@@ -78,17 +78,6 @@ export default function Intake() {
             />
           )}
 
-          {step > 1 && (
-            <p style={{
-              fontFamily: 'Manrope, sans-serif',
-              color: 'var(--slate-600)',
-              textAlign: 'center',
-              padding: '3rem 0'
-            }}>
-              Step {step} coming soon...
-            </p>
-          )}
-
           <WizardNavButtons
             showBack={step > 1}
             onBack={handleBack}

@@ -52,9 +52,9 @@ export default function ViolationTypeStep({ value, onChange }) {
                 }
               }}
               style={{
-                backgroundColor: 'var(--surface)',
-                border: `2px solid ${isSelected ? 'var(--terra-600)' : 'var(--slate-200)'}`,
-                borderRadius: 'var(--radius-lg)',
+                backgroundColor: isSelected ? '#FFF8F5' : 'var(--surface)',
+                border: isSelected ? '2px solid #C2410C' : '1px solid #E7E4DE',
+                borderRadius: '16px',
                 padding: 'var(--space-xl)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
@@ -67,7 +67,7 @@ export default function ViolationTypeStep({ value, onChange }) {
                 alignItems: 'center',
                 textAlign: 'center',
                 gap: 'var(--space-md)',
-                minHeight: '200px',
+                minHeight: '160px',
                 justifyContent: 'center'
               }}
               onMouseEnter={e => {
