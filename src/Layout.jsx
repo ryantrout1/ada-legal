@@ -222,6 +222,13 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('MyCases')} style={{ color: 'white' }}>
                       My Cases
                     </Link>
+                    <span style={{
+                      background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
+                      fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      <strong>USER</strong> {user.email}
+                    </span>
                     <button
                       onClick={handleLogout}
                       style={{
@@ -254,6 +261,13 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('LawyerProfile')} style={{ color: 'white' }}>
                       Profile
                     </Link>
+                    <span style={{
+                      background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
+                      fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      <strong>LAWYER</strong> {user.email}
+                    </span>
                     <button
                       onClick={handleLogout}
                       style={{
@@ -289,6 +303,13 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('AdminLawyers')} style={{ color: 'white' }}>
                       Lawyers
                     </Link>
+                    <span style={{
+                      background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
+                      fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      <strong>ADMIN</strong> {user.email}
+                    </span>
                     <button
                       onClick={handleLogout}
                       style={{
@@ -357,6 +378,12 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('MyCases')} style={{ color: 'white', padding: '0.5rem 0' }}>
                       My Cases
                     </Link>
+                    <span style={{
+                      background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
+                      fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px'
+                    }}>
+                      <strong>USER</strong> {user.email}
+                    </span>
                     <button onClick={handleLogout} style={{
                       background: 'transparent',
                       color: 'white',
@@ -382,6 +409,12 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('LawyerProfile')} style={{ color: 'white', padding: '0.5rem 0' }}>
                       Profile
                     </Link>
+                    <span style={{
+                      background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
+                      fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px'
+                    }}>
+                      <strong>LAWYER</strong> {user.email}
+                    </span>
                     <button onClick={handleLogout} style={{
                       background: 'transparent',
                       color: 'white',
@@ -410,6 +443,12 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('AdminLawyers')} style={{ color: 'white', padding: '0.5rem 0' }}>
                       Lawyers
                     </Link>
+                    <span style={{
+                      background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
+                      fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px'
+                    }}>
+                      <strong>ADMIN</strong> {user.email}
+                    </span>
                     <button onClick={handleLogout} style={{
                       background: 'transparent',
                       color: 'white',
