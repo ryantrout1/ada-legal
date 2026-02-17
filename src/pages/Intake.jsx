@@ -5,6 +5,7 @@ import ViolationTypeStep from '../components/intake/ViolationTypeStep';
 import PhysicalSpaceStep from '../components/intake/PhysicalSpaceStep';
 import DigitalWebsiteStep from '../components/intake/DigitalWebsiteStep';
 import IncidentStep from '../components/intake/IncidentStep';
+import ContactStep from '../components/intake/ContactStep';
 
 export default function Intake() {
   const [step, setStep] = useState(1);
@@ -20,7 +21,11 @@ export default function Intake() {
     assistive_tech: [],
     incident_date: '',
     visited_before: '',
-    narrative: ''
+    narrative: '',
+    contact_name: '',
+    contact_email: '',
+    contact_phone: '',
+    contact_preference: ''
   });
   const [errors, setErrors] = useState({});
 
@@ -38,6 +43,9 @@ export default function Intake() {
     }
     if (step === 3) {
       return !!(formData.incident_date && formData.visited_before && formData.narrative && formData.narrative.length >= 50);
+    }
+    if (step === 4) {
+      return !!(formData.contact_name && formData.contact_email && formData.contact_phone && formData.contact_preference);
     }
     return false;
   };
@@ -77,6 +85,32 @@ export default function Intake() {
       }
       return;
     }
+    if (step === 4) {
+      if (validateStep4()) {
+        setStep(5);
+      }
+      return;
+    }
+  };
+
+  const validateStep4 = () => {
+    const e = {};
+    if (!formData.contact_name.trim()) e.contact_name = 'Full name is required';
+    const email = formData.contact_email.trim();
+    if (!email) {
+      e.contact_email = 'Email address is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      e.contact_email = 'Please enter a valid email address';
+    }
+    const digits = (formData.contact_phone || '').replace(/\D/g, '');
+    if (!formData.contact_phone.trim()) {
+      e.contact_phone = 'Phone number is required';
+    } else if (digits.length !== 10) {
+      e.contact_phone = 'Please enter a valid 10-digit US phone number';
+    }
+    if (!formData.contact_preference) e.contact_preference = 'Please select a preferred contact method';
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
   const validateStep3 = () => {
@@ -189,6 +223,14 @@ export default function Intake() {
 
           {step === 3 && (
             <IncidentStep
+              data={formData}
+              onChange={updateField}
+              errors={errors}
+            />
+          )}
+
+          {step === 4 && (
+            <ContactStep
               data={formData}
               onChange={updateField}
               errors={errors}
