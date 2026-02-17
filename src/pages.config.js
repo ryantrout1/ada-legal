@@ -57,6 +57,7 @@ import LawyerCaseDetail from './pages/LawyerCaseDetail';
 import LawyerDashboard from './pages/LawyerDashboard';
 import MyCases from './pages/MyCases';
 import CaseDetail from './pages/CaseDetail';
+import LawyerLanding from './pages/LawyerLanding';
 import __Layout from './Layout.jsx';
 
 
@@ -71,6 +72,7 @@ export const PAGES = {
     "LawyerDashboard": LawyerDashboard,
     "MyCases": MyCases,
     "CaseDetail": CaseDetail,
+    "LawyerLanding": LawyerLanding,
 }
 
 export const pagesConfig = {
