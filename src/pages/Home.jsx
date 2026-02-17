@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { base44 } from '@/api/base44Client';
 import HeroSection from '../components/landing/HeroSection';
 import HowItWorks from '../components/landing/HowItWorks';
 import OurPromise from '../components/landing/OurPromise';
@@ -8,6 +9,34 @@ import LandingFooter from '../components/landing/LandingFooter';
 import { createPageUrl } from '../utils';
 
 export default function Home() {
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    async function checkRole() {
+      try {
+        const user = await base44.auth.me();
+        if (user?.role === 'user') {
+          window.location.href = createPageUrl('MyCases');
+          return;
+        }
+        if (user?.role === 'lawyer') {
+          window.location.href = createPageUrl('Marketplace');
+          return;
+        }
+        if (user?.role === 'admin') {
+          window.location.href = createPageUrl('Admin');
+          return;
+        }
+      } catch {
+        // Not logged in — show landing page
+      }
+      setChecked(true);
+    }
+    checkRole();
+  }, []);
+
+  if (!checked) return null;
+
   return (
     <div>
       <HeroSection />
