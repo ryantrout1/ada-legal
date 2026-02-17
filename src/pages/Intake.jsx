@@ -2,12 +2,20 @@ import React, { useState } from 'react';
 import ProgressBar from '../components/intake/ProgressBar';
 import WizardNavButtons from '../components/intake/WizardNavButtons';
 import ViolationTypeStep from '../components/intake/ViolationTypeStep';
+import PhysicalSpaceStep from '../components/intake/PhysicalSpaceStep';
 
 export default function Intake() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    violation_type: ''
+    violation_type: '',
+    business_name: '',
+    business_type: '',
+    city: '',
+    state: '',
+    street_address: '',
+    violation_subtype: ''
   });
+  const [errors, setErrors] = useState({});
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -15,16 +23,39 @@ export default function Intake() {
 
   const canContinue = () => {
     if (step === 1) return !!formData.violation_type;
+    if (step === 2 && formData.violation_type === 'physical_space') {
+      return !!(formData.business_name && formData.business_type && formData.city && formData.state && formData.violation_subtype);
+    }
     return false;
   };
 
+  const validateStep2Physical = () => {
+    const e = {};
+    if (!formData.business_name.trim()) e.business_name = 'Business name is required';
+    if (!formData.business_type) e.business_type = 'Please select a business type';
+    if (!formData.city.trim()) e.city = 'City is required';
+    if (!formData.state) e.state = 'Please select a state';
+    if (!formData.violation_subtype) e.violation_subtype = 'Please select a violation sub-type';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
   const handleContinue = () => {
-    if (canContinue()) {
-      setStep(prev => prev + 1);
+    if (step === 1 && canContinue()) {
+      setErrors({});
+      setStep(2);
+      return;
+    }
+    if (step === 2 && formData.violation_type === 'physical_space') {
+      if (validateStep2Physical()) {
+        setStep(3);
+      }
+      return;
     }
   };
 
   const handleBack = () => {
+    setErrors({});
     setStep(prev => prev - 1);
   };
 
@@ -75,6 +106,14 @@ export default function Intake() {
             <ViolationTypeStep
               value={formData.violation_type}
               onChange={val => updateField('violation_type', val)}
+            />
+          )}
+
+          {step === 2 && formData.violation_type === 'physical_space' && (
+            <PhysicalSpaceStep
+              data={formData}
+              onChange={updateField}
+              errors={errors}
             />
           )}
 
