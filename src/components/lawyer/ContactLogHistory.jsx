@@ -17,7 +17,7 @@ export default function ContactLogHistory({ logs }) {
     return (
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-        color: 'var(--slate-400)', fontStyle: 'italic', margin: 0
+        color: 'var(--slate-600)', fontStyle: 'italic', margin: 0
       }}>
         No contact logs yet.
       </p>
@@ -45,11 +45,11 @@ export default function ContactLogHistory({ logs }) {
                 }}>{TYPE_LABELS[log.contact_type] || log.contact_type}</span>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-                  color: 'var(--slate-400)'
+                  color: 'var(--slate-600)'
                 }}>via {METHOD_LABELS[log.contact_method] || log.contact_method}</span>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-                  color: 'var(--slate-400)', marginLeft: 'auto'
+                  color: 'var(--slate-600)', marginLeft: 'auto'
                 }}>{formatDate(log.logged_at || log.created_date)}</span>
               </div>
               {log.notes && (

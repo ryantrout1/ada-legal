@@ -152,11 +152,11 @@ function InfoItem({ icon: Icon, label, value }) {
   if (!value) return null;
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-      <Icon size={14} style={{ color: 'var(--slate-400)', flexShrink: 0, marginTop: '3px' }} />
+      <Icon size={14} aria-hidden="true" style={{ color: 'var(--slate-500)', flexShrink: 0, marginTop: '3px' }} />
       <div>
         <span style={{
           display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem',
-          fontWeight: 700, color: 'var(--slate-400)', textTransform: 'uppercase',
+          fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase',
           letterSpacing: '0.04em'
         }}>{label}</span>
         <span style={{

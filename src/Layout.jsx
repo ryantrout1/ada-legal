@@ -132,7 +132,7 @@ export default function Layout({ children, currentPageName }) {
       </a>
 
       {/* Header */}
-      <header style={{
+      <header role="banner" style={{
         backgroundColor: 'var(--slate-900)',
         color: 'white',
         padding: '1rem 0',
@@ -418,12 +418,12 @@ export default function Layout({ children, currentPageName }) {
       </header>
 
       {/* Main Content */}
-      <main id="main-content" style={{ flex: 1 }}>
+      <main id="main-content" role="main" style={{ flex: 1 }}>
         {children}
       </main>
 
       {/* Footer */}
-      <footer style={{
+      <footer role="contentinfo" style={{
         backgroundColor: 'var(--slate-900)',
         color: 'var(--slate-400)',
         padding: '2rem 0',

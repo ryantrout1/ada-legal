@@ -2,9 +2,9 @@ import React from 'react';
 
 export default function LandingFooter() {
   return (
-    <footer style={{
+    <footer role="contentinfo" style={{
       backgroundColor: '#0F172A',
-      color: 'var(--slate-500)',
+      color: 'var(--slate-400)',
       padding: '2.5rem 1.5rem 2rem'
     }}>
       <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
@@ -16,7 +16,7 @@ export default function LandingFooter() {
           ADA Legal Marketplace
         </p>
         <div style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
           color: 'var(--slate-400)', lineHeight: 1.7
         }}>
           <p style={{ margin: '0 0 0.75rem' }}>
