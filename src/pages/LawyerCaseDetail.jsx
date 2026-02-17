@@ -78,12 +78,12 @@ export default function LawyerCaseDetail() {
       padding: 'var(--space-xl) var(--space-lg)'
     }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <Link to={createPageUrl('Marketplace')} style={{
+        <Link to={createPageUrl('LawyerDashboard')} style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
           color: 'var(--terra-600)', textDecoration: 'none', marginBottom: 'var(--space-lg)'
         }}>
-          <ArrowLeft size={16} /> Back to Marketplace
+          <ArrowLeft size={16} /> Back to My Cases
         </Link>
 
         {/* Header */}

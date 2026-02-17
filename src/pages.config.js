@@ -54,6 +54,7 @@ import Intake from './pages/Intake';
 import LawyerRegister from './pages/LawyerRegister';
 import Marketplace from './pages/Marketplace';
 import LawyerCaseDetail from './pages/LawyerCaseDetail';
+import LawyerDashboard from './pages/LawyerDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +66,7 @@ export const PAGES = {
     "LawyerRegister": LawyerRegister,
     "Marketplace": Marketplace,
     "LawyerCaseDetail": LawyerCaseDetail,
+    "LawyerDashboard": LawyerDashboard,
 }
 
 export const pagesConfig = {
