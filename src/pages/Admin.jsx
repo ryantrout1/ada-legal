@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
-import { Clock, Briefcase, Users, AlertTriangle } from 'lucide-react';
+import { Clock, Briefcase, Users, AlertTriangle, UserPlus, Timer } from 'lucide-react';
 import StatCard from '../components/admin/StatCard';
 import RecentSubmissionsTable from '../components/admin/RecentSubmissionsTable';
+import UnclaimedCasesBanner from '../components/admin/UnclaimedCasesBanner';
+import PendingLawyersBanner from '../components/admin/PendingLawyersBanner';
 
 export default function Admin() {
   const [loading, setLoading] = useState(true);
@@ -47,14 +49,26 @@ export default function Admin() {
   const pendingCount = cases.filter(c => c.status === 'submitted' || c.status === 'under_review').length;
   const activeCount = cases.filter(c => ['available', 'assigned', 'in_progress'].includes(c.status)).length;
   const activeLawyerCount = lawyers.filter(l => l.subscription_status === 'active').length;
+  const pendingLawyerCount = lawyers.filter(l => l.account_status === 'pending_approval').length;
 
   const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-  const needsAttentionCount = cases.filter(c =>
+  const needsAttentionCases = cases.filter(c =>
     c.status === 'assigned' &&
     c.assigned_at &&
     c.assigned_at < twentyFourHoursAgo &&
     !c.contact_logged_at
-  ).length;
+  );
+  const needsAttentionCount = needsAttentionCases.length;
+
+  const seventyTwoHoursAgo = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
+  const unclaimedCases = cases.filter(c =>
+    c.status === 'available' &&
+    c.approved_at &&
+    c.approved_at < seventyTwoHoursAgo
+  );
+  const unclaimedCount = unclaimedCases.length;
+
+  const pendingLawyers = lawyers.filter(l => l.account_status === 'pending_approval');
 
   const recentSubmissions = cases
     .filter(c => c.status === 'submitted')
@@ -113,7 +127,30 @@ export default function Admin() {
             textColor="#B91C1C"
             icon={AlertTriangle}
           />
+          <StatCard
+            label="Unclaimed 72hrs+"
+            count={unclaimedCount}
+            bgColor="#FEF3C7"
+            textColor="#92400E"
+            icon={Timer}
+          />
+          <StatCard
+            label="Lawyer Applications"
+            count={pendingLawyerCount}
+            bgColor={pendingLawyerCount > 0 ? '#F3E8FF' : 'var(--surface)'}
+            textColor={pendingLawyerCount > 0 ? '#7C3AED' : 'var(--slate-700)'}
+            borderColor={pendingLawyerCount > 0 ? '#E9D5FF' : 'var(--slate-200)'}
+            icon={UserPlus}
+          />
         </div>
+
+        {/* Alert Banners */}
+        {pendingLawyers.length > 0 && (
+          <PendingLawyersBanner lawyers={pendingLawyers} />
+        )}
+        {unclaimedCases.length > 0 && (
+          <UnclaimedCasesBanner cases={unclaimedCases} />
+        )}
 
         {/* Recent Submissions */}
         <h2 style={{
