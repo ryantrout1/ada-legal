@@ -6,6 +6,7 @@ import PhysicalSpaceStep from '../components/intake/PhysicalSpaceStep';
 import DigitalWebsiteStep from '../components/intake/DigitalWebsiteStep';
 import IncidentStep from '../components/intake/IncidentStep';
 import ContactStep from '../components/intake/ContactStep';
+import ReviewStep from '../components/intake/ReviewStep';
 
 export default function Intake() {
   const [step, setStep] = useState(1);
@@ -28,6 +29,7 @@ export default function Intake() {
     contact_preference: ''
   });
   const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -155,6 +157,12 @@ export default function Intake() {
     setStep(prev => prev - 1);
   };
 
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    // TODO: wire up actual case creation
+    setSubmitting(false);
+  };
+
   return (
     <div style={{
       backgroundColor: 'var(--slate-50)',
@@ -237,12 +245,23 @@ export default function Intake() {
             />
           )}
 
-          <WizardNavButtons
-            showBack={step > 1}
-            onBack={handleBack}
-            onContinue={handleContinue}
-            canContinue={canContinue()}
-          />
+          {step === 5 && (
+            <ReviewStep
+              data={formData}
+              onEdit={(targetStep) => { setErrors({}); setStep(targetStep); }}
+              onSubmit={handleSubmit}
+              submitting={submitting}
+            />
+          )}
+
+          {step < 5 && (
+            <WizardNavButtons
+              showBack={step > 1}
+              onBack={handleBack}
+              onContinue={handleContinue}
+              canContinue={canContinue()}
+            />
+          )}
         </div>
       </div>
     </div>
