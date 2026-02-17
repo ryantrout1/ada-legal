@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import MarketplaceFilters from '../components/marketplace/MarketplaceFilters';
 import CaseCard from '../components/marketplace/CaseCard';
+import InitiateSupportModal from '../components/marketplace/InitiateSupportModal';
 
 export default function Marketplace() {
   const [loading, setLoading] = useState(true);
@@ -15,6 +16,8 @@ export default function Marketplace() {
     businessType: 'all',
     sort: 'newest'
   });
+  const [selectedCase, setSelectedCase] = useState(null);
+  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     async function init() {
@@ -193,7 +196,89 @@ export default function Marketplace() {
     });
 
   const handleInitiate = (caseData) => {
-    window.location.href = createPageUrl('CaseInitiate') + `?id=${caseData.id}`;
+    setSelectedCase(caseData);
+  };
+
+  const handleConfirmInitiate = async () => {
+    if (!selectedCase || !lawyerProfile) return;
+    setProcessing(true);
+
+    const now = new Date().toISOString();
+    const c = selectedCase;
+
+    // 1. Update case: assign to lawyer
+    await base44.entities.Case.update(c.id, {
+      status: 'assigned',
+      assigned_lawyer_id: lawyerProfile.id,
+      assigned_at: now
+    });
+
+    // 2. Remove from local list immediately
+    setCases(prev => prev.filter(x => x.id !== c.id));
+
+    // 3. Create timeline event
+    await base44.entities.TimelineEvent.create({
+      case_id: c.id,
+      event_type: 'assigned',
+      event_description: 'An attorney has been assigned to your case.',
+      actor_role: 'lawyer',
+      visible_to_user: true,
+      created_at: now
+    });
+
+    // 4. Send email to claimant
+    await base44.integrations.Core.SendEmail({
+      to: c.contact_email,
+      subject: 'Attorney Assigned — ADA Legal Marketplace',
+      body: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #1E293B;">An Attorney Has Been Assigned to Your Case</h2>
+          <p>Dear ${c.contact_name},</p>
+          <p>Good news — a licensed attorney has initiated support for your ADA violation case against <strong>${c.business_name}</strong>.</p>
+          <p><strong>What happens next?</strong></p>
+          <ul>
+            <li>The assigned attorney will contact you within <strong>24 hours</strong> using your preferred contact method (<strong>${c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'}</strong>).</li>
+            <li>Please ensure your contact information is up to date and be ready to discuss your case.</li>
+          </ul>
+          <p>If you do not hear from an attorney within 24 hours, please reply to this email.</p>
+          <p style="color: #64748B; font-size: 0.875rem; font-style: italic; margin-top: 24px;">
+            This platform is not a law firm and does not provide legal advice. Attorney assignment does not create an attorney-client relationship until you and the attorney agree to terms.
+          </p>
+        </div>
+      `
+    });
+
+    // 5. Send email to lawyer
+    await base44.integrations.Core.SendEmail({
+      to: lawyerProfile.email,
+      subject: 'Support Initiation Confirmed — ADA Legal Marketplace',
+      body: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #1E293B;">Support Initiation Confirmed</h2>
+          <p>Dear ${lawyerProfile.full_name},</p>
+          <p>You have successfully initiated support for the following case:</p>
+          <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Business</td><td style="padding: 8px;">${c.business_name}</td></tr>
+            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Location</td><td style="padding: 8px;">${[c.city, c.state].filter(Boolean).join(', ')}</td></tr>
+            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Violation Type</td><td style="padding: 8px;">${c.violation_type === 'physical_space' ? 'Physical Space' : 'Digital / Website'}</td></tr>
+            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant</td><td style="padding: 8px;">${c.contact_name}</td></tr>
+            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant Email</td><td style="padding: 8px;">${c.contact_email}</td></tr>
+            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant Phone</td><td style="padding: 8px;">${c.contact_phone}</td></tr>
+            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Contact Preference</td><td style="padding: 8px;">${c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'}</td></tr>
+          </table>
+          <p><strong>Reminder:</strong> You are required to contact the claimant within <strong>24 hours</strong>.</p>
+          <p style="color: #64748B; font-size: 0.875rem; font-style: italic; margin-top: 24px;">
+            ADA Legal Marketplace — Connecting people with experienced ADA attorneys.
+          </p>
+        </div>
+      `
+    });
+
+    setProcessing(false);
+    setSelectedCase(null);
+
+    // 6. Redirect to case detail
+    window.location.href = createPageUrl('LawyerCaseDetail') + `?id=${c.id}`;
   };
 
   return (
@@ -242,6 +327,13 @@ export default function Marketplace() {
           ))}
         </div>
       </div>
+
+      <InitiateSupportModal
+        open={!!selectedCase}
+        onCancel={() => { if (!processing) setSelectedCase(null); }}
+        onConfirm={handleConfirmInitiate}
+        processing={processing}
+      />
     </div>
   );
 }

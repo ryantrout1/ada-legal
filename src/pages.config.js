@@ -53,6 +53,7 @@ import Home from './pages/Home';
 import Intake from './pages/Intake';
 import LawyerRegister from './pages/LawyerRegister';
 import Marketplace from './pages/Marketplace';
+import LawyerCaseDetail from './pages/LawyerCaseDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -63,6 +64,7 @@ export const PAGES = {
     "Intake": Intake,
     "LawyerRegister": LawyerRegister,
     "Marketplace": Marketplace,
+    "LawyerCaseDetail": LawyerCaseDetail,
 }
 
 export const pagesConfig = {
