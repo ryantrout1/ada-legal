@@ -4,8 +4,8 @@ import { createPageUrl } from '../utils';
 import { Clock, Briefcase, Users, AlertTriangle, UserPlus, Timer } from 'lucide-react';
 import StatCard from '../components/admin/StatCard';
 import RecentSubmissionsTable from '../components/admin/RecentSubmissionsTable';
-import UnclaimedCasesBanner from '../components/admin/UnclaimedCasesBanner';
-import PendingLawyersBanner from '../components/admin/PendingLawyersBanner';
+import UnclaimedCasesBanner from '../components/admin/UnclaimedCasesBanner.jsx';
+import PendingLawyersBanner from '../components/admin/PendingLawyersBanner.jsx';
 
 export default function Admin() {
   const [loading, setLoading] = useState(true);
