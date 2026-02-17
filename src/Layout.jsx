@@ -213,6 +213,9 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'user' && (
                   <>
+                    <Link to={createPageUrl('Intake')} style={{ color: 'white' }}>
+                      Report Violation
+                    </Link>
                     <Link to={createPageUrl('MyCases')} style={{ color: 'white' }}>
                       My Cases
                     </Link>
@@ -336,6 +339,9 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'user' && (
                   <>
+                    <Link to={createPageUrl('Intake')} style={{ color: 'white', padding: '0.5rem 0' }}>
+                      Report Violation
+                    </Link>
                     <Link to={createPageUrl('MyCases')} style={{ color: 'white', padding: '0.5rem 0' }}>
                       My Cases
                     </Link>
