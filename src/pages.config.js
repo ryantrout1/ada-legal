@@ -52,6 +52,7 @@ import AdminReview from './pages/AdminReview';
 import Home from './pages/Home';
 import Intake from './pages/Intake';
 import LawyerRegister from './pages/LawyerRegister';
+import Marketplace from './pages/Marketplace';
 import __Layout from './Layout.jsx';
 
 
@@ -61,6 +62,7 @@ export const PAGES = {
     "Home": Home,
     "Intake": Intake,
     "LawyerRegister": LawyerRegister,
+    "Marketplace": Marketplace,
 }
 
 export const pagesConfig = {
