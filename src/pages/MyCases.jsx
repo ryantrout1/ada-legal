@@ -19,6 +19,12 @@ export default function MyCases() {
         return;
       }
 
+      // Redirect lawyers to their own dashboard
+      if (user.role === 'lawyer') {
+        window.location.href = createPageUrl('LawyerDashboard');
+        return;
+      }
+
       const myCases = await base44.entities.Case.filter(
         { submitter_user_id: user.id },
         '-created_date',
