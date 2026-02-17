@@ -251,6 +251,9 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('LawyerDashboard')} style={{ color: 'white' }}>
                       My Cases
                     </Link>
+                    <Link to={createPageUrl('LawyerRegister')} style={{ color: 'white' }}>
+                      Profile
+                    </Link>
                     <button
                       onClick={handleLogout}
                       style={{
@@ -274,6 +277,9 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'admin' && (
                   <>
+                    <Link to={createPageUrl('Admin')} style={{ color: 'white' }}>
+                      Dashboard
+                    </Link>
                     <Link to={createPageUrl('AdminQueue')} style={{ color: 'white' }}>
                       Review Queue
                     </Link>
@@ -373,6 +379,9 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('LawyerDashboard')} style={{ color: 'white', padding: '0.5rem 0' }}>
                       My Cases
                     </Link>
+                    <Link to={createPageUrl('LawyerRegister')} style={{ color: 'white', padding: '0.5rem 0' }}>
+                      Profile
+                    </Link>
                     <button onClick={handleLogout} style={{
                       background: 'transparent',
                       color: 'white',
@@ -389,6 +398,9 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'admin' && (
                   <>
+                    <Link to={createPageUrl('Admin')} style={{ color: 'white', padding: '0.5rem 0' }}>
+                      Dashboard
+                    </Link>
                     <Link to={createPageUrl('AdminQueue')} style={{ color: 'white', padding: '0.5rem 0' }}>
                       Review Queue
                     </Link>

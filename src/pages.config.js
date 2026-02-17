@@ -49,30 +49,30 @@
  */
 import Admin from './pages/Admin';
 import AdminReview from './pages/AdminReview';
+import CaseDetail from './pages/CaseDetail';
 import Home from './pages/Home';
 import Intake from './pages/Intake';
-import LawyerRegister from './pages/LawyerRegister';
-import Marketplace from './pages/Marketplace';
 import LawyerCaseDetail from './pages/LawyerCaseDetail';
 import LawyerDashboard from './pages/LawyerDashboard';
-import MyCases from './pages/MyCases';
-import CaseDetail from './pages/CaseDetail';
 import LawyerLanding from './pages/LawyerLanding';
+import LawyerRegister from './pages/LawyerRegister';
+import Marketplace from './pages/Marketplace';
+import MyCases from './pages/MyCases';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Admin": Admin,
     "AdminReview": AdminReview,
+    "CaseDetail": CaseDetail,
     "Home": Home,
     "Intake": Intake,
-    "LawyerRegister": LawyerRegister,
-    "Marketplace": Marketplace,
     "LawyerCaseDetail": LawyerCaseDetail,
     "LawyerDashboard": LawyerDashboard,
-    "MyCases": MyCases,
-    "CaseDetail": CaseDetail,
     "LawyerLanding": LawyerLanding,
+    "LawyerRegister": LawyerRegister,
+    "Marketplace": Marketplace,
+    "MyCases": MyCases,
 }
 
 export const pagesConfig = {
