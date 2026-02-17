@@ -193,6 +193,9 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('Intake')} style={{ color: 'white' }}>
                       Report Violation
                     </Link>
+                    <Link to={createPageUrl('LawyerLanding')} style={{ color: 'white' }}>
+                      For Attorneys
+                    </Link>
                     <button
                       onClick={() => base44.auth.redirectToLogin()}
                       style={{
@@ -318,6 +321,9 @@ export default function Layout({ children, currentPageName }) {
                   <>
                     <Link to={createPageUrl('Intake')} style={{ color: 'white', padding: '0.5rem 0' }}>
                       Report Violation
+                    </Link>
+                    <Link to={createPageUrl('LawyerLanding')} style={{ color: 'white', padding: '0.5rem 0' }}>
+                      For Attorneys
                     </Link>
                     <button
                       onClick={() => base44.auth.redirectToLogin()}
