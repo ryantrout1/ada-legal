@@ -49,12 +49,14 @@
  */
 import Home from './pages/Home';
 import Intake from './pages/Intake';
+import Admin from './pages/Admin';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Home": Home,
     "Intake": Intake,
+    "Admin": Admin,
 }
 
 export const pagesConfig = {
