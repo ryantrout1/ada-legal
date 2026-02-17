@@ -48,48 +48,34 @@ export default function LawyerRegister() {
     return Object.keys(e).length === 0;
   };
 
+  const [submitError, setSubmitError] = useState('');
+
   const handleSubmit = async () => {
     if (!validate()) return;
     setSubmitting(true);
+    setSubmitError('');
 
-    await base44.entities.LawyerProfile.create({
-      full_name: form.full_name.trim(),
-      firm_name: form.firm_name.trim(),
-      email: form.email.trim(),
-      phone: form.phone.trim(),
-      states_of_practice: form.states_of_practice,
-      bar_numbers: form.bar_numbers.trim(),
-      account_status: 'pending_approval',
-      subscription_status: 'inactive',
-      marketplace_rules_accepted: true
-    });
-
-    // Notify admins
-    const admins = await base44.entities.User.list();
-    const adminUsers = admins.filter(u => u.role === 'admin');
-    for (const admin of adminUsers) {
-      await base44.integrations.Core.SendEmail({
-        to: admin.email,
-        subject: 'New Lawyer Application — ADA Legal Marketplace',
-        body: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #1E293B;">New Lawyer Application</h2>
-            <p>A new attorney has applied to join the marketplace:</p>
-            <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
-              <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Name</td><td style="padding: 8px;">${form.full_name.trim()}</td></tr>
-              <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Firm</td><td style="padding: 8px;">${form.firm_name.trim()}</td></tr>
-              <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Email</td><td style="padding: 8px;">${form.email.trim()}</td></tr>
-              <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">State(s)</td><td style="padding: 8px;">${form.states_of_practice.join(', ')}</td></tr>
-              <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Bar #</td><td style="padding: 8px;">${form.bar_numbers.trim()}</td></tr>
-            </table>
-            <p>Please review this application in the admin dashboard.</p>
-          </div>
-        `
+    try {
+      await base44.entities.LawyerProfile.create({
+        full_name: form.full_name.trim(),
+        firm_name: form.firm_name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        states_of_practice: form.states_of_practice,
+        bar_numbers: form.bar_numbers.trim(),
+        account_status: 'pending_approval',
+        subscription_status: 'inactive',
+        marketplace_rules_accepted: true,
+        flagged: false
       });
-    }
 
-    setSubmitting(false);
-    setSubmitted(true);
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Lawyer registration failed:', err);
+      setSubmitError('Something went wrong. Please try again or contact support.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -123,7 +109,7 @@ export default function LawyerRegister() {
               color: 'var(--slate-600)', lineHeight: 1.6, maxWidth: '440px',
               margin: '0 auto'
             }}>
-              Our team will review your application and notify you by email.
+              Our team will review your application and notify you by email within 48 hours.
             </p>
           </div>
         </div>
@@ -257,6 +243,19 @@ export default function LawyerRegister() {
           >
             {submitting ? 'Submitting…' : 'Submit Application'}
           </button>
+
+          {submitError && (
+            <p role="alert" style={{
+              display: 'flex', alignItems: 'center', gap: '8px',
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+              color: '#B91C1C', backgroundColor: 'var(--error-100)',
+              padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)',
+              marginTop: 'var(--space-md)'
+            }}>
+              <AlertCircle size={18} style={{ flexShrink: 0 }} />
+              {submitError}
+            </p>
+          )}
         </div>
       </div>
     </div>
