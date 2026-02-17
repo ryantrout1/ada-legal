@@ -33,6 +33,7 @@ export default function Intake() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [caseId, setCaseId] = useState(null);
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -189,6 +190,7 @@ export default function Intake() {
     };
 
     const newCase = await base44.entities.Case.create(casePayload);
+    setCaseId(newCase.id);
 
     // 2. Create TimelineEvent
     await base44.entities.TimelineEvent.create({
@@ -279,7 +281,7 @@ export default function Intake() {
           aria-label="ADA Violation Report Form"
         >
           {submitted && (
-            <SuccessStep caseData={formData} />
+            <SuccessStep caseData={formData} caseId={caseId} />
           )}
 
           {!submitted && step === 1 && (
