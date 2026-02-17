@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { caseSubmittedEmail } from '../components/emails/caseEmails';
+
 import ProgressBar from '../components/intake/ProgressBar';
 import WizardNavButtons from '../components/intake/WizardNavButtons';
 import ViolationTypeStep from '../components/intake/ViolationTypeStep';
@@ -224,14 +224,6 @@ export default function Intake() {
       actor_role: 'system',
       visible_to_user: true,
       created_at: now
-    });
-
-    // 3. Send branded confirmation email
-    const portalUrl = window.location.origin + '/MyCases';
-    await base44.integrations.Core.SendEmail({
-      to: formData.contact_email.trim(),
-      subject: 'ADA Legal Marketplace — Report Received',
-      body: caseSubmittedEmail(casePayload, portalUrl)
     });
 
     setSubmitting(false);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircle, Mail, AlertTriangle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../../utils';
+import { caseSubmittedEmail } from '../emails/caseEmails';
 
 const inputStyle = {
   width: '100%',
@@ -45,13 +46,24 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
     setInviting(true);
     try {
       await base44.users.inviteUser(trimmed, 'user');
-      setInvited(true);
     } catch (err) {
       // User may already exist — still allow sign in
-      setInvited(true);
-    } finally {
-      setInviting(false);
     }
+
+    // Send confirmation email now that user is registered
+    try {
+      const portalUrl = window.location.origin + '/MyCases';
+      await base44.integrations.Core.SendEmail({
+        to: trimmed,
+        subject: 'ADA Legal Marketplace — Report Received',
+        body: caseSubmittedEmail(caseData, portalUrl)
+      });
+    } catch (emailErr) {
+      console.error('Confirmation email failed:', emailErr);
+    }
+
+    setInvited(true);
+    setInviting(false);
   };
 
   const handleSignIn = () => {
