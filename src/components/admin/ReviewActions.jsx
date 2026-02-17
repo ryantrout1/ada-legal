@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { CheckCircle, XCircle, Flag } from 'lucide-react';
+import { caseApprovedEmail, caseRejectedEmail } from '../emails/caseEmails';
 
 const inputStyle = {
   width: '100%', minHeight: '44px', padding: '0.625rem 0.75rem',
@@ -34,20 +35,11 @@ export default function ReviewActions({ caseData, onActionComplete }) {
       created_at: now
     });
 
+    const portalUrl = window.location.origin + '/MyCases';
     await base44.integrations.Core.SendEmail({
       to: caseData.contact_email,
       subject: 'ADA Legal Marketplace — Case Approved',
-      body: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #15803D;">Your Case Has Been Approved</h2>
-          <p>Dear ${caseData.contact_name},</p>
-          <p>Your ADA violation report regarding <strong>${caseData.business_name}</strong> has been reviewed and approved.</p>
-          <p>Your case is now available for licensed ADA attorneys in your area to review. An attorney will reach out to you via your preferred contact method.</p>
-          <p style="color: #64748B; font-size: 0.875rem; font-style: italic; margin-top: 24px;">
-            This platform is not a law firm and does not provide legal advice.
-          </p>
-        </div>
-      `
+      body: caseApprovedEmail(caseData, portalUrl)
     });
 
     setProcessing(false);
@@ -73,21 +65,11 @@ export default function ReviewActions({ caseData, onActionComplete }) {
       created_at: now
     });
 
+    const portalUrl = window.location.origin + '/MyCases';
     await base44.integrations.Core.SendEmail({
       to: caseData.contact_email,
       subject: 'ADA Legal Marketplace — Submission Update',
-      body: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #B91C1C;">Submission Update</h2>
-          <p>Dear ${caseData.contact_name},</p>
-          <p>After reviewing your ADA violation report regarding <strong>${caseData.business_name}</strong>, we were unable to approve it at this time.</p>
-          <p><strong>Reason:</strong> ${rejectionReason.trim()}</p>
-          <p>If you believe this was in error, you may submit a new report with additional details.</p>
-          <p style="color: #64748B; font-size: 0.875rem; font-style: italic; margin-top: 24px;">
-            This platform is not a law firm and does not provide legal advice.
-          </p>
-        </div>
-      `
+      body: caseRejectedEmail(caseData, rejectionReason.trim(), portalUrl)
     });
 
     setProcessing(false);

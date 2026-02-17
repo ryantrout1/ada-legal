@@ -4,6 +4,7 @@ import { createPageUrl } from '../utils';
 import MarketplaceFilters from '../components/marketplace/MarketplaceFilters';
 import CaseCard from '../components/marketplace/CaseCard';
 import InitiateSupportModal from '../components/marketplace/InitiateSupportModal';
+import { attorneyAssignedEmail } from '../components/emails/caseEmails';
 
 export default function Marketplace() {
   const [loading, setLoading] = useState(true);
@@ -226,26 +227,12 @@ export default function Marketplace() {
       created_at: now
     });
 
-    // 4. Send email to claimant
+    // 4. Send branded email to claimant
+    const portalUrl = window.location.origin + '/MyCases';
     await base44.integrations.Core.SendEmail({
       to: c.contact_email,
       subject: 'Attorney Assigned — ADA Legal Marketplace',
-      body: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #1E293B;">An Attorney Has Been Assigned to Your Case</h2>
-          <p>Dear ${c.contact_name},</p>
-          <p>Good news — a licensed attorney has initiated support for your ADA violation case against <strong>${c.business_name}</strong>.</p>
-          <p><strong>What happens next?</strong></p>
-          <ul>
-            <li>The assigned attorney will contact you within <strong>24 hours</strong> using your preferred contact method (<strong>${c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'}</strong>).</li>
-            <li>Please ensure your contact information is up to date and be ready to discuss your case.</li>
-          </ul>
-          <p>If you do not hear from an attorney within 24 hours, please reply to this email.</p>
-          <p style="color: #64748B; font-size: 0.875rem; font-style: italic; margin-top: 24px;">
-            This platform is not a law firm and does not provide legal advice. Attorney assignment does not create an attorney-client relationship until you and the attorney agree to terms.
-          </p>
-        </div>
-      `
+      body: attorneyAssignedEmail(c, lawyerProfile.full_name, lawyerProfile.firm_name, portalUrl)
     });
 
     // 5. Send email to lawyer

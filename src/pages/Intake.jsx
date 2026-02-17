@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { caseSubmittedEmail } from '../components/emails/caseEmails';
 import ProgressBar from '../components/intake/ProgressBar';
 import WizardNavButtons from '../components/intake/WizardNavButtons';
 import ViolationTypeStep from '../components/intake/ViolationTypeStep';
@@ -202,33 +203,12 @@ export default function Intake() {
       created_at: now
     });
 
-    // 3. Send confirmation email
-    const violationLabel = isPhysical ? 'Physical Space' : 'Digital / Website';
+    // 3. Send branded confirmation email
+    const portalUrl = window.location.origin + '/MyCases';
     await base44.integrations.Core.SendEmail({
       to: formData.contact_email.trim(),
       subject: 'ADA Legal Marketplace — Report Received',
-      body: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #1E293B;">Your Report Has Been Received</h2>
-          <p>Dear ${formData.contact_name.trim()},</p>
-          <p>Thank you for submitting your ADA violation report. Here is a summary:</p>
-          <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
-            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Violation Type</td><td style="padding: 8px;">${violationLabel}</td></tr>
-            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Business</td><td style="padding: 8px;">${formData.business_name.trim()}</td></tr>
-            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Incident Date</td><td style="padding: 8px;">${formData.incident_date}</td></tr>
-            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Status</td><td style="padding: 8px;">Submitted — Pending Review</td></tr>
-          </table>
-          <p><strong>What happens next?</strong></p>
-          <ol>
-            <li>Our team will review your report.</li>
-            <li>If approved, your case will be made available to licensed ADA attorneys in your area.</li>
-            <li>A matched attorney will reach out to you via your preferred contact method.</li>
-          </ol>
-          <p style="color: #64748B; font-size: 0.875rem; font-style: italic; margin-top: 24px;">
-            This platform is not a law firm and does not provide legal advice. Submitting a report does not create an attorney-client relationship.
-          </p>
-        </div>
-      `
+      body: caseSubmittedEmail(casePayload, portalUrl)
     });
 
     setSubmitting(false);
