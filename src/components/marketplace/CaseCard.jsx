@@ -120,7 +120,7 @@ export default function CaseCard({ caseData, onInitiate }) {
       }}>
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-          color: 'var(--slate-400)'
+          color: 'var(--slate-600)'
         }}>
           Posted {formatDate(c.approved_at)}
         </span>
@@ -133,7 +133,7 @@ export default function CaseCard({ caseData, onInitiate }) {
             fontSize: '0.875rem', fontWeight: 700, color: 'white',
             backgroundColor: 'var(--terra-600)', border: 'none',
             borderRadius: 'var(--radius-md)', cursor: 'pointer',
-            minHeight: '40px', transition: 'background-color 0.15s'
+            minHeight: '44px', transition: 'background-color 0.15s'
           }}
           onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--terra-700)'; }}
           onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--terra-600)'; }}

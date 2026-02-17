@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 import FormField from '../components/intake/FormField';
 import StateMultiSelect from '../components/lawyer/StateMultiSelect';
 
@@ -228,10 +228,12 @@ export default function LawyerRegister() {
               </span>
             </label>
             {errors.rules_accepted && (
-              <p style={{
+              <p role="alert" style={{
+                display: 'flex', alignItems: 'center', gap: '6px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                color: 'var(--error-600)', margin: '0.375rem 0 0 2.25rem'
+                color: '#B91C1C', margin: '0.375rem 0 0 2.25rem'
               }}>
+                <AlertCircle size={14} style={{ flexShrink: 0 }} />
                 {errors.rules_accepted}
               </p>
             )}

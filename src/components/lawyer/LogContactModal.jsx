@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { AlertCircle } from 'lucide-react';
 
 const CONTACT_TYPES = [
   { value: 'initial_contact', label: 'Initial Contact' },
@@ -81,41 +82,70 @@ export default function LogContactModal({ open, onCancel, onSubmit, saving }) {
 
         {/* Contact Type */}
         <div style={{ marginBottom: 'var(--space-md)' }}>
-          <label style={{
+          <label htmlFor="log-contact-type" style={{
             display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
             fontWeight: 700, color: 'var(--slate-600)', marginBottom: '4px'
-          }}>Contact Type *</label>
+          }}>Contact Type <span aria-label="required" style={{ color: '#DC2626' }}>*</span></label>
           <select
+            id="log-contact-type"
             value={form.contact_type} onChange={e => setForm(p => ({ ...p, contact_type: e.target.value }))}
+            aria-required="true"
+            aria-invalid={!!errors.contact_type}
+            aria-describedby={errors.contact_type ? 'log-contact-type-error' : undefined}
             style={{ ...selectStyle, borderColor: errors.contact_type ? 'var(--error-600)' : 'var(--slate-200)' }}
           >
             <option value="">Select…</option>
             {CONTACT_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
           </select>
+          {errors.contact_type && (
+            <p id="log-contact-type-error" role="alert" style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+              color: '#B91C1C', margin: '4px 0 0 0'
+            }}>
+              <AlertCircle size={14} style={{ flexShrink: 0 }} />
+              {errors.contact_type}
+            </p>
+          )}
         </div>
 
         {/* Contact Method */}
         <div style={{ marginBottom: 'var(--space-md)' }}>
-          <label style={{
+          <label htmlFor="log-contact-method" style={{
             display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
             fontWeight: 700, color: 'var(--slate-600)', marginBottom: '4px'
-          }}>Contact Method *</label>
+          }}>Contact Method <span aria-label="required" style={{ color: '#DC2626' }}>*</span></label>
           <select
+            id="log-contact-method"
             value={form.contact_method} onChange={e => setForm(p => ({ ...p, contact_method: e.target.value }))}
+            aria-required="true"
+            aria-invalid={!!errors.contact_method}
+            aria-describedby={errors.contact_method ? 'log-contact-method-error' : undefined}
             style={{ ...selectStyle, borderColor: errors.contact_method ? 'var(--error-600)' : 'var(--slate-200)' }}
           >
             <option value="">Select…</option>
             {CONTACT_METHODS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
           </select>
+          {errors.contact_method && (
+            <p id="log-contact-method-error" role="alert" style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+              color: '#B91C1C', margin: '4px 0 0 0'
+            }}>
+              <AlertCircle size={14} style={{ flexShrink: 0 }} />
+              {errors.contact_method}
+            </p>
+          )}
         </div>
 
         {/* Notes */}
         <div style={{ marginBottom: 'var(--space-xl)' }}>
-          <label style={{
+          <label htmlFor="log-contact-notes" style={{
             display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
             fontWeight: 700, color: 'var(--slate-600)', marginBottom: '4px'
           }}>Notes (optional)</label>
           <textarea
+            id="log-contact-notes"
             value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
             rows={3} placeholder="Brief notes about the conversation (optional)"
             style={{ ...selectStyle, minHeight: '80px', resize: 'vertical' }}

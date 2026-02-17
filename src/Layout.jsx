@@ -111,8 +111,8 @@ export default function Layout({ children, currentPageName }) {
         
         /* Focus Styles */
         *:focus-visible {
-          outline: 2px solid var(--terra-600);
-          outline-offset: 2px;
+          outline: 3px solid #1D4ED8;
+          outline-offset: 3px;
         }
         
         /* Links */
@@ -181,7 +181,7 @@ export default function Layout({ children, currentPageName }) {
           </button>
 
           {/* Desktop Navigation */}
-          <nav style={{
+          <nav aria-label="Main navigation" style={{
             display: 'flex',
             alignItems: 'center',
             gap: '2rem'
@@ -310,7 +310,7 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav style={{
+          <nav aria-label="Mobile navigation" style={{
             display: 'none',
             padding: '1rem 1.5rem',
             borderTop: '1px solid var(--slate-700)'

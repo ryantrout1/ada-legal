@@ -53,7 +53,13 @@ export default function StateMultiSelect({ selected, onChange, error }) {
   return (
     <div ref={ref} style={{ position: 'relative' }}>
       <div
+        role="combobox"
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        aria-label="Select states of practice"
+        tabIndex={0}
         onClick={() => setOpen(!open)}
+        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!open); } }}
         style={{
           width: '100%', minHeight: '44px', padding: '0.375rem 0.75rem',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
@@ -75,10 +81,16 @@ export default function StateMultiSelect({ selected, onChange, error }) {
             fontSize: '0.8125rem', fontWeight: 600
           }}>
             {s}
-            <button type="button" onClick={(e) => remove(s, e)} style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              padding: 0, display: 'flex', color: 'var(--terra-600)'
-            }}>
+            <button
+              type="button"
+              onClick={(e) => remove(s, e)}
+              aria-label={`Remove ${STATE_NAMES[s]}`}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                padding: '4px', display: 'flex', color: 'var(--terra-600)',
+                minWidth: '24px', minHeight: '24px', alignItems: 'center', justifyContent: 'center'
+              }}
+            >
               <X size={14} />
             </button>
           </span>
@@ -131,6 +143,8 @@ export default function StateMultiSelect({ selected, onChange, error }) {
                     type="checkbox"
                     checked={isSelected}
                     readOnly
+                    tabIndex={-1}
+                    aria-hidden="true"
                     style={{ accentColor: '#C2410C', cursor: 'pointer' }}
                   />
                   <span style={{ fontWeight: 600 }}>{s}</span>

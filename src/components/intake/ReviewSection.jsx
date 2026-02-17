@@ -39,7 +39,7 @@ export default function ReviewSection({ title, onEdit, children }) {
             border: '1px solid var(--terra-600)',
             borderRadius: 'var(--radius-sm)',
             cursor: 'pointer',
-            minHeight: '36px',
+            minHeight: '44px',
             transition: 'all 0.15s'
           }}
           onMouseEnter={e => {

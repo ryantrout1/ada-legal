@@ -35,11 +35,11 @@ export default function CaseDetailPanel({ caseData }) {
 
         {/* Violation Details */}
         <div>
-          <h4 style={{
+          <h3 style={{
             fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
             color: 'var(--slate-900)', marginBottom: 'var(--space-md)',
             paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--slate-200)'
-          }}>Violation Details</h4>
+          }}>Violation Details</h3>
           <DetailItem label="Type" value={isPhysical ? 'Physical Space' : 'Digital / Website'} />
           <DetailItem label="Business Name" value={c.business_name} />
           <DetailItem label="Business Type" value={c.business_type} />
@@ -60,21 +60,21 @@ export default function CaseDetailPanel({ caseData }) {
 
         {/* Incident & Contact */}
         <div>
-          <h4 style={{
+          <h3 style={{
             fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
             color: 'var(--slate-900)', marginBottom: 'var(--space-md)',
             paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--slate-200)'
-          }}>Incident</h4>
+          }}>Incident</h3>
           <DetailItem label="Incident Date" value={formatDate(c.incident_date)} />
           <DetailItem label="Visited Before" value={
             c.visited_before === 'yes' ? 'Yes' : c.visited_before === 'no' ? 'No' : c.visited_before === 'first_time' ? 'First Time' : c.visited_before
           } />
 
-          <h4 style={{
+          <h3 style={{
             fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
             color: 'var(--slate-900)', marginBottom: 'var(--space-md)', marginTop: 'var(--space-lg)',
             paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--slate-200)'
-          }}>Contact Information</h4>
+          }}>Contact Information</h3>
           <DetailItem label="Name" value={c.contact_name} />
           <DetailItem label="Email" value={c.contact_email} />
           <DetailItem label="Phone" value={c.contact_phone} />
@@ -86,11 +86,11 @@ export default function CaseDetailPanel({ caseData }) {
 
       {/* Full-width narrative */}
       <div style={{ marginTop: 'var(--space-lg)' }}>
-        <h4 style={{
+        <h3 style={{
           fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
           color: 'var(--slate-900)', marginBottom: 'var(--space-sm)',
           paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--slate-200)'
-        }}>Narrative</h4>
+        }}>Narrative</h3>
         <div style={{
           backgroundColor: 'var(--slate-50)', border: '1px solid var(--slate-200)',
           borderRadius: 'var(--radius-md)', padding: 'var(--space-md)',

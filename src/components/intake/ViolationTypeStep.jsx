@@ -29,11 +29,15 @@ export default function ViolationTypeStep({ value, onChange }) {
         What type of ADA violation did you experience? Select one to continue.
       </p>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-        gap: 'var(--space-lg)'
-      }}>
+      <div
+        role="radiogroup"
+        aria-label="Violation type"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: 'var(--space-lg)'
+        }}
+      >
         {CARDS.map(card => {
           const isSelected = value === card.value;
           const Icon = card.icon;

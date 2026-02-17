@@ -30,12 +30,12 @@ export default function MarketplaceFilters({ filters, onChange, lawyerStates }) 
       alignItems: 'center', marginBottom: 'var(--space-xl)'
     }}>
       <div>
-        <label style={{
+        <label htmlFor="filter-state" style={{
           display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-          fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase',
+          fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase',
           letterSpacing: '0.05em', marginBottom: '4px'
         }}>State</label>
-        <select style={selectStyle} value={filters.state} onChange={e => update('state', e.target.value)}>
+        <select id="filter-state" style={{ ...selectStyle, minHeight: '44px' }} value={filters.state} onChange={e => update('state', e.target.value)}>
           <option value="my_states">My States ({lawyerStates.join(', ')})</option>
           <option value="all">All States</option>
           {STATES.map(s => <option key={s} value={s}>{s}</option>)}
@@ -43,12 +43,12 @@ export default function MarketplaceFilters({ filters, onChange, lawyerStates }) 
       </div>
 
       <div>
-        <label style={{
+        <label htmlFor="filter-violation" style={{
           display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-          fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase',
+          fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase',
           letterSpacing: '0.05em', marginBottom: '4px'
         }}>Violation Type</label>
-        <select style={selectStyle} value={filters.violationType} onChange={e => update('violationType', e.target.value)}>
+        <select id="filter-violation" style={{ ...selectStyle, minHeight: '44px' }} value={filters.violationType} onChange={e => update('violationType', e.target.value)}>
           <option value="all">All Types</option>
           <option value="physical_space">Physical Space</option>
           <option value="digital_website">Digital / Website</option>
@@ -56,24 +56,24 @@ export default function MarketplaceFilters({ filters, onChange, lawyerStates }) 
       </div>
 
       <div>
-        <label style={{
+        <label htmlFor="filter-business" style={{
           display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-          fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase',
+          fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase',
           letterSpacing: '0.05em', marginBottom: '4px'
         }}>Business Type</label>
-        <select style={selectStyle} value={filters.businessType} onChange={e => update('businessType', e.target.value)}>
+        <select id="filter-business" style={{ ...selectStyle, minHeight: '44px' }} value={filters.businessType} onChange={e => update('businessType', e.target.value)}>
           <option value="all">All</option>
           {BUSINESS_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
       </div>
 
       <div>
-        <label style={{
+        <label htmlFor="filter-sort" style={{
           display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-          fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase',
+          fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase',
           letterSpacing: '0.05em', marginBottom: '4px'
         }}>Sort</label>
-        <select style={selectStyle} value={filters.sort} onChange={e => update('sort', e.target.value)}>
+        <select id="filter-sort" style={{ ...selectStyle, minHeight: '44px' }} value={filters.sort} onChange={e => update('sort', e.target.value)}>
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
         </select>

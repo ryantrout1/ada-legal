@@ -17,7 +17,7 @@ export default function LandingFooter() {
         </p>
         <div style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-          color: 'var(--slate-500)', lineHeight: 1.7
+          color: 'var(--slate-400)', lineHeight: 1.7
         }}>
           <p style={{ margin: '0 0 0.75rem' }}>
             ADA Legal Marketplace is not a law firm and does not provide legal advice. The information on this site is for general informational purposes only and does not constitute legal counsel.

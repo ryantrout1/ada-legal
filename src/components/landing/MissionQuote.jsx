@@ -21,7 +21,7 @@ export default function MissionQuote() {
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.875rem',
-          color: 'var(--slate-400)',
+          color: 'var(--slate-300)',
           marginTop: '1.5rem',
           marginBottom: 0,
           fontWeight: 600,
