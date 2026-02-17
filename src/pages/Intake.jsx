@@ -3,6 +3,7 @@ import ProgressBar from '../components/intake/ProgressBar';
 import WizardNavButtons from '../components/intake/WizardNavButtons';
 import ViolationTypeStep from '../components/intake/ViolationTypeStep';
 import PhysicalSpaceStep from '../components/intake/PhysicalSpaceStep';
+import DigitalWebsiteStep from '../components/intake/DigitalWebsiteStep';
 
 export default function Intake() {
   const [step, setStep] = useState(1);
@@ -13,7 +14,9 @@ export default function Intake() {
     city: '',
     state: '',
     street_address: '',
-    violation_subtype: ''
+    violation_subtype: '',
+    url_domain: '',
+    assistive_tech: []
   });
   const [errors, setErrors] = useState({});
 
@@ -25,6 +28,9 @@ export default function Intake() {
     if (step === 1) return !!formData.violation_type;
     if (step === 2 && formData.violation_type === 'physical_space') {
       return !!(formData.business_name && formData.business_type && formData.city && formData.state && formData.violation_subtype);
+    }
+    if (step === 2 && formData.violation_type === 'digital_website') {
+      return !!(formData.url_domain && formData.assistive_tech.length > 0 && formData.business_name);
     }
     return false;
   };
@@ -52,6 +58,31 @@ export default function Intake() {
       }
       return;
     }
+    if (step === 2 && formData.violation_type === 'digital_website') {
+      if (validateStep2Digital()) {
+        setStep(3);
+      }
+      return;
+    }
+  };
+
+  const validateStep2Digital = () => {
+    const e = {};
+    const url = formData.url_domain.trim();
+    if (!url) {
+      e.url_domain = 'Website URL or app name is required';
+    } else {
+      const urlPattern = /^(https?:\/\/)?[\w.-]+\.\w{2,}(\/.*)?$|^[\w\s]+$/i;
+      if (!urlPattern.test(url)) {
+        e.url_domain = 'Please enter a valid URL (e.g., www.example.com) or app name';
+      }
+    }
+    if (!formData.assistive_tech || formData.assistive_tech.length === 0) {
+      e.assistive_tech = 'Please select at least one assistive technology';
+    }
+    if (!formData.business_name.trim()) e.business_name = 'Business or organization name is required';
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
   const handleBack = () => {
@@ -111,6 +142,14 @@ export default function Intake() {
 
           {step === 2 && formData.violation_type === 'physical_space' && (
             <PhysicalSpaceStep
+              data={formData}
+              onChange={updateField}
+              errors={errors}
+            />
+          )}
+
+          {step === 2 && formData.violation_type === 'digital_website' && (
+            <DigitalWebsiteStep
               data={formData}
               onChange={updateField}
               errors={errors}
