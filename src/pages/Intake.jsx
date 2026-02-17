@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { caseSubmittedEmail } from '../components/emails/caseEmails';
 import ProgressBar from '../components/intake/ProgressBar';
@@ -12,6 +12,7 @@ import ReviewStep from '../components/intake/ReviewStep';
 import SuccessStep from '../components/intake/SuccessStep';
 
 export default function Intake() {
+  const [currentUser, setCurrentUser] = useState(null);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     violation_type: '',
@@ -35,6 +36,19 @@ export default function Intake() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [caseId, setCaseId] = useState(null);
+
+  // Silently check if user is logged in (no redirect — page is public)
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const user = await base44.auth.me();
+        if (user) setCurrentUser(user);
+      } catch {
+        // Not logged in — that's fine, form is public
+      }
+    }
+    checkAuth();
+  }, []);
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -190,6 +204,11 @@ export default function Intake() {
       submitted_at: now
     };
 
+    // If user is logged in, attach their ID
+    if (currentUser) {
+      casePayload.submitter_user_id = currentUser.id;
+    }
+
     const newCase = await base44.entities.Case.create(casePayload);
     setCaseId(newCase.id);
 
@@ -261,7 +280,7 @@ export default function Intake() {
           aria-label="ADA Violation Report Form"
         >
           {submitted && (
-            <SuccessStep caseData={formData} caseId={caseId} />
+            <SuccessStep caseData={formData} caseId={caseId} isLoggedIn={!!currentUser} />
           )}
 
           {!submitted && step === 1 && (

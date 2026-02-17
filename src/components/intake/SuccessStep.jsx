@@ -28,7 +28,7 @@ const blurHandler = (e) => {
   e.target.style.boxShadow = 'none';
 };
 
-export default function SuccessStep({ caseData, caseId }) {
+export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
   const [email, setEmail] = useState(caseData.contact_email || '');
   const [inviting, setInviting] = useState(false);
   const [invited, setInvited] = useState(false);
@@ -152,6 +152,49 @@ export default function SuccessStep({ caseData, caseId }) {
             Without an account, you won't be able to check your case status online. You can still create one anytime by signing in with <strong>{caseData.contact_email}</strong>.
           </p>
         </div>
+      </div>
+    );
+  }
+
+  // If user was already logged in, skip account creation — show simple confirmation
+  if (isLoggedIn) {
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <div style={{
+          width: '80px', height: '80px', borderRadius: '50%',
+          backgroundColor: 'var(--success-100)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          margin: '0 auto var(--space-xl)'
+        }}>
+          <CheckCircle size={40} style={{ color: 'var(--success-600)' }} />
+        </div>
+
+        <h2 style={{
+          fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 700,
+          color: 'var(--slate-900)', marginBottom: 'var(--space-sm)'
+        }}>
+          Report Submitted Successfully
+        </h2>
+        <p style={{
+          fontFamily: 'Manrope, sans-serif', fontSize: '1.0625rem',
+          color: 'var(--slate-600)', lineHeight: 1.6,
+          maxWidth: '480px', margin: '0 auto var(--space-xl)'
+        }}>
+          Your ADA violation report has been received and is pending review. A confirmation email has been sent to <strong style={{ color: 'var(--slate-700)' }}>{caseData.contact_email}</strong>.
+        </p>
+
+        <a
+          href={createPageUrl('MyCases')}
+          style={{
+            display: 'inline-block', padding: '0.875rem 2rem',
+            fontFamily: 'Manrope, sans-serif', fontSize: '1.0625rem', fontWeight: 700,
+            color: 'white', backgroundColor: 'var(--terra-600)',
+            borderRadius: 'var(--radius-md)', textDecoration: 'none',
+            minHeight: '52px', transition: 'background-color 0.2s'
+          }}
+        >
+          View My Cases
+        </a>
       </div>
     );
   }

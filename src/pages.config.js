@@ -48,6 +48,8 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import Admin from './pages/Admin';
+import AdminCases from './pages/AdminCases';
+import AdminLawyers from './pages/AdminLawyers';
 import AdminReview from './pages/AdminReview';
 import CaseDetail from './pages/CaseDetail';
 import Home from './pages/Home';
@@ -55,17 +57,17 @@ import Intake from './pages/Intake';
 import LawyerCaseDetail from './pages/LawyerCaseDetail';
 import LawyerDashboard from './pages/LawyerDashboard';
 import LawyerLanding from './pages/LawyerLanding';
+import LawyerProfile from './pages/LawyerProfile';
 import LawyerRegister from './pages/LawyerRegister';
 import Marketplace from './pages/Marketplace';
 import MyCases from './pages/MyCases';
-import AdminCases from './pages/AdminCases';
-import AdminLawyers from './pages/AdminLawyers';
-import LawyerProfile from './pages/LawyerProfile';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Admin": Admin,
+    "AdminCases": AdminCases,
+    "AdminLawyers": AdminLawyers,
     "AdminReview": AdminReview,
     "CaseDetail": CaseDetail,
     "Home": Home,
@@ -73,12 +75,10 @@ export const PAGES = {
     "LawyerCaseDetail": LawyerCaseDetail,
     "LawyerDashboard": LawyerDashboard,
     "LawyerLanding": LawyerLanding,
+    "LawyerProfile": LawyerProfile,
     "LawyerRegister": LawyerRegister,
     "Marketplace": Marketplace,
     "MyCases": MyCases,
-    "AdminCases": AdminCases,
-    "AdminLawyers": AdminLawyers,
-    "LawyerProfile": LawyerProfile,
 }
 
 export const pagesConfig = {
