@@ -39,15 +39,19 @@ export default function Intake() {
 
   // Silently check if user is logged in (no redirect — page is public)
   useEffect(() => {
+    let cancelled = false;
     async function checkAuth() {
+      const isAuthed = await base44.auth.isAuthenticated();
+      if (!isAuthed || cancelled) return;
       try {
         const user = await base44.auth.me();
-        if (user) setCurrentUser(user);
+        if (!cancelled && user) setCurrentUser(user);
       } catch {
         // Not logged in — that's fine, form is public
       }
     }
     checkAuth();
+    return () => { cancelled = true; };
   }, []);
 
   const updateField = (field, value) => {
