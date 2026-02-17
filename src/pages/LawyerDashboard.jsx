@@ -11,6 +11,13 @@ export default function LawyerDashboard() {
   const [allLogs, setAllLogs] = useState([]);
   const [logModalCase, setLogModalCase] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+
+  useEffect(() => {
+    if (!successMessage) return;
+    const t = setTimeout(() => setSuccessMessage(''), 4000);
+    return () => clearTimeout(t);
+  }, [successMessage]);
 
   useEffect(() => {
     async function init() {
@@ -60,27 +67,35 @@ export default function LawyerDashboard() {
       logged_at: now
     });
 
-    // Update case contact_logged_at
-    await base44.entities.Case.update(logModalCase.id, { contact_logged_at: now });
+    // Update case: set contact_logged_at, and if initial_contact set status to in_progress
+    const caseUpdate = { contact_logged_at: now };
+    const isFirstContact = formData.contact_type === 'initial_contact';
+    if (isFirstContact) {
+      caseUpdate.status = 'in_progress';
+    }
+    await base44.entities.Case.update(logModalCase.id, caseUpdate);
 
-    // Create timeline event
+    // Create timeline event (not visible to user)
     await base44.entities.TimelineEvent.create({
       case_id: logModalCase.id,
       event_type: 'contact_logged',
-      event_description: 'The assigned attorney has made contact.',
+      event_description: 'Attorney logged contact with claimant.',
       actor_role: 'lawyer',
-      visible_to_user: true,
+      visible_to_user: false,
       created_at: now
     });
 
     // Update local state
     setCases(prev => prev.map(c =>
-      c.id === logModalCase.id ? { ...c, contact_logged_at: now } : c
+      c.id === logModalCase.id
+        ? { ...c, contact_logged_at: now, ...(isFirstContact ? { status: 'in_progress' } : {}) }
+        : c
     ));
     setAllLogs(prev => [newLog, ...prev]);
 
     setSaving(false);
     setLogModalCase(null);
+    setSuccessMessage('Contact logged successfully.');
   };
 
   if (loading) {
@@ -147,6 +162,22 @@ export default function LawyerDashboard() {
         onSubmit={handleLogContact}
         saving={saving}
       />
+
+      {successMessage && (
+        <div
+          role="alert"
+          style={{
+            position: 'fixed', bottom: 'var(--space-xl)', left: '50%', transform: 'translateX(-50%)',
+            zIndex: 1100, backgroundColor: '#15803D', color: 'white',
+            padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-md)',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.15)', display: 'flex', alignItems: 'center', gap: '0.5rem'
+          }}
+          onClick={() => setSuccessMessage('')}
+        >
+          ✓ {successMessage}
+        </div>
+      )}
     </div>
   );
 }

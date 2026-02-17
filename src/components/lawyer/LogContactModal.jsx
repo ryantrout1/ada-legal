@@ -117,7 +117,7 @@ export default function LogContactModal({ open, onCancel, onSubmit, saving }) {
           }}>Notes (optional)</label>
           <textarea
             value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
-            rows={3} placeholder="Brief summary of the contact…"
+            rows={3} placeholder="Brief notes about the conversation (optional)"
             style={{ ...selectStyle, minHeight: '80px', resize: 'vertical' }}
           />
         </div>
