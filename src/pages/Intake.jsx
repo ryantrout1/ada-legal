@@ -4,6 +4,7 @@ import WizardNavButtons from '../components/intake/WizardNavButtons';
 import ViolationTypeStep from '../components/intake/ViolationTypeStep';
 import PhysicalSpaceStep from '../components/intake/PhysicalSpaceStep';
 import DigitalWebsiteStep from '../components/intake/DigitalWebsiteStep';
+import IncidentStep from '../components/intake/IncidentStep';
 
 export default function Intake() {
   const [step, setStep] = useState(1);
@@ -16,7 +17,10 @@ export default function Intake() {
     street_address: '',
     violation_subtype: '',
     url_domain: '',
-    assistive_tech: []
+    assistive_tech: [],
+    incident_date: '',
+    visited_before: '',
+    narrative: ''
   });
   const [errors, setErrors] = useState({});
 
@@ -31,6 +35,9 @@ export default function Intake() {
     }
     if (step === 2 && formData.violation_type === 'digital_website') {
       return !!(formData.url_domain && formData.assistive_tech.length > 0 && formData.business_name);
+    }
+    if (step === 3) {
+      return !!(formData.incident_date && formData.visited_before && formData.narrative && formData.narrative.length >= 50);
     }
     return false;
   };
@@ -64,6 +71,30 @@ export default function Intake() {
       }
       return;
     }
+    if (step === 3) {
+      if (validateStep3()) {
+        setStep(4);
+      }
+      return;
+    }
+  };
+
+  const validateStep3 = () => {
+    const e = {};
+    if (!formData.incident_date) {
+      e.incident_date = 'Please select the date of the incident';
+    } else {
+      const today = new Date().toISOString().split('T')[0];
+      if (formData.incident_date > today) e.incident_date = 'Date cannot be in the future';
+    }
+    if (!formData.visited_before) e.visited_before = 'Please select an option';
+    if (!formData.narrative || !formData.narrative.trim()) {
+      e.narrative = 'Please describe what happened';
+    } else if (formData.narrative.trim().length < 50) {
+      e.narrative = 'Please provide more detail about your experience (at least 50 characters)';
+    }
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
   const validateStep2Digital = () => {
@@ -150,6 +181,14 @@ export default function Intake() {
 
           {step === 2 && formData.violation_type === 'digital_website' && (
             <DigitalWebsiteStep
+              data={formData}
+              onChange={updateField}
+              errors={errors}
+            />
+          )}
+
+          {step === 3 && (
+            <IncidentStep
               data={formData}
               onChange={updateField}
               errors={errors}
