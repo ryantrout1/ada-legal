@@ -13,7 +13,7 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
       </button>
 
       {runningSite && (
-        <div style={{ textAlign: 'center', padding: '2rem 0', color: '#64748B' }}>
+        <div style={{ textAlign: 'center', padding: '2rem 0', color: '#475569' }}>
           <div className="a11y-spinner" style={{ margin: '0 auto 0.75rem' }} />
           <p style={{ fontSize: '0.8125rem' }}>{siteProgress || 'Preparing…'}</p>
           <p style={{ fontSize: '0.6875rem', color: '#94A3B8' }}>
@@ -46,7 +46,7 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
           </div>
 
           {/* Per-page breakdown */}
-          <h3 style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 0.5rem' }}>
+          <h3 style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 0.5rem' }}>
             By Page
           </h3>
           {siteResults.pages.map(p => {
@@ -91,7 +91,7 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
           {/* Most common violations */}
           {siteResults.commonViolations.length > 0 && (
             <>
-              <h3 style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '1rem 0 0.5rem' }}>
+              <h3 style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '1rem 0 0.5rem' }}>
                 Most Common Issues
               </h3>
               {siteResults.commonViolations.slice(0, 8).map((v, i) => (
@@ -103,7 +103,7 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div>
                       <p style={{ margin: 0, fontWeight: 700, fontSize: '0.8125rem', color: '#1E293B' }}>{v.help}</p>
-                      <p style={{ margin: '0.125rem 0 0', fontSize: '0.6875rem', color: '#64748B', fontFamily: 'monospace' }}>{v.id}</p>
+                      <p style={{ margin: '0.125rem 0 0', fontSize: '0.6875rem', color: '#475569', fontFamily: 'monospace' }}>{v.id}</p>
                     </div>
                     <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: '#475569', flexShrink: 0 }}>
                       {v.totalNodes} el{v.totalNodes !== 1 ? 's' : ''}

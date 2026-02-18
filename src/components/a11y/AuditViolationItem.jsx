@@ -42,7 +42,7 @@ export default function AuditViolationItem({ violation, index, config, onHighlig
             {v.help}
           </p>
           <p style={{
-            margin: '0.15rem 0 0', fontSize: '0.6875rem', color: '#64748B',
+            margin: '0.15rem 0 0', fontSize: '0.6875rem', color: '#475569',
             fontFamily: 'monospace'
           }}>
             {v.id}
