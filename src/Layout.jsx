@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { Scale, Menu, X, User, LogOut } from 'lucide-react';
 import LiveAnnouncer from './components/a11y/LiveAnnouncer';
 import AuditButton from './components/a11y/AuditButton';
+import LandingFooterNew from './components/landing/LandingFooterNew';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = React.useState(null);
@@ -500,7 +501,10 @@ export default function Layout({ children, currentPageName }) {
         {children}
       </main>
 
-      {/* Footer — hidden on landing page (it has its own footer) */}
+      {/* Landing page footer — rendered outside main as sibling */}
+      {currentPageName === 'Home' && !loading && !user && <LandingFooterNew />}
+
+      {/* Global footer — hidden on landing page */}
       {currentPageName !== 'Home' && (
         <footer role="contentinfo" style={{
           backgroundColor: 'var(--slate-900)',

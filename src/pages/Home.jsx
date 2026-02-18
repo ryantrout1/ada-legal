@@ -8,7 +8,6 @@ import HowItWorksNew from '../components/landing/HowItWorksNew';
 import CommitmentSection from '../components/landing/CommitmentSection';
 import ForAttorneysNew from '../components/landing/ForAttorneysNew';
 import FinalCTANew from '../components/landing/FinalCTANew';
-import LandingFooterNew from '../components/landing/LandingFooterNew';
 
 export default function Home() {
   const [checked, setChecked] = useState(false);
@@ -48,7 +47,6 @@ export default function Home() {
       <CommitmentSection />
       <ForAttorneysNew />
       <FinalCTANew />
-      <LandingFooterNew />
     </>
   );
 }
