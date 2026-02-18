@@ -28,18 +28,18 @@
 /* Skip to main content link */
 .skip-to-main {
   position: absolute;
-  top: -100%;
-  left: 1rem;
+  top: -100px;
+  left: 16px;
   z-index: 10000;
-  padding: 0.75rem 1.5rem;
-  background: #2563EB;
+  padding: 12px 24px;
+  background: #C2410C;
   color: white;
   font-family: 'Manrope', sans-serif;
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
-  border-radius: 0 0 0.5rem 0.5rem;
-  transition: top 0.15s;
+  border-radius: 0 0 8px 8px;
+  transition: top 0.2s;
 }
 
 .skip-to-main:focus {
