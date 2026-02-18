@@ -81,7 +81,7 @@ export default function AuditPanel({
   };
 
   return (
-    <div style={{
+    <aside role="complementary" aria-label="Accessibility audit panel" style={{
       position: 'fixed', top: 0, left: 0, bottom: 0,
       width: 'min(420px, 100vw)', zIndex: 10000,
       backgroundColor: '#FFFFFF', borderRight: '2px solid #E2E8F0',
@@ -131,7 +131,7 @@ export default function AuditPanel({
             flex: 1, padding: '0.5rem', border: 'none', cursor: 'pointer',
             fontWeight: 700, fontSize: '0.8125rem',
             backgroundColor: tab === t ? '#DBEAFE' : 'white',
-            color: tab === t ? '#1D4ED8' : '#64748B',
+            color: tab === t ? '#1D4ED8' : '#475569',
             borderBottom: tab === t ? '2px solid #1D4ED8' : '2px solid transparent'
           }}>
             {t === 'page' ? 'Current Page' : 'Full Site'}
@@ -144,7 +144,7 @@ export default function AuditPanel({
         {tab === 'page' && (
           <>
             <div style={{ marginBottom: '0.75rem' }}>
-              <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748B' }}>Page</p>
+              <p style={{ margin: 0, fontSize: '0.75rem', color: '#475569' }}>Page</p>
               <p style={{ margin: 0, fontSize: '0.875rem', fontWeight: 700, color: '#1E293B' }}>
                 {results?.page || currentPageName || '—'}
               </p>
@@ -160,7 +160,7 @@ export default function AuditPanel({
             </button>
 
             {running && (
-              <div style={{ textAlign: 'center', padding: '2rem 0', color: '#64748B' }}>
+              <div style={{ textAlign: 'center', padding: '2rem 0', color: '#475569' }}>
                 <div className="a11y-spinner" style={{ margin: '0 auto 0.75rem' }} />
                 <p style={{ fontSize: '0.8125rem' }}>Analyzing page accessibility…</p>
               </div>
@@ -228,6 +228,6 @@ export default function AuditPanel({
           />
         )}
       </div>
-    </div>
+    </aside>
   );
 }
