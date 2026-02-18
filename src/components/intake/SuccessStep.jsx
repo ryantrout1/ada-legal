@@ -80,7 +80,7 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           margin: '0 auto var(--space-xl)'
         }}>
-          <Mail size={40} style={{ color: 'var(--success-600)' }} />
+          <Mail size={40} aria-hidden="true" style={{ color: 'var(--success-600)' }} />
         </div>
 
         <h2 style={{
@@ -133,7 +133,7 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           margin: '0 auto var(--space-xl)'
         }}>
-          <CheckCircle size={40} style={{ color: 'var(--success-600)' }} />
+          <CheckCircle size={40} aria-hidden="true" style={{ color: 'var(--success-600)' }} />
         </div>
 
         <h2 style={{
@@ -156,7 +156,7 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
           display: 'flex', alignItems: 'flex-start', gap: '0.75rem',
           textAlign: 'left', maxWidth: '480px', margin: '0 auto'
         }}>
-          <AlertTriangle size={20} style={{ color: 'var(--warning-600)', flexShrink: 0, marginTop: '2px' }} />
+          <AlertTriangle size={20} aria-hidden="true" style={{ color: 'var(--warning-600)', flexShrink: 0, marginTop: '2px' }} />
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
             color: 'var(--slate-700)', margin: 0, lineHeight: 1.5
@@ -178,7 +178,7 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           margin: '0 auto var(--space-xl)'
         }}>
-          <CheckCircle size={40} style={{ color: 'var(--success-600)' }} />
+          <CheckCircle size={40} aria-hidden="true" style={{ color: 'var(--success-600)' }} />
         </div>
 
         <h2 style={{
@@ -221,7 +221,7 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           margin: '0 auto var(--space-xl)'
         }}>
-          <CheckCircle size={40} style={{ color: 'var(--success-600)' }} />
+          <CheckCircle size={40} aria-hidden="true" style={{ color: 'var(--success-600)' }} />
         </div>
 
         <h2 style={{

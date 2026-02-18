@@ -212,7 +212,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
             onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--terra-700)'; }}
             onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--terra-600)'; }}
           >
-            Initiate Support <ArrowRight size={18} />
+            Initiate Support <ArrowRight size={18} aria-hidden="true" />
           </button>
           <button
             ref={closeRef}

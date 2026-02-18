@@ -39,7 +39,14 @@ export default function MyCases() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)' }}>
+      <div
+        role="status" aria-label="Loading your cases"
+        style={{
+          display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+          minHeight: 'calc(100vh - 200px)', gap: '1rem'
+        }}
+      >
+        <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)' }}>Loading your cases…</p>
       </div>
     );
@@ -71,7 +78,7 @@ export default function MyCases() {
               alignItems: 'center', justifyContent: 'center',
               margin: '0 auto var(--space-lg)'
             }}>
-              <FileText size={28} style={{ color: 'var(--slate-400)' }} />
+              <FileText size={28} aria-hidden="true" style={{ color: 'var(--slate-400)' }} />
             </div>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
@@ -89,7 +96,7 @@ export default function MyCases() {
                 textDecoration: 'none', minHeight: '44px'
               }}
             >
-              Report a Violation <ArrowRight size={18} />
+              Report a Violation <ArrowRight size={18} aria-hidden="true" />
             </Link>
           </div>
         ) : (
