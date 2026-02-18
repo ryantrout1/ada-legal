@@ -99,9 +99,9 @@ export default function Admin() {
 
         {/* Stat Cards */}
         <div style={{
-          display: 'flex',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))',
           gap: 'var(--space-md)',
-          flexWrap: 'wrap',
           marginBottom: 'var(--space-2xl)'
         }}>
           <StatCard
