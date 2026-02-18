@@ -48,7 +48,7 @@ export default function DocScoreModal({ open, onClose, caseData }) {
       }}>
         <button ref={closeRef} type="button" onClick={onClose} aria-label="Close" style={{
           position: 'absolute', top: '16px', right: '16px',
-          background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--slate-500)'
+          background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#475569'
         }}>
           <X size={20} />
         </button>
