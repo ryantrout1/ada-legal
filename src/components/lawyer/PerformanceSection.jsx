@@ -107,13 +107,14 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
       ) : (
         <div style={{ overflow: 'auto', borderRadius: 'var(--radius-sm)', border: '1px solid var(--slate-200)' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'white' }}>
+            <caption className="sr-only">Case history</caption>
             <thead>
               <tr>
-                <th style={th}>Business</th>
-                <th style={th}>Location</th>
-                <th style={th}>Type</th>
-                <th style={th}>Assigned</th>
-                <th style={th}>Status</th>
+                <th scope="col" style={th}>Business</th>
+                <th scope="col" style={th}>Location</th>
+                <th scope="col" style={th}>Type</th>
+                <th scope="col" style={th}>Assigned</th>
+                <th scope="col" style={th}>Status</th>
               </tr>
             </thead>
             <tbody>

@@ -230,14 +230,14 @@ export default function AdminCases() {
             color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em',
             alignItems: 'center'
           }}>
-            <span></span>
-            <span></span>
-            <span>ID</span>
-            <span>Business</span>
-            <span>City / State</span>
-            <span>Status</span>
-            <span>Submitted</span>
-            <span>Assigned Lawyer</span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span role="columnheader">ID</span>
+            <span role="columnheader">Business</span>
+            <span role="columnheader">City / State</span>
+            <span role="columnheader">Status</span>
+            <span role="columnheader">Submitted</span>
+            <span role="columnheader">Assigned Lawyer</span>
           </div>
 
           {filtered.length === 0 && (
@@ -256,6 +256,8 @@ export default function AdminCases() {
               <div key={c.id} style={{ borderBottom: '1px solid var(--slate-200)' }}>
                 <button
                   type="button"
+                  aria-expanded={isExpanded}
+                  aria-label={`${c.business_name} — ${c.status}`}
                   onClick={() => setExpandedId(isExpanded ? null : c.id)}
                   style={{
                     display: 'grid', width: '100%',

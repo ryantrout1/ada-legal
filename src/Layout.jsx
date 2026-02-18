@@ -109,27 +109,9 @@ export default function Layout({ children, currentPageName }) {
           line-height: 1.2;
         }
         
-        /* Skip Link */
-        .skip-link {
-          position: absolute;
-          top: -100px;
-          left: 0;
-          background: var(--terra-600);
-          color: white;
-          padding: var(--space-sm) var(--space-md);
-          text-decoration: none;
-          z-index: 1000;
-        }
+        /* Skip Link — handled by globals.css .skip-to-main */
         
-        .skip-link:focus {
-          top: 0;
-        }
-        
-        /* Focus Styles */
-        *:focus-visible {
-          outline: 3px solid #1D4ED8;
-          outline-offset: 3px;
-        }
+        /* Focus Styles — handled by globals.css */
         
         /* Links */
         a {

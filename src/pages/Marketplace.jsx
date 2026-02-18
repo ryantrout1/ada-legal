@@ -353,10 +353,11 @@ export default function Marketplace() {
           filteredCases.length > 0 && (
             <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', overflow: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <caption className="sr-only">Available marketplace cases</caption>
                 <thead>
                   <tr>
                     {['Type', 'Business Type', 'City / State', 'Subtype / Domain', 'Posted', ''].map(h => (
-                      <th key={h} style={{
+                      <th key={h} scope="col" style={{
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
                         color: 'var(--slate-500)', textAlign: 'left', padding: '0.5rem 0.75rem',
                         borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase',
