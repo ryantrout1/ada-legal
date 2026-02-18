@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
+import { useFocusTrap } from '../a11y/FocusTrap';
 
 const RESOLUTION_OPTIONS = [
   { value: 'engaged', label: 'Engaged', desc: 'I am representing this claimant' },
@@ -40,6 +41,8 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
     expected_timeline: ''
   });
 
+  const trapRef = useFocusTrap(open && !!caseData, () => { if (!saving) handleClose(); });
+
   if (!open || !caseData) return null;
 
   const isEngaged = form.resolution_type === 'engaged';
@@ -65,16 +68,18 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
   };
 
   return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 1000,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      backgroundColor: 'rgba(0,0,0,0.5)', padding: '1rem'
-    }} onClick={e => { if (e.target === e.currentTarget && !saving) handleClose(); }}>
-      <div style={{
+    <div
+      role="dialog" aria-modal="true" aria-labelledby="resolve-heading"
+      style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)', padding: '1rem'
+      }} onClick={e => { if (e.target === e.currentTarget && !saving) handleClose(); }}>
+      <div ref={trapRef} style={{
         backgroundColor: 'white', borderRadius: '16px', width: '100%', maxWidth: '520px',
         maxHeight: '90vh', overflow: 'auto', padding: 'var(--space-xl)'
       }}>
-        <h2 style={{
+        <h2 id="resolve-heading" style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700,
           color: 'var(--slate-900)', margin: '0 0 var(--space-lg) 0'
         }}>

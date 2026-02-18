@@ -138,7 +138,14 @@ export default function AdminCases() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)' }}>
+      <div
+        role="status" aria-label="Loading cases"
+        style={{
+          display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+          minHeight: 'calc(100vh - 200px)', gap: '1rem'
+        }}
+      >
+        <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)' }}>Loading cases…</p>
       </div>
     );

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useAnnounce } from '../components/a11y/LiveAnnouncer';
 import { createPageUrl } from '../utils';
 import MarketplaceFilters from '../components/marketplace/MarketplaceFilters';
 import CaseCard from '../components/marketplace/CaseCard';
