@@ -59,7 +59,7 @@ export default function LawyerActivitySection({ lawyers, cases, contactLogs }) {
         borderRadius: 'var(--radius-md)', overflow: 'auto'
       }}>
         {approvedLawyers.length === 0 ? (
-          <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', padding: 'var(--space-lg)', textAlign: 'center' }}>No approved lawyers yet</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', padding: '12px', textAlign: 'center' }}>No approved lawyers yet</p>
         ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>

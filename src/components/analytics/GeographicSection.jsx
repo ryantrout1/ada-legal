@@ -84,9 +84,9 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
                 <tbody>{stateData.map(d => <tr key={d.name}><td>{d.name}</td><td>{d.count}</td></tr>)}</tbody>
               </table>
             </div>
-            <div aria-hidden="true" style={{ width: '100%', height: Math.max(140, stateData.length * 24) }}>
+            <div aria-hidden="true" style={{ width: '100%', height: Math.max(120, stateData.length * 22) }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stateData} layout="vertical" barSize={14} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
+                <BarChart data={stateData} layout="vertical" barSize={12} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" horizontal={false} />
                   <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
                   <YAxis type="category" dataKey="name" width={32} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-700)' }} />
@@ -119,9 +119,9 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
                 <tbody>{cityData.map(d => <tr key={d.name}><td>{d.name}</td><td>{d.count}</td></tr>)}</tbody>
               </table>
             </div>
-            <div aria-hidden="true" style={{ width: '100%', height: Math.max(140, cityData.length * 24) }}>
+            <div aria-hidden="true" style={{ width: '100%', height: Math.max(120, cityData.length * 22) }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={cityData} layout="vertical" barSize={14} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
+                <BarChart data={cityData} layout="vertical" barSize={12} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" horizontal={false} />
                   <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
                   <YAxis type="category" dataKey="name" width={70} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-700)' }} />
