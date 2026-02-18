@@ -11,7 +11,7 @@ function formatDate(dateStr) {
 export default function CompactSubmissionsTable({ cases }) {
   if (!cases || cases.length === 0) {
     return (
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)', margin: 0 }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569', margin: 0 }}>
         No pending submissions at this time.
       </p>
 

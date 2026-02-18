@@ -116,8 +116,8 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
               <button type="button" onClick={() => onResolve(c)} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
                 padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                fontWeight: 700, color: 'var(--slate-500)', backgroundColor: 'transparent',
-                border: '1px solid var(--slate-500)', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+                fontWeight: 700, color: '#475569', backgroundColor: 'transparent',
+                border: '1px solid #475569', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
                 whiteSpace: 'nowrap', minHeight: '36px'
               }}>
                 Resolve Case
@@ -138,8 +138,8 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
               <button type="button" onClick={() => onResolve(c)} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
                 padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                fontWeight: 700, color: 'var(--slate-500)', backgroundColor: 'transparent',
-                border: '1px solid var(--slate-500)', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+                fontWeight: 700, color: '#475569', backgroundColor: 'transparent',
+                border: '1px solid #475569', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
                 whiteSpace: 'nowrap', minHeight: '36px'
               }}>
                 Resolve Case
@@ -162,7 +162,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
               border: '2px solid #FDBA74'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.625rem' }}>
-                <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>
+                <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>
                   Claimant Contact
                 </h4>
                 <span style={{

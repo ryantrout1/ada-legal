@@ -237,10 +237,10 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
             display: 'block', width: '100%',
             background: 'none', border: 'none', cursor: 'pointer',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-            color: 'var(--slate-500)', textAlign: 'center', padding: '6px'
+            color: '#475569', textAlign: 'center', padding: '6px'
           }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'var(--slate-700)'; }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'var(--slate-500)'; }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'var(--slate-900)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#475569'; }}
           >Close</button>
         </div>
       </div>

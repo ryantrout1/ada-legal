@@ -14,7 +14,7 @@ function formatDuration(dateStr) {
 export default function CompactUnclaimedSection({ cases }) {
   if (!cases || cases.length === 0) {
     return (
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)', margin: 0 }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569', margin: 0 }}>
         No unclaimed cases over 72 hours.
       </p>
 

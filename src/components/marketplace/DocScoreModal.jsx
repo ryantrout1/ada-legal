@@ -117,7 +117,7 @@ export default function DocScoreModal({ open, onClose, caseData }) {
         </div>
 
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)',
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569',
           lineHeight: 1.6, margin: 0, fontStyle: 'italic',
           borderTop: '1px solid var(--slate-200)', paddingTop: '16px'
         }}>
