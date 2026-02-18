@@ -2,14 +2,18 @@ import React from 'react';
 
 export default function StatCard({ label, count, bgColor, textColor, borderColor, icon: Icon }) {
   return (
-    <div style={{
-      backgroundColor: bgColor || 'var(--surface)',
-      border: `1px solid ${borderColor || bgColor || 'var(--slate-200)'}`,
-      borderRadius: 'var(--radius-lg)',
-      padding: 'var(--space-lg)',
-      flex: '1 1 200px',
-      minWidth: '180px'
-    }}>
+    <div
+      role="group"
+      aria-label={`${label}: ${count ?? '—'}`}
+      style={{
+        backgroundColor: bgColor || 'var(--surface)',
+        border: `1px solid ${borderColor || bgColor || 'var(--slate-200)'}`,
+        borderRadius: 'var(--radius-lg)',
+        padding: 'var(--space-lg)',
+        flex: '1 1 12.5rem',
+        minWidth: '11.25rem'
+      }}
+    >
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -25,7 +29,7 @@ export default function StatCard({ label, count, bgColor, textColor, borderColor
         }}>
           {label}
         </p>
-        {Icon && <Icon size={20} style={{ color: textColor || 'var(--slate-500)', opacity: 0.7 }} />}
+        {Icon && <Icon size={20} aria-hidden="true" style={{ color: textColor || 'var(--slate-500)', opacity: 0.7 }} />}
       </div>
       <p style={{
         fontFamily: 'Fraunces, serif',
@@ -34,7 +38,9 @@ export default function StatCard({ label, count, bgColor, textColor, borderColor
         color: textColor || 'var(--slate-900)',
         margin: 0,
         lineHeight: 1.2
-      }}>
+      }}
+      aria-hidden="true"
+      >
         {count ?? '—'}
       </p>
     </div>

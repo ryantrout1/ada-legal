@@ -38,22 +38,22 @@ export default function ProgressBar({ currentStep }) {
       <div
         style={{
           width: '100%',
-          height: '8px',
+          height: '0.5rem',
           backgroundColor: 'var(--slate-300)',
-          borderRadius: '4px',
+          borderRadius: '0.25rem',
           overflow: 'hidden'
         }}
         role="progressbar"
-        aria-valuenow={progress}
+        aria-valuenow={Math.round(progress)}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={`Step ${currentStep} of ${STEP_LABELS.length}`}
+        aria-label={`Form progress: Step ${currentStep} of ${STEP_LABELS.length}`}
       >
         <div style={{
           width: `${progress}%`,
           height: '100%',
           backgroundColor: 'var(--terra-600)',
-          borderRadius: '4px',
+          borderRadius: '0.25rem',
           transition: 'width 0.3s ease'
         }} />
       </div>

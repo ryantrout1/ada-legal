@@ -15,18 +15,22 @@ export default function CaseStatusBadge({ status, large }) {
   const config = statusConfig[status] || { label: status, bg: '#E2E8F0', color: '#475569' };
 
   return (
-    <span style={{
-      display: 'inline-block',
-      padding: large ? '0.375rem 1rem' : '0.25rem 0.75rem',
-      fontFamily: 'Manrope, sans-serif',
-      fontSize: large ? '0.875rem' : '0.75rem',
-      fontWeight: 700,
-      color: config.color,
-      backgroundColor: config.bg,
-      borderRadius: '9999px',
-      textTransform: 'capitalize',
-      whiteSpace: 'nowrap'
-    }}>
+    <span
+      role="status"
+      aria-label={`Case status: ${config.label}`}
+      style={{
+        display: 'inline-block',
+        padding: large ? '0.375rem 1rem' : '0.25rem 0.75rem',
+        fontFamily: 'Manrope, sans-serif',
+        fontSize: large ? '0.875rem' : '0.75rem',
+        fontWeight: 700,
+        color: config.color,
+        backgroundColor: config.bg,
+        borderRadius: '9999px',
+        textTransform: 'capitalize',
+        whiteSpace: 'nowrap'
+      }}
+    >
       {config.label}
     </span>
   );

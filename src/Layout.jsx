@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
 import { Scale, Menu, X, User, LogOut } from 'lucide-react';
+import LiveAnnouncer from './components/a11y/LiveAnnouncer';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = React.useState(null);
@@ -27,7 +28,22 @@ export default function Layout({ children, currentPageName }) {
     await base44.auth.logout();
   };
 
+  const PAGE_TITLES = {
+    Home: 'Home', Intake: 'Report a Violation', MyCases: 'My Cases',
+    CaseDetail: 'Case Detail', Marketplace: 'Marketplace', LawyerDashboard: 'My Cases',
+    LawyerProfile: 'My Profile', LawyerRegister: 'Attorney Registration',
+    LawyerLanding: 'For Attorneys', Admin: 'Admin Dashboard',
+    AdminReview: 'Review Queue', AdminCases: 'All Cases',
+    AdminAnalytics: 'Analytics', AdminLawyers: 'Manage Lawyers'
+  };
+
+  React.useEffect(() => {
+    const title = PAGE_TITLES[currentPageName] || currentPageName;
+    document.title = `${title} — ADA Legal Marketplace`;
+  }, [currentPageName]);
+
   return (
+    <LiveAnnouncer>
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <style>{`
         /* Design System Variables */
@@ -127,7 +143,7 @@ export default function Layout({ children, currentPageName }) {
         }
       `}</style>
 
-      <a href="#main-content" className="skip-link">
+      <a href="#main-content" className="skip-to-main">
         Skip to main content
       </a>
 
@@ -181,7 +197,7 @@ export default function Layout({ children, currentPageName }) {
           </button>
 
           {/* Desktop Navigation */}
-          <nav aria-label="Main navigation" style={{
+          <nav role="navigation" aria-label="Main navigation" style={{
             display: 'flex',
             alignItems: 'center',
             gap: '2rem'
@@ -340,7 +356,7 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav aria-label="Mobile navigation" style={{
+          <nav role="navigation" aria-label="Mobile navigation" style={{
             display: 'none',
             padding: '1rem 1.5rem',
             borderTop: '1px solid var(--slate-700)'
@@ -515,5 +531,6 @@ export default function Layout({ children, currentPageName }) {
         }
       `}</style>
     </div>
+    </LiveAnnouncer>
   );
 }

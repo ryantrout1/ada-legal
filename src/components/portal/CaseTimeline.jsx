@@ -52,7 +52,7 @@ export default function CaseTimeline({ events }) {
   );
 
   return (
-    <div style={{ position: 'relative', paddingLeft: '2rem' }}>
+    <div role="list" aria-label="Case timeline" style={{ position: 'relative', paddingLeft: '2rem' }}>
       {/* Vertical line */}
       <div style={{
         position: 'absolute', left: '11px', top: '4px', bottom: '4px',
@@ -64,7 +64,7 @@ export default function CaseTimeline({ events }) {
         const color = eventColors[ev.event_type] || 'var(--slate-500)';
 
         return (
-          <div key={ev.id || i} style={{
+        <div role="listitem" key={ev.id || i} style={{
             position: 'relative', marginBottom: i < sorted.length - 1 ? 'var(--space-lg)' : 0
           }}>
             {/* Dot */}
@@ -74,7 +74,7 @@ export default function CaseTimeline({ events }) {
               backgroundColor: 'white', border: `2px solid ${color}`,
               display: 'flex', alignItems: 'center', justifyContent: 'center'
             }}>
-              <Icon size={12} style={{ color }} />
+              <Icon size={12} aria-hidden="true" style={{ color }} />
             </div>
 
             <p style={{
