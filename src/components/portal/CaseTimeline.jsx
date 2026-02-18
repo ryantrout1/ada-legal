@@ -1,31 +1,15 @@
 import React from 'react';
-import {
-  Send, Search, CheckCircle, XCircle, Globe, UserCheck,
-  Phone, RotateCcw, Lock
-} from 'lucide-react';
 
-const eventIcons = {
-  submitted: Send,
-  reviewed: Search,
-  approved: CheckCircle,
-  rejected: XCircle,
-  available: Globe,
-  assigned: UserCheck,
-  contact_logged: Phone,
-  reclaimed: RotateCcw,
-  closed: Lock
-};
-
-const eventColors = {
-  submitted: '#1D4ED8',
-  reviewed: '#92400E',
+const DOT_COLORS = {
+  submitted: 'var(--slate-500)',
+  reviewed: '#1D4ED8',
   approved: '#15803D',
   rejected: '#B91C1C',
-  available: '#7C3AED',
-  assigned: '#1D4ED8',
-  contact_logged: '#065F46',
+  available: '#15803D',
+  assigned: 'var(--terra-600, #C2410C)',
+  contact_logged: '#15803D',
   reclaimed: '#92400E',
-  closed: '#475569'
+  closed: 'var(--slate-600)'
 };
 
 function formatDateTime(d) {
@@ -38,10 +22,7 @@ function formatDateTime(d) {
 export default function CaseTimeline({ events }) {
   if (!events || events.length === 0) {
     return (
-      <p style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-        color: 'var(--slate-600)', margin: 0
-      }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-500)', margin: 0 }}>
         No timeline events yet.
       </p>
     );
@@ -52,43 +33,38 @@ export default function CaseTimeline({ events }) {
   );
 
   return (
-    <div role="list" aria-label="Case timeline" style={{ position: 'relative', paddingLeft: '2rem' }}>
-      {/* Vertical line */}
+    <div role="list" aria-label="Case timeline" style={{ position: 'relative', paddingLeft: '24px' }}>
       <div style={{
-        position: 'absolute', left: '11px', top: '4px', bottom: '4px',
+        position: 'absolute', left: '7px', top: '8px', bottom: '8px',
         width: '2px', backgroundColor: 'var(--slate-200)'
       }} />
-
       {sorted.map((ev, i) => {
-        const Icon = eventIcons[ev.event_type] || Send;
-        const color = eventColors[ev.event_type] || 'var(--slate-500)';
-
+        const color = DOT_COLORS[ev.event_type] || 'var(--slate-500)';
         return (
-        <div role="listitem" key={ev.id || i} style={{
-            position: 'relative', marginBottom: i < sorted.length - 1 ? 'var(--space-lg)' : 0
+          <div role="listitem" key={ev.id || i} style={{
+            position: 'relative', marginBottom: i < sorted.length - 1 ? '12px' : 0
           }}>
-            {/* Dot */}
             <div style={{
-              position: 'absolute', left: '-2rem', top: '2px',
-              width: '24px', height: '24px', borderRadius: '50%',
-              backgroundColor: 'white', border: `2px solid ${color}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
+              position: 'absolute', left: '-20px', top: '8px',
+              width: '12px', height: '12px', borderRadius: '50%',
+              backgroundColor: color
+            }} />
+            <div style={{
+              backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '12px 14px'
             }}>
-              <Icon size={12} aria-hidden="true" style={{ color }} />
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
+                color: 'var(--slate-600)', margin: '0 0 4px'
+              }}>
+                {formatDateTime(ev.created_at || ev.created_date)}
+              </p>
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+                color: 'var(--slate-800)', margin: 0, lineHeight: 1.5
+              }}>
+                {ev.event_description}
+              </p>
             </div>
-
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-              color: 'var(--slate-600)', margin: '0 0 0.25rem 0'
-            }}>
-              {formatDateTime(ev.created_at || ev.created_date)}
-            </p>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-              color: 'var(--slate-800)', margin: 0, lineHeight: 1.5
-            }}>
-              {ev.event_description}
-            </p>
           </div>
         );
       })}
