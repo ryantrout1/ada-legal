@@ -28,7 +28,7 @@ export default function RecentSubmissionsTable({ cases }) {
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.9375rem',
-          color: 'var(--slate-500)',
+          color: 'var(--slate-600)',
           margin: 0
         }}>
           No pending submissions at this time.
@@ -41,7 +41,7 @@ export default function RecentSubmissionsTable({ cases }) {
     fontFamily: 'Manrope, sans-serif',
     fontSize: '0.75rem',
     fontWeight: 700,
-    color: 'var(--slate-500)',
+    color: 'var(--slate-600)',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
     padding: '0.75rem 1rem',
