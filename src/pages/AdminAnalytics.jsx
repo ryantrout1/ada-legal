@@ -103,6 +103,7 @@ export default function AdminAnalytics() {
   if (loading) {
     return (
       <div role="status" aria-label="Loading analytics" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
+        <h1 className="sr-only">Analytics</h1>
         <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading analytics…</p>
       </div>
