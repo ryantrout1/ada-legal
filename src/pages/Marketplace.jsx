@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import MarketplaceFilters from '../components/marketplace/MarketplaceFilters';
 import CaseCard from '../components/marketplace/CaseCard';
+import CaseDetailModal from '../components/marketplace/CaseDetailModal';
 import InitiateSupportModal from '../components/marketplace/InitiateSupportModal';
 import { attorneyAssignedEmail } from '../components/emails/caseEmails';
 
@@ -17,6 +18,7 @@ export default function Marketplace() {
     businessType: 'all',
     sort: 'newest'
   });
+  const [detailCase, setDetailCase] = useState(null);
   const [selectedCase, setSelectedCase] = useState(null);
   const [processing, setProcessing] = useState(false);
 
@@ -216,7 +218,12 @@ export default function Marketplace() {
       return filters.sort === 'newest' ? dateB - dateA : dateA - dateB;
     });
 
-  const handleInitiate = (caseData) => {
+  const handleViewDetails = (caseData) => {
+    setDetailCase(caseData);
+  };
+
+  const handleInitiateFromModal = (caseData) => {
+    setDetailCase(null);
     setSelectedCase(caseData);
   };
 
@@ -330,10 +337,16 @@ export default function Marketplace() {
           gap: 'var(--space-lg)'
         }}>
           {filteredCases.map(c => (
-            <CaseCard key={c.id} caseData={c} onInitiate={handleInitiate} />
+            <CaseCard key={c.id} caseData={c} onViewDetails={handleViewDetails} />
           ))}
         </div>
       </div>
+
+      <CaseDetailModal
+        caseData={detailCase}
+        onClose={() => setDetailCase(null)}
+        onInitiate={handleInitiateFromModal}
+      />
 
       <InitiateSupportModal
         open={!!selectedCase}

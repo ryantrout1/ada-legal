@@ -1,28 +1,5 @@
 import React from 'react';
-import { Building2, Globe, ArrowRight } from 'lucide-react';
-
-function redactNames(text) {
-  // Redact capitalized proper name patterns (2+ capitalized words in sequence, or single capitalized word not at sentence start)
-  return text
-    .replace(/(?<=[.!?]\s+)([A-Z][a-z]+)/g, '$1') // keep sentence-start words
-    .replace(/\b([A-Z][a-z]{1,}(?:\s+[A-Z][a-z]{1,})+)\b/g, '[Name]') // multi-word proper names
-    .replace(/(?<=\s)([A-Z][a-z]{2,})\b(?!\s+[a-z])/g, (match, p1, offset, str) => {
-      // Single capitalized word mid-sentence
-      const before = str.slice(Math.max(0, offset - 3), offset);
-      if (/[.!?]\s*$/.test(before)) return match;
-      return '[Name]';
-    });
-}
-
-function extractDomain(url) {
-  if (!url) return '—';
-  try {
-    const cleaned = url.startsWith('http') ? url : `https://${url}`;
-    return new URL(cleaned).hostname;
-  } catch {
-    return url.split('/')[0];
-  }
-}
+import { Building2, Globe } from 'lucide-react';
 
 function formatDate(dateStr) {
   if (!dateStr) return '—';
@@ -31,15 +8,9 @@ function formatDate(dateStr) {
   });
 }
 
-export default function CaseCard({ caseData, onInitiate }) {
+export default function CaseCard({ caseData, onViewDetails }) {
   const c = caseData;
   const isPhysical = c.violation_type === 'physical_space';
-
-  const truncatedNarrative = (() => {
-    const raw = (c.narrative || '').slice(0, 200);
-    const redacted = redactNames(raw);
-    return redacted + (c.narrative && c.narrative.length > 200 ? '…' : '');
-  })();
 
   return (
     <div
@@ -104,46 +75,58 @@ export default function CaseCard({ caseData, onInitiate }) {
         {!isPhysical && c.url_domain && <DetailChip label={extractDomain(c.url_domain)} />}
       </div>
 
-      {/* Narrative preview */}
+      {/* Narrative preview — 2 lines max */}
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
         color: 'var(--slate-600)', lineHeight: 1.6,
-        marginBottom: 'var(--space-md)', minHeight: '3em'
+        marginBottom: 'var(--space-sm)',
+        display: '-webkit-box',
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        minHeight: '2.8em'
       }}>
-        {truncatedNarrative || 'No description available.'}
+        {c.narrative || 'No description available.'}
       </p>
 
-      {/* Footer: date + button */}
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        flexWrap: 'wrap', gap: 'var(--space-sm)'
-      }}>
+      {/* View Details link */}
+      <button
+        type="button"
+        onClick={() => onViewDetails(c)}
+        style={{
+          background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
+          color: 'var(--terra-600)', marginBottom: 'var(--space-md)',
+          display: 'inline-block'
+        }}
+        onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline'; }}
+        onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none'; }}
+      >
+        View Details →
+      </button>
+
+      {/* Footer: date */}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
           color: 'var(--slate-600)'
         }}>
           Posted {formatDate(c.approved_at)}
         </span>
-        <button
-          type="button"
-          onClick={() => onInitiate(c)}
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
-            padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-            fontSize: '0.875rem', fontWeight: 700, color: 'white',
-            backgroundColor: 'var(--terra-600)', border: 'none',
-            borderRadius: 'var(--radius-md)', cursor: 'pointer',
-            minHeight: '44px', transition: 'background-color 0.15s'
-          }}
-          onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--terra-700)'; }}
-          onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--terra-600)'; }}
-        >
-          Initiate Support
-          <ArrowRight size={16} />
-        </button>
       </div>
     </div>
   );
+}
+
+function extractDomain(url) {
+  if (!url) return '—';
+  try {
+    const cleaned = url.startsWith('http') ? url : `https://${url}`;
+    return new URL(cleaned).hostname;
+  } catch {
+    return url.split('/')[0];
+  }
 }
 
 function DetailChip({ label }) {
