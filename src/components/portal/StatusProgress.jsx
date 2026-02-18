@@ -102,7 +102,7 @@ export default function StatusProgress({ status, closedEventDescription, expired
                 </div>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-                  color: completed ? '#15803D' : current ? 'var(--terra-600, #C2410C)' : 'var(--slate-400)',
+                  color: completed ? '#15803D' : current ? 'var(--terra-600, #C2410C)' : '#78716C',
                   textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.03em'
                 }}>{step.label}</span>
               </div>

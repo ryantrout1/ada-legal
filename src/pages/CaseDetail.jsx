@@ -62,7 +62,7 @@ export default function CaseDetail() {
         minHeight: 'calc(100vh - 200px)', gap: '1rem'
       }}>
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading case…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading case…</p>
       </div>
     );
   }
@@ -85,7 +85,7 @@ export default function CaseDetail() {
             <ArrowLeft size={16} /> My Cases
           </Link>
           <span style={{ color: 'var(--slate-400)' }}>/</span>
-          <span style={{ color: 'var(--slate-600)' }}>Case #{c.id?.slice(0, 8)}</span>
+          <span style={{ color: '#475569' }}>Case #{c.id?.slice(0, 8)}</span>
         </div>
 
         {/* Page Header */}

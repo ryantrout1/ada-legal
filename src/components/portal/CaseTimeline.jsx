@@ -54,7 +54,7 @@ export default function CaseTimeline({ events }) {
             }}>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-                color: 'var(--slate-600)', margin: '0 0 4px'
+                color: '#475569', margin: '0 0 4px'
               }}>
                 {formatDateTime(ev.created_at || ev.created_date)}
               </p>

@@ -8,7 +8,7 @@ function formatDate(d) {
 
 const labelStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-  color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 3px'
+  color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 3px'
 };
 const valStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 600,
@@ -109,7 +109,7 @@ export default function WhatYouReported({ caseData }) {
       {/* Contact Info */}
       <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '12px', padding: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>
             Your Contact Info
           </p>
           <span style={{
@@ -132,7 +132,7 @@ export default function WhatYouReported({ caseData }) {
             <p style={valStyle}>{c.contact_phone}</p>
           </div>
         </div>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-400)', fontStyle: 'italic', margin: '12px 0 0' }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569', fontStyle: 'italic', margin: '12px 0 0' }}>
           This information is only shared with your assigned attorney.
         </p>
       </div>
