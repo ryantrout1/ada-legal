@@ -9,7 +9,7 @@ function DetailRow({ icon: Icon, label, value }) {
       <div>
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-          color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em'
+          color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.05em'
         }}>{label}</span>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
@@ -66,7 +66,7 @@ export default function SubmissionDetails({ caseData }) {
         <div style={{ marginTop: 'var(--space-lg)' }}>
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-            color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em'
+            color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.05em'
           }}>Narrative</span>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',

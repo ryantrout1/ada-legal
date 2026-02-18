@@ -59,13 +59,13 @@ export default function MyCaseCard({ caseData }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.25rem', flexWrap: 'wrap' }}>
                 <span style={{
                   display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)'
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)'
                 }}>
                   <MapPin size={13} /> {[c.city, c.state].filter(Boolean).join(', ') || '—'}
                 </span>
                 <span style={{
                   display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)'
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)'
                 }}>
                   <Calendar size={13} /> {formatDate(c.submitted_at || c.created_date)}
                 </span>

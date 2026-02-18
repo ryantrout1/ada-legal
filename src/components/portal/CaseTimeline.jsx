@@ -40,7 +40,7 @@ export default function CaseTimeline({ events }) {
     return (
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-        color: 'var(--slate-500)', margin: 0
+        color: 'var(--slate-600)', margin: 0
       }}>
         No timeline events yet.
       </p>
@@ -79,7 +79,7 @@ export default function CaseTimeline({ events }) {
 
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-              color: 'var(--slate-500)', margin: '0 0 0.25rem 0'
+              color: 'var(--slate-600)', margin: '0 0 0.25rem 0'
             }}>
               {formatDateTime(ev.created_at || ev.created_date)}
             </p>

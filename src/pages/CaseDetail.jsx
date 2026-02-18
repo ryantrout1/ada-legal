@@ -65,7 +65,7 @@ export default function CaseDetail() {
         }}
       >
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)' }}>Loading case…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading case…</p>
       </div>
     );
   }

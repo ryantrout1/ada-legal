@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function LandingFooter() {
   return (
-    <footer role="contentinfo" style={{
+    <div style={{
       backgroundColor: '#0F172A',
       color: 'var(--slate-400)',
       padding: '2.5rem 1.5rem 2rem'
@@ -35,6 +35,6 @@ export default function LandingFooter() {
           </p>
         </div>
       </div>
-    </footer>
+    </div>
   );
 }

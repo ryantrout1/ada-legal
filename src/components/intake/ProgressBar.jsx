@@ -30,7 +30,7 @@ export default function ProgressBar({ currentStep }) {
         <span style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.75rem',
-          color: 'var(--slate-500)'
+          color: 'var(--slate-600)'
         }}>
           {Math.round(progress)}% complete
         </span>

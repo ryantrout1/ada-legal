@@ -39,7 +39,7 @@ export default function Home() {
   if (!checked) return null;
 
   return (
-    <div>
+    <div role="region" aria-label="Landing page">
       <HeroSection />
       <HowItWorks />
       <OurPromise />
