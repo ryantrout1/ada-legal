@@ -169,7 +169,7 @@ export default function LawyerDashboard() {
         }}
       >
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)' }}>Loading your cases…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading your cases…</p>
       </div>
     );
   }
@@ -182,7 +182,7 @@ export default function LawyerDashboard() {
       flex: '1 1 160px'
     }}>
       {icon}
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-600)' }}>{label}</span>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-700)' }}>{label}</span>
       <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.25rem', fontWeight: 700, color, marginLeft: 'auto' }}>{count}</span>
     </div>
   );

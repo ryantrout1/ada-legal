@@ -85,7 +85,7 @@ export default function Marketplace() {
         }}
       >
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)' }}>Loading marketplace…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading marketplace…</p>
       </div>
     );
   }
@@ -334,7 +334,7 @@ export default function Marketplace() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 'var(--space-md)', marginBottom: 'var(--space-xl)', width: '100%' }}>
           <MarketplaceFilters filters={filters} onChange={setFilters} lawyerStates={lawyerStates} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', marginBottom: '0.25rem' }}>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-500)' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-600)' }}>
               {filteredCases.length} available case{filteredCases.length !== 1 ? 's' : ''}
             </span>
             <ViewToggle view={viewMode} onChange={setViewMode} />
@@ -348,7 +348,7 @@ export default function Marketplace() {
           }}>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-              color: 'var(--slate-500)', margin: 0
+              color: 'var(--slate-600)', margin: 0
             }}>
               No available cases match your filters. Try broadening your search.
             </p>
@@ -375,7 +375,7 @@ export default function Marketplace() {
                     {['Type', 'Business Type', 'City / State', 'Subtype / Domain', 'Posted', ''].map(h => (
                       <th key={h} scope="col" style={{
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-                        color: 'var(--slate-500)', textAlign: 'left', padding: '0.5rem 0.75rem',
+                        color: 'var(--slate-600)', textAlign: 'left', padding: '0.5rem 0.75rem',
                         borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase',
                         letterSpacing: '0.04em', whiteSpace: 'nowrap'
                       }}>{h}</th>

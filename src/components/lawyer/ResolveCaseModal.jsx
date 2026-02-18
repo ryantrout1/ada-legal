@@ -120,7 +120,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
                     <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-800)' }}>
                       {opt.label}
                     </span>
-                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', display: 'block', marginTop: '2px' }}>
+                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)', display: 'block', marginTop: '2px' }}>
                       {opt.desc}
                     </span>
                   </div>
@@ -235,7 +235,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
 function SummaryRow({ label, value }) {
   return (
     <div style={{ marginBottom: '0.5rem' }}>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
         {label}
       </span>
       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-800)', margin: '2px 0 0' }}>
@@ -255,5 +255,5 @@ const btnStyle = {
 const cancelStyle = {
   background: 'none', border: 'none', cursor: 'pointer',
   fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-  color: 'var(--slate-500)', padding: '0.5rem'
+  color: 'var(--slate-600)', padding: '0.5rem'
 };
