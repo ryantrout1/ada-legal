@@ -46,7 +46,7 @@ export default function Admin() {
         }}
       >
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)' }}>Loading dashboard…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading dashboard…</p>
       </div>
     );
   }
