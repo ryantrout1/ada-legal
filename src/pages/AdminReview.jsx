@@ -58,7 +58,7 @@ export default function AdminReview() {
         }}
       >
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)' }}>Loading review queue…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading review queue…</p>
       </div>
     );
   }
@@ -82,7 +82,7 @@ export default function AdminReview() {
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: '1rem',
-          color: 'var(--slate-500)',
+          color: 'var(--slate-600)',
           marginBottom: 'var(--space-xl)'
         }}>
           {cases.length} case{cases.length !== 1 ? 's' : ''} pending review
@@ -95,7 +95,7 @@ export default function AdminReview() {
           }}>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-              color: 'var(--slate-500)', margin: 0
+              color: 'var(--slate-600)', margin: 0
             }}>
               All clear — no cases pending review.
             </p>
@@ -147,7 +147,7 @@ export default function AdminReview() {
 
                     <span style={{
                       fontFamily: 'monospace', fontSize: '0.8125rem',
-                      color: 'var(--slate-500)', flexShrink: 0, width: '80px'
+                      color: 'var(--slate-600)', flexShrink: 0, width: '80px'
                     }}>
                       {c.id?.slice(0, 8)}
                     </span>
@@ -163,14 +163,14 @@ export default function AdminReview() {
 
                     <span style={{
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                      color: 'var(--slate-500)', flexShrink: 0, display: 'none'
+                      color: 'var(--slate-600)', flexShrink: 0, display: 'none'
                     }} className="review-city-col">
                       {[c.city, c.state].filter(Boolean).join(', ') || '—'}
                     </span>
 
                     <span style={{
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                      color: 'var(--slate-500)', flexShrink: 0
+                      color: 'var(--slate-600)', flexShrink: 0
                     }}>
                       {formatDate(c.submitted_at || c.created_date)}
                     </span>
