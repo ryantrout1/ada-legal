@@ -14,7 +14,8 @@ const statusColors = {
   available: { bg: '#F0FDF4', text: '#166534' },
   assigned: { bg: '#E0E7FF', text: '#3730A3' },
   in_progress: { bg: '#DBEAFE', text: '#1D4ED8' },
-  closed: { bg: '#F1F5F9', text: '#475569' }
+  closed: { bg: '#F1F5F9', text: '#475569' },
+  expired: { bg: '#64748B', text: '#FFFFFF' }
 };
 
 function formatDate(d) {
@@ -201,6 +202,7 @@ export default function AdminCases() {
             <option value="in_progress">In Progress</option>
             <option value="rejected">Rejected</option>
             <option value="closed">Closed</option>
+            <option value="expired">Expired</option>
           </select>
           <select value={violationFilter} onChange={e => setViolationFilter(e.target.value)} style={selectStyle}>
             <option value="all">All Violations</option>
