@@ -1,47 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
-import { ChevronDown, ChevronRight, CheckCircle, XCircle, Flag, Search } from 'lucide-react';
-
-const accountColors = {
-  pending_approval: { bg: '#FEF3C7', text: '#92400E' },
-  approved: { bg: '#DCFCE7', text: '#15803D' },
-  suspended: { bg: '#FEE2E2', text: '#B91C1C' },
-  removed: { bg: '#F1F5F9', text: '#475569' }
-};
-
-const subColors = {
-  inactive: { bg: '#F1F5F9', text: '#475569' },
-  active: { bg: '#DCFCE7', text: '#15803D' },
-  canceled: { bg: '#FEE2E2', text: '#B91C1C' },
-  past_due: { bg: '#FEF3C7', text: '#92400E' }
-};
-
-function Badge({ label, colorMap }) {
-  const c = colorMap[label] || { bg: '#F1F5F9', text: '#475569' };
-  return (
-    <span style={{
-      display: 'inline-block', padding: '0.2rem 0.625rem',
-      fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-      color: c.text, backgroundColor: c.bg, borderRadius: '9999px',
-      textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap'
-    }}>
-      {(label || '').replace(/_/g, ' ')}
-    </span>
-  );
-}
+import { ChevronDown, ChevronRight, Search } from 'lucide-react';
+import LawyerBadge, { accountColors, subColors } from '../components/admin/lawyers/LawyerBadge';
+import ProfileSection from '../components/admin/lawyers/ProfileSection';
+import PerformanceSection from '../components/admin/lawyers/PerformanceSection';
+import ActiveCasesSection from '../components/admin/lawyers/ActiveCasesSection';
+import CaseHistorySection from '../components/admin/lawyers/CaseHistorySection';
+import ActionButtons from '../components/admin/lawyers/ActionButtons';
 
 export default function AdminLawyers() {
   const [loading, setLoading] = useState(true);
   const [lawyers, setLawyers] = useState([]);
+  const [cases, setCases] = useState([]);
+  const [contactLogs, setContactLogs] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
-  const [processing, setProcessing] = useState(false);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [toast, setToast] = useState('');
 
-  const loadLawyers = async () => {
-    const all = await base44.entities.LawyerProfile.list('-created_date', 500);
-    setLawyers(all);
+  const loadData = async () => {
+    const [allLawyers, allCases, allLogs] = await Promise.all([
+      base44.entities.LawyerProfile.list('-created_date', 500),
+      base44.entities.Case.list('-created_date', 1000),
+      base44.entities.ContactLog.list('-created_date', 1000)
+    ]);
+    setLawyers(allLawyers);
+    setCases(allCases);
+    setContactLogs(allLogs);
   };
 
   useEffect(() => {
@@ -51,39 +37,33 @@ export default function AdminLawyers() {
         window.location.href = createPageUrl('Home');
         return;
       }
-      await loadLawyers();
+      await loadData();
       setLoading(false);
     }
     init();
   }, []);
 
-  const handleApprove = async (lawyer) => {
-    setProcessing(true);
-    await base44.entities.LawyerProfile.update(lawyer.id, {
-      account_status: 'approved',
-      approved_at: new Date().toISOString()
-    });
-    await loadLawyers();
-    setProcessing(false);
-  };
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(''), 4000);
+    return () => clearTimeout(t);
+  }, [toast]);
 
-  const handleSuspend = async (lawyer) => {
-    setProcessing(true);
-    await base44.entities.LawyerProfile.update(lawyer.id, {
-      account_status: 'suspended'
-    });
-    await loadLawyers();
-    setProcessing(false);
+  const handleProfileSave = async (lawyerId, updates) => {
+    await base44.entities.LawyerProfile.update(lawyerId, updates);
+    setToast('Profile updated.');
+    await loadData();
   };
 
   const filtered = lawyers.filter(l => {
     if (statusFilter !== 'all' && l.account_status !== statusFilter) return false;
     if (search.trim()) {
       const q = search.toLowerCase();
-      const nameMatch = (l.full_name || '').toLowerCase().includes(q);
-      const firmMatch = (l.firm_name || '').toLowerCase().includes(q);
-      const emailMatch = (l.email || '').toLowerCase().includes(q);
-      if (!nameMatch && !firmMatch && !emailMatch) return false;
+      if (
+        !(l.full_name || '').toLowerCase().includes(q) &&
+        !(l.firm_name || '').toLowerCase().includes(q) &&
+        !(l.email || '').toLowerCase().includes(q)
+      ) return false;
     }
     return true;
   });
@@ -143,8 +123,10 @@ export default function AdminLawyers() {
             <option value="removed">Removed</option>
           </select>
           <span style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            color: 'var(--slate-500)', marginLeft: 'auto'
+            display: 'inline-block', padding: '0.25rem 0.75rem',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
+            color: 'var(--slate-600)', backgroundColor: 'var(--slate-100)',
+            borderRadius: '9999px', marginLeft: 'auto'
           }}>
             {filtered.length} lawyer{filtered.length !== 1 ? 's' : ''}
           </span>
@@ -201,85 +183,42 @@ export default function AdminLawyers() {
                   }} className="lawyer-email-col">
                     {l.email}
                   </span>
-                  <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0 }}>
-                    <Badge label={l.account_status} colorMap={accountColors} />
-                    <Badge label={l.subscription_status} colorMap={subColors} />
+                  <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0, alignItems: 'center' }}>
+                    <LawyerBadge label={l.account_status} colorMap={accountColors} />
+                    <LawyerBadge label={l.subscription_status} colorMap={subColors} />
+                    {l.flagged && (
+                      <span style={{
+                        width: '10px', height: '10px', borderRadius: '50%',
+                        backgroundColor: '#B91C1C', flexShrink: 0
+                      }} title="Flagged" />
+                    )}
                   </div>
-                  {l.flagged && (
-                    <Flag size={16} style={{ color: '#B91C1C', flexShrink: 0 }} />
-                  )}
                 </button>
 
                 {isExpanded && (
                   <div style={{
                     padding: 'var(--space-lg)', borderTop: '1px solid var(--slate-200)',
-                    backgroundColor: 'var(--slate-50)'
+                    backgroundColor: 'var(--slate-50)',
+                    display: 'flex', flexDirection: 'column', gap: 'var(--space-xl)'
                   }}>
-                    <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                      gap: 'var(--space-lg)', marginBottom: 'var(--space-lg)'
-                    }}>
-                      <DetailItem label="Email" value={l.email} />
-                      <DetailItem label="Phone" value={l.phone} />
-                      <DetailItem label="States of Practice" value={(l.states_of_practice || []).join(', ')} />
-                      <DetailItem label="Bar Numbers" value={l.bar_numbers} />
-                      <DetailItem label="Marketplace Rules" value={l.marketplace_rules_accepted ? 'Accepted' : 'Not Accepted'} />
-                      {l.flag_reason && <DetailItem label="Flag Reason" value={l.flag_reason} />}
+                    <ProfileSection lawyer={l} onSave={handleProfileSave} />
+                    <div style={{ borderTop: '1px solid var(--slate-200)', paddingTop: 'var(--space-lg)' }}>
+                      <PerformanceSection lawyer={l} cases={cases} contactLogs={contactLogs} />
                     </div>
-
-                    <div style={{ display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap' }}>
-                      {l.account_status === 'pending_approval' && (
-                        <button
-                          type="button"
-                          onClick={() => handleApprove(l)}
-                          disabled={processing}
-                          style={{
-                            display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                            padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-                            fontSize: '0.875rem', fontWeight: 700, color: 'white',
-                            backgroundColor: processing ? 'var(--slate-400)' : '#15803D',
-                            border: 'none', borderRadius: 'var(--radius-md)',
-                            cursor: processing ? 'not-allowed' : 'pointer', minHeight: '44px'
-                          }}
-                        >
-                          <CheckCircle size={16} /> Approve
-                        </button>
-                      )}
-                      {l.account_status === 'approved' && (
-                        <button
-                          type="button"
-                          onClick={() => handleSuspend(l)}
-                          disabled={processing}
-                          style={{
-                            display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                            padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-                            fontSize: '0.875rem', fontWeight: 700, color: 'white',
-                            backgroundColor: processing ? 'var(--slate-400)' : '#B91C1C',
-                            border: 'none', borderRadius: 'var(--radius-md)',
-                            cursor: processing ? 'not-allowed' : 'pointer', minHeight: '44px'
-                          }}
-                        >
-                          <XCircle size={16} /> Suspend
-                        </button>
-                      )}
-                      {l.account_status === 'suspended' && (
-                        <button
-                          type="button"
-                          onClick={() => handleApprove(l)}
-                          disabled={processing}
-                          style={{
-                            display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                            padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-                            fontSize: '0.875rem', fontWeight: 700, color: 'white',
-                            backgroundColor: processing ? 'var(--slate-400)' : '#15803D',
-                            border: 'none', borderRadius: 'var(--radius-md)',
-                            cursor: processing ? 'not-allowed' : 'pointer', minHeight: '44px'
-                          }}
-                        >
-                          <CheckCircle size={16} /> Reinstate
-                        </button>
-                      )}
+                    <div style={{ borderTop: '1px solid var(--slate-200)', paddingTop: 'var(--space-lg)' }}>
+                      <ActiveCasesSection lawyer={l} cases={cases} contactLogs={contactLogs} />
+                    </div>
+                    <div style={{ borderTop: '1px solid var(--slate-200)', paddingTop: 'var(--space-lg)' }}>
+                      <CaseHistorySection lawyer={l} cases={cases} contactLogs={contactLogs} />
+                    </div>
+                    <div style={{ borderTop: '1px solid var(--slate-200)', paddingTop: 'var(--space-lg)' }}>
+                      <ActionButtons
+                        lawyer={l}
+                        cases={cases}
+                        contactLogs={contactLogs}
+                        onRefresh={loadData}
+                        onToast={setToast}
+                      />
                     </div>
                   </div>
                 )}
@@ -289,27 +228,27 @@ export default function AdminLawyers() {
         </div>
       </div>
 
+      {toast && (
+        <div
+          role="alert"
+          style={{
+            position: 'fixed', bottom: 'var(--space-xl)', left: '50%', transform: 'translateX(-50%)',
+            zIndex: 1100, backgroundColor: '#15803D', color: 'white',
+            padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-md)',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.15)', cursor: 'pointer'
+          }}
+          onClick={() => setToast('')}
+        >
+          ✓ {toast}
+        </div>
+      )}
+
       <style>{`
         @media (min-width: 768px) {
           .lawyer-email-col { display: inline !important; }
         }
       `}</style>
-    </div>
-  );
-}
-
-function DetailItem({ label, value }) {
-  return (
-    <div>
-      <p style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-        color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em',
-        margin: '0 0 2px 0'
-      }}>{label}</p>
-      <p style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-        color: 'var(--slate-800)', margin: 0
-      }}>{value || '—'}</p>
     </div>
   );
 }
