@@ -42,21 +42,21 @@ export default function LawyerActivitySection({ lawyers, cases, contactLogs }) {
     .sort((a, b) => b.activeCases - a.activeCases);
 
   const th = {
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-    color: 'var(--slate-500)', textAlign: 'left', padding: '0.75rem 1rem',
+    fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
+    color: 'var(--slate-500)', textAlign: 'left', padding: '0.4rem 0.75rem',
     borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase',
     letterSpacing: '0.05em'
   };
   const td = {
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-700)',
-    padding: '0.75rem 1rem', borderBottom: '1px solid var(--slate-100)'
+    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)',
+    padding: '0.35rem 0.75rem', borderBottom: '1px solid var(--slate-100)'
   };
 
   return (
     <div>
       <h2 style={{
-        fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600,
-        color: 'var(--slate-900)', marginBottom: 'var(--space-md)', marginTop: 0
+        fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
+        color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
       }}>Lawyer Activity</h2>
       <div style={{
         backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',

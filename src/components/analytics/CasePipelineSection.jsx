@@ -24,8 +24,8 @@ export default function CasePipelineSection({ cases }) {
   return (
     <div>
       <h2 style={{
-        fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600,
-        color: 'var(--slate-900)', marginBottom: 'var(--space-md)', marginTop: 0
+        fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
+        color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
       }}>Case Pipeline</h2>
       <div style={{ display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap' }}>
         <StatCard label="Submitted This Month" count={submittedThisMonth} bgColor="#DBEAFE" textColor="#1D4ED8" icon={FileText} />

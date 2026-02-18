@@ -51,35 +51,35 @@ export default function GeographicSection({ cases }) {
 
   const cardStyle = {
     backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-    borderRadius: 'var(--radius-lg)', padding: 'var(--space-lg)'
+    borderRadius: 'var(--radius-lg)', padding: '0.875rem 1rem'
   };
   const subhead = {
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700,
-    color: 'var(--slate-800)', marginBottom: 'var(--space-md)', marginTop: 0
+    fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
+    color: 'var(--slate-800)', marginBottom: '0.5rem', marginTop: 0
   };
 
   return (
     <div>
       <h2 style={{
-        fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600,
-        color: 'var(--slate-900)', marginBottom: 'var(--space-md)', marginTop: 0
+        fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
+        color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
       }}>Geographic Distribution</h2>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-lg)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
         {/* By State */}
         <div style={cardStyle}>
           <p style={subhead}>Cases by State</p>
           {stateData.length === 0 ? (
-            <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.875rem' }}>No data yet</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.8125rem' }}>No data yet</p>
           ) : (
-            <div style={{ width: '100%', height: Math.max(200, stateData.length * 32) }}>
+            <div style={{ width: '100%', height: Math.max(140, stateData.length * 24) }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stateData} layout="vertical" margin={{ left: 10, right: 20, top: 5, bottom: 5 }}>
+                <BarChart data={stateData} layout="vertical" barSize={14} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" horizontal={false} />
-                  <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 12, fill: 'var(--slate-500)' }} />
-                  <YAxis type="category" dataKey="name" width={40} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 12, fill: 'var(--slate-700)' }} />
-                  <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 13 }} />
-                  <Bar dataKey="count" fill="var(--terra-600)" radius={[0, 4, 4, 0]} />
+                  <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
+                  <YAxis type="category" dataKey="name" width={32} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-700)' }} />
+                  <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
+                  <Bar dataKey="count" fill="var(--terra-600)" radius={[0, 3, 3, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -90,39 +90,20 @@ export default function GeographicSection({ cases }) {
         <div style={cardStyle}>
           <p style={subhead}>Top 10 Cities</p>
           {cityData.length === 0 ? (
-            <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.875rem' }}>No data yet</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.8125rem' }}>No data yet</p>
           ) : (
-            <div style={{ width: '100%', height: Math.max(200, cityData.length * 32) }}>
+            <div style={{ width: '100%', height: Math.max(140, cityData.length * 24) }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={cityData} layout="vertical" margin={{ left: 10, right: 20, top: 5, bottom: 5 }}>
+                <BarChart data={cityData} layout="vertical" barSize={14} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" horizontal={false} />
-                  <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 12, fill: 'var(--slate-500)' }} />
-                  <YAxis type="category" dataKey="name" width={80} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-700)' }} />
-                  <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 13 }} />
-                  <Bar dataKey="count" fill="var(--terra-600)" radius={[0, 4, 4, 0]} />
+                  <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
+                  <YAxis type="category" dataKey="name" width={70} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-700)' }} />
+                  <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
+                  <Bar dataKey="count" fill="var(--terra-600)" radius={[0, 3, 3, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Violation type split */}
-      <div style={{ ...cardStyle, marginTop: 'var(--space-lg)' }}>
-        <p style={subhead}>Violation Type Split</p>
-        <div style={{ display: 'flex', gap: 'var(--space-xl)', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div style={{ width: 16, height: 16, borderRadius: 4, backgroundColor: 'var(--terra-600)' }} />
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-700)' }}>
-              Physical Space: <strong>{physical}</strong>{total > 0 && ` (${Math.round((physical / total) * 100)}%)`}
-            </span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div style={{ width: 16, height: 16, borderRadius: 4, backgroundColor: '#1D4ED8' }} />
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-700)' }}>
-              Digital / Website: <strong>{digital}</strong>{total > 0 && ` (${Math.round((digital / total) * 100)}%)`}
-            </span>
-          </div>
         </div>
       </div>
     </div>

@@ -53,10 +53,10 @@ export default function AdminAnalytics() {
       minHeight: 'calc(100vh - 200px)',
       padding: 'var(--space-xl) var(--space-lg)'
     }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-2xl)' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <h1 style={{
           fontFamily: 'Fraunces, serif',
-          fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
+          fontSize: 'clamp(1.5rem, 3vw, 2rem)',
           fontWeight: 700, color: 'var(--slate-900)', margin: 0
         }}>
           Analytics

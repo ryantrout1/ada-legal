@@ -40,8 +40,8 @@ export default function MarketplaceHealthSection({ cases, contactLogs }) {
   return (
     <div>
       <h2 style={{
-        fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600,
-        color: 'var(--slate-900)', marginBottom: 'var(--space-md)', marginTop: 0
+        fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
+        color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
       }}>Marketplace Health</h2>
       <div style={{ display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap' }}>
         <StatCard label="Available Now" count={availableNow} bgColor="#DCFCE7" textColor="#15803D" icon={ShoppingCart} />
