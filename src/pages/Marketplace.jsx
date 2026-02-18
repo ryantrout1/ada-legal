@@ -229,6 +229,10 @@ export default function Marketplace() {
 
   const handleViewDetails = (caseData) => {
     setDetailCase(caseData);
+    // Part A: increment marketplace_views in background
+    base44.entities.Case.update(caseData.id, {
+      marketplace_views: (caseData.marketplace_views || 0) + 1
+    });
   };
 
   const handleInitiateFromModal = (caseData) => {
