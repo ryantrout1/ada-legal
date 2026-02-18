@@ -1,41 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
-import { Building2, Globe, Search, ChevronDown, ChevronRight } from 'lucide-react';
-import CaseDetailPanel from '../components/admin/CaseDetailPanel';
-import ReviewActions from '../components/admin/ReviewActions';
+import { Search } from 'lucide-react';
+import AdminCaseRow from '../components/admin/cases/AdminCaseRow';
+import AdminCaseExpanded from '../components/admin/cases/AdminCaseExpanded';
 import ForceCloseModal from '../components/admin/ForceCloseModal';
-
-const statusColors = {
-  submitted: { bg: '#DBEAFE', text: '#1D4ED8' },
-  under_review: { bg: '#FEF3C7', text: '#92400E' },
-  approved: { bg: '#DCFCE7', text: '#15803D' },
-  rejected: { bg: '#FEE2E2', text: '#B91C1C' },
-  available: { bg: '#F0FDF4', text: '#166534' },
-  assigned: { bg: '#E0E7FF', text: '#3730A3' },
-  in_progress: { bg: '#DBEAFE', text: '#1D4ED8' },
-  closed: { bg: '#F1F5F9', text: '#475569' },
-  expired: { bg: '#64748B', text: '#FFFFFF' }
-};
-
-function formatDate(d) {
-  if (!d) return '—';
-  return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
-function StatusBadge({ status }) {
-  const c = statusColors[status] || { bg: '#F1F5F9', text: '#475569' };
-  return (
-    <span style={{
-      display: 'inline-block', padding: '0.2rem 0.625rem',
-      fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-      color: c.text, backgroundColor: c.bg, borderRadius: '9999px',
-      textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap'
-    }}>
-      {(status || '').replace(/_/g, ' ')}
-    </span>
-  );
-}
 
 const STATE_NAME_TO_ABBR = {
   'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO',
@@ -56,6 +25,30 @@ function normalizeState(s) {
   return STATE_NAME_TO_ABBR[trimmed] || trimmed;
 }
 
+const STATUS_PRIORITY = {
+  submitted: 0, under_review: 1, available: 2, approved: 3,
+  assigned: 4, in_progress: 5, closed: 6, rejected: 7, expired: 8
+};
+
+function sortCases(cases, sortBy) {
+  return [...cases].sort((a, b) => {
+    if (sortBy === 'oldest') {
+      return new Date(a.submitted_at || a.created_date) - new Date(b.submitted_at || b.created_date);
+    }
+    if (sortBy === 'status') {
+      const pa = STATUS_PRIORITY[a.status] ?? 10;
+      const pb = STATUS_PRIORITY[b.status] ?? 10;
+      if (pa !== pb) return pa - pb;
+      return new Date(b.submitted_at || b.created_date) - new Date(a.submitted_at || a.created_date);
+    }
+    if (sortBy === 'name') {
+      return (a.business_name || '').localeCompare(b.business_name || '');
+    }
+    // default: newest
+    return new Date(b.submitted_at || b.created_date) - new Date(a.submitted_at || a.created_date);
+  });
+}
+
 export default function AdminCases() {
   const [loading, setLoading] = useState(true);
   const [cases, setCases] = useState([]);
@@ -63,6 +56,8 @@ export default function AdminCases() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [violationFilter, setViolationFilter] = useState('all');
+  const [lawyerFilter, setLawyerFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('newest');
   const [expandedId, setExpandedId] = useState(null);
   const [forceCloseCase, setForceCloseCase] = useState(null);
   const [closeSaving, setCloseSaving] = useState(false);
@@ -89,35 +84,41 @@ export default function AdminCases() {
     init();
   }, []);
 
-  const handleActionComplete = () => {
-    setExpandedId(null);
-    loadData();
-  };
-
   const handleForceClose = async (formData) => {
     if (!forceCloseCase) return;
     setCloseSaving(true);
     const now = new Date().toISOString();
-
     await base44.entities.Case.update(forceCloseCase.id, {
-      status: 'closed',
-      closed_at: now,
-      resolution_type: 'admin_closed',
-      resolution_notes: formData.resolution_notes,
-      resolved_by: 'admin'
+      status: 'closed', closed_at: now, resolution_type: 'admin_closed',
+      resolution_notes: formData.resolution_notes, resolved_by: 'admin'
     });
-
     await base44.entities.TimelineEvent.create({
-      case_id: forceCloseCase.id,
-      event_type: 'closed',
+      case_id: forceCloseCase.id, event_type: 'closed',
       event_description: 'This case has been closed by the platform administrator.',
-      actor_role: 'admin',
-      visible_to_user: true,
-      created_at: now
+      actor_role: 'admin', visible_to_user: true, created_at: now
     });
-
     setCloseSaving(false);
     setForceCloseCase(null);
+    setExpandedId(null);
+    loadData();
+  };
+
+  const handleReassign = async (caseData) => {
+    const now = new Date().toISOString();
+    const lawyerProfile = caseData.assigned_lawyer_id ? lawyerMap[caseData.assigned_lawyer_id] : null;
+    await base44.entities.Case.update(caseData.id, {
+      status: 'available', assigned_lawyer_id: '', assigned_at: ''
+    });
+    if (lawyerProfile && lawyerProfile.cases_reclaimed != null) {
+      await base44.entities.LawyerProfile.update(lawyerProfile.id, {
+        cases_reclaimed: (lawyerProfile.cases_reclaimed || 0) + 1
+      });
+    }
+    await base44.entities.TimelineEvent.create({
+      case_id: caseData.id, event_type: 'reclaimed',
+      event_description: 'This case has been returned to the marketplace by an administrator.',
+      actor_role: 'admin', visible_to_user: false, created_at: now
+    });
     setExpandedId(null);
     loadData();
   };
@@ -125,9 +126,14 @@ export default function AdminCases() {
   const lawyerMap = {};
   lawyers.forEach(l => { lawyerMap[l.id] = l; });
 
+  // Lawyers who have/had cases assigned
+  const assignedLawyerIds = [...new Set(cases.filter(c => c.assigned_lawyer_id).map(c => c.assigned_lawyer_id))];
+  const assignedLawyers = assignedLawyerIds.map(id => lawyerMap[id]).filter(Boolean);
+
   const filtered = cases.filter(c => {
     if (statusFilter !== 'all' && c.status !== statusFilter) return false;
     if (violationFilter !== 'all' && c.violation_type !== violationFilter) return false;
+    if (lawyerFilter !== 'all' && c.assigned_lawyer_id !== lawyerFilter) return false;
     if (search.trim()) {
       const q = search.toLowerCase();
       const idMatch = (c.id || '').toLowerCase().includes(q);
@@ -137,17 +143,16 @@ export default function AdminCases() {
     return true;
   });
 
+  const sorted = sortCases(filtered, sortBy);
+
   if (loading) {
     return (
-      <div
-        role="status" aria-label="Loading cases"
-        style={{
-          display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-          minHeight: 'calc(100vh - 200px)', gap: '1rem'
-        }}
-      >
+      <div role="status" aria-label="Loading cases" style={{
+        display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+        minHeight: 'calc(100vh - 200px)', gap: '1rem'
+      }}>
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)' }}>Loading cases…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading cases…</p>
       </div>
     );
   }
@@ -155,45 +160,58 @@ export default function AdminCases() {
   const selectStyle = {
     minHeight: '40px', padding: '0.5rem 0.75rem',
     fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-    color: 'var(--slate-700)', backgroundColor: 'var(--surface)',
-    border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-md)',
+    color: '#334155', backgroundColor: 'var(--surface)',
+    border: '1px solid var(--slate-200)', borderRadius: '8px',
     outline: 'none', cursor: 'pointer'
   };
 
   return (
     <div style={{
       backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)',
-      padding: 'var(--space-xl) var(--space-lg)'
+      padding: '1.5rem'
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <h1 style={{
-          fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
-          fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-xl)'
-        }}>
-          All Cases
-        </h1>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <h1 style={{
+            fontFamily: 'Fraunces, serif', fontSize: '1.75rem',
+            fontWeight: 600, color: 'var(--slate-900)', margin: 0
+          }}>
+            All Cases
+          </h1>
+          <span style={{
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+            color: '#475569'
+          }}>
+            {filtered.length} case{filtered.length !== 1 ? 's' : ''}
+          </span>
+        </div>
 
-        {/* Filters */}
+        {/* Filter Bar */}
         <div style={{
-          display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap',
-          marginBottom: 'var(--space-lg)', alignItems: 'center'
+          display: 'flex', gap: '12px', flexWrap: 'wrap',
+          marginBottom: '16px', alignItems: 'center'
         }}>
-          <div style={{ position: 'relative', flex: '1 1 240px', maxWidth: '360px' }}>
+          <div style={{ position: 'relative', flex: '1 1 220px', maxWidth: '340px' }}>
             <Search size={16} style={{
               position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)',
-              color: 'var(--slate-400)', pointerEvents: 'none'
+              color: '#94A3B8', pointerEvents: 'none'
             }} />
             <input
               type="text"
               placeholder="Search by business name or case ID…"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              style={{
-                ...selectStyle, width: '100%', paddingLeft: '2.25rem'
-              }}
+              aria-label="Search cases"
+              style={{ ...selectStyle, width: '100%', paddingLeft: '2.25rem' }}
             />
           </div>
-          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={selectStyle}>
+          <select
+            value={statusFilter}
+            onChange={e => setStatusFilter(e.target.value)}
+            style={selectStyle}
+            aria-label="Filter by status"
+          >
             <option value="all">All Statuses</option>
             <option value="submitted">Submitted</option>
             <option value="under_review">Under Review</option>
@@ -204,136 +222,73 @@ export default function AdminCases() {
             <option value="closed">Closed</option>
             <option value="expired">Expired</option>
           </select>
-          <select value={violationFilter} onChange={e => setViolationFilter(e.target.value)} style={selectStyle}>
+          <select
+            value={violationFilter}
+            onChange={e => setViolationFilter(e.target.value)}
+            style={selectStyle}
+            aria-label="Filter by violation type"
+          >
             <option value="all">All Violations</option>
             <option value="physical_space">Physical Space</option>
             <option value="digital_website">Digital / Website</option>
           </select>
-          <span style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            color: 'var(--slate-500)', marginLeft: 'auto'
-          }}>
-            {filtered.length} case{filtered.length !== 1 ? 's' : ''}
-          </span>
+          <select
+            value={lawyerFilter}
+            onChange={e => setLawyerFilter(e.target.value)}
+            style={selectStyle}
+            aria-label="Filter by assigned lawyer"
+          >
+            <option value="all">All Lawyers</option>
+            {assignedLawyers.sort((a, b) => a.full_name.localeCompare(b.full_name)).map(l => (
+              <option key={l.id} value={l.id}>{l.full_name}</option>
+            ))}
+          </select>
+          <select
+            value={sortBy}
+            onChange={e => setSortBy(e.target.value)}
+            style={selectStyle}
+            aria-label="Sort cases"
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="status">Status</option>
+            <option value="name">Business Name A–Z</option>
+          </select>
         </div>
 
-        {/* Table */}
+        {/* Case List */}
         <div style={{
           backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-          borderRadius: 'var(--radius-lg)', overflow: 'hidden'
+          borderRadius: '12px', overflow: 'hidden'
         }}>
-          {/* Header row */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '40px 32px 80px 1fr 140px 100px 120px 150px',
-            gap: 'var(--space-sm)', padding: 'var(--space-sm) var(--space-lg)',
-            backgroundColor: 'var(--slate-50)', borderBottom: '1px solid var(--slate-200)',
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-            color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em',
-            alignItems: 'center'
-          }}>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span role="columnheader">ID</span>
-            <span role="columnheader">Business</span>
-            <span role="columnheader">City / State</span>
-            <span role="columnheader">Status</span>
-            <span role="columnheader">Submitted</span>
-            <span role="columnheader">Assigned Lawyer</span>
-          </div>
-
-          {filtered.length === 0 && (
-            <div style={{ padding: 'var(--space-2xl)', textAlign: 'center' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-500)', margin: 0 }}>
+          {sorted.length === 0 && (
+            <div style={{ padding: '3rem', textAlign: 'center' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>
                 No cases match your filters.
               </p>
             </div>
           )}
 
-          {filtered.map(c => {
+          {sorted.map(c => {
             const isExpanded = expandedId === c.id;
-            const isPhysical = c.violation_type === 'physical_space';
             const lawyer = c.assigned_lawyer_id ? lawyerMap[c.assigned_lawyer_id] : null;
             return (
-              <div key={c.id} style={{ borderBottom: '1px solid var(--slate-200)' }}>
-                <button
-                  type="button"
-                  aria-expanded={isExpanded}
-                  aria-label={`${c.business_name} — ${(c.status || '').replace(/_/g, ' ')}`}
-                  onClick={() => setExpandedId(isExpanded ? null : c.id)}
-                  style={{
-                    display: 'grid', width: '100%',
-                    gridTemplateColumns: '40px 32px 80px 1fr 140px 100px 120px 150px',
-                    gap: 'var(--space-sm)', padding: 'var(--space-sm) var(--space-lg)',
-                    background: isExpanded ? 'var(--slate-50)' : 'transparent',
-                    border: 'none', cursor: 'pointer', textAlign: 'left',
-                    alignItems: 'center', minHeight: '52px',
-                    transition: 'background-color 0.15s'
-                  }}
-                  onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
-                  onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.backgroundColor = 'transparent'; }}
-                >
-                  {isExpanded
-                    ? <ChevronDown size={16} style={{ color: 'var(--terra-600)' }} />
-                    : <ChevronRight size={16} style={{ color: 'var(--slate-400)' }} />
-                  }
-                  <span style={{
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                    width: '28px', height: '28px', borderRadius: 'var(--radius-sm)',
-                    backgroundColor: isPhysical ? '#DBEAFE' : '#F3E8FF'
-                  }}>
-                    {isPhysical
-                      ? <Building2 size={14} aria-hidden="true" style={{ color: '#1D4ED8' }} />
-                      : <Globe size={14} aria-hidden="true" style={{ color: '#7C3AED' }} />
-                    }
-                  </span>
-                  <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
-                    {c.id?.slice(0, 8)}
-                  </span>
-                  <span style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
-                    color: 'var(--slate-800)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
-                  }}>
-                    {c.business_name}
-                  </span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)' }}>
-                    {[c.city, normalizeState(c.state)].filter(Boolean).join(', ') || '—'}
-                  </span>
-                  <StatusBadge status={c.status} />
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
-                    {formatDate(c.submitted_at || c.created_date)}
-                  </span>
-                  <span style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                    color: lawyer ? 'var(--slate-700)' : 'var(--slate-400)',
-                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
-                  }}>
-                    {lawyer ? lawyer.full_name : '—'}
-                  </span>
-                </button>
-
+              <React.Fragment key={c.id}>
+                <AdminCaseRow
+                  caseData={c}
+                  lawyer={lawyer}
+                  expanded={isExpanded}
+                  onToggle={() => setExpandedId(isExpanded ? null : c.id)}
+                />
                 {isExpanded && (
-                  <div style={{ borderTop: '1px solid var(--slate-200)' }}>
-                    <CaseDetailPanel caseData={c} />
-                    {c.status === 'submitted' && (
-                      <ReviewActions caseData={c} onActionComplete={handleActionComplete} />
-                    )}
-                    {c.status !== 'closed' && c.status !== 'rejected' && (
-                      <div style={{ padding: '0 var(--space-lg) var(--space-lg)' }}>
-                        <button type="button" onClick={() => setForceCloseCase(c)} style={{
-                          display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
-                          padding: '0.5rem 1rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                          fontWeight: 700, color: '#B91C1C', backgroundColor: 'transparent',
-                          border: '2px solid #B91C1C', borderRadius: 'var(--radius-md)', cursor: 'pointer',
-                          minHeight: '40px'
-                        }}>
-                          Force Close Case
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  <AdminCaseExpanded
+                    caseData={c}
+                    lawyer={lawyer}
+                    onForceClose={setForceCloseCase}
+                    onReassign={handleReassign}
+                  />
                 )}
-              </div>
+              </React.Fragment>
             );
           })}
         </div>
