@@ -300,6 +300,9 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('AdminCases')} style={{ color: 'white' }}>
                       All Cases
                     </Link>
+                    <Link to={createPageUrl('AdminAnalytics')} style={{ color: 'white' }}>
+                      Analytics
+                    </Link>
                     <Link to={createPageUrl('AdminLawyers')} style={{ color: 'white' }}>
                       Lawyers
                     </Link>
@@ -439,6 +442,9 @@ export default function Layout({ children, currentPageName }) {
                     </Link>
                     <Link to={createPageUrl('AdminCases')} style={{ color: 'white', padding: '0.5rem 0' }}>
                       All Cases
+                    </Link>
+                    <Link to={createPageUrl('AdminAnalytics')} style={{ color: 'white', padding: '0.5rem 0' }}>
+                      Analytics
                     </Link>
                     <Link to={createPageUrl('AdminLawyers')} style={{ color: 'white', padding: '0.5rem 0' }}>
                       Lawyers
