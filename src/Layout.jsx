@@ -54,7 +54,7 @@ export default function Layout({ children, currentPageName }) {
           --slate-800: #334155;
           --slate-700: #475569;
           --slate-600: #475569;
-          --slate-500: #64748B;
+          --slate-500: #475569;
           --slate-400: #CBD5E1;
           --slate-300: #E2E8F0;
           --slate-200: #E7E4DE;
