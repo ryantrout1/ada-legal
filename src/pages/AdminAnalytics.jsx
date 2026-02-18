@@ -8,6 +8,8 @@ import LawyerActivitySection from '../components/analytics/LawyerActivitySection
 import ViolationTypeSection from '../components/analytics/ViolationTypeSection';
 import ActiveFiltersBar from '../components/analytics/ActiveFiltersBar';
 import CaseOutcomesSection from '../components/analytics/CaseOutcomesSection';
+import DemandIntelligenceSection from '../components/analytics/DemandIntelligenceSection';
+import ExportAnalytics from '../components/analytics/ExportAnalytics';
 
 const STATE_NAME_TO_ABBR = {
   'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO',
@@ -134,19 +136,23 @@ export default function AdminAnalytics() {
       padding: 'var(--space-xl) var(--space-lg)'
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <h1 style={{
-          fontFamily: 'Fraunces, serif',
-          fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-          fontWeight: 700, color: 'var(--slate-900)', margin: 0
-        }}>
-          Analytics
-        </h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <h1 style={{
+            fontFamily: 'Fraunces, serif',
+            fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+            fontWeight: 700, color: 'var(--slate-900)', margin: 0
+          }}>
+            Analytics
+          </h1>
+          <ExportAnalytics cases={filteredCases} lawyers={lawyers} contactLogs={contactLogs} filters={filters} />
+        </div>
 
         <ActiveFiltersBar filters={filters} onRemove={handleRemoveFilter} onClearAll={handleClearAll} />
 
         <CasePipelineSection cases={filteredCases} />
         <MarketplaceHealthSection cases={filteredCases} contactLogs={contactLogs} />
         <CaseOutcomesSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
+        <DemandIntelligenceSection cases={filteredCases} lawyers={lawyers} contactLogs={contactLogs} filters={filters} onFilterChange={handleFilterChange} />
         <GeographicSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
         <ViolationTypeSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
         <LawyerActivitySection lawyers={lawyers} cases={filteredCases} contactLogs={contactLogs} />
