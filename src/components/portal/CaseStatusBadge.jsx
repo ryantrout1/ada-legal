@@ -8,7 +8,8 @@ const statusConfig = {
   available: { label: 'Awaiting Attorney', bg: '#F3E8FF', color: '#7C3AED' },
   assigned: { label: 'Attorney Assigned', bg: '#DBEAFE', color: '#1D4ED8' },
   in_progress: { label: 'In Progress', bg: '#D1FAE5', color: '#065F46' },
-  closed: { label: 'Closed', bg: '#E2E8F0', color: '#475569' }
+  closed: { label: 'Closed', bg: '#E2E8F0', color: '#475569' },
+  expired: { label: 'Expired', bg: '#64748B', color: '#FFFFFF' }
 };
 
 export default function CaseStatusBadge({ status, large }) {

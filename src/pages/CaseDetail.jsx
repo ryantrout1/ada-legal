@@ -108,18 +108,42 @@ export default function CaseDetail() {
             }}>
               {c.business_name}
             </h1>
-            {c.status === 'closed' ? (
-              <span style={{
-                display: 'inline-block', padding: '0.375rem 1rem',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-                color: 'white', backgroundColor: 'var(--slate-600)', borderRadius: '9999px',
-                textTransform: 'uppercase'
-              }}>Closed</span>
-            ) : (
-              <CaseStatusBadge status={c.status} large />
-            )}
+            <CaseStatusBadge status={c.status} large />
           </div>
         </div>
+
+        {/* Expired case message */}
+        {c.status === 'expired' && (
+          <div style={{
+            backgroundColor: '#F8FAFC', border: '1px solid var(--slate-300)',
+            borderRadius: '16px', padding: 'var(--space-xl)', marginBottom: 'var(--space-lg)'
+          }}>
+            <h2 style={{
+              fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
+              color: 'var(--slate-900)', margin: '0 0 var(--space-sm) 0'
+            }}>
+              Case Expired
+            </h2>
+            <p style={{
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+              color: 'var(--slate-700)', lineHeight: 1.7, margin: '0 0 var(--space-lg) 0'
+            }}>
+              We were unable to match your case with an attorney in your area within 90 days. This may be due to limited attorney availability in your region. You are welcome to submit a new report at any time.
+            </p>
+            <Link
+              to={createPageUrl('Intake')}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
+                fontSize: '0.9375rem', fontWeight: 700, color: 'white',
+                backgroundColor: 'var(--terra-600)', borderRadius: 'var(--radius-md)',
+                textDecoration: 'none', minHeight: '44px'
+              }}
+            >
+              Submit New Report →
+            </Link>
+          </div>
+        )}
 
         {/* Closed case resolution message */}
         {c.status === 'closed' && (() => {
