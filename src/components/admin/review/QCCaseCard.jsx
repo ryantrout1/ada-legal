@@ -105,11 +105,11 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
               {c.business_name}
             </p>
             {c.qc_flagged && (
-              <Flag size={14} style={{ color: '#D97706', flexShrink: 0 }} aria-label="Flagged for review" />
+              <Flag size={14} style={{ color: '#92400E', flexShrink: 0 }} aria-label="Flagged for review" />
             )}
           </div>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: '#64748B', margin: 0
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: '#475569', margin: 0
           }}>
             {c.id?.slice(0, 8)}...
           </p>
@@ -311,8 +311,8 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                fontWeight: 700, color: '#D97706', backgroundColor: 'transparent',
-                border: '2px solid #D97706', borderRadius: '8px', cursor: 'pointer'
+                fontWeight: 700, color: '#92400E', backgroundColor: 'transparent',
+                border: '2px solid #92400E', borderRadius: '8px', cursor: 'pointer'
               }}
             >
               <Flag size={16} /> Flag for Review
