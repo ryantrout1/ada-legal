@@ -22,7 +22,7 @@ function formatDateTime(d) {
 export default function CaseTimeline({ events }) {
   if (!events || events.length === 0) {
     return (
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-500)', margin: 0 }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>
         No timeline events yet.
       </p>
     );
