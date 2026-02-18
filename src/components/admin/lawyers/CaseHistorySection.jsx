@@ -52,9 +52,9 @@ export default function CaseHistorySection({ lawyer, cases, contactLogs }) {
         }}
       >
         {open ? <ChevronDown size={14} style={{ color: '#475569' }} /> : <ChevronRight size={14} style={{ color: '#475569' }} />}
-        <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
           Case History ({allCases.length})
-        </h3>
+        </p>
       </button>
 
       {open && (

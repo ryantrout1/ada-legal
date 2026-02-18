@@ -136,9 +136,9 @@ export default function ProfileSection({ lawyer, onSave }) {
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           padding: '12px 16px', borderBottom: '1px solid var(--slate-200)'
         }}>
-          <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
             Profile Details
-          </h3>
+          </p>
           <button type="button" onClick={startEdit} style={{
             display: 'inline-flex', alignItems: 'center', gap: '4px',
             padding: '6px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
@@ -234,9 +234,9 @@ export default function ProfileSection({ lawyer, onSave }) {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         padding: '12px 16px', borderBottom: '1px solid var(--slate-200)'
       }}>
-        <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
-          Profile Details — Editing
-        </h3>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
+        Profile Details — Editing
+        </p>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button type="button" onClick={() => setEditing(false)} style={{
             display: 'inline-flex', alignItems: 'center', gap: '4px',
