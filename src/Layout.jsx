@@ -134,12 +134,12 @@ export default function Layout({ children, currentPageName }) {
       <header role="banner" style={
         !loading && !user && currentPageName === 'Home'
           ? {
-              position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
+              position: 'fixed', top: 0, left: 0, right: 0, width: '100%', zIndex: 1000,
               backgroundColor: 'rgba(30,41,59,0.97)',
               backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
               color: 'white', height: '72px',
               display: 'flex', alignItems: 'center',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+              boxShadow: 'none', border: 'none', outline: 'none'
             }
           : {
               backgroundColor: 'var(--slate-900)',
@@ -147,14 +147,24 @@ export default function Layout({ children, currentPageName }) {
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
             }
       }>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          padding: '0 1.5rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
+        <div style={
+          !loading && !user && currentPageName === 'Home'
+            ? {
+                width: '100%',
+                padding: '0 40px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }
+            : {
+                maxWidth: '1400px',
+                margin: '0 auto',
+                padding: '0 1.5rem',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }
+        }>
           <Link to={createPageUrl('Home')} style={{
             display: 'flex',
             alignItems: 'center',
@@ -193,7 +203,7 @@ export default function Layout({ children, currentPageName }) {
           <nav role="navigation" aria-label="Main navigation" style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '2rem'
+            gap: (!loading && !user) ? '32px' : '2rem'
           }} className="desktop-nav">
             {!loading && (
               <>
