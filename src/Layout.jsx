@@ -131,12 +131,22 @@ export default function Layout({ children, currentPageName }) {
       </a>
 
       {/* Header */}
-      <header role="banner" style={{
-        backgroundColor: 'var(--slate-900)',
-        color: 'white',
-        padding: '1rem 0',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-      }}>
+      <header role="banner" style={
+        !loading && !user && currentPageName === 'Home'
+          ? {
+              position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
+              backgroundColor: 'rgba(30,41,59,0.97)',
+              backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+              color: 'white', height: '72px',
+              display: 'flex', alignItems: 'center',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }
+          : {
+              backgroundColor: 'var(--slate-900)',
+              color: 'white', padding: '1rem 0',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }
+      }>
         <div style={{
           maxWidth: '1400px',
           margin: '0 auto',
@@ -202,9 +212,10 @@ export default function Layout({ children, currentPageName }) {
                         color: 'white',
                         border: 'none',
                         padding: '0.5rem 1.5rem',
-                        borderRadius: 'var(--radius-md)',
+                        borderRadius: '10px',
                         cursor: 'pointer',
-                        fontWeight: 500,
+                        fontWeight: 600,
+                        fontFamily: 'Manrope, sans-serif',
                         minHeight: '44px'
                       }}
                     >
@@ -478,27 +489,29 @@ export default function Layout({ children, currentPageName }) {
         {children}
       </main>
 
-      {/* Footer */}
-      <footer role="contentinfo" style={{
-        backgroundColor: 'var(--slate-900)',
-        color: 'var(--slate-400)',
-        padding: '2rem 0',
-        marginTop: '4rem'
-      }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          padding: '0 1.5rem',
-          textAlign: 'center'
+      {/* Footer — hidden on landing page (it has its own footer) */}
+      {currentPageName !== 'Home' && (
+        <footer role="contentinfo" style={{
+          backgroundColor: 'var(--slate-900)',
+          color: 'var(--slate-400)',
+          padding: '2rem 0',
+          marginTop: '4rem'
         }}>
-          <p style={{ margin: 0, fontSize: '0.875rem' }}>
-            © 2026 ADA Legal Marketplace. All rights reserved.
-          </p>
-          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem' }}>
-            Connecting people with experienced ADA attorneys.
-          </p>
-        </div>
-      </footer>
+          <div style={{
+            maxWidth: '1400px',
+            margin: '0 auto',
+            padding: '0 1.5rem',
+            textAlign: 'center'
+          }}>
+            <p style={{ margin: 0, fontSize: '0.875rem' }}>
+              © 2026 ADA Legal Marketplace. All rights reserved.
+            </p>
+            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem' }}>
+              Connecting people with experienced ADA attorneys.
+            </p>
+          </div>
+        </footer>
+      )}
 
       <style>{`
         @media (max-width: 768px) {

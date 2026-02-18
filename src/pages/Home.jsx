@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import HeroSection from '../components/landing/HeroSection';
-import HowItWorks from '../components/landing/HowItWorks';
-import OurPromise from '../components/landing/OurPromise';
-import MissionQuote from '../components/landing/MissionQuote';
-import ForAttorneysSection from '../components/landing/ForAttorneysSection';
-import FinalCTA from '../components/landing/FinalCTA';
-import LandingFooter from '../components/landing/LandingFooter';
 import { createPageUrl } from '../utils';
+import LandingStyles from '../components/landing/LandingStyles';
+import LandingHeroNew from '../components/landing/LandingHeroNew';
+import StoriesSection from '../components/landing/StoriesSection';
+import HowItWorksNew from '../components/landing/HowItWorksNew';
+import CommitmentSection from '../components/landing/CommitmentSection';
+import ForAttorneysNew from '../components/landing/ForAttorneysNew';
+import FinalCTANew from '../components/landing/FinalCTANew';
+import LandingFooterNew from '../components/landing/LandingFooterNew';
 
 export default function Home() {
   const [checked, setChecked] = useState(false);
@@ -39,19 +40,15 @@ export default function Home() {
   if (!checked) return null;
 
   return (
-    <div role="region" aria-label="Landing page">
-      <HeroSection />
-      <HowItWorks />
-      <OurPromise />
-      <ForAttorneysSection />
-      <MissionQuote />
-      <FinalCTA
-        heading="Ready to Take Action?"
-        subtitle="Report your ADA violation today and connect with an attorney who can help — completely free."
-        buttonText="Report a Violation"
-        buttonLink={createPageUrl('Intake')}
-      />
-      <LandingFooter />
-    </div>
+    <>
+      <LandingStyles />
+      <LandingHeroNew />
+      <StoriesSection />
+      <HowItWorksNew />
+      <CommitmentSection />
+      <ForAttorneysNew />
+      <FinalCTANew />
+      <LandingFooterNew />
+    </>
   );
 }
