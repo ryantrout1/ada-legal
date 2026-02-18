@@ -112,7 +112,7 @@ export default function CaseDetail() {
               <span style={{
                 display: 'inline-block', padding: '0.375rem 1rem',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-                color: 'white', backgroundColor: 'var(--slate-500)', borderRadius: '9999px',
+                color: 'white', backgroundColor: 'var(--slate-600)', borderRadius: '9999px',
                 textTransform: 'uppercase'
               }}>Closed</span>
             ) : (
