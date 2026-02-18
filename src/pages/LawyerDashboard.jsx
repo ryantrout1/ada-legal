@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import { Link } from 'react-router-dom';
-import { AlertTriangle, Clock, CheckCircle, ChevronDown, ChevronRight, ArrowRight } from 'lucide-react';
+import { CheckCircle, ChevronDown, ChevronRight, ArrowRight } from 'lucide-react';
 import StatPills from '../components/lawyer/StatPills';
 import NeedsActionCard from '../components/lawyer/NeedsActionCard';
 import InProgressCard from '../components/lawyer/InProgressCard';
@@ -15,6 +15,7 @@ export default function LawyerDashboard() {
   const [profile, setProfile] = useState(null);
   const [cases, setCases] = useState([]);
   const [allLogs, setAllLogs] = useState([]);
+  const [allNotes, setAllNotes] = useState([]);
   const [logModalCase, setLogModalCase] = useState(null);
   const [resolveModalCase, setResolveModalCase] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -30,12 +31,14 @@ export default function LawyerDashboard() {
 
   const loadData = async (profileObj) => {
     const p = profileObj || profile;
-    const [myCases, logs] = await Promise.all([
+    const [myCases, logs, notes] = await Promise.all([
       base44.entities.Case.filter({ assigned_lawyer_id: p.id }, '-assigned_at', 200),
-      base44.entities.ContactLog.filter({ lawyer_id: p.id }, '-created_date', 500)
+      base44.entities.ContactLog.filter({ lawyer_id: p.id }, '-created_date', 500),
+      base44.entities.LawyerNote.filter({ lawyer_id: p.id }, '-created_date', 500)
     ]);
     setCases(myCases);
     setAllLogs(logs);
+    setAllNotes(notes);
   };
 
   useEffect(() => {
@@ -75,6 +78,21 @@ export default function LawyerDashboard() {
   });
   const completed = cases.filter(c => c.status === 'closed');
 
+  const getNotesForCase = (caseId) => allNotes.filter(n => n.case_id === caseId);
+  const getLogsForCase = (caseId) => allLogs.filter(l => l.case_id === caseId);
+
+  const handleSaveNote = async (caseId, text) => {
+    const now = new Date().toISOString();
+    await base44.entities.LawyerNote.create({
+      case_id: caseId,
+      lawyer_id: profile.id,
+      note_text: text,
+      created_at: now
+    });
+    await loadData();
+    setSuccessMessage('Note saved');
+  };
+
   const handleLogContact = async (formData) => {
     if (!logModalCase || !profile) return;
     setSaving(true);
@@ -92,10 +110,12 @@ export default function LawyerDashboard() {
       event_description: 'Attorney logged contact with claimant.',
       actor_role: 'lawyer', visible_to_user: false, created_at: now
     });
+    setHighlightedCaseId(logModalCase.id);
     await loadData();
     setSaving(false);
     setLogModalCase(null);
     setSuccessMessage('Contact logged successfully.');
+    setTimeout(() => setHighlightedCaseId(null), 3000);
   };
 
   const RESOLUTION_DESCRIPTIONS = {
@@ -190,9 +210,18 @@ export default function LawyerDashboard() {
               </span>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {needsAction.map(c => (
-                <NeedsActionCard key={c.id} caseData={c} onLogContact={setLogModalCase} onResolve={setResolveModalCase} highlighted={c.id === highlightedCaseId} />
+                <NeedsActionCard
+                  key={c.id} caseData={c}
+                  contactLogs={getLogsForCase(c.id)}
+                  notes={getNotesForCase(c.id)}
+                  onLogContact={setLogModalCase}
+                  onResolve={setResolveModalCase}
+                  onSaveNote={(text) => handleSaveNote(c.id, text)}
+                  highlighted={c.id === highlightedCaseId}
+                  defaultExpanded={c.id === highlightedCaseId}
+                />
               ))}
             </div>
           )}
@@ -214,9 +243,17 @@ export default function LawyerDashboard() {
               </span>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {inProgress.map(c => (
-                <InProgressCard key={c.id} caseData={c} contactLogs={allLogs.filter(l => l.case_id === c.id)} onLogContact={setLogModalCase} onResolve={setResolveModalCase} />
+                <InProgressCard
+                  key={c.id} caseData={c}
+                  contactLogs={getLogsForCase(c.id)}
+                  notes={getNotesForCase(c.id)}
+                  onLogContact={setLogModalCase}
+                  onResolve={setResolveModalCase}
+                  onSaveNote={(text) => handleSaveNote(c.id, text)}
+                  defaultExpanded={c.id === highlightedCaseId}
+                />
               ))}
             </div>
           )}
@@ -244,7 +281,13 @@ export default function LawyerDashboard() {
               </div>
             ) : (
               <div>
-                {completed.map(c => <CompletedCaseRow key={c.id} caseData={c} />)}
+                {completed.map(c => (
+                  <CompletedCaseRow
+                    key={c.id} caseData={c}
+                    notes={getNotesForCase(c.id)}
+                    onSaveNote={(text) => handleSaveNote(c.id, text)}
+                  />
+                ))}
               </div>
             )
           )}
