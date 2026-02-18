@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { AlertCircle } from 'lucide-react';
+import { Phone, Mail, Users, MoreHorizontal } from 'lucide-react';
 
 const CONTACT_TYPES = [
   { value: 'initial_contact', label: 'Initial Contact' },
@@ -8,165 +8,139 @@ const CONTACT_TYPES = [
 ];
 
 const CONTACT_METHODS = [
-  { value: 'phone', label: 'Phone' },
-  { value: 'email', label: 'Email' },
-  { value: 'in_person', label: 'In Person' },
-  { value: 'other', label: 'Other' }
+  { value: 'phone', label: 'Phone', icon: '📞' },
+  { value: 'email', label: 'Email', icon: '✉️' },
+  { value: 'in_person', label: 'In-Person', icon: '🤝' },
+  { value: 'other', label: 'Other', icon: '💬' }
 ];
 
-const selectStyle = {
-  width: '100%', minHeight: '44px', padding: '0.625rem 0.75rem',
-  fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-  color: 'var(--slate-800)', backgroundColor: 'var(--surface)',
-  border: '2px solid var(--slate-200)', borderRadius: 'var(--radius-md)',
-  outline: 'none', boxSizing: 'border-box'
-};
-
-export default function LogContactModal({ open, onCancel, onSubmit, saving }) {
+export default function LogContactModal({ open, onCancel, onSubmit, saving, businessName }) {
   const [form, setForm] = useState({ contact_type: '', contact_method: '', notes: '' });
   const [errors, setErrors] = useState({});
-  const cancelRef = useRef(null);
-  const submitRef = useRef(null);
+  const overlayRef = useRef(null);
 
   useEffect(() => {
     if (!open) return;
     setForm({ contact_type: '', contact_method: '', notes: '' });
     setErrors({});
-    setTimeout(() => cancelRef.current?.focus(), 50);
-
-    const handleKey = (e) => {
-      if (e.key === 'Escape') { e.preventDefault(); onCancel(); }
-      if (e.key === 'Tab') {
-        const els = [cancelRef.current, submitRef.current].filter(Boolean);
-        const first = els[0], last = els[els.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    };
-    document.addEventListener('keydown', handleKey);
     document.body.style.overflow = 'hidden';
+    const handleKey = (e) => { if (e.key === 'Escape' && !saving) onCancel(); };
+    document.addEventListener('keydown', handleKey);
     return () => { document.removeEventListener('keydown', handleKey); document.body.style.overflow = ''; };
-  }, [open, onCancel]);
+  }, [open, onCancel, saving]);
 
   if (!open) return null;
 
   const handleSubmit = () => {
     const e = {};
-    if (!form.contact_type) e.contact_type = 'Required';
-    if (!form.contact_method) e.contact_method = 'Required';
+    if (!form.contact_type) e.contact_type = true;
+    if (!form.contact_method) e.contact_method = true;
     setErrors(e);
     if (Object.keys(e).length > 0) return;
     onSubmit(form);
   };
 
+  const radioBtn = (group, value, label, extra) => {
+    const active = form[group] === value;
+    return (
+      <label key={value} style={{
+        display: 'inline-flex', alignItems: 'center', gap: '6px',
+        padding: '8px 16px', borderRadius: '8px', cursor: 'pointer',
+        border: active ? '2px solid var(--terra-600)' : `2px solid ${errors[group] ? '#FECACA' : 'var(--slate-200)'}`,
+        backgroundColor: active ? 'var(--terra-50, #FFF7ED)' : 'white',
+        fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: active ? 700 : 500,
+        color: active ? 'var(--terra-600)' : 'var(--slate-700)',
+        transition: 'all 0.1s', minHeight: '44px'
+      }}>
+        <input type="radio" name={group} checked={active}
+          onChange={() => setForm(p => ({ ...p, [group]: value }))}
+          style={{ display: 'none' }}
+        />
+        {extra && <span>{extra}</span>}
+        {label}
+      </label>
+    );
+  };
+
   return (
     <div
-      role="dialog" aria-modal="true" aria-labelledby="log-contact-heading"
-      onClick={(e) => { if (e.target === e.currentTarget && !saving) onCancel(); }}
+      ref={overlayRef}
+      role="dialog" aria-modal="true"
+      onClick={(e) => { if (e.target === overlayRef.current && !saving) onCancel(); }}
       style={{
         position: 'fixed', inset: 0, zIndex: 1000,
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: 'rgba(30,41,59,0.5)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: 'var(--space-lg)'
+        padding: '1rem'
       }}
     >
       <div style={{
-        backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--slate-200)', padding: 'var(--space-2xl)',
+        backgroundColor: 'var(--surface)', borderRadius: '16px', overflow: 'hidden',
         maxWidth: '500px', width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.15)'
       }}>
-        <h2 id="log-contact-heading" style={{
-          fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700,
-          color: 'var(--slate-900)', margin: '0 0 var(--space-lg) 0'
-        }}>Log Contact Made</h2>
+        {/* Header */}
+        <div style={{ backgroundColor: 'var(--slate-900)', padding: '16px 24px' }}>
+          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 700, color: 'white', margin: 0 }}>
+            Log Contact{businessName ? ` — ${businessName}` : ''}
+          </h2>
+        </div>
 
-        {/* Contact Type */}
-        <div style={{ marginBottom: 'var(--space-md)' }}>
-          <label htmlFor="log-contact-type" style={{
-            display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            fontWeight: 700, color: 'var(--slate-600)', marginBottom: '4px'
-          }}>Contact Type <span aria-label="required" style={{ color: '#DC2626' }}>*</span></label>
-          <select
-            id="log-contact-type"
-            value={form.contact_type} onChange={e => setForm(p => ({ ...p, contact_type: e.target.value }))}
-            aria-required="true"
-            aria-invalid={!!errors.contact_type}
-            aria-describedby={errors.contact_type ? 'log-contact-type-error' : undefined}
-            style={{ ...selectStyle, borderColor: errors.contact_type ? 'var(--error-600)' : 'var(--slate-200)' }}
-          >
-            <option value="">Select…</option>
-            {CONTACT_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-          </select>
-          {errors.contact_type && (
-            <p id="log-contact-type-error" role="alert" style={{
-              display: 'flex', alignItems: 'center', gap: '6px',
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-              color: '#B91C1C', margin: '4px 0 0 0'
-            }}>
-              <AlertCircle size={14} style={{ flexShrink: 0 }} />
-              {errors.contact_type}
+        {/* Form */}
+        <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Contact Type */}
+          <div>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 8px' }}>
+              Contact Type {errors.contact_type && <span style={{ color: '#B91C1C', fontSize: '0.75rem' }}>— Required</span>}
             </p>
-          )}
-        </div>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {CONTACT_TYPES.map(t => radioBtn('contact_type', t.value, t.label))}
+            </div>
+          </div>
 
-        {/* Contact Method */}
-        <div style={{ marginBottom: 'var(--space-md)' }}>
-          <label htmlFor="log-contact-method" style={{
-            display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            fontWeight: 700, color: 'var(--slate-600)', marginBottom: '4px'
-          }}>Contact Method <span aria-label="required" style={{ color: '#DC2626' }}>*</span></label>
-          <select
-            id="log-contact-method"
-            value={form.contact_method} onChange={e => setForm(p => ({ ...p, contact_method: e.target.value }))}
-            aria-required="true"
-            aria-invalid={!!errors.contact_method}
-            aria-describedby={errors.contact_method ? 'log-contact-method-error' : undefined}
-            style={{ ...selectStyle, borderColor: errors.contact_method ? 'var(--error-600)' : 'var(--slate-200)' }}
-          >
-            <option value="">Select…</option>
-            {CONTACT_METHODS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
-          </select>
-          {errors.contact_method && (
-            <p id="log-contact-method-error" role="alert" style={{
-              display: 'flex', alignItems: 'center', gap: '6px',
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-              color: '#B91C1C', margin: '4px 0 0 0'
-            }}>
-              <AlertCircle size={14} style={{ flexShrink: 0 }} />
-              {errors.contact_method}
+          {/* Contact Method */}
+          <div>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 8px' }}>
+              Contact Method {errors.contact_method && <span style={{ color: '#B91C1C', fontSize: '0.75rem' }}>— Required</span>}
             </p>
-          )}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {CONTACT_METHODS.map(m => radioBtn('contact_method', m.value, m.label, m.icon))}
+            </div>
+          </div>
+
+          {/* Notes */}
+          <div>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 8px' }}>
+              Notes
+            </p>
+            <textarea
+              value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
+              rows={3} placeholder="What was discussed? Any next steps?"
+              style={{
+                width: '100%', padding: '12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+                color: 'var(--slate-800)', border: '2px solid var(--slate-200)', borderRadius: '10px',
+                outline: 'none', boxSizing: 'border-box', resize: 'vertical', minHeight: '80px',
+                backgroundColor: 'var(--surface)'
+              }}
+            />
+          </div>
         </div>
 
-        {/* Notes */}
-        <div style={{ marginBottom: 'var(--space-xl)' }}>
-          <label htmlFor="log-contact-notes" style={{
-            display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            fontWeight: 700, color: 'var(--slate-600)', marginBottom: '4px'
-          }}>Notes (optional)</label>
-          <textarea
-            id="log-contact-notes"
-            value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
-            rows={3} placeholder="Brief notes about the conversation (optional)"
-            style={{ ...selectStyle, minHeight: '80px', resize: 'vertical' }}
-          />
-        </div>
-
-        <div style={{ display: 'flex', gap: 'var(--space-md)', justifyContent: 'flex-end' }}>
-          <button ref={cancelRef} type="button" onClick={onCancel} disabled={saving} style={{
-            padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-            fontWeight: 600, color: 'var(--slate-700)', backgroundColor: 'transparent',
-            border: '2px solid var(--slate-200)', borderRadius: 'var(--radius-md)',
-            cursor: saving ? 'not-allowed' : 'pointer', minHeight: '44px', opacity: saving ? 0.5 : 1
+        {/* Footer */}
+        <div style={{ padding: '0 24px 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '16px' }}>
+          <button type="button" onClick={onCancel} disabled={saving} style={{
+            background: 'none', border: 'none', cursor: saving ? 'not-allowed' : 'pointer',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
+            color: 'var(--slate-500)', padding: '8px'
           }}>Cancel</button>
-          <button ref={submitRef} type="button" onClick={handleSubmit} disabled={saving} style={{
-            padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+          <button type="button" onClick={handleSubmit} disabled={saving} style={{
+            padding: '0 24px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
             fontWeight: 700, color: 'white',
             backgroundColor: saving ? 'var(--slate-400)' : 'var(--terra-600)',
-            border: 'none', borderRadius: 'var(--radius-md)',
-            cursor: saving ? 'not-allowed' : 'pointer', minHeight: '44px'
+            border: 'none', borderRadius: '10px',
+            cursor: saving ? 'not-allowed' : 'pointer', minHeight: '44px',
+            transition: 'background-color 0.15s'
           }}>
-            {saving ? 'Saving…' : 'Log Contact'}
+            {saving ? 'Saving…' : 'Save Contact Log'}
           </button>
         </div>
       </div>

@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
-import { AlertTriangle, Clock, CheckCircle, ChevronDown, ChevronRight } from 'lucide-react';
-import CaseRow from '../components/lawyer/CaseRow';
+import { Link } from 'react-router-dom';
+import { AlertTriangle, Clock, CheckCircle, ChevronDown, ChevronRight, ArrowRight } from 'lucide-react';
+import StatPills from '../components/lawyer/StatPills';
+import NeedsActionCard from '../components/lawyer/NeedsActionCard';
+import InProgressCard from '../components/lawyer/InProgressCard';
+import CompletedCaseRow from '../components/lawyer/CompletedCaseRow';
 import LogContactModal from '../components/lawyer/LogContactModal';
 import ResolveCaseModal from '../components/lawyer/ResolveCaseModal';
 
@@ -41,77 +45,53 @@ export default function LawyerDashboard() {
         base44.auth.redirectToLogin(createPageUrl('LawyerDashboard'));
         return;
       }
-      if (!user) {
-        base44.auth.redirectToLogin(createPageUrl('LawyerDashboard'));
-        return;
-      }
+      if (!user) { base44.auth.redirectToLogin(createPageUrl('LawyerDashboard')); return; }
       const profiles = await base44.entities.LawyerProfile.filter({ email: user.email });
       const p = profiles[0];
       if (!p) { window.location.href = createPageUrl('Home'); return; }
       setProfile(p);
-      // Update last_active
       base44.entities.LawyerProfile.update(p.id, { last_active: new Date().toISOString() });
       await loadData(p);
       setLoading(false);
 
-      // Check for highlight param (post-initiate redirect)
       const urlParams = new URLSearchParams(window.location.search);
       const hl = urlParams.get('highlight');
       if (hl) {
         setHighlightedCaseId(hl);
         setSuccessMessage('Case assigned successfully. You have 24 hours to make first contact.');
-        // Clear highlight after 4 seconds
         setTimeout(() => setHighlightedCaseId(null), 4000);
-        // Clean URL
         window.history.replaceState({}, '', window.location.pathname);
       }
     }
     init();
   }, []);
 
-  // Group cases
-  const needsAction = cases.filter(c => {
-    if (c.status !== 'assigned') return false;
-    return !allLogs.some(l => l.case_id === c.id);
-  });
-
+  // Groups
+  const needsAction = cases.filter(c => c.status === 'assigned' && !allLogs.some(l => l.case_id === c.id));
   const inProgress = cases.filter(c => {
     if (c.status === 'in_progress') return true;
     if (c.status === 'assigned' && allLogs.some(l => l.case_id === c.id)) return true;
     return false;
   });
-
   const completed = cases.filter(c => c.status === 'closed');
 
   const handleLogContact = async (formData) => {
     if (!logModalCase || !profile) return;
     setSaving(true);
     const now = new Date().toISOString();
-
-    const newLog = await base44.entities.ContactLog.create({
-      case_id: logModalCase.id,
-      lawyer_id: profile.id,
-      contact_type: formData.contact_type,
-      contact_method: formData.contact_method,
-      notes: formData.notes || '',
-      logged_at: now
+    await base44.entities.ContactLog.create({
+      case_id: logModalCase.id, lawyer_id: profile.id,
+      contact_type: formData.contact_type, contact_method: formData.contact_method,
+      notes: formData.notes || '', logged_at: now
     });
-
     const caseUpdate = { contact_logged_at: now };
-    if (formData.contact_type === 'initial_contact') {
-      caseUpdate.status = 'in_progress';
-    }
+    if (formData.contact_type === 'initial_contact') caseUpdate.status = 'in_progress';
     await base44.entities.Case.update(logModalCase.id, caseUpdate);
-
     await base44.entities.TimelineEvent.create({
-      case_id: logModalCase.id,
-      event_type: 'contact_logged',
+      case_id: logModalCase.id, event_type: 'contact_logged',
       event_description: 'Attorney logged contact with claimant.',
-      actor_role: 'lawyer',
-      visible_to_user: false,
-      created_at: now
+      actor_role: 'lawyer', visible_to_user: false, created_at: now
     });
-
     await loadData();
     setSaving(false);
     setLogModalCase(null);
@@ -120,175 +100,155 @@ export default function LawyerDashboard() {
 
   const RESOLUTION_DESCRIPTIONS = {
     engaged: 'An attorney has taken your case and is actively working on it. You may be contacted directly for next steps.',
-    referred_out: 'Your case has been referred to an attorney who specializes in this area. They may reach out to you directly.',
-    not_viable: 'After careful review, the attorney determined this case may not have sufficient grounds for legal action under the ADA. This does not mean your experience was not valid.',
-    claimant_unresponsive: 'We were unable to reach you after multiple attempts. If you would like to reconnect, please submit a new report.',
-    claimant_declined: 'We understand your decision not to pursue legal action at this time. Your report remains on file.'
+    referred_out: 'Your case has been referred to an attorney who specializes in this area.',
+    not_viable: 'After careful review, the attorney determined this case may not have sufficient grounds for legal action under the ADA.',
+    claimant_unresponsive: 'We were unable to reach you after multiple attempts.',
+    claimant_declined: 'We understand your decision not to pursue legal action at this time.'
   };
 
   const handleResolve = async (formData) => {
     if (!resolveModalCase || !profile) return;
     setSaving(true);
     const now = new Date().toISOString();
-
     const caseUpdate = {
-      status: 'closed',
-      closed_at: now,
-      resolution_type: formData.resolution_type,
-      resolution_notes: formData.resolution_notes,
-      resolved_by: 'lawyer'
+      status: 'closed', closed_at: now, resolution_type: formData.resolution_type,
+      resolution_notes: formData.resolution_notes, resolved_by: 'lawyer'
     };
     if (formData.resolution_type === 'engaged') {
       caseUpdate.estimated_case_value = formData.estimated_case_value;
       caseUpdate.expected_timeline = formData.expected_timeline;
     }
     await base44.entities.Case.update(resolveModalCase.id, caseUpdate);
-
     await base44.entities.TimelineEvent.create({
-      case_id: resolveModalCase.id,
-      event_type: 'closed',
+      case_id: resolveModalCase.id, event_type: 'closed',
       event_description: RESOLUTION_DESCRIPTIONS[formData.resolution_type] || 'This case has been closed.',
-      actor_role: 'lawyer',
-      visible_to_user: true,
-      created_at: now
+      actor_role: 'lawyer', visible_to_user: true, created_at: now
     });
-
     await loadData();
     setSaving(false);
     setResolveModalCase(null);
     setSuccessMessage('Case resolved and closed.');
   };
 
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   if (loading) {
     return (
-      <div
-        role="status" aria-label="Loading your cases"
-        style={{
-          display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-          minHeight: 'calc(100vh - 200px)', gap: '1rem'
-        }}
-      >
+      <div role="status" aria-label="Loading your cases" style={{
+        display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+        minHeight: 'calc(100vh - 200px)', gap: '1rem'
+      }}>
         <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading your cases…</p>
       </div>
     );
   }
 
-  const statCard = (icon, label, count, color) => (
-    <div style={{
-      display: 'flex', alignItems: 'center', gap: '0.5rem',
-      padding: '0.5rem 1rem', backgroundColor: 'var(--surface)',
-      border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-md)',
-      flex: '1 1 160px'
-    }}>
-      {icon}
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-700)' }}>{label}</span>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.25rem', fontWeight: 700, color, marginLeft: 'auto' }}>{count}</span>
-    </div>
-  );
-
   return (
-    <div style={{
-      backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)',
-      padding: 'var(--space-xl) var(--space-lg)'
-    }}>
-      <div style={{ maxWidth: '960px', margin: '0 auto' }}>
-        <h1 style={{
-          fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
-          fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-lg)'
-        }}>
+    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: '1.5rem' }}>
+      <div style={{ maxWidth: '960px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
           My Cases
         </h1>
 
-        {/* Summary stats */}
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: 'var(--space-xl)' }}>
-          {statCard(<AlertTriangle size={16} style={{ color: '#B91C1C' }} />, 'Needs Action', needsAction.length, '#B91C1C')}
-          {statCard(<Clock size={16} style={{ color: '#15803D' }} />, 'In Progress', inProgress.length, '#15803D')}
-          {statCard(<CheckCircle size={16} style={{ color: 'var(--slate-500)' }} />, 'Completed', completed.length, 'var(--slate-600)')}
-        </div>
+        <StatPills needsAction={needsAction.length} inProgress={inProgress.length} completed={completed.length} onScrollTo={scrollTo} />
 
         {cases.length === 0 && (
           <div style={{
             backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-            borderRadius: '16px', padding: 'var(--space-2xl)', textAlign: 'center'
+            borderRadius: '16px', padding: '3rem', textAlign: 'center'
           }}>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', marginBottom: 'var(--space-md)' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', marginBottom: '1rem' }}>
               You have no assigned cases yet.
             </p>
-            <a href={createPageUrl('Marketplace')} style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, color: 'var(--terra-600)'
+            <Link to={createPageUrl('Marketplace')} style={{
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
+              color: 'var(--terra-600)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px'
             }}>
-              Browse Available Cases →
-            </a>
+              Browse Available Cases <ArrowRight size={16} />
+            </Link>
           </div>
         )}
 
-        {/* Group 1: Needs Action */}
-        {needsAction.length > 0 && (
-          <div style={{ marginBottom: 'var(--space-xl)' }}>
-            <h2 style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-              color: '#B91C1C', margin: '0 0 0.5rem'
-            }}>
-              Needs Action ({needsAction.length})
+        {/* NEEDS ACTION */}
+        <div id="needs-action">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <div style={{ width: '4px', height: '20px', borderRadius: '2px', backgroundColor: '#B91C1C' }} />
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+              Needs Action
             </h2>
-            {needsAction.map(c => (
-              <CaseRow
-                key={c.id} caseData={c} group="needs_action"
-                contactLogs={allLogs.filter(l => l.case_id === c.id)}
-                onLogContact={setLogModalCase}
-                onResolve={setResolveModalCase}
-                highlighted={c.id === highlightedCaseId}
-                defaultExpanded={c.id === highlightedCaseId}
-              />
-            ))}
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: '#B91C1C' }}>({needsAction.length})</span>
           </div>
-        )}
+          {needsAction.length === 0 ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 20px', backgroundColor: '#DCFCE7', borderRadius: '10px' }}>
+              <CheckCircle size={16} style={{ color: '#15803D' }} />
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, color: '#15803D' }}>
+                All caught up — no cases need immediate action.
+              </span>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {needsAction.map(c => (
+                <NeedsActionCard key={c.id} caseData={c} onLogContact={setLogModalCase} onResolve={setResolveModalCase} highlighted={c.id === highlightedCaseId} />
+              ))}
+            </div>
+          )}
+        </div>
 
-        {/* Group 2: In Progress */}
-        {inProgress.length > 0 && (
-          <div style={{ marginBottom: 'var(--space-xl)' }}>
-            <h2 style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-              color: '#15803D', margin: '0 0 0.5rem'
-            }}>
-              In Progress ({inProgress.length})
+        {/* IN PROGRESS */}
+        <div id="in-progress">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <div style={{ width: '4px', height: '20px', borderRadius: '2px', backgroundColor: '#15803D' }} />
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+              In Progress
             </h2>
-            {inProgress.map(c => (
-              <CaseRow
-                key={c.id} caseData={c} group="in_progress"
-                contactLogs={allLogs.filter(l => l.case_id === c.id)}
-                onLogContact={setLogModalCase}
-                onResolve={setResolveModalCase}
-              />
-            ))}
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: '#15803D' }}>({inProgress.length})</span>
           </div>
-        )}
+          {inProgress.length === 0 ? (
+            <div style={{ padding: '16px 20px', backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '10px' }}>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-600)' }}>
+                No active cases. <Link to={createPageUrl('Marketplace')} style={{ color: 'var(--terra-600)', fontWeight: 600, textDecoration: 'none' }}>Browse available cases</Link> to get started.
+              </span>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {inProgress.map(c => (
+                <InProgressCard key={c.id} caseData={c} contactLogs={allLogs.filter(l => l.case_id === c.id)} onLogContact={setLogModalCase} onResolve={setResolveModalCase} />
+              ))}
+            </div>
+          )}
+        </div>
 
-        {/* Group 3: Completed */}
-        {completed.length > 0 && (
-          <div style={{ marginBottom: 'var(--space-xl)' }}>
-            <button type="button" onClick={() => setCompletedOpen(!completedOpen)} style={{
-              display: 'flex', alignItems: 'center', gap: '0.375rem', background: 'none',
-              border: 'none', cursor: 'pointer', padding: 0, marginBottom: '0.5rem'
-            }}>
-              {completedOpen ? <ChevronDown size={16} style={{ color: 'var(--slate-500)' }} /> : <ChevronRight size={16} style={{ color: 'var(--slate-500)' }} />}
-              <h2 style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-                color: 'var(--slate-600)', margin: 0
-              }}>
-                Completed ({completed.length})
-              </h2>
-            </button>
-            {completedOpen && completed.map(c => (
-              <CaseRow
-                key={c.id} caseData={c} group="completed"
-                contactLogs={allLogs.filter(l => l.case_id === c.id)}
-                onLogContact={setLogModalCase}
-              />
-            ))}
-          </div>
-        )}
+        {/* COMPLETED */}
+        <div id="completed">
+          <button type="button" onClick={() => setCompletedOpen(!completedOpen)} style={{
+            display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none',
+            cursor: 'pointer', padding: 0, marginBottom: completedOpen ? '8px' : 0
+          }}>
+            {completedOpen ? <ChevronDown size={15} style={{ color: 'var(--slate-400)' }} /> : <ChevronRight size={15} style={{ color: 'var(--slate-400)' }} />}
+            <div style={{ width: '4px', height: '20px', borderRadius: '2px', backgroundColor: 'var(--slate-300)' }} />
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+              Completed
+            </h2>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-600)' }}>({completed.length})</span>
+          </button>
+          {completedOpen && (
+            completed.length === 0 ? (
+              <div style={{ padding: '16px 20px', backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '10px' }}>
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-600)' }}>
+                  No resolved cases yet.
+                </span>
+              </div>
+            ) : (
+              <div>
+                {completed.map(c => <CompletedCaseRow key={c.id} caseData={c} />)}
+              </div>
+            )
+          )}
+        </div>
       </div>
 
       <LogContactModal
@@ -296,6 +256,7 @@ export default function LawyerDashboard() {
         onCancel={() => { if (!saving) setLogModalCase(null); }}
         onSubmit={handleLogContact}
         saving={saving}
+        businessName={logModalCase?.business_name}
       />
 
       <ResolveCaseModal
@@ -308,9 +269,9 @@ export default function LawyerDashboard() {
 
       {successMessage && (
         <div role="alert" aria-live="assertive" style={{
-          position: 'fixed', bottom: 'var(--space-xl)', left: '50%', transform: 'translateX(-50%)',
+          position: 'fixed', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)',
           zIndex: 1100, backgroundColor: '#15803D', color: 'white',
-          padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-md)',
+          padding: '12px 24px', borderRadius: '10px',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
           boxShadow: '0 4px 16px rgba(0,0,0,0.15)', cursor: 'pointer'
         }} onClick={() => setSuccessMessage('')}>
