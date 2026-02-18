@@ -233,7 +233,7 @@ export default function AdminCases() {
                     {c.business_name}
                   </span>
                   <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)' }}>
-                    {[c.city, c.state].filter(Boolean).join(', ') || '—'}
+                    {[c.city, normalizeState(c.state)].filter(Boolean).join(', ') || '—'}
                   </span>
                   <StatusBadge status={c.status} />
                   <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
