@@ -32,7 +32,7 @@ export default function Layout({ children, currentPageName }) {
 
   const PAGE_TITLES = {
     Home: 'Home', Intake: 'Report a Violation', MyCases: 'My Cases',
-    CaseDetail: 'Case Detail', Marketplace: 'Marketplace', LawyerDashboard: 'My Cases',
+    CaseDetail: 'Case Detail', Marketplace: 'Available Cases', LawyerDashboard: 'My Cases',
     LawyerProfile: 'My Profile', LawyerRegister: 'Attorney Registration',
     LawyerLanding: 'For Attorneys', Admin: 'Admin Dashboard',
     AdminReview: 'Review Queue', AdminCases: 'All Cases',
