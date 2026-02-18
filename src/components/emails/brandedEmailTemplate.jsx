@@ -49,7 +49,7 @@ export function brandedEmail({ heading, headingColor = '#1E293B', bodyHtml, port
     <!-- Footer -->
     <div style="background-color: #1E293B; padding: 20px 32px; text-align: center;">
       <p style="margin: 0; font-family: Manrope, Arial, sans-serif; font-size: 12px; color: #94A3B8; line-height: 1.5;">
-        © 2026 ADA Legal Marketplace. All rights reserved.
+        © 2026 ADA Legal Connect. All rights reserved.
       </p>
       <p style="margin: 6px 0 0 0; font-family: Manrope, Arial, sans-serif; font-size: 12px; color: #94A3B8; line-height: 1.5;">
         Connecting people with experienced ADA attorneys.

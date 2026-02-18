@@ -41,7 +41,7 @@ export default function Layout({ children, currentPageName }) {
 
   React.useEffect(() => {
     const title = PAGE_TITLES[currentPageName] || currentPageName;
-    document.title = `${title} — ADA Legal Marketplace`;
+    document.title = `${title} — ADA Legal Connect`;
   }, [currentPageName]);
 
   return (
@@ -274,7 +274,7 @@ export default function Layout({ children, currentPageName }) {
                 {user?.role === 'lawyer' && (
                   <>
                     <Link to={createPageUrl('Marketplace')} style={{ color: 'white' }}>
-                      Marketplace
+                      Available Cases
                     </Link>
                     <Link to={createPageUrl('LawyerDashboard')} style={{ color: 'white' }}>
                       My Cases
@@ -426,7 +426,7 @@ export default function Layout({ children, currentPageName }) {
                 {user?.role === 'lawyer' && (
                   <>
                     <Link to={createPageUrl('Marketplace')} style={{ color: 'white', padding: '0.5rem 0' }}>
-                      Marketplace
+                      Available Cases
                     </Link>
                     <Link to={createPageUrl('LawyerDashboard')} style={{ color: 'white', padding: '0.5rem 0' }}>
                       My Cases
@@ -519,7 +519,7 @@ export default function Layout({ children, currentPageName }) {
             textAlign: 'center'
           }}>
             <p style={{ margin: 0, fontSize: '0.875rem' }}>
-              © 2026 ADA Legal Marketplace. All rights reserved.
+              © 2026 ADA Legal Connect. All rights reserved.
             </p>
             <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem' }}>
               Connecting people with experienced ADA attorneys.

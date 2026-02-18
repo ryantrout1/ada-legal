@@ -104,7 +104,7 @@ export function caseClosedEmail(c, portalUrl) {
       <p>Dear ${c.contact_name},</p>
       <p>Your ADA violation case regarding <strong>${c.business_name}</strong> has been closed.</p>
       <p>If you have any questions about the outcome or need further assistance, please don't hesitate to reach out by replying to this email.</p>
-      <p>Thank you for using ADA Legal Marketplace.</p>
+      <p>Thank you for using ADA Legal Connect.</p>
     `,
     portalUrl,
     portalLabel: 'View Case Summary'

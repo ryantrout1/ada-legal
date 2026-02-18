@@ -16,10 +16,10 @@ export default function SupportBanner() {
       }}>
         Questions about your case? Contact us at{' '}
         <a
-          href="mailto:support@adalegalmarketplace.com"
+          href="mailto:support@adalegalconnect.com"
           style={{ color: 'var(--terra-600)', fontWeight: 600, textDecoration: 'underline' }}
         >
-          support@adalegalmarketplace.com
+          support@adalegalconnect.com
         </a>
       </p>
     </div>

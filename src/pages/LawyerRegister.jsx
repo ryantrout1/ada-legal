@@ -43,7 +43,7 @@ export default function LawyerRegister() {
     if (!form.phone.trim()) e.phone = 'Phone number is required';
     if (form.states_of_practice.length === 0) e.states_of_practice = 'Select at least one state';
     if (!form.bar_numbers.trim()) e.bar_numbers = 'Bar number is required';
-    if (!form.rules_accepted) e.rules_accepted = 'You must accept the marketplace rules';
+    if (!form.rules_accepted) e.rules_accepted = 'You must accept the platform rules';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -129,7 +129,7 @@ export default function LawyerRegister() {
           fontWeight: 700, color: 'var(--slate-900)',
           marginBottom: 'var(--space-xs)', textAlign: 'center'
         }}>
-          Join the ADA Legal Marketplace
+          Join ADA Legal Connect
         </h1>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
@@ -210,7 +210,7 @@ export default function LawyerRegister() {
                 }}
               />
               <span>
-                I have read and agree to the ADA Legal Marketplace Rules, including the requirement to contact claimants within 24 hours of initiating support.
+                I have read and agree to the ADA Legal Connect Rules, including the requirement to contact claimants within 24 hours of initiating support.
               </span>
             </label>
             {errors.rules_accepted && (

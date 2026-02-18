@@ -13,25 +13,25 @@ export default function LandingFooter() {
           color: 'var(--slate-300)', fontWeight: 600,
           marginBottom: '1.25rem', marginTop: 0
         }}>
-          ADA Legal Marketplace
+          ADA Legal Connect
         </p>
         <div style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
           color: 'var(--slate-400)', lineHeight: 1.7
         }}>
           <p style={{ margin: '0 0 0.75rem' }}>
-            ADA Legal Marketplace is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship.
+            ADA Legal Connect is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship.
           </p>
           <p style={{ margin: '0 0 0.75rem' }}>
             The information on this site is for general informational purposes only and does not constitute legal counsel. Attorney listings do not constitute endorsements. Results may vary.
           </p>
           <p style={{ margin: '0 0 0.75rem' }}>
-            <a href="mailto:support@adalegalmarketplace.com" style={{ color: 'var(--terra-300)', textDecoration: 'underline' }}>
-              Contact Us: support@adalegalmarketplace.com
+            <a href="mailto:support@adalegalconnect.com" style={{ color: 'var(--terra-300)', textDecoration: 'underline' }}>
+              Contact Us: support@adalegalconnect.com
             </a>
           </p>
           <p style={{ margin: 0 }}>
-            © {new Date().getFullYear()} ADA Legal Marketplace. All rights reserved.
+            © {new Date().getFullYear()} ADA Legal Connect. All rights reserved.
           </p>
         </div>
       </div>
