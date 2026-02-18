@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
-import CasePipelineSection from '../components/analytics/CasePipelineSection';
-import MarketplaceHealthSection from '../components/analytics/MarketplaceHealthSection';
+import PipelineMarketplaceSection from '../components/analytics/PipelineMarketplaceSection';
 import GeographicSection from '../components/analytics/GeographicSection';
 import LawyerActivitySection from '../components/analytics/LawyerActivitySection';
 import ViolationTypeSection from '../components/analytics/ViolationTypeSection';
@@ -10,6 +9,7 @@ import ActiveFiltersBar from '../components/analytics/ActiveFiltersBar';
 import CaseOutcomesSection from '../components/analytics/CaseOutcomesSection';
 import DemandIntelligenceSection from '../components/analytics/DemandIntelligenceSection';
 import ExportAnalytics from '../components/analytics/ExportAnalytics';
+import CollapsibleSection from '../components/analytics/CollapsibleSection';
 
 const STATE_NAME_TO_ABBR = {
   'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO',
@@ -51,13 +51,9 @@ export default function AdminAnalytics() {
   const [lawyers, setLawyers] = useState([]);
   const [contactLogs, setContactLogs] = useState([]);
   const [filters, setFilters] = useState({
-    state: null,
-    city: null,
-    violationType: null,
-    violationSubtype: null,
-    businessType: null,
-    resolutionType: null,
-    caseValue: null
+    state: null, city: null, violationType: null,
+    violationSubtype: null, businessType: null,
+    resolutionType: null, caseValue: null
   });
 
   useEffect(() => {
@@ -71,13 +67,11 @@ export default function AdminAnalytics() {
         }
         return;
       }
-
       const [allCases, allLawyers, allLogs] = await Promise.all([
         base44.entities.Case.list('-created_date', 1000),
         base44.entities.LawyerProfile.list('-created_date', 500),
         base44.entities.ContactLog.list('-created_date', 1000)
       ]);
-
       setCases(allCases);
       setLawyers(allLawyers);
       setContactLogs(allLogs);
@@ -86,17 +80,9 @@ export default function AdminAnalytics() {
     init();
   }, []);
 
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-  };
-
-  const handleRemoveFilter = (key) => {
-    setFilters(prev => ({ ...prev, [key]: null }));
-  };
-
-  const handleClearAll = () => {
-    setFilters({ state: null, city: null, violationType: null, violationSubtype: null, businessType: null, resolutionType: null, caseValue: null });
-  };
+  const handleFilterChange = (key, value) => setFilters(prev => ({ ...prev, [key]: value }));
+  const handleRemoveFilter = (key) => setFilters(prev => ({ ...prev, [key]: null }));
+  const handleClearAll = () => setFilters({ state: null, city: null, violationType: null, violationSubtype: null, businessType: null, resolutionType: null, caseValue: null });
 
   const filteredCases = useMemo(() => {
     return cases.filter(c => {
@@ -116,13 +102,7 @@ export default function AdminAnalytics() {
 
   if (loading) {
     return (
-      <div
-        role="status" aria-label="Loading analytics"
-        style={{
-          display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-          minHeight: 'calc(100vh - 200px)', gap: '1rem'
-        }}
-      >
+      <div role="status" aria-label="Loading analytics" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
         <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)' }}>Loading analytics…</p>
       </div>
@@ -130,32 +110,38 @@ export default function AdminAnalytics() {
   }
 
   return (
-    <div style={{
-      backgroundColor: 'var(--slate-50)',
-      minHeight: 'calc(100vh - 200px)',
-      padding: 'var(--space-xl) var(--space-lg)'
-    }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: '1.25rem 1.5rem' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <h1 style={{
-            fontFamily: 'Fraunces, serif',
-            fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-            fontWeight: 700, color: 'var(--slate-900)', margin: 0
-          }}>
-            Analytics
-          </h1>
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>Analytics</h1>
           <ExportAnalytics cases={filteredCases} lawyers={lawyers} contactLogs={contactLogs} filters={filters} />
         </div>
 
         <ActiveFiltersBar filters={filters} onRemove={handleRemoveFilter} onClearAll={handleClearAll} />
 
-        <CasePipelineSection cases={filteredCases} />
-        <MarketplaceHealthSection cases={filteredCases} contactLogs={contactLogs} />
-        <CaseOutcomesSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
-        <DemandIntelligenceSection cases={filteredCases} lawyers={lawyers} contactLogs={contactLogs} filters={filters} onFilterChange={handleFilterChange} />
-        <GeographicSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
-        <ViolationTypeSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
-        <LawyerActivitySection lawyers={lawyers} cases={filteredCases} contactLogs={contactLogs} />
+        <CollapsibleSection id="pipeline" title="Pipeline & Marketplace">
+          <PipelineMarketplaceSection cases={filteredCases} contactLogs={contactLogs} />
+        </CollapsibleSection>
+
+        <CollapsibleSection id="outcomes" title="Case Outcomes">
+          <CaseOutcomesSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
+        </CollapsibleSection>
+
+        <CollapsibleSection id="demand" title="Demand Intelligence">
+          <DemandIntelligenceSection cases={filteredCases} lawyers={lawyers} contactLogs={contactLogs} filters={filters} onFilterChange={handleFilterChange} />
+        </CollapsibleSection>
+
+        <CollapsibleSection id="geographic" title="Geographic Distribution">
+          <GeographicSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
+        </CollapsibleSection>
+
+        <CollapsibleSection id="violation" title="Violation Type Breakdown">
+          <ViolationTypeSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
+        </CollapsibleSection>
+
+        <CollapsibleSection id="lawyer" title="Lawyer Activity">
+          <LawyerActivitySection lawyers={lawyers} cases={filteredCases} contactLogs={contactLogs} />
+        </CollapsibleSection>
       </div>
     </div>
   );
