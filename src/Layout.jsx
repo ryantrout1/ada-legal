@@ -583,10 +583,10 @@ export default function Layout({ children, currentPageName }) {
         }
       `}</style>
 
-      <aside role="complementary" aria-label="Accessibility tools">
-        <AuditButton currentPageName={currentPageName} />
-      </aside>
     </div>
+    <aside role="complementary" aria-label="Accessibility tools" style={{ position: 'relative', zIndex: 9999 }}>
+      <AuditButton currentPageName={currentPageName} />
+    </aside>
     </LiveAnnouncer>
   );
 }
