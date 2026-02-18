@@ -1,43 +1,62 @@
 import React, { useState } from 'react';
 import { CheckCircle, XCircle, AlertTriangle, RotateCcw, Trash2, RefreshCw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useFocusTrap } from '../../a11y/FocusTrap';
 
 const btnBase = {
-  display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-  fontSize: '0.875rem', fontWeight: 700, color: 'white',
-  border: 'none', borderRadius: 'var(--radius-md)',
+  display: 'inline-flex', alignItems: 'center', gap: '6px',
+  padding: '10px 20px', fontFamily: 'Manrope, sans-serif',
+  fontSize: '0.9375rem', fontWeight: 700, color: 'white',
+  border: 'none', borderRadius: '8px',
   cursor: 'pointer', minHeight: '44px', transition: 'opacity 0.15s'
 };
 
-function ConfirmModal({ open, title, message, confirmLabel, confirmColor, onConfirm, onCancel, children }) {
+function ActionModal({ open, title, headerColor, message, confirmLabel, confirmColor, confirmDisabled, onConfirm, onCancel, saving, children }) {
+  const trapRef = useFocusTrap(open, () => { if (!saving) onCancel(); });
   if (!open) return null;
   return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 1000,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      backgroundColor: 'rgba(0,0,0,0.4)'
-    }} onClick={onCancel}>
-      <div onClick={e => e.stopPropagation()} style={{
-        backgroundColor: 'white', borderRadius: 'var(--radius-lg)',
-        padding: 'var(--space-xl)', maxWidth: '480px', width: '90%',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
+    <div
+      role="dialog" aria-modal="true" aria-labelledby="action-modal-heading"
+      style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)', padding: '1rem'
+      }}
+      onClick={e => { if (e.target === e.currentTarget && !saving) onCancel(); }}
+    >
+      <div ref={trapRef} style={{
+        backgroundColor: 'white', borderRadius: '16px', width: '100%', maxWidth: '480px',
+        maxHeight: '90vh', overflow: 'auto'
       }}>
-        <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.125rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 0.5rem' }}>
-          {title}
-        </h3>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-600)', lineHeight: 1.6, margin: '0 0 1rem' }}>
-          {message}
-        </p>
-        {children}
-        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
-          <button type="button" onClick={onCancel} style={{
-            ...btnBase, color: 'var(--slate-700)', backgroundColor: 'white',
-            border: '1px solid var(--slate-200)'
-          }}>Cancel</button>
-          <button type="button" onClick={onConfirm} style={{ ...btnBase, backgroundColor: confirmColor }}>
-            {confirmLabel}
-          </button>
+        {/* Colored header bar */}
+        <div style={{ height: '6px', backgroundColor: headerColor || '#475569', borderRadius: '16px 16px 0 0' }} />
+        <div style={{ padding: '24px' }}>
+          <h2 id="action-modal-heading" style={{
+            fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700,
+            color: 'var(--slate-900)', margin: '0 0 8px'
+          }}>
+            {title}
+          </h2>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', lineHeight: 1.6, margin: '0 0 16px' }}>
+            {message}
+          </p>
+          {children}
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
+            <button type="button" onClick={onCancel} disabled={saving} style={{
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
+              color: '#475569', backgroundColor: 'transparent', border: 'none',
+              cursor: 'pointer', padding: '8px 16px', minHeight: '44px'
+            }}>
+              Cancel
+            </button>
+            <button type="button" onClick={onConfirm} disabled={confirmDisabled || saving} style={{
+              ...btnBase,
+              backgroundColor: (confirmDisabled || saving) ? '#94A3B8' : confirmColor,
+              cursor: (confirmDisabled || saving) ? 'not-allowed' : 'pointer'
+            }}>
+              {saving ? 'Processing…' : confirmLabel}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -45,7 +64,7 @@ function ConfirmModal({ open, title, message, confirmLabel, confirmColor, onConf
 }
 
 export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, onToast }) {
-  const [modal, setModal] = useState(null); // 'reject'|'suspend'|'remove'|'reassign'
+  const [modal, setModal] = useState(null);
   const [reason, setReason] = useState('');
   const [confirmText, setConfirmText] = useState('');
   const [processing, setProcessing] = useState(false);
@@ -54,7 +73,7 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
   const activeCases = cases.filter(c =>
     c.assigned_lawyer_id === lawyer.id && (c.status === 'assigned' || c.status === 'in_progress')
   );
-  const showReassign = activeCases.length > 0 && (status === 'suspended' || status === 'removed');
+  const showReassign = activeCases.length > 0 && (status === 'approved' || status === 'suspended');
 
   const handleApprove = async () => {
     setProcessing(true);
@@ -72,8 +91,7 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
     setProcessing(true);
     await base44.entities.LawyerProfile.update(lawyer.id, { account_status: 'removed' });
     onToast('Lawyer rejected.');
-    setModal(null);
-    setReason('');
+    setModal(null); setReason('');
     await onRefresh();
     setProcessing(false);
   };
@@ -85,8 +103,7 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
       account_status: 'suspended', flagged: true, flag_reason: reason.trim()
     });
     onToast('Lawyer suspended.');
-    setModal(null);
-    setReason('');
+    setModal(null); setReason('');
     await onRefresh();
     setProcessing(false);
   };
@@ -97,6 +114,7 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
       account_status: 'approved', flagged: false, flag_reason: ''
     });
     onToast('Lawyer reinstated.');
+    setModal(null); setReason('');
     await onRefresh();
     setProcessing(false);
   };
@@ -104,10 +122,19 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
   const handleRemove = async () => {
     if (confirmText !== 'REMOVE') return;
     setProcessing(true);
+    // Return active cases first
+    const now = new Date().toISOString();
+    for (const c of activeCases) {
+      await base44.entities.Case.update(c.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '' });
+      await base44.entities.TimelineEvent.create({
+        case_id: c.id, event_type: 'reclaimed',
+        event_description: 'Case returned to marketplace by admin.',
+        actor_role: 'admin', visible_to_user: false, created_at: now
+      });
+    }
     await base44.entities.LawyerProfile.update(lawyer.id, { account_status: 'removed' });
     onToast('Lawyer removed.');
-    setModal(null);
-    setConfirmText('');
+    setModal(null); setConfirmText('');
     await onRefresh();
     setProcessing(false);
   };
@@ -116,19 +143,11 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
     setProcessing(true);
     const now = new Date().toISOString();
     for (const c of activeCases) {
-      await base44.entities.Case.update(c.id, {
-        status: 'available',
-        assigned_lawyer_id: '',
-        assigned_at: '',
-        contact_logged_at: ''
-      });
+      await base44.entities.Case.update(c.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '', contact_logged_at: '' });
       await base44.entities.TimelineEvent.create({
-        case_id: c.id,
-        event_type: 'reclaimed',
+        case_id: c.id, event_type: 'reclaimed',
         event_description: 'Case returned to marketplace by admin.',
-        actor_role: 'admin',
-        visible_to_user: false,
-        created_at: now
+        actor_role: 'admin', visible_to_user: false, created_at: now
       });
     }
     await base44.entities.LawyerProfile.update(lawyer.id, {
@@ -143,15 +162,15 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
   const disabledStyle = processing ? { opacity: 0.5, pointerEvents: 'none' } : {};
 
   const inputStyle = {
-    width: '100%', padding: '0.5rem 0.75rem', marginTop: '0.5rem',
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-    border: '1px solid var(--slate-300)', borderRadius: 'var(--radius-sm)',
-    color: 'var(--slate-800)', outline: 'none'
+    width: '100%', padding: '10px 12px', marginTop: '8px',
+    fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+    border: '2px solid var(--slate-200)', borderRadius: '8px',
+    color: '#334155', outline: 'none', boxSizing: 'border-box'
   };
 
   return (
     <div>
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', ...disabledStyle }}>
+      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', ...disabledStyle }}>
         {status === 'pending_approval' && (
           <>
             <button type="button" onClick={handleApprove} style={{ ...btnBase, backgroundColor: '#15803D' }}>
@@ -164,7 +183,7 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
         )}
         {status === 'approved' && (
           <>
-            <button type="button" onClick={() => { setReason(''); setModal('suspend'); }} style={{ ...btnBase, backgroundColor: '#D97706' }}>
+            <button type="button" onClick={() => { setReason(''); setModal('suspend'); }} style={{ ...btnBase, backgroundColor: '#92400E' }}>
               <AlertTriangle size={16} /> Suspend
             </button>
             <button type="button" onClick={() => { setConfirmText(''); setModal('remove'); }} style={{ ...btnBase, backgroundColor: '#B91C1C' }}>
@@ -174,7 +193,7 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
         )}
         {status === 'suspended' && (
           <>
-            <button type="button" onClick={handleReinstate} style={{ ...btnBase, backgroundColor: '#15803D' }}>
+            <button type="button" onClick={() => { setReason(''); setModal('reinstate'); }} style={{ ...btnBase, backgroundColor: '#15803D' }}>
               <RotateCcw size={16} /> Reinstate
             </button>
             <button type="button" onClick={() => { setConfirmText(''); setModal('remove'); }} style={{ ...btnBase, backgroundColor: '#B91C1C' }}>
@@ -183,68 +202,86 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
           </>
         )}
         {showReassign && (
-          <button type="button" onClick={() => setModal('reassign')} style={{ ...btnBase, backgroundColor: 'var(--slate-700)' }}>
-            <RefreshCw size={16} /> Reassign Cases ({activeCases.length})
+          <button type="button" onClick={() => setModal('reassign')} style={{
+            ...btnBase, color: '#92400E', backgroundColor: 'transparent',
+            border: '2px solid #92400E'
+          }}>
+            <RefreshCw size={16} /> Reassign {activeCases.length} Case{activeCases.length !== 1 ? 's' : ''}
           </button>
         )}
       </div>
 
       {/* Reject Modal */}
-      <ConfirmModal
-        open={modal === 'reject'}
-        title="Reject Lawyer"
-        message="Please provide a reason for rejecting this application."
-        confirmLabel="Reject"
-        confirmColor="#B91C1C"
-        onConfirm={handleReject}
-        onCancel={() => setModal(null)}
+      <ActionModal
+        open={modal === 'reject'} title="Reject Application" headerColor="#B91C1C"
+        message="Please provide a reason for rejecting this lawyer's application."
+        confirmLabel="Reject" confirmColor="#B91C1C"
+        confirmDisabled={!reason.trim()} onConfirm={handleReject}
+        onCancel={() => setModal(null)} saving={processing}
       >
-        <input type="text" value={reason} onChange={e => setReason(e.target.value)}
-          placeholder="Reason for rejection (required)..." style={inputStyle} />
-      </ConfirmModal>
+        <textarea value={reason} onChange={e => setReason(e.target.value)}
+          placeholder="Reason for rejection (required)…" rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
+      </ActionModal>
 
       {/* Suspend Modal */}
-      <ConfirmModal
-        open={modal === 'suspend'}
-        title="Suspend Lawyer"
-        message="Please provide a reason for suspending this lawyer."
-        confirmLabel="Suspend"
-        confirmColor="#D97706"
-        onConfirm={handleSuspend}
-        onCancel={() => setModal(null)}
+      <ActionModal
+        open={modal === 'suspend'} title="Suspend Lawyer" headerColor="#92400E"
+        message="Please provide a reason for suspending this lawyer's access."
+        confirmLabel="Suspend" confirmColor="#92400E"
+        confirmDisabled={!reason.trim()} onConfirm={handleSuspend}
+        onCancel={() => setModal(null)} saving={processing}
       >
-        <input type="text" value={reason} onChange={e => setReason(e.target.value)}
-          placeholder="Reason for suspension (required)..." style={inputStyle} />
-      </ConfirmModal>
+        <textarea value={reason} onChange={e => setReason(e.target.value)}
+          placeholder="Reason for suspension (required)…" rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
+        {activeCases.length > 0 && (
+          <div style={{
+            display: 'flex', alignItems: 'flex-start', gap: '8px', padding: '10px',
+            backgroundColor: '#FEF9C3', borderRadius: '8px', marginTop: '12px'
+          }}>
+            <AlertTriangle size={16} style={{ color: '#92400E', flexShrink: 0, marginTop: '2px' }} />
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#92400E', margin: 0, lineHeight: 1.5 }}>
+              This lawyer has {activeCases.length} active case(s). You can reassign them after suspending.
+            </p>
+          </div>
+        )}
+      </ActionModal>
+
+      {/* Reinstate Modal */}
+      <ActionModal
+        open={modal === 'reinstate'} title="Reinstate Lawyer" headerColor="#15803D"
+        message="This will restore the lawyer's access to the marketplace."
+        confirmLabel="Reinstate" confirmColor="#15803D"
+        confirmDisabled={false} onConfirm={handleReinstate}
+        onCancel={() => setModal(null)} saving={processing}
+      >
+        <textarea value={reason} onChange={e => setReason(e.target.value)}
+          placeholder="Notes (optional)…" rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
+      </ActionModal>
 
       {/* Remove Modal */}
-      <ConfirmModal
-        open={modal === 'remove'}
-        title="Remove Lawyer"
-        message="This will permanently remove this lawyer and return their active cases to the marketplace. This cannot be undone."
-        confirmLabel="Remove"
-        confirmColor="#B91C1C"
-        onConfirm={handleRemove}
-        onCancel={() => setModal(null)}
+      <ActionModal
+        open={modal === 'remove'} title="Remove Lawyer" headerColor="#B91C1C"
+        message="This will permanently remove this lawyer. Active cases will be returned to the marketplace. This cannot be undone."
+        confirmLabel="Remove" confirmColor="#B91C1C"
+        confirmDisabled={confirmText !== 'REMOVE'} onConfirm={handleRemove}
+        onCancel={() => setModal(null)} saving={processing}
       >
         <div>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)', margin: '0 0 0.25rem' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569', margin: '0 0 4px' }}>
             Type <strong>REMOVE</strong> to confirm:
           </p>
           <input type="text" value={confirmText} onChange={e => setConfirmText(e.target.value)}
             placeholder="REMOVE" style={inputStyle} />
         </div>
-      </ConfirmModal>
+      </ActionModal>
 
       {/* Reassign Modal */}
-      <ConfirmModal
-        open={modal === 'reassign'}
-        title="Reassign Cases"
+      <ActionModal
+        open={modal === 'reassign'} title="Reassign Cases" headerColor="#92400E"
         message={`This will return ${activeCases.length} active case(s) to the marketplace. Claimants will not be notified.`}
-        confirmLabel="Reassign Cases"
-        confirmColor="var(--slate-700)"
-        onConfirm={handleReassign}
-        onCancel={() => setModal(null)}
+        confirmLabel="Reassign Cases" confirmColor="#92400E"
+        confirmDisabled={false} onConfirm={handleReassign}
+        onCancel={() => setModal(null)} saving={processing}
       />
     </div>
   );

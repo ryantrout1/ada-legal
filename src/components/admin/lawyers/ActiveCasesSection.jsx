@@ -1,11 +1,7 @@
-import React from 'react';
-import { CheckCircle, AlertTriangle, Clock } from 'lucide-react';
-import LawyerBadge from './LawyerBadge';
-
-const violationColors = {
-  physical_space: { bg: '#FEF1EC', text: '#9A3412' },
-  digital_website: { bg: '#EFF6FF', text: '#1D4ED8' }
-};
+import React, { useState } from 'react';
+import { Building2, Globe, CheckCircle, AlertTriangle, Clock, ChevronDown, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../../../utils';
 
 function formatDate(d) {
   if (!d) return '—';
@@ -16,76 +12,93 @@ export default function ActiveCasesSection({ lawyer, cases, contactLogs }) {
   const active = cases.filter(c =>
     c.assigned_lawyer_id === lawyer.id && (c.status === 'assigned' || c.status === 'in_progress')
   );
+  const [open, setOpen] = useState(active.length > 0);
 
   return (
     <div>
-      <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 0.75rem 0' }}>
-        Active Cases ({active.length})
-      </h3>
-      {active.length === 0 ? (
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)', margin: 0 }}>No active cases.</p>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {active.map(c => {
-            const hasContact = contactLogs.some(l => l.case_id === c.id);
-            const hoursSinceAssign = c.assigned_at ? Math.round((Date.now() - new Date(c.assigned_at).getTime()) / (1000 * 60 * 60)) : 0;
-            const overdue = !hasContact && hoursSinceAssign > 24;
-            const remaining = !hasContact && hoursSinceAssign <= 24 ? 24 - hoursSinceAssign : 0;
-            const daysSince = c.assigned_at ? Math.round((Date.now() - new Date(c.assigned_at).getTime()) / (1000 * 60 * 60 * 24)) : 0;
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: '6px',
+          background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginBottom: open ? '8px' : 0
+        }}
+      >
+        {open ? <ChevronDown size={14} style={{ color: '#475569' }} /> : <ChevronRight size={14} style={{ color: '#475569' }} />}
+        <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
+          Active Cases ({active.length})
+        </h3>
+      </button>
 
-            const vColor = violationColors[c.violation_type] || { bg: '#F1F5F9', text: '#475569' };
+      {open && (
+        active.length === 0 ? (
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569', margin: '4px 0 0 20px' }}>
+            No active cases.
+          </p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            {active.map(c => {
+              const isPhysical = c.violation_type === 'physical_space';
+              const hasContact = contactLogs.some(l => l.case_id === c.id);
+              const hoursSinceAssign = c.assigned_at ? Math.round((Date.now() - new Date(c.assigned_at).getTime()) / (1000 * 60 * 60)) : 0;
+              const overdue = !hasContact && hoursSinceAssign > 24;
+              const remaining = !hasContact && hoursSinceAssign <= 24 ? 24 - hoursSinceAssign : 0;
+              const daysSince = c.assigned_at ? Math.round((Date.now() - new Date(c.assigned_at).getTime()) / (1000 * 60 * 60 * 24)) : 0;
 
-            return (
-              <div key={c.id} style={{
-                display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap',
-                padding: '0.625rem 0.875rem',
-                backgroundColor: 'white', border: '1px solid var(--slate-200)',
-                borderRadius: 'var(--radius-sm)'
-              }}>
-                <div style={{ flex: 1, minWidth: '140px' }}>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-800)' }}>
+              return (
+                <Link
+                  key={c.id}
+                  to={createPageUrl('AdminCases') + `?search=${c.id?.slice(0, 8)}`}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap',
+                    padding: '8px 12px', textDecoration: 'none',
+                    backgroundColor: 'white', border: '1px solid var(--slate-200)',
+                    borderRadius: '8px', transition: 'background-color 0.15s',
+                    minHeight: '44px'
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--slate-50)'}
+                  onMouseLeave={e => e.currentTarget.style.backgroundColor = 'white'}
+                >
+                  {isPhysical
+                    ? <Building2 size={14} style={{ color: '#C2410C' }} />
+                    : <Globe size={14} style={{ color: '#1D4ED8' }} />
+                  }
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: '#334155', flex: 1, minWidth: '120px' }}>
                     {c.business_name}
                   </span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', marginLeft: '0.5rem' }}>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569' }}>
                     {[c.city, c.state].filter(Boolean).join(', ')}
                   </span>
-                </div>
-                <span style={{
-                  display: 'inline-block', padding: '0.15rem 0.5rem',
-                  fontSize: '0.6875rem', fontWeight: 700, borderRadius: '9999px',
-                  backgroundColor: vColor.bg, color: vColor.text
-                }}>
-                  {c.violation_type === 'physical_space' ? 'Physical' : 'Digital'}
-                </span>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
-                  Assigned {formatDate(c.assigned_at)} ({daysSince}d ago)
-                </span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flexShrink: 0 }}>
-                  {hasContact ? (
-                    <>
-                      <CheckCircle size={14} style={{ color: '#15803D' }} />
-                      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#15803D' }}>Contacted</span>
-                    </>
-                  ) : overdue ? (
-                    <>
-                      <AlertTriangle size={14} style={{ color: '#B91C1C' }} />
-                      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#B91C1C' }}>
-                        No Contact — {hoursSinceAssign - 24}h overdue
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <Clock size={14} style={{ color: '#D97706' }} />
-                      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#D97706' }}>
-                        {remaining}h remaining
-                      </span>
-                    </>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569' }}>
+                    {daysSince}d ago
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
+                    {hasContact ? (
+                      <>
+                        <CheckCircle size={14} style={{ color: '#15803D' }} />
+                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#15803D' }}>Contacted</span>
+                      </>
+                    ) : overdue ? (
+                      <>
+                        <AlertTriangle size={14} style={{ color: '#B91C1C' }} />
+                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#B91C1C' }}>
+                          {hoursSinceAssign - 24}h overdue
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <Clock size={14} style={{ color: '#92400E' }} />
+                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#92400E' }}>
+                          {remaining}h left
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )
       )}
     </div>
   );

@@ -1,17 +1,17 @@
 import React from 'react';
 
 const accountColors = {
-  pending_approval: { bg: '#FEF3C7', text: '#92400E' },
+  pending_approval: { bg: '#FEF9C3', text: '#92400E' },
   approved: { bg: '#DCFCE7', text: '#15803D' },
   suspended: { bg: '#FEE2E2', text: '#B91C1C' },
   removed: { bg: '#F1F5F9', text: '#475569' }
 };
 
 const subColors = {
-  inactive: { bg: '#F1F5F9', text: '#475569' },
+  inactive: { bg: '#F1EFEA', text: '#1E293B' },
   active: { bg: '#DCFCE7', text: '#15803D' },
   canceled: { bg: '#FEE2E2', text: '#B91C1C' },
-  past_due: { bg: '#FEF3C7', text: '#92400E' }
+  past_due: { bg: '#FEF9C3', text: '#92400E' }
 };
 
 export { accountColors, subColors };

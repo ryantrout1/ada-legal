@@ -1,12 +1,10 @@
 import React from 'react';
-import { Briefcase, Activity, Clock, ShieldCheck } from 'lucide-react';
 
 export default function PerformanceSection({ lawyer, cases, contactLogs }) {
   const myCases = cases.filter(c => c.assigned_lawyer_id === lawyer.id);
   const totalCases = myCases.length;
   const activeCases = myCases.filter(c => c.status === 'assigned' || c.status === 'in_progress').length;
 
-  // Avg time to contact
   const casesWithAssign = myCases.filter(c => c.assigned_at);
   let avgContactHrs = null;
   if (casesWithAssign.length > 0) {
@@ -26,49 +24,55 @@ export default function PerformanceSection({ lawyer, cases, contactLogs }) {
     }
   }
 
-  // Compliance rate
   let complianceRate = null;
   if (casesWithAssign.length > 0) {
     const compliant = casesWithAssign.filter(c => {
       const deadline = new Date(new Date(c.assigned_at).getTime() + 24 * 60 * 60 * 1000);
       return contactLogs.some(l =>
-        l.case_id === c.id &&
-        l.contact_type === 'initial_contact' &&
+        l.case_id === c.id && l.contact_type === 'initial_contact' &&
         new Date(l.logged_at || l.created_date) <= deadline
       );
     }).length;
     complianceRate = Math.round((compliant / casesWithAssign.length) * 100);
   }
 
-  const complianceBg = complianceRate === null ? 'var(--surface)' :
-    complianceRate >= 80 ? '#DCFCE7' : complianceRate >= 50 ? '#FEF3C7' : '#FEE2E2';
-  const complianceText = complianceRate === null ? 'var(--slate-700)' :
-    complianceRate >= 80 ? '#15803D' : complianceRate >= 50 ? '#92400E' : '#B91C1C';
-
-  const card = (label, value, bg, text, IconComp) => (
-    <div style={{
-      backgroundColor: bg || 'var(--surface)', border: `1px solid ${bg || 'var(--slate-200)'}`,
-      borderRadius: 'var(--radius-lg)', padding: '0.875rem 1rem', flex: '1 1 160px', minWidth: '140px'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: text || 'var(--slate-500)', margin: 0 }}>{label}</p>
-        <IconComp size={16} style={{ color: text || 'var(--slate-400)', opacity: 0.7 }} />
-      </div>
-      <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: text || 'var(--slate-900)', margin: 0 }}>{value}</p>
-    </div>
-  );
+  const compColor = complianceRate === null ? 'white' :
+    complianceRate >= 80 ? '#4ADE80' : complianceRate >= 50 ? '#FCD34D' : '#FCA5A5';
 
   return (
     <div>
-      <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 0.75rem 0' }}>
+      <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px' }}>
         Performance Metrics
       </h3>
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-        {card('Total Cases', totalCases, '#DBEAFE', '#1D4ED8', Briefcase)}
-        {card('Active Cases', activeCases, '#F3E8FF', '#7C3AED', Activity)}
-        {card('Avg Time to Contact', avgContactHrs !== null ? `${avgContactHrs}h` : '—', 'var(--surface)', 'var(--slate-700)', Clock)}
-        {card('Compliance Rate', complianceRate !== null ? `${complianceRate}%` : '—', complianceBg, complianceText, ShieldCheck)}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap',
+        backgroundColor: 'var(--slate-900)', borderRadius: '12px', padding: '14px 20px'
+      }}>
+        <Stat label="Total" value={totalCases} />
+        <Sep />
+        <Stat label="Active" value={activeCases} />
+        <Sep />
+        <Stat label="Avg Response" value={avgContactHrs !== null ? `${avgContactHrs}h` : '—'} />
+        <Sep />
+        <Stat label="On-Time" value={complianceRate !== null ? `${complianceRate}%` : '—'} color={compColor} />
       </div>
     </div>
   );
+}
+
+function Stat({ label, value, color }) {
+  return (
+    <div>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+        {label}
+      </span>
+      <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700, color: color || 'white', marginLeft: '6px' }}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function Sep() {
+  return <div style={{ width: '1px', height: '28px', backgroundColor: 'rgba(255,255,255,0.15)' }} />;
 }
