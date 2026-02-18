@@ -127,7 +127,26 @@ export default function Layout({ children, currentPageName }) {
         }
       `}</style>
 
-      <a href="#main-content" className="skip-to-main">
+      <a
+        href="#main-content"
+        style={{
+          position: 'absolute',
+          top: '-200px',
+          left: '16px',
+          background: '#C2410C',
+          color: 'white',
+          padding: '12px 24px',
+          borderRadius: '0 0 8px 8px',
+          zIndex: 10000,
+          fontWeight: 600,
+          fontFamily: 'Manrope, sans-serif',
+          fontSize: '0.9375rem',
+          textDecoration: 'none',
+          transition: 'top 0.2s'
+        }}
+        onFocus={(e) => e.target.style.top = '0px'}
+        onBlur={(e) => e.target.style.top = '-200px'}
+      >
         Skip to main content
       </a>
 

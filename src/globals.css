@@ -1,3 +1,4 @@
+css
 /* ========================================
    GLOBAL ACCESSIBILITY STYLES
    ======================================== */
@@ -25,39 +26,7 @@
   outline: none !important;
 }
 
-/* Skip to main content link — hidden off-screen, visible on focus */
-a[href="#main-content"],
-.skip-to-main {
-  position: absolute !important;
-  top: -200px !important;
-  left: 16px !important;
-  z-index: 10000;
-  padding: 12px 24px;
-  background: #C2410C;
-  color: white;
-  font-family: 'Manrope', sans-serif;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  text-decoration: none;
-  border-radius: 0 0 8px 8px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  width: 1px;
-  height: 1px;
-  white-space: nowrap;
-}
-
-a[href="#main-content"]:focus,
-.skip-to-main:focus {
-  top: 0 !important;
-  clip: auto;
-  width: auto;
-  height: auto;
-  overflow: visible;
-  white-space: normal;
-  outline: 3px solid #1D4ED8;
-  outline-offset: 2px;
-}
+/* Skip to main content link — now handled via inline styles + JS onFocus/onBlur in Layout */
 
 /* Loading spinner */
 .a11y-spinner {
