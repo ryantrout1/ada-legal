@@ -331,7 +331,7 @@ export default function Marketplace() {
           Available Cases
         </h1>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 'var(--space-md)', marginBottom: 'var(--space-xl)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 'var(--space-md)', marginBottom: 'var(--space-xl)', width: '100%' }}>
           <MarketplaceFilters filters={filters} onChange={setFilters} lawyerStates={lawyerStates} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', marginBottom: '0.25rem' }}>
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-500)' }}>
@@ -356,9 +356,9 @@ export default function Marketplace() {
         )}
 
         {viewMode === 'grid' ? (
-          <div style={{
+          <div className="marketplace-grid" style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(360px, 100%), 1fr))',
             gap: 'var(--space-lg)'
           }}>
             {filteredCases.map(c => (

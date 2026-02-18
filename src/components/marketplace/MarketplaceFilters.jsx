@@ -1,11 +1,11 @@
 import React from 'react';
 
 const selectStyle = {
-  minHeight: '40px', padding: '0.5rem 0.75rem',
+  minHeight: '44px', padding: '0.5rem 0.75rem',
   fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
   color: 'var(--slate-800)', backgroundColor: 'var(--surface)',
   border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-md)',
-  outline: 'none', cursor: 'pointer', minWidth: '140px'
+  outline: 'none', cursor: 'pointer', minWidth: '140px', width: '100%', maxWidth: '200px'
 };
 
 const BUSINESS_TYPES = [
@@ -27,7 +27,7 @@ export default function MarketplaceFilters({ filters, onChange, lawyerStates }) 
   return (
     <div style={{
       display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap',
-      alignItems: 'flex-end', marginBottom: 0
+      alignItems: 'flex-end', marginBottom: 0, flex: '1 1 auto'
     }}>
       <div>
         <label htmlFor="filter-state" style={{

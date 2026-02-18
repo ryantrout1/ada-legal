@@ -211,13 +211,14 @@ html {
 /* ========================================
    MOBILE RESPONSIVE (375px)
    ======================================== */
+
+/* Modals become bottom sheets on small screens */
 @media (max-width: 480px) {
-  /* Full-width buttons on mobile */
-  button, a[style*="inline-flex"], a[style*="inline-block"] {
-    min-height: 48px !important;
+  [role="dialog"] {
+    align-items: flex-end !important;
+    padding: 0 !important;
   }
 
-  /* Modals become bottom sheets on mobile */
   [role="dialog"] > div {
     position: fixed !important;
     bottom: 0 !important;
@@ -228,15 +229,27 @@ html {
     max-height: 90vh;
     overflow-y: auto;
   }
+}
 
-  [role="dialog"] {
-    align-items: flex-end !important;
-    padding: 0 !important;
+/* Admin cases table: hide grid on mobile, show card layout */
+@media (max-width: 768px) {
+  .admin-cases-header-row {
+    display: none !important;
   }
 
-  /* Filter dropdowns stack */
-  [style*="flex-wrap: wrap"] {
-    flex-direction: column;
+  .admin-cases-row-btn {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem 1rem !important;
+  }
+}
+
+/* Marketplace cards single column on small screens */
+@media (max-width: 480px) {
+  [style*="gridTemplateColumns: repeat(auto-fill, minmax(360px"] {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -244,14 +257,8 @@ html {
    TABLET RESPONSIVE (768px)
    ======================================== */
 @media (max-width: 768px) {
-  /* Stat cards wrap */
-  [style*="flex: 1 1 160px"] {
-    flex: 1 1 calc(50% - 0.5rem) !important;
-  }
-}
-
-@media (max-width: 480px) {
-  [style*="flex: 1 1 160px"] {
-    flex: 1 1 100% !important;
+  /* Marketplace cards on tablet */
+  [style*="gridTemplateColumns: repeat(auto-fill, minmax(360px"] {
+    grid-template-columns: 1fr !important;
   }
 }

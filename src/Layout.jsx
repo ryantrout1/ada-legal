@@ -511,6 +511,12 @@ export default function Layout({ children, currentPageName }) {
             display: block !important;
           }
         }
+        @media (max-width: 480px) {
+          main {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+          }
+        }
       `}</style>
     </div>
     </LiveAnnouncer>
