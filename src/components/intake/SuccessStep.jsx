@@ -3,6 +3,7 @@ import { CheckCircle, Mail, AlertTriangle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../../utils';
 import { caseSubmittedEmail } from '../emails/caseEmails';
+import CaseIdDisplay from './CaseIdDisplay';
 
 const inputStyle = {
   width: '100%',
@@ -74,6 +75,7 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
   if (invited) {
     return (
       <div style={{ textAlign: 'center' }}>
+        <CaseIdDisplay caseId={caseId} />
         <div style={{
           width: '80px', height: '80px', borderRadius: '50%',
           backgroundColor: 'var(--success-100)',
@@ -127,6 +129,7 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
   if (skipped) {
     return (
       <div style={{ textAlign: 'center' }}>
+        <CaseIdDisplay caseId={caseId} />
         <div style={{
           width: '80px', height: '80px', borderRadius: '50%',
           backgroundColor: 'var(--success-100)',
@@ -172,6 +175,7 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
   if (isLoggedIn) {
     return (
       <div style={{ textAlign: 'center' }}>
+        <CaseIdDisplay caseId={caseId} />
         <div style={{
           width: '80px', height: '80px', borderRadius: '50%',
           backgroundColor: 'var(--success-100)',
@@ -214,6 +218,7 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
   // Default: account creation prompt
   return (
     <div>
+      <CaseIdDisplay caseId={caseId} />
       <div style={{ textAlign: 'center', marginBottom: 'var(--space-xl)' }}>
         <div style={{
           width: '80px', height: '80px', borderRadius: '50%',

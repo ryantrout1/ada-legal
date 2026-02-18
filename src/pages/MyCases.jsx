@@ -5,6 +5,7 @@ import { createPageUrl } from '../utils';
 import { Link } from 'react-router-dom';
 import { FileText, ArrowRight } from 'lucide-react';
 import MyCaseCard from '../components/portal/MyCaseCard';
+import SupportBanner from '../components/portal/SupportBanner';
 
 export default function MyCases() {
   const [cases, setCases] = useState([]);
@@ -106,6 +107,8 @@ export default function MyCases() {
             ))}
           </div>
         )}
+
+        <SupportBanner />
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { ArrowLeft, User, Building2, Mail, Phone } from 'lucide-react';
 import CaseStatusBadge from '../components/portal/CaseStatusBadge';
 import CaseTimeline from '../components/portal/CaseTimeline';
 import SubmissionDetails from '../components/portal/SubmissionDetails';
+import SupportBanner from '../components/portal/SupportBanner';
 
 export default function CaseDetail() {
   const [caseData, setCaseData] = useState(null);
@@ -213,6 +214,8 @@ export default function CaseDetail() {
           </h2>
           <SubmissionDetails caseData={c} />
         </div>
+
+        <SupportBanner />
       </div>
     </div>
   );
