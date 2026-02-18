@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import CasePipelineSection from '../components/analytics/CasePipelineSection';
@@ -6,12 +6,54 @@ import MarketplaceHealthSection from '../components/analytics/MarketplaceHealthS
 import GeographicSection from '../components/analytics/GeographicSection';
 import LawyerActivitySection from '../components/analytics/LawyerActivitySection';
 import ViolationTypeSection from '../components/analytics/ViolationTypeSection';
+import ActiveFiltersBar from '../components/analytics/ActiveFiltersBar';
+
+const STATE_NAME_TO_ABBR = {
+  'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO',
+  'Connecticut':'CT','Delaware':'DE','District of Columbia':'DC','Florida':'FL','Georgia':'GA',
+  'Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA','Kansas':'KS','Kentucky':'KY',
+  'Louisiana':'LA','Maine':'ME','Maryland':'MD','Massachusetts':'MA','Michigan':'MI','Minnesota':'MN',
+  'Mississippi':'MS','Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH',
+  'New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND',
+  'Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC',
+  'South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA',
+  'Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'
+};
+
+function normalizeState(s) {
+  if (!s) return '';
+  const trimmed = s.trim();
+  if (trimmed.length === 2) return trimmed.toUpperCase();
+  return STATE_NAME_TO_ABBR[trimmed] || trimmed;
+}
+
+const PHYSICAL_SUBTYPES_MAP = {
+  'Parking': 'parking',
+  'Entrance/Exit': 'entrance',
+  'Restroom': 'restroom',
+  'Path of Travel': 'path',
+  'Service Animal Denial': 'service animal',
+  'Other': 'other'
+};
+
+function matchSubtype(caseSubtype, filterLabel) {
+  const v = (caseSubtype || 'other').toLowerCase();
+  const keyword = PHYSICAL_SUBTYPES_MAP[filterLabel] || filterLabel.toLowerCase();
+  return v.includes(keyword);
+}
 
 export default function AdminAnalytics() {
   const [loading, setLoading] = useState(true);
   const [cases, setCases] = useState([]);
   const [lawyers, setLawyers] = useState([]);
   const [contactLogs, setContactLogs] = useState([]);
+  const [filters, setFilters] = useState({
+    state: null,
+    city: null,
+    violationType: null,
+    violationSubtype: null,
+    businessType: null
+  });
 
   useEffect(() => {
     async function init() {
@@ -39,6 +81,32 @@ export default function AdminAnalytics() {
     init();
   }, []);
 
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleRemoveFilter = (key) => {
+    setFilters(prev => ({ ...prev, [key]: null }));
+  };
+
+  const handleClearAll = () => {
+    setFilters({ state: null, city: null, violationType: null, violationSubtype: null, businessType: null });
+  };
+
+  const filteredCases = useMemo(() => {
+    return cases.filter(c => {
+      if (filters.state && normalizeState(c.state) !== filters.state) return false;
+      if (filters.city && (c.city || '').trim() !== filters.city) return false;
+      if (filters.violationType && c.violation_type !== filters.violationType) return false;
+      if (filters.violationSubtype && !matchSubtype(c.violation_subtype, filters.violationSubtype)) return false;
+      if (filters.businessType) {
+        const bt = (c.business_type || 'Other').toLowerCase();
+        if (bt !== filters.businessType.toLowerCase()) return false;
+      }
+      return true;
+    });
+  }, [cases, filters]);
+
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)' }}>
@@ -62,11 +130,13 @@ export default function AdminAnalytics() {
           Analytics
         </h1>
 
-        <CasePipelineSection cases={cases} />
-        <MarketplaceHealthSection cases={cases} contactLogs={contactLogs} />
-        <GeographicSection cases={cases} />
-        <ViolationTypeSection cases={cases} />
-        <LawyerActivitySection lawyers={lawyers} cases={cases} contactLogs={contactLogs} />
+        <ActiveFiltersBar filters={filters} onRemove={handleRemoveFilter} onClearAll={handleClearAll} />
+
+        <CasePipelineSection cases={filteredCases} />
+        <MarketplaceHealthSection cases={filteredCases} contactLogs={contactLogs} />
+        <GeographicSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
+        <ViolationTypeSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
+        <LawyerActivitySection lawyers={lawyers} cases={filteredCases} contactLogs={contactLogs} />
       </div>
     </div>
   );

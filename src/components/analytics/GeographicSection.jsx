@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const STATE_NAME_TO_ABBR = {
   'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO',
@@ -20,8 +20,14 @@ function normalizeState(s) {
   return STATE_NAME_TO_ABBR[trimmed] || trimmed;
 }
 
-export default function GeographicSection({ cases }) {
-  // Cases by state (normalized to 2-letter codes)
+const ACTIVE_COLOR = '#9A3412';
+const DEFAULT_COLOR = '#C2410C';
+const FADED_COLOR = '#C2410C80';
+
+export default function GeographicSection({ cases, filters, onFilterChange }) {
+  const activeState = filters.state;
+  const activeCity = filters.city;
+
   const stateMap = {};
   cases.forEach(c => {
     const st = normalizeState(c.state);
@@ -31,7 +37,6 @@ export default function GeographicSection({ cases }) {
     .map(([state, count]) => ({ name: state, count }))
     .sort((a, b) => b.count - a.count);
 
-  // Cases by city — top 10
   const cityMap = {};
   cases.forEach(c => {
     if (c.city) {
@@ -44,10 +49,15 @@ export default function GeographicSection({ cases }) {
     .sort((a, b) => b.count - a.count)
     .slice(0, 10);
 
-  // Violation type split
-  const physical = cases.filter(c => c.violation_type === 'physical_space').length;
-  const digital = cases.filter(c => c.violation_type === 'digital_website').length;
-  const total = physical + digital;
+  const handleStateClick = (data) => {
+    if (!data?.name) return;
+    onFilterChange('state', data.name === activeState ? null : data.name);
+  };
+
+  const handleCityClick = (data) => {
+    if (!data?.name) return;
+    onFilterChange('city', data.name === activeCity ? null : data.name);
+  };
 
   const cardStyle = {
     backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
@@ -66,7 +76,6 @@ export default function GeographicSection({ cases }) {
       }}>Geographic Distribution</h2>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-        {/* By State */}
         <div style={cardStyle}>
           <p style={subhead}>Cases by State</p>
           {stateData.length === 0 ? (
@@ -79,14 +88,20 @@ export default function GeographicSection({ cases }) {
                   <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
                   <YAxis type="category" dataKey="name" width={32} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-700)' }} />
                   <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
-                  <Bar dataKey="count" fill="var(--terra-600)" radius={[0, 3, 3, 0]} />
+                  <Bar dataKey="count" radius={[0, 3, 3, 0]} cursor="pointer" onClick={handleStateClick}>
+                    {stateData.map(entry => (
+                      <Cell
+                        key={entry.name}
+                        fill={activeState ? (entry.name === activeState ? ACTIVE_COLOR : FADED_COLOR) : DEFAULT_COLOR}
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
           )}
         </div>
 
-        {/* By City top 10 */}
         <div style={cardStyle}>
           <p style={subhead}>Top 10 Cities</p>
           {cityData.length === 0 ? (
@@ -99,7 +114,14 @@ export default function GeographicSection({ cases }) {
                   <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
                   <YAxis type="category" dataKey="name" width={70} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-700)' }} />
                   <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
-                  <Bar dataKey="count" fill="var(--terra-600)" radius={[0, 3, 3, 0]} />
+                  <Bar dataKey="count" radius={[0, 3, 3, 0]} cursor="pointer" onClick={handleCityClick}>
+                    {cityData.map(entry => (
+                      <Cell
+                        key={entry.name}
+                        fill={activeCity ? (entry.name === activeCity ? ACTIVE_COLOR : FADED_COLOR) : DEFAULT_COLOR}
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
