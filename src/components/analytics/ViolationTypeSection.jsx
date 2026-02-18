@@ -58,7 +58,7 @@ function SectionCard({ title, subtitle, children }) {
   return (
     <div style={{
       backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-      borderRadius: '10px', padding: '0.875rem 1rem'
+      borderRadius: 'var(--radius-md)', padding: '12px'
     }}>
       <h3 style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
@@ -133,12 +133,7 @@ export default function ViolationTypeSection({ cases, filters, onFilterChange })
 
   return (
     <div>
-      <h2 style={{
-        fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
-        color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
-      }}>Violation Type Breakdown</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <SectionCard title="Overall Split">
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
             <div
@@ -180,7 +175,7 @@ export default function ViolationTypeSection({ cases, filters, onFilterChange })
           </div>
         </SectionCard>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           <SectionCard title="Physical Space Subcategories" subtitle={`${physical.length} cases`}>
             {sortedSubtypes.map(s => (
               <HorizontalBar

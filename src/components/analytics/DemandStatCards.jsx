@@ -1,5 +1,5 @@
 import React from 'react';
-import StatCard from '../admin/StatCard';
+import CompactStatCard from './CompactStatCard';
 import { Clock, TrendingDown, Eye, MapPin } from 'lucide-react';
 
 const STATE_NAME_TO_ABBR = {
@@ -78,11 +78,11 @@ export default function DemandStatCards({ cases, lawyers }) {
   const gapBg = gapCount === 0 ? '#DCFCE7' : '#FEE2E2';
 
   return (
-    <div style={{ display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
-      <StatCard label="Avg Days to Match" count={avgDaysToMatch} bgColor="var(--surface)" borderColor="var(--slate-200)" icon={Clock} />
-      <StatCard label="Unmatched Rate" count={unmatchedRate} bgColor={unmatchedBg} textColor={unmatchedColor} icon={TrendingDown} />
-      <StatCard label="Avg Views Before Claim" count={avgViews} bgColor="var(--surface)" borderColor="var(--slate-200)" icon={Eye} />
-      <StatCard label="Supply Gaps" count={gapCount} bgColor={gapBg} textColor={gapColor} icon={MapPin} />
+    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+      <CompactStatCard label="Avg Days to Match" count={avgDaysToMatch} bgColor="var(--surface)" borderColor="var(--slate-200)" icon={Clock} />
+      <CompactStatCard label="Unmatched Rate" count={unmatchedRate} bgColor={unmatchedBg} textColor={unmatchedColor} icon={TrendingDown} />
+      <CompactStatCard label="Avg Views Before Claim" count={avgViews} bgColor="var(--surface)" borderColor="var(--slate-200)" icon={Eye} />
+      <CompactStatCard label="Supply Gaps" count={gapCount} bgColor={gapBg} textColor={gapColor} icon={MapPin} />
     </div>
   );
 }

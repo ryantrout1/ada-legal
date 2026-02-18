@@ -28,7 +28,7 @@ export default function EngagementFunnel({ cases, contactLogs }) {
   return (
     <div style={{
       backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-      borderRadius: 'var(--radius-lg)', padding: '0.875rem 1rem', marginBottom: '0.75rem'
+      borderRadius: 'var(--radius-md)', padding: '12px'
     }}>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
@@ -46,7 +46,7 @@ export default function EngagementFunnel({ cases, contactLogs }) {
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-600)',
                 minWidth: '72px', textAlign: 'right', flexShrink: 0
               }}>{stage.label}</span>
-              <div style={{ flex: 1, height: '22px', backgroundColor: '#F1F5F9', borderRadius: '3px', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ flex: 1, height: '16px', backgroundColor: '#F1F5F9', borderRadius: '3px', overflow: 'hidden', position: 'relative' }}>
                 <div style={{
                   height: '100%', width: `${barWidth}%`,
                   backgroundColor: '#C2410C',

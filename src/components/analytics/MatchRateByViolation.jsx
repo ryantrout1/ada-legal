@@ -39,7 +39,7 @@ export default function MatchRateByViolation({ cases, filters, onFilterChange })
   return (
     <div style={{
       backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-      borderRadius: 'var(--radius-lg)', padding: '0.875rem 1rem', marginBottom: '0.75rem'
+      borderRadius: 'var(--radius-md)', padding: '12px'
     }}>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,

@@ -7,16 +7,19 @@ import UnderservedAreas from './UnderservedAreas';
 
 export default function DemandIntelligenceSection({ cases, lawyers, contactLogs, filters, onFilterChange }) {
   return (
-    <div>
-      <h2 style={{
-        fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
-        color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
-      }}>Demand Intelligence</h2>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      {/* Row 1: Stat cards */}
       <DemandStatCards cases={cases} lawyers={lawyers} />
-      <MatchRateByState cases={cases} filters={filters} onFilterChange={onFilterChange} />
-      <MatchRateByViolation cases={cases} filters={filters} onFilterChange={onFilterChange} />
-      <EngagementFunnel cases={cases} contactLogs={contactLogs} />
-      <UnderservedAreas cases={cases} lawyers={lawyers} />
+      {/* Row 2: Match Rate charts side by side */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <MatchRateByState cases={cases} filters={filters} onFilterChange={onFilterChange} />
+        <MatchRateByViolation cases={cases} filters={filters} onFilterChange={onFilterChange} />
+      </div>
+      {/* Row 3: Funnel + Underserved side by side */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <EngagementFunnel cases={cases} contactLogs={contactLogs} />
+        <UnderservedAreas cases={cases} lawyers={lawyers} />
+      </div>
     </div>
   );
 }

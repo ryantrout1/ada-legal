@@ -61,7 +61,7 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
 
   const cardStyle = {
     backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-    borderRadius: 'var(--radius-lg)', padding: '0.875rem 1rem'
+    borderRadius: 'var(--radius-md)', padding: '12px'
   };
   const subhead = {
     fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
@@ -70,12 +70,7 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
 
   return (
     <div>
-      <h2 style={{
-        fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
-        color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
-      }}>Geographic Distribution</h2>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         <div style={cardStyle}>
           <p style={subhead}>Cases by State</p>
           {stateData.length === 0 ? (

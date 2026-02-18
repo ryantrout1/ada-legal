@@ -54,13 +54,9 @@ export default function LawyerActivitySection({ lawyers, cases, contactLogs }) {
 
   return (
     <div>
-      <h2 style={{
-        fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
-        color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
-      }}>Lawyer Activity</h2>
       <div style={{
         backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-        borderRadius: 'var(--radius-lg)', overflow: 'auto'
+        borderRadius: 'var(--radius-md)', overflow: 'auto'
       }}>
         {approvedLawyers.length === 0 ? (
           <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', padding: 'var(--space-lg)', textAlign: 'center' }}>No approved lawyers yet</p>
