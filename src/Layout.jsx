@@ -199,10 +199,10 @@ export default function Layout({ children, currentPageName }) {
               <>
                 {!user && (
                   <>
-                    <Link to={createPageUrl('Intake')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('Intake')} className="desktop-nav-public-links" style={{ color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }}>
                       Report Violation
                     </Link>
-                    <Link to={createPageUrl('LawyerLanding')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('LawyerLanding')} className="desktop-nav-public-links" style={{ color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }}>
                       For Attorneys
                     </Link>
                     <button
