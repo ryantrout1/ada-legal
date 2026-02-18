@@ -64,7 +64,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
       {/* Collapsed Row */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'auto 1fr auto auto auto auto auto',
+        gridTemplateColumns: 'auto 1fr auto auto auto auto',
         alignItems: 'center',
         gap: '16px',
         padding: '14px 16px'
