@@ -12,7 +12,7 @@ function DetailItem({ label, value }) {
     <div style={{ marginBottom: 'var(--space-md)' }}>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-        color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em',
+        color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.05em',
         margin: '0 0 2px 0'
       }}>{label}</p>
       <p style={{
