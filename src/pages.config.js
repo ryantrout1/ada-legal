@@ -48,6 +48,7 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import Admin from './pages/Admin';
+import AdminAnalytics from './pages/AdminAnalytics';
 import AdminCases from './pages/AdminCases';
 import AdminLawyers from './pages/AdminLawyers';
 import AdminReview from './pages/AdminReview';
@@ -61,12 +62,12 @@ import LawyerProfile from './pages/LawyerProfile';
 import LawyerRegister from './pages/LawyerRegister';
 import Marketplace from './pages/Marketplace';
 import MyCases from './pages/MyCases';
-import AdminAnalytics from './pages/AdminAnalytics';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Admin": Admin,
+    "AdminAnalytics": AdminAnalytics,
     "AdminCases": AdminCases,
     "AdminLawyers": AdminLawyers,
     "AdminReview": AdminReview,
@@ -80,7 +81,6 @@ export const PAGES = {
     "LawyerRegister": LawyerRegister,
     "Marketplace": Marketplace,
     "MyCases": MyCases,
-    "AdminAnalytics": AdminAnalytics,
 }
 
 export const pagesConfig = {
