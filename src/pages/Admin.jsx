@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import { Clock, Briefcase, Users, AlertTriangle, UserPlus, Timer } from 'lucide-react';
+/* Icons passed to StatCard are decorative — StatCard marks them aria-hidden */
 import StatCard from '../components/admin/StatCard';
 import RecentSubmissionsTable from '../components/admin/RecentSubmissionsTable';
 import UnclaimedCasesBanner from '../components/admin/UnclaimedCasesBanner.jsx';

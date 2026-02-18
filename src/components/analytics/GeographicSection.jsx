@@ -78,6 +78,13 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
         <div style={cardStyle}>
           <p style={subhead}>Cases by State</p>
+          {stateData.length > 0 && (
+            <table className="chart-data-table">
+              <caption>Cases by State</caption>
+              <thead><tr><th scope="col">State</th><th scope="col">Count</th></tr></thead>
+              <tbody>{stateData.map(d => <tr key={d.name}><td>{d.name}</td><td>{d.count}</td></tr>)}</tbody>
+            </table>
+          )}
           {stateData.length === 0 ? (
             <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.8125rem' }}>No data yet</p>
           ) : (
@@ -104,6 +111,13 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
 
         <div style={cardStyle}>
           <p style={subhead}>Top 10 Cities</p>
+          {cityData.length > 0 && (
+            <table className="chart-data-table">
+              <caption>Top Cities</caption>
+              <thead><tr><th scope="col">City</th><th scope="col">Count</th></tr></thead>
+              <tbody>{cityData.map(d => <tr key={d.name}><td>{d.name}</td><td>{d.count}</td></tr>)}</tbody>
+            </table>
+          )}
           {cityData.length === 0 ? (
             <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.8125rem' }}>No data yet</p>
           ) : (

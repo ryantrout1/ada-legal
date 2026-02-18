@@ -2,6 +2,7 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import StatCard from '../admin/StatCard';
 import { CheckCircle, TrendingUp, Clock } from 'lucide-react';
+/* Icons passed to StatCard are decorative — StatCard marks them aria-hidden */
 
 const RESOLUTION_COLORS = {
   engaged: '#15803D',
@@ -111,6 +112,14 @@ export default function CaseOutcomesSection({ cases, filters, onFilterChange }) 
       <div style={{ display: 'grid', gridTemplateColumns: valData.length > 0 ? '1fr 1fr' : '1fr', gap: '0.75rem' }}>
         <div style={cardStyle}>
           <p style={subhead}>Resolution Type Breakdown</p>
+          {/* Screen reader data table */}
+          {resData.length > 0 && (
+            <table className="chart-data-table">
+              <caption>Resolution Type Breakdown</caption>
+              <thead><tr><th scope="col">Type</th><th scope="col">Count</th></tr></thead>
+              <tbody>{resData.map(d => <tr key={d.type}><td>{d.name}</td><td>{d.count}</td></tr>)}</tbody>
+            </table>
+          )}
           {resData.length === 0 ? (
             <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.8125rem' }}>No closed cases yet</p>
           ) : (
@@ -142,6 +151,11 @@ export default function CaseOutcomesSection({ cases, filters, onFilterChange }) 
         {valData.length > 0 && (
           <div style={cardStyle}>
             <p style={subhead}>Estimated Case Value (Engaged)</p>
+            <table className="chart-data-table">
+              <caption>Case Value Distribution (Engaged)</caption>
+              <thead><tr><th scope="col">Value</th><th scope="col">Count</th></tr></thead>
+              <tbody>{valData.map(d => <tr key={d.value}><td>{d.name}</td><td>{d.count}</td></tr>)}</tbody>
+            </table>
             <div style={{ width: '100%', height: Math.max(140, valData.length * 28) }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={valData} layout="vertical" barSize={16} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
