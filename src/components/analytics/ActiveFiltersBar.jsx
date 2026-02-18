@@ -6,7 +6,9 @@ const FILTER_LABELS = {
   city: 'City',
   violationType: 'Type',
   violationSubtype: 'Subtype',
-  businessType: 'Business'
+  businessType: 'Business',
+  resolutionType: 'Resolution',
+  caseValue: 'Case Value'
 };
 
 export default function ActiveFiltersBar({ filters, onRemove, onClearAll }) {

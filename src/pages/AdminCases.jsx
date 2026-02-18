@@ -4,6 +4,7 @@ import { createPageUrl } from '../utils';
 import { Building2, Globe, Search, ChevronDown, ChevronRight } from 'lucide-react';
 import CaseDetailPanel from '../components/admin/CaseDetailPanel';
 import ReviewActions from '../components/admin/ReviewActions';
+import ForceCloseModal from '../components/admin/ForceCloseModal';
 
 const statusColors = {
   submitted: { bg: '#DBEAFE', text: '#1D4ED8' },
@@ -62,6 +63,8 @@ export default function AdminCases() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [violationFilter, setViolationFilter] = useState('all');
   const [expandedId, setExpandedId] = useState(null);
+  const [forceCloseCase, setForceCloseCase] = useState(null);
+  const [closeSaving, setCloseSaving] = useState(false);
 
   const loadData = async () => {
     const [allCases, allLawyers] = await Promise.all([
@@ -86,6 +89,34 @@ export default function AdminCases() {
   }, []);
 
   const handleActionComplete = () => {
+    setExpandedId(null);
+    loadData();
+  };
+
+  const handleForceClose = async (formData) => {
+    if (!forceCloseCase) return;
+    setCloseSaving(true);
+    const now = new Date().toISOString();
+
+    await base44.entities.Case.update(forceCloseCase.id, {
+      status: 'closed',
+      closed_at: now,
+      resolution_type: 'admin_closed',
+      resolution_notes: formData.resolution_notes,
+      resolved_by: 'admin'
+    });
+
+    await base44.entities.TimelineEvent.create({
+      case_id: forceCloseCase.id,
+      event_type: 'closed',
+      event_description: 'This case has been closed by the platform administrator.',
+      actor_role: 'admin',
+      visible_to_user: true,
+      created_at: now
+    });
+
+    setCloseSaving(false);
+    setForceCloseCase(null);
     setExpandedId(null);
     loadData();
   };
@@ -273,6 +304,19 @@ export default function AdminCases() {
                     {c.status === 'submitted' && (
                       <ReviewActions caseData={c} onActionComplete={handleActionComplete} />
                     )}
+                    {c.status !== 'closed' && c.status !== 'rejected' && (
+                      <div style={{ padding: '0 var(--space-lg) var(--space-lg)' }}>
+                        <button type="button" onClick={() => setForceCloseCase(c)} style={{
+                          display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+                          padding: '0.5rem 1rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+                          fontWeight: 700, color: '#B91C1C', backgroundColor: 'transparent',
+                          border: '2px solid #B91C1C', borderRadius: 'var(--radius-md)', cursor: 'pointer',
+                          minHeight: '40px'
+                        }}>
+                          Force Close Case
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -280,6 +324,14 @@ export default function AdminCases() {
           })}
         </div>
       </div>
+
+      <ForceCloseModal
+        open={!!forceCloseCase}
+        caseData={forceCloseCase}
+        onCancel={() => { if (!closeSaving) setForceCloseCase(null); }}
+        onSubmit={handleForceClose}
+        saving={closeSaving}
+      />
     </div>
   );
 }

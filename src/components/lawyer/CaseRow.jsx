@@ -9,7 +9,7 @@ function formatDate(d) {
 
 const METHOD_LABELS = { phone: 'Phone call', email: 'Email', in_person: 'In person', other: 'Other' };
 
-export default function CaseRow({ caseData, contactLogs, group, onLogContact }) {
+export default function CaseRow({ caseData, contactLogs, group, onLogContact, onResolve }) {
   const [expanded, setExpanded] = useState(false);
   const c = caseData;
   const isPhysical = c.violation_type === 'physical_space';
@@ -89,29 +89,53 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact }) 
           )}
         </div>
 
-        {/* Action button */}
-        {group === 'needs_action' && (
-          <button type="button" onClick={() => onLogContact(c)} style={{
-            display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
-            padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            fontWeight: 700, color: 'white', backgroundColor: 'var(--terra-600)',
-            border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
-            whiteSpace: 'nowrap', minHeight: '36px'
-          }}>
-            Log Contact
-          </button>
-        )}
-        {group === 'in_progress' && (
-          <button type="button" onClick={() => onLogContact(c)} style={{
-            display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
-            padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            fontWeight: 700, color: 'var(--terra-600)', backgroundColor: 'transparent',
-            border: '1px solid var(--terra-600)', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
-            whiteSpace: 'nowrap', minHeight: '36px'
-          }}>
-            Log Follow-Up
-          </button>
-        )}
+        {/* Action buttons */}
+        <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0 }}>
+          {group === 'needs_action' && (
+            <>
+              <button type="button" onClick={() => onLogContact(c)} style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+                padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                fontWeight: 700, color: 'white', backgroundColor: 'var(--terra-600)',
+                border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+                whiteSpace: 'nowrap', minHeight: '36px'
+              }}>
+                Log Contact
+              </button>
+              <button type="button" onClick={() => onResolve(c)} style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+                padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                fontWeight: 700, color: 'var(--slate-500)', backgroundColor: 'transparent',
+                border: '1px solid var(--slate-500)', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+                whiteSpace: 'nowrap', minHeight: '36px'
+              }}>
+                Resolve Case
+              </button>
+            </>
+          )}
+          {group === 'in_progress' && (
+            <>
+              <button type="button" onClick={() => onLogContact(c)} style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+                padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                fontWeight: 700, color: 'var(--terra-600)', backgroundColor: 'transparent',
+                border: '1px solid var(--terra-600)', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+                whiteSpace: 'nowrap', minHeight: '36px'
+              }}>
+                Log Follow-Up
+              </button>
+              <button type="button" onClick={() => onResolve(c)} style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+                padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                fontWeight: 700, color: 'var(--slate-500)', backgroundColor: 'transparent',
+                border: '1px solid var(--slate-500)', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+                whiteSpace: 'nowrap', minHeight: '36px'
+              }}>
+                Resolve Case
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Expanded detail */}

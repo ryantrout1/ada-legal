@@ -7,6 +7,7 @@ import GeographicSection from '../components/analytics/GeographicSection';
 import LawyerActivitySection from '../components/analytics/LawyerActivitySection';
 import ViolationTypeSection from '../components/analytics/ViolationTypeSection';
 import ActiveFiltersBar from '../components/analytics/ActiveFiltersBar';
+import CaseOutcomesSection from '../components/analytics/CaseOutcomesSection';
 
 const STATE_NAME_TO_ABBR = {
   'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO',
@@ -52,7 +53,9 @@ export default function AdminAnalytics() {
     city: null,
     violationType: null,
     violationSubtype: null,
-    businessType: null
+    businessType: null,
+    resolutionType: null,
+    caseValue: null
   });
 
   useEffect(() => {
@@ -90,7 +93,7 @@ export default function AdminAnalytics() {
   };
 
   const handleClearAll = () => {
-    setFilters({ state: null, city: null, violationType: null, violationSubtype: null, businessType: null });
+    setFilters({ state: null, city: null, violationType: null, violationSubtype: null, businessType: null, resolutionType: null, caseValue: null });
   };
 
   const filteredCases = useMemo(() => {
@@ -103,6 +106,8 @@ export default function AdminAnalytics() {
         const bt = (c.business_type || 'Other').toLowerCase();
         if (bt !== filters.businessType.toLowerCase()) return false;
       }
+      if (filters.resolutionType && c.resolution_type !== filters.resolutionType) return false;
+      if (filters.caseValue && c.estimated_case_value !== filters.caseValue) return false;
       return true;
     });
   }, [cases, filters]);
@@ -134,6 +139,7 @@ export default function AdminAnalytics() {
 
         <CasePipelineSection cases={filteredCases} />
         <MarketplaceHealthSection cases={filteredCases} contactLogs={contactLogs} />
+        <CaseOutcomesSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
         <GeographicSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
         <ViolationTypeSection cases={filteredCases} filters={filters} onFilterChange={handleFilterChange} />
         <LawyerActivitySection lawyers={lawyers} cases={filteredCases} contactLogs={contactLogs} />

@@ -4,6 +4,7 @@ import { createPageUrl } from '../utils';
 import { AlertTriangle, Clock, CheckCircle, ChevronDown, ChevronRight } from 'lucide-react';
 import CaseRow from '../components/lawyer/CaseRow';
 import LogContactModal from '../components/lawyer/LogContactModal';
+import ResolveCaseModal from '../components/lawyer/ResolveCaseModal';
 
 export default function LawyerDashboard() {
   const [loading, setLoading] = useState(true);
@@ -11,6 +12,7 @@ export default function LawyerDashboard() {
   const [cases, setCases] = useState([]);
   const [allLogs, setAllLogs] = useState([]);
   const [logModalCase, setLogModalCase] = useState(null);
+  const [resolveModalCase, setResolveModalCase] = useState(null);
   const [saving, setSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [completedOpen, setCompletedOpen] = useState(false);
@@ -103,6 +105,47 @@ export default function LawyerDashboard() {
     setSuccessMessage('Contact logged successfully.');
   };
 
+  const RESOLUTION_DESCRIPTIONS = {
+    engaged: 'An attorney has taken your case and is actively working on it. You may be contacted directly for next steps.',
+    referred_out: 'Your case has been referred to an attorney who specializes in this area. They may reach out to you directly.',
+    not_viable: 'After careful review, the attorney determined this case may not have sufficient grounds for legal action under the ADA. This does not mean your experience was not valid.',
+    claimant_unresponsive: 'We were unable to reach you after multiple attempts. If you would like to reconnect, please submit a new report.',
+    claimant_declined: 'We understand your decision not to pursue legal action at this time. Your report remains on file.'
+  };
+
+  const handleResolve = async (formData) => {
+    if (!resolveModalCase || !profile) return;
+    setSaving(true);
+    const now = new Date().toISOString();
+
+    const caseUpdate = {
+      status: 'closed',
+      closed_at: now,
+      resolution_type: formData.resolution_type,
+      resolution_notes: formData.resolution_notes,
+      resolved_by: 'lawyer'
+    };
+    if (formData.resolution_type === 'engaged') {
+      caseUpdate.estimated_case_value = formData.estimated_case_value;
+      caseUpdate.expected_timeline = formData.expected_timeline;
+    }
+    await base44.entities.Case.update(resolveModalCase.id, caseUpdate);
+
+    await base44.entities.TimelineEvent.create({
+      case_id: resolveModalCase.id,
+      event_type: 'closed',
+      event_description: RESOLUTION_DESCRIPTIONS[formData.resolution_type] || 'This case has been closed.',
+      actor_role: 'lawyer',
+      visible_to_user: true,
+      created_at: now
+    });
+
+    await loadData();
+    setSaving(false);
+    setResolveModalCase(null);
+    setSuccessMessage('Case resolved and closed.');
+  };
+
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)' }}>
@@ -174,6 +217,7 @@ export default function LawyerDashboard() {
                 key={c.id} caseData={c} group="needs_action"
                 contactLogs={allLogs.filter(l => l.case_id === c.id)}
                 onLogContact={setLogModalCase}
+                onResolve={setResolveModalCase}
               />
             ))}
           </div>
@@ -193,6 +237,7 @@ export default function LawyerDashboard() {
                 key={c.id} caseData={c} group="in_progress"
                 contactLogs={allLogs.filter(l => l.case_id === c.id)}
                 onLogContact={setLogModalCase}
+                onResolve={setResolveModalCase}
               />
             ))}
           </div>
@@ -228,6 +273,14 @@ export default function LawyerDashboard() {
         open={!!logModalCase}
         onCancel={() => { if (!saving) setLogModalCase(null); }}
         onSubmit={handleLogContact}
+        saving={saving}
+      />
+
+      <ResolveCaseModal
+        open={!!resolveModalCase}
+        caseData={resolveModalCase}
+        onCancel={() => { if (!saving) setResolveModalCase(null); }}
+        onSubmit={handleResolve}
         saving={saving}
       />
 

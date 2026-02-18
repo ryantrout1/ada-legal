@@ -100,9 +100,43 @@ export default function CaseDetail() {
             }}>
               {c.business_name}
             </h1>
-            <CaseStatusBadge status={c.status} large />
+            {c.status === 'closed' ? (
+              <span style={{
+                display: 'inline-block', padding: '0.375rem 1rem',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
+                color: 'white', backgroundColor: 'var(--slate-500)', borderRadius: '9999px',
+                textTransform: 'uppercase'
+              }}>Closed</span>
+            ) : (
+              <CaseStatusBadge status={c.status} large />
+            )}
           </div>
         </div>
+
+        {/* Closed case resolution message */}
+        {c.status === 'closed' && (() => {
+          const closedEvent = events.find(e => e.event_type === 'closed');
+          if (!closedEvent) return null;
+          return (
+            <div style={{
+              backgroundColor: '#F8FAFC', border: '1px solid var(--slate-300)',
+              borderRadius: '16px', padding: 'var(--space-xl)', marginBottom: 'var(--space-lg)'
+            }}>
+              <h2 style={{
+                fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
+                color: 'var(--slate-900)', margin: '0 0 var(--space-sm) 0'
+              }}>
+                Case Resolution
+              </h2>
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+                color: 'var(--slate-700)', lineHeight: 1.7, margin: 0
+              }}>
+                {closedEvent.event_description}
+              </p>
+            </div>
+          );
+        })()}
 
         {/* Assigned Attorney */}
         {lawyer && ['assigned', 'in_progress', 'closed'].includes(c.status) && (
