@@ -155,15 +155,30 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
           padding: '0 1rem 1rem 2.5rem', borderTop: '1px solid var(--slate-100)'
         }}>
           <div style={{ paddingTop: '0.75rem' }}>
-            {/* Claimant info */}
-            <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 0.5rem' }}>
-              Claimant Information
-            </h4>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.5rem', marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#FFF7ED', borderRadius: 'var(--radius-sm)', border: '1px solid #FED7AA' }}>
-              <Info icon={User} label="Name" value={c.contact_name} />
-              <Info icon={Mail} label="Email" value={c.contact_email} />
-              <Info icon={Phone} label="Phone" value={c.contact_phone} />
-              <Info icon={User} label="Preference" value={prefLabel[c.contact_preference] || c.contact_preference} />
+            {/* Claimant contact — prominently at top */}
+            <div style={{
+              padding: '0.875rem', marginBottom: '1rem',
+              backgroundColor: '#FFF7ED', borderRadius: 'var(--radius-md)',
+              border: '2px solid #FDBA74'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.625rem' }}>
+                <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>
+                  Claimant Contact
+                </h4>
+                <span style={{
+                  display: 'inline-block', padding: '0.15rem 0.5rem',
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
+                  color: '#92400E', backgroundColor: '#FEF3C7', borderRadius: '9999px',
+                  textTransform: 'uppercase'
+                }}>
+                  Prefers {prefLabel[c.contact_preference] || c.contact_preference}
+                </span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.5rem' }}>
+                <Info icon={User} label="Name" value={c.contact_name} />
+                <Info icon={Mail} label="Email" value={c.contact_email} />
+                <Info icon={Phone} label="Phone" value={c.contact_phone} />
+              </div>
             </div>
 
             {/* Case details */}
