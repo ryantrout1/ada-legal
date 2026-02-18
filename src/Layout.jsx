@@ -372,9 +372,10 @@ export default function Layout({ children, currentPageName }) {
                         color: 'white',
                         border: 'none',
                         padding: '0.75rem',
-                        borderRadius: 'var(--radius-md)',
+                        borderRadius: '10px',
                         cursor: 'pointer',
-                        fontWeight: 500,
+                        fontWeight: 600,
+                        fontFamily: 'Manrope, sans-serif',
                         minHeight: '44px'
                       }}
                     >
@@ -523,6 +524,11 @@ export default function Layout({ children, currentPageName }) {
           }
           .mobile-nav {
             display: block !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .desktop-nav-public-links {
+            display: none !important;
           }
         }
         @media (max-width: 480px) {
