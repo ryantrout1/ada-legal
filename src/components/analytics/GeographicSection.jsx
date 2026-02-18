@@ -78,17 +78,18 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
         <div style={cardStyle}>
           <p style={subhead}>Cases by State</p>
-          {stateData.length > 0 && (
-            <table className="chart-data-table">
-              <caption>Cases by State</caption>
-              <thead><tr><th scope="col">State</th><th scope="col">Count</th></tr></thead>
-              <tbody>{stateData.map(d => <tr key={d.name}><td>{d.name}</td><td>{d.count}</td></tr>)}</tbody>
-            </table>
-          )}
           {stateData.length === 0 ? (
             <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.8125rem' }}>No data yet</p>
           ) : (
-            <div style={{ width: '100%', height: Math.max(140, stateData.length * 24) }}>
+            <>
+            <div style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}>
+              <table>
+                <caption>Cases by State data</caption>
+                <thead><tr><th scope="col">State</th><th scope="col">Count</th></tr></thead>
+                <tbody>{stateData.map(d => <tr key={d.name}><td>{d.name}</td><td>{d.count}</td></tr>)}</tbody>
+              </table>
+            </div>
+            <div aria-hidden="true" style={{ width: '100%', height: Math.max(140, stateData.length * 24) }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stateData} layout="vertical" barSize={14} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" horizontal={false} />
@@ -106,22 +107,24 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
                 </BarChart>
               </ResponsiveContainer>
             </div>
+            </>
           )}
         </div>
 
         <div style={cardStyle}>
           <p style={subhead}>Top 10 Cities</p>
-          {cityData.length > 0 && (
-            <table className="chart-data-table">
-              <caption>Top Cities</caption>
-              <thead><tr><th scope="col">City</th><th scope="col">Count</th></tr></thead>
-              <tbody>{cityData.map(d => <tr key={d.name}><td>{d.name}</td><td>{d.count}</td></tr>)}</tbody>
-            </table>
-          )}
           {cityData.length === 0 ? (
             <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.8125rem' }}>No data yet</p>
           ) : (
-            <div style={{ width: '100%', height: Math.max(140, cityData.length * 24) }}>
+            <>
+            <div style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}>
+              <table>
+                <caption>Top Cities data</caption>
+                <thead><tr><th scope="col">City</th><th scope="col">Count</th></tr></thead>
+                <tbody>{cityData.map(d => <tr key={d.name}><td>{d.name}</td><td>{d.count}</td></tr>)}</tbody>
+              </table>
+            </div>
+            <div aria-hidden="true" style={{ width: '100%', height: Math.max(140, cityData.length * 24) }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={cityData} layout="vertical" barSize={14} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" horizontal={false} />
@@ -139,6 +142,7 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
                 </BarChart>
               </ResponsiveContainer>
             </div>
+            </>
           )}
         </div>
       </div>
