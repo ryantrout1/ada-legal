@@ -5,7 +5,6 @@ import CasePipelineSection from '../components/analytics/CasePipelineSection';
 import MarketplaceHealthSection from '../components/analytics/MarketplaceHealthSection';
 import GeographicSection from '../components/analytics/GeographicSection';
 import LawyerActivitySection from '../components/analytics/LawyerActivitySection';
-import ApprovalRejectionSection from '../components/analytics/ApprovalRejectionSection';
 import ViolationTypeSection from '../components/analytics/ViolationTypeSection';
 
 export default function AdminAnalytics() {
@@ -64,11 +63,10 @@ export default function AdminAnalytics() {
         </h1>
 
         <CasePipelineSection cases={cases} />
-        <ViolationTypeSection cases={cases} />
         <MarketplaceHealthSection cases={cases} contactLogs={contactLogs} />
         <GeographicSection cases={cases} />
+        <ViolationTypeSection cases={cases} />
         <LawyerActivitySection lawyers={lawyers} cases={cases} contactLogs={contactLogs} />
-        <ApprovalRejectionSection cases={cases} />
       </div>
     </div>
   );
