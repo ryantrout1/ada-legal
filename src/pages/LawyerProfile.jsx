@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
-import { User, Building2, Mail, Phone, MapPin, CreditCard, Shield } from 'lucide-react';
+import { User, Building2, Mail, Phone, MapPin, CreditCard, Shield, Pencil } from 'lucide-react';
+import ProfileEditForm from '../components/lawyer/ProfileEditForm';
+import PerformanceSection from '../components/lawyer/PerformanceSection';
 
 const accountColors = {
   pending_approval: { bg: '#FEF3C7', text: '#92400E' },
@@ -52,6 +54,16 @@ function InfoRow({ icon: Icon, label, value }) {
 export default function LawyerProfile() {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);
+  const [cases, setCases] = useState([]);
+  const [contactLogs, setContactLogs] = useState([]);
+  const [editing, setEditing] = useState(false);
+  const [toast, setToast] = useState('');
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(''), 4000);
+    return () => clearTimeout(t);
+  }, [toast]);
 
   useEffect(() => {
     async function init() {
@@ -64,17 +76,30 @@ export default function LawyerProfile() {
         base44.auth.redirectToLogin(createPageUrl('LawyerProfile'));
         return;
       }
-
       const profiles = await base44.entities.LawyerProfile.filter({ email: user.email });
-      if (!profiles[0]) {
-        window.location.href = createPageUrl('Home');
-        return;
-      }
+      if (!profiles[0]) { window.location.href = createPageUrl('Home'); return; }
       setProfile(profiles[0]);
+
+      // Update last_active
+      base44.entities.LawyerProfile.update(profiles[0].id, { last_active: new Date().toISOString() });
+
+      const [allCases, allLogs] = await Promise.all([
+        base44.entities.Case.filter({ assigned_lawyer_id: profiles[0].id }, '-assigned_at', 500),
+        base44.entities.ContactLog.filter({ lawyer_id: profiles[0].id }, '-created_date', 1000)
+      ]);
+      setCases(allCases);
+      setContactLogs(allLogs);
       setLoading(false);
     }
     init();
   }, []);
+
+  const handleSave = async (updates) => {
+    await base44.entities.LawyerProfile.update(profile.id, updates);
+    setProfile(prev => ({ ...prev, ...updates }));
+    setEditing(false);
+    setToast('Profile updated successfully.');
+  };
 
   if (loading) {
     return (
@@ -91,7 +116,7 @@ export default function LawyerProfile() {
       backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)',
       padding: 'var(--space-xl) var(--space-lg)'
     }}>
-      <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <h1 style={{
           fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
           fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-xl)'
@@ -113,18 +138,45 @@ export default function LawyerProfile() {
           backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
           borderRadius: '16px', padding: 'var(--space-xl)', marginBottom: 'var(--space-lg)'
         }}>
-          <h2 style={{
-            fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
-            color: 'var(--slate-900)', margin: '0 0 var(--space-lg) 0'
-          }}>
-            Attorney Information
-          </h2>
-          <InfoRow icon={User} label="Full Name" value={p.full_name} />
-          <InfoRow icon={Building2} label="Firm" value={p.firm_name} />
-          <InfoRow icon={Mail} label="Email" value={p.email} />
-          <InfoRow icon={Phone} label="Phone" value={p.phone} />
-          <InfoRow icon={MapPin} label="States of Practice" value={(p.states_of_practice || []).join(', ')} />
-          <InfoRow icon={Shield} label="Bar Numbers" value={p.bar_numbers} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-lg)' }}>
+            <h2 style={{
+              fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
+              color: 'var(--slate-900)', margin: 0
+            }}>
+              Attorney Information
+            </h2>
+            {!editing && (
+              <button type="button" onClick={() => setEditing(true)} style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+                padding: '0.375rem 0.75rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                fontWeight: 600, color: 'var(--terra-600)', backgroundColor: 'var(--terra-50)',
+                border: '1px solid var(--terra-200)', borderRadius: 'var(--radius-sm)', cursor: 'pointer'
+              }}>
+                <Pencil size={14} /> Edit Profile
+              </button>
+            )}
+          </div>
+
+          {editing ? (
+            <ProfileEditForm profile={p} onSave={handleSave} onCancel={() => setEditing(false)} />
+          ) : (
+            <>
+              <InfoRow icon={User} label="Full Name" value={p.full_name} />
+              <InfoRow icon={Building2} label="Firm" value={p.firm_name} />
+              <InfoRow icon={Mail} label="Email" value={p.email} />
+              <InfoRow icon={Phone} label="Phone" value={p.phone} />
+              <InfoRow icon={MapPin} label="States of Practice" value={(p.states_of_practice || []).join(', ')} />
+              <InfoRow icon={Shield} label="Bar Numbers" value={p.bar_numbers} />
+            </>
+          )}
+        </div>
+
+        {/* Performance section */}
+        <div style={{
+          backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+          borderRadius: '16px', padding: 'var(--space-xl)', marginBottom: 'var(--space-lg)'
+        }}>
+          <PerformanceSection cases={cases} contactLogs={contactLogs} lawyerProfile={p} />
         </div>
 
         {/* Billing placeholder */}
@@ -156,6 +208,18 @@ export default function LawyerProfile() {
           </p>
         </div>
       </div>
+
+      {toast && (
+        <div role="alert" style={{
+          position: 'fixed', bottom: 'var(--space-xl)', left: '50%', transform: 'translateX(-50%)',
+          zIndex: 1100, backgroundColor: '#15803D', color: 'white',
+          padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-md)',
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
+          boxShadow: '0 4px 16px rgba(0,0,0,0.15)', cursor: 'pointer'
+        }} onClick={() => setToast('')}>
+          ✓ {toast}
+        </div>
+      )}
     </div>
   );
 }
