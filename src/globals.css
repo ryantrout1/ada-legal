@@ -207,3 +207,51 @@ html {
     overflow-x: hidden;
   }
 }
+
+/* ========================================
+   MOBILE RESPONSIVE (375px)
+   ======================================== */
+@media (max-width: 480px) {
+  /* Full-width buttons on mobile */
+  button, a[style*="inline-flex"], a[style*="inline-block"] {
+    min-height: 48px !important;
+  }
+
+  /* Modals become bottom sheets on mobile */
+  [role="dialog"] > div {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100% !important;
+    border-radius: 1rem 1rem 0 0 !important;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  [role="dialog"] {
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+
+  /* Filter dropdowns stack */
+  [style*="flex-wrap: wrap"] {
+    flex-direction: column;
+  }
+}
+
+/* ========================================
+   TABLET RESPONSIVE (768px)
+   ======================================== */
+@media (max-width: 768px) {
+  /* Stat cards wrap */
+  [style*="flex: 1 1 160px"] {
+    flex: 1 1 calc(50% - 0.5rem) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  [style*="flex: 1 1 160px"] {
+    flex: 1 1 100% !important;
+  }
+}
