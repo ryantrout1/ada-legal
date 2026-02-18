@@ -170,7 +170,7 @@ export default function AdminReview() {
 
           {/* Sort dropdown */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ArrowUpDown size={16} style={{ color: 'var(--slate-500)' }} />
+            <ArrowUpDown size={16} style={{ color: '#475569' }} />
             <select
               aria-label="Sort order"
               value={sortOrder}

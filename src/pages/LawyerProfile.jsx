@@ -56,7 +56,7 @@ export default function LawyerProfile() {
         minHeight: 'calc(100vh - 200px)', gap: '1rem'
       }}>
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)' }}>Loading profile…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading profile…</p>
       </div>
     );
   }

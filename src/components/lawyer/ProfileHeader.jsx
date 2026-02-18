@@ -46,7 +46,7 @@ export default function ProfileHeader({ profile }) {
             color: sc.text, backgroundColor: sc.bg, textTransform: 'uppercase'
           }}>{(p.subscription_status || 'inactive').replace(/_/g, ' ')}</span>
         </div>
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', color: 'var(--slate-500)' }}>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', color: '#475569' }}>
           Member since {formatDate(p.date_joined || p.approved_at || p.created_date)}
         </span>
       </div>
