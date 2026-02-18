@@ -172,6 +172,7 @@ export default function AdminReview() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <ArrowUpDown size={16} style={{ color: 'var(--slate-500)' }} />
             <select
+              aria-label="Sort order"
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
               style={{

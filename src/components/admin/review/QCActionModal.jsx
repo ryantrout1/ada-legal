@@ -154,6 +154,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
                 {action === 'reject' ? 'Rejection Reason' : 'Flag Reason'} <span style={{ color: '#B91C1C' }}>*</span>
               </label>
               <select
+                aria-label={action === 'reject' ? 'Rejection reason' : 'Flag reason'}
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 disabled={saving}
