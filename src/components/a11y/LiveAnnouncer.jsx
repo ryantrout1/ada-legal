@@ -23,20 +23,20 @@ export default function LiveAnnouncer({ children }) {
   return (
     <AnnounceContext.Provider value={announce}>
       {children}
-      <div
-        ref={politeRef}
-        aria-live="polite"
-        aria-atomic="true"
-        role="status"
-        className="sr-only"
-      />
-      <div
-        ref={assertiveRef}
-        aria-live="assertive"
-        aria-atomic="true"
-        role="alert"
-        className="sr-only"
-      />
+      <aside role="complementary" aria-label="Notifications" className="sr-only">
+        <div
+          ref={politeRef}
+          aria-live="polite"
+          aria-atomic="true"
+          role="status"
+        />
+        <div
+          ref={assertiveRef}
+          aria-live="assertive"
+          aria-atomic="true"
+          role="alert"
+        />
+      </aside>
     </AnnounceContext.Provider>
   );
 }

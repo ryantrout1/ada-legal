@@ -175,7 +175,7 @@ export default function AuditButton({ currentPageName }) {
   return (
     <>
       {/* Floating button */}
-      <div role="complementary" aria-label="Accessibility tools" style={{ position: 'fixed', bottom: '1rem', left: '1rem', zIndex: 9999 }}>
+      <div style={{ position: 'fixed', bottom: '1rem', left: '1rem', zIndex: 9999 }}>
       <button
         onClick={handleOpen}
         aria-label="Open accessibility audit"
@@ -200,7 +200,6 @@ export default function AuditButton({ currentPageName }) {
         ♿
       </button>
       </div>
-
       {/* Panel */}
       {open && (
         <AuditPanel

@@ -107,7 +107,7 @@ export default function ViolationTypeStep({ value, onChange }) {
                 />
               </div>
 
-              <h3 style={{
+              <p style={{
                 fontFamily: 'Fraunces, serif',
                 fontSize: '1.25rem',
                 fontWeight: 600,
@@ -115,7 +115,7 @@ export default function ViolationTypeStep({ value, onChange }) {
                 margin: 0
               }}>
                 {card.title}
-              </h3>
+              </p>
 
               <p style={{
                 fontFamily: 'Manrope, sans-serif',

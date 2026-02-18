@@ -46,7 +46,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <LiveAnnouncer>
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }} role="presentation">
       <style>{`
         /* Design System Variables */
         :root {
@@ -54,7 +54,7 @@ export default function Layout({ children, currentPageName }) {
           --slate-800: #334155;
           --slate-700: #475569;
           --slate-600: #475569;
-          --slate-500: #475569;
+          --slate-500: #64748B;
           --slate-400: #CBD5E1;
           --slate-300: #E2E8F0;
           --slate-200: #E7E4DE;
@@ -151,7 +151,7 @@ export default function Layout({ children, currentPageName }) {
       </a>
 
       {/* Header */}
-      <header role="banner" style={
+      <header role="banner" aria-label="Site header" style={
         !loading && !user && currentPageName === 'Home'
           ? {
               position: 'fixed', top: 0, left: 0, right: 0, width: '100%', zIndex: 1000,
@@ -220,7 +220,7 @@ export default function Layout({ children, currentPageName }) {
           </button>
 
           {/* Desktop Navigation */}
-          <nav role="navigation" aria-label="Main navigation" style={{
+          <nav aria-label="Main navigation" style={{
             display: 'flex',
             alignItems: 'center',
             gap: (!loading && !user) ? '32px' : '2rem'
@@ -380,7 +380,7 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav role="navigation" aria-label="Mobile navigation" style={{
+          <nav aria-label="Mobile navigation" style={{
             display: 'none',
             padding: '1rem 1.5rem',
             borderTop: '1px solid var(--slate-700)'
@@ -572,7 +572,9 @@ export default function Layout({ children, currentPageName }) {
         }
       `}</style>
 
-      <AuditButton currentPageName={currentPageName} />
+      <aside role="complementary" aria-label="Accessibility tools">
+        <AuditButton currentPageName={currentPageName} />
+      </aside>
     </div>
     </LiveAnnouncer>
   );

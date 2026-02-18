@@ -14,7 +14,7 @@ export default function ReviewSection({ title, onEdit, children }) {
         alignItems: 'center',
         marginBottom: 'var(--space-md)'
       }}>
-        <h3 style={{
+        <h2 style={{
           fontFamily: 'Fraunces, serif',
           fontSize: '1.125rem',
           fontWeight: 600,
@@ -22,7 +22,7 @@ export default function ReviewSection({ title, onEdit, children }) {
           margin: 0
         }}>
           {title}
-        </h3>
+        </h2>
         <button
           type="button"
           onClick={onEdit}

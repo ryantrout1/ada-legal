@@ -250,12 +250,12 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
         borderRadius: 'var(--radius-lg)', padding: 'var(--space-xl)',
         marginBottom: 'var(--space-lg)'
       }}>
-        <h3 style={{
+        <h2 style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600,
           color: 'var(--slate-900)', marginBottom: 'var(--space-sm)', textAlign: 'center'
         }}>
           Track Your Case
-        </h3>
+        </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
           color: 'var(--slate-600)', lineHeight: 1.6,
