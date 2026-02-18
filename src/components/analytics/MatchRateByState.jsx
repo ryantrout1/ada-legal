@@ -85,7 +85,7 @@ export default function MatchRateByState({ cases, filters, onFilterChange }) {
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-700)',
               minWidth: '30px', textAlign: 'right', flexShrink: 0
             }}>{d.state}</span>
-            <div style={{ flex: 1, height: '16px', display: 'flex', borderRadius: '3px', overflow: 'hidden', backgroundColor: '#F1F5F9' }}>
+            <div style={{ flex: 1, height: '14px', display: 'flex', borderRadius: '3px', overflow: 'hidden', backgroundColor: '#F1F5F9' }}>
               {d.matched > 0 && (
                 <div style={{ width: `${(d.matched / maxTotal) * 100}%`, backgroundColor: '#15803D', height: '100%' }} />
               )}
