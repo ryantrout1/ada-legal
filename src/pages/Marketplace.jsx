@@ -8,65 +8,47 @@ import CaseListRow from '../components/marketplace/CaseListRow';
 import ViewToggle from '../components/marketplace/ViewToggle';
 import CaseDetailModal from '../components/marketplace/CaseDetailModal';
 import InitiateSupportModal from '../components/marketplace/InitiateSupportModal';
+import DocScoreModal from '../components/marketplace/DocScoreModal';
+import { calculateDocScore, getFreshness } from '../components/marketplace/docScore';
 import { attorneyAssignedEmail } from '../components/emails/caseEmails';
+import { HelpCircle } from 'lucide-react';
 
 export default function Marketplace() {
   const [loading, setLoading] = useState(true);
-  const [accessState, setAccessState] = useState(null); // 'ok' | 'pending' | 'no_sub' | 'denied'
+  const [accessState, setAccessState] = useState(null);
   const [lawyerProfile, setLawyerProfile] = useState(null);
   const [cases, setCases] = useState([]);
   const [filters, setFilters] = useState({
     state: 'my_states',
     violationType: 'all',
     businessType: 'all',
-    sort: 'newest'
+    sort: 'newest',
+    posted: 'any',
+    documentation: 'all'
   });
   const [detailCase, setDetailCase] = useState(null);
   const [selectedCase, setSelectedCase] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [raceError, setRaceError] = useState('');
   const [viewMode, setViewMode] = useState('grid');
+  const [scoreModalOpen, setScoreModalOpen] = useState(false);
 
   useEffect(() => {
     async function init() {
       let user;
-      try {
-        user = await base44.auth.me();
-      } catch {
+      try { user = await base44.auth.me(); } catch {
         base44.auth.redirectToLogin(createPageUrl('Marketplace'));
         return;
       }
+      if (!user) { base44.auth.redirectToLogin(createPageUrl('Marketplace')); return; }
 
-      if (!user) {
-        base44.auth.redirectToLogin(createPageUrl('Marketplace'));
-        return;
-      }
-
-      // Find lawyer profile by email
       const profiles = await base44.entities.LawyerProfile.filter({ email: user.email });
       const profile = profiles[0];
-
-      if (!profile) {
-        setAccessState('denied');
-        setLoading(false);
-        return;
-      }
-
+      if (!profile) { setAccessState('denied'); setLoading(false); return; }
       setLawyerProfile(profile);
+      if (profile.account_status !== 'approved') { setAccessState('pending'); setLoading(false); return; }
+      if (profile.subscription_status !== 'active') { setAccessState('no_sub'); setLoading(false); return; }
 
-      if (profile.account_status !== 'approved') {
-        setAccessState('pending');
-        setLoading(false);
-        return;
-      }
-
-      if (profile.subscription_status !== 'active') {
-        setAccessState('no_sub');
-        setLoading(false);
-        return;
-      }
-
-      // Load available cases
       const available = await base44.entities.Case.filter({ status: 'available' }, '-approved_at', 200);
       setCases(available);
       setAccessState('ok');
@@ -77,13 +59,10 @@ export default function Marketplace() {
 
   if (loading) {
     return (
-      <div
-        role="status" aria-label="Loading marketplace"
-        style={{
-          display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-          minHeight: 'calc(100vh - 200px)', gap: '1rem'
-        }}
-      >
+      <div role="status" aria-label="Loading marketplace" style={{
+        display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+        minHeight: 'calc(100vh - 200px)', gap: '1rem'
+      }}>
         <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading marketplace…</p>
       </div>
@@ -92,19 +71,10 @@ export default function Marketplace() {
 
   if (accessState === 'denied') {
     return (
-      <div style={{
-        display: 'flex', justifyContent: 'center', alignItems: 'center',
-        minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)'
-      }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)' }}>
         <div style={{ textAlign: 'center', maxWidth: '480px' }}>
-          <h2 style={{
-            fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700,
-            color: 'var(--slate-900)', marginBottom: 'var(--space-sm)'
-          }}>Access Restricted</h2>
-          <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-            color: 'var(--slate-600)', lineHeight: 1.6
-          }}>
+          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Access Restricted</h2>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
             This page is for approved attorneys only. If you'd like to join the marketplace, please <a href={createPageUrl('LawyerRegister')} style={{ color: 'var(--terra-600)', fontWeight: 600 }}>apply here</a>.
           </p>
         </div>
@@ -114,29 +84,11 @@ export default function Marketplace() {
 
   if (accessState === 'pending') {
     return (
-      <div style={{
-        display: 'flex', justifyContent: 'center', alignItems: 'center',
-        minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)'
-      }}>
-        <div style={{
-          textAlign: 'center', maxWidth: '480px', backgroundColor: 'var(--surface)',
-          border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-2xl)'
-        }}>
-          <div style={{
-            width: '64px', height: '64px', borderRadius: '50%',
-            backgroundColor: '#FEF3C7', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', margin: '0 auto var(--space-lg)',
-            fontSize: '1.75rem'
-          }}>⏳</div>
-          <h2 style={{
-            fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700,
-            color: 'var(--slate-900)', marginBottom: 'var(--space-sm)'
-          }}>Application Pending</h2>
-          <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-            color: 'var(--slate-600)', lineHeight: 1.6, margin: 0
-          }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)' }}>
+        <div style={{ textAlign: 'center', maxWidth: '480px', backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-2xl)' }}>
+          <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto var(--space-lg)', fontSize: '1.75rem' }}>⏳</div>
+          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Application Pending</h2>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', lineHeight: 1.6, margin: 0 }}>
             Your application is currently under review. You'll receive an email once your account has been approved.
           </p>
         </div>
@@ -146,43 +98,23 @@ export default function Marketplace() {
 
   if (accessState === 'no_sub') {
     return (
-      <div style={{
-        display: 'flex', justifyContent: 'center', alignItems: 'center',
-        minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)'
-      }}>
-        <div style={{
-          textAlign: 'center', maxWidth: '480px', backgroundColor: 'var(--surface)',
-          border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-2xl)'
-        }}>
-          <h2 style={{
-            fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700,
-            color: 'var(--slate-900)', marginBottom: 'var(--space-sm)'
-          }}>Subscription Required</h2>
-          <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-            color: 'var(--slate-600)', lineHeight: 1.6, marginBottom: 'var(--space-lg)'
-          }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)' }}>
+        <div style={{ textAlign: 'center', maxWidth: '480px', backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-2xl)' }}>
+          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Subscription Required</h2>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', lineHeight: 1.6, marginBottom: 'var(--space-lg)' }}>
             Your account is approved, but you need an active subscription to access the marketplace.
           </p>
-          <a
-            href={createPageUrl('LawyerSubscription')}
-            style={{
-              display: 'inline-block', padding: '0.75rem 2rem',
-              fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-              color: 'white', backgroundColor: 'var(--terra-600)',
-              borderRadius: 'var(--radius-md)', textDecoration: 'none',
-              transition: 'background-color 0.15s'
-            }}
-          >
-            Activate Subscription
-          </a>
+          <a href={createPageUrl('LawyerSubscription')} style={{
+            display: 'inline-block', padding: '0.75rem 2rem', fontFamily: 'Manrope, sans-serif',
+            fontSize: '1rem', fontWeight: 700, color: 'white', backgroundColor: 'var(--terra-600)',
+            borderRadius: 'var(--radius-md)', textDecoration: 'none'
+          }}>Activate Subscription</a>
         </div>
       </div>
     );
   }
 
-  // State name → abbreviation map for matching
+  // State normalization
   const STATE_NAME_TO_ABBR = {
     'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO',
     'Connecticut':'CT','Delaware':'DE','District of Columbia':'DC','Florida':'FL','Georgia':'GA',
@@ -194,32 +126,30 @@ export default function Marketplace() {
     'South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA',
     'Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'
   };
+  const normalizeState = (s) => { if (!s) return ''; const t = s.trim(); return t.length === 2 ? t.toUpperCase() : (STATE_NAME_TO_ABBR[t] || t); };
 
-  const normalizeState = (s) => {
-    if (!s) return '';
-    const trimmed = s.trim();
-    if (trimmed.length === 2) return trimmed.toUpperCase();
-    return STATE_NAME_TO_ABBR[trimmed] || trimmed;
-  };
-
-  // Filter cases
   const lawyerStates = lawyerProfile?.states_of_practice || [];
 
   const filteredCases = cases
     .filter(c => {
-      if (filters.state === 'my_states') {
-        return lawyerStates.includes(normalizeState(c.state));
-      }
+      if (filters.state === 'my_states') return lawyerStates.includes(normalizeState(c.state));
       if (filters.state !== 'all') return normalizeState(c.state) === filters.state;
       return true;
     })
+    .filter(c => filters.violationType === 'all' || c.violation_type === filters.violationType)
+    .filter(c => filters.businessType === 'all' || c.business_type === filters.businessType)
     .filter(c => {
-      if (filters.violationType !== 'all') return c.violation_type === filters.violationType;
+      if (!filters.posted || filters.posted === 'any') return true;
+      const fresh = getFreshness(c);
+      if (filters.posted === '7') return fresh.daysAgo <= 7;
+      if (filters.posted === '30') return fresh.daysAgo <= 30;
+      if (filters.posted === 'older') return fresh.daysAgo > 30;
       return true;
     })
     .filter(c => {
-      if (filters.businessType !== 'all') return c.business_type === filters.businessType;
-      return true;
+      if (!filters.documentation || filters.documentation === 'all') return true;
+      const score = calculateDocScore(c).score;
+      return score >= parseInt(filters.documentation);
     })
     .sort((a, b) => {
       const dateA = new Date(a.approved_at || a.created_date);
@@ -229,26 +159,18 @@ export default function Marketplace() {
 
   const handleViewDetails = (caseData) => {
     setDetailCase(caseData);
-    // Part A: increment marketplace_views in background
-    base44.entities.Case.update(caseData.id, {
-      marketplace_views: (caseData.marketplace_views || 0) + 1
-    });
+    base44.entities.Case.update(caseData.id, { marketplace_views: (caseData.marketplace_views || 0) + 1 });
   };
 
-  const handleInitiateFromModal = (caseData) => {
-    setDetailCase(null);
-    setSelectedCase(caseData);
-  };
+  const handleInitiateFromModal = (caseData) => { setDetailCase(null); setSelectedCase(caseData); };
 
   const handleConfirmInitiate = async () => {
     if (!selectedCase || !lawyerProfile || processing) return;
     setProcessing(true);
     setRaceError('');
-
     const now = new Date().toISOString();
     const c = selectedCase;
 
-    // Race condition check: re-fetch case to ensure it's still available
     const freshCases = await base44.entities.Case.filter({ id: c.id });
     const freshCase = freshCases[0];
     if (!freshCase || freshCase.status !== 'available') {
@@ -258,27 +180,15 @@ export default function Marketplace() {
       return;
     }
 
-    // 1. Update case: assign to lawyer
-    await base44.entities.Case.update(c.id, {
-      status: 'assigned',
-      assigned_lawyer_id: lawyerProfile.id,
-      assigned_at: now
-    });
-
-    // 2. Remove from local list immediately
+    await base44.entities.Case.update(c.id, { status: 'assigned', assigned_lawyer_id: lawyerProfile.id, assigned_at: now });
     setCases(prev => prev.filter(x => x.id !== c.id));
 
-    // 3. Create timeline event
     await base44.entities.TimelineEvent.create({
-      case_id: c.id,
-      event_type: 'assigned',
+      case_id: c.id, event_type: 'assigned',
       event_description: 'An attorney has been assigned to your case.',
-      actor_role: 'lawyer',
-      visible_to_user: true,
-      created_at: now
+      actor_role: 'lawyer', visible_to_user: true, created_at: now
     });
 
-    // 4. Send branded email to claimant
     const portalUrl = window.location.origin + '/MyCases';
     await base44.integrations.Core.SendEmail({
       to: c.contact_email,
@@ -286,60 +196,58 @@ export default function Marketplace() {
       body: attorneyAssignedEmail(c, lawyerProfile.full_name, lawyerProfile.firm_name, portalUrl)
     });
 
-    // 5. Send email to lawyer
     await base44.integrations.Core.SendEmail({
       to: lawyerProfile.email,
       subject: 'Support Initiation Confirmed — ADA Legal Connect',
-      body: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #1E293B;">Support Initiation Confirmed</h2>
-          <p>Dear ${lawyerProfile.full_name},</p>
-          <p>You have successfully initiated support for the following case:</p>
-          <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
-            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Business</td><td style="padding: 8px;">${c.business_name}</td></tr>
-            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Location</td><td style="padding: 8px;">${[c.city, c.state].filter(Boolean).join(', ')}</td></tr>
-            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Violation Type</td><td style="padding: 8px;">${c.violation_type === 'physical_space' ? 'Physical Space' : 'Digital / Website'}</td></tr>
-            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant</td><td style="padding: 8px;">${c.contact_name}</td></tr>
-            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant Email</td><td style="padding: 8px;">${c.contact_email}</td></tr>
-            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant Phone</td><td style="padding: 8px;">${c.contact_phone}</td></tr>
-            <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Contact Preference</td><td style="padding: 8px;">${c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'}</td></tr>
-          </table>
-          <p><strong>Reminder:</strong> You are required to contact the claimant within <strong>24 hours</strong>.</p>
-          <p style="color: #64748B; font-size: 0.875rem; font-style: italic; margin-top: 24px;">
-            ADA Legal Connect — Connecting people with experienced ADA attorneys.
-          </p>
-        </div>
-      `
+      body: `<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #1E293B;">Support Initiation Confirmed</h2>
+        <p>Dear ${lawyerProfile.full_name},</p>
+        <p>You have successfully initiated support for the following case:</p>
+        <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Business</td><td style="padding: 8px;">${c.business_name}</td></tr>
+          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Location</td><td style="padding: 8px;">${[c.city, c.state].filter(Boolean).join(', ')}</td></tr>
+          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Violation Type</td><td style="padding: 8px;">${c.violation_type === 'physical_space' ? 'Physical Space' : 'Digital / Website'}</td></tr>
+          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant</td><td style="padding: 8px;">${c.contact_name}</td></tr>
+          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant Email</td><td style="padding: 8px;">${c.contact_email}</td></tr>
+          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant Phone</td><td style="padding: 8px;">${c.contact_phone}</td></tr>
+          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Contact Preference</td><td style="padding: 8px;">${c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'}</td></tr>
+        </table>
+        <p><strong>Reminder:</strong> You are required to contact the claimant within <strong>24 hours</strong>.</p>
+        <p style="color: #64748B; font-size: 0.875rem; font-style: italic; margin-top: 24px;">ADA Legal Connect — Connecting people with experienced ADA attorneys.</p>
+      </div>`
     });
 
     setProcessing(false);
     setSelectedCase(null);
-
-    // 6. Redirect to lawyer dashboard with highlight
     window.location.href = createPageUrl('LawyerDashboard') + `?highlight=${c.id}`;
   };
 
+  const resetFilters = () => setFilters({ state: 'my_states', violationType: 'all', businessType: 'all', sort: 'newest', posted: 'any', documentation: 'all' });
+
+  const hasActiveFilters = filters.state !== 'my_states' || filters.violationType !== 'all' || filters.businessType !== 'all' || filters.posted !== 'any' || filters.documentation !== 'all';
+
   return (
-    <div style={{
-      backgroundColor: 'var(--slate-50)',
-      minHeight: 'calc(100vh - 200px)',
-      padding: 'var(--space-xl) var(--space-lg)'
-    }}>
+    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl) var(--space-lg)' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <h1 style={{
-          fontFamily: 'Fraunces, serif',
-          fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
-          fontWeight: 700, color: 'var(--slate-900)',
-          marginBottom: 'var(--space-xl)'
-        }}>
+        <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-md)' }}>
           Available Cases
         </h1>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 'var(--space-md)', marginBottom: 'var(--space-xl)', width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '10px', marginBottom: 'var(--space-lg)', width: '100%' }}>
           <MarketplaceFilters filters={filters} onChange={setFilters} lawyerStates={lawyerStates} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', marginBottom: '0.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '0.25rem' }}>
+            <button type="button" onClick={() => setScoreModalOpen(true)} style={{
+              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
+              color: 'var(--slate-500)', display: 'inline-flex', alignItems: 'center', gap: '4px'
+            }}
+              onMouseEnter={e => { e.currentTarget.style.color = 'var(--terra-600)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'var(--slate-500)'; }}
+            >
+              <HelpCircle size={14} /> How are cases scored?
+            </button>
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-600)' }}>
-              {filteredCases.length} available case{filteredCases.length !== 1 ? 's' : ''}
+              {filteredCases.length} case{filteredCases.length !== 1 ? 's' : ''}
             </span>
             <ViewToggle view={viewMode} onChange={setViewMode} />
           </div>
@@ -350,20 +258,27 @@ export default function Marketplace() {
             backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
             borderRadius: '16px', padding: 'var(--space-2xl)', textAlign: 'center'
           }}>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-              color: 'var(--slate-600)', margin: 0
-            }}>
-              No available cases match your filters. Try broadening your search.
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-700)', margin: '0 0 8px' }}>
+              No cases match these filters
             </p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)', margin: '0 0 16px' }}>
+              There {cases.length === 1 ? 'is' : 'are'} {cases.length} case{cases.length !== 1 ? 's' : ''} available with different criteria
+            </p>
+            {hasActiveFilters && (
+              <button type="button" onClick={resetFilters} style={{
+                background: 'none', border: '1px solid var(--slate-300)', borderRadius: 'var(--radius-md)',
+                padding: '8px 20px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
+                fontSize: '0.875rem', fontWeight: 600, color: 'var(--terra-600)'
+              }}>Reset Filters</button>
+            )}
           </div>
         )}
 
         {viewMode === 'grid' ? (
-          <div className="marketplace-grid" style={{
+          <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(360px, 100%), 1fr))',
-            gap: 'var(--space-lg)'
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(340px, 100%), 1fr))',
+            gap: '16px'
           }}>
             {filteredCases.map(c => (
               <CaseCard key={c.id} caseData={c} onViewDetails={handleViewDetails} />
@@ -376,10 +291,10 @@ export default function Marketplace() {
                 <caption className="sr-only">Available marketplace cases</caption>
                 <thead>
                   <tr>
-                    {['Type', 'Business Type', 'City / State', 'Subtype / Domain', 'Posted', ''].map(h => (
+                    {['Type', 'Business', 'City / State', 'Subtype', 'Score', '', 'Posted', ''].map(h => (
                       <th key={h} scope="col" style={{
-                        fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-                        color: 'var(--slate-600)', textAlign: 'left', padding: '0.5rem 0.75rem',
+                        fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700,
+                        color: 'var(--slate-500)', textAlign: 'left', padding: '6px 0.75rem',
                         borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase',
                         letterSpacing: '0.04em', whiteSpace: 'nowrap'
                       }}>{h}</th>
@@ -387,8 +302,8 @@ export default function Marketplace() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredCases.map(c => (
-                    <CaseListRow key={c.id} caseData={c} onViewDetails={handleViewDetails} />
+                  {filteredCases.map((c, i) => (
+                    <CaseListRow key={c.id} caseData={c} onViewDetails={handleViewDetails} isEven={i % 2 === 1} />
                   ))}
                 </tbody>
               </table>
@@ -397,12 +312,7 @@ export default function Marketplace() {
         )}
       </div>
 
-      <CaseDetailModal
-        caseData={detailCase}
-        onClose={() => setDetailCase(null)}
-        onInitiate={handleInitiateFromModal}
-      />
-
+      <CaseDetailModal caseData={detailCase} onClose={() => setDetailCase(null)} onInitiate={handleInitiateFromModal} />
       <InitiateSupportModal
         open={!!selectedCase || !!raceError}
         onCancel={() => { if (!processing) { setSelectedCase(null); setRaceError(''); } }}
@@ -411,6 +321,7 @@ export default function Marketplace() {
         raceError={raceError}
         onDismissError={() => { setSelectedCase(null); setRaceError(''); }}
       />
+      <DocScoreModal open={scoreModalOpen} onClose={() => setScoreModalOpen(false)} caseData={null} />
     </div>
   );
 }
