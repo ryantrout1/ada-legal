@@ -3,17 +3,17 @@ import React from 'react';
 const steps = [
   {
     num: '1',
-    title: 'Report',
+    title: 'Report What Happened',
     desc: 'Tell us about the ADA violation you experienced through our simple, guided form. It takes about five minutes.'
   },
   {
     num: '2',
-    title: 'Review',
+    title: 'We Review and Verify',
     desc: 'Our team reviews every submission for quality and completeness before it enters the marketplace.'
   },
   {
     num: '3',
-    title: 'Connect',
+    title: 'An Attorney Reaches Out to You',
     desc: 'A vetted ADA attorney claims your case exclusively and contacts you directly — usually within 24 hours.'
   }
 ];

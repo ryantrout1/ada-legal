@@ -10,6 +10,7 @@ import IncidentStep from '../components/intake/IncidentStep';
 import ContactStep from '../components/intake/ContactStep';
 import ReviewStep from '../components/intake/ReviewStep';
 import SuccessStep from '../components/intake/SuccessStep';
+import ExitConfirmModal from '../components/intake/ExitConfirmModal';
 
 export default function Intake() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -36,6 +37,7 @@ export default function Intake() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [caseId, setCaseId] = useState(null);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   // Silently check if user is logged in (no redirect — page is public)
   useEffect(() => {
@@ -240,6 +242,25 @@ export default function Intake() {
         maxWidth: '720px',
         margin: '0 auto'
       }}>
+        {/* Exit button */}
+        {!submitted && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--space-sm)' }}>
+            <button
+              type="button"
+              onClick={() => setShowExitConfirm(true)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
+                color: 'var(--slate-500)', display: 'flex', alignItems: 'center', gap: '0.25rem',
+                padding: '0.375rem 0.5rem'
+              }}
+              aria-label="Exit form"
+            >
+              ✕ Exit
+            </button>
+          </div>
+        )}
+
         <h1 style={{
           fontFamily: 'Fraunces, serif',
           fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
@@ -337,6 +358,8 @@ export default function Intake() {
           )}
         </div>
       </div>
+
+      <ExitConfirmModal open={showExitConfirm} onStay={() => setShowExitConfirm(false)} />
     </div>
   );
 }

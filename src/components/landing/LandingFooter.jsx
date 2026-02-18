@@ -20,10 +20,15 @@ export default function LandingFooter() {
           color: 'var(--slate-400)', lineHeight: 1.7
         }}>
           <p style={{ margin: '0 0 0.75rem' }}>
-            ADA Legal Marketplace is not a law firm and does not provide legal advice. The information on this site is for general informational purposes only and does not constitute legal counsel.
+            ADA Legal Marketplace is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship.
           </p>
           <p style={{ margin: '0 0 0.75rem' }}>
-            No attorney-client relationship is formed by submitting a report or using this platform. Attorney listings do not constitute endorsements. Results may vary.
+            The information on this site is for general informational purposes only and does not constitute legal counsel. Attorney listings do not constitute endorsements. Results may vary.
+          </p>
+          <p style={{ margin: '0 0 0.75rem' }}>
+            <a href="mailto:support@adalegalmarketplace.com" style={{ color: 'var(--terra-300)', textDecoration: 'underline' }}>
+              Contact Us: support@adalegalmarketplace.com
+            </a>
           </p>
           <p style={{ margin: 0 }}>
             © {new Date().getFullYear()} ADA Legal Marketplace. All rights reserved.

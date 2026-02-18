@@ -30,17 +30,17 @@ export default function HeroSection() {
           marginBottom: '1.5rem',
           marginTop: 0
         }}>
-          Every Barrier Deserves<br />an Advocate
+          Your Rights Matter. We Connect You With ADA Attorneys Who Fight For Access.
         </h1>
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: 'clamp(1rem, 2vw, 1.25rem)',
           color: 'var(--slate-300)',
-          maxWidth: '600px',
+          maxWidth: '640px',
           margin: '0 auto 2.5rem',
           lineHeight: 1.6
         }}>
-          Report ADA violations and get matched with experienced attorneys — at no cost to you. We believe access is a right, not a privilege.
+          Report an ADA violation and get matched with an experienced disability rights attorney — at no cost to you.
         </p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link
@@ -56,7 +56,7 @@ export default function HeroSection() {
             onMouseEnter={e => e.currentTarget.style.background = 'var(--terra-700)'}
             onMouseLeave={e => e.currentTarget.style.background = 'var(--terra-600)'}
           >
-            Report a Violation <ArrowRight size={18} />
+            Report a Violation <ArrowRight size={18} aria-hidden="true" />
           </Link>
           <a
             href="#how-it-works"
