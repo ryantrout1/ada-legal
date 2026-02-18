@@ -24,7 +24,7 @@ function InfoRow({ label, value }) {
     <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.5rem' }}>
       <span style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-        color: 'var(--slate-500)', minWidth: '130px', flexShrink: 0
+        color: 'var(--slate-600)', minWidth: '130px', flexShrink: 0
       }}>{label}</span>
       <span style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-800)'
@@ -37,7 +37,7 @@ function SectionHeading({ children }) {
   return (
     <h3 style={{
       fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-      color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.06em',
+      color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.06em',
       margin: '0 0 0.625rem 0', paddingBottom: '0.375rem',
       borderBottom: '1px solid var(--slate-200)'
     }}>{children}</h3>
@@ -145,7 +145,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
           </div>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            color: 'var(--slate-500)', margin: '0.625rem 0 0 0'
+            color: 'var(--slate-600)', margin: '0.625rem 0 0 0'
           }}>
             Posted {formatDate(c.approved_at)}
           </p>
@@ -173,7 +173,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
           <div style={{ marginTop: '0.625rem' }}>
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-              color: 'var(--slate-500)', display: 'block', marginBottom: '0.375rem'
+              color: 'var(--slate-600)', display: 'block', marginBottom: '0.375rem'
             }}>Description</span>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
@@ -222,10 +222,10 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
               display: 'block', width: '100%', marginTop: '0.75rem',
               background: 'none', border: 'none', cursor: 'pointer',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-              color: 'var(--slate-500)', textAlign: 'center', padding: '0.5rem'
+              color: 'var(--slate-600)', textAlign: 'center', padding: '0.5rem'
             }}
             onMouseEnter={e => { e.currentTarget.style.color = 'var(--slate-700)'; }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'var(--slate-500)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'var(--slate-600)'; }}
           >
             Close
           </button>
