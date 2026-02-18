@@ -14,12 +14,13 @@ export default function CompactSubmissionsTable({ cases }) {
       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)', margin: 0 }}>
         No pending submissions at this time.
       </p>
+
     );
   }
 
   const th = {
     fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-    color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em',
+    color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em',
     padding: '6px 10px', textAlign: 'left', borderBottom: '2px solid var(--slate-200)'
   };
   const td = {
@@ -48,7 +49,7 @@ export default function CompactSubmissionsTable({ cases }) {
             <tbody>
               {cases.map(c => (
                 <tr key={c.id}>
-                  <td style={{ ...td, fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
+                  <td style={{ ...td, fontFamily: 'monospace', fontSize: '0.75rem', color: '#475569' }}>
                     {c.id?.slice(0, 8)}
                   </td>
                   <td style={{ ...td, fontWeight: 600 }}>{c.business_name || '—'}</td>

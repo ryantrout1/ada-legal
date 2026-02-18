@@ -80,7 +80,7 @@ export default function LawyerActivityAlerts({ lawyers, cases, contactLogs, onDa
               backgroundColor: '#FFF5F5'
             }}>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-800)' }}>{item.lawyerName}</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>→ {item.caseName}</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569' }}>→ {item.caseName}</span>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#B91C1C', marginLeft: 'auto', flexShrink: 0 }}>
                 {item.hoursOverdue}h overdue
               </span>
@@ -111,7 +111,7 @@ export default function LawyerActivityAlerts({ lawyers, cases, contactLogs, onDa
               backgroundColor: '#F3E8FF20'
             }}>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-800)' }}>{l.full_name}</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>{l.firm_name}</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569' }}>{l.firm_name}</span>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#7C3AED', marginLeft: 'auto', flexShrink: 0 }}>
                 Applied {formatDate(l.created_date)}
               </span>

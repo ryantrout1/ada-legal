@@ -44,7 +44,7 @@ export default function DocScoreDots({ caseData, showLabel = true, tooltipPlacem
         style={{
           background: 'none', border: 'none', cursor: 'pointer', padding: 0,
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-          color: 'var(--slate-400)', lineHeight: 1
+          color: '#475569', lineHeight: 1
         }}
       >ⓘ</button>
 

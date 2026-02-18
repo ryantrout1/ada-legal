@@ -23,7 +23,7 @@ export default function ClickableStatCard({ label, count, bgColor, textColor, bo
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
         <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: textColor || 'var(--slate-700)', margin: 0 }}>{label}</p>
-        {Icon && <Icon size={16} aria-hidden="true" style={{ color: textColor || 'var(--slate-500)', opacity: 0.7 }} />}
+        {Icon && <Icon size={16} aria-hidden="true" style={{ color: textColor || '#475569', opacity: 0.7 }} />}
       </div>
       <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1.7rem', fontWeight: 700, color: textColor || 'var(--slate-900)', margin: 0, lineHeight: 1.2 }} aria-hidden="true">
         {count ?? '—'}

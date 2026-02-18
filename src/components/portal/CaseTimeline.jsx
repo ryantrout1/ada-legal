@@ -1,7 +1,7 @@
 import React from 'react';
 
 const DOT_COLORS = {
-  submitted: 'var(--slate-500)',
+  submitted: '#475569',
   reviewed: '#1D4ED8',
   approved: '#15803D',
   rejected: '#B91C1C',

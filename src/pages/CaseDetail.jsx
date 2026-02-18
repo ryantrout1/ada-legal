@@ -9,14 +9,14 @@ import CaseTimeline from '../components/portal/CaseTimeline';
 import CaseHelpCard from '../components/portal/CaseHelpCard';
 
 const STATUS_BADGE_CONFIG = {
-  submitted: { label: 'Submitted', bg: 'var(--slate-500)' },
+  submitted: { label: 'Submitted', bg: '#475569' },
   under_review: { label: 'Under Review', bg: '#1D4ED8' },
   approved: { label: 'Matched & Waiting', bg: '#15803D' },
   available: { label: 'Matched & Waiting', bg: '#15803D' },
   assigned: { label: 'Attorney Assigned', bg: 'var(--terra-600, #C2410C)' },
   in_progress: { label: 'Attorney Working Your Case', bg: '#15803D' },
   closed: { label: 'Closed', bg: 'var(--slate-600)' },
-  expired: { label: 'Expired', bg: 'var(--slate-500)' },
+  expired: { label: 'Expired', bg: '#475569' },
   rejected: { label: 'Not Approved', bg: '#B91C1C' }
 };
 

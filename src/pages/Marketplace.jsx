@@ -239,10 +239,10 @@ export default function Marketplace() {
             <button type="button" onClick={() => setScoreModalOpen(true)} style={{
               background: 'none', border: 'none', cursor: 'pointer', padding: 0,
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-              color: 'var(--slate-500)', display: 'inline-flex', alignItems: 'center', gap: '4px'
+              color: '#475569', display: 'inline-flex', alignItems: 'center', gap: '4px'
             }}
               onMouseEnter={e => { e.currentTarget.style.color = 'var(--terra-600)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'var(--slate-500)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#475569'; }}
             >
               <HelpCircle size={14} /> How are cases scored?
             </button>
@@ -261,7 +261,7 @@ export default function Marketplace() {
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-700)', margin: '0 0 8px' }}>
               No cases match these filters
             </p>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)', margin: '0 0 16px' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569', margin: '0 0 16px' }}>
               There {cases.length === 1 ? 'is' : 'are'} {cases.length} case{cases.length !== 1 ? 's' : ''} available with different criteria
             </p>
             {hasActiveFilters && (
@@ -294,7 +294,7 @@ export default function Marketplace() {
                     {['Type', 'Business', 'City / State', 'Subtype', 'Score', '', 'Posted', ''].map(h => (
                       <th key={h} scope="col" style={{
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700,
-                        color: 'var(--slate-500)', textAlign: 'left', padding: '6px 0.75rem',
+                        color: '#475569', textAlign: 'left', padding: '6px 0.75rem',
                         borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase',
                         letterSpacing: '0.04em', whiteSpace: 'nowrap'
                       }}>{h}</th>
