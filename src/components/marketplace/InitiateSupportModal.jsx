@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function InitiateSupportModal({ open, onCancel, onConfirm, processing }) {
+export default function InitiateSupportModal({ open, onCancel, onConfirm, processing, raceError, onDismissError }) {
   const cancelRef = useRef(null);
   const confirmRef = useRef(null);
   const overlayRef = useRef(null);
@@ -65,67 +65,108 @@ export default function InitiateSupportModal({ open, onCancel, onConfirm, proces
         maxWidth: '480px', width: '100%',
         boxShadow: '0 20px 60px rgba(0,0,0,0.15)'
       }}>
-        <h2
-          id="initiate-modal-heading"
-          style={{
-            fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700,
-            color: 'var(--slate-900)', margin: '0 0 var(--space-md) 0'
-          }}
-        >
-          Initiate Support for This Case?
-        </h2>
-        <p
-          id="initiate-modal-body"
-          style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-            color: 'var(--slate-600)', lineHeight: 1.6,
-            margin: '0 0 var(--space-xl) 0'
-          }}
-        >
-          By initiating support for this case, you agree to contact the claimant within 24 hours. This case will be exclusively assigned to you. This action cannot be undone.
-        </p>
+        {raceError ? (
+          <>
+            <h2
+              id="initiate-modal-heading"
+              style={{
+                fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700,
+                color: 'var(--error-600)', margin: '0 0 var(--space-md) 0'
+              }}
+            >
+              Case Unavailable
+            </h2>
+            <p
+              id="initiate-modal-body"
+              style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+                color: 'var(--slate-600)', lineHeight: 1.6,
+                margin: '0 0 var(--space-xl) 0'
+              }}
+            >
+              {raceError}
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button
+                ref={cancelRef}
+                type="button"
+                onClick={onDismissError}
+                style={{
+                  padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
+                  fontSize: '0.9375rem', fontWeight: 700, color: 'white',
+                  backgroundColor: 'var(--terra-600)', border: 'none',
+                  borderRadius: 'var(--radius-md)', cursor: 'pointer', minHeight: '44px'
+                }}
+              >
+                OK
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h2
+              id="initiate-modal-heading"
+              style={{
+                fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700,
+                color: 'var(--slate-900)', margin: '0 0 var(--space-md) 0'
+              }}
+            >
+              Initiate Support for This Case?
+            </h2>
+            <p
+              id="initiate-modal-body"
+              style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+                color: 'var(--slate-600)', lineHeight: 1.6,
+                margin: '0 0 var(--space-xl) 0'
+              }}
+            >
+              By initiating support for this case, you agree to contact the claimant within 24 hours. This case will be exclusively assigned to you. This action cannot be undone.
+            </p>
 
-        <div style={{
-          display: 'flex', gap: 'var(--space-md)', justifyContent: 'flex-end',
-          flexWrap: 'wrap'
-        }}>
-          <button
-            ref={cancelRef}
-            type="button"
-            onClick={onCancel}
-            disabled={processing}
-            style={{
-              padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-              fontSize: '0.9375rem', fontWeight: 600, color: 'var(--slate-700)',
-              backgroundColor: 'transparent', border: '2px solid var(--slate-200)',
-              borderRadius: 'var(--radius-md)', cursor: processing ? 'not-allowed' : 'pointer',
-              minHeight: '44px', transition: 'all 0.15s',
-              opacity: processing ? 0.5 : 1
-            }}
-            onMouseEnter={e => { if (!processing) e.currentTarget.style.borderColor = 'var(--slate-400)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; }}
-          >
-            Cancel
-          </button>
-          <button
-            ref={confirmRef}
-            type="button"
-            onClick={onConfirm}
-            disabled={processing}
-            style={{
-              padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-              fontSize: '0.9375rem', fontWeight: 700, color: 'white',
-              backgroundColor: processing ? 'var(--slate-400)' : 'var(--terra-600)',
-              border: 'none', borderRadius: 'var(--radius-md)',
-              cursor: processing ? 'not-allowed' : 'pointer',
-              minHeight: '44px', transition: 'background-color 0.15s'
-            }}
-            onMouseEnter={e => { if (!processing) e.currentTarget.style.backgroundColor = 'var(--terra-700)'; }}
-            onMouseLeave={e => { if (!processing) e.currentTarget.style.backgroundColor = processing ? 'var(--slate-400)' : 'var(--terra-600)'; }}
-          >
-            {processing ? 'Assigning…' : 'Confirm — Initiate Support'}
-          </button>
-        </div>
+            <div style={{
+              display: 'flex', gap: 'var(--space-md)', justifyContent: 'flex-end',
+              flexWrap: 'wrap'
+            }}>
+              <button
+                ref={cancelRef}
+                type="button"
+                onClick={onCancel}
+                disabled={processing}
+                style={{
+                  padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
+                  fontSize: '0.9375rem', fontWeight: 600, color: 'var(--slate-700)',
+                  backgroundColor: 'transparent', border: '2px solid var(--slate-200)',
+                  borderRadius: 'var(--radius-md)', cursor: processing ? 'not-allowed' : 'pointer',
+                  minHeight: '44px', transition: 'all 0.15s',
+                  opacity: processing ? 0.5 : 1
+                }}
+                onMouseEnter={e => { if (!processing) e.currentTarget.style.borderColor = 'var(--slate-400)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; }}
+              >
+                Cancel
+              </button>
+              <button
+                ref={confirmRef}
+                type="button"
+                onClick={onConfirm}
+                disabled={processing}
+                style={{
+                  padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
+                  fontSize: '0.9375rem', fontWeight: 700, color: 'white',
+                  backgroundColor: processing ? 'var(--slate-400)' : 'var(--terra-600)',
+                  border: 'none', borderRadius: 'var(--radius-md)',
+                  cursor: processing ? 'not-allowed' : 'pointer',
+                  minHeight: '44px', transition: 'background-color 0.15s'
+                }}
+                onMouseEnter={e => { if (!processing) e.currentTarget.style.backgroundColor = 'var(--terra-700)'; }}
+                onMouseLeave={e => { if (!processing) e.currentTarget.style.backgroundColor = processing ? 'var(--slate-400)' : 'var(--terra-600)'; }}
+              >
+                {processing ? 'Assigning…' : 'Confirm — Initiate Support'}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

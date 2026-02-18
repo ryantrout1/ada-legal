@@ -24,6 +24,7 @@ export default function Marketplace() {
   const [detailCase, setDetailCase] = useState(null);
   const [selectedCase, setSelectedCase] = useState(null);
   const [processing, setProcessing] = useState(false);
+  const [raceError, setRaceError] = useState('');
   const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
@@ -236,11 +237,22 @@ export default function Marketplace() {
   };
 
   const handleConfirmInitiate = async () => {
-    if (!selectedCase || !lawyerProfile) return;
+    if (!selectedCase || !lawyerProfile || processing) return;
     setProcessing(true);
+    setRaceError('');
 
     const now = new Date().toISOString();
     const c = selectedCase;
+
+    // Race condition check: re-fetch case to ensure it's still available
+    const freshCases = await base44.entities.Case.filter({ id: c.id });
+    const freshCase = freshCases[0];
+    if (!freshCase || freshCase.status !== 'available') {
+      setCases(prev => prev.filter(x => x.id !== c.id));
+      setRaceError('This case has already been assigned to another attorney. It has been removed from the marketplace.');
+      setProcessing(false);
+      return;
+    }
 
     // 1. Update case: assign to lawyer
     await base44.entities.Case.update(c.id, {
@@ -299,8 +311,8 @@ export default function Marketplace() {
     setProcessing(false);
     setSelectedCase(null);
 
-    // 6. Redirect to case detail
-    window.location.href = createPageUrl('LawyerCaseDetail') + `?id=${c.id}`;
+    // 6. Redirect to lawyer dashboard with highlight
+    window.location.href = createPageUrl('LawyerDashboard') + `?highlight=${c.id}`;
   };
 
   return (
@@ -388,10 +400,12 @@ export default function Marketplace() {
       />
 
       <InitiateSupportModal
-        open={!!selectedCase}
-        onCancel={() => { if (!processing) setSelectedCase(null); }}
+        open={!!selectedCase || !!raceError}
+        onCancel={() => { if (!processing) { setSelectedCase(null); setRaceError(''); } }}
         onConfirm={handleConfirmInitiate}
         processing={processing}
+        raceError={raceError}
+        onDismissError={() => { setSelectedCase(null); setRaceError(''); }}
       />
     </div>
   );
