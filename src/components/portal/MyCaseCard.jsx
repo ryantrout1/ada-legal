@@ -96,13 +96,13 @@ export default function MyCaseCard({ caseData }) {
               ? <Building2 size={18} aria-hidden="true" style={{ color: '#C2410C', flexShrink: 0 }} />
               : <Globe size={18} aria-hidden="true" style={{ color: '#1D4ED8', flexShrink: 0 }} />
             }
-            <h3 style={{
+            <p style={{
               fontFamily: 'Fraunces, serif', fontSize: '1.05rem', fontWeight: 600,
               color: 'var(--slate-900)', margin: 0, flex: 1, minWidth: 0,
               overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
             }}>
               {c.business_name}
-            </h3>
+            </p>
             <span style={{
               display: 'inline-block', padding: '3px 10px', borderRadius: '8px', flexShrink: 0,
               fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
