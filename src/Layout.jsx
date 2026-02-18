@@ -196,7 +196,7 @@ export default function Layout({ children, currentPageName }) {
             fontWeight: 700
           }}>
             <Scale size={32} style={{ color: 'var(--terra-400)' }} />
-            <span>ADA Legal</span>
+            <span>ADA Legal Connect</span>
           </Link>
 
           {/* Mobile Menu Button */}
