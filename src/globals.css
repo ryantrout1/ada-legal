@@ -25,11 +25,12 @@
   outline: none !important;
 }
 
-/* Skip to main content link */
+/* Skip to main content link — hidden off-screen, visible on focus */
+a[href="#main-content"],
 .skip-to-main {
-  position: absolute;
-  top: -100px;
-  left: 16px;
+  position: absolute !important;
+  top: -200px !important;
+  left: 16px !important;
   z-index: 10000;
   padding: 12px 24px;
   background: #C2410C;
@@ -39,11 +40,21 @@
   font-weight: 600;
   text-decoration: none;
   border-radius: 0 0 8px 8px;
-  transition: top 0.2s;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  width: 1px;
+  height: 1px;
+  white-space: nowrap;
 }
 
+a[href="#main-content"]:focus,
 .skip-to-main:focus {
-  top: 0;
+  top: 0 !important;
+  clip: auto;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  white-space: normal;
   outline: 3px solid #1D4ED8;
   outline-offset: 2px;
 }
