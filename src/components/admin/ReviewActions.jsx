@@ -38,7 +38,7 @@ export default function ReviewActions({ caseData, onActionComplete }) {
     const portalUrl = window.location.origin + '/MyCases';
     await base44.integrations.Core.SendEmail({
       to: caseData.contact_email,
-      subject: 'ADA Legal Marketplace — Case Approved',
+      subject: 'ADA Legal Connect — Case Approved',
       body: caseApprovedEmail(caseData, portalUrl)
     });
 
@@ -68,7 +68,7 @@ export default function ReviewActions({ caseData, onActionComplete }) {
     const portalUrl = window.location.origin + '/MyCases';
     await base44.integrations.Core.SendEmail({
       to: caseData.contact_email,
-      subject: 'ADA Legal Marketplace — Submission Update',
+      subject: 'ADA Legal Connect — Submission Update',
       body: caseRejectedEmail(caseData, rejectionReason.trim(), portalUrl)
     });
 
