@@ -4,6 +4,7 @@ import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
 import { Scale, Menu, X, User, LogOut } from 'lucide-react';
 import LiveAnnouncer from './components/a11y/LiveAnnouncer';
+import AuditButton from './components/a11y/AuditButton';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = React.useState(null);
@@ -518,6 +519,8 @@ export default function Layout({ children, currentPageName }) {
           }
         }
       `}</style>
+
+      <AuditButton currentPageName={currentPageName} />
     </div>
     </LiveAnnouncer>
   );
