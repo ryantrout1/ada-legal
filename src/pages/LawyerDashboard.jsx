@@ -16,6 +16,7 @@ export default function LawyerDashboard() {
   const [saving, setSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [completedOpen, setCompletedOpen] = useState(false);
+  const [highlightedCaseId, setHighlightedCaseId] = useState(null);
 
   useEffect(() => {
     if (!successMessage) return;
@@ -52,6 +53,18 @@ export default function LawyerDashboard() {
       base44.entities.LawyerProfile.update(p.id, { last_active: new Date().toISOString() });
       await loadData(p);
       setLoading(false);
+
+      // Check for highlight param (post-initiate redirect)
+      const urlParams = new URLSearchParams(window.location.search);
+      const hl = urlParams.get('highlight');
+      if (hl) {
+        setHighlightedCaseId(hl);
+        setSuccessMessage('Case assigned successfully. You have 24 hours to make first contact.');
+        // Clear highlight after 4 seconds
+        setTimeout(() => setHighlightedCaseId(null), 4000);
+        // Clean URL
+        window.history.replaceState({}, '', window.location.pathname);
+      }
     }
     init();
   }, []);
@@ -225,6 +238,8 @@ export default function LawyerDashboard() {
                 contactLogs={allLogs.filter(l => l.case_id === c.id)}
                 onLogContact={setLogModalCase}
                 onResolve={setResolveModalCase}
+                highlighted={c.id === highlightedCaseId}
+                defaultExpanded={c.id === highlightedCaseId}
               />
             ))}
           </div>

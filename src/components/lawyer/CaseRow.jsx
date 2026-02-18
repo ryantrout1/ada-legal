@@ -9,8 +9,8 @@ function formatDate(d) {
 
 const METHOD_LABELS = { phone: 'Phone call', email: 'Email', in_person: 'In person', other: 'Other' };
 
-export default function CaseRow({ caseData, contactLogs, group, onLogContact, onResolve }) {
-  const [expanded, setExpanded] = useState(false);
+export default function CaseRow({ caseData, contactLogs, group, onLogContact, onResolve, highlighted, defaultExpanded }) {
+  const [expanded, setExpanded] = useState(defaultExpanded || false);
   const c = caseData;
   const isPhysical = c.violation_type === 'physical_space';
   const hasContact = contactLogs.length > 0;
@@ -26,10 +26,21 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: highlighted ? '2px solid #16A34A' : '1px solid var(--slate-200)',
       borderLeft: `4px solid ${borderColor}`, borderRadius: 'var(--radius-sm)',
-      marginBottom: '0.5rem'
+      marginBottom: '0.5rem',
+      boxShadow: highlighted ? '0 0 0 3px rgba(22,163,74,0.2)' : 'none',
+      transition: 'box-shadow 0.3s, border-color 0.3s',
+      animation: highlighted ? 'highlightPulse 1.5s ease-in-out 2' : 'none'
     }}>
+      {highlighted && (
+        <style>{`
+          @keyframes highlightPulse {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(22,163,74,0.15); }
+            50% { box-shadow: 0 0 0 6px rgba(22,163,74,0.25); }
+          }
+        `}</style>
+      )}
       {/* Row */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem',
