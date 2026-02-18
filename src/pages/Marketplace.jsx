@@ -3,6 +3,8 @@ import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import MarketplaceFilters from '../components/marketplace/MarketplaceFilters';
 import CaseCard from '../components/marketplace/CaseCard';
+import CaseListRow from '../components/marketplace/CaseListRow';
+import ViewToggle from '../components/marketplace/ViewToggle';
 import CaseDetailModal from '../components/marketplace/CaseDetailModal';
 import InitiateSupportModal from '../components/marketplace/InitiateSupportModal';
 import { attorneyAssignedEmail } from '../components/emails/caseEmails';
@@ -21,6 +23,7 @@ export default function Marketplace() {
   const [detailCase, setDetailCase] = useState(null);
   const [selectedCase, setSelectedCase] = useState(null);
   const [processing, setProcessing] = useState(false);
+  const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
     async function init() {
@@ -311,11 +314,15 @@ export default function Marketplace() {
           Available Cases
         </h1>
 
-        <MarketplaceFilters
-          filters={filters}
-          onChange={setFilters}
-          lawyerStates={lawyerStates}
-        />
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 'var(--space-md)', marginBottom: 'var(--space-xl)' }}>
+          <MarketplaceFilters filters={filters} onChange={setFilters} lawyerStates={lawyerStates} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', marginBottom: '0.25rem' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-500)' }}>
+              {filteredCases.length} available case{filteredCases.length !== 1 ? 's' : ''}
+            </span>
+            <ViewToggle view={viewMode} onChange={setViewMode} />
+          </div>
+        </div>
 
         {filteredCases.length === 0 && (
           <div style={{
@@ -331,15 +338,41 @@ export default function Marketplace() {
           </div>
         )}
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
-          gap: 'var(--space-lg)'
-        }}>
-          {filteredCases.map(c => (
-            <CaseCard key={c.id} caseData={c} onViewDetails={handleViewDetails} />
-          ))}
-        </div>
+        {viewMode === 'grid' ? (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
+            gap: 'var(--space-lg)'
+          }}>
+            {filteredCases.map(c => (
+              <CaseCard key={c.id} caseData={c} onViewDetails={handleViewDetails} />
+            ))}
+          </div>
+        ) : (
+          filteredCases.length > 0 && (
+            <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', overflow: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr>
+                    {['Type', 'Business Type', 'City / State', 'Subtype / Domain', 'Posted', ''].map(h => (
+                      <th key={h} style={{
+                        fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
+                        color: 'var(--slate-500)', textAlign: 'left', padding: '0.5rem 0.75rem',
+                        borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase',
+                        letterSpacing: '0.04em', whiteSpace: 'nowrap'
+                      }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredCases.map(c => (
+                    <CaseListRow key={c.id} caseData={c} onViewDetails={handleViewDetails} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        )}
       </div>
 
       <CaseDetailModal

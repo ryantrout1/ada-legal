@@ -27,7 +27,7 @@ export default function MarketplaceFilters({ filters, onChange, lawyerStates }) 
   return (
     <div style={{
       display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap',
-      alignItems: 'center', marginBottom: 'var(--space-xl)'
+      alignItems: 'flex-end', marginBottom: 0
     }}>
       <div>
         <label htmlFor="filter-state" style={{
