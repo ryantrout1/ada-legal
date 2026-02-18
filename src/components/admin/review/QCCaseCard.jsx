@@ -61,14 +61,28 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
       backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
       borderRadius: '12px', overflow: 'hidden'
     }}>
-      {/* Collapsed Row */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'auto 1fr auto auto auto auto',
-        alignItems: 'center',
-        gap: '16px',
-        padding: '14px 16px'
-      }}>
+      {/* Collapsed Row — entire row is clickable */}
+      <div
+        role="button"
+        tabIndex={0}
+        aria-expanded={expanded}
+        aria-label={`${c.business_name} — ${c.business_type}, ${[c.city, c.state].filter(Boolean).join(', ') || 'unknown location'}. ${expanded ? 'Collapse' : 'Expand'} details.`}
+        onClick={() => setExpanded(!expanded)}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded(!expanded); } }}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'auto 1fr auto auto auto auto',
+          alignItems: 'center',
+          gap: '16px',
+          padding: '14px 16px',
+          cursor: 'pointer',
+          minHeight: '48px',
+          backgroundColor: expanded ? 'var(--slate-50)' : 'transparent',
+          transition: 'background-color 0.15s'
+        }}
+        onMouseEnter={(e) => { if (!expanded) e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
+        onMouseLeave={(e) => { if (!expanded) e.currentTarget.style.backgroundColor = 'transparent'; }}
+      >
         {/* Icon */}
         <div style={{
           width: '40px', height: '40px', borderRadius: '50%',
@@ -141,19 +155,10 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
           )}
         </div>
 
-        {/* Expand */}
-        <button
-          type="button"
-          onClick={() => setExpanded(!expanded)}
-          aria-expanded={expanded}
-          aria-label={expanded ? 'Collapse details' : 'Expand details'}
-          style={{
-            background: 'none', border: 'none', cursor: 'pointer', padding: '8px',
-            color: 'var(--slate-500)'
-          }}
-        >
+        {/* Arrow indicator */}
+        <span aria-hidden="true" style={{ color: 'var(--slate-500)', display: 'flex', alignItems: 'center', padding: '8px' }}>
           {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-        </button>
+        </span>
       </div>
 
       {/* Expanded View */}

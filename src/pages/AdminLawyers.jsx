@@ -151,13 +151,18 @@ export default function AdminLawyers() {
               <div key={l.id} style={{ borderBottom: '1px solid var(--slate-200)' }}>
                 <button
                   type="button"
+                  aria-expanded={isExpanded}
+                  aria-label={`${l.full_name} — ${l.firm_name}`}
                   onClick={() => setExpandedId(isExpanded ? null : l.id)}
                   style={{
                     display: 'flex', width: '100%', alignItems: 'center',
                     gap: 'var(--space-md)', padding: 'var(--space-md) var(--space-lg)',
-                    background: isExpanded ? 'var(--slate-50)' : 'none',
-                    border: 'none', cursor: 'pointer', textAlign: 'left', minHeight: '56px'
+                    background: isExpanded ? 'var(--slate-50)' : 'transparent',
+                    border: 'none', cursor: 'pointer', textAlign: 'left', minHeight: '56px',
+                    transition: 'background-color 0.15s'
                   }}
+                  onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
+                  onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.backgroundColor = 'transparent'; }}
                 >
                   {isExpanded
                     ? <ChevronDown size={16} style={{ color: 'var(--terra-600)', flexShrink: 0 }} />

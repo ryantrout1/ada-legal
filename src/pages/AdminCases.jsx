@@ -259,16 +259,19 @@ export default function AdminCases() {
                 <button
                   type="button"
                   aria-expanded={isExpanded}
-                  aria-label={`${c.business_name} — ${c.status}`}
+                  aria-label={`${c.business_name} — ${(c.status || '').replace(/_/g, ' ')}`}
                   onClick={() => setExpandedId(isExpanded ? null : c.id)}
                   style={{
                     display: 'grid', width: '100%',
                     gridTemplateColumns: '40px 32px 80px 1fr 140px 100px 120px 150px',
                     gap: 'var(--space-sm)', padding: 'var(--space-sm) var(--space-lg)',
-                    background: isExpanded ? 'var(--slate-50)' : 'none',
+                    background: isExpanded ? 'var(--slate-50)' : 'transparent',
                     border: 'none', cursor: 'pointer', textAlign: 'left',
-                    alignItems: 'center', minHeight: '52px'
+                    alignItems: 'center', minHeight: '52px',
+                    transition: 'background-color 0.15s'
                   }}
+                  onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
+                  onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.backgroundColor = 'transparent'; }}
                 >
                   {isExpanded
                     ? <ChevronDown size={16} style={{ color: 'var(--terra-600)' }} />
