@@ -12,6 +12,17 @@ export default function Layout({ children, currentPageName }) {
   const [loading, setLoading] = React.useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
+  // Fix 1: Ensure meta viewport allows zooming (remove any platform-injected restrictions)
+  React.useEffect(() => {
+    const vp = document.querySelector('meta[name="viewport"]');
+    if (vp) {
+      const content = vp.getAttribute('content') || '';
+      if (content.includes('user-scalable') || content.includes('maximum-scale') || content.includes('minimum-scale')) {
+        vp.setAttribute('content', 'width=device-width, initial-scale=1.0');
+      }
+    }
+  }, []);
+
   React.useEffect(() => {
     async function loadUser() {
       try {
