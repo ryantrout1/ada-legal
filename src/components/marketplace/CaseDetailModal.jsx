@@ -85,7 +85,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
             }
             <span id="case-detail-heading" style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 800,
-              color: isPhysical ? 'var(--terra-600, #C2410C)' : '#1D4ED8'
+              color: isPhysical ? '#7C2D12' : '#1E3A5F'
             }}>
               {isPhysical ? 'Physical Space' : 'Digital / Website'}
             </span>
@@ -100,7 +100,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
             {freshness.type === 'new' ? (
               <span style={{ padding: '2px 7px', borderRadius: '4px', fontSize: '0.625rem', fontWeight: 800, color: '#15803D', backgroundColor: '#BBF7D0', textTransform: 'uppercase' }}>NEW</span>
             ) : (
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: freshness.type === 'old' ? '#B45309' : 'var(--slate-500)' }}>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: freshness.type === 'old' ? '#92400E' : '#475569' }}>
                 Posted {freshness.daysAgo} day{freshness.daysAgo !== 1 ? 's' : ''} ago
               </span>
             )}
@@ -130,20 +130,20 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
           }}>
             {summaryItems.map((item, i) => (
               <div key={i}>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 2px' }}>{item.label}</p>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 2px' }}>{item.label}</p>
                 <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>{item.value}</p>
               </div>
             ))}
             {/* Assistive Tech pills for digital */}
             {!isPhysical && c.assistive_tech?.length > 0 && (
               <div style={{ gridColumn: '1 / -1' }}>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>Assistive Technologies</p>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>Assistive Technologies</p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                   {c.assistive_tech.map((t, i) => (
                     <span key={i} style={{
                       display: 'inline-block', padding: '2px 10px', borderRadius: '6px',
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
-                      color: '#1D4ED8', backgroundColor: '#DBEAFE'
+                      color: '#1E3A5F', backgroundColor: '#DBEAFE'
                     }}>{t}</span>
                   ))}
                 </div>
@@ -227,7 +227,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
 
           {/* Dates line */}
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-400)',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569',
             textAlign: 'center', margin: '12px 0 4px'
           }}>
             Submitted {formatDate(c.submitted_at || c.created_date)} · Approved {formatDate(c.approved_at)}

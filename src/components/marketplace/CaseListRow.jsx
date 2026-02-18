@@ -69,11 +69,11 @@ export default function CaseListRow({ caseData, onViewDetails, isEven }) {
           <span style={{ padding: '1px 5px', borderRadius: '4px', fontSize: '0.5625rem', fontWeight: 800, color: '#15803D', backgroundColor: '#DCFCE7', textTransform: 'uppercase' }}>NEW</span>
         )}
         {freshness.type === 'old' && (
-          <span style={{ fontSize: '0.6875rem', color: '#B45309', fontWeight: 600 }}>{freshness.daysAgo}d</span>
+          <span style={{ fontSize: '0.6875rem', color: '#92400E', fontWeight: 600 }}>{freshness.daysAgo}d</span>
         )}
       </td>
       <td style={td}>
-        <span style={{ fontSize: '0.75rem', color: freshness.type === 'old' ? '#B45309' : 'var(--slate-500)' }}>
+        <span style={{ fontSize: '0.75rem', color: freshness.type === 'old' ? '#92400E' : '#475569' }}>
           {formatDate(c.approved_at)}
         </span>
       </td>

@@ -54,7 +54,7 @@ export default function CaseCard({ caseData, onViewDetails }) {
           }
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-            color: isPhysical ? 'var(--terra-600, #C2410C)' : '#1D4ED8'
+            color: isPhysical ? '#7C2D12' : '#1E3A5F'
           }}>
             {isPhysical ? 'Physical Space' : 'Digital / Website'}
           </span>
@@ -76,7 +76,7 @@ export default function CaseCard({ caseData, onViewDetails }) {
             <span style={{
               display: 'inline-block', padding: '2px 10px', borderRadius: '6px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
-              color: 'var(--slate-700)', backgroundColor: 'var(--slate-50)',
+              color: '#1E293B', backgroundColor: 'var(--slate-50)',
               border: '1px solid var(--slate-200)'
             }}>
               {isPhysical ? c.violation_subtype : extractDomain(c.url_domain)}
@@ -99,7 +99,7 @@ export default function CaseCard({ caseData, onViewDetails }) {
 
         {/* Row 5: Footer — date + view details */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2px' }}>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: freshness.type === 'old' ? '#B45309' : 'var(--slate-500)' }}>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: freshness.type === 'old' ? '#92400E' : '#475569' }}>
             {freshness.type === 'old' ? `Posted ${freshness.daysAgo} days ago` : `Posted ${formatDate(c.approved_at)}`}
             {freshness.type === 'new' && (
               <span style={{

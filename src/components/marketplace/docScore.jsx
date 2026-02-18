@@ -11,8 +11,8 @@ export function calculateDocScore(c) {
   const score = criteria.filter(cr => cr.met).length;
   let label, color;
   if (score >= 5) { label = 'Well Documented'; color = '#15803D'; }
-  else if (score >= 3) { label = 'Moderate Detail'; color = 'var(--slate-600)'; }
-  else { label = 'Limited Detail'; color = '#B45309'; }
+  else if (score >= 3) { label = 'Moderate Detail'; color = '#334155'; }
+  else { label = 'Limited Detail'; color = '#92400E'; }
   return { criteria, score, label, color };
 }
 

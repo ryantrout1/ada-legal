@@ -107,7 +107,7 @@ export default function DocScoreModal({ open, onClose, caseData }) {
           {[
             { range: 'Well Documented (5-6)', text: 'These cases have comprehensive detail. You\'ll have strong information to evaluate the violation and reach out to the claimant effectively.', color: '#15803D' },
             { range: 'Moderate Detail (3-4)', text: 'These cases have the basics covered. You may need to gather additional details during your initial contact with the claimant.', color: 'var(--slate-600)' },
-            { range: 'Limited Detail (1-2)', text: 'These cases have minimal information. The claimant may not have been able to provide full details at the time of reporting. Initial contact may require more discovery.', color: '#B45309' },
+            { range: 'Limited Detail (1-2)', text: 'These cases have minimal information. The claimant may not have been able to provide full details at the time of reporting. Initial contact may require more discovery.', color: '#92400E' },
           ].map((item, i) => (
             <div key={i}>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: item.color }}>{item.range}</span>
