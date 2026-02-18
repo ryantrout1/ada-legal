@@ -141,34 +141,6 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
           )}
         </div>
 
-        {/* Quick Actions */}
-        <div style={{ display: 'flex', gap: '6px' }}>
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); onApprove(); }}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: '4px',
-              padding: '6px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-              fontWeight: 700, color: 'white', backgroundColor: '#15803D',
-              border: 'none', borderRadius: '6px', cursor: 'pointer', whiteSpace: 'nowrap'
-            }}
-          >
-            <Check size={14} /> Approve
-          </button>
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); onReject(); }}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: '4px',
-              padding: '6px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-              fontWeight: 700, color: 'white', backgroundColor: '#B91C1C',
-              border: 'none', borderRadius: '6px', cursor: 'pointer', whiteSpace: 'nowrap'
-            }}
-          >
-            <X size={14} /> Reject
-          </button>
-        </div>
-
         {/* Expand */}
         <button
           type="button"
