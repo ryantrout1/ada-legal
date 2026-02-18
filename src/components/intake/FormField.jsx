@@ -53,7 +53,7 @@ export default function FormField({ label, id, required, error, helperText, chil
             lineHeight: 1.4
           }}
         >
-          <AlertCircle size={14} style={{ flexShrink: 0 }} />
+          <AlertCircle size={14} aria-hidden="true" style={{ flexShrink: 0 }} />
           {error}
         </p>
       )}

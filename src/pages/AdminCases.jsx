@@ -276,8 +276,8 @@ export default function AdminCases() {
                     backgroundColor: isPhysical ? '#DBEAFE' : '#F3E8FF'
                   }}>
                     {isPhysical
-                      ? <Building2 size={14} style={{ color: '#1D4ED8' }} />
-                      : <Globe size={14} style={{ color: '#7C3AED' }} />
+                      ? <Building2 size={14} aria-hidden="true" style={{ color: '#1D4ED8' }} />
+                      : <Globe size={14} aria-hidden="true" style={{ color: '#7C3AED' }} />
                     }
                   </span>
                   <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--slate-500)' }}>

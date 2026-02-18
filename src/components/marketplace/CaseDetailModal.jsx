@@ -123,8 +123,8 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
                 backgroundColor: isPhysical ? '#DBEAFE' : '#F3E8FF', flexShrink: 0
               }}>
                 {isPhysical
-                  ? <Building2 size={18} style={{ color: '#1D4ED8' }} />
-                  : <Globe size={18} style={{ color: '#7C3AED' }} />
+                  ? <Building2 size={18} aria-hidden="true" style={{ color: '#1D4ED8' }} />
+                  : <Globe size={18} aria-hidden="true" style={{ color: '#7C3AED' }} />
                 }
               </span>
               <span style={{

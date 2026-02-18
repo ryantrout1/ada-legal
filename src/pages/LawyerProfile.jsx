@@ -217,7 +217,7 @@ export default function LawyerProfile() {
       </div>
 
       {toast && (
-        <div role="alert" style={{
+        <div role="alert" aria-live="assertive" style={{
           position: 'fixed', bottom: 'var(--space-xl)', left: '50%', transform: 'translateX(-50%)',
           zIndex: 1100, backgroundColor: '#15803D', color: 'white',
           padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-md)',

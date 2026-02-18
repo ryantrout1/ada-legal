@@ -27,8 +27,8 @@ export default function CaseListRow({ caseData, onViewDetails }) {
       <td style={td}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           {isPhysical
-            ? <Building2 size={14} style={{ color: '#1D4ED8', flexShrink: 0 }} />
-            : <Globe size={14} style={{ color: '#7C3AED', flexShrink: 0 }} />
+            ? <Building2 size={14} aria-hidden="true" style={{ color: '#1D4ED8', flexShrink: 0 }} />
+            : <Globe size={14} aria-hidden="true" style={{ color: '#7C3AED', flexShrink: 0 }} />
           }
           <span style={{ fontWeight: 600, color: isPhysical ? '#1D4ED8' : '#7C3AED', fontSize: '0.8125rem' }}>
             {isPhysical ? 'Physical' : 'Digital'}

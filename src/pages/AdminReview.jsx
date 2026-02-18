@@ -140,8 +140,8 @@ export default function AdminReview() {
                       backgroundColor: isPhysical ? '#DBEAFE' : '#F3E8FF', flexShrink: 0
                     }}>
                       {isPhysical
-                        ? <Building2 size={16} style={{ color: '#1D4ED8' }} />
-                        : <Globe size={16} style={{ color: '#7C3AED' }} />
+                        ? <Building2 size={16} aria-hidden="true" style={{ color: '#1D4ED8' }} />
+                        : <Globe size={16} aria-hidden="true" style={{ color: '#7C3AED' }} />
                       }
                     </span>
 

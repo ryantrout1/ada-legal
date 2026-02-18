@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronRight, Building2, Globe, Clock, AlertTriangle, CheckCircle, User, Mail, Phone, FileText, Calendar, MapPin } from 'lucide-react';
+import { ChevronDown, ChevronRight, Building2, Globe, Clock, AlertTriangle, User, Mail, Phone, Calendar, MapPin } from 'lucide-react';
 import ContactLogHistory from './ContactLogHistory';
 
 function formatDate(d) {

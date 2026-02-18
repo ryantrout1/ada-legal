@@ -99,6 +99,7 @@ export default function ViolationTypeStep({ value, onChange }) {
               }}>
                 <Icon
                   size={30}
+                  aria-hidden="true"
                   style={{
                     color: isSelected ? 'var(--terra-600)' : 'var(--slate-500)',
                     transition: 'color 0.2s'
