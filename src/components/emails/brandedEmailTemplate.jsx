@@ -1,5 +1,5 @@
 /**
- * Returns a branded HTML email wrapper for ADA Legal Marketplace.
+ * Returns a branded HTML email wrapper for ADA Legal Connect.
  * @param {object} opts
  * @param {string} opts.heading - Main heading text
  * @param {string} opts.headingColor - Color for the heading (default: slate-900)

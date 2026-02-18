@@ -45,7 +45,7 @@ export default function PricingSection() {
           color: 'var(--terra-600)', textTransform: 'uppercase', letterSpacing: '0.1em',
           marginBottom: '0.5rem', marginTop: 0
         }}>
-          Marketplace Access
+          Platform Access
         </p>
         <div style={{
           fontFamily: 'Fraunces, serif', fontSize: '3rem', fontWeight: 700,
