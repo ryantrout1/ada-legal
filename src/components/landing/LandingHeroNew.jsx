@@ -47,7 +47,7 @@ export default function LandingHeroNew() {
             <div aria-hidden="true" style={{ width: '32px', height: '2px', background: '#C2410C' }} />
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-              letterSpacing: '0.15em', textTransform: 'uppercase', color: '#EA580C'
+              letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FB923C'
             }}>
               ADA Legal Marketplace
             </span>
@@ -115,7 +115,7 @@ export default function LandingHeroNew() {
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-              color: '#475569', margin: 0
+              color: '#94A3B8', margin: 0
             }}>
               Source: Seyfarth Shaw ADA Title III Litigation Report, 2024
             </p>
@@ -134,7 +134,7 @@ export default function LandingHeroNew() {
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-              color: '#64748B', margin: 0
+              color: '#94A3B8', margin: 0
             }}>
               — Platform claimant
             </p>

@@ -34,7 +34,7 @@ export default function FinalCTANew() {
         </Link>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-          color: '#475569', marginTop: '1.25rem', marginBottom: 0
+          color: '#94A3B8', marginTop: '1.25rem', marginBottom: 0
         }}>
           No account required. No cost. Your information is kept confidential.
         </p>

@@ -17,7 +17,7 @@ export default function LandingFooterNew() {
         </p>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-          color: '#64748B', maxWidth: '680px', margin: '0 auto 1.5rem',
+          color: '#94A3B8', maxWidth: '680px', margin: '0 auto 1.5rem',
           lineHeight: 1.7
         }}>
           ADA Legal Marketplace is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship. Attorney listings do not constitute endorsements. Results may vary.
@@ -50,7 +50,7 @@ export default function LandingFooterNew() {
         </div>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-          color: '#475569', margin: 0
+          color: '#94A3B8', margin: 0
         }}>
           © 2026 ADA Legal Marketplace. All rights reserved.
         </p>

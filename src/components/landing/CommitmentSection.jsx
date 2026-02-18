@@ -25,7 +25,7 @@ export default function CommitmentSection() {
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#EA580C',
+            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FB923C',
             margin: '0 0 0.75rem'
           }} aria-hidden="true">
             Our Commitment
@@ -59,7 +59,7 @@ export default function CommitmentSection() {
                 width: '40px', height: '40px', borderRadius: '8px',
                 background: 'rgba(194,65,12,0.12)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#EA580C', fontFamily: 'Manrope, sans-serif',
+                color: '#FB923C', fontFamily: 'Manrope, sans-serif',
                 fontSize: item.icon.length > 2 ? '0.75rem' : '1.1rem',
                 fontWeight: 700, flexShrink: 0
               }}>
