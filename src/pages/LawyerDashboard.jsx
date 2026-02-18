@@ -212,7 +212,7 @@ export default function LawyerDashboard() {
             backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
             borderRadius: '16px', padding: 'var(--space-2xl)', textAlign: 'center'
           }}>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-500)', marginBottom: 'var(--space-md)' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', marginBottom: 'var(--space-md)' }}>
               You have no assigned cases yet.
             </p>
             <a href={createPageUrl('Marketplace')} style={{
@@ -275,7 +275,7 @@ export default function LawyerDashboard() {
               {completedOpen ? <ChevronDown size={16} style={{ color: 'var(--slate-500)' }} /> : <ChevronRight size={16} style={{ color: 'var(--slate-500)' }} />}
               <h2 style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-                color: 'var(--slate-500)', margin: 0
+                color: 'var(--slate-600)', margin: 0
               }}>
                 Completed ({completed.length})
               </h2>
