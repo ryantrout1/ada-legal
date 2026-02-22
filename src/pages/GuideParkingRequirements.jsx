@@ -4,6 +4,7 @@ import GuideHeroBanner from '../components/guide/GuideHeroBanner';
 import GuideSection from '../components/guide/GuideSection';
 import GuideLegalCallout from '../components/guide/GuideLegalCallout';
 import GuideReportCTA from '../components/guide/GuideReportCTA';
+import ParkingDiagram from '../components/guide/diagrams/ParkingDiagram';
 
 export default function GuideParkingRequirements() {
   return (
@@ -17,6 +18,8 @@ export default function GuideParkingRequirements() {
 
       <div className="guide-content-wrap">
         <div className="guide-content">
+
+          <ParkingDiagram />
 
           <GuideSection
             id="scoping-table"
