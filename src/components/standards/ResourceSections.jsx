@@ -126,6 +126,13 @@ const SECTIONS = [
         tags: ['§216', '§703', 'Braille']
       },
       {
+        title: 'Reach Ranges & Operable Parts',
+        type: 'Technical', dotColor: '#9A3412',
+        href: '/GuideReachRanges',
+        description: 'Forward and side reach envelopes, obstructed reach over counters, clear floor space, operable parts requirements, and children\'s reach advisories.',
+        tags: ['§308', '§309', '§305']
+      },
+      {
         title: 'ADA Tax Incentives for Businesses',
         type: 'Guide', dotColor: '#9A3412',
         href: '/GuideTaxIncentives',
