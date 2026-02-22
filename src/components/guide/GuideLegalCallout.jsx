@@ -15,7 +15,7 @@ export default function GuideLegalCallout({ citation, children }) {
           letterSpacing: '0.1em', textTransform: 'uppercase',
           color: 'var(--slate-500)', margin: '0 0 8px'
         }}>
-          {citation}
+          <AutoCiteLinks>{citation}</AutoCiteLinks>
         </p>
       )}
       <div style={{
