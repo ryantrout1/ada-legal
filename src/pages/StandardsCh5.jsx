@@ -1,5 +1,7 @@
 import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
+import ParkingDiagram from '../components/guide/diagrams/ParkingDiagram';
+import HandrailDiagram from '../components/guide/diagrams/HandrailDiagram';
 
 const sections = [
   {
@@ -10,7 +12,8 @@ const sections = [
   {
     number: '§502', title: 'Parking Spaces',
     plain: <><p>Accessible parking spaces have precise dimension requirements:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Car spaces:</strong> 96 inches (8 feet) wide minimum</li><li style={{marginBottom:'6px'}}><strong>Van spaces:</strong> 132 inches (11 feet) wide minimum, or 96 inches with a 96-inch access aisle</li><li style={{marginBottom:'6px'}}><strong>Access aisles:</strong> 60 inches (5 feet) wide minimum, marked to discourage parking</li><li style={{marginBottom:'6px'}}><strong>Vertical clearance:</strong> 98 inches (8 feet 2 inches) minimum for van spaces (the route to/from the space must also have this clearance)</li><li style={{marginBottom:'6px'}}><strong>Surface:</strong> Firm, stable, and slip-resistant; slopes not steeper than 1:48 in any direction</li><li style={{marginBottom:'6px'}}><strong>Signs:</strong> 60 inches minimum above the ground to the bottom of the sign; van spaces marked "van accessible"</li></ul></>,
-    legal: <p>§502.2 "Car parking spaces shall be 96 inches wide minimum." §502.3.1 "Access aisles shall be 60 inches wide minimum." §502.4 "Parking spaces and access aisles shall comply with §302. Access aisles shall be at the same level as the parking spaces they serve." §502.6 "Parking space identification signs shall include the International Symbol of Accessibility… 60 inches minimum above the finish ground."</p>
+    legal: <p>§502.2 "Car parking spaces shall be 96 inches wide minimum." §502.3.1 "Access aisles shall be 60 inches wide minimum." §502.4 "Parking spaces and access aisles shall comply with §302. Access aisles shall be at the same level as the parking spaces they serve." §502.6 "Parking space identification signs shall include the International Symbol of Accessibility… 60 inches minimum above the finish ground."</p>,
+    diagram: <ParkingDiagram />
   },
   {
     number: '§503', title: 'Passenger Loading Zones',
@@ -25,7 +28,8 @@ const sections = [
   {
     number: '§505', title: 'Handrails',
     plain: <><p>Handrails are critical for people with mobility and balance impairments. Requirements:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Height:</strong> 34 to 38 inches above the walking surface or stair nosing</li><li style={{marginBottom:'6px'}}><strong>Gripping surface:</strong> Circular cross section 1¼ to 2 inches diameter, or non-circular with perimeter 4 to 6¼ inches</li><li style={{marginBottom:'6px'}}><strong>Clearance:</strong> 1½ inches minimum between the handrail and the wall</li><li style={{marginBottom:'6px'}}><strong>Extensions:</strong> At ramps: 12 inches beyond the top and bottom. At stairs: 12 inches beyond the top riser, extending the slope beyond the bottom riser.</li><li style={{marginBottom:'6px'}}><strong>Continuous:</strong> Handrails must be continuous within the full length of stair flights and ramp runs</li></ul></>,
-    legal: <p>§505.4 "Top of gripping surfaces of handrails shall be 34 inches minimum and 38 inches maximum above walking surfaces, stair nosings, and ramp surfaces." §505.5 "Handrail gripping surfaces with a circular cross section shall have an outside diameter of 1¼ inches minimum and 2 inches maximum." §505.10 Extensions shall extend 12 inches minimum beyond top and bottom.</p>
+    legal: <p>§505.4 "Top of gripping surfaces of handrails shall be 34 inches minimum and 38 inches maximum above walking surfaces, stair nosings, and ramp surfaces." §505.5 "Handrail gripping surfaces with a circular cross section shall have an outside diameter of 1¼ inches minimum and 2 inches maximum." §505.10 Extensions shall extend 12 inches minimum beyond top and bottom.</p>,
+    diagram: <HandrailDiagram />
   }
 ];
 

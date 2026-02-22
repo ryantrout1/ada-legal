@@ -1,5 +1,7 @@
 import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
+import TurningSpaceDiagram from '../components/guide/diagrams/TurningSpaceDiagram';
+import ReachRangeDiagram from '../components/guide/diagrams/ReachRangeDiagram';
 
 const sections = [
   {
@@ -15,7 +17,8 @@ const sections = [
   {
     number: '§304', title: 'Turning Space',
     plain: <><p>A wheelchair user needs room to <strong>turn around</strong>. Two options are allowed:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Circular:</strong> A 60-inch diameter circle (5 feet across)</li><li style={{marginBottom:'6px'}}><strong>T-shaped:</strong> A T-shape where each arm is at least 36 inches wide</li></ul><p>This space must be provided anywhere a wheelchair user might need to reverse direction — like at the end of a hallway, in a restroom, or in front of an elevator.</p></>,
-    legal: <p>§304.3.1 "The turning space shall be a space complying with §304.3.1 (circular) or §304.3.2 (T-shaped)." Circular: "The turning space shall be a 60 inch minimum diameter circle." T-shaped: "The turning space shall be a T-shaped space within a 60 inch minimum square, with arms and base 36 inches wide minimum."</p>
+    legal: <p>§304.3.1 "The turning space shall be a space complying with §304.3.1 (circular) or §304.3.2 (T-shaped)." Circular: "The turning space shall be a 60 inch minimum diameter circle." T-shaped: "The turning space shall be a T-shaped space within a 60 inch minimum square, with arms and base 36 inches wide minimum."</p>,
+    diagram: <TurningSpaceDiagram />
   },
   {
     number: '§305', title: 'Clear Floor or Ground Space',
@@ -35,7 +38,8 @@ const sections = [
   {
     number: '§308', title: 'Reach Ranges',
     plain: <><p>Controls and operable parts must be within reach of a person in a wheelchair:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Forward reach (no obstruction):</strong> 15 inches minimum to 48 inches maximum above the floor</li><li style={{marginBottom:'6px'}}><strong>Side reach (no obstruction):</strong> 15 inches minimum to 48 inches maximum above the floor</li><li style={{marginBottom:'6px'}}>If reaching over an obstruction (counter or shelf), maximum height decreases based on depth</li></ul><p><strong>Example:</strong> A thermostat mounted at 60 inches (5 feet) is too high. It needs to be at 48 inches (4 feet) or lower.</p></>,
-    legal: <p>§308.2.1 Forward reach unobstructed: "15 inches minimum and 48 inches maximum above the finish floor." §308.3.1 Side reach unobstructed: "15 inches minimum and 48 inches maximum above the finish floor." §308.2.2 Over obstruction: maximum height decreases based on obstruction depth.</p>
+    legal: <p>§308.2.1 Forward reach unobstructed: "15 inches minimum and 48 inches maximum above the finish floor." §308.3.1 Side reach unobstructed: "15 inches minimum and 48 inches maximum above the finish floor." §308.2.2 Over obstruction: maximum height decreases based on obstruction depth.</p>,
+    diagram: <ReachRangeDiagram />
   },
   {
     number: '§309', title: 'Operable Parts',

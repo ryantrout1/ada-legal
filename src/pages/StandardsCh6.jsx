@@ -1,5 +1,6 @@
 import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
+import ToiletStallDiagram from '../components/guide/diagrams/ToiletStallDiagram';
 
 const sections = [
   {
@@ -15,7 +16,8 @@ const sections = [
   {
     number: '§604', title: 'Water Closets & Toilet Compartments',
     plain: <><p>The toilet itself and its compartment have detailed requirements:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Seat height:</strong> 17 to 19 inches above the floor</li><li style={{marginBottom:'6px'}}><strong>Centerline:</strong> 16 to 18 inches from the side wall</li><li style={{marginBottom:'6px'}}><strong>Standard compartment:</strong> 60 inches wide minimum, 56 inches deep minimum (wall-mounted) or 59 inches deep (floor-mounted)</li><li style={{marginBottom:'6px'}}><strong>Ambulatory compartment:</strong> 35 to 37 inches wide with grab bars on both sides — for people who can walk but need support</li><li style={{marginBottom:'6px'}}><strong>Door:</strong> Must be self-closing and have a pull on both sides; cannot swing into the required clearance</li></ul></>,
-    legal: <p>§604.4 "The seat height of a water closet shall be 17 inches minimum and 19 inches maximum above the finish floor." §604.2 "The water closet shall be positioned with a wall or partition to the rear and to one side. The centerline shall be 16 inches minimum to 18 inches maximum from the side wall." §604.8.1.1 Standard compartment: "60 inches wide minimum."</p>
+    legal: <p>§604.4 "The seat height of a water closet shall be 17 inches minimum and 19 inches maximum above the finish floor." §604.2 "The water closet shall be positioned with a wall or partition to the rear and to one side. The centerline shall be 16 inches minimum to 18 inches maximum from the side wall." §604.8.1.1 Standard compartment: "60 inches wide minimum."</p>,
+    diagram: <ToiletStallDiagram />
   },
   {
     number: '§605', title: 'Urinals',

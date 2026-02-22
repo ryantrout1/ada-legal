@@ -1,5 +1,7 @@
 import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
+import RampDiagram from '../components/guide/diagrams/RampDiagram';
+import DoorDiagram from '../components/guide/diagrams/DoorDiagram';
 
 const sections = [
   {
@@ -15,12 +17,14 @@ const sections = [
   {
     number: '§404', title: 'Doors, Doorways & Gates',
     plain: <><p>This is one of the most detailed sections. Key requirements:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Clear width:</strong> 32 inches minimum when the door is open 90°</li><li style={{marginBottom:'6px'}}><strong>Maneuvering clearance:</strong> Enough space on both sides of the door for a wheelchair user to approach and open it</li><li style={{marginBottom:'6px'}}><strong>Threshold:</strong> ½ inch maximum height (¾ inch for sliding doors)</li><li style={{marginBottom:'6px'}}><strong>Hardware:</strong> Operable with one hand, no grasping/twisting — lever or push/pull handles</li><li style={{marginBottom:'6px'}}><strong>Opening force:</strong> Interior doors maximum 5 lbs (fire doors may be higher per code)</li><li style={{marginBottom:'6px'}}><strong>Closing speed:</strong> From 90° to 12° in 5 seconds minimum</li></ul></>,
-    legal: <p>§404.2.3 "Door openings shall provide a clear width of 32 inches minimum." §404.2.4 Maneuvering clearances per Table 404.2.4.1. §404.2.7 "Thresholds shall be ½ inch high maximum." §404.2.9 "Opening force for interior doors shall be 5 pounds maximum."</p>
+    legal: <p>§404.2.3 "Door openings shall provide a clear width of 32 inches minimum." §404.2.4 Maneuvering clearances per Table 404.2.4.1. §404.2.7 "Thresholds shall be ½ inch high maximum." §404.2.9 "Opening force for interior doors shall be 5 pounds maximum."</p>,
+    diagram: <DoorDiagram />
   },
   {
     number: '§405', title: 'Ramps',
     plain: <><p>When a route has a slope steeper than 1:20, it's a ramp and must comply:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Slope:</strong> Not steeper than <strong>1:12</strong> (for every 1 inch of rise, 12 inches of ramp). A 30-inch rise needs a 30-foot ramp.</li><li style={{marginBottom:'6px'}}><strong>Width:</strong> 36 inches minimum clear between handrails</li><li style={{marginBottom:'6px'}}><strong>Rise:</strong> Maximum 30 inches of rise per ramp run, then a landing is required</li><li style={{marginBottom:'6px'}}><strong>Landings:</strong> At least 60 inches long at the top, bottom, and where the ramp changes direction</li><li style={{marginBottom:'6px'}}><strong>Handrails:</strong> Required on both sides of ramp runs with more than 6 inches of rise</li><li style={{marginBottom:'6px'}}><strong>Edge protection:</strong> Curbs, walls, or rails to prevent wheelchairs from rolling off</li></ul></>,
-    legal: <p>§405.2 "Ramp runs shall have a running slope not steeper than 1:12." §405.6 "The rise for any ramp run shall be 30 inches maximum." §405.7 Landings: "60 inches long minimum." §405.8 "Handrails complying with §505 shall be provided on both sides."</p>
+    legal: <p>§405.2 "Ramp runs shall have a running slope not steeper than 1:12." §405.6 "The rise for any ramp run shall be 30 inches maximum." §405.7 Landings: "60 inches long minimum." §405.8 "Handrails complying with §505 shall be provided on both sides."</p>,
+    diagram: <RampDiagram />
   },
   {
     number: '§406', title: 'Curb Ramps',
