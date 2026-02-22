@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -20,57 +20,94 @@ const ALL_CHAPTERS = [
   { num: 10, name: 'Recreation Facilities', range: '§1001–1010', page: 'StandardsCh10' },
 ];
 
-function SectionBlock({ number, title, plain, legal }) {
+function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onToggle }) {
+  const panelId = `section-panel-${index}`;
+  const headerId = `section-header-${index}`;
+
   return (
-    <details style={{
-      background: 'white', border: '1px solid var(--slate-200)',
-      borderRadius: '12px', marginBottom: '12px', overflow: 'hidden'
+    <div style={{
+      background: isOpen ? '#FAF7F2' : 'white',
+      border: '1px solid var(--slate-200)',
+      borderRadius: '12px', marginBottom: '12px', overflow: 'hidden',
+      transition: 'background 0.2s ease'
     }}>
-      <summary style={{
-        padding: '16px 20px', cursor: 'pointer',
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 600,
-        color: 'var(--slate-900)', listStyle: 'none', display: 'flex',
-        alignItems: 'center', gap: '12px', minHeight: '44px'
-      }}>
+      <button
+        id={headerId}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        onClick={onToggle}
+        style={{
+          width: '100%', padding: '16px 20px', cursor: 'pointer',
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 600,
+          color: 'var(--slate-900)', display: 'flex',
+          alignItems: 'center', gap: '12px', minHeight: '44px',
+          background: 'transparent', border: 'none', textAlign: 'left'
+        }}
+      >
         <span style={{
           fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
           color: '#C2410C', background: '#FFF7ED', padding: '2px 10px',
           borderRadius: '6px', flexShrink: 0, border: '1px solid #FFEDD5'
         }}>{number}</span>
         <span style={{ flex: 1 }}>{title}</span>
-        <ChevronRight size={16} style={{ color: 'var(--slate-400)', flexShrink: 0 }} aria-hidden="true" />
-      </summary>
-      <div style={{ borderTop: '1px solid var(--slate-200)' }}>
-        <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
-          <div style={{ flex: '1 1 55%', minWidth: 0 }}>
-            <div style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-              color: 'var(--slate-700)', lineHeight: 1.75
-            }}><AutoCiteLinks>{plain}</AutoCiteLinks></div>
-          </div>
-          <aside aria-label="Official legal text" style={{ flex: '1 1 40%', minWidth: 0 }}>
-            <div style={{
-              background: '#F8FAFC', border: '1px solid var(--slate-200)',
-              borderRadius: '10px', padding: '16px'
-            }}>
-              <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-                letterSpacing: '0.1em', textTransform: 'uppercase',
-                color: 'var(--slate-500)', margin: '0 0 8px'
-              }}>Official Standard</p>
-              <div style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                color: 'var(--slate-600)', lineHeight: 1.7
-              }}><AutoCiteLinks>{legal}</AutoCiteLinks></div>
+        <ChevronRight size={16} style={{
+          color: 'var(--slate-400)', flexShrink: 0,
+          transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+          transition: 'transform 0.25s ease'
+        }} aria-hidden="true" />
+      </button>
+
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={headerId}
+        style={{
+          maxHeight: isOpen ? '5000px' : '0px',
+          overflow: 'hidden',
+          transition: isOpen ? 'max-height 0.5s ease-in' : 'max-height 0.3s ease-out'
+        }}
+      >
+        <div style={{ borderTop: '1px solid #E7E4DE' }}>
+          <div style={{ padding: '24px', background: 'white' }}>
+            <div className="guide-two-col" style={{ gap: '24px', margin: 0 }}>
+              <div style={{ flex: '1 1 55%', minWidth: 0 }}>
+                <div style={{
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+                  color: 'var(--slate-700)', lineHeight: 1.75
+                }}><AutoCiteLinks>{plain}</AutoCiteLinks></div>
+              </div>
+              <aside aria-label="Official legal text" style={{ flex: '1 1 40%', minWidth: 0 }}>
+                <div style={{
+                  background: '#F8FAFC', border: '1px solid var(--slate-200)',
+                  borderRadius: '10px', padding: '16px'
+                }}>
+                  <p style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+                    letterSpacing: '0.1em', textTransform: 'uppercase',
+                    color: 'var(--slate-500)', margin: '0 0 8px'
+                  }}>Official Standard</p>
+                  <div style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+                    color: 'var(--slate-600)', lineHeight: 1.7
+                  }}><AutoCiteLinks>{legal}</AutoCiteLinks></div>
+                </div>
+              </aside>
             </div>
-          </aside>
+
+            {diagram && (
+              <div style={{ marginTop: '24px', maxWidth: '100%' }}>
+                {diagram}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </details>
+    </div>
   );
 }
 
 export default function ChapterPageLayout({ chapterNum, title, range, overview, sections }) {
+  const [openIndex, setOpenIndex] = useState(null);
   const currentIdx = ALL_CHAPTERS.findIndex(c => c.num === chapterNum);
   const prev = currentIdx > 0 ? ALL_CHAPTERS[currentIdx - 1] : null;
   const next = currentIdx < ALL_CHAPTERS.length - 1 ? ALL_CHAPTERS[currentIdx + 1] : null;
@@ -85,10 +122,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
     <>
       <GuideStyles />
       <style>{`
-        details summary::-webkit-details-marker { display: none; }
-        details summary::marker { display: none; content: ''; }
-        details[open] summary svg { transform: rotate(90deg); }
-        details summary:focus-visible { outline: 2px solid #C2410C; outline-offset: 2px; border-radius: 10px; }
+        button:focus-visible { outline: 2px solid #C2410C; outline-offset: 2px; border-radius: 10px; }
       `}</style>
       <GuideHeroBanner
         title={`Chapter ${chapterNum}: ${title}`}
@@ -132,7 +166,17 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
           {/* Sections */}
           <div role="region" aria-label="Standards sections">
             {sections.map((s, i) => (
-              <SectionBlock key={i} number={s.number} title={s.title} plain={s.plain} legal={s.legal} />
+              <SectionBlock
+                key={i}
+                index={i}
+                number={s.number}
+                title={s.title}
+                plain={s.plain}
+                legal={s.legal}
+                diagram={s.diagram || null}
+                isOpen={openIndex === i}
+                onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+              />
             ))}
           </div>
 
