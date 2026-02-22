@@ -67,6 +67,10 @@ import GuideIntroToAda from './pages/GuideIntroToAda';
 import GuideFilingComplaint from './pages/GuideFilingComplaint';
 import GuideServiceAnimals from './pages/GuideServiceAnimals';
 import GuideEffectiveCommunication from './pages/GuideEffectiveCommunication';
+import GuideReasonableModifications from './pages/GuideReasonableModifications';
+import GuideMobilityDevices from './pages/GuideMobilityDevices';
+import GuideParking from './pages/GuideParking';
+import GuideAdaProtections from './pages/GuideAdaProtections';
 import __Layout from './Layout.jsx';
 
 
@@ -91,6 +95,10 @@ export const PAGES = {
     "GuideFilingComplaint": GuideFilingComplaint,
     "GuideServiceAnimals": GuideServiceAnimals,
     "GuideEffectiveCommunication": GuideEffectiveCommunication,
+    "GuideReasonableModifications": GuideReasonableModifications,
+    "GuideMobilityDevices": GuideMobilityDevices,
+    "GuideParking": GuideParking,
+    "GuideAdaProtections": GuideAdaProtections,
 }
 
 export const pagesConfig = {
