@@ -63,6 +63,10 @@ import LawyerRegister from './pages/LawyerRegister';
 import Marketplace from './pages/Marketplace';
 import MyCases from './pages/MyCases';
 import StandardsGuide from './pages/StandardsGuide';
+import GuideIntroToAda from './pages/GuideIntroToAda';
+import GuideFilingComplaint from './pages/GuideFilingComplaint';
+import GuideServiceAnimals from './pages/GuideServiceAnimals';
+import GuideEffectiveCommunication from './pages/GuideEffectiveCommunication';
 import __Layout from './Layout.jsx';
 
 
@@ -83,6 +87,10 @@ export const PAGES = {
     "Marketplace": Marketplace,
     "MyCases": MyCases,
     "StandardsGuide": StandardsGuide,
+    "GuideIntroToAda": GuideIntroToAda,
+    "GuideFilingComplaint": GuideFilingComplaint,
+    "GuideServiceAnimals": GuideServiceAnimals,
+    "GuideEffectiveCommunication": GuideEffectiveCommunication,
 }
 
 export const pagesConfig = {
