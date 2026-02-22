@@ -72,7 +72,7 @@ const SECTIONS = [
       {
         title: 'Small Business ADA Primer',
         type: 'Primer', dotColor: '#9A3412',
-        href: '#guide/small-business-primer',
+        href: '/GuideSmallBusiness',
         description: 'A plain-language walkthrough of what the ADA requires from small businesses — barrier removal, reasonable modifications, and effective communication.',
         meta: [{ text: '12 min read' }, { text: 'Most popular' }]
       },
@@ -86,7 +86,7 @@ const SECTIONS = [
       {
         title: "Barrier Removal: What's Readily Achievable?",
         type: 'Legal Standard', dotColor: '#9A3412',
-        href: '#guide/barrier-removal',
+        href: '/GuideBarrierRemoval',
         description: 'Understanding the legal standard for removing architectural barriers in existing facilities, with practical examples and cost considerations.',
         tags: ['Title III', '§36.304']
       }
