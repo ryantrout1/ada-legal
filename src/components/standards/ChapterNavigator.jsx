@@ -1,16 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../../utils';
 
 const CHAPTERS = [
-  { num: 1, name: 'Application & Administration', range: '§101–106' },
-  { num: 2, name: 'Scoping Requirements', range: '§201–243' },
-  { num: 3, name: 'Building Blocks', range: '§301–309' },
-  { num: 4, name: 'Accessible Routes', range: '§401–410' },
-  { num: 5, name: 'General Site & Building', range: '§501–505' },
-  { num: 6, name: 'Plumbing Elements', range: '§601–612' },
-  { num: 7, name: 'Communication Elements', range: '§701–708' },
-  { num: 8, name: 'Special Rooms & Spaces', range: '§801–811' },
-  { num: 9, name: 'Built-in Elements', range: '§901–904' },
-  { num: 10, name: 'Recreation Facilities', range: '§1001–1010' }
+  { num: 1, name: 'Application & Administration', range: '§101–106', page: 'StandardsCh1' },
+  { num: 2, name: 'Scoping Requirements', range: '§201–243', page: 'StandardsCh2' },
+  { num: 3, name: 'Building Blocks', range: '§301–309', page: 'StandardsCh3' },
+  { num: 4, name: 'Accessible Routes', range: '§401–410', page: 'StandardsCh4' },
+  { num: 5, name: 'General Site & Building', range: '§501–505', page: 'StandardsCh5' },
+  { num: 6, name: 'Plumbing Elements', range: '§601–612', page: 'StandardsCh6' },
+  { num: 7, name: 'Communication Elements', range: '§701–708', page: 'StandardsCh7' },
+  { num: 8, name: 'Special Rooms & Spaces', range: '§801–811', page: 'StandardsCh8' },
+  { num: 9, name: 'Built-in Elements', range: '§901–904', page: 'StandardsCh9' },
+  { num: 10, name: 'Recreation Facilities', range: '§1001–1010', page: 'StandardsCh10' }
 ];
 
 export default function ChapterNavigator() {
@@ -46,8 +48,8 @@ export default function ChapterNavigator() {
       }}>
         {CHAPTERS.map(ch => (
           <li key={ch.num}>
-            <a
-              href={`#standards/ch${ch.num}`}
+            <Link
+              to={createPageUrl(ch.page)}
               className="sg-chapter-link"
               style={{
                 display: 'flex', alignItems: 'center', gap: '14px',
@@ -77,7 +79,7 @@ export default function ChapterNavigator() {
               }}>
                 {ch.range}
               </span>
-            </a>
+            </Link>
           </li>
         ))}
       </ol>
