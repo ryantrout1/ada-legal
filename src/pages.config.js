@@ -86,6 +86,9 @@ import GuideMedicalFacilities from './pages/GuideMedicalFacilities';
 import GuideWebRule from './pages/GuideWebRule';
 import GuideWcagExplained from './pages/GuideWcagExplained';
 import GuideWebFirstSteps from './pages/GuideWebFirstSteps';
+import GuideWebTesting from './pages/GuideWebTesting';
+import GuideAccessibleDocuments from './pages/GuideAccessibleDocuments';
+import GuideSocialMedia from './pages/GuideSocialMedia';
 import __Layout from './Layout.jsx';
 
 
@@ -129,6 +132,9 @@ export const PAGES = {
     "GuideWebRule": GuideWebRule,
     "GuideWcagExplained": GuideWcagExplained,
     "GuideWebFirstSteps": GuideWebFirstSteps,
+    "GuideWebTesting": GuideWebTesting,
+    "GuideAccessibleDocuments": GuideAccessibleDocuments,
+    "GuideSocialMedia": GuideSocialMedia,
 }
 
 export const pagesConfig = {
