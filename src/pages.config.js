@@ -83,6 +83,9 @@ import GuideTaxIncentives from './pages/GuideTaxIncentives';
 import GuideHotelsLodging from './pages/GuideHotelsLodging';
 import GuideRestaurantsRetail from './pages/GuideRestaurantsRetail';
 import GuideMedicalFacilities from './pages/GuideMedicalFacilities';
+import GuideWebRule from './pages/GuideWebRule';
+import GuideWcagExplained from './pages/GuideWcagExplained';
+import GuideWebFirstSteps from './pages/GuideWebFirstSteps';
 import __Layout from './Layout.jsx';
 
 
@@ -123,6 +126,9 @@ export const PAGES = {
     "GuideHotelsLodging": GuideHotelsLodging,
     "GuideRestaurantsRetail": GuideRestaurantsRetail,
     "GuideMedicalFacilities": GuideMedicalFacilities,
+    "GuideWebRule": GuideWebRule,
+    "GuideWcagExplained": GuideWcagExplained,
+    "GuideWebFirstSteps": GuideWebFirstSteps,
 }
 
 export const pagesConfig = {

@@ -174,21 +174,21 @@ const SECTIONS = [
       {
         title: 'Title II Web & Mobile App Accessibility Rule',
         type: 'New Rule', dotColor: '#5B2C6F',
-        href: '#guide/title-ii-web-rule',
+        href: '/GuideWebRule',
         description: 'The April 2024 rule requiring state and local governments to meet WCAG 2.1 Level AA — deadlines, exceptions, and what to do now.',
         meta: [{ text: 'Deadlines active', warning: true }]
       },
       {
         title: 'WCAG 2.1 Level AA — What It Requires',
         type: 'Standard', dotColor: '#5B2C6F',
-        href: '#guide/wcag-21',
+        href: '/GuideWcagExplained',
         description: 'A practical breakdown of the Web Content Accessibility Guidelines — perceivable, operable, understandable, and robust.',
         tags: ['WCAG 2.1', 'Level AA', 'Checklist']
       },
       {
         title: 'First Steps Toward Web Compliance',
         type: 'Action Plan', dotColor: '#5B2C6F',
-        href: '#guide/web-first-steps',
+        href: '/GuideWebFirstSteps',
         description: 'Practical guidance for getting started — audit your site, prioritize fixes, work with vendors, and build accessibility into contracts.',
         tags: ['Title II', 'Vendor contracts']
       }
