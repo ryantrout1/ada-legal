@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import GuideStyles from './GuideStyles';
 import GuideHeroBanner from './GuideHeroBanner';
 import GuideReportCTA from './GuideReportCTA';
+import AutoCiteLinks from './AutoCiteLinks';
 
 const ALL_CHAPTERS = [
   { num: 1, name: 'Application & Administration', range: '§101–106', page: 'StandardsCh1' },
@@ -45,7 +46,7 @@ function SectionBlock({ number, title, plain, legal }) {
             <div style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
               color: 'var(--slate-700)', lineHeight: 1.75
-            }}>{plain}</div>
+            }}><AutoCiteLinks>{plain}</AutoCiteLinks></div>
           </div>
           <aside aria-label="Official legal text" style={{ flex: '1 1 40%', minWidth: 0 }}>
             <div style={{
@@ -60,7 +61,7 @@ function SectionBlock({ number, title, plain, legal }) {
               <div style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
                 color: 'var(--slate-600)', lineHeight: 1.7
-              }}>{legal}</div>
+              }}><AutoCiteLinks>{legal}</AutoCiteLinks></div>
             </div>
           </aside>
         </div>

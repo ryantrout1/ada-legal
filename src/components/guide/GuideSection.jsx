@@ -1,4 +1,5 @@
 import React from 'react';
+import AutoCiteLinks from './AutoCiteLinks';
 
 export default function GuideSection({ id, title, children, legalTitle, legalContent }) {
   const hasSideBySide = !!legalContent;
@@ -21,7 +22,7 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
               fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
               color: 'var(--slate-700)', lineHeight: 1.75
             }}>
-              {children}
+              <AutoCiteLinks>{children}</AutoCiteLinks>
             </div>
           </div>
 
@@ -44,7 +45,7 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
                 color: 'var(--slate-600)', lineHeight: 1.7
               }}>
-                {legalContent}
+                <AutoCiteLinks>{legalContent}</AutoCiteLinks>
               </div>
             </div>
           </aside>
@@ -61,7 +62,7 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
             fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
             color: 'var(--slate-700)', lineHeight: 1.75
           }}>
-            {children}
+            <AutoCiteLinks>{children}</AutoCiteLinks>
           </div>
         </>
       )}

@@ -1,4 +1,5 @@
 import React from 'react';
+import AutoCiteLinks from './AutoCiteLinks';
 
 export default function GuideLegalCallout({ citation, children }) {
   return (
@@ -21,7 +22,7 @@ export default function GuideLegalCallout({ citation, children }) {
         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
         color: 'var(--slate-600)', lineHeight: 1.7
       }}>
-        {children}
+        <AutoCiteLinks>{children}</AutoCiteLinks>
       </div>
     </aside>
   );
