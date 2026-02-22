@@ -93,9 +93,6 @@ import GuideTitleII from './pages/GuideTitleII';
 import GuideVoting from './pages/GuideVoting';
 import GuideProgramAccess from './pages/GuideProgramAccess';
 import GuideEmergencyManagement from './pages/GuideEmergencyManagement';
-import GuideEducation from './pages/GuideEducation';
-import GuideCriminalJustice from './pages/GuideCriminalJustice';
-import GuideAdaCoordinators from './pages/GuideAdaCoordinators';
 import __Layout from './Layout.jsx';
 
 
@@ -146,9 +143,6 @@ export const PAGES = {
     "GuideVoting": GuideVoting,
     "GuideProgramAccess": GuideProgramAccess,
     "GuideEmergencyManagement": GuideEmergencyManagement,
-    "GuideEducation": GuideEducation,
-    "GuideCriminalJustice": GuideCriminalJustice,
-    "GuideAdaCoordinators": GuideAdaCoordinators,
 }
 
 export const pagesConfig = {
