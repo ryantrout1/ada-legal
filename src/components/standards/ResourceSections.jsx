@@ -249,6 +249,27 @@ const SECTIONS = [
         href: '/GuideEmergencyManagement',
         description: 'ADA requirements for emergency preparedness, evacuation plans, shelters, and disaster response that includes people with disabilities.',
         tags: ['Shelters', 'Evacuation', 'FEMA']
+      },
+      {
+        title: 'Education & the ADA',
+        type: 'Guide', dotColor: '#8B1A1A',
+        href: '/GuideEducation',
+        description: 'How the ADA applies to public schools, universities, testing, and educational programs operated by government entities.',
+        tags: ['Title II', 'Testing', '§36.309']
+      },
+      {
+        title: 'Criminal Justice & the ADA',
+        type: 'Guide', dotColor: '#8B1A1A',
+        href: '/GuideCriminalJustice',
+        description: 'ADA requirements for law enforcement encounters, courts, jails, and prisons — ensuring access for people with disabilities.',
+        tags: ['§35.152', 'Corrections', 'Courts']
+      },
+      {
+        title: 'ADA Coordinators: Roles & Requirements',
+        type: 'Guide', dotColor: '#8B1A1A',
+        href: '/GuideAdaCoordinators',
+        description: 'What government entities need to know about designating an ADA Coordinator, grievance procedures, and self-evaluations.',
+        tags: ['§35.107', '§35.105', 'Grievance']
       }
     ]
   }
