@@ -45,8 +45,8 @@ export default function Layout({ children, currentPageName }) {
     Home: 'Home', Intake: 'Report a Violation', MyCases: 'My Cases',
     CaseDetail: 'Case Detail', Marketplace: 'Available Cases', LawyerDashboard: 'My Cases',
     LawyerProfile: 'My Profile', LawyerRegister: 'Attorney Registration',
-    LawyerLanding: 'For Attorneys', Admin: 'Admin Dashboard',
-    AdminReview: 'Review Queue', AdminCases: 'All Cases',
+    LawyerLanding: 'For Attorneys', StandardsGuide: 'ADA Standards Guide',
+    Admin: 'Admin Dashboard', AdminReview: 'Review Queue', AdminCases: 'All Cases',
     AdminAnalytics: 'Analytics', AdminLawyers: 'Manage Lawyers'
   };
 
@@ -405,11 +405,12 @@ export default function Layout({ children, currentPageName }) {
         {mobileMenuOpen && (
           <nav aria-label="Mobile navigation" style={{
             display: 'none',
-            padding: '1rem 1.5rem',
-            borderTop: '1px solid var(--slate-700)'
+            padding: '0',
+            borderTop: '1px solid rgba(255,255,255,0.08)',
+            backgroundColor: '#1A1F2B'
           }} className="mobile-nav">
             {!loading && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                 {!user && (
                   <>
                     <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
@@ -603,7 +604,7 @@ export default function Layout({ children, currentPageName }) {
       )}
 
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 860px) {
           .mobile-menu-btn {
             display: block !important;
           }
@@ -612,11 +613,6 @@ export default function Layout({ children, currentPageName }) {
           }
           .mobile-nav {
             display: block !important;
-          }
-        }
-        @media (max-width: 600px) {
-          .desktop-nav-public-links {
-            display: none !important;
           }
         }
         @media (max-width: 480px) {
