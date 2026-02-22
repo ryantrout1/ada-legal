@@ -53,6 +53,14 @@ import AdminCases from './pages/AdminCases';
 import AdminLawyers from './pages/AdminLawyers';
 import AdminReview from './pages/AdminReview';
 import CaseDetail from './pages/CaseDetail';
+import GuideAdaProtections from './pages/GuideAdaProtections';
+import GuideEffectiveCommunication from './pages/GuideEffectiveCommunication';
+import GuideFilingComplaint from './pages/GuideFilingComplaint';
+import GuideIntroToAda from './pages/GuideIntroToAda';
+import GuideMobilityDevices from './pages/GuideMobilityDevices';
+import GuideParking from './pages/GuideParking';
+import GuideReasonableModifications from './pages/GuideReasonableModifications';
+import GuideServiceAnimals from './pages/GuideServiceAnimals';
 import Home from './pages/Home';
 import Intake from './pages/Intake';
 import LawyerCaseDetail from './pages/LawyerCaseDetail';
@@ -63,14 +71,10 @@ import LawyerRegister from './pages/LawyerRegister';
 import Marketplace from './pages/Marketplace';
 import MyCases from './pages/MyCases';
 import StandardsGuide from './pages/StandardsGuide';
-import GuideIntroToAda from './pages/GuideIntroToAda';
-import GuideFilingComplaint from './pages/GuideFilingComplaint';
-import GuideServiceAnimals from './pages/GuideServiceAnimals';
-import GuideEffectiveCommunication from './pages/GuideEffectiveCommunication';
-import GuideReasonableModifications from './pages/GuideReasonableModifications';
-import GuideMobilityDevices from './pages/GuideMobilityDevices';
-import GuideParking from './pages/GuideParking';
-import GuideAdaProtections from './pages/GuideAdaProtections';
+import GuideSmallBusiness from './pages/GuideSmallBusiness';
+import GuideParkingRequirements from './pages/GuideParkingRequirements';
+import GuideBarrierRemoval from './pages/GuideBarrierRemoval';
+import GuideNewConstruction from './pages/GuideNewConstruction';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +85,14 @@ export const PAGES = {
     "AdminLawyers": AdminLawyers,
     "AdminReview": AdminReview,
     "CaseDetail": CaseDetail,
+    "GuideAdaProtections": GuideAdaProtections,
+    "GuideEffectiveCommunication": GuideEffectiveCommunication,
+    "GuideFilingComplaint": GuideFilingComplaint,
+    "GuideIntroToAda": GuideIntroToAda,
+    "GuideMobilityDevices": GuideMobilityDevices,
+    "GuideParking": GuideParking,
+    "GuideReasonableModifications": GuideReasonableModifications,
+    "GuideServiceAnimals": GuideServiceAnimals,
     "Home": Home,
     "Intake": Intake,
     "LawyerCaseDetail": LawyerCaseDetail,
@@ -91,14 +103,10 @@ export const PAGES = {
     "Marketplace": Marketplace,
     "MyCases": MyCases,
     "StandardsGuide": StandardsGuide,
-    "GuideIntroToAda": GuideIntroToAda,
-    "GuideFilingComplaint": GuideFilingComplaint,
-    "GuideServiceAnimals": GuideServiceAnimals,
-    "GuideEffectiveCommunication": GuideEffectiveCommunication,
-    "GuideReasonableModifications": GuideReasonableModifications,
-    "GuideMobilityDevices": GuideMobilityDevices,
-    "GuideParking": GuideParking,
-    "GuideAdaProtections": GuideAdaProtections,
+    "GuideSmallBusiness": GuideSmallBusiness,
+    "GuideParkingRequirements": GuideParkingRequirements,
+    "GuideBarrierRemoval": GuideBarrierRemoval,
+    "GuideNewConstruction": GuideNewConstruction,
 }
 
 export const pagesConfig = {
