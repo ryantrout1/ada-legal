@@ -1,0 +1,57 @@
+import React from 'react';
+import ChapterPageLayout from '../components/guide/ChapterPageLayout';
+
+const sections = [
+  {
+    number: '§201–205', title: 'Application & General Exceptions',
+    plain: <><p>These sections establish <strong>where and when</strong> the Standards apply. New construction must be fully accessible. Alterations must make the altered areas accessible. Certain elements are exempt — like construction sites, employee-only mechanical rooms, and raised areas used only for security or life safety.</p><p>Maintenance and normal replacement (paint, carpet, fixtures) are generally <strong>not</strong> considered alterations.</p></>,
+    legal: <><p>§201.1 "Buildings and facilities shall be accessible in accordance with these Standards." §201.3 "Where a building or facility is vacated for purposes of alteration, and the building undergoes alterations that would otherwise trigger the path of travel requirement… the entirety of the building or facility shall comply."</p><p>§203.5 Machinery spaces used only by service personnel for maintenance are exempt.</p></>
+  },
+  {
+    number: '§206', title: 'Accessible Routes',
+    plain: <><p>An <strong>accessible route</strong> must connect every accessible entrance to all accessible spaces within the building. This is the core "get from A to B" requirement.</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}>At least one accessible route from public transit stops, parking, and sidewalks to an accessible entrance</li><li style={{marginBottom:'6px'}}>At least one accessible route between accessible floors (elevator, ramp, or platform lift)</li><li style={{marginBottom:'6px'}}>Accessible routes to stages, performing areas, and raised platforms in assembly areas</li></ul></>,
+    legal: <p>§206.2.1 "At least one accessible route shall be provided within the site from accessible parking spaces and accessible passenger loading zones; public streets and sidewalks; and public transportation stops to the accessible building or facility entrance they serve."</p>
+  },
+  {
+    number: '§208', title: 'Parking Spaces',
+    plain: <><p>This is the <strong>scoping table</strong> — how many accessible spaces you need based on total parking:</p><div style={{background:'#F8FAFC',borderRadius:'8px',padding:'12px',margin:'8px 0',fontSize:'0.875rem'}}><table style={{width:'100%',borderCollapse:'collapse'}}><thead><tr style={{borderBottom:'1px solid #CBD5E1'}}><th style={{textAlign:'left',padding:'6px 8px',fontWeight:600}}>Total Spaces</th><th style={{textAlign:'left',padding:'6px 8px',fontWeight:600}}>Required Accessible</th></tr></thead><tbody>{[['1–25','1'],['26–50','2'],['51–75','3'],['76–100','4'],['101–150','5'],['151–200','6'],['201–300','7'],['301–400','8'],['401–500','9'],['501–1000','2% of total'],['1001+','20 + 1 per 100 over 1000']].map(([t,a],i)=><tr key={i} style={{borderBottom:'1px solid #E2E8F0'}}><td style={{padding:'4px 8px',fontSize:'0.8125rem'}}>{t}</td><td style={{padding:'4px 8px',fontSize:'0.8125rem'}}>{a}</td></tr>)}</tbody></table></div><p>At least <strong>1 in every 6</strong> accessible spaces must be van-accessible (wider, with access aisle).</p></>,
+    legal: <p>§208.2 Minimum Number: Parking facilities shall comply with Table 208.2. §208.2.4 "For every six or fraction of six parking spaces required by §208.2 to comply with §502, at least one shall be a van parking space complying with §502."</p>
+  },
+  {
+    number: '§213', title: 'Toilet Facilities & Bathing Facilities',
+    plain: <><p>Where toilet or bathing rooms are provided, <strong>at least one of each type</strong> must be accessible on each floor:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}>At least one accessible toilet room per floor where toilets are provided</li><li style={{marginBottom:'6px'}}>At least 5% of patient/resident toilet rooms in medical and long-term care facilities</li><li style={{marginBottom:'6px'}}>Unisex (single-user) toilet rooms: at least one must be accessible where provided</li></ul><p>If a facility has <strong>six or more toilet compartments</strong> in a multi-stall room, at least one must be a standard accessible compartment AND one must be an ambulatory accessible compartment (narrower, with grab bars).</p></>,
+    legal: <p>§213.2 "Where toilet rooms are provided, each toilet room shall comply with §603. Where bathing rooms are provided, each bathing room shall comply with §603." §213.3.1 "Where six or more toilet compartments are provided… at least one compartment shall be a standard accessible compartment and at least one shall be an ambulatory accessible compartment."</p>
+  },
+  {
+    number: '§216', title: 'Signs',
+    plain: <><p>Signage requirements specify which signs need <strong>Braille, raised characters, and high contrast</strong>:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Room and space identification signs</strong> (room numbers, restroom signs) — must have raised characters and Braille</li><li style={{marginBottom:'6px'}}><strong>Directional and informational signs</strong> — must meet visual character requirements (contrast, sizing) but don't need Braille</li><li style={{marginBottom:'6px'}}><strong>Accessible entrance signs</strong> — the International Symbol of Accessibility must be posted at accessible entrances when not all entrances are accessible</li></ul></>,
+    legal: <p>§216.2 "Signs that provide designations, labels, or names for interior rooms and spaces… shall comply with §703.1, §703.2, and §703.5" (raised characters, Braille, installation height). §216.6 "Where not all entrances comply with §404, compliant entrances shall be identified by the International Symbol of Accessibility."</p>
+  },
+  {
+    number: '§221', title: 'Assembly Areas',
+    plain: <><p>Places where people gather — theaters, stadiums, auditoriums, classrooms, courtrooms — must provide <strong>wheelchair spaces</strong>:</p><div style={{background:'#F8FAFC',borderRadius:'8px',padding:'12px',margin:'8px 0',fontSize:'0.875rem'}}><table style={{width:'100%',borderCollapse:'collapse'}}><thead><tr style={{borderBottom:'1px solid #CBD5E1'}}><th style={{textAlign:'left',padding:'6px 8px',fontWeight:600}}>Total Seats</th><th style={{textAlign:'left',padding:'6px 8px',fontWeight:600}}>Required Wheelchair Spaces</th></tr></thead><tbody>{[['4–25','1'],['26–50','2'],['51–150','4'],['151–300','5'],['301–500','6'],['501–5000','6 + 1 per 150 over 500'],['5001+','36 + 1 per 200 over 5000']].map(([t,a],i)=><tr key={i} style={{borderBottom:'1px solid #E2E8F0'}}><td style={{padding:'4px 8px',fontSize:'0.8125rem'}}>{t}</td><td style={{padding:'4px 8px',fontSize:'0.8125rem'}}>{a}</td></tr>)}</tbody></table></div><p>Each wheelchair space must have an <strong>adjacent companion seat</strong>. Wheelchair spaces must be dispersed to provide <strong>lines of sight</strong> comparable to other seating.</p></>,
+    legal: <p>§221.2 Wheelchair Spaces: "Wheelchair spaces complying with §802.1 shall be provided in assembly areas with fixed seating in accordance with Table 221.2.1." §221.3 "Companion seats complying with §802.3 shall be provided at each wheelchair space."</p>
+  },
+  {
+    number: '§224', title: 'Transient Lodging Guest Rooms',
+    plain: <><p>Hotels, motels, and other lodging must provide <strong>accessible guest rooms</strong>:</p><div style={{background:'#F8FAFC',borderRadius:'8px',padding:'12px',margin:'8px 0',fontSize:'0.875rem'}}><table style={{width:'100%',borderCollapse:'collapse'}}><thead><tr style={{borderBottom:'1px solid #CBD5E1'}}><th style={{textAlign:'left',padding:'6px 8px',fontWeight:600}}>Total Rooms</th><th style={{textAlign:'left',padding:'6px 8px',fontWeight:600}}>Mobility Accessible</th><th style={{textAlign:'left',padding:'6px 8px',fontWeight:600}}>Communication Accessible</th></tr></thead><tbody>{[['1–25','1','1'],['26–50','2','2'],['51–75','3','4'],['76–100','4','5'],['101–150','5','7'],['151–200','6','8'],['201–300','7','10'],['301–400','8','12'],['401–500','9','13'],['501+','2% of total','4% of total']].map(([t,m,c],i)=><tr key={i} style={{borderBottom:'1px solid #E2E8F0'}}><td style={{padding:'4px 8px',fontSize:'0.8125rem'}}>{t}</td><td style={{padding:'4px 8px',fontSize:'0.8125rem'}}>{m}</td><td style={{padding:'4px 8px',fontSize:'0.8125rem'}}>{c}</td></tr>)}</tbody></table></div><p>Mobility rooms have roll-in showers and wider doorways. Communication rooms have visual alarms and notification devices.</p></>,
+    legal: <p>§224.2 "In transient lodging facilities, guest rooms with mobility features… shall be provided in accordance with Table 224.2." §224.4 "In transient lodging facilities with more than 50 guest rooms, at least one guest room… shall provide communication features."</p>
+  },
+  {
+    number: '§225–243', title: 'Additional Scoping (Storage, Dining, Judicial, Medical & More)',
+    plain: <><p>The remaining scoping sections cover specific facility types:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}>§225 <strong>Storage:</strong> At least one of each type must be accessible (lockers, shelves, cabinets)</li><li style={{marginBottom:'6px'}}>§226 <strong>Dining/work surfaces:</strong> At least 5% must be accessible</li><li style={{marginBottom:'6px'}}>§231 <strong>Judicial facilities:</strong> Each courtroom must have accessible jury boxes, witness stands, and spectator seating</li><li style={{marginBottom:'6px'}}>§232 <strong>Detention/correctional:</strong> At least 3% of cells must be accessible</li><li style={{marginBottom:'6px'}}>§233 <strong>Residential:</strong> At least 5% of dwelling units in government housing</li><li style={{marginBottom:'6px'}}>§235 <strong>Recreational:</strong> Team/player seating, exercise machines, play areas must be accessible</li></ul></>,
+    legal: <p>§226.1 "Where dining surfaces are provided for the consumption of food or drink, at least 5 percent… shall comply with §902." §232.2 "At least 3 percent, but no fewer than one, of the total number of cells in a facility shall provide mobility features." §233.3 "Entities subject to HUD's Section 504 regulations… shall comply with the applicable HUD regulations."</p>
+  }
+];
+
+export default function StandardsCh2() {
+  return (
+    <ChapterPageLayout
+      chapterNum={2}
+      title="Scoping Requirements"
+      range="§201–243"
+      overview={<p>Chapter 2 is the <strong>most important chapter</strong> in the Standards. It tells you <strong>how many</strong> accessible elements you need and <strong>where</strong> they're required. While later chapters describe the technical requirements (how wide, how high, what slope), this chapter answers: "Do I need one? How many?" It includes the key scoping tables for parking, restrooms, assembly areas, and guest rooms.</p>}
+      sections={sections}
+    />
+  );
+}

@@ -96,6 +96,16 @@ import GuideEmergencyManagement from './pages/GuideEmergencyManagement';
 import GuideEducation from './pages/GuideEducation';
 import GuideCriminalJustice from './pages/GuideCriminalJustice';
 import GuideAdaCoordinators from './pages/GuideAdaCoordinators';
+import StandardsCh1 from './pages/StandardsCh1';
+import StandardsCh2 from './pages/StandardsCh2';
+import StandardsCh3 from './pages/StandardsCh3';
+import StandardsCh4 from './pages/StandardsCh4';
+import StandardsCh5 from './pages/StandardsCh5';
+import StandardsCh6 from './pages/StandardsCh6';
+import StandardsCh7 from './pages/StandardsCh7';
+import StandardsCh8 from './pages/StandardsCh8';
+import StandardsCh9 from './pages/StandardsCh9';
+import StandardsCh10 from './pages/StandardsCh10';
 import __Layout from './Layout.jsx';
 
 
@@ -149,6 +159,16 @@ export const PAGES = {
     "GuideEducation": GuideEducation,
     "GuideCriminalJustice": GuideCriminalJustice,
     "GuideAdaCoordinators": GuideAdaCoordinators,
+    "StandardsCh1": StandardsCh1,
+    "StandardsCh2": StandardsCh2,
+    "StandardsCh3": StandardsCh3,
+    "StandardsCh4": StandardsCh4,
+    "StandardsCh5": StandardsCh5,
+    "StandardsCh6": StandardsCh6,
+    "StandardsCh7": StandardsCh7,
+    "StandardsCh8": StandardsCh8,
+    "StandardsCh9": StandardsCh9,
+    "StandardsCh10": StandardsCh10,
 }
 
 export const pagesConfig = {
