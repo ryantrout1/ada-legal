@@ -3,6 +3,8 @@ import ChapterPageLayout from '../components/guide/ChapterPageLayout';
 import TurningSpaceDiagram from '../components/guide/diagrams/TurningSpaceDiagram';
 import ReachRangeDiagram from '../components/guide/diagrams/ReachRangeDiagram';
 import ClearFloorDiagram from '../components/guide/diagrams/ClearFloorDiagram';
+import KneeToeDiagram from '../components/guide/diagrams/KneeToeDiagram';
+import ProtrudingObjectsDiagram from '../components/guide/diagrams/ProtrudingObjectsDiagram';
 
 const sections = [
   {
@@ -30,12 +32,14 @@ const sections = [
   {
     number: '§306', title: 'Knee & Toe Clearance',
     plain: <><p>When a wheelchair user needs to <strong>pull up under</strong> a counter, desk, or lavatory:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Toe clearance:</strong> At least 9 inches high and 17 inches deep under the element</li><li style={{marginBottom:'6px'}}><strong>Knee clearance:</strong> At least 27 inches high and 11 inches deep minimum, extending to 25 inches deep at 9 inches above the floor</li></ul><p><strong>Example:</strong> A reception desk must have a section low enough (34 inches max) with knee space underneath so a wheelchair user can pull up and interact face-to-face.</p></>,
-    legal: <p>§306.2 Toe Clearance: "minimum 9 inches above the finish floor, 17 inches minimum deep, and 30 inches minimum wide." §306.3 Knee Clearance: "27 inches high minimum, 25 inches deep maximum, and 30 inches wide minimum."</p>
+    legal: <p>§306.2 Toe Clearance: "minimum 9 inches above the finish floor, 17 inches minimum deep, and 30 inches minimum wide." §306.3 Knee Clearance: "27 inches high minimum, 25 inches deep maximum, and 30 inches wide minimum."</p>,
+    diagram: <KneeToeDiagram />
   },
   {
     number: '§307', title: 'Protruding Objects',
     plain: <><p>Objects mounted on walls or posts cannot stick out into walkways where a <strong>person using a cane or who is blind</strong> might walk into them:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}>Objects between <strong>27 and 80 inches</strong> above the floor can protrude no more than <strong>4 inches</strong> from the wall</li><li style={{marginBottom:'6px'}}>Objects below <strong>27 inches</strong> can protrude any amount (a cane will detect them)</li><li style={{marginBottom:'6px'}}>Freestanding objects on posts can protrude no more than <strong>12 inches</strong></li></ul><p><strong>Example:</strong> A wall-mounted fire extinguisher cabinet installed at 30 inches above the floor can only stick out 4 inches. A drinking fountain at 24 inches can protrude further because a cane can detect it.</p></>,
-    legal: <p>§307.2 "Objects with leading edges more than 27 inches and not more than 80 inches above the finish floor or ground shall protrude 4 inches maximum horizontally into the circulation path." §307.3 Post-mounted objects: "12 inches maximum beyond the post."</p>
+    legal: <p>§307.2 "Objects with leading edges more than 27 inches and not more than 80 inches above the finish floor or ground shall protrude 4 inches maximum horizontally into the circulation path." §307.3 Post-mounted objects: "12 inches maximum beyond the post."</p>,
+    diagram: <ProtrudingObjectsDiagram />
   },
   {
     number: '§308', title: 'Reach Ranges',
