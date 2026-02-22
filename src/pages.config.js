@@ -72,6 +72,7 @@ import GuideParking from './pages/GuideParking';
 import GuideParkingRequirements from './pages/GuideParkingRequirements';
 import GuideProgramAccess from './pages/GuideProgramAccess';
 import GuideRamps from './pages/GuideRamps';
+import GuideReachRanges from './pages/GuideReachRanges';
 import GuideReasonableModifications from './pages/GuideReasonableModifications';
 import GuideRestaurantsRetail from './pages/GuideRestaurantsRetail';
 import GuideRestrooms from './pages/GuideRestrooms';
@@ -81,6 +82,7 @@ import GuideSmallBusiness from './pages/GuideSmallBusiness';
 import GuideSocialMedia from './pages/GuideSocialMedia';
 import GuideTaxIncentives from './pages/GuideTaxIncentives';
 import GuideTitleII from './pages/GuideTitleII';
+import GuideTurningHandrails from './pages/GuideTurningHandrails';
 import GuideVoting from './pages/GuideVoting';
 import GuideWcagExplained from './pages/GuideWcagExplained';
 import GuideWebFirstSteps from './pages/GuideWebFirstSteps';
@@ -106,8 +108,6 @@ import StandardsCh7 from './pages/StandardsCh7';
 import StandardsCh8 from './pages/StandardsCh8';
 import StandardsCh9 from './pages/StandardsCh9';
 import StandardsGuide from './pages/StandardsGuide';
-import GuideReachRanges from './pages/GuideReachRanges';
-import GuideTurningHandrails from './pages/GuideTurningHandrails';
 import __Layout from './Layout.jsx';
 
 
@@ -137,6 +137,7 @@ export const PAGES = {
     "GuideParkingRequirements": GuideParkingRequirements,
     "GuideProgramAccess": GuideProgramAccess,
     "GuideRamps": GuideRamps,
+    "GuideReachRanges": GuideReachRanges,
     "GuideReasonableModifications": GuideReasonableModifications,
     "GuideRestaurantsRetail": GuideRestaurantsRetail,
     "GuideRestrooms": GuideRestrooms,
@@ -146,6 +147,7 @@ export const PAGES = {
     "GuideSocialMedia": GuideSocialMedia,
     "GuideTaxIncentives": GuideTaxIncentives,
     "GuideTitleII": GuideTitleII,
+    "GuideTurningHandrails": GuideTurningHandrails,
     "GuideVoting": GuideVoting,
     "GuideWcagExplained": GuideWcagExplained,
     "GuideWebFirstSteps": GuideWebFirstSteps,
@@ -171,8 +173,6 @@ export const PAGES = {
     "StandardsCh8": StandardsCh8,
     "StandardsCh9": StandardsCh9,
     "StandardsGuide": StandardsGuide,
-    "GuideReachRanges": GuideReachRanges,
-    "GuideTurningHandrails": GuideTurningHandrails,
 }
 
 export const pagesConfig = {

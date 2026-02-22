@@ -1,6 +1,8 @@
 import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
 import ToiletStallDiagram from '../components/guide/diagrams/ToiletStallDiagram';
+import BathtubDiagram from '../components/guide/diagrams/BathtubDiagram';
+import ShowerDiagram from '../components/guide/diagrams/ShowerDiagram';
 
 const sections = [
   {
@@ -30,9 +32,16 @@ const sections = [
     legal: <p>§606.3 "Lavatories and sinks shall be installed with the front of the higher of the rim or counter surface 34 inches maximum above the finish floor." §606.4 "Faucets shall comply with §309." §606.5 "Water supply and drain pipes under lavatories and sinks shall be insulated or otherwise configured to protect against contact."</p>
   },
   {
-    number: '§607–608', title: 'Bathtubs & Shower Compartments',
-    plain: <><p><strong>Bathtubs:</strong> Accessible bathtubs need grab bars along the back wall and head end wall, a removable or permanent seat, and clearance for a wheelchair alongside.</p><p><strong>Showers</strong> come in two standard sizes:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Transfer-type:</strong> 36 × 36 inches — the user transfers from a wheelchair onto a seat inside</li><li style={{marginBottom:'6px'}}><strong>Roll-in type:</strong> 30 × 60 inches minimum (or 36 × 60) — a wheelchair can roll directly in</li></ul><p>Both types need grab bars, a folding or non-folding seat, and a handheld shower spray with a 59-inch minimum hose.</p></>,
-    legal: <p>§607.4 Grab bars per §607.4.1 and §607.4.2. §608.2.1 Transfer-type: "36 inches by 36 inches clear inside dimensions." §608.2.2 Standard roll-in: "30 inches minimum by 60 inches minimum clear inside dimensions." §608.6 "A shower spray unit with a hose 59 inches long minimum… shall be provided."</p>
+    number: '§607', title: 'Bathtubs',
+    plain: <><p>Accessible bathtubs need grab bars along the back wall and head end wall, a removable or permanent seat, and clearance for a wheelchair alongside the full length of the tub:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Clear floor space:</strong> 30 × 60 inches alongside the tub, extending its full length</li><li style={{marginBottom:'6px'}}><strong>Seat:</strong> Permanent or removable, 15 inches deep minimum, at the head end</li><li style={{marginBottom:'6px'}}><strong>Grab bars:</strong> On back wall and head-end wall, at 33–36 inches above floor plus a lower bar 8–10 inches above the rim</li><li style={{marginBottom:'6px'}}><strong>Controls:</strong> Between the rim and grab bar, on the end wall opposite the seat</li><li style={{marginBottom:'6px'}}><strong>Shower spray:</strong> Hand-held with a 59-inch hose minimum</li></ul></>,
+    legal: <p>§607.2 "A clearance in front of bathtubs shall extend the length of the bathtub and shall be 30 inches wide minimum." §607.4 Grab bars per §607.4.1 and §607.4.2. §607.5 "Controls, faucets, and shower spray units shall be installed on an end wall." §607.6 "A shower spray unit with a hose 59 inches long minimum… shall be provided."</p>,
+    diagram: <BathtubDiagram />
+  },
+  {
+    number: '§608', title: 'Shower Compartments',
+    plain: <><p>Accessible showers come in two standard types:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Transfer-type:</strong> 36 × 36 inches — the user transfers from a wheelchair onto a built-in seat</li><li style={{marginBottom:'6px'}}><strong>Standard roll-in:</strong> 60 × 30 inches — a wheelchair can roll directly in on the long side</li><li style={{marginBottom:'6px'}}><strong>Alternate roll-in:</strong> 36 × 60 inches with a 36-inch entry on the long side</li></ul><p>All types require grab bars, a hand-held shower spray with 59-inch hose, and controls operable with one hand between 38 and 48 inches above the floor. No curb or threshold (½ inch max if beveled).</p></>,
+    legal: <p>§608.2.1 Transfer-type: "36 inches by 36 inches clear inside dimensions." §608.3.1 Standard roll-in: "30 inches minimum by 60 inches minimum clear inside dimensions." §608.6 "A shower spray unit with a hose 59 inches long minimum… shall be provided." §608.5 Controls: "38 inches minimum and 48 inches maximum above the shower floor."</p>,
+    diagram: <ShowerDiagram />
   },
   {
     number: '§609', title: 'Grab Bars',
