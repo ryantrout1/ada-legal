@@ -79,6 +79,10 @@ import GuideRestrooms from './pages/GuideRestrooms';
 import GuideEntrances from './pages/GuideEntrances';
 import GuideRamps from './pages/GuideRamps';
 import GuideSignage from './pages/GuideSignage';
+import GuideTaxIncentives from './pages/GuideTaxIncentives';
+import GuideHotelsLodging from './pages/GuideHotelsLodging';
+import GuideRestaurantsRetail from './pages/GuideRestaurantsRetail';
+import GuideMedicalFacilities from './pages/GuideMedicalFacilities';
 import __Layout from './Layout.jsx';
 
 
@@ -115,6 +119,10 @@ export const PAGES = {
     "GuideEntrances": GuideEntrances,
     "GuideRamps": GuideRamps,
     "GuideSignage": GuideSignage,
+    "GuideTaxIncentives": GuideTaxIncentives,
+    "GuideHotelsLodging": GuideHotelsLodging,
+    "GuideRestaurantsRetail": GuideRestaurantsRetail,
+    "GuideMedicalFacilities": GuideMedicalFacilities,
 }
 
 export const pagesConfig = {
