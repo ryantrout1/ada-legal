@@ -3,6 +3,8 @@ import ChapterPageLayout from '../components/guide/ChapterPageLayout';
 import ToiletStallDiagram from '../components/guide/diagrams/ToiletStallDiagram';
 import BathtubDiagram from '../components/guide/diagrams/BathtubDiagram';
 import ShowerDiagram from '../components/guide/diagrams/ShowerDiagram';
+import LavatoryDiagram from '../components/guide/diagrams/LavatoryDiagram';
+import GrabBarDetailDiagram from '../components/guide/diagrams/GrabBarDetailDiagram';
 
 const sections = [
   {
@@ -29,7 +31,8 @@ const sections = [
   {
     number: '§606', title: 'Lavatories & Sinks',
     plain: <><p>Accessible lavatories (bathroom sinks) must allow a <strong>forward approach</strong> in a wheelchair:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Rim height:</strong> 34 inches maximum above the floor</li><li style={{marginBottom:'6px'}}><strong>Knee and toe clearance:</strong> Must be provided underneath</li><li style={{marginBottom:'6px'}}><strong>Faucets:</strong> Operable with one hand, no tight grasping — lever, push, or sensor-operated</li><li style={{marginBottom:'6px'}}><strong>Exposed pipes:</strong> Hot water and drain pipes under the lavatory must be insulated or covered to prevent burns</li></ul></>,
-    legal: <p>§606.3 "Lavatories and sinks shall be installed with the front of the higher of the rim or counter surface 34 inches maximum above the finish floor." §606.4 "Faucets shall comply with §309." §606.5 "Water supply and drain pipes under lavatories and sinks shall be insulated or otherwise configured to protect against contact."</p>
+    legal: <p>§606.3 "Lavatories and sinks shall be installed with the front of the higher of the rim or counter surface 34 inches maximum above the finish floor." §606.4 "Faucets shall comply with §309." §606.5 "Water supply and drain pipes under lavatories and sinks shall be insulated or otherwise configured to protect against contact."</p>,
+    diagram: <LavatoryDiagram />
   },
   {
     number: '§607', title: 'Bathtubs',
@@ -46,7 +49,8 @@ const sections = [
   {
     number: '§609', title: 'Grab Bars',
     plain: <><p>Grab bars are life-saving safety features. Requirements:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Diameter:</strong> 1¼ to 2 inches (circular) for a secure grip</li><li style={{marginBottom:'6px'}}><strong>Height:</strong> 33 to 36 inches above the floor</li><li style={{marginBottom:'6px'}}><strong>Wall clearance:</strong> 1½ inches from the wall</li><li style={{marginBottom:'6px'}}><strong>Structural strength:</strong> Must resist 250 pounds of force applied at any point</li><li style={{marginBottom:'6px'}}><strong>No rotation:</strong> Bars must not rotate within their fittings</li></ul></>,
-    legal: <p>§609.2.1 Circular: "1¼ inches minimum and 2 inches maximum." §609.3 "The space between the wall and the grab bar shall be 1½ inches." §609.4 "Grab bars, seat walls and seats… shall be mounted at 33 inches minimum and 36 inches maximum above the finish floor." §609.8 "Grab bars… shall be capable of resisting a vertical or horizontal force of 250 pounds."</p>
+    legal: <p>§609.2.1 Circular: "1¼ inches minimum and 2 inches maximum." §609.3 "The space between the wall and the grab bar shall be 1½ inches." §609.4 "Grab bars, seat walls and seats… shall be mounted at 33 inches minimum and 36 inches maximum above the finish floor." §609.8 "Grab bars… shall be capable of resisting a vertical or horizontal force of 250 pounds."</p>,
+    diagram: <GrabBarDetailDiagram />
   },
   {
     number: '§610–612', title: 'Seats, Coat Hooks & Shelves',

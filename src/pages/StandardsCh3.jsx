@@ -2,6 +2,7 @@ import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
 import TurningSpaceDiagram from '../components/guide/diagrams/TurningSpaceDiagram';
 import ReachRangeDiagram from '../components/guide/diagrams/ReachRangeDiagram';
+import ClearFloorDiagram from '../components/guide/diagrams/ClearFloorDiagram';
 
 const sections = [
   {
@@ -23,7 +24,8 @@ const sections = [
   {
     number: '§305', title: 'Clear Floor or Ground Space',
     plain: <><p>Wherever someone in a wheelchair needs to <strong>use a control, reach something, or park beside an element</strong>, there must be a clear floor space of at least <strong>30 inches by 48 inches</strong> (2.5 feet × 4 feet). This can be positioned for either a forward or a parallel (side) approach.</p></>,
-    legal: <p>§305.3 "The clear floor or ground space shall be 30 inches minimum by 48 inches minimum." §305.5 "Unless otherwise specified, clear floor or ground space shall permit either forward or parallel approach to an element." §305.7 Maneuvering clearance: "If clear floor space is in an alcove, additional maneuvering clearance is required."</p>
+    legal: <p>§305.3 "The clear floor or ground space shall be 30 inches minimum by 48 inches minimum." §305.5 "Unless otherwise specified, clear floor or ground space shall permit either forward or parallel approach to an element." §305.7 Maneuvering clearance: "If clear floor space is in an alcove, additional maneuvering clearance is required."</p>,
+    diagram: <ClearFloorDiagram />
   },
   {
     number: '§306', title: 'Knee & Toe Clearance',

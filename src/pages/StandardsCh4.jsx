@@ -2,6 +2,7 @@ import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
 import RampDiagram from '../components/guide/diagrams/RampDiagram';
 import DoorDiagram from '../components/guide/diagrams/DoorDiagram';
+import CurbRampDiagram from '../components/guide/diagrams/CurbRampDiagram';
 
 const sections = [
   {
@@ -29,7 +30,8 @@ const sections = [
   {
     number: '§406', title: 'Curb Ramps',
     plain: <><p>Curb ramps allow wheelchair users, stroller users, and others to transition between a sidewalk and street. Requirements:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Slope:</strong> Not steeper than 1:12</li><li style={{marginBottom:'6px'}}><strong>Width:</strong> 36 inches minimum</li><li style={{marginBottom:'6px'}}><strong>Flared sides:</strong> If the curb ramp is next to a walkway, sides must be flared at 1:10 maximum slope so pedestrians don't trip</li><li style={{marginBottom:'6px'}}><strong>Detectable warnings:</strong> Raised bumps (truncated domes) at the bottom where the ramp meets the street — they alert people who are blind that they're entering a roadway</li></ul></>,
-    legal: <p>§406.1 "Curb ramps on accessible routes shall comply with §406." §406.3 "The running slope of curb ramp runs shall not be steeper than 1:12." §406.5 "Flared sides shall have a slope of 1:10 maximum." §406.13 Detectable warnings: "36 inches minimum in the direction of travel."</p>
+    legal: <p>§406.1 "Curb ramps on accessible routes shall comply with §406." §406.3 "The running slope of curb ramp runs shall not be steeper than 1:12." §406.5 "Flared sides shall have a slope of 1:10 maximum." §406.13 Detectable warnings: "36 inches minimum in the direction of travel."</p>,
+    diagram: <CurbRampDiagram />
   },
   {
     number: '§407–408', title: 'Elevators',
