@@ -4,6 +4,7 @@ import GuideHeroBanner from '../components/guide/GuideHeroBanner';
 import GuideSection from '../components/guide/GuideSection';
 import GuideLegalCallout from '../components/guide/GuideLegalCallout';
 import GuideReportCTA from '../components/guide/GuideReportCTA';
+import DoorDiagram from '../components/guide/diagrams/DoorDiagram';
 
 export default function GuideEntrances() {
   return (
@@ -17,6 +18,8 @@ export default function GuideEntrances() {
 
       <div className="guide-content-wrap">
         <div className="guide-content">
+
+          <DoorDiagram />
 
           <GuideSection
             id="how-many"
