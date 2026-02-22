@@ -192,13 +192,13 @@ export default function Marketplace() {
     const portalUrl = window.location.origin + '/MyCases';
     await base44.integrations.Core.SendEmail({
       to: c.contact_email,
-      subject: 'Attorney Assigned — ADA Legal Connect',
+      subject: 'Attorney Assigned — ADA Legal Link',
       body: attorneyAssignedEmail(c, lawyerProfile.full_name, lawyerProfile.firm_name, portalUrl)
     });
 
     await base44.integrations.Core.SendEmail({
       to: lawyerProfile.email,
-      subject: 'Support Initiation Confirmed — ADA Legal Connect',
+      subject: 'Support Initiation Confirmed — ADA Legal Link',
       body: `<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #1E293B;">Support Initiation Confirmed</h2>
         <p>Dear ${lawyerProfile.full_name},</p>
@@ -213,7 +213,7 @@ export default function Marketplace() {
           <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Contact Preference</td><td style="padding: 8px;">${c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'}</td></tr>
         </table>
         <p><strong>Reminder:</strong> You are required to contact the claimant within <strong>24 hours</strong>.</p>
-        <p style="color: #64748B; font-size: 0.875rem; font-style: italic; margin-top: 24px;">ADA Legal Connect — Connecting people with experienced ADA attorneys.</p>
+        <p style="color: #64748B; font-size: 0.875rem; font-style: italic; margin-top: 24px;">ADA Legal Link — Connecting people with experienced ADA attorneys.</p>
       </div>`
     });
 
