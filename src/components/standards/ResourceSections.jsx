@@ -79,7 +79,7 @@ const SECTIONS = [
       {
         title: 'Accessible Parking Requirements',
         type: 'Checklist', dotColor: '#9A3412',
-        href: '/GuideParking',
+        href: '/GuideParkingRequirements',
         description: "How many accessible spaces you need, van-accessible requirements, signage, dimensions, and where to locate them. Includes the scoping table from §208.",
         tags: ['§208', '§502', 'Scoping table']
       },
@@ -89,6 +89,13 @@ const SECTIONS = [
         href: '/GuideBarrierRemoval',
         description: 'Understanding the legal standard for removing architectural barriers in existing facilities, with practical examples and cost considerations.',
         tags: ['Title III', '§36.304']
+      },
+      {
+        title: 'New Construction & Alterations',
+        type: 'Legal Standard', dotColor: '#9A3412',
+        href: '/GuideNewConstruction',
+        description: 'What the ADA requires when building new facilities or making alterations to existing ones, including the path of travel rule.',
+        tags: ['§36.401', '§202', 'Path of travel']
       }
     ]
   },
