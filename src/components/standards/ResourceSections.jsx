@@ -225,16 +225,30 @@ const SECTIONS = [
       {
         title: 'Title II: State & Local Government Obligations',
         type: 'Overview', dotColor: '#8B1A1A',
-        href: '#guide/title-ii-overview',
+        href: '/GuideTitleII',
         description: 'What Title II requires — program access, effective communication, reasonable modifications, and the integration mandate.',
         meta: [{ text: '10 min read' }]
       },
       {
         title: 'Voting & Election Accessibility',
         type: 'Specialized', dotColor: '#8B1A1A',
-        href: '#guide/voting-accessibility',
+        href: '/GuideVoting',
         description: 'ADA requirements for polling places, ballot accessibility, and ensuring full and equal opportunity to vote for people with disabilities.',
         tags: ['Title II', 'Elections']
+      },
+      {
+        title: 'Program Accessibility',
+        type: 'Guide', dotColor: '#8B1A1A',
+        href: '/GuideProgramAccess',
+        description: 'How state and local governments must ensure their programs and services are accessible, even in older buildings.',
+        tags: ['§35.149', '§35.150', 'Transition plans']
+      },
+      {
+        title: 'Emergency Management & Disability',
+        type: 'Guide', dotColor: '#8B1A1A',
+        href: '/GuideEmergencyManagement',
+        description: 'ADA requirements for emergency preparedness, evacuation plans, shelters, and disaster response that includes people with disabilities.',
+        tags: ['Shelters', 'Evacuation', 'FEMA']
       }
     ]
   }

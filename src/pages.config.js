@@ -89,6 +89,10 @@ import GuideWebFirstSteps from './pages/GuideWebFirstSteps';
 import GuideWebTesting from './pages/GuideWebTesting';
 import GuideAccessibleDocuments from './pages/GuideAccessibleDocuments';
 import GuideSocialMedia from './pages/GuideSocialMedia';
+import GuideTitleII from './pages/GuideTitleII';
+import GuideVoting from './pages/GuideVoting';
+import GuideProgramAccess from './pages/GuideProgramAccess';
+import GuideEmergencyManagement from './pages/GuideEmergencyManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -135,6 +139,10 @@ export const PAGES = {
     "GuideWebTesting": GuideWebTesting,
     "GuideAccessibleDocuments": GuideAccessibleDocuments,
     "GuideSocialMedia": GuideSocialMedia,
+    "GuideTitleII": GuideTitleII,
+    "GuideVoting": GuideVoting,
+    "GuideProgramAccess": GuideProgramAccess,
+    "GuideEmergencyManagement": GuideEmergencyManagement,
 }
 
 export const pagesConfig = {
