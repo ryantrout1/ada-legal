@@ -224,7 +224,7 @@ export default function Layout({ children, currentPageName }) {
               minHeight: '44px'
             }}
             className="mobile-menu-btn"
-            aria-label="Toggle menu"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
