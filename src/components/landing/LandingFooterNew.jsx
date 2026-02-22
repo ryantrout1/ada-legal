@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { Scale, CheckCircle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
+import LogoBrand from '../LogoBrand';
 
 const footerLinkStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
@@ -30,7 +31,7 @@ export default function LandingFooterNew() {
           {/* Brand */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-              <Scale size={22} style={{ color: '#EA580C' }} aria-hidden="true" />
+              <LogoBrand size={24} variant="light" />
               <span style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 700,
                 color: 'white'

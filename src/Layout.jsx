@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
-import { Scale, Menu, X, User, LogOut } from 'lucide-react';
+import { Menu, X, User, LogOut } from 'lucide-react';
+import LogoBrand from './components/LogoBrand';
 import LiveAnnouncer from './components/a11y/LiveAnnouncer';
 import AuditButton from './components/a11y/AuditButton';
 import LandingFooterNew from './components/landing/LandingFooterNew';
@@ -21,6 +22,14 @@ export default function Layout({ children, currentPageName }) {
         vp.setAttribute('content', 'width=device-width, initial-scale=1.0');
       }
     }
+  }, []);
+
+  // Favicon
+  React.useEffect(() => {
+    let link = document.querySelector("link[rel='icon']");
+    if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+    link.type = 'image/png';
+    link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/64a69db3b_image.png';
   }, []);
 
   React.useEffect(() => {
@@ -207,7 +216,7 @@ export default function Layout({ children, currentPageName }) {
             fontFamily: 'Fraunces, serif',
             fontWeight: 700
           }}>
-            <Scale size={32} style={{ color: 'var(--terra-400)' }} />
+            <LogoBrand size={36} variant="light" />
             <span>ADA Legal Link</span>
           </Link>
 
@@ -594,6 +603,7 @@ export default function Layout({ children, currentPageName }) {
             padding: '0 1.5rem',
             textAlign: 'center'
           }}>
+            <LogoBrand size={28} variant="light" style={{ opacity: 0.6, marginBottom: '0.5rem' }} aria-hidden="true" />
             <p style={{ margin: 0, fontSize: '0.875rem' }}>
               © 2026 ADA Legal Link. All rights reserved.
             </p>
