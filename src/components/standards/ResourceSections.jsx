@@ -191,6 +191,27 @@ const SECTIONS = [
         href: '/GuideWebFirstSteps',
         description: 'Practical guidance for getting started — audit your site, prioritize fixes, work with vendors, and build accessibility into contracts.',
         tags: ['Title II', 'Vendor contracts']
+      },
+      {
+        title: 'How to Test Your Website for Accessibility',
+        type: 'Guide', dotColor: '#5B2C6F',
+        href: '/GuideWebTesting',
+        description: 'A practical guide to automated tools, manual testing, and screen reader testing for web accessibility compliance.',
+        tags: ['axe', 'WAVE', 'Screen readers']
+      },
+      {
+        title: 'Making Documents Accessible',
+        type: 'Guide', dotColor: '#5B2C6F',
+        href: '/GuideAccessibleDocuments',
+        description: 'How to create accessible PDFs, Word documents, and presentations that meet WCAG requirements.',
+        tags: ['PDF/UA', 'SC 1.3.1', 'Tagged PDF']
+      },
+      {
+        title: 'Social Media & Digital Content Accessibility',
+        type: 'Guide', dotColor: '#5B2C6F',
+        href: '/GuideSocialMedia',
+        description: 'How to make social media posts, videos, and other digital content accessible under ADA obligations.',
+        tags: ['Captions', 'Alt text', 'CamelCase']
       }
     ]
   },
