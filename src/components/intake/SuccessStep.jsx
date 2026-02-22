@@ -56,7 +56,7 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
       const portalUrl = window.location.origin + '/MyCases';
       await base44.integrations.Core.SendEmail({
         to: trimmed,
-        subject: 'ADA Legal Connect — Report Received',
+        subject: 'ADA Legal Link — Report Received',
         body: caseSubmittedEmail(caseData, portalUrl)
       });
     } catch (emailErr) {

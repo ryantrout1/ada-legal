@@ -49,7 +49,7 @@ export default function LandingHeroNew() {
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
               letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FB923C'
             }}>
-              ADA Legal Connect
+              ADA Legal Link
             </span>
           </div>
 

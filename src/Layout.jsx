@@ -52,7 +52,7 @@ export default function Layout({ children, currentPageName }) {
 
   React.useEffect(() => {
     const title = PAGE_TITLES[currentPageName] || currentPageName;
-    document.title = `${title} — ADA Legal Connect`;
+    document.title = `${title} — ADA Legal Link`;
   }, [currentPageName]);
 
   return (
@@ -207,7 +207,7 @@ export default function Layout({ children, currentPageName }) {
             fontWeight: 700
           }}>
             <Scale size={32} style={{ color: 'var(--terra-400)' }} />
-            <span>ADA Legal Connect</span>
+            <span>ADA Legal Link</span>
           </Link>
 
           {/* Mobile Menu Button */}
@@ -549,7 +549,7 @@ export default function Layout({ children, currentPageName }) {
             textAlign: 'center'
           }}>
             <p style={{ margin: 0, fontSize: '0.875rem' }}>
-              © 2026 ADA Legal Connect. All rights reserved.
+              © 2026 ADA Legal Link. All rights reserved.
             </p>
             <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem' }}>
               Connecting people with experienced ADA attorneys.

@@ -129,7 +129,7 @@ export default function LawyerRegister() {
           fontWeight: 700, color: 'var(--slate-900)',
           marginBottom: 'var(--space-xs)', textAlign: 'center'
         }}>
-          Join ADA Legal Connect
+          Join ADA Legal Link
         </h1>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
@@ -210,7 +210,7 @@ export default function LawyerRegister() {
                 }}
               />
               <span>
-                I have read and agree to the ADA Legal Connect Rules, including the requirement to contact claimants within 24 hours of initiating support.
+                I have read and agree to the ADA Legal Link Rules, including the requirement to contact claimants within 24 hours of initiating support.
               </span>
             </label>
             {errors.rules_accepted && (

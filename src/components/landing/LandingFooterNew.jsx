@@ -13,14 +13,14 @@ export default function LandingFooterNew() {
           fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700,
           color: 'white', margin: '0 0 1.25rem', fontStyle: 'normal'
         }}>
-          ADA Legal Connect
+          ADA Legal Link
         </p>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
           color: '#94A3B8', maxWidth: '680px', margin: '0 auto 1.5rem',
           lineHeight: 1.7
         }}>
-          ADA Legal Connect is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship. Attorney listings do not constitute endorsements. Results may vary.
+          ADA Legal Link is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship. Attorney listings do not constitute endorsements. Results may vary.
         </p>
         <div className="landing-footer-links" style={{
           display: 'flex', gap: '2rem', justifyContent: 'center',
@@ -52,7 +52,7 @@ export default function LandingFooterNew() {
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
           color: '#94A3B8', margin: 0
         }}>
-          © 2026 ADA Legal Connect. All rights reserved.
+          © 2026 ADA Legal Link. All rights reserved.
         </p>
       </div>
     </footer>
