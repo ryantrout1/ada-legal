@@ -124,6 +124,34 @@ const SECTIONS = [
         href: '/GuideSignage',
         description: 'Which signs need Braille, raised characters, and high contrast — and the specific mounting heights and placement rules.',
         tags: ['§216', '§703', 'Braille']
+      },
+      {
+        title: 'ADA Tax Incentives for Businesses',
+        type: 'Guide', dotColor: '#9A3412',
+        href: '/GuideTaxIncentives',
+        description: 'Federal tax credits and deductions available to help businesses cover the cost of ADA accessibility improvements.',
+        tags: ['Section 44', 'Section 190']
+      },
+      {
+        title: 'Hotels & Lodging Accessibility',
+        type: 'Guide', dotColor: '#9A3412',
+        href: '/GuideHotelsLodging',
+        description: 'Accessible guest room requirements, reservation systems, and communication features required for hotels and places of lodging.',
+        tags: ['§224', '§806', 'Reservations']
+      },
+      {
+        title: 'Restaurants & Retail Accessibility',
+        type: 'Guide', dotColor: '#9A3412',
+        href: '/GuideRestaurantsRetail',
+        description: 'ADA requirements for dining areas, sales counters, checkout aisles, and display areas in restaurants and retail stores.',
+        tags: ['§226', '§904', 'Counters']
+      },
+      {
+        title: 'Medical Facility Accessibility',
+        type: 'Guide', dotColor: '#9A3412',
+        href: '/GuideMedicalFacilities',
+        description: "ADA requirements for doctors' offices, hospitals, and medical facilities — including exam rooms, equipment, and communication.",
+        tags: ['§223', 'DOJ guidance', 'Exam tables']
       }
     ]
   },
