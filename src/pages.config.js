@@ -75,6 +75,10 @@ import GuideSmallBusiness from './pages/GuideSmallBusiness';
 import GuideParkingRequirements from './pages/GuideParkingRequirements';
 import GuideBarrierRemoval from './pages/GuideBarrierRemoval';
 import GuideNewConstruction from './pages/GuideNewConstruction';
+import GuideRestrooms from './pages/GuideRestrooms';
+import GuideEntrances from './pages/GuideEntrances';
+import GuideRamps from './pages/GuideRamps';
+import GuideSignage from './pages/GuideSignage';
 import __Layout from './Layout.jsx';
 
 
@@ -107,6 +111,10 @@ export const PAGES = {
     "GuideParkingRequirements": GuideParkingRequirements,
     "GuideBarrierRemoval": GuideBarrierRemoval,
     "GuideNewConstruction": GuideNewConstruction,
+    "GuideRestrooms": GuideRestrooms,
+    "GuideEntrances": GuideEntrances,
+    "GuideRamps": GuideRamps,
+    "GuideSignage": GuideSignage,
 }
 
 export const pagesConfig = {
