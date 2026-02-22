@@ -53,6 +53,7 @@ export default function Layout({ children, currentPageName }) {
   React.useEffect(() => {
     const title = PAGE_TITLES[currentPageName] || currentPageName;
     document.title = `${title} — ADA Legal Link`;
+    setMobileMenuOpen(false);
   }, [currentPageName]);
 
   return (
