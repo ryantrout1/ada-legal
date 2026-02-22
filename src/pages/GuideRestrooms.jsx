@@ -4,6 +4,7 @@ import GuideHeroBanner from '../components/guide/GuideHeroBanner';
 import GuideSection from '../components/guide/GuideSection';
 import GuideLegalCallout from '../components/guide/GuideLegalCallout';
 import GuideReportCTA from '../components/guide/GuideReportCTA';
+import ToiletStallDiagram from '../components/guide/diagrams/ToiletStallDiagram';
 
 export default function GuideRestrooms() {
   return (
@@ -17,6 +18,8 @@ export default function GuideRestrooms() {
 
       <div className="guide-content-wrap">
         <div className="guide-content">
+
+          <ToiletStallDiagram />
 
           <GuideSection
             id="scoping"
