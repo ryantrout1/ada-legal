@@ -107,6 +107,7 @@ import StandardsCh8 from './pages/StandardsCh8';
 import StandardsCh9 from './pages/StandardsCh9';
 import StandardsGuide from './pages/StandardsGuide';
 import GuideReachRanges from './pages/GuideReachRanges';
+import GuideTurningHandrails from './pages/GuideTurningHandrails';
 import __Layout from './Layout.jsx';
 
 
@@ -171,6 +172,7 @@ export const PAGES = {
     "StandardsCh9": StandardsCh9,
     "StandardsGuide": StandardsGuide,
     "GuideReachRanges": GuideReachRanges,
+    "GuideTurningHandrails": GuideTurningHandrails,
 }
 
 export const pagesConfig = {
