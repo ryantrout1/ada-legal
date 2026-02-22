@@ -1,8 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../../utils';
 import { Clock, AlertTriangle } from 'lucide-react';
 
 export default function ResourceCard({ card }) {
   const { title, type, dotColor, description, meta, tags, href } = card;
+  const isInternal = href && href.startsWith('/');
+  const pageName = isInternal ? href.slice(1) : null;
 
   return (
     <div className="sg-resource-card" style={{
@@ -30,11 +34,19 @@ export default function ResourceCard({ card }) {
         fontFamily: 'Fraunces, serif', fontSize: '1.0625rem', fontWeight: 600,
         color: 'var(--slate-900)', margin: '0 0 8px', lineHeight: 1.3
       }}>
-        <a href={href} className="sg-card-link" style={{
-          color: 'inherit', textDecoration: 'none'
-        }}>
-          {title}
-        </a>
+        {isInternal ? (
+          <Link to={createPageUrl(pageName)} className="sg-card-link" style={{
+            color: 'inherit', textDecoration: 'none'
+          }}>
+            {title}
+          </Link>
+        ) : (
+          <a href={href} className="sg-card-link" style={{
+            color: 'inherit', textDecoration: 'none'
+          }}>
+            {title}
+          </a>
+        )}
       </h3>
 
       {/* Description */}
