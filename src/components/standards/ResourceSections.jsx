@@ -38,6 +38,27 @@ const SECTIONS = [
         href: '/GuideEffectiveCommunication',
         description: 'How the ADA requires businesses and governments to communicate effectively with people who have vision, hearing, or speech disabilities.',
         tags: ['Title II', 'Title III', 'Auxiliary Aids']
+      },
+      {
+        title: 'Reasonable Modifications',
+        type: 'Guide', dotColor: '#D4570A',
+        href: '/GuideReasonableModifications',
+        description: 'When and how businesses and government entities must modify their policies, practices, and procedures for people with disabilities.',
+        tags: ['Title II', 'Title III', '§35.130']
+      },
+      {
+        title: 'Wheelchairs & Mobility Devices',
+        type: 'Reference', dotColor: '#D4570A',
+        href: '/GuideMobilityDevices',
+        description: 'Your right to use wheelchairs, scooters, and other power-driven mobility devices in public spaces under the ADA.',
+        tags: ['OPDMDs', '§35.137']
+      },
+      {
+        title: 'Who the ADA Protects',
+        type: 'Overview', dotColor: '#D4570A',
+        href: '/GuideAdaProtections',
+        description: "Understanding the ADA's definition of disability, who qualifies for protection, and what 'regarded as' means.",
+        tags: ['ADAAA 2008', '§12102']
       }
     ]
   },
@@ -58,7 +79,7 @@ const SECTIONS = [
       {
         title: 'Accessible Parking Requirements',
         type: 'Checklist', dotColor: '#9A3412',
-        href: '#guide/parking-requirements',
+        href: '/GuideParking',
         description: "How many accessible spaces you need, van-accessible requirements, signage, dimensions, and where to locate them. Includes the scoping table from §208.",
         tags: ['§208', '§502', 'Scoping table']
       },
