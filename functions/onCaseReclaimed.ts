@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
     </div>
   </div>
   <div style="background-color:#1E293B;padding:20px 32px;text-align:center;">
-    <p style="margin:0;font-size:12px;color:#94A3B8;">© 2026 ADA Legal Connect. All rights reserved.</p>
+    <p style="margin:0;font-size:12px;color:#94A3B8;">© 2026 ADA Legal Link. All rights reserved.</p>
     <p style="margin:6px 0 0 0;font-size:12px;color:#94A3B8;">Connecting people with experienced ADA attorneys.</p>
     <p style="margin:10px 0 0 0;font-size:11px;color:#64748B;font-style:italic;">This platform is not a law firm and does not provide legal advice.</p>
   </div>
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
 
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: lawyer.email,
-      subject: 'Case Reclaimed — ADA Legal Connect',
+      subject: 'Case Reclaimed — ADA Legal Link',
       body: emailHtml
     });
 

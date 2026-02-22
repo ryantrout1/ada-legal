@@ -29,10 +29,10 @@ Deno.serve(async (req) => {
     <span style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#fff;">⚖️ ADA Legal</span>
   </div>
   <div style="background-color:#fff;padding:40px 32px;border-left:1px solid #E2E8F0;border-right:1px solid #E2E8F0;">
-    <h1 style="font-family:Georgia,serif;font-size:24px;font-weight:700;color:#15803D;margin:0 0 24px 0;">Welcome to ADA Legal Connect</h1>
+    <h1 style="font-family:Georgia,serif;font-size:24px;font-weight:700;color:#15803D;margin:0 0 24px 0;">Welcome to ADA Legal Link</h1>
     <div style="font-size:15px;line-height:1.7;">
       <p>Dear ${data.full_name},</p>
-      <p>Congratulations — your attorney account has been <strong>approved</strong>! You are now eligible to access ADA Legal Connect and initiate support for ADA violation cases in your licensed states.</p>
+      <p>Congratulations — your attorney account has been <strong>approved</strong>! You are now eligible to access ADA Legal Link and initiate support for ADA violation cases in your licensed states.</p>
       <p><strong>Next step:</strong> Activate your subscription to start browsing and claiming cases.</p>
     </div>
     <div style="text-align:center;margin:32px 0 16px 0;">
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     </div>
   </div>
   <div style="background-color:#1E293B;padding:20px 32px;text-align:center;">
-    <p style="margin:0;font-size:12px;color:#94A3B8;">© 2026 ADA Legal Connect. All rights reserved.</p>
+    <p style="margin:0;font-size:12px;color:#94A3B8;">© 2026 ADA Legal Link. All rights reserved.</p>
     <p style="margin:6px 0 0 0;font-size:12px;color:#94A3B8;">Connecting people with experienced ADA attorneys.</p>
     <p style="margin:10px 0 0 0;font-size:11px;color:#64748B;font-style:italic;">This platform is not a law firm and does not provide legal advice.</p>
   </div>
@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
 
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: data.email,
-      subject: 'Welcome to ADA Legal Connect',
+      subject: 'Welcome to ADA Legal Link',
       body: emailHtml
     });
 

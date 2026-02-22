@@ -39,14 +39,14 @@ Deno.serve(async (req) => {
         <p>Dear ${c.contact_name},</p>
         <p>Your ADA violation case regarding <strong>${c.business_name}</strong> has been closed.</p>
         <p>If you have any questions about the outcome or need further assistance, please don't hesitate to reach out by replying to this email.</p>
-        <p>Thank you for using ADA Legal Connect.</p>
+        <p>Thank you for using ADA Legal Link.</p>
       </div>
       <div style="text-align: center; margin: 32px 0 16px 0;">
         <a href="${portalUrl}" style="display: inline-block; padding: 14px 32px; background-color: #C2410C; color: #ffffff; font-family: Manrope, Arial, sans-serif; font-size: 16px; font-weight: 700; text-decoration: none; border-radius: 8px;">View Case Summary</a>
       </div>
     </div>
     <div style="background-color: #1E293B; padding: 20px 32px; text-align: center;">
-      <p style="margin: 0; font-size: 12px; color: #94A3B8;">© 2026 ADA Legal Connect. All rights reserved.</p>
+      <p style="margin: 0; font-size: 12px; color: #94A3B8;">© 2026 ADA Legal Link. All rights reserved.</p>
       <p style="margin: 6px 0 0 0; font-size: 12px; color: #94A3B8;">Connecting people with experienced ADA attorneys.</p>
       <p style="margin: 10px 0 0 0; font-size: 11px; color: #64748B; font-style: italic;">This platform is not a law firm and does not provide legal advice.</p>
     </div>
@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
 
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: c.contact_email,
-      subject: 'ADA Legal Connect — Case Closed',
+      subject: 'ADA Legal Link — Case Closed',
       body: emailHtml
     });
 
