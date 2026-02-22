@@ -240,10 +240,13 @@ export default function Layout({ children, currentPageName }) {
               <>
                 {!user && (
                   <>
-                    <Link to={createPageUrl('Intake')} className="desktop-nav-public-links" style={{ color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }}>
+                    <Link to={createPageUrl('StandardsGuide')} className="desktop-nav-public-links" style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                      ADA Standards Guide
+                    </Link>
+                    <Link to={createPageUrl('Intake')} className="desktop-nav-public-links" style={{ color: currentPageName === 'Intake' ? '#D4570A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }} aria-current={currentPageName === 'Intake' ? 'page' : undefined}>
                       Report Violation
                     </Link>
-                    <Link to={createPageUrl('LawyerLanding')} className="desktop-nav-public-links" style={{ color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }}>
+                    <Link to={createPageUrl('LawyerLanding')} className="desktop-nav-public-links" style={{ color: currentPageName === 'LawyerLanding' ? '#D4570A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
                       For Attorneys
                     </Link>
                     <button
@@ -267,10 +270,13 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'user' && (
                   <>
-                    <Link to={createPageUrl('Intake')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                      ADA Standards Guide
+                    </Link>
+                    <Link to={createPageUrl('Intake')} style={{ color: currentPageName === 'Intake' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'Intake' ? 'page' : undefined}>
                       Report Violation
                     </Link>
-                    <Link to={createPageUrl('MyCases')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('MyCases')} style={{ color: currentPageName === 'MyCases' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'MyCases' ? 'page' : undefined}>
                       My Cases
                     </Link>
                     <span style={{
@@ -303,13 +309,16 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'lawyer' && (
                   <>
-                    <Link to={createPageUrl('Marketplace')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                      ADA Standards Guide
+                    </Link>
+                    <Link to={createPageUrl('Marketplace')} style={{ color: currentPageName === 'Marketplace' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'Marketplace' ? 'page' : undefined}>
                       Available Cases
                     </Link>
-                    <Link to={createPageUrl('LawyerDashboard')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('LawyerDashboard')} style={{ color: currentPageName === 'LawyerDashboard' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'LawyerDashboard' ? 'page' : undefined}>
                       My Cases
                     </Link>
-                    <Link to={createPageUrl('LawyerProfile')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('LawyerProfile')} style={{ color: currentPageName === 'LawyerProfile' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'LawyerProfile' ? 'page' : undefined}>
                       Profile
                     </Link>
                     <span style={{
@@ -342,19 +351,22 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'admin' && (
                   <>
-                    <Link to={createPageUrl('Admin')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                      ADA Standards Guide
+                    </Link>
+                    <Link to={createPageUrl('Admin')} style={{ color: currentPageName === 'Admin' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'Admin' ? 'page' : undefined}>
                       Dashboard
                     </Link>
-                    <Link to={createPageUrl('AdminReview')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('AdminReview')} style={{ color: currentPageName === 'AdminReview' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminReview' ? 'page' : undefined}>
                       Review Queue
                     </Link>
-                    <Link to={createPageUrl('AdminCases')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('AdminCases')} style={{ color: currentPageName === 'AdminCases' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
                       All Cases
                     </Link>
-                    <Link to={createPageUrl('AdminLawyers')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('AdminLawyers')} style={{ color: currentPageName === 'AdminLawyers' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminLawyers' ? 'page' : undefined}>
                       Lawyers
                     </Link>
-                    <Link to={createPageUrl('AdminAnalytics')} style={{ color: 'white' }}>
+                    <Link to={createPageUrl('AdminAnalytics')} style={{ color: currentPageName === 'AdminAnalytics' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminAnalytics' ? 'page' : undefined}>
                       Analytics
                     </Link>
                     <span style={{
