@@ -4,6 +4,7 @@ import GuideHeroBanner from '../components/guide/GuideHeroBanner';
 import GuideSection from '../components/guide/GuideSection';
 import GuideLegalCallout from '../components/guide/GuideLegalCallout';
 import GuideReportCTA from '../components/guide/GuideReportCTA';
+import RampDiagram from '../components/guide/diagrams/RampDiagram';
 
 export default function GuideRamps() {
   return (
@@ -17,6 +18,8 @@ export default function GuideRamps() {
 
       <div className="guide-content-wrap">
         <div className="guide-content">
+
+          <RampDiagram />
 
           <GuideSection
             id="when-required"

@@ -53,14 +53,39 @@ import AdminCases from './pages/AdminCases';
 import AdminLawyers from './pages/AdminLawyers';
 import AdminReview from './pages/AdminReview';
 import CaseDetail from './pages/CaseDetail';
+import GuideAccessibleDocuments from './pages/GuideAccessibleDocuments';
+import GuideAdaCoordinators from './pages/GuideAdaCoordinators';
 import GuideAdaProtections from './pages/GuideAdaProtections';
+import GuideBarrierRemoval from './pages/GuideBarrierRemoval';
+import GuideCriminalJustice from './pages/GuideCriminalJustice';
+import GuideEducation from './pages/GuideEducation';
 import GuideEffectiveCommunication from './pages/GuideEffectiveCommunication';
+import GuideEmergencyManagement from './pages/GuideEmergencyManagement';
+import GuideEntrances from './pages/GuideEntrances';
 import GuideFilingComplaint from './pages/GuideFilingComplaint';
+import GuideHotelsLodging from './pages/GuideHotelsLodging';
 import GuideIntroToAda from './pages/GuideIntroToAda';
+import GuideMedicalFacilities from './pages/GuideMedicalFacilities';
 import GuideMobilityDevices from './pages/GuideMobilityDevices';
+import GuideNewConstruction from './pages/GuideNewConstruction';
 import GuideParking from './pages/GuideParking';
+import GuideParkingRequirements from './pages/GuideParkingRequirements';
+import GuideProgramAccess from './pages/GuideProgramAccess';
+import GuideRamps from './pages/GuideRamps';
 import GuideReasonableModifications from './pages/GuideReasonableModifications';
+import GuideRestaurantsRetail from './pages/GuideRestaurantsRetail';
+import GuideRestrooms from './pages/GuideRestrooms';
 import GuideServiceAnimals from './pages/GuideServiceAnimals';
+import GuideSignage from './pages/GuideSignage';
+import GuideSmallBusiness from './pages/GuideSmallBusiness';
+import GuideSocialMedia from './pages/GuideSocialMedia';
+import GuideTaxIncentives from './pages/GuideTaxIncentives';
+import GuideTitleII from './pages/GuideTitleII';
+import GuideVoting from './pages/GuideVoting';
+import GuideWcagExplained from './pages/GuideWcagExplained';
+import GuideWebFirstSteps from './pages/GuideWebFirstSteps';
+import GuideWebRule from './pages/GuideWebRule';
+import GuideWebTesting from './pages/GuideWebTesting';
 import Home from './pages/Home';
 import Intake from './pages/Intake';
 import LawyerCaseDetail from './pages/LawyerCaseDetail';
@@ -70,33 +95,8 @@ import LawyerProfile from './pages/LawyerProfile';
 import LawyerRegister from './pages/LawyerRegister';
 import Marketplace from './pages/Marketplace';
 import MyCases from './pages/MyCases';
-import StandardsGuide from './pages/StandardsGuide';
-import GuideSmallBusiness from './pages/GuideSmallBusiness';
-import GuideParkingRequirements from './pages/GuideParkingRequirements';
-import GuideBarrierRemoval from './pages/GuideBarrierRemoval';
-import GuideNewConstruction from './pages/GuideNewConstruction';
-import GuideRestrooms from './pages/GuideRestrooms';
-import GuideEntrances from './pages/GuideEntrances';
-import GuideRamps from './pages/GuideRamps';
-import GuideSignage from './pages/GuideSignage';
-import GuideTaxIncentives from './pages/GuideTaxIncentives';
-import GuideHotelsLodging from './pages/GuideHotelsLodging';
-import GuideRestaurantsRetail from './pages/GuideRestaurantsRetail';
-import GuideMedicalFacilities from './pages/GuideMedicalFacilities';
-import GuideWebRule from './pages/GuideWebRule';
-import GuideWcagExplained from './pages/GuideWcagExplained';
-import GuideWebFirstSteps from './pages/GuideWebFirstSteps';
-import GuideWebTesting from './pages/GuideWebTesting';
-import GuideAccessibleDocuments from './pages/GuideAccessibleDocuments';
-import GuideSocialMedia from './pages/GuideSocialMedia';
-import GuideTitleII from './pages/GuideTitleII';
-import GuideVoting from './pages/GuideVoting';
-import GuideProgramAccess from './pages/GuideProgramAccess';
-import GuideEmergencyManagement from './pages/GuideEmergencyManagement';
-import GuideEducation from './pages/GuideEducation';
-import GuideCriminalJustice from './pages/GuideCriminalJustice';
-import GuideAdaCoordinators from './pages/GuideAdaCoordinators';
 import StandardsCh1 from './pages/StandardsCh1';
+import StandardsCh10 from './pages/StandardsCh10';
 import StandardsCh2 from './pages/StandardsCh2';
 import StandardsCh3 from './pages/StandardsCh3';
 import StandardsCh4 from './pages/StandardsCh4';
@@ -105,7 +105,7 @@ import StandardsCh6 from './pages/StandardsCh6';
 import StandardsCh7 from './pages/StandardsCh7';
 import StandardsCh8 from './pages/StandardsCh8';
 import StandardsCh9 from './pages/StandardsCh9';
-import StandardsCh10 from './pages/StandardsCh10';
+import StandardsGuide from './pages/StandardsGuide';
 import __Layout from './Layout.jsx';
 
 
@@ -116,14 +116,39 @@ export const PAGES = {
     "AdminLawyers": AdminLawyers,
     "AdminReview": AdminReview,
     "CaseDetail": CaseDetail,
+    "GuideAccessibleDocuments": GuideAccessibleDocuments,
+    "GuideAdaCoordinators": GuideAdaCoordinators,
     "GuideAdaProtections": GuideAdaProtections,
+    "GuideBarrierRemoval": GuideBarrierRemoval,
+    "GuideCriminalJustice": GuideCriminalJustice,
+    "GuideEducation": GuideEducation,
     "GuideEffectiveCommunication": GuideEffectiveCommunication,
+    "GuideEmergencyManagement": GuideEmergencyManagement,
+    "GuideEntrances": GuideEntrances,
     "GuideFilingComplaint": GuideFilingComplaint,
+    "GuideHotelsLodging": GuideHotelsLodging,
     "GuideIntroToAda": GuideIntroToAda,
+    "GuideMedicalFacilities": GuideMedicalFacilities,
     "GuideMobilityDevices": GuideMobilityDevices,
+    "GuideNewConstruction": GuideNewConstruction,
     "GuideParking": GuideParking,
+    "GuideParkingRequirements": GuideParkingRequirements,
+    "GuideProgramAccess": GuideProgramAccess,
+    "GuideRamps": GuideRamps,
     "GuideReasonableModifications": GuideReasonableModifications,
+    "GuideRestaurantsRetail": GuideRestaurantsRetail,
+    "GuideRestrooms": GuideRestrooms,
     "GuideServiceAnimals": GuideServiceAnimals,
+    "GuideSignage": GuideSignage,
+    "GuideSmallBusiness": GuideSmallBusiness,
+    "GuideSocialMedia": GuideSocialMedia,
+    "GuideTaxIncentives": GuideTaxIncentives,
+    "GuideTitleII": GuideTitleII,
+    "GuideVoting": GuideVoting,
+    "GuideWcagExplained": GuideWcagExplained,
+    "GuideWebFirstSteps": GuideWebFirstSteps,
+    "GuideWebRule": GuideWebRule,
+    "GuideWebTesting": GuideWebTesting,
     "Home": Home,
     "Intake": Intake,
     "LawyerCaseDetail": LawyerCaseDetail,
@@ -133,33 +158,8 @@ export const PAGES = {
     "LawyerRegister": LawyerRegister,
     "Marketplace": Marketplace,
     "MyCases": MyCases,
-    "StandardsGuide": StandardsGuide,
-    "GuideSmallBusiness": GuideSmallBusiness,
-    "GuideParkingRequirements": GuideParkingRequirements,
-    "GuideBarrierRemoval": GuideBarrierRemoval,
-    "GuideNewConstruction": GuideNewConstruction,
-    "GuideRestrooms": GuideRestrooms,
-    "GuideEntrances": GuideEntrances,
-    "GuideRamps": GuideRamps,
-    "GuideSignage": GuideSignage,
-    "GuideTaxIncentives": GuideTaxIncentives,
-    "GuideHotelsLodging": GuideHotelsLodging,
-    "GuideRestaurantsRetail": GuideRestaurantsRetail,
-    "GuideMedicalFacilities": GuideMedicalFacilities,
-    "GuideWebRule": GuideWebRule,
-    "GuideWcagExplained": GuideWcagExplained,
-    "GuideWebFirstSteps": GuideWebFirstSteps,
-    "GuideWebTesting": GuideWebTesting,
-    "GuideAccessibleDocuments": GuideAccessibleDocuments,
-    "GuideSocialMedia": GuideSocialMedia,
-    "GuideTitleII": GuideTitleII,
-    "GuideVoting": GuideVoting,
-    "GuideProgramAccess": GuideProgramAccess,
-    "GuideEmergencyManagement": GuideEmergencyManagement,
-    "GuideEducation": GuideEducation,
-    "GuideCriminalJustice": GuideCriminalJustice,
-    "GuideAdaCoordinators": GuideAdaCoordinators,
     "StandardsCh1": StandardsCh1,
+    "StandardsCh10": StandardsCh10,
     "StandardsCh2": StandardsCh2,
     "StandardsCh3": StandardsCh3,
     "StandardsCh4": StandardsCh4,
@@ -168,7 +168,7 @@ export const PAGES = {
     "StandardsCh7": StandardsCh7,
     "StandardsCh8": StandardsCh8,
     "StandardsCh9": StandardsCh9,
-    "StandardsCh10": StandardsCh10,
+    "StandardsGuide": StandardsGuide,
 }
 
 export const pagesConfig = {
