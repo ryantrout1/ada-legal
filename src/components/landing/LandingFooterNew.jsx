@@ -1,60 +1,121 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
+import { Scale, CheckCircle } from 'lucide-react';
+
+const footerLinkStyle = {
+  fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
+  color: '#CBD5E1', textDecoration: 'none', minHeight: '44px',
+  display: 'inline-flex', alignItems: 'center'
+};
+
+const colHeadingStyle = {
+  fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+  letterSpacing: '0.12em', textTransform: 'uppercase',
+  color: '#64748B', margin: '0 0 12px'
+};
 
 export default function LandingFooterNew() {
   return (
     <footer role="contentinfo" style={{
-      background: '#141820', padding: '40px 1.5rem',
+      background: '#141820', padding: '56px 1.5rem 32px',
       borderTop: '1px solid rgba(255,255,255,0.05)'
     }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
-        <p style={{
-          fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700,
-          color: 'white', margin: '0 0 1.25rem', fontStyle: 'normal'
+      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        {/* Columns */}
+        <div className="landing-footer-columns" style={{
+          display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr',
+          gap: '40px', marginBottom: '40px'
         }}>
-          ADA Legal Link
-        </p>
-        <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-          color: '#94A3B8', maxWidth: '680px', margin: '0 auto 1.5rem',
-          lineHeight: 1.7
-        }}>
-          ADA Legal Link is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship. Attorney listings do not constitute endorsements. Results may vary.
-        </p>
-        <div className="landing-footer-links" style={{
-          display: 'flex', gap: '2rem', justifyContent: 'center',
-          marginBottom: '1.5rem', flexWrap: 'wrap'
-        }}>
-          <Link to={createPageUrl('Intake')} className="landing-footer-link" style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-            color: '#CBD5E1', textDecoration: 'none', minHeight: '44px',
-            display: 'inline-flex', alignItems: 'center'
-          }}>
-            Report a Violation
-          </Link>
-          <Link to={createPageUrl('LawyerLanding')} className="landing-footer-link" style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-            color: '#CBD5E1', textDecoration: 'none', minHeight: '44px',
-            display: 'inline-flex', alignItems: 'center'
-          }}>
-            For Attorneys
-          </Link>
-          <a href="mailto:support@adalegalconnect.com" className="landing-footer-link" style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-            color: '#CBD5E1', textDecoration: 'none', minHeight: '44px',
-            display: 'inline-flex', alignItems: 'center'
-          }}>
-            Contact Us
-          </a>
+          {/* Brand */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+              <Scale size={22} style={{ color: '#EA580C' }} aria-hidden="true" />
+              <span style={{
+                fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 700,
+                color: 'white'
+              }}>
+                ADA Legal Link
+              </span>
+            </div>
+            <p style={{
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+              color: '#94A3B8', lineHeight: 1.7, margin: 0
+            }}>
+              ADA Legal Link is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship. Attorney listings do not constitute endorsements. Results may vary.
+            </p>
+          </div>
+
+          {/* Standards Guide */}
+          <div>
+            <p style={colHeadingStyle}>Standards Guide</p>
+            <nav aria-label="Standards Guide footer links" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <a href="#guide/intro-to-ada" className="landing-footer-link" style={footerLinkStyle}>Know Your Rights</a>
+              <a href="#guide/small-business-primer" className="landing-footer-link" style={footerLinkStyle}>Business Compliance</a>
+              <a href="#standards/ch1" className="landing-footer-link" style={footerLinkStyle}>Design Standards</a>
+              <a href="#guide/title-ii-web-rule" className="landing-footer-link" style={footerLinkStyle}>Web Accessibility</a>
+            </nav>
+          </div>
+
+          {/* Take Action */}
+          <div>
+            <p style={colHeadingStyle}>Take Action</p>
+            <nav aria-label="Take action footer links" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <Link to={createPageUrl('Intake')} className="landing-footer-link" style={footerLinkStyle}>Report a Violation</Link>
+              <Link to={createPageUrl('LawyerLanding')} className="landing-footer-link" style={footerLinkStyle}>For Attorneys</Link>
+              <a href="https://www.ada.gov/file-a-complaint/" target="_blank" rel="noopener noreferrer" className="landing-footer-link" style={footerLinkStyle}>File DOJ Complaint</a>
+            </nav>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <p style={colHeadingStyle}>Legal</p>
+            <nav aria-label="Legal footer links" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <a href="#accessibility" className="landing-footer-link" style={footerLinkStyle}>Accessibility Statement</a>
+              <a href="#privacy" className="landing-footer-link" style={footerLinkStyle}>Privacy</a>
+              <a href="#terms" className="landing-footer-link" style={footerLinkStyle}>Terms</a>
+              <a href="mailto:support@adalegalconnect.com" className="landing-footer-link" style={footerLinkStyle}>Contact Us</a>
+            </nav>
+          </div>
         </div>
-        <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-          color: '#94A3B8', margin: 0
+
+        {/* Bottom row */}
+        <div style={{
+          borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          flexWrap: 'wrap', gap: '12px'
         }}>
-          © 2026 ADA Legal Link. All rights reserved.
-        </p>
+          <p style={{
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+            color: '#94A3B8', margin: 0
+          }}>
+            © 2026 ADA Legal Link. All rights reserved.
+          </p>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: '6px',
+            background: 'rgba(45,106,79,0.2)', border: '1px solid rgba(45,106,79,0.4)',
+            borderRadius: '100px', padding: '4px 12px',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
+            color: '#7DCEA0'
+          }}>
+            <CheckCircle size={14} aria-hidden="true" />
+            WCAG 2.1 AA Conformant
+          </span>
+        </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .landing-footer-columns {
+            grid-template-columns: 1fr 1fr !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .landing-footer-columns {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </footer>
   );
 }

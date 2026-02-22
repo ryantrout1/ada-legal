@@ -1,6 +1,7 @@
 import React from 'react';
-import { Shield, Home, Monitor, Users } from 'lucide-react';
+import { Shield, Home, Monitor, Users, FileText } from 'lucide-react';
 import ResourceSection from './ResourceSection';
+import ChapterNavigator from './ChapterNavigator';
 
 const SECTIONS = [
   {
@@ -64,6 +65,15 @@ const SECTIONS = [
     ]
   },
   {
+    id: 'design-standards',
+    icon: FileText,
+    iconBg: '#2D6A4F',
+    title: 'Design Standards',
+    count: 10,
+    hasChapterNav: true,
+    cards: []
+  },
+  {
     id: 'web-access',
     icon: Monitor,
     iconBg: '#5B2C6F',
@@ -122,15 +132,48 @@ export default function ResourceSections() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
       {SECTIONS.map(section => (
-        <ResourceSection
-          key={section.id}
-          id={section.id}
-          icon={section.icon}
-          iconBg={section.iconBg}
-          title={section.title}
-          count={section.count}
-          cards={section.cards}
-        />
+        <React.Fragment key={section.id}>
+          {section.hasChapterNav ? (
+            <section id={section.id} aria-labelledby={`${section.id}-heading`} style={{ scrollMarginTop: '96px' }}>
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                paddingBottom: '16px', borderBottom: '2px solid var(--slate-200)',
+                marginBottom: '20px', flexWrap: 'wrap', gap: '8px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{
+                    width: '44px', height: '44px', borderRadius: '10px',
+                    background: section.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}>
+                    <section.icon size={22} style={{ color: 'white' }} aria-hidden="true" />
+                  </div>
+                  <h2 id={`${section.id}-heading`} style={{
+                    fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700,
+                    color: 'var(--slate-900)', margin: 0
+                  }}>
+                    {section.title}
+                  </h2>
+                </div>
+                <span style={{
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                  color: 'var(--slate-500)'
+                }}>
+                  {section.count} chapters
+                </span>
+              </div>
+              <ChapterNavigator />
+            </section>
+          ) : (
+            <ResourceSection
+              id={section.id}
+              icon={section.icon}
+              iconBg={section.iconBg}
+              title={section.title}
+              count={section.count}
+              cards={section.cards}
+            />
+          )}
+        </React.Fragment>
       ))}
     </div>
   );

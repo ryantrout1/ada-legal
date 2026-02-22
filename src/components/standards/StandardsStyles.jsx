@@ -142,10 +142,21 @@ export default function StandardsStyles() {
           grid-template-columns: 1fr !important;
         }
       }
+      /* Chapter link hover */
+      .sg-chapter-link {
+        transition: background 0.15s, border-color 0.15s;
+      }
+      .sg-chapter-link:hover,
+      .sg-chapter-link:focus-visible {
+        background: var(--terra-100) !important;
+        border-color: var(--terra-400) !important;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         .sg-search-input,
         .sg-filter-btn,
-        .sg-resource-card {
+        .sg-resource-card,
+        .sg-chapter-link {
           transition: none !important;
         }
         .sg-resource-card:hover {
