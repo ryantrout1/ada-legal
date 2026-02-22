@@ -62,6 +62,7 @@ import LawyerProfile from './pages/LawyerProfile';
 import LawyerRegister from './pages/LawyerRegister';
 import Marketplace from './pages/Marketplace';
 import MyCases from './pages/MyCases';
+import StandardsGuide from './pages/StandardsGuide';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +82,7 @@ export const PAGES = {
     "LawyerRegister": LawyerRegister,
     "Marketplace": Marketplace,
     "MyCases": MyCases,
+    "StandardsGuide": StandardsGuide,
 }
 
 export const pagesConfig = {
