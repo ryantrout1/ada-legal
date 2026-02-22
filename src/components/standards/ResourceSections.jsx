@@ -14,21 +14,21 @@ const SECTIONS = [
       {
         title: 'Introduction to the ADA',
         type: 'Overview', dotColor: '#D4570A',
-        href: '#guide/intro-to-ada',
+        href: '/GuideIntroToAda',
         description: "What the ADA covers, who it protects, and how it's structured across five titles. Start here if you're new to disability rights law.",
         meta: [{ text: '5 min read' }, { text: 'Plain language' }]
       },
       {
         title: 'How to File an ADA Complaint',
         type: 'Guide', dotColor: '#D4570A',
-        href: '#guide/filing-complaint',
+        href: '/GuideFilingComplaint',
         description: 'Step-by-step instructions for reporting disability rights violations to the Department of Justice, including what to expect after filing.',
         meta: [{ text: '8 min read' }, { text: 'Actionable steps' }]
       },
       {
         title: 'Service Animals & the ADA',
         type: 'Reference', dotColor: '#D4570A',
-        href: '#guide/service-animals',
+        href: '/GuideServiceAnimals',
         description: "What qualifies as a service animal, where they're allowed, what businesses can and cannot ask, and your rights if denied access.",
         tags: ['Title II', 'Title III', 'FAQ included']
       }
