@@ -1,6 +1,10 @@
 import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
 import AssemblySeatingDiagram from '../components/guide/diagrams/AssemblySeatingDiagram';
+import GuestRoomDiagram from '../components/guide/diagrams/GuestRoomDiagram';
+import KitchenDiagram from '../components/guide/diagrams/KitchenDiagram';
+import DressingRoomDiagram from '../components/guide/diagrams/DressingRoomDiagram';
+import DetentionCellDiagram from '../components/guide/diagrams/DetentionCellDiagram';
 
 const sections = [
   {
@@ -12,7 +16,8 @@ const sections = [
   {
     number: '§803', title: 'Dressing, Fitting & Locker Rooms',
     plain: <><p>Where dressing rooms or fitting rooms are provided, at least one of each type must be accessible:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Turning space:</strong> 60-inch diameter clear space</li><li style={{marginBottom:'6px'}}><strong>Door:</strong> Cannot swing into the room (or must provide clear space beyond the door swing)</li><li style={{marginBottom:'6px'}}><strong>Bench:</strong> 24 inches wide minimum, 48 inches long minimum, at 17–19 inches height</li><li style={{marginBottom:'6px'}}><strong>Coat hooks and shelves:</strong> Within reach range</li></ul><p><strong>Example:</strong> A retail store with six fitting rooms must make at least one large enough for a wheelchair with an accessible bench.</p></>,
-    legal: <p>§803.1 "Where dressing rooms, fitting rooms, or locker rooms are provided, at least one of each type shall comply." §903.3 Benches: "24 inches wide minimum and 48 inches long minimum. The seat shall be at a height of 17 inches minimum and 19 inches maximum above the finish floor." Per §803.4 coat hooks at 48 inches max.</p>
+    legal: <p>§803.1 "Where dressing rooms, fitting rooms, or locker rooms are provided, at least one of each type shall comply." §903.3 Benches: "24 inches wide minimum and 48 inches long minimum. The seat shall be at a height of 17 inches minimum and 19 inches maximum above the finish floor." Per §803.4 coat hooks at 48 inches max.</p>,
+    diagram: <DressingRoomDiagram />
   },
   {
     number: '§805', title: 'Medical Care & Long-Term Care Patient Rooms',
@@ -22,7 +27,8 @@ const sections = [
   {
     number: '§807', title: 'Holding Cells & Housing Cells',
     plain: <><p>Accessible jail and prison cells must include:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Turning space:</strong> 60-inch diameter</li><li style={{marginBottom:'6px'}}><strong>Clear floor space:</strong> At beds, desks, and fixtures</li><li style={{marginBottom:'6px'}}><strong>Beds:</strong> Clear space on at least one side</li><li style={{marginBottom:'6px'}}><strong>Toilet:</strong> Accessible water closet with grab bars</li><li style={{marginBottom:'6px'}}><strong>Benches:</strong> In holding cells, accessible benches must be provided</li></ul><p>At least <strong>3% of cells</strong> must be accessible (per §232 scoping).</p></>,
-    legal: <p>§807.2 Housing cells: "shall provide mobility features complying with §805." §807.2.2 "Turning space complying with §304 shall be provided within cells." Holding cells: §807.1 "where benches are provided, at least one shall comply with §903."</p>
+    legal: <p>§807.2 Housing cells: "shall provide mobility features complying with §805." §807.2.2 "Turning space complying with §304 shall be provided within cells." Holding cells: §807.1 "where benches are provided, at least one shall comply with §903."</p>,
+    diagram: <DetentionCellDiagram />
   },
   {
     number: '§808', title: 'Courtrooms',
@@ -38,6 +44,18 @@ const sections = [
     number: '§811', title: 'Swimming Pools, Wading Pools & Spas',
     plain: <><p>Pools require specific means of accessible entry:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Large pools (300+ linear feet of wall):</strong> Two accessible means of entry required — at least one must be a pool lift or sloped entry</li><li style={{marginBottom:'6px'}}><strong>Smaller pools:</strong> One accessible means of entry</li><li style={{marginBottom:'6px'}}><strong>Pool lifts:</strong> Must be capable of unassisted operation, support 300 lbs, lower to 18 inches below water surface</li><li style={{marginBottom:'6px'}}><strong>Sloped entries:</strong> Must extend to 24–30 inches below water surface with handrails on both sides</li><li style={{marginBottom:'6px'}}><strong>Spas:</strong> At least one accessible means of entry — a pool lift, transfer wall, or accessible steps</li></ul></>,
     legal: <p>§811.1 "Where a pool has over 300 linear feet of pool wall, at least two accessible means of entry shall be provided. Where a pool has 300 or fewer linear feet, at least one shall be provided." §811.2 Pool lifts: "shall be located where the water level does not exceed 48 inches." Seat: "16 inches wide minimum, lower to 18 inches below the stationary water level."</p>
+  },
+  {
+    number: '§806', title: 'Transient Lodging Guest Rooms',
+    plain: <><p>Accessible hotel and motel guest rooms must include:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Accessible route:</strong> 36 inches clear from entry to all elements (bed, bathroom, desk, closet)</li><li style={{marginBottom:'6px'}}><strong>Bed clearance:</strong> 36 inches on both sides of beds in double-bed rooms</li><li style={{marginBottom:'6px'}}><strong>Bathroom:</strong> Accessible toilet, tub or roll-in shower, lavatory</li><li style={{marginBottom:'6px'}}><strong>Controls:</strong> All switches, thermostats, outlets within reach range</li></ul></>,
+    legal: <p>§806.2.2 "An accessible route complying with §402 shall connect all accessible spaces." §806.2.3 "Clear floor space 36 inches wide minimum shall be provided along both sides of a bed." §806.3 Communication features: visible notification for door, phone, alarm.</p>,
+    diagram: <GuestRoomDiagram />
+  },
+  {
+    number: '§804', title: 'Kitchens & Kitchenettes',
+    plain: <><p>Accessible kitchens require:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Work surface:</strong> 34 inches max with knee clearance underneath</li><li style={{marginBottom:'6px'}}><strong>Clearance:</strong> 40 inches between opposing counters (60 inches for U-shaped)</li><li style={{marginBottom:'6px'}}><strong>Sink:</strong> 34 inches max with knee clearance</li><li style={{marginBottom:'6px'}}><strong>Appliances:</strong> Clear floor space at each, front-mounted controls</li></ul></>,
+    legal: <p>§804.3 "At least one work surface 34 inches maximum." §804.2.1 "Clearance between opposing base cabinets: 40 inches minimum." U-shaped: 60 inches for turning. §804.4 Sinks per §606.</p>,
+    diagram: <KitchenDiagram />
   }
 ];
 

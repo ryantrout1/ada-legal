@@ -1,5 +1,7 @@
 import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
+import PoolDiagram from '../components/guide/diagrams/PoolDiagram';
+import PlayAreaDiagram from '../components/guide/diagrams/PlayAreaDiagram';
 
 const sections = [
   {
@@ -35,12 +37,14 @@ const sections = [
   {
     number: '§1008', title: 'Play Areas',
     plain: <><p>Playgrounds and play areas must provide accessible ground-level and elevated play components:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Ground-level:</strong> At least one of each type of ground-level play component must be on an accessible route</li><li style={{marginBottom:'6px'}}><strong>Elevated:</strong> At least 50% of elevated play components must be connected by an accessible route (ramp system)</li><li style={{marginBottom:'6px'}}><strong>Transfer platforms:</strong> Allowed as an alternative to ramps for elevated components — 14 inches high, 24 × 24 inches minimum</li><li style={{marginBottom:'6px'}}><strong>Ground surfaces:</strong> Must comply with ASTM F1951 (accessibility) and F1292 (impact attenuation)</li></ul></>,
-    legal: <p>§1008.2 "At least one of each type of ground level play component that is present shall be on an accessible route." §1008.3 "Where elevated play components are provided, at least 50 percent shall be on an accessible route." §1008.2.6 Ground surfaces: "shall comply with ASTM F1951."</p>
+    legal: <p>§1008.2 "At least one of each type of ground level play component that is present shall be on an accessible route." §1008.3 "Where elevated play components are provided, at least 50 percent shall be on an accessible route." §1008.2.6 Ground surfaces: "shall comply with ASTM F1951."</p>,
+    diagram: <PlayAreaDiagram />
   },
   {
     number: '§1009', title: 'Swimming Pools, Wading Pools & Spas',
     plain: <><p>Pools and spas require accessible means of entry (also covered in §811):</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Pool lifts:</strong> Must support 300 lbs, seat at 16 inches wide minimum, lower to 18 inches below water level, operable without assistance</li><li style={{marginBottom:'6px'}}><strong>Sloped entries:</strong> Extend to 24–30 inches below water with handrails on both sides</li><li style={{marginBottom:'6px'}}><strong>Transfer walls:</strong> 12 to 16 inches wide, 16 to 19 inches above the deck</li><li style={{marginBottom:'6px'}}><strong>Wading pools:</strong> Must have a sloped entry into the water</li><li style={{marginBottom:'6px'}}><strong>Spas:</strong> At least one accessible means of entry — lift, transfer wall, or accessible steps</li></ul></>,
-    legal: <p>§1009.2 Pool lifts: "seat shall be 16 inches wide minimum, immerse to 18 inches below the stationary water level." §1009.3 Sloped entries: "extend to 24 inches minimum and 30 inches maximum below the stationary water level." §1009.4 Transfer walls: "12 inches wide minimum and 16 inches wide maximum, 16 inches high minimum and 19 inches high maximum."</p>
+    legal: <p>§1009.2 Pool lifts: "seat shall be 16 inches wide minimum, immerse to 18 inches below the stationary water level." §1009.3 Sloped entries: "extend to 24 inches minimum and 30 inches maximum below the stationary water level." §1009.4 Transfer walls: "12 inches wide minimum and 16 inches wide maximum, 16 inches high minimum and 19 inches high maximum."</p>,
+    diagram: <PoolDiagram />
   },
   {
     number: '§1010', title: 'Shooting Facilities with Firing Positions',
