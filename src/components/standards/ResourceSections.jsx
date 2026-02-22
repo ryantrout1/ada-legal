@@ -133,6 +133,13 @@ const SECTIONS = [
         tags: ['§308', '§309', '§305']
       },
       {
+        title: 'Turning Spaces & Handrail Profiles',
+        type: 'Technical', dotColor: '#9A3412',
+        href: '/GuideTurningHandrails',
+        description: 'Circular and T-shaped turning space options, plus handrail cross-section profiles — circular and non-circular — with wall clearance requirements.',
+        tags: ['§304', '§505', 'Cross-section']
+      },
+      {
         title: 'ADA Tax Incentives for Businesses',
         type: 'Guide', dotColor: '#9A3412',
         href: '/GuideTaxIncentives',
