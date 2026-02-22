@@ -96,6 +96,34 @@ const SECTIONS = [
         href: '/GuideNewConstruction',
         description: 'What the ADA requires when building new facilities or making alterations to existing ones, including the path of travel rule.',
         tags: ['§36.401', '§202', 'Path of travel']
+      },
+      {
+        title: 'Accessible Restroom Requirements',
+        type: 'Checklist', dotColor: '#9A3412',
+        href: '/GuideRestrooms',
+        description: 'Detailed requirements for accessible toilet rooms — clearances, grab bars, fixtures, and signage from the 2010 Standards.',
+        tags: ['§213', '§603–604', 'Grab bars']
+      },
+      {
+        title: 'Accessible Entrances & Doors',
+        type: 'Checklist', dotColor: '#9A3412',
+        href: '/GuideEntrances',
+        description: 'Requirements for accessible entrances including door width, hardware, thresholds, automatic doors, and signage.',
+        tags: ['§206.4', '§404', 'Maneuvering']
+      },
+      {
+        title: 'Ramps & Slope Requirements',
+        type: 'Technical', dotColor: '#9A3412',
+        href: '/GuideRamps',
+        description: 'Maximum slopes, landing sizes, handrail specs, and edge protection requirements for ramps under the 2010 Standards.',
+        tags: ['§405', '1:12 slope', 'Handrails']
+      },
+      {
+        title: 'ADA Signage Requirements',
+        type: 'Checklist', dotColor: '#9A3412',
+        href: '/GuideSignage',
+        description: 'Which signs need Braille, raised characters, and high contrast — and the specific mounting heights and placement rules.',
+        tags: ['§216', '§703', 'Braille']
       }
     ]
   },
