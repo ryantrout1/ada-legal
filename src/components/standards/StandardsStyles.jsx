@@ -75,10 +75,81 @@ export default function StandardsStyles() {
           font-size: 2rem !important;
         }
       }
+      /* Sidebar + content layout */
+      .sg-body-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 48px 40px 80px;
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 48px;
+        align-items: start;
+      }
+      .sg-sidebar {
+        position: sticky;
+        top: 96px;
+      }
+      .sg-sidebar-link:hover {
+        background: var(--slate-100) !important;
+        color: var(--slate-900) !important;
+        border-left-color: var(--slate-300) !important;
+      }
+      .sg-sidebar-active:hover {
+        background: #FEF1EC !important;
+        color: #C2410C !important;
+        border-left-color: #C2410C !important;
+      }
+
+      /* Card grid */
+      .sg-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      /* Resource card hover */
+      .sg-resource-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .sg-resource-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      }
+
+      /* Stretched link pattern */
+      .sg-card-link::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+      }
+
+      @media (max-width: 960px) {
+        .sg-body-grid {
+          grid-template-columns: 1fr !important;
+          padding: 32px 24px 60px !important;
+          gap: 32px !important;
+        }
+        .sg-sidebar {
+          position: static !important;
+        }
+      }
+      @media (max-width: 600px) {
+        .sg-body-grid {
+          padding: 24px 16px 48px !important;
+        }
+        .sg-card-grid {
+          grid-template-columns: 1fr !important;
+        }
+      }
       @media (prefers-reduced-motion: reduce) {
         .sg-search-input,
-        .sg-filter-btn {
+        .sg-filter-btn,
+        .sg-resource-card {
           transition: none !important;
+        }
+        .sg-resource-card:hover {
+          transform: none !important;
         }
       }
     `}</style>

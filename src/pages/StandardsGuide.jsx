@@ -3,6 +3,8 @@ import StandardsStyles from '../components/standards/StandardsStyles';
 import StandardsHero from '../components/standards/StandardsHero';
 import QuickFilters from '../components/standards/QuickFilters';
 import BreadcrumbAndInfo from '../components/standards/BreadcrumbAndInfo';
+import StandardsSidebar from '../components/standards/StandardsSidebar';
+import ResourceSections from '../components/standards/ResourceSections';
 
 export default function StandardsGuide() {
   const [searchValue, setSearchValue] = useState('');
@@ -20,6 +22,12 @@ export default function StandardsGuide() {
       <StandardsHero searchValue={searchValue} onSearchChange={setSearchValue} />
       <QuickFilters activeFilters={activeFilters} onToggle={handleToggleFilter} />
       <BreadcrumbAndInfo />
+      <div style={{ background: 'var(--slate-50)' }}>
+        <div className="sg-body-grid">
+          <StandardsSidebar />
+          <ResourceSections />
+        </div>
+      </div>
     </>
   );
 }
