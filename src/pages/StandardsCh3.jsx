@@ -5,6 +5,7 @@ import ReachRangeDiagram from '../components/guide/diagrams/ReachRangeDiagram';
 import ClearFloorDiagram from '../components/guide/diagrams/ClearFloorDiagram';
 import KneeToeDiagram from '../components/guide/diagrams/KneeToeDiagram';
 import ProtrudingObjectsDiagram from '../components/guide/diagrams/ProtrudingObjectsDiagram';
+import OperablePartsDiagram from '../components/guide/diagrams/OperablePartsDiagram';
 
 const sections = [
   {
@@ -50,7 +51,8 @@ const sections = [
   {
     number: '§309', title: 'Operable Parts',
     plain: <><p>Every control, handle, switch, or mechanism that people use must be <strong>operable with one hand</strong> and without tight grasping, pinching, or twisting of the wrist:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}>No more than <strong>5 pounds of force</strong> to operate</li><li style={{marginBottom:'6px'}}>Round doorknobs fail this test — <strong>lever handles</strong> are required</li><li style={{marginBottom:'6px'}}>Light switches, faucet handles, thermostats, elevator buttons — all must comply</li></ul></>,
-    legal: <p>§309.4 "Operable parts shall be operable with one hand and shall not require tight grasping, pinching, or twisting of the wrist. The force required to activate operable parts shall be 5 pounds maximum."</p>
+    legal: <p>§309.4 "Operable parts shall be operable with one hand and shall not require tight grasping, pinching, or twisting of the wrist. The force required to activate operable parts shall be 5 pounds maximum."</p>,
+    diagram: <OperablePartsDiagram />
   }
 ];
 

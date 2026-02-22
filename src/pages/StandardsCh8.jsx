@@ -1,11 +1,13 @@
 import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
+import AssemblySeatingDiagram from '../components/guide/diagrams/AssemblySeatingDiagram';
 
 const sections = [
   {
     number: '§802', title: 'Wheelchair Spaces, Companion Seats & Lines of Sight',
     plain: <><p>In assembly areas (theaters, stadiums, auditoriums):</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Wheelchair space size:</strong> 36 inches wide × 48 inches deep (forward/rear entry) or 60 inches deep (side entry)</li><li style={{marginBottom:'6px'}}><strong>Companion seat:</strong> Must be directly adjacent — shoulder-to-shoulder with the wheelchair user</li><li style={{marginBottom:'6px'}}><strong>Lines of sight:</strong> Wheelchair users must be able to see over standing spectators when others in front stand up. Wheelchair locations must be <strong>dispersed</strong> — not all clustered in one spot.</li></ul><p><strong>Example:</strong> In a stadium where fans regularly stand, wheelchair seating in the front row isn't sufficient — the view is blocked. Seats must be elevated or positioned to maintain sightlines.</p></>,
-    legal: <p>§802.1.2 "Wheelchair spaces shall be 36 inches wide minimum." §802.1.3 "Where a wheelchair space can be entered from the front or rear, the wheelchair space shall be 48 inches deep minimum. Where entered from the side, 60 inches deep minimum." §802.2 Lines of sight: "Where spectators are expected to stand, wheelchair spaces shall provide a line of sight over standing spectators."</p>
+    legal: <p>§802.1.2 "Wheelchair spaces shall be 36 inches wide minimum." §802.1.3 "Where a wheelchair space can be entered from the front or rear, the wheelchair space shall be 48 inches deep minimum. Where entered from the side, 60 inches deep minimum." §802.2 Lines of sight: "Where spectators are expected to stand, wheelchair spaces shall provide a line of sight over standing spectators."</p>,
+    diagram: <AssemblySeatingDiagram />
   },
   {
     number: '§803', title: 'Dressing, Fitting & Locker Rooms',

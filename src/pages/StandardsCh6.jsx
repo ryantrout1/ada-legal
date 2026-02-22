@@ -5,12 +5,14 @@ import BathtubDiagram from '../components/guide/diagrams/BathtubDiagram';
 import ShowerDiagram from '../components/guide/diagrams/ShowerDiagram';
 import LavatoryDiagram from '../components/guide/diagrams/LavatoryDiagram';
 import GrabBarDetailDiagram from '../components/guide/diagrams/GrabBarDetailDiagram';
+import DrinkingFountainDiagram from '../components/guide/diagrams/DrinkingFountainDiagram';
 
 const sections = [
   {
     number: '§602', title: 'Drinking Fountains',
     plain: <><p>Where drinking fountains are provided, there must be <strong>two types</strong>:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Wheelchair accessible:</strong> Spout no higher than 36 inches, with knee and toe clearance underneath for a forward approach</li><li style={{marginBottom:'6px'}}><strong>Standing height:</strong> Spout 38 to 43 inches high for people who have difficulty bending</li></ul><p>Many buildings use a "hi-lo" combination unit that satisfies both requirements. The operable parts (button or lever) must be at the front and operable with one hand.</p></>,
-    legal: <p>§602.4 "Spout outlets of drinking fountains for wheelchair users shall be 36 inches maximum above the finish floor." §602.5 "Spout outlets of drinking fountains for standing persons shall be 38 inches minimum and 43 inches maximum above the finish floor." §602.6 "Unit water flow shall be 4 inches high minimum."</p>
+    legal: <p>§602.4 "Spout outlets of drinking fountains for wheelchair users shall be 36 inches maximum above the finish floor." §602.5 "Spout outlets of drinking fountains for standing persons shall be 38 inches minimum and 43 inches maximum above the finish floor." §602.6 "Unit water flow shall be 4 inches high minimum."</p>,
+    diagram: <DrinkingFountainDiagram />
   },
   {
     number: '§603', title: 'Toilet & Bathing Rooms',

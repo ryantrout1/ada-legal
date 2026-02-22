@@ -1,11 +1,13 @@
 import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
+import SignageDiagram from '../components/guide/diagrams/SignageDiagram';
 
 const sections = [
   {
     number: '§703', title: 'Signs',
     plain: <><p>Signage requirements are divided into two categories:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'8px'}}><strong>Tactile signs</strong> (room ID signs): Raised characters ≥ 1/32 inch high, Grade 2 Braille below the text, mounted on the latch side of the door at 48–60 inches above the floor. Characters must be sans serif, uppercase, and have high contrast.</li><li style={{marginBottom:'8px'}}><strong>Visual signs</strong> (directional, informational): Characters sized based on viewing distance — minimum ⅝ inch high for distances under 6 feet, scaling up. Must have a non-glare finish and high contrast with background.</li></ul><p><strong>Example:</strong> Room number signs at restrooms need Braille and raised letters. A "Restrooms →" directional sign does not need Braille but must have large, high-contrast text.</p></>,
-    legal: <p>§703.2 Raised characters: "shall be 1/32 inch minimum above their background." §703.3 Braille: "shall be Grade 2." §703.4.1 "Characters on signs shall be based on the uppercase letter 'I.'" §703.4.2 Mounting: "48 inches minimum above the finish floor to the baseline of the lowest tactile character and 60 inches maximum above the finish floor to the baseline of the highest tactile character."</p>
+    legal: <p>§703.2 Raised characters: "shall be 1/32 inch minimum above their background." §703.3 Braille: "shall be Grade 2." §703.4.1 "Characters on signs shall be based on the uppercase letter 'I.'" §703.4.2 Mounting: "48 inches minimum above the finish floor to the baseline of the lowest tactile character and 60 inches maximum above the finish floor to the baseline of the highest tactile character."</p>,
+    diagram: <SignageDiagram />
   },
   {
     number: '§702', title: 'Fire Alarm Systems',

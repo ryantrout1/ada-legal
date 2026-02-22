@@ -1,5 +1,6 @@
 import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
+import CounterDiagram from '../components/guide/diagrams/CounterDiagram';
 
 const sections = [
   {
@@ -15,7 +16,8 @@ const sections = [
   {
     number: '§904.3', title: 'Sales & Service Counters',
     plain: <><p>Counters where business is transacted must have an accessible portion:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Height:</strong> 36 inches maximum above the floor</li><li style={{marginBottom:'6px'}}><strong>Length:</strong> 36 inches minimum, extending the same depth as the sales/service counter top</li><li style={{marginBottom:'6px'}}><strong>Clear floor space:</strong> 30 × 48 inches for either forward or parallel approach</li></ul><p><strong>Example:</strong> A hotel check-in desk at 42 inches is too high. A lowered section of at least 36 inches must be provided so a wheelchair user can interact face-to-face, sign papers, and exchange cards or keys.</p></>,
-    legal: <p>§904.3.1 "A portion of the counter surface that is 36 inches long minimum and 36 inches high maximum above the finish floor shall be provided." §904.3 "Where a counter or window serves a function that requires the customer to exchange objects with the service provider, the accessible portion of the counter shall be positioned to accommodate both forward and parallel approaches."</p>
+    legal: <p>§904.3.1 "A portion of the counter surface that is 36 inches long minimum and 36 inches high maximum above the finish floor shall be provided." §904.3 "Where a counter or window serves a function that requires the customer to exchange objects with the service provider, the accessible portion of the counter shall be positioned to accommodate both forward and parallel approaches."</p>,
+    diagram: <CounterDiagram />
   },
   {
     number: '§904.4', title: 'Checkout Aisles',
