@@ -50,10 +50,10 @@ export default function LandingFooterNew() {
           <div>
             <p style={colHeadingStyle}>Standards Guide</p>
             <nav aria-label="Standards Guide footer links" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <a href="#guide/intro-to-ada" className="landing-footer-link" style={footerLinkStyle}>Know Your Rights</a>
-              <a href="#guide/small-business-primer" className="landing-footer-link" style={footerLinkStyle}>Business Compliance</a>
-              <a href="#standards/ch1" className="landing-footer-link" style={footerLinkStyle}>Design Standards</a>
-              <a href="#guide/title-ii-web-rule" className="landing-footer-link" style={footerLinkStyle}>Web Accessibility</a>
+              <Link to={createPageUrl('GuideIntroToAda')} className="landing-footer-link" style={footerLinkStyle}>Know Your Rights</Link>
+              <Link to={createPageUrl('StandardsGuide')} className="landing-footer-link" style={footerLinkStyle}>Business Compliance</Link>
+              <Link to={createPageUrl('StandardsGuide')} className="landing-footer-link" style={footerLinkStyle}>Design Standards</Link>
+              <Link to={createPageUrl('GuideEffectiveCommunication')} className="landing-footer-link" style={footerLinkStyle}>Web Accessibility</Link>
             </nav>
           </div>
 

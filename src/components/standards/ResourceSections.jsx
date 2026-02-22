@@ -31,6 +31,13 @@ const SECTIONS = [
         href: '/GuideServiceAnimals',
         description: "What qualifies as a service animal, where they're allowed, what businesses can and cannot ask, and your rights if denied access.",
         tags: ['Title II', 'Title III', 'FAQ included']
+      },
+      {
+        title: 'Effective Communication',
+        type: 'Guide', dotColor: '#D4570A',
+        href: '/GuideEffectiveCommunication',
+        description: 'How the ADA requires businesses and governments to communicate effectively with people who have vision, hearing, or speech disabilities.',
+        tags: ['Title II', 'Title III', 'Auxiliary Aids']
       }
     ]
   },
