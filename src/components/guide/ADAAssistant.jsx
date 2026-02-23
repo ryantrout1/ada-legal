@@ -215,9 +215,40 @@ export default function ADAAssistant() {
         }
       });
 
-      const parsed = typeof response === 'string' ? JSON.parse(response) : response;
-      const answerText = parsed?.answer || '';
-      const resultIds = parsed?.results || [];
+      let answerText = '';
+      let resultIds = [];
+
+      try {
+        let parsed;
+        if (typeof response === 'string') {
+          const cleaned = response.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+          parsed = JSON.parse(cleaned);
+        } else {
+          parsed = response;
+        }
+        answerText = parsed?.answer || '';
+        resultIds = Array.isArray(parsed?.results) ? parsed.results : [];
+      } catch (jsonErr) {
+        answerText = typeof response === 'string' ? response : (response?.result || response?.answer || response?.text || String(response));
+        resultIds = [];
+      }
+
+      if (resultIds.length === 0) {
+        const qLower = q.toLowerCase();
+        const scored = CONTENT_MAP.map(item => {
+          const keywords = (item.keywords + ' ' + item.title + ' ' + item.desc).toLowerCase();
+          let score = 0;
+          const qWords = qLower.split(/\s+/).filter(w => w.length > 2);
+          for (const word of qWords) {
+            if (keywords.includes(word)) score += 1;
+          }
+          if (item.diagram && score > 0) score += 0.5;
+          return { ...item, score };
+        }).filter(item => item.score > 0)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 4);
+        resultIds = scored.map(s => s.id);
+      }
 
       const matched = resultIds
         .map(id => CONTENT_INDEX[id])
