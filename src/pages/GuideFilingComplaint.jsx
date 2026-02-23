@@ -12,7 +12,7 @@ export default function GuideFilingComplaint() {
       <GuideHeroBanner
         title="How to File an ADA Complaint"
         typeBadge="Guide"
-        badgeColor="#D4570A"
+        badgeColor="#C2410C"
       />
 
       <div className="guide-content-wrap">
