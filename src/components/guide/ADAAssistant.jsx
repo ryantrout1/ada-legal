@@ -1,469 +1,372 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { base44 } from '@/api/base44Client';
-import { Send, ArrowRight, RotateCcw, AlertCircle } from 'lucide-react';
-import LogoBrand from '../LogoBrand';
-import AutoCiteLinks from './AutoCiteLinks';
+import { Search, ArrowRight, X, Ruler } from 'lucide-react';
 
-const CONTENT_MAP = [
-  { id: "ch3-turning", title: "Turning Space (§304)", page: "StandardsCh3", section: "304", desc: "60-inch diameter or T-shaped turning space", keywords: "turning space wheelchair circle t-shape maneuver", diagram: true },
-  { id: "ch3-clearfloor", title: "Clear Floor Space (§305)", page: "StandardsCh3", section: "305", desc: "30×48 inch minimum clear floor space", keywords: "clear floor space ground approach forward parallel", diagram: true },
-  { id: "ch3-kneetoe", title: "Knee & Toe Clearance (§306)", page: "StandardsCh3", section: "306", desc: "Clearance under counters, desks, lavatories", keywords: "knee toe clearance under counter desk lavatory", diagram: true },
-  { id: "ch3-protruding", title: "Protruding Objects (§307)", page: "StandardsCh3", section: "307", desc: "Wall-mounted objects, cane detection limits", keywords: "protruding objects wall mounted cane detection fire extinguisher", diagram: true },
-  { id: "ch3-reach", title: "Reach Ranges (§308)", page: "StandardsCh3", section: "308", desc: "Forward and side reach: 15-48 inches", keywords: "reach range forward side height controls switches", diagram: true },
-  { id: "ch3-operable", title: "Operable Parts (§309)", page: "StandardsCh3", section: "309", desc: "One-hand operation, 5 lbs max force", keywords: "operable parts controls switches knobs lever force", diagram: true },
-  { id: "ch4-doors", title: "Doors & Gates (§404)", page: "StandardsCh4", section: "404", desc: "32-inch clear width, 5 lbs force, lever hardware", keywords: "door doorway gate width opening force hardware maneuvering clearance", diagram: true },
-  { id: "ch4-ramps", title: "Ramps (§405)", page: "StandardsCh4", section: "405", desc: "1:12 max slope, 36 inches wide, landings", keywords: "ramp slope rise run landing handrail grade", diagram: true },
-  { id: "ch4-curbramps", title: "Curb Ramps (§406)", page: "StandardsCh4", section: "406", desc: "Detectable warnings, flared sides, transitions", keywords: "curb ramp sidewalk street crossing detectable warning truncated dome", diagram: true },
-  { id: "ch4-elevators", title: "Elevators (§407)", page: "StandardsCh4", section: "407", desc: "Cab dimensions, controls, signals, door timing", keywords: "elevator lift cab controls signals braille door timing", diagram: true },
-  { id: "ch5-parking", title: "Parking Spaces (§502)", page: "StandardsCh5", section: "502", desc: "Van 132in wide, car 96in, scoping table", keywords: "parking space accessible van car access aisle how many scoping", diagram: true },
-  { id: "ch5-loading", title: "Loading Zones (§503)", page: "StandardsCh5", section: "503", desc: "96 inches wide, 20 feet long, vertical clearance", keywords: "loading zone passenger drop-off pick-up vehicle", diagram: true },
-  { id: "ch5-stairs", title: "Stairways (§504)", page: "StandardsCh5", section: "504", desc: "Uniform risers, nosings, handrails both sides", keywords: "stairs stairway steps riser tread nosing", diagram: true },
-  { id: "ch5-handrails", title: "Handrails (§505)", page: "StandardsCh5", section: "505", desc: "34-38 inches high, extensions, graspable", keywords: "handrail railing grip height extension diameter", diagram: true },
-  { id: "ch6-toilets", title: "Toilet Compartments (§604)", page: "StandardsCh6", section: "604", desc: "Centerline, grab bars, seat height", keywords: "toilet water closet bathroom restroom stall compartment grab bar", diagram: true },
-  { id: "ch6-lavatories", title: "Lavatories & Sinks (§606)", page: "StandardsCh6", section: "606", desc: "34-inch max height, knee clearance, pipe protection", keywords: "lavatory sink bathroom faucet pipe protection knee clearance", diagram: true },
-  { id: "ch6-bathtubs", title: "Bathtubs (§607)", page: "StandardsCh6", section: "607", desc: "Clearance, grab bars, seat, shower spray", keywords: "bathtub tub grab bar seat shower spray clearance", diagram: true },
-  { id: "ch6-showers", title: "Shower Compartments (§608)", page: "StandardsCh6", section: "608", desc: "Transfer 36x36, roll-in 60x30, grab bars", keywords: "shower transfer roll-in grab bar seat compartment", diagram: true },
-  { id: "ch6-grabbars", title: "Grab Bar Details (§609)", page: "StandardsCh6", section: "609", desc: "Diameter, wall clearance, 250 lbs strength", keywords: "grab bar diameter clearance mounting strength installation", diagram: true },
-  { id: "ch6-fountains", title: "Drinking Fountains (§611)", page: "StandardsCh6", section: "611", desc: "Wheelchair and standing height units", keywords: "drinking fountain water cooler bottle filler", diagram: true },
-  { id: "ch7-signs", title: "Signs (§703)", page: "StandardsCh7", section: "703", desc: "Raised characters, Braille, mounting height", keywords: "sign signage braille raised characters mounting height room", diagram: true },
-  { id: "ch8-assembly", title: "Assembly Seating (§802)", page: "StandardsCh8", section: "802", desc: "Wheelchair spaces, sightlines, companion seats", keywords: "assembly seating wheelchair space companion sightline theater stadium", diagram: true },
-  { id: "ch8-dressing", title: "Dressing Rooms (§803)", page: "StandardsCh8", section: "803", desc: "Turning space, bench, mirror, door swing", keywords: "dressing fitting locker room changing room bench mirror", diagram: true },
-  { id: "ch8-kitchen", title: "Kitchens (§804)", page: "StandardsCh8", section: "804", desc: "Work surface height, clearance, appliances", keywords: "kitchen kitchenette counter sink appliance clearance", diagram: true },
-  { id: "ch8-guestroom", title: "Guest Rooms (§806)", page: "StandardsCh8", section: "806", desc: "Accessible route, bed clearance, bathroom", keywords: "hotel guest room lodging transient bed clearance bathroom", diagram: true },
-  { id: "ch8-detention", title: "Detention Cells (§807)", page: "StandardsCh8", section: "807", desc: "3% mobility, 2% communication, dispersed", keywords: "detention cell jail prison correctional holding", diagram: true },
-  { id: "ch9-dining", title: "Dining Surfaces (§902)", page: "StandardsCh9", section: "902", desc: "28-34 inches high, knee clearance, 5% accessible", keywords: "dining table work surface desk counter height knee clearance", diagram: true },
-  { id: "ch9-benches", title: "Benches (§903)", page: "StandardsCh9", section: "903", desc: "17-19 inches high, back support, 250 lbs", keywords: "bench seat locker room shower pool", diagram: true },
-  { id: "ch9-counters", title: "Sales Counters (§904)", page: "StandardsCh9", section: "904", desc: "36 inches max height, checkout aisle width", keywords: "counter sales service checkout register cash", diagram: true },
-  { id: "ch10-play", title: "Play Areas (§1008)", page: "StandardsCh10", section: "1008", desc: "Transfer platform, ground-level, elevated", keywords: "playground play area equipment transfer platform ground elevated", diagram: true },
-  { id: "ch10-pool", title: "Swimming Pools (§1009)", page: "StandardsCh10", section: "1009", desc: "Pool lift, sloped entry, transfer wall", keywords: "pool swimming wading spa hot tub lift sloped entry", diagram: true },
-  { id: "guide-intro", title: "Introduction to the ADA", page: "GuideIntroToAda", desc: "What the ADA covers, who it protects, five titles", keywords: "what is ada introduction overview basics titles" },
-  { id: "guide-complaint", title: "How to File an ADA Complaint", page: "GuideFilingComplaint", desc: "Step-by-step instructions for filing with DOJ", keywords: "file complaint report violation doj department justice" },
-  { id: "guide-protections", title: "ADA Protections", page: "GuideAdaProtections", desc: "Who is protected, what counts as a disability", keywords: "who protected disability rights qualified individual" },
-  { id: "guide-service", title: "Service Animals", page: "GuideServiceAnimals", desc: "Rules for service dogs, emotional support animals", keywords: "service animal dog emotional support animal pet" },
-  { id: "guide-mobility", title: "Mobility Devices", page: "GuideMobilityDevices", desc: "Wheelchairs, scooters, other power-driven devices", keywords: "wheelchair scooter mobility device power segway" },
-  { id: "guide-modifications", title: "Reasonable Modifications", page: "GuideReasonableModifications", desc: "When businesses must modify policies", keywords: "reasonable modification accommodation policy change" },
-  { id: "guide-communication", title: "Effective Communication", page: "GuideEffectiveCommunication", desc: "Sign language, Braille, auxiliary aids", keywords: "communication interpreter sign language braille auxiliary aids deaf blind" },
-  { id: "guide-parking-req", title: "Parking Requirements Guide", page: "GuideParkingRequirements", desc: "Complete guide to accessible parking rules", keywords: "parking accessible van space how many required lot" },
-  { id: "guide-parking", title: "Parking Design", page: "GuideParking", desc: "Design details for accessible parking spaces", keywords: "parking design layout stripe marking sign" },
-  { id: "guide-restrooms", title: "Restroom Requirements", page: "GuideRestrooms", desc: "Complete guide to accessible restrooms", keywords: "restroom bathroom toilet accessible stall grab bar" },
-  { id: "guide-ramps", title: "Ramp Requirements", page: "GuideRamps", desc: "Slope, width, landings, handrails", keywords: "ramp slope width landing handrail rise" },
-  { id: "guide-entrances", title: "Entrances", page: "GuideEntrances", desc: "Accessible entrances, doors, vestibules", keywords: "entrance door vestibule entry accessible front" },
-  { id: "guide-signage", title: "Signage Guide", page: "GuideSignage", desc: "Braille signs, room signs, directional signs", keywords: "sign signage braille room directory wayfinding" },
-  { id: "guide-smallbiz", title: "Small Business Guide", page: "GuideSmallBusiness", desc: "ADA essentials for small business owners", keywords: "small business owner store shop compliance" },
-  { id: "guide-restaurant", title: "Restaurants & Retail", page: "GuideRestaurantsRetail", desc: "ADA rules for restaurants, stores, retail", keywords: "restaurant retail store bar cafe dining accessible" },
-  { id: "guide-hotel", title: "Hotels & Lodging", page: "GuideHotelsLodging", desc: "Accessible guest room requirements", keywords: "hotel motel lodging guest room inn resort" },
-  { id: "guide-medical", title: "Medical Facilities", page: "GuideMedicalFacilities", desc: "ADA rules for doctors, hospitals, clinics", keywords: "medical hospital doctor clinic dentist healthcare" },
-  { id: "guide-newconstruction", title: "New Construction", page: "GuideNewConstruction", desc: "Requirements for new buildings", keywords: "new construction building built design architect" },
-  { id: "guide-barriers", title: "Barrier Removal", page: "GuideBarrierRemoval", desc: "Existing buildings, readily achievable standard", keywords: "barrier removal existing building renovation alteration readily achievable" },
-  { id: "guide-tax", title: "Tax Incentives", page: "GuideTaxIncentives", desc: "Tax credits and deductions for ADA compliance", keywords: "tax credit deduction incentive 5000 cost" },
-  { id: "guide-reach", title: "Reach Ranges & Controls", page: "GuideReachRanges", desc: "Height limits for controls and switches", keywords: "reach range controls height switch outlet thermostat" },
-  { id: "guide-turning", title: "Turning Space & Handrails", page: "GuideTurningHandrails", desc: "Wheelchair turning and handrail requirements", keywords: "turning space handrail wheelchair circle t-shape" },
-  { id: "guide-wcag", title: "WCAG Explained", page: "GuideWcagExplained", desc: "Web Content Accessibility Guidelines overview", keywords: "wcag web accessibility guidelines perceivable operable" },
-  { id: "guide-webrule", title: "ADA Web Accessibility Rule", page: "GuideWebRule", desc: "DOJ's 2024 web accessibility rule for Title II", keywords: "web accessibility rule title ii website digital" },
-  { id: "guide-webfirst", title: "Web Accessibility First Steps", page: "GuideWebFirstSteps", desc: "Getting started with web accessibility", keywords: "web accessibility start begin first steps how" },
-  { id: "guide-webtesting", title: "Web Testing Tools", page: "GuideWebTesting", desc: "Tools for testing website accessibility", keywords: "web testing tools audit scan accessibility checker" },
-  { id: "guide-social", title: "Social Media Accessibility", page: "GuideSocialMedia", desc: "Making social media posts accessible", keywords: "social media instagram facebook twitter alt text caption" },
-  { id: "guide-documents", title: "Accessible Documents", page: "GuideAccessibleDocuments", desc: "Making PDFs, Word docs, presentations accessible", keywords: "document pdf word accessible heading alt text reading order" },
-  { id: "guide-titleii", title: "Title II Overview", page: "GuideTitleII", desc: "State and local government obligations", keywords: "title ii 2 government state local city county municipal" },
-  { id: "guide-programaccess", title: "Program Access", page: "GuideProgramAccess", desc: "Government program accessibility requirements", keywords: "program access government service activity" },
-  { id: "guide-coordinators", title: "ADA Coordinators", page: "GuideAdaCoordinators", desc: "Government ADA coordinator requirements", keywords: "ada coordinator officer government designated employee" },
-  { id: "guide-voting", title: "Voting Accessibility", page: "GuideVoting", desc: "Accessible polling places and voting", keywords: "voting poll election ballot accessible" },
-  { id: "guide-education", title: "Education", page: "GuideEducation", desc: "ADA in schools and higher education", keywords: "school education university college student classroom" },
-  { id: "guide-criminal", title: "Criminal Justice", page: "GuideCriminalJustice", desc: "ADA in courts, jails, law enforcement", keywords: "court jail prison law enforcement police criminal justice" },
-  { id: "guide-emergency", title: "Emergency Management", page: "GuideEmergencyManagement", desc: "Accessible emergency planning and shelters", keywords: "emergency evacuation shelter disaster plan" },
+const CONTENT = [
+  // Chapter 3: Building Blocks
+  { id: "ch3-turning", title: "Turning Space", section: "§304", page: "StandardsCh3", desc: "60-inch diameter or T-shaped turning space for wheelchairs", keywords: "turning space wheelchair circle t-shape maneuver rotate 60 inch diameter", category: "Design Standards", diagram: true },
+  { id: "ch3-clearfloor", title: "Clear Floor Space", section: "§305", page: "StandardsCh3", desc: "30×48 inch minimum clear floor space for wheelchair approach", keywords: "clear floor space ground approach forward parallel 30 48 wheelchair", category: "Design Standards", diagram: true },
+  { id: "ch3-kneetoe", title: "Knee & Toe Clearance", section: "§306", page: "StandardsCh3", desc: "Clearance envelope under counters, desks, and lavatories", keywords: "knee toe clearance under counter desk lavatory table sink 27 inches", category: "Design Standards", diagram: true },
+  { id: "ch3-protruding", title: "Protruding Objects", section: "§307", page: "StandardsCh3", desc: "Wall-mounted objects, cane detection limits — 4 inch max projection", keywords: "protruding objects wall mounted cane detection fire extinguisher 4 inch 27 80", category: "Design Standards", diagram: true },
+  { id: "ch3-reach", title: "Reach Ranges", section: "§308", page: "StandardsCh3", desc: "Forward and side reach: 15–48 inches above floor", keywords: "reach range forward side height controls switches outlets 15 48 inches", category: "Design Standards", diagram: true },
+  { id: "ch3-operable", title: "Operable Parts", section: "§309", page: "StandardsCh3", desc: "One-hand operation, no tight grasping, 5 lbs max force", keywords: "operable parts controls switches knobs lever force one hand 5 pounds", category: "Design Standards", diagram: true },
+
+  // Chapter 4: Accessible Routes
+  { id: "ch4-doors", title: "Doors & Doorways", section: "§404", page: "StandardsCh4", desc: "32-inch clear width, 5 lbs max force, lever hardware", keywords: "door doorway gate width opening force hardware maneuvering clearance 32 inches lever handle", category: "Design Standards", diagram: true },
+  { id: "ch4-ramps", title: "Ramps", section: "§405", page: "StandardsCh4", desc: "1:12 max slope, 36 inches wide, landings, handrails", keywords: "ramp slope rise run landing handrail grade 1:12 36 inches 30 inch rise", category: "Design Standards", diagram: true },
+  { id: "ch4-curbramps", title: "Curb Ramps", section: "§406", page: "StandardsCh4", desc: "Detectable warnings, flared sides, sidewalk transitions", keywords: "curb ramp sidewalk street crossing detectable warning truncated dome flared", category: "Design Standards", diagram: true },
+  { id: "ch4-elevators", title: "Elevators", section: "§407", page: "StandardsCh4", desc: "Cab dimensions, controls, signals, door timing", keywords: "elevator lift cab controls signals braille door timing hall call", category: "Design Standards", diagram: true },
+
+  // Chapter 5: General Site
+  { id: "ch5-parking", title: "Parking Spaces", section: "§502", page: "StandardsCh5", desc: "Van spaces 132\" wide, car spaces 96\", access aisle 60\", scoping table", keywords: "parking space accessible van car access aisle how many scoping lot striping sign 132 96 60", category: "Design Standards", diagram: true },
+  { id: "ch5-loading", title: "Passenger Loading Zones", section: "§503", page: "StandardsCh5", desc: "96 inches wide, 20 feet long, vertical clearance", keywords: "loading zone passenger drop-off pick-up vehicle curb 96 20 feet", category: "Design Standards", diagram: true },
+  { id: "ch5-stairs", title: "Stairways", section: "§504", page: "StandardsCh5", desc: "Uniform risers 4–7 inches, nosings, handrails both sides", keywords: "stairs stairway steps riser tread nosing uniform", category: "Design Standards", diagram: true },
+  { id: "ch5-handrails", title: "Handrails", section: "§505", page: "StandardsCh5", desc: "34–38 inches high, 1.25–2 inch diameter, extensions required", keywords: "handrail railing grip height extension diameter 34 38 graspable", category: "Design Standards", diagram: true },
+
+  // Chapter 6: Plumbing
+  { id: "ch6-toilets", title: "Toilet Compartments", section: "§604", page: "StandardsCh6", desc: "Centerline 16–18\" from wall, grab bars, seat height 17–19\"", keywords: "toilet water closet bathroom restroom stall compartment grab bar centerline seat height 17 19", category: "Design Standards", diagram: true },
+  { id: "ch6-lavatories", title: "Lavatories & Sinks", section: "§606", page: "StandardsCh6", desc: "34-inch max height, knee clearance underneath, pipe protection", keywords: "lavatory sink bathroom faucet pipe protection knee clearance 34 inches", category: "Design Standards", diagram: true },
+  { id: "ch6-bathtubs", title: "Bathtubs", section: "§607", page: "StandardsCh6", desc: "30×60 clearance, grab bars, removable seat, 59\" shower spray", keywords: "bathtub tub grab bar seat shower spray clearance 30 60", category: "Design Standards", diagram: true },
+  { id: "ch6-showers", title: "Shower Compartments", section: "§608", page: "StandardsCh6", desc: "Transfer shower 36×36, roll-in 60×30, grab bars, folding seat", keywords: "shower transfer roll-in grab bar seat compartment 36 60 30 folding", category: "Design Standards", diagram: true },
+  { id: "ch6-grabbars", title: "Grab Bar Details", section: "§609", page: "StandardsCh6", desc: "1.25–2\" diameter, 1.5\" from wall, support 250 lbs", keywords: "grab bar diameter clearance mounting strength installation 250 pounds 1.25 2 inch", category: "Design Standards", diagram: true },
+  { id: "ch6-fountains", title: "Drinking Fountains", section: "§611", page: "StandardsCh6", desc: "Wheelchair unit 36\" max, standing unit 38–43\"", keywords: "drinking fountain water cooler bottle filler 36 38 43 wheelchair standing", category: "Design Standards", diagram: true },
+
+  // Chapter 7: Communication
+  { id: "ch7-signs", title: "Signs & Signage", section: "§703", page: "StandardsCh7", desc: "Raised characters, Grade 2 Braille, mounting height 48–60\"", keywords: "sign signage braille raised characters mounting height room tactile 48 60", category: "Design Standards", diagram: true },
+
+  // Chapter 8: Special Rooms
+  { id: "ch8-assembly", title: "Assembly Seating", section: "§802", page: "StandardsCh8", desc: "Wheelchair spaces, sightlines over standing spectators, companion seats", keywords: "assembly seating wheelchair space companion sightline theater stadium arena 36 48 60", category: "Design Standards", diagram: true },
+  { id: "ch8-dressing", title: "Dressing & Fitting Rooms", section: "§803", page: "StandardsCh8", desc: "60\" turning space, bench 24×48, door swings out, full-length mirror", keywords: "dressing fitting locker room changing bench mirror door swing out", category: "Design Standards", diagram: true },
+  { id: "ch8-kitchen", title: "Kitchens & Kitchenettes", section: "§804", page: "StandardsCh8", desc: "Work surface 34\" max, 60\" U-turn, 40\" galley clearance", keywords: "kitchen kitchenette counter sink appliance clearance work surface 34 60 40 U-shaped galley", category: "Design Standards", diagram: true },
+  { id: "ch8-guestroom", title: "Hotel Guest Rooms", section: "§806", page: "StandardsCh8", desc: "36\" accessible route, bed clearance, accessible bathroom, scoping", keywords: "hotel guest room lodging transient bed clearance bathroom accessible scoping how many", category: "Design Standards", diagram: true },
+  { id: "ch8-detention", title: "Detention & Holding Cells", section: "§807", page: "StandardsCh8", desc: "3% mobility features, 2% communication, dispersed among units", keywords: "detention cell jail prison correctional holding 3 percent mobility communication", category: "Design Standards", diagram: true },
+
+  // Chapter 9: Built-in Elements
+  { id: "ch9-dining", title: "Dining & Work Surfaces", section: "§902", page: "StandardsCh9", desc: "28–34\" height, knee clearance underneath, 5% of seats accessible", keywords: "dining table work surface desk counter height knee clearance 28 34 5 percent accessible", category: "Design Standards", diagram: true },
+  { id: "ch9-benches", title: "Benches", section: "§903", page: "StandardsCh9", desc: "Seat 17–19\" high, 42\" long min, back support, 250 lbs capacity", keywords: "bench seat locker room shower pool 17 19 42 back support 250", category: "Design Standards", diagram: true },
+  { id: "ch9-counters", title: "Sales & Service Counters", section: "§904", page: "StandardsCh9", desc: "36\" max height, accessible checkout aisle width", keywords: "counter sales service checkout register cash aisle 36 height accessible", category: "Design Standards", diagram: true },
+
+  // Chapter 10: Recreation
+  { id: "ch10-play", title: "Play Areas", section: "§1008", page: "StandardsCh10", desc: "Transfer platform 14\" high, 50% of elevated via ramp, ground-level access", keywords: "playground play area equipment transfer platform ground elevated ramp children 14 50 percent", category: "Design Standards", diagram: true },
+  { id: "ch10-pool", title: "Swimming Pools & Spas", section: "§1009", page: "StandardsCh10", desc: "Pool lift, sloped entry, transfer wall — 2 means for large pools", keywords: "pool swimming wading spa hot tub lift sloped entry transfer wall steps 300 linear feet", category: "Design Standards", diagram: true },
+
+  // Know Your Rights
+  { id: "guide-intro", title: "Introduction to the ADA", page: "GuideIntroToAda", desc: "What the ADA covers, who it protects, how it's structured across five titles", keywords: "what is ada introduction overview basics titles five structure history", category: "Know Your Rights" },
+  { id: "guide-protections", title: "ADA Protections & Who Is Covered", page: "GuideAdaProtections", desc: "Who counts as a person with a disability under the ADA", keywords: "who protected disability rights qualified individual covered definition", category: "Know Your Rights" },
+  { id: "guide-service", title: "Service Animals", page: "GuideServiceAnimals", desc: "Rules for service dogs in businesses and public places", keywords: "service animal dog emotional support pet allowed business store restaurant", category: "Know Your Rights" },
+  { id: "guide-mobility", title: "Mobility Devices", page: "GuideMobilityDevices", desc: "Wheelchairs, scooters, and other power-driven mobility devices", keywords: "wheelchair scooter mobility device power segway electric", category: "Know Your Rights" },
+  { id: "guide-modifications", title: "Reasonable Modifications", page: "GuideReasonableModifications", desc: "When and how businesses must modify their policies", keywords: "reasonable modification accommodation policy change business", category: "Know Your Rights" },
+  { id: "guide-communication", title: "Effective Communication", page: "GuideEffectiveCommunication", desc: "Sign language interpreters, Braille, auxiliary aids and services", keywords: "communication interpreter sign language braille auxiliary aids deaf blind hearing", category: "Know Your Rights" },
+  { id: "guide-complaint", title: "How to File an ADA Complaint", page: "GuideFilingComplaint", desc: "Step-by-step instructions for reporting violations to the DOJ", keywords: "file complaint report violation doj department justice how sue enforcement", category: "Know Your Rights" },
+
+  // Business Compliance
+  { id: "guide-smallbiz", title: "Small Business ADA Guide", page: "GuideSmallBusiness", desc: "ADA essentials every small business owner needs to know", keywords: "small business owner store shop compliance what do I need requirements", category: "Business Compliance" },
+  { id: "guide-restaurant", title: "Restaurants & Retail", page: "GuideRestaurantsRetail", desc: "ADA requirements for restaurants, bars, cafes, and retail stores", keywords: "restaurant retail store bar cafe dining accessible table menu counter", category: "Business Compliance" },
+  { id: "guide-hotel", title: "Hotels & Lodging", page: "GuideHotelsLodging", desc: "Accessible guest room requirements and scoping", keywords: "hotel motel lodging guest room inn resort bed bathroom accessible", category: "Business Compliance" },
+  { id: "guide-medical", title: "Medical Facilities", page: "GuideMedicalFacilities", desc: "ADA rules for hospitals, clinics, doctor and dentist offices", keywords: "medical hospital doctor clinic dentist healthcare office patient exam", category: "Business Compliance" },
+  { id: "guide-newconstruction", title: "New Construction Requirements", page: "GuideNewConstruction", desc: "What's required when building new facilities", keywords: "new construction building built design architect permit plan", category: "Business Compliance" },
+  { id: "guide-barriers", title: "Barrier Removal", page: "GuideBarrierRemoval", desc: "Existing buildings — what's readily achievable to fix", keywords: "barrier removal existing building renovation alteration readily achievable old", category: "Business Compliance" },
+  { id: "guide-tax", title: "ADA Tax Incentives", page: "GuideTaxIncentives", desc: "Tax credits and deductions for accessibility improvements", keywords: "tax credit deduction incentive 5000 cost money save irs", category: "Business Compliance" },
+  { id: "guide-parking-req", title: "Parking Requirements Guide", page: "GuideParkingRequirements", desc: "Complete guide to how many accessible parking spaces you need", keywords: "parking accessible van space how many required lot number count", category: "Business Compliance" },
+  { id: "guide-parking", title: "Parking Space Design", page: "GuideParking", desc: "Design details — striping, signs, access aisles, slopes", keywords: "parking design layout stripe marking sign access aisle slope surface", category: "Business Compliance" },
+  { id: "guide-restrooms", title: "Accessible Restrooms", page: "GuideRestrooms", desc: "Complete guide to building compliant restrooms", keywords: "restroom bathroom toilet accessible stall grab bar lavatory sink", category: "Business Compliance" },
+  { id: "guide-ramps", title: "Ramp Requirements", page: "GuideRamps", desc: "Slopes, widths, landings, and handrail specifications", keywords: "ramp slope width landing handrail rise run build install", category: "Business Compliance" },
+  { id: "guide-entrances", title: "Accessible Entrances", page: "GuideEntrances", desc: "Door widths, thresholds, vestibules, and approach clearances", keywords: "entrance door vestibule entry accessible front threshold approach", category: "Business Compliance" },
+  { id: "guide-signage", title: "Signage Requirements", page: "GuideSignage", desc: "Braille signs, room identification, directional and informational signs", keywords: "sign signage braille room directory wayfinding exit tactile", category: "Business Compliance" },
+  { id: "guide-reach", title: "Reach Ranges & Controls", page: "GuideReachRanges", desc: "Height requirements for controls, outlets, switches, and dispensers", keywords: "reach range controls height switch outlet thermostat dispenser", category: "Business Compliance" },
+  { id: "guide-turning", title: "Turning Spaces & Handrails", page: "GuideTurningHandrails", desc: "Wheelchair turning clearances and handrail specifications", keywords: "turning space handrail wheelchair circle t-shape maneuvering grip", category: "Business Compliance" },
+
+  // Web & Digital
+  { id: "guide-wcag", title: "WCAG 2.1 Explained", page: "GuideWcagExplained", desc: "Web Content Accessibility Guidelines — the four principles", keywords: "wcag web accessibility guidelines perceivable operable understandable robust 2.1", category: "Web & Digital" },
+  { id: "guide-webrule", title: "ADA Web Accessibility Rule", page: "GuideWebRule", desc: "DOJ's web accessibility rule for state and local government (Title II)", keywords: "web accessibility rule title ii website digital government 2024 doj", category: "Web & Digital" },
+  { id: "guide-webfirst", title: "Web Accessibility First Steps", page: "GuideWebFirstSteps", desc: "Getting started making your website accessible", keywords: "web accessibility start begin first steps how website fix", category: "Web & Digital" },
+  { id: "guide-webtesting", title: "Web Accessibility Testing Tools", page: "GuideWebTesting", desc: "Free and paid tools for testing your website", keywords: "web testing tools audit scan accessibility checker wave axe lighthouse", category: "Web & Digital" },
+  { id: "guide-social", title: "Social Media Accessibility", page: "GuideSocialMedia", desc: "Making posts accessible on Instagram, Facebook, X, and more", keywords: "social media instagram facebook twitter alt text caption video image", category: "Web & Digital" },
+  { id: "guide-documents", title: "Accessible Documents", page: "GuideAccessibleDocuments", desc: "Making PDFs, Word docs, and presentations accessible", keywords: "document pdf word accessible heading alt text reading order powerpoint", category: "Web & Digital" },
+
+  // Government
+  { id: "guide-titleii", title: "Title II — State & Local Government", page: "GuideTitleII", desc: "Government obligations under Title II of the ADA", keywords: "title ii 2 government state local city county municipal public", category: "Government" },
+  { id: "guide-programaccess", title: "Program Access", page: "GuideProgramAccess", desc: "Making government programs and services accessible", keywords: "program access government service activity building department", category: "Government" },
+  { id: "guide-coordinators", title: "ADA Coordinators", page: "GuideAdaCoordinators", desc: "When and how to designate a government ADA coordinator", keywords: "ada coordinator officer government designated employee 50 required", category: "Government" },
+  { id: "guide-voting", title: "Accessible Voting", page: "GuideVoting", desc: "Polling place accessibility and voting rights", keywords: "voting poll election ballot accessible booth machine curbside", category: "Government" },
+  { id: "guide-education", title: "Education & Schools", page: "GuideEducation", desc: "ADA requirements in K-12 schools and higher education", keywords: "school education university college student classroom campus", category: "Government" },
+  { id: "guide-criminal", title: "Criminal Justice", page: "GuideCriminalJustice", desc: "ADA in courts, jails, and law enforcement encounters", keywords: "court jail prison law enforcement police criminal justice arrest", category: "Government" },
+  { id: "guide-emergency", title: "Emergency Management", page: "GuideEmergencyManagement", desc: "Accessible emergency plans, shelters, and evacuations", keywords: "emergency evacuation shelter disaster plan fire alarm notification", category: "Government" },
 ];
 
-const CONTENT_INDEX = Object.fromEntries(CONTENT_MAP.map(c => [c.id, c]));
+function searchContent(query) {
+  if (!query || query.trim().length < 2) return [];
+  const q = query.toLowerCase().trim();
+  const qWords = q.split(/\s+/).filter(w => w.length >= 2);
+  if (qWords.length === 0) return [];
 
-const SYSTEM_PROMPT = `You are the ADA Standards Assistant for ADA Legal Link. Your job is to give a BRIEF direct answer and identify which pages on our site the user should visit for full details.
+  const scored = CONTENT.map(item => {
+    const searchable = `${item.title} ${item.section || ''} ${item.desc} ${item.keywords} ${item.category}`.toLowerCase();
+    let score = 0;
+    if (searchable.includes(q)) score += 10;
+    for (const word of qWords) {
+      if (searchable.includes(word)) score += 2;
+      const words = searchable.split(/\s+/);
+      for (const sw of words) {
+        if (sw.startsWith(word) && !searchable.includes(word)) score += 1;
+      }
+    }
+    const sectionMatch = q.match(/§?\d{3,4}/);
+    if (sectionMatch && item.section && item.section.includes(sectionMatch[0].replace('§', ''))) {
+      score += 15;
+    }
+    if (item.diagram && score > 0) score += 1;
+    return { ...item, score };
+  })
+    .filter(item => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 6);
 
-RESPONSE FORMAT — You MUST respond in this exact JSON format:
-{
-  "answer": "Your brief 2-4 sentence answer here. Include key measurements. Use §xxx format for section references.",
-  "results": ["content_id_1", "content_id_2", "content_id_3"]
+  return scored;
 }
 
-The "results" array should contain 2-4 content IDs from this list (pick the most relevant):
-${CONTENT_MAP.map(c => `${c.id}: ${c.title} - ${c.desc}`).join('\n')}
-
-RULES:
-- answer: Be direct. Lead with the specific measurement or requirement. Max 3-4 sentences.
-- answer: Always cite §section numbers.
-- answer: Never say "check with local authorities" — these are FEDERAL standards.
-- results: Pick 2-4 most relevant content IDs. Put the single best match first.
-- results: If a diagram exists for the topic, prioritize that content ID.
-- If asked for legal advice, say "For legal advice, consult an ADA attorney" and still show relevant content pages.
-- If the question is not about ADA, say so politely and suggest what you can help with.`;
+const CAT_COLORS = {
+  "Design Standards": { bg: 'rgba(194,65,12,0.1)', text: '#C2410C', border: 'rgba(194,65,12,0.2)' },
+  "Know Your Rights": { bg: 'rgba(22,163,98,0.1)', text: '#16A362', border: 'rgba(22,163,98,0.2)' },
+  "Business Compliance": { bg: 'rgba(37,99,235,0.1)', text: '#2563EB', border: 'rgba(37,99,235,0.2)' },
+  "Web & Digital": { bg: 'rgba(124,58,237,0.1)', text: '#7C3AED', border: 'rgba(124,58,237,0.2)' },
+  "Government": { bg: 'rgba(217,119,6,0.1)', text: '#D97706', border: 'rgba(217,119,6,0.2)' },
+};
 
 const STARTERS = [
-  "How many accessible parking spaces does my lot need?",
-  "What are the grab bar requirements for bathrooms?",
-  "What width must accessible doorways be?",
-  "I'm renovating a restaurant — what ADA rules apply?"
+  { label: "Parking spaces", q: "parking spaces" },
+  { label: "Grab bars", q: "grab bar" },
+  { label: "Door width", q: "door width" },
+  { label: "Ramp slope", q: "ramp slope" },
+  { label: "Restrooms", q: "restroom bathroom" },
+  { label: "Service animals", q: "service animal" },
+  { label: "Small business", q: "small business" },
+  { label: "Web accessibility", q: "web accessibility" },
 ];
-
-function TypingDots() {
-  return (
-    <div style={{ display: 'flex', gap: '5px', alignItems: 'center', padding: '16px 0' }}>
-      {[0, 1, 2].map(i => (
-        <span key={i} style={{
-          width: '7px', height: '7px', borderRadius: '50%', background: '#94A3B8',
-          display: 'inline-block',
-          animation: `adaPulse 1.2s ease-in-out ${i * 0.2}s infinite`
-        }} />
-      ))}
-    </div>
-  );
-}
-
-function ResultCard({ item }) {
-  return (
-    <Link
-      to={createPageUrl(item.page)}
-      aria-label={`${item.title} — ${item.desc}`}
-      style={{ textDecoration: 'none', display: 'block' }}
-    >
-      <div
-        className="ada-result-card"
-        style={{
-          background: 'white', border: '1px solid #E2E8F0',
-          borderRadius: '12px', padding: '16px 20px',
-          transition: 'all 0.2s', cursor: 'pointer'
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.borderColor = '#C2410C';
-          e.currentTarget.style.boxShadow = '0 4px 16px rgba(194,65,12,0.1)';
-          e.currentTarget.style.transform = 'translateY(-1px)';
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.borderColor = '#E2E8F0';
-          e.currentTarget.style.boxShadow = 'none';
-          e.currentTarget.style.transform = 'none';
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
-              <span style={{
-                fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700,
-                color: 'var(--slate-900)'
-              }}>
-                {item.title}
-              </span>
-              {item.diagram && (
-                <span style={{
-                  background: '#FEF1EC', color: '#C2410C',
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-                  padding: '2px 8px', borderRadius: '100px',
-                  whiteSpace: 'nowrap'
-                }}>
-                  📐 Interactive Diagram
-                </span>
-              )}
-            </div>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-              color: '#64748B', margin: 0, lineHeight: 1.5
-            }}>
-              {item.desc}
-            </p>
-          </div>
-          <ArrowRight size={18} style={{ color: '#C2410C', flexShrink: 0, marginTop: '2px' }} />
-        </div>
-      </div>
-    </Link>
-  );
-}
 
 export default function ADAAssistant() {
   const [query, setQuery] = useState('');
-  const [lastQuestion, setLastQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [resultItems, setResultItems] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [focused, setFocused] = useState(false);
   const inputRef = useRef(null);
-  const resultsRef = useRef(null);
+  const containerRef = useRef(null);
 
-  const hasResults = answer || resultItems.length > 0;
+  const results = useMemo(() => searchContent(query), [query]);
+  const showResults = (focused || query.length >= 2) && results.length > 0;
+  const showStarters = !query && !showResults;
 
-  const handleSubmit = async (text) => {
-    const q = (text || query).trim();
-    if (!q || loading) return;
-
-    setLastQuestion(q);
-    setQuery('');
-    setAnswer('');
-    setResultItems([]);
-    setError(null);
-    setLoading(true);
-
-    try {
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: q,
-        system_prompt: SYSTEM_PROMPT,
-        add_context_from_internet: false,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            answer: { type: "string" },
-            results: { type: "array", items: { type: "string" } }
-          },
-          required: ["answer", "results"]
-        }
-      });
-
-      let answerText = '';
-      let resultIds = [];
-
-      try {
-        let parsed;
-        if (typeof response === 'string') {
-          const cleaned = response.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
-          parsed = JSON.parse(cleaned);
-        } else {
-          parsed = response;
-        }
-        answerText = parsed?.answer || '';
-        resultIds = Array.isArray(parsed?.results) ? parsed.results : [];
-      } catch (jsonErr) {
-        answerText = typeof response === 'string' ? response : (response?.result || response?.answer || response?.text || String(response));
-        resultIds = [];
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setFocused(false);
       }
-
-      if (resultIds.length === 0) {
-        const qLower = q.toLowerCase();
-        const scored = CONTENT_MAP.map(item => {
-          const keywords = (item.keywords + ' ' + item.title + ' ' + item.desc).toLowerCase();
-          let score = 0;
-          const qWords = qLower.split(/\s+/).filter(w => w.length > 2);
-          for (const word of qWords) {
-            if (keywords.includes(word)) score += 1;
-          }
-          if (item.diagram && score > 0) score += 0.5;
-          return { ...item, score };
-        }).filter(item => item.score > 0)
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 4);
-        resultIds = scored.map(s => s.id);
-      }
-
-      const matched = resultIds
-        .map(id => CONTENT_INDEX[id])
-        .filter(Boolean)
-        .slice(0, 4);
-
-      setAnswer(answerText);
-      setResultItems(matched);
-    } catch (err) {
-      setError('Unable to get a response. Please try again.');
-    } finally {
-      setLoading(false);
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
-  };
-
-  const handleReset = () => {
-    setLastQuestion('');
-    setAnswer('');
-    setResultItems([]);
-    setError(null);
-    setTimeout(() => inputRef.current?.focus(), 50);
-  };
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
+    if (e.key === 'Escape') {
+      setQuery('');
+      setFocused(false);
+      inputRef.current?.blur();
     }
+  };
+
+  const handleStarterClick = (text) => {
+    setQuery(text);
+    setFocused(true);
+    inputRef.current?.focus();
+  };
+
+  const clearSearch = () => {
+    setQuery('');
+    inputRef.current?.focus();
   };
 
   return (
-    <div style={{ maxWidth: '520px', width: '100%' }}>
-      <style>{`
-        @keyframes adaPulse {
-          0%, 100% { opacity: 0.3; transform: scale(0.8); }
-          50% { opacity: 1; transform: scale(1); }
-        }
-      `}</style>
-
-      {/* Input */}
-      <div role="search" aria-label="Ask about ADA standards">
-        <label htmlFor="ada-assistant-input" className="sr-only">Ask about ADA standards</label>
+    <div ref={containerRef} style={{ maxWidth: '520px', width: '100%', position: 'relative' }}>
+      {/* Search input */}
+      <div role="search" aria-label="Search ADA standards">
+        <label htmlFor="ada-search-input" className="sr-only">Search ADA standards and guides</label>
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <Search size={18} style={{
+            position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
+            color: '#64748B', pointerEvents: 'none'
+          }} />
           <input
-            id="ada-assistant-input"
+            id="ada-search-input"
             ref={inputRef}
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
+            onFocus={() => setFocused(true)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about any ADA standard... e.g. How wide must a doorway be?"
-            aria-label="Ask about ADA standards"
+            placeholder="Search ADA standards, guides, diagrams..."
+            aria-label="Search ADA standards and guides"
+            aria-expanded={showResults}
+            aria-controls="ada-search-results"
+            role="combobox"
+            autoComplete="off"
             style={{
-              width: '100%', padding: '14px 56px 14px 16px',
+              width: '100%', padding: '14px 44px 14px 44px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
               background: 'rgba(255,255,255,0.06)', color: 'white',
               border: '1px solid rgba(255,255,255,0.12)',
               borderRadius: '12px', outline: 'none',
-              minHeight: '48px', boxSizing: 'border-box'
+              minHeight: '48px', boxSizing: 'border-box',
+              transition: 'border-color 0.2s'
             }}
-            onFocus={e => e.target.style.borderColor = 'rgba(194,65,12,0.5)'}
-            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.12)'}
+            onMouseEnter={e => e.target.style.borderColor = 'rgba(255,255,255,0.2)'}
+            onMouseLeave={e => { if (document.activeElement !== e.target) e.target.style.borderColor = 'rgba(255,255,255,0.12)'; }}
           />
-          <button
-            onClick={() => handleSubmit()}
-            disabled={!query.trim() || loading}
-            aria-label="Send message"
-            style={{
-              position: 'absolute', right: '6px', top: '50%', transform: 'translateY(-50%)',
-              background: query.trim() && !loading ? '#C2410C' : 'rgba(255,255,255,0.1)',
-              border: 'none', borderRadius: '8px',
-              width: '36px', height: '36px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: query.trim() && !loading ? 'pointer' : 'default',
-              transition: 'background 0.2s'
-            }}
-          >
-            <Send size={16} style={{ color: 'white' }} />
-          </button>
+          {query && (
+            <button
+              onClick={clearSearch}
+              aria-label="Clear search"
+              style={{
+                position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
+                background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '6px',
+                width: '28px', height: '28px', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', cursor: 'pointer'
+              }}
+            >
+              <X size={14} style={{ color: '#94A3B8' }} />
+            </button>
+          )}
         </div>
-        <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-          color: '#64748B', margin: '8px 0 0', fontStyle: 'italic'
-        }}>
-          AI-powered guidance based on the 2010 ADA Standards. For legal advice, consult an ADA attorney.
-        </p>
       </div>
 
-      {/* Starter chips — only before first result */}
-      {!hasResults && !loading && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px' }}>
-          {STARTERS.map((q, i) => (
+      {/* Quick-jump topic chips */}
+      {showStarters && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px' }}>
+          {STARTERS.map((s, i) => (
             <button
               key={i}
-              onClick={() => handleSubmit(q)}
+              onClick={() => handleStarterClick(s.q)}
               style={{
                 background: 'rgba(255,255,255,0.06)',
                 border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '100px', padding: '8px 16px',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+                borderRadius: '100px', padding: '6px 14px',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem',
                 color: '#CBD5E1', cursor: 'pointer',
                 transition: 'all 0.2s', lineHeight: 1.4
               }}
               onMouseEnter={e => { e.target.style.background = 'rgba(194,65,12,0.15)'; e.target.style.borderColor = 'rgba(194,65,12,0.3)'; e.target.style.color = '#FED7AA'; }}
               onMouseLeave={e => { e.target.style.background = 'rgba(255,255,255,0.06)'; e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.color = '#CBD5E1'; }}
             >
-              {q}
+              {s.label}
             </button>
           ))}
         </div>
       )}
 
-      {/* Results area */}
-      <div
-        ref={resultsRef}
-        aria-live="polite"
-        aria-busy={loading}
-        style={{ marginTop: '20px' }}
-      >
-        {/* Loading */}
-        {loading && (
+      {/* Live search results */}
+      {showResults && (
+        <div
+          id="ada-search-results"
+          role="listbox"
+          aria-label="Search results"
+          style={{
+            marginTop: '8px',
+            background: 'white',
+            border: '1px solid #E2E8F0',
+            borderRadius: '14px',
+            boxShadow: '0 8px 30px rgba(0,0,0,0.15)',
+            overflow: 'hidden',
+            maxHeight: '420px',
+            overflowY: 'auto'
+          }}
+        >
           <div style={{
-            display: 'flex', alignItems: 'center', gap: '10px'
+            padding: '10px 16px 6px',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+            letterSpacing: '0.08em', textTransform: 'uppercase', color: '#94A3B8'
           }}>
-            <LogoBrand size={24} style={{ flexShrink: 0 }} />
-            <TypingDots />
-            <span className="sr-only">Searching ADA standards...</span>
+            {results.length} result{results.length !== 1 ? 's' : ''}
           </div>
-        )}
 
-        {/* Question label */}
-        {lastQuestion && !loading && hasResults && (
-          <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-            color: '#94A3B8', margin: '0 0 12px',
-            display: 'flex', alignItems: 'center', gap: '6px'
-          }}>
-            <span style={{ fontWeight: 600 }}>You asked:</span> {lastQuestion}
+          {results.map((item) => {
+            const cat = CAT_COLORS[item.category] || CAT_COLORS["Design Standards"];
+            return (
+              <Link
+                key={item.id}
+                to={createPageUrl(item.page)}
+                role="option"
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '12px',
+                  padding: '12px 16px', textDecoration: 'none',
+                  borderTop: '1px solid #F1F5F9',
+                  transition: 'background 0.15s', cursor: 'pointer'
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = '#FAFAF9'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                onClick={() => { setQuery(''); setFocused(false); }}
+              >
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '2px' }}>
+                    <span style={{
+                      fontFamily: 'Fraunces, serif', fontSize: '0.95rem', fontWeight: 700,
+                      color: '#1A1F2B'
+                    }}>
+                      {item.title}
+                    </span>
+                    {item.section && (
+                      <span style={{
+                        fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
+                        color: '#C2410C', background: 'rgba(194,65,12,0.08)',
+                        padding: '1px 6px', borderRadius: '4px'
+                      }}>
+                        {item.section}
+                      </span>
+                    )}
+                    {item.diagram && (
+                      <span style={{
+                        fontFamily: 'Manrope, sans-serif', fontSize: '0.65rem', fontWeight: 600,
+                        color: cat.text, background: cat.bg, border: `1px solid ${cat.border}`,
+                        padding: '1px 6px', borderRadius: '4px',
+                        display: 'inline-flex', alignItems: 'center', gap: '3px'
+                      }}>
+                        <Ruler size={10} /> Interactive Diagram
+                      </span>
+                    )}
+                  </div>
+                  <p style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+                    color: '#64748B', margin: 0, lineHeight: 1.4
+                  }}>
+                    {item.desc}
+                  </p>
+                  <span style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.65rem', fontWeight: 600,
+                    color: cat.text, marginTop: '2px', display: 'inline-block'
+                  }}>
+                    {item.category}
+                  </span>
+                </div>
+                <ArrowRight size={16} style={{ color: '#94A3B8', flexShrink: 0 }} />
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
+      {/* No results message */}
+      {query.length >= 2 && focused && results.length === 0 && (
+        <div style={{
+          marginTop: '8px', background: 'white', border: '1px solid #E2E8F0',
+          borderRadius: '14px', padding: '20px', textAlign: 'center',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.15)'
+        }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#64748B', margin: 0 }}>
+            No results for "{query}" — try different keywords or browse the categories below.
           </p>
-        )}
+        </div>
+      )}
 
-        {/* AI Answer callout */}
-        {answer && !loading && (
-          <div style={{
-            background: '#FFFBF7', borderLeft: '3px solid #C2410C',
-            borderRadius: '0 12px 12px 0', padding: '16px 20px',
-            marginBottom: '16px', position: 'relative'
-          }}>
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-              <LogoBrand size={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-              <div style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-                color: 'var(--slate-700)', lineHeight: 1.7
-              }}>
-                <AutoCiteLinks>{answer}</AutoCiteLinks>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Result cards */}
-        {resultItems.length > 0 && !loading && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-              letterSpacing: '0.1em', textTransform: 'uppercase',
-              color: '#94A3B8', margin: '0 0 4px'
-            }}>
-              Explore the full details
-            </p>
-            {resultItems.map(item => (
-              <ResultCard key={item.id} item={item} />
-            ))}
-          </div>
-        )}
-
-        {/* Error */}
-        {error && !loading && (
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: '8px',
-            background: 'rgba(220,38,38,0.1)', border: '1px solid rgba(220,38,38,0.2)',
-            borderRadius: '10px', padding: '10px 14px',
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', color: '#FCA5A5'
-          }}>
-            <AlertCircle size={16} />
-            {error}
-          </div>
-        )}
-
-        {/* Ask another */}
-        {hasResults && !loading && (
-          <button
-            onClick={handleReset}
-            style={{
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '100px', padding: '8px 20px',
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-              color: '#CBD5E1', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: '6px',
-              transition: 'all 0.2s'
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'white'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#CBD5E1'; }}
-          >
-            <RotateCcw size={14} />
-            Ask another question
-          </button>
-        )}
-      </div>
-
-      {/* Screen reader announcement */}
-      <div aria-live="assertive" className="sr-only">
-        {loading ? 'Searching ADA standards...' : ''}
+      {/* Screen reader live region */}
+      <div aria-live="polite" className="sr-only">
+        {showResults ? `${results.length} results found` : ''}
       </div>
     </div>
   );
