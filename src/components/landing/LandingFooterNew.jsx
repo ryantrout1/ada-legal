@@ -13,7 +13,7 @@ const footerLinkStyle = {
 const colHeadingStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
   letterSpacing: '0.12em', textTransform: 'uppercase',
-  color: '#64748B', margin: '0 0 12px'
+  color: '#94A3B8', margin: '0 0 12px'
 };
 
 export default function LandingFooterNew() {
