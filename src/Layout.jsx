@@ -9,6 +9,10 @@ import AuditButton from './components/a11y/AuditButton';
 import LandingFooterNew from './components/landing/LandingFooterNew';
 
 export default function Layout({ children, currentPageName }) {
+  // Scroll to top on page change
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPageName]);
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
