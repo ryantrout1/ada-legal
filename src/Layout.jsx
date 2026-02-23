@@ -217,7 +217,7 @@ export default function Layout({ children, currentPageName }) {
             fontWeight: 700
           }}>
             <LogoBrand size={36} variant="light" />
-            <span>ADA Legal Link</span>
+            <span>ADA Legal <span style={{ color: '#C2410C' }}>Link</span></span>
           </Link>
 
           {/* Mobile Menu Button */}
@@ -603,9 +603,11 @@ export default function Layout({ children, currentPageName }) {
             padding: '0 1.5rem',
             textAlign: 'center'
           }}>
-            <LogoBrand size={28} variant="light" style={{ opacity: 0.6, marginBottom: '0.5rem' }} aria-hidden="true" />
+            <LogoBrand size={48} glow variant="light" style={{ display: 'block', margin: '0 auto 12px' }} aria-hidden="true" />
             <p style={{ margin: 0, fontSize: '0.875rem' }}>
-              © 2026 ADA Legal Link. All rights reserved.
+              © 2026 <span style={{ color: '#94A3B8' }}>ADA Legal</span>{' '}
+              <span style={{ color: '#C2410C', opacity: 0.7 }}>Link</span>.
+              {' '}All rights reserved.
             </p>
             <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem' }}>
               Connecting people with experienced ADA attorneys.
