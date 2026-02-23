@@ -110,6 +110,9 @@ import StandardsCh9 from './pages/StandardsCh9';
 import StandardsGuide from './pages/StandardsGuide';
 import GuideEmployment from './pages/GuideEmployment';
 import GuideHousing from './pages/GuideHousing';
+import GuideSidewalks from './pages/GuideSidewalks';
+import GuidePlaygrounds from './pages/GuidePlaygrounds';
+import GuideSwimmingPools from './pages/GuideSwimmingPools';
 import __Layout from './Layout.jsx';
 
 
@@ -177,6 +180,9 @@ export const PAGES = {
     "StandardsGuide": StandardsGuide,
     "GuideEmployment": GuideEmployment,
     "GuideHousing": GuideHousing,
+    "GuideSidewalks": GuideSidewalks,
+    "GuidePlaygrounds": GuidePlaygrounds,
+    "GuideSwimmingPools": GuideSwimmingPools,
 }
 
 export const pagesConfig = {
