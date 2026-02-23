@@ -216,7 +216,7 @@ export default function Layout({ children, currentPageName }) {
             fontFamily: 'Fraunces, serif',
             fontWeight: 700
           }}>
-            <LogoBrand size={36} />
+            <LogoBrand size={72} />
             <span>ADA Legal <span style={{ color: '#C2410C' }}>Link</span></span>
           </Link>
 
@@ -603,7 +603,7 @@ export default function Layout({ children, currentPageName }) {
             padding: '0 1.5rem',
             textAlign: 'center'
           }}>
-            <LogoBrand size={48} glow style={{ display: 'block', margin: '0 auto 12px' }} aria-hidden="true" />
+            <LogoBrand size={96} glow style={{ display: 'block', margin: '0 auto 12px' }} aria-hidden="true" />
             <p style={{ margin: 0, fontSize: '0.875rem' }}>
               © 2026 <span style={{ color: '#94A3B8' }}>ADA Legal</span>{' '}
               <span style={{ color: '#C2410C', opacity: 0.7 }}>Link</span>.
