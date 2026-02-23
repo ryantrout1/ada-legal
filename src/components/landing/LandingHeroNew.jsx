@@ -57,21 +57,21 @@ export default function LandingHeroNew() {
             fontFamily: 'Fraunces, serif', fontSize: '3.25rem', fontWeight: 700,
             lineHeight: 1.1, color: 'white', margin: '0 0 1.5rem', fontStyle: 'normal'
           }}>
-            You were denied access.<br />
-            <span style={{ color: '#EA580C' }}>That ends here.</span>
+            Understand your rights.<br />
+            <span style={{ color: '#EA580C' }}>Then enforce them.</span>
           </h1>
 
           <p className="landing-fade-up landing-delay-2" style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.125rem',
             color: '#CBD5E1', lineHeight: 1.7, margin: '0 0 2rem', maxWidth: '540px'
           }}>
-            Report your ADA violation and we'll connect you with an experienced disability rights attorney — at no cost to you. Every person deserves equal access.
+            We turned 279 pages of ADA standards into an interactive, accessible resource center — with 30 diagrams, 47 guides, and instant search. When you're ready, we connect you with an attorney at no cost.
           </p>
 
           <div className="landing-fade-up landing-delay-3 landing-hero-buttons" style={{
             display: 'flex', gap: '1rem', flexWrap: 'wrap'
           }}>
-            <Link to={createPageUrl('Intake')} className="landing-btn-primary" style={{
+            <Link to={createPageUrl('StandardsGuide')} className="landing-btn-primary" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
               background: '#C2410C', color: 'white',
               padding: '16px 32px', borderRadius: '10px',
@@ -79,9 +79,9 @@ export default function LandingHeroNew() {
               textDecoration: 'none', minHeight: '44px', border: 'none',
               transition: 'background 0.15s'
             }}>
-              Report a Violation →
+              Explore the ADA Standards Guide →
             </Link>
-            <a href="#how-it-works" className="landing-btn-secondary" style={{
+            <Link to={createPageUrl('Intake')} className="landing-btn-secondary" style={{
               display: 'inline-flex', alignItems: 'center',
               background: 'transparent', color: '#E2E8F0',
               padding: '16px 32px', borderRadius: '10px',
@@ -89,54 +89,67 @@ export default function LandingHeroNew() {
               textDecoration: 'none', minHeight: '44px',
               border: '1px solid #475569', transition: 'all 0.15s'
             }}>
-              See How It Works
-            </a>
+              Report a Violation
+            </Link>
           </div>
         </div>
 
-        {/* Right column */}
+        {/* Right column — What we built */}
         <div className="landing-fade-up landing-delay-4">
-          {/* Impact card */}
           <div style={{
             background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: '16px', padding: '28px 32px', marginBottom: '1rem'
           }}>
             <p style={{
-              fontFamily: 'Fraunces, serif', fontSize: '3rem', fontWeight: 800,
-              color: '#EA580C', margin: '0 0 0.75rem', fontStyle: 'normal'
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+              letterSpacing: '0.15em', textTransform: 'uppercase', color: '#94A3B8',
+              margin: '0 0 1.25rem'
             }}>
-              8,800+
+              Inside the ADA Standards Guide
             </p>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-              color: '#CBD5E1', lineHeight: 1.6, margin: '0 0 0.75rem'
+            <div style={{
+              display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px'
             }}>
-              ADA Title III federal lawsuits were filed in 2024 — and thousands more go unreported because people don't know where to turn.
-            </p>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-              color: '#94A3B8', margin: 0
-            }}>
-              Source: Seyfarth Shaw ADA Title III Litigation Report, 2024
-            </p>
+              {[
+                { value: '30', label: 'Interactive Diagrams', sub: 'with unit toggle & callouts' },
+                { value: '47', label: 'Guide Pages', sub: 'plain language + legal text' },
+                { value: '10', label: 'Chapters Covered', sub: 'all major ADA sections' },
+                { value: '60+', label: 'Searchable Items', sub: 'instant results, zero delay' }
+              ].map((stat, i) => (
+                <div key={i} style={{ padding: '8px 0' }}>
+                  <p style={{
+                    fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 800,
+                    color: '#EA580C', margin: '0 0 2px', fontStyle: 'normal'
+                  }}>
+                    {stat.value}
+                  </p>
+                  <p style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
+                    color: '#E2E8F0', margin: '0 0 2px', fontWeight: 600
+                  }}>
+                    {stat.label}
+                  </p>
+                  <p style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
+                    color: '#94A3B8', margin: 0
+                  }}>
+                    {stat.sub}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Testimonial card */}
+          {/* Accessibility commitment mini-card */}
           <div style={{
             background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
-            borderRadius: '10px', padding: '24px', borderLeft: '3px solid #C2410C'
+            borderRadius: '10px', padding: '20px 24px', borderLeft: '3px solid #C2410C'
           }}>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-              color: '#E2E8F0', lineHeight: 1.6, margin: '0 0 0.75rem', fontStyle: 'normal'
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
+              color: '#E2E8F0', lineHeight: 1.6, margin: 0, fontStyle: 'normal'
             }}>
-              "I didn't think anyone would care about a missing ramp at a restaurant. Three weeks after reporting, an attorney called me. Someone finally listened."
-            </p>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-              color: '#94A3B8', margin: 0
-            }}>
-              — Platform claimant
+              <strong style={{ color: 'white' }}>100% WCAG 2.1 AA compliant.</strong> Every page, every diagram, every interaction — built for the community it serves. Keyboard navigable. Screen reader optimized. High contrast supported.
             </p>
           </div>
         </div>

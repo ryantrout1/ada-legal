@@ -3,21 +3,27 @@ import React from 'react';
 const steps = [
   {
     num: '1',
-    title: 'Tell Us What Happened',
+    title: 'Learn Your Rights',
+    desc: 'Browse the ADA Standards Guide — 30 interactive diagrams and 47 guides in plain language. Search any topic instantly.',
+    time: 'At your own pace'
+  },
+  {
+    num: '2',
+    title: 'Report What Happened',
     desc: 'Fill out a simple guided form describing the ADA violation you experienced. No legal knowledge needed.',
     time: 'About 5 minutes'
   },
   {
-    num: '2',
-    title: 'We Review Your Report',
-    desc: 'Our team reviews every submission for completeness and merit before it enters the attorney marketplace.',
+    num: '3',
+    title: 'We Review & Match',
+    desc: 'Our team reviews every submission. Your case enters the attorney marketplace, visible only to qualified ADA lawyers in your area.',
     time: 'Within 24 hours'
   },
   {
-    num: '3',
+    num: '4',
     title: 'An Attorney Reaches Out',
-    desc: 'A licensed ADA attorney claims your case exclusively and contacts you directly to discuss next steps.',
-    time: 'Usually within 24 hours'
+    desc: 'A licensed ADA attorney claims your case exclusively and contacts you directly — at no cost to you.',
+    time: 'Usually within 48 hours'
   }
 ];
 
@@ -39,14 +45,14 @@ export default function HowItWorksNew() {
             fontFamily: 'Fraunces, serif', fontSize: '2.5rem', fontWeight: 700,
             color: '#1E293B', margin: '0 0 0.75rem', fontStyle: 'normal'
           }}>
-            Three steps to getting help
+            From understanding to action
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
             color: '#475569', margin: 0, maxWidth: '520px',
             marginLeft: 'auto', marginRight: 'auto'
           }}>
-            No legal knowledge required. No upfront costs. We guide you through everything.
+            Start by learning your rights. When you're ready, we guide you through everything — no legal knowledge required, no upfront costs.
           </p>
         </div>
 
@@ -60,7 +66,7 @@ export default function HowItWorksNew() {
           }} />
 
           <div role="list" className="landing-steps-grid" style={{
-            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+            display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '2rem', position: 'relative', zIndex: 1
           }}>
             {steps.map((s, i) => (

@@ -56,7 +56,7 @@ export default function LandingStyles() {
           grid-template-columns: 1fr !important;
         }
         .landing-steps-grid {
-          grid-template-columns: 1fr !important;
+          grid-template-columns: repeat(2, 1fr) !important;
         }
         .landing-steps-line {
           display: none !important;
@@ -89,6 +89,9 @@ export default function LandingStyles() {
         .landing-hero-buttons a {
           width: 100% !important;
           justify-content: center !important;
+        }
+        .landing-steps-grid {
+          grid-template-columns: 1fr !important;
         }
         .landing-stat-grid {
           grid-template-columns: 1fr !important;

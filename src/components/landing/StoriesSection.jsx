@@ -1,23 +1,28 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../../utils';
 
-const stories = [
+const capabilities = [
   {
-    emoji: '🏥',
-    heading: 'The restroom door was too narrow for my wheelchair.',
-    body: 'A medical office with a stall that swings inward, missing grab bars, and a sink too high to reach. A basic appointment became a humiliating ordeal.',
-    tag: 'Physical Access'
+    icon: '📐',
+    heading: 'Interactive Diagrams',
+    body: 'Parking spaces, restrooms, ramps, elevators, signage — 30 interactive diagrams with numbered callouts, unit toggle (imperial/metric), and full keyboard navigation. Tap any callout to see the plain language explanation alongside the official legal standard.',
+    tag: 'Standards Guide',
+    link: 'StandardsGuide'
   },
   {
-    emoji: '💻',
-    heading: "I couldn't order my own groceries online.",
-    body: "A grocery chain's website required mouse clicks to add items to cart. Keyboard navigation was impossible. A simple task everyone else takes for granted.",
-    tag: 'Digital Access'
+    icon: '🔍',
+    heading: 'Instant Search',
+    body: 'Type any ADA topic — parking, grab bars, service animals, website accessibility — and get instant results from 60+ indexed items. No loading, no API calls, no delays. Built to work with screen readers and keyboard navigation.',
+    tag: 'Search',
+    link: 'StandardsGuide'
   },
   {
-    emoji: '🐕‍🦺',
-    heading: "They said my service dog wasn't allowed.",
-    body: "A dental office refused a patient with a clearly-identified service animal, citing a 'no pets' policy. The appointment was denied. The law was broken.",
-    tag: 'Service Animal'
+    icon: '⚖️',
+    heading: 'Know Your Legal Options',
+    body: 'Understand the difference between filing a DOJ complaint and hiring an attorney. Learn what to expect from demand letters, settlements, and court. Know your deadlines, your remedies, and your rights — before you need a lawyer.',
+    tag: 'Legal Guides',
+    link: 'GuideLegalOptions'
   }
 ];
 
@@ -36,19 +41,19 @@ export default function StoriesSection() {
             letterSpacing: '0.15em', textTransform: 'uppercase', color: '#C2410C',
             margin: '0 0 0.75rem'
           }} aria-hidden="true">
-            This Happens Every Day
+            What We Built
           </p>
           <h2 id="stories-heading" style={{
             fontFamily: 'Fraunces, serif', fontSize: '2.5rem', fontWeight: 700,
             color: '#1E293B', margin: '0 0 0.75rem', fontStyle: 'normal'
           }}>
-            These are real ADA violations
+            The ADA, made accessible
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
-            color: '#475569', margin: 0, maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto'
+            color: '#475569', margin: 0, maxWidth: '640px', marginLeft: 'auto', marginRight: 'auto'
           }}>
-            Every day, people with disabilities face barriers that violate their civil rights. These stories represent thousands of unreported incidents.
+            We took 279 pages of federal accessibility standards and turned them into something anyone can understand, search, and act on — fully accessible to the community it serves.
           </p>
         </div>
 
@@ -56,18 +61,19 @@ export default function StoriesSection() {
           display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '24px'
         }}>
-          {stories.map((s, i) => (
+          {capabilities.map((s, i) => (
             <article key={i} className="landing-story-card" style={{
               background: '#FFFFFF', border: '1px solid #E7E4DE',
               borderRadius: '16px', padding: '32px',
-              transition: 'transform 0.2s, box-shadow 0.2s'
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              display: 'flex', flexDirection: 'column'
             }}>
               <div aria-hidden="true" style={{
                 width: '48px', height: '48px', borderRadius: '12px',
                 background: '#FEF1EC', display: 'flex', alignItems: 'center',
                 justifyContent: 'center', fontSize: '1.5rem', marginBottom: '1.25rem'
               }}>
-                {s.emoji}
+                {s.icon}
               </div>
               <h3 style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 600,
@@ -77,18 +83,27 @@ export default function StoriesSection() {
               </h3>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-                color: '#475569', lineHeight: 1.6, margin: '0 0 1.25rem'
+                color: '#475569', lineHeight: 1.6, margin: '0 0 1.25rem',
+                flex: 1
               }}>
                 {s.body}
               </p>
-              <span style={{
-                display: 'inline-block', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.8rem', fontWeight: 700, color: '#C2410C',
-                background: '#FEF1EC', padding: '0.3rem 0.75rem',
-                borderRadius: '9999px'
-              }}>
-                {s.tag}
-              </span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{
+                  display: 'inline-block', fontFamily: 'Manrope, sans-serif',
+                  fontSize: '0.8rem', fontWeight: 700, color: '#C2410C',
+                  background: '#FEF1EC', padding: '0.3rem 0.75rem',
+                  borderRadius: '9999px'
+                }}>
+                  {s.tag}
+                </span>
+                <Link to={createPageUrl(s.link)} style={{
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
+                  fontWeight: 600, color: '#C2410C', textDecoration: 'none'
+                }}>
+                  Explore →
+                </Link>
+              </div>
             </article>
           ))}
         </div>

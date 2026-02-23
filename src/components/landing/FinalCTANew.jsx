@@ -14,24 +14,36 @@ export default function FinalCTANew() {
         }}>
           The ADA was written so every person could participate fully in American life.
           <br />
-          <span style={{ color: '#EA580C' }}>We exist to keep that promise.</span>
+          <span style={{ color: '#EA580C' }}>We built this to keep that promise.</span>
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
           color: '#CBD5E1', margin: '0 0 2.5rem', lineHeight: 1.6
         }}>
-          It takes five minutes to report a violation. It could change everything.
+          Learn your rights with 30 interactive diagrams and 47 plain-language guides. When you're ready, report a violation and we'll connect you with an attorney — at no cost.
         </p>
-        <Link to={createPageUrl('Intake')} className="landing-btn-primary" style={{
-          display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-          background: '#C2410C', color: 'white',
-          padding: '18px 40px', borderRadius: '10px',
-          fontSize: '1.1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
-          textDecoration: 'none', minHeight: '44px', border: 'none',
-          transition: 'background 0.15s'
-        }}>
-          Report a Violation →
-        </Link>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link to={createPageUrl('StandardsGuide')} className="landing-btn-primary" style={{
+            display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+            background: '#C2410C', color: 'white',
+            padding: '18px 36px', borderRadius: '10px',
+            fontSize: '1.1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
+            textDecoration: 'none', minHeight: '44px', border: 'none',
+            transition: 'background 0.15s'
+          }}>
+            Explore the ADA Standards Guide →
+          </Link>
+          <Link to={createPageUrl('Intake')} style={{
+            display: 'inline-flex', alignItems: 'center',
+            background: 'transparent', color: '#E2E8F0',
+            padding: '18px 36px', borderRadius: '10px',
+            fontSize: '1.1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
+            textDecoration: 'none', minHeight: '44px',
+            border: '1px solid #475569', transition: 'all 0.15s'
+          }}>
+            Report a Violation
+          </Link>
+        </div>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
           color: '#94A3B8', marginTop: '1.25rem', marginBottom: 0
