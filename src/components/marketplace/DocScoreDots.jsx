@@ -22,7 +22,7 @@ export default function DocScoreDots({ caseData, showLabel = true, tooltipPlacem
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', position: 'relative' }}>
-      <div style={{ display: 'flex', gap: '3px' }} aria-label={`Documentation score: ${score} of 6, ${label}`} role="img">
+      <div style={{ display: 'flex', gap: '3px' }} aria-label={`Documentation score: ${score} of 7, ${label}`} role="img">
         {criteria.map((cr, i) => (
           <span key={i} style={{
             width: '8px', height: '8px', borderRadius: '50%',
@@ -61,7 +61,7 @@ export default function DocScoreDots({ caseData, showLabel = true, tooltipPlacem
           padding: '12px 14px', width: '280px'
         }}>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-800)', margin: '0 0 8px' }}>
-            Documentation Score: {score}/6 — {label}
+            Documentation Score: {score}/7 — {label}
           </p>
           {criteria.map((cr, i) => (
             <div key={i} style={{ display: 'flex', gap: '6px', marginBottom: '4px', alignItems: 'flex-start' }}>
