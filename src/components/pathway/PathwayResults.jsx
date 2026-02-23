@@ -177,7 +177,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
                   color: 'var(--slate-600)', lineHeight: 1.5, margin: 0
                 }}>{fp.description}</p>
               </div>
-              {fp.url && (
+              {fp.url ? (
                 <a href={fp.url} target="_blank" rel="noopener noreferrer"
                   aria-label={`${fp.agency} (opens in new tab)`}
                   style={{
@@ -188,7 +188,21 @@ export default function PathwayResults({ results, answers, onStartOver }) {
                   }}>
                   Visit <ExternalLink size={14} aria-hidden="true" />
                 </a>
-              )}
+              ) : fp.agency.toLowerCase().includes('attorney') ? (
+                <Link to={`${createPageUrl('Intake')}?${intakeParams}`}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
+                    color: 'white', backgroundColor: '#C2410C', textDecoration: 'none',
+                    flexShrink: 0, borderRadius: '8px', padding: '10px 16px',
+                    minHeight: '44px', transition: 'background-color 0.15s'
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#A93B0A'; }}
+                  onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#C2410C'; }}
+                >
+                  Report Violation <ArrowRight size={14} aria-hidden="true" />
+                </Link>
+              ) : null}
             </div>
           ))}
         </div>
