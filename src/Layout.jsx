@@ -216,7 +216,7 @@ export default function Layout({ children, currentPageName }) {
             fontFamily: 'Fraunces, serif',
             fontWeight: 700
           }}>
-            <LogoBrand size={72} />
+            <LogoBrand size={44} />
             <span>ADA Legal <span style={{ color: '#C2410C' }}>Link</span></span>
           </Link>
 
