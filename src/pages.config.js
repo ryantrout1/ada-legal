@@ -106,6 +106,7 @@ import LawyerProfile from './pages/LawyerProfile';
 import LawyerRegister from './pages/LawyerRegister';
 import Marketplace from './pages/Marketplace';
 import MyCases from './pages/MyCases';
+import RightsPathway from './pages/RightsPathway';
 import StandardsCh1 from './pages/StandardsCh1';
 import StandardsCh10 from './pages/StandardsCh10';
 import StandardsCh2 from './pages/StandardsCh2';
@@ -117,7 +118,6 @@ import StandardsCh7 from './pages/StandardsCh7';
 import StandardsCh8 from './pages/StandardsCh8';
 import StandardsCh9 from './pages/StandardsCh9';
 import StandardsGuide from './pages/StandardsGuide';
-import RightsPathway from './pages/RightsPathway';
 import __Layout from './Layout.jsx';
 
 
@@ -181,6 +181,7 @@ export const PAGES = {
     "LawyerRegister": LawyerRegister,
     "Marketplace": Marketplace,
     "MyCases": MyCases,
+    "RightsPathway": RightsPathway,
     "StandardsCh1": StandardsCh1,
     "StandardsCh10": StandardsCh10,
     "StandardsCh2": StandardsCh2,
@@ -192,7 +193,6 @@ export const PAGES = {
     "StandardsCh8": StandardsCh8,
     "StandardsCh9": StandardsCh9,
     "StandardsGuide": StandardsGuide,
-    "RightsPathway": RightsPathway,
 }
 
 export const pagesConfig = {

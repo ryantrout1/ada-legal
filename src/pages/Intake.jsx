@@ -141,7 +141,7 @@ export default function Intake() {
   const canContinue = () => {
     if (step === 1) return !!formData.violation_type;
     if (step === 2 && formData.violation_type === 'physical_space') {
-      return !!(formData.business_name && formData.business_type && formData.city && formData.state && formData.violation_subtype);
+      return !!(formData.business_name && formData.business_type && formData.city && formData.state && formData.street_address && formData.violation_subtype);
     }
     if (step === 2 && formData.violation_type === 'digital_website') {
       return !!(formData.url_domain && formData.assistive_tech.length > 0 && formData.business_name);
@@ -161,6 +161,7 @@ export default function Intake() {
     if (!formData.business_type) e.business_type = 'Please select a business type';
     if (!formData.city.trim()) e.city = 'City is required';
     if (!formData.state) e.state = 'Please select a state';
+    if (!(formData.street_address || '').trim()) e.street_address = 'Street address is required';
     if (!formData.violation_subtype) e.violation_subtype = 'Please select a violation sub-type';
     setErrors(e);
     return Object.keys(e).length === 0;

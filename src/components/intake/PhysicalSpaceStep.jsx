@@ -157,16 +157,20 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
       <FormField
         label="Street Address"
         id="street_address"
-        helperText="Optional — helps attorneys locate the business"
+        required
+        error={errors.street_address}
       >
         <input
           id="street_address"
           type="text"
-          placeholder="Street address"
+          placeholder="e.g., 123 Main St"
           value={data.street_address || ''}
           onChange={e => update('street_address', e.target.value)}
           onFocus={focusHandler}
           onBlur={blurHandler}
+          aria-required="true"
+          aria-invalid={!!errors.street_address}
+          aria-describedby={errors.street_address ? 'street_address-error' : undefined}
           style={inputStyle}
         />
       </FormField>
