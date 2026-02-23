@@ -52,7 +52,7 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
         {subtitle && (
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-            color: '#64748B', margin: '4px 0 0', lineHeight: 1.4
+            color: '#475569', margin: '4px 0 0', lineHeight: 1.4
           }}>
             {subtitle}
           </p>

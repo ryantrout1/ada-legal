@@ -201,8 +201,13 @@ export default function PathwayResults({ results, answers, onStartOver }) {
             <Link key={i} to={createPageUrl(gl.page)} style={{
               display: 'block', background: 'var(--slate-50)', border: '1px solid var(--slate-200)',
               borderRadius: '10px', padding: '14px 16px', textDecoration: 'none',
-              transition: 'border-color 0.15s'
-            }}>
+              transition: 'border-color 0.15s, box-shadow 0.15s', outline: 'none'
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = '#C2410C'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; e.currentTarget.style.boxShadow = 'none'; }}
+            onFocus={e => { e.currentTarget.style.borderColor = '#C2410C'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(194,65,12,0.15)'; }}
+            onBlur={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700,
                 color: '#C2410C', margin: '0 0 4px'

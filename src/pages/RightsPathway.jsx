@@ -193,7 +193,7 @@ export default function RightsPathway() {
           </h1>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-            color: '#64748B', margin: 0, lineHeight: 1.6
+            color: '#475569', margin: 0, lineHeight: 1.6
           }}>
             Answer a few questions and we'll show you exactly what the law says about your situation.
           </p>
@@ -269,8 +269,12 @@ export default function RightsPathway() {
                 <button onClick={handleBack} style={{
                   background: 'transparent', border: 'none', cursor: 'pointer',
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 600,
-                  color: '#64748B', padding: '8px 0', minHeight: '44px'
-                }}>
+                  color: '#475569', padding: '8px 4px', minHeight: '44px',
+                  borderRadius: '6px', outline: 'none'
+                }}
+                onFocus={e => { e.currentTarget.style.outline = '2px solid #C2410C'; e.currentTarget.style.outlineOffset = '2px'; }}
+                onBlur={e => { e.currentTarget.style.outline = 'none'; }}
+                >
                   ← Back
                 </button>
               </div>
@@ -284,7 +288,10 @@ export default function RightsPathway() {
         )}
 
         {/* Live region */}
-        <div aria-live="polite" className="sr-only">
+        <div aria-live="polite" style={{
+          position: 'absolute', width: '1px', height: '1px',
+          overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0, padding: 0, margin: '-1px'
+        }}>
           {showResults ? 'Your personalized rights summary is now displayed.' :
             `Step ${currentStepIndex + 1} of ${totalSteps}: ${stepQuestions[currentStepKey]}`}
         </div>

@@ -65,7 +65,7 @@ export default function LandingHeroNew() {
             fontFamily: 'Manrope, sans-serif', fontSize: '1.125rem',
             color: '#CBD5E1', lineHeight: 1.7, margin: '0 0 2rem', maxWidth: '540px'
           }}>
-            We turned 279 pages of ADA standards into an interactive, accessible resource center — with 30 diagrams, 47 guides, and instant search. When you're ready, we connect you with an attorney at no cost.
+            We turned 279 pages of ADA standards into an interactive, accessible resource center — with 42 diagrams, 52 guides, and instant search. When you're ready, we connect you with an attorney at no cost.
           </p>
 
           <div className="landing-fade-up landing-delay-3 landing-hero-buttons" style={{
@@ -121,8 +121,8 @@ export default function LandingHeroNew() {
               display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px'
             }}>
               {[
-                { value: '30', label: 'Interactive Diagrams', sub: 'with unit toggle & callouts' },
-                { value: '47', label: 'Guide Pages', sub: 'plain language + legal text' },
+                { value: '42', label: 'Interactive Diagrams', sub: 'with unit toggle & callouts' },
+                { value: '52', label: 'Guide Pages', sub: 'plain language + legal text' },
                 { value: '10', label: 'Chapters Covered', sub: 'all major ADA sections' },
                 { value: '60+', label: 'Searchable Items', sub: 'instant results, zero delay' }
               ].map((stat, i) => (

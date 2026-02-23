@@ -6,7 +6,7 @@ const capabilities = [
   {
     icon: '📐',
     heading: 'Interactive Diagrams',
-    body: 'Parking spaces, restrooms, ramps, elevators, signage — 30 interactive diagrams with numbered callouts, unit toggle (imperial/metric), and full keyboard navigation. Tap any callout to see the plain language explanation alongside the official legal standard.',
+    body: 'Parking spaces, restrooms, ramps, elevators, signage — 42 interactive diagrams with numbered callouts, unit toggle (imperial/metric), and full keyboard navigation. Tap any callout to see the plain language explanation alongside the official legal standard.',
     tag: 'Standards Guide',
     link: 'StandardsGuide'
   },

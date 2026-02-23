@@ -20,7 +20,7 @@ export default function FinalCTANew() {
           fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
           color: '#CBD5E1', margin: '0 0 2.5rem', lineHeight: 1.6
         }}>
-          Learn your rights with 30 interactive diagrams and 47 plain-language guides. When you're ready, report a violation and we'll connect you with an attorney — at no cost.
+          Learn your rights with 42 interactive diagrams and 52 plain-language guides. When you're ready, report a violation and we'll connect you with an attorney — at no cost.
         </p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link to={createPageUrl('StandardsGuide')} className="landing-btn-primary" style={{
