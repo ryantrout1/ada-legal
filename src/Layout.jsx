@@ -184,7 +184,8 @@ export default function Layout({ children, currentPageName }) {
             }
           : {
               backgroundColor: 'var(--slate-900)',
-              color: 'white', padding: '1rem 0',
+              color: 'white', height: '72px',
+              display: 'flex', alignItems: 'center',
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
             }
       }>
