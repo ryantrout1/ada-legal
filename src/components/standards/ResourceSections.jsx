@@ -225,8 +225,15 @@ const SECTIONS = [
     icon: Monitor,
     iconBg: '#5B2C6F',
     title: 'Web & Digital Accessibility',
-    count: 6,
+    count: 7,
     cards: [
+      {
+        title: 'Website & App Barriers: Your Rights',
+        type: 'Your Rights', dotColor: '#5B2C6F',
+        href: '/GuideDigitalBarriers',
+        description: 'Encountered an inaccessible website or app? Learn what counts as a digital barrier, how to document it, and what you can do about it.',
+        meta: [{ text: 'Action guide' }]
+      },
       {
         title: 'Title II Web & Mobile App Accessibility Rule',
         type: 'New Rule', dotColor: '#5B2C6F',

@@ -91,6 +91,7 @@ const CONTENT = [
   { id: "guide-webtesting", title: "Web Accessibility Testing Tools", page: "GuideWebTesting", desc: "Free and paid tools for testing your website", keywords: "web testing tools audit scan accessibility checker wave axe lighthouse", category: "Web & Digital" },
   { id: "guide-social", title: "Social Media Accessibility", page: "GuideSocialMedia", desc: "Making posts accessible on Instagram, Facebook, X, and more", keywords: "social media instagram facebook twitter alt text caption video image", category: "Web & Digital" },
   { id: "guide-documents", title: "Accessible Documents", page: "GuideAccessibleDocuments", desc: "Making PDFs, Word docs, and presentations accessible", keywords: "document pdf word accessible heading alt text reading order powerpoint", category: "Web & Digital" },
+  { id: "guide-digital-barriers", title: "Website & App Barriers: Your Rights", page: "GuideDigitalBarriers", desc: "What counts as a digital ADA violation, how to document website barriers, your legal options, lawsuit trends, and why accessibility overlays don't help", keywords: "website app digital barrier screen reader keyboard caption alt text accessibility overlay widget inaccessible online WCAG 2.1 lawsuit", category: "Web & Digital" },
 
   // Government
   { id: "guide-titleii", title: "Title II — State & Local Government", page: "GuideTitleII", desc: "Government obligations under Title II of the ADA", keywords: "title ii 2 government state local city county municipal public", category: "Government" },
