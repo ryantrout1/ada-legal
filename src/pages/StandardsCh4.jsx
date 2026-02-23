@@ -4,6 +4,7 @@ import RampDiagram from '../components/guide/diagrams/RampDiagram';
 import DoorDiagram from '../components/guide/diagrams/DoorDiagram';
 import CurbRampDiagram from '../components/guide/diagrams/CurbRampDiagram';
 import ElevatorDiagram from '../components/guide/diagrams/ElevatorDiagram';
+import WalkingSurfaceDiagram from '../components/guide/diagrams/WalkingSurfaceDiagram';
 
 const sections = [
   {
@@ -14,7 +15,8 @@ const sections = [
   {
     number: '§403', title: 'Walking Surfaces',
     plain: <><p>Walking surfaces along accessible routes must meet these requirements:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Width:</strong> 36 inches minimum clear width</li><li style={{marginBottom:'6px'}}><strong>Running slope:</strong> No steeper than 1:20 (5%). Anything steeper is a ramp.</li><li style={{marginBottom:'6px'}}><strong>Cross slope:</strong> No steeper than 1:48 (about 2%)</li><li style={{marginBottom:'6px'}}><strong>Surface:</strong> Stable, firm, and slip-resistant</li></ul><p><strong>Example:</strong> A sidewalk to a building entrance can have a gentle slope (1:20) but not a steep hill. If it's steeper than 1:20, it must have ramp features (handrails, landings).</p></>,
-    legal: <p>§403.3 "The running slope of walking surfaces shall not be steeper than 1:20." §403.5.1 "The clear width of walking surfaces shall be 36 inches minimum." §403.3 "The cross slope of walking surfaces shall not be steeper than 1:48."</p>
+    legal: <p>§403.3 "The running slope of walking surfaces shall not be steeper than 1:20." §403.5.1 "The clear width of walking surfaces shall be 36 inches minimum." §403.3 "The cross slope of walking surfaces shall not be steeper than 1:48."</p>,
+    diagram: <WalkingSurfaceDiagram />
   },
   {
     number: '§404', title: 'Doors, Doorways & Gates',

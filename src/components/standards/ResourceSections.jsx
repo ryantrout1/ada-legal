@@ -59,6 +59,20 @@ const SECTIONS = [
         href: '/GuideAdaProtections',
         description: "Understanding the ADA's definition of disability, who qualifies for protection, and what 'regarded as' means.",
         tags: ['ADAAA 2008', '§12102']
+      },
+      {
+        title: 'Employment & the ADA (Title I)',
+        type: 'Guide', dotColor: '#D4570A',
+        href: '/GuideEmployment',
+        description: 'Reasonable accommodation, the interactive process, what employers cannot do, and how to file an EEOC complaint.',
+        tags: ['Title I', 'EEOC', 'Accommodation']
+      },
+      {
+        title: 'Housing, Apartments & the ADA',
+        type: 'Guide', dotColor: '#D4570A',
+        href: '/GuideHousing',
+        description: 'Which laws apply to housing, Fair Housing Act design requirements, reasonable accommodations for tenants, and filing complaints.',
+        tags: ['FHA', 'Title II', 'Section 504']
       }
     ]
   },

@@ -6,6 +6,7 @@ import ShowerDiagram from '../components/guide/diagrams/ShowerDiagram';
 import LavatoryDiagram from '../components/guide/diagrams/LavatoryDiagram';
 import GrabBarDetailDiagram from '../components/guide/diagrams/GrabBarDetailDiagram';
 import DrinkingFountainDiagram from '../components/guide/diagrams/DrinkingFountainDiagram';
+import UrinalDiagram from '../components/guide/diagrams/UrinalDiagram';
 
 const sections = [
   {
@@ -28,7 +29,8 @@ const sections = [
   {
     number: '§605', title: 'Urinals',
     plain: <><p>Where urinals are provided, at least one must be accessible:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Type:</strong> Stall-type or wall-hung with elongated rim no higher than <strong>17 inches</strong> above the floor</li><li style={{marginBottom:'6px'}}><strong>Clear floor space:</strong> 30 × 48 inches for a forward approach</li><li style={{marginBottom:'6px'}}><strong>Flush controls:</strong> No higher than 44 inches above the floor</li></ul></>,
-    legal: <p>§605.2 "Urinals shall be the stall-type or the wall-hung type with the rim 17 inches maximum above the finish floor or ground." §605.3 "A clear floor or ground space complying with §305 positioned for forward approach shall be provided." §605.4 "Flush controls shall be hand operated or automatic, and shall comply with §309. Flush controls shall be 44 inches maximum above the finish floor."</p>
+    legal: <p>§605.2 "Urinals shall be the stall-type or the wall-hung type with the rim 17 inches maximum above the finish floor or ground." §605.3 "A clear floor or ground space complying with §305 positioned for forward approach shall be provided." §605.4 "Flush controls shall be hand operated or automatic, and shall comply with §309. Flush controls shall be 44 inches maximum above the finish floor."</p>,
+    diagram: <UrinalDiagram />
   },
   {
     number: '§606', title: 'Lavatories & Sinks',
