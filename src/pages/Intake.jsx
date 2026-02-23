@@ -272,16 +272,27 @@ export default function Intake() {
     let photoUrls = [];
     if (formData.photos && formData.photos.length > 0) {
       try {
-        const uploadPromises = formData.photos.map(async (photo) => {
-          const result = await base44.integrations.Core.UploadFile({
-            file: photo.data
-          });
-          return result?.file_url;
-        });
-        photoUrls = (await Promise.all(uploadPromises)).filter(Boolean);
+        for (const photo of formData.photos) {
+          try {
+            const result = await base44.integrations.Core.UploadFile({
+              file: photo.data,
+              fileName: photo.name || 'violation-photo.jpg'
+            });
+            console.log('UploadFile result:', JSON.stringify(result));
+            const url = typeof result === 'string'
+              ? result
+              : result?.file_url || result?.url || result?.fileUrl || result?.download_url || result?.downloadUrl || result?.path;
+            if (url) photoUrls.push(url);
+          } catch (singleErr) {
+            console.error('Single photo upload failed:', singleErr);
+          }
+        }
       } catch (uploadErr) {
         console.error('Photo upload failed:', uploadErr);
       }
+    }
+    if (photoUrls.length > 0) {
+      console.log('Photo URLs saved:', photoUrls);
     }
 
     // 2. Create Case record
