@@ -93,6 +93,11 @@ export default function Intake() {
   const [currentUser, setCurrentUser] = useState(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
+  const goToStep = (n) => {
+    setStep(n);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Read URL params for pathway integration
   const urlParams = new URLSearchParams(window.location.search);
   const isFromPathway = urlParams.get('source') === 'pathway';
@@ -147,17 +152,29 @@ export default function Intake() {
 
   const handleContinue = () => {
     setErrors({});
+    let valid = false;
     if (step === 1) {
-      setStep(2);
+      goToStep(2);
+      return;
     } else if (step === 2) {
       const isPhysical = formData.violation_type === 'physical_space';
-      const valid = isPhysical ? validateStep2Physical() : validateStep2Digital();
-      if (valid) setStep(3);
+      valid = isPhysical ? validateStep2Physical() : validateStep2Digital();
+      if (valid) { goToStep(3); return; }
     } else if (step === 3) {
-      if (validateStep3()) setStep(4);
+      valid = validateStep3();
+      if (valid) { goToStep(4); return; }
     } else if (step === 4) {
-      if (validateStep4()) setStep(5);
+      valid = validateStep4();
+      if (valid) { goToStep(5); return; }
     }
+    // Validation failed — scroll to first error field
+    setTimeout(() => {
+      const firstError = document.querySelector('[aria-invalid="true"]');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstError.focus();
+      }
+    }, 50);
   };
 
   const validateStep2Physical = () => {
@@ -232,6 +249,7 @@ export default function Intake() {
     setErrors({});
     if (isFromPathway && step <= 2) return;
     setStep(prev => prev - 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSubmit = async () => {
