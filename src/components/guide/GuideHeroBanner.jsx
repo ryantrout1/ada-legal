@@ -30,14 +30,14 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
                 color: '#94A3B8', textDecoration: 'none'
               }}>Home</Link>
             </li>
-            <li aria-hidden="true"><ChevronRight size={14} style={{ color: '#64748B' }} /></li>
+            <li aria-hidden="true"><ChevronRight size={14} style={{ color: '#94A3B8' }} /></li>
             <li>
               <Link to={createPageUrl('StandardsGuide')} style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
                 color: '#94A3B8', textDecoration: 'none'
               }}>ADA Standards Guide</Link>
             </li>
-            <li aria-hidden="true"><ChevronRight size={14} style={{ color: '#64748B' }} /></li>
+            <li aria-hidden="true"><ChevronRight size={14} style={{ color: '#94A3B8' }} /></li>
             <li>
               <span aria-current="page" style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
