@@ -9,7 +9,7 @@ const SECTIONS = [
     icon: Shield,
     iconBg: '#D4570A',
     title: 'Know Your Rights',
-    count: 12,
+    count: 13,
     cards: [
       {
         title: 'Introduction to the ADA',
@@ -31,6 +31,13 @@ const SECTIONS = [
         href: '/GuideWhatToExpect',
         description: 'Step-by-step guide from documenting a barrier to demand letter, settlement, and resolution — including timelines, costs, and common questions.',
         meta: [{ text: '8 min read' }]
+      },
+      {
+        title: 'Why You Need an ADA Attorney',
+        type: 'Guide', dotColor: '#D4570A',
+        href: '/GuideWhyAttorney',
+        description: 'How private attorneys enforce the ADA, what they do that you can\'t do alone, and how ADA Legal Link connects you at no cost.',
+        meta: [{ text: '6 min read' }]
       },
       {
         title: 'How to File an ADA Complaint',
