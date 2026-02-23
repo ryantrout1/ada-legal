@@ -114,6 +114,7 @@ import GuideSidewalks from './pages/GuideSidewalks';
 import GuidePlaygrounds from './pages/GuidePlaygrounds';
 import GuideSwimmingPools from './pages/GuideSwimmingPools';
 import GuideLegalOptions from './pages/GuideLegalOptions';
+import GuideWhatToExpect from './pages/GuideWhatToExpect';
 import __Layout from './Layout.jsx';
 
 
@@ -185,6 +186,7 @@ export const PAGES = {
     "GuidePlaygrounds": GuidePlaygrounds,
     "GuideSwimmingPools": GuideSwimmingPools,
     "GuideLegalOptions": GuideLegalOptions,
+    "GuideWhatToExpect": GuideWhatToExpect,
 }
 
 export const pagesConfig = {

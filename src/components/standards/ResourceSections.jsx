@@ -9,7 +9,7 @@ const SECTIONS = [
     icon: Shield,
     iconBg: '#D4570A',
     title: 'Know Your Rights',
-    count: 11,
+    count: 12,
     cards: [
       {
         title: 'Introduction to the ADA',
@@ -24,6 +24,13 @@ const SECTIONS = [
         href: '/GuideLegalOptions',
         description: "Filing a DOJ complaint vs. hiring an attorney — understand the different paths, deadlines, what you can recover, and which is right for your situation.",
         meta: [{ text: 'Most important', warning: true }]
+      },
+      {
+        title: 'What to Expect: The Legal Process',
+        type: 'Walkthrough', dotColor: '#D4570A',
+        href: '/GuideWhatToExpect',
+        description: 'Step-by-step guide from documenting a barrier to demand letter, settlement, and resolution — including timelines, costs, and common questions.',
+        meta: [{ text: '8 min read' }]
       },
       {
         title: 'How to File an ADA Complaint',
