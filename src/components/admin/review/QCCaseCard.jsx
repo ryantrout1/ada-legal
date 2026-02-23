@@ -169,19 +169,6 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
       {expanded && (
         <div style={{ borderTop: '1px solid var(--slate-200)', padding: '20px' }}>
 
-          {/* DEBUG — remove after testing */}
-          <div style={{
-            background: '#FEF3C7', border: '1px solid #F59E0B', borderRadius: '8px',
-            padding: '12px', marginBottom: '16px', fontFamily: 'monospace', fontSize: '0.75rem',
-            color: '#92400E', wordBreak: 'break-all'
-          }}>
-            <strong>DEBUG photos field:</strong><br />
-            Type: {typeof c.photos}<br />
-            Is Array: {String(Array.isArray(c.photos))}<br />
-            Length: {c.photos?.length ?? 'N/A'}<br />
-            Value: {JSON.stringify(c.photos)}
-          </div>
-
           {/* Violation Summary Card */}
           <div style={{
             backgroundColor: 'var(--slate-50)', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px'
