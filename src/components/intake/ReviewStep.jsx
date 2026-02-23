@@ -50,6 +50,30 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
         <ReviewItem label="Date" value={data.incident_date} />
         <ReviewItem label="Visited Before" value={VISITED_LABELS[data.visited_before] || data.visited_before} />
         <ReviewItem label="Description" value={data.narrative} />
+        {data.photos && data.photos.length > 0 && (
+          <>
+            <ReviewItem label="Photos" value={`${data.photos.length} attached`} />
+            <dt style={{
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+              fontWeight: 600, color: 'var(--slate-600)'
+            }}> </dt>
+            <dd style={{ margin: 0 }}>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {data.photos.map((photo, i) => (
+                  <img
+                    key={i}
+                    src={photo.data}
+                    alt={`Violation photo ${i + 1}`}
+                    style={{
+                      width: '60px', height: '60px', objectFit: 'cover',
+                      borderRadius: '6px', border: '1px solid var(--slate-200)'
+                    }}
+                  />
+                ))}
+              </div>
+            </dd>
+          </>
+        )}
       </ReviewSection>
 
       {/* Contact Information */}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const STEP_LABELS = [
+const DEFAULT_LABELS = [
   'Violation Type',
   'Details',
   'Incident',
@@ -8,8 +8,10 @@ const STEP_LABELS = [
   'Review'
 ];
 
-export default function ProgressBar({ currentStep }) {
-  const progress = (currentStep / STEP_LABELS.length) * 100;
+export default function ProgressBar({ currentStep, totalOverride, labelsOverride }) {
+  const labels = labelsOverride || DEFAULT_LABELS;
+  const total = totalOverride || labels.length;
+  const progress = (currentStep / total) * 100;
 
   return (
     <div style={{ marginBottom: 'var(--space-2xl)' }}>
@@ -25,7 +27,7 @@ export default function ProgressBar({ currentStep }) {
           fontWeight: 600,
           color: 'var(--slate-700)'
         }}>
-          Step {currentStep} of {STEP_LABELS.length} — {STEP_LABELS[currentStep - 1]}
+          Step {currentStep} of {total} — {labels[currentStep - 1] || ''}
         </span>
         <span style={{
           fontFamily: 'Manrope, sans-serif',
@@ -47,7 +49,7 @@ export default function ProgressBar({ currentStep }) {
         aria-valuenow={Math.round(progress)}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={`Form progress: Step ${currentStep} of ${STEP_LABELS.length}`}
+        aria-label={`Form progress: Step ${currentStep} of ${total}`}
       >
         <div style={{
           width: `${progress}%`,

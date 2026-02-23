@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useLocation } from 'react-router-dom';
 
 import ProgressBar from '../components/intake/ProgressBar';
 import WizardNavButtons from '../components/intake/WizardNavButtons';
@@ -31,13 +32,78 @@ export default function Intake() {
     contact_name: '',
     contact_email: '',
     contact_phone: '',
-    contact_preference: ''
+    contact_preference: '',
+    photos: []
   });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [caseId, setCaseId] = useState(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+
+  const routeLocation = useLocation();
+
+  // Read Pathway params if coming from Rights Pathway
+  const pathwayParams = useMemo(() => {
+    const params = new URLSearchParams(routeLocation.search);
+    if (params.get('source') !== 'pathway') return null;
+
+    const type = params.get('type') || '';
+    const loc = params.get('location') || '';
+    const barrier = params.get('barrier') || '';
+
+    const violationTypeMap = {
+      physical_access: 'physical_space',
+      digital_access: 'digital_website',
+      service_animal: 'physical_space',
+      communication: 'physical_space',
+      employment: 'physical_space',
+      housing: 'physical_space',
+    };
+
+    const businessTypeMap = {
+      restaurant: 'Restaurant',
+      store: 'Retail Store',
+      hotel: 'Hotel/Lodging',
+      medical: 'Medical Office',
+      government: 'Government Building',
+      school: 'Education',
+      other_business: 'Other',
+      business_website: 'Website/App',
+      government_website: 'Government Building',
+      app: 'Website/App',
+      ecommerce: 'Website/App',
+      hospital_public: 'Medical Office',
+    };
+
+    const subtypeMap = {
+      service_animal: 'Service Animal Denial',
+      communication: 'Other',
+      employment: 'Other',
+      housing: 'Other',
+    };
+    const barrierSubtypeMap = {
+      no_ramp: 'Path of Travel',
+      stairs_only: 'Path of Travel',
+      no_parking: 'Parking',
+      parking_blocked: 'Parking',
+      restroom: 'Restroom',
+      narrow_door: 'Entrance/Exit',
+      entrance: 'Entrance/Exit',
+      elevator: 'Path of Travel',
+      counter_high: 'Other',
+      other: 'Other',
+    };
+
+    return {
+      isFromPathway: true,
+      violation_type: violationTypeMap[type] || '',
+      business_type: businessTypeMap[loc] || '',
+      violation_subtype: subtypeMap[type] || barrierSubtypeMap[barrier] || '',
+    };
+  }, [routeLocation.search]);
+
+  const isFromPathway = !!pathwayParams;
 
   // Silently check if user is logged in (no redirect — page is public)
   useEffect(() => {
@@ -55,6 +121,18 @@ export default function Intake() {
     checkAuth();
     return () => { cancelled = true; };
   }, []);
+
+  // Pre-fill from Pathway answers
+  useEffect(() => {
+    if (!pathwayParams) return;
+    setFormData(prev => ({
+      ...prev,
+      violation_type: pathwayParams.violation_type || prev.violation_type,
+      business_type: pathwayParams.business_type || prev.business_type,
+      violation_subtype: pathwayParams.violation_subtype || prev.violation_subtype,
+    }));
+    setStep(2);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -179,6 +257,7 @@ export default function Intake() {
 
   const handleBack = () => {
     setErrors({});
+    if (isFromPathway && step <= 2) return;
     setStep(prev => prev - 1);
   };
 
@@ -206,6 +285,7 @@ export default function Intake() {
       contact_email: formData.contact_email.trim(),
       contact_phone: formData.contact_phone.trim(),
       contact_preference: formData.contact_preference,
+      photos: formData.photos || [],
       status: 'submitted',
       submitted_at: now
     };
@@ -283,7 +363,13 @@ export default function Intake() {
           </p>
         )}
 
-        {!submitted && <ProgressBar currentStep={step} />}
+        {!submitted && (
+          <ProgressBar
+            currentStep={isFromPathway ? step - 1 : step}
+            totalOverride={isFromPathway ? 4 : undefined}
+            labelsOverride={isFromPathway ? ['Details', 'Incident', 'Contact', 'Review'] : undefined}
+          />
+        )}
 
         <div
           style={{
@@ -296,6 +382,24 @@ export default function Intake() {
           role="form"
           aria-label="ADA Violation Report Form"
         >
+          {/* Pathway context banner */}
+          {isFromPathway && !submitted && step <= 5 && (
+            <div style={{
+              background: '#FFF8F5', border: '1px solid #FDBA7440',
+              borderRadius: 'var(--radius-md)', padding: '12px 16px',
+              marginBottom: 'var(--space-xl)', display: 'flex',
+              alignItems: 'flex-start', gap: '10px'
+            }}>
+              <span aria-hidden="true" style={{ fontSize: '1.1rem', flexShrink: 0, marginTop: '1px' }}>✓</span>
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
+                color: 'var(--slate-700)', margin: 0, lineHeight: 1.5
+              }}>
+                We've carried over your answers from the Rights Pathway. Just fill in the remaining details below.
+              </p>
+            </div>
+          )}
+
           {submitted && (
             <SuccessStep caseData={formData} caseId={caseId} isLoggedIn={!!currentUser} />
           )}
@@ -350,7 +454,7 @@ export default function Intake() {
 
           {!submitted && step < 5 && (
             <WizardNavButtons
-              showBack={step > 1}
+              showBack={isFromPathway ? step > 2 : step > 1}
               onBack={handleBack}
               onContinue={handleContinue}
               canContinue={canContinue()}

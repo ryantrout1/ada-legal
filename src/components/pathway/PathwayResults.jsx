@@ -27,7 +27,7 @@ function Card({ title, children }) {
 
 export default function PathwayResults({ results, answers, onStartOver }) {
   const urgency = urgencyColors[results.deadline.urgency] || urgencyColors.yellow;
-  const intakeParams = new URLSearchParams({ source: 'pathway', type: answers.category || '', location: answers.location || '', timing: answers.timing || '' }).toString();
+  const intakeParams = new URLSearchParams({ source: 'pathway', type: answers.category || '', location: answers.location || '', timing: answers.timing || '', barrier: answers.barrier || '' }).toString();
 
   return (
     <div>

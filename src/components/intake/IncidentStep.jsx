@@ -1,5 +1,6 @@
 import React from 'react';
 import FormField from './FormField';
+import PhotoUpload from './PhotoUpload';
 
 const VISITED_OPTIONS = [
   { value: 'yes', label: 'Yes' },
@@ -155,6 +156,18 @@ export default function IncidentStep({ data, onChange, errors }) {
         >
           {charCount} characters (minimum 50)
         </p>
+      </FormField>
+
+      {/* Photo Upload — Optional */}
+      <FormField
+        label="Photos of the Violation"
+        id="photos"
+        helperText="Optional — photos of barriers like missing ramps, blocked parking, narrow doorways, or inaccessible restrooms help attorneys evaluate your case faster."
+      >
+        <PhotoUpload
+          photos={data.photos || []}
+          onChange={(updated) => onChange('photos', updated)}
+        />
       </FormField>
     </div>
   );
