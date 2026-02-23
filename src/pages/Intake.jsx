@@ -268,7 +268,23 @@ export default function Intake() {
     const now = new Date().toISOString();
     const isPhysical = formData.violation_type === 'physical_space';
 
-    // 1. Create Case record
+    // 1. Upload photos (if any) via UploadFile integration
+    let photoUrls = [];
+    if (formData.photos && formData.photos.length > 0) {
+      try {
+        const uploadPromises = formData.photos.map(async (photo) => {
+          const result = await base44.integrations.Core.UploadFile({
+            file: photo.data
+          });
+          return result?.file_url;
+        });
+        photoUrls = (await Promise.all(uploadPromises)).filter(Boolean);
+      } catch (uploadErr) {
+        console.error('Photo upload failed:', uploadErr);
+      }
+    }
+
+    // 2. Create Case record
     const casePayload = {
       violation_type: formData.violation_type,
       business_name: formData.business_name.trim(),
@@ -286,7 +302,7 @@ export default function Intake() {
       contact_email: formData.contact_email.trim(),
       contact_phone: formData.contact_phone.trim(),
       contact_preference: formData.contact_preference,
-      photos: formData.photos || [],
+      photos: photoUrls,
       intake_source: isFromPathway ? 'pathway' : 'direct',
       status: 'submitted',
       submitted_at: now
