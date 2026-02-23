@@ -37,7 +37,7 @@ export default function PhotoUpload({ photos = [], onChange }) {
 
     Promise.all(validFiles.map(file => new Promise((resolve) => {
       const reader = new FileReader();
-      reader.onload = () => resolve({ name: file.name, data: reader.result });
+      reader.onload = () => resolve({ name: file.name, data: reader.result, file: file });
       reader.readAsDataURL(file);
     }))).then(results => {
       onChange([...photos, ...results]);

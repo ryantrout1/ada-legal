@@ -261,35 +261,16 @@ export default function Intake() {
     // 1. Upload photos (if any) via UploadFile integration
     let photoUrls = [];
     if (formData.photos && formData.photos.length > 0) {
-      console.log('=== PHOTO UPLOAD START ===');
-      console.log('Photos to upload:', formData.photos.length);
-      try {
-        for (const photo of formData.photos) {
-          try {
-            console.log('Uploading photo:', photo.name, 'data length:', photo.data?.length);
-            const result = await base44.integrations.Core.UploadFile({
-              file: photo.data
-            });
-            console.log('UploadFile raw result:', result);
-            console.log('UploadFile result type:', typeof result);
-            if (typeof result === 'object' && result !== null) {
-              console.log('UploadFile result keys:', Object.keys(result));
-            }
-            const url = typeof result === 'string'
-              ? result
-              : result?.file_url || result?.url || result?.fileUrl
-                || result?.download_url || result?.downloadUrl
-                || result?.path || result?.file || result?.link;
-            console.log('Extracted URL:', url);
-            if (url) photoUrls.push(url);
-          } catch (singleErr) {
-            console.error('Single photo upload failed:', singleErr);
-          }
+      for (const photo of formData.photos) {
+        try {
+          const { file_url } = await base44.integrations.Core.UploadFile({
+            file: photo.file
+          });
+          if (file_url) photoUrls.push(file_url);
+        } catch (uploadErr) {
+          console.error('Photo upload failed:', uploadErr);
         }
-      } catch (uploadErr) {
-        console.error('Photo upload block failed:', uploadErr);
       }
-      console.log('=== PHOTO UPLOAD END === URLs:', photoUrls);
     }
 
     // 2. Create Case record
