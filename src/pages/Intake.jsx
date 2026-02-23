@@ -1,9 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useLocation } from 'react-router-dom';
-
-import ProgressBar from '../components/intake/ProgressBar';
-import WizardNavButtons from '../components/intake/WizardNavButtons';
 import ViolationTypeStep from '../components/intake/ViolationTypeStep';
 import PhysicalSpaceStep from '../components/intake/PhysicalSpaceStep';
 import DigitalWebsiteStep from '../components/intake/DigitalWebsiteStep';
@@ -11,10 +7,44 @@ import IncidentStep from '../components/intake/IncidentStep';
 import ContactStep from '../components/intake/ContactStep';
 import ReviewStep from '../components/intake/ReviewStep';
 import SuccessStep from '../components/intake/SuccessStep';
+import ProgressBar from '../components/intake/ProgressBar';
+import WizardNavButtons from '../components/intake/WizardNavButtons';
 import ExitConfirmModal from '../components/intake/ExitConfirmModal';
 
+const US_STATES = [
+  'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN',
+  'IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH',
+  'NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT',
+  'VT','VA','WA','WV','WI','WY'
+];
+
+const PATHWAY_TYPE_MAP = {
+  physical: 'physical_space',
+  digital: 'digital_website'
+};
+
+const PATHWAY_LOCATION_MAP = {
+  restaurant: 'Restaurant',
+  retail: 'Retail Store',
+  hotel: 'Hotel / Lodging',
+  medical: 'Medical Facility',
+  government: 'Government Building',
+  school: 'School / University',
+  transit: 'Public Transit',
+  entertainment: 'Entertainment Venue',
+  other: 'Other'
+};
+
+const PATHWAY_BARRIER_MAP = {
+  parking: 'Parking',
+  entrance: 'Entrance',
+  restroom: 'Restroom',
+  path: 'Path',
+  service_animal: 'Service Animal',
+  other: 'Other'
+};
+
 export default function Intake() {
-  const [currentUser, setCurrentUser] = useState(null);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     violation_type: '',
@@ -23,9 +53,9 @@ export default function Intake() {
     city: '',
     state: '',
     street_address: '',
-    violation_subtype: '',
     url_domain: '',
     assistive_tech: [],
+    violation_subtype: '',
     incident_date: '',
     visited_before: '',
     narrative: '',
@@ -39,120 +69,74 @@ export default function Intake() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [caseId, setCaseId] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
-  const routeLocation = useLocation();
+  // Read URL params for pathway integration
+  const urlParams = new URLSearchParams(window.location.search);
+  const isFromPathway = urlParams.get('source') === 'pathway';
+  const pathwayType = urlParams.get('type');
+  const pathwayLocation = urlParams.get('location');
+  const pathwayBarrier = urlParams.get('barrier');
 
-  // Read Pathway params if coming from Rights Pathway
-  const pathwayParams = useMemo(() => {
-    const params = new URLSearchParams(routeLocation.search);
-    if (params.get('source') !== 'pathway') return null;
-
-    const type = params.get('type') || '';
-    const loc = params.get('location') || '';
-    const barrier = params.get('barrier') || '';
-
-    const violationTypeMap = {
-      physical_access: 'physical_space',
-      digital_access: 'digital_website',
-      service_animal: 'physical_space',
-      communication: 'physical_space',
-      employment: 'physical_space',
-      housing: 'physical_space',
-    };
-
-    const businessTypeMap = {
-      restaurant: 'Restaurant',
-      store: 'Retail Store',
-      hotel: 'Hotel/Lodging',
-      medical: 'Medical Office',
-      government: 'Government Building',
-      school: 'Education',
-      other_business: 'Other',
-      business_website: 'Website/App',
-      government_website: 'Government Building',
-      app: 'Website/App',
-      ecommerce: 'Website/App',
-      hospital_public: 'Medical Office',
-    };
-
-    const subtypeMap = {
-      service_animal: 'Service Animal Denial',
-      communication: 'Other',
-      employment: 'Other',
-      housing: 'Other',
-    };
-    const barrierSubtypeMap = {
-      no_ramp: 'Path of Travel',
-      stairs_only: 'Path of Travel',
-      no_parking: 'Parking',
-      parking_blocked: 'Parking',
-      restroom: 'Restroom',
-      narrow_door: 'Entrance/Exit',
-      entrance: 'Entrance/Exit',
-      elevator: 'Path of Travel',
-      counter_high: 'Other',
-      other: 'Other',
-    };
-
-    return {
-      isFromPathway: true,
-      violation_type: violationTypeMap[type] || '',
-      business_type: businessTypeMap[loc] || '',
-      violation_subtype: subtypeMap[type] || barrierSubtypeMap[barrier] || '',
-    };
-  }, [routeLocation.search]);
-
-  const isFromPathway = !!pathwayParams;
-
-  // Silently check if user is logged in (no redirect — page is public)
   useEffect(() => {
-    let cancelled = false;
-    async function checkAuth() {
-      const isAuthed = await base44.auth.isAuthenticated();
-      if (!isAuthed || cancelled) return;
+    async function loadUser() {
       try {
         const user = await base44.auth.me();
-        if (!cancelled && user) setCurrentUser(user);
-      } catch {
-        // Not logged in — that's fine, form is public
+        setCurrentUser(user);
+      } catch (e) {
+        setCurrentUser(null);
       }
     }
-    checkAuth();
-    return () => { cancelled = true; };
+    loadUser();
   }, []);
 
-  // Pre-fill from Pathway answers
+  // Pre-fill from pathway on mount
   useEffect(() => {
-    if (!pathwayParams) return;
-    setFormData(prev => ({
-      ...prev,
-      violation_type: pathwayParams.violation_type || prev.violation_type,
-      business_type: pathwayParams.business_type || prev.business_type,
-      violation_subtype: pathwayParams.violation_subtype || prev.violation_subtype,
-    }));
-    setStep(2);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (isFromPathway) {
+      const updates = {};
+      if (pathwayType && PATHWAY_TYPE_MAP[pathwayType]) {
+        updates.violation_type = PATHWAY_TYPE_MAP[pathwayType];
+      }
+      if (pathwayLocation && PATHWAY_LOCATION_MAP[pathwayLocation]) {
+        updates.business_type = PATHWAY_LOCATION_MAP[pathwayLocation];
+      }
+      if (pathwayBarrier && PATHWAY_BARRIER_MAP[pathwayBarrier]) {
+        updates.violation_subtype = PATHWAY_BARRIER_MAP[pathwayBarrier];
+      }
+      if (Object.keys(updates).length > 0) {
+        setFormData(prev => ({ ...prev, ...updates }));
+      }
+      // Skip step 1 (violation type) — jump to step 2
+      setStep(2);
+    }
+  }, []);
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => { const n = { ...prev }; delete n[field]; return n; });
+    }
   };
 
   const canContinue = () => {
     if (step === 1) return !!formData.violation_type;
-    if (step === 2 && formData.violation_type === 'physical_space') {
-      return !!(formData.business_name && formData.business_type && formData.city && formData.state && formData.street_address && formData.violation_subtype);
+    return true;
+  };
+
+  const handleContinue = () => {
+    setErrors({});
+    if (step === 1) {
+      setStep(2);
+    } else if (step === 2) {
+      const isPhysical = formData.violation_type === 'physical_space';
+      const valid = isPhysical ? validateStep2Physical() : validateStep2Digital();
+      if (valid) setStep(3);
+    } else if (step === 3) {
+      if (validateStep3()) setStep(4);
+    } else if (step === 4) {
+      if (validateStep4()) setStep(5);
     }
-    if (step === 2 && formData.violation_type === 'digital_website') {
-      return !!(formData.url_domain && formData.assistive_tech.length > 0 && formData.business_name);
-    }
-    if (step === 3) {
-      return !!(formData.incident_date && formData.visited_before && formData.narrative && formData.narrative.length >= 50);
-    }
-    if (step === 4) {
-      return !!(formData.contact_name && formData.contact_email && formData.contact_phone && formData.contact_preference);
-    }
-    return false;
   };
 
   const validateStep2Physical = () => {
@@ -160,43 +144,10 @@ export default function Intake() {
     if (!formData.business_name.trim()) e.business_name = 'Business name is required';
     if (!formData.business_type) e.business_type = 'Please select a business type';
     if (!formData.city.trim()) e.city = 'City is required';
-    if (!formData.state) e.state = 'Please select a state';
-    if (!(formData.street_address || '').trim()) e.street_address = 'Street address is required';
-    if (!formData.violation_subtype) e.violation_subtype = 'Please select a violation sub-type';
+    if (!formData.state) e.state = 'State is required';
+    if (!formData.street_address || !formData.street_address.trim()) e.street_address = 'Street address is required';
     setErrors(e);
     return Object.keys(e).length === 0;
-  };
-
-  const handleContinue = () => {
-    if (step === 1 && canContinue()) {
-      setErrors({});
-      setStep(2);
-      return;
-    }
-    if (step === 2 && formData.violation_type === 'physical_space') {
-      if (validateStep2Physical()) {
-        setStep(3);
-      }
-      return;
-    }
-    if (step === 2 && formData.violation_type === 'digital_website') {
-      if (validateStep2Digital()) {
-        setStep(3);
-      }
-      return;
-    }
-    if (step === 3) {
-      if (validateStep3()) {
-        setStep(4);
-      }
-      return;
-    }
-    if (step === 4) {
-      if (validateStep4()) {
-        setStep(5);
-      }
-      return;
-    }
   };
 
   const validateStep4 = () => {
@@ -271,28 +222,35 @@ export default function Intake() {
     // 1. Upload photos (if any) via UploadFile integration
     let photoUrls = [];
     if (formData.photos && formData.photos.length > 0) {
+      console.log('=== PHOTO UPLOAD START ===');
+      console.log('Photos to upload:', formData.photos.length);
       try {
         for (const photo of formData.photos) {
           try {
+            console.log('Uploading photo:', photo.name, 'data length:', photo.data?.length);
             const result = await base44.integrations.Core.UploadFile({
-              file: photo.data,
-              fileName: photo.name || 'violation-photo.jpg'
+              file: photo.data
             });
-            console.log('UploadFile result:', JSON.stringify(result));
+            console.log('UploadFile raw result:', result);
+            console.log('UploadFile result type:', typeof result);
+            if (typeof result === 'object' && result !== null) {
+              console.log('UploadFile result keys:', Object.keys(result));
+            }
             const url = typeof result === 'string'
               ? result
-              : result?.file_url || result?.url || result?.fileUrl || result?.download_url || result?.downloadUrl || result?.path;
+              : result?.file_url || result?.url || result?.fileUrl
+                || result?.download_url || result?.downloadUrl
+                || result?.path || result?.file || result?.link;
+            console.log('Extracted URL:', url);
             if (url) photoUrls.push(url);
           } catch (singleErr) {
             console.error('Single photo upload failed:', singleErr);
           }
         }
       } catch (uploadErr) {
-        console.error('Photo upload failed:', uploadErr);
+        console.error('Photo upload block failed:', uploadErr);
       }
-    }
-    if (photoUrls.length > 0) {
-      console.log('Photo URLs saved:', photoUrls);
+      console.log('=== PHOTO UPLOAD END === URLs:', photoUrls);
     }
 
     // 2. Create Case record
@@ -327,7 +285,7 @@ export default function Intake() {
     const newCase = await base44.entities.Case.create(casePayload);
     setCaseId(newCase.id);
 
-    // 2. Create TimelineEvent
+    // 3. Create TimelineEvent
     await base44.entities.TimelineEvent.create({
       case_id: newCase.id,
       event_type: 'submitted',
