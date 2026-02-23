@@ -19,6 +19,13 @@ const SECTIONS = [
         meta: [{ text: '5 min read' }, { text: 'Plain language' }]
       },
       {
+        title: 'Your Legal Options Explained',
+        type: 'Essential', dotColor: '#D4570A',
+        href: '/GuideLegalOptions',
+        description: "Filing a DOJ complaint vs. hiring an attorney — understand the different paths, deadlines, what you can recover, and which is right for your situation.",
+        meta: [{ text: 'Most important', warning: true }]
+      },
+      {
         title: 'How to File an ADA Complaint',
         type: 'Guide', dotColor: '#D4570A',
         href: '/GuideFilingComplaint',
