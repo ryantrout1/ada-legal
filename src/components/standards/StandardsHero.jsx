@@ -1,5 +1,6 @@
 import React from 'react';
-import { Search, Shield } from 'lucide-react';
+import { Shield } from 'lucide-react';
+import ADAAssistant from '../guide/ADAAssistant';
 
 export default function StandardsHero({ searchValue, onSearchChange }) {
   return (
@@ -55,31 +56,8 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
             Plain language alongside the official legal text.
           </p>
 
-          {/* Search */}
-          <div role="search" aria-label="Search ADA standards" style={{ maxWidth: '520px' }}>
-            <label htmlFor="sg-search" className="sr-only">Search standards, topics, or keywords</label>
-            <div style={{ position: 'relative' }}>
-              <Search size={20} aria-hidden="true" style={{
-                position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)',
-                color: '#64748B', pointerEvents: 'none'
-              }} />
-              <input
-                id="sg-search"
-                type="search"
-                className="sg-search-input"
-                placeholder="Search standards, topics, or keywords..."
-                value={searchValue}
-                onChange={e => onSearchChange(e.target.value)}
-                aria-describedby="sg-search-hint"
-              />
-            </div>
-            <p id="sg-search-hint" style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-              color: '#64748B', margin: '8px 0 0', fontStyle: 'italic'
-            }}>
-              Try "ramp slope" or "parking spaces"
-            </p>
-          </div>
+          {/* AI Assistant */}
+          <ADAAssistant />
         </div>
 
         {/* Right column */}
