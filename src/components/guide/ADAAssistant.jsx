@@ -245,16 +245,11 @@ export default function ADAAssistant() {
     try {
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: fullPrompt,
-        add_context_from_internet: false,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            answer: { type: "string" }
-          }
-        }
+        system_prompt: SYSTEM_PROMPT,
+        add_context_from_internet: false
       });
 
-      const answer = typeof response === 'string' ? response : (response?.answer || response?.text || JSON.stringify(response));
+      const answer = typeof response === 'string' ? response : (response?.result || response?.answer || response?.text || String(response));
       setMessages(prev => [...prev, { role: 'assistant', text: answer }]);
     } catch (err) {
       setError('Unable to connect. Please try again.');
