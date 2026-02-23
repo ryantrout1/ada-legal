@@ -76,7 +76,7 @@ function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onT
                   color: 'var(--slate-700)', lineHeight: 1.75
                 }}><AutoCiteLinks>{plain}</AutoCiteLinks></div>
               </div>
-              <aside aria-label="Official legal text" style={{ flex: '1 1 40%', minWidth: 0 }}>
+              <div role="note" aria-label="Official legal text" style={{ flex: '1 1 40%', minWidth: 0 }}>
                 <div style={{
                   background: '#F8FAFC', border: '1px solid var(--slate-200)',
                   borderRadius: '10px', padding: '16px'
@@ -91,7 +91,7 @@ function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onT
                     color: 'var(--slate-600)', lineHeight: 1.7
                   }}><AutoCiteLinks>{legal}</AutoCiteLinks></div>
                 </div>
-              </aside>
+              </div>
             </div>
 
             {diagram && (
