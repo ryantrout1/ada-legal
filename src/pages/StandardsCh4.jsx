@@ -5,6 +5,7 @@ import DoorDiagram from '../components/guide/diagrams/DoorDiagram';
 import CurbRampDiagram from '../components/guide/diagrams/CurbRampDiagram';
 import ElevatorDiagram from '../components/guide/diagrams/ElevatorDiagram';
 import WalkingSurfaceDiagram from '../components/guide/diagrams/WalkingSurfaceDiagram';
+import PlatformLiftDiagram from '../components/guide/diagrams/PlatformLiftDiagram';
 
 const sections = [
   {
@@ -45,7 +46,8 @@ const sections = [
   {
     number: '§409–410', title: 'Platform Lifts & Stairways',
     plain: <><p><strong>Platform lifts</strong> can be used as an alternative to ramps or elevators in certain situations — existing buildings, areas with limited space, performance stages, and speaker platforms. Key requirements include a clear floor space of 30 × 48 inches on the platform.</p><p><strong>Stairways</strong> on accessible routes (between floors served by elevators) need handrails on both sides extending 12 inches beyond the top and bottom risers.</p></>,
-    legal: <p>§409.1 Platform lifts "shall comply with ASME A18.1." §410.1 Stairways: "Stairs on accessible routes shall comply with §210." §505.10 Handrail extensions: "at the top, 12 inches horizontally beyond the top riser; at the bottom, extending the slope of the stair flight beyond the bottom riser."</p>
+    legal: <p>§409.1 Platform lifts "shall comply with ASME A18.1." §410.1 Stairways: "Stairs on accessible routes shall comply with §210." §505.10 Handrail extensions: "at the top, 12 inches horizontally beyond the top riser; at the bottom, extending the slope of the stair flight beyond the bottom riser."</p>,
+    diagram: <PlatformLiftDiagram />
   }
 ];
 

@@ -81,7 +81,7 @@ const SECTIONS = [
     icon: Home,
     iconBg: '#9A3412',
     title: 'Business Compliance',
-    count: 12,
+    count: 14,
     cards: [
       {
         title: 'Small Business ADA Primer',
@@ -180,6 +180,20 @@ const SECTIONS = [
         href: '/GuideMedicalFacilities',
         description: "ADA requirements for doctors' offices, hospitals, and medical facilities — including exam rooms, equipment, and communication.",
         tags: ['§223', 'DOJ guidance', 'Exam tables']
+      },
+      {
+        title: 'Accessible Playgrounds',
+        type: 'Guide', dotColor: '#9A3412',
+        href: '/GuidePlaygrounds',
+        description: 'Ground-level and elevated play components, accessible surfaces, transfer platforms, and what parents should look for.',
+        tags: ['§240', '§1008', 'Play areas']
+      },
+      {
+        title: 'Swimming Pool Accessibility',
+        type: 'Guide', dotColor: '#9A3412',
+        href: '/GuideSwimmingPools',
+        description: 'Pool lifts, sloped entries, spa access requirements, and obligations for existing hotel and public pools.',
+        tags: ['§242', '§1009', 'Pool lifts']
       }
     ]
   },
@@ -248,7 +262,7 @@ const SECTIONS = [
     icon: Users,
     iconBg: '#8B1A1A',
     title: 'Government (Title II)',
-    count: 7,
+    count: 8,
     cards: [
       {
         title: 'Title II: State & Local Government Obligations',
@@ -298,6 +312,13 @@ const SECTIONS = [
         href: '/GuideAdaCoordinators',
         description: 'What government entities need to know about designating an ADA Coordinator, grievance procedures, and self-evaluations.',
         tags: ['§35.107', '§35.105', '50+ employees']
+      },
+      {
+        title: 'Sidewalks & Pedestrian Access',
+        type: 'Guide', dotColor: '#8B1A1A',
+        href: '/GuideSidewalks',
+        description: 'Sidewalk width, curb ramps, detectable warnings, pedestrian signals, and filing complaints about broken sidewalks.',
+        tags: ['Title II', 'Curb ramps', '§35.151']
       }
     ]
   }

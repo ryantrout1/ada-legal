@@ -5,6 +5,7 @@ import GuestRoomDiagram from '../components/guide/diagrams/GuestRoomDiagram';
 import KitchenDiagram from '../components/guide/diagrams/KitchenDiagram';
 import DressingRoomDiagram from '../components/guide/diagrams/DressingRoomDiagram';
 import DetentionCellDiagram from '../components/guide/diagrams/DetentionCellDiagram';
+import TransportationDiagram from '../components/guide/diagrams/TransportationDiagram';
 
 const sections = [
   {
@@ -38,7 +39,8 @@ const sections = [
   {
     number: '§810', title: 'Transportation Facilities',
     plain: <><p>Bus stops, rail stations, and transit platforms must be accessible:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Bus boarding areas:</strong> Firm, stable surface with a clear area 96 inches long (parallel to the bus) and 60 inches wide (perpendicular), at the same height as the street</li><li style={{marginBottom:'6px'}}><strong>Rail platforms:</strong> Detectable warnings (truncated domes) along the full length of the platform edge</li><li style={{marginBottom:'6px'}}><strong>Level boarding:</strong> Platform height should match the vehicle floor where possible</li><li style={{marginBottom:'6px'}}><strong>Signage:</strong> Route identification signs with visual characters meeting §703</li></ul></>,
-    legal: <p>§810.2 Bus boarding areas: "96 inches long minimum perpendicular to the curb or vehicle roadway edge, and 60 inches wide minimum." §810.5.2 "Detectable warning surfaces shall be provided at the boarding edge of each platform." §810.4 Rail platforms: "shall comply with §810.5 through §810.10."</p>
+    legal: <p>§810.2 Bus boarding areas: "96 inches long minimum perpendicular to the curb or vehicle roadway edge, and 60 inches wide minimum." §810.5.2 "Detectable warning surfaces shall be provided at the boarding edge of each platform." §810.4 Rail platforms: "shall comply with §810.5 through §810.10."</p>,
+    diagram: <TransportationDiagram />
   },
   {
     number: '§811', title: 'Swimming Pools, Wading Pools & Spas',
