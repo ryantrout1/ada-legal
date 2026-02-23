@@ -200,9 +200,7 @@ export default function Layout({ children, currentPageName }) {
               }
             : {
                 width: '100%',
-                maxWidth: '1400px',
-                margin: '0 auto',
-                padding: '0 1.5rem',
+                padding: '0 40px',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center'
