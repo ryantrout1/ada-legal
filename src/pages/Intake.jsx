@@ -19,28 +19,49 @@ const US_STATES = [
 ];
 
 const PATHWAY_TYPE_MAP = {
+  physical_access: 'physical_space',
+  digital_access: 'digital_website',
+  service_animal: 'physical_space',
+  communication: 'physical_space',
+  employment: 'physical_space',
+  housing: 'physical_space',
+  // Legacy short keys
   physical: 'physical_space',
   digital: 'digital_website'
 };
 
 const PATHWAY_LOCATION_MAP = {
   restaurant: 'Restaurant',
+  store: 'Retail Store',
   retail: 'Retail Store',
-  hotel: 'Hotel / Lodging',
-  medical: 'Medical Facility',
+  hotel: 'Hotel/Lodging',
+  medical: 'Medical Office',
   government: 'Government Building',
-  school: 'School / University',
-  transit: 'Public Transit',
+  school: 'Education',
+  transit: 'Transportation',
   entertainment: 'Entertainment Venue',
-  other: 'Other'
+  other_business: 'Other',
+  other: 'Other',
+  business_website: 'Website/App',
+  government_website: 'Government Building',
+  app: 'Website/App',
+  ecommerce: 'Website/App',
+  hospital_public: 'Medical Office'
 };
 
 const PATHWAY_BARRIER_MAP = {
+  no_ramp: 'Path of Travel',
+  stairs_only: 'Path of Travel',
+  no_parking: 'Parking',
+  parking_blocked: 'Parking',
   parking: 'Parking',
-  entrance: 'Entrance',
   restroom: 'Restroom',
-  path: 'Path',
-  service_animal: 'Service Animal',
+  narrow_door: 'Entrance/Exit',
+  entrance: 'Entrance/Exit',
+  elevator: 'Path of Travel',
+  counter_high: 'Other',
+  path: 'Path of Travel',
+  service_animal: 'Service Animal Denial',
   other: 'Other'
 };
 
