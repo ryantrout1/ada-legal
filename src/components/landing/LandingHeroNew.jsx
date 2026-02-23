@@ -141,6 +141,18 @@ export default function LandingHeroNew() {
           </div>
         </div>
       </div>
+
+      {/* Watermark logo */}
+      <img
+        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/e3c293e44_logo-terracotta.png"
+        alt=""
+        aria-hidden="true"
+        style={{
+          position: 'absolute', bottom: '20px', right: '40px',
+          width: '280px', height: '280px', objectFit: 'contain',
+          opacity: 0.07, pointerEvents: 'none'
+        }}
+      />
     </section>
   );
 }
