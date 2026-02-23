@@ -199,6 +199,7 @@ export default function Layout({ children, currentPageName }) {
                 alignItems: 'center'
               }
             : {
+                width: '100%',
                 maxWidth: '1400px',
                 margin: '0 auto',
                 padding: '0 1.5rem',
