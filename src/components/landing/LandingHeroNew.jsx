@@ -92,6 +92,16 @@ export default function LandingHeroNew() {
               Report a Violation
             </Link>
           </div>
+
+          <p className="landing-fade-up landing-delay-4" style={{
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
+            color: '#94A3B8', marginTop: '1rem'
+          }}>
+            Not sure if what happened was a violation?{' '}
+            <Link to={createPageUrl('RightsPathway')} style={{ color: '#EA580C', textDecoration: 'underline' }}>
+              Find out in 60 seconds
+            </Link>
+          </p>
         </div>
 
         {/* Right column — What we built */}

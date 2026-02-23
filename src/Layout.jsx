@@ -55,7 +55,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const PAGE_TITLES = {
-    Home: 'Home', Intake: 'Report a Violation', MyCases: 'My Cases',
+    Home: 'Home', Intake: 'Report a Violation', RightsPathway: 'Know Your Rights', MyCases: 'My Cases',
     CaseDetail: 'Case Detail', Marketplace: 'Available Cases', LawyerDashboard: 'My Cases',
     LawyerProfile: 'My Profile', LawyerRegister: 'Attorney Registration',
     LawyerLanding: 'For Attorneys', StandardsGuide: 'ADA Standards Guide',

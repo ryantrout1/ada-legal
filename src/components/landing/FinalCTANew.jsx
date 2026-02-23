@@ -50,6 +50,15 @@ export default function FinalCTANew() {
         }}>
           No account required. No cost. Your information is kept confidential.
         </p>
+        <p style={{
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
+          color: '#94A3B8', marginTop: '0.75rem', marginBottom: 0
+        }}>
+          Not sure where to start?{' '}
+          <Link to={createPageUrl('RightsPathway')} style={{ color: '#EA580C', textDecoration: 'underline' }}>
+            Take the Rights Assessment
+          </Link>
+        </p>
       </div>
     </section>
   );
