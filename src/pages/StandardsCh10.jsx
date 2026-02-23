@@ -2,17 +2,22 @@ import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
 import PoolDiagram from '../components/guide/diagrams/PoolDiagram';
 import PlayAreaDiagram from '../components/guide/diagrams/PlayAreaDiagram';
+import AmusementRideDiagram from '../components/guide/diagrams/AmusementRideDiagram';
+import BoatingDiagram from '../components/guide/diagrams/BoatingDiagram';
+import GolfDiagram from '../components/guide/diagrams/GolfDiagram';
 
 const sections = [
   {
     number: '§1002', title: 'Amusement Rides',
     plain: <><p>New and altered amusement rides must provide accessible boarding:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>At least one wheelchair space</strong> on the ride, OR a ride seat designed for transfer from a wheelchair, OR a transfer device (platform) for boarding</li><li style={{marginBottom:'6px'}}><strong>Accessible route</strong> to the ride loading area</li><li style={{marginBottom:'6px'}}><strong>Transfer platforms:</strong> If used, must be 24 inches wide minimum at seat height (14–24 inches)</li></ul><p><strong>Exception:</strong> Rides designed for one rider (like a mechanical bull) or rides that require the rider to walk/climb as part of the experience may be exempt.</p></>,
-    legal: <p>§1002.2 "Amusement rides shall provide at least one wheelchair space complying with §1002.4, or at least one amusement ride seat designed for transfer complying with §1002.5, or at least one transfer device complying with §1002.6." §1002.3 "An accessible route complying with Chapter 4 shall be provided to accessible amusement rides."</p>
+    legal: <p>§1002.2 "Amusement rides shall provide at least one wheelchair space complying with §1002.4, or at least one amusement ride seat designed for transfer complying with §1002.5, or at least one transfer device complying with §1002.6." §1002.3 "An accessible route complying with Chapter 4 shall be provided to accessible amusement rides."</p>,
+    diagram: <AmusementRideDiagram />
   },
   {
     number: '§1003', title: 'Recreational Boating Facilities',
     plain: <><p>Marinas and boat launch facilities must have accessible boat slips and boarding piers:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Accessible slips:</strong> Based on total number — 1 accessible slip for the first 25, then 1 per additional 50</li><li style={{marginBottom:'6px'}}><strong>Gangways:</strong> Maximum slope of 1:12 (but when the total length would exceed 80 feet, a 1:10 slope or 80-foot max length is allowed as an exception)</li><li style={{marginBottom:'6px'}}><strong>Cleats and other edge protection:</strong> Shall not protrude into the accessible route on the pier</li></ul></>,
-    legal: <p>§1003.2 "Boat slips complying with §1003.3 shall be provided in accordance with Table 1003.2." §1003.3.1 Clear pier space: "60 inches wide minimum and at least as long as the slip." Gangways: §1003.2.1 "Where gangway slope exceeds 1:12, the gangway shall be 80 feet long minimum."</p>
+    legal: <p>§1003.2 "Boat slips complying with §1003.3 shall be provided in accordance with Table 1003.2." §1003.3.1 Clear pier space: "60 inches wide minimum and at least as long as the slip." Gangways: §1003.2.1 "Where gangway slope exceeds 1:12, the gangway shall be 80 feet long minimum."</p>,
+    diagram: <BoatingDiagram />
   },
   {
     number: '§1004', title: 'Exercise Machines & Equipment',
@@ -27,7 +32,8 @@ const sections = [
   {
     number: '§1006', title: 'Golf Facilities',
     plain: <><p>Accessible golf facilities must provide:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Teeing grounds:</strong> Accessible route to each teeing ground</li><li style={{marginBottom:'6px'}}><strong>Putting greens:</strong> Accessible route to each putting green</li><li style={{marginBottom:'6px'}}><strong>Practice ranges:</strong> Accessible route to at least one practice station</li><li style={{marginBottom:'6px'}}><strong>Weather shelters:</strong> Accessible route and clear floor space</li><li style={{marginBottom:'6px'}}>Golf car passages may serve as accessible routes where the course permits golf car use</li></ul></>,
-    legal: <p>§1006.2 "An accessible route complying with Chapter 4 shall connect accessible elements within the boundary of the golf course." §1006.3 "Golf car passages complying with §1006.3 shall be permitted to be used as accessible routes." Width: "48 inches wide minimum."</p>
+    legal: <p>§1006.2 "An accessible route complying with Chapter 4 shall connect accessible elements within the boundary of the golf course." §1006.3 "Golf car passages complying with §1006.3 shall be permitted to be used as accessible routes." Width: "48 inches wide minimum."</p>,
+    diagram: <GolfDiagram />
   },
   {
     number: '§1007', title: 'Miniature Golf Facilities',

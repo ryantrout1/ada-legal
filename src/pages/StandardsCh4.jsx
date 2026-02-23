@@ -6,6 +6,7 @@ import CurbRampDiagram from '../components/guide/diagrams/CurbRampDiagram';
 import ElevatorDiagram from '../components/guide/diagrams/ElevatorDiagram';
 import WalkingSurfaceDiagram from '../components/guide/diagrams/WalkingSurfaceDiagram';
 import PlatformLiftDiagram from '../components/guide/diagrams/PlatformLiftDiagram';
+import LULAElevatorDiagram from '../components/guide/diagrams/LULAElevatorDiagram';
 
 const sections = [
   {
@@ -41,7 +42,7 @@ const sections = [
     number: '§407–408', title: 'Elevators',
     plain: <><p>Both standard elevators and LULA (Limited Use/Limited Application) elevators have requirements:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Call buttons:</strong> 42 inches max above floor, with visual indicators</li><li style={{marginBottom:'6px'}}><strong>Hall signals:</strong> Audible and visible signals indicating car arrival and direction</li><li style={{marginBottom:'6px'}}><strong>Cab size:</strong> At least 51 inches deep × 68 inches wide (for standard), or 54 × 36 inches minimum for LULA</li><li style={{marginBottom:'6px'}}><strong>Controls:</strong> Within reach range, with Braille and raised characters</li><li style={{marginBottom:'6px'}}><strong>Door timing:</strong> Doors must remain open long enough for a person using a wheelchair to enter</li></ul></>,
     legal: <p>§407.2.1 Call buttons: "located 42 inches maximum above the finish floor." §407.4.1 Car dimensions: minimum inside dimensions per Table 407.4.1. §407.4.7 Floor designation: "provided in raised characters and Braille on both jambs."</p>,
-    diagram: <ElevatorDiagram />
+    diagram: <><ElevatorDiagram /><LULAElevatorDiagram /></>
   },
   {
     number: '§409–410', title: 'Platform Lifts & Stairways',

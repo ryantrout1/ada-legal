@@ -6,6 +6,7 @@ import KitchenDiagram from '../components/guide/diagrams/KitchenDiagram';
 import DressingRoomDiagram from '../components/guide/diagrams/DressingRoomDiagram';
 import DetentionCellDiagram from '../components/guide/diagrams/DetentionCellDiagram';
 import TransportationDiagram from '../components/guide/diagrams/TransportationDiagram';
+import ResidentialUnitDiagram from '../components/guide/diagrams/ResidentialUnitDiagram';
 
 const sections = [
   {
@@ -51,7 +52,7 @@ const sections = [
     number: '§806', title: 'Transient Lodging Guest Rooms',
     plain: <><p>Accessible hotel and motel guest rooms must include:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Accessible route:</strong> 36 inches clear from entry to all elements (bed, bathroom, desk, closet)</li><li style={{marginBottom:'6px'}}><strong>Bed clearance:</strong> 36 inches on both sides of beds in double-bed rooms</li><li style={{marginBottom:'6px'}}><strong>Bathroom:</strong> Accessible toilet, tub or roll-in shower, lavatory</li><li style={{marginBottom:'6px'}}><strong>Controls:</strong> All switches, thermostats, outlets within reach range</li></ul></>,
     legal: <p>§806.2.2 "An accessible route complying with §402 shall connect all accessible spaces." §806.2.3 "Clear floor space 36 inches wide minimum shall be provided along both sides of a bed." §806.3 Communication features: visible notification for door, phone, alarm.</p>,
-    diagram: <GuestRoomDiagram />
+    diagram: <><GuestRoomDiagram /><ResidentialUnitDiagram /></>
   },
   {
     number: '§804', title: 'Kitchens & Kitchenettes',

@@ -1,6 +1,9 @@
 import React from 'react';
 import ChapterPageLayout from '../components/guide/ChapterPageLayout';
 import SignageDiagram from '../components/guide/diagrams/SignageDiagram';
+import TelephoneDiagram from '../components/guide/diagrams/TelephoneDiagram';
+import AssistiveListeningDiagram from '../components/guide/diagrams/AssistiveListeningDiagram';
+import ATMDiagram from '../components/guide/diagrams/ATMDiagram';
 
 const sections = [
   {
@@ -17,7 +20,8 @@ const sections = [
   {
     number: '§704', title: 'Telephones',
     plain: <><p>Where public telephones are provided, at least one on each floor must be accessible:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Clear floor space:</strong> 30 × 48 inches for forward or parallel approach</li><li style={{marginBottom:'6px'}}><strong>Height:</strong> Operable parts within reach range (48 inches max)</li><li style={{marginBottom:'6px'}}><strong>Volume control:</strong> Must amplify sound 12 dB minimum above normal, up to 20 dB max</li><li style={{marginBottom:'6px'}}><strong>TTY:</strong> At least one per bank must have a text telephone (TTY) for people who are deaf</li></ul><p><em>Note: While pay phones are increasingly rare, these requirements also apply to courtesy phones and house phones in hotels.</em></p></>,
-    legal: <p>§704.2.1 "A clear floor or ground space complying with §305 shall be provided." §704.3 "Volume controls shall be on 12 dB above normal." §704.4 "TTYs complying with §704.4 shall be provided at… all banks of telephones where four or more public pay telephones are provided."</p>
+    legal: <p>§704.2.1 "A clear floor or ground space complying with §305 shall be provided." §704.3 "Volume controls shall be on 12 dB above normal." §704.4 "TTYs complying with §704.4 shall be provided at… all banks of telephones where four or more public pay telephones are provided."</p>,
+    diagram: <TelephoneDiagram />
   },
   {
     number: '§705', title: 'Detectable Warnings',
@@ -27,12 +31,14 @@ const sections = [
   {
     number: '§706', title: 'Assistive Listening Systems',
     plain: <><p>Assembly areas with audio amplification must provide <strong>assistive listening systems</strong> (ALS):</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}>Required in assembly areas where audio communication is integral (theaters, courtrooms, meeting rooms)</li><li style={{marginBottom:'6px'}}>Types include <strong>hearing loops</strong> (induction), <strong>FM systems</strong>, and <strong>infrared systems</strong></li><li style={{marginBottom:'6px'}}>At least 25% of receivers must be hearing-aid compatible (T-coil/neckloop)</li><li style={{marginBottom:'6px'}}>Signage with the International Symbol of Access for Hearing Loss must be posted</li></ul></>,
-    legal: <p>§706.2 "Receivers required for use with an assistive listening system shall be hearing-aid compatible." §706.3 "Assistive listening systems shall be identified by the International Symbol of Access for Hearing Loss." System coverage must provide an adequate signal-to-noise ratio per design standards.</p>
+    legal: <p>§706.2 "Receivers required for use with an assistive listening system shall be hearing-aid compatible." §706.3 "Assistive listening systems shall be identified by the International Symbol of Access for Hearing Loss." System coverage must provide an adequate signal-to-noise ratio per design standards.</p>,
+    diagram: <AssistiveListeningDiagram />
   },
   {
     number: '§707', title: 'ATMs & Fare Machines',
     plain: <><p>ATMs, ticket kiosks, and transit fare machines must be accessible to people with vision and mobility disabilities:</p><ul style={{paddingLeft:'1.25rem',margin:'8px 0'}}><li style={{marginBottom:'6px'}}><strong>Speech output:</strong> Must provide speech for all functions — reads the screen aloud through a headphone jack</li><li style={{marginBottom:'6px'}}><strong>Braille instructions:</strong> Operating instructions in Braille</li><li style={{marginBottom:'6px'}}><strong>Input:</strong> Keypad with raised tactile dots on the "5" key (like a phone)</li><li style={{marginBottom:'6px'}}><strong>Reach:</strong> All controls within 48 inches above the floor</li><li style={{marginBottom:'6px'}}><strong>Privacy:</strong> Speech must have volume control and a mechanism (headphone jack) to prevent others from hearing PINs</li></ul></>,
-    legal: <p>§707.5 "Machines shall be speech enabled. Operating instructions shall be provided in Braille." §707.6.1 "Input controls shall be tactilely discernible without activation." §707.5.1 "Speech output shall be delivered through a mechanism that is readily available to all users, including but not limited to, an industry standard connector or a telephone handset."</p>
+    legal: <p>§707.5 "Machines shall be speech enabled. Operating instructions shall be provided in Braille." §707.6.1 "Input controls shall be tactilely discernible without activation." §707.5.1 "Speech output shall be delivered through a mechanism that is readily available to all users, including but not limited to, an industry standard connector or a telephone handset."</p>,
+    diagram: <ATMDiagram />
   },
   {
     number: '§708', title: 'Two-Way Communication Systems',
