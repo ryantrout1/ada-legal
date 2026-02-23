@@ -144,14 +144,13 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
 
       {/* Watermark logo */}
       <img
-        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/64a69db3b_image.png"
+        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/e3c293e44_logo-terracotta.png"
         alt=""
         aria-hidden="true"
         style={{
           position: 'absolute', bottom: '20px', right: '40px',
           width: '240px', height: '240px', objectFit: 'contain',
-          opacity: 0.06, pointerEvents: 'none',
-          filter: 'invert(1) brightness(2)'
+          opacity: 0.08, pointerEvents: 'none'
         }}
       />
 
