@@ -108,6 +108,8 @@ import StandardsCh7 from './pages/StandardsCh7';
 import StandardsCh8 from './pages/StandardsCh8';
 import StandardsCh9 from './pages/StandardsCh9';
 import StandardsGuide from './pages/StandardsGuide';
+import GuideEmployment from './pages/GuideEmployment';
+import GuideHousing from './pages/GuideHousing';
 import __Layout from './Layout.jsx';
 
 
@@ -173,6 +175,8 @@ export const PAGES = {
     "StandardsCh8": StandardsCh8,
     "StandardsCh9": StandardsCh9,
     "StandardsGuide": StandardsGuide,
+    "GuideEmployment": GuideEmployment,
+    "GuideHousing": GuideHousing,
 }
 
 export const pagesConfig = {
