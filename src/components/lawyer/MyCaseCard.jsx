@@ -5,6 +5,7 @@ import { Building2, Globe, User, Mail, Phone, Calendar, MapPin, FileText } from 
 import CaseStatusBadge from './CaseStatusBadge';
 import ContactComplianceBanner from './ContactComplianceBanner';
 import ContactLogHistory from './ContactLogHistory';
+import PhotoGallery from '../shared/PhotoGallery';
 
 function formatDate(d) {
   if (!d) return '—';
@@ -113,6 +114,12 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
         }}>
           {c.narrative}
         </p>
+        {/* Photos */}
+        {c.photos?.length > 0 && (
+          <div style={{ marginTop: '12px' }}>
+            <PhotoGallery photos={c.photos} />
+          </div>
+        )}
       </div>
 
       {/* Log Contact Button */}

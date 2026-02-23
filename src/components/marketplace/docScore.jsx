@@ -7,11 +7,12 @@ export function calculateDocScore(c) {
     { key: 'visited', label: 'Visit History', description: 'The claimant indicated whether they had visited the location before.', met: !!c.visited_before },
     { key: 'specifics', label: 'Violation Specifics', description: c.violation_type === 'digital_website' ? 'For digital violations: the assistive technologies affected were specified.' : 'For physical violations: the specific subtype (parking, entrance, restroom, etc.) was identified.', met: c.violation_type === 'digital_website' ? !!(c.assistive_tech && c.assistive_tech.length > 0) : !!c.violation_subtype },
     { key: 'contact', label: 'Contact Preference Stated', description: 'The claimant indicated their preferred method of contact (phone, email, etc.).', met: !!c.contact_preference },
+    { key: 'photos', label: 'Evidence Photos', description: 'The claimant attached one or more photos documenting the violation.', met: c.photos?.length > 0 },
   ];
   const score = criteria.filter(cr => cr.met).length;
   let label, color;
-  if (score >= 5) { label = 'Well Documented'; color = '#15803D'; }
-  else if (score >= 3) { label = 'Moderate Detail'; color = '#334155'; }
+  if (score >= 6) { label = 'Well Documented'; color = '#15803D'; }
+  else if (score >= 4) { label = 'Moderate Detail'; color = '#334155'; }
   else { label = 'Limited Detail'; color = '#92400E'; }
   return { criteria, score, label, color };
 }

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Building2, Globe, ArrowRight, FileText, Phone, Mail, MinusCircle } from 'lucide-react';
 import { calculateDocScore, getFreshness } from './docScore';
+import PhotoGallery from '../shared/PhotoGallery';
+import SourceBadge from '../shared/SourceBadge';
 
 function formatDate(dateStr) {
   if (!dateStr) return '—';
@@ -97,6 +99,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
               color: '#15803D', backgroundColor: '#DCFCE7',
               textTransform: 'uppercase', letterSpacing: '0.04em'
             }}>Available</span>
+            <SourceBadge source={c.intake_source} />
             {freshness.type === 'new' ? (
               <span style={{ padding: '2px 7px', borderRadius: '4px', fontSize: '0.625rem', fontWeight: 800, color: '#15803D', backgroundColor: '#BBF7D0', textTransform: 'uppercase' }}>NEW</span>
             ) : (
@@ -167,6 +170,14 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
             </p>
           </div>
 
+          {/* Photos */}
+          {c.photos?.length > 0 && (
+            <div>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 8px' }}>Evidence Photos</p>
+              <PhotoGallery photos={c.photos} />
+            </div>
+          )}
+
           {/* Section 3 — Documentation Score (inline) */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
@@ -176,7 +187,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
                 ))}
               </div>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: docScore.color }}>
-                {docScore.score}/6 — {docScore.label}
+                {docScore.score}/7 — {docScore.label}
               </span>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 16px' }}>

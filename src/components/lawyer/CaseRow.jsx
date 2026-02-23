@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Building2, Globe, Clock, AlertTriangle, User, Mail, Phone, Calendar, MapPin } from 'lucide-react';
 import ContactLogHistory from './ContactLogHistory';
+import PhotoGallery from '../shared/PhotoGallery';
+import SourceBadge from '../shared/SourceBadge';
 
 function formatDate(d) {
   if (!d) return '—';
@@ -65,6 +67,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
           }}>
             {isPhysical ? 'Physical' : 'Digital'}
           </span>
+          <span style={{ marginLeft: '0.375rem' }}><SourceBadge source={c.intake_source} /></span>
           <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)', marginLeft: '0.5rem' }}>
             {[c.city, c.state].filter(Boolean).join(', ')}
           </span>
@@ -201,6 +204,13 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-700)', lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: '0 0 1rem' }}>
               {c.narrative || '—'}
             </p>
+
+            {/* Photos */}
+            {c.photos?.length > 0 && (
+              <div style={{ marginTop: '12px', marginBottom: '1rem' }}>
+                <PhotoGallery photos={c.photos} />
+              </div>
+            )}
 
             {/* Contact history */}
             {contactLogs.length > 0 && (

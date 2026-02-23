@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../../utils';
 import { User, Mail, Phone, ArrowRight } from 'lucide-react';
 import AdminCaseTimeline from './AdminCaseTimeline';
+import PhotoGallery from '../../shared/PhotoGallery';
+import SourceBadge from '../../shared/SourceBadge';
 
 function formatDate(d) {
   if (!d) return '—';
@@ -25,13 +27,14 @@ function DocScoreDots({ caseData }) {
     { label: 'Location', met: !!(c.city && c.state) },
     { label: 'Business', met: !!c.business_name },
     { label: 'Contact', met: !!(c.contact_email && c.contact_phone) },
-    { label: 'Subtype', met: !!(c.violation_subtype || c.url_domain) }
+    { label: 'Subtype', met: !!(c.violation_subtype || c.url_domain) },
+    { label: 'Photos', met: c.photos?.length > 0 }
   ];
   const score = criteria.filter(cr => cr.met).length;
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
       <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#1E293B' }}>
-        Documentation: {score}/6
+        Documentation: {score}/7
       </span>
       <div style={{ display: 'flex', gap: '4px' }}>
         {criteria.map((cr, i) => (
@@ -134,6 +137,14 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
         <p style={{ ...VALUE_STYLE, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{c.narrative}</p>
       </div>
 
+      {/* Photos */}
+      {c.photos?.length > 0 && (
+        <div style={{ marginBottom: '16px' }}>
+          <p style={{ ...LABEL_STYLE, margin: '0 0 8px' }}>Evidence Photos</p>
+          <PhotoGallery photos={c.photos} />
+        </div>
+      )}
+
       {/* Claimant Contact Card */}
       <div style={{
         backgroundColor: 'var(--slate-50)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
@@ -172,6 +183,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
         <MetaItem label="Assigned to" value={lawyer ? lawyer.full_name : 'Unassigned'} />
         {c.qc_reviewer_notes && <MetaItem label="QC Notes" value={c.qc_reviewer_notes} />}
         {c.admin_notes && <MetaItem label="Admin Notes" value={c.admin_notes} />}
+        {c.intake_source && <MetaItem label="Source" value={c.intake_source === 'pathway' ? 'Rights Pathway' : 'Direct Report'} />}
       </div>
 
       {/* Doc Score */}

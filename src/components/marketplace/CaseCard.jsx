@@ -2,6 +2,7 @@ import React from 'react';
 import { Building2, Globe } from 'lucide-react';
 import { getFreshness } from './docScore';
 import DocScoreDots from './DocScoreDots';
+import SourceBadge from '../shared/SourceBadge';
 
 function formatDate(dateStr) {
   if (!dateStr) return '—';
@@ -58,6 +59,7 @@ export default function CaseCard({ caseData, onViewDetails }) {
           }}>
             {isPhysical ? 'Physical Space' : 'Digital / Website'}
           </span>
+          <SourceBadge source={c.intake_source} />
         </div>
 
         {/* Row 2: Business type + location */}

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Building2, Globe, ChevronDown, ChevronUp, Check, X, Flag, Clock, User, Mail, Phone } from 'lucide-react';
+import PhotoGallery from '../../shared/PhotoGallery';
+import SourceBadge from '../../shared/SourceBadge';
 
 function formatDate(d) {
   if (!d) return '—';
@@ -26,14 +28,15 @@ function DocScoreDots({ caseData }) {
     { label: 'Location', met: !!(caseData.city && caseData.state) },
     { label: 'Business', met: !!caseData.business_name },
     { label: 'Contact', met: !!(caseData.contact_email && caseData.contact_phone) },
-    { label: 'Subtype', met: !!(caseData.violation_subtype || caseData.url_domain) }
+    { label: 'Subtype', met: !!(caseData.violation_subtype || caseData.url_domain) },
+    { label: 'Photos', met: caseData.photos?.length > 0 }
   ];
   const score = criteria.filter(c => c.met).length;
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
       <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#1E293B' }}>
-        Documentation: {score}/6
+        Documentation: {score}/7
       </span>
       <div style={{ display: 'flex', gap: '4px' }}>
         {criteria.map((c, i) => (
@@ -130,6 +133,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
               backgroundColor: isPhysical ? '#FEF1EC' : '#DBEAFE'
             }}>{c.violation_subtype || c.url_domain}</span>
           )}
+          <SourceBadge source={c.intake_source} />
         </div>
 
         {/* Col 3: Location */}
@@ -242,6 +246,14 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
               {c.narrative}
             </p>
           </div>
+
+          {/* Photos */}
+          {c.photos?.length > 0 && (
+            <div style={{ marginBottom: '16px' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 8px', textTransform: 'uppercase' }}>Evidence Photos</p>
+              <PhotoGallery photos={c.photos} />
+            </div>
+          )}
 
           {/* Claimant Contact Card */}
           <div style={{

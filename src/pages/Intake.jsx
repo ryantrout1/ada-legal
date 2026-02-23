@@ -287,6 +287,7 @@ export default function Intake() {
       contact_phone: formData.contact_phone.trim(),
       contact_preference: formData.contact_preference,
       photos: formData.photos || [],
+      intake_source: isFromPathway ? 'pathway' : 'direct',
       status: 'submitted',
       submitted_at: now
     };

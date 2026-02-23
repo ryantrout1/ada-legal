@@ -1,5 +1,6 @@
 import React from 'react';
 import { Building2, Globe, ChevronDown, ChevronUp } from 'lucide-react';
+import SourceBadge from '../../shared/SourceBadge';
 
 function formatDate(d) {
   if (!d) return '—';
@@ -105,6 +106,7 @@ export default function AdminCaseRow({ caseData, lawyer, expanded, onToggle }) {
               backgroundColor: isPhysical ? '#FEF1EC' : '#DBEAFE'
             }}>{c.violation_subtype || c.url_domain}</span>
           )}
+          <SourceBadge source={c.intake_source} />
         </div>
 
         {/* Location */}
