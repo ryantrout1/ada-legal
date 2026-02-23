@@ -27,7 +27,7 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
           </div>
 
           {/* Legal text */}
-          <aside aria-label="Official legal text" style={{
+          <div role="note" aria-label="Official legal text" style={{
             flex: '1 1 40%', minWidth: 0
           }}>
             <div style={{
@@ -48,7 +48,7 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
                 <AutoCiteLinks>{legalContent}</AutoCiteLinks>
               </div>
             </div>
-          </aside>
+          </div>
         </div>
       ) : (
         <>

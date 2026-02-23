@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 
 export default function GuideReportCTA() {
   return (
-    <section aria-label="Report a violation" style={{
+    <div role="region" aria-label="Report an ADA violation" style={{
       background: '#1A1F2B', padding: '64px 40px', textAlign: 'center'
     }}>
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>
@@ -40,6 +40,6 @@ export default function GuideReportCTA() {
           </Link>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

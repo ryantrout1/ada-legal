@@ -5,7 +5,7 @@ import { ChevronRight } from 'lucide-react';
 
 export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
   return (
-    <section aria-labelledby="guide-page-heading" style={{
+    <header aria-labelledby="guide-page-heading" style={{
       background: '#1A1F2B', position: 'relative', overflow: 'hidden'
     }}>
       <div aria-hidden="true" style={{
@@ -50,7 +50,7 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
         {/* Badge */}
         <span style={{
           display: 'inline-block',
-          background: badgeColor || '#D4570A',
+          background: badgeColor || '#C2410C',
           color: 'white',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
           letterSpacing: '0.08em', textTransform: 'uppercase',
@@ -70,6 +70,6 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
           {title}
         </h1>
       </div>
-    </section>
+    </header>
   );
 }

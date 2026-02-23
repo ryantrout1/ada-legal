@@ -12,7 +12,7 @@ export default function GuideWhyAttorney() {
       <GuideHeroBanner
         title="Why You Need an ADA Attorney"
         typeBadge="Know Your Rights"
-        badgeColor="#D4570A"
+        badgeColor="#C2410C"
       />
 
       <div className="guide-content-wrap">

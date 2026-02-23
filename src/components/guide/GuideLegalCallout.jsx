@@ -3,7 +3,7 @@ import AutoCiteLinks from './AutoCiteLinks';
 
 export default function GuideLegalCallout({ citation, children }) {
   return (
-    <aside aria-label="Legal citation" style={{
+    <div role="note" aria-label="Legal citation" style={{
       background: 'white', border: '1px solid var(--slate-200)',
       borderLeft: '3px solid #C2410C',
       borderRadius: '0 10px 10px 0', padding: '16px 20px',
@@ -24,6 +24,6 @@ export default function GuideLegalCallout({ citation, children }) {
       }}>
         <AutoCiteLinks>{children}</AutoCiteLinks>
       </div>
-    </aside>
+    </div>
   );
 }

@@ -12,7 +12,7 @@ export default function GuideWhatToExpect() {
       <GuideHeroBanner
         title="What to Expect: The ADA Legal Process"
         typeBadge="Process Guide"
-        badgeColor="#D4570A"
+        badgeColor="#C2410C"
       />
 
       <div className="guide-content-wrap">
