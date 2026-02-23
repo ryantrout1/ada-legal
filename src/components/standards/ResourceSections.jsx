@@ -9,7 +9,7 @@ const SECTIONS = [
     icon: Shield,
     iconBg: '#D4570A',
     title: 'Know Your Rights',
-    count: 10,
+    count: 11,
     cards: [
       {
         title: 'Introduction to the ADA',
