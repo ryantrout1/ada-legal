@@ -5,6 +5,7 @@ import QuickFilters from '../components/standards/QuickFilters';
 import BreadcrumbAndInfo from '../components/standards/BreadcrumbAndInfo';
 import StandardsSidebar from '../components/standards/StandardsSidebar';
 import ResourceSections from '../components/standards/ResourceSections';
+import GuideReportCTA from '../components/guide/GuideReportCTA';
 
 export default function StandardsGuide() {
   const [searchValue, setSearchValue] = useState('');
@@ -28,6 +29,7 @@ export default function StandardsGuide() {
           <ResourceSections />
         </div>
       </div>
+      <GuideReportCTA />
     </>
   );
 }

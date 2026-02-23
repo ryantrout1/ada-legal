@@ -348,6 +348,36 @@ export default function ADAAssistant() {
               </Link>
             );
           })}
+
+          {/* Violation CTA */}
+          <Link
+            to={createPageUrl('Intake')}
+            onClick={() => { setQuery(''); setFocused(false); }}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '12px 16px', textDecoration: 'none',
+              borderTop: '1px solid #F1F5F9',
+              background: 'linear-gradient(135deg, #FFF7ED 0%, #FFFBF7 100%)'
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = '#FFF7ED'}
+            onMouseLeave={e => e.currentTarget.style.background = 'linear-gradient(135deg, #FFF7ED 0%, #FFFBF7 100%)'}
+          >
+            <div>
+              <span style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', fontWeight: 600,
+                color: '#C2410C'
+              }}>
+                Experienced a violation?
+              </span>
+              <span style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+                color: '#64748B', marginLeft: '6px'
+              }}>
+                Report it — we'll connect you with an attorney.
+              </span>
+            </div>
+            <ArrowRight size={16} style={{ color: '#C2410C', flexShrink: 0 }} />
+          </Link>
         </div>
       )}
 

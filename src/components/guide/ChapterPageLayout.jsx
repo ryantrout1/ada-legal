@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import GuideStyles from './GuideStyles';
 import GuideHeroBanner from './GuideHeroBanner';
 import GuideReportCTA from './GuideReportCTA';
@@ -99,6 +99,33 @@ function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onT
                 {diagram}
               </div>
             )}
+
+            {/* Inline violation CTA */}
+            <div style={{
+              marginTop: '20px', paddingTop: '16px',
+              borderTop: '1px solid #E7E4DE',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              flexWrap: 'wrap', gap: '8px'
+            }}>
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+                color: '#64748B', margin: 0, lineHeight: 1.5
+              }}>
+                Does this standard describe a barrier you've encountered?
+              </p>
+              <Link to={createPageUrl('Intake')} style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
+                color: '#C2410C', textDecoration: 'none',
+                padding: '6px 14px', borderRadius: '8px',
+                border: '1px solid rgba(194,65,12,0.2)',
+                background: 'rgba(194,65,12,0.04)',
+                minHeight: '36px',
+                transition: 'background 0.2s'
+              }}>
+                Report a Violation <ArrowRight size={14} aria-hidden="true" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
