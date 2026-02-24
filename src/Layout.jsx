@@ -2,11 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
-import { Menu, X, User, LogOut } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings } from 'lucide-react';
 import LogoBrand from './components/LogoBrand';
 import LiveAnnouncer from './components/a11y/LiveAnnouncer';
 import AuditButton from './components/a11y/AuditButton';
 import LandingFooterNew from './components/landing/LandingFooterNew';
+import DisplaySettings, { applyPreferences, loadPreferences } from './components/a11y/DisplaySettings';
 
 export default function Layout({ children, currentPageName }) {
   // Scroll to top on page change
@@ -16,6 +17,8 @@ export default function Layout({ children, currentPageName }) {
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const settingsButtonRef = React.useRef(null);
 
   // Fix 1: Ensure meta viewport allows zooming (remove any platform-injected restrictions)
   React.useEffect(() => {
@@ -28,9 +31,11 @@ export default function Layout({ children, currentPageName }) {
     }
   }, []);
 
-  // Set lang attribute
+  // Set lang attribute + apply display preferences
   React.useEffect(() => {
     document.documentElement.lang = 'en';
+    const prefs = loadPreferences();
+    applyPreferences(prefs);
   }, []);
 
   // Favicon
@@ -103,6 +108,7 @@ export default function Layout({ children, currentPageName }) {
       document.title = `${title} — ADA Legal Link`;
     }
     setMobileMenuOpen(false);
+    setSettingsOpen(false);
   }, [currentPageName]);
 
   return (
