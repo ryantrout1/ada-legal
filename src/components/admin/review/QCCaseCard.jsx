@@ -302,7 +302,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
                 fontWeight: 700, color: 'white', backgroundColor: '#15803D',
-                border: 'none', borderRadius: '8px', cursor: 'pointer'
+                border: 'none', borderRadius: '8px', cursor: 'pointer', minHeight: '44px'
               }}
             >
               <Check size={16} /> Approve
@@ -314,7 +314,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
                 fontWeight: 700, color: 'white', backgroundColor: '#B91C1C',
-                border: 'none', borderRadius: '8px', cursor: 'pointer'
+                border: 'none', borderRadius: '8px', cursor: 'pointer', minHeight: '44px'
               }}
             >
               <X size={16} /> Reject
@@ -326,7 +326,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
                 fontWeight: 700, color: '#92400E', backgroundColor: 'transparent',
-                border: '2px solid #92400E', borderRadius: '8px', cursor: 'pointer'
+                border: '2px solid #92400E', borderRadius: '8px', cursor: 'pointer', minHeight: '44px'
               }}
             >
               <Flag size={16} /> Flag for Review

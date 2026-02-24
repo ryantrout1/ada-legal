@@ -159,7 +159,7 @@ export default function AdminCases() {
   }
 
   const selectStyle = {
-    minHeight: '40px', padding: '0.5rem 0.75rem',
+    minHeight: '44px', padding: '0.625rem 0.75rem',
     fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
     color: '#334155', backgroundColor: 'var(--surface)',
     border: '1px solid var(--slate-200)', borderRadius: '8px',

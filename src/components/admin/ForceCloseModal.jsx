@@ -96,7 +96,7 @@ export default function ForceCloseModal({ open, caseData, onSubmit, onCancel, sa
           <button type="button" onClick={handleClose} disabled={saving} style={{
             background: 'none', border: 'none', cursor: 'pointer',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-            color: 'var(--slate-500)', padding: '0.5rem'
+            color: 'var(--slate-500)', padding: '0.5rem 1rem', minHeight: '44px'
           }}>
             Cancel
           </button>
