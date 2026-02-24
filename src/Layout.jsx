@@ -94,8 +94,12 @@ export default function Layout({ children, currentPageName }) {
   };
 
   React.useEffect(() => {
-    const title = PAGE_TITLES[currentPageName] || currentPageName;
-    document.title = `${title} — ADA Legal Link`;
+    if (currentPageName === 'Home') {
+      document.title = 'ADA Legal Link — Know Your Rights. Then Enforce Them.';
+    } else {
+      const title = PAGE_TITLES[currentPageName] || currentPageName;
+      document.title = `${title} — ADA Legal Link`;
+    }
     setMobileMenuOpen(false);
   }, [currentPageName]);
 
