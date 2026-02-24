@@ -37,6 +37,31 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   React.useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        const firstLink = document.querySelector('#mobile-nav-panel a, #mobile-nav-panel button');
+        if (firstLink) firstLink.focus();
+      }, 50);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileMenuOpen]);
+
+  React.useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        setMobileMenuOpen(false);
+        document.querySelector('.mobile-menu-btn')?.focus();
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [mobileMenuOpen]);
+
+  React.useEffect(() => {
     async function loadUser() {
       try {
         const currentUser = await base44.auth.me();
@@ -193,23 +218,13 @@ export default function Layout({ children, currentPageName }) {
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
             }
       }>
-        <div style={
-          !loading && !user && currentPageName === 'Home'
-            ? {
-                width: '100%',
-                padding: '0 40px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }
-            : {
-                width: '100%',
-                padding: '0 40px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }
-        }>
+        <div style={{
+            width: '100%',
+            padding: '0 clamp(16px, 4vw, 40px)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+        }}>
           <Link to={createPageUrl('Home')} style={{
             display: 'flex',
             alignItems: 'center',

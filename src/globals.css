@@ -3,6 +3,11 @@ css
    GLOBAL ACCESSIBILITY STYLES
    ======================================== */
 
+/* Prevent horizontal scroll from any overflow */
+html {
+  overflow-x: hidden;
+}
+
 /* Visually hidden utility — for screen readers only */
 .sr-only {
   position: absolute;
