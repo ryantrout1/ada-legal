@@ -90,7 +90,9 @@ export default function Layout({ children, currentPageName }) {
     LawyerProfile: 'My Profile', LawyerRegister: 'Attorney Registration',
     LawyerLanding: 'For Attorneys', StandardsGuide: 'ADA Standards Guide',
     Admin: 'Admin Dashboard', AdminReview: 'Review Queue', AdminCases: 'All Cases',
-    AdminAnalytics: 'Analytics', AdminLawyers: 'Manage Lawyers'
+    AdminAnalytics: 'Analytics', AdminLawyers: 'Manage Lawyers',
+    TitleIIPathway: 'Government Accessibility Complaints',
+    TitleIPathway: 'Workplace Disability Discrimination'
   };
 
   React.useEffect(() => {

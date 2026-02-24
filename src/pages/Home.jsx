@@ -5,6 +5,7 @@ import LandingStyles from '../components/landing/LandingStyles';
 import LandingHeroNew from '../components/landing/LandingHeroNew';
 import StoriesSection from '../components/landing/StoriesSection';
 import HowItWorksNew from '../components/landing/HowItWorksNew';
+import KnowYourRightsSection from '../components/landing/KnowYourRightsSection';
 import CommitmentSection from '../components/landing/CommitmentSection';
 import ForAttorneysNew from '../components/landing/ForAttorneysNew';
 import FinalCTANew from '../components/landing/FinalCTANew';
@@ -44,6 +45,7 @@ export default function Home() {
       <LandingHeroNew />
       <StoriesSection />
       <HowItWorksNew />
+      <KnowYourRightsSection />
       <CommitmentSection />
       <ForAttorneysNew />
       <FinalCTANew />
