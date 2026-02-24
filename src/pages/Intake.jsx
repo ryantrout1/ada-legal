@@ -448,7 +448,7 @@ export default function Intake() {
             }}>
               <strong>Submission Error:</strong> {errors.submit}
             </div>
-          )
+          )}
           {/* Pathway context banner */}
           {isFromPathway && !submitted && step <= 5 && (
             <div style={{
