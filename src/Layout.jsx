@@ -444,6 +444,45 @@ export default function Layout({ children, currentPageName }) {
                 )}
               </>
             )}
+
+            {/* Display Settings */}
+            <div style={{ position: 'relative' }} className="desktop-settings-btn">
+              <button
+                ref={settingsButtonRef}
+                onClick={() => setSettingsOpen(!settingsOpen)}
+                aria-label="Display preferences"
+                aria-expanded={settingsOpen}
+                aria-haspopup="dialog"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'white',
+                  cursor: 'pointer',
+                  padding: '8px',
+                  minWidth: '44px',
+                  minHeight: '44px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '8px',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <Settings size={20} aria-hidden="true" />
+              </button>
+              {settingsOpen && (
+                <DisplaySettings
+                  variant="dropdown"
+                  isOpen={settingsOpen}
+                  onClose={() => {
+                    setSettingsOpen(false);
+                    settingsButtonRef.current?.focus();
+                  }}
+                />
+              )}
+            </div>
           </nav>
         </div>
 
@@ -487,6 +526,12 @@ export default function Layout({ children, currentPageName }) {
               display: 'none'
             }}
           >
+            {/* Display Settings — inline in mobile menu */}
+            <DisplaySettings
+              variant="inline"
+              isOpen={true}
+              onClose={() => {}}
+            />
             {!loading && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                 {!user && (
@@ -693,6 +738,9 @@ export default function Layout({ children, currentPageName }) {
             display: block !important;
           }
           .desktop-nav {
+            display: none !important;
+          }
+          .desktop-settings-btn {
             display: none !important;
           }
           .mobile-nav {
