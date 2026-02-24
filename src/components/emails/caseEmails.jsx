@@ -56,21 +56,33 @@ export function caseApprovedEmail(c, portalUrl) {
   });
 }
 
-export function caseRejectedEmail(c, rejectionReason, portalUrl) {
+export function caseRejectedEmail(c, reasonText, portalUrl) {
+  const standardsGuideUrl = portalUrl ? portalUrl.replace('/MyCases', '/StandardsGuide') : '/StandardsGuide';
+  const intakeUrl = portalUrl ? portalUrl.replace('/MyCases', '/Intake') : '/Intake';
+
   return brandedEmail({
-    heading: 'Submission Update',
-    headingColor: '#B91C1C',
+    heading: 'Update on Your Report',
+    headingColor: '#475569',
     bodyHtml: `
       <p>Dear ${c.contact_name},</p>
-      <p>After reviewing your ADA violation report regarding <strong>${c.business_name}</strong>, we were unable to approve it at this time.</p>
-      <div style="background-color: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 16px; margin: 16px 0;">
-        <p style="margin: 0; font-weight: 600; color: #991B1B;">Reason:</p>
-        <p style="margin: 8px 0 0 0; color: #7F1D1D;">${rejectionReason}</p>
+      <p>Thank you for taking the time to submit your report about <strong>${c.business_name}</strong>. We know that encountering accessibility barriers is frustrating, and we appreciate you bringing this to our attention.</p>
+      <p>After reviewing your submission, we were unable to move it forward to our attorney network at this time.</p>
+      ${reasonText ? `
+      <div style="background-color: #F8FAFC; border-left: 3px solid #C2410C; border-radius: 0 8px 8px 0; padding: 16px; margin: 16px 0;">
+        <p style="margin: 0; color: #334155; line-height: 1.6;">${reasonText}</p>
       </div>
-      <p>If you believe this was in error or have additional information, you may submit a new report with more details.</p>
+      ` : ''}
+      <p><strong>What you can do:</strong></p>
+      <ul style="padding-left: 20px; line-height: 1.8;">
+        <li>Visit our <a href="${standardsGuideUrl}" style="color: #C2410C; font-weight: 600;">ADA Standards Guide</a> to learn more about the specific standards that apply to your situation.</li>
+        <li>File a complaint directly with the <a href="https://civilrights.justice.gov/" style="color: #C2410C; font-weight: 600;">U.S. Department of Justice</a>.</li>
+        <li>Contact your state's <a href="https://www.ndrn.org/about/ndrn-member-agencies/" style="color: #C2410C; font-weight: 600;">Protection &amp; Advocacy organization</a> for free assistance.</li>
+        <li>If your situation changes or you have additional documentation, you are welcome to <a href="${intakeUrl}" style="color: #C2410C; font-weight: 600;">submit a new report</a>.</li>
+      </ul>
+      <p style="color: #64748B; font-size: 13px; margin-top: 24px; line-height: 1.5;">This assessment is provided as general information to help you understand your situation and does not constitute legal advice or create an attorney-client relationship.</p>
     `,
     portalUrl,
-    portalLabel: 'View Details'
+    portalLabel: 'View Your Case'
   });
 }
 

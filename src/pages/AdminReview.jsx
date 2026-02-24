@@ -4,6 +4,7 @@ import { createPageUrl } from '../utils';
 import { CheckCircle, Flag, ArrowUpDown } from 'lucide-react';
 import QCCaseCard from '../components/admin/review/QCCaseCard';
 import QCActionModal from '../components/admin/review/QCActionModal';
+import { caseRejectedEmail } from '../components/emails/caseEmails';
 
 export default function AdminReview() {
   const [loading, setLoading] = useState(true);
@@ -61,7 +62,7 @@ export default function AdminReview() {
     if (!saving) setModalState({ open: false, action: null, caseData: null });
   };
 
-  const handleConfirm = async ({ reason, comment }) => {
+  const handleConfirm = async ({ reason, comment, internalNotes }) => {
     if (!modalState.caseData) return;
     setSaving(true);
     const c = modalState.caseData;
@@ -98,7 +99,7 @@ export default function AdminReview() {
       await base44.entities.Case.update(c.id, {
         status: 'rejected',
         qc_rejection_reason: reason,
-        qc_reviewer_notes: comment || null
+        qc_reviewer_notes: internalNotes || null
       });
       await base44.entities.TimelineEvent.create({
         case_id: c.id,
@@ -111,12 +112,38 @@ export default function AdminReview() {
       await base44.entities.TimelineEvent.create({
         case_id: c.id,
         event_type: 'reviewed',
-        event_description: `Rejection reason: ${reason}${comment ? `. Note: ${comment}` : ''}`,
+        event_description: `Rejection reason: ${reason}${internalNotes ? `. Internal note: ${internalNotes}` : ''}`,
         actor_role: 'admin',
         visible_to_user: false,
         created_at: now
       });
-      setToast({ type: 'success', message: 'Case rejected' });
+
+      // Send rejection email to claimant
+      const REASON_EMAIL_TEXT = [
+        { value: 'appears_compliant', emailText: 'Based on our review, the situation described appears to meet current ADA accessibility standards.' },
+        { value: 'not_ada_violation', emailText: 'The issue described does not appear to fall under the ADA accessibility standards that our platform covers.' },
+        { value: 'insufficient_documentation', emailText: 'We were unable to fully evaluate your report based on the information and documentation provided. Additional photos or details about the specific barrier you encountered would help us better assess your situation.' },
+        { value: 'exempt_entity', emailText: 'The business or entity you reported may be exempt from certain ADA requirements based on its classification (such as private clubs, religious organizations, or certain historic properties).' },
+        { value: 'statute_of_limitations', emailText: 'Based on the timeline described, there may be limitations on the legal options available for this particular situation.' },
+        { value: 'already_remediated', emailText: 'Based on available information, the accessibility barrier you reported may have already been addressed or remediated.' },
+        { value: 'duplicate', emailText: 'It appears this report is a duplicate of a previous submission. If you have new information to add, you are welcome to submit a new report with the additional details.' },
+        { value: 'other', emailText: '' }
+      ];
+      const selectedReason = REASON_EMAIL_TEXT.find(r => r.value === reason);
+      const emailReasonText = (selectedReason?.emailText || '') + (comment ? ' ' + comment : '');
+      const portalUrl = window.location.origin + '/MyCases';
+
+      try {
+        await base44.integrations.Core.SendEmail({
+          to: c.contact_email,
+          subject: 'ADA Legal Link — Submission Update',
+          body: caseRejectedEmail(c, emailReasonText, portalUrl)
+        });
+      } catch (emailErr) {
+        console.error('Rejection email failed:', emailErr);
+      }
+
+      setToast({ type: 'success', message: 'Case rejected & email sent' });
     }
 
     if (modalState.action === 'flag') {

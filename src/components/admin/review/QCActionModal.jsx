@@ -2,11 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, Check, AlertTriangle, Flag } from 'lucide-react';
 
 const REJECTION_REASONS = [
-  { value: 'insufficient_detail', label: 'Insufficient detail' },
-  { value: 'not_ada_violation', label: 'Not an ADA violation' },
-  { value: 'duplicate', label: 'Duplicate submission' },
-  { value: 'incomplete_contact', label: 'Incomplete contact info' },
-  { value: 'other', label: 'Other' }
+  { value: 'appears_compliant', label: 'Appears ADA compliant', emailText: 'Based on our review, the situation described appears to meet current ADA accessibility standards.' },
+  { value: 'not_ada_violation', label: 'Not an ADA violation', emailText: 'The issue described does not appear to fall under the ADA accessibility standards that our platform covers.' },
+  { value: 'insufficient_documentation', label: 'Insufficient documentation', emailText: 'We were unable to fully evaluate your report based on the information and documentation provided. Additional photos or details about the specific barrier you encountered would help us better assess your situation.' },
+  { value: 'exempt_entity', label: 'Business/entity is exempt', emailText: 'The business or entity you reported may be exempt from certain ADA requirements based on its classification (such as private clubs, religious organizations, or certain historic properties).' },
+  { value: 'statute_of_limitations', label: 'Statute of limitations concern', emailText: 'Based on the timeline described, there may be limitations on the legal options available for this particular situation.' },
+  { value: 'already_remediated', label: 'Issue already remediated', emailText: 'Based on available information, the accessibility barrier you reported may have already been addressed or remediated.' },
+  { value: 'duplicate', label: 'Duplicate submission', emailText: 'It appears this report is a duplicate of a previous submission. If you have new information to add, you are welcome to submit a new report with the additional details.' },
+  { value: 'other', label: 'Other', emailText: '' }
 ];
 
 const FLAG_REASONS = [
@@ -35,11 +38,13 @@ const ACTION_CONFIG = {
     headerColor: '#B91C1C',
     buttonBg: '#B91C1C',
     icon: X,
-    message: 'This case will be rejected and the claimant will be notified. Please provide a reason.',
-    commentLabel: 'Rejection Note (optional — internal only)',
-    commentPlaceholder: 'Provide additional context for the rejection (optional)...',
-    confirmText: 'Reject Case',
-    warning: 'The claimant will see a generic rejection message, not your notes.'
+    message: 'This case will be rejected and the claimant will receive an email with your feedback.',
+    commentLabel: 'Personal Note to Submitter (optional — included in their email)',
+    commentPlaceholder: 'Add a sentence about their specific situation if you\'d like — e.g., "The ramp in your photos appears to meet grade requirements" or "Private clubs are exempt under Title III."',
+    internalNotesLabel: 'Internal Notes (optional — only visible to admins)',
+    internalNotesPlaceholder: 'Any private notes for the team...',
+    confirmText: 'Send & Reject',
+    warning: null
   },
   flag: {
     title: 'Flag for Review',
@@ -57,12 +62,14 @@ const ACTION_CONFIG = {
 export default function QCActionModal({ open, action, businessName, onConfirm, onCancel, saving }) {
   const [reason, setReason] = useState('');
   const [comment, setComment] = useState('');
+  const [internalNotes, setInternalNotes] = useState('');
   const modalRef = useRef(null);
 
   useEffect(() => {
     if (open) {
       setReason('');
       setComment('');
+      setInternalNotes('');
       modalRef.current?.focus();
     }
   }, [open, action]);
@@ -86,7 +93,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
 
   const handleConfirm = () => {
     if (!canConfirm || saving) return;
-    onConfirm({ reason, comment });
+    onConfirm({ reason, comment, internalNotes });
   };
 
   return (
@@ -172,7 +179,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
             </div>
           )}
 
-          <div style={{ marginBottom: config.warning ? '12px' : '0' }}>
+          <div style={{ marginBottom: '12px' }}>
             <label style={{
               display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
               fontWeight: 600, color: 'var(--slate-700)', marginBottom: '6px'
@@ -193,10 +200,65 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
             />
           </div>
 
+          {action === 'reject' && (
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{
+                display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                fontWeight: 600, color: 'var(--slate-700)', marginBottom: '6px'
+              }}>
+                {config.internalNotesLabel || 'Internal Notes (optional)'}
+              </label>
+              <textarea
+                value={internalNotes}
+                onChange={(e) => setInternalNotes(e.target.value)}
+                placeholder={config.internalNotesPlaceholder || 'Private notes...'}
+                disabled={saving}
+                rows={2}
+                style={{
+                  width: '100%', padding: '10px 12px', fontFamily: 'Manrope, sans-serif',
+                  fontSize: '0.9375rem', border: '1px solid var(--slate-300)', borderRadius: '8px',
+                  resize: 'vertical', minHeight: '60px'
+                }}
+              />
+            </div>
+          )}
+
+          {action === 'reject' && reason && (
+            <details style={{ marginTop: '12px' }}>
+              <summary style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                fontWeight: 600, color: 'var(--slate-500)', cursor: 'pointer',
+                marginBottom: '8px'
+              }}>
+                Preview email to submitter ▾
+              </summary>
+              <div style={{
+                backgroundColor: '#F8FAFC', border: '1px solid var(--slate-200)',
+                borderRadius: '8px', padding: '16px', fontSize: '0.8125rem',
+                fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)',
+                lineHeight: 1.6
+              }}>
+                <p style={{ margin: '0 0 8px', fontWeight: 600, color: 'var(--slate-800)' }}>
+                  Dear submitter,
+                </p>
+                <p style={{ margin: '0 0 8px' }}>
+                  After reviewing your ADA violation report regarding <strong>{businessName}</strong>, we were unable to move it forward to our attorney network at this time.
+                </p>
+                <p style={{ margin: '0 0 8px', fontStyle: 'italic', color: 'var(--slate-700)' }}>
+                  {REJECTION_REASONS.find(r => r.value === reason)?.emailText || ''}
+                  {comment ? ` ${comment}` : ''}
+                </p>
+                <p style={{ margin: '0', fontSize: '0.75rem', color: 'var(--slate-400)' }}>
+                  + next steps, Standards Guide link, resubmit option, disclaimer
+                </p>
+              </div>
+            </details>
+          )}
+
           {config.warning && (
             <div style={{
               display: 'flex', alignItems: 'flex-start', gap: '8px', padding: '10px 12px',
-              backgroundColor: '#FEF3C7', borderRadius: '8px'
+              backgroundColor: '#FEF3C7', borderRadius: '8px', marginTop: '12px'
             }}>
               <AlertTriangle size={16} style={{ color: '#92400E', flexShrink: 0, marginTop: '2px' }} />
               <p style={{
