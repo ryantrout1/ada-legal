@@ -114,9 +114,9 @@ export default function Intake() {
   const pathwayLocation = urlParams.get('location');
   const pathwayBarrier = urlParams.get('barrier');
 
-  // Warn before accidental navigation if form has data
+  // Warn before accidental navigation if form has data (only after triage)
   useEffect(() => {
-    const hasData = formData.violation_type || formData.business_name || formData.narrative;
+    const hasData = (step > 0) && (formData.violation_type || formData.business_name || formData.narrative);
     if (!hasData || submitted) return;
 
     const handleBeforeUnload = (e) => {
@@ -125,7 +125,7 @@ export default function Intake() {
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [formData.violation_type, formData.business_name, formData.narrative, submitted]);
+  }, [step, formData.violation_type, formData.business_name, formData.narrative, submitted]);
 
   useEffect(() => {
     async function loadUser() {
