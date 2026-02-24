@@ -15,7 +15,7 @@ export default function QuickFilters({ activeFilters, onToggle }) {
     <div style={{
       background: '#FFFFFF',
       borderBottom: '1px solid var(--slate-200)',
-      padding: '48px 40px'
+      padding: 'clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px)'
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <p style={{

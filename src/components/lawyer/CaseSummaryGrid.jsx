@@ -31,7 +31,7 @@ export default function CaseSummaryGrid({ caseData }) {
   return (
     <div style={{
       backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '14px',
-      display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px'
+      display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px'
     }}>
       {items.map((item, i) => (
         <div key={i}>

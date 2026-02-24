@@ -66,7 +66,7 @@ export default function LandingStyles() {
         }
         .landing-attorneys-grid {
           grid-template-columns: 1fr !important;
-          gap: 3rem !important;
+          gap: 32px !important;
         }
         .landing-stat-grid {
           grid-template-columns: repeat(2, 1fr) !important;
@@ -100,6 +100,11 @@ export default function LandingStyles() {
           flex-direction: column !important;
           gap: 0.5rem !important;
         }
+        section[aria-labelledby="hero-heading"] {
+          min-height: auto !important;
+          padding-top: 88px !important;
+          padding-bottom: 48px !important;
+        }
       }
 
       /* Reduced motion */
@@ -132,6 +137,14 @@ export default function LandingStyles() {
         .landing-commitment-card {
           border-width: 2px !important;
         }
+      }
+
+      @keyframes landingBounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(8px); }
+      }
+      .landing-scroll-hint {
+        animation: landingBounce 2s ease-in-out infinite;
       }
     `}</style>
   );

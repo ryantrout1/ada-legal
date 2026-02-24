@@ -7,7 +7,7 @@ export default function BreadcrumbAndInfo() {
   return (
     <div style={{
       background: '#FAF7F2',
-      padding: '60px 40px'
+      padding: 'clamp(32px, 6vw, 60px) clamp(16px, 4vw, 40px)'
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         {/* Breadcrumb */}

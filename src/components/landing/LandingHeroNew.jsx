@@ -176,6 +176,28 @@ export default function LandingHeroNew() {
           opacity: 0.07, pointerEvents: 'none'
         }}
       />
+
+      {/* Scroll indicator */}
+      <div
+        aria-hidden="true"
+        className="landing-scroll-hint"
+        style={{
+          position: 'absolute',
+          bottom: '24px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '4px',
+          opacity: 0.5,
+          pointerEvents: 'none'
+        }}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </div>
     </section>
   );
 }

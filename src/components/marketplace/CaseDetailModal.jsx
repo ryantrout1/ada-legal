@@ -190,7 +190,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
                 {docScore.score}/7 — {docScore.label}
               </span>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '4px 16px' }}>
               {docScore.criteria.map((cr, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span style={{ fontSize: '0.85rem', color: cr.met ? '#15803D' : 'var(--slate-300)', flexShrink: 0 }}>{cr.met ? '●' : '○'}</span>

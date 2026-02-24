@@ -71,7 +71,7 @@ export default function CompletedCaseRow({ caseData, notes, onSaveNote }) {
           )}
           <div style={{
             marginTop: '12px', backgroundColor: 'var(--slate-50)', borderRadius: '8px', padding: '12px',
-            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px'
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '8px'
           }}>
             <div>
               <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.65rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', margin: '0 0 2px' }}>Business Type</p>

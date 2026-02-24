@@ -55,7 +55,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
           {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
         </button>
 
-        <div style={{ flex: 1, minWidth: '140px' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)' }}>
             {c.business_name}
           </span>
@@ -74,7 +74,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
         </div>
 
         {/* Middle info */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.15rem', minWidth: '160px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.15rem', minWidth: 0 }}>
           {group === 'needs_action' && (
             <>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-600)' }}>

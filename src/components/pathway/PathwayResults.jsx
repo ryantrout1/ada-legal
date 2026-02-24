@@ -237,7 +237,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
 
       {/* CTA */}
       <div style={{
-        background: '#1A1F2B', borderRadius: '16px', padding: '40px 32px',
+        background: '#1A1F2B', borderRadius: '16px', padding: 'clamp(24px, 4vw, 40px) clamp(20px, 4vw, 32px)',
         textAlign: 'center', marginBottom: '16px'
       }}>
         <h2 style={{
