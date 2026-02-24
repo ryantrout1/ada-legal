@@ -433,12 +433,14 @@ export default function Intake() {
           }}>
             {submitted
               ? 'Your report has been submitted successfully.'
-              : `Step ${isFromPathway ? step - 1 : step} of ${isFromPathway ? 4 : 5}: ${
-                  (isFromPathway
-                    ? ['Details', 'Incident', 'Contact', 'Review']
-                    : ['Violation Type', 'Details', 'Incident', 'Contact', 'Review']
-                  )[step - 1] || ''
-                }`
+              : step === 0
+                ? 'Select the type of access barrier you experienced.'
+                : `Step ${isFromPathway ? step - 1 : step} of ${isFromPathway ? 4 : 5}: ${
+                    (isFromPathway
+                      ? ['Details', 'Incident', 'Contact', 'Review']
+                      : ['Violation Type', 'Details', 'Incident', 'Contact', 'Review']
+                    )[step - 1] || ''
+                  }`
             }
           </div>
 
