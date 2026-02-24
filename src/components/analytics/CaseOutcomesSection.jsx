@@ -75,7 +75,7 @@ export default function CaseOutcomesSection({ cases, filters, onFilterChange }) 
   return (
     <div>
       {/* Side by side: stat cards left, resolution chart right */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <CompactStatCard label="Cases Resolved" count={totalClosed} bgColor="#F1F5F9" textColor="#475569" icon={CheckCircle} />
           <CompactStatCard label="Engagement Rate" count={engagementRate !== null ? `${engagementRate}%` : '—'} bgColor={rateBg} textColor={rateColor} icon={TrendingUp} />

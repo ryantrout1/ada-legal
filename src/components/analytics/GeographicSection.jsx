@@ -70,7 +70,7 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
 
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
         <div style={cardStyle}>
           <p style={subhead}>Cases by State</p>
           {stateData.length === 0 ? (

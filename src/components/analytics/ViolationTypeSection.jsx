@@ -175,7 +175,7 @@ export default function ViolationTypeSection({ cases, filters, onFilterChange })
           </div>
         </SectionCard>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
           <SectionCard title="Physical Space Subcategories" subtitle={`${physical.length} cases`}>
             {sortedSubtypes.map(s => (
               <HorizontalBar

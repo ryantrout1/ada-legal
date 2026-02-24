@@ -119,7 +119,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
         </div>
 
         {/* Col 2: Business type + subtype pills */}
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', flex: '0 1 auto' }}>
           <span style={{
             display: 'inline-block', padding: '2px 8px', borderRadius: '6px',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
