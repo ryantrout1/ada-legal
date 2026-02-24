@@ -363,8 +363,9 @@ export default function Intake() {
       padding: 'var(--space-xl) var(--space-lg)'
     }}>
       <div style={{
-        maxWidth: '720px',
-        margin: '0 auto'
+        maxWidth: step === 0 && !submitted ? '860px' : '720px',
+        margin: '0 auto',
+        transition: 'max-width 0.3s ease'
       }}>
         {/* Exit button — shown during wizard steps, not triage */}
         {!submitted && step > 0 && (
