@@ -435,206 +435,207 @@ export default function Layout({ children, currentPageName }) {
           </nav>
         </div>
 
-        {/* Mobile Navigation — Fixed Overlay */}
-        {mobileMenuOpen && (
-          <>
-            {/* Overlay backdrop */}
-            <div
-              className="mobile-nav-overlay"
-              onClick={() => setMobileMenuOpen(false)}
-              style={{
-                position: 'fixed',
-                top: '72px',
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0,0,0,0.4)',
-                zIndex: 998,
-                display: 'none'
-              }}
-              aria-hidden="true"
-            />
-            {/* Menu panel */}
-            <nav
-              aria-label="Mobile navigation"
-              id="mobile-nav-panel"
-              className="mobile-nav"
-              style={{
-                position: 'fixed',
-                top: '72px',
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: '#1A1F2B',
-                zIndex: 999,
-                overflowY: 'auto',
-                WebkitOverflowScrolling: 'touch',
-                padding: '8px 0 24px',
-                display: 'none'
-              }}
-            >
-              {!loading && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-                  {!user && (
-                    <>
-                      <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
-                        ADA Standards Guide
-                      </Link>
-                      <Link to={createPageUrl('Intake')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'Intake' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'Intake' ? 'page' : undefined}>
-                        Report Violation
-                      </Link>
-                      <Link to={createPageUrl('LawyerLanding')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerLanding' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
-                        For Attorneys
-                      </Link>
-                      <button
-                        onClick={() => { setMobileMenuOpen(false); base44.auth.redirectToLogin(); }}
-                        style={{
-                          background: 'var(--terra-600)',
-                          color: 'white',
-                          border: 'none',
-                          padding: '0.75rem',
-                          borderRadius: '10px',
-                          cursor: 'pointer',
-                          fontWeight: 600,
-                          fontFamily: 'Manrope, sans-serif',
-                          minHeight: '44px',
-                          width: '100%',
-                          textAlign: 'center',
-                          margin: '8px 16px',
-                          boxSizing: 'border-box',
-                          maxWidth: 'calc(100% - 32px)'
-                        }}
-                      >
-                        Sign In
-                      </button>
-                    </>
-                  )}
-                  
-                  {user?.role === 'user' && (
-                    <>
-                      <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
-                        ADA Standards Guide
-                      </Link>
-                      <Link to={createPageUrl('Intake')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                        Report Violation
-                      </Link>
-                      <Link to={createPageUrl('MyCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                        My Cases
-                      </Link>
-                      <div style={{ padding: '8px 16px' }}>
-                        <span style={{
-                          background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
-                          fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px'
-                        }}>
-                          <strong>USER</strong> {user.email}
-                        </span>
-                      </div>
-                      <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
-                        background: 'transparent',
-                        color: 'white',
-                        border: '1px solid white',
-                        padding: '0.75rem',
-                        borderRadius: 'var(--radius-md)',
-                        cursor: 'pointer',
-                        minHeight: '44px',
-                        width: 'calc(100% - 32px)',
-                        margin: '8px 16px',
-                        textAlign: 'center'
-                      }}>
-                        Sign Out
-                      </button>
-                    </>
-                  )}
-                  
-                  {user?.role === 'lawyer' && (
-                    <>
-                      <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
-                        ADA Standards Guide
-                      </Link>
-                      <Link to={createPageUrl('Marketplace')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                        Available Cases
-                      </Link>
-                      <Link to={createPageUrl('LawyerDashboard')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                        My Cases
-                      </Link>
-                      <Link to={createPageUrl('LawyerProfile')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                        Profile
-                      </Link>
-                      <div style={{ padding: '8px 16px' }}>
-                        <span style={{
-                          background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
-                          fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px'
-                        }}>
-                          <strong>LAWYER</strong> {user.email}
-                        </span>
-                      </div>
-                      <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
-                        background: 'transparent',
-                        color: 'white',
-                        border: '1px solid white',
-                        padding: '0.75rem',
-                        borderRadius: 'var(--radius-md)',
-                        cursor: 'pointer',
-                        minHeight: '44px',
-                        width: 'calc(100% - 32px)',
-                        margin: '8px 16px',
-                        textAlign: 'center'
-                      }}>
-                        Sign Out
-                      </button>
-                    </>
-                  )}
-                  
-                  {user?.role === 'admin' && (
-                    <>
-                      <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
-                        ADA Standards Guide
-                      </Link>
-                      <Link to={createPageUrl('Admin')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                        Dashboard
-                      </Link>
-                      <Link to={createPageUrl('AdminReview')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                        Review Queue
-                      </Link>
-                      <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                        All Cases
-                      </Link>
-                      <Link to={createPageUrl('AdminLawyers')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                        Lawyers
-                      </Link>
-                      <Link to={createPageUrl('AdminAnalytics')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                        Analytics
-                      </Link>
-                      <div style={{ padding: '8px 16px' }}>
-                        <span style={{
-                          background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
-                          fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px'
-                        }}>
-                          <strong>ADMIN</strong> {user.email}
-                        </span>
-                      </div>
-                      <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
-                        background: 'transparent',
-                        color: 'white',
-                        border: '1px solid white',
-                        padding: '0.75rem',
-                        borderRadius: 'var(--radius-md)',
-                        cursor: 'pointer',
-                        minHeight: '44px',
-                        width: 'calc(100% - 32px)',
-                        margin: '8px 16px',
-                        textAlign: 'center'
-                      }}>
-                        Sign Out
-                      </button>
-                    </>
-                  )}
-                </div>
-              )}
-            </nav>
-          </>
-        )}
       </header>
+
+      {/* Mobile Navigation — Fixed Overlay (outside header to avoid backdrop-filter containing block issue) */}
+      {mobileMenuOpen && (
+        <>
+          {/* Overlay backdrop */}
+          <div
+            className="mobile-nav-overlay"
+            onClick={() => setMobileMenuOpen(false)}
+            style={{
+              position: 'fixed',
+              top: '72px',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.4)',
+              zIndex: 998,
+              display: 'none'
+            }}
+            aria-hidden="true"
+          />
+          {/* Menu panel */}
+          <nav
+            aria-label="Mobile navigation"
+            id="mobile-nav-panel"
+            className="mobile-nav"
+            style={{
+              position: 'fixed',
+              top: '72px',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: '#1A1F2B',
+              zIndex: 999,
+              overflowY: 'auto',
+              WebkitOverflowScrolling: 'touch',
+              padding: '8px 0 24px',
+              display: 'none'
+            }}
+          >
+            {!loading && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+                {!user && (
+                  <>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                      ADA Standards Guide
+                    </Link>
+                    <Link to={createPageUrl('Intake')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'Intake' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'Intake' ? 'page' : undefined}>
+                      Report Violation
+                    </Link>
+                    <Link to={createPageUrl('LawyerLanding')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerLanding' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
+                      For Attorneys
+                    </Link>
+                    <button
+                      onClick={() => { setMobileMenuOpen(false); base44.auth.redirectToLogin(); }}
+                      style={{
+                        background: 'var(--terra-600)',
+                        color: 'white',
+                        border: 'none',
+                        padding: '0.75rem',
+                        borderRadius: '10px',
+                        cursor: 'pointer',
+                        fontWeight: 600,
+                        fontFamily: 'Manrope, sans-serif',
+                        minHeight: '44px',
+                        width: '100%',
+                        textAlign: 'center',
+                        margin: '8px 16px',
+                        boxSizing: 'border-box',
+                        maxWidth: 'calc(100% - 32px)'
+                      }}
+                    >
+                      Sign In
+                    </button>
+                  </>
+                )}
+                
+                {user?.role === 'user' && (
+                  <>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                      ADA Standards Guide
+                    </Link>
+                    <Link to={createPageUrl('Intake')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      Report Violation
+                    </Link>
+                    <Link to={createPageUrl('MyCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      My Cases
+                    </Link>
+                    <div style={{ padding: '8px 16px' }}>
+                      <span style={{
+                        background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
+                        fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px'
+                      }}>
+                        <strong>USER</strong> {user.email}
+                      </span>
+                    </div>
+                    <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
+                      background: 'transparent',
+                      color: 'white',
+                      border: '1px solid white',
+                      padding: '0.75rem',
+                      borderRadius: 'var(--radius-md)',
+                      cursor: 'pointer',
+                      minHeight: '44px',
+                      width: 'calc(100% - 32px)',
+                      margin: '8px 16px',
+                      textAlign: 'center'
+                    }}>
+                      Sign Out
+                    </button>
+                  </>
+                )}
+                
+                {user?.role === 'lawyer' && (
+                  <>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                      ADA Standards Guide
+                    </Link>
+                    <Link to={createPageUrl('Marketplace')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      Available Cases
+                    </Link>
+                    <Link to={createPageUrl('LawyerDashboard')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      My Cases
+                    </Link>
+                    <Link to={createPageUrl('LawyerProfile')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      Profile
+                    </Link>
+                    <div style={{ padding: '8px 16px' }}>
+                      <span style={{
+                        background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
+                        fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px'
+                      }}>
+                        <strong>LAWYER</strong> {user.email}
+                      </span>
+                    </div>
+                    <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
+                      background: 'transparent',
+                      color: 'white',
+                      border: '1px solid white',
+                      padding: '0.75rem',
+                      borderRadius: 'var(--radius-md)',
+                      cursor: 'pointer',
+                      minHeight: '44px',
+                      width: 'calc(100% - 32px)',
+                      margin: '8px 16px',
+                      textAlign: 'center'
+                    }}>
+                      Sign Out
+                    </button>
+                  </>
+                )}
+                
+                {user?.role === 'admin' && (
+                  <>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                      ADA Standards Guide
+                    </Link>
+                    <Link to={createPageUrl('Admin')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      Dashboard
+                    </Link>
+                    <Link to={createPageUrl('AdminReview')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      Review Queue
+                    </Link>
+                    <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      All Cases
+                    </Link>
+                    <Link to={createPageUrl('AdminLawyers')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      Lawyers
+                    </Link>
+                    <Link to={createPageUrl('AdminAnalytics')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      Analytics
+                    </Link>
+                    <div style={{ padding: '8px 16px' }}>
+                      <span style={{
+                        background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
+                        fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px'
+                      }}>
+                        <strong>ADMIN</strong> {user.email}
+                      </span>
+                    </div>
+                    <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
+                      background: 'transparent',
+                      color: 'white',
+                      border: '1px solid white',
+                      padding: '0.75rem',
+                      borderRadius: 'var(--radius-md)',
+                      cursor: 'pointer',
+                      minHeight: '44px',
+                      width: 'calc(100% - 32px)',
+                      margin: '8px 16px',
+                      textAlign: 'center'
+                    }}>
+                      Sign Out
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+          </nav>
+        </>
+      )}
 
       {/* Main Content */}
       <main id="main-content" role="main" style={{ flex: 1 }}>
