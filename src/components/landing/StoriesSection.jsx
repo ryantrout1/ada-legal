@@ -32,7 +32,7 @@ export default function StoriesSection() {
       background: '#FAF7F2',
       padding: '100px 1.5rem',
       borderTop: '1px solid transparent',
-      borderImage: 'linear-gradient(to right, transparent, #E7E4DE, transparent) 1'
+      borderImage: 'linear-gradient(to right, transparent, var(--slate-200), transparent) 1'
     }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
@@ -63,7 +63,7 @@ export default function StoriesSection() {
         }}>
           {capabilities.map((s, i) => (
             <article key={i} className="landing-story-card" style={{
-              background: '#FFFFFF', border: '1px solid #E7E4DE',
+              background: '#FFFFFF', border: '1px solid var(--slate-200)',
               borderRadius: '16px', padding: '32px',
               transition: 'transform 0.2s, box-shadow 0.2s',
               display: 'flex', flexDirection: 'column'

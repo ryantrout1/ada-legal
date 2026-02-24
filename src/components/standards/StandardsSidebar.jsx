@@ -18,7 +18,7 @@ export default function StandardsSidebar({ activeId }) {
       }}>
         Browse by Category
       </p>
-      <div style={{ borderLeft: '2px solid #E7E4DE' }}>
+      <div style={{ borderLeft: '2px solid var(--slate-200)' }}>
         {CATEGORIES.map(cat => {
           const isActive = activeId === cat.id;
           return (

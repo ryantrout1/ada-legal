@@ -16,7 +16,7 @@ html {
 /* Ensure minimum touch target on all interactive elements */
 @media (pointer: coarse) {
   a, button, [role="button"], input, select, textarea, summary {
-    min-height: 44px;
+    min-height: 44px !important;
   }
 }
 

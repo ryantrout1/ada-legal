@@ -232,7 +232,7 @@ export default function RightsPathway() {
         {/* Wizard Steps */}
         {!showResults && (
           <div style={{
-            background: 'white', border: '1px solid #E7E4DE', borderRadius: '20px',
+            background: 'white', border: '1px solid var(--slate-200)', borderRadius: '20px',
             padding: '32px'
           }}>
             <h2

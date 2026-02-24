@@ -57,7 +57,7 @@ export default function ViolationTypeStep({ value, onChange }) {
               }}
               style={{
                 backgroundColor: isSelected ? '#FFF8F5' : 'var(--surface)',
-                border: isSelected ? '2px solid #C2410C' : '1px solid #E7E4DE',
+                border: isSelected ? '2px solid #C2410C' : '1px solid var(--slate-200)',
                 borderRadius: '16px',
                 padding: 'var(--space-xl)',
                 cursor: 'pointer',

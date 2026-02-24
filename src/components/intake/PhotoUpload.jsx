@@ -132,13 +132,13 @@ export default function PhotoUpload({ photos = [], onChange }) {
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
             fontWeight: 600, color: 'var(--slate-700)', margin: '0 0 4px'
           }}>
-            {dragOver ? 'Drop photos here' : 'Add photos of the violation'}
+            {dragOver ? 'Drop photos here' : 'Tap or click to add photos'}
           </p>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
             color: 'var(--slate-500)', margin: 0
           }}>
-            Drag and drop or click to browse. Up to {MAX_PHOTOS} photos, {MAX_SIZE_MB}MB each.
+            Up to {MAX_PHOTOS} photos, {MAX_SIZE_MB}MB each. JPG, PNG, or WebP.
           </p>
         </div>
       )}

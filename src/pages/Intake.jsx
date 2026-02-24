@@ -96,6 +96,13 @@ export default function Intake() {
   const goToStep = (n) => {
     setStep(n);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      const formRegion = document.querySelector('[role="form"]');
+      if (formRegion) {
+        formRegion.setAttribute('tabIndex', '-1');
+        formRegion.focus({ preventScroll: true });
+      }
+    }, 150);
   };
 
   // Read URL params for pathway integration
@@ -104,6 +111,19 @@ export default function Intake() {
   const pathwayType = urlParams.get('type');
   const pathwayLocation = urlParams.get('location');
   const pathwayBarrier = urlParams.get('barrier');
+
+  // Warn before accidental navigation if form has data
+  useEffect(() => {
+    const hasData = formData.violation_type || formData.business_name || formData.narrative;
+    if (!hasData || submitted) return;
+
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [formData.violation_type, formData.business_name, formData.narrative, submitted]);
 
   useEffect(() => {
     async function loadUser() {
@@ -250,6 +270,13 @@ export default function Intake() {
     if (isFromPathway && step <= 2) return;
     setStep(prev => prev - 1);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      const formRegion = document.querySelector('[role="form"]');
+      if (formRegion) {
+        formRegion.setAttribute('tabIndex', '-1');
+        formRegion.focus({ preventScroll: true });
+      }
+    }, 150);
   };
 
   const handleSubmit = async () => {
@@ -302,21 +329,28 @@ export default function Intake() {
       casePayload.submitter_user_id = currentUser.id;
     }
 
-    const newCase = await base44.entities.Case.create(casePayload);
-    setCaseId(newCase.id);
+    try {
+      const newCase = await base44.entities.Case.create(casePayload);
+      setCaseId(newCase.id);
 
-    // 3. Create TimelineEvent
-    await base44.entities.TimelineEvent.create({
-      case_id: newCase.id,
-      event_type: 'submitted',
-      event_description: 'Your ADA violation report has been received and is pending review.',
-      actor_role: 'system',
-      visible_to_user: true,
-      created_at: now
-    });
+      // 3. Create TimelineEvent
+      await base44.entities.TimelineEvent.create({
+        case_id: newCase.id,
+        event_type: 'submitted',
+        event_description: 'Your ADA violation report has been received and is pending review.',
+        actor_role: 'system',
+        visible_to_user: true,
+        created_at: now
+      });
 
-    setSubmitting(false);
-    setSubmitted(true);
+      setSubmitting(false);
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Case submission failed:', err);
+      setSubmitting(false);
+      setErrors(prev => ({ ...prev, submit: 'Something went wrong submitting your report. Your information has been preserved — please try the Submit button again. If the problem continues, email support@adalegallink.com.' }));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -389,6 +423,32 @@ export default function Intake() {
           role="form"
           aria-label="ADA Violation Report Form"
         >
+          {/* Screen reader step announcement */}
+          <div aria-live="polite" className="sr-only" style={{
+            position: 'absolute', width: '1px', height: '1px',
+            overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0
+          }}>
+            {submitted
+              ? 'Your report has been submitted successfully.'
+              : `Step ${isFromPathway ? step - 1 : step} of ${isFromPathway ? 4 : 5}: ${
+                  (isFromPathway
+                    ? ['Details', 'Incident', 'Contact', 'Review']
+                    : ['Violation Type', 'Details', 'Incident', 'Contact', 'Review']
+                  )[step - 1] || ''
+                }`
+            }
+          </div>
+
+          {errors.submit && (
+            <div role="alert" style={{
+              background: '#FEE2E2', border: '1px solid #FCA5A5',
+              borderRadius: 'var(--radius-md)', padding: '16px',
+              marginBottom: 'var(--space-xl)', fontFamily: 'Manrope, sans-serif',
+              fontSize: '0.9375rem', color: '#991B1B', lineHeight: 1.6
+            }}>
+              <strong>Submission Error:</strong> {errors.submit}
+            </div>
+          )
           {/* Pathway context banner */}
           {isFromPathway && !submitted && step <= 5 && (
             <div style={{

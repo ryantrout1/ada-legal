@@ -13,7 +13,7 @@ const urgencyColors = {
 function Card({ title, children }) {
   return (
     <div style={{
-      background: 'white', border: '1px solid #E7E4DE', borderRadius: '16px',
+      background: 'white', border: '1px solid var(--slate-200)', borderRadius: '16px',
       padding: '28px 32px', marginBottom: '16px'
     }}>
       <h2 style={{

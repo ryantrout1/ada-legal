@@ -15,7 +15,7 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
       }}
       style={{
         backgroundColor: isSelected ? '#FFF8F5' : 'var(--surface)',
-        border: isSelected ? '2px solid #C2410C' : '1px solid #E7E4DE',
+        border: isSelected ? '2px solid #C2410C' : '1px solid var(--slate-200)',
         borderRadius: '16px',
         padding: '20px 24px',
         cursor: 'pointer',
@@ -30,7 +30,7 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
         minHeight: '64px'
       }}
       onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-400)'; }}
-      onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = '#E7E4DE'; }}
+      onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-200)'; }}
       onFocus={e => { if (!isSelected) e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,65,12,0.15)'; }}
       onBlur={e => { if (!isSelected) e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)'; }}
     >

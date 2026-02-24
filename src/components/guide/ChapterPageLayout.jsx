@@ -67,7 +67,7 @@ function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onT
           transition: isOpen ? 'max-height 0.5s ease-in' : 'max-height 0.3s ease-out'
         }}
       >
-        <div style={{ borderTop: '1px solid #E7E4DE' }}>
+        <div style={{ borderTop: '1px solid var(--slate-200)' }}>
           <div style={{ padding: '24px', background: 'white' }}>
             <div className="guide-two-col" style={{ gap: '24px', margin: 0 }}>
               <div style={{ flex: '1 1 55%', minWidth: 0 }}>
@@ -103,7 +103,7 @@ function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onT
             {/* Inline violation CTA */}
             <div style={{
               marginTop: '20px', paddingTop: '16px',
-              borderTop: '1px solid #E7E4DE',
+              borderTop: '1px solid var(--slate-200)',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               flexWrap: 'wrap', gap: '8px'
             }}>

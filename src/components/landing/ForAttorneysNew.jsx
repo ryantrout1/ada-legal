@@ -92,7 +92,7 @@ export default function ForAttorneysNew() {
         }}>
           {stats.map((s, i) => (
             <div key={i} className="landing-stat-card" style={{
-              background: '#FFFFFF', border: '1px solid #E7E4DE',
+              background: '#FFFFFF', border: '1px solid var(--slate-200)',
               borderRadius: '10px', padding: '24px', textAlign: 'center',
               transition: 'transform 0.2s, box-shadow 0.2s'
             }}>

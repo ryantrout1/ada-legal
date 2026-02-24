@@ -61,7 +61,7 @@ export default function HowItWorksNew() {
           <div aria-hidden="true" className="landing-steps-line" style={{
             position: 'absolute', top: '40px', left: '15%', right: '15%',
             height: '2px', opacity: 0.4,
-            background: 'linear-gradient(to right, #E7E4DE, #C2410C, #E7E4DE)',
+            background: 'linear-gradient(to right, var(--slate-200), #C2410C, var(--slate-200))',
             zIndex: 0
           }} />
 
