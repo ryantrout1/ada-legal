@@ -68,7 +68,7 @@ const PATHWAY_BARRIER_MAP = {
 };
 
 export default function Intake() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0); // 0 = triage, 1-5 = wizard
   const [formData, setFormData] = useState({
     violation_type: '',
     business_name: '',
@@ -155,7 +155,7 @@ export default function Intake() {
       if (Object.keys(updates).length > 0) {
         setFormData(prev => ({ ...prev, ...updates }));
       }
-      // Skip step 1 (violation type) — jump to step 2
+      // Skip triage + violation type — jump to step 2
       setStep(2);
     }
   }, []);
@@ -270,6 +270,7 @@ export default function Intake() {
   const handleBack = () => {
     setErrors({});
     if (isFromPathway && step <= 2) return;
+    if (step === 1) { setStep(0); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
     setStep(prev => prev - 1);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setTimeout(() => {
