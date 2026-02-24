@@ -194,7 +194,7 @@ export default function HandrailDiagram() {
               <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--slate-900)' }}>{activeCallout.label}</span>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: activeCallout.color, background: `${activeCallout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{activeCallout.section}</span>
             </div>
-            <button onClick={() => setActive(null)} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--slate-200)', borderRadius: '6px', padding: '4px 10px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)', minHeight: '30px' }}>Close ✕</button>
+            <button onClick={() => setActive(null)} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--slate-200)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-600)', minHeight: '44px' }}>Close <span aria-hidden="true">✕</span></button>
           </div>
           <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
             <div style={{ flex: '1 1 55%', minWidth: 0 }}>
