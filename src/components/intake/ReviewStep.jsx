@@ -114,7 +114,7 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
               marginTop: '2px'
             }}
           />
-          I confirm this information is accurate and consent to sharing it with a licensed attorney if my case is approved.
+          I confirm this information is accurate and understand that submitting this report does not guarantee attorney representation. I consent to my report being reviewed and, if approved, shared with licensed attorneys in the ADA Legal Link network.
         </label>
 
         <p style={{
