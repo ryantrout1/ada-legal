@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../../utils';
 import { caseSubmittedEmail } from '../emails/caseEmails';
 import CaseIdDisplay from './CaseIdDisplay';
+import WhatHappensNextCallout from './WhatHappensNextCallout';
 
 const inputStyle = {
   width: '100%',
@@ -151,9 +152,11 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
           maxWidth: '480px', margin: '0 auto var(--space-lg)'
         }}>
           Your report has been received. A confirmation email has been sent to <strong style={{ color: 'var(--slate-700)' }}>{caseData.contact_email}</strong>.
-        </p>
+          </p>
 
-        <div style={{
+          <WhatHappensNextCallout />
+
+          <div style={{
           backgroundColor: 'var(--warning-100)', border: '1px solid var(--warning-600)',
           borderRadius: 'var(--radius-md)', padding: 'var(--space-md)',
           display: 'flex', alignItems: 'flex-start', gap: '0.75rem',
@@ -197,9 +200,11 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
           maxWidth: '480px', margin: '0 auto var(--space-xl)'
         }}>
           Your ADA violation report has been received and is pending review. A confirmation email has been sent to <strong style={{ color: 'var(--slate-700)' }}>{caseData.contact_email}</strong>.
-        </p>
+          </p>
 
-        <a
+          <WhatHappensNextCallout />
+
+          <a
           href={createPageUrl('MyCases')}
           style={{
             display: 'inline-block', padding: '0.875rem 2rem',
@@ -241,10 +246,12 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
           maxWidth: '480px', margin: '0 auto'
         }}>
           Your ADA violation report has been received and is pending review.
-        </p>
-      </div>
+          </p>
 
-      {/* Account creation section */}
+          <WhatHappensNextCallout />
+          </div>
+
+          {/* Account creation section */}
       <div style={{
         backgroundColor: 'var(--slate-50)', border: '1px solid var(--slate-200)',
         borderRadius: 'var(--radius-lg)', padding: 'var(--space-xl)',
