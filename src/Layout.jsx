@@ -28,6 +28,11 @@ export default function Layout({ children, currentPageName }) {
     }
   }, []);
 
+  // Set lang attribute
+  React.useEffect(() => {
+    document.documentElement.lang = 'en';
+  }, []);
+
   // Favicon
   React.useEffect(() => {
     let link = document.querySelector("link[rel='icon']");
@@ -107,7 +112,7 @@ export default function Layout({ children, currentPageName }) {
           --slate-500: #475569;
           --slate-400: #CBD5E1;
           --slate-300: #E2E8F0;
-          --slate-200: #E7E4DE;
+          --slate-200: #B8B3AA;
           --slate-100: #F1F5F9;
           --slate-50: #FAF7F2;
           

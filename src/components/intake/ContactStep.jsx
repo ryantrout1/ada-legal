@@ -49,6 +49,7 @@ export default function ContactStep({ data, onChange, errors }) {
         <input
           id="contact_name"
           type="text"
+          autoComplete="name"
           placeholder="Your full name"
           value={data.contact_name || ''}
           onChange={e => onChange('contact_name', e.target.value)}
@@ -71,6 +72,7 @@ export default function ContactStep({ data, onChange, errors }) {
         <input
           id="contact_email"
           type="email"
+          autoComplete="email"
           placeholder="you@example.com"
           value={data.contact_email || ''}
           onChange={e => onChange('contact_email', e.target.value)}
@@ -87,6 +89,7 @@ export default function ContactStep({ data, onChange, errors }) {
         <input
           id="contact_phone"
           type="tel"
+          autoComplete="tel"
           placeholder="(555) 123-4567"
           value={data.contact_phone || ''}
           onChange={e => onChange('contact_phone', e.target.value)}

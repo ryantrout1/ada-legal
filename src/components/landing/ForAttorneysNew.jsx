@@ -111,7 +111,7 @@ export default function ForAttorneysNew() {
               {s.note && (
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-                  color: '#64748B', margin: '0.25rem 0 0', fontWeight: 600
+                  color: '#596778', margin: '0.25rem 0 0', fontWeight: 600
                 }}>
                   {s.note}
                 </p>
