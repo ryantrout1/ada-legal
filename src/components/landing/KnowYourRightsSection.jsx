@@ -77,7 +77,7 @@ function RightsCard({ card }) {
           </div>
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.68rem', fontWeight: 700,
-            textTransform: 'uppercase', letterSpacing: '0.04em',
+            textTransform: 'uppercase', letterSpacing: '0.06em',
             background: card.badge.bg, color: card.badge.color, border: `1px solid ${card.badge.border}`,
             padding: '3px 10px', borderRadius: '100px'
           }}>
