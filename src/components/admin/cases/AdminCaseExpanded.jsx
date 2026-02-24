@@ -74,7 +74,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
         <div style={{ height: '6px', backgroundColor: isPhysical ? '#FEF1EC' : '#DBEAFE' }} />
         <div style={{ padding: '16px' }}>
           {/* Row 1: 3 columns */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '12px' }}>
             <div>
               <p style={LABEL_STYLE}>Business</p>
               <p style={{ ...VALUE_STYLE, fontWeight: 700, color: 'var(--slate-900)' }}>{c.business_name}</p>
@@ -93,7 +93,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
           </div>
 
           {/* Row 2: 2 columns */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '12px' }}>
             <div>
               <p style={LABEL_STYLE}>{isPhysical ? 'Violation Subtype' : 'URL / Domain'}</p>
               <p style={VALUE_STYLE}>{isPhysical ? (c.violation_subtype || '—') : (c.url_domain || '—')}</p>
@@ -150,7 +150,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
         backgroundColor: 'var(--slate-50)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
       }}>
         <p style={{ ...LABEL_STYLE, margin: '0 0 12px' }}>Claimant Contact</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <User size={14} style={{ color: '#94A3B8' }} />
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_name}</span>

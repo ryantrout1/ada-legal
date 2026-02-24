@@ -169,7 +169,7 @@ export default function AdminCases() {
   return (
     <div style={{
       backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)',
-      padding: '1.5rem'
+      padding: 'clamp(0.75rem, 3vw, 1.5rem)'
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         {/* Header */}

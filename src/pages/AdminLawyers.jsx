@@ -100,7 +100,7 @@ export default function AdminLawyers() {
   return (
     <div style={{
       backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)',
-      padding: '1.5rem'
+      padding: 'clamp(0.75rem, 3vw, 1.5rem)'
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         {/* Header */}
@@ -291,7 +291,7 @@ export default function AdminLawyers() {
       )}
 
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
           .lawyer-email-col { display: none !important; }
         }
       `}</style>

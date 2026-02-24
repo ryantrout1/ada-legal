@@ -114,7 +114,8 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
         tabIndex={-1}
         style={{
           backgroundColor: 'white', borderRadius: '12px', width: '100%', maxWidth: '520px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.2)', overflow: 'hidden'
+          boxShadow: '0 8px 32px rgba(0,0,0,0.2)', overflow: 'hidden',
+          maxHeight: '90vh', overflowY: 'auto'
         }}
       >
         {/* Header */}

@@ -73,10 +73,10 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
         onClick={() => setExpanded(!expanded)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded(!expanded); } }}
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'auto 1fr auto auto auto auto',
+          display: 'flex',
+          flexWrap: 'wrap',
           alignItems: 'center',
-          gap: '16px',
+          gap: '10px 16px',
           padding: '14px 16px',
           cursor: 'pointer',
           minHeight: '48px',
@@ -88,7 +88,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
       >
         {/* Icon */}
         <div style={{
-          width: '40px', height: '40px', borderRadius: '50%',
+          width: '40px', height: '40px', borderRadius: '50%', flexShrink: 0,
           backgroundColor: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center'
         }}>
           {isPhysical
@@ -98,7 +98,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
         </div>
 
         {/* Col 1: Business + Case ID */}
-        <div style={{ minWidth: 0 }}>
+        <div style={{ minWidth: 0, flex: '1 1 180px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
@@ -138,13 +138,14 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
 
         {/* Col 3: Location */}
         <span style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569', whiteSpace: 'nowrap'
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569',
+          whiteSpace: 'nowrap', flex: '0 0 auto'
         }}>
           {[c.city, c.state].filter(Boolean).join(', ') || '—'}
         </span>
 
         {/* Col 4: Date + wait time */}
-        <div style={{ textAlign: 'right' }}>
+        <div style={{ textAlign: 'right', flex: '0 0 auto' }}>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569', margin: 0 }}>
             {formatDate(c.submitted_at || c.created_date)}
           </p>
@@ -179,7 +180,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
             }} />
             <div style={{ padding: '16px' }}>
               {/* Row 1: 3-column */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '12px' }}>
                 <div>
                   <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 2px', textTransform: 'uppercase' }}>Business</p>
                   <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>{c.business_name}</p>
@@ -198,7 +199,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
               </div>
 
               {/* Row 2: 2-column */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '12px' }}>
                 <div>
                   <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 2px', textTransform: 'uppercase' }}>
                     {isPhysical ? 'Violation Subtype' : 'URL / Domain'}
@@ -261,7 +262,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
             backgroundColor: 'var(--slate-50)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
           }}>
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 12px', textTransform: 'uppercase' }}>Claimant Contact</p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <User size={14} style={{ color: 'var(--slate-400)' }} />
                 <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_name}</span>
