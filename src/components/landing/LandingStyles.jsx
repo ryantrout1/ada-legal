@@ -80,9 +80,6 @@ export default function LandingStyles() {
       }
 
       @media (max-width: 600px) {
-        #hero-heading {
-          font-size: 2rem !important;
-        }
         .landing-hero-buttons {
           flex-direction: column !important;
         }
@@ -99,6 +96,9 @@ export default function LandingStyles() {
         .landing-footer-links {
           flex-direction: column !important;
           gap: 0.5rem !important;
+        }
+        .landing-watermark {
+          display: none !important;
         }
         section[aria-labelledby="hero-heading"] {
           min-height: auto !important;

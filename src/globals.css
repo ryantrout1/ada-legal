@@ -3,9 +3,21 @@ css
    GLOBAL ACCESSIBILITY STYLES
    ======================================== */
 
+/* TOUCH TARGETS: All interactive elements must be minimum 44x44px.
+   Verified: nav links (minHeight: 44px), buttons (minHeight: 44px),
+   filter buttons (minHeight: 44px), form inputs (padding ensures 44px+).
+   Inline text links exempt per WCAG if adequate spacing exists. */
+
 /* Prevent horizontal scroll from any overflow */
 html {
   overflow-x: hidden;
+}
+
+/* Ensure minimum touch target on all interactive elements */
+@media (pointer: coarse) {
+  a, button, [role="button"], input, select, textarea, summary {
+    min-height: 44px;
+  }
 }
 
 /* Visually hidden utility — for screen readers only */

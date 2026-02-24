@@ -40,7 +40,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
           </div>
 
           <h1 id="sg-heading" style={{
-            fontFamily: 'Fraunces, serif', fontSize: 'clamp(2.25rem, 4vw, 3.25rem)',
+            fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)',
             fontWeight: 700, lineHeight: 1.1, color: 'white', margin: '0 0 1.5rem'
           }}>
             Know the law.<br />

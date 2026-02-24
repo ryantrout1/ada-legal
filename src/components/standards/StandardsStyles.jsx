@@ -71,9 +71,6 @@ export default function StandardsStyles() {
         .sg-hero-grid {
           padding: 88px 16px 40px !important;
         }
-        #sg-heading {
-          font-size: 2rem !important;
-        }
       }
       /* Sidebar + content layout */
       .sg-body-grid {
@@ -140,6 +137,16 @@ export default function StandardsStyles() {
         }
         .sg-card-grid {
           grid-template-columns: 1fr !important;
+        }
+        .sg-filter-row {
+          flex-wrap: nowrap !important;
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch;
+          padding-bottom: 8px !important;
+          scrollbar-width: thin;
+        }
+        .sg-filter-btn {
+          flex-shrink: 0 !important;
         }
       }
       /* Chapter link hover */

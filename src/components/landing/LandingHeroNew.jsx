@@ -54,7 +54,7 @@ export default function LandingHeroNew() {
           </div>
 
           <h1 id="hero-heading" className="landing-fade-up landing-delay-1" style={{
-            fontFamily: 'Fraunces, serif', fontSize: '3.25rem', fontWeight: 700,
+            fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.75rem, 6vw, 3.25rem)', fontWeight: 700,
             lineHeight: 1.1, color: 'white', margin: '0 0 1.5rem', fontStyle: 'normal'
           }}>
             Understand your rights.<br />
@@ -167,6 +167,7 @@ export default function LandingHeroNew() {
 
       {/* Watermark logo */}
       <img
+        className="landing-watermark"
         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/e3c293e44_logo-terracotta.png"
         alt=""
         aria-hidden="true"

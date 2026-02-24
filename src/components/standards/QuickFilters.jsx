@@ -24,7 +24,7 @@ export default function QuickFilters({ activeFilters, onToggle }) {
         }}>
           I need information about:
         </p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+        <div className="sg-filter-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
           {FILTERS.map(({ key, label, Icon }) => (
             <button
               key={key}

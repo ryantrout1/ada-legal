@@ -236,7 +236,7 @@ export default function Layout({ children, currentPageName }) {
             fontWeight: 700
           }}>
             <LogoBrand size={44} />
-            <span>ADA Legal <span style={{ color: '#C2410C' }}>Link</span></span>
+            <span className="mobile-brand-text">ADA Legal <span style={{ color: '#C2410C' }}>Link</span></span>
           </Link>
 
           {/* Mobile Menu Button */}
@@ -653,7 +653,7 @@ export default function Layout({ children, currentPageName }) {
             padding: '0 1.5rem',
             textAlign: 'center'
           }}>
-            <LogoBrand size={96} glow style={{ display: 'block', margin: '0 auto 12px' }} aria-hidden="true" />
+            <LogoBrand size={96} glow className="footer-logo" style={{ display: 'block', margin: '0 auto 12px' }} aria-hidden="true" />
             <p style={{ margin: 0, fontSize: '0.875rem' }}>
               © 2026 <span style={{ color: '#94A3B8' }}>ADA Legal</span>{' '}
               <span style={{ color: '#C2410C', opacity: 0.7 }}>Link</span>.
@@ -688,6 +688,15 @@ export default function Layout({ children, currentPageName }) {
           main {
             padding-left: 0.75rem !important;
             padding-right: 0.75rem !important;
+          }
+          .footer-logo {
+            width: 64px !important;
+            height: 64px !important;
+          }
+        }
+        @media (max-width: 420px) {
+          .mobile-brand-text {
+            font-size: 1.125rem !important;
           }
         }
       `}</style>
