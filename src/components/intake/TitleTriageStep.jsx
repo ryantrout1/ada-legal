@@ -122,6 +122,13 @@ export default function TitleTriageStep({ onSelectTitleIII }) {
           </button>
         ))}
       </div>
+      <p style={{
+        fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#94A3B8',
+        fontStyle: 'italic', lineHeight: 1.55, textAlign: 'center',
+        maxWidth: '780px', margin: '20px auto 0'
+      }}>
+        The ADA also includes Title IV (telecommunications relay services, handled by the FCC) and Title V (anti-retaliation protections and other provisions). These apply in specific circumstances — the three options above cover the vast majority of individual ADA claims.
+      </p>
     </div>
   );
 }
