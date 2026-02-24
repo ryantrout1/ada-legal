@@ -416,7 +416,9 @@ export default function Intake() {
         )}
 
         <div
-          style={{
+          style={step === 0 && !submitted ? {
+            padding: 'clamp(1rem, 3vw, 1.5rem) 0'
+          } : {
             backgroundColor: 'var(--surface)',
             borderRadius: 'var(--radius-lg)',
             border: '1px solid var(--slate-200)',
