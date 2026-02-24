@@ -305,9 +305,9 @@ export default function RampDiagram() {
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             padding: '14px 20px', borderBottom: '1px solid var(--slate-200)',
-            background: '#FAFAF9'
+            background: '#FAFAF9', flexWrap: 'wrap', gap: '8px'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                 width: '26px', height: '26px', borderRadius: '50%',
