@@ -366,8 +366,8 @@ export default function Intake() {
         maxWidth: '720px',
         margin: '0 auto'
       }}>
-        {/* Exit button */}
-        {!submitted && (
+        {/* Exit button — shown during wizard steps, not triage */}
+        {!submitted && step > 0 && (
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--space-sm)' }}>
             <button
               type="button"
