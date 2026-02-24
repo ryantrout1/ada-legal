@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import TitleTriageStep from '../components/intake/TitleTriageStep';
 import ViolationTypeStep from '../components/intake/ViolationTypeStep';
 import PhysicalSpaceStep from '../components/intake/PhysicalSpaceStep';
 import DigitalWebsiteStep from '../components/intake/DigitalWebsiteStep';
@@ -7,6 +8,7 @@ import IncidentStep from '../components/intake/IncidentStep';
 import ContactStep from '../components/intake/ContactStep';
 import ReviewStep from '../components/intake/ReviewStep';
 import SuccessStep from '../components/intake/SuccessStep';
+import TitleIIIInfoBox from '../components/intake/TitleIIIInfoBox';
 import ProgressBar from '../components/intake/ProgressBar';
 import WizardNavButtons from '../components/intake/WizardNavButtons';
 import ExitConfirmModal from '../components/intake/ExitConfirmModal';
