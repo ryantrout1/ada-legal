@@ -328,11 +328,11 @@ export default function RampDiagram() {
               aria-label="Close panel"
               style={{
                 background: 'none', border: '1px solid var(--slate-200)',
-                borderRadius: '6px', padding: '4px 10px', cursor: 'pointer',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-                color: 'var(--slate-500)', minHeight: '30px'
+                borderRadius: '8px', padding: '8px 16px', cursor: 'pointer',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+                fontWeight: 600, color: 'var(--slate-600)', minHeight: '44px'
               }}>
-              Close ✕
+              Close <span aria-hidden="true">✕</span>
             </button>
           </div>
 
