@@ -393,9 +393,9 @@ export default function Intake() {
           marginBottom: 'var(--space-xs)',
           textAlign: 'center'
         }}>
-          {submitted ? 'Thank You' : 'Report an ADA Violation'}
+          {submitted ? 'Thank You' : step === 0 ? 'What kind of access barrier did you experience?' : 'Report an ADA Violation'}
         </h1>
-        {!submitted && (
+        {!submitted && step > 0 && (
           <p style={{
             fontFamily: 'Manrope, sans-serif',
             fontSize: '1rem',
@@ -407,7 +407,7 @@ export default function Intake() {
           </p>
         )}
 
-        {!submitted && (
+        {!submitted && step > 0 && (
           <ProgressBar
             currentStep={isFromPathway ? step - 1 : step}
             totalOverride={isFromPathway ? 4 : undefined}
@@ -471,7 +471,14 @@ export default function Intake() {
           )}
 
           {submitted && (
-            <SuccessStep caseData={formData} caseId={caseId} isLoggedIn={!!currentUser} />
+            <>
+              <SuccessStep caseData={formData} caseId={caseId} isLoggedIn={!!currentUser} />
+              <TitleIIIInfoBox />
+            </>
+          )}
+
+          {!submitted && step === 0 && (
+            <TitleTriageStep onSelectTitleIII={() => goToStep(1)} />
           )}
 
           {!submitted && step === 1 && (
@@ -522,9 +529,9 @@ export default function Intake() {
             />
           )}
 
-          {!submitted && step < 5 && (
+          {!submitted && step >= 1 && step < 5 && (
             <WizardNavButtons
-              showBack={isFromPathway ? step > 2 : step > 1}
+              showBack={isFromPathway ? step > 2 : step > 0}
               onBack={handleBack}
               onContinue={handleContinue}
               canContinue={canContinue()}
