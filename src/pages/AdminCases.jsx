@@ -53,6 +53,7 @@ export default function AdminCases() {
   const [expandedId, setExpandedId] = useState(null);
   const [forceCloseCase, setForceCloseCase] = useState(null);
   const [closeSaving, setCloseSaving] = useState(false);
+  const [actionSaving, setActionSaving] = useState(false);
   const searchTimer = useRef(null);
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
