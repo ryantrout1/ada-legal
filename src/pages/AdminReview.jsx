@@ -32,6 +32,7 @@ export default function AdminReview() {
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
   const [triageOpen, setTriageOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     if (!toast) return;
