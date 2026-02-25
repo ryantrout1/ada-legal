@@ -292,9 +292,6 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('StandardsGuide')} className="desktop-nav-public-links" style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('Intake')} className="desktop-nav-public-links" style={{ color: currentPageName === 'Intake' ? '#D4570A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }} aria-current={currentPageName === 'Intake' ? 'page' : undefined}>
-                      Report Violation
-                    </Link>
                     <Link to={createPageUrl('LawyerLanding')} className="desktop-nav-public-links" style={{ color: currentPageName === 'LawyerLanding' ? '#D4570A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
                       For Attorneys
                     </Link>
@@ -321,9 +318,6 @@ export default function Layout({ children, currentPageName }) {
                   <>
                     <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
-                    </Link>
-                    <Link to={createPageUrl('Intake')} style={{ color: currentPageName === 'Intake' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'Intake' ? 'page' : undefined}>
-                      Report Violation
                     </Link>
                     <Link to={createPageUrl('MyCases')} style={{ color: currentPageName === 'MyCases' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'MyCases' ? 'page' : undefined}>
                       My Cases
@@ -467,9 +461,6 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('Intake')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'Intake' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'Intake' ? 'page' : undefined}>
-                      Report Violation
-                    </Link>
                     <Link to={createPageUrl('LawyerLanding')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerLanding' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
                       For Attorneys
                     </Link>
@@ -501,9 +492,6 @@ export default function Layout({ children, currentPageName }) {
                   <>
                     <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
-                    </Link>
-                    <Link to={createPageUrl('Intake')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                      Report Violation
                     </Link>
                     <Link to={createPageUrl('MyCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       My Cases
