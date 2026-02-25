@@ -1,3 +1,9 @@
+
+// Legacy email template functions — DEPRECATED
+// All email sending now uses the EmailTemplate entity via renderEmailTemplate.
+// This file is kept as a reference only. Do not import from here.
+// See: components/emails/renderTemplate.js and entities/EmailTemplate.json
+
 import { brandedEmail } from './brandedEmailTemplate';
 
 const PORTAL_URL = ''; // Will be passed as param since we can't know the absolute URL at build time
