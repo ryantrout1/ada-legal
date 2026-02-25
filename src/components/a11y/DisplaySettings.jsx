@@ -216,6 +216,103 @@ export const applyPreferences = (prefs) => {
       footer[role="contentinfo"] a {
         background-color: #0F1219 !important;
       }
+
+      /* ============================================
+         SVG DIAGRAMS — DARK MODE
+         All 42 interactive diagrams use inline SVG
+         with light fills. Override via CSS.
+         ============================================ */
+
+      /* SVG background rects (the big #FAFAF9 / white fills) */
+      #main-content svg[role="img"] rect[fill="#FAFAF9"],
+      #main-content svg[role="img"] rect[fill="#fafaf9"],
+      #main-content svg[role="img"] rect[fill="white"],
+      #main-content svg[role="img"] rect[fill="#FFFFFF"],
+      #main-content svg[role="img"] rect[fill="#ffffff"] {
+        fill: #1E293B !important;
+      }
+
+      /* Landing / floor / structural rects (light grays) */
+      #main-content svg[role="img"] rect[fill="#E2E8F0"],
+      #main-content svg[role="img"] rect[fill="#e2e8f0"] {
+        fill: #2D3748 !important;
+        stroke: #4A5568 !important;
+      }
+      #main-content svg[role="img"] rect[fill="#E7E5E4"],
+      #main-content svg[role="img"] rect[fill="#e7e5e4"],
+      #main-content svg[role="img"] rect[fill="#D6D3D1"],
+      #main-content svg[role="img"] rect[fill="#d6d3d1"] {
+        fill: #374151 !important;
+        stroke: #4A5568 !important;
+      }
+      #main-content svg[role="img"] rect[fill="#F1F5F9"],
+      #main-content svg[role="img"] rect[fill="#f1f5f9"],
+      #main-content svg[role="img"] rect[fill="#F8FAFC"],
+      #main-content svg[role="img"] rect[fill="#f8fafc"] {
+        fill: #2D3748 !important;
+      }
+
+      /* Ramp / polygon fills */
+      #main-content svg[role="img"] polygon[fill="#F1F5F9"],
+      #main-content svg[role="img"] polygon[fill="#f1f5f9"] {
+        fill: #2D3748 !important;
+        stroke: #4A5568 !important;
+      }
+
+      /* Light-filled area rects (parking spaces etc) */
+      #main-content svg[role="img"] rect[fill="#FEF2F2"],
+      #main-content svg[role="img"] rect[fill="#F0FDF4"],
+      #main-content svg[role="img"] rect[fill="#DBEAFE"],
+      #main-content svg[role="img"] rect[fill="#FFFBF7"] {
+        fill: #1E293B !important;
+      }
+
+      /* Dashed / structural lines */
+      #main-content svg[role="img"] line[stroke="#CBD5E1"],
+      #main-content svg[role="img"] line[stroke="#cbd5e1"],
+      #main-content svg[role="img"] line[stroke="#E2E8F0"],
+      #main-content svg[role="img"] line[stroke="#e2e8f0"] {
+        stroke: #4A5568 !important;
+      }
+
+      /* Text labels in SVG */
+      #main-content svg[role="img"] text[fill="#64748B"],
+      #main-content svg[role="img"] text[fill="#94A3B8"],
+      #main-content svg[role="img"] text[fill="#78716C"],
+      #main-content svg[role="img"] text[fill="#57534E"],
+      #main-content svg[role="img"] text[fill="#CBD5E1"],
+      #main-content svg[role="img"] text[fill="#cbd5e1"] {
+        fill: #94A3B8 !important;
+      }
+
+      /* Panel inset lines */
+      #main-content svg[role="img"] rect[stroke="#CBD5E1"],
+      #main-content svg[role="img"] rect[stroke="#cbd5e1"],
+      #main-content svg[role="img"] rect[stroke="#A8A29E"],
+      #main-content svg[role="img"] rect[stroke="#D6D3D1"],
+      #main-content svg[role="img"] rect[stroke="#94A3B8"] {
+        stroke: #4A5568 !important;
+      }
+
+      /* Inactive callout circles (white fill) */
+      #main-content svg[role="img"] g[role="button"] circle[fill="white"] {
+        fill: #1E293B !important;
+      }
+
+      /* Wall fills */
+      #main-content svg[role="img"] rect[fill="#475569"] {
+        fill: #64748B !important;
+      }
+
+      /* Door panel */
+      #main-content svg[role="img"] rect[fill="#F8FAFC"] {
+        fill: #2D3748 !important;
+      }
+
+      /* Diagram container div — override the blanket rule */
+      #main-content svg[role="img"] {
+        background-color: transparent !important;
+      }
     `;
   }
 
@@ -497,6 +594,115 @@ export const applyPreferences = (prefs) => {
       [style*="border-radius: 100px"],
       [style*="border-radius: 9999px"] {
         border: 2px solid currentColor !important;
+      }
+
+      /* ============================================
+         SVG DIAGRAMS — HIGH CONTRAST MODE
+         ============================================ */
+
+      /* SVG background rects → pure black */
+      #main-content svg[role="img"] rect[fill="#FAFAF9"],
+      #main-content svg[role="img"] rect[fill="#fafaf9"],
+      #main-content svg[role="img"] rect[fill="white"],
+      #main-content svg[role="img"] rect[fill="#FFFFFF"],
+      #main-content svg[role="img"] rect[fill="#ffffff"] {
+        fill: #000000 !important;
+      }
+
+      /* Landing / floor / structural rects */
+      #main-content svg[role="img"] rect[fill="#E2E8F0"],
+      #main-content svg[role="img"] rect[fill="#e2e8f0"] {
+        fill: #1A1A1A !important;
+        stroke: #FFFFFF !important;
+      }
+      #main-content svg[role="img"] rect[fill="#E7E5E4"],
+      #main-content svg[role="img"] rect[fill="#e7e5e4"],
+      #main-content svg[role="img"] rect[fill="#D6D3D1"],
+      #main-content svg[role="img"] rect[fill="#d6d3d1"] {
+        fill: #1A1A1A !important;
+        stroke: #FFFFFF !important;
+      }
+      #main-content svg[role="img"] rect[fill="#F1F5F9"],
+      #main-content svg[role="img"] rect[fill="#f1f5f9"],
+      #main-content svg[role="img"] rect[fill="#F8FAFC"],
+      #main-content svg[role="img"] rect[fill="#f8fafc"] {
+        fill: #1A1A1A !important;
+      }
+
+      /* Ramp / polygon fills */
+      #main-content svg[role="img"] polygon[fill="#F1F5F9"],
+      #main-content svg[role="img"] polygon[fill="#f1f5f9"] {
+        fill: #1A1A1A !important;
+        stroke: #FFFFFF !important;
+      }
+
+      /* Light-filled area rects */
+      #main-content svg[role="img"] rect[fill="#FEF2F2"],
+      #main-content svg[role="img"] rect[fill="#F0FDF4"],
+      #main-content svg[role="img"] rect[fill="#DBEAFE"],
+      #main-content svg[role="img"] rect[fill="#FFFBF7"] {
+        fill: #000000 !important;
+      }
+
+      /* ALL structural lines → white */
+      #main-content svg[role="img"] line[stroke="#CBD5E1"],
+      #main-content svg[role="img"] line[stroke="#cbd5e1"],
+      #main-content svg[role="img"] line[stroke="#E2E8F0"],
+      #main-content svg[role="img"] line[stroke="#e2e8f0"],
+      #main-content svg[role="img"] line[stroke="#94A3B8"],
+      #main-content svg[role="img"] line[stroke="#64748B"] {
+        stroke: #FFFFFF !important;
+      }
+
+      /* All SVG text → white or near-white */
+      #main-content svg[role="img"] text[fill="#64748B"],
+      #main-content svg[role="img"] text[fill="#94A3B8"],
+      #main-content svg[role="img"] text[fill="#78716C"],
+      #main-content svg[role="img"] text[fill="#57534E"],
+      #main-content svg[role="img"] text[fill="#CBD5E1"],
+      #main-content svg[role="img"] text[fill="#cbd5e1"] {
+        fill: #D0D0D0 !important;
+      }
+
+      /* Strokes on rects */
+      #main-content svg[role="img"] rect[stroke="#CBD5E1"],
+      #main-content svg[role="img"] rect[stroke="#cbd5e1"],
+      #main-content svg[role="img"] rect[stroke="#A8A29E"],
+      #main-content svg[role="img"] rect[stroke="#D6D3D1"],
+      #main-content svg[role="img"] rect[stroke="#94A3B8"] {
+        stroke: #FFFFFF !important;
+      }
+
+      /* Inactive callout circles → black fill, white border added */
+      #main-content svg[role="img"] g[role="button"] circle[fill="white"] {
+        fill: #000000 !important;
+        stroke-width: 2.5 !important;
+      }
+      /* Outer focus/pulse circles get white border */
+      #main-content svg[role="img"] g[role="button"] circle[fill="none"][stroke="transparent"] {
+        stroke: #FFFFFF !important;
+        stroke-width: 2 !important;
+      }
+
+      /* Wall fills */
+      #main-content svg[role="img"] rect[fill="#475569"] {
+        fill: #FFFFFF !important;
+      }
+
+      /* Door panel */
+      #main-content svg[role="img"] rect[fill="#F8FAFC"] {
+        fill: #1A1A1A !important;
+        stroke: #FFFFFF !important;
+      }
+
+      /* Ensure SVG background transparent */
+      #main-content svg[role="img"] {
+        background-color: transparent !important;
+      }
+
+      /* Diagram container border override for HC */
+      #main-content div[style*="border-radius: 12px"] svg[role="img"] {
+        border: none !important;
       }
     `;
   }
