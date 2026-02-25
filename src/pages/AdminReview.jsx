@@ -40,6 +40,14 @@ export default function AdminReview() {
     return () => clearTimeout(t);
   }, [toast]);
 
+  // Close filters on Escape
+  useEffect(() => {
+    if (!filtersOpen) return;
+    const handleKey = (e) => { if (e.key === 'Escape') setFiltersOpen(false); };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [filtersOpen]);
+
   const loadCases = async () => {
     const submitted = await base44.entities.Case.filter({ status: 'submitted' }, 'created_date', 500);
     const underReview = await base44.entities.Case.filter({ status: 'under_review' }, 'created_date', 500);
