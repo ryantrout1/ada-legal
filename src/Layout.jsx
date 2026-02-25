@@ -400,14 +400,11 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('Admin')} style={{ color: currentPageName === 'Admin' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'Admin' ? 'page' : undefined}>
-                      Dashboard
+                    <Link to={createPageUrl('AdminCases')} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
+                      Case Manager
                     </Link>
                     <Link to={createPageUrl('AdminReview')} style={{ color: currentPageName === 'AdminReview' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminReview' ? 'page' : undefined}>
                       Review Queue
-                    </Link>
-                    <Link to={createPageUrl('AdminCases')} style={{ color: currentPageName === 'AdminCases' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
-                      Case Manager
                     </Link>
                     <Link to={createPageUrl('AdminLawyers')} style={{ color: currentPageName === 'AdminLawyers' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminLawyers' ? 'page' : undefined}>
                       Lawyers
