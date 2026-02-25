@@ -474,6 +474,17 @@ export default function AdminReview() {
         )}
       </div>
 
+      {/* Bulk Action Modal */}
+      <BulkActionModal
+        open={bulkModal.open}
+        action={bulkModal.action}
+        businessName={bulkModal.cases[0]?.business_name || ''}
+        count={bulkModal.cases.length}
+        onConfirm={handleBulkConfirm}
+        onCancel={() => { if (!saving) setBulkModal({ open: false, action: null, clusterId: null, cases: [] }); }}
+        saving={saving}
+      />
+
       {/* Action Modal */}
       <QCActionModal
         open={modalState.open}
