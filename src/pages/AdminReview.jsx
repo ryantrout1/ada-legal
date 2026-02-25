@@ -85,6 +85,105 @@ export default function AdminReview() {
     return sortOrder === 'oldest' ? dateA - dateB : dateB - dateA;
   });
 
+  // --- Cluster View data ---
+  const CLUSTER_SEV_ORDER = { high: 0, medium: 1, low: 2 };
+
+  const { clusters, individualCases } = useMemo(() => {
+    const clusterMap = {};
+    const individuals = [];
+    displayCases.forEach(c => {
+      const cid = c.ai_duplicate_cluster_id;
+      if (cid && (c.ai_duplicate_cluster_size ?? 0) >= 2) {
+        if (!clusterMap[cid]) clusterMap[cid] = [];
+        clusterMap[cid].push(c);
+      } else {
+        individuals.push(c);
+      }
+    });
+
+    let clusterList = Object.entries(clusterMap).map(([id, cases]) => {
+      const highestSev = ['high', 'medium', 'low'].find(s => cases.some(c => c.ai_severity === s)) || null;
+      const avgScore = Math.round(cases.map(c => c.ai_completeness_score ?? 0).reduce((a, b) => a + b, 0) / cases.length);
+      const dates = cases.map(c => new Date(c.submitted_at || c.created_date));
+      return { id, cases, highestSev, avgScore, newest: Math.max(...dates), oldest: Math.min(...dates) };
+    });
+
+    if (clusterSort === 'most') clusterList.sort((a, b) => b.cases.length - a.cases.length);
+    else if (clusterSort === 'severity') clusterList.sort((a, b) => (CLUSTER_SEV_ORDER[a.highestSev] ?? 3) - (CLUSTER_SEV_ORDER[b.highestSev] ?? 3));
+    else if (clusterSort === 'newest') clusterList.sort((a, b) => b.newest - a.newest);
+    else if (clusterSort === 'oldest') clusterList.sort((a, b) => a.oldest - b.oldest);
+
+    return { clusters: clusterList, individualCases: individuals };
+  }, [displayCases, clusterSort]);
+
+  // --- Bulk actions ---
+  const handleBulkApprove = (clusterId, cases) => {
+    setBulkModal({ open: true, action: 'approve', clusterId, cases });
+  };
+
+  const handleBulkReject = (clusterId, cases) => {
+    setBulkModal({ open: true, action: 'reject', clusterId, cases });
+  };
+
+  const handleBulkConfirm = async ({ reason, comment }) => {
+    setSaving(true);
+    const now = new Date().toISOString();
+    const bCases = bulkModal.cases;
+
+    if (bulkModal.action === 'approve') {
+      for (const c of bCases) {
+        await base44.entities.Case.update(c.id, {
+          status: 'available', approved_at: now,
+          qc_reviewer_notes: comment || null,
+        });
+        await base44.entities.TimelineEvent.create({
+          case_id: c.id, event_type: 'approved',
+          event_description: 'Your case has been approved and is now visible to attorneys in your area.',
+          actor_role: 'admin', visible_to_user: true, created_at: now,
+        });
+      }
+      setToast({ type: 'success', message: `${bCases.length} cases approved` });
+    }
+
+    if (bulkModal.action === 'reject') {
+      const REASON_EMAIL_TEXT = [
+        { value: 'insufficient_detail', emailText: 'We were unable to fully evaluate your report based on the information provided.' },
+        { value: 'not_ada_violation', emailText: 'The issue described does not appear to fall under the ADA accessibility standards that our platform covers.' },
+        { value: 'duplicate', emailText: 'It appears this report is a duplicate of a previous submission.' },
+        { value: 'incomplete_contact', emailText: 'The contact information provided was incomplete.' },
+        { value: 'other', emailText: '' },
+      ];
+      const emailReasonText = (REASON_EMAIL_TEXT.find(r => r.value === reason)?.emailText || '') + (comment ? ' ' + comment : '');
+      const portalUrl = window.location.origin + '/MyCases';
+
+      for (const c of bCases) {
+        await base44.entities.Case.update(c.id, {
+          status: 'rejected', qc_rejection_reason: reason,
+          qc_reviewer_notes: comment || null,
+        });
+        await base44.entities.TimelineEvent.create({
+          case_id: c.id, event_type: 'rejected',
+          event_description: 'After review, this report did not meet the criteria for our platform.',
+          actor_role: 'admin', visible_to_user: true, created_at: now,
+        });
+        try {
+          await base44.integrations.Core.SendEmail({
+            to: c.contact_email,
+            subject: 'ADA Legal Link — Submission Update',
+            body: caseRejectedEmail(c, emailReasonText, portalUrl),
+          });
+        } catch (emailErr) {
+          console.error('Bulk rejection email failed:', emailErr);
+        }
+      }
+      setToast({ type: 'success', message: `${bCases.length} cases rejected` });
+    }
+
+    await loadCases();
+    setSaving(false);
+    setBulkModal({ open: false, action: null, clusterId: null, cases: [] });
+  };
+
   const openModal = (action, caseData) => {
     setModalState({ open: true, action, caseData });
   };
