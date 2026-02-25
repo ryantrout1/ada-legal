@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
+import trackEvent from '../components/analytics/trackEvent';
 import { createPageUrl } from '../utils';
 import { CheckCircle, Flag, ArrowUpDown, Zap } from 'lucide-react';
 import AdminPageHeader from '../components/admin/shared/AdminPageHeader';
@@ -187,7 +188,9 @@ export default function AdminReview() {
     const c = modalState.caseData; const now = new Date().toISOString();
     if (modalState.action === 'approve') {
       base44.analytics.track({ eventName: 'admin_case_reviewed', properties: { action: 'approve', case_id: c.id } });
+      trackEvent('admin_case_reviewed', { action: 'approve', case_id: c.id }, 'AdminReview');
       base44.analytics.track({ eventName: 'case_status_changed', properties: { case_id: c.id, old_status: c.status, new_status: 'available' } });
+      trackEvent('case_status_changed', { case_id: c.id, old_status: c.status, new_status: 'available' }, 'AdminReview');
       await base44.entities.Case.update(c.id, { status: 'available', approved_at: now, qc_reviewer_notes: comment || null });
       await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'approved', event_description: 'Your case has been approved and is now visible to attorneys.', actor_role: 'admin', visible_to_user: true, created_at: now });
       if (comment) await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `QC Note: ${comment}`, actor_role: 'admin', visible_to_user: false, created_at: now });
@@ -195,7 +198,9 @@ export default function AdminReview() {
     }
     if (modalState.action === 'reject') {
       base44.analytics.track({ eventName: 'admin_case_reviewed', properties: { action: 'reject', case_id: c.id } });
+      trackEvent('admin_case_reviewed', { action: 'reject', case_id: c.id }, 'AdminReview');
       base44.analytics.track({ eventName: 'case_status_changed', properties: { case_id: c.id, old_status: c.status, new_status: 'rejected' } });
+      trackEvent('case_status_changed', { case_id: c.id, old_status: c.status, new_status: 'rejected' }, 'AdminReview');
       await base44.entities.Case.update(c.id, { status: 'rejected', qc_rejection_reason: reason, qc_reviewer_notes: internalNotes || null });
       await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'rejected', event_description: 'After review, this report did not meet the criteria.', actor_role: 'admin', visible_to_user: true, created_at: now });
       await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `Rejection: ${reason}${internalNotes ? `. Note: ${internalNotes}` : ''}`, actor_role: 'admin', visible_to_user: false, created_at: now });
@@ -206,6 +211,7 @@ export default function AdminReview() {
     }
     if (modalState.action === 'flag') {
       base44.analytics.track({ eventName: 'admin_case_reviewed', properties: { action: 'flag', case_id: c.id } });
+      trackEvent('admin_case_reviewed', { action: 'flag', case_id: c.id }, 'AdminReview');
       await base44.entities.Case.update(c.id, { qc_flagged: true, qc_flag_reason: reason, qc_reviewer_notes: comment || c.qc_reviewer_notes || null });
       await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `Flagged: ${reason}${comment ? `. Note: ${comment}` : ''}`, actor_role: 'admin', visible_to_user: false, created_at: now });
       setToast({ type: 'warning', message: 'Case flagged' });

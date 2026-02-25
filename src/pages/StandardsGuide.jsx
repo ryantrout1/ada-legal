@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
+import trackEvent from '../components/analytics/trackEvent';
 import StandardsStyles from '../components/standards/StandardsStyles';
 import StandardsHero from '../components/standards/StandardsHero';
 import QuickFilters from '../components/standards/QuickFilters';
@@ -19,6 +20,7 @@ export default function StandardsGuide() {
     if (val.trim()) {
       searchTimerRef.current = setTimeout(() => {
         base44.analytics.track({ eventName: 'guide_search', properties: { query: val.trim() } });
+        trackEvent('guide_search', { query: val.trim() }, 'StandardsGuide');
       }, 1000);
     }
   }, []);

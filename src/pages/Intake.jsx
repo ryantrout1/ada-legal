@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
+import trackEvent from '../components/analytics/trackEvent';
 import TitleTriageStep from '../components/intake/TitleTriageStep';
 import ViolationTypeStep from '../components/intake/ViolationTypeStep';
 import PhysicalSpaceStep from '../components/intake/PhysicalSpaceStep';
@@ -101,6 +102,7 @@ export default function Intake() {
     if (n === 1 && !reportStartedRef.current) {
       reportStartedRef.current = true;
       base44.analytics.track({ eventName: 'report_started', properties: { source: isFromPathway ? 'pathway' : 'direct' } });
+      trackEvent('report_started', { source: isFromPathway ? 'pathway' : 'direct' }, 'Intake');
     }
     setStep(n);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -150,6 +152,7 @@ export default function Intake() {
     if (isFromPathway) {
       reportStartedRef.current = true;
       base44.analytics.track({ eventName: 'report_started', properties: { source: 'pathway' } });
+      trackEvent('report_started', { source: 'pathway' }, 'Intake');
       const updates = {};
       if (pathwayType && PATHWAY_TYPE_MAP[pathwayType]) {
         updates.violation_type = PATHWAY_TYPE_MAP[pathwayType];
@@ -355,6 +358,7 @@ export default function Intake() {
       });
 
       base44.analytics.track({ eventName: 'report_completed', properties: { violation_type: formData.violation_type, source: isFromPathway ? 'pathway' : 'direct' } });
+      trackEvent('report_completed', { violation_type: formData.violation_type, source: isFromPathway ? 'pathway' : 'direct' }, 'Intake');
 
       setSubmitting(false);
       setSubmitted(true);

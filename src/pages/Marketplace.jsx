@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import trackEvent from '../components/analytics/trackEvent';
 import { useAnnounce } from '../components/a11y/LiveAnnouncer';
 import { createPageUrl } from '../utils';
 import MarketplaceFilters from '../components/marketplace/MarketplaceFilters';
@@ -182,7 +183,9 @@ export default function Marketplace() {
 
     await base44.entities.Case.update(c.id, { status: 'assigned', assigned_lawyer_id: lawyerProfile.id, assigned_at: now });
     base44.analytics.track({ eventName: 'attorney_case_accepted', properties: { case_id: c.id, violation_type: c.violation_type } });
+    trackEvent('attorney_case_accepted', { case_id: c.id, violation_type: c.violation_type }, 'Marketplace');
     base44.analytics.track({ eventName: 'case_status_changed', properties: { case_id: c.id, old_status: 'available', new_status: 'assigned' } });
+    trackEvent('case_status_changed', { case_id: c.id, old_status: 'available', new_status: 'assigned' }, 'Marketplace');
     setCases(prev => prev.filter(x => x.id !== c.id));
 
     await base44.entities.TimelineEvent.create({

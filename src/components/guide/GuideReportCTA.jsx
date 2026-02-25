@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import trackEvent from '../analytics/trackEvent';
 import { createPageUrl } from '../../utils';
 import { ArrowRight } from 'lucide-react';
 
@@ -23,7 +24,7 @@ export default function GuideReportCTA() {
           Report it and we'll connect you with an experienced disability rights
           attorney — at no cost to you.
         </p>
-        <Link to={createPageUrl('Intake')} onClick={() => base44.analytics.track({ eventName: 'guide_to_report_conversion', properties: { source: 'guide_cta' } })} style={{
+        <Link to={createPageUrl('Intake')} onClick={() => { base44.analytics.track({ eventName: 'guide_to_report_conversion', properties: { source: 'guide_cta' } }); trackEvent('guide_to_report_conversion', { source: 'guide_cta' }, 'GuideReportCTA'); }} style={{
           display: 'inline-flex', alignItems: 'center', gap: '8px',
           background: '#C2410C', color: 'white',
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600,
