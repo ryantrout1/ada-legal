@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
-import { Menu, X, User, LogOut, Settings } from 'lucide-react';
+import { Menu, X, User, LogOut, Eye } from 'lucide-react';
 import LogoBrand from './components/LogoBrand';
 import LiveAnnouncer from './components/a11y/LiveAnnouncer';
 import AuditButton from './components/a11y/AuditButton';
@@ -645,7 +645,7 @@ export default function Layout({ children, currentPageName }) {
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
-                <Settings size={20} aria-hidden="true" />
+                <Eye size={20} aria-hidden="true" />
               </button>
               {settingsOpen && (
                 <DisplaySettings
