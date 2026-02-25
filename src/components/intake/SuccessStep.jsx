@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircle, Mail, AlertTriangle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../../utils';
-import { caseSubmittedEmail } from '../emails/caseEmails';
+import { renderEmailTemplate } from '../emails/renderTemplate';
 import CaseIdDisplay from './CaseIdDisplay';
 import WhatHappensNextCallout from './WhatHappensNextCallout';
 
@@ -52,14 +52,24 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
       // User may already exist — still allow sign in
     }
 
-    // Send confirmation email now that user is registered
+    // Send confirmation email from template
     try {
       const portalUrl = window.location.origin + '/MyCases';
-      await base44.integrations.Core.SendEmail({
-        to: trimmed,
-        subject: 'ADA Legal Link — Report Received',
-        body: caseSubmittedEmail(caseData, portalUrl)
+      const violationLabel = caseData.violation_type === 'physical_space' ? 'Physical Space' : 'Digital / Website';
+      const rendered = await renderEmailTemplate('report_submitted', {
+        reporter_name: caseData.contact_name,
+        violation_type: violationLabel,
+        business_name: caseData.business_name,
+        incident_date: caseData.incident_date,
+        case_url: portalUrl
       });
+      if (rendered) {
+        await base44.integrations.Core.SendEmail({
+          to: trimmed,
+          subject: rendered.subject,
+          body: rendered.body
+        });
+      }
     } catch (emailErr) {
       console.error('Confirmation email failed:', emailErr);
     }

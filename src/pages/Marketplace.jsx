@@ -11,7 +11,7 @@ import CaseDetailModal from '../components/marketplace/CaseDetailModal';
 import InitiateSupportModal from '../components/marketplace/InitiateSupportModal';
 import DocScoreModal from '../components/marketplace/DocScoreModal';
 import { calculateDocScore, getFreshness } from '../components/marketplace/docScore';
-import { attorneyAssignedEmail } from '../components/emails/caseEmails';
+import { renderEmailTemplate } from '../components/emails/renderTemplate';
 import { HelpCircle } from 'lucide-react';
 
 export default function Marketplace() {
@@ -195,32 +195,31 @@ export default function Marketplace() {
     });
 
     const portalUrl = window.location.origin + '/MyCases';
-    await base44.integrations.Core.SendEmail({
-      to: c.contact_email,
-      subject: 'Attorney Assigned — ADA Legal Link',
-      body: attorneyAssignedEmail(c, lawyerProfile.full_name, lawyerProfile.firm_name, portalUrl)
-    });
+    const prefLabel = c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference';
+    const violLabel = c.violation_type === 'physical_space' ? 'Physical Space' : 'Digital / Website';
+    const loc = [c.city, c.state].filter(Boolean).join(', ');
 
-    await base44.integrations.Core.SendEmail({
-      to: lawyerProfile.email,
-      subject: 'Support Initiation Confirmed — ADA Legal Link',
-      body: `<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #1E293B;">Support Initiation Confirmed</h2>
-        <p>Dear ${lawyerProfile.full_name},</p>
-        <p>You have successfully initiated support for the following case:</p>
-        <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
-          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Business</td><td style="padding: 8px;">${c.business_name}</td></tr>
-          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Location</td><td style="padding: 8px;">${[c.city, c.state].filter(Boolean).join(', ')}</td></tr>
-          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Violation Type</td><td style="padding: 8px;">${c.violation_type === 'physical_space' ? 'Physical Space' : 'Digital / Website'}</td></tr>
-          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Reporter</td><td style="padding: 8px;">${c.contact_name}</td></tr>
-          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Reporter Email</td><td style="padding: 8px;">${c.contact_email}</td></tr>
-          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Reporter Phone</td><td style="padding: 8px;">${c.contact_phone}</td></tr>
-          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Contact Preference</td><td style="padding: 8px;">${c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'}</td></tr>
-        </table>
-        <p><strong>Reminder:</strong> You are required to contact the claimant within <strong>24 hours</strong>.</p>
-        <p style="color: #64748B; font-size: 0.875rem; font-style: italic; margin-top: 24px;">ADA Legal Link — Connecting people with experienced ADA attorneys.</p>
-      </div>`
+    // Reporter email
+    const reporterEmail = await renderEmailTemplate('attorney_assigned_reporter', {
+      reporter_name: c.contact_name, business_name: c.business_name,
+      attorney_name: lawyerProfile.full_name, attorney_firm: lawyerProfile.firm_name,
+      contact_preference: prefLabel, case_url: portalUrl
     });
+    if (reporterEmail) {
+      await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: reporterEmail.subject, body: reporterEmail.body });
+    }
+
+    // Attorney confirmation email
+    const attorneyEmail = await renderEmailTemplate('attorney_assigned_confirmation', {
+      attorney_name: lawyerProfile.full_name, business_name: c.business_name,
+      case_location: loc, violation_type: violLabel,
+      reporter_name: c.contact_name, reporter_email: c.contact_email,
+      reporter_phone: c.contact_phone, contact_preference: prefLabel,
+      dashboard_url: window.location.origin + '/LawyerDashboard'
+    });
+    if (attorneyEmail) {
+      await base44.integrations.Core.SendEmail({ to: lawyerProfile.email, subject: attorneyEmail.subject, body: attorneyEmail.body });
+    }
 
     setProcessing(false);
     setSelectedCase(null);
