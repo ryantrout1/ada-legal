@@ -70,7 +70,7 @@ export default function HandrailDiagram() {
   const WALL_X_R = 490; // right wall x
 
   return (
-    <div style={{ margin: '48px 0 32px' }}>
+    <div className="ada-diagram-wrap" style={{ margin: '48px 0 32px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
         <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
           §505 Handrails — Cross-Section Detail
