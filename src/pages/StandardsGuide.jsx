@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
+import { base44 } from '@/api/base44Client';
 import StandardsStyles from '../components/standards/StandardsStyles';
 import StandardsHero from '../components/standards/StandardsHero';
 import QuickFilters from '../components/standards/QuickFilters';
@@ -10,6 +11,17 @@ import GuideReportCTA from '../components/guide/GuideReportCTA';
 export default function StandardsGuide() {
   const [searchValue, setSearchValue] = useState('');
   const [activeFilters, setActiveFilters] = useState([]);
+  const searchTimerRef = useRef(null);
+
+  const handleSearchChange = useCallback((val) => {
+    setSearchValue(val);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    if (val.trim()) {
+      searchTimerRef.current = setTimeout(() => {
+        base44.analytics.track({ eventName: 'guide_search', properties: { query: val.trim() } });
+      }, 1000);
+    }
+  }, []);
 
   const handleToggleFilter = (key) => {
     setActiveFilters(prev =>
@@ -20,7 +32,7 @@ export default function StandardsGuide() {
   return (
     <>
       <StandardsStyles />
-      <StandardsHero searchValue={searchValue} onSearchChange={setSearchValue} />
+      <StandardsHero searchValue={searchValue} onSearchChange={handleSearchChange} />
       <QuickFilters activeFilters={activeFilters} onToggle={handleToggleFilter} />
       <BreadcrumbAndInfo />
       <div style={{ background: 'var(--slate-50)' }}>

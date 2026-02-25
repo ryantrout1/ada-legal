@@ -181,6 +181,7 @@ export default function Marketplace() {
     }
 
     await base44.entities.Case.update(c.id, { status: 'assigned', assigned_lawyer_id: lawyerProfile.id, assigned_at: now });
+    base44.analytics.track({ eventName: 'attorney_case_accepted', properties: { case_id: c.id, violation_type: c.violation_type } });
     setCases(prev => prev.filter(x => x.id !== c.id));
 
     await base44.entities.TimelineEvent.create({

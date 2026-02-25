@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../../utils';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import GuideStyles from './GuideStyles';
@@ -113,7 +114,7 @@ function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onT
               }}>
                 Does this standard describe a barrier you've encountered?
               </p>
-              <Link to={createPageUrl('Intake')} style={{
+              <Link to={createPageUrl('Intake')} onClick={() => base44.analytics.track({ eventName: 'guide_to_report_conversion', properties: { source: `chapter_${chapterNum}_inline` } })} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
                 color: '#C2410C', textDecoration: 'none',
@@ -135,6 +136,10 @@ function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onT
 
 export default function ChapterPageLayout({ chapterNum, title, range, overview, sections }) {
   const [openIndex, setOpenIndex] = useState(null);
+
+  useEffect(() => {
+    base44.analytics.track({ eventName: 'guide_section_viewed', properties: { section_name: `Chapter ${chapterNum}: ${title}` } });
+  }, [chapterNum, title]);
   const currentIdx = ALL_CHAPTERS.findIndex(c => c.num === chapterNum);
   const prev = currentIdx > 0 ? ALL_CHAPTERS[currentIdx - 1] : null;
   const next = currentIdx < ALL_CHAPTERS.length - 1 ? ALL_CHAPTERS[currentIdx + 1] : null;
