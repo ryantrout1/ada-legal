@@ -533,25 +533,13 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('LawyerProfile')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Profile
                     </Link>
-                    <div style={{ padding: '8px 16px' }}>
-                      <span style={{
-                        background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
-                        fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px'
-                      }}>
-                        <strong>LAWYER</strong> {user.email}
-                      </span>
+                    <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', margin: '0 0 8px' }}>{user.email}</p>
                     </div>
                     <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
-                      background: 'transparent',
-                      color: 'white',
-                      border: '1px solid white',
-                      padding: '0.75rem',
-                      borderRadius: 'var(--radius-md)',
-                      cursor: 'pointer',
-                      minHeight: '44px',
-                      width: 'calc(100% - 32px)',
-                      margin: '8px 16px',
-                      textAlign: 'center'
+                      background: 'transparent', color: 'white', border: '1px solid white',
+                      padding: '0.75rem', borderRadius: 'var(--radius-md)', cursor: 'pointer',
+                      minHeight: '44px', width: 'calc(100% - 32px)', margin: '0 16px 8px', textAlign: 'center',
                     }}>
                       Sign Out
                     </button>
