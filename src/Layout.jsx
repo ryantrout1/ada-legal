@@ -96,7 +96,7 @@ export default function Layout({ children, currentPageName }) {
     LawyerProfile: 'My Profile', LawyerRegister: 'Attorney Registration',
     LawyerLanding: 'For Attorneys', StandardsGuide: 'ADA Standards Guide',
     Admin: 'Admin Dashboard', AdminReview: 'Review Queue', AdminCases: 'Case Manager',
-    AdminAnalytics: 'Analytics', AdminLawyers: 'Attorney Network',
+    AdminAnalytics: 'Analytics', AdminLawyers: 'Attorney Network', AdminEmails: 'Email Templates',
     TitleIIPathway: 'Government Accessibility Complaints',
     TitleIPathway: 'Workplace Disability Discrimination'
   };
@@ -365,6 +365,9 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('AdminAnalytics')} style={{ color: currentPageName === 'AdminAnalytics' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminAnalytics' ? 'page' : undefined}>
                       Platform Intelligence
                     </Link>
+                    <Link to={createPageUrl('AdminEmails')} style={{ color: currentPageName === 'AdminEmails' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminEmails' ? 'page' : undefined}>
+                      Email Templates
+                    </Link>
                     <UserAvatarMenu user={user} onLogout={handleLogout} />
                   </>
                 )}
@@ -562,6 +565,9 @@ export default function Layout({ children, currentPageName }) {
                     </Link>
                     <Link to={createPageUrl('AdminAnalytics')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminAnalytics' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Platform Intelligence
+                    </Link>
+                    <Link to={createPageUrl('AdminEmails')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminEmails' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      Email Templates
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
                       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', margin: '0 0 8px' }}>{user.email}</p>
