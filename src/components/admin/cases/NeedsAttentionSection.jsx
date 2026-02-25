@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import AssignLawyerDropdown from './AssignLawyerDropdown';
 import ReclaimConfirmModal from './ReclaimConfirmModal';
 
