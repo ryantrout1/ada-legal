@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { CheckCircle } from 'lucide-react';
 import LogoBrand from '../LogoBrand';
+import { useComingSoon } from '../useComingSoonModal';
 
 const footerLinkStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
@@ -17,6 +18,7 @@ const colHeadingStyle = {
 };
 
 export default function LandingFooterNew() {
+  const { openModal } = useComingSoon();
   return (
     <footer role="contentinfo" style={{
       background: '#141820', padding: '56px 1.5rem 32px',
@@ -62,7 +64,7 @@ export default function LandingFooterNew() {
           <div>
             <p style={colHeadingStyle}>Take Action</p>
             <nav aria-label="Take action footer links" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <Link to={createPageUrl('Intake')} className="landing-footer-link" style={footerLinkStyle}>Report a Violation</Link>
+              <button onClick={() => openModal('report_violation')} className="landing-footer-link" style={{ ...footerLinkStyle, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Report a Violation</button>
               <Link to={createPageUrl('LawyerLanding')} className="landing-footer-link" style={footerLinkStyle}>For Attorneys</Link>
               <a href="https://www.ada.gov/file-a-complaint/" target="_blank" rel="noopener noreferrer" className="landing-footer-link" style={footerLinkStyle}>File DOJ Complaint</a>
             </nav>

@@ -1,7 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '../../utils';
 import { Shield, Home, Monitor, FileText, Users, CheckCircle } from 'lucide-react';
+import { useComingSoon } from '../useComingSoonModal';
 
 const FILTERS = [
   { key: 'rights', label: 'My Rights', Icon: Shield },
@@ -13,11 +12,11 @@ const FILTERS = [
 ];
 
 export default function QuickFilters({ activeFilters, onToggle }) {
-  const navigate = useNavigate();
+  const { openModal } = useComingSoon();
 
   const handleClick = (key, isLink) => {
     if (isLink) {
-      navigate(createPageUrl('RightsPathway'));
+      openModal('pathways');
       return;
     }
     onToggle(key);

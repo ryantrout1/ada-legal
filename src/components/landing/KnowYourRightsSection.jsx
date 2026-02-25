@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
+import { useComingSoon } from '../useComingSoonModal';
 
 const CARDS = [
   {
@@ -124,6 +125,7 @@ function RightsCard({ card }) {
 }
 
 export default function KnowYourRightsSection() {
+  const { openModal } = useComingSoon();
   return (
     <section
       aria-labelledby="kyr-heading"
@@ -172,18 +174,17 @@ export default function KnowYourRightsSection() {
           }}>
             Not sure which one applies? That's completely normal — many situations overlap. Our intake form asks simple questions to determine the right path for you. No legal knowledge required.
           </p>
-          <Link
-            to={createPageUrl('Intake')}
+          <button
+            onClick={() => openModal('report_violation')}
             style={{
               display: 'inline-block', fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-              fontWeight: 600, color: 'white', background: '#C45D3E', padding: '14px 28px',
-              borderRadius: '10px', textDecoration: 'none', transition: 'background 0.2s, box-shadow 0.2s'
+              fontWeight: 600, color: '#94A3B8', background: 'transparent', padding: '14px 28px',
+              borderRadius: '10px', cursor: 'pointer', border: '1px solid #CBD5E1',
+              transition: 'background 0.2s, box-shadow 0.2s'
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#A3401C'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(194,65,12,0.25)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#C45D3E'; e.currentTarget.style.boxShadow = 'none'; }}
           >
-            Report a Violation →
-          </Link>
+            Report a Violation — Coming Soon →
+          </button>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#94A3B8',
             fontStyle: 'italic', lineHeight: 1.55, textAlign: 'center',

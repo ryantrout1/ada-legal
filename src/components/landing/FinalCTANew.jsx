@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
+import { useComingSoon } from '../useComingSoonModal';
 
 export default function FinalCTANew() {
+  const { openModal } = useComingSoon();
   return (
     <section aria-labelledby="cta-heading" style={{
       background: '#1E293B', padding: '100px 1.5rem', textAlign: 'center'
@@ -33,16 +35,16 @@ export default function FinalCTANew() {
           }}>
             Explore the ADA Standards Guide →
           </Link>
-          <Link to={createPageUrl('Intake')} style={{
-            display: 'inline-flex', alignItems: 'center',
-            background: 'transparent', color: '#E2E8F0',
+          <button onClick={() => openModal('report_violation')} style={{
+            display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+            background: 'transparent', color: '#94A3B8',
             padding: '18px 36px', borderRadius: '10px',
             fontSize: '1.1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
-            textDecoration: 'none', minHeight: '44px',
+            minHeight: '44px', cursor: 'pointer',
             border: '1px solid #475569', transition: 'all 0.15s'
           }}>
-            Report a Violation
-          </Link>
+            Report a Violation — Coming Soon
+          </button>
         </div>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
@@ -55,9 +57,9 @@ export default function FinalCTANew() {
           color: '#94A3B8', marginTop: '0.75rem', marginBottom: 0
         }}>
           Not sure where to start?{' '}
-          <Link to={createPageUrl('RightsPathway')} style={{ color: '#EA580C', textDecoration: 'underline' }}>
-            Take the Rights Assessment
-          </Link>
+          <button onClick={() => openModal('pathways')} style={{ color: '#EA580C', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit', padding: 0 }}>
+            Take the Rights Assessment — Coming Soon
+          </button>
         </p>
       </div>
     </section>

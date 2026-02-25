@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
+import { useComingSoon } from '../useComingSoonModal';
 
 export default function LandingHeroNew() {
+  const { openModal } = useComingSoon();
   return (
     <section
       aria-labelledby="hero-heading"
@@ -81,16 +83,16 @@ export default function LandingHeroNew() {
             }}>
               Explore the ADA Standards Guide →
             </Link>
-            <Link to={createPageUrl('Intake')} className="landing-btn-secondary" style={{
-              display: 'inline-flex', alignItems: 'center',
-              background: 'transparent', color: '#E2E8F0',
+            <button onClick={() => openModal('report_violation')} className="landing-btn-secondary" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+              background: 'transparent', color: '#94A3B8',
               padding: '16px 32px', borderRadius: '10px',
               fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
-              textDecoration: 'none', minHeight: '44px',
+              minHeight: '44px', cursor: 'pointer',
               border: '1px solid #475569', transition: 'all 0.15s'
             }}>
-              Report a Violation
-            </Link>
+              Report a Violation — Coming Soon
+            </button>
           </div>
 
           <p className="landing-fade-up landing-delay-4" style={{
@@ -98,9 +100,9 @@ export default function LandingHeroNew() {
             color: '#94A3B8', marginTop: '1rem'
           }}>
             Not sure if what happened was a violation?{' '}
-            <Link to={createPageUrl('RightsPathway')} style={{ color: '#EA580C', textDecoration: 'underline' }}>
+            <button onClick={() => openModal('pathways')} style={{ color: '#EA580C', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit', padding: 0 }}>
               Find out in 60 seconds
-            </Link>
+            </button>
           </p>
         </div>
 
