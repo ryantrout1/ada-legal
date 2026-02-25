@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { X, Copy, Eye, Save, Send, ArrowLeft } from 'lucide-react';
+import { Copy, Eye, Save, Send, ArrowLeft } from 'lucide-react';
+import RichEmailEditor from './RichEmailEditor';
+import EmailPreviewModal from './EmailPreviewModal';
 
 const SAMPLE_DATA = {
   reporter_name: 'Jane Doe',
