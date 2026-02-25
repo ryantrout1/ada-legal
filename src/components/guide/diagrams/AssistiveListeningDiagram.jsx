@@ -21,7 +21,7 @@ export default function AssistiveListeningDiagram() {
   const ac = CALLOUTS.find(c => c.id === active);
 
   return (
-    <div style={{ margin: '32px 0' }}>
+    <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
       <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px' }}>§706 Assistive Listening Systems</h3>
       <div style={{ background: 'white', border: '1px solid var(--slate-200)', borderRadius: 12, overflow: 'hidden' }}>
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="als-title" style={{ width: '100%', height: 'auto', display: 'block' }}>

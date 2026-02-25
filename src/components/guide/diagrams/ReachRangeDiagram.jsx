@@ -137,7 +137,7 @@ export default function ReachRangeDiagram() {
   const GY = 340; // ground Y
 
   return (
-    <div style={{ margin: '32px 0' }}>
+    <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
       {/* Unit toggle */}
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px', gap: '8px', alignItems: 'center' }}>
         <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--slate-500)' }}>Units:</span>

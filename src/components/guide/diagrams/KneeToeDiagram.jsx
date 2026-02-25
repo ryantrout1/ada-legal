@@ -76,7 +76,7 @@ export default function KneeToeDiagram() {
   /* Scale: ~10.4 px per inch from floor to 27" mark */
 
   return (
-    <div style={{ margin: '32px 0' }}>
+    <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
         <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>§306 Knee & Toe Clearance</h3>
         <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>

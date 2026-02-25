@@ -93,7 +93,7 @@ export default function BathtubDiagram() {
   const activeCallout = CALLOUTS.find(c => c.id === active);
 
   return (
-    <div style={{ margin: '32px 0' }}>
+    <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
         <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
