@@ -4,13 +4,14 @@ import { createPageUrl } from '../utils';
 import { CheckCircle, Flag, ArrowUpDown, Zap } from 'lucide-react';
 import QCCaseCard from '../components/admin/review/QCCaseCard';
 import QCActionModal from '../components/admin/review/QCActionModal';
-import QCVolumeDashboard from '../components/admin/review/QCVolumeDashboard';
+import CompactQCStatsBar from '../components/admin/review/CompactQCStatsBar';
+import CompactViewsFilterRow from '../components/admin/review/CompactViewsFilterRow';
 import ViewModeToggle from '../components/admin/review/ViewModeToggle';
 import ClusterRow from '../components/admin/review/ClusterRow';
 import BulkActionModal from '../components/admin/review/BulkActionModal';
 import SearchBar from '../components/admin/review/SearchBar';
 import FilterPanel, { EMPTY_FILTERS, countActiveFilters } from '../components/admin/review/FilterPanel';
-import SavedViews, { useSavedViews } from '../components/admin/review/SavedViews';
+import { useSavedViews } from '../components/admin/review/SavedViews';
 import TriageMode from '../components/admin/review/TriageMode';
 import { caseRejectedEmail } from '../components/emails/caseEmails';
 
