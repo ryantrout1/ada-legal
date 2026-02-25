@@ -249,6 +249,60 @@ html {
     background: #FFFFFF;
     border-radius: 4px;
   }
+
+  /* SVG Diagrams — high contrast */
+  #main-content svg[role="img"] rect[fill="#FAFAF9"],
+  #main-content svg[role="img"] rect[fill="#fafaf9"],
+  #main-content svg[role="img"] rect[fill="white"],
+  #main-content svg[role="img"] rect[fill="#FFFFFF"],
+  #main-content svg[role="img"] rect[fill="#ffffff"] {
+    fill: #000000 !important;
+  }
+  #main-content svg[role="img"] rect[fill="#E2E8F0"],
+  #main-content svg[role="img"] rect[fill="#E7E5E4"],
+  #main-content svg[role="img"] rect[fill="#D6D3D1"] {
+    fill: #1A1A1A !important;
+    stroke: #FFFFFF !important;
+  }
+  #main-content svg[role="img"] rect[fill="#F1F5F9"],
+  #main-content svg[role="img"] rect[fill="#F8FAFC"] {
+    fill: #1A1A1A !important;
+  }
+  #main-content svg[role="img"] polygon[fill="#F1F5F9"] {
+    fill: #1A1A1A !important;
+    stroke: #FFFFFF !important;
+  }
+  #main-content svg[role="img"] rect[fill="#FEF2F2"],
+  #main-content svg[role="img"] rect[fill="#F0FDF4"],
+  #main-content svg[role="img"] rect[fill="#DBEAFE"],
+  #main-content svg[role="img"] rect[fill="#FFFBF7"] {
+    fill: #000000 !important;
+  }
+  #main-content svg[role="img"] line[stroke="#CBD5E1"],
+  #main-content svg[role="img"] line[stroke="#E2E8F0"],
+  #main-content svg[role="img"] line[stroke="#94A3B8"],
+  #main-content svg[role="img"] line[stroke="#64748B"] {
+    stroke: #FFFFFF !important;
+  }
+  #main-content svg[role="img"] text[fill="#64748B"],
+  #main-content svg[role="img"] text[fill="#94A3B8"],
+  #main-content svg[role="img"] text[fill="#78716C"],
+  #main-content svg[role="img"] text[fill="#57534E"],
+  #main-content svg[role="img"] text[fill="#CBD5E1"] {
+    fill: #D0D0D0 !important;
+  }
+  #main-content svg[role="img"] rect[stroke="#CBD5E1"],
+  #main-content svg[role="img"] rect[stroke="#A8A29E"],
+  #main-content svg[role="img"] rect[stroke="#D6D3D1"],
+  #main-content svg[role="img"] rect[stroke="#94A3B8"] {
+    stroke: #FFFFFF !important;
+  }
+  #main-content svg[role="img"] g[role="button"] circle[fill="white"] {
+    fill: #000000 !important;
+  }
+  #main-content svg[role="img"] rect[fill="#475569"] {
+    fill: #FFFFFF !important;
+  }
 }
 
 /* ========================================
