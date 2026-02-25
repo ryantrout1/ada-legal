@@ -13,11 +13,20 @@ export default function EmailPreviewModal({ subject, bodyHtml, sampleData, onClo
   };
 
   useEffect(() => {
-    if (iframeRef.current) {
-      const doc = iframeRef.current.contentDocument;
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+    const write = () => {
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!doc) return;
       doc.open();
       doc.write(replaceVars(bodyHtml));
       doc.close();
+    };
+    // Write once the iframe is ready
+    if (iframe.contentDocument?.readyState === 'complete' || iframe.contentDocument?.readyState === 'interactive') {
+      write();
+    } else {
+      iframe.addEventListener('load', write, { once: true });
     }
   }, [bodyHtml]);
 
