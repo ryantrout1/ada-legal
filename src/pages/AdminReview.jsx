@@ -381,6 +381,32 @@ export default function AdminReview() {
           onFilterChange={setDashboardFilter}
         />
 
+        {/* Search Bar */}
+        <SearchBar value={searchQuery} onChange={setSearchQuery} />
+
+        {/* Saved Views */}
+        {userId && (
+          <SavedViews
+            views={savedViews}
+            activeViewId={activeViewId}
+            onApply={(v) => {
+              setActiveViewId(v.id);
+              setSearchQuery(v.config.search || '');
+              setFilters(v.config.filters ? { ...EMPTY_FILTERS, ...v.config.filters } : { ...EMPTY_FILTERS });
+              setSortOrder(v.config.sortOrder || 'oldest');
+              setClusterSort(v.config.clusterSort || 'most');
+              setViewMode(v.config.viewMode || 'list');
+            }}
+            onRemove={(id) => { removeView(id); if (activeViewId === id) setActiveViewId(null); }}
+            onSave={(name) => addView(name, {
+              search: searchQuery, filters, sortOrder, clusterSort, viewMode,
+            })}
+          />
+        )}
+
+        {/* Filter Panel */}
+        <FilterPanel filters={filters} onChange={(f) => { setFilters(f); setActiveViewId(null); }} />
+
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
           <div>
@@ -388,10 +414,8 @@ export default function AdminReview() {
               QC Review Queue
             </h1>
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: '#475569', margin: '4px 0 0' }}>
-              {dashboardFilter
-                ? `${displayCases.length} case${displayCases.length !== 1 ? 's' : ''} (filtered) of ${cases.length} total`
-                : `${cases.length} case${cases.length !== 1 ? 's' : ''} pending review`
-              }
+              {displayCases.length} case{displayCases.length !== 1 ? 's' : ''}
+              {displayCases.length !== cases.length ? ` (filtered from ${cases.length})` : ' pending review'}
             </p>
           </div>
 
