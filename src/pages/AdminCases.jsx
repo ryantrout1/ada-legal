@@ -129,13 +129,61 @@ export default function AdminCases() {
     return { unclaimed: unc, awaitingContact: awc, needsAttentionIds: ids };
   }, [cases]);
 
-  // Avg assignment days
-  const avgAssignDays = useMemo(() => {
-    const assigned = cases.filter(c => c.assigned_at && c.approved_at);
-    if (assigned.length === 0) return '—';
-    const total = assigned.reduce((sum, c) => sum + Math.max(0, (new Date(c.assigned_at) - new Date(c.approved_at)) / 86400000), 0);
-    return Math.round(total / assigned.length);
+  // Secondary stats (inline text)
+  const secondaryStats = useMemo(() => {
+    const pendingReview = cases.filter(c => c.status === 'submitted' || c.status === 'under_review').length;
+    const activeLawyers = lawyers.filter(l => l.subscription_status === 'active').length;
+    const lawyerApps = lawyers.filter(l => l.account_status === 'pending_approval').length;
+    const assignedWithLawyer = cases.filter(c => c.assigned_at && c.assigned_lawyer_id);
+    let compliance = '—';
+    if (assignedWithLawyer.length > 0) {
+      const compliant = assignedWithLawyer.filter(c => c.contact_logged_at && (new Date(c.contact_logged_at) - new Date(c.assigned_at)) <= 86400000).length;
+      compliance = `${Math.round((compliant / assignedWithLawyer.length) * 100)}%`;
+    }
+    return { pendingReview, activeLawyers, lawyerApps, compliance };
+  }, [cases, lawyers]);
+
+  // Summary stats for alert bar
+  const summaryStats = useMemo(() => {
+    const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
+    const todayISO = todayStart.toISOString();
+    const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0, 0, 0, 0);
+    const weekISO = weekStart.toISOString();
+    const newToday = cases.filter(c => c.submitted_at && c.submitted_at >= todayISO).length;
+    const approvedWeek = cases.filter(c => c.approved_at && c.approved_at >= weekISO).length;
+    const rejectedWeek = cases.filter(c => c.status === 'rejected' && c.created_date >= weekISO).length;
+    const approvedCases = cases.filter(c => c.submitted_at && c.approved_at);
+    let avgReview = '—';
+    if (approvedCases.length > 0) {
+      const totalHrs = approvedCases.reduce((sum, c) => sum + (new Date(c.approved_at) - new Date(c.submitted_at)) / 3600000, 0);
+      const avg = totalHrs / approvedCases.length;
+      avgReview = avg < 1 ? '<1h' : `${Math.round(avg)}h`;
+    }
+    return { newToday, approvedWeek, rejectedWeek, avgReview };
   }, [cases]);
+
+  // Recent submissions for popover
+  const recentSubmissions = useMemo(() => {
+    return cases
+      .filter(c => c.status === 'submitted')
+      .sort((a, b) => new Date(b.submitted_at || b.created_date) - new Date(a.submitted_at || a.created_date))
+      .slice(0, 5);
+  }, [cases]);
+
+  // Overdue contacts for popover
+  const overdueContacts = useMemo(() => {
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const result = [];
+    cases.filter(c => c.status === 'assigned' && c.assigned_at && c.assigned_at < twentyFourHoursAgo && c.assigned_lawyer_id).forEach(c => {
+      const hasLog = contactLogs.some(l => l.case_id === c.id);
+      if (hasLog) return;
+      const lawyer = lawyers.find(l => l.id === c.assigned_lawyer_id);
+      if (!lawyer) return;
+      const hrs = Math.floor((Date.now() - new Date(c.assigned_at).getTime()) / 3600000);
+      result.push({ caseId: c.id, caseName: c.business_name, lawyerName: lawyer.full_name, hoursOverdue: hrs });
+    });
+    return result;
+  }, [cases, lawyers, contactLogs]);
 
   // Filtered list
   const displayCases = useMemo(() => {
