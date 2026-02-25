@@ -23,43 +23,7 @@ const savePreferences = (prefs) => {
 };
 
 export const applyPreferences = (prefs) => {
-  // --- 1. Display Mode: Direct inline styles on main-content ---
-  const main = document.getElementById('main-content');
-  const footers = document.querySelectorAll('footer[role="contentinfo"]');
-
-  if (prefs.displayMode === 'dark') {
-    if (main) {
-      main.style.filter = 'invert(0.88) hue-rotate(180deg)';
-      main.style.backgroundColor = '#111111';
-    }
-    footers.forEach(f => {
-      f.style.filter = 'invert(1) hue-rotate(180deg)';
-    });
-    document.documentElement.style.colorScheme = 'dark';
-  } else {
-    if (main) {
-      main.style.filter = '';
-      main.style.backgroundColor = '';
-    }
-    footers.forEach(f => {
-      f.style.filter = '';
-    });
-    document.documentElement.style.colorScheme = '';
-  }
-
-  // Reverse filter on images/SVGs inside main for dark mode
-  if (main) {
-    const mediaElements = main.querySelectorAll('img, svg, video, canvas');
-    mediaElements.forEach(el => {
-      if (prefs.displayMode === 'dark') {
-        el.style.filter = 'invert(1) hue-rotate(180deg)';
-      } else {
-        el.style.filter = '';
-      }
-    });
-  }
-
-  // --- 2. High Contrast: Inject a runtime <style> element ---
+  // Get or create the runtime style element (lives in <head>, outside React)
   let styleEl = document.getElementById('ada-prefs-runtime-style');
   if (!styleEl) {
     styleEl = document.createElement('style');
@@ -69,20 +33,31 @@ export const applyPreferences = (prefs) => {
 
   let css = '';
 
-  if (prefs.displayMode === 'high-contrast') {
-    // Clear any dark mode inline styles first
-    if (main) {
-      main.style.filter = '';
-      main.style.backgroundColor = '';
-    }
-    footers.forEach(f => { f.style.filter = ''; });
-    document.documentElement.style.colorScheme = '';
-    if (main) {
-      main.querySelectorAll('img, svg, video, canvas').forEach(el => {
-        el.style.filter = '';
-      });
-    }
+  // --- DARK MODE ---
+  if (prefs.displayMode === 'dark') {
+    css += `
+      #main-content {
+        filter: invert(0.88) hue-rotate(180deg) !important;
+        background-color: #111111 !important;
+      }
+      #main-content img,
+      #main-content svg,
+      #main-content video,
+      #main-content canvas,
+      #main-content [style*="background-image"] {
+        filter: invert(1) hue-rotate(180deg) !important;
+      }
+      footer[role="contentinfo"] {
+        filter: invert(1) hue-rotate(180deg) !important;
+      }
+      html {
+        color-scheme: dark;
+      }
+    `;
+  }
 
+  // --- HIGH CONTRAST MODE ---
+  if (prefs.displayMode === 'high-contrast') {
     css += `
       :root {
         --slate-900: #FFFFFF !important;
@@ -148,18 +123,14 @@ export const applyPreferences = (prefs) => {
     `;
   }
 
-  // --- 3. Font Size ---
+  // --- FONT SIZE ---
   if (prefs.fontSize === 'large') {
-    css += `
-      html { font-size: 125% !important; }
-    `;
+    css += `html { font-size: 125% !important; }`;
   } else if (prefs.fontSize === 'xl') {
-    css += `
-      html { font-size: 150% !important; }
-    `;
+    css += `html { font-size: 150% !important; }`;
   }
 
-  // --- 4. Font Family ---
+  // --- FONT FAMILY ---
   if (prefs.fontFamily === 'atkinson') {
     if (!document.getElementById('atkinson-font-link')) {
       const link = document.createElement('link');
@@ -178,33 +149,8 @@ export const applyPreferences = (prefs) => {
     `;
   }
 
-  // Write all CSS to the runtime style element
+  // Write all CSS at once — replaces previous content entirely
   styleEl.textContent = css;
-
-  // --- 5. Dark mode: Watch for new images/SVGs that need reverse filter ---
-  if (window._adaDarkModeObserver) {
-    window._adaDarkModeObserver.disconnect();
-    window._adaDarkModeObserver = null;
-  }
-
-  if (prefs.displayMode === 'dark' && main) {
-    window._adaDarkModeObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1) {
-            if (['IMG', 'SVG', 'VIDEO', 'CANVAS'].includes(node.tagName)) {
-              node.style.filter = 'invert(1) hue-rotate(180deg)';
-            }
-            const media = node.querySelectorAll ? node.querySelectorAll('img, svg, video, canvas') : [];
-            media.forEach(el => {
-              el.style.filter = 'invert(1) hue-rotate(180deg)';
-            });
-          }
-        });
-      });
-    });
-    window._adaDarkModeObserver.observe(main, { childList: true, subtree: true });
-  }
 };
 
 function OptionButton({ label, active, onClick, ariaPressed, style: extraStyle, variant }) {
