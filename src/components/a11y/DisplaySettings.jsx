@@ -184,16 +184,6 @@ export const applyPreferences = (prefs) => {
         border-color: #374151 !important;
       }
 
-      /* === CTA link-buttons — ensure visible borders on dark hero/sections === */
-      #main-content a[style*="border: 1px solid"],
-      #main-content a[style*="border: 2px solid"] {
-        border-color: #94A3B8 !important;
-      }
-      #main-content a[style*="border: none"],
-      #main-content a.landing-btn-primary {
-        border: 1px solid #94A3B8 !important;
-      }
-
       /* === The settings dropdown === */
       [role="dialog"][aria-label="Display preferences"] {
         background-color: #1E293B !important;
