@@ -56,6 +56,7 @@ export default function AdminCases() {
   const [closeSaving, setCloseSaving] = useState(false);
   const [actionSaving, setActionSaving] = useState(false);
   const [contactLogs, setContactLogs] = useState([]);
+  const [attentionOpen, setAttentionOpen] = useState(false);
   const searchTimer = useRef(null);
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
