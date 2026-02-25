@@ -265,6 +265,9 @@ export default function AdminCases() {
           avgAssignDays={avgAssignDays}
         />
 
+        {/* Secondary Stat Cards */}
+        <SecondaryStatCards cases={cases} lawyers={lawyers} />
+
         {/* Needs Attention */}
         <NeedsAttentionSection
           unclaimed={unclaimed}
@@ -276,6 +279,30 @@ export default function AdminCases() {
           onReclaim={handleReassign}
           saving={actionSaving}
         />
+
+        {/* Today's Summary */}
+        <TodaySummaryBar cases={cases} avgAssignDays={avgAssignDays} />
+
+        {/* Recent Submissions (collapsible) */}
+        <CollapsibleSection
+          id="recent-submissions"
+          title="📋 Recent Submissions"
+          count={cases.filter(c => c.status === 'submitted').length}
+        >
+          <RecentSubmissionsPanel
+            cases={cases}
+            onViewAll={() => { handleTabChange('active'); setSortBy('newest'); }}
+          />
+        </CollapsibleSection>
+
+        {/* Lawyer Activity (collapsible) */}
+        <CollapsibleSection
+          id="lawyer-activity"
+          title="⚖️ Lawyer Activity"
+          alertCount={cases.filter(c => c.status === 'assigned' && c.assigned_at && !c.contact_logged_at && (Date.now() - new Date(c.assigned_at).getTime()) >= 86400000).length}
+        >
+          <LawyerActivityPanel cases={cases} lawyers={lawyers} contactLogs={contactLogs} />
+        </CollapsibleSection>
 
         {/* Search */}
         <div style={{ position: 'relative' }}>
