@@ -194,51 +194,171 @@ export const applyPreferences = (prefs) => {
         color: #94A3B8 !important;
       }
 
-      /* === Ghost / outline buttons & link-buttons — DARK MODE ===
-         These become invisible when background-color: unset strips them.
-         Target both <button> and <a> elements styled as ghost buttons. */
+      /* ============================================
+         DARK MODE — ACCENT COLORS & BUTTONS
+         Restore brand terracotta and orange accents
+         to avoid flat gray-on-gray monotone.
+         ============================================ */
+
+      /* --- Eyebrow labels (uppercase section headers) --- */
+      #main-content p[style*="letterSpacing"][style*="uppercase"],
+      #main-content p[style*="letter-spacing"][style*="uppercase"],
+      #main-content p[style*="textTransform"][style*="uppercase"] {
+        color: #FB923C !important;
+      }
+
+      /* --- Hero accent line "Then enforce them." --- */
+      #main-content h1 span[style*="color: #EA580C"],
+      #main-content h1 span[style*="EA580C"],
+      #main-content h2 span[style*="color: #EA580C"],
+      #main-content h2 span[style*="EA580C"] {
+        color: #D4572A !important;
+      }
+
+      /* --- Stat numbers in hero box (42, 52, 10, 60+) --- */
+      #main-content p[style*="Fraunces"][style*="fontWeight: 800"],
+      #main-content p[style*="Fraunces, serif"][style*="font-weight: 800"] {
+        color: #FFFFFF !important;
+      }
+
+      /* --- Terracotta-colored text accents (step times, tag labels, etc.) --- */
+      #main-content span[style*="color: #C2410C"],
+      #main-content span[style*="color: var(--terra"],
+      #main-content p[style*="color: #C45D3E"],
+      #main-content p[style*="color: #C2410C"] {
+        color: #FB923C !important;
+      }
+
+      /* --- Links — ensure distinct from body text --- */
+      #main-content a {
+        color: #FB923C !important;
+        text-decoration: underline !important;
+      }
+      #main-content a:hover {
+        color: #FFFFFF !important;
+      }
+
+      /* --- Primary CTA buttons (terracotta bg) — including <a> styled as buttons --- */
+      a.landing-btn-primary,
       #main-content a.landing-btn-primary,
-      a.landing-btn-primary {
+      #main-content a[style*="background: #C2410C"],
+      #main-content a[style*="background: #C45D3E"],
+      #main-content a[style*="background: '#C2410C'"],
+      #main-content a[style*="background: '#C45D3E'"] {
         background-color: #C2410C !important;
         color: #FFFFFF !important;
         border: 1px solid #C2410C !important;
+        text-decoration: none !important;
       }
+      a.landing-btn-primary:hover,
       #main-content a.landing-btn-primary:hover,
-      a.landing-btn-primary:hover {
+      #main-content a[style*="background: #C2410C"]:hover,
+      #main-content a[style*="background: #C45D3E"]:hover,
+      #main-content a[style*="background: '#C2410C'"]:hover,
+      #main-content a[style*="background: '#C45D3E'"]:hover {
         background-color: #D4572A !important;
         color: #FFFFFF !important;
         text-decoration: none !important;
       }
 
-      #main-content a.landing-btn-secondary,
-      a.landing-btn-secondary {
+      /* --- Secondary / ghost buttons (outline style) --- */
+      a.landing-btn-secondary,
+      #main-content a.landing-btn-secondary {
         background-color: transparent !important;
         color: #CBD5E1 !important;
         border: 1px solid #94A3B8 !important;
+        text-decoration: none !important;
       }
-      #main-content a.landing-btn-secondary:hover,
-      a.landing-btn-secondary:hover {
+      a.landing-btn-secondary:hover,
+      #main-content a.landing-btn-secondary:hover {
         border-color: #FFFFFF !important;
         color: #FFFFFF !important;
         background-color: rgba(255,255,255,0.05) !important;
         text-decoration: none !important;
       }
 
-      /* Generic outline/ghost buttons (border but transparent/no bg) */
+      /* --- Attorney CTA (outline terracotta) --- */
+      #main-content a.landing-btn-attorney,
+      a.landing-btn-attorney {
+        background-color: transparent !important;
+        color: #FB923C !important;
+        border: 2px solid #FB923C !important;
+        text-decoration: none !important;
+      }
+      #main-content a.landing-btn-attorney:hover,
+      a.landing-btn-attorney:hover {
+        background-color: rgba(251,146,60,0.1) !important;
+        color: #FFFFFF !important;
+        border-color: #FFFFFF !important;
+        text-decoration: none !important;
+      }
+
+      /* --- Generic outline/ghost buttons --- */
       #main-content button[style*="background: transparent"],
       #main-content button[style*="background: none"],
-      #main-content a[style*="background: transparent"],
-      #main-content a[style*="border: 1px solid"] {
+      #main-content a[style*="background: transparent"][style*="border"],
+      #main-content a[style*="border: 1px solid #475569"],
+      #main-content a[style*="border: 2px solid #C2410C"] {
         border-color: #94A3B8 !important;
         color: #CBD5E1 !important;
+        text-decoration: none !important;
       }
       #main-content button[style*="background: transparent"]:hover,
       #main-content button[style*="background: none"]:hover,
-      #main-content a[style*="background: transparent"]:hover,
-      #main-content a[style*="border: 1px solid"]:hover {
+      #main-content a[style*="background: transparent"][style*="border"]:hover,
+      #main-content a[style*="border: 1px solid #475569"]:hover,
+      #main-content a[style*="border: 2px solid #C2410C"]:hover {
         border-color: #FFFFFF !important;
         color: #FFFFFF !important;
         background-color: rgba(255,255,255,0.05) !important;
+      }
+
+      /* --- All buttons: minimum visible border --- */
+      #main-content button {
+        border: 1px solid #4A5568 !important;
+      }
+      #main-content button:hover {
+        border-color: #94A3B8 !important;
+      }
+      /* Preserve terracotta CTA button styling */
+      #main-content button[style*="C2410C"],
+      #main-content button[style*="background: var(--terra"] {
+        background-color: #C2410C !important;
+        color: #FFFFFF !important;
+        border: 1px solid #C2410C !important;
+      }
+      #main-content button[style*="C2410C"]:hover,
+      #main-content button[style*="background: var(--terra"]:hover {
+        background-color: #D4572A !important;
+      }
+
+      /* --- Guide page CTA bar (Report a Violation below diagrams) --- */
+      #main-content div[role="region"][aria-label*="violation"] a,
+      #main-content div[style*="background: #1A1F2B"] a[style*="C2410C"],
+      #main-content div[style*="background: '#1A1F2B'"] a[style*="C2410C"] {
+        background-color: #C2410C !important;
+        color: #FFFFFF !important;
+        border: 1px solid #C2410C !important;
+        text-decoration: none !important;
+      }
+      #main-content div[role="region"][aria-label*="violation"] a:hover {
+        background-color: #D4572A !important;
+      }
+
+      /* --- Orange left-accent bars on cards — keep terracotta --- */
+      #main-content [style*="border-left: 3px solid #C2410C"],
+      #main-content [style*="borderLeft"][style*="C2410C"] {
+        border-left-color: #C2410C !important;
+      }
+
+      /* --- Card accent top bars --- */
+      #main-content div[style*="height: 4px"][style*="background"] {
+        background-color: unset !important;
+      }
+
+      /* --- Section code badges (§406, §407) --- */
+      #main-content span[style*="borderRadius"][style*="padding: 2px 8px"] {
+        color: #CBD5E1 !important;
       }
 
       /* === Focus outlines — bright on dark === */
