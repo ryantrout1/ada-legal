@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { SlidersHorizontal, Calendar } from 'lucide-react';
+import React from 'react';
+import { Calendar } from 'lucide-react';
 import StatusSegmentedControl from './filters/StatusSegmentedControl';
 import SeverityPills from './filters/SeverityPills';
 import CompletenessPills from './filters/CompletenessPills';
