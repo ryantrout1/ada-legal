@@ -9,6 +9,7 @@ import AuditButton from './components/a11y/AuditButton';
 import LandingFooterNew from './components/landing/LandingFooterNew';
 import DisplaySettings, { applyPreferences, loadPreferences } from './components/a11y/DisplaySettings';
 import UserAvatarMenu from './components/UserAvatarMenu';
+import { ComingSoonProvider } from './components/useComingSoonModal';
 
 export default function Layout({ children, currentPageName }) {
   // Scroll to top on page change
@@ -114,6 +115,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <LiveAnnouncer>
+    <ComingSoonProvider>
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }} role="presentation">
       <style>{`
         /* Design System Variables */
@@ -658,6 +660,7 @@ export default function Layout({ children, currentPageName }) {
       `}</style>
 
     </div>
+    </ComingSoonProvider>
     <aside role="complementary" aria-label="Accessibility tools" style={{ position: 'relative', zIndex: 9999 }}>
       <AuditButton currentPageName={currentPageName} />
     </aside>
