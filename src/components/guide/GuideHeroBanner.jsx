@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../../utils';
 import { ChevronRight } from 'lucide-react';
 
 export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
+  useEffect(() => {
+    base44.analytics.track({ eventName: 'guide_section_viewed', properties: { section_name: title } });
+  }, [title]);
+
   return (
     <header aria-labelledby="guide-page-heading" style={{
       background: '#1A1F2B', position: 'relative', overflow: 'hidden'
