@@ -1,10 +1,13 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import { CheckCircle, Flag, ArrowUpDown } from 'lucide-react';
 import QCCaseCard from '../components/admin/review/QCCaseCard';
 import QCActionModal from '../components/admin/review/QCActionModal';
 import QCVolumeDashboard from '../components/admin/review/QCVolumeDashboard';
+import ViewModeToggle from '../components/admin/review/ViewModeToggle';
+import ClusterRow from '../components/admin/review/ClusterRow';
+import BulkActionModal from '../components/admin/review/BulkActionModal';
 import { caseRejectedEmail } from '../components/emails/caseEmails';
 
 export default function AdminReview() {
@@ -12,7 +15,11 @@ export default function AdminReview() {
   const [cases, setCases] = useState([]);
   const [sortOrder, setSortOrder] = useState('oldest');
   const [dashboardFilter, setDashboardFilter] = useState(null);
+  const [viewMode, setViewMode] = useState('list');
+  const [clusterSort, setClusterSort] = useState('most');
   const [modalState, setModalState] = useState({ open: false, action: null, caseData: null });
+  const [bulkModal, setBulkModal] = useState({ open: false, action: null, clusterId: null, cases: [] });
+  const [expandedClusterCase, setExpandedClusterCase] = useState(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
 
