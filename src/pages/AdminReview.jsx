@@ -53,11 +53,14 @@ export default function AdminReview() {
         window.location.href = createPageUrl('Home');
         return;
       }
+      setUserId(user.id || user.email);
       await loadCases();
       setLoading(false);
     }
     init();
   }, []);
+
+  const { views: savedViews, addView, removeView } = useSavedViews(userId);
 
   const displayCases = useMemo(() => {
     if (!dashboardFilter) return cases;
