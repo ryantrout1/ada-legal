@@ -89,6 +89,10 @@ export default function AdminCases() {
     return m;
   }, [lawyers]);
 
+  const approvedLawyers = useMemo(() => {
+    return lawyers.filter(l => l.account_status === 'approved');
+  }, [lawyers]);
+
   // Needs attention cases
   const { unclaimed, awaitingContact, needsAttentionIds } = useMemo(() => {
     const now = Date.now();
