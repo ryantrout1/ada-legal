@@ -582,6 +582,49 @@ export const applyPreferences = (prefs) => {
         color: #FFFFFF !important;
       }
 
+      /* === Ghost / outline buttons & link-buttons — HIGH CONTRAST === */
+      #main-content a.landing-btn-primary,
+      a.landing-btn-primary {
+        background-color: #D4572A !important;
+        color: #FFFFFF !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      #main-content a.landing-btn-primary:hover,
+      a.landing-btn-primary:hover {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        text-decoration: none !important;
+      }
+
+      #main-content a.landing-btn-secondary,
+      a.landing-btn-secondary {
+        background-color: transparent !important;
+        color: #FFFFFF !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      #main-content a.landing-btn-secondary:hover,
+      a.landing-btn-secondary:hover {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        text-decoration: none !important;
+      }
+
+      /* Generic outline/ghost buttons */
+      #main-content button[style*="background: transparent"],
+      #main-content button[style*="background: none"],
+      #main-content a[style*="background: transparent"],
+      #main-content a[style*="border: 1px solid"] {
+        border: 2px solid #FFFFFF !important;
+        color: #FFFFFF !important;
+      }
+      #main-content button[style*="background: transparent"]:hover,
+      #main-content button[style*="background: none"]:hover,
+      #main-content a[style*="background: transparent"]:hover,
+      #main-content a[style*="border: 1px solid"]:hover {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+      }
+
       /* === Focus indicators — gold === */
       *:focus-visible {
         outline: 3px solid #FFD700 !important;
