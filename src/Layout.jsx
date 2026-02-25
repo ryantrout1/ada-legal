@@ -94,7 +94,7 @@ export default function Layout({ children, currentPageName }) {
     CaseDetail: 'Case Detail', Marketplace: 'Available Cases', LawyerDashboard: 'My Cases',
     LawyerProfile: 'My Profile', LawyerRegister: 'Attorney Registration',
     LawyerLanding: 'For Attorneys', StandardsGuide: 'ADA Standards Guide',
-    Admin: 'Admin Dashboard', AdminReview: 'Review Queue', AdminCases: 'All Cases',
+    Admin: 'Admin Dashboard', AdminReview: 'Review Queue', AdminCases: 'Case Manager',
     AdminAnalytics: 'Analytics', AdminLawyers: 'Manage Lawyers',
     TitleIIPathway: 'Government Accessibility Complaints',
     TitleIPathway: 'Workplace Disability Discrimination'
