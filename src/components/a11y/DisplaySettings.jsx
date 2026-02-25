@@ -23,11 +23,143 @@ const savePreferences = (prefs) => {
 };
 
 export const applyPreferences = (prefs) => {
-  const root = document.documentElement;
-  root.setAttribute('data-theme', prefs.displayMode);
-  root.setAttribute('data-font-size', prefs.fontSize);
-  root.setAttribute('data-font-family', prefs.fontFamily);
+  // --- 1. Display Mode: Direct inline styles on main-content ---
+  const main = document.getElementById('main-content');
+  const footers = document.querySelectorAll('footer[role="contentinfo"]');
 
+  if (prefs.displayMode === 'dark') {
+    if (main) {
+      main.style.filter = 'invert(0.88) hue-rotate(180deg)';
+      main.style.backgroundColor = '#111111';
+    }
+    footers.forEach(f => {
+      f.style.filter = 'invert(1) hue-rotate(180deg)';
+    });
+    document.documentElement.style.colorScheme = 'dark';
+  } else {
+    if (main) {
+      main.style.filter = '';
+      main.style.backgroundColor = '';
+    }
+    footers.forEach(f => {
+      f.style.filter = '';
+    });
+    document.documentElement.style.colorScheme = '';
+  }
+
+  // Reverse filter on images/SVGs inside main for dark mode
+  if (main) {
+    const mediaElements = main.querySelectorAll('img, svg, video, canvas');
+    mediaElements.forEach(el => {
+      if (prefs.displayMode === 'dark') {
+        el.style.filter = 'invert(1) hue-rotate(180deg)';
+      } else {
+        el.style.filter = '';
+      }
+    });
+  }
+
+  // --- 2. High Contrast: Inject a runtime <style> element ---
+  let styleEl = document.getElementById('ada-prefs-runtime-style');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = 'ada-prefs-runtime-style';
+    document.head.appendChild(styleEl);
+  }
+
+  let css = '';
+
+  if (prefs.displayMode === 'high-contrast') {
+    // Clear any dark mode inline styles first
+    if (main) {
+      main.style.filter = '';
+      main.style.backgroundColor = '';
+    }
+    footers.forEach(f => { f.style.filter = ''; });
+    document.documentElement.style.colorScheme = '';
+    if (main) {
+      main.querySelectorAll('img, svg, video, canvas').forEach(el => {
+        el.style.filter = '';
+      });
+    }
+
+    css += `
+      :root {
+        --slate-900: #FFFFFF !important;
+        --slate-800: #FFFFFF !important;
+        --slate-700: #FFFFFF !important;
+        --slate-600: #FFFFFF !important;
+        --slate-500: #E0E0E0 !important;
+        --slate-400: #CCCCCC !important;
+        --slate-300: #FFFFFF !important;
+        --slate-200: #FFFFFF !important;
+        --slate-100: #111111 !important;
+        --slate-50: #000000 !important;
+        --surface: #000000 !important;
+        --terra-600: #FF6B35 !important;
+        --terra-700: #FF6B35 !important;
+        --terra-100: #1A0A00 !important;
+        --terra-50: #0D0500 !important;
+        --success-600: #4ADE80 !important;
+        --success-100: #052E16 !important;
+        --warning-600: #FBBF24 !important;
+        --warning-100: #1C1001 !important;
+        --error-600: #F87171 !important;
+        --error-100: #2D0606 !important;
+        --info-600: #60A5FA !important;
+        --info-100: #0A1628 !important;
+      }
+      body {
+        background-color: #000000 !important;
+        color: #FFFFFF !important;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        color: #FFFFFF !important;
+      }
+      p, span, li, label, td, th, dt, dd, div {
+        color: #FFFFFF !important;
+      }
+      a {
+        color: #FF6B35 !important;
+        text-decoration: underline !important;
+      }
+      a:hover {
+        color: #FFB088 !important;
+      }
+      header[role="banner"] a {
+        color: white !important;
+      }
+      input, select, textarea {
+        border: 2px solid #FFFFFF !important;
+        background-color: #111111 !important;
+        color: #FFFFFF !important;
+      }
+      input:focus, select:focus, textarea:focus {
+        border-color: #FF6B35 !important;
+        outline-color: #FF6B35 !important;
+      }
+      button {
+        border: 2px solid #FFFFFF !important;
+      }
+      *:focus-visible {
+        outline: 3px solid #FF6B35 !important;
+        outline-offset: 3px !important;
+      }
+    `;
+  }
+
+  // --- 3. Font Size ---
+  if (prefs.fontSize === 'large') {
+    css += `
+      html { font-size: 125% !important; }
+    `;
+  } else if (prefs.fontSize === 'xl') {
+    css += `
+      html { font-size: 150% !important; }
+    `;
+  }
+
+  // --- 4. Font Family ---
   if (prefs.fontFamily === 'atkinson') {
     if (!document.getElementById('atkinson-font-link')) {
       const link = document.createElement('link');
@@ -36,6 +168,42 @@ export const applyPreferences = (prefs) => {
       link.href = 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap';
       document.head.appendChild(link);
     }
+    css += `
+      body, input, select, textarea, button {
+        font-family: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Atkinson Hyperlegible', Georgia, serif !important;
+      }
+    `;
+  }
+
+  // Write all CSS to the runtime style element
+  styleEl.textContent = css;
+
+  // --- 5. Dark mode: Watch for new images/SVGs that need reverse filter ---
+  if (window._adaDarkModeObserver) {
+    window._adaDarkModeObserver.disconnect();
+    window._adaDarkModeObserver = null;
+  }
+
+  if (prefs.displayMode === 'dark' && main) {
+    window._adaDarkModeObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) {
+            if (['IMG', 'SVG', 'VIDEO', 'CANVAS'].includes(node.tagName)) {
+              node.style.filter = 'invert(1) hue-rotate(180deg)';
+            }
+            const media = node.querySelectorAll ? node.querySelectorAll('img, svg, video, canvas') : [];
+            media.forEach(el => {
+              el.style.filter = 'invert(1) hue-rotate(180deg)';
+            });
+          }
+        });
+      });
+    });
+    window._adaDarkModeObserver.observe(main, { childList: true, subtree: true });
   }
 };
 
