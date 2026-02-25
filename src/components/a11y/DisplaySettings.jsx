@@ -944,33 +944,17 @@ export const applyPreferences = (prefs) => {
     css += `html { font-size: 150% !important; }`;
     css += `
       /* ============================================
-         DIAGRAM SCALING — XL (1.5x)
+         DIAGRAM SCALING — XL (1.3x)
          ============================================ */
-
-      #main-content svg[role="img"] {
-        transform: scale(1.3) !important;
-        transform-origin: top left !important;
+      .ada-diagram-wrap {
+        zoom: 1.3 !important;
+        -moz-transform: scale(1.3) !important;
+        -moz-transform-origin: top left !important;
       }
-      #main-content div[style*="border-radius: 12px"]:has(svg[role="img"]) {
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        padding-bottom: 30% !important;
-      }
-
-      /* Callout info panels */
-      #main-content svg[role="img"] ~ div[style*="border-radius: 12px"],
-      #main-content div:has(> svg[role="img"]) + div[aria-live] + div {
-        font-size: 1rem !important;
-      }
-
-      /* Unit toggle buttons */
-      #main-content div:has(> div > svg[role="img"]) > div:first-child button[aria-pressed] {
-        font-size: 1.125rem !important;
-        padding: 6px 15px !important;
-        min-height: 40px !important;
-      }
-      #main-content div:has(> div > svg[role="img"]) > div:first-child span {
-        font-size: 1.2rem !important;
+      @-moz-document url-prefix() {
+        .ada-diagram-wrap {
+          width: 76.92% !important;
+        }
       }
     `;
   }
