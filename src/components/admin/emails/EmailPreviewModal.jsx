@@ -105,11 +105,11 @@ export default function EmailPreviewModal({ subject, bodyHtml, sampleData, onClo
           <iframe
             ref={iframeRef}
             title="Full email preview"
+            srcDoc="<html><body></body></html>"
             style={{
               width: '100%', height: '100%', minHeight: '500px',
               border: 'none',
             }}
-            sandbox=""
           />
         </div>
       </div>
