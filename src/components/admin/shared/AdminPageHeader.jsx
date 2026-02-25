@@ -47,7 +47,7 @@ export default function AdminPageHeader({
       {(onSearchChange || filterPills || sortDropdown) && (
         <div className="admin-search-filters-row" style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
           {onSearchChange && (
-            <div style={{ position: 'relative', flex: '1 1 240px', maxWidth: '40%', minWidth: '200px' }}>
+            <div style={{ position: 'relative', flex: '0 1 auto', width: '40%', minWidth: '200px', maxWidth: '400px' }}>
               <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8', pointerEvents: 'none' }} />
               <input
                 type="text"
@@ -79,7 +79,7 @@ export default function AdminPageHeader({
               )}
             </div>
           )}
-          {filterPills && <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', alignItems: 'center', flex: '1 1 auto' }}>{filterPills}</div>}
+          {filterPills && <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center', flex: '1 1 auto', minWidth: 0 }}>{filterPills}</div>}
           {sortDropdown && <div style={{ flexShrink: 0, marginLeft: 'auto' }}>{sortDropdown}</div>}
         </div>
       )}
