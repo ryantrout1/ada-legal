@@ -240,25 +240,24 @@ export default function FilterPanel({ filters, onChange }) {
           </div>
 
           {/* Footer — Clear + count */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px' }}>
             {count > 0 ? (
               <button
                 onClick={() => onChange({ ...EMPTY_FILTERS })}
                 style={{
                   background: 'none', border: 'none', fontFamily: 'Manrope, sans-serif',
-                  fontSize: '0.875rem', fontWeight: 600, color: 'var(--terra-600)',
+                  fontSize: '0.8125rem', fontWeight: 600, color: 'var(--terra-600)',
                   cursor: 'pointer', textDecoration: 'underline', padding: '8px 4px',
-                  minHeight: '44px',
+                  minHeight: '44px', display: 'inline-flex', alignItems: 'center',
                 }}
               >
-                Clear All Filters
+                {count} filter{count !== 1 ? 's' : ''} active · Clear All Filters
               </button>
             ) : (
-              <span />
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)', minHeight: '44px', display: 'inline-flex', alignItems: 'center' }}>
+                No filters active
+              </span>
             )}
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
-              {count > 0 ? `${count} filter${count !== 1 ? 's' : ''} active` : 'No filters active'}
-            </span>
           </div>
         </div>
       )}
