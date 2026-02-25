@@ -376,21 +376,18 @@ export default function AdminReview() {
 
   return (
     <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
 
-        {/* Volume Dashboard */}
-        <QCVolumeDashboard
+        {/* Row 1: Stats bar + Quick Insights */}
+        <CompactQCStatsBar
           cases={cases}
           activeFilter={dashboardFilter}
           onFilterChange={setDashboardFilter}
         />
 
-        {/* Search Bar */}
-        <SearchBar value={searchQuery} onChange={setSearchQuery} />
-
-        {/* Saved Views */}
+        {/* Row 2: Saved Views + Filters button */}
         {userId && (
-          <SavedViews
+          <CompactViewsFilterRow
             views={savedViews}
             activeViewId={activeViewId}
             onApply={(v) => {
@@ -405,51 +402,56 @@ export default function AdminReview() {
             onSave={(name) => addView(name, {
               search: searchQuery, filters, sortOrder, clusterSort, viewMode,
             })}
+            filterCount={countActiveFilters(filters)}
+            onToggleFilters={() => setFiltersOpen(!filtersOpen)}
+            filtersOpen={filtersOpen}
           />
         )}
 
-        {/* Filter Panel */}
-        <FilterPanel filters={filters} onChange={(f) => { setFilters(f); setActiveViewId(null); }} />
+        {/* Filter Panel (overlay/push) */}
+        <FilterPanel filters={filters} onChange={(f) => { setFilters(f); setActiveViewId(null); }} open={filtersOpen} />
 
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-          <div>
-            <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+        {/* Row 3: Search Bar */}
+        <SearchBar value={searchQuery} onChange={setSearchQuery} />
+
+        {/* Row 4: Queue header with controls */}
+        <div className="qc-queue-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', minHeight: '44px' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+            <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
               QC Review Queue
             </h1>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: '#475569', margin: '4px 0 0' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569' }}>
               {displayCases.length} case{displayCases.length !== 1 ? 's' : ''}
-              {displayCases.length !== cases.length ? ` (filtered from ${cases.length})` : ' pending review'}
-            </p>
+              {displayCases.length !== cases.length ? ` (of ${cases.length})` : ''}
+            </span>
           </div>
 
-          {/* View toggle + Sort dropdown */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <div className="qc-queue-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <button
               onClick={() => setTriageOpen(true)}
               disabled={displayCases.length === 0}
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: '6px',
-                padding: '8px 16px', minHeight: '44px', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.875rem', fontWeight: 700, cursor: displayCases.length === 0 ? 'default' : 'pointer',
-                border: 'none', borderRadius: '10px',
+                display: 'inline-flex', alignItems: 'center', gap: '5px',
+                padding: '6px 14px', minHeight: '44px', fontFamily: 'Manrope, sans-serif',
+                fontSize: '0.8125rem', fontWeight: 700, cursor: displayCases.length === 0 ? 'default' : 'pointer',
+                border: 'none', borderRadius: '8px',
                 backgroundColor: '#D97706', color: 'white',
                 opacity: displayCases.length === 0 ? 0.5 : 1,
               }}
               aria-label="Enter Triage Mode for rapid case processing"
             >
-              <Zap size={16} /> Triage Mode
+              <Zap size={14} /> Triage
             </button>
             <ViewModeToggle value={viewMode} onChange={setViewMode} />
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <ArrowUpDown size={16} style={{ color: '#475569' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <ArrowUpDown size={14} style={{ color: '#475569' }} />
               {viewMode === 'list' ? (
                 <select
                   aria-label="Sort order"
                   value={sortOrder}
                   onChange={(e) => setSortOrder(e.target.value)}
                   style={{
-                    padding: '8px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+                    padding: '6px 10px', minHeight: '44px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
                     border: '1px solid var(--slate-300)', borderRadius: '8px',
                     backgroundColor: 'white', color: 'var(--slate-800)', cursor: 'pointer',
                   }}
@@ -466,7 +468,7 @@ export default function AdminReview() {
                   value={clusterSort}
                   onChange={(e) => setClusterSort(e.target.value)}
                   style={{
-                    padding: '8px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+                    padding: '6px 10px', minHeight: '44px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
                     border: '1px solid var(--slate-300)', borderRadius: '8px',
                     backgroundColor: 'white', color: 'var(--slate-800)', cursor: 'pointer',
                   }}
@@ -480,6 +482,21 @@ export default function AdminReview() {
             </div>
           </div>
         </div>
+
+        {/* Dashboard filter clear link */}
+        {dashboardFilter && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+              Showing: <strong style={{ color: 'var(--slate-700)', textTransform: 'capitalize' }}>{dashboardFilter}</strong> only
+            </span>
+            <button
+              onClick={() => setDashboardFilter(null)}
+              style={{ background: 'none', border: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--terra-600)', cursor: 'pointer', textDecoration: 'underline', padding: '4px', minHeight: '44px' }}
+            >
+              Clear
+            </button>
+          </div>
+        )}
 
         {/* Flagged banner */}
         {flaggedCases.length > 0 && (
