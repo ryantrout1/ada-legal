@@ -291,7 +291,7 @@ export default function Marketplace() {
                 <caption className="sr-only">Available marketplace cases</caption>
                 <thead>
                   <tr>
-                    {['Type', 'Business', 'City / State', 'Subtype', 'Score', '', 'Posted', ''].map(h => (
+                    {['Type', 'Business', 'City / State', 'Subtype', 'Score', '', 'Posted', 'Reports', ''].map(h => (
                       <th key={h} scope="col" style={{
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700,
                         color: '#475569', textAlign: 'left', padding: '6px 0.75rem',
