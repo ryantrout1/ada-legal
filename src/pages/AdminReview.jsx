@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import { CheckCircle, Flag, ArrowUpDown } from 'lucide-react';
 import QCCaseCard from '../components/admin/review/QCCaseCard';
 import QCActionModal from '../components/admin/review/QCActionModal';
+import QCVolumeDashboard from '../components/admin/review/QCVolumeDashboard';
 import { caseRejectedEmail } from '../components/emails/caseEmails';
 
 export default function AdminReview() {
   const [loading, setLoading] = useState(true);
   const [cases, setCases] = useState([]);
   const [sortOrder, setSortOrder] = useState('oldest');
+  const [dashboardFilter, setDashboardFilter] = useState(null);
   const [modalState, setModalState] = useState({ open: false, action: null, caseData: null });
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
