@@ -15,6 +15,7 @@ import GeographicImpact from '../components/analytics/impact/GeographicImpact';
 import TrendsSection from '../components/analytics/impact/TrendsSection';
 import AccountabilityTable from '../components/analytics/impact/AccountabilityTable';
 import CommunityVoice from '../components/analytics/impact/CommunityVoice';
+import UserJourneyEngagement from '../components/analytics/impact/UserJourneyEngagement';
 
 export default function AdminAnalytics() {
   const [loading, setLoading] = useState(true);
@@ -120,6 +121,7 @@ export default function AdminAnalytics() {
             <TrendsSection cases={cases} />
             <AccountabilityTable cases={cases} />
             <CommunityVoice cases={cases} />
+            <UserJourneyEngagement />
           </div>
         )}
       </div>
