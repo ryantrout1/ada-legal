@@ -596,6 +596,24 @@ export default function AdminReview() {
         saving={saving}
       />
 
+      {/* Triage Mode */}
+      {triageOpen && (
+        <TriageMode
+          filteredCases={displayCases}
+          onExit={(sessionStats) => {
+            setTriageOpen(false);
+            const total = sessionStats.approved + sessionStats.rejected + sessionStats.flagged + sessionStats.skipped;
+            if (total > 0) {
+              setToast({
+                type: 'success',
+                message: `Session complete: ${total} reviewed — ${sessionStats.approved} approved, ${sessionStats.rejected} rejected, ${sessionStats.flagged} flagged, ${sessionStats.skipped} skipped`,
+              });
+            }
+          }}
+          onCasesChanged={loadCases}
+        />
+      )}
+
       {/* Toast */}
       {toast && (
         <div role="alert" aria-live="assertive" style={{
