@@ -99,14 +99,6 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
 
   const handlePreview = () => {
     setShowPreview(true);
-    setTimeout(() => {
-      if (iframeRef.current) {
-        const doc = iframeRef.current.contentDocument;
-        doc.open();
-        doc.write(replaceVars(bodyHtml));
-        doc.close();
-      }
-    }, 50);
   };
 
   if (!template) return null;
