@@ -248,8 +248,8 @@ export default function AdminReview() {
             />
           }
           listHeader={
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-600)' }}>
-              {displayCases.length} case{displayCases.length !== 1 ? 's' : ''}{displayCases.length !== cases.length ? ` (of ${cases.length})` : ''}
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-500)' }}>
+              {dashboardFilter ? <><span style={{ textTransform: 'capitalize' }}>{dashboardFilter}</span> ({displayCases.length})</> : `All (${displayCases.length})`}
               {dashboardFilter && (
                 <> · <button onClick={() => setDashboardFilter(null)} style={{ background: 'none', border: 'none', color: '#C2410C', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', textDecoration: 'underline', padding: 0 }}>Clear filter</button></>
               )}

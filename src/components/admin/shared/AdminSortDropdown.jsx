@@ -7,7 +7,7 @@ export default function AdminSortDropdown({ value, onChange, options }) {
       onChange={e => onChange(e.target.value)}
       aria-label="Sort order"
       style={{
-        minHeight: '44px', padding: '8px 12px',
+        minHeight: '44px', padding: '8px 16px', minWidth: '180px',
         fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
         border: '1px solid var(--slate-200)', borderRadius: '8px',
         backgroundColor: 'white', color: 'var(--slate-800)', cursor: 'pointer',

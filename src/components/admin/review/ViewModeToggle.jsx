@@ -10,7 +10,7 @@ export default function ViewModeToggle({ value, onChange }) {
     <div
       role="radiogroup"
       aria-label="Queue view mode"
-      style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--slate-300)' }}
+      style={{ display: 'flex', gap: '4px' }}
     >
       {MODES.map(m => {
         const active = value === m.key;
@@ -27,17 +27,19 @@ export default function ViewModeToggle({ value, onChange }) {
                 onChange(value === 'list' ? 'cluster' : 'list');
               }
             }}
+            className="admin-filter-pill"
             style={{
-              padding: '8px 16px',
+              padding: '8px 20px',
               minHeight: '44px',
               fontFamily: 'Manrope, sans-serif',
-              fontSize: '0.875rem',
-              fontWeight: 600,
+              fontSize: '0.85rem',
+              fontWeight: active ? 700 : 500,
               cursor: 'pointer',
-              border: 'none',
-              backgroundColor: active ? 'var(--slate-900)' : 'var(--slate-100)',
-              color: active ? 'white' : 'var(--slate-600)',
-              transition: 'background-color 0.15s, color 0.15s',
+              border: active ? 'none' : '1px solid var(--slate-200)',
+              borderRadius: '20px',
+              backgroundColor: active ? '#C2410C' : 'white',
+              color: active ? 'white' : 'var(--slate-800)',
+              transition: 'all 0.15s',
               whiteSpace: 'nowrap',
             }}
           >

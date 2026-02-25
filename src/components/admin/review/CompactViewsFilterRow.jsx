@@ -84,13 +84,14 @@ export default function CompactViewsFilterRow({
         <button
           onClick={onToggleFilters}
           aria-expanded={filtersOpen}
+          className="admin-filter-pill"
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '5px',
-            padding: '6px 14px', minHeight: '44px', fontFamily: 'Manrope, sans-serif',
-            fontSize: '0.8125rem', fontWeight: 600, cursor: 'pointer',
-            border: '1px solid var(--slate-300)', borderRadius: '10px',
-            backgroundColor: filtersOpen ? 'var(--slate-100)' : 'white',
-            color: 'var(--slate-700)', flexShrink: 0, position: 'relative',
+            padding: '8px 20px', minHeight: '44px', fontFamily: 'Manrope, sans-serif',
+            fontSize: '0.85rem', fontWeight: filtersOpen ? 700 : 500, cursor: 'pointer',
+            border: filtersOpen ? 'none' : '1px solid var(--slate-200)', borderRadius: '20px',
+            backgroundColor: filtersOpen ? '#C2410C' : 'white',
+            color: filtersOpen ? 'white' : 'var(--slate-800)', flexShrink: 0, position: 'relative',
           }}
         >
           <SlidersHorizontal size={14} />
@@ -99,7 +100,8 @@ export default function CompactViewsFilterRow({
             <span style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               width: '18px', height: '18px', borderRadius: '50%',
-              backgroundColor: 'var(--terra-600)', color: 'white',
+              backgroundColor: filtersOpen ? 'white' : 'var(--terra-600)',
+              color: filtersOpen ? '#C2410C' : 'white',
               fontSize: '0.65rem', fontWeight: 700,
             }}>
               {filterCount}

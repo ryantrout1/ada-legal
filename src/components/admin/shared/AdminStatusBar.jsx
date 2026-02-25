@@ -66,7 +66,7 @@ export default function AdminStatusBar({ cells, secondaryText }) {
       {secondaryText && (
         <div className="admin-status-secondary" style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--slate-500)',
-          whiteSpace: 'nowrap', flexShrink: 0,
+          whiteSpace: 'nowrap', flexShrink: 0, paddingLeft: '4px',
         }}>
           {secondaryText}
         </div>

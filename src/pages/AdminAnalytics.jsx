@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
-import { Download } from 'lucide-react';
 import AdminPageHeader from '../components/admin/shared/AdminPageHeader';
 import AdminStatusBar from '../components/admin/shared/AdminStatusBar';
 import AdminFilterPill from '../components/admin/shared/AdminFilterPill';
-import AdminActionButton from '../components/admin/shared/AdminActionButton';
 import IntelExport from '../components/analytics/IntelExport';
 import OpsStatBar from '../components/analytics/ops/OpsStatBar';
 import OpsFunnel from '../components/analytics/ops/OpsFunnel';
@@ -97,7 +95,6 @@ export default function AdminAnalytics() {
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <AdminPageHeader
           title="Platform Intelligence"
-          actionButton={<IntelExport activeTab={activeTab} cases={cases} lawyers={lawyers} contactLogs={contactLogs} />}
           statusBar={<AdminStatusBar cells={activeTab === 'operations' ? opsStatusCells : impactStatusCells} />}
           filterPills={
             <>
@@ -105,6 +102,7 @@ export default function AdminAnalytics() {
               <AdminFilterPill label="🌍 ADA Impact" active={activeTab === 'impact'} onClick={() => setActiveTab('impact')} />
             </>
           }
+          sortDropdown={<IntelExport activeTab={activeTab} cases={cases} lawyers={lawyers} contactLogs={contactLogs} />}
         />
 
         {activeTab === 'operations' && (

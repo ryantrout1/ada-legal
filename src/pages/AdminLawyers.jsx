@@ -154,7 +154,7 @@ export default function AdminLawyers() {
           searchPlaceholder="Search by name, firm, email, or state…"
           filterPills={FILTER_PILLS.map(p => <AdminFilterPill key={p.key} label={p.label} active={statusFilter === p.key} onClick={() => setStatusFilter(p.key)} />)}
           sortDropdown={<AdminSortDropdown value={sortBy} onChange={setSortBy} options={SORT_OPTIONS} />}
-          listHeader={<span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-600)' }}>Showing {filtered.length} of {lawyers.length} attorney{lawyers.length !== 1 ? 's' : ''}</span>}
+          listHeader={<span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-500)' }}>{statusFilter === 'all' ? `All (${filtered.length})` : `${FILTER_PILLS.find(p => p.key === statusFilter)?.label || 'All'} (${filtered.length})`}</span>}
         />
 
         <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', overflow: 'hidden' }}>

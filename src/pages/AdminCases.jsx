@@ -275,7 +275,7 @@ export default function AdminCases() {
           }
           sortDropdown={<AdminSortDropdown value={sortBy} onChange={setSortBy} options={SORT_OPTIONS} />}
           listHeader={
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-600)' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-500)' }}>
               {pipelineStatus ? <>{sorted.length} <span style={{ textTransform: 'capitalize' }}>{pipelineStatus.replace('_', ' ')}</span> · <button onClick={() => setPipelineStatus(null)} style={{ background: 'none', border: 'none', color: '#C2410C', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', textDecoration: 'underline', padding: 0 }}>Clear filter</button></> : `All (${sorted.length})`}
             </span>
           }
