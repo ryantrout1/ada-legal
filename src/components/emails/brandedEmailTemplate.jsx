@@ -30,7 +30,7 @@ export function brandedEmail({ heading, headingColor = '#1E293B', bodyHtml, port
           </div>
         </td>
         <td style="vertical-align: middle;">
-          <span style="font-family: Georgia, serif; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 0.01em;">ADA Legal</span>
+          <span style="font-family: Georgia, serif; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 0.01em;">ADA Legal Link</span>
         </td>
       </tr></table>
     </div>
