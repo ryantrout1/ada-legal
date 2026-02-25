@@ -45,8 +45,18 @@ export default function AdminReview() {
     init();
   }, []);
 
-  const flaggedCases = cases.filter(c => c.qc_flagged);
-  const sortedCases = [...cases].sort((a, b) => {
+  const displayCases = useMemo(() => {
+    if (!dashboardFilter) return cases;
+    const submitted = cases.filter(c => c.status === 'submitted');
+    if (dashboardFilter === 'ready') return submitted.filter(c => (c.ai_completeness_score ?? 0) >= 80);
+    if (dashboardFilter === 'needs') return submitted.filter(c => (c.ai_completeness_score ?? 0) < 50);
+    if (dashboardFilter === 'high') return submitted.filter(c => c.ai_severity === 'high');
+    if (dashboardFilter === 'clusters') return submitted.filter(c => c.ai_duplicate_cluster_id && (c.ai_duplicate_cluster_size ?? 0) >= 2);
+    return cases;
+  }, [cases, dashboardFilter]);
+
+  const flaggedCases = displayCases.filter(c => c.qc_flagged);
+  const sortedCases = [...displayCases].sort((a, b) => {
     // Flagged first
     if (a.qc_flagged && !b.qc_flagged) return -1;
     if (!a.qc_flagged && b.qc_flagged) return 1;
