@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Building2, Globe } from 'lucide-react';
+import { Building2, Globe, BarChart3 } from 'lucide-react';
 import { calculateDocScore, getFreshness } from './docScore';
 
 function extractDomain(url) {
@@ -76,6 +76,14 @@ export default function CaseListRow({ caseData, onViewDetails, isEven }) {
         <span style={{ fontSize: '0.75rem', color: freshness.type === 'old' ? '#92400E' : '#475569' }}>
           {formatDate(c.approved_at)}
         </span>
+      </td>
+      <td style={td}>
+        {c.ai_duplicate_cluster_size >= 2 && (
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600, color: '#1D4ED8' }}>
+            <BarChart3 size={12} aria-hidden="true" />
+            {c.ai_duplicate_cluster_size}
+          </span>
+        )}
       </td>
       <td style={td}>
         <button type="button" onClick={() => onViewDetails(c)} style={{
