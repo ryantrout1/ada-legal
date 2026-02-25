@@ -38,7 +38,7 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
   const [sending, setSending] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [toast, setToast] = useState(null);
-  const iframeRef = useRef(null);
+
 
   useEffect(() => {
     if (template) {
