@@ -244,6 +244,11 @@ export default function AdminCases() {
           unclaimed={unclaimed}
           awaitingContact={awaitingContact}
           lawyerMap={lawyerMap}
+          approvedLawyers={approvedLawyers}
+          onForceAssign={handleForceAssign}
+          onForceClose={setForceCloseCase}
+          onReclaim={handleReassign}
+          saving={actionSaving}
         />
 
         {/* Search */}
