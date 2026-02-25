@@ -8,6 +8,7 @@ import LiveAnnouncer from './components/a11y/LiveAnnouncer';
 import AuditButton from './components/a11y/AuditButton';
 import LandingFooterNew from './components/landing/LandingFooterNew';
 import DisplaySettings, { applyPreferences, loadPreferences } from './components/a11y/DisplaySettings';
+import UserAvatarMenu from './components/UserAvatarMenu';
 
 export default function Layout({ children, currentPageName }) {
   // Scroll to top on page change
@@ -325,31 +326,7 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('MyCases')} style={{ color: currentPageName === 'MyCases' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'MyCases' ? 'page' : undefined}>
                       My Cases
                     </Link>
-                    <span style={{
-                      background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
-                      fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px',
-                      whiteSpace: 'nowrap'
-                    }}>
-                      <strong>USER</strong> {user.email}
-                    </span>
-                    <button
-                      onClick={handleLogout}
-                      style={{
-                        background: 'transparent',
-                        color: 'white',
-                        border: '1px solid white',
-                        padding: '0.5rem 1rem',
-                        borderRadius: 'var(--radius-md)',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        minHeight: '44px'
-                      }}
-                    >
-                      <LogOut size={16} />
-                      Sign Out
-                    </button>
+                    <UserAvatarMenu user={user} onLogout={handleLogout} />
                   </>
                 )}
                 
@@ -367,31 +344,7 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('LawyerProfile')} style={{ color: currentPageName === 'LawyerProfile' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'LawyerProfile' ? 'page' : undefined}>
                       Profile
                     </Link>
-                    <span style={{
-                      background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
-                      fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px',
-                      whiteSpace: 'nowrap'
-                    }}>
-                      <strong>LAWYER</strong> {user.email}
-                    </span>
-                    <button
-                      onClick={handleLogout}
-                      style={{
-                        background: 'transparent',
-                        color: 'white',
-                        border: '1px solid white',
-                        padding: '0.5rem 1rem',
-                        borderRadius: 'var(--radius-md)',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        minHeight: '44px'
-                      }}
-                    >
-                      <LogOut size={16} />
-                      Sign Out
-                    </button>
+                    <UserAvatarMenu user={user} onLogout={handleLogout} />
                   </>
                 )}
                 
@@ -412,31 +365,7 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('AdminAnalytics')} style={{ color: currentPageName === 'AdminAnalytics' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminAnalytics' ? 'page' : undefined}>
                       Analytics
                     </Link>
-                    <span style={{
-                      background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '12px',
-                      fontFamily: 'Manrope, sans-serif', borderRadius: '100px', padding: '4px 12px',
-                      whiteSpace: 'nowrap'
-                    }}>
-                      <strong>ADMIN</strong> {user.email}
-                    </span>
-                    <button
-                      onClick={handleLogout}
-                      style={{
-                        background: 'transparent',
-                        color: 'white',
-                        border: '1px solid white',
-                        padding: '0.5rem 1rem',
-                        borderRadius: 'var(--radius-md)',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        minHeight: '44px'
-                      }}
-                    >
-                      <LogOut size={16} />
-                      Sign Out
-                    </button>
+                    <UserAvatarMenu user={user} onLogout={handleLogout} />
                   </>
                 )}
               </>
