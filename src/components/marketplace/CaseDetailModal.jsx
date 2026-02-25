@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { base44 } from '@/api/base44Client';
 import { Building2, Globe, ArrowRight, FileText, Phone, Mail, MinusCircle } from 'lucide-react';
 import { calculateDocScore, getFreshness } from './docScore';
 import PhotoGallery from '../shared/PhotoGallery';
@@ -226,7 +227,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
 
         {/* ── Footer ── */}
         <div style={{ padding: '0 24px 20px' }}>
-          <button type="button" onClick={() => onInitiate(c)} style={{
+          <button type="button" onClick={() => { base44.analytics.track({ eventName: 'attorney_connect_clicked', properties: { case_id: c.id, violation_type: c.violation_type } }); onInitiate(c); }} style={{
             width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
             gap: '8px', padding: '16px',
             fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
