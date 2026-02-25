@@ -21,14 +21,14 @@ export default function TitleIIPathway() {
     <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: '40px 24px' }}>
       <div style={{ maxWidth: '780px', margin: '0 auto' }}>
 
-        <Link to={createPageUrl('Intake')} style={{
+        <Link to={createPageUrl('StandardsGuide')} style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: '#475569',
           textDecoration: 'none', display: 'inline-block', marginBottom: '24px'
         }}
           onMouseEnter={e => { e.currentTarget.style.color = '#C2410C'; }}
           onMouseLeave={e => { e.currentTarget.style.color = '#475569'; }}
         >
-          ← Back to options
+          ← Back to Standards Guide
         </Link>
 
         {/* Hero card */}
