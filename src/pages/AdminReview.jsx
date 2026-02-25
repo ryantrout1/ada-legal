@@ -411,7 +411,7 @@ export default function AdminReview() {
               New submissions will appear here automatically.
             </p>
           </div>
-        ) : (
+        ) : viewMode === 'list' ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {sortedCases.map(c => (
               <QCCaseCard
@@ -422,6 +422,54 @@ export default function AdminReview() {
                 onFlag={() => openModal('flag', c)}
               />
             ))}
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {clusters.map(cl => (
+              <ClusterRow
+                key={cl.id}
+                clusterId={cl.id}
+                cases={cl.cases}
+                onBulkApprove={handleBulkApprove}
+                onBulkReject={handleBulkReject}
+                onExpandCase={(c) => setExpandedClusterCase(expandedClusterCase?.id === c.id ? null : c)}
+              />
+            ))}
+
+            {/* Expanded individual case from cluster click */}
+            {expandedClusterCase && (
+              <div style={{ marginTop: '-6px' }}>
+                <QCCaseCard
+                  key={expandedClusterCase.id}
+                  caseData={expandedClusterCase}
+                  defaultExpanded={true}
+                  onApprove={() => openModal('approve', expandedClusterCase)}
+                  onReject={() => openModal('reject', expandedClusterCase)}
+                  onFlag={() => openModal('flag', expandedClusterCase)}
+                />
+              </div>
+            )}
+
+            {/* Individual reports section */}
+            {individualCases.length > 0 && (
+              <>
+                <h2 style={{
+                  fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
+                  color: 'var(--slate-900)', margin: '20px 0 4px',
+                }}>
+                  Individual Reports ({individualCases.length})
+                </h2>
+                {individualCases.map(c => (
+                  <QCCaseCard
+                    key={c.id}
+                    caseData={c}
+                    onApprove={() => openModal('approve', c)}
+                    onReject={() => openModal('reject', c)}
+                    onFlag={() => openModal('flag', c)}
+                  />
+                ))}
+              </>
+            )}
           </div>
         )}
       </div>
