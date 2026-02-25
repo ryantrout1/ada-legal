@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
-import { Menu, X, User, LogOut, Eye } from 'lucide-react';
+import { Menu, X, User, LogOut, Eye, BarChart3, Mail } from 'lucide-react';
 import LogoBrand from './components/LogoBrand';
 import LiveAnnouncer from './components/a11y/LiveAnnouncer';
 import AuditButton from './components/a11y/AuditButton';
@@ -353,22 +353,19 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('AdminCases')} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
-                      Case Manager
-                    </Link>
                     <Link to={createPageUrl('AdminReview')} style={{ color: currentPageName === 'AdminReview' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminReview' ? 'page' : undefined}>
                       Review Queue
+                    </Link>
+                    <Link to={createPageUrl('AdminCases')} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
+                      Case Manager
                     </Link>
                     <Link to={createPageUrl('AdminLawyers')} style={{ color: currentPageName === 'AdminLawyers' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminLawyers' ? 'page' : undefined}>
                       Lawyers
                     </Link>
-                    <Link to={createPageUrl('AdminAnalytics')} style={{ color: currentPageName === 'AdminAnalytics' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminAnalytics' ? 'page' : undefined}>
-                      Platform Intelligence
-                    </Link>
-                    <Link to={createPageUrl('AdminEmails')} style={{ color: currentPageName === 'AdminEmails' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminEmails' ? 'page' : undefined}>
-                      Email Templates
-                    </Link>
-                    <UserAvatarMenu user={user} onLogout={handleLogout} />
+                    <UserAvatarMenu user={user} onLogout={handleLogout} extraMenuItems={[
+                      { to: createPageUrl('AdminAnalytics'), icon: <BarChart3 size={15} />, label: 'Platform Intelligence' },
+                      { to: createPageUrl('AdminEmails'), icon: <Mail size={15} />, label: 'Email Templates' },
+                    ]} />
                   </>
                 )}
               </>
@@ -554,11 +551,11 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                      Case Manager
-                    </Link>
                     <Link to={createPageUrl('AdminReview')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminReview' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Review Queue
+                    </Link>
+                    <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      Case Manager
                     </Link>
                     <Link to={createPageUrl('AdminLawyers')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminLawyers' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Lawyers
