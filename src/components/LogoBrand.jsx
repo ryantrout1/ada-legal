@@ -13,7 +13,7 @@ export default function LogoBrand({ size = 32, glow = false, style = {}, classNa
       alt="ADA Legal Link logo"
       width={size}
       height={size}
-      style={{ objectFit: 'contain', ...glowStyle, ...style }}
+      style={{ objectFit: 'contain', mixBlendMode: 'lighten', ...glowStyle, ...style }}
       className={className}
       {...props}
     />
