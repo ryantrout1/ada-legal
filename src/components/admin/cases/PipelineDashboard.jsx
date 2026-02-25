@@ -1,5 +1,5 @@
-import React from 'react';
-import { ChevronRight } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { ArrowRight } from 'lucide-react';
 
 const STAGES = [
   { key: 'submitted', label: 'Submitted', bg: 'var(--slate-100, #F1F5F9)', color: 'var(--slate-700, #475569)', borderColor: '#475569' },
@@ -16,23 +16,49 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
   STAGES.forEach(s => { counts[s.key] = 0; });
   cases.forEach(c => { if (counts[c.status] !== undefined) counts[c.status]++; });
 
+  // Find bottleneck — stage with the most cases
+  const bottleneckKey = useMemo(() => {
+    let maxKey = STAGES[0].key;
+    let maxCount = 0;
+    STAGES.forEach(s => {
+      if (counts[s.key] > maxCount) { maxCount = counts[s.key]; maxKey = s.key; }
+    });
+    return maxCount > 0 ? maxKey : null;
+  }, [cases]);
+
+  // The arrow AFTER the bottleneck card is highlighted
+  const bottleneckIdx = STAGES.findIndex(s => s.key === bottleneckKey);
+
   return (
     <div>
       {/* Pipeline cards */}
       <div className="pipeline-card-row" style={{ display: 'flex', alignItems: 'center', gap: '0', overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory', paddingBottom: '4px' }}>
         {STAGES.map((stage, i) => {
           const active = activeStatus === stage.key;
+          const isBottleneck = stage.key === bottleneckKey && counts[stage.key] > 0;
+          // Arrow between previous card and this card: highlight if the previous card is the bottleneck
+          const arrowHighlighted = i > 0 && (i - 1) === bottleneckIdx && counts[bottleneckKey] > 0;
+
           return (
             <React.Fragment key={stage.key}>
               {i > 0 && (
-                <ChevronRight size={16} style={{ color: 'var(--slate-300)', flexShrink: 0 }} aria-hidden="true" />
+                <ArrowRight
+                  size={16}
+                  className="pipeline-arrow"
+                  style={{
+                    color: arrowHighlighted ? '#EA580C' : 'var(--slate-300)',
+                    flexShrink: 0,
+                    transition: 'color 0.3s',
+                  }}
+                  aria-hidden="true"
+                />
               )}
               <button
                 role="button"
-                aria-label={`Filter to ${stage.label}: ${counts[stage.key]} cases`}
+                aria-label={`Filter to ${stage.label}: ${counts[stage.key]} cases${isBottleneck ? ' (highest volume)' : ''}`}
                 aria-pressed={active}
                 onClick={() => onStatusClick(stage.key)}
-                className="pipeline-card"
+                className={`pipeline-card${isBottleneck ? ' pipeline-bottleneck' : ''}`}
                 style={{
                   flex: '1 0 110px',
                   minHeight: '44px',
@@ -45,7 +71,11 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
                   scrollSnapAlign: 'start',
                   transition: 'box-shadow 0.15s, border-bottom 0.15s',
                   boxShadow: active ? '0 2px 8px rgba(0,0,0,0.12)' : 'none',
-                  borderBottom: active ? `3px solid ${stage.borderColor}` : '3px solid transparent',
+                  borderBottom: isBottleneck
+                    ? '3px solid #EA580C'
+                    : active
+                      ? `3px solid ${stage.borderColor}`
+                      : '3px solid transparent',
                   position: 'relative',
                 }}
               >
@@ -76,6 +106,16 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
       </p>
 
       <style>{`
+        @keyframes bottleneckPulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(234,88,12,0.25); }
+          50% { box-shadow: 0 0 0 4px rgba(234,88,12,0.15); }
+        }
+        .pipeline-bottleneck {
+          animation: bottleneckPulse 2.5s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .pipeline-bottleneck { animation: none !important; }
+        }
         @media (max-width: 768px) {
           .pipeline-card-row {
             display: grid !important;
@@ -83,7 +123,7 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
             gap: 6px !important;
             overflow: visible !important;
           }
-          .pipeline-card-row svg { display: none !important; }
+          .pipeline-card-row .pipeline-arrow { display: none !important; }
           .pipeline-card { flex: unset !important; min-width: 0 !important; }
         }
       `}</style>
