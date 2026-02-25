@@ -36,22 +36,161 @@ export const applyPreferences = (prefs) => {
   // --- DARK MODE ---
   if (prefs.displayMode === 'dark') {
     css += `
-      #main-content {
-        filter: invert(0.88) hue-rotate(180deg) !important;
-        background-color: #111111 !important;
-      }
-      #main-content img,
-      #main-content svg,
-      #main-content video,
-      #main-content canvas,
-      #main-content [style*="background-image"] {
-        filter: invert(1) hue-rotate(180deg) !important;
-      }
-      footer[role="contentinfo"] {
-        filter: invert(1) hue-rotate(180deg) !important;
-      }
       html {
         color-scheme: dark;
+      }
+
+      /* === Body & page background === */
+      body {
+        background-color: #0F1219 !important;
+      }
+
+      /* === Override CSS variables for components using var() === */
+      :root {
+        --slate-50: #0F1219 !important;
+        --slate-100: #151B24 !important;
+        --slate-200: #374151 !important;
+        --slate-300: #334155 !important;
+        --slate-400: #94A3B8 !important;
+        --slate-500: #CBD5E1 !important;
+        --slate-600: #E2E8F0 !important;
+        --slate-700: #E2E8F0 !important;
+        --slate-800: #F1F5F9 !important;
+        --slate-900: #F8FAFC !important;
+        --surface: #1E293B !important;
+      }
+
+      /* === Headings === */
+      h1, h2, h3, h4, h5, h6 {
+        color: #F1F5F9 !important;
+      }
+
+      /* === Body text === */
+      p, li, dd, dt, td, th, label, figcaption {
+        color: #E2E8F0 !important;
+      }
+
+      /* === Secondary/muted text (spans, small text) === */
+      span {
+        color: #CBD5E1 !important;
+      }
+
+      /* === Links stay terracotta (already good on dark) === */
+      a {
+        color: #F97316 !important;
+      }
+      a:hover {
+        color: #FB923C !important;
+      }
+
+      /* === Keep header links white (header is already dark) === */
+      header[role="banner"] a,
+      header[role="banner"] span,
+      header[role="banner"] button {
+        color: white !important;
+      }
+
+      /* === Override hardcoded white/cream backgrounds === */
+      [style*="background: #FFFFFF"],
+      [style*="background: '#FFFFFF'"],
+      [style*="background-color: #FFFFFF"],
+      [style*="background-color: '#FFFFFF'"],
+      [style*="backgroundColor: '#FFFFFF'"],
+      [style*="background: white"],
+      [style*="background: 'white'"],
+      [style*="background-color: white"],
+      [style*="backgroundColor: 'white'"] {
+        background-color: #1E293B !important;
+        background: #1E293B !important;
+      }
+
+      [style*="background: #FAF7F2"],
+      [style*="background: '#FAF7F2'"],
+      [style*="backgroundColor: '#FAF7F2'"] {
+        background-color: #151B24 !important;
+        background: #151B24 !important;
+      }
+
+      [style*="background: #F8FAFC"],
+      [style*="background: '#F8FAFC'"],
+      [style*="backgroundColor: '#F8FAFC'"] {
+        background-color: #1A2332 !important;
+        background: #1A2332 !important;
+      }
+
+      [style*="background: #FEF1EC"],
+      [style*="background: '#FEF1EC'"],
+      [style*="backgroundColor: '#FEF1EC'"],
+      [style*="background: #FFF8F5"],
+      [style*="background: '#FFF8F5'"],
+      [style*="backgroundColor: '#FFF8F5'"] {
+        background-color: #2D1A11 !important;
+        background: #2D1A11 !important;
+      }
+
+      /* === Cards and bordered containers === */
+      [style*="border-radius"] {
+        border-color: #374151 !important;
+      }
+
+      /* === Form inputs === */
+      input, select, textarea {
+        background-color: #151B24 !important;
+        border-color: #374151 !important;
+        color: #F1F5F9 !important;
+      }
+      input:focus, select:focus, textarea:focus {
+        border-color: #C2410C !important;
+      }
+      input::placeholder, textarea::placeholder {
+        color: #94A3B8 !important;
+      }
+
+      /* === Buttons — keep terracotta buttons, adjust outline buttons === */
+      button[style*="background: 'transparent'"],
+      button[style*="background: transparent"] {
+        border-color: #475569 !important;
+        color: #E2E8F0 !important;
+      }
+
+      /* === The settings dropdown itself === */
+      [role="dialog"][aria-label="Display preferences"] {
+        background-color: #1E293B !important;
+        border-color: #374151 !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] legend,
+      [role="dialog"][aria-label="Display preferences"] p {
+        color: #94A3B8 !important;
+      }
+
+      /* === Scroll chevron === */
+      [style*="cursor: pointer"][style*="border-radius: 50%"] {
+        background-color: rgba(30,41,59,0.8) !important;
+        color: #E2E8F0 !important;
+      }
+
+      /* === WCAG compliance callout bar === */
+      [style*="border-left: 4px solid #C2410C"] {
+        background-color: #1A1008 !important;
+      }
+
+      /* === Focus outlines — slightly brighter for dark bg === */
+      *:focus-visible {
+        outline-color: #F97316 !important;
+      }
+
+      /* === Code/pre blocks if any === */
+      code, pre {
+        background-color: #151B24 !important;
+        color: #E2E8F0 !important;
+      }
+
+      /* === Tables === */
+      table, tr, td, th {
+        border-color: #374151 !important;
+      }
+      th {
+        background-color: #151B24 !important;
       }
     `;
   }
