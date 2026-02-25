@@ -423,6 +423,21 @@ export default function AdminReview() {
 
           {/* View toggle + Sort dropdown */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => setTriageOpen(true)}
+              disabled={displayCases.length === 0}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                padding: '8px 16px', minHeight: '44px', fontFamily: 'Manrope, sans-serif',
+                fontSize: '0.875rem', fontWeight: 700, cursor: displayCases.length === 0 ? 'default' : 'pointer',
+                border: 'none', borderRadius: '10px',
+                backgroundColor: '#D97706', color: 'white',
+                opacity: displayCases.length === 0 ? 0.5 : 1,
+              }}
+              aria-label="Enter Triage Mode for rapid case processing"
+            >
+              <Zap size={16} /> Triage Mode
+            </button>
             <ViewModeToggle value={viewMode} onChange={setViewMode} />
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <ArrowUpDown size={16} style={{ color: '#475569' }} />
