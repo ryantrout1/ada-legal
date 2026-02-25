@@ -9,6 +9,11 @@ import CaseManagerRow from '../components/admin/cases/CaseManagerRow';
 import AdminCaseExpanded from '../components/admin/cases/AdminCaseExpanded';
 import StickyFooter from '../components/admin/cases/StickyFooter';
 import ForceCloseModal from '../components/admin/ForceCloseModal';
+import TodaySummaryBar from '../components/admin/cases/TodaySummaryBar';
+import SecondaryStatCards from '../components/admin/cases/SecondaryStatCards';
+import CollapsibleSection from '../components/admin/cases/CollapsibleSection';
+import RecentSubmissionsPanel from '../components/admin/cases/RecentSubmissionsPanel';
+import LawyerActivityPanel from '../components/admin/cases/LawyerActivityPanel';
 
 function daysSince(d) { return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 0; }
 
