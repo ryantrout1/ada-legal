@@ -3,6 +3,7 @@ import { Building2, Globe, ArrowRight, FileText, Phone, Mail, MinusCircle } from
 import { calculateDocScore, getFreshness } from './docScore';
 import PhotoGallery from '../shared/PhotoGallery';
 import SourceBadge from '../shared/SourceBadge';
+import ClusterIndicator from './ClusterIndicator';
 
 function formatDate(dateStr) {
   if (!dateStr) return '—';
@@ -199,6 +200,9 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
               ))}
             </div>
           </div>
+
+          {/* Cluster Indicator */}
+          <ClusterIndicator caseData={c} />
 
           {/* Section 4 — Before You Commit */}
           <div style={{

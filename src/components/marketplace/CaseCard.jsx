@@ -3,6 +3,7 @@ import { Building2, Globe } from 'lucide-react';
 import { getFreshness } from './docScore';
 import DocScoreDots from './DocScoreDots';
 import SourceBadge from '../shared/SourceBadge';
+import ClusterIndicator from './ClusterIndicator';
 
 function formatDate(dateStr) {
   if (!dateStr) return '—';
@@ -98,6 +99,9 @@ export default function CaseCard({ caseData, onViewDetails }) {
 
         {/* Documentation Score */}
         <DocScoreDots caseData={c} tooltipPlacement="below" />
+
+        {/* Cluster Indicator */}
+        <ClusterIndicator caseData={c} />
 
         {/* Row 5: Footer — date + view details */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2px' }}>
