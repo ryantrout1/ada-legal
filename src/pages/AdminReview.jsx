@@ -1,19 +1,35 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import { CheckCircle, Flag, ArrowUpDown, Zap } from 'lucide-react';
+import AdminPageHeader from '../components/admin/shared/AdminPageHeader';
+import AdminStatusBar from '../components/admin/shared/AdminStatusBar';
+import AdminActionButton from '../components/admin/shared/AdminActionButton';
+import AdminSortDropdown from '../components/admin/shared/AdminSortDropdown';
 import QCCaseCard from '../components/admin/review/QCCaseCard';
 import QCActionModal from '../components/admin/review/QCActionModal';
-import CompactQCStatsBar from '../components/admin/review/CompactQCStatsBar';
 import CompactViewsFilterRow from '../components/admin/review/CompactViewsFilterRow';
 import ViewModeToggle from '../components/admin/review/ViewModeToggle';
 import ClusterRow from '../components/admin/review/ClusterRow';
 import BulkActionModal from '../components/admin/review/BulkActionModal';
-import SearchBar from '../components/admin/review/SearchBar';
 import FilterPanel, { EMPTY_FILTERS, countActiveFilters } from '../components/admin/review/FilterPanel';
 import { useSavedViews } from '../components/admin/review/SavedViews';
 import TriageMode from '../components/admin/review/TriageMode';
 import { caseRejectedEmail } from '../components/emails/caseEmails';
+
+const SORT_OPTIONS_LIST = [
+  { value: 'oldest', label: 'Oldest First' },
+  { value: 'newest', label: 'Newest First' },
+  { value: 'severity', label: 'Severity (High First)' },
+  { value: 'completeness', label: 'Completeness (Ready First)' },
+  { value: 'cluster', label: 'Cluster Size (Largest First)' },
+];
+const SORT_OPTIONS_CLUSTER = [
+  { value: 'most', label: 'Most Reports' },
+  { value: 'severity', label: 'Highest Severity' },
+  { value: 'newest', label: 'Newest First' },
+  { value: 'oldest', label: 'Oldest First' },
+];
 
 export default function AdminReview() {
   const [loading, setLoading] = useState(true);
@@ -34,50 +50,62 @@ export default function AdminReview() {
   const [triageOpen, setTriageOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(null), 3000);
-    return () => clearTimeout(t);
-  }, [toast]);
-
-  // Close filters on Escape
-  useEffect(() => {
-    if (!filtersOpen) return;
-    const handleKey = (e) => { if (e.key === 'Escape') setFiltersOpen(false); };
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [filtersOpen]);
+  useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(null), 3000); return () => clearTimeout(t); }, [toast]);
+  useEffect(() => { if (!filtersOpen) return; const h = (e) => { if (e.key === 'Escape') setFiltersOpen(false); }; document.addEventListener('keydown', h); return () => document.removeEventListener('keydown', h); }, [filtersOpen]);
 
   const loadCases = async () => {
-    const submitted = await base44.entities.Case.filter({ status: 'submitted' }, 'created_date', 500);
-    const underReview = await base44.entities.Case.filter({ status: 'under_review' }, 'created_date', 500);
+    const [submitted, underReview] = await Promise.all([
+      base44.entities.Case.filter({ status: 'submitted' }, 'created_date', 500),
+      base44.entities.Case.filter({ status: 'under_review' }, 'created_date', 500),
+    ]);
     setCases([...submitted, ...underReview]);
   };
 
   useEffect(() => {
     async function init() {
       let user;
-      try { user = await base44.auth.me(); } catch {
-        base44.auth.redirectToLogin(createPageUrl('AdminReview'));
-        return;
-      }
-      if (user.role !== 'admin') {
-        window.location.href = createPageUrl('Home');
-        return;
-      }
+      try { user = await base44.auth.me(); } catch { base44.auth.redirectToLogin(createPageUrl('AdminReview')); return; }
+      if (user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
       setUserId(user.id || user.email);
-      await loadCases();
-      setLoading(false);
+      await loadCases(); setLoading(false);
     }
     init();
   }, []);
 
   const { views: savedViews, addView, removeView } = useSavedViews(userId);
 
+  // Status bar cells
+  const statusCells = useMemo(() => {
+    const submitted = cases.filter(c => c.status === 'submitted');
+    const total = submitted.length;
+    const ready = submitted.filter(c => (c.ai_completeness_score ?? 0) >= 80).length;
+    const needs = submitted.filter(c => (c.ai_completeness_score ?? 0) < 50).length;
+    const high = submitted.filter(c => c.ai_severity === 'high').length;
+    const clusterIds = new Set();
+    submitted.forEach(c => { if (c.ai_duplicate_cluster_id && (c.ai_duplicate_cluster_size ?? 0) >= 2) clusterIds.add(c.ai_duplicate_cluster_id); });
+    return [
+      { key: 'total', label: 'Queue Total', value: total, color: 'var(--slate-800)', active: !dashboardFilter, onClick: () => setDashboardFilter(null) },
+      { key: 'ready', label: 'Ready', value: ready, bg: 'rgba(220,252,231,0.5)', color: '#15803D', active: dashboardFilter === 'ready', onClick: () => setDashboardFilter(dashboardFilter === 'ready' ? null : 'ready') },
+      { key: 'needs', label: 'Needs Info', value: needs, bg: 'rgba(254,243,199,0.5)', color: '#B45309', warn: needs > 0, active: dashboardFilter === 'needs', onClick: () => setDashboardFilter(dashboardFilter === 'needs' ? null : 'needs') },
+      { key: 'high', label: 'High Sev', value: high, bg: 'rgba(254,226,226,0.5)', color: '#B91C1C', active: dashboardFilter === 'high', onClick: () => setDashboardFilter(dashboardFilter === 'high' ? null : 'high') },
+      { key: 'clusters', label: 'Clusters', value: clusterIds.size, bg: 'rgba(219,234,254,0.5)', color: '#1D4ED8', active: dashboardFilter === 'clusters', onClick: () => setDashboardFilter(dashboardFilter === 'clusters' ? null : 'clusters') },
+    ];
+  }, [cases, dashboardFilter]);
+
+  const secondaryText = useMemo(() => {
+    const submitted = cases.filter(c => c.status === 'submitted');
+    const today = new Date().toISOString().split('T')[0];
+    const newToday = submitted.filter(c => (c.submitted_at || c.created_date || '').startsWith(today)).length;
+    const clusterMap = {};
+    submitted.forEach(c => { if (c.ai_duplicate_cluster_id && (c.ai_duplicate_cluster_size ?? 0) >= 2) { if (!clusterMap[c.ai_duplicate_cluster_id] || (c.ai_duplicate_cluster_size ?? 0) > clusterMap[c.ai_duplicate_cluster_id].size) clusterMap[c.ai_duplicate_cluster_id] = { name: c.business_name, size: c.ai_duplicate_cluster_size ?? 0 }; } });
+    let topCluster = null;
+    Object.values(clusterMap).forEach(v => { if (!topCluster || v.size > topCluster.size) topCluster = v; });
+    const readyPct = submitted.length > 0 ? Math.round((submitted.filter(c => (c.ai_completeness_score ?? 0) >= 80).length / submitted.length) * 100) : 0;
+    return <span>{newToday} new today{topCluster ? ` · Top cluster: ${topCluster.name} (${topCluster.size})` : ''} · {readyPct}% review-ready</span>;
+  }, [cases]);
+
   const displayCases = useMemo(() => {
     let result = cases;
-
-    // 1. Dashboard quick-filter (cards)
     if (dashboardFilter) {
       const submitted = result.filter(c => c.status === 'submitted');
       if (dashboardFilter === 'ready') result = submitted.filter(c => (c.ai_completeness_score ?? 0) >= 80);
@@ -86,571 +114,188 @@ export default function AdminReview() {
       else if (dashboardFilter === 'clusters') result = submitted.filter(c => c.ai_duplicate_cluster_id && (c.ai_duplicate_cluster_size ?? 0) >= 2);
       else result = submitted;
     }
-
-    // 2. Advanced filters
     const f = filters;
     if (f.status === 'submitted') result = result.filter(c => c.status === 'submitted');
     else if (f.status === 'under_review') result = result.filter(c => c.status === 'under_review');
-    // 'all_pending' keeps both
-
     if (f.violationTypes.length) result = result.filter(c => f.violationTypes.includes(c.violation_type));
     if (f.severities.length) result = result.filter(c => f.severities.includes(c.ai_severity));
-    if (f.completeness.length) {
-      result = result.filter(c => {
-        const s = c.ai_completeness_score ?? 0;
-        return (f.completeness.includes('ready') && s >= 80) ||
-               (f.completeness.includes('partial') && s >= 50 && s < 80) ||
-               (f.completeness.includes('incomplete') && s < 50);
-      });
-    }
+    if (f.completeness.length) result = result.filter(c => { const s = c.ai_completeness_score ?? 0; return (f.completeness.includes('ready') && s >= 80) || (f.completeness.includes('partial') && s >= 50 && s < 80) || (f.completeness.includes('incomplete') && s < 50); });
     if (f.states.length) result = result.filter(c => f.states.includes(c.state));
     if (f.categories.length) result = result.filter(c => f.categories.includes(c.ai_category));
     if (f.hasCluster) result = result.filter(c => (c.ai_duplicate_cluster_size ?? 0) >= 2);
     if (f.flaggedOnly) result = result.filter(c => c.qc_flagged);
-    if (f.dateAfter) {
-      const after = new Date(f.dateAfter);
-      result = result.filter(c => new Date(c.submitted_at || c.created_date) >= after);
-    }
-    if (f.dateBefore) {
-      const before = new Date(f.dateBefore + 'T23:59:59');
-      result = result.filter(c => new Date(c.submitted_at || c.created_date) <= before);
-    }
-
-    // 3. Search query
+    if (f.dateAfter) result = result.filter(c => new Date(c.submitted_at || c.created_date) >= new Date(f.dateAfter));
+    if (f.dateBefore) result = result.filter(c => new Date(c.submitted_at || c.created_date) <= new Date(f.dateBefore + 'T23:59:59'));
     if (searchQuery.trim()) {
       const q = searchQuery.trim().toLowerCase();
-      result = result.filter(c =>
-        (c.business_name || '').toLowerCase().includes(q) ||
-        (c.city || '').toLowerCase().includes(q) ||
-        (c.state || '').toLowerCase().includes(q) ||
-        (c.id || '').toLowerCase().includes(q) ||
-        (c.case_id || '').toLowerCase().includes(q) ||
-        (c.narrative || '').toLowerCase().includes(q) ||
-        (c.ai_summary || '').toLowerCase().includes(q) ||
-        (c.url_domain || '').toLowerCase().includes(q)
-      );
+      result = result.filter(c => (c.business_name || '').toLowerCase().includes(q) || (c.city || '').toLowerCase().includes(q) || (c.state || '').toLowerCase().includes(q) || (c.id || '').toLowerCase().includes(q) || (c.case_id || '').toLowerCase().includes(q) || (c.narrative || '').toLowerCase().includes(q) || (c.ai_summary || '').toLowerCase().includes(q) || (c.url_domain || '').toLowerCase().includes(q));
     }
-
     return result;
   }, [cases, dashboardFilter, filters, searchQuery]);
 
   const SEVERITY_ORDER = { high: 0, medium: 1, low: 2 };
-
   const flaggedCases = displayCases.filter(c => c.qc_flagged);
   const sortedCases = [...displayCases].sort((a, b) => {
-    // Flagged first
-    if (a.qc_flagged && !b.qc_flagged) return -1;
-    if (!a.qc_flagged && b.qc_flagged) return 1;
-
-    if (sortOrder === 'severity') {
-      return (SEVERITY_ORDER[a.ai_severity] ?? 3) - (SEVERITY_ORDER[b.ai_severity] ?? 3);
-    }
-    if (sortOrder === 'completeness') {
-      return (b.ai_completeness_score ?? 0) - (a.ai_completeness_score ?? 0);
-    }
-    if (sortOrder === 'cluster') {
-      return (b.ai_duplicate_cluster_size ?? 0) - (a.ai_duplicate_cluster_size ?? 0);
-    }
-    // Default: date
-    const dateA = new Date(a.submitted_at || a.created_date);
-    const dateB = new Date(b.submitted_at || b.created_date);
-    return sortOrder === 'oldest' ? dateA - dateB : dateB - dateA;
+    if (a.qc_flagged && !b.qc_flagged) return -1; if (!a.qc_flagged && b.qc_flagged) return 1;
+    if (sortOrder === 'severity') return (SEVERITY_ORDER[a.ai_severity] ?? 3) - (SEVERITY_ORDER[b.ai_severity] ?? 3);
+    if (sortOrder === 'completeness') return (b.ai_completeness_score ?? 0) - (a.ai_completeness_score ?? 0);
+    if (sortOrder === 'cluster') return (b.ai_duplicate_cluster_size ?? 0) - (a.ai_duplicate_cluster_size ?? 0);
+    const dA = new Date(a.submitted_at || a.created_date), dB = new Date(b.submitted_at || b.created_date);
+    return sortOrder === 'oldest' ? dA - dB : dB - dA;
   });
 
-  // --- Cluster View data ---
-  const CLUSTER_SEV_ORDER = { high: 0, medium: 1, low: 2 };
-
   const { clusters, individualCases } = useMemo(() => {
-    const clusterMap = {};
-    const individuals = [];
-    displayCases.forEach(c => {
-      const cid = c.ai_duplicate_cluster_id;
-      if (cid && (c.ai_duplicate_cluster_size ?? 0) >= 2) {
-        if (!clusterMap[cid]) clusterMap[cid] = [];
-        clusterMap[cid].push(c);
-      } else {
-        individuals.push(c);
-      }
+    const clusterMap = {}; const individuals = [];
+    displayCases.forEach(c => { const cid = c.ai_duplicate_cluster_id; if (cid && (c.ai_duplicate_cluster_size ?? 0) >= 2) { if (!clusterMap[cid]) clusterMap[cid] = []; clusterMap[cid].push(c); } else individuals.push(c); });
+    let clusterList = Object.entries(clusterMap).map(([id, cs]) => {
+      const highestSev = ['high', 'medium', 'low'].find(s => cs.some(c => c.ai_severity === s)) || null;
+      const avgScore = Math.round(cs.map(c => c.ai_completeness_score ?? 0).reduce((a, b) => a + b, 0) / cs.length);
+      const dates = cs.map(c => new Date(c.submitted_at || c.created_date));
+      return { id, cases: cs, highestSev, avgScore, newest: Math.max(...dates), oldest: Math.min(...dates) };
     });
-
-    let clusterList = Object.entries(clusterMap).map(([id, cases]) => {
-      const highestSev = ['high', 'medium', 'low'].find(s => cases.some(c => c.ai_severity === s)) || null;
-      const avgScore = Math.round(cases.map(c => c.ai_completeness_score ?? 0).reduce((a, b) => a + b, 0) / cases.length);
-      const dates = cases.map(c => new Date(c.submitted_at || c.created_date));
-      return { id, cases, highestSev, avgScore, newest: Math.max(...dates), oldest: Math.min(...dates) };
-    });
-
+    const CLUSTER_SEV_ORDER = { high: 0, medium: 1, low: 2 };
     if (clusterSort === 'most') clusterList.sort((a, b) => b.cases.length - a.cases.length);
     else if (clusterSort === 'severity') clusterList.sort((a, b) => (CLUSTER_SEV_ORDER[a.highestSev] ?? 3) - (CLUSTER_SEV_ORDER[b.highestSev] ?? 3));
     else if (clusterSort === 'newest') clusterList.sort((a, b) => b.newest - a.newest);
     else if (clusterSort === 'oldest') clusterList.sort((a, b) => a.oldest - b.oldest);
-
     return { clusters: clusterList, individualCases: individuals };
   }, [displayCases, clusterSort]);
 
-  // --- Bulk actions ---
-  const handleBulkApprove = (clusterId, cases) => {
-    setBulkModal({ open: true, action: 'approve', clusterId, cases });
-  };
-
-  const handleBulkReject = (clusterId, cases) => {
-    setBulkModal({ open: true, action: 'reject', clusterId, cases });
-  };
-
+  const handleBulkApprove = (clusterId, cs) => setBulkModal({ open: true, action: 'approve', clusterId, cases: cs });
+  const handleBulkReject = (clusterId, cs) => setBulkModal({ open: true, action: 'reject', clusterId, cases: cs });
   const handleBulkConfirm = async ({ reason, comment }) => {
-    setSaving(true);
-    const now = new Date().toISOString();
-    const bCases = bulkModal.cases;
-
+    setSaving(true); const now = new Date().toISOString();
     if (bulkModal.action === 'approve') {
-      for (const c of bCases) {
-        await base44.entities.Case.update(c.id, {
-          status: 'available', approved_at: now,
-          qc_reviewer_notes: comment || null,
-        });
-        await base44.entities.TimelineEvent.create({
-          case_id: c.id, event_type: 'approved',
-          event_description: 'Your case has been approved and is now visible to attorneys in your area.',
-          actor_role: 'admin', visible_to_user: true, created_at: now,
-        });
-      }
-      setToast({ type: 'success', message: `${bCases.length} cases approved` });
+      for (const c of bulkModal.cases) { await base44.entities.Case.update(c.id, { status: 'available', approved_at: now, qc_reviewer_notes: comment || null }); await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'approved', event_description: 'Your case has been approved and is now visible to attorneys.', actor_role: 'admin', visible_to_user: true, created_at: now }); }
+      setToast({ type: 'success', message: `${bulkModal.cases.length} cases approved` });
     }
-
     if (bulkModal.action === 'reject') {
-      const REASON_EMAIL_TEXT = [
-        { value: 'insufficient_detail', emailText: 'We were unable to fully evaluate your report based on the information provided.' },
-        { value: 'not_ada_violation', emailText: 'The issue described does not appear to fall under the ADA accessibility standards that our platform covers.' },
-        { value: 'duplicate', emailText: 'It appears this report is a duplicate of a previous submission.' },
-        { value: 'incomplete_contact', emailText: 'The contact information provided was incomplete.' },
-        { value: 'other', emailText: '' },
-      ];
-      const emailReasonText = (REASON_EMAIL_TEXT.find(r => r.value === reason)?.emailText || '') + (comment ? ' ' + comment : '');
-      const portalUrl = window.location.origin + '/MyCases';
-
-      for (const c of bCases) {
-        await base44.entities.Case.update(c.id, {
-          status: 'rejected', qc_rejection_reason: reason,
-          qc_reviewer_notes: comment || null,
-        });
-        await base44.entities.TimelineEvent.create({
-          case_id: c.id, event_type: 'rejected',
-          event_description: 'After review, this report did not meet the criteria for our platform.',
-          actor_role: 'admin', visible_to_user: true, created_at: now,
-        });
-        try {
-          await base44.integrations.Core.SendEmail({
-            to: c.contact_email,
-            subject: 'ADA Legal Link — Submission Update',
-            body: caseRejectedEmail(c, emailReasonText, portalUrl),
-          });
-        } catch (emailErr) {
-          console.error('Bulk rejection email failed:', emailErr);
-        }
-      }
-      setToast({ type: 'success', message: `${bCases.length} cases rejected` });
+      const R = [{ value: 'insufficient_detail', emailText: 'We were unable to fully evaluate your report.' }, { value: 'not_ada_violation', emailText: 'The issue does not appear to fall under ADA.' }, { value: 'duplicate', emailText: 'This report is a duplicate.' }, { value: 'incomplete_contact', emailText: 'Contact information was incomplete.' }, { value: 'other', emailText: '' }];
+      const txt = (R.find(r => r.value === reason)?.emailText || '') + (comment ? ' ' + comment : '');
+      const url = window.location.origin + '/MyCases';
+      for (const c of bulkModal.cases) { await base44.entities.Case.update(c.id, { status: 'rejected', qc_rejection_reason: reason, qc_reviewer_notes: comment || null }); await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'rejected', event_description: 'After review, this report did not meet criteria.', actor_role: 'admin', visible_to_user: true, created_at: now }); try { await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: 'ADA Legal Link — Submission Update', body: caseRejectedEmail(c, txt, url) }); } catch {} }
+      setToast({ type: 'success', message: `${bulkModal.cases.length} cases rejected` });
     }
-
-    await loadCases();
-    setSaving(false);
-    setBulkModal({ open: false, action: null, clusterId: null, cases: [] });
+    await loadCases(); setSaving(false); setBulkModal({ open: false, action: null, clusterId: null, cases: [] });
   };
 
-  const openModal = (action, caseData) => {
-    setModalState({ open: true, action, caseData });
-  };
-
-  const closeModal = () => {
-    if (!saving) setModalState({ open: false, action: null, caseData: null });
-  };
+  const openModal = (action, caseData) => setModalState({ open: true, action, caseData });
+  const closeModal = () => { if (!saving) setModalState({ open: false, action: null, caseData: null }); };
 
   const handleConfirm = async ({ reason, comment, internalNotes }) => {
-    if (!modalState.caseData) return;
-    setSaving(true);
-    const c = modalState.caseData;
-    const now = new Date().toISOString();
-
+    if (!modalState.caseData) return; setSaving(true);
+    const c = modalState.caseData; const now = new Date().toISOString();
     if (modalState.action === 'approve') {
-      await base44.entities.Case.update(c.id, {
-        status: 'available',
-        approved_at: now,
-        qc_reviewer_notes: comment || null
-      });
-      await base44.entities.TimelineEvent.create({
-        case_id: c.id,
-        event_type: 'approved',
-        event_description: 'Your case has been approved and is now visible to attorneys in your area.',
-        actor_role: 'admin',
-        visible_to_user: true,
-        created_at: now
-      });
-      if (comment) {
-        await base44.entities.TimelineEvent.create({
-          case_id: c.id,
-          event_type: 'reviewed',
-          event_description: `QC Note: ${comment}`,
-          actor_role: 'admin',
-          visible_to_user: false,
-          created_at: now
-        });
-      }
+      await base44.entities.Case.update(c.id, { status: 'available', approved_at: now, qc_reviewer_notes: comment || null });
+      await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'approved', event_description: 'Your case has been approved and is now visible to attorneys.', actor_role: 'admin', visible_to_user: true, created_at: now });
+      if (comment) await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `QC Note: ${comment}`, actor_role: 'admin', visible_to_user: false, created_at: now });
       setToast({ type: 'success', message: 'Case approved' });
     }
-
     if (modalState.action === 'reject') {
-      await base44.entities.Case.update(c.id, {
-        status: 'rejected',
-        qc_rejection_reason: reason,
-        qc_reviewer_notes: internalNotes || null
-      });
-      await base44.entities.TimelineEvent.create({
-        case_id: c.id,
-        event_type: 'rejected',
-        event_description: 'After review, this report did not meet the criteria for our platform. This does not mean your experience was not valid.',
-        actor_role: 'admin',
-        visible_to_user: true,
-        created_at: now
-      });
-      await base44.entities.TimelineEvent.create({
-        case_id: c.id,
-        event_type: 'reviewed',
-        event_description: `Rejection reason: ${reason}${internalNotes ? `. Internal note: ${internalNotes}` : ''}`,
-        actor_role: 'admin',
-        visible_to_user: false,
-        created_at: now
-      });
-
-      // Send rejection email to claimant
-      const REASON_EMAIL_TEXT = [
-        { value: 'appears_compliant', emailText: 'Based on our review, the situation described appears to meet current ADA accessibility standards.' },
-        { value: 'not_ada_violation', emailText: 'The issue described does not appear to fall under the ADA accessibility standards that our platform covers.' },
-        { value: 'insufficient_documentation', emailText: 'We were unable to fully evaluate your report based on the information and documentation provided. Additional photos or details about the specific barrier you encountered would help us better assess your situation.' },
-        { value: 'exempt_entity', emailText: 'The business or entity you reported may be exempt from certain ADA requirements based on its classification (such as private clubs, religious organizations, or certain historic properties).' },
-        { value: 'statute_of_limitations', emailText: 'Based on the timeline described, there may be limitations on the legal options available for this particular situation.' },
-        { value: 'already_remediated', emailText: 'Based on available information, the accessibility barrier you reported may have already been addressed or remediated.' },
-        { value: 'duplicate', emailText: 'It appears this report is a duplicate of a previous submission. If you have new information to add, you are welcome to submit a new report with the additional details.' },
-        { value: 'other', emailText: '' }
-      ];
-      const selectedReason = REASON_EMAIL_TEXT.find(r => r.value === reason);
-      const emailReasonText = (selectedReason?.emailText || '') + (comment ? ' ' + comment : '');
-      const portalUrl = window.location.origin + '/MyCases';
-
-      try {
-        await base44.integrations.Core.SendEmail({
-          to: c.contact_email,
-          subject: 'ADA Legal Link — Submission Update',
-          body: caseRejectedEmail(c, emailReasonText, portalUrl)
-        });
-      } catch (emailErr) {
-        console.error('Rejection email failed:', emailErr);
-      }
-
+      await base44.entities.Case.update(c.id, { status: 'rejected', qc_rejection_reason: reason, qc_reviewer_notes: internalNotes || null });
+      await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'rejected', event_description: 'After review, this report did not meet the criteria.', actor_role: 'admin', visible_to_user: true, created_at: now });
+      await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `Rejection: ${reason}${internalNotes ? `. Note: ${internalNotes}` : ''}`, actor_role: 'admin', visible_to_user: false, created_at: now });
+      const R = [{ value: 'appears_compliant', t: 'Appears to meet ADA standards.' }, { value: 'not_ada_violation', t: 'Does not fall under ADA.' }, { value: 'insufficient_documentation', t: 'Insufficient documentation.' }, { value: 'exempt_entity', t: 'Entity may be exempt.' }, { value: 'statute_of_limitations', t: 'Timeline limitations.' }, { value: 'already_remediated', t: 'Barrier may have been remediated.' }, { value: 'duplicate', t: 'Duplicate submission.' }, { value: 'other', t: '' }];
+      const emailTxt = (R.find(r => r.value === reason)?.t || '') + (comment ? ' ' + comment : '');
+      try { await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: 'ADA Legal Link — Submission Update', body: caseRejectedEmail(c, emailTxt, window.location.origin + '/MyCases') }); } catch {}
       setToast({ type: 'success', message: 'Case rejected & email sent' });
     }
-
     if (modalState.action === 'flag') {
-      await base44.entities.Case.update(c.id, {
-        qc_flagged: true,
-        qc_flag_reason: reason,
-        qc_reviewer_notes: comment || c.qc_reviewer_notes || null
-      });
-      await base44.entities.TimelineEvent.create({
-        case_id: c.id,
-        event_type: 'reviewed',
-        event_description: `Flagged for review: ${reason}${comment ? `. Note: ${comment}` : ''}`,
-        actor_role: 'admin',
-        visible_to_user: false,
-        created_at: now
-      });
-      setToast({ type: 'warning', message: 'Case flagged for review' });
+      await base44.entities.Case.update(c.id, { qc_flagged: true, qc_flag_reason: reason, qc_reviewer_notes: comment || c.qc_reviewer_notes || null });
+      await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `Flagged: ${reason}${comment ? `. Note: ${comment}` : ''}`, actor_role: 'admin', visible_to_user: false, created_at: now });
+      setToast({ type: 'warning', message: 'Case flagged' });
     }
-
-    await loadCases();
-    setSaving(false);
-    closeModal();
+    await loadCases(); setSaving(false); closeModal();
   };
 
   if (loading) {
-    return (
-      <div role="status" aria-label="Loading review queue" style={{
-        display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-        minHeight: 'calc(100vh - 200px)', gap: '1rem'
-      }}>
-        <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading review queue…</p>
-      </div>
-    );
+    return (<div role="status" aria-label="Loading review queue" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}><div className="a11y-spinner" aria-hidden="true" /><p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading review queue…</p></div>);
   }
 
   return (
     <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-
-        {/* Row 1: Stats bar + Quick Insights */}
-        <CompactQCStatsBar
-          cases={cases}
-          activeFilter={dashboardFilter}
-          onFilterChange={setDashboardFilter}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <AdminPageHeader
+          title="QC Review Queue"
+          actionButton={
+            <AdminActionButton
+              icon={<Zap size={14} />} label="Triage"
+              onClick={() => setTriageOpen(true)} disabled={displayCases.length === 0}
+            />
+          }
+          statusBar={<AdminStatusBar cells={statusCells} secondaryText={secondaryText} />}
+          searchValue={searchQuery} onSearchChange={setSearchQuery}
+          searchPlaceholder="Search by business, city, state, case ID, or keyword…"
+          filterPills={
+            <>
+              {userId && (
+                <CompactViewsFilterRow
+                  views={savedViews} activeViewId={activeViewId}
+                  onApply={(v) => { setActiveViewId(v.id); setSearchQuery(v.config.search || ''); setFilters(v.config.filters ? { ...EMPTY_FILTERS, ...v.config.filters } : { ...EMPTY_FILTERS }); setSortOrder(v.config.sortOrder || 'oldest'); setClusterSort(v.config.clusterSort || 'most'); setViewMode(v.config.viewMode || 'list'); }}
+                  onRemove={(id) => { removeView(id); if (activeViewId === id) setActiveViewId(null); }}
+                  onSave={(name) => addView(name, { search: searchQuery, filters, sortOrder, clusterSort, viewMode })}
+                  filterCount={countActiveFilters(filters)} onToggleFilters={() => setFiltersOpen(!filtersOpen)} filtersOpen={filtersOpen}
+                />
+              )}
+              <ViewModeToggle value={viewMode} onChange={setViewMode} />
+            </>
+          }
+          sortDropdown={
+            <AdminSortDropdown
+              value={viewMode === 'list' ? sortOrder : clusterSort}
+              onChange={viewMode === 'list' ? setSortOrder : setClusterSort}
+              options={viewMode === 'list' ? SORT_OPTIONS_LIST : SORT_OPTIONS_CLUSTER}
+            />
+          }
+          listHeader={
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-600)' }}>
+              {displayCases.length} case{displayCases.length !== 1 ? 's' : ''}{displayCases.length !== cases.length ? ` (of ${cases.length})` : ''}
+              {dashboardFilter && (
+                <> · <button onClick={() => setDashboardFilter(null)} style={{ background: 'none', border: 'none', color: '#C2410C', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', textDecoration: 'underline', padding: 0 }}>Clear filter</button></>
+              )}
+            </span>
+          }
         />
 
-        {/* Row 2: Saved Views + Filters button */}
-        {userId && (
-          <CompactViewsFilterRow
-            views={savedViews}
-            activeViewId={activeViewId}
-            onApply={(v) => {
-              setActiveViewId(v.id);
-              setSearchQuery(v.config.search || '');
-              setFilters(v.config.filters ? { ...EMPTY_FILTERS, ...v.config.filters } : { ...EMPTY_FILTERS });
-              setSortOrder(v.config.sortOrder || 'oldest');
-              setClusterSort(v.config.clusterSort || 'most');
-              setViewMode(v.config.viewMode || 'list');
-            }}
-            onRemove={(id) => { removeView(id); if (activeViewId === id) setActiveViewId(null); }}
-            onSave={(name) => addView(name, {
-              search: searchQuery, filters, sortOrder, clusterSort, viewMode,
-            })}
-            filterCount={countActiveFilters(filters)}
-            onToggleFilters={() => setFiltersOpen(!filtersOpen)}
-            filtersOpen={filtersOpen}
-          />
-        )}
-
-        {/* Filter Panel (overlay/push) */}
         <FilterPanel filters={filters} onChange={(f) => { setFilters(f); setActiveViewId(null); }} open={filtersOpen} />
 
-        {/* Row 3: Search Bar */}
-        <SearchBar value={searchQuery} onChange={setSearchQuery} />
-
-        {/* Row 4: Queue header with controls */}
-        <div className="qc-queue-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', minHeight: '44px' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-            <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
-              QC Review Queue
-            </h1>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569' }}>
-              {displayCases.length} case{displayCases.length !== 1 ? 's' : ''}
-              {displayCases.length !== cases.length ? ` (of ${cases.length})` : ''}
-            </span>
-          </div>
-
-          <div className="qc-queue-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <button
-              onClick={() => setTriageOpen(true)}
-              disabled={displayCases.length === 0}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '5px',
-                padding: '6px 14px', minHeight: '44px', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.8125rem', fontWeight: 700, cursor: displayCases.length === 0 ? 'default' : 'pointer',
-                border: 'none', borderRadius: '8px',
-                backgroundColor: '#D97706', color: 'white',
-                opacity: displayCases.length === 0 ? 0.5 : 1,
-              }}
-              aria-label="Enter Triage Mode for rapid case processing"
-            >
-              <Zap size={14} /> Triage
-            </button>
-            <ViewModeToggle value={viewMode} onChange={setViewMode} />
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <ArrowUpDown size={14} style={{ color: '#475569' }} />
-              {viewMode === 'list' ? (
-                <select
-                  aria-label="Sort order"
-                  value={sortOrder}
-                  onChange={(e) => setSortOrder(e.target.value)}
-                  style={{
-                    padding: '6px 10px', minHeight: '44px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                    border: '1px solid var(--slate-300)', borderRadius: '8px',
-                    backgroundColor: 'white', color: 'var(--slate-800)', cursor: 'pointer',
-                  }}
-                >
-                  <option value="oldest">Oldest First</option>
-                  <option value="newest">Newest First</option>
-                  <option value="severity">Severity (High First)</option>
-                  <option value="completeness">Completeness (Ready First)</option>
-                  <option value="cluster">Cluster Size (Largest First)</option>
-                </select>
-              ) : (
-                <select
-                  aria-label="Sort order"
-                  value={clusterSort}
-                  onChange={(e) => setClusterSort(e.target.value)}
-                  style={{
-                    padding: '6px 10px', minHeight: '44px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                    border: '1px solid var(--slate-300)', borderRadius: '8px',
-                    backgroundColor: 'white', color: 'var(--slate-800)', cursor: 'pointer',
-                  }}
-                >
-                  <option value="most">Most Reports</option>
-                  <option value="severity">Highest Severity</option>
-                  <option value="newest">Newest First</option>
-                  <option value="oldest">Oldest First</option>
-                </select>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Dashboard filter clear link */}
-        {dashboardFilter && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
-              Showing: <strong style={{ color: 'var(--slate-700)', textTransform: 'capitalize' }}>{dashboardFilter}</strong> only
-            </span>
-            <button
-              onClick={() => setDashboardFilter(null)}
-              style={{ background: 'none', border: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--terra-600)', cursor: 'pointer', textDecoration: 'underline', padding: '4px', minHeight: '44px' }}
-            >
-              Clear
-            </button>
-          </div>
-        )}
-
-        {/* Flagged banner */}
         {flaggedCases.length > 0 && (
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: '10px',
-            padding: '12px 16px', backgroundColor: '#FEF3C7', borderRadius: '10px'
-          }}>
-            <Flag size={18} style={{ color: '#92400E' }} />
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, color: '#92400E' }}>
-              {flaggedCases.length} case{flaggedCases.length !== 1 ? 's' : ''} flagged for review
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 16px', backgroundColor: '#FEF3C7', borderRadius: '8px', border: '1px solid #FDE68A' }}>
+            <Flag size={16} style={{ color: '#92400E' }} />
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', fontWeight: 600, color: '#92400E' }}>{flaggedCases.length} case{flaggedCases.length !== 1 ? 's' : ''} flagged for review</span>
           </div>
         )}
 
-        {/* Cases */}
         {cases.length === 0 ? (
-          <div style={{
-            backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-            borderRadius: '12px', padding: '48px 24px', textAlign: 'center'
-          }}>
-            <div style={{
-              width: '64px', height: '64px', borderRadius: '50%',
-              backgroundColor: '#DCFCE7', display: 'flex',
-              alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px'
-            }}>
-              <CheckCircle size={28} style={{ color: '#15803D' }} />
-            </div>
-            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 8px' }}>
-              All caught up — no cases pending review
-            </h2>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>
-              New submissions will appear here automatically.
-            </p>
+          <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '48px 24px', textAlign: 'center' }}>
+            <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}><CheckCircle size={28} style={{ color: '#15803D' }} /></div>
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 8px' }}>All caught up — no cases pending review</h2>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>New submissions will appear here automatically.</p>
           </div>
         ) : viewMode === 'list' ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {sortedCases.map(c => (
-              <QCCaseCard
-                key={c.id}
-                caseData={c}
-                onApprove={() => openModal('approve', c)}
-                onReject={() => openModal('reject', c)}
-                onFlag={() => openModal('flag', c)}
-              />
-            ))}
+            {sortedCases.map(c => <QCCaseCard key={c.id} caseData={c} onApprove={() => openModal('approve', c)} onReject={() => openModal('reject', c)} onFlag={() => openModal('flag', c)} />)}
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {clusters.map(cl => (
-              <ClusterRow
-                key={cl.id}
-                clusterId={cl.id}
-                cases={cl.cases}
-                onBulkApprove={handleBulkApprove}
-                onBulkReject={handleBulkReject}
-                onExpandCase={(c) => setExpandedClusterCase(expandedClusterCase?.id === c.id ? null : c)}
-              />
-            ))}
-
-            {/* Expanded individual case from cluster click */}
-            {expandedClusterCase && (
-              <div style={{ marginTop: '-6px' }}>
-                <QCCaseCard
-                  key={expandedClusterCase.id}
-                  caseData={expandedClusterCase}
-                  defaultExpanded={true}
-                  onApprove={() => openModal('approve', expandedClusterCase)}
-                  onReject={() => openModal('reject', expandedClusterCase)}
-                  onFlag={() => openModal('flag', expandedClusterCase)}
-                />
-              </div>
-            )}
-
-            {/* Individual reports section */}
+            {clusters.map(cl => <ClusterRow key={cl.id} clusterId={cl.id} cases={cl.cases} onBulkApprove={handleBulkApprove} onBulkReject={handleBulkReject} onExpandCase={(c) => setExpandedClusterCase(expandedClusterCase?.id === c.id ? null : c)} />)}
+            {expandedClusterCase && <div style={{ marginTop: '-6px' }}><QCCaseCard key={expandedClusterCase.id} caseData={expandedClusterCase} defaultExpanded={true} onApprove={() => openModal('approve', expandedClusterCase)} onReject={() => openModal('reject', expandedClusterCase)} onFlag={() => openModal('flag', expandedClusterCase)} /></div>}
             {individualCases.length > 0 && (
               <>
-                <h2 style={{
-                  fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
-                  color: 'var(--slate-900)', margin: '20px 0 4px',
-                }}>
-                  Individual Reports ({individualCases.length})
-                </h2>
-                {individualCases.map(c => (
-                  <QCCaseCard
-                    key={c.id}
-                    caseData={c}
-                    onApprove={() => openModal('approve', c)}
-                    onReject={() => openModal('reject', c)}
-                    onFlag={() => openModal('flag', c)}
-                  />
-                ))}
+                <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: '20px 0 4px' }}>Individual Reports ({individualCases.length})</h2>
+                {individualCases.map(c => <QCCaseCard key={c.id} caseData={c} onApprove={() => openModal('approve', c)} onReject={() => openModal('reject', c)} onFlag={() => openModal('flag', c)} />)}
               </>
             )}
           </div>
         )}
       </div>
 
-      {/* Bulk Action Modal */}
-      <BulkActionModal
-        open={bulkModal.open}
-        action={bulkModal.action}
-        businessName={bulkModal.cases[0]?.business_name || ''}
-        count={bulkModal.cases.length}
-        onConfirm={handleBulkConfirm}
-        onCancel={() => { if (!saving) setBulkModal({ open: false, action: null, clusterId: null, cases: [] }); }}
-        saving={saving}
-      />
+      <BulkActionModal open={bulkModal.open} action={bulkModal.action} businessName={bulkModal.cases[0]?.business_name || ''} count={bulkModal.cases.length} onConfirm={handleBulkConfirm} onCancel={() => { if (!saving) setBulkModal({ open: false, action: null, clusterId: null, cases: [] }); }} saving={saving} />
+      <QCActionModal open={modalState.open} action={modalState.action} businessName={modalState.caseData?.business_name} onConfirm={handleConfirm} onCancel={closeModal} saving={saving} />
+      {triageOpen && <TriageMode filteredCases={displayCases} onExit={(s) => { setTriageOpen(false); const t = s.approved + s.rejected + s.flagged + s.skipped; if (t > 0) setToast({ type: 'success', message: `Session: ${t} reviewed — ${s.approved} approved, ${s.rejected} rejected, ${s.flagged} flagged, ${s.skipped} skipped` }); }} onCasesChanged={loadCases} />}
 
-      {/* Action Modal */}
-      <QCActionModal
-        open={modalState.open}
-        action={modalState.action}
-        businessName={modalState.caseData?.business_name}
-        onConfirm={handleConfirm}
-        onCancel={closeModal}
-        saving={saving}
-      />
-
-      {/* Triage Mode */}
-      {triageOpen && (
-        <TriageMode
-          filteredCases={displayCases}
-          onExit={(sessionStats) => {
-            setTriageOpen(false);
-            const total = sessionStats.approved + sessionStats.rejected + sessionStats.flagged + sessionStats.skipped;
-            if (total > 0) {
-              setToast({
-                type: 'success',
-                message: `Session complete: ${total} reviewed — ${sessionStats.approved} approved, ${sessionStats.rejected} rejected, ${sessionStats.flagged} flagged, ${sessionStats.skipped} skipped`,
-              });
-            }
-          }}
-          onCasesChanged={loadCases}
-        />
-      )}
-
-      {/* Toast */}
       {toast && (
-        <div role="alert" aria-live="assertive" style={{
-          position: 'fixed', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)',
-          zIndex: 1100, padding: '12px 24px', borderRadius: '10px',
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-          boxShadow: '0 4px 16px rgba(0,0,0,0.15)', cursor: 'pointer',
-          backgroundColor: toast.type === 'success' ? '#15803D' : '#D97706',
-          color: 'white'
-        }} onClick={() => setToast(null)}>
+        <div role="alert" aria-live="assertive" style={{ position: 'fixed', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 1100, padding: '12px 24px', borderRadius: '10px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, boxShadow: '0 4px 16px rgba(0,0,0,0.15)', cursor: 'pointer', backgroundColor: toast.type === 'success' ? '#15803D' : '#D97706', color: 'white' }} onClick={() => setToast(null)}>
           ✓ {toast.message}
         </div>
       )}
