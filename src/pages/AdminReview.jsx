@@ -63,14 +63,64 @@ export default function AdminReview() {
   const { views: savedViews, addView, removeView } = useSavedViews(userId);
 
   const displayCases = useMemo(() => {
-    if (!dashboardFilter) return cases;
-    const submitted = cases.filter(c => c.status === 'submitted');
-    if (dashboardFilter === 'ready') return submitted.filter(c => (c.ai_completeness_score ?? 0) >= 80);
-    if (dashboardFilter === 'needs') return submitted.filter(c => (c.ai_completeness_score ?? 0) < 50);
-    if (dashboardFilter === 'high') return submitted.filter(c => c.ai_severity === 'high');
-    if (dashboardFilter === 'clusters') return submitted.filter(c => c.ai_duplicate_cluster_id && (c.ai_duplicate_cluster_size ?? 0) >= 2);
-    return cases;
-  }, [cases, dashboardFilter]);
+    let result = cases;
+
+    // 1. Dashboard quick-filter (cards)
+    if (dashboardFilter) {
+      const submitted = result.filter(c => c.status === 'submitted');
+      if (dashboardFilter === 'ready') result = submitted.filter(c => (c.ai_completeness_score ?? 0) >= 80);
+      else if (dashboardFilter === 'needs') result = submitted.filter(c => (c.ai_completeness_score ?? 0) < 50);
+      else if (dashboardFilter === 'high') result = submitted.filter(c => c.ai_severity === 'high');
+      else if (dashboardFilter === 'clusters') result = submitted.filter(c => c.ai_duplicate_cluster_id && (c.ai_duplicate_cluster_size ?? 0) >= 2);
+      else result = submitted;
+    }
+
+    // 2. Advanced filters
+    const f = filters;
+    if (f.status === 'submitted') result = result.filter(c => c.status === 'submitted');
+    else if (f.status === 'under_review') result = result.filter(c => c.status === 'under_review');
+    // 'all_pending' keeps both
+
+    if (f.violationTypes.length) result = result.filter(c => f.violationTypes.includes(c.violation_type));
+    if (f.severities.length) result = result.filter(c => f.severities.includes(c.ai_severity));
+    if (f.completeness.length) {
+      result = result.filter(c => {
+        const s = c.ai_completeness_score ?? 0;
+        return (f.completeness.includes('ready') && s >= 80) ||
+               (f.completeness.includes('partial') && s >= 50 && s < 80) ||
+               (f.completeness.includes('incomplete') && s < 50);
+      });
+    }
+    if (f.states.length) result = result.filter(c => f.states.includes(c.state));
+    if (f.categories.length) result = result.filter(c => f.categories.includes(c.ai_category));
+    if (f.hasCluster) result = result.filter(c => (c.ai_duplicate_cluster_size ?? 0) >= 2);
+    if (f.flaggedOnly) result = result.filter(c => c.qc_flagged);
+    if (f.dateAfter) {
+      const after = new Date(f.dateAfter);
+      result = result.filter(c => new Date(c.submitted_at || c.created_date) >= after);
+    }
+    if (f.dateBefore) {
+      const before = new Date(f.dateBefore + 'T23:59:59');
+      result = result.filter(c => new Date(c.submitted_at || c.created_date) <= before);
+    }
+
+    // 3. Search query
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      result = result.filter(c =>
+        (c.business_name || '').toLowerCase().includes(q) ||
+        (c.city || '').toLowerCase().includes(q) ||
+        (c.state || '').toLowerCase().includes(q) ||
+        (c.id || '').toLowerCase().includes(q) ||
+        (c.case_id || '').toLowerCase().includes(q) ||
+        (c.narrative || '').toLowerCase().includes(q) ||
+        (c.ai_summary || '').toLowerCase().includes(q) ||
+        (c.url_domain || '').toLowerCase().includes(q)
+      );
+    }
+
+    return result;
+  }, [cases, dashboardFilter, filters, searchQuery]);
 
   const SEVERITY_ORDER = { high: 0, medium: 1, low: 2 };
 
