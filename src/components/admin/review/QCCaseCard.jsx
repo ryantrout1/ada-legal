@@ -50,8 +50,8 @@ function DocScoreDots({ caseData }) {
   );
 }
 
-export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
-  const [expanded, setExpanded] = useState(false);
+export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defaultExpanded = false }) {
+  const [expanded, setExpanded] = useState(defaultExpanded);
   const c = caseData;
   const isPhysical = c.violation_type === 'physical_space';
   const waitTime = getWaitTime(c.submitted_at || c.created_date);
