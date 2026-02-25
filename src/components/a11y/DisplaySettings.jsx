@@ -222,20 +222,25 @@ export const applyPreferences = (prefs) => {
   // --- HIGH CONTRAST MODE ---
   if (prefs.displayMode === 'high-contrast') {
     css += `
+      html {
+        color-scheme: dark;
+      }
+
+      /* === CSS variable overrides === */
       :root {
-        --slate-900: #FFFFFF !important;
-        --slate-800: #FFFFFF !important;
-        --slate-700: #FFFFFF !important;
-        --slate-600: #FFFFFF !important;
-        --slate-500: #E0E0E0 !important;
-        --slate-400: #CCCCCC !important;
-        --slate-300: #FFFFFF !important;
-        --slate-200: #FFFFFF !important;
-        --slate-100: #111111 !important;
         --slate-50: #000000 !important;
+        --slate-100: #0A0A0A !important;
+        --slate-200: #FFFFFF !important;
+        --slate-300: #FFFFFF !important;
+        --slate-400: #D0D0D0 !important;
+        --slate-500: #D0D0D0 !important;
+        --slate-600: #F0F0F0 !important;
+        --slate-700: #F0F0F0 !important;
+        --slate-800: #FFFFFF !important;
+        --slate-900: #FFFFFF !important;
         --surface: #000000 !important;
-        --terra-600: #FF6B35 !important;
-        --terra-700: #FF6B35 !important;
+        --terra-600: #FFB347 !important;
+        --terra-700: #FFB347 !important;
         --terra-100: #1A0A00 !important;
         --terra-50: #0D0500 !important;
         --success-600: #4ADE80 !important;
@@ -247,41 +252,251 @@ export const applyPreferences = (prefs) => {
         --info-600: #60A5FA !important;
         --info-100: #0A1628 !important;
       }
+
+      /* === Body background === */
       body {
         background-color: #000000 !important;
         color: #FFFFFF !important;
       }
+
+      /* ============================================
+         BLANKET BACKGROUND OVERRIDE — HIGH CONTRAST
+         Force ALL containers to pure black / near-black.
+         ============================================ */
+      #main-content,
+      #main-content > *,
+      #main-content div,
+      #main-content section,
+      #main-content article,
+      #main-content aside,
+      #main-content figure,
+      #main-content details,
+      #main-content fieldset,
+      #main-content nav,
+      #main-content header:not([role="banner"]),
+      #main-content footer:not([role="contentinfo"]),
+      #main-content form,
+      #main-content ul,
+      #main-content ol,
+      #main-content li,
+      #main-content table,
+      #main-content tr,
+      #main-content td,
+      #main-content th {
+        background-color: #0A0A0A !important;
+        background-image: none !important;
+        border-color: #FFFFFF !important;
+      }
+
+      /* === Cards — slightly lighter black for depth === */
+      #main-content [style*="border-radius"],
+      #main-content [style*="borderRadius"] {
+        background-color: #1A1A1A !important;
+        border: 2px solid #FFFFFF !important;
+      }
+
+      /* === Pills, tags, badges === */
+      #main-content span[role="listitem"],
+      #main-content span[style*="border-radius: 100px"],
+      #main-content span[style*="border-radius: 9999px"],
+      #main-content span[style*="borderRadius"] {
+        background-color: #1A1A1A !important;
+        border: 2px solid #FFB347 !important;
+        color: #FFB347 !important;
+      }
+
+      /* === Section badge pills === */
+      #main-content span[style*="padding: 3px"],
+      #main-content span[style*="padding: 4px"] {
+        background-color: #1A1A1A !important;
+        border: 2px solid #FFB347 !important;
+        color: #FFB347 !important;
+      }
+
+      /* === Re-exempt interactive elements === */
+      #main-content button,
+      #main-content a,
+      #main-content [role="button"],
+      #main-content [role="radio"],
+      #main-content [role="tab"],
+      #main-content [role="switch"],
+      #main-content [role="checkbox"],
+      #main-content [role="option"],
+      #main-content [role="alert"],
+      #main-content svg,
+      #main-content img,
+      #main-content video,
+      #main-content canvas {
+        background-color: unset !important;
+        background-image: unset !important;
+      }
+
+      /* === Text — MAXIMUM CONTRAST === */
       h1, h2, h3, h4, h5, h6 {
         color: #FFFFFF !important;
       }
-      p, span, li, label, td, th, dt, dd, div {
-        color: #FFFFFF !important;
+      p, li, dd, dt, td, th, label, figcaption, blockquote {
+        color: #F0F0F0 !important;
       }
+      span, small {
+        color: #D0D0D0 !important;
+      }
+
+      /* === Links — gold on black === */
       a {
-        color: #FF6B35 !important;
+        color: #FFD700 !important;
         text-decoration: underline !important;
       }
       a:hover {
-        color: #FFB088 !important;
-      }
-      header[role="banner"] a {
-        color: white !important;
-      }
-      input, select, textarea {
-        border: 2px solid #FFFFFF !important;
-        background-color: #111111 !important;
         color: #FFFFFF !important;
       }
-      input:focus, select:focus, textarea:focus {
-        border-color: #FF6B35 !important;
-        outline-color: #FF6B35 !important;
+
+      /* === Terracotta accent text → warm orange === */
+      [style*="color: #C2410C"],
+      [style*="color: var(--terra-600)"],
+      [style*="color: var(--terra-700)"] {
+        color: #FFB347 !important;
       }
+
+      /* === Header — pure black with white border === */
+      header[role="banner"] {
+        background-color: #000000 !important;
+        border-bottom: 2px solid #FFFFFF !important;
+      }
+      header[role="banner"] a,
+      header[role="banner"] span,
+      header[role="banner"] button,
+      header[role="banner"] div {
+        color: #FFFFFF !important;
+      }
+      /* Active nav link gold */
+      header[role="banner"] a[aria-current="page"] {
+        color: #FFD700 !important;
+        text-decoration: underline !important;
+      }
+
+      /* === Form inputs === */
+      input, select, textarea {
+        background-color: #1A1A1A !important;
+        border: 2px solid #FFFFFF !important;
+        color: #FFFFFF !important;
+      }
+      input::placeholder, textarea::placeholder {
+        color: #D0D0D0 !important;
+      }
+      input:focus, select:focus, textarea:focus {
+        border-color: #FFD700 !important;
+      }
+
+      /* === Buttons === */
       button {
         border: 2px solid #FFFFFF !important;
       }
+      /* Primary CTA buttons (terracotta) */
+      button[style*="background: var(--terra"],
+      button[style*="background-color: var(--terra"],
+      button[style*="C2410C"],
+      button[style*="c2410c"],
+      #main-content button[style*="C2410C"],
+      #main-content button[style*="background: #C2410C"],
+      #main-content button[style*="background-color: #C2410C"] {
+        background-color: #D4572A !important;
+        color: #FFFFFF !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      /* Button hover — invert */
+      button:hover {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+      }
+
+      /* === All borders visible === */
+      #main-content [style*="border"] {
+        border-color: #FFFFFF !important;
+      }
+
+      /* === Separators / dividers === */
+      hr, [role="separator"] {
+        border-color: #444444 !important;
+        border-width: 2px !important;
+      }
+
+      /* === Card accent bars (left borders) === */
+      [style*="border-left: 3px"],
+      [style*="border-left: 4px"],
+      [style*="borderLeft"] {
+        border-left-width: 4px !important;
+      }
+
+      /* === Step number circles === */
+      #main-content [style*="border-radius: 50%"],
+      #main-content [style*="borderRadius: 50%"],
+      #main-content [style*="border-radius: 9999px"][style*="width: 3"],
+      #main-content [style*="border-radius: 9999px"][style*="width: 4"] {
+        border: 2px solid #FFFFFF !important;
+        background-color: #1A1A1A !important;
+        color: #FFFFFF !important;
+      }
+
+      /* === Focus indicators — gold === */
       *:focus-visible {
-        outline: 3px solid #FF6B35 !important;
+        outline: 3px solid #FFD700 !important;
         outline-offset: 3px !important;
+      }
+
+      /* === Settings panel itself === */
+      [role="dialog"][aria-label="Display preferences"] {
+        background-color: #000000 !important;
+        border: 2px solid #FFFFFF !important;
+        color: #FFFFFF !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] legend,
+      [role="dialog"][aria-label="Display preferences"] p {
+        color: #D0D0D0 !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] {
+        background-color: #D4572A !important;
+        border: 2px solid #FFFFFF !important;
+        color: #FFFFFF !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="false"] {
+        background-color: #1A1A1A !important;
+        border: 2px solid #FFFFFF !important;
+        color: #FFFFFF !important;
+      }
+
+      /* === Scrollbar high contrast === */
+      ::-webkit-scrollbar {
+        background: #000000;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #FFFFFF;
+        border-radius: 4px;
+      }
+
+      /* === Footer === */
+      footer[role="contentinfo"],
+      footer[role="contentinfo"] div,
+      footer[role="contentinfo"] p,
+      footer[role="contentinfo"] span,
+      footer[role="contentinfo"] a {
+        background-color: #000000 !important;
+      }
+      footer[role="contentinfo"] {
+        border-top: 2px solid #FFFFFF !important;
+      }
+
+      /* === WCAG compliance banner === */
+      #main-content [style*="WCAG"],
+      #main-content [style*="border-left: 4px solid #C2410C"] {
+        background-color: #1A1A1A !important;
+        border: 2px solid #FFB347 !important;
+      }
+
+      /* === Status badges === */
+      [style*="border-radius: 100px"],
+      [style*="border-radius: 9999px"] {
+        border: 2px solid currentColor !important;
       }
     `;
   }
