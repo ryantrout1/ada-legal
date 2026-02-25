@@ -121,7 +121,7 @@ export default function InitiateSupportModal({ open, onCancel, onConfirm, proces
                 margin: '0 0 var(--space-xl) 0'
               }}
             >
-              By initiating support for this case, you agree to contact the claimant within 24 hours. This case will be exclusively assigned to you. This action cannot be undone.
+              By initiating support for this case, you agree to contact the reporter within 24 hours. This case will be exclusively assigned to you. This action cannot be undone.
             </p>
 
             <div style={{

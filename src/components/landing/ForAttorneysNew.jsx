@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 
 const features = [
-  'Pre-screened cases with documented violations and willing claimants',
+  'Pre-screened cases with documented violations and verified reporters',
   'Exclusive assignment — no bidding wars with other firms',
   'Filter by state, violation type, and business category',
-  'Claimant contact info revealed only after you commit',
+  'Reporter contact info revealed only after you commit',
   'Built-in case management and compliance tracking'
 ];
 

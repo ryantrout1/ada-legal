@@ -9,12 +9,12 @@ const steps = [
   {
     num: '2',
     title: 'Subscribe',
-    desc: 'Activate your subscription to gain full marketplace access and start receiving case notifications.'
+    desc: 'Activate your subscription to gain full platform access and start receiving case notifications.'
   },
   {
     num: '3',
     title: 'Receive Cases',
-    desc: 'Browse pre-screened cases matched to your state. Claim a case and contact the claimant within 24 hours.'
+    desc: 'Browse pre-screened cases matched to your state. Accept a case and contact the reporter within 24 hours.'
   }
 ];
 

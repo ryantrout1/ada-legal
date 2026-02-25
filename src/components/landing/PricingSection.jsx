@@ -7,7 +7,7 @@ const features = [
   'Access to all pre-screened ADA cases in your state',
   'Exclusive case assignment — no bidding',
   'Real-time case notifications',
-  'Full claimant details upon assignment',
+  'Full reporter details upon assignment',
   'Dedicated attorney dashboard',
   'Cancel anytime'
 ];

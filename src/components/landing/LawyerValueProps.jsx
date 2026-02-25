@@ -5,17 +5,17 @@ const props = [
   {
     icon: Lock,
     title: 'Exclusive Assignment',
-    desc: 'Every case is assigned to one attorney only. No bidding, no competition — just a direct connection between you and the claimant.'
+    desc: 'Every case is assigned to one attorney only. No bidding, no competition — just a direct connection between you and the reporter.'
   },
   {
     icon: Clock,
     title: '24-Hour Contact Model',
-    desc: 'You commit to contacting the claimant within 24 hours of assignment. Swift action leads to better outcomes for everyone.'
+    desc: 'You commit to contacting the reporter within 24 hours of assignment. Swift action leads to better outcomes for everyone.'
   },
   {
     icon: ShieldCheck,
     title: 'Vetted & Reviewed Cases',
-    desc: 'Every submission is reviewed by our team before it enters the marketplace. You only see quality, actionable cases.'
+    desc: 'Every submission is reviewed by our team before it becomes available to qualified attorneys. You only see quality, actionable cases.'
   }
 ];
 
@@ -37,7 +37,7 @@ export default function LawyerValueProps() {
         color: 'var(--slate-600)', textAlign: 'center',
         maxWidth: '480px', margin: '0 auto clamp(2rem, 5vw, 3.5rem)'
       }}>
-        A marketplace built for the way you actually practice.
+        A platform built for the way you actually practice.
       </p>
 
       <div style={{

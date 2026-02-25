@@ -212,9 +212,9 @@ export default function Marketplace() {
           <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Business</td><td style="padding: 8px;">${c.business_name}</td></tr>
           <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Location</td><td style="padding: 8px;">${[c.city, c.state].filter(Boolean).join(', ')}</td></tr>
           <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Violation Type</td><td style="padding: 8px;">${c.violation_type === 'physical_space' ? 'Physical Space' : 'Digital / Website'}</td></tr>
-          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant</td><td style="padding: 8px;">${c.contact_name}</td></tr>
-          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant Email</td><td style="padding: 8px;">${c.contact_email}</td></tr>
-          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Claimant Phone</td><td style="padding: 8px;">${c.contact_phone}</td></tr>
+          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Reporter</td><td style="padding: 8px;">${c.contact_name}</td></tr>
+          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Reporter Email</td><td style="padding: 8px;">${c.contact_email}</td></tr>
+          <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Reporter Phone</td><td style="padding: 8px;">${c.contact_phone}</td></tr>
           <tr><td style="padding: 8px; color: #64748B; font-weight: 600;">Contact Preference</td><td style="padding: 8px;">${c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'}</td></tr>
         </table>
         <p><strong>Reminder:</strong> You are required to contact the claimant within <strong>24 hours</strong>.</p>

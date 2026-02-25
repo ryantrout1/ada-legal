@@ -210,7 +210,7 @@ export default function LawyerRegister() {
                 }}
               />
               <span>
-                I have read and agree to the ADA Legal Link Rules, including the requirement to contact claimants within 24 hours of initiating support.
+                I have read and agree to the ADA Legal Link Rules, including the requirement to contact reporters within 24 hours of initiating support.
               </span>
             </label>
             {errors.rules_accepted && (

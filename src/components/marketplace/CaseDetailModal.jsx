@@ -157,7 +157,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
             )}
           </div>
 
-          {/* Section 2 — Claimant's Account */}
+          {/* Section 2 — Reporter's Account */}
           <div style={{
             borderLeft: '3px solid var(--terra-600, #C2410C)',
             backgroundColor: '#FFF8F5',
