@@ -177,6 +177,21 @@ export default function AdminCases() {
     loadData();
   };
 
+  const handleForceAssign = async (caseData, lawyer) => {
+    setActionSaving(true);
+    const now = new Date().toISOString();
+    await base44.entities.Case.update(caseData.id, {
+      status: 'assigned', assigned_lawyer_id: lawyer.id, assigned_at: now
+    });
+    await base44.entities.TimelineEvent.create({
+      case_id: caseData.id, event_type: 'assigned',
+      event_description: `An attorney has been assigned to review your case.`,
+      actor_role: 'admin', visible_to_user: true, created_at: now
+    });
+    setActionSaving(false);
+    loadData();
+  };
+
   const handleReassign = async (caseData) => {
     const now = new Date().toISOString();
     const lawyerProfile = caseData.assigned_lawyer_id ? lawyerMap[caseData.assigned_lawyer_id] : null;
