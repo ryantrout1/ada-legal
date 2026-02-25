@@ -130,6 +130,11 @@ export const applyPreferences = (prefs) => {
         color: #FB923C !important;
       }
 
+      /* === Header background — force dark regardless of var() === */
+      header[role="banner"] {
+        background-color: #1E293B !important;
+      }
+
       /* === Header already dark — keep text white === */
       header[role="banner"] a,
       header[role="banner"] span,
