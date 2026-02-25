@@ -244,6 +244,9 @@ export default function AdminReview() {
             >
               <option value="oldest">Oldest First</option>
               <option value="newest">Newest First</option>
+              <option value="severity">Severity (High First)</option>
+              <option value="completeness">Completeness (Ready First)</option>
+              <option value="cluster">Cluster Size (Largest First)</option>
             </select>
           </div>
         </div>
