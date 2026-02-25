@@ -194,6 +194,53 @@ export const applyPreferences = (prefs) => {
         color: #94A3B8 !important;
       }
 
+      /* === Ghost / outline buttons & link-buttons — DARK MODE ===
+         These become invisible when background-color: unset strips them.
+         Target both <button> and <a> elements styled as ghost buttons. */
+      #main-content a.landing-btn-primary,
+      a.landing-btn-primary {
+        background-color: #C2410C !important;
+        color: #FFFFFF !important;
+        border: 1px solid #C2410C !important;
+      }
+      #main-content a.landing-btn-primary:hover,
+      a.landing-btn-primary:hover {
+        background-color: #D4572A !important;
+        color: #FFFFFF !important;
+        text-decoration: none !important;
+      }
+
+      #main-content a.landing-btn-secondary,
+      a.landing-btn-secondary {
+        background-color: transparent !important;
+        color: #CBD5E1 !important;
+        border: 1px solid #94A3B8 !important;
+      }
+      #main-content a.landing-btn-secondary:hover,
+      a.landing-btn-secondary:hover {
+        border-color: #FFFFFF !important;
+        color: #FFFFFF !important;
+        background-color: rgba(255,255,255,0.05) !important;
+        text-decoration: none !important;
+      }
+
+      /* Generic outline/ghost buttons (border but transparent/no bg) */
+      #main-content button[style*="background: transparent"],
+      #main-content button[style*="background: none"],
+      #main-content a[style*="background: transparent"],
+      #main-content a[style*="border: 1px solid"] {
+        border-color: #94A3B8 !important;
+        color: #CBD5E1 !important;
+      }
+      #main-content button[style*="background: transparent"]:hover,
+      #main-content button[style*="background: none"]:hover,
+      #main-content a[style*="background: transparent"]:hover,
+      #main-content a[style*="border: 1px solid"]:hover {
+        border-color: #FFFFFF !important;
+        color: #FFFFFF !important;
+        background-color: rgba(255,255,255,0.05) !important;
+      }
+
       /* === Focus outlines — bright on dark === */
       *:focus-visible {
         outline-color: #F97316 !important;
