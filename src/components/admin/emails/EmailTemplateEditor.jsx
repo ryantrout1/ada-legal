@@ -175,7 +175,7 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
             />
           </div>
 
-          {/* HTML body */}
+          {/* Visual Rich Text Editor */}
           <div style={{
             backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
             borderRadius: '12px', padding: '20px'
@@ -185,20 +185,12 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
               fontWeight: 700, color: '#64748B', marginBottom: '6px',
               textTransform: 'uppercase', letterSpacing: '0.04em'
             }}>
-              Email Body (HTML)
+              Email Body
             </label>
-            <textarea
+            <RichEmailEditor
               value={bodyHtml}
-              onChange={e => setBodyHtml(e.target.value)}
-              style={{
-                width: '100%', minHeight: '400px', padding: '12px',
-                fontFamily: 'monospace', fontSize: '0.8125rem', lineHeight: 1.5,
-                border: '2px solid var(--slate-200)', borderRadius: '8px',
-                outline: 'none', boxSizing: 'border-box', resize: 'vertical',
-                color: 'var(--slate-800)', backgroundColor: '#FAFAFA'
-              }}
-              onFocus={e => { e.target.style.borderColor = '#1D4ED8'; }}
-              onBlur={e => { e.target.style.borderColor = 'var(--slate-200)'; }}
+              onChange={setBodyHtml}
+              variables={variables}
             />
           </div>
 
