@@ -70,8 +70,7 @@ export function countActiveFilters(f) {
   return n;
 }
 
-export default function FilterPanel({ filters, onChange }) {
-  const [open, setOpen] = useState(false);
+export default function FilterPanel({ filters, onChange, open }) {
   const count = countActiveFilters(filters);
 
   const set = (key, val) => onChange({ ...filters, [key]: val });
