@@ -196,6 +196,13 @@ export default function AdminReview() {
     <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
+        {/* Volume Dashboard */}
+        <QCVolumeDashboard
+          cases={cases}
+          activeFilter={dashboardFilter}
+          onFilterChange={setDashboardFilter}
+        />
+
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
           <div>
