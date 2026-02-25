@@ -120,6 +120,7 @@ import StandardsCh9 from './pages/StandardsCh9';
 import StandardsGuide from './pages/StandardsGuide';
 import TitleIIPathway from './pages/TitleIIPathway';
 import TitleIPathway from './pages/TitleIPathway';
+import AdminEmails from './pages/AdminEmails';
 import __Layout from './Layout.jsx';
 
 
@@ -197,6 +198,7 @@ export const PAGES = {
     "StandardsGuide": StandardsGuide,
     "TitleIIPathway": TitleIIPathway,
     "TitleIPathway": TitleIPathway,
+    "AdminEmails": AdminEmails,
 }
 
 export const pagesConfig = {
