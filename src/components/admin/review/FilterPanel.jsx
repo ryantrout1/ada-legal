@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal, Calendar } from 'lucide-react';
+import StatusSegmentedControl from './filters/StatusSegmentedControl';
+import SeverityPills from './filters/SeverityPills';
+import CompletenessPills from './filters/CompletenessPills';
+import ViolationTypePills from './filters/ViolationTypePills';
+import SearchableDropdown from './filters/SearchableDropdown';
+import ToggleSwitch from './filters/ToggleSwitch';
 
 const US_STATES = [
   'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN',
@@ -8,82 +14,33 @@ const US_STATES = [
   'VT','VA','WA','WV','WI','WY'
 ];
 
-const AI_CATEGORIES = [
-  'physical_entrance','physical_restroom','physical_parking','physical_path',
-  'physical_service_animal','digital_screen_reader','digital_keyboard_nav',
-  'digital_forms','digital_video_captions','other'
+const STATE_NAMES = {
+  AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',
+  CT:'Connecticut',DE:'Delaware',DC:'DC',FL:'Florida',GA:'Georgia',HI:'Hawaii',
+  ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',
+  LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',
+  MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',
+  NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',
+  NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',
+  PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',
+  TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',
+  WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming'
+};
+
+const CATEGORY_OPTIONS = [
+  { value: 'physical_entrance', label: 'Entrance' },
+  { value: 'physical_restroom', label: 'Restroom' },
+  { value: 'physical_parking', label: 'Parking' },
+  { value: 'physical_path', label: 'Path of Travel' },
+  { value: 'physical_service_animal', label: 'Service Animal' },
+  { value: 'physical_other', label: 'Physical — Other' },
+  { value: 'digital_screen_reader', label: 'Screen Reader' },
+  { value: 'digital_keyboard_nav', label: 'Keyboard Nav' },
+  { value: 'digital_voice_control', label: 'Voice Control' },
+  { value: 'digital_magnification', label: 'Magnification' },
+  { value: 'digital_other', label: 'Digital — Other' },
+  { value: 'other', label: 'Other' },
 ];
-
-function PillGroup({ options, selected, onToggle, name }) {
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }} role="group" aria-label={name}>
-      {options.map(o => {
-        const active = selected.includes(o.value);
-        return (
-          <button
-            key={o.value}
-            role="checkbox"
-            aria-checked={active}
-            onClick={() => onToggle(o.value)}
-            style={{
-              padding: '6px 14px', borderRadius: '100px', minHeight: '36px',
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
-              cursor: 'pointer', border: '1px solid',
-              backgroundColor: active ? 'var(--slate-900)' : 'white',
-              color: active ? 'white' : 'var(--slate-600)',
-              borderColor: active ? 'var(--slate-900)' : 'var(--slate-300)',
-              transition: 'all 0.15s',
-            }}
-          >
-            {o.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-function MultiSelect({ label, options, selected, onChange, id }) {
-  const handleChange = (e) => {
-    const vals = Array.from(e.target.selectedOptions, o => o.value);
-    onChange(vals);
-  };
-  return (
-    <div>
-      <label htmlFor={id} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-        {label}
-      </label>
-      <select
-        id={id}
-        multiple
-        value={selected}
-        onChange={handleChange}
-        style={{
-          width: '100%', minHeight: '80px', padding: '6px', fontFamily: 'Manrope, sans-serif',
-          fontSize: '0.8125rem', border: '1px solid var(--slate-300)', borderRadius: '8px',
-          backgroundColor: 'white',
-        }}
-      >
-        {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-      </select>
-    </div>
-  );
-}
-
-function Toggle({ label, checked, onChange, id }) {
-  return (
-    <label htmlFor={id} style={{
-      display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer',
-      fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-700)',
-    }}>
-      <input
-        type="checkbox" id={id} checked={checked} onChange={(e) => onChange(e.target.checked)}
-        style={{ width: '18px', height: '18px', accentColor: 'var(--slate-900)' }}
-      />
-      {label}
-    </label>
-  );
-}
 
 export const EMPTY_FILTERS = {
   status: 'all_pending',
@@ -123,8 +80,17 @@ export default function FilterPanel({ filters, onChange }) {
     set(key, arr.includes(val) ? arr.filter(v => v !== val) : [...arr, val]);
   };
 
+  const stateOptions = US_STATES.map(s => ({ value: s, label: `${s} — ${STATE_NAMES[s] || s}` }));
+
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      {/* Status Segmented Control — always visible */}
+      <StatusSegmentedControl
+        value={filters.status}
+        onChange={(v) => set('status', v)}
+      />
+
+      {/* Toggle button */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
         <button
           onClick={() => setOpen(!open)}
@@ -139,146 +105,175 @@ export default function FilterPanel({ filters, onChange }) {
           }}
         >
           <SlidersHorizontal size={16} />
-          Filters{count > 0 && ` (${count})`}
+          Advanced Filters{count > 0 && ` (${count})`}
         </button>
-        {count > 0 && (
-          <button
-            onClick={() => onChange({ ...EMPTY_FILTERS })}
-            style={{
-              background: 'none', border: 'none', fontFamily: 'Manrope, sans-serif',
-              fontSize: '0.8125rem', color: 'var(--terra-600)', cursor: 'pointer',
-              textDecoration: 'underline', padding: '4px 8px', minHeight: '44px',
-            }}
-          >
-            Clear All Filters
-          </button>
-        )}
       </div>
 
+      {/* Filter Panel */}
       {open && (
-        <div style={{
-          marginTop: '10px', padding: '20px', backgroundColor: 'white',
-          border: '1px solid var(--slate-200)', borderRadius: '12px',
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px',
-        }}>
-          {/* Status */}
-          <div>
-            <label htmlFor="filter-status" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-              Status
-            </label>
-            <select
-              id="filter-status"
-              value={filters.status}
-              onChange={(e) => set('status', e.target.value)}
-              style={{
-                width: '100%', padding: '8px 12px', minHeight: '44px',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                border: '1px solid var(--slate-300)', borderRadius: '8px',
-              }}
-            >
-              <option value="all_pending">All Pending (Submitted + Under Review)</option>
-              <option value="submitted">Submitted Only</option>
-              <option value="under_review">Under Review Only</option>
-            </select>
+        <div
+          role="region"
+          aria-label="Case filters"
+          className="filter-panel-container"
+          style={{
+            padding: '24px',
+            backgroundColor: 'var(--slate-50, #FAF7F2)',
+            border: '1px solid var(--slate-200)',
+            borderRadius: '12px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '24px',
+          }}
+        >
+          {/* Row 1 — Primary filters */}
+          <div className="filter-row-1" style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+            <div style={{ flex: '1 1 200px' }}>
+              <SeverityPills
+                selected={filters.severities}
+                onToggle={(v) => toggleInArray('severities', v)}
+              />
+            </div>
+            <div style={{ flex: '1 1 260px' }}>
+              <CompletenessPills
+                selected={filters.completeness}
+                onToggle={(v) => toggleInArray('completeness', v)}
+              />
+            </div>
+            <div style={{ flex: '1 1 160px' }}>
+              <ViolationTypePills
+                selected={filters.violationTypes}
+                onToggle={(v) => toggleInArray('violationTypes', v)}
+              />
+            </div>
           </div>
 
-          {/* Violation Type */}
-          <div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', margin: '0 0 6px' }}>Violation Type</p>
-            <PillGroup
-              name="Violation type filter"
-              options={[
-                { value: 'physical_space', label: 'Physical Space' },
-                { value: 'digital_website', label: 'Digital Website' },
-              ]}
-              selected={filters.violationTypes}
-              onToggle={(v) => toggleInArray('violationTypes', v)}
-            />
+          {/* Divider */}
+          <div style={{ height: '1px', backgroundColor: 'var(--slate-200)' }} />
+
+          {/* Row 2 — Secondary filters */}
+          <div className="filter-row-2" style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+            {/* State dropdown */}
+            <div style={{ flex: '1 1 200px', minWidth: '180px' }}>
+              <SearchableDropdown
+                label="State"
+                id="filter-states"
+                options={stateOptions}
+                selected={filters.states}
+                onChange={(v) => set('states', v)}
+                placeholder="All States"
+              />
+            </div>
+
+            {/* Category dropdown */}
+            <div style={{ flex: '1 1 200px', minWidth: '180px' }}>
+              <SearchableDropdown
+                label="Violation Category"
+                id="filter-categories"
+                options={CATEGORY_OPTIONS}
+                selected={filters.categories}
+                onChange={(v) => set('categories', v)}
+                placeholder="All Categories"
+              />
+            </div>
+
+            {/* Date range */}
+            <div style={{ flex: '1 1 220px', minWidth: '180px' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>
+                Date Range
+              </p>
+              <div className="filter-date-row" style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ flex: 1, position: 'relative' }}>
+                  <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-400)', pointerEvents: 'none' }} />
+                  <input
+                    type="date"
+                    id="filter-date-after"
+                    aria-label="Start date"
+                    value={filters.dateAfter}
+                    onChange={(e) => set('dateAfter', e.target.value)}
+                    placeholder="Start date"
+                    style={{
+                      width: '100%', padding: '8px 10px 8px 30px', minHeight: '44px',
+                      fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                      border: '1px solid var(--slate-300)', borderRadius: '10px',
+                      backgroundColor: 'white', boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+                <div style={{ flex: 1, position: 'relative' }}>
+                  <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-400)', pointerEvents: 'none' }} />
+                  <input
+                    type="date"
+                    id="filter-date-before"
+                    aria-label="End date"
+                    value={filters.dateBefore}
+                    onChange={(e) => set('dateBefore', e.target.value)}
+                    placeholder="End date"
+                    style={{
+                      width: '100%', padding: '8px 10px 8px 30px', minHeight: '44px',
+                      fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                      border: '1px solid var(--slate-300)', borderRadius: '10px',
+                      backgroundColor: 'white', boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Toggles */}
+            <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: '4px', justifyContent: 'flex-start' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>
+                Show Only
+              </p>
+              <ToggleSwitch
+                label="Clustered cases (2+ reports)"
+                checked={filters.hasCluster}
+                onChange={(v) => set('hasCluster', v)}
+                id="filter-cluster"
+              />
+              <ToggleSwitch
+                label="Flagged cases"
+                checked={filters.flaggedOnly}
+                onChange={(v) => set('flaggedOnly', v)}
+                id="filter-flagged"
+              />
+            </div>
           </div>
 
-          {/* Severity */}
-          <div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', margin: '0 0 6px' }}>AI Severity</p>
-            <PillGroup
-              name="Severity filter"
-              options={[
-                { value: 'high', label: '🔴 High' },
-                { value: 'medium', label: '🟡 Medium' },
-                { value: 'low', label: '🟢 Low' },
-              ]}
-              selected={filters.severities}
-              onToggle={(v) => toggleInArray('severities', v)}
-            />
-          </div>
-
-          {/* Completeness */}
-          <div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', margin: '0 0 6px' }}>Completeness</p>
-            <PillGroup
-              name="Completeness filter"
-              options={[
-                { value: 'ready', label: 'Ready (80+)' },
-                { value: 'partial', label: 'Partial (50–79)' },
-                { value: 'incomplete', label: 'Incomplete (<50)' },
-              ]}
-              selected={filters.completeness}
-              onToggle={(v) => toggleInArray('completeness', v)}
-            />
-          </div>
-
-          {/* State */}
-          <MultiSelect
-            label="State"
-            id="filter-states"
-            options={US_STATES.map(s => ({ value: s, label: s }))}
-            selected={filters.states}
-            onChange={(v) => set('states', v)}
-          />
-
-          {/* Category */}
-          <MultiSelect
-            label="Violation Category"
-            id="filter-categories"
-            options={AI_CATEGORIES.map(c => ({ value: c, label: c.replace(/_/g, ' ') }))}
-            selected={filters.categories}
-            onChange={(v) => set('categories', v)}
-          />
-
-          {/* Date range */}
-          <div>
-            <label htmlFor="filter-date-after" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-              Submitted After
-            </label>
-            <input
-              type="date" id="filter-date-after" value={filters.dateAfter}
-              onChange={(e) => set('dateAfter', e.target.value)}
-              style={{
-                width: '100%', padding: '8px 12px', minHeight: '44px',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                border: '1px solid var(--slate-300)', borderRadius: '8px', marginBottom: '8px',
-              }}
-            />
-            <label htmlFor="filter-date-before" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-              Submitted Before
-            </label>
-            <input
-              type="date" id="filter-date-before" value={filters.dateBefore}
-              onChange={(e) => set('dateBefore', e.target.value)}
-              style={{
-                width: '100%', padding: '8px 12px', minHeight: '44px',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                border: '1px solid var(--slate-300)', borderRadius: '8px',
-              }}
-            />
-          </div>
-
-          {/* Toggles */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', justifyContent: 'center' }}>
-            <Toggle label="Show only clustered cases" checked={filters.hasCluster} onChange={(v) => set('hasCluster', v)} id="filter-cluster" />
-            <Toggle label="Show only flagged cases" checked={filters.flaggedOnly} onChange={(v) => set('flaggedOnly', v)} id="filter-flagged" />
+          {/* Footer — Clear + count */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+            {count > 0 ? (
+              <button
+                onClick={() => onChange({ ...EMPTY_FILTERS })}
+                style={{
+                  background: 'none', border: 'none', fontFamily: 'Manrope, sans-serif',
+                  fontSize: '0.875rem', fontWeight: 600, color: 'var(--terra-600)',
+                  cursor: 'pointer', textDecoration: 'underline', padding: '8px 4px',
+                  minHeight: '44px',
+                }}
+              >
+                Clear All Filters
+              </button>
+            ) : (
+              <span />
+            )}
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+              {count > 0 ? `${count} filter${count !== 1 ? 's' : ''} active` : 'No filters active'}
+            </span>
           </div>
         </div>
       )}
+
+      {/* Responsive styles */}
+      <style>{`
+        @media (max-width: 768px) {
+          .filter-row-1, .filter-row-2 {
+            flex-direction: column !important;
+          }
+          .filter-date-row {
+            flex-direction: column !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
