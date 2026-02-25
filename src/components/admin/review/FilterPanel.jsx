@@ -83,48 +83,31 @@ export default function FilterPanel({ filters, onChange }) {
   const stateOptions = US_STATES.map(s => ({ value: s, label: `${s} — ${STATE_NAMES[s] || s}` }));
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      {/* Status Segmented Control — always visible */}
-      <StatusSegmentedControl
-        value={filters.status}
-        onChange={(v) => set('status', v)}
-      />
-
-      {/* Toggle button */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-        <button
-          onClick={() => setOpen(!open)}
-          aria-expanded={open}
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: '6px',
-            padding: '8px 16px', minHeight: '44px', fontFamily: 'Manrope, sans-serif',
-            fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer',
-            border: '1px solid var(--slate-300)', borderRadius: '10px',
-            backgroundColor: open ? 'var(--slate-100)' : 'white',
-            color: 'var(--slate-700)', transition: 'background-color 0.15s',
-          }}
-        >
-          <SlidersHorizontal size={16} />
-          Advanced Filters{count > 0 && ` (${count})`}
-        </button>
-      </div>
-
-      {/* Filter Panel */}
+    <>
+      {/* Filter Panel — controlled externally via open prop */}
       {open && (
         <div
           role="region"
           aria-label="Case filters"
           className="filter-panel-container"
           style={{
-            padding: '24px',
+            padding: '20px',
             backgroundColor: 'var(--slate-50, #FAF7F2)',
             border: '1px solid var(--slate-200)',
             borderRadius: '12px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '24px',
+            gap: '20px',
           }}
         >
+          {/* Status segmented control — moved inside panel */}
+          <div>
+            <StatusSegmentedControl
+              value={filters.status}
+              onChange={(v) => set('status', v)}
+            />
+          </div>
+
           {/* Row 1 — Primary filters */}
           <div className="filter-row-1" style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
             <div style={{ flex: '1 1 200px' }}>
@@ -273,6 +256,6 @@ export default function FilterPanel({ filters, onChange }) {
           }
         }
       `}</style>
-    </div>
+    </>
   );
 }
