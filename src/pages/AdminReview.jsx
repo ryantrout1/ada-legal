@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
-import { CheckCircle, Flag, ArrowUpDown } from 'lucide-react';
+import { CheckCircle, Flag, ArrowUpDown, Zap } from 'lucide-react';
 import QCCaseCard from '../components/admin/review/QCCaseCard';
 import QCActionModal from '../components/admin/review/QCActionModal';
 import QCVolumeDashboard from '../components/admin/review/QCVolumeDashboard';
@@ -11,6 +11,7 @@ import BulkActionModal from '../components/admin/review/BulkActionModal';
 import SearchBar from '../components/admin/review/SearchBar';
 import FilterPanel, { EMPTY_FILTERS, countActiveFilters } from '../components/admin/review/FilterPanel';
 import SavedViews, { useSavedViews } from '../components/admin/review/SavedViews';
+import TriageMode from '../components/admin/review/TriageMode';
 import { caseRejectedEmail } from '../components/emails/caseEmails';
 
 export default function AdminReview() {
