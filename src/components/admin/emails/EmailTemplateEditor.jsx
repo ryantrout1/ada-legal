@@ -268,6 +268,16 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
         </div>
       </div>
 
+      {/* Preview Modal */}
+      {showPreview && (
+        <EmailPreviewModal
+          subject={subject}
+          bodyHtml={bodyHtml}
+          sampleData={SAMPLE_DATA}
+          onClose={() => setShowPreview(false)}
+        />
+      )}
+
       {/* Toast */}
       {toast && (
         <div role="alert" aria-live="assertive" style={{
