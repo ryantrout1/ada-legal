@@ -91,6 +91,29 @@ export const applyPreferences = (prefs) => {
         background-image: none !important;
       }
 
+      /* === Pills, tags, badges (spans used as visual containers) === */
+      #main-content span[role="listitem"],
+      #main-content span[style*="border-radius: 100px"],
+      #main-content span[style*="border-radius: 9999px"],
+      #main-content span[style*="borderRadius"] {
+        background-color: #2D3748 !important;
+        border-color: #4A5568 !important;
+        color: #E2E8F0 !important;
+      }
+
+      /* === Section badge pills (WE HANDLE THIS, WE'LL GUIDE YOU) === */
+      #main-content span[style*="padding: 3px"],
+      #main-content span[style*="padding: 4px"] {
+        background-color: #2D3748 !important;
+        border-color: #4A5568 !important;
+      }
+
+      /* === Story card tag pills (Standards Guide, Search, Legal Guides) === */
+      #main-content span[style*="border-radius: 9999px"] {
+        background-color: #3C1810 !important;
+        color: #F97316 !important;
+      }
+
       /* === Re-exempt buttons and interactive elements === 
          Buttons, links, badges keep their original backgrounds.
          This goes AFTER the blanket rule so it wins by cascade. */
