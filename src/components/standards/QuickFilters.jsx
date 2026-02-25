@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '../../utils';
 import { Shield, Home, Monitor, FileText, Users, CheckCircle } from 'lucide-react';
 
 const FILTERS = [
@@ -7,10 +9,20 @@ const FILTERS = [
   { key: 'website', label: 'Website Accessibility', Icon: Monitor },
   { key: 'design', label: 'Design Standards', Icon: FileText },
   { key: 'government', label: 'Government Entities', Icon: Users },
-  { key: 'complaint', label: 'Filing a Complaint', Icon: CheckCircle }
+  { key: 'complaint', label: 'Filing a Complaint', Icon: CheckCircle, isLink: true }
 ];
 
 export default function QuickFilters({ activeFilters, onToggle }) {
+  const navigate = useNavigate();
+
+  const handleClick = (key, isLink) => {
+    if (isLink) {
+      navigate(createPageUrl('RightsPathway'));
+      return;
+    }
+    onToggle(key);
+  };
+
   return (
     <div style={{
       background: '#FFFFFF',
@@ -25,13 +37,13 @@ export default function QuickFilters({ activeFilters, onToggle }) {
           I need information about:
         </p>
         <div className="sg-filter-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-          {FILTERS.map(({ key, label, Icon }) => (
+          {FILTERS.map(({ key, label, Icon, isLink }) => (
             <button
               key={key}
               type="button"
               className="sg-filter-btn"
-              aria-pressed={activeFilters.includes(key) ? 'true' : 'false'}
-              onClick={() => onToggle(key)}
+              aria-pressed={!isLink && activeFilters.includes(key) ? 'true' : 'false'}
+              onClick={() => handleClick(key, isLink)}
             >
               <Icon size={18} aria-hidden="true" />
               {label}

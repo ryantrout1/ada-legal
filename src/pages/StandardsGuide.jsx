@@ -9,9 +9,19 @@ import StandardsSidebar from '../components/standards/StandardsSidebar';
 import ResourceSections from '../components/standards/ResourceSections';
 import GuideReportCTA from '../components/guide/GuideReportCTA';
 
+// Maps QuickFilter keys to ResourceSections section IDs
+const FILTER_TO_SECTION = {
+  rights: 'rights',
+  business: 'business',
+  website: 'web-access',
+  design: 'design-standards',
+  government: 'government'
+};
+
 export default function StandardsGuide() {
   const [searchValue, setSearchValue] = useState('');
   const [activeFilters, setActiveFilters] = useState([]);
+  const [activeSidebarId, setActiveSidebarId] = useState(null);
   const searchTimerRef = useRef(null);
 
   const handleSearchChange = useCallback((val) => {
@@ -26,9 +36,16 @@ export default function StandardsGuide() {
   }, []);
 
   const handleToggleFilter = (key) => {
-    setActiveFilters(prev =>
-      prev.includes(key) ? prev.filter(f => f !== key) : [...prev, key]
-    );
+    // "Filing a Complaint" has no section — handled inside QuickFilters via navigation
+    const sectionId = FILTER_TO_SECTION[key];
+    if (sectionId) {
+      setActiveFilters(prev =>
+        prev.includes(key) ? prev.filter(f => f !== key) : [key]
+      );
+      setActiveSidebarId(sectionId);
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -39,7 +56,7 @@ export default function StandardsGuide() {
       <BreadcrumbAndInfo />
       <div style={{ background: 'var(--slate-50)' }}>
         <div className="sg-body-grid">
-          <StandardsSidebar />
+          <StandardsSidebar activeId={activeSidebarId} />
           <ResourceSections />
         </div>
       </div>
