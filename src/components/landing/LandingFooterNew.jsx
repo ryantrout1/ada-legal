@@ -100,7 +100,7 @@ export default function LandingFooterNew() {
             color: '#7DCEA0'
           }}>
             <CheckCircle size={14} aria-hidden="true" />
-            WCAG 2.1 AA Conformant
+            WCAG 2.2 AA Conformant
           </span>
         </div>
       </div>
