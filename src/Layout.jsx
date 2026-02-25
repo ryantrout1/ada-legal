@@ -363,7 +363,7 @@ export default function Layout({ children, currentPageName }) {
                       Lawyers
                     </Link>
                     <Link to={createPageUrl('AdminAnalytics')} style={{ color: currentPageName === 'AdminAnalytics' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminAnalytics' ? 'page' : undefined}>
-                      Analytics
+                      Platform Intelligence
                     </Link>
                     <UserAvatarMenu user={user} onLogout={handleLogout} />
                   </>
@@ -561,7 +561,7 @@ export default function Layout({ children, currentPageName }) {
                       Lawyers
                     </Link>
                     <Link to={createPageUrl('AdminAnalytics')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminAnalytics' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                      Analytics
+                      Platform Intelligence
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
                       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', margin: '0 0 8px' }}>{user.email}</p>
