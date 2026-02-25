@@ -39,7 +39,6 @@ export default function NeedsAttentionSection({
   unclaimed, awaitingContact, lawyerMap, approvedLawyers,
   onForceAssign, onForceClose, onReclaim, saving,
 }) {
-  const [open, setOpen] = useState(true);
   const [toast, setToast] = useState(null);
   const [reclaimCase, setReclaimCase] = useState(null);
   const total = unclaimed.length + awaitingContact.length;
@@ -53,25 +52,8 @@ export default function NeedsAttentionSection({
 
   return (
     <>
-      <div role="alert" style={{ backgroundColor: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: '12px', overflow: 'hidden' }}>
-        <button
-          onClick={() => setOpen(!open)}
-          aria-expanded={open}
-          style={{
-            width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '14px 16px', minHeight: '44px', border: 'none', backgroundColor: 'transparent',
-            cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700,
-            color: '#92400E', textAlign: 'left',
-          }}
-        >
-          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <AlertTriangle size={18} /> {total} case{total !== 1 ? 's' : ''} need attention
-          </span>
-          {open ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-        </button>
-
-        {open && (
-          <div style={{ padding: '0 16px 16px' }}>
+      <div role="region" aria-label="Cases needing attention" style={{ backgroundColor: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: '12px', overflow: 'hidden' }}>
+          <div style={{ padding: '12px 16px 16px' }}>
             {/* Unclaimed too long */}
             {unclaimed.length > 0 && (
               <div style={{ marginBottom: awaitingContact.length > 0 ? '16px' : 0 }}>
