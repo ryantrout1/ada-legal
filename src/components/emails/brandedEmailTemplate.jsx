@@ -22,15 +22,13 @@ export function brandedEmail({ heading, headingColor = '#1E293B', bodyHtml, port
   <div style="max-width: 600px; margin: 0 auto; padding: 0;">
 
     <!-- Header -->
-    <div style="background-color: #1E293B; padding: 24px 32px; text-align: center; border-radius: 0 0 0 0;">
+    <div style="background-color: #1E293B; padding: 24px 32px; text-align: center;">
       <table role="presentation" style="margin: 0 auto;"><tr>
         <td style="vertical-align: middle; padding-right: 10px;">
-          <div style="width: 28px; height: 28px; display: inline-block;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
-          </div>
+          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/e3c293e44_logo-terracotta.png" alt="ADA Legal Link" width="32" height="32" style="display: block;" />
         </td>
         <td style="vertical-align: middle;">
-          <span style="font-family: Georgia, serif; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 0.01em;">ADA Legal Link</span>
+          <span style="font-family: Georgia, serif; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 0.01em;">ADA Legal </span><span style="font-family: Georgia, serif; font-size: 22px; font-weight: 700; color: #C2410C; letter-spacing: 0.01em;">Link</span>
         </td>
       </tr></table>
     </div>
