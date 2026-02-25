@@ -2,18 +2,14 @@ import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import { Search, X, ArrowUpDown } from 'lucide-react';
-import PipelineDashboard from '../components/admin/cases/PipelineDashboard';
+import CompactPipelineBar from '../components/admin/cases/CompactPipelineBar';
+import AlertSummaryBar from '../components/admin/cases/AlertSummaryBar';
 import NeedsAttentionSection from '../components/admin/cases/NeedsAttentionSection';
 import CaseManagerTabs, { getTabCounts, filterByTab } from '../components/admin/cases/CaseManagerTabs';
 import CaseManagerRow from '../components/admin/cases/CaseManagerRow';
 import AdminCaseExpanded from '../components/admin/cases/AdminCaseExpanded';
 import StickyFooter from '../components/admin/cases/StickyFooter';
 import ForceCloseModal from '../components/admin/ForceCloseModal';
-import TodaySummaryBar from '../components/admin/cases/TodaySummaryBar';
-import SecondaryStatCards from '../components/admin/cases/SecondaryStatCards';
-import CollapsibleSection from '../components/admin/cases/CollapsibleSection';
-import RecentSubmissionsPanel from '../components/admin/cases/RecentSubmissionsPanel';
-import LawyerActivityPanel from '../components/admin/cases/LawyerActivityPanel';
 
 function daysSince(d) { return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 0; }
 
