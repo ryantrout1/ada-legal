@@ -40,17 +40,17 @@ export const applyPreferences = (prefs) => {
         color-scheme: dark;
       }
 
-      /* === Body & page background === */
+      /* === Base page background === */
       body {
         background-color: #0F1219 !important;
       }
 
-      /* === Override CSS variables for components using var() === */
+      /* === Swap CSS variables (catches components using var()) === */
       :root {
         --slate-50: #0F1219 !important;
         --slate-100: #151B24 !important;
         --slate-200: #374151 !important;
-        --slate-300: #334155 !important;
+        --slate-300: #475569 !important;
         --slate-400: #94A3B8 !important;
         --slate-500: #CBD5E1 !important;
         --slate-600: #E2E8F0 !important;
@@ -60,22 +60,69 @@ export const applyPreferences = (prefs) => {
         --surface: #1E293B !important;
       }
 
-      /* === Headings === */
+      /* ============================================
+         BLANKET BACKGROUND OVERRIDE
+         Force ALL container elements inside #main-content to dark.
+         !important in <style> beats non-!important inline styles.
+         Already-dark elements (#1E293B) → no visible change.
+         Light elements (#FFF, #FAF7F2, etc) → forced dark.
+         ============================================ */
+      #main-content,
+      #main-content > *,
+      #main-content div,
+      #main-content section,
+      #main-content article,
+      #main-content aside,
+      #main-content figure,
+      #main-content details,
+      #main-content fieldset,
+      #main-content nav,
+      #main-content header:not([role="banner"]),
+      #main-content footer:not([role="contentinfo"]),
+      #main-content form,
+      #main-content ul,
+      #main-content ol,
+      #main-content li,
+      #main-content table,
+      #main-content tr,
+      #main-content td,
+      #main-content th {
+        background-color: #1E293B !important;
+        background-image: none !important;
+      }
+
+      /* === Re-exempt buttons and interactive elements === 
+         Buttons, links, badges keep their original backgrounds.
+         This goes AFTER the blanket rule so it wins by cascade. */
+      #main-content button,
+      #main-content a,
+      #main-content [role="button"],
+      #main-content [role="radio"],
+      #main-content [role="tab"],
+      #main-content [role="switch"],
+      #main-content [role="checkbox"],
+      #main-content [role="option"],
+      #main-content [role="alert"],
+      #main-content svg,
+      #main-content img,
+      #main-content video,
+      #main-content canvas {
+        background-color: unset !important;
+        background-image: unset !important;
+      }
+
+      /* === Text colors === */
       h1, h2, h3, h4, h5, h6 {
         color: #F1F5F9 !important;
       }
-
-      /* === Body text === */
-      p, li, dd, dt, td, th, label, figcaption {
+      p, li, dd, dt, td, th, label, figcaption, blockquote {
         color: #E2E8F0 !important;
       }
-
-      /* === Secondary/muted text (spans, small text) === */
-      span {
+      span, small {
         color: #CBD5E1 !important;
       }
 
-      /* === Links stay terracotta (already good on dark) === */
+      /* === Links — bright orange on dark === */
       a {
         color: #F97316 !important;
       }
@@ -83,77 +130,33 @@ export const applyPreferences = (prefs) => {
         color: #FB923C !important;
       }
 
-      /* === Keep header links white (header is already dark) === */
+      /* === Header already dark — keep text white === */
       header[role="banner"] a,
       header[role="banner"] span,
-      header[role="banner"] button {
+      header[role="banner"] button,
+      header[role="banner"] div {
         color: white !important;
-      }
-
-      /* === Override hardcoded white/cream backgrounds === */
-      [style*="background: #FFFFFF"],
-      [style*="background: '#FFFFFF'"],
-      [style*="background-color: #FFFFFF"],
-      [style*="background-color: '#FFFFFF'"],
-      [style*="backgroundColor: '#FFFFFF'"],
-      [style*="background: white"],
-      [style*="background: 'white'"],
-      [style*="background-color: white"],
-      [style*="backgroundColor: 'white'"] {
-        background-color: #1E293B !important;
-        background: #1E293B !important;
-      }
-
-      [style*="background: #FAF7F2"],
-      [style*="background: '#FAF7F2'"],
-      [style*="backgroundColor: '#FAF7F2'"] {
-        background-color: #151B24 !important;
-        background: #151B24 !important;
-      }
-
-      [style*="background: #F8FAFC"],
-      [style*="background: '#F8FAFC'"],
-      [style*="backgroundColor: '#F8FAFC'"] {
-        background-color: #1A2332 !important;
-        background: #1A2332 !important;
-      }
-
-      [style*="background: #FEF1EC"],
-      [style*="background: '#FEF1EC'"],
-      [style*="backgroundColor: '#FEF1EC'"],
-      [style*="background: #FFF8F5"],
-      [style*="background: '#FFF8F5'"],
-      [style*="backgroundColor: '#FFF8F5'"] {
-        background-color: #2D1A11 !important;
-        background: #2D1A11 !important;
-      }
-
-      /* === Cards and bordered containers === */
-      [style*="border-radius"] {
-        border-color: #374151 !important;
       }
 
       /* === Form inputs === */
       input, select, textarea {
         background-color: #151B24 !important;
-        border-color: #374151 !important;
+        border-color: #475569 !important;
         color: #F1F5F9 !important;
-      }
-      input:focus, select:focus, textarea:focus {
-        border-color: #C2410C !important;
       }
       input::placeholder, textarea::placeholder {
         color: #94A3B8 !important;
       }
-
-      /* === Buttons — keep terracotta buttons, adjust outline buttons === */
-      button[style*="background: 'transparent'"],
-      button[style*="background: transparent"] {
-        border-color: #475569 !important;
-        color: #E2E8F0 !important;
+      input:focus, select:focus, textarea:focus {
+        border-color: #C2410C !important;
       }
 
-      /* === The settings dropdown itself === */
+      /* === Card/container borders — visible on dark === */
+      #main-content [style*="border"] {
+        border-color: #374151 !important;
+      }
+
+      /* === The settings dropdown === */
       [role="dialog"][aria-label="Display preferences"] {
         background-color: #1E293B !important;
         border-color: #374151 !important;
@@ -163,34 +166,27 @@ export const applyPreferences = (prefs) => {
         color: #94A3B8 !important;
       }
 
-      /* === Scroll chevron === */
-      [style*="cursor: pointer"][style*="border-radius: 50%"] {
-        background-color: rgba(30,41,59,0.8) !important;
-        color: #E2E8F0 !important;
-      }
-
-      /* === WCAG compliance callout bar === */
-      [style*="border-left: 4px solid #C2410C"] {
-        background-color: #1A1008 !important;
-      }
-
-      /* === Focus outlines — slightly brighter for dark bg === */
+      /* === Focus outlines — bright on dark === */
       *:focus-visible {
         outline-color: #F97316 !important;
       }
 
-      /* === Code/pre blocks if any === */
-      code, pre {
-        background-color: #151B24 !important;
-        color: #E2E8F0 !important;
+      /* === Scrollbar dark === */
+      ::-webkit-scrollbar {
+        background: #0F1219;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #374151;
+        border-radius: 4px;
       }
 
-      /* === Tables === */
-      table, tr, td, th {
-        border-color: #374151 !important;
-      }
-      th {
-        background-color: #151B24 !important;
+      /* === Global footer (non-landing, already dark) === */
+      footer[role="contentinfo"],
+      footer[role="contentinfo"] div,
+      footer[role="contentinfo"] p,
+      footer[role="contentinfo"] span,
+      footer[role="contentinfo"] a {
+        background-color: #0F1219 !important;
       }
     `;
   }
