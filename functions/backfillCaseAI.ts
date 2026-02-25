@@ -43,12 +43,10 @@ function buildSummary(data) {
     const subtype = data.violation_subtype || "Unknown";
     return `${subtype} issue at ${data.business_name || "Unknown"} in ${data.city || "Unknown"}, ${data.state || "??"} — ${snippet}`;
   }
-
   if (data.violation_type === "digital_website") {
     const domain = data.url_domain ? ` (${data.url_domain})` : "";
     return `Website accessibility issue at ${data.business_name || "Unknown"}${domain} — ${snippet}`;
   }
-
   return `ADA violation report at ${data.business_name || "Unknown"} — ${snippet}`;
 }
 
@@ -56,7 +54,6 @@ function categorize(data) {
   if (data.violation_type === "physical_space") {
     return PHYSICAL_SUBTYPE_MAP[data.violation_subtype] || "physical_other";
   }
-
   if (data.violation_type === "digital_website") {
     const techs = data.assistive_tech || [];
     for (const entry of DIGITAL_TECH_PRIORITY) {
@@ -64,7 +61,6 @@ function categorize(data) {
     }
     return "digital_other";
   }
-
   return "other";
 }
 
@@ -154,68 +150,96 @@ function buildClusterId(data) {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const body = await req.json();
 
-    const event = body.event;
-    const data = body.data;
-
-    // Only process create events for submitted cases
-    if (!event || event.type !== "create") {
-      return Response.json({ skipped: true, reason: "not a create event" });
+    // Admin only
+    const user = await base44.auth.me();
+    if (user?.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    if (!data || data.status !== "submitted") {
-      return Response.json({ skipped: true, reason: "status is not submitted" });
+    // Fetch ALL cases (paginate with 500 per page)
+    let allCases = [];
+    let offset = 0;
+    const pageSize = 500;
+    while (true) {
+      const page = await base44.asServiceRole.entities.Case.filter({}, 'created_date', pageSize, offset);
+      allCases = allCases.concat(page);
+      if (page.length < pageSize) break;
+      offset += pageSize;
     }
 
-    const caseId = event.entity_id;
+    console.log(`Total cases fetched: ${allCases.length}`);
 
-    const ai_summary = buildSummary(data);
-    const ai_category = categorize(data);
-    const ai_severity = assessSeverity(data.narrative);
-    const { score: ai_completeness_score, flags: ai_completeness_flags } = scoreCompleteness(data);
-    const ai_duplicate_cluster_id = buildClusterId(data);
-    const ai_processed_at = new Date().toISOString();
+    // Filter to those not yet processed
+    const toProcess = allCases.filter(c => !c.ai_processed_at);
+    console.log(`Cases needing backfill: ${toProcess.length}`);
 
-    await base44.asServiceRole.entities.Case.update(caseId, {
-      ai_summary,
-      ai_category,
-      ai_severity,
-      ai_completeness_score,
-      ai_completeness_flags,
-      ai_duplicate_cluster_id,
-      ai_processed_at
-    });
+    const now = new Date().toISOString();
+    let processed = 0;
 
-    // Count cluster and update all cases in cluster
-    const clusterCases = await base44.asServiceRole.entities.Case.filter({
-      ai_duplicate_cluster_id: ai_duplicate_cluster_id
-    });
+    // Step 1: Process each case individually (except cluster size)
+    for (const c of toProcess) {
+      const ai_summary = buildSummary(c);
+      const ai_category = categorize(c);
+      const ai_severity = assessSeverity(c.narrative);
+      const { score: ai_completeness_score, flags: ai_completeness_flags } = scoreCompleteness(c);
+      const ai_duplicate_cluster_id = buildClusterId(c);
 
-    const clusterSize = clusterCases.length;
+      await base44.asServiceRole.entities.Case.update(c.id, {
+        ai_summary,
+        ai_category,
+        ai_severity,
+        ai_completeness_score,
+        ai_completeness_flags,
+        ai_duplicate_cluster_id,
+        ai_processed_at: now,
+      });
 
-    for (const c of clusterCases) {
-      if (c.ai_duplicate_cluster_size !== clusterSize) {
-        await base44.asServiceRole.entities.Case.update(c.id, {
-          ai_duplicate_cluster_size: clusterSize
-        });
+      // Update in-memory too for cluster counting
+      c.ai_duplicate_cluster_id = ai_duplicate_cluster_id;
+      processed++;
+    }
+
+    // Also compute cluster IDs for already-processed cases (for accurate cluster counts)
+    for (const c of allCases) {
+      if (!c.ai_duplicate_cluster_id) {
+        c.ai_duplicate_cluster_id = buildClusterId(c);
       }
     }
 
+    // Step 2: Compute cluster sizes across ALL cases
+    const clusterCounts = {};
+    for (const c of allCases) {
+      const cid = c.ai_duplicate_cluster_id;
+      if (cid) {
+        clusterCounts[cid] = (clusterCounts[cid] || 0) + 1;
+      }
+    }
+
+    // Step 3: Update cluster sizes where they differ
+    let clusterUpdates = 0;
+    for (const c of allCases) {
+      const cid = c.ai_duplicate_cluster_id;
+      const correctSize = clusterCounts[cid] || 1;
+      if (c.ai_duplicate_cluster_size !== correctSize) {
+        await base44.asServiceRole.entities.Case.update(c.id, {
+          ai_duplicate_cluster_size: correctSize,
+        });
+        clusterUpdates++;
+      }
+    }
+
+    const uniqueClusters = Object.values(clusterCounts).filter(v => v >= 2).length;
+
     return Response.json({
       success: true,
-      caseId,
-      ai_summary,
-      ai_category,
-      ai_severity,
-      ai_completeness_score,
-      ai_completeness_flags,
-      ai_duplicate_cluster_id,
-      ai_duplicate_cluster_size: clusterSize,
-      ai_processed_at
+      total_cases: allCases.length,
+      cases_processed: processed,
+      cluster_size_updates: clusterUpdates,
+      unique_clusters_with_2_plus: uniqueClusters,
     });
   } catch (error) {
-    console.error("processCaseAI error:", error.message);
-    return Response.json({ success: false, error: error.message }, { status: 200 });
+    console.error("backfillCaseAI error:", error.message, error.stack);
+    return Response.json({ error: error.message }, { status: 500 });
   }
 });
