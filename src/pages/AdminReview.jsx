@@ -335,25 +335,46 @@ export default function AdminReview() {
             </p>
           </div>
 
-          {/* Sort dropdown */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ArrowUpDown size={16} style={{ color: '#475569' }} />
-            <select
-              aria-label="Sort order"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-              style={{
-                padding: '8px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                border: '1px solid var(--slate-300)', borderRadius: '8px',
-                backgroundColor: 'white', color: 'var(--slate-800)', cursor: 'pointer'
-              }}
-            >
-              <option value="oldest">Oldest First</option>
-              <option value="newest">Newest First</option>
-              <option value="severity">Severity (High First)</option>
-              <option value="completeness">Completeness (Ready First)</option>
-              <option value="cluster">Cluster Size (Largest First)</option>
-            </select>
+          {/* View toggle + Sort dropdown */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <ViewModeToggle value={viewMode} onChange={setViewMode} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ArrowUpDown size={16} style={{ color: '#475569' }} />
+              {viewMode === 'list' ? (
+                <select
+                  aria-label="Sort order"
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value)}
+                  style={{
+                    padding: '8px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+                    border: '1px solid var(--slate-300)', borderRadius: '8px',
+                    backgroundColor: 'white', color: 'var(--slate-800)', cursor: 'pointer',
+                  }}
+                >
+                  <option value="oldest">Oldest First</option>
+                  <option value="newest">Newest First</option>
+                  <option value="severity">Severity (High First)</option>
+                  <option value="completeness">Completeness (Ready First)</option>
+                  <option value="cluster">Cluster Size (Largest First)</option>
+                </select>
+              ) : (
+                <select
+                  aria-label="Sort order"
+                  value={clusterSort}
+                  onChange={(e) => setClusterSort(e.target.value)}
+                  style={{
+                    padding: '8px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+                    border: '1px solid var(--slate-300)', borderRadius: '8px',
+                    backgroundColor: 'white', color: 'var(--slate-800)', cursor: 'pointer',
+                  }}
+                >
+                  <option value="most">Most Reports</option>
+                  <option value="severity">Highest Severity</option>
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                </select>
+              )}
+            </div>
           </div>
         </div>
 
