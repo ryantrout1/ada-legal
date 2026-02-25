@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { LogOut, Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../utils';
+import { LogOut, BarChart3, Mail } from 'lucide-react';
 
-export default function UserAvatarMenu({ user, onLogout }) {
+export default function UserAvatarMenu({ user, onLogout, extraMenuItems = [] }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
   const btnRef = useRef(null);
@@ -81,6 +83,29 @@ export default function UserAvatarMenu({ user, onLogout }) {
           }}>
             {displayEmail}
           </div>
+          {extraMenuItems.map((item, i) => (
+            <Link
+              key={i}
+              role="menuitem"
+              tabIndex={0}
+              to={item.to}
+              onClick={() => setOpen(false)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px', width: '100%',
+                padding: '0 14px', minHeight: '44px',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
+                color: '#334155', backgroundColor: 'transparent', border: 'none',
+                cursor: 'pointer', textAlign: 'left', textDecoration: 'none',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F8FAFC'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            >
+              {item.icon} {item.label}
+            </Link>
+          ))}
+          {extraMenuItems.length > 0 && (
+            <div style={{ borderTop: '1px solid #E2E8F0' }} />
+          )}
           <button
             role="menuitem"
             tabIndex={0}
