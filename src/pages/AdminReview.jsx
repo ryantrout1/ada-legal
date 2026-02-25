@@ -30,6 +30,7 @@ export default function AdminReview() {
   const [expandedClusterCase, setExpandedClusterCase] = useState(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
+  const [triageOpen, setTriageOpen] = useState(false);
 
   useEffect(() => {
     if (!toast) return;
