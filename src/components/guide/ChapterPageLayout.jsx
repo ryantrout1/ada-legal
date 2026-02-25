@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../../utils';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import GuideStyles from './GuideStyles';
@@ -136,10 +135,6 @@ function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onT
 
 export default function ChapterPageLayout({ chapterNum, title, range, overview, sections }) {
   const [openIndex, setOpenIndex] = useState(null);
-
-  useEffect(() => {
-    base44.analytics.track({ eventName: 'guide_section_viewed', properties: { section_name: `Chapter ${chapterNum}: ${title}` } });
-  }, [chapterNum, title]);
   const currentIdx = ALL_CHAPTERS.findIndex(c => c.num === chapterNum);
   const prev = currentIdx > 0 ? ALL_CHAPTERS[currentIdx - 1] : null;
   const next = currentIdx < ALL_CHAPTERS.length - 1 ? ALL_CHAPTERS[currentIdx + 1] : null;
