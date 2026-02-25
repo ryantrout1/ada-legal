@@ -26,7 +26,7 @@ export default function Home() {
           return;
         }
         if (user?.role === 'admin') {
-          window.location.href = createPageUrl('Admin');
+          window.location.href = createPageUrl('AdminCases');
           return;
         }
       } catch {
