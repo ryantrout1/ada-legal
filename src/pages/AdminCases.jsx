@@ -59,16 +59,37 @@ export default function AdminCases() {
   const [forceCloseCase, setForceCloseCase] = useState(null);
   const [closeSaving, setCloseSaving] = useState(false);
   const [actionSaving, setActionSaving] = useState(false);
+  const [contactLogs, setContactLogs] = useState([]);
   const searchTimer = useRef(null);
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
   const loadData = async () => {
-    const [allCases, allLawyers] = await Promise.all([
+    const [allCases, allLawyers, allLogs] = await Promise.all([
       base44.entities.Case.list('-created_date', 500),
-      base44.entities.LawyerProfile.list('-created_date', 500)
+      base44.entities.LawyerProfile.list('-created_date', 500),
+      base44.entities.ContactLog.list('-created_date', 500)
     ]);
+
+    // Auto-expire cases available > 90 days
+    const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
+    const toExpire = allCases.filter(c =>
+      c.status === 'available' && (c.created_date || c.submitted_at) < ninetyDaysAgo
+    );
+    const now = new Date().toISOString();
+    for (const c of toExpire) {
+      await base44.entities.Case.update(c.id, { status: 'expired', expired_at: now });
+      await base44.entities.TimelineEvent.create({
+        case_id: c.id, event_type: 'expired',
+        event_description: 'This case was not matched with an attorney within 90 days. You may resubmit at any time.',
+        actor_role: 'system', visible_to_user: true, created_at: now
+      });
+      c.status = 'expired';
+      c.expired_at = now;
+    }
+
     setCases(allCases);
     setLawyers(allLawyers);
+    setContactLogs(allLogs);
   };
 
   useEffect(() => {
