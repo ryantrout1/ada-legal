@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import AutoCiteLinks from '../guide/AutoCiteLinks';
 import { ArrowRight, ExternalLink, RotateCcw } from 'lucide-react';
+import { useComingSoon } from '../useComingSoonModal';
 
 const urgencyColors = {
   green: { border: '#16A34A', bg: '#F0FDF4', text: '#15803D', label: 'You have time' },
@@ -26,6 +27,7 @@ function Card({ title, children }) {
 }
 
 export default function PathwayResults({ results, answers, onStartOver }) {
+  const { openModal } = useComingSoon();
   const urgency = urgencyColors[results.deadline.urgency] || urgencyColors.yellow;
   const intakeParams = new URLSearchParams({ source: 'pathway', type: answers.category || '', location: answers.location || '', timing: answers.timing || '', barrier: answers.barrier || '' }).toString();
 
@@ -189,19 +191,18 @@ export default function PathwayResults({ results, answers, onStartOver }) {
                   Visit <ExternalLink size={14} aria-hidden="true" />
                 </a>
               ) : fp.agency.toLowerCase().includes('attorney') ? (
-                <Link to={`${createPageUrl('Intake')}?${intakeParams}`}
+                <button
+                  onClick={() => openModal('report_violation')}
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: '6px',
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-                    color: 'white', backgroundColor: '#C2410C', textDecoration: 'none',
+                    color: '#94A3B8', backgroundColor: 'transparent', border: '1px solid #CBD5E1',
                     flexShrink: 0, borderRadius: '8px', padding: '10px 16px',
-                    minHeight: '44px', transition: 'background-color 0.15s'
+                    minHeight: '44px', cursor: 'pointer'
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#A93B0A'; }}
-                  onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#C2410C'; }}
                 >
-                  Report Violation <ArrowRight size={14} aria-hidden="true" />
-                </Link>
+                  Coming Soon <ArrowRight size={14} aria-hidden="true" />
+                </button>
               ) : null}
             </div>
           ))}
@@ -250,15 +251,15 @@ export default function PathwayResults({ results, answers, onStartOver }) {
         }}>
           An attorney will review your case — at no cost to you.
         </p>
-        <Link to={`${createPageUrl('Intake')}?${intakeParams}`} style={{
+        <button onClick={() => openModal('report_violation')} style={{
           display: 'inline-flex', alignItems: 'center', gap: '8px',
-          background: '#C2410C', color: 'white',
+          background: 'transparent', color: '#CBD5E1',
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-          padding: '16px 32px', borderRadius: '10px', textDecoration: 'none',
-          minHeight: '44px', transition: 'background 0.15s'
+          padding: '16px 32px', borderRadius: '10px', cursor: 'pointer',
+          minHeight: '44px', border: '1px solid #475569'
         }}>
-          Report This Violation <ArrowRight size={18} aria-hidden="true" />
-        </Link>
+          Report a Violation — Coming Soon <ArrowRight size={18} aria-hidden="true" />
+        </button>
       </div>
 
       {/* Start Over */}
