@@ -50,6 +50,7 @@
 import Admin from './pages/Admin';
 import AdminAnalytics from './pages/AdminAnalytics';
 import AdminCases from './pages/AdminCases';
+import AdminEmails from './pages/AdminEmails';
 import AdminLawyers from './pages/AdminLawyers';
 import AdminReview from './pages/AdminReview';
 import CaseDetail from './pages/CaseDetail';
@@ -120,7 +121,6 @@ import StandardsCh9 from './pages/StandardsCh9';
 import StandardsGuide from './pages/StandardsGuide';
 import TitleIIPathway from './pages/TitleIIPathway';
 import TitleIPathway from './pages/TitleIPathway';
-import AdminEmails from './pages/AdminEmails';
 import __Layout from './Layout.jsx';
 
 
@@ -128,6 +128,7 @@ export const PAGES = {
     "Admin": Admin,
     "AdminAnalytics": AdminAnalytics,
     "AdminCases": AdminCases,
+    "AdminEmails": AdminEmails,
     "AdminLawyers": AdminLawyers,
     "AdminReview": AdminReview,
     "CaseDetail": CaseDetail,
@@ -198,7 +199,6 @@ export const PAGES = {
     "StandardsGuide": StandardsGuide,
     "TitleIIPathway": TitleIIPathway,
     "TitleIPathway": TitleIPathway,
-    "AdminEmails": AdminEmails,
 }
 
 export const pagesConfig = {

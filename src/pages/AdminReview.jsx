@@ -167,7 +167,7 @@ export default function AdminReview() {
   const handleBulkConfirm = async ({ reason, comment }) => {
     setSaving(true); const now = new Date().toISOString();
     if (bulkModal.action === 'approve') {
-      for (const c of bulkModal.cases) { await base44.entities.Case.update(c.id, { status: 'available', approved_at: now, qc_reviewer_notes: comment || null }); await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'approved', event_description: 'Your case has been approved and is now visible to attorneys.', actor_role: 'admin', visible_to_user: true, created_at: now }); }
+      for (const c of bulkModal.cases) { await base44.entities.Case.update(c.id, { status: 'available', approved_at: now, qc_reviewer_notes: comment || null }); await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'approved', event_description: 'Your case has been approved and is now visible to attorneys.', actor_role: 'admin', visible_to_user: true, created_at: now }); try { const prefLabel = c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'; const rendered = await renderEmailTemplate('case_approved', { reporter_name: c.contact_name, business_name: c.business_name, contact_preference: prefLabel, case_url: window.location.origin + '/MyCases' }); if (rendered) await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: rendered.subject, body: rendered.body }); } catch {} }
       setToast({ type: 'success', message: `${bulkModal.cases.length} cases approved` });
     }
     if (bulkModal.action === 'reject') {
