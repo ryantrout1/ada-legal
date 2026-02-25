@@ -210,7 +210,10 @@ export default function AdminReview() {
               QC Review Queue
             </h1>
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: '#475569', margin: '4px 0 0' }}>
-              {cases.length} case{cases.length !== 1 ? 's' : ''} pending review
+              {dashboardFilter
+                ? `${displayCases.length} case${displayCases.length !== 1 ? 's' : ''} (filtered) of ${cases.length} total`
+                : `${cases.length} case${cases.length !== 1 ? 's' : ''} pending review`
+              }
             </p>
           </div>
 
