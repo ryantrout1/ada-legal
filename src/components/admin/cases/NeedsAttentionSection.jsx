@@ -158,7 +158,6 @@ export default function NeedsAttentionSection({
               </div>
             )}
           </div>
-        )}
       </div>
 
       {/* Reclaim confirmation modal */}
