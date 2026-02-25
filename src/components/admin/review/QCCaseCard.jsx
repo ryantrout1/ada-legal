@@ -59,24 +59,46 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
   const iconBg = isPhysical ? '#FEF1EC' : '#DBEAFE';
   const iconColor = isPhysical ? '#C2410C' : '#1D4ED8';
 
+  // Left border highlight
+  const isHighSeverity = c.ai_severity === 'high';
+  const isLargeCluster = (c.ai_duplicate_cluster_size ?? 0) >= 5;
+  const leftBorder = isHighSeverity ? '3px solid var(--error-400, #F87171)' : isLargeCluster ? '3px solid var(--info-400, #60A5FA)' : 'none';
+
+  // Severity config
+  const severityCfg = {
+    high:   { emoji: '🔴', label: 'High Severity', bg: 'var(--error-100)',   color: '#7F1D1D' },
+    medium: { emoji: '🟡', label: 'Medium',        bg: 'var(--warning-100)', color: '#92400E' },
+    low:    { emoji: '🟢', label: 'Low',            bg: 'var(--success-100)', color: '#14532D' },
+  };
+  const sev = severityCfg[c.ai_severity] || null;
+
+  // Completeness config
+  const score = c.ai_completeness_score ?? 0;
+  const compCfg = score >= 80
+    ? { dot: '#15803D', label: 'Ready',      color: '#15803D' }
+    : score >= 50
+      ? { dot: '#D97706', label: 'Partial',    color: '#B45309' }
+      : { dot: '#DC2626', label: 'Incomplete', color: '#B91C1C' };
+
   return (
     <div style={{
       backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-      borderRadius: '12px', overflow: 'hidden'
+      borderRadius: '12px', overflow: 'hidden',
+      borderLeft: leftBorder,
     }}>
       {/* Collapsed Row */}
       <div
         role="button"
         tabIndex={0}
         aria-expanded={expanded}
-        aria-label={`${c.business_name} — ${c.business_type}, ${[c.city, c.state].filter(Boolean).join(', ') || 'unknown location'}. ${expanded ? 'Collapse' : 'Expand'} details.`}
+        aria-label={`${c.business_name} — ${c.business_type}, ${[c.city, c.state].filter(Boolean).join(', ') || 'unknown location'}. ${c.ai_severity ? c.ai_severity + ' severity.' : ''} ${expanded ? 'Collapse' : 'Expand'} details.`}
         onClick={() => setExpanded(!expanded)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded(!expanded); } }}
         style={{
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
-          gap: '10px 16px',
+          gap: '10px 14px',
           padding: '14px 16px',
           cursor: 'pointer',
           minHeight: '48px',
@@ -88,20 +110,20 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
       >
         {/* Icon */}
         <div style={{
-          width: '40px', height: '40px', borderRadius: '50%', flexShrink: 0,
+          width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0,
           backgroundColor: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center'
         }}>
           {isPhysical
-            ? <Building2 size={18} style={{ color: iconColor }} />
-            : <Globe size={18} style={{ color: iconColor }} />
+            ? <Building2 size={16} style={{ color: iconColor }} />
+            : <Globe size={16} style={{ color: iconColor }} />
           }
         </div>
 
-        {/* Col 1: Business + Case ID */}
-        <div style={{ minWidth: 0, flex: '1 1 180px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        {/* Left: Business + Case ID + cluster badge */}
+        <div style={{ minWidth: 0, flex: '0 1 180px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700,
               color: 'var(--slate-900)', margin: 0, overflow: 'hidden',
               textOverflow: 'ellipsis', whiteSpace: 'nowrap'
             }}>
@@ -110,60 +132,87 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag }) {
             {c.qc_flagged && (
               <Flag size={14} style={{ color: '#92400E', flexShrink: 0 }} aria-label="Flagged for review" />
             )}
+            {(c.ai_duplicate_cluster_size ?? 0) >= 2 && (
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', padding: '1px 7px', borderRadius: '100px',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
+                color: '#1D4ED8', backgroundColor: 'var(--info-100)', whiteSpace: 'nowrap', flexShrink: 0,
+              }}>
+                {c.ai_duplicate_cluster_size} reports
+              </span>
+            )}
           </div>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: '#475569', margin: 0
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-400)', margin: 0
           }}>
             {c.id?.slice(0, 8)}...
           </p>
         </div>
 
-        {/* Col 2: Business type + subtype pills */}
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', flex: '0 1 auto' }}>
-          <span style={{
-            display: 'inline-block', padding: '2px 8px', borderRadius: '6px',
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
-            color: '#1E293B', backgroundColor: '#F1EFEA'
-          }}>{c.business_type}</span>
-          {(c.violation_subtype || c.url_domain) && (
+        {/* Middle: AI insights */}
+        <div style={{ flex: '1 1 300px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {/* Severity + Completeness row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            {sev && (
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: '3px',
+                padding: '2px 8px', borderRadius: '6px',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+                color: sev.color, backgroundColor: sev.bg,
+              }}>
+                {sev.emoji} {sev.label}
+              </span>
+            )}
             <span style={{
-              display: 'inline-block', padding: '2px 8px', borderRadius: '6px',
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
-              color: isPhysical ? '#7C2D12' : '#1E3A5F',
-              backgroundColor: isPhysical ? '#FEF1EC' : '#DBEAFE'
-            }}>{c.violation_subtype || c.url_domain}</span>
-          )}
-          <SourceBadge source={c.intake_source} />
-        </div>
-
-        {/* Col 3: Location */}
-        <span style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569',
-          whiteSpace: 'nowrap', flex: '0 0 auto'
-        }}>
-          {[c.city, c.state].filter(Boolean).join(', ') || '—'}
-        </span>
-
-        {/* Col 4: Date + wait time */}
-        <div style={{ textAlign: 'right', flex: '0 0 auto' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569', margin: 0 }}>
-            {formatDate(c.submitted_at || c.created_date)}
-          </p>
-          {waitTime && (
-            <p style={{
+              display: 'inline-flex', alignItems: 'center', gap: '4px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-              color: waitTime.isOverdue ? '#92400E' : '#475569', margin: 0,
-              display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end'
+              color: compCfg.color,
             }}>
-              <Clock size={12} /> {waitTime.text}
+              <span style={{
+                width: '8px', height: '8px', borderRadius: '50%',
+                backgroundColor: compCfg.dot, flexShrink: 0,
+              }} />
+              {compCfg.label}
+            </span>
+          </div>
+          {/* AI summary */}
+          {c.ai_summary && (
+            <p style={{
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', color: 'var(--slate-600)',
+              margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              lineHeight: 1.4,
+            }}>
+              {c.ai_summary}
             </p>
           )}
         </div>
 
-        {/* Arrow indicator */}
-        <span aria-hidden="true" style={{ color: 'var(--slate-500)', display: 'flex', alignItems: 'center', padding: '8px' }}>
-          {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-        </span>
+        {/* Right: Location + date + arrow */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: '0 0 auto' }}>
+          <div style={{ textAlign: 'right' }}>
+            <span style={{
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569',
+              whiteSpace: 'nowrap', display: 'block',
+            }}>
+              {[c.city, c.state].filter(Boolean).join(', ') || '—'}
+            </span>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569', margin: '2px 0 0' }}>
+              {formatDate(c.submitted_at || c.created_date)}
+            </p>
+            {waitTime && (
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
+                color: waitTime.isOverdue ? '#92400E' : '#475569', margin: 0,
+                display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end'
+              }}>
+                <Clock size={11} /> {waitTime.text}
+              </p>
+            )}
+          </div>
+          <span aria-hidden="true" style={{ color: 'var(--slate-500)', display: 'flex', alignItems: 'center', padding: '4px' }}>
+            {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </span>
+        </div>
       </div>
 
       {/* Expanded View */}

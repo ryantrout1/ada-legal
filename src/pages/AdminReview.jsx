@@ -55,12 +55,24 @@ export default function AdminReview() {
     return cases;
   }, [cases, dashboardFilter]);
 
+  const SEVERITY_ORDER = { high: 0, medium: 1, low: 2 };
+
   const flaggedCases = displayCases.filter(c => c.qc_flagged);
   const sortedCases = [...displayCases].sort((a, b) => {
     // Flagged first
     if (a.qc_flagged && !b.qc_flagged) return -1;
     if (!a.qc_flagged && b.qc_flagged) return 1;
-    // Then by date
+
+    if (sortOrder === 'severity') {
+      return (SEVERITY_ORDER[a.ai_severity] ?? 3) - (SEVERITY_ORDER[b.ai_severity] ?? 3);
+    }
+    if (sortOrder === 'completeness') {
+      return (b.ai_completeness_score ?? 0) - (a.ai_completeness_score ?? 0);
+    }
+    if (sortOrder === 'cluster') {
+      return (b.ai_duplicate_cluster_size ?? 0) - (a.ai_duplicate_cluster_size ?? 0);
+    }
+    // Default: date
     const dateA = new Date(a.submitted_at || a.created_date);
     const dateB = new Date(b.submitted_at || b.created_date);
     return sortOrder === 'oldest' ? dateA - dateB : dateB - dateA;
