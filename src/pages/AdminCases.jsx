@@ -1,50 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
-import { Search } from 'lucide-react';
-import AdminCaseRow from '../components/admin/cases/AdminCaseRow';
+import { Search, X, ArrowUpDown } from 'lucide-react';
+import PipelineDashboard from '../components/admin/cases/PipelineDashboard';
+import NeedsAttentionSection from '../components/admin/cases/NeedsAttentionSection';
+import CaseManagerTabs, { getTabCounts, filterByTab } from '../components/admin/cases/CaseManagerTabs';
+import CaseManagerRow from '../components/admin/cases/CaseManagerRow';
 import AdminCaseExpanded from '../components/admin/cases/AdminCaseExpanded';
+import StickyFooter from '../components/admin/cases/StickyFooter';
 import ForceCloseModal from '../components/admin/ForceCloseModal';
 
-const STATE_NAME_TO_ABBR = {
-  'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO',
-  'Connecticut':'CT','Delaware':'DE','District of Columbia':'DC','Florida':'FL','Georgia':'GA',
-  'Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA','Kansas':'KS','Kentucky':'KY',
-  'Louisiana':'LA','Maine':'ME','Maryland':'MD','Massachusetts':'MA','Michigan':'MI','Minnesota':'MN',
-  'Mississippi':'MS','Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH',
-  'New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND',
-  'Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC',
-  'South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA',
-  'Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'
-};
+function daysSince(d) { return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 0; }
 
-function normalizeState(s) {
-  if (!s) return '';
-  const trimmed = s.trim();
-  if (trimmed.length === 2) return trimmed.toUpperCase();
-  return STATE_NAME_TO_ABBR[trimmed] || trimmed;
-}
+const SEVERITY_ORDER = { high: 0, medium: 1, low: 2 };
 
-const STATUS_PRIORITY = {
-  submitted: 0, under_review: 1, available: 2, approved: 3,
-  assigned: 4, in_progress: 5, closed: 6, rejected: 7, expired: 8
-};
-
-function sortCases(cases, sortBy) {
+function sortCases(cases, sortBy, lawyerMap, needsAttentionIds) {
   return [...cases].sort((a, b) => {
-    if (sortBy === 'oldest') {
-      return new Date(a.submitted_at || a.created_date) - new Date(b.submitted_at || b.created_date);
-    }
-    if (sortBy === 'status') {
-      const pa = STATUS_PRIORITY[a.status] ?? 10;
-      const pb = STATUS_PRIORITY[b.status] ?? 10;
-      if (pa !== pb) return pa - pb;
+    if (sortBy === 'attention') {
+      const aNeeds = needsAttentionIds.has(a.id) ? 0 : 1;
+      const bNeeds = needsAttentionIds.has(b.id) ? 0 : 1;
+      if (aNeeds !== bNeeds) return aNeeds - bNeeds;
       return new Date(b.submitted_at || b.created_date) - new Date(a.submitted_at || a.created_date);
     }
-    if (sortBy === 'name') {
-      return (a.business_name || '').localeCompare(b.business_name || '');
+    if (sortBy === 'oldest') return new Date(a.submitted_at || a.created_date) - new Date(b.submitted_at || b.created_date);
+    if (sortBy === 'status') {
+      const p = { submitted: 0, under_review: 1, available: 2, assigned: 3, in_progress: 4, closed: 5, rejected: 6, expired: 7 };
+      const diff = (p[a.status] ?? 10) - (p[b.status] ?? 10);
+      return diff !== 0 ? diff : new Date(b.submitted_at || b.created_date) - new Date(a.submitted_at || a.created_date);
     }
-    // default: newest
+    if (sortBy === 'severity') {
+      return (SEVERITY_ORDER[a.ai_severity] ?? 3) - (SEVERITY_ORDER[b.ai_severity] ?? 3);
+    }
+    if (sortBy === 'business') return (a.business_name || '').localeCompare(b.business_name || '');
+    if (sortBy === 'lawyer') {
+      const la = a.assigned_lawyer_id ? (lawyerMap[a.assigned_lawyer_id]?.full_name || '') : '';
+      const lb = b.assigned_lawyer_id ? (lawyerMap[b.assigned_lawyer_id]?.full_name || '') : '';
+      return la.localeCompare(lb);
+    }
+    // newest
     return new Date(b.submitted_at || b.created_date) - new Date(a.submitted_at || a.created_date);
   });
 }
@@ -54,13 +47,14 @@ export default function AdminCases() {
   const [cases, setCases] = useState([]);
   const [lawyers, setLawyers] = useState([]);
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [violationFilter, setViolationFilter] = useState('all');
-  const [lawyerFilter, setLawyerFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('newest');
+  const [sortBy, setSortBy] = useState('attention');
+  const [activeTab, setActiveTab] = useState('all');
+  const [pipelineStatus, setPipelineStatus] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
   const [forceCloseCase, setForceCloseCase] = useState(null);
   const [closeSaving, setCloseSaving] = useState(false);
+  const searchTimer = useRef(null);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
   const loadData = async () => {
     const [allCases, allLawyers] = await Promise.all([
@@ -74,15 +68,90 @@ export default function AdminCases() {
   useEffect(() => {
     async function init() {
       const user = await base44.auth.me();
-      if (!user || user.role !== 'admin') {
-        window.location.href = createPageUrl('Home');
-        return;
-      }
+      if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
       await loadData();
       setLoading(false);
     }
     init();
   }, []);
+
+  // Debounce search
+  useEffect(() => {
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    searchTimer.current = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => { if (searchTimer.current) clearTimeout(searchTimer.current); };
+  }, [search]);
+
+  const lawyerMap = useMemo(() => {
+    const m = {};
+    lawyers.forEach(l => { m[l.id] = l; });
+    return m;
+  }, [lawyers]);
+
+  // Needs attention cases
+  const { unclaimed, awaitingContact, needsAttentionIds } = useMemo(() => {
+    const now = Date.now();
+    const unc = cases.filter(c => c.status === 'available' && daysSince(c.approved_at || c.created_date) >= 7);
+    const awc = cases.filter(c => c.status === 'assigned' && c.assigned_at && !c.contact_logged_at && (now - new Date(c.assigned_at).getTime()) >= 86400000);
+    const ids = new Set([...unc, ...awc].map(c => c.id));
+    return { unclaimed: unc, awaitingContact: awc, needsAttentionIds: ids };
+  }, [cases]);
+
+  // Avg assignment days
+  const avgAssignDays = useMemo(() => {
+    const assigned = cases.filter(c => c.assigned_at && c.approved_at);
+    if (assigned.length === 0) return '—';
+    const total = assigned.reduce((sum, c) => sum + Math.max(0, (new Date(c.assigned_at) - new Date(c.approved_at)) / 86400000), 0);
+    return Math.round(total / assigned.length);
+  }, [cases]);
+
+  // Filtered list
+  const displayCases = useMemo(() => {
+    let result = cases;
+
+    // Pipeline status filter overrides tab
+    if (pipelineStatus) {
+      result = result.filter(c => c.status === pipelineStatus);
+    } else {
+      result = filterByTab(result, activeTab);
+    }
+
+    // Search
+    if (debouncedSearch.trim()) {
+      const q = debouncedSearch.trim().toLowerCase();
+      result = result.filter(c => {
+        const lawyer = c.assigned_lawyer_id ? lawyerMap[c.assigned_lawyer_id] : null;
+        return (c.business_name || '').toLowerCase().includes(q) ||
+          (c.city || '').toLowerCase().includes(q) ||
+          (c.state || '').toLowerCase().includes(q) ||
+          (c.id || '').toLowerCase().includes(q) ||
+          (c.case_id || '').toLowerCase().includes(q) ||
+          (c.narrative || '').toLowerCase().includes(q) ||
+          (c.ai_summary || '').toLowerCase().includes(q) ||
+          (lawyer?.full_name || '').toLowerCase().includes(q);
+      });
+    }
+
+    return result;
+  }, [cases, pipelineStatus, activeTab, debouncedSearch, lawyerMap]);
+
+  const sorted = useMemo(() => sortCases(displayCases, sortBy, lawyerMap, needsAttentionIds), [displayCases, sortBy, lawyerMap, needsAttentionIds]);
+
+  const tabCounts = useMemo(() => getTabCounts(cases), [cases]);
+
+  const handlePipelineClick = (status) => {
+    if (pipelineStatus === status) {
+      setPipelineStatus(null);
+    } else {
+      setPipelineStatus(status);
+      setActiveTab('all');
+    }
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setPipelineStatus(null);
+  };
 
   const handleForceClose = async (formData) => {
     if (!forceCloseCase) return;
@@ -106,13 +175,9 @@ export default function AdminCases() {
   const handleReassign = async (caseData) => {
     const now = new Date().toISOString();
     const lawyerProfile = caseData.assigned_lawyer_id ? lawyerMap[caseData.assigned_lawyer_id] : null;
-    await base44.entities.Case.update(caseData.id, {
-      status: 'available', assigned_lawyer_id: '', assigned_at: ''
-    });
+    await base44.entities.Case.update(caseData.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '' });
     if (lawyerProfile && lawyerProfile.cases_reclaimed != null) {
-      await base44.entities.LawyerProfile.update(lawyerProfile.id, {
-        cases_reclaimed: (lawyerProfile.cases_reclaimed || 0) + 1
-      });
+      await base44.entities.LawyerProfile.update(lawyerProfile.id, { cases_reclaimed: (lawyerProfile.cases_reclaimed || 0) + 1 });
     }
     await base44.entities.TimelineEvent.create({
       case_id: caseData.id, event_type: 'reclaimed',
@@ -123,159 +188,136 @@ export default function AdminCases() {
     loadData();
   };
 
-  const lawyerMap = {};
-  lawyers.forEach(l => { lawyerMap[l.id] = l; });
-
-  // Lawyers who have/had cases assigned
-  const assignedLawyerIds = [...new Set(cases.filter(c => c.assigned_lawyer_id).map(c => c.assigned_lawyer_id))];
-  const assignedLawyers = assignedLawyerIds.map(id => lawyerMap[id]).filter(Boolean);
-
-  const filtered = cases.filter(c => {
-    if (statusFilter !== 'all' && c.status !== statusFilter) return false;
-    if (violationFilter !== 'all' && c.violation_type !== violationFilter) return false;
-    if (lawyerFilter !== 'all' && c.assigned_lawyer_id !== lawyerFilter) return false;
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      const idMatch = (c.id || '').toLowerCase().includes(q);
-      const nameMatch = (c.business_name || '').toLowerCase().includes(q);
-      if (!idMatch && !nameMatch) return false;
-    }
-    return true;
-  });
-
-  const sorted = sortCases(filtered, sortBy);
-
   if (loading) {
     return (
-      <div role="status" aria-label="Loading cases" style={{
+      <div role="status" aria-label="Loading Case Manager" style={{
         display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
         minHeight: 'calc(100vh - 200px)', gap: '1rem'
       }}>
-        <h1 className="sr-only">All Cases</h1>
+        <h1 className="sr-only">Case Manager</h1>
         <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading cases…</p>
       </div>
     );
   }
 
-  const selectStyle = {
-    minHeight: '44px', padding: '0.625rem 0.75rem',
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-    color: '#334155', backgroundColor: 'var(--surface)',
-    border: '1px solid var(--slate-200)', borderRadius: '8px',
-    outline: 'none', cursor: 'pointer'
-  };
-
   return (
-    <div style={{
-      backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)',
-      padding: 'clamp(0.75rem, 3vw, 1.5rem)'
-    }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)', paddingBottom: '60px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <h1 style={{
-            fontFamily: 'Fraunces, serif', fontSize: '1.75rem',
-            fontWeight: 600, color: 'var(--slate-900)', margin: 0
-          }}>
-            All Cases
-          </h1>
-          <span style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-            color: '#475569'
-          }}>
-            {filtered.length} case{filtered.length !== 1 ? 's' : ''}
-          </span>
+        <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+          Case Manager
+        </h1>
+
+        {/* Pipeline Dashboard */}
+        <PipelineDashboard
+          cases={cases}
+          activeStatus={pipelineStatus}
+          onStatusClick={handlePipelineClick}
+          needAttentionCount={needsAttentionIds.size}
+          avgAssignDays={avgAssignDays}
+        />
+
+        {/* Needs Attention */}
+        <NeedsAttentionSection
+          unclaimed={unclaimed}
+          awaitingContact={awaitingContact}
+          lawyerMap={lawyerMap}
+        />
+
+        {/* Search */}
+        <div style={{ position: 'relative' }}>
+          <Search size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8', pointerEvents: 'none' }} />
+          <input
+            type="text"
+            placeholder="Search by business name, city, case ID, lawyer name, or keyword…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            aria-label="Search cases"
+            style={{
+              width: '100%', minHeight: '44px', padding: '10px 40px 10px 38px',
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+              border: '1px solid var(--slate-200)', borderRadius: '10px',
+              backgroundColor: 'white', boxSizing: 'border-box',
+            }}
+          />
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              aria-label="Clear search"
+              style={{
+                position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
+                background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
+                color: 'var(--slate-400)', display: 'flex', minHeight: '44px', minWidth: '44px',
+                alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
 
-        {/* Filter Bar */}
-        <div style={{
-          display: 'flex', gap: '12px', flexWrap: 'wrap',
-          marginBottom: '16px', alignItems: 'center'
-        }}>
-          <div style={{ position: 'relative', flex: '1 1 220px', maxWidth: '340px' }}>
-            <Search size={16} style={{
-              position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)',
-              color: '#94A3B8', pointerEvents: 'none'
-            }} />
-            <input
-              type="text"
-              placeholder="Search by business name or case ID…"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              aria-label="Search cases"
-              style={{ ...selectStyle, width: '100%', paddingLeft: '2.25rem' }}
-            />
+        {/* Tabs + Sort */}
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+          <CaseManagerTabs
+            activeTab={pipelineStatus ? 'all' : activeTab}
+            onChange={handleTabChange}
+            counts={tabCounts}
+          />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0, paddingBottom: '4px' }}>
+            <ArrowUpDown size={14} style={{ color: 'var(--slate-400)' }} />
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              aria-label="Sort order"
+              style={{
+                minHeight: '44px', padding: '8px 12px', fontFamily: 'Manrope, sans-serif',
+                fontSize: '0.8125rem', border: '1px solid var(--slate-200)', borderRadius: '8px',
+                backgroundColor: 'white', color: 'var(--slate-700)', cursor: 'pointer',
+              }}
+            >
+              <option value="attention">Needs Attention First</option>
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="status">Status</option>
+              <option value="severity">Severity (High First)</option>
+              <option value="business">Business Name A–Z</option>
+              <option value="lawyer">Lawyer Name A–Z</option>
+            </select>
           </div>
-          <select
-            value={statusFilter}
-            onChange={e => setStatusFilter(e.target.value)}
-            style={selectStyle}
-            aria-label="Filter by status"
-          >
-            <option value="all">All Statuses</option>
-            <option value="submitted">Submitted</option>
-            <option value="under_review">Under Review</option>
-            <option value="available">Available</option>
-            <option value="assigned">Assigned</option>
-            <option value="in_progress">In Progress</option>
-            <option value="rejected">Rejected</option>
-            <option value="closed">Closed</option>
-            <option value="expired">Expired</option>
-          </select>
-          <select
-            value={violationFilter}
-            onChange={e => setViolationFilter(e.target.value)}
-            style={selectStyle}
-            aria-label="Filter by violation type"
-          >
-            <option value="all">All Violations</option>
-            <option value="physical_space">Physical Space</option>
-            <option value="digital_website">Digital / Website</option>
-          </select>
-          <select
-            value={lawyerFilter}
-            onChange={e => setLawyerFilter(e.target.value)}
-            style={selectStyle}
-            aria-label="Filter by assigned lawyer"
-          >
-            <option value="all">All Lawyers</option>
-            {assignedLawyers.sort((a, b) => a.full_name.localeCompare(b.full_name)).map(l => (
-              <option key={l.id} value={l.id}>{l.full_name}</option>
-            ))}
-          </select>
-          <select
-            value={sortBy}
-            onChange={e => setSortBy(e.target.value)}
-            style={selectStyle}
-            aria-label="Sort cases"
-          >
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-            <option value="status">Status</option>
-            <option value="name">Business Name A–Z</option>
-          </select>
         </div>
+
+        {/* Pipeline status indicator */}
+        {pipelineStatus && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+              Showing: <strong style={{ color: 'var(--slate-700)', textTransform: 'capitalize' }}>{pipelineStatus.replace('_', ' ')}</strong> only
+            </span>
+            <button
+              onClick={() => setPipelineStatus(null)}
+              style={{ background: 'none', border: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--terra-600)', cursor: 'pointer', textDecoration: 'underline', padding: '4px', minHeight: '44px' }}
+            >
+              Clear
+            </button>
+          </div>
+        )}
 
         {/* Case List */}
-        <div style={{
-          backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-          borderRadius: '12px', overflow: 'hidden'
-        }}>
+        <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '12px', overflow: 'hidden' }}>
           {sorted.length === 0 && (
             <div style={{ padding: '3rem', textAlign: 'center' }}>
               <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>
-                No cases match your filters.
+                No cases match your current filters.
               </p>
             </div>
           )}
-
           {sorted.map(c => {
             const isExpanded = expandedId === c.id;
             const lawyer = c.assigned_lawyer_id ? lawyerMap[c.assigned_lawyer_id] : null;
             return (
               <React.Fragment key={c.id}>
-                <AdminCaseRow
+                <CaseManagerRow
                   caseData={c}
                   lawyer={lawyer}
                   expanded={isExpanded}
@@ -294,6 +336,9 @@ export default function AdminCases() {
           })}
         </div>
       </div>
+
+      {/* Sticky Footer */}
+      <StickyFooter viewingCount={sorted.length} totalCount={cases.length} cases={cases} />
 
       <ForceCloseModal
         open={!!forceCloseCase}
