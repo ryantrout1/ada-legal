@@ -1,42 +1,71 @@
 import React, { useMemo } from 'react';
 import { ArrowRight } from 'lucide-react';
 
+const RESOLVED_KEYS = new Set(['closed', 'rejected']);
+const ACTIVE_KEYS = new Set(['submitted', 'under_review', 'available', 'assigned', 'in_progress']);
+
 const STAGES = [
-  { key: 'submitted', label: 'Submitted', bg: 'var(--slate-100, #F1F5F9)', color: 'var(--slate-700, #475569)', borderColor: '#475569' },
-  { key: 'under_review', label: 'In Review', bg: 'var(--info-100, #DBEAFE)', color: '#1D4ED8', borderColor: '#1D4ED8' },
-  { key: 'available', label: 'Available', bg: 'var(--terra-100, #FEF1EC)', color: '#9A3412', borderColor: '#C2410C', subtitle: 'In marketplace' },
-  { key: 'assigned', label: 'Assigned', bg: 'var(--warning-100, #FEF3C7)', color: '#92400E', borderColor: '#D97706' },
-  { key: 'in_progress', label: 'In Progress', bg: 'var(--success-100, #DCFCE7)', color: '#15803D', borderColor: '#15803D' },
-  { key: 'closed', label: 'Closed', bg: 'var(--slate-200, #E2E8F0)', color: 'var(--slate-500, #64748B)', borderColor: '#94A3B8' },
-  { key: 'rejected', label: 'Rejected', bg: 'var(--error-100, #FEE2E2)', color: '#B91C1C', borderColor: '#DC2626' },
+  { key: 'submitted',    label: 'Submitted',    subtitle: null },
+  { key: 'under_review', label: 'In Review',    subtitle: null },
+  { key: 'available',    label: 'Available',    subtitle: 'In marketplace' },
+  { key: 'assigned',     label: 'Assigned',     subtitle: null },
+  { key: 'in_progress',  label: 'In Progress',  subtitle: null },
+  { key: 'closed',       label: 'Closed',       subtitle: null },
+  { key: 'rejected',     label: 'Rejected',     subtitle: null },
 ];
+
+/* Active-stage base colors (used when count > 0) */
+const ACTIVE_COLORS = {
+  submitted:    { bg: '#FFF7ED', numColor: '#9A3412', labelColor: '#9A3412', border: '2px solid #FB923C' },
+  under_review: { bg: '#DBEAFE', numColor: '#1D4ED8', labelColor: '#1D4ED8', border: 'none' },
+  available:    { bg: '#FEF1EC', numColor: '#9A3412', labelColor: '#9A3412', border: 'none' },
+  assigned:     { bg: '#FEF3C7', numColor: '#92400E', labelColor: '#92400E', border: 'none' },
+  in_progress:  { bg: '#DCFCE7', numColor: '#15803D', labelColor: '#15803D', border: 'none' },
+};
+
+/* Resolved-stage colors (muted regardless of count) */
+const RESOLVED_COLORS = {
+  closed:   { bg: '#F1F5F9', numColor: '#94A3B8', labelColor: '#64748B' },
+  rejected: { bg: '#F1F5F9', numColor: '#DC2626', labelColor: '#DC2626' },
+};
+
+/* Zero-case styling — nearly invisible */
+const ZERO_STYLE = { bg: '#FAFAF9', numColor: '#CBD5E1', labelColor: '#94A3B8', border: 'none' };
+
+function getCardStyle(key, count) {
+  if (count === 0) return ZERO_STYLE;
+  if (RESOLVED_KEYS.has(key)) return { ...RESOLVED_COLORS[key], border: 'none' };
+  return ACTIVE_COLORS[key] || ZERO_STYLE;
+}
 
 export default function PipelineDashboard({ cases, activeStatus, onStatusClick, needAttentionCount, avgAssignDays }) {
   const counts = {};
   STAGES.forEach(s => { counts[s.key] = 0; });
   cases.forEach(c => { if (counts[c.status] !== undefined) counts[c.status]++; });
 
-  // Find bottleneck — stage with the most cases
+  /* Bottleneck = highest count among ACTIVE stages only */
   const bottleneckKey = useMemo(() => {
-    let maxKey = STAGES[0].key;
+    let maxKey = null;
     let maxCount = 0;
     STAGES.forEach(s => {
-      if (counts[s.key] > maxCount) { maxCount = counts[s.key]; maxKey = s.key; }
+      if (ACTIVE_KEYS.has(s.key) && counts[s.key] > maxCount) {
+        maxCount = counts[s.key];
+        maxKey = s.key;
+      }
     });
     return maxCount > 0 ? maxKey : null;
   }, [cases]);
 
-  // The arrow AFTER the bottleneck card is highlighted
   const bottleneckIdx = STAGES.findIndex(s => s.key === bottleneckKey);
 
   return (
     <div>
-      {/* Pipeline cards */}
       <div className="pipeline-card-row" style={{ display: 'flex', alignItems: 'center', gap: '0', overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory', paddingBottom: '4px' }}>
         {STAGES.map((stage, i) => {
+          const count = counts[stage.key];
           const active = activeStatus === stage.key;
-          const isBottleneck = stage.key === bottleneckKey && counts[stage.key] > 0;
-          // Arrow between previous card and this card: highlight if the previous card is the bottleneck
+          const isBottleneck = stage.key === bottleneckKey && count > 0;
+          const cs = getCardStyle(stage.key, count);
           const arrowHighlighted = i > 0 && (i - 1) === bottleneckIdx && counts[bottleneckKey] > 0;
 
           return (
@@ -46,16 +75,16 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
                   size={16}
                   className="pipeline-arrow"
                   style={{
-                    color: arrowHighlighted ? '#EA580C' : 'var(--slate-300)',
+                    color: arrowHighlighted ? '#EA580C' : '#CBD5E1',
                     flexShrink: 0,
+                    margin: '0 2px',
                     transition: 'color 0.3s',
                   }}
                   aria-hidden="true"
                 />
               )}
               <button
-                role="button"
-                aria-label={`Filter to ${stage.label}: ${counts[stage.key]} cases${isBottleneck ? ' (highest volume)' : ''}`}
+                aria-label={`Filter to ${stage.label}: ${count} cases${isBottleneck ? ' (highest volume)' : ''}`}
                 aria-pressed={active}
                 onClick={() => onStatusClick(stage.key)}
                 className={`pipeline-card${isBottleneck ? ' pipeline-bottleneck' : ''}`}
@@ -63,30 +92,30 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
                   flex: '1 0 110px',
                   minHeight: '44px',
                   padding: '12px 14px',
-                  backgroundColor: stage.bg,
-                  border: 'none',
+                  backgroundColor: cs.bg,
+                  border: cs.border || 'none',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   textAlign: 'center',
                   scrollSnapAlign: 'start',
-                  transition: 'box-shadow 0.15s, border-bottom 0.15s',
+                  transition: 'box-shadow 0.15s, border-bottom-color 0.15s',
                   boxShadow: active ? '0 2px 8px rgba(0,0,0,0.12)' : 'none',
                   borderBottom: isBottleneck
                     ? '3px solid #EA580C'
                     : active
-                      ? `3px solid ${stage.borderColor}`
+                      ? '3px solid var(--slate-700)'
                       : '3px solid transparent',
                   position: 'relative',
                 }}
               >
-                <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: stage.color, margin: 0, lineHeight: 1 }}>
-                  {counts[stage.key]}
+                <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: cs.numColor, margin: 0, lineHeight: 1 }}>
+                  {count}
                 </p>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: stage.color, margin: '2px 0 0', textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap' }}>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: cs.labelColor, margin: '2px 0 0', textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap' }}>
                   {stage.label}
                 </p>
-                {stage.subtitle && (
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', color: stage.color, margin: '1px 0 0', opacity: 0.7 }}>
+                {stage.subtitle && count > 0 && (
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', color: cs.labelColor, margin: '1px 0 0', opacity: 0.7 }}>
                     {stage.subtitle}
                   </p>
                 )}
@@ -96,7 +125,6 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
         })}
       </div>
 
-      {/* Summary line */}
       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '10px 0 0', lineHeight: 1.5 }}>
         <strong style={{ color: 'var(--slate-700)' }}>{cases.length}</strong> total cases
         {' · '}
@@ -108,7 +136,7 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
       <style>{`
         @keyframes bottleneckPulse {
           0%, 100% { box-shadow: 0 0 0 0 rgba(234,88,12,0.25); }
-          50% { box-shadow: 0 0 0 4px rgba(234,88,12,0.15); }
+          50% { box-shadow: 0 0 0 4px rgba(234,88,12,0.12); }
         }
         .pipeline-bottleneck {
           animation: bottleneckPulse 2.5s ease-in-out infinite;
