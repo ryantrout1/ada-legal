@@ -920,8 +920,76 @@ export const applyPreferences = (prefs) => {
   // --- FONT SIZE ---
   if (prefs.fontSize === 'large') {
     css += `html { font-size: 125% !important; }`;
+    css += `
+      /* ============================================
+         DIAGRAM SCALING — LARGE (1.25x)
+         SVG text uses absolute px so html font-size
+         doesn't affect it. Scale the entire SVG and
+         its surrounding controls.
+         ============================================ */
+
+      /* SVG container: scale the SVG and allow horizontal scroll */
+      #main-content svg[role="img"] {
+        transform: scale(1.15) !important;
+        transform-origin: top left !important;
+      }
+      /* The div wrapping the SVG — grow to fit scaled content */
+      #main-content div[style*="border-radius: 12px"]:has(svg[role="img"]) {
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        /* The SVG grows ~15% so pad the container height */
+        padding-bottom: 15% !important;
+      }
+
+      /* Callout info panels below diagrams */
+      #main-content svg[role="img"] ~ div[style*="border-radius: 12px"],
+      #main-content div:has(> svg[role="img"]) + div[aria-live] + div {
+        font-size: 1rem !important;
+      }
+
+      /* Unit toggle buttons beside diagrams */
+      #main-content div:has(> div > svg[role="img"]) > div:first-child button[aria-pressed] {
+        font-size: 0.9375rem !important;
+        padding: 5px 13px !important;
+        min-height: 35px !important;
+      }
+      #main-content div:has(> div > svg[role="img"]) > div:first-child span {
+        font-size: 1rem !important;
+      }
+    `;
   } else if (prefs.fontSize === 'xl') {
     css += `html { font-size: 150% !important; }`;
+    css += `
+      /* ============================================
+         DIAGRAM SCALING — XL (1.5x)
+         ============================================ */
+
+      #main-content svg[role="img"] {
+        transform: scale(1.3) !important;
+        transform-origin: top left !important;
+      }
+      #main-content div[style*="border-radius: 12px"]:has(svg[role="img"]) {
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        padding-bottom: 30% !important;
+      }
+
+      /* Callout info panels */
+      #main-content svg[role="img"] ~ div[style*="border-radius: 12px"],
+      #main-content div:has(> svg[role="img"]) + div[aria-live] + div {
+        font-size: 1rem !important;
+      }
+
+      /* Unit toggle buttons */
+      #main-content div:has(> div > svg[role="img"]) > div:first-child button[aria-pressed] {
+        font-size: 1.125rem !important;
+        padding: 6px 15px !important;
+        min-height: 40px !important;
+      }
+      #main-content div:has(> div > svg[role="img"]) > div:first-child span {
+        font-size: 1.2rem !important;
+      }
+    `;
   }
 
   // --- FONT FAMILY ---
