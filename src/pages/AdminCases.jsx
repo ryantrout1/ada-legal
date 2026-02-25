@@ -298,60 +298,41 @@ export default function AdminCases() {
 
   return (
     <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)', paddingBottom: '60px' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
 
-        {/* Header */}
-        <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
-          Case Manager
-        </h1>
-
-        {/* Pipeline Dashboard */}
-        <PipelineDashboard
+        {/* Row 1: Pipeline bar + secondary stats */}
+        <CompactPipelineBar
           cases={cases}
           activeStatus={pipelineStatus}
           onStatusClick={handlePipelineClick}
-          needAttentionCount={needsAttentionIds.size}
-          avgAssignDays={avgAssignDays}
+          secondaryStats={secondaryStats}
         />
 
-        {/* Secondary Stat Cards */}
-        <SecondaryStatCards cases={cases} lawyers={lawyers} />
-
-        {/* Needs Attention */}
-        <NeedsAttentionSection
-          unclaimed={unclaimed}
-          awaitingContact={awaitingContact}
+        {/* Row 2: Alert/summary bar */}
+        <AlertSummaryBar
+          cases={cases}
+          needsAttentionCount={needsAttentionIds.size}
+          summaryStats={summaryStats}
+          recentSubmissions={recentSubmissions}
+          overdueContacts={overdueContacts}
           lawyerMap={lawyerMap}
-          approvedLawyers={approvedLawyers}
-          onForceAssign={handleForceAssign}
-          onForceClose={setForceCloseCase}
-          onReclaim={handleReassign}
-          saving={actionSaving}
+          onExpandAttention={() => setAttentionOpen(!attentionOpen)}
+          attentionExpanded={attentionOpen}
         />
 
-        {/* Today's Summary */}
-        <TodaySummaryBar cases={cases} avgAssignDays={avgAssignDays} />
-
-        {/* Recent Submissions (collapsible) */}
-        <CollapsibleSection
-          id="recent-submissions"
-          title="📋 Recent Submissions"
-          count={cases.filter(c => c.status === 'submitted').length}
-        >
-          <RecentSubmissionsPanel
-            cases={cases}
-            onViewAll={() => { handleTabChange('active'); setSortBy('newest'); }}
+        {/* Needs Attention expanded panel (hidden by default) */}
+        {attentionOpen && needsAttentionIds.size > 0 && (
+          <NeedsAttentionSection
+            unclaimed={unclaimed}
+            awaitingContact={awaitingContact}
+            lawyerMap={lawyerMap}
+            approvedLawyers={approvedLawyers}
+            onForceAssign={handleForceAssign}
+            onForceClose={setForceCloseCase}
+            onReclaim={handleReassign}
+            saving={actionSaving}
           />
-        </CollapsibleSection>
-
-        {/* Lawyer Activity (collapsible) */}
-        <CollapsibleSection
-          id="lawyer-activity"
-          title="⚖️ Lawyer Activity"
-          alertCount={cases.filter(c => c.status === 'assigned' && c.assigned_at && !c.contact_logged_at && (Date.now() - new Date(c.assigned_at).getTime()) >= 86400000).length}
-        >
-          <LawyerActivityPanel cases={cases} lawyers={lawyers} contactLogs={contactLogs} />
-        </CollapsibleSection>
+        )}
 
         {/* Search */}
         <div style={{ position: 'relative' }}>
