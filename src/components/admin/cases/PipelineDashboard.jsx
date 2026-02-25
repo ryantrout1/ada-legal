@@ -129,8 +129,6 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
         <strong style={{ color: 'var(--slate-700)' }}>{cases.length}</strong> total cases
         {' · '}
         <strong style={{ color: needAttentionCount > 0 ? '#D97706' : 'var(--slate-700)' }}>{needAttentionCount}</strong> need attention
-        {' · '}
-        Avg time to assignment: <strong style={{ color: 'var(--slate-700)' }}>{avgAssignDays}</strong> days
       </p>
 
       <style>{`
