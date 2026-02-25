@@ -15,11 +15,15 @@ import { caseRejectedEmail } from '../components/emails/caseEmails';
 
 export default function AdminReview() {
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
   const [cases, setCases] = useState([]);
   const [sortOrder, setSortOrder] = useState('oldest');
   const [dashboardFilter, setDashboardFilter] = useState(null);
   const [viewMode, setViewMode] = useState('list');
   const [clusterSort, setClusterSort] = useState('most');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState({ ...EMPTY_FILTERS });
+  const [activeViewId, setActiveViewId] = useState(null);
   const [modalState, setModalState] = useState({ open: false, action: null, caseData: null });
   const [bulkModal, setBulkModal] = useState({ open: false, action: null, clusterId: null, cases: [] });
   const [expandedClusterCase, setExpandedClusterCase] = useState(null);
