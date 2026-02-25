@@ -168,13 +168,13 @@ export default function LandingHeroNew() {
       {/* Watermark logo */}
       <img
         className="landing-watermark"
-        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/e3c293e44_logo-terracotta.png"
+        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/2b7a73622_image11.png"
         alt=""
         aria-hidden="true"
         style={{
           position: 'absolute', bottom: '20px', right: '40px',
           width: '280px', height: '280px', objectFit: 'contain',
-          opacity: 0.07, pointerEvents: 'none'
+          opacity: 0.07, pointerEvents: 'none', mixBlendMode: 'lighten'
         }}
       />
 
