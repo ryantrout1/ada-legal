@@ -264,37 +264,7 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
             </div>
           </div>
 
-          {/* Preview panel */}
-          {showPreview && (
-            <div style={{
-              backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
-              borderRadius: '12px', overflow: 'hidden'
-            }}>
-              <div style={{
-                padding: '10px 16px', backgroundColor: '#F8FAFC',
-                borderBottom: '1px solid var(--slate-200)',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between'
-              }}>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>
-                  Preview
-                </span>
-                <button onClick={() => setShowPreview(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#94A3B8' }}>
-                  <X size={14} />
-                </button>
-              </div>
-              <div style={{ padding: '8px' }}>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569', margin: '0 0 6px 4px' }}>
-                  <strong>Subject:</strong> {replaceVars(subject)}
-                </p>
-                <iframe
-                  ref={iframeRef}
-                  title="Email preview"
-                  style={{ width: '100%', height: '400px', border: '1px solid var(--slate-200)', borderRadius: '6px' }}
-                  sandbox=""
-                />
-              </div>
-            </div>
-          )}
+
         </div>
       </div>
 
