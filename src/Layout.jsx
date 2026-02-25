@@ -407,7 +407,7 @@ export default function Layout({ children, currentPageName }) {
                       Review Queue
                     </Link>
                     <Link to={createPageUrl('AdminCases')} style={{ color: currentPageName === 'AdminCases' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
-                      All Cases
+                      Case Manager
                     </Link>
                     <Link to={createPageUrl('AdminLawyers')} style={{ color: currentPageName === 'AdminLawyers' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'AdminLawyers' ? 'page' : undefined}>
                       Lawyers
@@ -656,7 +656,7 @@ export default function Layout({ children, currentPageName }) {
                       Review Queue
                     </Link>
                     <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
-                      All Cases
+                      Case Manager
                     </Link>
                     <Link to={createPageUrl('AdminLawyers')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Lawyers
