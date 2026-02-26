@@ -1,104 +1,90 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { base44 } from '@/api/base44Client';
+import GuideEngagementStats from './GuideEngagementStats';
+import GuideTopSectionsChart from './GuideTopSectionsChart';
+import GuideActivityChart from './GuideActivityChart';
+import GuideTopSearches from './GuideTopSearches';
 
-export default function GuideEngagement({ events }) {
-  const { topSections, totalSearches, topQueries, conversionRate } = useMemo(() => {
-    const sectionMap = {};
-    let searches = 0;
-    const queryMap = {};
-    let sectionViews = 0;
-    let conversions = 0;
+export default function GuideEngagement() {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [range, setRange] = useState('30');
 
-    events.forEach(e => {
-      if (e.event_name === 'guide_section_viewed') {
-        sectionViews++;
-        const name = e.properties?.section_name || 'Unknown';
-        sectionMap[name] = (sectionMap[name] || 0) + 1;
-      }
-      if (e.event_name === 'guide_search') {
-        searches++;
-        const q = e.properties?.query || e.properties?.search_query || '';
-        if (q.trim()) queryMap[q.trim().toLowerCase()] = (queryMap[q.trim().toLowerCase()] || 0) + 1;
-      }
-      if (e.event_name === 'guide_to_report_conversion') {
-        conversions++;
-      }
-    });
+  useEffect(() => {
+    async function load() {
+      const all = await base44.entities.AnalyticsEvent.list('-created_date', 2000);
+      setEvents(all);
+      setLoading(false);
+    }
+    load();
+  }, []);
 
-    const topSections = Object.entries(sectionMap)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10);
+  const filtered = useMemo(() => {
+    if (range === 'all') return events;
+    const cutoff = new Date(Date.now() - parseInt(range) * 24 * 60 * 60 * 1000);
+    return events.filter(e => new Date(e.created_date) >= cutoff);
+  }, [events, range]);
 
-    const topQueries = Object.entries(queryMap)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10);
+  const guideViews = useMemo(() => filtered.filter(e => e.event_name === 'guide_section_viewed'), [filtered]);
+  const guideSearches = useMemo(() => filtered.filter(e => e.event_name === 'guide_search'), [filtered]);
+  const reportIntent = useMemo(() => filtered.filter(e => e.event_name === 'guide_to_report_conversion'), [filtered]);
 
-    const conversionRate = sectionViews > 0 ? ((conversions / sectionViews) * 100).toFixed(1) : '0.0';
+  const uniqueSections = useMemo(() => {
+    const s = new Set();
+    guideViews.forEach(e => { const n = e.properties?.section_name; if (n) s.add(n); });
+    return s.size;
+  }, [guideViews]);
 
-    return { topSections, totalSearches: searches, topQueries, conversionRate };
-  }, [events]);
-
-  const maxSectionCount = topSections.length > 0 ? topSections[0][1] : 1;
+  if (loading) {
+    return (
+      <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '40px', textAlign: 'center' }}>
+        <div className="a11y-spinner" style={{ margin: '0 auto' }} />
+      </div>
+    );
+  }
 
   return (
     <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '20px' }}>
-      <h4 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 16px' }}>
-        Guide Engagement
-      </h4>
-
-      {/* Stats row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginBottom: '20px' }}>
-        <div style={{ padding: '12px', backgroundColor: 'var(--slate-50)', borderRadius: '8px', textAlign: 'center' }}>
-          <div style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)' }}>{totalSearches}</div>
-          <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--slate-500)' }}>Guide Searches</div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+        <div>
+          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+            How are people using the Standards Guide?
+          </h3>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '2px 0 0' }}>Guide Engagement</p>
         </div>
-        <div style={{ padding: '12px', backgroundColor: 'var(--slate-50)', borderRadius: '8px', textAlign: 'center' }}>
-          <div style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--terra-600)' }}>{conversionRate}%</div>
-          <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--slate-500)' }}>Guide → Report Rate</div>
-        </div>
+        <select
+          aria-label="Date range for guide engagement"
+          value={range}
+          onChange={(e) => setRange(e.target.value)}
+          style={{
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
+            padding: '8px 12px', borderRadius: '8px',
+            border: '1px solid var(--slate-300)', background: 'white',
+            color: 'var(--slate-600)', cursor: 'pointer', minHeight: '38px',
+          }}
+        >
+          <option value="7">Last 7 days</option>
+          <option value="14">Last 14 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="all">All time</option>
+        </select>
       </div>
 
-      {/* Two columns */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
-        {/* Top sections */}
-        <div>
-          <h5 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 10px' }}>
-            Top Viewed Sections
-          </h5>
-          {topSections.length === 0 && (
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)' }}>No data yet</p>
-          )}
-          {topSections.map(([name, count], i) => (
-            <div key={name} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-400)', width: '18px', textAlign: 'right' }}>{i + 1}</span>
-              <div style={{ flex: 1, position: 'relative', height: '24px', backgroundColor: 'var(--slate-100)', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: `${(count / maxSectionCount) * 100}%`, backgroundColor: '#DBEAFE', borderRadius: '4px' }} />
-                <span style={{ position: 'relative', zIndex: 1, fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--slate-700)', padding: '0 8px', lineHeight: '24px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block' }}>
-                  {name}
-                </span>
-              </div>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-600)', minWidth: '28px', textAlign: 'right' }}>{count}</span>
-            </div>
-          ))}
-        </div>
+      <GuideEngagementStats
+        totalViews={guideViews.length}
+        uniqueSections={uniqueSections}
+        totalSearches={guideSearches.length}
+        reportIntent={reportIntent.length}
+      />
 
-        {/* Top queries */}
-        <div>
-          <h5 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 10px' }}>
-            Top Search Queries
-          </h5>
-          {topQueries.length === 0 && (
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)' }}>No search data yet</p>
-          )}
-          {topQueries.map(([query, count], i) => (
-            <div key={query} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-400)', width: '18px', textAlign: 'right' }}>{i + 1}</span>
-              <span style={{ flex: 1, fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                "{query}"
-              </span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-600)', minWidth: '28px', textAlign: 'right' }}>{count}</span>
-            </div>
-          ))}
-        </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px', marginTop: '20px' }}>
+        <GuideTopSectionsChart events={guideViews} />
+        <GuideActivityChart events={guideViews} days={parseInt(range) || 30} range={range} />
+      </div>
+
+      <div style={{ marginTop: '20px' }}>
+        <GuideTopSearches events={guideSearches} />
       </div>
     </div>
   );

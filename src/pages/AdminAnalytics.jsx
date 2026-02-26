@@ -10,6 +10,7 @@ import OpsFunnel from '../components/analytics/ops/OpsFunnel';
 import OpsLawyerTable from '../components/analytics/ops/OpsLawyerTable';
 import OpsCoverageGaps from '../components/analytics/ops/OpsCoverageGaps';
 import BigNumbers from '../components/analytics/impact/BigNumbers';
+import GuideEngagement from '../components/analytics/impact/GuideEngagement';
 import ViolationLandscape from '../components/analytics/impact/ViolationLandscape';
 import GeographicImpact from '../components/analytics/impact/GeographicImpact';
 import TrendsSection from '../components/analytics/impact/TrendsSection';
@@ -116,6 +117,7 @@ export default function AdminAnalytics() {
 
         {activeTab === 'impact' && (
           <div role="tabpanel" id="panel-impact" aria-labelledby="tab-impact" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <GuideEngagement />
             <ViolationLandscape cases={cases} />
             <GeographicImpact cases={cases} lawyers={lawyers} />
             <TrendsSection cases={cases} />
