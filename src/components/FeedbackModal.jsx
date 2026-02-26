@@ -107,7 +107,17 @@ export default function FeedbackModal({ isOpen, onClose }) {
         #feedback-modal-panel input:focus,
         #feedback-modal-panel textarea:focus,
         #feedback-modal-panel select:focus {
-          border-color: #C2410C !important;
+          border-color: #C75B2B !important;
+          outline: 2px solid #C75B2B !important;
+          outline-offset: -1px !important;
+          box-shadow: none !important;
+        }
+        #feedback-modal-panel input:focus-visible,
+        #feedback-modal-panel textarea:focus-visible,
+        #feedback-modal-panel select:focus-visible {
+          outline: 2px solid #C75B2B !important;
+          outline-offset: -1px !important;
+          box-shadow: none !important;
         }
         #feedback-modal-panel input::placeholder,
         #feedback-modal-panel textarea::placeholder {
