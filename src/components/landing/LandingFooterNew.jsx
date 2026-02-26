@@ -14,7 +14,7 @@ const footerLinkStyle = {
 const colHeadingStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
   letterSpacing: '0.12em', textTransform: 'uppercase',
-  color: '#5E6B7C', margin: '0 0 12px'
+  color: '#94A3B8', margin: '0 0 12px'
 };
 
 export default function LandingFooterNew() {
@@ -43,7 +43,7 @@ export default function LandingFooterNew() {
             </div>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-              color: '#5E6B7C', lineHeight: 1.7, margin: 0
+              color: '#94A3B8', lineHeight: 1.7, margin: 0
             }}>
               ADA Legal Link is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship. Attorney listings do not constitute endorsements. Results may vary.
             </p>
@@ -90,7 +90,7 @@ export default function LandingFooterNew() {
         }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-            color: '#5E6B7C', margin: 0
+            color: '#94A3B8', margin: 0
           }}>
             © 2026 ADA Legal Link. All rights reserved.
           </p>

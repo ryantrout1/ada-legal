@@ -46,13 +46,13 @@ export function brandedEmail({ heading, headingColor = '#1E293B', bodyHtml, port
 
     <!-- Footer -->
     <div style="background-color: #1E293B; padding: 20px 32px; text-align: center;">
-      <p style="margin: 0; font-family: Manrope, Arial, sans-serif; font-size: 12px; color: #5E6B7C; line-height: 1.5;">
+      <p style="margin: 0; font-family: Manrope, Arial, sans-serif; font-size: 12px; color: #94A3B8; line-height: 1.5;">
         © 2026 ADA Legal Link. All rights reserved.
       </p>
-      <p style="margin: 6px 0 0 0; font-family: Manrope, Arial, sans-serif; font-size: 12px; color: #5E6B7C; line-height: 1.5;">
+      <p style="margin: 6px 0 0 0; font-family: Manrope, Arial, sans-serif; font-size: 12px; color: #94A3B8; line-height: 1.5;">
         Connecting people with experienced ADA attorneys.
       </p>
-      <p style="margin: 10px 0 0 0; font-family: Manrope, Arial, sans-serif; font-size: 11px; color: #586577; line-height: 1.5; font-style: italic;">
+      <p style="margin: 10px 0 0 0; font-family: Manrope, Arial, sans-serif; font-size: 11px; color: #64748B; line-height: 1.5; font-style: italic;">
         This platform is not a law firm and does not provide legal advice. Submitting a report does not create an attorney-client relationship.
       </p>
     </div>
