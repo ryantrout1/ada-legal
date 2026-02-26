@@ -177,11 +177,11 @@ export default function PhotoUpload({ photos = [], onChange }) {
                 aria-label={`Remove photo ${i + 1}: ${photo.name}`}
                 style={{
                   position: 'absolute', top: '4px', right: '4px',
-                  width: '28px', height: '28px', borderRadius: '50%',
+                  width: '36px', height: '36px', borderRadius: '50%',
                   backgroundColor: 'rgba(0,0,0,0.6)', border: 'none',
                   cursor: 'pointer', display: 'flex',
                   alignItems: 'center', justifyContent: 'center',
-                  padding: 0, minHeight: '28px'
+                  padding: 0, minWidth: '36px', minHeight: '36px'
                 }}
               >
                 <X size={14} style={{ color: 'white' }} aria-hidden="true" />

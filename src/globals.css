@@ -607,7 +607,7 @@ html {
   font-size: 0.8125rem; font-weight: 600;
   color: #334155; display: block; margin-bottom: 4px;
 }
-.fb-optional { color: #94A3B8; font-weight: 400; }
+.fb-optional { color: #5E6B7C; font-weight: 400; }
 .fb-required { color: #DC2626; }
 .fb-select, .fb-input, .fb-textarea {
   font-family: Manrope, sans-serif; font-size: 0.9rem;
@@ -619,11 +619,11 @@ html {
 .fb-select { min-height: 40px; appearance: auto; }
 .fb-textarea { resize: vertical; min-height: 90px; }
 .fb-select:focus, .fb-input:focus, .fb-textarea:focus {
-  border-color: #C75B2B;
-  outline: 2px solid #C75B2B;
+  border-color: #B7501F;
+  outline: 2px solid #B7501F;
   outline-offset: -1px;
 }
-.fb-input::placeholder, .fb-textarea::placeholder { color: #9CA3AF; }
+.fb-input::placeholder, .fb-textarea::placeholder { color: #6B7280; }
 .fb-error {
   font-family: Manrope, sans-serif;
   font-size: 0.85rem; color: #DC2626; margin: 0;

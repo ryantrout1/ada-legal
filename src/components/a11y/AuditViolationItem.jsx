@@ -48,7 +48,7 @@ export default function AuditViolationItem({ violation, index, config, onHighlig
             {v.id}
           </p>
         </div>
-        <span style={{ color: '#94A3B8', fontSize: '0.75rem', flexShrink: 0 }}>
+        <span style={{ color: '#5E6B7C', fontSize: '0.75rem', flexShrink: 0 }}>
           {expanded ? '▼' : '▶'} {v.nodes.length}
         </span>
       </button>

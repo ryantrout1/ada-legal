@@ -42,7 +42,7 @@ export default function LandingStyles() {
         color: white !important;
       }
       .landing-footer-link:hover {
-        color: #EA580C !important;
+        color: #F97316 !important;
       }
 
       /* Responsive */

@@ -109,7 +109,7 @@ export default function TitleTriageStep({ onSelectTitleIII }) {
                 {card.description}
               </p>
               <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#94A3B8',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#5E6B7C',
                 margin: 0, lineHeight: 1.5, fontStyle: 'italic'
               }}>
                 {card.examples}
@@ -123,7 +123,7 @@ export default function TitleTriageStep({ onSelectTitleIII }) {
         ))}
       </div>
       <p style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#94A3B8',
+        fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#5E6B7C',
         fontStyle: 'italic', lineHeight: 1.55, textAlign: 'center',
         maxWidth: '780px', margin: '20px auto 0'
       }}>

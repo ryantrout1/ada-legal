@@ -16,7 +16,7 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
         <div style={{ textAlign: 'center', padding: '2rem 0', color: '#475569' }}>
           <div className="a11y-spinner" style={{ margin: '0 auto 0.75rem' }} />
           <p style={{ fontSize: '0.8125rem' }}>{siteProgress || 'Preparing…'}</p>
-          <p style={{ fontSize: '0.6875rem', color: '#94A3B8' }}>
+          <p style={{ fontSize: '0.6875rem', color: '#5E6B7C' }}>
             This may take 1–2 minutes. Each page is loaded and audited individually.
           </p>
         </div>
@@ -40,7 +40,7 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
             <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#475569', margin: '0.25rem 0 0' }}>
               Estimated Accessibility Score
             </p>
-            <p style={{ fontSize: '0.6875rem', color: '#94A3B8', margin: '0.25rem 0 0' }}>
+            <p style={{ fontSize: '0.6875rem', color: '#5E6B7C', margin: '0.25rem 0 0' }}>
               {siteResults.totalViolations} violation{siteResults.totalViolations !== 1 ? 's' : ''} across {siteResults.pages.length} pages
             </p>
           </div>
@@ -109,7 +109,7 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
                       {v.totalNodes} el{v.totalNodes !== 1 ? 's' : ''}
                     </span>
                   </div>
-                  <p style={{ margin: '0.25rem 0 0', fontSize: '0.6875rem', color: '#94A3B8' }}>
+                  <p style={{ margin: '0.25rem 0 0', fontSize: '0.6875rem', color: '#5E6B7C' }}>
                     Pages: {v.pages.join(', ')}
                   </p>
                 </div>
