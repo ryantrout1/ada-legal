@@ -480,6 +480,42 @@ export const applyPreferences = (prefs) => {
       #main-content svg[role="img"] {
         background-color: transparent !important;
       }
+
+      /* === MODAL EXEMPTIONS — DARK MODE === */
+      #feedback-modal-panel,
+      #feedback-modal-panel div,
+      #feedback-modal-panel form {
+        background-color: #FAF7F2 !important;
+        background: #FAF7F2 !important;
+        background-image: none !important;
+      }
+      #feedback-modal-panel h2 { color: #1E293B !important; }
+      #feedback-modal-panel p { color: #586577 !important; }
+      #feedback-modal-panel label { color: #334155 !important; }
+      #feedback-modal-panel span { color: #334155 !important; }
+      #feedback-modal-panel span.fb-optional { color: #94A3B8 !important; }
+      #feedback-modal-panel span.fb-required { color: #DC2626 !important; }
+      #feedback-modal-panel input,
+      #feedback-modal-panel textarea,
+      #feedback-modal-panel select {
+        background-color: #FFFFFF !important;
+        background: #FFFFFF !important;
+        color: #334155 !important;
+        border: 1px solid #D1D5DB !important;
+      }
+      #feedback-modal-panel input::placeholder,
+      #feedback-modal-panel textarea::placeholder { color: #9CA3AF !important; }
+      #feedback-modal-panel option { background-color: #FFFFFF !important; color: #334155 !important; }
+      #feedback-modal-panel button.fb-close-btn { color: #475569 !important; background: transparent !important; border: none !important; }
+      #feedback-modal-panel button.fb-submit-btn { background: #C2410C !important; color: #FFFFFF !important; border: none !important; }
+      #feedback-modal-panel button.fb-done-btn { background: #1E293B !important; color: #FFFFFF !important; border: none !important; }
+
+      .modal-light-theme,
+      .modal-light-theme div,
+      .modal-light-theme form { background: #FFFFFF !important; color: #334155 !important; }
+      .modal-light-theme h2, .modal-light-theme h3 { color: #1E293B !important; }
+      .modal-light-theme p, .modal-light-theme label { color: #475569 !important; }
+      .modal-light-theme input, .modal-light-theme textarea, .modal-light-theme select { background: #FFFFFF !important; color: #334155 !important; border: 1px solid #D1D5DB !important; }
     `;
   }
 
@@ -954,6 +990,113 @@ export const applyPreferences = (prefs) => {
 
       /* Diagram container border override for HC */
       #main-content div[style*="border-radius: 12px"] svg[role="img"] {
+        border: none !important;
+      }
+
+      /* ============================================
+         MODAL EXEMPTIONS — HIGH CONTRAST
+         Modals (feedback, coming soon, previews) must
+         keep their own light theme regardless of HC mode.
+         These use #id selectors for maximum specificity.
+         ============================================ */
+      #feedback-modal-panel,
+      #feedback-modal-panel div,
+      #feedback-modal-panel form {
+        background-color: #FAF7F2 !important;
+        background: #FAF7F2 !important;
+        background-image: none !important;
+        border-color: #D1D5DB !important;
+      }
+      #feedback-modal-panel h2 {
+        color: #1E293B !important;
+      }
+      #feedback-modal-panel p {
+        color: #586577 !important;
+      }
+      #feedback-modal-panel label {
+        color: #334155 !important;
+      }
+      #feedback-modal-panel span {
+        color: #334155 !important;
+      }
+      #feedback-modal-panel span.fb-optional {
+        color: #94A3B8 !important;
+      }
+      #feedback-modal-panel span.fb-required {
+        color: #DC2626 !important;
+      }
+      #feedback-modal-panel input,
+      #feedback-modal-panel textarea,
+      #feedback-modal-panel select {
+        background-color: #FFFFFF !important;
+        background: #FFFFFF !important;
+        color: #334155 !important;
+        border: 1px solid #D1D5DB !important;
+      }
+      #feedback-modal-panel input:focus,
+      #feedback-modal-panel textarea:focus,
+      #feedback-modal-panel select:focus {
+        border-color: #C75B2B !important;
+        outline: 2px solid #C75B2B !important;
+      }
+      #feedback-modal-panel input::placeholder,
+      #feedback-modal-panel textarea::placeholder {
+        color: #9CA3AF !important;
+      }
+      #feedback-modal-panel option {
+        background-color: #FFFFFF !important;
+        color: #334155 !important;
+      }
+      #feedback-modal-panel button.fb-close-btn {
+        color: #475569 !important;
+        background: transparent !important;
+        border: none !important;
+      }
+      #feedback-modal-panel button.fb-submit-btn {
+        background-color: #C2410C !important;
+        background: #C2410C !important;
+        color: #FFFFFF !important;
+        border: none !important;
+      }
+      #feedback-modal-panel button.fb-done-btn {
+        background-color: #1E293B !important;
+        background: #1E293B !important;
+        color: #FFFFFF !important;
+        border: none !important;
+      }
+      #feedback-modal-panel a {
+        color: #C2410C !important;
+      }
+
+      /* Coming Soon modal exemption */
+      .modal-light-theme,
+      .modal-light-theme div,
+      .modal-light-theme form {
+        background-color: #FFFFFF !important;
+        background: #FFFFFF !important;
+        color: #334155 !important;
+        border-color: #D1D5DB !important;
+      }
+      .modal-light-theme h2,
+      .modal-light-theme h3 {
+        color: #1E293B !important;
+      }
+      .modal-light-theme p,
+      .modal-light-theme label {
+        color: #475569 !important;
+      }
+      .modal-light-theme span {
+        color: #334155 !important;
+      }
+      .modal-light-theme input,
+      .modal-light-theme textarea,
+      .modal-light-theme select {
+        background-color: #FFFFFF !important;
+        background: #FFFFFF !important;
+        color: #334155 !important;
+        border: 1px solid #D1D5DB !important;
+      }
+      .modal-light-theme button {
         border: none !important;
       }
     `;
