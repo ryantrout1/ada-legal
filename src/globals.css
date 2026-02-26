@@ -374,6 +374,55 @@ html {
   display: none;
 }
 
+/* ========================================
+   MODAL LIGHT THEME ISOLATION
+   Ensures modals always render with light backgrounds/dark text,
+   even when high-contrast or dark overrides are active.
+   ======================================== */
+.modal-light-theme,
+.modal-light-theme *:not(button):not(a):not([role="button"]):not(svg):not(path) {
+  background-color: #FFFFFF !important;
+  background-image: none !important;
+  color: #334155 !important;
+  border-color: #D1D5DB !important;
+}
+
+.modal-light-theme h1,
+.modal-light-theme h2,
+.modal-light-theme h3 {
+  color: #1E293B !important;
+}
+
+.modal-light-theme p {
+  color: #475569 !important;
+}
+
+.modal-light-theme input,
+.modal-light-theme textarea,
+.modal-light-theme select {
+  background-color: #FFFFFF !important;
+  color: #334155 !important;
+  border-color: #D1D5DB !important;
+}
+
+.modal-light-theme input::placeholder,
+.modal-light-theme textarea::placeholder {
+  color: #9CA3AF !important;
+}
+
+.modal-light-theme option {
+  background-color: #FFFFFF !important;
+  color: #334155 !important;
+}
+
+.modal-light-theme label {
+  color: #334155 !important;
+}
+
+.modal-light-theme span {
+  color: inherit !important;
+}
+
 /* Ensure rem-based sizing */
 html {
   font-size: 100%;
