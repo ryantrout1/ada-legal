@@ -37,7 +37,7 @@ export default function ReclaimConfirmModal({ open, caseData, lawyerName, onConf
           Reclaim Case
         </h2>
         <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-700)', margin: '0 0 20px', lineHeight: 1.5 }}>
-          Reclaim <strong>{caseData.business_name}</strong> from <strong>{lawyerName || 'Unknown'}</strong>? It will return to the marketplace.
+          Reclaim <strong>{caseData.business_name}</strong> from <strong>{lawyerName || 'Unknown'}</strong>? It will return to the available case pool.
         </p>
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
           <button

@@ -142,7 +142,7 @@ export default function LawyerCaseDetail() {
               <DetailRow icon={Calendar} label="Incident Date" value={formatDate(c.incident_date)} />
             </div>
             <div>
-              <DetailRow icon={User} label="Claimant Name" value={c.contact_name} />
+              <DetailRow icon={User} label="Reporter Name" value={c.contact_name} />
               <DetailRow icon={Mail} label="Email" value={c.contact_email} />
               <DetailRow icon={Phone} label="Phone" value={c.contact_phone} />
               <DetailRow icon={User} label="Contact Preference" value={

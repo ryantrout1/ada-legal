@@ -3,12 +3,12 @@ import { calculateDocScore } from './docScore';
 import { X } from 'lucide-react';
 
 const GENERIC_CRITERIA = [
-  { label: 'Detailed Narrative', description: 'The claimant provided a description of 50 or more characters explaining what happened.' },
+  { label: 'Detailed Narrative', description: 'The reporter provided a description of 50 or more characters explaining what happened.' },
   { label: 'Location Identified', description: 'A street address for the business or location was provided.' },
-  { label: 'Incident Date Recorded', description: 'The claimant specified when the violation occurred.' },
-  { label: 'Visit History', description: 'The claimant indicated whether they had visited the location before.' },
+  { label: 'Incident Date Recorded', description: 'The reporter specified when the violation occurred.' },
+  { label: 'Visit History', description: 'The reporter indicated whether they had visited the location before.' },
   { label: 'Violation Specifics', description: 'For physical violations: the specific subtype (parking, entrance, restroom, etc.) was identified. For digital violations: the assistive technologies affected were specified.' },
-  { label: 'Contact Preference Stated', description: 'The claimant indicated their preferred method of contact (phone, email, etc.).' },
+  { label: 'Contact Preference Stated', description: 'The reporter indicated their preferred method of contact (phone, email, etc.).' },
 ];
 
 export default function DocScoreModal({ open, onClose, caseData }) {
@@ -62,7 +62,7 @@ export default function DocScoreModal({ open, onClose, caseData }) {
           fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-600)',
           lineHeight: 1.7, margin: '0 0 20px'
         }}>
-          Each case receives a documentation score based on the completeness of the information provided by the claimant. Better-documented cases typically have stronger foundations for legal action. The score is not a measure of case merit — it reflects how much information is available for your review.
+          Each case receives a documentation score based on the completeness of the information provided by the reporter. Better-documented cases typically have stronger foundations for legal action. The score is not a measure of case merit — it reflects how much information is available for your review.
         </p>
 
         {caseSpecific && (
@@ -105,9 +105,9 @@ export default function DocScoreModal({ open, onClose, caseData }) {
         </h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
           {[
-            { range: 'Well Documented (5-6)', text: 'These cases have comprehensive detail. You\'ll have strong information to evaluate the violation and reach out to the claimant effectively.', color: '#15803D' },
-            { range: 'Moderate Detail (3-4)', text: 'These cases have the basics covered. You may need to gather additional details during your initial contact with the claimant.', color: 'var(--slate-600)' },
-            { range: 'Limited Detail (1-2)', text: 'These cases have minimal information. The claimant may not have been able to provide full details at the time of reporting. Initial contact may require more discovery.', color: '#92400E' },
+            { range: 'Well Documented (5-6)', text: 'These cases have comprehensive detail. You\'ll have strong information to evaluate the violation and reach out to the reporter effectively.', color: '#15803D' },
+            { range: 'Moderate Detail (3-4)', text: 'These cases have the basics covered. You may need to gather additional details during your initial contact with the reporter.', color: 'var(--slate-600)' },
+            { range: 'Limited Detail (1-2)', text: 'These cases have minimal information. The reporter may not have been able to provide full details at the time of reporting. Initial contact may require more discovery.', color: '#92400E' },
           ].map((item, i) => (
             <div key={i}>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: item.color }}>{item.range}</span>

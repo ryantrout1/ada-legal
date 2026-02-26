@@ -149,7 +149,7 @@ export default function GuideWhyAttorney() {
             title="How ADA Legal Link Connects You"
           >
             <p>
-              ADA Legal Link is a marketplace that connects people who have
+              ADA Legal Link is a platform that connects people who have
               experienced ADA violations with attorneys who specialize in disability
               rights law. Here's how it works:
             </p>

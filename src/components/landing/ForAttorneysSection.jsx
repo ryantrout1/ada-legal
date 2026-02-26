@@ -28,7 +28,7 @@ export default function ForAttorneysSection() {
           color: 'var(--slate-600)', lineHeight: 1.6,
           maxWidth: '520px', margin: '0 auto clamp(2rem, 5vw, 2.5rem)'
         }}>
-          Join a marketplace built for ADA practitioners. Get matched with real clients who need your help.
+          Join a platform built for ADA practitioners. Get matched with real clients who need your help.
         </p>
 
         <div style={{

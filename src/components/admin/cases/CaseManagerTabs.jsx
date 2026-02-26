@@ -3,7 +3,7 @@ import React from 'react';
 const TABS = [
   { key: 'all', label: 'All' },
   { key: 'active', label: 'Active Pipeline' },
-  { key: 'marketplace', label: 'Marketplace' },
+  { key: 'marketplace', label: 'Available Cases' },
   { key: 'with_lawyers', label: 'With Lawyers' },
   { key: 'resolved', label: 'Resolved' },
 ];

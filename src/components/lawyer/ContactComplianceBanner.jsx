@@ -59,8 +59,8 @@ export default function ContactComplianceBanner({ assignedAt, contactLoggedAt })
         color: '#B91C1C'
       }}>
         {isOverdue
-          ? 'Contact Overdue — You were required to contact the claimant within 24 hours.'
-          : `Contact Required — You must contact the claimant within 24 hours. ${hrs}h ${mins}m remaining.`
+          ? 'Contact Overdue — You were required to contact the reporter within 24 hours.'
+          : `Contact Required — You must contact the reporter within 24 hours. ${hrs}h ${mins}m remaining.`
         }
       </span>
     </div>

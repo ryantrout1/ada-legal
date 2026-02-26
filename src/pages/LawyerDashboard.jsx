@@ -107,7 +107,7 @@ export default function LawyerDashboard() {
     await base44.entities.Case.update(logModalCase.id, caseUpdate);
     await base44.entities.TimelineEvent.create({
       case_id: logModalCase.id, event_type: 'contact_logged',
-      event_description: 'Attorney logged contact with claimant.',
+      event_description: 'Attorney logged contact with reporter.',
       actor_role: 'lawyer', visible_to_user: false, created_at: now
     });
     setHighlightedCaseId(logModalCase.id);

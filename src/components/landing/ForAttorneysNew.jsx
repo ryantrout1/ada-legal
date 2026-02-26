@@ -14,7 +14,7 @@ const stats = [
   { value: '8,800+', label: 'ADA Title III federal lawsuits filed in 2024', note: null },
   { value: '$10K–75K', label: 'Typical fee recovery per ADA case', note: null },
   { value: '3 States', label: 'Account for 80% of all filings', note: 'CA, NY, FL' },
-  { value: '24 hrs', label: 'Maximum time to first claimant contact', note: null }
+  { value: '24 hrs', label: 'Maximum time to first reporter contact', note: null }
 ];
 
 export default function ForAttorneysNew() {

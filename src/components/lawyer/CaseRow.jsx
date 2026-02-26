@@ -166,7 +166,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.625rem' }}>
                 <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>
-                  Claimant Contact
+                  Reporter Contact
                 </h4>
                 <span style={{
                   display: 'inline-block', padding: '0.15rem 0.5rem',

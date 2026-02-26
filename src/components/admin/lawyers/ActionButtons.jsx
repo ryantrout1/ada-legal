@@ -128,7 +128,7 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
       await base44.entities.Case.update(c.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '' });
       await base44.entities.TimelineEvent.create({
         case_id: c.id, event_type: 'reclaimed',
-        event_description: 'Case returned to marketplace by admin.',
+        event_description: 'Case returned to available pool by admin.',
         actor_role: 'admin', visible_to_user: false, created_at: now
       });
     }
@@ -146,14 +146,14 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
       await base44.entities.Case.update(c.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '', contact_logged_at: '' });
       await base44.entities.TimelineEvent.create({
         case_id: c.id, event_type: 'reclaimed',
-        event_description: 'Case returned to marketplace by admin.',
+        event_description: 'Case returned to available pool by admin.',
         actor_role: 'admin', visible_to_user: false, created_at: now
       });
     }
     await base44.entities.LawyerProfile.update(lawyer.id, {
       cases_reclaimed: (lawyer.cases_reclaimed || 0) + activeCases.length
     });
-    onToast(`${activeCases.length} case(s) returned to marketplace.`);
+    onToast(`${activeCases.length} case(s) returned to available pool.`);
     setModal(null);
     await onRefresh();
     setProcessing(false);
@@ -249,7 +249,7 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
       {/* Reinstate Modal */}
       <ActionModal
         open={modal === 'reinstate'} title="Reinstate Lawyer" headerColor="#15803D"
-        message="This will restore the lawyer's access to the marketplace."
+        message="This will restore the lawyer's access to the attorney network."
         confirmLabel="Reinstate" confirmColor="#15803D"
         confirmDisabled={false} onConfirm={handleReinstate}
         onCancel={() => setModal(null)} saving={processing}
@@ -261,7 +261,7 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
       {/* Remove Modal */}
       <ActionModal
         open={modal === 'remove'} title="Remove Lawyer" headerColor="#B91C1C"
-        message="This will permanently remove this lawyer. Active cases will be returned to the marketplace. This cannot be undone."
+        message="This will permanently remove this lawyer. Active cases will be returned to the available case pool. This cannot be undone."
         confirmLabel="Remove" confirmColor="#B91C1C"
         confirmDisabled={confirmText !== 'REMOVE'} onConfirm={handleRemove}
         onCancel={() => setModal(null)} saving={processing}
@@ -278,7 +278,7 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
       {/* Reassign Modal */}
       <ActionModal
         open={modal === 'reassign'} title="Reassign Cases" headerColor="#92400E"
-        message={`This will return ${activeCases.length} active case(s) to the marketplace. Claimants will not be notified.`}
+        message={`This will return ${activeCases.length} active case(s) to the available case pool. Reporters will not be notified.`}
         confirmLabel="Reassign Cases" confirmColor="#92400E"
         confirmDisabled={false} onConfirm={handleReassign}
         onCancel={() => setModal(null)} saving={processing}

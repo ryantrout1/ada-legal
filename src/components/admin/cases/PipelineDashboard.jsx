@@ -7,7 +7,7 @@ const ACTIVE_KEYS = new Set(['submitted', 'under_review', 'available', 'assigned
 const STAGES = [
   { key: 'submitted',    label: 'Submitted',    subtitle: null },
   { key: 'under_review', label: 'In Review',    subtitle: null },
-  { key: 'available',    label: 'Available',    subtitle: 'In marketplace' },
+  { key: 'available',    label: 'Available',    subtitle: null },
   { key: 'assigned',     label: 'Assigned',     subtitle: null },
   { key: 'in_progress',  label: 'In Progress',  subtitle: null },
   { key: 'closed',       label: 'Closed',       subtitle: null },

@@ -94,7 +94,7 @@ export default function GuideWhatToExpect() {
               </li>
             </ul>
             <p>
-              Once submitted, your report enters our marketplace. Attorneys who
+              Once submitted, your report becomes available to qualified attorneys who
               specialize in your type of case and geographic area can review it and
               initiate support. Most cases get attorney contact within{' '}
               <strong>24–48 hours</strong>.

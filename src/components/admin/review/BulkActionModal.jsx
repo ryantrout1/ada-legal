@@ -59,7 +59,7 @@ export default function BulkActionModal({ open, action, businessName, count, onC
 
         {isApprove ? (
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: '0 0 20px', lineHeight: 1.5 }}>
-            Approve all <strong>{count}</strong> cases for <strong>{businessName}</strong>? They will all move to the marketplace.
+            Approve all <strong>{count}</strong> cases for <strong>{businessName}</strong>? They will all move to the available case pool.
           </p>
         ) : (
           <>

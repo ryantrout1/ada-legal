@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useState as useStateReact } from 'react';
 import { X } from 'lucide-react';
-import { useComingSoon } from './useComingSoonModal';
 
 const DISMISSED_KEY = 'early_access_banner_dismissed';
 
 export default function EarlyAccessBanner() {
-  const { openModal } = useComingSoon();
   const [dismissed, setDismissed] = useState(() => sessionStorage.getItem(DISMISSED_KEY) === '1');
+  const [showFeedback, setShowFeedback] = useState(false);
 
   if (dismissed) return null;
 

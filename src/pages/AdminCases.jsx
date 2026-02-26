@@ -55,7 +55,7 @@ const ACTIVE_KEYS = new Set(['submitted', 'under_review', 'available', 'assigned
 const TAB_PILLS = [
   { key: 'all', label: 'All' },
   { key: 'active', label: 'Active Pipeline' },
-  { key: 'marketplace', label: 'Marketplace' },
+  { key: 'marketplace', label: 'Available Cases' },
   { key: 'with_lawyers', label: 'With Lawyers' },
   { key: 'resolved', label: 'Resolved' },
 ];
@@ -233,7 +233,7 @@ export default function AdminCases() {
     const lp = caseData.assigned_lawyer_id ? lawyerMap[caseData.assigned_lawyer_id] : null;
     await base44.entities.Case.update(caseData.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '' });
     if (lp) await base44.entities.LawyerProfile.update(lp.id, { cases_reclaimed: (lp.cases_reclaimed || 0) + 1 });
-    await base44.entities.TimelineEvent.create({ case_id: caseData.id, event_type: 'reclaimed', event_description: 'This case has been returned to the marketplace by an administrator.', actor_role: 'admin', visible_to_user: false, created_at: now });
+    await base44.entities.TimelineEvent.create({ case_id: caseData.id, event_type: 'reclaimed', event_description: 'This case has been returned to the available case pool by an administrator.', actor_role: 'admin', visible_to_user: false, created_at: now });
     setExpandedId(null); loadData();
   };
 

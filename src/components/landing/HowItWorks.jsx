@@ -9,7 +9,7 @@ const steps = [
   {
     num: '2',
     title: 'We Review and Verify',
-    desc: 'Our team reviews every submission for quality and completeness before it enters the marketplace.'
+    desc: 'Our team reviews every submission for quality and completeness before it enters our attorney network.'
   },
   {
     num: '3',

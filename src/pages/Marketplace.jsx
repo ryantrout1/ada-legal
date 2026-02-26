@@ -60,12 +60,12 @@ export default function Marketplace() {
 
   if (loading) {
     return (
-      <div role="status" aria-label="Loading marketplace" style={{
+      <div role="status" aria-label="Loading available cases" style={{
         display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
         minHeight: 'calc(100vh - 200px)', gap: '1rem'
       }}>
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading marketplace…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading available cases…</p>
       </div>
     );
   }
@@ -76,7 +76,7 @@ export default function Marketplace() {
         <div style={{ textAlign: 'center', maxWidth: '480px' }}>
           <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Access Restricted</h2>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
-            This page is for approved attorneys only. If you'd like to join the marketplace, please <a href={createPageUrl('LawyerRegister')} style={{ color: 'var(--terra-600)', fontWeight: 600 }}>apply here</a>.
+            This page is for approved attorneys only. If you'd like to join the attorney network, please <a href={createPageUrl('LawyerRegister')} style={{ color: 'var(--terra-600)', fontWeight: 600 }}>apply here</a>.
           </p>
         </div>
       </div>
@@ -103,7 +103,7 @@ export default function Marketplace() {
         <div style={{ textAlign: 'center', maxWidth: '480px', backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-2xl)' }}>
           <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Subscription Required</h2>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', lineHeight: 1.6, marginBottom: 'var(--space-lg)' }}>
-            Your account is approved, but you need an active subscription to access the marketplace.
+            Your account is approved, but you need an active subscription to access available cases.
           </p>
           <a href={createPageUrl('LawyerSubscription')} style={{
             display: 'inline-block', padding: '0.75rem 2rem', fontFamily: 'Manrope, sans-serif',
@@ -176,7 +176,7 @@ export default function Marketplace() {
     const freshCase = freshCases[0];
     if (!freshCase || freshCase.status !== 'available') {
       setCases(prev => prev.filter(x => x.id !== c.id));
-      setRaceError('This case has already been assigned to another attorney. It has been removed from the marketplace.');
+      setRaceError('This case has already been assigned to another attorney. It is no longer available.');
       setProcessing(false);
       return;
     }
@@ -292,7 +292,7 @@ export default function Marketplace() {
           filteredCases.length > 0 && (
             <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', overflow: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <caption className="sr-only">Available marketplace cases</caption>
+                <caption className="sr-only">Available cases</caption>
                 <thead>
                   <tr>
                     {['Type', 'Business', 'City / State', 'Subtype', 'Score', '', 'Posted', 'Reports', ''].map(h => (

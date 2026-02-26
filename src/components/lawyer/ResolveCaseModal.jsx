@@ -3,11 +3,11 @@ import { AlertTriangle } from 'lucide-react';
 import { useFocusTrap } from '../a11y/FocusTrap';
 
 const RESOLUTION_OPTIONS = [
-  { value: 'engaged', label: 'Engaged', desc: 'I am representing this claimant' },
+  { value: 'engaged', label: 'Engaged', desc: 'I am representing this reporter' },
   { value: 'referred_out', label: 'Referred Out', desc: 'I referred this to another attorney' },
   { value: 'not_viable', label: 'Not Viable', desc: 'This case does not have sufficient merit to pursue' },
-  { value: 'claimant_unresponsive', label: 'Claimant Unresponsive', desc: 'I could not reach the claimant after multiple attempts' },
-  { value: 'claimant_declined', label: 'Claimant Declined', desc: 'The claimant decided not to pursue legal action' }
+  { value: 'claimant_unresponsive', label: 'Reporter Unresponsive', desc: 'I could not reach the reporter after multiple attempts' },
+  { value: 'claimant_declined', label: 'Reporter Declined', desc: 'The reporter decided not to pursue legal action' }
 ];
 
 const VALUE_OPTIONS = [
@@ -25,11 +25,11 @@ const TIMELINE_OPTIONS = [
 ];
 
 const RESOLUTION_LABELS = {
-  engaged: 'Engaged — representing this claimant',
+  engaged: 'Engaged — representing this reporter',
   referred_out: 'Referred Out — referred to another attorney',
   not_viable: 'Not Viable — insufficient merit',
-  claimant_unresponsive: 'Claimant Unresponsive',
-  claimant_declined: 'Claimant Declined'
+  claimant_unresponsive: 'Reporter Unresponsive',
+  claimant_declined: 'Reporter Declined'
 };
 
 export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, saving }) {
@@ -210,7 +210,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
             }}>
               <AlertTriangle size={16} style={{ color: '#92400E', flexShrink: 0, marginTop: '2px' }} />
               <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#92400E', margin: 0, lineHeight: 1.5 }}>
-                This action will close the case and notify the claimant. This cannot be undone.
+                This action will close the case and notify the reporter. This cannot be undone.
               </p>
             </div>
 

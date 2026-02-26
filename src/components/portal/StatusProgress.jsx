@@ -67,7 +67,7 @@ const STATUS_MESSAGES = {
   },
   rejected: {
     bg: '#FEE2E2',
-    text: 'After review, your case was not approved for the attorney marketplace. If you believe this was in error, please contact support.'
+    text: 'After review, your case was not approved for the attorney network. If you believe this was in error, please contact support.'
   }
 };
 

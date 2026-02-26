@@ -1,13 +1,13 @@
 // Shared documentation score logic
 export function calculateDocScore(c) {
   const criteria = [
-    { key: 'narrative', label: 'Detailed Narrative', description: 'The claimant provided a description of 50 or more characters explaining what happened.', met: !!(c.narrative && c.narrative.trim().length >= 50) },
+    { key: 'narrative', label: 'Detailed Narrative', description: 'The reporter provided a description of 50 or more characters explaining what happened.', met: !!(c.narrative && c.narrative.trim().length >= 50) },
     { key: 'address', label: 'Location Identified', description: 'A street address for the business or location was provided.', met: !!(c.street_address && c.street_address.trim()) },
-    { key: 'date', label: 'Incident Date Recorded', description: 'The claimant specified when the violation occurred.', met: !!c.incident_date },
-    { key: 'visited', label: 'Visit History', description: 'The claimant indicated whether they had visited the location before.', met: !!c.visited_before },
+    { key: 'date', label: 'Incident Date Recorded', description: 'The reporter specified when the violation occurred.', met: !!c.incident_date },
+    { key: 'visited', label: 'Visit History', description: 'The reporter indicated whether they had visited the location before.', met: !!c.visited_before },
     { key: 'specifics', label: 'Violation Specifics', description: c.violation_type === 'digital_website' ? 'For digital violations: the assistive technologies affected were specified.' : 'For physical violations: the specific subtype (parking, entrance, restroom, etc.) was identified.', met: c.violation_type === 'digital_website' ? !!(c.assistive_tech && c.assistive_tech.length > 0) : !!c.violation_subtype },
-    { key: 'contact', label: 'Contact Preference Stated', description: 'The claimant indicated their preferred method of contact (phone, email, etc.).', met: !!c.contact_preference },
-    { key: 'photos', label: 'Evidence Photos', description: 'The claimant attached one or more photos documenting the violation.', met: c.photos?.length > 0 },
+    { key: 'contact', label: 'Contact Preference Stated', description: 'The reporter indicated their preferred method of contact (phone, email, etc.).', met: !!c.contact_preference },
+    { key: 'photos', label: 'Evidence Photos', description: 'The reporter attached one or more photos documenting the violation.', met: c.photos?.length > 0 },
   ];
   const score = criteria.filter(cr => cr.met).length;
   let label, color;

@@ -90,7 +90,7 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
         padding: 'var(--space-md)', backgroundColor: '#FFF7ED',
         borderRadius: 'var(--radius-md)', border: '1px solid #FED7AA'
       }}>
-        <InfoItem icon={User} label="Claimant" value={c.contact_name} />
+        <InfoItem icon={User} label="Reporter" value={c.contact_name} />
         <InfoItem icon={Mail} label="Email" value={c.contact_email} />
         <InfoItem icon={Phone} label="Phone" value={c.contact_phone} />
         <InfoItem icon={User} label="Preference" value={

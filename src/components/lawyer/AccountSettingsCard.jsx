@@ -67,7 +67,7 @@ export default function AccountSettingsCard() {
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#B91C1C', margin: 0, lineHeight: 1.5 }}>
               To deactivate your account, please contact{' '}
               <a href="mailto:support@adalegalconnect.com" style={{ color: '#B91C1C', fontWeight: 700 }}>support@adalegalconnect.com</a>.
-              Active cases will be returned to the marketplace.
+              Active cases will be returned to the available case pool.
             </p>
           </div>
         )}
