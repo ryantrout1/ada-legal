@@ -90,7 +90,7 @@ export default function CurbRampDiagram() {
           {/* ===== ISOMETRIC CURB RAMP ===== */}
           {/* Street level surface */}
           <polygon points="50,260 450,280 850,260 450,240" fill="#94A3B8" opacity="0.08" stroke="#94A3B8" strokeWidth="1" />
-          <text x="450" y="275" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="500">STREET</text>
+          <text x="450" y="275" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">STREET</text>
 
           {/* Curb line */}
           <line x1="100" y1="230" x2="800" y2="230" stroke="#94A3B8" strokeWidth="2.5" />
@@ -99,8 +99,8 @@ export default function CurbRampDiagram() {
 
           {/* Sidewalk (elevated) */}
           <rect x="100" y="60" width="700" height="160" rx="2" fill="#E7E5E4" opacity="0.15" stroke="#94A3B8" strokeWidth="1" />
-          <text x="200" y="85" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="500">SIDEWALK</text>
-          <text x="680" y="85" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="500">SIDEWALK</text>
+          <text x="200" y="85" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">SIDEWALK</text>
+          <text x="680" y="85" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">SIDEWALK</text>
 
           {/* Ramp run (center, going from sidewalk down to street) */}
           <polygon points="350,100 550,100 580,230 320,230" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
@@ -167,7 +167,7 @@ export default function CurbRampDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

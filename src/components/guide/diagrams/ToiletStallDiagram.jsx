@@ -160,7 +160,7 @@ export default function ToiletStallDiagram() {
           <rect x="0" y="0" width="700" height="540" fill="#FAFAF9" />
 
           {/* Label */}
-          <text x="350" y="32" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">
+          <text x="350" y="32" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">
             PLAN VIEW (TOP-DOWN) — WHEELCHAIR-ACCESSIBLE STALL
           </text>
 
@@ -176,16 +176,16 @@ export default function ToiletStallDiagram() {
           <line x1={SR - 80} y1={SY} x2={SR} y2={SY} stroke="#475569" strokeWidth="3" />
 
           {/* Wall labels */}
-          <text x={SX - 8} y={(SY + SB) / 2} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8" transform={`rotate(-90, ${SX - 8}, ${(SY + SB) / 2})`}>SIDE WALL</text>
-          <text x={(SX + SR) / 2} y={SB + 16} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">REAR WALL</text>
+          <text x={SX - 8} y={(SY + SB) / 2} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" transform={`rotate(-90, ${SX - 8}, ${(SY + SB) / 2})`}>SIDE WALL</text>
+          <text x={(SX + SR) / 2} y={SB + 16} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">REAR WALL</text>
 
           {/* ===== DOOR (swings outward) ===== */}
           {/* Door leaf shown swung open (arc outside stall) */}
           <line x1={SX + 100} y1={SY} x2={SX + 100} y2={SY - 50} stroke="#475569" strokeWidth="2.5" />
           <path d={`M ${SX + 100} ${SY} A 50 50 0 0 1 ${SX + 100} ${SY - 50}`}
             fill="none" stroke="#94A3B8" strokeWidth="1" strokeDasharray="4 3" />
-          <text x={SX + 130} y={SY - 25} fontFamily="Manrope, sans-serif" fontSize="8" fill="#64748B">DOOR</text>
-          <text x={SX + 130} y={SY - 14} fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8">(swings out)</text>
+          <text x={SX + 130} y={SY - 25} fontFamily="Manrope, sans-serif" fontSize="8" fill="#374151">DOOR</text>
+          <text x={SX + 130} y={SY - 14} fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">(swings out)</text>
 
           {/* Door opening indicator */}
           <line x1={SX + 100} y1={SY} x2={SR - 80} y2={SY} stroke="#475569" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
@@ -201,7 +201,7 @@ export default function ToiletStallDiagram() {
           <rect x={TX - 30} y={SB - 28} width={60} height={24} rx="4" fill="#E2E8F0" stroke="#64748B" strokeWidth="1.5" />
           {/* Centerline indicator */}
           <line x1={TX} y1={TY - 10} x2={TX} y2={SB - 28} stroke="#16A34A" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
-          <text x={TX} y={TY + 24} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#64748B">TOILET</text>
+          <text x={TX} y={TY + 24} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#374151">TOILET</text>
 
           {/* Flush control indicator (on open/right side) */}
           <circle cx={TX + 38} cy={SB - 50} r="5" fill="#DB2777" opacity="0.2" stroke="#DB2777" strokeWidth="1" />
@@ -325,7 +325,7 @@ export default function ToiletStallDiagram() {
             </g>
           ))}
 
-          <text x="40" y="525" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8">
+          <text x="40" y="525" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563">
             Click or tap numbered callouts for details
           </text>
         </svg>

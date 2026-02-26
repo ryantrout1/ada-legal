@@ -53,7 +53,7 @@ export default function ElevatorDiagram() {
           <rect width="900" height="420" fill="#FAFAF9" />
 
           {/* LEFT: Cab Plan View */}
-          <text x="210" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">PLAN VIEW — ELEVATOR CAB</text>
+          <text x="210" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW — ELEVATOR CAB</text>
           {/* Cab walls */}
           <rect x="60" y="50" width="300" height="320" rx="4" fill="white" stroke="#94A3B8" strokeWidth="2.5" />
           {/* Door opening (center) */}
@@ -91,7 +91,7 @@ export default function ElevatorDiagram() {
           <line x1="475" y1="20" x2="475" y2="410" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
 
           {/* RIGHT: Control Panel Elevation */}
-          <text x="690" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">CONTROL PANEL ELEVATION</text>
+          <text x="690" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">CONTROL PANEL ELEVATION</text>
           {/* Panel background */}
           <rect x="600" y="50" width="180" height="330" rx="8" fill="#1A1F2B" stroke="#64748B" strokeWidth="1.5" />
           {/* Floor buttons */}
@@ -102,8 +102,8 @@ export default function ElevatorDiagram() {
             </React.Fragment>
           ))}
           {/* Braille labels */}
-          <text x="720" y="170" fontFamily="Manrope, sans-serif" fontSize="6" fill="#94A3B8">← Braille + raised</text>
-          <text x="720" y="180" fontFamily="Manrope, sans-serif" fontSize="6" fill="#94A3B8">   characters each</text>
+          <text x="720" y="170" fontFamily="Manrope, sans-serif" fontSize="6" fill="#4B5563">← Braille + raised</text>
+          <text x="720" y="180" fontFamily="Manrope, sans-serif" fontSize="6" fill="#4B5563">   characters each</text>
           {/* Emergency controls at bottom */}
           <rect x="620" y="330" width="140" height="35" rx="4" fill="#EF4444" opacity="0.1" stroke="#EF4444" strokeWidth="1" />
           <text x="690" y="350" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#EF4444" fontWeight="600">🔔 ALARM  📞 PHONE  ⏹ STOP</text>
@@ -134,7 +134,7 @@ export default function ElevatorDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>
