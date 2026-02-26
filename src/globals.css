@@ -229,6 +229,13 @@ html {
     outline-offset: 3px !important;
   }
 
+  /* Landing hero section — force pure black background */
+  .landing-hero-section,
+  .landing-hero-section > div {
+    background-color: #000000 !important;
+    background: #000000 !important;
+  }
+
   /* Footer */
   footer[role="contentinfo"],
   footer[role="contentinfo"] div,
