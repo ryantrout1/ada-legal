@@ -229,11 +229,40 @@ html {
     outline-offset: 3px !important;
   }
 
-  /* Landing hero section — force pure black background */
+  /* === Landing hero — force pure black === */
   .landing-hero-section,
-  .landing-hero-section > div {
-    background-color: #000000 !important;
+  .landing-hero-section > div,
+  .landing-hero-section div {
     background: #000000 !important;
+    background-image: none !important;
+    background-color: #000000 !important;
+  }
+
+  /* === All sections with dark navy inline bg === */
+  section[style*="#1E293B"],
+  div[style*="#1E293B"],
+  [style*="background: #1E293B"],
+  [style*="background: '#1E293B'"],
+  [style*="background-color: #1E293B"],
+  section[style*="#1A1F2B"],
+  div[style*="#1A1F2B"],
+  [style*="background: #1A1F2B"],
+  [style*="background: '#1A1F2B'"],
+  section[style*="#0F172A"],
+  div[style*="#0F172A"],
+  [style*="background: '#0F172A'"],
+  section[style*="var(--slate-900)"],
+  div[style*="var(--slate-900)"] {
+    background: #000000 !important;
+    background-color: #000000 !important;
+    background-image: none !important;
+  }
+
+  /* === Remove all gradient overlays in high contrast === */
+  div[style*="radial-gradient"],
+  div[style*="linear-gradient"] {
+    background: transparent !important;
+    background-image: none !important;
   }
 
   /* Footer */
