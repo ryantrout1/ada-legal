@@ -24,7 +24,7 @@ const STATUS_BADGE = {
 
 const RESOLUTION_LABELS = {
   engaged: 'Engaged', referred_out: 'Referred Out', not_viable: 'Not Viable',
-  claimant_unresponsive: 'Unresponsive', claimant_declined: 'Declined', admin_closed: 'Admin Closed'
+  claimant_unresponsive: 'Reporter Unresponsive', claimant_declined: 'Reporter Declined', admin_closed: 'Admin Closed'
 };
 
 function AgingIndicator({ caseData, lawyer }) {

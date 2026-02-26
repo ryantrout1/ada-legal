@@ -18,8 +18,8 @@ const resolutionBadge = {
   engaged: { label: 'Engaged', bg: '#DCFCE7', color: '#15803D' },
   referred_out: { label: 'Referred Out', bg: '#DBEAFE', color: '#1D4ED8' },
   not_viable: { label: 'Not Viable', bg: 'var(--slate-100)', color: 'var(--slate-600)' },
-  claimant_unresponsive: { label: 'Unresponsive', bg: '#FEF3C7', color: '#B45309' },
-  claimant_declined: { label: 'Declined', bg: '#FEF3C7', color: '#B45309' },
+  claimant_unresponsive: { label: 'Reporter Unresponsive', bg: '#FEF3C7', color: '#B45309' },
+  claimant_declined: { label: 'Reporter Declined', bg: '#FEF3C7', color: '#B45309' },
   admin_closed: { label: 'Admin Closed', bg: 'var(--slate-100)', color: 'var(--slate-600)' }
 };
 
