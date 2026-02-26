@@ -8,6 +8,7 @@ export default function LandingHeroNew() {
   return (
     <section
       aria-labelledby="hero-heading"
+      className="landing-hero-section"
       style={{
         minHeight: '100vh',
         background: '#1E293B',

@@ -112,7 +112,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-              color: '#64748B', margin: 0
+              color: '#94A3B8', margin: 0
             }}>
               — Small business owner
             </p>
