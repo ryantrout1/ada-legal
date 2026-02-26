@@ -958,6 +958,38 @@ export const applyPreferences = (prefs) => {
         border: none !important;
       }
 
+      /* === Feedback modal — high contrast === */
+      .fb-panel {
+        background-color: #000000 !important;
+        background: #000000 !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      .fb-submit-btn {
+        background-color: #D4572A !important;
+        color: #FFFFFF !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      .fb-submit-btn:hover {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+      }
+      .fb-done-btn {
+        background-color: #1A1A1A !important;
+        color: #FFFFFF !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      .fb-close-btn {
+        color: #FFFFFF !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      .fb-success-icon-wrap {
+        background-color: #0A0A0A !important;
+        border: 2px solid #16A34A !important;
+      }
+      .fb-error {
+        color: #FF6B6B !important;
+      }
+
     `;
   }
 
