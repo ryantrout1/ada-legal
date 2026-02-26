@@ -523,6 +523,48 @@ export const applyPreferences = (prefs) => {
         color: #FFFFFF !important;
       }
 
+      /* === Landing hero — force pure black === */
+      .landing-hero-section,
+      .landing-hero-section > div,
+      .landing-hero-section div {
+        background: #000000 !important;
+        background-image: none !important;
+        background-color: #000000 !important;
+      }
+
+      /* === All sections with dark navy inline bg === */
+      section[style*="#1E293B"],
+      div[style*="#1E293B"],
+      [style*="background: #1E293B"],
+      [style*="background: '#1E293B'"],
+      [style*="background-color: #1E293B"] {
+        background: #000000 !important;
+        background-color: #000000 !important;
+        background-image: none !important;
+      }
+
+      /* === Dark navy variants (slate-900, #1A1F2B, #0F172A) === */
+      section[style*="#1A1F2B"],
+      div[style*="#1A1F2B"],
+      [style*="background: #1A1F2B"],
+      [style*="background: '#1A1F2B'"],
+      section[style*="#0F172A"],
+      div[style*="#0F172A"],
+      [style*="background: '#0F172A'"],
+      section[style*="var(--slate-900)"],
+      div[style*="var(--slate-900)"] {
+        background: #000000 !important;
+        background-color: #000000 !important;
+        background-image: none !important;
+      }
+
+      /* === Remove all gradient overlays in high contrast === */
+      div[style*="radial-gradient"],
+      div[style*="linear-gradient"] {
+        background: transparent !important;
+        background-image: none !important;
+      }
+
       /* ============================================
          BLANKET BACKGROUND OVERRIDE — HIGH CONTRAST
          Force ALL containers to pure black / near-black.
