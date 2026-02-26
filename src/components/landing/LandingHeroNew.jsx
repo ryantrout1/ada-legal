@@ -85,13 +85,13 @@ export default function LandingHeroNew() {
             </Link>
             <button onClick={() => openModal('report_violation')} className="landing-btn-secondary" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-              background: 'transparent', color: '#94A3B8',
-              padding: '16px 32px', borderRadius: '10px',
-              fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
+              background: 'transparent', color: '#CBD5E1',
+              padding: '12px 24px', borderRadius: '10px',
+              fontSize: '0.9rem', fontWeight: 600, fontFamily: 'Manrope, sans-serif',
               minHeight: '44px', cursor: 'pointer',
               border: '1px solid #475569', transition: 'all 0.15s'
             }}>
-              Report a Violation — Coming Soon
+              Report a Violation <span style={{ color: '#C75B2B' }}>— Coming Soon</span>
             </button>
           </div>
 
