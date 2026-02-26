@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import trackEvent from '../analytics/trackEvent';
 import { createPageUrl } from '../../utils';
 import { ChevronRight } from 'lucide-react';
+import ShareBar from './ShareBar';
 
 export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
   useEffect(() => {
@@ -72,10 +73,20 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
           fontFamily: 'Fraunces, serif',
           fontSize: 'clamp(1.75rem, 3vw, 2.25rem)',
           fontWeight: 700, lineHeight: 1.15,
-          color: 'white', margin: 0
+          color: 'white', margin: '0 0 16px'
         }}>
           {title}
         </h1>
+        <div style={{ opacity: 0.9 }}>
+          <style>{`
+            .guide-hero-share button { border-color: rgba(255,255,255,0.2) !important; background: rgba(255,255,255,0.08) !important; color: rgba(255,255,255,0.7) !important; }
+            .guide-hero-share button:hover { border-color: #C2410C !important; color: white !important; }
+            .guide-hero-share span { color: rgba(255,255,255,0.5) !important; }
+          `}</style>
+          <div className="guide-hero-share">
+            <ShareBar />
+          </div>
+        </div>
       </div>
     </header>
   );

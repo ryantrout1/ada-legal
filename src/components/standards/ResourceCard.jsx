@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { Clock, AlertTriangle } from 'lucide-react';
+import ShareCardButton from './ShareCardButton';
 
 export default function ResourceCard({ card }) {
   const { title, type, dotColor, description, meta, tags, href } = card;
@@ -14,19 +15,23 @@ export default function ResourceCard({ card }) {
       borderRadius: '16px', padding: '28px', position: 'relative',
       boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.03)'
     }}>
-      {/* Type label */}
+      {/* Type label + share */}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px'
+        display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px',
+        justifyContent: 'space-between',
       }}>
-        <span aria-hidden="true" style={{
-          width: '6px', height: '6px', borderRadius: '50%', background: dotColor
-        }} />
-        <span style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-          textTransform: 'uppercase', letterSpacing: '0.08em', color: dotColor
-        }}>
-          {type}
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span aria-hidden="true" style={{
+            width: '6px', height: '6px', borderRadius: '50%', background: dotColor
+          }} />
+          <span style={{
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+            textTransform: 'uppercase', letterSpacing: '0.08em', color: dotColor
+          }}>
+            {type}
+          </span>
+        </div>
+        <ShareCardButton href={isInternal ? createPageUrl(pageName) : href} />
       </div>
 
       {/* Title as stretched link */}
