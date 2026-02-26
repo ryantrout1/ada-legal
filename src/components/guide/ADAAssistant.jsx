@@ -260,7 +260,7 @@ export default function ADAAssistant() {
                 borderRadius: '100px', padding: '6px 14px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem',
                 color: '#CBD5E1', cursor: 'pointer',
-                transition: 'all 0.2s', lineHeight: 1.4
+                transition: 'all 0.2s', lineHeight: 1.5
               }}
               onMouseEnter={e => { e.target.style.background = 'rgba(194,65,12,0.15)'; e.target.style.borderColor = 'rgba(194,65,12,0.3)'; e.target.style.color = '#FED7AA'; }}
               onMouseLeave={e => { e.target.style.background = 'rgba(255,255,255,0.06)'; e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.color = '#CBD5E1'; }}
@@ -343,7 +343,7 @@ export default function ADAAssistant() {
                   </div>
                   <p style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                    color: '#64748B', margin: 0, lineHeight: 1.4
+                    color: '#64748B', margin: 0, lineHeight: 1.5
                   }}>
                     {item.desc}
                   </p>

@@ -50,7 +50,7 @@ const CALLOUTS = [
     altUrl: OP_URL
   },
   {
-    id: 7, label: "Children's Reach", section: 'Advisory §308.1', color: '#0EA5E9', textColor: '#0C4A6E',
+    id: 7, label: "Children's Reach", section: 'Advisory §308.1', color: '#0891B2', textColor: '#0C4A6E',
     x: 595, y: 390,
     plain: "The Standards do not mandate separate children's reach ranges except at specific elements designed for children's use. However, the Advisory notes in §308.1 recommend reduced maximums based on age: ages 3–4 should have a forward reach maximum of 36 inches; ages 5–8 a maximum of 40 inches; and ages 9–12 a maximum of 44 inches. Facilities specifically designed for children (schools, daycare) should follow these advisories.",
     legal: '"Advisory 308.1: Where building elements are designed specifically for use by children ages 12 and younger, the following specifications may be used." Forward reach: ages 3–4: 36 inches max; ages 5–8: 40 inches max; ages 9–12: 44 inches max.',
@@ -376,7 +376,7 @@ export default function ReachRangeDiagram() {
                   <animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" />
                 </circle>
               )}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'}
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'}
                 stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
                 fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>

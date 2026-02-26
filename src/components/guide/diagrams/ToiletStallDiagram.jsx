@@ -49,7 +49,7 @@ const CALLOUTS = [
     citation: '§604.6'
   },
   {
-    id: 7, label: 'Toilet Paper Dispenser', section: '§604.7', color: '#0EA5E9', textColor: '#0C4A6E',
+    id: 7, label: 'Toilet Paper Dispenser', section: '§604.7', color: '#0891B2', textColor: '#0C4A6E',
     x: 115, y: 130,
     plain: 'The toilet paper dispenser must be mounted 7 to 9 inches in front of the toilet (measured from the front edge of the toilet to the centerline of the dispenser). It must be between 15 and 48 inches above the floor. Critically, it must not obstruct the use of the grab bar — large dispensers that stick out from the wall can block a person from gripping the bar. The dispenser must allow continuous paper delivery (no controlled-delivery types that limit how much paper you can pull at once).',
     legal: '"Toilet paper dispensers shall be 7 inches (180 mm) minimum and 9 inches (230 mm) maximum in front of the water closet measured to the centerline of the dispenser. The outlet of the dispenser shall be 15 inches (380 mm) minimum and 48 inches (1220 mm) maximum above the finish floor." "Dispensers shall not be of a type that controls delivery or that does not allow continuous paper flow."',
@@ -208,7 +208,7 @@ export default function ToiletStallDiagram() {
           <text x={TX + 38} y={SB - 38} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#9D174D">FLUSH</text>
 
           {/* ===== TOILET PAPER DISPENSER ===== */}
-          <rect x={SX + 6} y={TY - 40} width="18" height="24" rx="3" fill="#0EA5E9" opacity="0.12" stroke="#0EA5E9" strokeWidth="1" />
+          <rect x={SX + 6} y={TY - 40} width="18" height="24" rx="3" fill="#0EA5E9" opacity="0.12" stroke="#0891B2" strokeWidth="1" />
           <text x={SX + 15} y={TY - 24} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#0C4A6E">TP</text>
 
           {/* ===== GRAB BARS ===== */}
@@ -294,7 +294,7 @@ export default function ToiletStallDiagram() {
           </text>
 
           {/* TP dispenser position */}
-          <line x1={SX + 15} y1={TY - 16} x2={SX + 15} y2={TY} stroke="#0EA5E9" strokeWidth="1" strokeDasharray="2 2" />
+          <line x1={SX + 15} y1={TY - 16} x2={SX + 15} y2={TY} stroke="#0891B2" strokeWidth="1" strokeDasharray="2 2" />
           <rect x={SX + 26} y={TY - 22} width="68" height="12" rx="3" fill="#0EA5E9" opacity="0.8" />
           <text x={SX + 60} y={TY - 13} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">
             {imp('7–9', '180–230')} in front
@@ -316,7 +316,7 @@ export default function ToiletStallDiagram() {
                   <animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" />
                 </circle>
               )}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'}
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'}
                 stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
                 fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>

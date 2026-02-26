@@ -7,7 +7,7 @@ const CALLOUTS = [
   { id: 3, label: 'Mini Golf — Start of Play', section: '§1007.7', color: '#2563EB', textColor: '#1E3A8A', x: 580, y: 100, plain: 'Each accessible hole must have a clear space of 48 × 60 inches at the start of play area. One long side of this space must adjoin the accessible route. This provides room for a wheelchair user to position and swing a putter.', legal: '"Start of play areas shall be 48 inches minimum by 60 inches minimum." One long side adjoining the accessible route.', citation: '§1007.7' },
   { id: 4, label: 'Golf — Teeing Grounds', section: '§1006.2', color: '#7C3AED', textColor: '#5B21B6', x: 120, y: 340, plain: 'If one teeing ground per hole is provided, all must be accessible. If two are provided, at least one per hole must be accessible. If three or more, at least two per hole must be on an accessible route.', legal: '§1006.2: "Where one teeing ground is provided, it shall be accessible. Where two, at least one. Where three or more, at least two shall be accessible."', citation: '§1006.2' },
   { id: 5, label: 'Golf — Accessible Route', section: '§1006.3', color: '#D97706', textColor: '#78350F', x: 350, y: 340, plain: 'An accessible route must connect teeing grounds, putting greens, and weather shelters. Golf car passages at least 48 inches wide may serve as accessible routes if the course allows golf car use on those paths.', legal: '"An accessible route complying with Chapter 4 shall connect accessible elements within the boundary of the golf course." Golf car passages: "48 inches wide minimum."', citation: '§1006.3' },
-  { id: 6, label: 'Golf — Weather Shelters', section: '§1006.4', color: '#0EA5E9', textColor: '#0C4A6E', x: 580, y: 340, plain: 'If weather shelters are provided on the course, an accessible route must lead to and into each shelter. The shelter must have the required clear floor space for a wheelchair user.', legal: '"If weather shelters are provided, an accessible route shall connect the shelter to the course." Clear floor space per §305 required inside.', citation: '§1006.4' }
+  { id: 6, label: 'Golf — Weather Shelters', section: '§1006.4', color: '#0891B2', textColor: '#0C4A6E', x: 580, y: 340, plain: 'If weather shelters are provided on the course, an accessible route must lead to and into each shelter. The shelter must have the required clear floor space for a wheelchair user.', legal: '"If weather shelters are provided, an accessible route shall connect the shelter to the course." Clear floor space per §305 required inside.', citation: '§1006.4' }
 ];
 
 function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
@@ -100,14 +100,14 @@ export default function GolfDiagram() {
           <circle cx="680" cy="390" r="4" fill="#475569" opacity="0.2" />
 
           {/* Weather shelter */}
-          <rect x="720" y="440" width="120" height="50" rx="6" fill="#0EA5E9" opacity="0.04" stroke="#0EA5E9" strokeWidth="1.5" />
+          <rect x="720" y="440" width="120" height="50" rx="6" fill="#0EA5E9" opacity="0.04" stroke="#0891B2" strokeWidth="1.5" />
           <text x="780" y="465" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">WEATHER SHELTER</text>
           <text x="780" y="480" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#0C4A6E">Accessible route required</text>
 
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

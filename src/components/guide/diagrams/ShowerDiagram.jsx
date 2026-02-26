@@ -46,7 +46,7 @@ const CALLOUTS = [
     citation: '§608.5, §608.6'
   },
   {
-    id: 7, label: 'Alternate Roll-In', section: '§608.3.2', color: '#0EA5E9', textColor: '#0C4A6E',
+    id: 7, label: 'Alternate Roll-In', section: '§608.3.2', color: '#0891B2', textColor: '#0C4A6E',
     x: 720, y: 160,
     plain: 'The alternate roll-in shower is 36 × 60 inches with the entry (36 inches minimum) on the long side. A folding seat is provided on one end wall. Grab bars are installed on each side of the seat (both side walls) and on the back wall opposite the seat. This design accommodates both wheelchair roll-in use and seated bathing, combining the benefits of both shower types.',
     legal: '"Alternate roll-in type shower compartments shall be 36 inches wide and 60 inches deep minimum." Entry: 36 inches minimum on the long side. "A folding seat complying with §610 shall be provided on an end wall."',
@@ -220,12 +220,12 @@ export default function ShowerDiagram() {
 
 
           {/* ===== ALTERNATE ROLL-IN sketch (small, bottom right) ===== */}
-          <rect x="760" y="80" width="120" height="70" rx="2" fill="#0EA5E9" opacity="0.04" stroke="#0EA5E9" strokeWidth="1.2" />
-          <line x1="760" y1="150" x2="880" y2="150" stroke="#0EA5E9" strokeWidth="1.2" strokeDasharray="4 3" />
+          <rect x="760" y="80" width="120" height="70" rx="2" fill="#0EA5E9" opacity="0.04" stroke="#0891B2" strokeWidth="1.2" />
+          <line x1="760" y1="150" x2="880" y2="150" stroke="#0891B2" strokeWidth="1.2" strokeDasharray="4 3" />
           <text x="820" y="96" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#0C4A6E" fontWeight="600">ALTERNATE</text>
           <text x="820" y="107" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#0C4A6E">{d('36', '915')} × {d('60', '1525')}</text>
           {/* Seat at end */}
-          <rect x="856" y="82" width="22" height="66" rx="1" fill="#0EA5E9" opacity="0.08" stroke="#0EA5E9" strokeWidth="0.8" />
+          <rect x="856" y="82" width="22" height="66" rx="1" fill="#0EA5E9" opacity="0.08" stroke="#0891B2" strokeWidth="0.8" />
           <text x="867" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#0C4A6E">SEAT</text>
 
 
@@ -249,7 +249,7 @@ export default function ShowerDiagram() {
                   <animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" />
                 </circle>
               )}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
               <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="shower-focus-ring" />
             </g>

@@ -26,7 +26,7 @@ const CALLOUTS = [
     plain: 'While not a strict code requirement, the advisory recommends rounded or eased edges on accessible counter sections. Sharp metal edges on lowered counter sections can injure wheelchair users whose arms or hands are at counter height. Rounded edges with a minimum ¼-inch radius are recommended for safety.',
     legal: 'Advisory §904: Rounded or eased edges are recommended on accessible counter sections to prevent injury. No sharp or abrasive edges.',
     citation: '§904' },
-  { id: 7, label: 'Scoping', section: '§227', color: '#0EA5E9', textColor: '#0C4A6E', x: 700, y: 150,
+  { id: 7, label: 'Scoping', section: '§227', color: '#0891B2', textColor: '#0C4A6E', x: 700, y: 150,
     plain: 'At least one of each type of sales or service counter must be accessible. For checkout aisles, the number required depends on total count: 1–4 aisles = 1 accessible; 5–8 = 2 accessible; 9–15 = 3 accessible; 16 or more = at least 50% but no fewer than 3. The accessible aisles must be identified with the International Symbol of Accessibility.',
     legal: '§227.2 Checkout aisles scoping: "1 to 4 total = 1 accessible; 5 to 8 = 2; 9 to 15 = 3; over 15 = 50 percent but not fewer than 3." §227.3 "At least one of each type of sales counter and service counter shall be accessible."',
     citation: '§227' }
@@ -120,7 +120,7 @@ export default function CounterDiagram() {
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

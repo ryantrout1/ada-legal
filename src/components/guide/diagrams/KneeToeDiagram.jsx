@@ -46,7 +46,7 @@ const CALLOUTS = [
     citation: '§306.3.2'
   },
   {
-    id: 7, label: 'Common Applications', section: 'Advisory §306', color: '#0EA5E9', textColor: '#0C4A6E',
+    id: 7, label: 'Common Applications', section: 'Advisory §306', color: '#0891B2', textColor: '#0C4A6E',
     x: 650, y: 140,
     plain: 'Knee and toe clearance is required under lavatories (§606), dining and work surfaces (§902), sales and service counters (§904), and check-writing surfaces. Elements like pipes, valves, and enclosures underneath must not reduce the required clearance. When insulation or protection covers are added to pipes (as required at lavatories), they must fit within the clearance envelope without reducing it.',
     legal: 'Advisory §306: "Clearances are required under lavatories (§606), dining surfaces, work surfaces (§902), and sales and service counters (§904)." Elements cannot reduce required knee/toe clearance.',
@@ -209,7 +209,7 @@ export default function KneeToeDiagram() {
           <text x="695" y="170" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#9D174D" fontWeight="600">Width: {d('30', '760')} min (into screen)</text>
 
           {/* Applications note */}
-          <rect x="560" y="200" width="260" height="60" rx="8" fill="#0EA5E9" opacity="0.04" stroke="#0EA5E9" strokeWidth="1" />
+          <rect x="560" y="200" width="260" height="60" rx="8" fill="#0EA5E9" opacity="0.04" stroke="#0891B2" strokeWidth="1" />
           <text x="690" y="222" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#0C4A6E" fontWeight="600">Common Applications:</text>
           <text x="690" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#0C4A6E">Lavatories · Desks · Counters</text>
           <text x="690" y="250" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#0C4A6E">Dining surfaces · Check-writing areas</text>
@@ -219,7 +219,7 @@ export default function KneeToeDiagram() {
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label} — ${c.section}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

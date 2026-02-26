@@ -20,7 +20,7 @@ const CALLOUTS = [
   { id: 6, label: 'Scoping', section: '§211', color: '#DB2777', textColor: '#9D174D', x: 500, y: 260,
     plain: 'Where drinking fountains are provided on a floor, at least two must be offered: one at wheelchair height and one at standing height. A single hi-lo unit satisfies both requirements. If only one fountain exists on a floor, it must be the wheelchair-accessible type. In exterior sites, at least one of each type per cluster.',
     legal: '§211.2 "Where drinking fountains are provided… no fewer than two shall be provided." One at wheelchair height per §602.4, one at standing height per §602.5.', citation: '§211' },
-  { id: 7, label: 'Bottle Fillers', section: 'Advisory', color: '#0EA5E9', textColor: '#0C4A6E', x: 700, y: 150,
+  { id: 7, label: 'Bottle Fillers', section: 'Advisory', color: '#0891B2', textColor: '#0C4A6E', x: 700, y: 150,
     plain: 'Bottle filler stations are increasingly common. If provided in addition to drinking fountains, accessible bottle fillers should be at wheelchair height with clear floor space for a forward approach. A bottle filler alone does not substitute for an accessible drinking fountain — both must be provided if fountains are required. Controls must be operable with one hand.',
     legal: 'Advisory: Bottle fillers provided in addition to fountains should comply with reach range and clear floor space requirements. Not a substitute for accessible drinking fountains.', citation: '§602' }
 ];
@@ -119,14 +119,14 @@ export default function DrinkingFountainDiagram() {
           <text x="720" y="396" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="500">{d('30', '760')} × {d('48', '1220')} ∥</text>
 
           {/* Hi-lo note */}
-          <rect x="770" y="70" width="110" height="50" rx="6" fill="#0EA5E9" opacity="0.04" stroke="#0EA5E9" strokeWidth="1" />
+          <rect x="770" y="70" width="110" height="50" rx="6" fill="#0EA5E9" opacity="0.04" stroke="#0891B2" strokeWidth="1" />
           <text x="825" y="90" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">Hi-Lo unit satisfies</text>
           <text x="825" y="104" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">both requirements</text>
 
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

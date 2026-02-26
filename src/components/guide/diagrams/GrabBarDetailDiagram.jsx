@@ -46,7 +46,7 @@ const CALLOUTS = [
     citation: '§609.5'
   },
   {
-    id: 7, label: 'Fittings', section: '§609.6 / §609.7', color: '#0EA5E9', textColor: '#0C4A6E',
+    id: 7, label: 'Fittings', section: '§609.6 / §609.7', color: '#0891B2', textColor: '#0C4A6E',
     x: 810, y: 190,
     plain: 'Grab bars must not rotate within their fittings — any rotation could cause a sudden loss of grip and a fall. The space adjacent to the grab bar must be free of obstructions for 1.5 inches above the bar (so hands can wrap over the top) and 12 inches below (so no objects catch on arms or clothing during a transfer). Fittings must be smooth and securely anchored to structural reinforcement.',
     legal: '"Grab bars shall not rotate within their fittings." §609.3 "Space between the wall and the grab bar shall be 1 1/2 inches." Adjacent space: "free of sharp or abrasive elements." 1.5 inches above, 12 inches below must be unobstructed.',
@@ -188,7 +188,7 @@ export default function GrabBarDetailDiagram() {
           <text x="830" y="133" fontFamily="Manrope, sans-serif" fontSize="6" fill="#9D174D" fontWeight="500">{d('1.5', '38')}↑</text>
 
           {/* 12" clearance below bar */}
-          <rect x="530" y="162" width="260" height="60" rx="2" fill="#0EA5E9" opacity="0.03" stroke="#0EA5E9" strokeWidth="0.8" strokeDasharray="3 2" />
+          <rect x="530" y="162" width="260" height="60" rx="2" fill="#0EA5E9" opacity="0.03" stroke="#0891B2" strokeWidth="0.8" strokeDasharray="3 2" />
           <text x="830" y="196" fontFamily="Manrope, sans-serif" fontSize="6" fill="#0C4A6E" fontWeight="500">{d('12', '305')}↓</text>
 
           <text x="660" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E">Clear zone: {d('1.5', '38')} above, {d('12', '305')} below</text>
@@ -198,7 +198,7 @@ export default function GrabBarDetailDiagram() {
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label} — ${c.section}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

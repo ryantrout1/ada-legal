@@ -46,7 +46,7 @@ const CALLOUTS = [
     citation: '§607.7'
   },
   {
-    id: 7, label: 'Surface & Drainage', section: '§607.1', color: '#0EA5E9', textColor: '#0C4A6E',
+    id: 7, label: 'Surface & Drainage', section: '§607.1', color: '#0891B2', textColor: '#0C4A6E',
     x: 710, y: 150,
     plain: 'The bathtub floor must be slip-resistant to prevent falls. While the Standards don\'t specify a precise coefficient of friction, the surface must meet the general §302 requirement for firm, stable, and slip-resistant finishes. The tub rim height should be approximately 17–19 inches above the floor to facilitate wheelchair transfer — matching standard wheelchair seat height. Drainage must prevent water accumulation on the adjacent floor.',
     legal: '"Bathtubs shall comply with §607." Floor surface per §302: "stable, firm, and slip-resistant." Rim height should permit transfer from wheelchair — typically 17 to 19 inches above the finish floor.',
@@ -213,9 +213,9 @@ export default function BathtubDiagram() {
 
           {/* Height dimensions */}
           {/* Rim height */}
-          <line x1="860" y1="185" x2="860" y2="275" stroke="#0EA5E9" strokeWidth="1" />
-          <line x1="854" y1="185" x2="866" y2="185" stroke="#0EA5E9" strokeWidth="1" />
-          <line x1="854" y1="275" x2="866" y2="275" stroke="#0EA5E9" strokeWidth="1" />
+          <line x1="860" y1="185" x2="860" y2="275" stroke="#0891B2" strokeWidth="1" />
+          <line x1="854" y1="185" x2="866" y2="185" stroke="#0891B2" strokeWidth="1" />
+          <line x1="854" y1="275" x2="866" y2="275" stroke="#0891B2" strokeWidth="1" />
           <rect x="842" y="222" width="36" height="12" rx="3" fill="#0EA5E9" />
           <text x="860" y="231" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fontWeight="700" fill="white">~{d('17–19', '430–485')}</text>
 
@@ -241,7 +241,7 @@ export default function BathtubDiagram() {
                   <animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" />
                 </circle>
               )}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
               <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="tub-focus-ring" />
             </g>

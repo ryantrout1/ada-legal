@@ -59,7 +59,7 @@ const CALLOUTS = [
     linkOverride: null
   },
   {
-    id: 7, label: 'Scoping (How Many?)', section: '§208.2', color: '#0EA5E9', textColor: '#0C4A6E',
+    id: 7, label: 'Scoping (How Many?)', section: '§208.2', color: '#0891B2', textColor: '#0C4A6E',
     x: 115, y: 340,
     plain: 'The number of accessible spaces required depends on the total number of parking spaces in your lot or garage. See the table below. Medical facilities specializing in treating people with mobility impairments must provide 20% accessible spaces for outpatient areas. Of all accessible spaces, at least 1 in every 6 must be van-accessible.',
     legal: '"Parking facilities shall provide accessible parking spaces in accordance with Table 208.2." Per §208.2.4: "For every six or fraction of six accessible parking spaces required, at least one shall be a van parking space complying with 502."',
@@ -309,7 +309,7 @@ export default function ParkingDiagram() {
                   <animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" />
                 </circle>
               )}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'}
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'}
                 stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
                 fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>

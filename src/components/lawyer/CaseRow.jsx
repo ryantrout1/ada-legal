@@ -41,7 +41,8 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
             0%, 100% { box-shadow: 0 0 0 3px rgba(22,163,74,0.15); }
             50% { box-shadow: 0 0 0 6px rgba(22,163,74,0.25); }
           }
-        `}</style>
+        `}        @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+        </style>
       )}
       {/* Row */}
       <div style={{

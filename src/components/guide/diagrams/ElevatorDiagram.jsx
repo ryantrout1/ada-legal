@@ -20,7 +20,7 @@ const CALLOUTS = [
   { id: 6, label: 'Hall Signals', section: '§407.2.2', color: '#DB2777', textColor: '#9D174D', x: 500, y: 260,
     plain: 'When the elevator arrives, both visible and audible signals must indicate which car is answering and which direction it\'s going. Audible signals: one tone for up, two tones for down (or verbal announcement). Visible signals: illuminated arrows visible from the hall call button area. Signals must be at least 2.5 inches high.',
     legal: '"A visible and audible signal at each hoistway entrance shall indicate which car is answering a call and the car\'s direction of travel." One tone up, two down.', citation: '§407.2.2' },
-  { id: 7, label: 'Floor Designation', section: '§407.4.7.1', color: '#0EA5E9', textColor: '#0C4A6E', x: 700, y: 150,
+  { id: 7, label: 'Floor Designation', section: '§407.4.7.1', color: '#0891B2', textColor: '#0C4A6E', x: 700, y: 150,
     plain: 'Floor designations must be provided in raised characters and Braille on BOTH door jambs (both sides of the door opening), centered at 48 inches above the floor. Characters must be at least 2 inches high. This allows a person who is blind to confirm their floor by touching either jamb as they exit. The star symbol (★) must mark the main entry floor.',
     legal: '"Floor designations… provided in raised characters and Braille complying with §703.2 and §703.3 on both jambs." Height: "48 inches above the finish floor." Characters: "2 inches high minimum."', citation: '§407.4.7.1' }
 ];
@@ -122,7 +122,7 @@ export default function ElevatorDiagram() {
           <text x="540" y="290" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">≤ {d('42', '1065')}</text>
 
           {/* Floor jamb designation */}
-          <rect x="790" y="120" width="90" height="55" rx="6" fill="#0EA5E9" opacity="0.04" stroke="#0EA5E9" strokeWidth="1" />
+          <rect x="790" y="120" width="90" height="55" rx="6" fill="#0EA5E9" opacity="0.04" stroke="#0891B2" strokeWidth="1" />
           <text x="835" y="140" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">JAMB SIGNS</text>
           <text x="835" y="153" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#0C4A6E">Both sides, {d('48', '1220')}</text>
           <text x="835" y="165" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#0C4A6E">{d('2', '51')} high min</text>
@@ -130,7 +130,7 @@ export default function ElevatorDiagram() {
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

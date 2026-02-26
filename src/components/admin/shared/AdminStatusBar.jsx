@@ -73,7 +73,7 @@ export default function AdminStatusBar({ cells, secondaryText }) {
       )}
 
       <style>{`
-        @keyframes adminCellPulse { 0%,100%{opacity:1}50%{opacity:0.7} }
+        @keyframes adminCellPulse { 0%,100%{opacity:1}50%{opacity:0.7} } @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
         .admin-status-cell:hover { background-color: var(--slate-50) !important; }
         .admin-status-cell:focus-visible { outline: 3px solid #1D4ED8 !important; outline-offset: -2px !important; z-index: 1; }
         @media (max-width: 768px) {

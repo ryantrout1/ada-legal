@@ -7,7 +7,7 @@ const CALLOUTS = [
   { id: 3, label: 'Detectable Warnings', section: '§810.5.2', color: '#2563EB', textColor: '#1E3A8A', x: 580, y: 100, plain: 'Rail platform edges not protected by guards or screens must have detectable warning surfaces (truncated domes) along the full length of the platform edge. The detectable warning must be 24 inches deep and extend the full length of the public use area of the platform. The domes provide tactile and visual cues to people who are blind or have low vision.', legal: '"Platform boarding edges not protected by platform screens or guards shall have detectable warnings 24 inches deep running the full length of the public use area of the platform."', citation: '§810.5.2, §705' },
   { id: 4, label: 'Platform Gap', section: '§810.5.3', color: '#7C3AED', textColor: '#5B21B6', x: 120, y: 340, plain: 'The horizontal gap between the rail vehicle door and the platform edge must be as small as practicable — the standard aims for 3 inches maximum. The vertical difference between the vehicle floor and the platform must also be minimized. Bridge plates or ramps may be used to span gaps.', legal: '"The horizontal gap between the vehicle floor and platform shall be as small as practicable." Advisory: "The platform-to-vehicle gap should be minimized to enable independent boarding."', citation: '§810.5.3' },
   { id: 5, label: 'Signage & Information', section: '§810.6', color: '#D97706', textColor: '#78350F', x: 350, y: 340, plain: 'Route maps, timetables, and fare information displayed at stations must comply with §703 signage requirements where applicable. Station names must be provided in raised characters and Braille at each station. Real-time arrival information, where provided, should include both visual and audible formats.', legal: '"Station signs shall comply with 703." Per §810.6: route identification signage at stations.', citation: '§810.6, §703' },
-  { id: 6, label: 'Accessible Route to Platform', section: '§810.5.1', color: '#0EA5E9', textColor: '#0C4A6E', x: 580, y: 340, plain: 'An accessible route must connect each entry point of the transit station to all boarding platforms, fare collection areas, and key destination points within the station. If the station has multiple levels, elevators or platform lifts must be provided. Fare gates must include at least one accessible gate wide enough for a wheelchair (32 inches minimum clear width).', legal: '"Each platform shall be connected to the station entrance by an accessible route complying with 402."', citation: '§810.5.1, §402' }
+  { id: 6, label: 'Accessible Route to Platform', section: '§810.5.1', color: '#0891B2', textColor: '#0C4A6E', x: 580, y: 340, plain: 'An accessible route must connect each entry point of the transit station to all boarding platforms, fare collection areas, and key destination points within the station. If the station has multiple levels, elevators or platform lifts must be provided. Fare gates must include at least one accessible gate wide enough for a wheelchair (32 inches minimum clear width).', legal: '"Each platform shall be connected to the station entrance by an accessible route complying with 402."', citation: '§810.5.1, §402' }
 ];
 
 function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
@@ -77,7 +77,7 @@ export default function TransportationDiagram() {
           <text x="140" y="394" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D">{d('30', '760')}×{d('48', '1220')} clear</text>
 
           {/* Accessible route arrow */}
-          <line x1="200" y1="295" x2="150" y2="330" stroke="#0EA5E9" strokeWidth="1.5" markerEnd="url(#trArr)" />
+          <line x1="200" y1="295" x2="150" y2="330" stroke="#0891B2" strokeWidth="1.5" markerEnd="url(#trArr)" />
           <text x="190" y="320" fontFamily="Manrope, sans-serif" fontSize="6" fill="#0C4A6E" fontWeight="600">Route</text>
           <defs><marker id="trArr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#0EA5E9" /></marker></defs>
 
@@ -129,7 +129,7 @@ export default function TransportationDiagram() {
           <text x="810" y="222" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F">+ Braille per §703</text>
 
           {/* Accessible route arrow */}
-          <line x1="530" y1="450" x2="530" y2="315" stroke="#0EA5E9" strokeWidth="1.5" markerEnd="url(#trArr2)" />
+          <line x1="530" y1="450" x2="530" y2="315" stroke="#0891B2" strokeWidth="1.5" markerEnd="url(#trArr2)" />
           <text x="545" y="450" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">Accessible Route</text>
           <text x="545" y="462" fontFamily="Manrope, sans-serif" fontSize="6" fill="#0C4A6E">from entrance</text>
           <defs><marker id="trArr2" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#0EA5E9" /></marker></defs>
@@ -137,7 +137,7 @@ export default function TransportationDiagram() {
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

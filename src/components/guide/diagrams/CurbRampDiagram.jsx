@@ -46,7 +46,7 @@ const CALLOUTS = [
     citation: '§406.2'
   },
   {
-    id: 7, label: 'Parallel Curb Ramps', section: '§406.5', color: '#0EA5E9', textColor: '#0C4A6E',
+    id: 7, label: 'Parallel Curb Ramps', section: '§406.5', color: '#0891B2', textColor: '#0C4A6E',
     x: 700, y: 220,
     plain: 'When the sidewalk is too narrow for a standard perpendicular curb ramp, a parallel curb ramp runs parallel to the curb with the ramp descending in the sidewalk direction. At the bottom of the parallel ramp, a 48-inch minimum turning space must be provided so the wheelchair user can turn 90 degrees to face the street before crossing. The ramp must still meet the 1:12 slope and 36-inch width requirements.',
     legal: '"Where a parallel curb ramp is provided, a turning space 48 inches minimum shall be provided at the bottom of the curb ramp." Running slope: 1:12 max. Width: 36 inches minimum.',
@@ -151,11 +151,11 @@ export default function CurbRampDiagram() {
           <text x="450" y="243" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#9D174D" fontWeight="600">Counter slope ≤ 1:20 at gutter</text>
 
           {/* Parallel ramp sketch (small, far right) */}
-          <rect x="720" y="120" width="120" height="90" rx="4" fill="#0EA5E9" opacity="0.04" stroke="#0EA5E9" strokeWidth="1" />
+          <rect x="720" y="120" width="120" height="90" rx="4" fill="#0EA5E9" opacity="0.04" stroke="#0891B2" strokeWidth="1" />
           <text x="780" y="140" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">PARALLEL</text>
           <text x="780" y="152" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#0C4A6E">ALTERNATIVE</text>
-          <line x1="740" y1="160" x2="800" y2="160" stroke="#0EA5E9" strokeWidth="1" />
-          <rect x="740" y="162" width="60" height="30" rx="2" fill="#0EA5E9" opacity="0.08" stroke="#0EA5E9" strokeWidth="0.8" />
+          <line x1="740" y1="160" x2="800" y2="160" stroke="#0891B2" strokeWidth="1" />
+          <rect x="740" y="162" width="60" height="30" rx="2" fill="#0EA5E9" opacity="0.08" stroke="#0891B2" strokeWidth="0.8" />
           <text x="770" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#0C4A6E">{d('48', '1220')} turn</text>
 
 
@@ -163,7 +163,7 @@ export default function CurbRampDiagram() {
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label} — ${c.section}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

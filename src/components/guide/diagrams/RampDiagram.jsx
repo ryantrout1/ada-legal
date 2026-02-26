@@ -46,7 +46,7 @@ const CALLOUTS = [
     citation: '§405.9'
   },
   {
-    id: 7, label: 'Cross Slope', section: '§405.3', color: '#0EA5E9', textColor: '#0C4A6E',
+    id: 7, label: 'Cross Slope', section: '§405.3', color: '#0891B2', textColor: '#0C4A6E',
     x: 500, y: 370,
     plain: 'The sideways tilt of the ramp — called the cross slope — must be no more than 1:48 (about 2%). Too much sideways tilt causes a wheelchair to drift to one side, making the ramp dangerous. The ramp surface must also be firm, stable, and slip-resistant. Loose gravel, deep carpet, and wood chips do not meet this standard.',
     legal: '"Cross slope of ramp runs shall not be steeper than 1:48." Surface: "Floor or ground surfaces of ramp runs shall comply with 302," requiring firm, stable, and slip-resistant surfaces.',
@@ -232,7 +232,7 @@ export default function RampDiagram() {
           </text>
 
           {/* Cross slope indicator */}
-          <line x1="400" y1="395" x2="520" y2="395" stroke="#0EA5E9" strokeWidth="1.5" />
+          <line x1="400" y1="395" x2="520" y2="395" stroke="#0891B2" strokeWidth="1.5" />
           <polygon points="400,395 410,391 410,399" fill="#0EA5E9" />
           <polygon points="520,395 510,391 510,399" fill="#0EA5E9" />
           <rect x="417" y="399" width="86" height="14" rx="3" fill="#0EA5E9" />
@@ -270,7 +270,7 @@ export default function RampDiagram() {
                   <animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" />
                 </circle>
               )}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'}
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'}
                 stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
                 fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>

@@ -26,7 +26,7 @@ const CALLOUTS = [
     plain: 'At the bottom, the handrail extends at the slope of the stair flight for a horizontal distance equal to one tread depth beyond the last riser nosing, then continues horizontally for 12 inches. This provides support as the person completes the last step and transitions to level ground. The total extension ensures a smooth grip from stair to landing.',
     legal: '"At the bottom of a stair flight, handrails shall extend at the slope of the stair flight for a horizontal distance at least equal to one tread depth beyond the last riser nosing."',
     citation: '§505.10.3' },
-  { id: 7, label: 'Wet Conditions', section: '§504.7', color: '#0EA5E9', textColor: '#0C4A6E', x: 680, y: 280,
+  { id: 7, label: 'Wet Conditions', section: '§504.7', color: '#0891B2', textColor: '#0C4A6E', x: 680, y: 280,
     plain: 'Outdoor stairs and any stairs that may be subject to wet conditions (near pools, in parking garages, at building entries) must have a visual contrast strip at the leading edge of each tread. The strip must extend the full width of the tread. It provides a visual warning of each step edge for people with low vision, especially when water makes surfaces reflective.',
     legal: '"Stairways that are not in an enclosed stairwell shall have visual contrast on tread nosings." §504.7 Contrast "shall be a stripe 1 inch wide minimum and 2 inches wide maximum, placed on the nosing tread at the leading edge."',
     citation: '§504.7' }
@@ -152,7 +152,7 @@ export default function StairwayDiagram() {
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

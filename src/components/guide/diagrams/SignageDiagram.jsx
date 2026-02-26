@@ -26,7 +26,7 @@ const CALLOUTS = [
     plain: 'For directional and informational signs (overhead signs, wall-mounted wayfinding), character height is based on viewing distance. The minimum character height equals the viewing distance divided by 40 (e.g., at 20 feet, characters must be 6 inches high). Stroke width must be 10% to 30% of the character height. These signs do not need Braille or raised text.',
     legal: '"Character height shall be based on the height of the uppercase letter I. Viewing distance shall be measured as the horizontal distance between the character and an obstruction preventing further approach." Stroke width: "10 percent minimum and 30 percent maximum."',
     citation: '§703.5' },
-  { id: 7, label: 'Pictograms', section: '§703.6', color: '#0EA5E9', textColor: '#0C4A6E', x: 680, y: 140,
+  { id: 7, label: 'Pictograms', section: '§703.6', color: '#0891B2', textColor: '#0C4A6E', x: 680, y: 140,
     plain: 'When a pictogram (symbol) is used to identify a room or space — like the restroom symbol or the International Symbol of Accessibility — it must be in a field at least 6 inches high. A text descriptor must appear directly below the pictogram field. Both the text descriptor and its Braille equivalent are required. The pictogram field cannot contain text — the text goes below it.',
     legal: '"Pictograms shall have a field height of 6 inches minimum." Text descriptors: "directly below the pictogram field. Raised characters and Braille shall be provided."',
     citation: '§703.6' }
@@ -133,21 +133,21 @@ export default function SignageDiagram() {
           <text x="620" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">Grade 2 contracted Braille</text>
 
           {/* PICTOGRAM note */}
-          <rect x="730" y="90" width="150" height="110" rx="8" fill="#0EA5E9" opacity="0.04" stroke="#0EA5E9" strokeWidth="1" />
+          <rect x="730" y="90" width="150" height="110" rx="8" fill="#0EA5E9" opacity="0.04" stroke="#0891B2" strokeWidth="1" />
           <text x="805" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#0C4A6E">PICTOGRAM</text>
           {/* Simple restroom icon */}
-          <circle cx="805" cy="135" r="8" fill="none" stroke="#0EA5E9" strokeWidth="1.5" />
-          <line x1="805" y1="143" x2="805" y2="168" stroke="#0EA5E9" strokeWidth="1.5" />
-          <line x1="790" y1="155" x2="820" y2="155" stroke="#0EA5E9" strokeWidth="1.5" />
-          <line x1="805" y1="168" x2="793" y2="185" stroke="#0EA5E9" strokeWidth="1.5" />
-          <line x1="805" y1="168" x2="817" y2="185" stroke="#0EA5E9" strokeWidth="1.5" />
+          <circle cx="805" cy="135" r="8" fill="none" stroke="#0891B2" strokeWidth="1.5" />
+          <line x1="805" y1="143" x2="805" y2="168" stroke="#0891B2" strokeWidth="1.5" />
+          <line x1="790" y1="155" x2="820" y2="155" stroke="#0891B2" strokeWidth="1.5" />
+          <line x1="805" y1="168" x2="793" y2="185" stroke="#0891B2" strokeWidth="1.5" />
+          <line x1="805" y1="168" x2="817" y2="185" stroke="#0891B2" strokeWidth="1.5" />
           <text x="805" y="195" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#0C4A6E">{d('6', '150')} min field height</text>
 
           {/* Callouts */}
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

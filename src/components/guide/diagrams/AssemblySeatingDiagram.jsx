@@ -20,7 +20,7 @@ const CALLOUTS = [
   { id: 6, label: 'Integration', section: '§802.1', color: '#DB2777', textColor: '#9D174D', x: 500, y: 260,
     plain: 'Wheelchair spaces must be an integral part of the seating layout — not isolated platforms, not behind barriers, not in separate "accessible sections." They must be adjacent to companion seats at the same level, integrated into the flow of the seating bowl, and connected by an accessible route.',
     legal: '"Wheelchair spaces shall adjoin accessible routes." Integration: spaces must be part of the general seating plan, not segregated.', citation: '§802.1' },
-  { id: 7, label: 'Scoping', section: '§221.2', color: '#0EA5E9', textColor: '#0C4A6E', x: 700, y: 150,
+  { id: 7, label: 'Scoping', section: '§221.2', color: '#0891B2', textColor: '#0C4A6E', x: 700, y: 150,
     plain: 'The number of wheelchair spaces required depends on total seating: 4–25 seats = 1 space; 26–50 = 2; 51–150 = 4; 151–300 = 5; 301–500 = 6; 501–5,000 = 6 plus 1 for each 150 over 500; 5,001+ = 36 plus 1 for each 200 over 5,000. Each wheelchair space must have a companion seat.',
     legal: '§221.2.1 Table: "4 to 25 = 1; 26 to 50 = 2; 51 to 150 = 4; 151 to 300 = 5; 301 to 500 = 6; 501 to 5000 = 6 + 1/150; 5001+ = 36 + 1/200."', citation: '§221.2' }
 ];
@@ -123,7 +123,7 @@ export default function AssemblySeatingDiagram() {
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

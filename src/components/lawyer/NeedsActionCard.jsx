@@ -22,7 +22,8 @@ export default function NeedsActionCard({ caseData, contactLogs, notes, onLogCon
       animation: highlighted ? 'highlightPulse 1.5s ease-in-out 2' : 'none'
     }}>
       {highlighted && (
-        <style>{`@keyframes highlightPulse { 0%,100%{box-shadow:0 0 0 3px rgba(22,163,74,0.15)} 50%{box-shadow:0 0 0 6px rgba(22,163,74,0.25)} }`}</style>
+        <style>{`@keyframes highlightPulse { 0%,100%{box-shadow:0 0 0 3px rgba(22,163,74,0.15)} 50%{box-shadow:0 0 0 6px rgba(22,163,74,0.25)} }        @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+      `}</style>
       )}
       {/* Collapsed Row */}
       <div style={{

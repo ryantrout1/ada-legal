@@ -7,7 +7,7 @@ const CALLOUTS = [
   { id: 3, label: 'Doors & Gates', section: '§410.5', color: '#2563EB', textColor: '#1E3A8A', x: 580, y: 80, plain: 'Doors and gates on platform lifts must provide at least 32 inches (815 mm) of clear width. Doors must not require tight grasping, pinching, or twisting to operate. Power-operated doors that open automatically or with a push button are preferred. Doors must remain open long enough for a wheelchair user to enter or exit.', legal: '"Platform lifts shall comply with ASME A18.1. Platform lifts shall not be attendant-operated."', citation: '§410.1, §410.5' },
   { id: 4, label: 'Controls', section: '§410.4', color: '#7C3AED', textColor: '#5B21B6', x: 120, y: 300, plain: 'Lift controls must be operable with one hand and not require tight grasping, pinching, or twisting. The force to operate must not exceed 5 pounds. Controls must be between 15 and 48 inches above the floor. Platform lifts must NOT require an attendant to operate — the user must be able to call and operate the lift independently.', legal: '"Platform lifts shall not be attendant-operated." Controls: "Operable parts shall comply with 309."', citation: '§410.1, §309' },
   { id: 5, label: 'Where Permitted', section: '§206.7', color: '#D97706', textColor: '#78350F', x: 350, y: 300, plain: 'Platform lifts can be used instead of ramps or elevators in these situations: as part of an accessible route to a performing area, wheelchair spaces in assembly areas, incidental spaces with an occupant load of 5 or fewer, courtrooms, certain existing buildings, and recreation facilities. They are not a substitute for elevators in new multi-story construction unless one of these exceptions applies.', legal: '§206.7: "Platform lifts shall be permitted as a component of an accessible route in specific locations" including performance areas (§206.7.1), wheelchair spaces in assembly areas (§206.7.2), incidental spaces (§206.7.3), judicial spaces (§206.7.4), existing buildings (§206.7.5), and recreation (§206.7.8-10).', citation: '§206.7' },
-  { id: 6, label: 'ASME A18.1 Safety', section: '§410.1', color: '#0EA5E9', textColor: '#0C4A6E', x: 580, y: 300, plain: 'All platform lifts must comply with ASME A18.1 Safety Standard. This includes requirements for: enclosure walls on sides not used for entry/exit, a grab bar on the full length of non-entry walls, emergency stop controls, non-skid surfaces, maximum speed of 12 inches per second, and capacity ratings. Annual inspections are typically required by state codes.', legal: '"Platform lifts shall comply with ASME A18.1 listed in 105.2.2."', citation: '§410.1' }
+  { id: 6, label: 'ASME A18.1 Safety', section: '§410.1', color: '#0891B2', textColor: '#0C4A6E', x: 580, y: 300, plain: 'All platform lifts must comply with ASME A18.1 Safety Standard. This includes requirements for: enclosure walls on sides not used for entry/exit, a grab bar on the full length of non-entry walls, emergency stop controls, non-skid surfaces, maximum speed of 12 inches per second, and capacity ratings. Annual inspections are typically required by state codes.', legal: '"Platform lifts shall comply with ASME A18.1 listed in 105.2.2."', citation: '§410.1' }
 ];
 
 function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
@@ -80,7 +80,7 @@ export default function PlatformLiftDiagram() {
           <text x="355" y="380" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#1E3A8A" fontWeight="600">DOOR</text>
 
           {/* Grab bar on wall */}
-          <line x1="244" y1="210" x2="244" y2="300" stroke="#0EA5E9" strokeWidth="3" opacity="0.4" />
+          <line x1="244" y1="210" x2="244" y2="300" stroke="#0891B2" strokeWidth="3" opacity="0.4" />
           <text x="235" y="260" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#0C4A6E">grab bar</text>
 
           {/* Controls */}
@@ -88,7 +88,7 @@ export default function PlatformLiftDiagram() {
           <text x="235" y="298" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#5B21B6">controls</text>
 
           {/* Speed note */}
-          <rect x="60" y="460" width="160" height="30" rx="6" fill="#0EA5E9" opacity="0.05" stroke="#0EA5E9" strokeWidth="1" />
+          <rect x="60" y="460" width="160" height="30" rx="6" fill="#0EA5E9" opacity="0.05" stroke="#0891B2" strokeWidth="1" />
           <text x="140" y="478" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">Max speed: 12"/sec</text>
 
           {/* ===== RIGHT: Plan view ===== */}
@@ -113,9 +113,9 @@ export default function PlatformLiftDiagram() {
           <text x="670" y="278" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#8B2E08" fontWeight="600">SPACE</text>
 
           {/* Grab bars on non-entry walls */}
-          <line x1="524" y1="180" x2="524" y2="340" stroke="#0EA5E9" strokeWidth="3" opacity="0.3" />
-          <line x1="816" y1="180" x2="816" y2="340" stroke="#0EA5E9" strokeWidth="3" opacity="0.3" />
-          <line x1="560" y1="144" x2="780" y2="144" stroke="#0EA5E9" strokeWidth="3" opacity="0.3" />
+          <line x1="524" y1="180" x2="524" y2="340" stroke="#0891B2" strokeWidth="3" opacity="0.3" />
+          <line x1="816" y1="180" x2="816" y2="340" stroke="#0891B2" strokeWidth="3" opacity="0.3" />
+          <line x1="560" y1="144" x2="780" y2="144" stroke="#0891B2" strokeWidth="3" opacity="0.3" />
 
           {/* Dim: width */}
           <line x1="570" y1="420" x2="770" y2="420" stroke="#C2410C" strokeWidth="1" />
@@ -146,7 +146,7 @@ export default function PlatformLiftDiagram() {
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

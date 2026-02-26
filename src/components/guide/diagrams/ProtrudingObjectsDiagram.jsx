@@ -46,7 +46,7 @@ const CALLOUTS = [
     citation: '§307.5'
   },
   {
-    id: 7, label: 'Common Violations', section: 'Advisory §307', color: '#0EA5E9', textColor: '#0C4A6E',
+    id: 7, label: 'Common Violations', section: 'Advisory §307', color: '#0891B2', textColor: '#0C4A6E',
     x: 680, y: 290,
     plain: 'The most frequent §307 violations include: fire extinguisher cabinets (recessing into the wall solves this), AED boxes, wall-mounted display cases, open stairway undersides (must have a cane-detectable barrier when headroom drops below 80 inches), decorative wall sconces and artwork, building directories and signage brackets, drinking fountains mounted too high, and wall-mounted TV screens or monitors in waiting areas.',
     legal: 'Advisory §307.2: "Examples of protruding objects include wall-mounted fire extinguisher cabinets, drinking fountains, signs, and similar elements." Recessing objects into the wall or adding a cane-detectable apron below are common solutions.',
@@ -212,7 +212,7 @@ export default function ProtrudingObjectsDiagram() {
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label} — ${c.section}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}

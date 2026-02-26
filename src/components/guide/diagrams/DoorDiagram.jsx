@@ -46,7 +46,7 @@ const CALLOUTS = [
     citation: '§404.2.10'
   },
   {
-    id: 7, label: 'Two Doors in Series', section: '§404.2.6', color: '#0EA5E9', textColor: '#0C4A6E',
+    id: 7, label: 'Two Doors in Series', section: '§404.2.6', color: '#0891B2', textColor: '#0C4A6E',
     x: 350, y: 475,
     plain: 'When two doors are in a series (a vestibule or airlock), the space between them must be at least 48 inches plus the width of any door swinging into that space. This allows a wheelchair user to fully clear the first door before needing to open the second. Both doors must be able to swing open simultaneously without hitting each other. The floor between the doors must be level.',
     legal: '"The distance between two hinged or pivoted doors in series shall be 48 inches (1220 mm) minimum plus the width of doors or gates swinging into the space."',
@@ -295,7 +295,7 @@ export default function DoorDiagram() {
           </text>
 
           {/* Two doors in series note (bottom center) */}
-          <rect x="180" y="450" width="240" height="40" rx="6" fill="#0EA5E9" opacity="0.05" stroke="#0EA5E9" strokeWidth="1" strokeDasharray="5 3" />
+          <rect x="180" y="450" width="240" height="40" rx="6" fill="#0EA5E9" opacity="0.05" stroke="#0891B2" strokeWidth="1" strokeDasharray="5 3" />
           <text x="300" y="468" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#0C4A6E" fontWeight="600">TWO DOORS IN SERIES (VESTIBULE)</text>
           <text x="300" y="480" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E">
             {imp('48', '1220')} min + door width between doors
@@ -317,7 +317,7 @@ export default function DoorDiagram() {
                   <animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" />
                 </circle>
               )}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'}
+              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'}
                 stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
                 fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>

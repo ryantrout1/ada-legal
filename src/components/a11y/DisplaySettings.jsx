@@ -959,7 +959,7 @@ export const applyPreferences = (prefs) => {
         fill: #FCD34D !important;
       }
       #main-content svg[role="img"] text[fill="#0C4A6E"],
-      #main-content svg[role="img"] text[fill="#0EA5E9"] {
+      #main-content svg[role="img"] text[fill="#0891B2"], #main-content svg[role="img"] text[fill="#0EA5E9"] {
         fill: #22D3EE !important;
       }
       #main-content svg[role="img"] text[fill="#9D174D"],
