@@ -5,7 +5,8 @@ const DEFAULTS = {
   displayMode: 'default',
   fontSize: 'default',
   lineSpacing: 'default',
-  fontFamily: 'default'
+  fontFamily: 'default',
+  readingLevel: 'standard'
 };
 
 export const loadPreferences = () => {
@@ -1318,6 +1319,28 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
           <OptionButton variant={variant} label={<span style={{ fontFamily: "'Atkinson Hyperlegible', sans-serif" }}>Atkinson Hyperlegible</span>}
             active={prefs.fontFamily === 'atkinson'} ariaPressed={String(prefs.fontFamily === 'atkinson')}
             onClick={() => updatePref('fontFamily', 'atkinson', 'Font changed to Atkinson Hyperlegible')} />
+        </div>
+      </fieldset>
+
+      {/* Reading Level */}
+      <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '16px' }}>
+        <legend style={labelStyle}>Reading Level</legend>
+        <p style={{
+          fontFamily: 'Manrope, sans-serif',
+          fontSize: '0.6875rem',
+          color: isMobile ? 'rgba(255,255,255,0.5)' : 'var(--slate-400)',
+          margin: '4px 0 8px',
+          lineHeight: 1.4
+        }}>
+          Controls how guide content is displayed
+        </p>
+        <div style={{ display: 'flex', gap: '4px', marginTop: '4px', flexWrap: 'wrap' }}>
+          <OptionButton variant={variant} label="Simple" active={prefs.readingLevel === 'simple'} ariaPressed={String(prefs.readingLevel === 'simple')}
+            onClick={() => updatePref('readingLevel', 'simple', 'Reading level changed to simple — plain language summaries')} />
+          <OptionButton variant={variant} label="Standard" active={prefs.readingLevel === 'standard'} ariaPressed={String(prefs.readingLevel === 'standard')}
+            onClick={() => updatePref('readingLevel', 'standard', 'Reading level changed to standard')} />
+          <OptionButton variant={variant} label="Professional" active={prefs.readingLevel === 'professional'} ariaPressed={String(prefs.readingLevel === 'professional')}
+            onClick={() => updatePref('readingLevel', 'professional', 'Reading level changed to professional — includes legal citations')} />
         </div>
       </fieldset>
 

@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { base44 } from '@/api/base44Client';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight, BookOpen, Scale, Sparkles } from 'lucide-react';
 import GuideStyles from './GuideStyles';
 import GuideHeroBanner from './GuideHeroBanner';
 import GuideReportCTA from './GuideReportCTA';
 import AutoCiteLinks from './AutoCiteLinks';
 import ShareBar from './ShareBar';
+import { loadPreferences } from '../a11y/DisplaySettings';
 
 const ALL_CHAPTERS = [
   { num: 1, name: 'Application & Administration', range: '§101–106', page: 'StandardsCh1' },
@@ -22,9 +23,14 @@ const ALL_CHAPTERS = [
   { num: 10, name: 'Recreation Facilities', range: '§1001–1010', page: 'StandardsCh10' },
 ];
 
-function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onToggle }) {
+function SectionBlock({ index, number, title, plain, legal, simple, diagram, isOpen, onToggle, readingLevel, chapterNum }) {
   const panelId = `section-panel-${index}`;
   const headerId = `section-header-${index}`;
+
+  // Reading level display logic
+  const showSimple = readingLevel === 'simple';
+  const showLegal = readingLevel === 'professional';
+  const showStandard = readingLevel === 'standard'; // default: plain + legal side-by-side
 
   return (
     <div style={{
@@ -71,30 +77,118 @@ function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onT
       >
         <div style={{ borderTop: '1px solid var(--slate-200)' }}>
           <div style={{ padding: '24px', background: 'white' }}>
-            <div className="guide-two-col" style={{ gap: '24px', margin: 0 }}>
-              <div style={{ flex: '1 1 55%', minWidth: 0 }}>
-                <div style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                  color: 'var(--slate-700)', lineHeight: 1.75
-                }}><AutoCiteLinks>{plain}</AutoCiteLinks></div>
-              </div>
-              <div role="note" aria-label="Official legal text" style={{ flex: '1 1 40%', minWidth: 0 }}>
-                <div style={{
-                  background: '#F8FAFC', border: '1px solid var(--slate-200)',
-                  borderRadius: '10px', padding: '16px'
-                }}>
-                  <p style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-                    letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: 'var(--slate-500)', margin: '0 0 8px'
-                  }}>Official Standard</p>
+
+            {/* ===== SIMPLE MODE ===== */}
+            {showSimple && (
+              <div>
+                {simple ? (
                   <div style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                    color: 'var(--slate-600)', lineHeight: 1.7
-                  }}><AutoCiteLinks>{legal}</AutoCiteLinks></div>
+                    fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
+                    color: 'var(--slate-700)', lineHeight: 1.85
+                  }}>
+                    {simple}
+                  </div>
+                ) : (
+                  /* Placeholder until Gina writes simple summaries */
+                  <div style={{
+                    background: '#FFF8F5',
+                    border: '1px solid #FDBA7440',
+                    borderRadius: '10px',
+                    padding: '20px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                      <Sparkles size={16} style={{ color: '#C2410C' }} aria-hidden="true" />
+                      <p style={{
+                        fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
+                        color: 'var(--slate-800)', margin: 0
+                      }}>
+                        Simple summary coming soon
+                      </p>
+                    </div>
+                    <p style={{
+                      fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+                      color: 'var(--slate-600)', margin: 0, lineHeight: 1.6
+                    }}>
+                      We're writing plain-language summaries for every section. In the meantime, here's the standard explanation:
+                    </p>
+                    <div style={{
+                      marginTop: '16px', paddingTop: '16px',
+                      borderTop: '1px solid var(--slate-200)',
+                      fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+                      color: 'var(--slate-700)', lineHeight: 1.75
+                    }}>
+                      <AutoCiteLinks>{plain}</AutoCiteLinks>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ===== STANDARD MODE (default) ===== */}
+            {showStandard && (
+              <div className="guide-two-col" style={{ gap: '24px', margin: 0 }}>
+                <div style={{ flex: '1 1 55%', minWidth: 0 }}>
+                  <div style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+                    color: 'var(--slate-700)', lineHeight: 1.75
+                  }}><AutoCiteLinks>{plain}</AutoCiteLinks></div>
+                </div>
+                <div role="note" aria-label="Official legal text" style={{ flex: '1 1 40%', minWidth: 0 }}>
+                  <div style={{
+                    background: '#F8FAFC', border: '1px solid var(--slate-200)',
+                    borderRadius: '10px', padding: '16px'
+                  }}>
+                    <p style={{
+                      fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+                      letterSpacing: '0.1em', textTransform: 'uppercase',
+                      color: 'var(--slate-500)', margin: '0 0 8px'
+                    }}>Official Standard</p>
+                    <div style={{
+                      fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+                      color: 'var(--slate-600)', lineHeight: 1.7
+                    }}><AutoCiteLinks>{legal}</AutoCiteLinks></div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* ===== PROFESSIONAL MODE ===== */}
+            {showLegal && (
+              <div>
+                <div style={{
+                  background: '#F8FAFC', border: '1px solid var(--slate-200)',
+                  borderRadius: '10px', padding: '20px', marginBottom: '16px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                    <Scale size={14} style={{ color: 'var(--slate-500)' }} aria-hidden="true" />
+                    <p style={{
+                      fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+                      letterSpacing: '0.1em', textTransform: 'uppercase',
+                      color: 'var(--slate-500)', margin: 0
+                    }}>Official Standard</p>
+                  </div>
+                  <div style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+                    color: 'var(--slate-700)', lineHeight: 1.75
+                  }}><AutoCiteLinks>{legal}</AutoCiteLinks></div>
+                </div>
+                <details style={{ marginTop: '8px' }}>
+                  <summary style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                    fontWeight: 600, color: '#C2410C', cursor: 'pointer',
+                    padding: '8px 0', minHeight: '44px',
+                    display: 'flex', alignItems: 'center', gap: '6px'
+                  }}>
+                    <BookOpen size={14} aria-hidden="true" /> View plain-language explanation
+                  </summary>
+                  <div style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+                    color: 'var(--slate-600)', lineHeight: 1.7,
+                    padding: '12px 0'
+                  }}><AutoCiteLinks>{plain}</AutoCiteLinks></div>
+                </details>
+              </div>
+            )}
 
             {diagram && (
               <div style={{ marginTop: '24px', maxWidth: '100%' }}>
@@ -137,9 +231,34 @@ function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onT
 
 export default function ChapterPageLayout({ chapterNum, title, range, overview, sections }) {
   const [openIndex, setOpenIndex] = useState(null);
+  const [readingLevel, setReadingLevel] = useState(() => {
+    const prefs = loadPreferences();
+    return prefs.readingLevel || 'standard';
+  });
   const currentIdx = ALL_CHAPTERS.findIndex(c => c.num === chapterNum);
   const prev = currentIdx > 0 ? ALL_CHAPTERS[currentIdx - 1] : null;
   const next = currentIdx < ALL_CHAPTERS.length - 1 ? ALL_CHAPTERS[currentIdx + 1] : null;
+
+  // Listen for preference changes (DisplaySettings writes to localStorage)
+  useEffect(() => {
+    const handleStorage = () => {
+      const prefs = loadPreferences();
+      setReadingLevel(prefs.readingLevel || 'standard');
+    };
+    window.addEventListener('storage', handleStorage);
+    // Also poll for same-tab changes (localStorage events don't fire in same tab)
+    const interval = setInterval(() => {
+      const prefs = loadPreferences();
+      setReadingLevel(prev => {
+        const next = prefs.readingLevel || 'standard';
+        return next !== prev ? next : prev;
+      });
+    }, 500);
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+      clearInterval(interval);
+    };
+  }, []);
 
   const linkStyle = {
     display: 'inline-flex', alignItems: 'center', gap: '6px',
@@ -192,6 +311,32 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
             color: 'var(--slate-700)', lineHeight: 1.75, marginBottom: '32px'
           }}>{overview}</div>
 
+          {/* Reading level indicator */}
+          {readingLevel !== 'standard' && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 16px',
+              marginBottom: '16px',
+              borderRadius: '8px',
+              background: readingLevel === 'simple' ? '#EFF6FF' : '#F8FAFC',
+              border: `1px solid ${readingLevel === 'simple' ? '#93C5FD' : 'var(--slate-200)'}`,
+              fontFamily: 'Manrope, sans-serif',
+              fontSize: '0.8125rem',
+              color: readingLevel === 'simple' ? '#1E40AF' : 'var(--slate-600)'
+            }}>
+              {readingLevel === 'simple' ? (
+                <><Sparkles size={14} aria-hidden="true" /> Viewing in <strong>Simple</strong> mode — plain-language summaries</>
+              ) : (
+                <><Scale size={14} aria-hidden="true" /> Viewing in <strong>Professional</strong> mode — legal text first</>
+              )}
+              <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: 'var(--slate-400)' }}>
+                Change in Display Settings ⚙
+              </span>
+            </div>
+          )}
+
           {/* Sections */}
           <div role="region" aria-label="Standards sections">
             {sections.map((s, i) => (
@@ -202,9 +347,12 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                 title={s.title}
                 plain={s.plain}
                 legal={s.legal}
+                simple={s.simple || null}
                 diagram={s.diagram || null}
                 isOpen={openIndex === i}
                 onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+                readingLevel={readingLevel}
+                chapterNum={chapterNum}
               />
             ))}
           </div>
