@@ -416,6 +416,7 @@ export default function Intake() {
       setSubmitting(false);
       setSubmitted(true);
       clearDraft(); // COGA: Clear saved draft on successful submit
+    } catch (err) {
       console.error('Case submission failed:', err);
       setSubmitting(false);
       setErrors(prev => ({ ...prev, submit: 'Something went wrong submitting your report. Your information has been preserved — please try the Submit button again. If the problem continues, email support@adalegallink.com.' }));
