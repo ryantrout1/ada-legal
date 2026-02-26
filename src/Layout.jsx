@@ -99,7 +99,7 @@ export default function Layout({ children, currentPageName }) {
     LawyerProfile: 'My Profile', LawyerRegister: 'Attorney Registration',
     LawyerLanding: 'For Attorneys', StandardsGuide: 'ADA Standards Guide',
     Admin: 'Admin Dashboard', AdminReview: 'Review Queue', AdminCases: 'Case Manager',
-    AdminAnalytics: 'Analytics', AdminLawyers: 'Attorney Network', AdminEmails: 'Email Templates',
+    AdminAnalytics: 'Analytics', AdminLawyers: 'Attorney Network', AdminEmails: 'Email Templates', AdminFeedback: 'Feedback',
     TitleIIPathway: 'Government Accessibility Complaints',
     TitleIPathway: 'Workplace Disability Discrimination'
   };
