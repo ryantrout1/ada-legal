@@ -564,6 +564,9 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('AdminEmails')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminEmails' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Email Templates
                     </Link>
+                    <Link to={createPageUrl('AdminFeedback')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminFeedback' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                      Feedback
+                    </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
                       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', margin: '0 0 8px' }}>{user.email}</p>
                     </div>
