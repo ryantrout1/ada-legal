@@ -14,7 +14,13 @@ export const loadPreferences = () => {
     if (saved) {
       return { ...DEFAULTS, ...JSON.parse(saved) };
     }
-    // COGA: Auto-detect OS dark mode for first-time visitors
+    // COGA: Auto-detect OS preferences for first-time visitors
+    const prefersHC = window.matchMedia?.('(prefers-contrast: more)')?.matches;
+    if (prefersHC) {
+      const autoPrefs = { ...DEFAULTS, displayMode: 'high-contrast' };
+      localStorage.setItem('ada-display-prefs', JSON.stringify(autoPrefs));
+      return autoPrefs;
+    }
     const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
     if (prefersDark) {
       const autoPrefs = { ...DEFAULTS, displayMode: 'dark' };

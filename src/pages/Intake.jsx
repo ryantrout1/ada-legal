@@ -246,43 +246,50 @@ export default function Intake() {
       valid = validateStep4();
       if (valid) { goToStep(5); return; }
     }
-    // Validation failed — scroll to first error field
+    // COGA: Validation failed — focus the error summary banner
     setTimeout(() => {
-      const firstError = document.querySelector('[aria-invalid="true"]');
-      if (firstError) {
-        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        firstError.focus();
+      const summary = document.getElementById('error-summary');
+      if (summary) {
+        summary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        summary.focus();
+      } else {
+        // Fallback: focus first invalid field
+        const firstError = document.querySelector('[aria-invalid="true"]');
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstError.focus();
+        }
       }
     }, 50);
   };
 
   const validateStep2Physical = () => {
     const e = {};
-    if (!formData.business_name.trim()) e.business_name = 'Business name is required';
-    if (!formData.business_type) e.business_type = 'Please select a business type';
-    if (!formData.city.trim()) e.city = 'City is required';
-    if (!formData.state) e.state = 'State is required';
-    if (!formData.street_address || !formData.street_address.trim()) e.street_address = 'Street address is required';
+    if (!formData.business_name.trim()) e.business_name = 'We need the business name to identify the location — even a partial name helps';
+    if (!formData.business_type) e.business_type = 'Select the closest match — you can add details later';
+    if (!formData.city.trim()) e.city = 'Which city was this in?';
+    if (!formData.state) e.state = 'Which state?';
+    if (!formData.street_address || !formData.street_address.trim()) e.street_address = 'A street address helps attorneys verify the location — approximate is fine';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
   const validateStep4 = () => {
     const e = {};
-    if (!formData.contact_name.trim()) e.contact_name = 'Full name is required';
+    if (!formData.contact_name.trim()) e.contact_name = 'An attorney will need your name to follow up';
     const email = formData.contact_email.trim();
     if (!email) {
-      e.contact_email = 'Email address is required';
+      e.contact_email = 'We\'ll only use this to send you updates about your case';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      e.contact_email = 'Please enter a valid email address';
+      e.contact_email = 'This doesn\'t look quite right — check for typos (e.g., name@email.com)';
     }
     const digits = (formData.contact_phone || '').replace(/\D/g, '');
     if (!formData.contact_phone.trim()) {
-      e.contact_phone = 'Phone number is required';
+      e.contact_phone = 'A phone number lets attorneys reach you directly';
     } else if (digits.length !== 10) {
-      e.contact_phone = 'Please enter a valid 10-digit US phone number';
+      e.contact_phone = 'US phone numbers are 10 digits — check for missing or extra numbers';
     }
-    if (!formData.contact_preference) e.contact_preference = 'Please select a preferred contact method';
+    if (!formData.contact_preference) e.contact_preference = 'How would you prefer to be contacted?';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -290,16 +297,16 @@ export default function Intake() {
   const validateStep3 = () => {
     const e = {};
     if (!formData.incident_date) {
-      e.incident_date = 'Please select the date of the incident';
+      e.incident_date = 'When did this happen? An approximate date is fine';
     } else {
       const today = new Date().toISOString().split('T')[0];
-      if (formData.incident_date > today) e.incident_date = 'Date cannot be in the future';
+      if (formData.incident_date > today) e.incident_date = 'This date is in the future — did you mean a past date?';
     }
-    if (!formData.visited_before) e.visited_before = 'Please select an option';
+    if (!formData.visited_before) e.visited_before = 'This helps attorneys understand the pattern — just pick the closest answer';
     if (!formData.narrative || !formData.narrative.trim()) {
-      e.narrative = 'Please describe what happened';
+      e.narrative = 'Tell us what happened in your own words — there are no wrong answers';
     } else if (formData.narrative.trim().length < 50) {
-      e.narrative = 'Please provide more detail about your experience (at least 50 characters)';
+      e.narrative = `Almost there — a few more details would help (${formData.narrative.trim().length}/50 characters)`;
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -309,17 +316,17 @@ export default function Intake() {
     const e = {};
     const url = formData.url_domain.trim();
     if (!url) {
-      e.url_domain = 'Website URL or app name is required';
+      e.url_domain = 'What website or app had the accessibility issue?';
     } else {
       const urlPattern = /^(https?:\/\/)?[\w.-]+\.\w{2,}(\/.*)?$|^[\w\s]+$/i;
       if (!urlPattern.test(url)) {
-        e.url_domain = 'Please enter a valid URL (e.g., www.example.com) or app name';
+        e.url_domain = 'Try entering just the website address (e.g., www.example.com) or the app name';
       }
     }
     if (!formData.assistive_tech || formData.assistive_tech.length === 0) {
-      e.assistive_tech = 'Please select at least one assistive technology';
+      e.assistive_tech = 'Which tools were you using when you encountered the barrier?';
     }
-    if (!formData.business_name.trim()) e.business_name = 'Business or organization name is required';
+    if (!formData.business_name.trim()) e.business_name = 'What company or organization runs this website/app?';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -532,6 +539,14 @@ export default function Intake() {
             currentStep={isFromPathway ? step - 1 : step}
             totalOverride={isFromPathway ? 4 : undefined}
             labelsOverride={isFromPathway ? ['Details', 'Incident', 'Contact', 'Review'] : undefined}
+            onStepClick={(targetStep) => {
+              // COGA: Allow clicking completed steps to go back
+              const actualStep = isFromPathway ? targetStep + 1 : targetStep;
+              if (actualStep < step) {
+                setErrors({});
+                goToStep(actualStep);
+              }
+            }}
           />
         )}
 
@@ -576,6 +591,88 @@ export default function Intake() {
               <strong>Submission Error:</strong> {errors.submit}
             </div>
           )}
+
+          {/* COGA: Error summary banner — shows count + clickable links to each error */}
+          {(() => {
+            const fieldErrors = Object.entries(errors).filter(([k]) => k !== 'submit');
+            if (fieldErrors.length === 0) return null;
+            const FIELD_LABELS = {
+              business_name: 'Business name',
+              business_type: 'Business type',
+              city: 'City',
+              state: 'State',
+              street_address: 'Street address',
+              url_domain: 'Website URL',
+              assistive_tech: 'Assistive technology',
+              incident_date: 'Incident date',
+              visited_before: 'Visited before',
+              narrative: 'Description',
+              contact_name: 'Full name',
+              contact_email: 'Email',
+              contact_phone: 'Phone',
+              contact_preference: 'Contact preference'
+            };
+            return (
+              <div
+                id="error-summary"
+                role="alert"
+                tabIndex={-1}
+                style={{
+                  background: '#FEF2F2',
+                  border: '2px solid #FCA5A5',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '16px 20px',
+                  marginBottom: 'var(--space-xl)',
+                  fontFamily: 'Manrope, sans-serif',
+                  outline: 'none'
+                }}
+              >
+                <p style={{
+                  fontSize: '0.9375rem',
+                  fontWeight: 700,
+                  color: '#991B1B',
+                  margin: '0 0 8px 0'
+                }}>
+                  {fieldErrors.length === 1
+                    ? 'There is 1 field that needs your attention:'
+                    : `There are ${fieldErrors.length} fields that need your attention:`}
+                </p>
+                <ul style={{
+                  margin: 0,
+                  padding: '0 0 0 20px',
+                  listStyle: 'none'
+                }}>
+                  {fieldErrors.map(([field, msg]) => (
+                    <li key={field} style={{ marginBottom: '4px' }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const el = document.getElementById(field);
+                          if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            el.focus();
+                          }
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          padding: 0,
+                          fontFamily: 'Manrope, sans-serif',
+                          fontSize: '0.8125rem',
+                          color: '#991B1B',
+                          textDecoration: 'underline',
+                          cursor: 'pointer',
+                          textAlign: 'left'
+                        }}
+                      >
+                        {FIELD_LABELS[field] || field}: {msg}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })()}
           {/* Pathway context banner */}
           {isFromPathway && !submitted && step <= 5 && (
             <div style={{
