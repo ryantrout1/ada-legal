@@ -162,7 +162,7 @@ export default function LandingHeroNew() {
               fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
               color: '#E2E8F0', lineHeight: 1.6, margin: 0, fontStyle: 'normal'
             }}>
-              <strong style={{ color: 'white' }}>100% WCAG 2.1 AA compliant.</strong> Every page, every diagram, every interaction — built for the community it serves. Keyboard navigable. Screen reader optimized. High contrast supported.
+              <strong style={{ color: 'white' }}>WCAG 2.2 AAA compliant. The highest level of web accessibility.</strong> Every page, every diagram, every interaction — built for the community it serves. Keyboard navigable. Screen reader optimized. High contrast supported.
             </p>
           </div>
         </div>
