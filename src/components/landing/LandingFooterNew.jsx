@@ -33,7 +33,7 @@ export default function LandingFooterNew() {
           {/* Brand */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-              <LogoBrand size={24} />
+              <LogoBrand size={24} variant="dark-bg" />
               <span style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 700,
                 color: 'white'

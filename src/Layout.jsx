@@ -47,7 +47,7 @@ export default function Layout({ children, currentPageName }) {
     let link = document.querySelector("link[rel='icon']");
     if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
     link.type = 'image/png';
-    link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/2b7a73622_image11.png';
+    link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/f0c886271_ADALLLogo-transparent.png';
   }, []);
 
   React.useEffect(() => {
@@ -262,7 +262,7 @@ export default function Layout({ children, currentPageName }) {
             fontFamily: 'Fraunces, serif',
             fontWeight: 700
           }}>
-            <LogoBrand size={44} />
+            <LogoBrand size={44} variant="dark-bg" />
             <span className="mobile-brand-text">ADA Legal <span style={{ color: '#C2410C' }}>Link</span></span>
           </Link>
 
@@ -613,7 +613,7 @@ export default function Layout({ children, currentPageName }) {
             padding: '0 1.5rem',
             textAlign: 'center'
           }}>
-            <LogoBrand size={96} glow className="footer-logo" style={{ display: 'block', margin: '0 auto 12px' }} aria-hidden="true" />
+            <LogoBrand size={96} glow variant="dark-bg" className="footer-logo" style={{ display: 'block', margin: '0 auto 12px' }} aria-hidden="true" />
             <p style={{ margin: 0, fontSize: '0.875rem' }}>
               © 2026 <span style={{ color: '#4B5563' }}>ADA Legal</span>{' '}
               <span style={{ color: '#C2410C', opacity: 0.7 }}>Link</span>.

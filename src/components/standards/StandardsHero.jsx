@@ -122,7 +122,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
 
       {/* Watermark logo */}
       <img
-        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/e3c293e44_logo-terracotta.png"
+        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/f0c886271_ADALLLogo-transparent.png"
         alt=""
         aria-hidden="true"
         style={{
