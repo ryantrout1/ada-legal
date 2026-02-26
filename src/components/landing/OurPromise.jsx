@@ -2,7 +2,7 @@ import React from 'react';
 import { Accessibility, ShieldCheck, Scale, Heart, Eye, Star } from 'lucide-react';
 
 const values = [
-  { icon: Accessibility, title: 'Accessible by Design', desc: 'Built WCAG 2.1 AA compliant from the ground up — because an access platform must be accessible itself.' },
+  { icon: Accessibility, title: 'Accessible by Design', desc: 'Built to WCAG 2.2 AAA — the highest accessibility standard — because an access platform must be accessible itself.' },
   { icon: ShieldCheck, title: 'Privacy First', desc: 'Your personal information is never shared publicly. Attorneys see only what they need to take your case.' },
   { icon: Scale, title: 'Vetted Attorneys', desc: 'Every lawyer on our platform is licensed, verified, and experienced in ADA litigation.' },
   { icon: Heart, title: 'Always Free', desc: 'There is no cost to submit a report or get matched. The service is free for people with disabilities.' },

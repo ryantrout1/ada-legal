@@ -158,12 +158,24 @@ export default function LandingHeroNew() {
             background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
             borderRadius: '10px', padding: '20px 24px', borderLeft: '3px solid #C2410C'
           }}>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-              color: '#E2E8F0', lineHeight: 1.6, margin: 0, fontStyle: 'normal'
-            }}>
-              <strong style={{ color: 'white' }}>WCAG 2.2 AAA compliant. The highest level of web accessibility.</strong> Every page, every diagram, every interaction — built for the community it serves. Keyboard navigable. Screen reader optimized. High contrast supported.
-            </p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
+                color: '#E2E8F0', lineHeight: 1.6, margin: 0, fontStyle: 'normal', flex: '1 1 0'
+              }}>
+                <strong style={{ color: 'white' }}>WCAG 2.2 AAA compliant.</strong> The highest level of web accessibility — built for the community it serves. Keyboard navigable. Screen reader optimized. High contrast supported.
+              </p>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px', flexShrink: 0,
+                background: 'rgba(45,106,79,0.2)', border: '1px solid rgba(45,106,79,0.4)',
+                borderRadius: '100px', padding: '5px 14px',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+                color: '#7DCEA0', whiteSpace: 'nowrap', letterSpacing: '0.02em'
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                WCAG 2.2 AAA
+              </span>
+            </div>
           </div>
         </div>
       </div>
