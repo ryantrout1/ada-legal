@@ -161,11 +161,11 @@ export default function ParkingDiagram() {
 
           {/* ===== LEFT: PLAN VIEW ===== */}
           {/* Divider label */}
-          <text x="230" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">PLAN VIEW (TOP-DOWN)</text>
+          <text x="230" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">PLAN VIEW (TOP-DOWN)</text>
 
           {/* Sidewalk strip */}
           <rect x="30" y="42" width="430" height="36" rx="3" fill="#D6D3D1" stroke="#A8A29E" strokeWidth="1" />
-          <text x="245" y="64" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="600" fill="#57534E">SIDEWALK / ACCESSIBLE ROUTE TO ENTRANCE →</text>
+          <text x="245" y="64" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="600" fill="#4B4540">SIDEWALK / ACCESSIBLE ROUTE TO ENTRANCE →</text>
 
           {/* Van space */}
           <rect x="30" y="82" width="140" height="260" rx="2" fill="#FEF2F2" stroke="#C2410C" strokeWidth="1.5" />
@@ -196,8 +196,8 @@ export default function ParkingDiagram() {
 
           {/* Non-accessible space (dashed) */}
           <rect x="350" y="82" width="110" height="260" rx="2" fill="none" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="5 4" />
-          <text x="405" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#CBD5E1">STANDARD</text>
-          <text x="405" y="218" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#CBD5E1">SPACE</text>
+          <text x="405" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">STANDARD</text>
+          <text x="405" y="218" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">SPACE</text>
 
           {/* --- LEFT DIMENSIONS --- */}
           {/* Van width */}
@@ -244,11 +244,11 @@ export default function ParkingDiagram() {
 
 
           {/* ===== RIGHT: SIGNAGE ELEVATION ===== */}
-          <text x="690" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">SIGNAGE DETAIL (ELEVATION)</text>
+          <text x="690" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">SIGNAGE DETAIL (ELEVATION)</text>
 
           {/* Ground line */}
           <rect x="510" y="380" width="360" height="20" rx="2" fill="#E7E5E4" stroke="#D6D3D1" strokeWidth="1" />
-          <text x="690" y="394" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#78716C">GROUND LEVEL</text>
+          <text x="690" y="394" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B4540">GROUND LEVEL</text>
 
           {/* Sign post */}
           <rect x="618" y="105" width="6" height="275" fill="#78716C" rx="1" />
@@ -312,13 +312,13 @@ export default function ParkingDiagram() {
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'}
                 stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
-                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
               <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2"
                 className="park-focus-ring" />
             </g>
           ))}
 
-          <text x="50" y="432" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8">
+          <text x="50" y="432" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563">
             Click or tap numbered callouts for details
           </text>
         </svg>
@@ -426,6 +426,12 @@ export default function ParkingDiagram() {
         }
         @media (max-width: 768px) {
           .guide-two-col { flex-direction: column !important; gap: 16px !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * {
+            animation: none !important;
+            transition: none !important;
+          }
         }
       `}</style>
     </div>
