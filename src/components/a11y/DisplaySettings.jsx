@@ -11,7 +11,17 @@ const DEFAULTS = {
 export const loadPreferences = () => {
   try {
     const saved = localStorage.getItem('ada-display-prefs');
-    return saved ? { ...DEFAULTS, ...JSON.parse(saved) } : { ...DEFAULTS };
+    if (saved) {
+      return { ...DEFAULTS, ...JSON.parse(saved) };
+    }
+    // COGA: Auto-detect OS dark mode for first-time visitors
+    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
+    if (prefersDark) {
+      const autoPrefs = { ...DEFAULTS, displayMode: 'dark' };
+      localStorage.setItem('ada-display-prefs', JSON.stringify(autoPrefs));
+      return autoPrefs;
+    }
+    return { ...DEFAULTS };
   } catch {
     return { ...DEFAULTS };
   }

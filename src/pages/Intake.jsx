@@ -95,8 +95,54 @@ export default function Intake() {
   const [caseId, setCaseId] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [draftRestored, setDraftRestored] = useState(false);
 
   const reportStartedRef = useRef(false);
+
+  // ========================================
+  // COGA: Save/Resume — auto-save draft to sessionStorage
+  // ========================================
+  const DRAFT_KEY = 'ada-intake-draft';
+  const DRAFT_STEP_KEY = 'ada-intake-draft-step';
+
+  // Restore draft on mount
+  useEffect(() => {
+    try {
+      const savedDraft = sessionStorage.getItem(DRAFT_KEY);
+      const savedStep = sessionStorage.getItem(DRAFT_STEP_KEY);
+      if (savedDraft) {
+        const parsed = JSON.parse(savedDraft);
+        // Only restore if there's meaningful data
+        const hasData = parsed.violation_type || parsed.business_name || parsed.narrative || parsed.contact_name;
+        if (hasData) {
+          setFormData(prev => ({ ...prev, ...parsed, photos: [] })); // photos can't be serialized
+          if (savedStep && parseInt(savedStep) > 0) {
+            setStep(parseInt(savedStep));
+            reportStartedRef.current = true;
+          }
+          setDraftRestored(true);
+        }
+      }
+    } catch {}
+  }, []);
+
+  // Auto-save on every field change (after step 0)
+  useEffect(() => {
+    if (step < 1 || submitted) return;
+    try {
+      const { photos, ...serializable } = formData;
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(serializable));
+      sessionStorage.setItem(DRAFT_STEP_KEY, String(step));
+    } catch {}
+  }, [formData, step, submitted]);
+
+  // Clear draft on successful submit
+  const clearDraft = () => {
+    try {
+      sessionStorage.removeItem(DRAFT_KEY);
+      sessionStorage.removeItem(DRAFT_STEP_KEY);
+    } catch {}
+  };
 
   const goToStep = (n) => {
     if (n === 1 && !reportStartedRef.current) {
@@ -362,7 +408,7 @@ export default function Intake() {
 
       setSubmitting(false);
       setSubmitted(true);
-    } catch (err) {
+      clearDraft(); // COGA: Clear saved draft on successful submit
       console.error('Case submission failed:', err);
       setSubmitting(false);
       setErrors(prev => ({ ...prev, submit: 'Something went wrong submitting your report. Your information has been preserved — please try the Submit button again. If the problem continues, email support@adalegallink.com.' }));
@@ -396,6 +442,64 @@ export default function Intake() {
               aria-label="Exit form"
             >
               ✕ Exit
+            </button>
+          </div>
+        )}
+
+        {/* COGA: Draft restored notification */}
+        {draftRestored && !submitted && step > 0 && (
+          <div
+            role="status"
+            aria-live="polite"
+            style={{
+              backgroundColor: '#EFF6FF',
+              border: '1px solid #93C5FD',
+              borderRadius: 'var(--radius-md)',
+              padding: 'var(--space-md) var(--space-lg)',
+              marginBottom: 'var(--space-lg)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 'var(--space-md)',
+              flexWrap: 'wrap'
+            }}
+          >
+            <p style={{
+              fontFamily: 'Manrope, sans-serif',
+              fontSize: '0.9375rem',
+              fontWeight: 600,
+              color: '#1E40AF',
+              margin: 0
+            }}>
+              ✓ Your previous progress has been restored.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                clearDraft();
+                setFormData({
+                  violation_type: '', business_name: '', business_type: '', city: '', state: '',
+                  street_address: '', url_domain: '', assistive_tech: [], violation_subtype: '',
+                  incident_date: '', visited_before: '', narrative: '',
+                  contact_name: '', contact_email: '', contact_phone: '', contact_preference: '', photos: []
+                });
+                setStep(0);
+                setDraftRestored(false);
+              }}
+              style={{
+                fontFamily: 'Manrope, sans-serif',
+                fontSize: '0.8125rem',
+                fontWeight: 600,
+                color: '#1E40AF',
+                background: 'transparent',
+                border: '1px solid #93C5FD',
+                borderRadius: 'var(--radius-sm)',
+                padding: '0.375rem 0.75rem',
+                cursor: 'pointer',
+                minHeight: '36px'
+              }}
+            >
+              Start over
             </button>
           </div>
         )}

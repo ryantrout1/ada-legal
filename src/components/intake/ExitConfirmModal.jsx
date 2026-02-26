@@ -53,19 +53,19 @@ export default function ExitConfirmModal({ open, onStay }) {
           color: 'var(--slate-600)', lineHeight: 1.6,
           margin: '0 0 var(--space-xl) 0'
         }}>
-          Your progress will not be saved. Are you sure you want to exit?
+          Your progress has been saved automatically. You can return to this form later and pick up where you left off.
         </p>
         <div style={{ display: 'flex', gap: 'var(--space-md)', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
           <button
             type="button" onClick={handleLeave}
             style={{
               padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-              fontSize: '0.9375rem', fontWeight: 600, color: 'var(--error-600)',
-              backgroundColor: 'transparent', border: '2px solid var(--error-600)',
+              fontSize: '0.9375rem', fontWeight: 600, color: 'var(--slate-600)',
+              backgroundColor: 'transparent', border: '2px solid var(--slate-300)',
               borderRadius: 'var(--radius-md)', cursor: 'pointer', minHeight: '44px'
             }}
           >
-            Leave
+            Save &amp; Exit
           </button>
           <button
             ref={stayRef}
@@ -77,7 +77,7 @@ export default function ExitConfirmModal({ open, onStay }) {
               borderRadius: 'var(--radius-md)', cursor: 'pointer', minHeight: '44px'
             }}
           >
-            Stay
+            Keep Working
           </button>
         </div>
       </div>

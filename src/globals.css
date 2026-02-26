@@ -60,6 +60,22 @@ html {
 }
 
 /* ========================================
+   OS DARK MODE AUTO-DETECT (COGA)
+   If user has OS dark mode AND hasn't manually
+   chosen a display mode in DisplaySettings,
+   auto-apply dark-friendly defaults.
+   Full dark mode is applied via JS in DisplaySettings
+   on first load when no explicit pref is saved.
+   ======================================== */
+@media (prefers-color-scheme: dark) {
+  /* Immediate flash-prevention: dark body before JS loads */
+  body:not([data-display-pref]) {
+    background-color: #0F1219;
+    color: #E2E8F0;
+  }
+}
+
+/* ========================================
    REDUCED MOTION
    ======================================== */
 @media (prefers-reduced-motion: reduce) {
