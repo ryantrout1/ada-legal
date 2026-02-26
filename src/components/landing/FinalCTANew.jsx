@@ -16,7 +16,7 @@ export default function FinalCTANew() {
         }}>
           The ADA was written so every person could participate fully in American life.
           <br />
-          <span style={{ color: '#EA580C' }}>We built this to keep that promise.</span>
+          <span style={{ color: '#F97316' }}>We built this to keep that promise.</span>
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
@@ -57,7 +57,7 @@ export default function FinalCTANew() {
           color: '#94A3B8', marginTop: '0.75rem', marginBottom: 0
         }}>
           Not sure where to start?{' '}
-          <button onClick={() => openModal('pathways')} style={{ color: '#EA580C', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit', padding: 0 }}>
+          <button onClick={() => openModal('pathways')} style={{ color: '#F97316', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit', padding: 0 }}>
             Take the Rights Assessment — Coming Soon
           </button>
         </p>
