@@ -411,6 +411,39 @@ html {
 }
 
 /* ========================================
+   LANDING HERO — DEFAULT BACKGROUND
+   ======================================== */
+.landing-hero-section {
+  background: #1E293B;
+}
+
+/* ========================================
+   JS-BASED HIGH CONTRAST OVERRIDES
+   body.hc-mode set by DisplaySettings.jsx
+   ======================================== */
+body.hc-mode .landing-hero-section,
+body.hc-mode .landing-hero-section > div,
+body.hc-mode .landing-hero-section div {
+  background: #000000 !important;
+  background-image: none !important;
+}
+
+body.hc-mode section[style*="#1A1F2B"],
+body.hc-mode div[style*="#1A1F2B"],
+body.hc-mode section[style*="#0F172A"],
+body.hc-mode div[style*="#0F172A"] {
+  background: #000000 !important;
+  background-color: #000000 !important;
+  background-image: none !important;
+}
+
+body.hc-mode div[style*="radial-gradient"],
+body.hc-mode div[style*="linear-gradient"] {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* ========================================
    MODAL LIGHT THEME ISOLATION
    Ensures modals always render with light backgrounds/dark text,
    even when high-contrast or dark overrides are active.

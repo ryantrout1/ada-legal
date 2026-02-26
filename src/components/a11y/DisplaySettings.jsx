@@ -1022,6 +1022,17 @@ export const applyPreferences = (prefs) => {
 
   // Write all CSS at once — replaces previous content entirely
   styleEl.textContent = css;
+
+  // Force high-contrast class on body for JS-based overrides
+  if (prefs.displayMode === 'high-contrast') {
+    document.body.classList.add('hc-mode');
+    document.body.classList.remove('dark-mode');
+  } else if (prefs.displayMode === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.body.classList.remove('hc-mode');
+  } else {
+    document.body.classList.remove('hc-mode', 'dark-mode');
+  }
 };
 
 function OptionButton({ label, active, onClick, ariaPressed, style: extraStyle, variant }) {
