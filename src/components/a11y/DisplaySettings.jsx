@@ -135,21 +135,21 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Text colors === */
-      h1, h2, h3, h4, h5, h6 {
+      h1:not(#feedback-modal-panel *), h2:not(#feedback-modal-panel *), h3:not(#feedback-modal-panel *), h4:not(#feedback-modal-panel *), h5:not(#feedback-modal-panel *), h6:not(#feedback-modal-panel *) {
         color: #F1F5F9 !important;
       }
-      p, li, dd, dt, td, th, label, figcaption, blockquote {
+      p:not(#feedback-modal-panel *), li:not(#feedback-modal-panel *), dd:not(#feedback-modal-panel *), dt:not(#feedback-modal-panel *), td:not(#feedback-modal-panel *), th:not(#feedback-modal-panel *), label:not(#feedback-modal-panel *), figcaption:not(#feedback-modal-panel *), blockquote:not(#feedback-modal-panel *) {
         color: #E2E8F0 !important;
       }
-      span, small {
+      span:not(#feedback-modal-panel *), small:not(#feedback-modal-panel *) {
         color: #CBD5E1 !important;
       }
 
       /* === Links — bright orange on dark === */
-      a {
+      a:not(#feedback-modal-panel *) {
         color: #F97316 !important;
       }
-      a:hover {
+      a:not(#feedback-modal-panel *):hover {
         color: #FB923C !important;
       }
 
@@ -167,15 +167,15 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Form inputs === */
-      input, select, textarea {
+      input:not(#feedback-modal-panel *), select:not(#feedback-modal-panel *), textarea:not(#feedback-modal-panel *) {
         background-color: #151B24 !important;
         border-color: #475569 !important;
         color: #F1F5F9 !important;
       }
-      input::placeholder, textarea::placeholder {
+      input:not(#feedback-modal-panel *)::placeholder, textarea:not(#feedback-modal-panel *)::placeholder {
         color: #94A3B8 !important;
       }
-      input:focus, select:focus, textarea:focus {
+      input:not(#feedback-modal-panel *):focus, select:not(#feedback-modal-panel *):focus, textarea:not(#feedback-modal-panel *):focus {
         border-color: #C2410C !important;
       }
 
@@ -674,22 +674,22 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Text — MAXIMUM CONTRAST === */
-      h1, h2, h3, h4, h5, h6 {
+      h1:not(#feedback-modal-panel *), h2:not(#feedback-modal-panel *), h3:not(#feedback-modal-panel *), h4:not(#feedback-modal-panel *), h5:not(#feedback-modal-panel *), h6:not(#feedback-modal-panel *) {
         color: #FFFFFF !important;
       }
-      p, li, dd, dt, td, th, label, figcaption, blockquote {
+      p:not(#feedback-modal-panel *), li:not(#feedback-modal-panel *), dd:not(#feedback-modal-panel *), dt:not(#feedback-modal-panel *), td:not(#feedback-modal-panel *), th:not(#feedback-modal-panel *), label:not(#feedback-modal-panel *), figcaption:not(#feedback-modal-panel *), blockquote:not(#feedback-modal-panel *) {
         color: #F0F0F0 !important;
       }
-      span, small {
+      span:not(#feedback-modal-panel *), small:not(#feedback-modal-panel *) {
         color: #D0D0D0 !important;
       }
 
       /* === Links — gold on black === */
-      a {
+      a:not(#feedback-modal-panel *) {
         color: #FFD700 !important;
         text-decoration: underline !important;
       }
-      a:hover {
+      a:not(#feedback-modal-panel *):hover {
         color: #FFFFFF !important;
       }
 
@@ -718,20 +718,20 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Form inputs === */
-      input, select, textarea {
+      input:not(#feedback-modal-panel *), select:not(#feedback-modal-panel *), textarea:not(#feedback-modal-panel *) {
         background-color: #1A1A1A !important;
         border: 2px solid #FFFFFF !important;
         color: #FFFFFF !important;
       }
-      input::placeholder, textarea::placeholder {
+      input:not(#feedback-modal-panel *)::placeholder, textarea:not(#feedback-modal-panel *)::placeholder {
         color: #D0D0D0 !important;
       }
-      input:focus, select:focus, textarea:focus {
+      input:not(#feedback-modal-panel *):focus, select:not(#feedback-modal-panel *):focus, textarea:not(#feedback-modal-panel *):focus {
         border-color: #FFD700 !important;
       }
 
       /* === Buttons === */
-      button {
+      button:not(#feedback-modal-panel *) {
         border: 2px solid #FFFFFF !important;
       }
       /* Primary CTA buttons (terracotta) */
@@ -747,7 +747,7 @@ export const applyPreferences = (prefs) => {
         border: 2px solid #FFFFFF !important;
       }
       /* Button hover — invert */
-      button:hover {
+      button:not(#feedback-modal-panel *):hover {
         background-color: #FFFFFF !important;
         color: #000000 !important;
       }
