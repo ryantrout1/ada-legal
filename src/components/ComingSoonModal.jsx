@@ -66,10 +66,12 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
     >
       <div
         ref={modalRef}
+        className="modal-light-theme"
         style={{
-          background: 'white', borderRadius: '16px', padding: '40px 32px',
+          background: '#FFFFFF', borderRadius: '16px', padding: '40px 32px',
           maxWidth: '480px', width: '100%', position: 'relative',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.15)'
+          boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+          color: '#334155',
         }}
       >
         <button
@@ -78,7 +80,7 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
           style={{
             position: 'absolute', top: '16px', right: '16px',
             background: 'transparent', border: 'none', cursor: 'pointer',
-            color: '#64748B', padding: '4px', minWidth: '44px', minHeight: '44px',
+            color: '#475569', padding: '4px', minWidth: '44px', minHeight: '44px',
             display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}
         >
@@ -123,11 +125,12 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
                 style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
                   padding: '14px 16px', borderRadius: '10px',
-                  border: '1px solid #E2E8F0', outline: 'none',
-                  transition: 'border-color 0.15s', minHeight: '44px'
+                  border: '1px solid #D1D5DB', outline: 'none',
+                  transition: 'border-color 0.15s', minHeight: '44px',
+                  backgroundColor: '#FFFFFF', color: '#334155',
                 }}
                 onFocus={(e) => e.target.style.borderColor = '#C2410C'}
-                onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
+                onBlur={(e) => e.target.style.borderColor = '#D1D5DB'}
               />
               {error && (
                 <p style={{

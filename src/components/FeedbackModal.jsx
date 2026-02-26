@@ -64,9 +64,10 @@ export default function FeedbackModal({ isOpen, onClose }) {
   const inputStyle = {
     fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
     padding: '10px 12px', borderRadius: '8px',
-    border: '1px solid #E2E8F0', outline: 'none',
+    border: '1px solid #D1D5DB', outline: 'none',
     width: '100%', boxSizing: 'border-box',
     transition: 'border-color 0.15s',
+    backgroundColor: '#FFFFFF', color: '#334155',
   };
 
   const labelStyle = {
@@ -85,18 +86,19 @@ export default function FeedbackModal({ isOpen, onClose }) {
         padding: '24px',
       }}
     >
-      <div style={{
-        background: 'white', borderRadius: '16px', padding: '28px 24px',
+      <div className="modal-light-theme" style={{
+        background: '#FFFFFF', borderRadius: '16px', padding: '28px 24px',
         width: '100%', maxWidth: '400px', position: 'relative',
         boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
         maxHeight: 'calc(100vh - 48px)', overflowY: 'auto',
+        color: '#334155',
       }}>
         <button
           onClick={onClose} aria-label="Close"
           style={{
             position: 'absolute', top: '12px', right: '12px',
             background: 'transparent', border: 'none', cursor: 'pointer',
-            color: '#64748B', padding: '4px', minWidth: '36px', minHeight: '36px',
+            color: '#475569', padding: '4px', minWidth: '36px', minHeight: '36px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
         >
@@ -125,7 +127,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
                   id="fb-type"
                   value={form.feedback_type}
                   onChange={(e) => setForm({ ...form, feedback_type: e.target.value })}
-                  style={{ ...inputStyle, minHeight: '40px' }}
+                  style={{ ...inputStyle, minHeight: '40px', appearance: 'auto' }}
                 >
                   {TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                 </select>
@@ -142,7 +144,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
                   placeholder="What's on your mind?"
                   style={{ ...inputStyle, resize: 'vertical', minHeight: '90px' }}
                   onFocus={(e) => e.target.style.borderColor = '#C2410C'}
-                  onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
+                  onBlur={(e) => e.target.style.borderColor = '#D1D5DB'}
                 />
               </div>
 
@@ -155,7 +157,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
                   placeholder="Your name"
                   style={inputStyle}
                   onFocus={(e) => e.target.style.borderColor = '#C2410C'}
-                  onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
+                  onBlur={(e) => e.target.style.borderColor = '#D1D5DB'}
                 />
               </div>
 
@@ -168,7 +170,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
                   placeholder="your@email.com"
                   style={inputStyle}
                   onFocus={(e) => e.target.style.borderColor = '#C2410C'}
-                  onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
+                  onBlur={(e) => e.target.style.borderColor = '#D1D5DB'}
                 />
 
               </div>
