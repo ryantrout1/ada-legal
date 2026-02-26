@@ -7,6 +7,7 @@ import LogoBrand from './components/LogoBrand';
 import LiveAnnouncer from './components/a11y/LiveAnnouncer';
 import AuditButton from './components/a11y/AuditButton';
 import LandingFooterNew from './components/landing/LandingFooterNew';
+import EarlyAccessBanner from './components/EarlyAccessBanner';
 import DisplaySettings, { applyPreferences, loadPreferences } from './components/a11y/DisplaySettings';
 import UserAvatarMenu from './components/UserAvatarMenu';
 import { ComingSoonProvider } from './components/useComingSoonModal';
@@ -219,6 +220,11 @@ export default function Layout({ children, currentPageName }) {
       >
         Skip to main content
       </a>
+
+      {/* Early Access Banner — public pages only */}
+      {!loading && !['Admin', 'AdminReview', 'AdminCases', 'AdminAnalytics', 'AdminLawyers', 'AdminEmails', 'LawyerDashboard', 'LawyerProfile', 'LawyerCaseDetail', 'Marketplace'].includes(currentPageName) && (
+        <EarlyAccessBanner />
+      )}
 
       {/* Header */}
       <header role="banner" aria-label="Site header" style={
