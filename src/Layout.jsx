@@ -2,12 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
-import { Menu, X, User, LogOut, Eye, BarChart3, Mail, Clock } from 'lucide-react';
+import { Menu, X, User, LogOut, Eye, BarChart3, Mail, Clock, MessageSquare } from 'lucide-react';
 import LogoBrand from './components/LogoBrand';
 import LiveAnnouncer from './components/a11y/LiveAnnouncer';
 import AuditButton from './components/a11y/AuditButton';
 import LandingFooterNew from './components/landing/LandingFooterNew';
 import EarlyAccessBanner from './components/EarlyAccessBanner';
+import FeedbackButton from './components/FeedbackButton';
 import DisplaySettings, { applyPreferences, loadPreferences } from './components/a11y/DisplaySettings';
 import UserAvatarMenu from './components/UserAvatarMenu';
 import { ComingSoonProvider } from './components/useComingSoonModal';
@@ -367,6 +368,7 @@ export default function Layout({ children, currentPageName }) {
                     <UserAvatarMenu user={user} onLogout={handleLogout} extraMenuItems={[
                       { to: createPageUrl('AdminAnalytics'), icon: <BarChart3 size={15} />, label: 'Platform Intelligence' },
                       { to: createPageUrl('AdminEmails'), icon: <Mail size={15} />, label: 'Email Templates' },
+                      { to: createPageUrl('AdminFeedback'), icon: <MessageSquare size={15} />, label: 'Feedback' },
                     ]} />
                   </>
                 )}
@@ -584,6 +586,11 @@ export default function Layout({ children, currentPageName }) {
       <main id="main-content" role="main" style={{ flex: 1 }}>
         {children}
       </main>
+
+      {/* Floating Feedback Button — public pages only */}
+      {!loading && !['Admin', 'AdminReview', 'AdminCases', 'AdminAnalytics', 'AdminLawyers', 'AdminEmails', 'AdminFeedback', 'LawyerDashboard', 'LawyerProfile', 'LawyerCaseDetail', 'Marketplace'].includes(currentPageName) && (
+        <FeedbackButton />
+      )}
 
       {/* Landing page footer — rendered outside main as sibling */}
       {currentPageName === 'Home' && !loading && !user && <LandingFooterNew />}
