@@ -926,12 +926,50 @@ export const applyPreferences = (prefs) => {
 
       /* All SVG text → white or near-white */
       #main-content svg[role="img"] text[fill="#64748B"],
+      #main-content svg[role="img"] text[fill="#374151"],
       #main-content svg[role="img"] text[fill="#94A3B8"],
+      #main-content svg[role="img"] text[fill="#4B5563"],
       #main-content svg[role="img"] text[fill="#78716C"],
+      #main-content svg[role="img"] text[fill="#4B4540"],
       #main-content svg[role="img"] text[fill="#57534E"],
       #main-content svg[role="img"] text[fill="#CBD5E1"],
       #main-content svg[role="img"] text[fill="#cbd5e1"] {
         fill: #D0D0D0 !important;
+      }
+
+      /* AAA: Lighten semantic callout text colors on black background */
+      #main-content svg[role="img"] text[fill="#8B2E08"],
+      #main-content svg[role="img"] text[fill="#C2410C"] {
+        fill: #FF8C5A !important;
+      }
+      #main-content svg[role="img"] text[fill="#14532D"],
+      #main-content svg[role="img"] text[fill="#16A34A"] {
+        fill: #4ADE80 !important;
+      }
+      #main-content svg[role="img"] text[fill="#1E3A8A"],
+      #main-content svg[role="img"] text[fill="#2563EB"] {
+        fill: #60A5FA !important;
+      }
+      #main-content svg[role="img"] text[fill="#5B21B6"],
+      #main-content svg[role="img"] text[fill="#7C3AED"] {
+        fill: #A78BFA !important;
+      }
+      #main-content svg[role="img"] text[fill="#78350F"],
+      #main-content svg[role="img"] text[fill="#D97706"] {
+        fill: #FCD34D !important;
+      }
+      #main-content svg[role="img"] text[fill="#0C4A6E"],
+      #main-content svg[role="img"] text[fill="#0EA5E9"] {
+        fill: #22D3EE !important;
+      }
+      #main-content svg[role="img"] text[fill="#9D174D"],
+      #main-content svg[role="img"] text[fill="#DB2777"] {
+        fill: #F472B6 !important;
+      }
+
+      /* AAA: Active callout circles in HC — use black text */
+      #main-content svg[role="img"] g[role="button"] text[fill="white"] {
+        fill: #000000 !important;
       }
 
       /* Strokes on rects */

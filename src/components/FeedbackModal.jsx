@@ -13,6 +13,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
   const [form, setForm] = useState({ feedback_type: 'general_feedback', message: '', name: '', email: '' });
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState('');
   const capturedRef = useRef({ page_url: '', page_name: '' });
   const textareaRef = useRef(null);
@@ -22,6 +23,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
       capturedRef.current = { page_url: window.location.href, page_name: document.title };
       setForm({ feedback_type: 'general_feedback', message: '', name: '', email: '' });
       setSuccess(false);
+      setConfirming(false);
       setError('');
       setTimeout(() => textareaRef.current?.focus(), 100);
     }
@@ -36,9 +38,14 @@ export default function FeedbackModal({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
-  const handleSubmit = async (e) => {
+  const handleReview = (e) => {
     e.preventDefault();
     if (!form.message.trim()) { setError('Please enter your feedback.'); return; }
+    setError('');
+    setConfirming(true);
+  };
+
+  const handleConfirmSend = async () => {
     setSubmitting(true);
     setError('');
     try {
@@ -156,11 +163,11 @@ export default function FeedbackModal({ isOpen, onClose }) {
          onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="fb-panel">
         <button className="fb-close-btn" onClick={onClose} aria-label="Close"><X size={18} /></button>
-        {!success ? (
+        {!success && !confirming ? (
           <>
             <h2 className="fb-title">Share Your Feedback</h2>
             <p className="fb-subtitle">Help us improve ADA Legal Link.</p>
-            <form className="fb-form" onSubmit={handleSubmit}>
+            <form className="fb-form" onSubmit={handleReview}>
               <div>
                 <label className="fb-label" htmlFor="fb-type">Feedback type</label>
                 <select id="fb-type" className="fb-select" value={form.feedback_type}
@@ -185,9 +192,40 @@ export default function FeedbackModal({ isOpen, onClose }) {
               </div>
               {error && <p className="fb-error">{error}</p>}
               <button type="submit" className="fb-submit-btn" disabled={submitting}>
-                {submitting ? 'Submitting...' : 'Submit Feedback'}
+                Review &amp; Send
               </button>
             </form>
+          </>
+        ) : confirming && !success ? (
+          <>
+            <h2 className="fb-title">Confirm Your Feedback</h2>
+            <p className="fb-subtitle">Please review before sending.</p>
+            <div style={{ marginBottom: '14px' }}>
+              <p className="fb-label">Type</p>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#334155', margin: '2px 0 10px' }}>
+                {TYPES.find(t => t.value === form.feedback_type)?.label}
+              </p>
+              <p className="fb-label">Message</p>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#334155', margin: '2px 0 10px', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+                {form.message}
+              </p>
+              {form.name && <>
+                <p className="fb-label">Name</p>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#334155', margin: '2px 0 10px' }}>{form.name}</p>
+              </>}
+              {form.email && <>
+                <p className="fb-label">Email</p>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#334155', margin: '2px 0 10px' }}>{form.email}</p>
+              </>}
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button type="button" className="fb-done-btn" onClick={() => setConfirming(false)} style={{ flex: 1 }}>
+                Go Back
+              </button>
+              <button type="button" className="fb-submit-btn" onClick={handleConfirmSend} disabled={submitting} style={{ flex: 1 }}>
+                {submitting ? 'Sending...' : 'Send'}
+              </button>
+            </div>
           </>
         ) : (
           <div className="fb-success-wrap">

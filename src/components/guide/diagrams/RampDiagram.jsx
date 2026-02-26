@@ -4,49 +4,49 @@ const RAMP_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Running Slope', section: '§405.2', color: '#C2410C',
+    id: 1, label: 'Running Slope', section: '§405.2', color: '#C2410C', textColor: '#8B2E08',
     x: 390, y: 260,
     plain: 'The maximum slope for an ADA ramp is 1:12. That means for every 1 inch of height, the ramp must go at least 12 inches forward. A ramp covering a 30-inch rise must be at least 30 feet long. In existing buildings where space is tight, steeper slopes are allowed for very short rises — up to 1:10 for 6 inches of rise, or 1:8 for just 3 inches.',
     legal: '"Ramp runs shall have a running slope not steeper than 1:12." In existing sites, slopes up to 1:10 (max 6-inch rise) or 1:8 (max 3-inch rise) are permitted where necessary due to space limitations.',
     citation: '§405.2'
   },
   {
-    id: 2, label: 'Maximum Rise', section: '§405.6', color: '#16A34A',
+    id: 2, label: 'Maximum Rise', section: '§405.6', color: '#16A34A', textColor: '#14532D',
     x: 700, y: 175,
     plain: 'A single ramp section — the sloped part between flat landings — can rise no more than 30 inches (about 2.5 feet). If you need to go higher, you add a flat landing and start another section. For example, reaching a level 5 feet up requires at least two ramp sections with a landing in between.',
     legal: '"The rise for any ramp run shall be 30 inches (760 mm) maximum."',
     citation: '§405.6'
   },
   {
-    id: 3, label: 'Clear Width', section: '§405.5', color: '#2563EB',
+    id: 3, label: 'Clear Width', section: '§405.5', color: '#2563EB', textColor: '#1E3A8A',
     x: 450, y: 210,
     plain: 'The walking surface of the ramp must be at least 36 inches wide, measured between the handrails. This provides enough room for a wheelchair to travel comfortably. Local fire codes may require wider ramps in some buildings.',
     legal: '"The clear width of a ramp run and, where handrails are provided, the clear width between handrails shall be 36 inches (915 mm) minimum."',
     citation: '§405.5'
   },
   {
-    id: 4, label: 'Landings', section: '§405.7', color: '#7C3AED',
+    id: 4, label: 'Landings', section: '§405.7', color: '#7C3AED', textColor: '#5B21B6',
     x: 155, y: 340,
     plain: 'Every ramp needs a flat landing at both the top and bottom. Landings must be at least 60 inches (5 feet) long in the direction you walk, and at least as wide as the ramp. If the ramp turns at a landing, that landing must be at least 60 × 60 inches so a wheelchair can turn safely. Landings must be nearly level — no more than a 1:48 slope for drainage.',
     legal: '"Ramp runs shall have landings at the top and the bottom of each ramp run. Landings shall have a clear length of 60 inches (1525 mm) long minimum." Where ramps change direction, landings shall be "60 inches (1525 mm) minimum by 60 inches (1525 mm) minimum."',
     citation: '§405.7'
   },
   {
-    id: 5, label: 'Handrails', section: '§405.8 + §505', color: '#D97706',
+    id: 5, label: 'Handrails', section: '§405.8 + §505', color: '#D97706', textColor: '#78350F',
     x: 580, y: 120,
     plain: 'Handrails are required on both sides of any ramp that rises more than 6 inches. They must be between 34 and 38 inches high, measured from the ramp surface to the top of the grip. Each handrail must extend 12 inches horizontally past the top and bottom of the ramp, giving people something to hold before stepping on or off the slope. The grip must be smooth, rounded, and continuous — no breaks or sharp edges.',
     legal: '"Ramp runs with a rise greater than 6 inches (150 mm) shall have handrails complying with 505." Handrails: "34 inches (865 mm) minimum and 38 inches (965 mm) maximum" high. Extensions: "12 inches (305 mm) minimum beyond the top" and bottom of ramp runs.',
     citation: '§405.8, §505.4, §505.10'
   },
   {
-    id: 6, label: 'Edge Protection', section: '§405.9', color: '#DB2777',
+    id: 6, label: 'Edge Protection', section: '§405.9', color: '#DB2777', textColor: '#9D174D',
     x: 320, y: 340,
     plain: 'Both sides of the ramp must have something to stop a wheelchair, walker, or cane from slipping off the edge. This can be a raised curb, a wall, a railing, or the ramp surface itself extending at least 12 inches past the handrail. The barrier must be solid enough that a 4-inch ball cannot pass through it.',
     legal: '"Edge protection complying with 405.9.1 or 405.9.2 shall be provided on each side of ramp runs and at each side of ramp landings." Options: floor extending 12 inches minimum beyond handrail, or "a curb or barrier that prevents the passage of a 4-inch diameter sphere."',
     citation: '§405.9'
   },
   {
-    id: 7, label: 'Cross Slope', section: '§405.3', color: '#0EA5E9',
+    id: 7, label: 'Cross Slope', section: '§405.3', color: '#0EA5E9', textColor: '#0C4A6E',
     x: 500, y: 370,
     plain: 'The sideways tilt of the ramp — called the cross slope — must be no more than 1:48 (about 2%). Too much sideways tilt causes a wheelchair to drift to one side, making the ramp dangerous. The ramp surface must also be firm, stable, and slip-resistant. Loose gravel, deep carpet, and wood chips do not meet this standard.',
     legal: '"Cross slope of ramp runs shall not be steeper than 1:48." Surface: "Floor or ground surfaces of ramp runs shall comply with 302," requiring firm, stable, and slip-resistant surfaces.',
@@ -148,7 +148,7 @@ export default function RampDiagram() {
 
           {/* Bottom landing */}
           <rect x="80" y="330" width="160" height="60" rx="2" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="160" y="365" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#64748B">Bottom Landing</text>
+          <text x="160" y="365" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#374151">Bottom Landing</text>
 
           {/* Ramp surface */}
           <polygon points="240,330 720,180 720,240 240,390" fill="#F1F5F9" stroke="#94A3B8" strokeWidth="1.5" />
@@ -158,7 +158,7 @@ export default function RampDiagram() {
 
           {/* Top landing */}
           <rect x="720" y="120" width="140" height="60" rx="2" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="790" y="155" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#64748B">Top Landing</text>
+          <text x="790" y="155" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#374151">Top Landing</text>
 
           {/* Edge protection (curb along bottom of ramp) */}
           <line x1="240" y1="390" x2="720" y2="240" stroke="#DB2777" strokeWidth="3" opacity="0.5" />
@@ -273,7 +273,7 @@ export default function RampDiagram() {
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'}
                 stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
-                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>
+                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>
                 {c.id}
               </text>
               {/* Focus ring */}
@@ -283,7 +283,7 @@ export default function RampDiagram() {
           ))}
 
           {/* Legend */}
-          <text x="50" y="480" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8">
+          <text x="50" y="480" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563">
             Click or tap numbered callouts for details
           </text>
         </svg>
@@ -382,6 +382,12 @@ export default function RampDiagram() {
         }
         @media (max-width: 768px) {
           .guide-two-col { flex-direction: column !important; gap: 16px !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * {
+            animation: none !important;
+            transition: none !important;
+          }
         }
       `}</style>
     </div>

@@ -4,49 +4,49 @@ const DOOR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Clear Width', section: '§404.2.3', color: '#C2410C',
+    id: 1, label: 'Clear Width', section: '§404.2.3', color: '#C2410C', textColor: '#8B2E08',
     x: 200, y: 80,
     plain: 'When the door is open to 90 degrees, the clear opening must be at least 32 inches wide. This is measured between the face of the door and the opposite door stop — not the full width of the door frame. A standard 36-inch door typically provides about 32 inches of clear width. Any projections into this clear width that are below 34 inches above the floor (like a closer arm) are limited to 4 inches maximum on each side.',
     legal: '"Door openings shall provide a clear width of 32 inches (815 mm) minimum. Clear openings of doorways with swinging doors shall be measured between the face of the door and the stop, with the door open 90 degrees." Projections: "into the clear opening width between 34 inches (865 mm) and 80 inches (2032 mm) above the finish floor or ground shall not exceed 4 inches (100 mm)."',
     citation: '§404.2.3'
   },
   {
-    id: 2, label: 'Maneuvering Clearance', section: '§404.2.4', color: '#16A34A',
+    id: 2, label: 'Maneuvering Clearance', section: '§404.2.4', color: '#16A34A', textColor: '#14532D',
     x: 125, y: 285,
     plain: 'Maneuvering clearance is the floor space in front of and behind a door that a wheelchair user needs to approach, open, and pass through. The required size depends on the approach direction (front, hinge-side, or latch-side) and whether you are pushing or pulling. For a front approach on the pull side, you need 60 inches of depth and 18 inches beyond the latch side. The push side requires less — typically 48 inches deep. The floor in this area must be level and clear of obstructions.',
     legal: '"Minimum maneuvering clearances at doors and gates shall comply with 404.2.4. Maneuvering clearances shall extend the full width of the doorway and the required latch side or hinge side clearance." "Floor or ground surface within the required maneuvering clearances shall be level and clear."',
     citation: '§404.2.4, §404.2.4.1'
   },
   {
-    id: 3, label: 'Hardware', section: '§404.2.7', color: '#2563EB',
+    id: 3, label: 'Hardware', section: '§404.2.7', color: '#2563EB', textColor: '#1E3A8A',
     x: 620, y: 160,
     plain: 'Door hardware must be mounted between 34 and 48 inches above the floor. It must be operable with one hand and cannot require tight grasping, pinching, or twisting of the wrist. Lever handles, push-type mechanisms, and U-shaped pulls all comply. Traditional round door knobs do NOT comply because they require grasping and twisting. This also applies to locks — thumb-turn locks are acceptable, but keyed locks that require twisting are not the only means of operation.',
     legal: '"Handles, pulls, latches, locks, and other operable parts on doors and gates shall comply with 309.4. Operable parts shall be 34 inches (865 mm) minimum and 48 inches (1220 mm) maximum above the finish floor or ground." Must not require "tight grasping, pinching, or twisting of the wrist."',
     citation: '§404.2.7, §309.4'
   },
   {
-    id: 4, label: 'Closing Speed', section: '§404.2.8', color: '#7C3AED',
+    id: 4, label: 'Closing Speed', section: '§404.2.8', color: '#7C3AED', textColor: '#5B21B6',
     x: 620, y: 80,
     plain: 'If a door has a closer, it must take at least 5 seconds to move from fully open (90 degrees) to 12 degrees from the latch. This gives a wheelchair user enough time to pass through before the door pushes back. For spring hinges (which do not have a hydraulic closer), the minimum is 1.5 seconds from 70 degrees to the closed position. Fire doors with integrated closers must still meet the 5-second requirement.',
     legal: '"Door closers and gate closers shall be adjusted so that from an open position of 90 degrees, the time required to move the door to a position of 12 degrees from the latch is 5 seconds minimum." Spring hinges: "shall be adjusted so that from the open position of 70 degrees, the door or gate shall move to the closed position in 1.5 seconds minimum."',
     citation: '§404.2.8, §404.2.8.1'
   },
   {
-    id: 5, label: 'Threshold', section: '§404.2.5', color: '#D97706',
+    id: 5, label: 'Threshold', section: '§404.2.5', color: '#D97706', textColor: '#78350F',
     x: 620, y: 370,
     plain: 'Thresholds at doors cannot exceed ½ inch (13mm) in height for new construction. For existing or altered buildings, up to ¾ inch (19mm) is permitted. Any threshold over ¼ inch must be beveled with a slope no steeper than 1:2 (a 45-degree angle). This prevents wheelchair casters and walker legs from catching. The threshold must also comply with the changes-in-level provisions of §302.',
     legal: '"Thresholds, if provided at doorways, shall be 1/2 inch (13 mm) high maximum. Existing or altered thresholds 3/4 inch (19 mm) high maximum shall be permitted provided that they have a beveled edge on each side with a slope not steeper than 1:2."',
     citation: '§404.2.5'
   },
   {
-    id: 6, label: 'Door Surface', section: '§404.2.10', color: '#DB2777',
+    id: 6, label: 'Door Surface', section: '§404.2.10', color: '#DB2777', textColor: '#9D174D',
     x: 620, y: 445,
     plain: 'The bottom 10 inches of the push side of a swinging door must have a smooth, uninterrupted surface. This zone is where wheelchair footrests make contact when a person uses their chair to push the door open. No hardware, applied panels, or decorative features can project into this area because they could catch on footrests or leg supports. This applies the full width of the door. Tempered glass doors without stiles are exempt if they meet other bottom-rail requirements.',
     legal: '"Swinging door and gate surfaces within 10 inches (255 mm) of the finish floor or ground measured vertically shall have a smooth surface on the push side extending the full width of the door or gate." Exceptions: "Tempered glass doors without stiles" and "doors and gates that do not extend to within 10 inches of the finish floor."',
     citation: '§404.2.10'
   },
   {
-    id: 7, label: 'Two Doors in Series', section: '§404.2.6', color: '#0EA5E9',
+    id: 7, label: 'Two Doors in Series', section: '§404.2.6', color: '#0EA5E9', textColor: '#0C4A6E',
     x: 350, y: 475,
     plain: 'When two doors are in a series (a vestibule or airlock), the space between them must be at least 48 inches plus the width of any door swinging into that space. This allows a wheelchair user to fully clear the first door before needing to open the second. Both doors must be able to swing open simultaneously without hitting each other. The floor between the doors must be level.',
     legal: '"The distance between two hinged or pivoted doors in series shall be 48 inches (1220 mm) minimum plus the width of doors or gates swinging into the space."',
@@ -133,9 +133,10 @@ export default function DoorDiagram() {
           <rect x="0" y="0" width="900" height="520" fill="#FAFAF9" />
 
           {/* ===== LEFT: PLAN VIEW ===== */}
-          <text x="220" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">
+          <text x="220" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">
             PLAN VIEW — PULL SIDE APPROACH
           </text>
+
 
           {/* Wall (horizontal) */}
           <rect x="40" y="110" width="155" height="8" fill="#475569" rx="1" />
@@ -153,11 +154,11 @@ export default function DoorDiagram() {
           <circle cx="273" cy="114" r="4" fill="#57534E" />
 
           {/* Latch side label */}
-          <text x="199" y="105" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#64748B" textAnchor="middle">LATCH SIDE</text>
+          <text x="199" y="105" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#374151" textAnchor="middle">LATCH SIDE</text>
           <line x1="199" y1="108" x2="199" y2="118" stroke="#64748B" strokeWidth="0.8" />
 
           {/* Hinge side label */}
-          <text x="290" y="105" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#64748B">HINGE</text>
+          <text x="290" y="105" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#374151">HINGE</text>
 
           {/* Clear width dimension (between door face at 90° and opposite stop) */}
           <line x1="195" y1="50" x2="270" y2="50" stroke="#C2410C" strokeWidth="1.2" />
@@ -211,13 +212,13 @@ export default function DoorDiagram() {
 
 
           {/* ===== RIGHT: ELEVATION DETAIL ===== */}
-          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">
+          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">
             ELEVATION — FRONT VIEW
           </text>
 
           {/* Floor line */}
           <rect x="510" y="455" width="340" height="14" rx="2" fill="#E7E5E4" stroke="#D6D3D1" strokeWidth="1" />
-          <text x="680" y="466" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#78716C">FLOOR</text>
+          <text x="680" y="466" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B4540">FLOOR</text>
 
           {/* Door frame */}
           <rect x="590" y="55" width="180" height="400" rx="2" fill="none" stroke="#475569" strokeWidth="3" />
@@ -241,8 +242,8 @@ export default function DoorDiagram() {
 
           {/* Kick plate (bottom 10") */}
           <rect x="594" y="405" width="172" height="46" rx="0" fill="#DB2777" opacity="0.06" stroke="#DB2777" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="680" y="432" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#DB2777" fontWeight="600">SMOOTH SURFACE ZONE</text>
-          <text x="680" y="444" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#DB2777">(push side — bottom {imp('10', '255')})</text>
+          <text x="680" y="432" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#9D174D" fontWeight="600">SMOOTH SURFACE ZONE</text>
+          <text x="680" y="444" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#9D174D">(push side — bottom {imp('10', '255')})</text>
 
           {/* Threshold */}
           <rect x="590" y="451" width="180" height="4" rx="1" fill="#D97706" stroke="#D97706" strokeWidth="0.5" />
@@ -286,8 +287,8 @@ export default function DoorDiagram() {
           {/* Closing speed annotation */}
           <path d="M 758 70 A 40 40 0 0 1 730 100" fill="none" stroke="#7C3AED" strokeWidth="1.5" />
           <polygon points="730,100 727,90 737,93" fill="#7C3AED" />
-          <text x="770" y="66" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#7C3AED">90°</text>
-          <text x="718" y="112" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#7C3AED">12°</text>
+          <text x="770" y="66" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#5B21B6">90°</text>
+          <text x="718" y="112" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#5B21B6">12°</text>
           <rect x="780" y="78" width="82" height="14" rx="3" fill="#7C3AED" />
           <text x="821" y="88" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">
             5 sec minimum
@@ -319,13 +320,13 @@ export default function DoorDiagram() {
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'}
                 stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
-                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
               <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2"
                 className="door-focus-ring" />
             </g>
           ))}
 
-          <text x="50" y="508" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8">
+          <text x="50" y="508" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563">
             Click or tap numbered callouts for details
           </text>
         </svg>
@@ -408,6 +409,12 @@ export default function DoorDiagram() {
         }
         @media (max-width: 768px) {
           .guide-two-col { flex-direction: column !important; gap: 16px !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * {
+            animation: none !important;
+            transition: none !important;
+          }
         }
       `}</style>
     </div>

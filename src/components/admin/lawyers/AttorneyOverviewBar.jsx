@@ -58,7 +58,7 @@ export default function AttorneyOverviewBar({ lawyers, cases, contactLogs }) {
               flex: '1 1 0', padding: '10px 8px', textAlign: 'center',
               borderRight: i < cells.length - 1 ? '1px solid var(--slate-200)' : 'none',
               backgroundColor: c.bg, minWidth: 0,
-              animation: c.pulse ? 'attPulse 2s ease-in-out infinite' : 'none',
+              animation: c.pulse ? (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'attPulse 2s ease-in-out infinite') : 'none',
             }}
           >
             <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: 'clamp(1rem, 2vw, 1.25rem)', fontWeight: 700, color: c.color, lineHeight: 1.2 }}>

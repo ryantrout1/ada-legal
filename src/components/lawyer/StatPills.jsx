@@ -24,7 +24,7 @@ export default function StatPills({ needsAction, inProgress, completed, onScroll
           <p.Icon size={15} />
           <span>{p.label}:</span>
           <span style={{
-            animation: p.pulse ? 'statPulse 2s ease-in-out infinite' : 'none',
+            animation: p.pulse ? (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'statPulse 2s ease-in-out infinite') : 'none',
             fontWeight: 800
           }}>{p.count}</span>
         </button>
