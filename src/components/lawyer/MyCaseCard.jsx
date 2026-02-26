@@ -34,7 +34,7 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
             backgroundColor: isPhysical ? '#DBEAFE' : '#F3E8FF', flexShrink: 0
           }}>
             {isPhysical
-              ? <Building2 size={18} style={{ color: '#1D4ED8' }} />
+              ? <Building2 size={18} style={{ color: '#1E3A8A' }} />
               : <Globe size={18} style={{ color: '#7C3AED' }} />
             }
           </span>
@@ -50,7 +50,7 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
             </Link>
             <span style={{
               display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-              color: isPhysical ? '#1D4ED8' : '#7C3AED', fontWeight: 600
+              color: isPhysical ? '#1E3A8A' : '#7C3AED', fontWeight: 600
             }}>
               {isPhysical ? 'Physical Space' : 'Digital / Website'}
             </span>

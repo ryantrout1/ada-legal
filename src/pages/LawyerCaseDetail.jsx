@@ -98,7 +98,7 @@ export default function LawyerCaseDetail() {
               backgroundColor: isPhysical ? '#DBEAFE' : '#F3E8FF'
             }}>
               {isPhysical
-                ? <Building2 size={20} style={{ color: '#1D4ED8' }} />
+                ? <Building2 size={20} style={{ color: '#1E3A8A' }} />
                 : <Globe size={20} style={{ color: '#7C3AED' }} />
               }
             </span>
@@ -111,7 +111,7 @@ export default function LawyerCaseDetail() {
               </h1>
               <span style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                color: isPhysical ? '#1D4ED8' : '#7C3AED', fontWeight: 600
+                color: isPhysical ? '#1E3A8A' : '#7C3AED', fontWeight: 600
               }}>
                 {isPhysical ? 'Physical Space Violation' : 'Digital / Website Violation'}
               </span>
@@ -119,7 +119,7 @@ export default function LawyerCaseDetail() {
             <span style={{
               marginLeft: 'auto', padding: '0.25rem 0.75rem',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-              color: '#1D4ED8', backgroundColor: '#DBEAFE', borderRadius: '9999px',
+              color: '#1E3A8A', backgroundColor: '#DBEAFE', borderRadius: '9999px',
               textTransform: 'uppercase'
             }}>
               Assigned to You

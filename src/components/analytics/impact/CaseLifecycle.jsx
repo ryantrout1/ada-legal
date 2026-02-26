@@ -113,8 +113,8 @@ export default function CaseLifecycle({ events }) {
           <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#9A3412', marginTop: '4px' }}>Avg Start → Complete</div>
         </div>
         <div style={{ padding: '16px', backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '10px', textAlign: 'center' }}>
-          <div style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: '#1D4ED8' }}>{formatAvgAccept()}</div>
-          <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#1D4ED8', marginTop: '4px' }}>Avg Complete → Attorney Accept</div>
+          <div style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: '#1E3A8A' }}>{formatAvgAccept()}</div>
+          <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#1E3A8A', marginTop: '4px' }}>Avg Complete → Attorney Accept</div>
         </div>
       </div>
 

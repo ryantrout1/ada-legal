@@ -3,10 +3,10 @@ import AuditViolationItem from './AuditViolationItem';
 import AuditSiteReport from './AuditSiteReport';
 
 const IMPACT_CONFIG = {
-  critical: { color: '#DC2626', bg: '#FEE2E2', label: 'Critical' },
+  critical: { color: '#991B1B', bg: '#FEE2E2', label: 'Critical' },
   serious:  { color: '#EA580C', bg: '#FFF7ED', label: 'Serious' },
   moderate: { color: '#D97706', bg: '#FEF3C7', label: 'Moderate' },
-  minor:    { color: '#2563EB', bg: '#DBEAFE', label: 'Minor' }
+  minor:    { color: '#1E3A8A', bg: '#DBEAFE', label: 'Minor' }
 };
 
 function countByImpact(violations) {
@@ -131,7 +131,7 @@ export default function AuditPanel({
             flex: 1, padding: '0.5rem', border: 'none', cursor: 'pointer',
             fontWeight: 700, fontSize: '0.8125rem',
             backgroundColor: tab === t ? '#DBEAFE' : 'white',
-            color: tab === t ? '#1D4ED8' : '#475569',
+            color: tab === t ? '#1E3A8A' : '#475569',
             borderBottom: tab === t ? '2px solid #1D4ED8' : '2px solid transparent'
           }}>
             {t === 'page' ? 'Current Page' : 'Full Site'}
@@ -152,7 +152,7 @@ export default function AuditPanel({
 
             <button onClick={onRerun} disabled={running} style={{
               width: '100%', padding: '0.5rem', marginBottom: '1rem',
-              backgroundColor: running ? '#94A3B8' : '#1D4ED8', color: 'white',
+              backgroundColor: running ? '#94A3B8' : '#1E3A8A', color: 'white',
               border: 'none', borderRadius: '6px', fontWeight: 700, fontSize: '0.8125rem',
               cursor: running ? 'default' : 'pointer'
             }}>

@@ -16,7 +16,7 @@ const statusColors = {
 
 const resolutionBadge = {
   engaged: { label: 'Engaged', bg: '#DCFCE7', color: '#15803D' },
-  referred_out: { label: 'Referred Out', bg: '#DBEAFE', color: '#1D4ED8' },
+  referred_out: { label: 'Referred Out', bg: '#DBEAFE', color: '#1E3A8A' },
   not_viable: { label: 'Not Viable', bg: 'var(--slate-100)', color: 'var(--slate-600)' },
   claimant_unresponsive: { label: 'Reporter Unresponsive', bg: '#FEF3C7', color: '#B45309' },
   claimant_declined: { label: 'Reporter Declined', bg: '#FEF3C7', color: '#B45309' },
@@ -106,7 +106,7 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
 
   const barSegments = [
     { key: 'engaged', label: 'Engaged', color: '#15803D', bg: '#DCFCE7' },
-    { key: 'referred_out', label: 'Referred', color: '#1D4ED8', bg: '#DBEAFE' },
+    { key: 'referred_out', label: 'Referred', color: '#1E3A8A', bg: '#DBEAFE' },
     { key: 'not_viable', label: 'Not Viable', color: 'var(--slate-600)', bg: 'var(--slate-100)' },
     { key: 'claimant_unresponsive', label: 'Unresponsive', color: '#B45309', bg: '#FEF3C7' },
     { key: 'claimant_declined', label: 'Declined', color: '#B45309', bg: '#FEF3C7' },
@@ -269,7 +269,7 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
                       </td>
                       <td style={tdStyle}>{[c.city, c.state].filter(Boolean).join(', ') || '—'}</td>
                       <td style={tdStyle}>
-                        {isPhysical ? <Building2 size={14} style={{ color: 'var(--terra-600, #C2410C)' }} /> : <Globe size={14} style={{ color: '#1D4ED8' }} />}
+                        {isPhysical ? <Building2 size={14} style={{ color: 'var(--terra-600, #C2410C)' }} /> : <Globe size={14} style={{ color: '#1E3A8A' }} />}
                       </td>
                       <td style={tdStyle}>{formatDate(c.assigned_at)}</td>
                       <td style={tdStyle}>

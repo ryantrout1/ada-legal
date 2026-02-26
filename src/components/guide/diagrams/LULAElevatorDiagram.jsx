@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#408-limited-uselimited-application-elevators';
 const CALLOUTS = [
-  { id: 1, label: 'Car Size', section: '§408.4.1', color: '#C2410C', x: 150, y: 100, plain: 'LULA elevator cars must have a clear floor area of at least 51 inches deep by 51 inches wide for side-opening doors, or 54 inches deep by 36 inches wide for center or end-opening doors. These are smaller than standard passenger elevators but large enough for one wheelchair user.', legal: '"Inside dimensions: 51 inches wide by 51 inches deep with side opening doors, or 54 inches deep by 36 inches wide with end/center opening doors."', citation: '§408.4.1' },
-  { id: 2, label: 'Door Width', section: '§408.4.2', color: '#16A34A', x: 400, y: 100, plain: 'LULA elevator doors must provide a clear width of at least 32 inches (815 mm). Doors must be automatic or power-operated with reopening devices that prevent closing on a person.', legal: '"Elevator doors shall provide a clear width of 32 inches minimum."', citation: '§408.4.2' },
-  { id: 3, label: 'Controls', section: '§408.4.6', color: '#2563EB', x: 650, y: 100, plain: 'Car controls must be between 15 and 48 inches above the floor for a forward approach, or between 15 and 54 inches for a side approach. Buttons must be raised or flush. All controls must have both visual and tactile indicators.', legal: '"Controls shall comply with 309." Reach ranges per §308.', citation: '§408.4.6, §309' },
-  { id: 4, label: 'Where Permitted', section: '§206.6', color: '#7C3AED', x: 150, y: 340, plain: 'LULA elevators can be used instead of standard elevators in certain situations: buildings where a standard elevator is not required (2 stories or fewer), or as part of an accessible route within a facility. They cannot substitute for passenger elevators required by §206.6.', legal: '§206.6: "In buildings not required to have a full passenger elevator, LULA elevators shall be permitted."', citation: '§206.6' },
-  { id: 5, label: 'Speed & Travel', section: '§408.4', color: '#D97706', x: 400, y: 340, plain: 'LULA elevators are limited to a maximum travel distance of 25 feet and a maximum speed of 30 feet per minute. They are designed for low-traffic, short-distance vertical travel — typically 1-2 stories. They must comply with ASME A17.1 safety standards.', legal: 'Per ASME A17.1: maximum travel 25 feet, maximum speed 30 feet per minute.', citation: '§408.1' }
+  { id: 1, label: 'Car Size', section: '§408.4.1', color: '#C2410C', textColor: '#8B2E08', x: 150, y: 100, plain: 'LULA elevator cars must have a clear floor area of at least 51 inches deep by 51 inches wide for side-opening doors, or 54 inches deep by 36 inches wide for center or end-opening doors. These are smaller than standard passenger elevators but large enough for one wheelchair user.', legal: '"Inside dimensions: 51 inches wide by 51 inches deep with side opening doors, or 54 inches deep by 36 inches wide with end/center opening doors."', citation: '§408.4.1' },
+  { id: 2, label: 'Door Width', section: '§408.4.2', color: '#16A34A', textColor: '#14532D', x: 400, y: 100, plain: 'LULA elevator doors must provide a clear width of at least 32 inches (815 mm). Doors must be automatic or power-operated with reopening devices that prevent closing on a person.', legal: '"Elevator doors shall provide a clear width of 32 inches minimum."', citation: '§408.4.2' },
+  { id: 3, label: 'Controls', section: '§408.4.6', color: '#2563EB', textColor: '#1E3A8A', x: 650, y: 100, plain: 'Car controls must be between 15 and 48 inches above the floor for a forward approach, or between 15 and 54 inches for a side approach. Buttons must be raised or flush. All controls must have both visual and tactile indicators.', legal: '"Controls shall comply with 309." Reach ranges per §308.', citation: '§408.4.6, §309' },
+  { id: 4, label: 'Where Permitted', section: '§206.6', color: '#7C3AED', textColor: '#5B21B6', x: 150, y: 340, plain: 'LULA elevators can be used instead of standard elevators in certain situations: buildings where a standard elevator is not required (2 stories or fewer), or as part of an accessible route within a facility. They cannot substitute for passenger elevators required by §206.6.', legal: '§206.6: "In buildings not required to have a full passenger elevator, LULA elevators shall be permitted."', citation: '§206.6' },
+  { id: 5, label: 'Speed & Travel', section: '§408.4', color: '#D97706', textColor: '#78350F', x: 400, y: 340, plain: 'LULA elevators are limited to a maximum travel distance of 25 feet and a maximum speed of 30 feet per minute. They are designed for low-traffic, short-distance vertical travel — typically 1-2 stories. They must comply with ASME A17.1 safety standards.', legal: 'Per ASME A17.1: maximum travel 25 feet, maximum speed 30 feet per minute.', citation: '§408.1' }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function LULAElevatorDiagram() {
@@ -48,7 +48,7 @@ export default function LULAElevatorDiagram() {
           <line x1="420" y1="60" x2="420" y2="140" stroke="#94A3B8" strokeWidth="3" />
           <line x1="420" y1="260" x2="420" y2="380" stroke="#94A3B8" strokeWidth="3" />
           <line x1="418" y1="140" x2="418" y2="260" stroke="#16A34A" strokeWidth="4" />
-          <text x="435" y="205" fontFamily="Manrope, sans-serif" fontSize="8" fill="#16A34A" fontWeight="600">DOOR</text>
+          <text x="435" y="205" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">DOOR</text>
 
           {/* Wheelchair silhouette */}
           <circle cx="260" cy="190" r="12" fill="#475569" opacity="0.1" />
@@ -79,7 +79,7 @@ export default function LULAElevatorDiagram() {
 
           {/* Controls panel */}
           <rect x="108" y="140" width="12" height="60" rx="2" fill="#2563EB" opacity="0.15" stroke="#2563EB" strokeWidth="1" />
-          <text x="130" y="175" fontFamily="Manrope, sans-serif" fontSize="6" fill="#2563EB" fontWeight="600">CONTROLS</text>
+          <text x="130" y="175" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A" fontWeight="600">CONTROLS</text>
 
           {/* RIGHT: End-opening config */}
           <rect x="540" y="60" width="220" height="320" fill="#C2410C" opacity="0.03" stroke="#94A3B8" strokeWidth="2" rx="2" />
@@ -90,7 +90,7 @@ export default function LULAElevatorDiagram() {
           <line x1="540" y1="380" x2="600" y2="380" stroke="#94A3B8" strokeWidth="3" />
           <line x1="700" y1="380" x2="760" y2="380" stroke="#94A3B8" strokeWidth="3" />
           <line x1="600" y1="378" x2="700" y2="378" stroke="#16A34A" strokeWidth="4" />
-          <text x="650" y="396" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#16A34A" fontWeight="600">DOOR</text>
+          <text x="650" y="396" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">DOOR</text>
 
           {/* Width dim */}
           <line x1="540" y1="410" x2="760" y2="410" stroke="#C2410C" strokeWidth="1" />
@@ -108,19 +108,19 @@ export default function LULAElevatorDiagram() {
 
           {/* Speed/travel note */}
           <rect x="540" y="460" width="220" height="36" rx="8" fill="#D97706" opacity="0.05" stroke="#D97706" strokeWidth="1" />
-          <text x="650" y="478" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#D97706" fontWeight="600">Max travel: 25 ft · Max speed: 30 ft/min</text>
-          <text x="650" y="490" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#D97706">Complies with ASME A17.1</text>
+          <text x="650" y="478" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#78350F" fontWeight="600">Max travel: 25 ft · Max speed: 30 ft/min</text>
+          <text x="650" y="490" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">Complies with ASME A17.1</text>
 
           {/* Where permitted note */}
           <rect x="100" y="460" width="320" height="36" rx="8" fill="#7C3AED" opacity="0.05" stroke="#7C3AED" strokeWidth="1" />
-          <text x="260" y="478" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#7C3AED" fontWeight="600">Permitted where standard elevator not required</text>
-          <text x="260" y="490" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#7C3AED">Buildings ≤ 2 stories per §206.6</text>
+          <text x="260" y="478" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#5B21B6" fontWeight="600">Permitted where standard elevator not required</text>
+          <text x="260" y="490" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#5B21B6">Buildings ≤ 2 stories per §206.6</text>
 
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
           <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
@@ -146,7 +146,10 @@ export default function LULAElevatorDiagram() {
           </div>
         </div>
       )}
-      <style>{`@keyframes luFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}`}</style>
+      <style>{`@keyframes luFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}        @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

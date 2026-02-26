@@ -21,7 +21,7 @@ export default function GuideReportCTA() {
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: '#94A3B8', lineHeight: 1.7, margin: '0 0 28px'
+          color: '#4B5563', lineHeight: 1.7, margin: '0 0 28px'
         }}>
           Report it and we'll connect you with an experienced disability rights
           attorney — at no cost to you.
@@ -38,7 +38,7 @@ export default function GuideReportCTA() {
         <div style={{ marginTop: '16px' }}>
           <Link to={createPageUrl('Home')} style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-            color: '#94A3B8', textDecoration: 'underline'
+            color: '#4B5563', textDecoration: 'underline'
           }}>
             Learn how it works
           </Link>

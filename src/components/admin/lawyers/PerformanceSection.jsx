@@ -63,7 +63,7 @@ export default function PerformanceSection({ lawyer, cases, contactLogs }) {
 function Stat({ label, value, color }) {
   return (
     <div>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: '#4B5563', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
         {label}
       </span>
       <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700, color: color || 'white', marginLeft: '6px' }}>

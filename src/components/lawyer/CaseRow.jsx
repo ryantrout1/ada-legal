@@ -63,7 +63,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
             display: 'inline-block', marginLeft: '0.5rem', padding: '0.1rem 0.5rem',
             fontSize: '0.6875rem', fontWeight: 700, borderRadius: '9999px',
             backgroundColor: isPhysical ? '#DBEAFE' : '#F3E8FF',
-            color: isPhysical ? '#1D4ED8' : '#7C3AED'
+            color: isPhysical ? '#1E3A8A' : '#7C3AED'
           }}>
             {isPhysical ? 'Physical' : 'Digital'}
           </span>

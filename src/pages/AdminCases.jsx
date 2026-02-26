@@ -43,12 +43,12 @@ function sortCases(cases, sortBy, lawyerMap, needsAttentionIds) {
 
 const STAGES = [
   { key: 'submitted', label: 'Submitted', color: '#9A3412', bg: 'rgba(251,146,60,0.08)', accent: '#FB923C' },
-  { key: 'under_review', label: 'In Review', color: '#1D4ED8', bg: 'rgba(59,130,246,0.08)', accent: '#3B82F6' },
+  { key: 'under_review', label: 'In Review', color: '#1E3A8A', bg: 'rgba(59,130,246,0.08)', accent: '#3B82F6' },
   { key: 'available', label: 'Available', color: '#9A3412', bg: 'rgba(194,65,12,0.08)', accent: '#EA580C' },
   { key: 'assigned', label: 'Assigned', color: '#92400E', bg: 'rgba(217,119,6,0.08)', accent: '#D97706' },
   { key: 'in_progress', label: 'In Progress', color: '#15803D', bg: 'rgba(22,163,74,0.08)', accent: '#16A34A' },
   { key: 'closed', label: 'Closed', color: '#64748B', bg: 'rgba(148,163,184,0.05)' },
-  { key: 'rejected', label: 'Rejected', color: '#DC2626', bg: 'rgba(220,38,38,0.05)' },
+  { key: 'rejected', label: 'Rejected', color: '#991B1B', bg: 'rgba(220,38,38,0.05)' },
 ];
 const ACTIVE_KEYS = new Set(['submitted', 'under_review', 'available', 'assigned', 'in_progress']);
 

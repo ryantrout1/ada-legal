@@ -5,21 +5,21 @@ const GRAB_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#6
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Stall Dimensions', section: '§604.8', color: '#C2410C',
+    id: 1, label: 'Stall Dimensions', section: '§604.8', color: '#C2410C', textColor: '#8B2E08',
     x: 450, y: 56,
     plain: 'A wheelchair-accessible toilet stall must be at least 60 inches (5 feet) wide and at least 56 inches deep if the toilet is wall-mounted, or 59 inches deep if it is floor-mounted. The extra 3 inches for floor-mounted toilets accounts for the base taking up floor space. The door must swing outward so it does not reduce the maneuvering room inside the stall. Self-closing hinges are allowed, but the door must close slowly enough for safe use.',
     legal: '"Wheelchair accessible compartments with floor-mounted water closets shall be 60 inches (1525 mm) wide minimum… and 59 inches (1500 mm) deep minimum." Wall-hung: "56 inches (1420 mm) deep minimum." Door: "shall not swing into the minimum required compartment area."',
     citation: '§604.8.1.1, §604.8.1.2, §604.8.1.6'
   },
   {
-    id: 2, label: 'Toilet Position', section: '§604.2', color: '#16A34A',
+    id: 2, label: 'Toilet Position', section: '§604.2', color: '#16A34A', textColor: '#14532D',
     x: 175, y: 295,
     plain: 'The center of the toilet must be between 16 and 18 inches from the side wall. This precise positioning ensures the side grab bar is within comfortable reach during a wheelchair transfer. The seat height must be between 17 and 19 inches above the floor — higher than a standard residential toilet (typically 15 inches) — making it much easier to transfer from a wheelchair.',
     legal: '"The centerline of the water closet shall be 16 inches (405 mm) minimum to 18 inches (455 mm) maximum from the side wall or partition." Seat height: "17 inches (430 mm) minimum and 19 inches (485 mm) maximum measured to the top of the seat."',
     citation: '§604.2, §604.4'
   },
   {
-    id: 3, label: 'Side Grab Bar', section: '§604.5.1 + §609', color: '#2563EB',
+    id: 3, label: 'Side Grab Bar', section: '§604.5.1 + §609', color: '#2563EB', textColor: '#1E3A8A',
     x: 80, y: 180,
     plain: 'The side grab bar must be at least 42 inches long, mounted on the wall closest to the toilet. It starts no more than 12 inches from the rear wall and extends at least 54 inches from the rear wall. It must be mounted between 33 and 36 inches above the floor, have a smooth circular cross-section between 1.25 and 2 inches in diameter, and support at least 250 pounds of force. The bar must be continuous with no breaks or obstructions along its length.',
     legal: '"The side wall grab bar shall be 42 inches (1065 mm) long minimum, located 12 inches (305 mm) maximum from the rear wall and extending 54 inches (1370 mm) minimum from the rear wall." Height: "33 inches (840 mm) minimum and 36 inches (915 mm) maximum above the finish floor." Structural strength: "250 pounds (1112 N)" of force.',
@@ -27,7 +27,7 @@ const CALLOUTS = [
     grabBar: true
   },
   {
-    id: 4, label: 'Rear Grab Bar', section: '§604.5.2 + §609', color: '#7C3AED',
+    id: 4, label: 'Rear Grab Bar', section: '§604.5.2 + §609', color: '#7C3AED', textColor: '#5B21B6',
     x: 260, y: 425,
     plain: 'The rear grab bar must be at least 36 inches long, mounted on the wall behind the toilet. It must extend at least 12 inches past the toilet centerline on one side and at least 24 inches past it on the other (the transfer side — the open side where the wheelchair approaches). The same height, diameter, and 250-pound strength requirements apply as for the side bar.',
     legal: '"The rear wall grab bar shall be 36 inches (915 mm) long minimum and extend from the centerline of the water closet 12 inches (305 mm) minimum on one side and 24 inches (610 mm) minimum on the other side."',
@@ -35,21 +35,21 @@ const CALLOUTS = [
     grabBar: true
   },
   {
-    id: 5, label: 'Clear Floor Space', section: '§604.3', color: '#D97706',
+    id: 5, label: 'Clear Floor Space', section: '§604.3', color: '#D97706', textColor: '#78350F',
     x: 370, y: 240,
     plain: 'The clear floor space inside the stall must extend at least 60 inches from the side wall (the full width of the stall) and at least 56 inches from the rear wall. This provides enough room for a person using a wheelchair to enter the stall, position next to the toilet, and perform a lateral (side) transfer. No fixtures, dispensers, or trash cans may protrude into this clear space.',
     legal: '"Clearance around water closets shall be 60 inches (1525 mm) minimum measured perpendicular from the side wall and 56 inches (1420 mm) minimum measured perpendicular from the rear wall."',
     citation: '§604.3.1'
   },
   {
-    id: 6, label: 'Flush Controls', section: '§604.6', color: '#DB2777',
+    id: 6, label: 'Flush Controls', section: '§604.6', color: '#DB2777', textColor: '#9D174D',
     x: 250, y: 345,
     plain: 'The flush control must be on the open side of the toilet — the side where the wheelchair approaches, not the wall side. It must be hand-operated or automatic. If hand-operated, it must work with one hand and not require tight grasping, pinching, or twisting of the wrist. The maximum operating force is 5 pounds. Automatic flush sensors always comply with these requirements.',
     legal: '"Flush controls shall be hand operated or automatic. Hand operated flush controls shall comply with 309. Flush controls shall be located on the open side of the water closet."',
     citation: '§604.6'
   },
   {
-    id: 7, label: 'Toilet Paper Dispenser', section: '§604.7', color: '#0EA5E9',
+    id: 7, label: 'Toilet Paper Dispenser', section: '§604.7', color: '#0EA5E9', textColor: '#0C4A6E',
     x: 115, y: 130,
     plain: 'The toilet paper dispenser must be mounted 7 to 9 inches in front of the toilet (measured from the front edge of the toilet to the centerline of the dispenser). It must be between 15 and 48 inches above the floor. Critically, it must not obstruct the use of the grab bar — large dispensers that stick out from the wall can block a person from gripping the bar. The dispenser must allow continuous paper delivery (no controlled-delivery types that limit how much paper you can pull at once).',
     legal: '"Toilet paper dispensers shall be 7 inches (180 mm) minimum and 9 inches (230 mm) maximum in front of the water closet measured to the centerline of the dispenser. The outlet of the dispenser shall be 15 inches (380 mm) minimum and 48 inches (1220 mm) maximum above the finish floor." "Dispensers shall not be of a type that controls delivery or that does not allow continuous paper flow."',
@@ -60,7 +60,7 @@ const CALLOUTS = [
 function makeLink(text, url) {
   return (
     <a href={url} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -205,11 +205,11 @@ export default function ToiletStallDiagram() {
 
           {/* Flush control indicator (on open/right side) */}
           <circle cx={TX + 38} cy={SB - 50} r="5" fill="#DB2777" opacity="0.2" stroke="#DB2777" strokeWidth="1" />
-          <text x={TX + 38} y={SB - 38} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#DB2777">FLUSH</text>
+          <text x={TX + 38} y={SB - 38} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#9D174D">FLUSH</text>
 
           {/* ===== TOILET PAPER DISPENSER ===== */}
           <rect x={SX + 6} y={TY - 40} width="18" height="24" rx="3" fill="#0EA5E9" opacity="0.12" stroke="#0EA5E9" strokeWidth="1" />
-          <text x={SX + 15} y={TY - 24} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#0EA5E9">TP</text>
+          <text x={SX + 15} y={TY - 24} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#0C4A6E">TP</text>
 
           {/* ===== GRAB BARS ===== */}
           {/* Side grab bar (on side wall) */}
@@ -227,8 +227,8 @@ export default function ToiletStallDiagram() {
           {/* ===== WHEELCHAIR TURNING INDICATOR ===== */}
           <circle cx={SX + SW / 2 + 40} cy={SY + SD / 2 - 40} r="60"
             fill="none" stroke="#D97706" strokeWidth="1" strokeDasharray="5 4" opacity="0.3" />
-          <text x={SX + SW / 2 + 40} y={SY + SD / 2 - 40} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#D97706" opacity="0.5">♿ turning</text>
-          <text x={SX + SW / 2 + 40} y={SY + SD / 2 - 30} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#D97706" opacity="0.5">radius</text>
+          <text x={SX + SW / 2 + 40} y={SY + SD / 2 - 40} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" opacity="0.5">♿ turning</text>
+          <text x={SX + SW / 2 + 40} y={SY + SD / 2 - 30} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" opacity="0.5">radius</text>
 
           {/* ===== DIMENSION LINES ===== */}
 
@@ -319,7 +319,7 @@ export default function ToiletStallDiagram() {
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'}
                 stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
-                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
               <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2"
                 className="wc-focus-ring" />
             </g>
@@ -408,6 +408,9 @@ export default function ToiletStallDiagram() {
         }
         @media (max-width: 768px) {
           .guide-two-col { flex-direction: column !important; gap: 16px !important; }
+        }
+              @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
         }
       `}</style>
     </div>

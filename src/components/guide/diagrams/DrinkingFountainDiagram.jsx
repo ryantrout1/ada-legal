@@ -2,30 +2,30 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const DF_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#602-drinking-fountains';
 const CALLOUTS = [
-  { id: 1, label: 'Wheelchair Height', section: '§602.4', color: '#C2410C', x: 100, y: 42,
+  { id: 1, label: 'Wheelchair Height', section: '§602.4', color: '#C2410C', textColor: '#8B2E08', x: 100, y: 42,
     plain: 'The spout of the wheelchair-accessible fountain must be no higher than 36 inches above the finish floor. The spout must be at the front of the unit and the water flow must be at least 4 inches high to allow insertion of a cup or bottle. The spout direction must be nearly parallel to the front of the unit so a person in a wheelchair can drink without tilting their head awkwardly.',
     legal: '"Spout outlets of drinking fountains for wheelchair users shall be 36 inches maximum above the finish floor or ground." Water flow: "4 inches high minimum."', citation: '§602.4' },
-  { id: 2, label: 'Standing Height', section: '§602.5', color: '#16A34A', x: 300, y: 42,
+  { id: 2, label: 'Standing Height', section: '§602.5', color: '#16A34A', textColor: '#14532D', x: 300, y: 42,
     plain: 'The standing-height fountain has a spout between 38 and 43 inches above the floor. This serves people who have difficulty bending down — including many elderly individuals and people with back or joint conditions. A clear floor space for a parallel approach (30 × 48 inches alongside) must be provided.',
     legal: '"Spout outlets of drinking fountains for standing persons shall be 38 inches minimum and 43 inches maximum above the finish floor."', citation: '§602.5' },
-  { id: 3, label: 'Knee Clearance', section: '§602.4 / §306', color: '#2563EB', x: 500, y: 42,
+  { id: 3, label: 'Knee Clearance', section: '§602.4 / §306', color: '#2563EB', textColor: '#1E3A8A', x: 500, y: 42,
     plain: 'The wheelchair-height fountain must provide knee and toe clearance underneath for a forward approach. Knee clearance: 27 inches high minimum, 8 inches deep minimum at that height. Toe clearance below 9 inches. All pipes must be insulated to prevent burns. The clearance space must be 30 inches wide minimum.',
     legal: '"Drinking fountains for wheelchair users shall have knee clearance complying with §306." 27 inches high, 8 inches deep at knee, insulated pipes.', citation: '§306' },
-  { id: 4, label: 'Clear Floor Space', section: '§602.2', color: '#7C3AED', x: 100, y: 260,
+  { id: 4, label: 'Clear Floor Space', section: '§602.2', color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 260,
     plain: 'Wheelchair fountain: 30 × 48 inches, forward approach, centered on the unit. Standing fountain: 30 × 48 inches, parallel approach, alongside the unit. For a hi-lo unit, both clear floor spaces may overlap. The floor must be level (max 1:48 slope) and slip-resistant.',
     legal: '"A clear floor space complying with §305, positioned for a forward approach, shall be provided." Standing: parallel approach. Floor per §302.', citation: '§602.2' },
-  { id: 5, label: 'Flow & Controls', section: '§602.6', color: '#D97706', x: 300, y: 260,
+  { id: 5, label: 'Flow & Controls', section: '§602.6', color: '#D97706', textColor: '#78350F', x: 300, y: 260,
     plain: 'Water flow must be at least 4 inches high to allow a cup or bottle to be filled. Controls must be front-mounted or side-mounted on the front half of the unit. They must be operable with one hand with no more than 5 pounds of force, and must not require tight grasping, pinching, or twisting. Push-button and lever controls comply; twist knobs do not.',
     legal: '"The spout shall provide a flow of water 4 inches high minimum." Controls: "comply with §309… operable with one hand, 5 pounds maximum force."', citation: '§602.6' },
-  { id: 6, label: 'Scoping', section: '§211', color: '#DB2777', x: 500, y: 260,
+  { id: 6, label: 'Scoping', section: '§211', color: '#DB2777', textColor: '#9D174D', x: 500, y: 260,
     plain: 'Where drinking fountains are provided on a floor, at least two must be offered: one at wheelchair height and one at standing height. A single hi-lo unit satisfies both requirements. If only one fountain exists on a floor, it must be the wheelchair-accessible type. In exterior sites, at least one of each type per cluster.',
     legal: '§211.2 "Where drinking fountains are provided… no fewer than two shall be provided." One at wheelchair height per §602.4, one at standing height per §602.5.', citation: '§211' },
-  { id: 7, label: 'Bottle Fillers', section: 'Advisory', color: '#0EA5E9', x: 700, y: 150,
+  { id: 7, label: 'Bottle Fillers', section: 'Advisory', color: '#0EA5E9', textColor: '#0C4A6E', x: 700, y: 150,
     plain: 'Bottle filler stations are increasingly common. If provided in addition to drinking fountains, accessible bottle fillers should be at wheelchair height with clear floor space for a forward approach. A bottle filler alone does not substitute for an accessible drinking fountain — both must be provided if fountains are required. Controls must be operable with one hand.',
     legal: 'Advisory: Bottle fillers provided in addition to fountains should comply with reach range and clear floor space requirements. Not a substitute for accessible drinking fountains.', citation: '§602' }
 ];
 
-function makeLink(t) { return (<a href={DF_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={DF_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function DrinkingFountainDiagram() {
@@ -66,18 +66,18 @@ export default function DrinkingFountainDiagram() {
           <rect x="150" y="192" width="20" height="10" rx="3" fill="#D97706" opacity="0.2" stroke="#D97706" strokeWidth="1" />
           {/* Water arc */}
           <path d="M 160 192 Q 165 178 172 182" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="3 2" />
-          <text x="152" y="180" fontFamily="Manrope, sans-serif" fontSize="6" fill="#2563EB">{d('4', '100')}+ flow</text>
+          <text x="152" y="180" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A">{d('4', '100')}+ flow</text>
           {/* Knee clearance */}
           <rect x="100" y="215" width="112" height="165" rx="2" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="156" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#2563EB" fontWeight="500">Knee/Toe</text>
-          <text x="156" y="312" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#2563EB" fontWeight="500">Clearance</text>
+          <text x="156" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="500">Knee/Toe</text>
+          <text x="156" y="312" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="500">Clearance</text>
           {/* 36" height dim */}
           <line x1="68" y1="200" x2="68" y2="380" stroke="#C2410C" strokeWidth="1" />
           <line x1="62" y1="200" x2="74" y2="200" stroke="#C2410C" strokeWidth="1" />
           <line x1="62" y1="380" x2="74" y2="380" stroke="#C2410C" strokeWidth="1" />
           <rect x="45" y="282" width="42" height="13" rx="3" fill="#C2410C" />
           <text x="66" y="291" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('36', '915')}</text>
-          <text x="156" y="155" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#C2410C" fontWeight="700">LOW (Wheelchair)</text>
+          <text x="156" y="155" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#8B2E08" fontWeight="700">LOW (Wheelchair)</text>
 
           {/* Wheelchair user */}
           <circle cx="340" cy="255" r="10" fill="#E2E8F0" stroke="#475569" strokeWidth="1.2" />
@@ -89,7 +89,7 @@ export default function DrinkingFountainDiagram() {
           <line x1="340" y1="285" x2="220" y2="205" stroke="#475569" strokeWidth="1.5" opacity="0.4" strokeLinecap="round" />
           {/* Clear floor label */}
           <rect x="290" y="382" width="100" height="20" rx="4" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="1" />
-          <text x="340" y="396" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#7C3AED" fontWeight="500">{d('30', '760')} × {d('48', '1220')} fwd</text>
+          <text x="340" y="396" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="500">{d('30', '760')} × {d('48', '1220')} fwd</text>
 
           {/* DIVIDER */}
           <line x1="450" y1="40" x2="450" y2="400" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
@@ -106,7 +106,7 @@ export default function DrinkingFountainDiagram() {
           <line x1="482" y1="380" x2="494" y2="380" stroke="#16A34A" strokeWidth="1" />
           <rect x="462" y="260" width="50" height="13" rx="3" fill="#16A34A" />
           <text x="487" y="269" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('38–43', '965–1090')}</text>
-          <text x="577" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#16A34A" fontWeight="700">HIGH (Standing)</text>
+          <text x="577" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="700">HIGH (Standing)</text>
 
           {/* Standing person */}
           <circle cx="710" cy="155" r="12" fill="#E2E8F0" stroke="#475569" strokeWidth="1.2" />
@@ -116,18 +116,18 @@ export default function DrinkingFountainDiagram() {
           <line x1="710" y1="220" x2="650" y2="163" stroke="#475569" strokeWidth="1.5" opacity="0.4" strokeLinecap="round" />
           {/* Clear floor */}
           <rect x="670" y="382" width="100" height="20" rx="4" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="1" />
-          <text x="720" y="396" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#7C3AED" fontWeight="500">{d('30', '760')} × {d('48', '1220')} ∥</text>
+          <text x="720" y="396" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="500">{d('30', '760')} × {d('48', '1220')} ∥</text>
 
           {/* Hi-lo note */}
           <rect x="770" y="70" width="110" height="50" rx="6" fill="#0EA5E9" opacity="0.04" stroke="#0EA5E9" strokeWidth="1" />
-          <text x="825" y="90" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0EA5E9" fontWeight="600">Hi-Lo unit satisfies</text>
-          <text x="825" y="104" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0EA5E9" fontWeight="600">both requirements</text>
+          <text x="825" y="90" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">Hi-Lo unit satisfies</text>
+          <text x="825" y="104" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">both requirements</text>
 
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
           <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
@@ -153,7 +153,10 @@ export default function DrinkingFountainDiagram() {
           </div>
         </div>
       )}
-      <style>{`@keyframes dfFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}`}</style>
+      <style>{`@keyframes dfFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}        @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

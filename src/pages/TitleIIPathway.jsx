@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 
 const INFO_CARDS = [
-  { icon: '📋', heading: 'Where to File', text: <>The <strong>U.S. Department of Justice, Civil Rights Division</strong> handles Title II complaints. You can file online, by mail, or by phone.</>, color: '#2563EB', bg: '#EFF6FF' },
-  { icon: '💰', heading: 'Cost to You', text: <><strong>Free.</strong> Filing a complaint with the DOJ costs nothing. No attorney is required, though you may consult one.</>, color: '#2563EB', bg: '#EFF6FF' },
-  { icon: '🔍', heading: 'What Happens Next', text: 'The DOJ reviews your complaint and may investigate, mediate, or refer it to the appropriate federal agency.', color: '#2563EB', bg: '#EFF6FF' },
-  { icon: '⚖️', heading: 'Your Rights', text: <>You can also file a <strong>private lawsuit</strong> under Title II. An attorney can advise whether this makes sense for your situation.</>, color: '#2563EB', bg: '#EFF6FF' }
+  { icon: '📋', heading: 'Where to File', text: <>The <strong>U.S. Department of Justice, Civil Rights Division</strong> handles Title II complaints. You can file online, by mail, or by phone.</>, color: '#1E3A8A', bg: '#EFF6FF' },
+  { icon: '💰', heading: 'Cost to You', text: <><strong>Free.</strong> Filing a complaint with the DOJ costs nothing. No attorney is required, though you may consult one.</>, color: '#1E3A8A', bg: '#EFF6FF' },
+  { icon: '🔍', heading: 'What Happens Next', text: 'The DOJ reviews your complaint and may investigate, mediate, or refer it to the appropriate federal agency.', color: '#1E3A8A', bg: '#EFF6FF' },
+  { icon: '⚖️', heading: 'Your Rights', text: <>You can also file a <strong>private lawsuit</strong> under Title II. An attorney can advise whether this makes sense for your situation.</>, color: '#1E3A8A', bg: '#EFF6FF' }
 ];
 
 const STEPS = [
@@ -40,7 +40,7 @@ export default function TitleIIPathway() {
           <span style={{
             display: 'inline-block', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
             fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em',
-            background: '#EFF6FF', color: '#1D4ED8', border: '1px solid #DBEAFE',
+            background: '#EFF6FF', color: '#1E3A8A', border: '1px solid #DBEAFE',
             padding: '4px 12px', borderRadius: '100px', marginBottom: '16px'
           }}>
             ADA Title II — Government Services
@@ -96,7 +96,7 @@ export default function TitleIIPathway() {
             <span aria-hidden="true">⏰</span>
           </div>
           <div>
-            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '0.95rem', fontWeight: 700, color: '#1D4ED8', margin: '0 0 8px' }}>
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '0.95rem', fontWeight: 700, color: '#1E3A8A', margin: '0 0 8px' }}>
               Filing deadline: 180 days from the violation
             </h2>
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: '#1E40AF', lineHeight: 1.6, margin: 0 }}>

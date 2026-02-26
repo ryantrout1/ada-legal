@@ -25,12 +25,12 @@ const ACTIVE_COLORS = {
 
 /* Resolved-stage colors (muted regardless of count) */
 const RESOLVED_COLORS = {
-  closed:   { bg: '#F1F5F9', numColor: '#5E6B7C', labelColor: '#586577' },
+  closed:   { bg: '#F1F5F9', numColor: '#434E5E', labelColor: '#3D4A5C' },
   rejected: { bg: '#F1F5F9', numColor: '#DC2626', labelColor: '#DC2626' },
 };
 
 /* Zero-case styling — nearly invisible */
-const ZERO_STYLE = { bg: '#FAFAF9', numColor: '#CBD5E1', labelColor: '#5E6B7C', border: 'none' };
+const ZERO_STYLE = { bg: '#FAFAF9', numColor: '#CBD5E1', labelColor: '#434E5E', border: 'none' };
 
 function getCardStyle(key, count) {
   if (count === 0) return ZERO_STYLE;

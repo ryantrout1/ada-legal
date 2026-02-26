@@ -78,7 +78,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
     ? { dot: '#15803D', label: 'Ready',      color: '#15803D' }
     : score >= 50
       ? { dot: '#D97706', label: 'Partial',    color: '#B45309' }
-      : { dot: '#DC2626', label: 'Incomplete', color: '#B91C1C' };
+      : { dot: '#DC2626', label: 'Incomplete', color: '#991B1B' };
 
   return (
     <div style={{
@@ -136,7 +136,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
               <span style={{
                 display: 'inline-flex', alignItems: 'center', padding: '1px 7px', borderRadius: '100px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-                color: '#1D4ED8', backgroundColor: 'var(--info-100)', whiteSpace: 'nowrap', flexShrink: 0,
+                color: '#1E3A8A', backgroundColor: 'var(--info-100)', whiteSpace: 'nowrap', flexShrink: 0,
               }}>
                 {c.ai_duplicate_cluster_size} reports
               </span>

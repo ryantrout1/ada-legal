@@ -170,8 +170,8 @@ export default function RampDiagram() {
           <line x1="720" y1="150" x2="750" y2="150" stroke="#D97706" strokeWidth="2.5" strokeDasharray="4 3" />
 
           {/* Handrail extension labels */}
-          <text x="225" y="292" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#D97706">{imp('12', '305')}</text>
-          <text x="735" y="142" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#D97706">{imp('12', '305')}</text>
+          <text x="225" y="292" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#78350F">{imp('12', '305')}</text>
+          <text x="735" y="142" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#78350F">{imp('12', '305')}</text>
 
           {/* Wheelchair silhouette on ramp */}
           <g transform="translate(420, 240) scale(0.35)" opacity="0.25">

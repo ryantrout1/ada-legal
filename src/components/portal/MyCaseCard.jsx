@@ -21,8 +21,8 @@ const ACCENT_COLORS = {
 };
 
 const BADGE_CONFIG = {
-  submitted: { label: 'Under Review', bg: '#DBEAFE', color: '#1D4ED8' },
-  under_review: { label: 'Under Review', bg: '#DBEAFE', color: '#1D4ED8' },
+  submitted: { label: 'Under Review', bg: '#DBEAFE', color: '#1E3A8A' },
+  under_review: { label: 'Under Review', bg: '#DBEAFE', color: '#1E3A8A' },
   approved: { label: 'Awaiting Attorney', bg: '#DCFCE7', color: '#15803D' },
   available: { label: 'Awaiting Attorney', bg: '#DCFCE7', color: '#15803D' },
   assigned: { label: 'Attorney Assigned', bg: '#FEF1EC', color: '#C2410C' },
@@ -33,8 +33,8 @@ const BADGE_CONFIG = {
 };
 
 const CONTEXT_LINES = {
-  submitted: { text: 'Our team is reviewing your report — usually within 24 hours.', color: '#1D4ED8' },
-  under_review: { text: 'Our team is reviewing your report — usually within 24 hours.', color: '#1D4ED8' },
+  submitted: { text: 'Our team is reviewing your report — usually within 24 hours.', color: '#1E3A8A' },
+  under_review: { text: 'Our team is reviewing your report — usually within 24 hours.', color: '#1E3A8A' },
   approved: { text: 'Approved and visible to attorneys in your area.', color: '#15803D' },
   available: { text: 'Approved and visible to attorneys in your area.', color: '#15803D' },
   assigned: { text: 'An attorney has your case and should contact you soon.', color: '#C2410C' },
@@ -94,7 +94,7 @@ export default function MyCaseCard({ caseData }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
             {isPhysical
               ? <Building2 size={18} aria-hidden="true" style={{ color: '#C2410C', flexShrink: 0 }} />
-              : <Globe size={18} aria-hidden="true" style={{ color: '#1D4ED8', flexShrink: 0 }} />
+              : <Globe size={18} aria-hidden="true" style={{ color: '#1E3A8A', flexShrink: 0 }} />
             }
             <p style={{
               fontFamily: 'Fraunces, serif', fontSize: '1.05rem', fontWeight: 600,

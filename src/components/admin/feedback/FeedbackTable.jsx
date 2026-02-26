@@ -3,8 +3,8 @@ import { format } from 'date-fns';
 import { ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
 
 const TYPE_LABELS = {
-  suggestion: { label: 'Suggestion', color: '#2563EB', bg: '#EFF6FF' },
-  bug_report: { label: 'Bug Report', color: '#DC2626', bg: '#FEF2F2' },
+  suggestion: { label: 'Suggestion', color: '#1E3A8A', bg: '#EFF6FF' },
+  bug_report: { label: 'Bug Report', color: '#991B1B', bg: '#FEF2F2' },
   question: { label: 'Question', color: '#D97706', bg: '#FFFBEB' },
   general_feedback: { label: 'General', color: '#475569', bg: '#F1F5F9' },
 };
@@ -83,7 +83,7 @@ export default function FeedbackTable({ feedback, expandedId, onToggle, onStatus
               onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.background = '#FAFAF9'; }}
               onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.background = 'transparent'; }}
             >
-              <span style={{ color: '#94A3B8' }}>
+              <span style={{ color: '#4B5563' }}>
                 {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
               </span>
               <span style={{ fontSize: '0.75rem', color: '#64748B' }}>{dateStr}</span>

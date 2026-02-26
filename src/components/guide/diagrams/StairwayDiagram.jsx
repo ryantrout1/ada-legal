@@ -2,37 +2,37 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STAIR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#504-stairways';
 const CALLOUTS = [
-  { id: 1, label: 'Treads', section: '§504.2', color: '#C2410C', x: 80, y: 42,
+  { id: 1, label: 'Treads', section: '§504.2', color: '#C2410C', textColor: '#8B2E08', x: 80, y: 42,
     plain: 'All treads within a single flight of stairs must be uniform depth — no variation is permitted. The standard minimum tread depth is 11 inches, measured from the leading edge of the nosing to the riser behind. Uniform tread depth is critical because people develop a rhythm when ascending or descending stairs; a sudden change in depth causes trips and falls.',
     legal: '"All steps on a flight of stairs shall have uniform riser heights and uniform tread depths." Treads: "11 inches deep minimum."',
     citation: '§504.2' },
-  { id: 2, label: 'Risers', section: '§504.3', color: '#16A34A', x: 280, y: 42,
+  { id: 2, label: 'Risers', section: '§504.3', color: '#16A34A', textColor: '#14532D', x: 280, y: 42,
     plain: 'All risers in a flight must be uniform in height, between 4 and 7 inches. Open risers (where you can see through the stair) are NOT permitted on accessible routes. Open risers catch cane tips and allow feet to slip through, creating fall hazards for people with mobility or vision impairments.',
     legal: '"Risers shall be 4 inches high minimum and 7 inches high maximum." §504.4 "Open risers are not permitted."',
     citation: '§504.3' },
-  { id: 3, label: 'Nosings', section: '§504.5', color: '#2563EB', x: 480, y: 42,
+  { id: 3, label: 'Nosings', section: '§504.5', color: '#2563EB', textColor: '#1E3A8A', x: 480, y: 42,
     plain: 'The leading edge of each tread (the nosing) must be curved or beveled — never square or abruptly projecting. The nosing can project a maximum of 1.5 inches beyond the riser face below. The underside of the nosing must form an angle of at least 60 degrees from horizontal. The radius of curvature at the leading edge must be ½ inch maximum. These profiles prevent tripping and snagging.',
     legal: '"The radius of curvature at the leading edge of the tread shall be 1/2 inch maximum." Nosing projection: "1 1/2 inches maximum." Underside angle: "60 degrees minimum from horizontal."',
     citation: '§504.5' },
-  { id: 4, label: 'Handrails', section: '§504.6', color: '#7C3AED', x: 680, y: 42,
+  { id: 4, label: 'Handrails', section: '§504.6', color: '#7C3AED', textColor: '#5B21B6', x: 680, y: 42,
     plain: 'Handrails complying with §505 are required on both sides of all stairs. The top of the gripping surface must be 34 to 38 inches above stair nosings, measured vertically from the line connecting the nosing edges. Handrails must be continuous for the full length of each stair flight. Breaks are only permitted at landing turns.',
     legal: '"Stairs shall have handrails complying with §505." Height: "34 inches minimum and 38 inches maximum above stair nosings."',
     citation: '§504.6, §505' },
-  { id: 5, label: 'Top Extension', section: '§505.10.2', color: '#D97706', x: 280, y: 280,
+  { id: 5, label: 'Top Extension', section: '§505.10.2', color: '#D97706', textColor: '#78350F', x: 280, y: 280,
     plain: 'At the top of the stairs, the handrail must extend horizontally at least 12 inches beyond the top riser nosing. This extension provides a stable grip point as a person transitions from the level landing onto the descending stairs. The extension must return to the wall, guard, or post — it cannot simply end in open space where someone could catch clothing on it.',
     legal: '"At the top of a stair flight, handrails shall extend horizontally above the landing for 12 inches minimum beginning directly above the first riser nosing."',
     citation: '§505.10.2' },
-  { id: 6, label: 'Bottom Extension', section: '§505.10.3', color: '#DB2777', x: 480, y: 280,
+  { id: 6, label: 'Bottom Extension', section: '§505.10.3', color: '#DB2777', textColor: '#9D174D', x: 480, y: 280,
     plain: 'At the bottom, the handrail extends at the slope of the stair flight for a horizontal distance equal to one tread depth beyond the last riser nosing, then continues horizontally for 12 inches. This provides support as the person completes the last step and transitions to level ground. The total extension ensures a smooth grip from stair to landing.',
     legal: '"At the bottom of a stair flight, handrails shall extend at the slope of the stair flight for a horizontal distance at least equal to one tread depth beyond the last riser nosing."',
     citation: '§505.10.3' },
-  { id: 7, label: 'Wet Conditions', section: '§504.7', color: '#0EA5E9', x: 680, y: 280,
+  { id: 7, label: 'Wet Conditions', section: '§504.7', color: '#0EA5E9', textColor: '#0C4A6E', x: 680, y: 280,
     plain: 'Outdoor stairs and any stairs that may be subject to wet conditions (near pools, in parking garages, at building entries) must have a visual contrast strip at the leading edge of each tread. The strip must extend the full width of the tread. It provides a visual warning of each step edge for people with low vision, especially when water makes surfaces reflective.',
     legal: '"Stairways that are not in an enclosed stairwell shall have visual contrast on tread nosings." §504.7 Contrast "shall be a stripe 1 inch wide minimum and 2 inches wide maximum, placed on the nosing tread at the leading edge."',
     citation: '§504.7' }
 ];
 
-function makeLink(t) { return (<a href={STAIR_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STAIR_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function StairwayDiagram() {
@@ -126,21 +126,21 @@ export default function StairwayDiagram() {
           <text x="760" y="50" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#4B5563">NOSING PROFILES</text>
           {/* (A) Angled */}
           <rect x="700" y="60" width="120" height="70" rx="4" fill="white" stroke="#2563EB" strokeWidth="1" />
-          <text x="760" y="76" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#2563EB" fontWeight="600">(A) Angled</text>
+          <text x="760" y="76" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600">(A) Angled</text>
           <line x1="720" y1="90" x2="800" y2="90" stroke="#94A3B8" strokeWidth="2" />
           <line x1="720" y1="90" x2="720" y2="120" stroke="#94A3B8" strokeWidth="2" />
           <line x1="720" y1="90" x2="710" y2="118" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="3 2" />
-          <text x="760" y="118" fontFamily="Manrope, sans-serif" fontSize="6" fill="#2563EB">60° min</text>
+          <text x="760" y="118" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A">60° min</text>
 
           {/* (B) Curved */}
           <rect x="700" y="140" width="120" height="60" rx="4" fill="white" stroke="#2563EB" strokeWidth="1" />
-          <text x="760" y="156" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#2563EB" fontWeight="600">(B) Rounded</text>
+          <text x="760" y="156" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600">(B) Rounded</text>
           <path d="M 720 170 Q 720 185 735 185 L 800 185" fill="none" stroke="#94A3B8" strokeWidth="2" />
-          <text x="760" y="196" fontFamily="Manrope, sans-serif" fontSize="6" fill="#2563EB">½" max radius</text>
+          <text x="760" y="196" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A">½" max radius</text>
 
           {/* (C) Flush */}
           <rect x="700" y="210" width="120" height="50" rx="4" fill="white" stroke="#2563EB" strokeWidth="1" />
-          <text x="760" y="226" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#2563EB" fontWeight="600">(C) Flush / No Nosing</text>
+          <text x="760" y="226" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600">(C) Flush / No Nosing</text>
           <line x1="720" y1="240" x2="800" y2="240" stroke="#94A3B8" strokeWidth="2" />
           <line x1="720" y1="240" x2="720" y2="255" stroke="#94A3B8" strokeWidth="2" />
 
@@ -153,7 +153,7 @@ export default function StairwayDiagram() {
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
           <text x="30" y="470" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
@@ -179,7 +179,10 @@ export default function StairwayDiagram() {
           </div>
         </div>
       )}
-      <style>{`@keyframes stairFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}`}</style>
+      <style>{`@keyframes stairFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}        @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

@@ -5,7 +5,7 @@ const CELLS = [
   { key: 'ready',    label: 'READY',           bgActive: 'rgba(220,252,231,0.5)', color: '#15803D' },
   { key: 'needs',    label: 'NEEDS INFO',      bgActive: 'rgba(254,243,199,0.5)', color: '#B45309' },
   { key: 'high',     label: 'HIGH SEV',        bgActive: 'rgba(254,226,226,0.5)', color: '#B91C1C' },
-  { key: 'clusters', label: 'CLUSTERS',        bgActive: 'rgba(219,234,254,0.5)', color: '#1D4ED8' },
+  { key: 'clusters', label: 'CLUSTERS',        bgActive: 'rgba(219,234,254,0.5)', color: '#1E3A8A' },
 ];
 
 export default function CompactQCStatsBar({ cases, activeFilter, onFilterChange }) {

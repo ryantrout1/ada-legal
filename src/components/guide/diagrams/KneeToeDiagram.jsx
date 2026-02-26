@@ -4,49 +4,49 @@ const KNEE_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#3
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Maximum Depth', section: '§306.2', color: '#C2410C',
+    id: 1, label: 'Maximum Depth', section: '§306.2', color: '#C2410C', textColor: '#8B2E08',
     x: 80, y: 42,
     plain: 'Both toe clearance and knee clearance share the same horizontal space under an element. The maximum depth for both is 25 inches from the front edge. Toe clearance extends from the floor up to 9 inches; knee clearance occupies the zone from 9 inches up to 27 inches. The entire clearance envelope is 25 inches deep maximum, measured horizontally from the leading edge of the element toward the wall.',
     legal: '"Toe clearance shall be permitted to extend 25 inches maximum under an element." §306.3.3 Knee clearance "25 inches deep maximum at 9 inches above the finish floor." Both zones share the same 25-inch horizontal envelope.',
     citation: '§306.2'
   },
   {
-    id: 2, label: 'Toe Space Height', section: '§306.2.1', color: '#16A34A',
+    id: 2, label: 'Toe Space Height', section: '§306.2.1', color: '#16A34A', textColor: '#14532D',
     x: 280, y: 42,
     plain: 'The toe clearance zone is defined as the space from the finish floor up to 9 inches above the floor. This is the area where a wheelchair\'s footrests and the user\'s feet extend under an element. Anything in this zone — pipes, structural supports, trash cans — reduces toe clearance and can block wheelchair access. The full 9-inch height must be maintained across the minimum required depth.',
     legal: '"Space under an element between the finish floor or ground and 9 inches (230 mm) above the finish floor or ground shall be considered toe clearance."',
     citation: '§306.2.1'
   },
   {
-    id: 3, label: 'Toe Space Depth', section: '§306.2.2', color: '#2563EB',
+    id: 3, label: 'Toe Space Depth', section: '§306.2.2', color: '#2563EB', textColor: '#1E3A8A',
     x: 480, y: 42,
     plain: 'Toe clearance must extend at least 17 inches under the element (measured from the front edge toward the back) and may extend up to 25 inches maximum. The 17-inch minimum ensures footrests can fit underneath. Toe clearance is required to be 30 inches wide minimum. The toe space may extend the full depth of the knee clearance — they are not separate zones but stacked vertically.',
     legal: '"Toe clearance shall extend 17 inches (430 mm) minimum under an element." Maximum: 25 inches. Width: 30 inches minimum per §306.2.3.',
     citation: '§306.2.2'
   },
   {
-    id: 4, label: 'Knee Height', section: '§306.3.1', color: '#7C3AED',
+    id: 4, label: 'Knee Height', section: '§306.3.1', color: '#7C3AED', textColor: '#5B21B6',
     x: 80, y: 250,
     plain: 'At the front edge of the element (the leading edge where the wheelchair approaches), knee clearance must be at least 27 inches above the finish floor. This is the point where the wheelchair user\'s thighs pass under the counter or desk surface. The 27-inch height is measured at a point 8 inches back from the front edge. This height allows standard wheelchair armrests (typically 25–27 inches) to slide under.',
     legal: '"Knee clearance shall be 27 inches (685 mm) high minimum, 30 inches (760 mm) wide minimum, and 8 inches (205 mm) deep minimum."',
     citation: '§306.3.1'
   },
   {
-    id: 5, label: 'Knee Depth', section: '§306.3.3', color: '#D97706',
+    id: 5, label: 'Knee Depth', section: '§306.3.3', color: '#D97706', textColor: '#78350F',
     x: 280, y: 250,
     plain: 'The knee clearance envelope tapers from front to back. At 27 inches above the floor, the clearance must be at least 8 inches deep (from the front edge back). At 9 inches above the floor (where it transitions to toe clearance), the depth must be at least 11 inches. Between these two heights, the clearance tapers linearly — creating a sloped profile that follows the natural shape of seated legs.',
     legal: '"At 27 inches above the finish floor: 8 inches deep minimum." "At 9 inches above the finish floor: 11 inches deep minimum, 25 inches deep maximum." The space between tapers linearly.',
     citation: '§306.3.3'
   },
   {
-    id: 6, label: 'Width', section: '§306.3.2', color: '#DB2777',
+    id: 6, label: 'Width', section: '§306.3.2', color: '#DB2777', textColor: '#9D174D',
     x: 480, y: 250,
     plain: 'Both knee clearance and toe clearance must be at least 30 inches wide. This width accommodates a standard wheelchair (typically 25–27 inches wide including wheels). The 30-inch measurement is taken perpendicular to the approach direction, between any vertical obstructions on either side. Pipe covers, structural elements, or equipment must not encroach into this 30-inch width.',
     legal: '"Knee clearance shall be 30 inches (760 mm) wide minimum." Toe clearance: "30 inches wide minimum." Both measured clear of any obstructions.',
     citation: '§306.3.2'
   },
   {
-    id: 7, label: 'Common Applications', section: 'Advisory §306', color: '#0EA5E9',
+    id: 7, label: 'Common Applications', section: 'Advisory §306', color: '#0EA5E9', textColor: '#0C4A6E',
     x: 650, y: 140,
     plain: 'Knee and toe clearance is required under lavatories (§606), dining and work surfaces (§902), sales and service counters (§904), and check-writing surfaces. Elements like pipes, valves, and enclosures underneath must not reduce the required clearance. When insulation or protection covers are added to pipes (as required at lavatories), they must fit within the clearance envelope without reducing it.',
     legal: 'Advisory §306: "Clearances are required under lavatories (§606), dining surfaces, work surfaces (§902), and sales and service counters (§904)." Elements cannot reduce required knee/toe clearance.',
@@ -55,7 +55,7 @@ const CALLOUTS = [
 ];
 
 function makeLink(text) {
-  return (<a href={KNEE_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
+  return (<a href={KNEE_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
 }
 function parseCitations(text) {
   return text.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p);
@@ -111,19 +111,19 @@ export default function KneeToeDiagram() {
 
           {/* Toe clearance zone (full rectangle) */}
           <rect x="152" y="347" width="240" height="93" rx="0" fill="#16A34A" opacity="0.06" stroke="#16A34A" strokeWidth="1.5" strokeDasharray="6 3" />
-          <text x="272" y="400" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#16A34A" fontWeight="600">TOE CLEARANCE</text>
-          <text x="272" y="415" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#16A34A">below {d('9', '230')}</text>
+          <text x="272" y="400" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" fontWeight="600">TOE CLEARANCE</text>
+          <text x="272" y="415" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D">below {d('9', '230')}</text>
 
           {/* Knee clearance zone (tapered trapezoid) */}
           {/* At 27" (y=160): 8" deep = ~77px from front edge(392) → x=315 */}
           {/* At 9" (y=347): 11" deep min = ~106px → x=286, but can go to 25" = x=152 */}
           <path d="M 392 160 L 315 160 L 286 347 L 392 347 Z" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="1.5" strokeDasharray="6 3" />
-          <text x="360" y="260" fontFamily="Manrope, sans-serif" fontSize="9" fill="#7C3AED" fontWeight="600">KNEE</text>
-          <text x="360" y="275" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C3AED">{d('9', '230')}–{d('27', '685')}</text>
+          <text x="360" y="260" fontFamily="Manrope, sans-serif" fontSize="9" fill="#5B21B6" fontWeight="600">KNEE</text>
+          <text x="360" y="275" fontFamily="Manrope, sans-serif" fontSize="8" fill="#5B21B6">{d('9', '230')}–{d('27', '685')}</text>
 
           {/* Taper line (sloped back edge of knee zone) */}
           <line x1="315" y1="160" x2="286" y2="347" stroke="#D97706" strokeWidth="2" strokeDasharray="4 3" />
-          <text x="280" y="256" fontFamily="Manrope, sans-serif" fontSize="7" fill="#D97706" fontWeight="600" transform="rotate(-76 280 256)">TAPER</text>
+          <text x="280" y="256" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600" transform="rotate(-76 280 256)">TAPER</text>
 
           {/* ===== DIMENSION LINES ===== */}
 
@@ -206,13 +206,13 @@ export default function KneeToeDiagram() {
 
           {/* Width note (30") */}
           <rect x="620" y="152" width="150" height="30" rx="6" fill="#DB2777" opacity="0.06" stroke="#DB2777" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="695" y="170" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#DB2777" fontWeight="600">Width: {d('30', '760')} min (into screen)</text>
+          <text x="695" y="170" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#9D174D" fontWeight="600">Width: {d('30', '760')} min (into screen)</text>
 
           {/* Applications note */}
           <rect x="560" y="200" width="260" height="60" rx="8" fill="#0EA5E9" opacity="0.04" stroke="#0EA5E9" strokeWidth="1" />
-          <text x="690" y="222" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#0EA5E9" fontWeight="600">Common Applications:</text>
-          <text x="690" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#0EA5E9">Lavatories · Desks · Counters</text>
-          <text x="690" y="250" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#0EA5E9">Dining surfaces · Check-writing areas</text>
+          <text x="690" y="222" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#0C4A6E" fontWeight="600">Common Applications:</text>
+          <text x="690" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#0C4A6E">Lavatories · Desks · Counters</text>
+          <text x="690" y="250" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#0C4A6E">Dining surfaces · Check-writing areas</text>
 
 
           {/* CALLOUT DOTS */}
@@ -220,7 +220,7 @@ export default function KneeToeDiagram() {
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label} — ${c.section}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
           <text x="30" y="475" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
@@ -247,7 +247,10 @@ export default function KneeToeDiagram() {
           </div>
         </div>
       )}
-      <style>{`@keyframes kneeFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }`}</style>
+      <style>{`@keyframes kneeFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }        @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

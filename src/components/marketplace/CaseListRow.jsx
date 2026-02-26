@@ -37,7 +37,7 @@ export default function CaseListRow({ caseData, onViewDetails, isEven }) {
         }}>
           {isPhysical
             ? <Building2 size={12} style={{ color: 'var(--terra-600, #C2410C)' }} />
-            : <Globe size={12} style={{ color: '#1D4ED8' }} />
+            : <Globe size={12} style={{ color: '#1E3A8A' }} />
           }
         </span>
       </td>
@@ -79,7 +79,7 @@ export default function CaseListRow({ caseData, onViewDetails, isEven }) {
       </td>
       <td style={td}>
         {c.ai_duplicate_cluster_size >= 2 && (
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600, color: '#1D4ED8' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600, color: '#1E3A8A' }}>
             <BarChart3 size={12} aria-hidden="true" />
             {c.ai_duplicate_cluster_size}
           </span>

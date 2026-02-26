@@ -42,11 +42,11 @@ export default function WhatYouReported({ caseData }) {
         }}>
           {isPhysical
             ? <Building2 size={16} style={{ color: 'var(--terra-600, #C2410C)' }} />
-            : <Globe size={16} style={{ color: '#1D4ED8' }} />
+            : <Globe size={16} style={{ color: '#1E3A8A' }} />
           }
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-            color: isPhysical ? 'var(--terra-600, #C2410C)' : '#1D4ED8'
+            color: isPhysical ? 'var(--terra-600, #C2410C)' : '#1E3A8A'
           }}>
             {isPhysical ? 'Physical Space Violation' : 'Digital / Website Violation'}
           </span>
@@ -85,7 +85,7 @@ export default function WhatYouReported({ caseData }) {
                 <span key={i} style={{
                   display: 'inline-block', padding: '2px 10px', borderRadius: '6px',
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
-                  color: '#1D4ED8', backgroundColor: '#DBEAFE'
+                  color: '#1E3A8A', backgroundColor: '#DBEAFE'
                 }}>{t}</span>
               ))}
             </div>

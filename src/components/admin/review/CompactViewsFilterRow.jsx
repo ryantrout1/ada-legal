@@ -57,7 +57,7 @@ export default function CompactViewsFilterRow({
                 aria-label={`Remove view: ${v.name}`}
                 style={{
                   background: 'none', border: 'none', cursor: 'pointer',
-                  color: activeViewId === v.id ? 'rgba(255,255,255,0.7)' : '#94A3B8',
+                  color: activeViewId === v.id ? 'rgba(255,255,255,0.7)' : '#4B5563',
                   display: 'flex', alignItems: 'center', padding: '2px',
                 }}
               >

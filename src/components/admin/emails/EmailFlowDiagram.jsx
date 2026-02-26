@@ -1,7 +1,7 @@
 import React from 'react';
 
 const RECIPIENT_STYLES = {
-  Reporter: { bg: '#DBEAFE', color: '#1D4ED8', border: '#93C5FD' },
+  Reporter: { bg: '#DBEAFE', color: '#1E3A8A', border: '#93C5FD' },
   Attorney: { bg: '#F3E8FF', color: '#7C3AED', border: '#C4B5FD' },
   Attorneys: { bg: '#F3E8FF', color: '#7C3AED', border: '#C4B5FD' },
 };
@@ -14,7 +14,7 @@ const STAGES = [
   },
   {
     label: 'Admin Review',
-    color: '#1D4ED8', bg: '#DBEAFE',
+    color: '#1E3A8A', bg: '#DBEAFE',
     emails: [
       { key: 'case_approved', recipient: 'Reporter' },
       { key: 'case_rejected', recipient: 'Reporter' },
@@ -48,7 +48,7 @@ const STAGES = [
 const BRANCH = {
   label: 'Case Reclaimed',
   fromStage: 'Attorney Accepts Case',
-  color: '#DC2626', bg: '#FEE2E2',
+  color: '#991B1B', bg: '#FEE2E2',
   emails: [{ key: 'case_reclaimed', recipient: 'Attorney' }],
 };
 
@@ -129,7 +129,7 @@ function StageRow({ stage, isLast, onSelectTemplate }) {
                 {email.note && (
                   <span style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem',
-                    color: '#94A3B8', fontStyle: 'italic',
+                    color: '#4B5563', fontStyle: 'italic',
                   }}>
                     {email.note}
                   </span>
@@ -187,7 +187,7 @@ export default function EmailFlowDiagram({ onSelectTemplate }) {
             }} />
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-              color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em',
+              color: '#4B5563', textTransform: 'uppercase', letterSpacing: '0.04em',
             }}>
               Branch from "Attorney Accepts Case"
             </span>
@@ -217,7 +217,7 @@ export default function EmailFlowDiagram({ onSelectTemplate }) {
             }} />
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-              color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em',
+              color: '#4B5563', textTransform: 'uppercase', letterSpacing: '0.04em',
             }}>
               Separate Flow
             </span>

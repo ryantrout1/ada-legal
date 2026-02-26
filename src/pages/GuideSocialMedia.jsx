@@ -227,7 +227,7 @@ export default function GuideSocialMedia() {
                   <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '0 0 4px' }}>
                     <span style={{
                       fontSize: '0.75rem', padding: '2px 8px', borderRadius: '6px',
-                      background: '#FEE2E2', color: '#DC2626', fontWeight: 600
+                      background: '#FEE2E2', color: '#991B1B', fontWeight: 600
                     }}>Avoid</span>
                     <code style={{
                       fontSize: '0.8rem', background: '#FEF2F2', padding: '2px 6px',

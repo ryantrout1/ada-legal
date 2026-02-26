@@ -36,7 +36,7 @@ export default function SearchBar({ value, onChange }) {
       <label htmlFor="qc-search" className="sr-only">Search cases</label>
       <Search size={18} style={{
         position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
-        color: '#94A3B8', pointerEvents: 'none',
+        color: '#4B5563', pointerEvents: 'none',
       }} aria-hidden="true" />
       <input
         ref={inputRef}
@@ -61,7 +61,7 @@ export default function SearchBar({ value, onChange }) {
           style={{
             position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
             background: 'none', border: 'none', cursor: 'pointer', padding: '6px',
-            color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#4B5563', display: 'flex', alignItems: 'center', justifyContent: 'center',
             minWidth: '32px', minHeight: '32px', borderRadius: '6px',
           }}
         >

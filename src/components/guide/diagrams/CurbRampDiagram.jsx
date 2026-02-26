@@ -4,49 +4,49 @@ const CURB_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Running Slope', section: '§406.1', color: '#C2410C',
+    id: 1, label: 'Running Slope', section: '§406.1', color: '#C2410C', textColor: '#8B2E08',
     x: 220, y: 42,
     plain: 'The running slope of a curb ramp (measured in the direction of travel) must not be steeper than 1:12. This means for every 1 inch of height change, the ramp must extend at least 12 inches horizontally. A typical 6-inch curb requires a minimum 72-inch (6-foot) ramp. Steeper slopes make wheelchair descent dangerous and ascent exhausting. Cross slope must not exceed 1:48 (2%).',
     legal: '"Curb ramp runs shall have a running slope not steeper than 1:12." Per §405.2 as referenced. Cross slope per §405.3: "not steeper than 1:48."',
     citation: '§406.1'
   },
   {
-    id: 2, label: 'Width', section: '§406.1', color: '#16A34A',
+    id: 2, label: 'Width', section: '§406.1', color: '#16A34A', textColor: '#14532D',
     x: 420, y: 42,
     plain: 'The clear width of a curb ramp must be at least 36 inches, measured between the flared sides (not including them). This provides enough room for a standard wheelchair to travel up or down without the wheels catching on the ramp edges. The width is measured perpendicular to the direction of travel at the narrowest point of the ramp run.',
     legal: '"Curb ramps shall be 36 inches wide minimum, exclusive of flared sides." Clear width per §405.5.',
     citation: '§406.1, §405.5'
   },
   {
-    id: 3, label: 'Flared Sides', section: '§406.3', color: '#2563EB',
+    id: 3, label: 'Flared Sides', section: '§406.3', color: '#2563EB', textColor: '#1E3A8A',
     x: 120, y: 175,
     plain: 'When a curb ramp is located where pedestrians walk across the ramp (perpendicular to the ramp direction), the sides must be flared at a maximum slope of 1:10. Flared sides create a gradual transition rather than an abrupt edge that could trip pedestrians. If the ramp is located where no one would walk across it (such as in a planter or against a building), flared sides are not required — vertical returns are acceptable.',
     legal: '"Where a pedestrian circulation path crosses the curb ramp, flared sides shall have a slope of 1:10 maximum, measured parallel to the curb."',
     citation: '§406.3'
   },
   {
-    id: 4, label: 'Detectable Warnings', section: '§406.8', color: '#7C3AED',
+    id: 4, label: 'Detectable Warnings', section: '§406.8', color: '#7C3AED', textColor: '#5B21B6',
     x: 420, y: 260,
     plain: 'At the bottom of the curb ramp where it meets the street, a detectable warning surface of truncated domes must be installed. These raised bumps alert blind or visually impaired pedestrians that they are transitioning from sidewalk to roadway. The warning surface must be 36 inches deep (in the direction of travel), extend the full width of the curb ramp, and contrast visually with the surrounding surface (typically bright yellow or red on gray concrete).',
     legal: '"A curb ramp shall have a detectable warning complying with §705." §705.1: "Truncated domes 36 inches minimum in the direction of travel, extending the full width of the curb ramp." Visual contrast with adjacent surfaces required.',
     citation: '§406.8'
   },
   {
-    id: 5, label: 'Top Landing', section: '§406.4', color: '#D97706',
+    id: 5, label: 'Top Landing', section: '§406.4', color: '#D97706', textColor: '#78350F',
     x: 620, y: 90,
     plain: 'At the top of the curb ramp where it meets the sidewalk, a landing at least 36 inches long (in the direction of travel) and at least as wide as the ramp must be provided. The landing provides a level area for a wheelchair user to stop, change direction, or transition onto the sidewalk. Maximum slope of the landing is 1:48 (about 2%) for drainage. The landing must connect directly to an accessible route.',
     legal: '"A landing 36 inches minimum by 48 inches minimum shall be provided at the top of curb ramps." Per §406.4. Slope: 1:48 maximum in any direction. Must adjoin accessible route.',
     citation: '§406.4'
   },
   {
-    id: 6, label: 'Counter Slope', section: '§406.2', color: '#DB2777',
+    id: 6, label: 'Counter Slope', section: '§406.2', color: '#DB2777', textColor: '#9D174D',
     x: 220, y: 260,
     plain: 'Where the gutter or road surface meets the bottom of the curb ramp, the counter slope (the slope of the gutter pan or street going away from the ramp) must not exceed 1:20 (5%). If the counter slope is too steep, a wheelchair user descending the ramp could tip forward when the front casters hit the abrupt change in slope. The transition between ramp and street must be flush (no lip or gap).',
     legal: '"The counter slope of the gutter or street at the foot of a curb ramp shall not be steeper than 1:20."',
     citation: '§406.2'
   },
   {
-    id: 7, label: 'Parallel Curb Ramps', section: '§406.5', color: '#0EA5E9',
+    id: 7, label: 'Parallel Curb Ramps', section: '§406.5', color: '#0EA5E9', textColor: '#0C4A6E',
     x: 700, y: 220,
     plain: 'When the sidewalk is too narrow for a standard perpendicular curb ramp, a parallel curb ramp runs parallel to the curb with the ramp descending in the sidewalk direction. At the bottom of the parallel ramp, a 48-inch minimum turning space must be provided so the wheelchair user can turn 90 degrees to face the street before crossing. The ramp must still meet the 1:12 slope and 36-inch width requirements.',
     legal: '"Where a parallel curb ramp is provided, a turning space 48 inches minimum shall be provided at the bottom of the curb ramp." Running slope: 1:12 max. Width: 36 inches minimum.',
@@ -55,7 +55,7 @@ const CALLOUTS = [
 ];
 
 function makeLink(text) {
-  return (<a href={CURB_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
+  return (<a href={CURB_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
 }
 function parseCitations(text) {
   return text.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p);
@@ -107,7 +107,7 @@ export default function CurbRampDiagram() {
 
           {/* Slope arrows on ramp */}
           <line x1="450" y1="110" x2="450" y2="220" stroke="#C2410C" strokeWidth="1.5" markerEnd="url(#curbSlope)" />
-          <text x="460" y="170" fontFamily="Manrope, sans-serif" fontSize="8" fill="#C2410C" fontWeight="700">1:12 max</text>
+          <text x="460" y="170" fontFamily="Manrope, sans-serif" fontSize="8" fill="#8B2E08" fontWeight="700">1:12 max</text>
 
           <defs>
             <marker id="curbSlope" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
@@ -117,11 +117,11 @@ export default function CurbRampDiagram() {
 
           {/* Flared side — left */}
           <polygon points="280,100 350,100 320,230 250,230" fill="#2563EB" opacity="0.06" stroke="#2563EB" strokeWidth="1.2" />
-          <text x="290" y="175" fontFamily="Manrope, sans-serif" fontSize="7" fill="#2563EB" fontWeight="600" transform="rotate(-60 290 175)">FLARE 1:10</text>
+          <text x="290" y="175" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600" transform="rotate(-60 290 175)">FLARE 1:10</text>
 
           {/* Flared side — right */}
           <polygon points="550,100 620,100 650,230 580,230" fill="#2563EB" opacity="0.06" stroke="#2563EB" strokeWidth="1.2" />
-          <text x="610" y="175" fontFamily="Manrope, sans-serif" fontSize="7" fill="#2563EB" fontWeight="600" transform="rotate(60 610 175)">FLARE 1:10</text>
+          <text x="610" y="175" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600" transform="rotate(60 610 175)">FLARE 1:10</text>
 
           {/* Detectable warnings at bottom */}
           <rect x="325" y="196" width="250" height="32" rx="2" fill="#7C3AED" opacity="0.12" stroke="#7C3AED" strokeWidth="1.5" />
@@ -133,11 +133,11 @@ export default function CurbRampDiagram() {
               ))}
             </React.Fragment>
           ))}
-          <text x="450" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#7C3AED" fontWeight="700">DETECTABLE WARNINGS ({d('36', '915')} deep)</text>
+          <text x="450" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="700">DETECTABLE WARNINGS ({d('36', '915')} deep)</text>
 
           {/* Top landing */}
           <rect x="340" y="68" width="220" height="32" rx="2" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1.2" strokeDasharray="5 3" />
-          <text x="450" y="88" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#D97706" fontWeight="600">LANDING ({d('36', '915')} min)</text>
+          <text x="450" y="88" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">LANDING ({d('36', '915')} min)</text>
 
           {/* Width dimension */}
           <line x1="350" y1="100" x2="550" y2="100" stroke="#16A34A" strokeWidth="1.2" />
@@ -148,15 +148,15 @@ export default function CurbRampDiagram() {
 
           {/* Counter slope note */}
           <rect x="320" y="232" width="260" height="16" rx="3" fill="#DB2777" opacity="0.06" stroke="#DB2777" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="450" y="243" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#DB2777" fontWeight="600">Counter slope ≤ 1:20 at gutter</text>
+          <text x="450" y="243" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#9D174D" fontWeight="600">Counter slope ≤ 1:20 at gutter</text>
 
           {/* Parallel ramp sketch (small, far right) */}
           <rect x="720" y="120" width="120" height="90" rx="4" fill="#0EA5E9" opacity="0.04" stroke="#0EA5E9" strokeWidth="1" />
-          <text x="780" y="140" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0EA5E9" fontWeight="600">PARALLEL</text>
-          <text x="780" y="152" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#0EA5E9">ALTERNATIVE</text>
+          <text x="780" y="140" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">PARALLEL</text>
+          <text x="780" y="152" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#0C4A6E">ALTERNATIVE</text>
           <line x1="740" y1="160" x2="800" y2="160" stroke="#0EA5E9" strokeWidth="1" />
           <rect x="740" y="162" width="60" height="30" rx="2" fill="#0EA5E9" opacity="0.08" stroke="#0EA5E9" strokeWidth="0.8" />
-          <text x="770" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#0EA5E9">{d('48', '1220')} turn</text>
+          <text x="770" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#0C4A6E">{d('48', '1220')} turn</text>
 
 
           {/* CALLOUT DOTS */}
@@ -164,7 +164,7 @@ export default function CurbRampDiagram() {
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label} — ${c.section}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
           <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
@@ -191,7 +191,10 @@ export default function CurbRampDiagram() {
           </div>
         </div>
       )}
-      <style>{`@keyframes curbFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }`}</style>
+      <style>{`@keyframes curbFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }        @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

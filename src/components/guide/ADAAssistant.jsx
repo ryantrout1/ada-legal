@@ -241,7 +241,7 @@ export default function ADAAssistant() {
                 justifyContent: 'center', cursor: 'pointer'
               }}
             >
-              <X size={14} style={{ color: '#94A3B8' }} />
+              <X size={14} style={{ color: '#4B5563' }} />
             </button>
           )}
         </div>
@@ -291,7 +291,7 @@ export default function ADAAssistant() {
           <div style={{
             padding: '10px 16px 6px',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-            letterSpacing: '0.08em', textTransform: 'uppercase', color: '#94A3B8'
+            letterSpacing: '0.08em', textTransform: 'uppercase', color: '#4B5563'
           }}>
             {results.length} result{results.length !== 1 ? 's' : ''}
           </div>
@@ -354,7 +354,7 @@ export default function ADAAssistant() {
                     {item.category}
                   </span>
                 </div>
-                <ArrowRight size={16} style={{ color: '#94A3B8', flexShrink: 0 }} />
+                <ArrowRight size={16} style={{ color: '#4B5563', flexShrink: 0 }} />
               </Link>
             );
           })}

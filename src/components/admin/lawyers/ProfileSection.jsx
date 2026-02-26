@@ -61,7 +61,7 @@ function StatesMultiSelect({ value, onChange }) {
         onClick={() => setOpen(!open)}
         style={{ ...inputStyle, cursor: 'pointer', minHeight: '38px', display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' }}
       >
-        {selected.length === 0 && <span style={{ color: '#94A3B8' }}>Select states…</span>}
+        {selected.length === 0 && <span style={{ color: '#4B5563' }}>Select states…</span>}
         {selected.map(s => (
           <span key={s} style={{
             display: 'inline-flex', alignItems: 'center', gap: '2px',

@@ -4,28 +4,28 @@ const TURN_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#3
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Circular Space', section: '§304.3.1', color: '#C2410C',
+    id: 1, label: 'Circular Space', section: '§304.3.1', color: '#C2410C', textColor: '#8B2E08',
     x: 160, y: 50,
     plain: 'The most common turning space option is a clear circular area with a 60-inch (5-foot) diameter. This allows a wheelchair user to make a full 360-degree turn. The entire circle must be free of obstructions at floor level — no columns, trash cans, or furniture legs within the circle. This is equivalent to the turning radius of a standard manual or power wheelchair.',
     legal: '"The turning space shall be a space complying with 304.3.1 or 304.3.2. The floor or ground surface of a circular turning space shall be a circular space with a 60 inch (1525 mm) diameter minimum. The floor or ground surface shall comply with 302."',
     citation: '§304.3.1'
   },
   {
-    id: 2, label: 'T-Shaped Space', section: '§304.3.2', color: '#16A34A',
+    id: 2, label: 'T-Shaped Space', section: '§304.3.2', color: '#16A34A', textColor: '#14532D',
     x: 560, y: 50,
     plain: 'The T-shaped turning space is an alternative to the circular option, useful in tighter layouts like corridors or alcoves. It fits within a 60-inch square and consists of a T-shape where each arm of the T is at least 36 inches wide. The person in a wheelchair executes a three-point turn — rolling forward into one arm, backing into the stem, then rolling forward in the new direction. Each arm must be clear of obstructions.',
     legal: '"The floor or ground surface of a T-shaped turning space shall be a T-shaped space within a 60 inch (1525 mm) square minimum with arms and base 36 inches (915 mm) wide minimum." Each segment of the T shall be provided with clearance 36 inches minimum.',
     citation: '§304.3.2'
   },
   {
-    id: 3, label: 'Floor Surface', section: '§304.2', color: '#2563EB',
+    id: 3, label: 'Floor Surface', section: '§304.2', color: '#2563EB', textColor: '#1E3A8A',
     x: 340, y: 285,
     plain: 'The floor within a turning space must be level, with a maximum slope of 1:48 (about 2%) in any direction. The surface must be firm, stable, and slip-resistant per §302. Carpet, if used, must be securely attached with a firm cushion or no cushion, and the pile height cannot exceed ½ inch. Gratings must have openings no wider than ½ inch in one direction.',
     legal: '"Floor or ground surfaces of a turning space shall comply with 302. Changes in level are not permitted." Slope: "shall not be steeper than 1:48."',
     citation: '§304.2'
   },
   {
-    id: 4, label: 'Obstructions', section: '§304', color: '#7C3AED',
+    id: 4, label: 'Obstructions', section: '§304', color: '#7C3AED', textColor: '#5B21B6',
     x: 780, y: 285,
     plain: 'Doors are permitted to swing into a turning space as long as the required space is still usable when the door is in any position during normal use. Knee and toe clearance areas (§306) — such as space under a lavatory or counter — can overlap with the turning space. However, no other fixed obstructions such as columns, furniture, or equipment may encroach into the turning space.',
     legal: '"EXCEPTION: Doors complying with 404.2.3, in any position, shall be permitted to encroach into turning spaces." Knee and toe clearance per §306 can extend into turning space.',
@@ -36,7 +36,7 @@ const CALLOUTS = [
 function makeLink(text) {
   return (
     <a href={TURN_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -99,7 +99,7 @@ export default function TurningSpaceDiagram() {
 
           <circle cx="200" cy="170" r="110" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="6 4" />
           {/* Wheelchair icon */}
-          <text x="200" y="175" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="32" fill="#C2410C" opacity="0.25">♿</text>
+          <text x="200" y="175" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="32" fill="#8B2E08" opacity="0.25">♿</text>
           {/* Rotation arrow */}
           <path d="M 250 100 A 70 70 0 1 1 150 100" fill="none" stroke="#C2410C" strokeWidth="1.2" opacity="0.3" />
           <polygon points="150,100 155,110 145,108" fill="#C2410C" opacity="0.4" />
@@ -131,8 +131,8 @@ export default function TurningSpaceDiagram() {
           <rect x="543" y="139" width="74" height="146" rx="2" fill="#16A34A" opacity="0.06" stroke="#16A34A" strokeWidth="1.5" />
 
           {/* Arm labels */}
-          <text x="580" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#16A34A" fontWeight="600">ARM</text>
-          <text x="580" y="225" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#16A34A" fontWeight="600">STEM</text>
+          <text x="580" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">ARM</text>
+          <text x="580" y="225" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">STEM</text>
 
           {/* T-arm width dimension (36") */}
           <line x1="470" y1="148" x2="543" y2="148" stroke="#16A34A" strokeWidth="1" />
@@ -171,7 +171,7 @@ export default function TurningSpaceDiagram() {
                 </circle>
               )}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
               <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="turn-focus-ring" />
             </g>
           ))}
@@ -212,6 +212,9 @@ export default function TurningSpaceDiagram() {
         @keyframes turnFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
         g[role="button"]:focus .turn-focus-ring { stroke: #C2410C; stroke-width: 2.5; }
         @media (max-width:768px) { .guide-two-col { flex-direction:column !important; gap:16px !important; } }
+              @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
+        }
       `}</style>
     </div>
   );

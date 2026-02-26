@@ -98,7 +98,7 @@ export default function LandingHeroNew() {
 
           <p className="landing-fade-up landing-delay-4" style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-            color: '#94A3B8', marginTop: '1rem'
+            color: '#4B5563', marginTop: '1rem'
           }}>
             Not sure if what happened was a violation?{' '}
             <button onClick={() => openModal('pathways')} style={{ color: '#F97316', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit', padding: 0 }}>
@@ -115,7 +115,7 @@ export default function LandingHeroNew() {
           }}>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-              letterSpacing: '0.15em', textTransform: 'uppercase', color: '#94A3B8',
+              letterSpacing: '0.15em', textTransform: 'uppercase', color: '#4B5563',
               margin: '0 0 1.25rem'
             }}>
               Inside the ADA Standards Guide
@@ -144,7 +144,7 @@ export default function LandingHeroNew() {
                   </p>
                   <p style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-                    color: '#94A3B8', margin: 0
+                    color: '#4B5563', margin: 0
                   }}>
                     {stat.sub}
                   </p>

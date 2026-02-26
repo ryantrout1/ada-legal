@@ -76,7 +76,7 @@ export default function EmailPreviewModal({ subject, bodyHtml, sampleData, onClo
             onClick={onClose}
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              color: '#94A3B8', padding: '4px', display: 'flex',
+              color: '#4B5563', padding: '4px', display: 'flex',
               minWidth: '32px', minHeight: '32px', alignItems: 'center', justifyContent: 'center',
             }}
             aria-label="Close preview"

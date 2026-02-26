@@ -82,7 +82,7 @@ export default function AdminAnalytics() {
     const connected = cases.filter(c => ['assigned', 'in_progress', 'closed'].includes(c.status)).length;
     return [
       { key: 'violations', label: 'Total Violations', value: cases.length, color: '#9A3412' },
-      { key: 'businesses', label: 'Businesses Identified', value: clusterIds.size + noClusters, color: '#1D4ED8' },
+      { key: 'businesses', label: 'Businesses Identified', value: clusterIds.size + noClusters, color: '#1E3A8A' },
       { key: 'communities', label: 'Communities', value: communities.size, color: '#15803D' },
       { key: 'connected', label: 'Connected to Attorneys', value: connected, color: '#92400E' },
     ];

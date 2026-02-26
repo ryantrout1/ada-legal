@@ -5,7 +5,7 @@ const METHOD_LABELS = { phone: 'Phone', email: 'Email', in_person: 'In Person', 
 const METHOD_EMOJIS = { phone: '📞', email: '✉️', in_person: '🤝', other: '💬' };
 const TYPE_LABELS = { initial_contact: 'Initial Contact', follow_up: 'Follow-Up', case_update: 'Case Update' };
 const TYPE_BADGE_COLORS = {
-  initial_contact: { bg: '#DBEAFE', color: '#1D4ED8' },
+  initial_contact: { bg: '#DBEAFE', color: '#1E3A8A' },
   follow_up: { bg: '#DCFCE7', color: '#15803D' },
   case_update: { bg: '#FEF3C7', color: '#92400E' }
 };

@@ -25,7 +25,7 @@ const SAMPLE_DATA = {
   new_case_count: '5',
   new_case_plural: 's',
   state_match_note: '<p><strong>3</strong> of these cases are in your licensed states (AZ, CA).</p>',
-  type_badges: '<span style="display:inline-block;padding:4px 10px;background:#DBEAFE;color:#1D4ED8;border-radius:12px;font-weight:600;">3 Physical</span> <span style="display:inline-block;padding:4px 10px;background:#F3E8FF;color:#7C3AED;border-radius:12px;font-weight:600;">2 Digital</span>',
+  type_badges: '<span style="display:inline-block;padding:4px 10px;background:#DBEAFE;color: #1E3A8A;border-radius:12px;font-weight:600;">3 Physical</span> <span style="display:inline-block;padding:4px 10px;background:#F3E8FF;color:#7C3AED;border-radius:12px;font-weight:600;">2 Digital</span>',
   case_table: '<table style="width:100%;border-collapse:collapse;margin:16px 0;"><thead><tr style="background-color:#F8FAFC;"><th style="padding:10px 12px;text-align:left;font-size:12px;color:#64748B;">Business</th><th style="padding:10px 12px;text-align:left;font-size:12px;color:#64748B;">Type</th><th style="padding:10px 12px;text-align:left;font-size:12px;color:#64748B;">Location</th></tr></thead><tbody><tr><td style="padding:10px 12px;border-bottom:1px solid #E2E8F0;">Sunrise Coffee</td><td style="padding:10px 12px;border-bottom:1px solid #E2E8F0;">Physical</td><td style="padding:10px 12px;border-bottom:1px solid #E2E8F0;">Phoenix, AZ</td></tr></tbody></table>',
   more_text: '',
   browse_url: 'https://app.example.com/Marketplace',
@@ -118,7 +118,7 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
         <div style={{ flex: 1 }} />
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-          color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em'
+          color: '#4B5563', textTransform: 'uppercase', letterSpacing: '0.04em'
         }}>
           {template.template_key}
         </span>
@@ -190,7 +190,7 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <button onClick={handleSave} disabled={saving} style={{
               display: 'flex', alignItems: 'center', gap: '6px',
-              padding: '10px 24px', backgroundColor: saving ? '#94A3B8' : 'var(--terra-600)',
+              padding: '10px 24px', backgroundColor: saving ? '#4B5563' : 'var(--terra-600)',
               color: 'white', border: 'none', borderRadius: '8px', cursor: saving ? 'not-allowed' : 'pointer',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, minHeight: '44px'
             }}>
@@ -208,7 +208,7 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
             <button onClick={handleSendTest} disabled={sending} style={{
               display: 'flex', alignItems: 'center', gap: '6px',
               padding: '10px 24px', backgroundColor: 'white',
-              color: sending ? '#94A3B8' : '#1D4ED8', border: `1px solid ${sending ? '#CBD5E1' : '#93C5FD'}`,
+              color: sending ? '#4B5563' : '#1D4ED8', border: `1px solid ${sending ? '#CBD5E1' : '#93C5FD'}`,
               borderRadius: '8px', cursor: sending ? 'not-allowed' : 'pointer',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, minHeight: '44px'
             }}>
@@ -246,18 +246,18 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
                     aria-label={`Copy ${v}`}
                     style={{
                       background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
-                      color: '#94A3B8', display: 'flex', minWidth: '28px', minHeight: '28px',
+                      color: '#4B5563', display: 'flex', minWidth: '28px', minHeight: '28px',
                       alignItems: 'center', justifyContent: 'center'
                     }}
                     onMouseEnter={e => { e.currentTarget.style.color = 'var(--terra-600)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.color = '#94A3B8'; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = '#4B5563'; }}
                   >
                     <Copy size={14} />
                   </button>
                 </div>
               ))}
               {variables.length === 0 && (
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#94A3B8', margin: 0 }}>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#4B5563', margin: 0 }}>
                   No variables defined
                 </p>
               )}

@@ -135,7 +135,7 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
               {error && (
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                  color: '#DC2626', margin: 0
+                  color: '#991B1B', margin: 0
                 }}>{error}</p>
               )}
               <button

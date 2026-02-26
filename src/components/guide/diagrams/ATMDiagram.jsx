@@ -2,15 +2,15 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#707-automatic-teller-machines-and-fare-machines';
 const CALLOUTS = [
-  { id: 1, label: 'Clear Floor Space', section: '§707.2', color: '#C2410C', x: 120, y: 100, plain: 'A clear floor space of 30 × 48 inches is required for a forward approach to the ATM. The space must be centered on the machine and allow forward reach to all controls and the card slot.', legal: '"A clear floor or ground space complying with §305 shall be provided."', citation: '§707.2' },
-  { id: 2, label: 'Operable Parts', section: '§707.3', color: '#16A34A', x: 350, y: 100, plain: 'All controls must be between 15 and 48 inches above the floor. Input keys must be raised or flush, with 0.025-inch minimum contrast from the background. The numeric keypad must follow standard telephone layout (1-2-3 across the top).', legal: '"Input controls shall be tactilely discernible without activation." Keypad layout: "Numeric keys shall be arranged in a 12-key ascending or descending telephone keypad layout."', citation: '§707.3' },
-  { id: 3, label: 'Privacy', section: '§707.4', color: '#2563EB', x: 580, y: 100, plain: 'If the ATM function requires entering personal information (like a PIN), the machine must provide visual shielding from casual observation. This can be a privacy screen filter, recessed alcove, or side panels.', legal: '"Where personal identification numbers or other personal information is entered, a mechanism to provide visual shielding shall be provided."', citation: '§707.4' },
-  { id: 4, label: 'Display Screen', section: '§707.5', color: '#7C3AED', x: 120, y: 340, plain: 'The screen must be visible from a point 40 inches above the center of the clear floor space (seated eye height). Characters must be high contrast, sans-serif font, and sized appropriately for the viewing distance.', legal: '"Characters displayed on the screen shall be in a sans serif font. Characters shall be 3/16 inch high minimum based on the uppercase letter I."', citation: '§707.5' },
-  { id: 5, label: 'Speech Output', section: '§707.5', color: '#D97706', x: 350, y: 340, plain: 'All ATMs must provide speech output that reads the screen aloud. An audio jack (standard 3.5mm) must be provided for privacy when entering PINs. Braille instructions must explain how to initiate speech mode.', legal: '"Machines shall be speech enabled. Operating instructions shall be provided in Braille." Speech: "delivered through a mechanism that is readily available to all users."', citation: '§707.5' },
-  { id: 6, label: 'Input Controls', section: '§707.6', color: '#0EA5E9', x: 580, y: 340, plain: 'Controls must be operable with one hand and must not require simultaneous actions (like pressing two buttons at once). Function keys must have contrast. Tactile markings are required on at least the "Enter" and "Clear" keys.', legal: '"Input controls shall be operable with one hand and shall not require tight grasping, pinching, or twisting of the wrist." Function keys: contrast ≥ 0.025 inch.', citation: '§707.6' }
+  { id: 1, label: 'Clear Floor Space', section: '§707.2', color: '#C2410C', textColor: '#8B2E08', x: 120, y: 100, plain: 'A clear floor space of 30 × 48 inches is required for a forward approach to the ATM. The space must be centered on the machine and allow forward reach to all controls and the card slot.', legal: '"A clear floor or ground space complying with §305 shall be provided."', citation: '§707.2' },
+  { id: 2, label: 'Operable Parts', section: '§707.3', color: '#16A34A', textColor: '#14532D', x: 350, y: 100, plain: 'All controls must be between 15 and 48 inches above the floor. Input keys must be raised or flush, with 0.025-inch minimum contrast from the background. The numeric keypad must follow standard telephone layout (1-2-3 across the top).', legal: '"Input controls shall be tactilely discernible without activation." Keypad layout: "Numeric keys shall be arranged in a 12-key ascending or descending telephone keypad layout."', citation: '§707.3' },
+  { id: 3, label: 'Privacy', section: '§707.4', color: '#2563EB', textColor: '#1E3A8A', x: 580, y: 100, plain: 'If the ATM function requires entering personal information (like a PIN), the machine must provide visual shielding from casual observation. This can be a privacy screen filter, recessed alcove, or side panels.', legal: '"Where personal identification numbers or other personal information is entered, a mechanism to provide visual shielding shall be provided."', citation: '§707.4' },
+  { id: 4, label: 'Display Screen', section: '§707.5', color: '#7C3AED', textColor: '#5B21B6', x: 120, y: 340, plain: 'The screen must be visible from a point 40 inches above the center of the clear floor space (seated eye height). Characters must be high contrast, sans-serif font, and sized appropriately for the viewing distance.', legal: '"Characters displayed on the screen shall be in a sans serif font. Characters shall be 3/16 inch high minimum based on the uppercase letter I."', citation: '§707.5' },
+  { id: 5, label: 'Speech Output', section: '§707.5', color: '#D97706', textColor: '#78350F', x: 350, y: 340, plain: 'All ATMs must provide speech output that reads the screen aloud. An audio jack (standard 3.5mm) must be provided for privacy when entering PINs. Braille instructions must explain how to initiate speech mode.', legal: '"Machines shall be speech enabled. Operating instructions shall be provided in Braille." Speech: "delivered through a mechanism that is readily available to all users."', citation: '§707.5' },
+  { id: 6, label: 'Input Controls', section: '§707.6', color: '#0EA5E9', textColor: '#0C4A6E', x: 580, y: 340, plain: 'Controls must be operable with one hand and must not require simultaneous actions (like pressing two buttons at once). Function keys must have contrast. Tactile markings are required on at least the "Enter" and "Clear" keys.', legal: '"Input controls shall be operable with one hand and shall not require tight grasping, pinching, or twisting of the wrist." Function keys: contrast ≥ 0.025 inch.', citation: '§707.6' }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function ATMDiagram() {
@@ -50,12 +50,12 @@ export default function ATMDiagram() {
 
           {/* Screen */}
           <rect x="255" y="130" width="110" height="80" rx="4" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="1.5" />
-          <text x="310" y="175" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C3AED" fontWeight="600">SCREEN</text>
+          <text x="310" y="175" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#5B21B6" fontWeight="600">SCREEN</text>
 
           {/* Privacy shield */}
           <path d="M245,120 L245,220 L240,220" fill="none" stroke="#2563EB" strokeWidth="2" />
           <path d="M375,120 L375,220 L380,220" fill="none" stroke="#2563EB" strokeWidth="2" />
-          <text x="310" y="118" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#2563EB" fontWeight="600">PRIVACY SHIELD</text>
+          <text x="310" y="118" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A" fontWeight="600">PRIVACY SHIELD</text>
 
           {/* Card slot */}
           <rect x="270" y="220" width="80" height="8" rx="2" fill="#475569" opacity="0.15" />
@@ -65,11 +65,11 @@ export default function ATMDiagram() {
           {[0, 1, 2, 3].map(r => [0, 1, 2].map(c => (
             <rect key={`k${r}${c}`} x={272 + c * 24} y={255 + r * 22} width="18" height="16" rx="3" fill="#16A34A" opacity="0.08" stroke="#16A34A" strokeWidth="0.8" />
           )))}
-          <text x="310" y="352" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#16A34A" fontWeight="600">KEYPAD</text>
+          <text x="310" y="352" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D" fontWeight="600">KEYPAD</text>
 
           {/* Braille label */}
           <rect x="270" y="360" width="80" height="14" rx="3" fill="#D97706" opacity="0.08" stroke="#D97706" strokeWidth="1" />
-          <text x="310" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#D97706" fontWeight="600">BRAILLE / AUDIO JACK</text>
+          <text x="310" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#78350F" fontWeight="600">BRAILLE / AUDIO JACK</text>
 
           {/* Cash dispenser */}
           <rect x="270" y="382" width="80" height="12" rx="2" fill="#475569" opacity="0.1" />
@@ -85,8 +85,8 @@ export default function ATMDiagram() {
           {/* Screen visibility line at 40" */}
           <line x1="420" y1="170" x2="500" y2="170" stroke="#7C3AED" strokeWidth="1" strokeDasharray="3 2" />
           <line x1="420" y1="290" x2="500" y2="290" stroke="#7C3AED" strokeWidth="1" strokeDasharray="3 2" />
-          <text x="470" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#7C3AED" fontWeight="500">Visible from</text>
-          <text x="470" y="246" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#7C3AED" fontWeight="500">{d('40', '1015')} eye ht</text>
+          <text x="470" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#5B21B6" fontWeight="500">Visible from</text>
+          <text x="470" y="246" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#5B21B6" fontWeight="500">{d('40', '1015')} eye ht</text>
 
           {/* Person */}
           <circle cx="310" cy="400" r="8" fill="#475569" opacity="0.12" />
@@ -105,8 +105,8 @@ export default function ATMDiagram() {
 
           {/* Clear floor space */}
           <rect x="640" y="164" width="160" height="200" rx="4" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="2" strokeDasharray="6 3" />
-          <text x="720" y="270" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#C2410C" fontWeight="600">CLEAR FLOOR</text>
-          <text x="720" y="283" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#C2410C" fontWeight="600">SPACE</text>
+          <text x="720" y="270" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#8B2E08" fontWeight="600">CLEAR FLOOR</text>
+          <text x="720" y="283" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#8B2E08" fontWeight="600">SPACE</text>
 
           {/* Width dim */}
           <line x1="640" y1="385" x2="800" y2="385" stroke="#C2410C" strokeWidth="1" />
@@ -124,14 +124,14 @@ export default function ATMDiagram() {
 
           {/* Speech note */}
           <rect x="570" y="430" width="300" height="40" rx="8" fill="#D97706" opacity="0.05" stroke="#D97706" strokeWidth="1" />
-          <text x="720" y="450" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#D97706" fontWeight="600">Speech output required · 3.5mm audio jack for privacy</text>
-          <text x="720" y="464" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#D97706">Braille instructions for initiating speech mode</text>
+          <text x="720" y="450" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#78350F" fontWeight="600">Speech output required · 3.5mm audio jack for privacy</text>
+          <text x="720" y="464" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">Braille instructions for initiating speech mode</text>
 
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
           <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
@@ -157,7 +157,10 @@ export default function ATMDiagram() {
           </div>
         </div>
       )}
-      <style>{`@keyframes atmFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}`}</style>
+      <style>{`@keyframes atmFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}        @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

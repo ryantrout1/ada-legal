@@ -37,7 +37,7 @@ export default function FinalCTANew() {
           </Link>
           <button onClick={() => openModal('report_violation')} style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-            background: 'transparent', color: '#94A3B8',
+            background: 'transparent', color: '#4B5563',
             padding: '18px 36px', borderRadius: '10px',
             fontSize: '1.1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
             minHeight: '44px', cursor: 'pointer',
@@ -48,13 +48,13 @@ export default function FinalCTANew() {
         </div>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-          color: '#94A3B8', marginTop: '1.25rem', marginBottom: 0
+          color: '#4B5563', marginTop: '1.25rem', marginBottom: 0
         }}>
           No account required. No cost. Your information is kept confidential.
         </p>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-          color: '#94A3B8', marginTop: '0.75rem', marginBottom: 0
+          color: '#4B5563', marginTop: '0.75rem', marginBottom: 0
         }}>
           Not sure where to start?{' '}
           <button onClick={() => openModal('pathways')} style={{ color: '#F97316', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit', padding: 0 }}>

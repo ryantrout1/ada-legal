@@ -4,49 +4,49 @@ const SHOWER_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Transfer Shower Size', section: '§608.2.1', color: '#C2410C',
+    id: 1, label: 'Transfer Shower Size', section: '§608.2.1', color: '#C2410C', textColor: '#8B2E08',
     x: 135, y: 42,
     plain: 'A transfer-type shower compartment must be exactly 36 × 36 inches (inside dimensions). The person transfers from a wheelchair onto the built-in seat, so a clear floor space of 36 × 48 inches must be provided adjacent to the open side. The entry must be at least 36 inches wide with no curb or threshold (maximum ½ inch if beveled). This compact design is ideal for smaller restrooms.',
     legal: '"Transfer type shower compartments shall be 36 inches by 36 inches inside finished dimensions measured at the center points of opposing sides." Clear floor space: 36 inches wide minimum by 48 inches long minimum positioned adjacent to the open face of the compartment.',
     citation: '§608.2.1'
   },
   {
-    id: 2, label: 'Roll-In Shower Size', section: '§608.3.1', color: '#16A34A',
+    id: 2, label: 'Roll-In Shower Size', section: '§608.3.1', color: '#16A34A', textColor: '#14532D',
     x: 560, y: 42,
     plain: 'A standard roll-in shower is 60 × 30 inches (inside dimensions), open on the long 60-inch side so a wheelchair can roll directly in. There is no curb or threshold. This design requires more floor space than a transfer shower but allows the user to remain in their wheelchair (or a shower wheelchair). An alternate roll-in shower (§608.3.2) is 36 × 60 inches with a 36-inch entry on the long side.',
     legal: '"Standard roll-in type shower compartments shall be 30 inches minimum by 60 inches minimum clear inside dimension measured at center points of opposing sides." Threshold: level with floor, ½ inch max if beveled.',
     citation: '§608.3.1'
   },
   {
-    id: 3, label: 'Shower Seat', section: '§608.4 / §610', color: '#2563EB',
+    id: 3, label: 'Shower Seat', section: '§608.4 / §610', color: '#2563EB', textColor: '#1E3A8A',
     x: 80, y: 190,
     plain: 'A folding or non-folding seat is required in transfer-type showers. The seat must be 15 to 16 inches deep and extend the full width of the compartment (wall to wall). It must support at least 250 pounds of force. The top of the seat surface must be 17 to 19 inches above the shower floor — matching standard wheelchair seat height to facilitate a smooth lateral transfer.',
     legal: '"In transfer type and certain alternate roll-in type shower compartments, a folding or non-folding seat shall be provided." §610.2 Rectangular seats: "15 inches deep minimum and 16 inches deep maximum." §610.3 "Seats shall support a vertical or horizontal force of 250 pounds."',
     citation: '§608.4, §610'
   },
   {
-    id: 4, label: 'Grab Bars (Transfer)', section: '§608.2.1.1', color: '#7C3AED',
+    id: 4, label: 'Grab Bars (Transfer)', section: '§608.2.1.1', color: '#7C3AED', textColor: '#5B21B6',
     x: 270, y: 100,
     plain: 'In a transfer shower, grab bars are installed on two walls: (1) across from the seat — extending the full length of the wall, and (2) on the side wall (control wall) — extending from the front edge of the seat to the shower entry. Both are mounted 33 to 36 inches above the shower floor. The bars let the user support themselves while transferring from wheelchair to seat and while showering.',
     legal: '"Grab bars shall be provided across the control wall and on the back wall to a point 18 inches from the control wall." Mounted 33 to 36 inches above the shower floor per §609.4.',
     citation: '§608.2.1.1'
   },
   {
-    id: 5, label: 'Grab Bars (Roll-In)', section: '§608.3.1.1', color: '#D97706',
+    id: 5, label: 'Grab Bars (Roll-In)', section: '§608.3.1.1', color: '#D97706', textColor: '#78350F',
     x: 560, y: 240,
     plain: 'In a standard roll-in shower, grab bars are installed on three walls: the full length of the back wall and on both side walls extending from the entry to the back wall grab bar. Bars are mounted 33 to 36 inches above the shower floor. The maximum gap between a grab bar end and an adjacent wall is 6 inches. This three-wall configuration provides continuous support as the user moves within the shower.',
     legal: '"Grab bars shall be provided on the back wall and on the side walls. Grab bars on the back wall shall extend the length of the wall. Grab bars on the side walls shall extend from the edge of the shower to the grab bar on the back wall." 6 inches max from adjacent walls.',
     citation: '§608.3.1.1'
   },
   {
-    id: 6, label: 'Controls & Spray', section: '§608.5 / §608.6', color: '#DB2777',
+    id: 6, label: 'Controls & Spray', section: '§608.5 / §608.6', color: '#DB2777', textColor: '#9D174D',
     x: 270, y: 260,
     plain: 'Shower controls must be installed above the grab bar, between 38 and 48 inches above the shower floor. They must be operable with one hand and must not require tight grasping, pinching, or twisting. In transfer-type showers, a hand-held shower spray unit with a hose at least 59 inches long is required. In roll-in showers, a hand shower is also required. The spray unit must have an on/off control with a non-positive shut-off.',
     legal: '"Controls, faucets, and shower spray units shall be installed on the side wall opposite the seat 38 inches minimum and 48 inches maximum above the shower floor." §608.6 "A shower spray unit with a hose 59 inches long minimum… shall be provided."',
     citation: '§608.5, §608.6'
   },
   {
-    id: 7, label: 'Alternate Roll-In', section: '§608.3.2', color: '#0EA5E9',
+    id: 7, label: 'Alternate Roll-In', section: '§608.3.2', color: '#0EA5E9', textColor: '#0C4A6E',
     x: 720, y: 160,
     plain: 'The alternate roll-in shower is 36 × 60 inches with the entry (36 inches minimum) on the long side. A folding seat is provided on one end wall. Grab bars are installed on each side of the seat (both side walls) and on the back wall opposite the seat. This design accommodates both wheelchair roll-in use and seated bathing, combining the benefits of both shower types.',
     legal: '"Alternate roll-in type shower compartments shall be 36 inches wide and 60 inches deep minimum." Entry: 36 inches minimum on the long side. "A folding seat complying with §610 shall be provided on an end wall."',
@@ -57,7 +57,7 @@ const CALLOUTS = [
 function makeLink(text) {
   return (
     <a href={SHOWER_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -127,24 +127,24 @@ export default function ShowerDiagram() {
 
           {/* Seat — on left wall */}
           <rect x="40" y="60" width="36" height="160" rx="2" fill="#2563EB" opacity="0.08" stroke="#2563EB" strokeWidth="1.2" />
-          <text x="58" y="145" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#2563EB" fontWeight="600" transform="rotate(-90 58 145)">SEAT</text>
+          <text x="58" y="145" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600" transform="rotate(-90 58 145)">SEAT</text>
 
           {/* Seat depth dimension */}
           <line x1="40" y1="248" x2="76" y2="248" stroke="#2563EB" strokeWidth="0.8" />
           <line x1="40" y1="244" x2="40" y2="252" stroke="#2563EB" strokeWidth="0.8" />
           <line x1="76" y1="244" x2="76" y2="252" stroke="#2563EB" strokeWidth="0.8" />
-          <text x="58" y="260" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#2563EB" fontWeight="600">{d('15–16', '380–405')}</text>
+          <text x="58" y="260" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#1E3A8A" fontWeight="600">{d('15–16', '380–405')}</text>
 
           {/* Grab bar — back wall (top, across from seat) */}
           <line x1="198" y1="62" x2="198" y2="218" stroke="#7C3AED" strokeWidth="4" strokeLinecap="round" />
-          <text x="210" y="140" fontFamily="Manrope, sans-serif" fontSize="6" fill="#7C3AED" fontWeight="600" transform="rotate(90 210 140)">GRAB BAR</text>
+          <text x="210" y="140" fontFamily="Manrope, sans-serif" fontSize="6" fill="#5B21B6" fontWeight="600" transform="rotate(90 210 140)">GRAB BAR</text>
 
           {/* Grab bar — control wall (top wall, from seat edge to entry) */}
           <line x1="76" y1="62" x2="198" y2="62" stroke="#7C3AED" strokeWidth="4" strokeLinecap="round" />
 
           {/* Controls on top wall */}
           <circle cx="150" cy="68" r="5" fill="#DB2777" opacity="0.3" stroke="#DB2777" strokeWidth="1" />
-          <text x="150" y="82" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#DB2777" fontWeight="600">CONTROLS</text>
+          <text x="150" y="82" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#9D174D" fontWeight="600">CONTROLS</text>
 
           {/* Shower spray */}
           <circle cx="170" cy="68" r="3" fill="#DB2777" opacity="0.5" />
@@ -166,11 +166,11 @@ export default function ShowerDiagram() {
 
           {/* Clear floor space — adjacent */}
           <rect x="40" y="222" width="160" height="72" rx="2" fill="#D97706" opacity="0.04" stroke="#D97706" strokeWidth="1" strokeDasharray="5 3" />
-          <text x="120" y="262" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#D97706" fontWeight="600">CLEAR FLOOR SPACE</text>
-          <text x="120" y="274" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#D97706">{d('36', '915')} × {d('48', '1220')}</text>
+          <text x="120" y="262" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">CLEAR FLOOR SPACE</text>
+          <text x="120" y="274" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">{d('36', '915')} × {d('48', '1220')}</text>
 
           {/* Wheelchair hint */}
-          <text x="120" y="286" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="18" fill="#D97706" opacity="0.2">♿</text>
+          <text x="120" y="286" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="18" fill="#78350F" opacity="0.2">♿</text>
 
 
           {/* ===== DIVIDER ===== */}
@@ -195,11 +195,11 @@ export default function ShowerDiagram() {
 
           {/* Controls on back wall */}
           <circle cx="550" cy="78" r="5" fill="#DB2777" opacity="0.3" stroke="#DB2777" strokeWidth="1" />
-          <text x="550" y="92" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#DB2777" fontWeight="600">CONTROLS</text>
+          <text x="550" y="92" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#9D174D" fontWeight="600">CONTROLS</text>
 
           {/* Optional seat (dashed, on back wall) */}
           <rect x="640" y="72" width="48" height="30" rx="2" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="664" y="91" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#2563EB" fontWeight="500">SEAT (opt.)</text>
+          <text x="664" y="91" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A" fontWeight="500">SEAT (opt.)</text>
 
           {/* Width dimension */}
           <line x1="410" y1="58" x2="690" y2="58" stroke="#16A34A" strokeWidth="1" />
@@ -216,23 +216,23 @@ export default function ShowerDiagram() {
           <text x="728" y="131" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('30', '760')}</text>
 
           {/* Wheelchair in roll-in */}
-          <text x="500" y="155" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="24" fill="#16A34A" opacity="0.15">♿</text>
+          <text x="500" y="155" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="24" fill="#14532D" opacity="0.15">♿</text>
 
 
           {/* ===== ALTERNATE ROLL-IN sketch (small, bottom right) ===== */}
           <rect x="760" y="80" width="120" height="70" rx="2" fill="#0EA5E9" opacity="0.04" stroke="#0EA5E9" strokeWidth="1.2" />
           <line x1="760" y1="150" x2="880" y2="150" stroke="#0EA5E9" strokeWidth="1.2" strokeDasharray="4 3" />
-          <text x="820" y="96" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#0EA5E9" fontWeight="600">ALTERNATE</text>
-          <text x="820" y="107" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#0EA5E9">{d('36', '915')} × {d('60', '1525')}</text>
+          <text x="820" y="96" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#0C4A6E" fontWeight="600">ALTERNATE</text>
+          <text x="820" y="107" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#0C4A6E">{d('36', '915')} × {d('60', '1525')}</text>
           {/* Seat at end */}
           <rect x="856" y="82" width="22" height="66" rx="1" fill="#0EA5E9" opacity="0.08" stroke="#0EA5E9" strokeWidth="0.8" />
-          <text x="867" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#0EA5E9">SEAT</text>
+          <text x="867" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#0C4A6E">SEAT</text>
 
 
           {/* Grab bar height note */}
           <rect x="410" y="215" width="140" height="28" rx="4" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="480" y="228" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#D97706" fontWeight="600">Grab bars: {d('33–36', '840–915')} AFF</text>
-          <text x="480" y="239" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#D97706">Controls: {d('38–48', '965–1220')} AFF</text>
+          <text x="480" y="228" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">Grab bars: {d('33–36', '840–915')} AFF</text>
+          <text x="480" y="239" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">Controls: {d('38–48', '965–1220')} AFF</text>
 
 
           {/* ===== CALLOUT DOTS ===== */}
@@ -250,7 +250,7 @@ export default function ShowerDiagram() {
                 </circle>
               )}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
               <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="shower-focus-ring" />
             </g>
           ))}
@@ -290,6 +290,9 @@ export default function ShowerDiagram() {
       <style>{`
         @keyframes showerFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
         g[role="button"]:focus .shower-focus-ring { stroke: #C2410C; stroke-width: 2.5; }
+              @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
+        }
       `}</style>
     </div>
   );

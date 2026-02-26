@@ -4,7 +4,7 @@ import { MessageSquare, Bell, Calendar } from 'lucide-react';
 const CARDS = [
   { key: 'total', label: 'Total Feedback', icon: MessageSquare, color: '#475569', bg: '#F1F5F9' },
   { key: 'newCount', label: 'New (Unreviewed)', icon: Bell, color: '#C2410C', bg: '#FEF1EC' },
-  { key: 'thisWeek', label: 'This Week', icon: Calendar, color: '#2563EB', bg: '#EFF6FF' },
+  { key: 'thisWeek', label: 'This Week', icon: Calendar, color: '#1E3A8A', bg: '#EFF6FF' },
 ];
 
 export default function FeedbackStatCards({ stats }) {

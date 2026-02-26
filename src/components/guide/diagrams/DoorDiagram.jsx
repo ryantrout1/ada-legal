@@ -174,7 +174,7 @@ export default function DoorDiagram() {
           {/* ===== MANEUVERING CLEARANCE ZONE (pull side) ===== */}
           <rect x="100" y="118" width="250" height="260" rx="4"
             fill="#16A34A" opacity="0.05" stroke="#16A34A" strokeWidth="1.5" strokeDasharray="6 4" />
-          <text x="225" y="138" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#16A34A" fontWeight="600">MANEUVERING CLEARANCE (PULL SIDE)</text>
+          <text x="225" y="138" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">MANEUVERING CLEARANCE (PULL SIDE)</text>
 
           {/* Depth dimension: 60" */}
           <line x1="62" y1="118" x2="62" y2="378" stroke="#16A34A" strokeWidth="1.2" />
@@ -200,8 +200,8 @@ export default function DoorDiagram() {
 
           {/* Wheelchair approach indicator */}
           <circle cx="225" cy="330" r="28" fill="none" stroke="#16A34A" strokeWidth="1" strokeDasharray="4 3" opacity="0.4" />
-          <text x="225" y="328" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="14" fill="#16A34A" opacity="0.5">♿</text>
-          <text x="225" y="345" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#16A34A" opacity="0.5">approach</text>
+          <text x="225" y="328" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="14" fill="#14532D" opacity="0.5">♿</text>
+          <text x="225" y="345" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" opacity="0.5">approach</text>
           {/* Approach arrow */}
           <line x1="225" y1="290" x2="225" y2="160" stroke="#16A34A" strokeWidth="1.5" opacity="0.4" />
           <polygon points="225,160 220,172 230,172" fill="#16A34A" opacity="0.5" />
@@ -296,8 +296,8 @@ export default function DoorDiagram() {
 
           {/* Two doors in series note (bottom center) */}
           <rect x="180" y="450" width="240" height="40" rx="6" fill="#0EA5E9" opacity="0.05" stroke="#0EA5E9" strokeWidth="1" strokeDasharray="5 3" />
-          <text x="300" y="468" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#0EA5E9" fontWeight="600">TWO DOORS IN SERIES (VESTIBULE)</text>
-          <text x="300" y="480" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0EA5E9">
+          <text x="300" y="468" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#0C4A6E" fontWeight="600">TWO DOORS IN SERIES (VESTIBULE)</text>
+          <text x="300" y="480" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E">
             {imp('48', '1220')} min + door width between doors
           </text>
 

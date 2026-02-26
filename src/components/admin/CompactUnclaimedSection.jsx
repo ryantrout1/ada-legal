@@ -41,7 +41,7 @@ export default function CompactUnclaimedSection({ cases }) {
               backgroundColor: isPhysical ? '#DBEAFE' : '#F3E8FF'
             }}>
               {isPhysical
-                ? <Building2 size={12} style={{ color: '#1D4ED8' }} />
+                ? <Building2 size={12} style={{ color: '#1E3A8A' }} />
                 : <Globe size={12} style={{ color: '#7C3AED' }} />
               }
             </span>
@@ -57,7 +57,7 @@ export default function CompactUnclaimedSection({ cases }) {
               display: 'inline-block', padding: '2px 8px', borderRadius: '9999px', flexShrink: 0,
               fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
               backgroundColor: isPhysical ? '#DBEAFE' : '#F3E8FF',
-              color: isPhysical ? '#1D4ED8' : '#7C3AED'
+              color: isPhysical ? '#1E3A8A' : '#7C3AED'
             }}>
               {isPhysical ? 'Physical' : 'Digital'}
             </span>

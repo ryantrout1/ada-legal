@@ -1,7 +1,7 @@
 import React from 'react';
 
 const RECIPIENT_COLORS = {
-  reporter: { bg: '#DBEAFE', color: '#1D4ED8' },
+  reporter: { bg: '#DBEAFE', color: '#1E3A8A' },
   attorney: { bg: '#F3E8FF', color: '#7C3AED' },
   admin: { bg: '#FEF3C7', color: '#92400E' },
 };
@@ -52,7 +52,7 @@ export default function EmailTemplateTable({ templates, onSelect, onToggleActive
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-900)' }}>
                 {tpl.template_name}
               </span>
-              <span style={{ display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: '#94A3B8', marginTop: '2px' }}>
+              <span style={{ display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: '#4B5563', marginTop: '2px' }}>
                 {tpl.template_key}
               </span>
             </div>
@@ -89,7 +89,7 @@ export default function EmailTemplateTable({ templates, onSelect, onToggleActive
                 }} />
               </button>
             </div>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#94A3B8' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#4B5563' }}>
               {formatDate(tpl.last_edited_at)}
             </span>
           </button>

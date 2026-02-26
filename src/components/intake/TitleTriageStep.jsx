@@ -17,7 +17,7 @@ const TRIAGE_CARDS = [
     id: 'title_ii',
     icon: '🏛️',
     iconBg: '#EFF6FF',
-    badge: { text: "We'll guide you to the right place", bg: '#EFF6FF', color: '#1D4ED8', border: '#DBEAFE' },
+    badge: { text: "We'll guide you to the right place", bg: '#EFF6FF', color: '#1E3A8A', border: '#DBEAFE' },
     heading: 'A government office, public transit, school, or public service was inaccessible',
     description: 'This covers state and local government services — courthouses, DMVs, public schools, transit systems, parks, and voting locations.',
     examples: 'Examples: courthouse with no elevator, public bus without a working lift, inaccessible polling station, public school without accommodations',
@@ -109,7 +109,7 @@ export default function TitleTriageStep({ onSelectTitleIII }) {
                 {card.description}
               </p>
               <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#5E6B7C',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#434E5E',
                 margin: 0, lineHeight: 1.5, fontStyle: 'italic'
               }}>
                 {card.examples}
@@ -123,7 +123,7 @@ export default function TitleTriageStep({ onSelectTitleIII }) {
         ))}
       </div>
       <p style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#5E6B7C',
+        fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#434E5E',
         fontStyle: 'italic', lineHeight: 1.55, textAlign: 'center',
         maxWidth: '780px', margin: '20px auto 0'
       }}>

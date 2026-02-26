@@ -3,10 +3,10 @@ import React from 'react';
 const STATUS_CONFIG = {
   submitted:    { label: 'Submitted',    bg: '#E2E8F0', color: '#475569' },
   under_review: { label: 'Under Review', bg: '#FEF3C7', color: '#92400E' },
-  approved:     { label: 'Approved',     bg: '#DBEAFE', color: '#1D4ED8' },
+  approved:     { label: 'Approved',     bg: '#DBEAFE', color: '#1E3A8A' },
   rejected:     { label: 'Rejected',     bg: '#FEE2E2', color: '#B91C1C' },
   available:    { label: 'Available',    bg: '#DCFCE7', color: '#15803D' },
-  assigned:     { label: 'Assigned',     bg: '#DBEAFE', color: '#1D4ED8' },
+  assigned:     { label: 'Assigned',     bg: '#DBEAFE', color: '#1E3A8A' },
   in_progress:  { label: 'In Progress',  bg: '#FEF3C7', color: '#92400E' },
   closed:       { label: 'Closed',       bg: '#E2E8F0', color: '#475569' }
 };

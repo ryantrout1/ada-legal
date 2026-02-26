@@ -38,7 +38,7 @@ export default function InProgressCard({ caseData, contactLogs, notes, onLogCont
           display: 'inline-flex', alignItems: 'center', gap: '3px',
           padding: '2px 8px', borderRadius: '9999px', fontSize: '0.6875rem', fontWeight: 700,
           backgroundColor: isPhysical ? 'var(--terra-100, #FEF1EC)' : '#DBEAFE',
-          color: isPhysical ? 'var(--terra-600, #C2410C)' : '#1D4ED8', flexShrink: 0
+          color: isPhysical ? 'var(--terra-600, #C2410C)' : '#1E3A8A', flexShrink: 0
         }}>
           {isPhysical ? <Building2 size={10} /> : <Globe size={10} />}
           {isPhysical ? 'Physical' : 'Digital'}

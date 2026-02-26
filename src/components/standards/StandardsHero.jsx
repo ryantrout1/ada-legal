@@ -49,7 +49,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
 
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.125rem',
-            color: '#94A3B8', lineHeight: 1.7, margin: '0 0 2rem', maxWidth: '520px'
+            color: '#4B5563', lineHeight: 1.7, margin: '0 0 2rem', maxWidth: '520px'
           }}>
             The complete ADA Accessibility Standards — reorganized for clarity,
             searchable by topic, and built to be fully accessible to everyone.
@@ -90,7 +90,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-              color: '#94A3B8', lineHeight: 1.6, margin: 0
+              color: '#4B5563', lineHeight: 1.6, margin: 0
             }}>
               Reorganized into searchable topics with plain-language explanations.
               All citations reference the official DOJ standards on ADA.gov.
@@ -112,7 +112,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-              color: '#94A3B8', margin: 0
+              color: '#4B5563', margin: 0
             }}>
               — Small business owner
             </p>

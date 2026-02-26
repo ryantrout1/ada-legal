@@ -152,15 +152,15 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
         <p style={{ ...LABEL_STYLE, margin: '0 0 12px' }}>Claimant Contact</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <User size={14} style={{ color: '#94A3B8' }} />
+            <User size={14} style={{ color: '#4B5563' }} />
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_name}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Mail size={14} style={{ color: '#94A3B8' }} />
+            <Mail size={14} style={{ color: '#4B5563' }} />
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_email}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Phone size={14} style={{ color: '#94A3B8' }} />
+            <Phone size={14} style={{ color: '#4B5563' }} />
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_phone}</span>
           </div>
         </div>
@@ -238,7 +238,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '6px',
               padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-              fontWeight: 700, color: '#1D4ED8', backgroundColor: 'transparent',
+              fontWeight: 700, color: '#1E3A8A', backgroundColor: 'transparent',
               border: '2px solid #1D4ED8', borderRadius: '8px', textDecoration: 'none',
               minHeight: '44px'
             }}
@@ -269,7 +269,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: '6px',
                   padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                  fontWeight: 700, color: '#1D4ED8', backgroundColor: 'transparent',
+                  fontWeight: 700, color: '#1E3A8A', backgroundColor: 'transparent',
                   border: '2px solid #1D4ED8', borderRadius: '8px', textDecoration: 'none',
                   minHeight: '44px'
                 }}

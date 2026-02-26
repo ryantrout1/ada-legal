@@ -196,7 +196,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: '6px',
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-                    color: '#94A3B8', backgroundColor: 'transparent', border: '1px solid #CBD5E1',
+                    color: '#4B5563', backgroundColor: 'transparent', border: '1px solid #CBD5E1',
                     flexShrink: 0, borderRadius: '8px', padding: '10px 16px',
                     minHeight: '44px', cursor: 'pointer'
                   }}
@@ -247,7 +247,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
         }}>Ready to take action?</h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: '#94A3B8', margin: '0 0 24px'
+          color: '#4B5563', margin: '0 0 24px'
         }}>
           An attorney will review your case — at no cost to you.
         </p>

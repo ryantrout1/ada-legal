@@ -125,7 +125,7 @@ export default function AttorneyExpandedPanel({ lawyer, cases, contactLogs, acti
           </div>
           <div style={{ display: 'flex', gap: '16px', marginTop: '6px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem' }}>
             <span style={{ color: '#16A34A', fontWeight: 600 }}>● {closed} closed</span>
-            <span style={{ color: '#2563EB', fontWeight: 600 }}>● {inProgress} active</span>
+            <span style={{ color: '#1E3A8A', fontWeight: 600 }}>● {inProgress} active</span>
             <span style={{ color: '#D97706', fontWeight: 600 }}>● {assigned} assigned</span>
           </div>
         </div>

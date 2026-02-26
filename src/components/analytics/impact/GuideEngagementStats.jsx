@@ -2,7 +2,7 @@ import React from 'react';
 import { BookOpen, Layers, Search, ArrowUpRight } from 'lucide-react';
 
 const CARDS = [
-  { key: 'totalViews', label: 'Total Guide Views', icon: BookOpen, color: '#1D4ED8', bg: '#EFF6FF' },
+  { key: 'totalViews', label: 'Total Guide Views', icon: BookOpen, color: '#1E3A8A', bg: '#EFF6FF' },
   { key: 'uniqueSections', label: 'Unique Sections Viewed', icon: Layers, color: '#7C3AED', bg: '#F5F3FF' },
   { key: 'totalSearches', label: 'Total Searches', icon: Search, color: '#C2410C', bg: '#FEF1EC' },
   { key: 'reportIntent', label: 'Report Intent', icon: ArrowUpRight, color: '#15803D', bg: '#F0FDF4' },

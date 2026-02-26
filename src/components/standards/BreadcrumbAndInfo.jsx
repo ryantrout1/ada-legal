@@ -24,7 +24,7 @@ export default function BreadcrumbAndInfo() {
               </Link>
             </li>
             <li aria-hidden="true">
-              <ChevronRight size={14} style={{ color: '#94A3B8' }} />
+              <ChevronRight size={14} style={{ color: '#4B5563' }} />
             </li>
             <li>
               <span aria-current="page" style={{ color: 'var(--slate-600)' }}>

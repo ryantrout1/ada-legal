@@ -86,7 +86,7 @@ export default function CaseHistorySection({ lawyer, cases, contactLogs }) {
                       <td style={td}>
                         {isPhysical
                           ? <Building2 size={14} style={{ color: '#C2410C' }} />
-                          : <Globe size={14} style={{ color: '#1D4ED8' }} />
+                          : <Globe size={14} style={{ color: '#1E3A8A' }} />
                         }
                       </td>
                       <td style={td}>{formatDate(c.assigned_at)}</td>

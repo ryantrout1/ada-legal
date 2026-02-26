@@ -225,7 +225,7 @@ export default function GuideWebTesting() {
                     <p style={{ margin: 0, fontWeight: 600, color: 'var(--slate-900)' }}>{item.issue}</p>
                     <span style={{
                       fontSize: '0.75rem', fontWeight: 600, padding: '2px 10px',
-                      borderRadius: '100px', background: '#FEE2E2', color: '#DC2626'
+                      borderRadius: '100px', background: '#FEE2E2', color: '#991B1B'
                     }}>{item.pct}</span>
                   </div>
                   <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>

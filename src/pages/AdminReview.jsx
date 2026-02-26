@@ -89,7 +89,7 @@ export default function AdminReview() {
       { key: 'ready', label: 'Ready', value: ready, bg: 'rgba(220,252,231,0.5)', color: '#15803D', active: dashboardFilter === 'ready', onClick: () => setDashboardFilter(dashboardFilter === 'ready' ? null : 'ready') },
       { key: 'needs', label: 'Needs Info', value: needs, bg: 'rgba(254,243,199,0.5)', color: '#B45309', warn: needs > 0, active: dashboardFilter === 'needs', onClick: () => setDashboardFilter(dashboardFilter === 'needs' ? null : 'needs') },
       { key: 'high', label: 'High Sev', value: high, bg: 'rgba(254,226,226,0.5)', color: '#B91C1C', active: dashboardFilter === 'high', onClick: () => setDashboardFilter(dashboardFilter === 'high' ? null : 'high') },
-      { key: 'clusters', label: 'Clusters', value: clusterIds.size, bg: 'rgba(219,234,254,0.5)', color: '#1D4ED8', active: dashboardFilter === 'clusters', onClick: () => setDashboardFilter(dashboardFilter === 'clusters' ? null : 'clusters') },
+      { key: 'clusters', label: 'Clusters', value: clusterIds.size, bg: 'rgba(219,234,254,0.5)', color: '#1E3A8A', active: dashboardFilter === 'clusters', onClick: () => setDashboardFilter(dashboardFilter === 'clusters' ? null : 'clusters') },
     ];
   }, [cases, dashboardFilter]);
 

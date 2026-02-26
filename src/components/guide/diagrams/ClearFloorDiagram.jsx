@@ -4,49 +4,49 @@ const CLEAR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Dimensions', section: '§305.3', color: '#C2410C',
+    id: 1, label: 'Dimensions', section: '§305.3', color: '#C2410C', textColor: '#8B2E08',
     x: 200, y: 42,
     plain: 'The minimum clear floor or ground space is 30 inches wide by 48 inches deep. These dimensions are measured in the clear — no fixed obstructions (columns, fixtures, equipment) may encroach into this area. The space must be large enough for a standard wheelchair and its occupant to park and operate whatever element is being accessed. Larger clear spaces may be required in alcoves or at specific elements.',
     legal: '"Clear floor or ground spaces shall be 30 inches (760 mm) minimum by 48 inches (1220 mm) minimum."',
     citation: '§305.3'
   },
   {
-    id: 2, label: 'Forward Approach', section: '§305.5', color: '#16A34A',
+    id: 2, label: 'Forward Approach', section: '§305.5', color: '#16A34A', textColor: '#14532D',
     x: 130, y: 170,
     plain: 'In a forward approach, the 48-inch dimension extends toward the element being accessed. The wheelchair faces the element head-on. This is the standard approach for lavatories, drinking fountains, counters, and any element that requires knee and toe clearance underneath. The user pulls straight up to the element with their knees extending under it.',
     legal: '"One full unobstructed side of the clear floor or ground space shall adjoin an accessible route or adjoin another clear floor or ground space." Forward approach: 48 inches toward element.',
     citation: '§305.5'
   },
   {
-    id: 3, label: 'Parallel Approach', section: '§305.6', color: '#2563EB',
+    id: 3, label: 'Parallel Approach', section: '§305.6', color: '#2563EB', textColor: '#1E3A8A',
     x: 570, y: 170,
     plain: 'In a parallel approach, the 48-inch dimension runs alongside the element. The wheelchair parks parallel to whatever is being accessed. This is common for wall-mounted controls (light switches, thermostats), some ATMs, vending machines, and fire alarm pull stations. The user reaches sideways to operate the element.',
     legal: '"Where a clear floor or ground space is positioned for a parallel approach, the 48-inch dimension shall be parallel to the element." Side reach per §308.3 applies.',
     citation: '§305.6'
   },
   {
-    id: 4, label: 'Floor Surface', section: '§305.2', color: '#7C3AED',
+    id: 4, label: 'Floor Surface', section: '§305.2', color: '#7C3AED', textColor: '#5B21B6',
     x: 370, y: 42,
     plain: 'The floor within the clear space must comply with §302: firm, stable, and slip-resistant. The maximum slope in any direction is 1:48 (about 2%), which allows only minor drainage slope. Carpet, if present, must be securely attached with a firm cushion or no cushion, and pile height cannot exceed ½ inch. Gratings must have openings no wider than ½ inch. No changes in level are permitted within the clear space.',
     legal: '"Floor or ground surfaces of a clear floor or ground space shall comply with §302." Changes in level not permitted. Slope: "not steeper than 1:48."',
     citation: '§305.2'
   },
   {
-    id: 5, label: 'Knee/Toe Clearance', section: '§305.4', color: '#D97706',
+    id: 5, label: 'Knee/Toe Clearance', section: '§305.4', color: '#D97706', textColor: '#78350F',
     x: 130, y: 280,
     plain: 'The clear floor space may extend under an element if knee and toe clearance per §306 is provided. This is essential for lavatories, desks, and counters where the wheelchair user needs to pull up underneath. Knee clearance: 27 inches high minimum, 8 inches deep minimum at that height. Toe clearance: below 9 inches, extending 17 to 25 inches from the front edge.',
     legal: '"Unless otherwise specified, clear floor or ground space may include knee and toe clearance complying with §306." This allows the clear space to extend under elements like lavatories and desks.',
     citation: '§305.4'
   },
   {
-    id: 6, label: 'Overlap', section: '§305.7', color: '#DB2777',
+    id: 6, label: 'Overlap', section: '§305.7', color: '#DB2777', textColor: '#9D174D',
     x: 370, y: 280,
     plain: 'Clear floor spaces are permitted to overlap with other clear floor spaces, accessible routes, turning spaces (§304), and maneuvering clearances at doors (§404). This is critical for compact designs — a single area can serve multiple purposes simultaneously. However, clear floor spaces cannot overlap restricted areas, hazardous zones, or areas behind barriers.',
     legal: '"Unless otherwise specified, clear floor or ground spaces, turning spaces, and accessible routes are permitted to overlap." Multiple clear spaces may share the same floor area.',
     citation: '§305.7'
   },
   {
-    id: 7, label: 'Alcoves', section: '§305.7', color: '#0EA5E9',
+    id: 7, label: 'Alcoves', section: '§305.7', color: '#0EA5E9', textColor: '#0C4A6E',
     x: 570, y: 280,
     plain: 'When a clear floor space is located in an alcove (recessed area), additional width is required for maneuvering. Forward approach in an alcove deeper than 15 inches: width must increase to 36 inches (from the standard 30). Parallel approach in an alcove deeper than 24 inches: width must also increase to 36 inches. The extra width gives the wheelchair room to turn into the alcove.',
     legal: '"Alcoves shall be 36 inches wide minimum where the depth exceeds 15 inches for forward approach, or 24 inches for parallel approach." Extra maneuvering width compensates for restricted movement.',
@@ -55,7 +55,7 @@ const CALLOUTS = [
 ];
 
 function makeLink(text) {
-  return (<a href={CLEAR_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
+  return (<a href={CLEAR_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
 }
 function parseCitations(text) {
   return text.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p);
@@ -182,7 +182,7 @@ export default function ClearFloorDiagram() {
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label} — ${c.section}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
           <text x="30" y="312" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
@@ -209,7 +209,10 @@ export default function ClearFloorDiagram() {
           </div>
         </div>
       )}
-      <style>{`@keyframes clearFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }`}</style>
+      <style>{`@keyframes clearFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }        @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

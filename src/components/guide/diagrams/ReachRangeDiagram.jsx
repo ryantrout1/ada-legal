@@ -6,35 +6,35 @@ const OP_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#309
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Unobstructed Forward Reach', section: '§308.2.1', color: '#C2410C',
+    id: 1, label: 'Unobstructed Forward Reach', section: '§308.2.1', color: '#C2410C', textColor: '#8B2E08',
     x: 115, y: 60,
     plain: 'When a wheelchair user approaches an element head-on with nothing in the way, the reach range is 15 inches minimum to 48 inches maximum above the floor. This covers controls like elevator buttons, light switches, and thermostats mounted on a wall. A clear floor space of 30 × 48 inches must be provided in front of the element so the wheelchair can pull straight up to it.',
     legal: '"Where a forward reach is unobstructed, the high forward reach shall be 48 inches (1220 mm) maximum and the low forward reach shall be 15 inches (380 mm) minimum above the finish floor or ground."',
     citation: '§308.2.1'
   },
   {
-    id: 2, label: 'Obstructed Forward Reach', section: '§308.2.2', color: '#16A34A',
+    id: 2, label: 'Obstructed Forward Reach', section: '§308.2.2', color: '#16A34A', textColor: '#14532D',
     x: 365, y: 60,
     plain: 'When reaching forward over a counter, shelf, or other obstruction, the maximum reach height decreases as the obstruction gets deeper. If the obstruction is up to 20 inches deep, the maximum high reach is 48 inches. If it is between 20 and 25 inches deep, the maximum drops to 44 inches. Obstructions deeper than 25 inches are not permitted for forward reach — you would need a side approach instead. The low reach remains 15 inches in all cases.',
     legal: '"Where the high forward reach is over an obstruction, the clear floor space shall extend beneath the element for a distance not less than the required reach depth over the obstruction." Obstruction ≤ 20 inches: high reach 48 inches max. Obstruction 20–25 inches: high reach 44 inches max.',
     citation: '§308.2.2'
   },
   {
-    id: 3, label: 'Unobstructed Side Reach', section: '§308.3.1', color: '#2563EB',
+    id: 3, label: 'Unobstructed Side Reach', section: '§308.3.1', color: '#2563EB', textColor: '#1E3A8A',
     x: 595, y: 60,
     plain: 'When approaching from the side (parallel to the element), with the wheelchair alongside it, the reach range is 15 inches minimum to 48 inches maximum above the floor — the same as unobstructed forward reach. The clear floor space is positioned parallel to the element rather than facing it. This is common for wall-mounted fire extinguishers, paper towel dispensers, and coat hooks.',
     legal: '"Where a clear floor or ground space allows a parallel approach to an element and the side reach is unobstructed, the high side reach shall be 48 inches (1220 mm) maximum and the low side reach shall be 15 inches (380 mm) minimum above the finish floor or ground."',
     citation: '§308.3.1'
   },
   {
-    id: 4, label: 'Obstructed Side Reach', section: '§308.3.2', color: '#7C3AED',
+    id: 4, label: 'Obstructed Side Reach', section: '§308.3.2', color: '#7C3AED', textColor: '#5B21B6',
     x: 820, y: 60,
     plain: 'When reaching sideways over an obstruction (like a counter or shelf), the rules depend on depth. If the obstruction is up to 10 inches deep, the maximum reach is 48 inches (same as unobstructed). If the obstruction is between 10 and 24 inches deep, the maximum high reach drops to 46 inches. Obstructions deeper than 24 inches are not permitted for side reach. The low reach remains 15 inches.',
     legal: '"Where a clear floor or ground space allows a parallel approach to an element and the high side reach is over an obstruction, the height of the obstruction shall be 34 inches (865 mm) maximum and the depth shall be 24 inches (610 mm) maximum." 10–24 inches deep: high reach 46 inches max.',
     citation: '§308.3.2'
   },
   {
-    id: 5, label: 'Clear Floor Space', section: '§305', color: '#D97706',
+    id: 5, label: 'Clear Floor Space', section: '§305', color: '#D97706', textColor: '#78350F',
     x: 115, y: 390,
     plain: 'A clear floor space of at least 30 inches wide × 48 inches deep is required at every element that a person needs to reach. The space can be oriented for either a forward approach (facing the element) or a parallel approach (alongside it). At least one full side of the clear floor space must adjoin an accessible route or another clear space. The floor must be level (max 1:48 slope) and the surface firm, stable, and slip-resistant.',
     legal: '"Clear floor or ground space shall comply with 305. The clear floor space shall be 30 inches (760 mm) minimum by 48 inches (1220 mm) minimum." Positioned for forward or parallel approach.',
@@ -42,7 +42,7 @@ const CALLOUTS = [
     altUrl: CLEAR_URL
   },
   {
-    id: 6, label: 'Operable Parts', section: '§309.4', color: '#DB2777',
+    id: 6, label: 'Operable Parts', section: '§309.4', color: '#DB2777', textColor: '#9D174D',
     x: 365, y: 390,
     plain: 'All controls, switches, outlets, and other operable parts within reach range must be usable with one hand and must not require tight grasping, pinching, or twisting of the wrist. The maximum operating force is 5 pounds. This applies to light switches, thermostats, electrical outlets, fire alarm pull stations, hand dryers, and any other controls or mechanisms a person needs to operate.',
     legal: '"Operable parts shall be operable with one hand and shall not require tight grasping, pinching, or twisting of the wrist. The force required to activate operable parts shall be 5 pounds (22.2 N) maximum."',
@@ -50,7 +50,7 @@ const CALLOUTS = [
     altUrl: OP_URL
   },
   {
-    id: 7, label: "Children's Reach", section: 'Advisory §308.1', color: '#0EA5E9',
+    id: 7, label: "Children's Reach", section: 'Advisory §308.1', color: '#0EA5E9', textColor: '#0C4A6E',
     x: 595, y: 390,
     plain: "The Standards do not mandate separate children's reach ranges except at specific elements designed for children's use. However, the Advisory notes in §308.1 recommend reduced maximums based on age: ages 3–4 should have a forward reach maximum of 36 inches; ages 5–8 a maximum of 40 inches; and ages 9–12 a maximum of 44 inches. Facilities specifically designed for children (schools, daycare) should follow these advisories.",
     legal: '"Advisory 308.1: Where building elements are designed specifically for use by children ages 12 and younger, the following specifications may be used." Forward reach: ages 3–4: 36 inches max; ages 5–8: 40 inches max; ages 9–12: 44 inches max.',
@@ -61,7 +61,7 @@ const CALLOUTS = [
 function makeLink(text, url) {
   return (
     <a href={url} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -349,16 +349,16 @@ export default function ReachRangeDiagram() {
 
           {/* ===== CLEAR FLOOR SPACE note (spans panels 1 & 2) ===== */}
           <rect x="55" y="355" width="130" height="28" rx="4" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="120" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#D97706" fontWeight="600">
+          <text x="120" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">
             CLEAR FLOOR: {imp('30', '760')} × {imp('48', '1220')}
           </text>
-          <text x="120" y="380" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#D97706">(forward approach)</text>
+          <text x="120" y="380" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">(forward approach)</text>
 
           <rect x="535" y="355" width="130" height="28" rx="4" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="600" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#D97706" fontWeight="600">
+          <text x="600" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">
             CLEAR FLOOR: {imp('30', '760')} × {imp('48', '1220')}
           </text>
-          <text x="600" y="380" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#D97706">(parallel approach)</text>
+          <text x="600" y="380" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">(parallel approach)</text>
 
 
           {/* ===== CALLOUT DOTS ===== */}
@@ -379,7 +379,7 @@ export default function ReachRangeDiagram() {
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'}
                 stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
-                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
               <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2"
                 className="reach-focus-ring" />
             </g>
@@ -468,6 +468,9 @@ export default function ReachRangeDiagram() {
         }
         @media (max-width: 768px) {
           .guide-two-col { flex-direction: column !important; gap: 16px !important; }
+        }
+              @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
         }
       `}</style>
     </div>

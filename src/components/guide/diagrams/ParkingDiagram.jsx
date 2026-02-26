@@ -173,15 +173,15 @@ export default function ParkingDiagram() {
           <rect x="50" y="110" width="100" height="180" rx="8" fill="#C2410C" opacity="0.07" />
           <rect x="55" y="115" width="90" height="40" rx="4" fill="#C2410C" opacity="0.05" />
           <rect x="55" y="255" width="90" height="30" rx="4" fill="#C2410C" opacity="0.05" />
-          <text x="100" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#C2410C" opacity="0.6">VAN</text>
+          <text x="100" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#8B2E08" opacity="0.6">VAN</text>
           {/* ISA on ground */}
           <circle cx="100" cy="316" r="10" fill="none" stroke="#2563EB" strokeWidth="1.5" opacity="0.4" />
-          <text x="100" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#2563EB" opacity="0.5">♿</text>
-          <text x="100" y="96" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#C2410C">VAN ACCESSIBLE</text>
+          <text x="100" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#1E3A8A" opacity="0.5">♿</text>
+          <text x="100" y="96" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#8B2E08">VAN ACCESSIBLE</text>
 
           {/* Access aisle */}
           <rect x="170" y="82" width="70" height="260" fill="url(#hatch)" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="6 3" />
-          <text x="205" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#2563EB" transform="rotate(-90, 205, 215)">ACCESS AISLE</text>
+          <text x="205" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#1E3A8A" transform="rotate(-90, 205, 215)">ACCESS AISLE</text>
 
           {/* Car space */}
           <rect x="240" y="82" width="110" height="260" rx="2" fill="#F0FDF4" stroke="#16A34A" strokeWidth="1.5" />
@@ -189,10 +189,10 @@ export default function ParkingDiagram() {
           <rect x="258" y="120" width="74" height="160" rx="10" fill="#16A34A" opacity="0.06" />
           <rect x="262" y="125" width="66" height="35" rx="6" fill="#16A34A" opacity="0.04" />
           <rect x="262" y="250" width="66" height="25" rx="6" fill="#16A34A" opacity="0.04" />
-          <text x="295" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#16A34A" opacity="0.6">CAR</text>
+          <text x="295" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" opacity="0.6">CAR</text>
           {/* ISA on ground */}
           <circle cx="295" cy="316" r="10" fill="none" stroke="#2563EB" strokeWidth="1.5" opacity="0.4" />
-          <text x="295" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#2563EB" opacity="0.5">♿</text>
+          <text x="295" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#1E3A8A" opacity="0.5">♿</text>
 
           {/* Non-accessible space (dashed) */}
           <rect x="350" y="82" width="110" height="260" rx="2" fill="none" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="5 4" />
@@ -265,7 +265,7 @@ export default function ParkingDiagram() {
           <rect x="720" y="220" width="100" height="160" rx="10" fill="#D97706" opacity="0.08" stroke="#D97706" strokeWidth="1" opacity="0.2" />
           <rect x="725" y="225" width="90" height="40" rx="6" fill="#D97706" opacity="0.06" />
           <rect x="725" y="345" width="90" height="30" rx="6" fill="#D97706" opacity="0.06" />
-          <text x="770" y="305" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#D97706" opacity="0.4">VAN</text>
+          <text x="770" y="305" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#78350F" opacity="0.4">VAN</text>
 
           {/* --- RIGHT DIMENSIONS --- */}
 

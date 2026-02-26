@@ -16,7 +16,7 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
         <div style={{ textAlign: 'center', padding: '2rem 0', color: '#475569' }}>
           <div className="a11y-spinner" style={{ margin: '0 auto 0.75rem' }} />
           <p style={{ fontSize: '0.8125rem' }}>{siteProgress || 'Preparing…'}</p>
-          <p style={{ fontSize: '0.6875rem', color: '#5E6B7C' }}>
+          <p style={{ fontSize: '0.6875rem', color: '#434E5E' }}>
             This may take 1–2 minutes. Each page is loaded and audited individually.
           </p>
         </div>
@@ -40,7 +40,7 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
             <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#475569', margin: '0.25rem 0 0' }}>
               Estimated Accessibility Score
             </p>
-            <p style={{ fontSize: '0.6875rem', color: '#5E6B7C', margin: '0.25rem 0 0' }}>
+            <p style={{ fontSize: '0.6875rem', color: '#434E5E', margin: '0.25rem 0 0' }}>
               {siteResults.totalViolations} violation{siteResults.totalViolations !== 1 ? 's' : ''} across {siteResults.pages.length} pages
             </p>
           </div>
@@ -61,11 +61,11 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontWeight: 700, fontSize: '0.8125rem', color: '#1E293B' }}>{p.page}</span>
                   {p.error ? (
-                    <span style={{ fontSize: '0.6875rem', color: '#DC2626' }}>{p.error}</span>
+                    <span style={{ fontSize: '0.6875rem', color: '#991B1B' }}>{p.error}</span>
                   ) : p.violations.length === 0 ? (
                     <span style={{ fontSize: '0.6875rem', color: '#16A34A', fontWeight: 600 }}>✓ Clean</span>
                   ) : (
-                    <span style={{ fontSize: '0.6875rem', color: '#DC2626', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.6875rem', color: '#991B1B', fontWeight: 600 }}>
                       {p.violations.length} issue{p.violations.length !== 1 ? 's' : ''}
                     </span>
                   )}
@@ -109,7 +109,7 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
                       {v.totalNodes} el{v.totalNodes !== 1 ? 's' : ''}
                     </span>
                   </div>
-                  <p style={{ margin: '0.25rem 0 0', fontSize: '0.6875rem', color: '#5E6B7C' }}>
+                  <p style={{ margin: '0.25rem 0 0', fontSize: '0.6875rem', color: '#434E5E' }}>
                     Pages: {v.pages.join(', ')}
                   </p>
                 </div>

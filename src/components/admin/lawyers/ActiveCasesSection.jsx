@@ -61,7 +61,7 @@ export default function ActiveCasesSection({ lawyer, cases, contactLogs }) {
                 >
                   {isPhysical
                     ? <Building2 size={14} style={{ color: '#C2410C' }} />
-                    : <Globe size={14} style={{ color: '#1D4ED8' }} />
+                    : <Globe size={14} style={{ color: '#1E3A8A' }} />
                   }
                   <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: '#334155', flex: 1, minWidth: '120px' }}>
                     {c.business_name}

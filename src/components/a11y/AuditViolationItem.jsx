@@ -48,7 +48,7 @@ export default function AuditViolationItem({ violation, index, config, onHighlig
             {v.id}
           </p>
         </div>
-        <span style={{ color: '#5E6B7C', fontSize: '0.75rem', flexShrink: 0 }}>
+        <span style={{ color: '#434E5E', fontSize: '0.75rem', flexShrink: 0 }}>
           {expanded ? '▼' : '▶'} {v.nodes.length}
         </span>
       </button>
@@ -60,7 +60,7 @@ export default function AuditViolationItem({ violation, index, config, onHighlig
           </p>
           {v.helpUrl && (
             <a href={v.helpUrl} target="_blank" rel="noopener noreferrer" style={{
-              fontSize: '0.6875rem', color: '#2563EB', marginBottom: '0.5rem', display: 'inline-block'
+              fontSize: '0.6875rem', color: '#1E3A8A', marginBottom: '0.5rem', display: 'inline-block'
             }}>
               Learn more →
             </a>

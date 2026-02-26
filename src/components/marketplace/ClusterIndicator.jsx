@@ -17,10 +17,10 @@ export default function ClusterIndicator({ caseData }) {
       <div style={{
         display: 'flex', alignItems: 'center', gap: '6px',
       }}>
-        <BarChart3 size={14} aria-hidden="true" style={{ color: '#1D4ED8', flexShrink: 0 }} />
+        <BarChart3 size={14} aria-hidden="true" style={{ color: '#1E3A8A', flexShrink: 0 }} />
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 600,
-          color: '#1D4ED8',
+          color: '#1E3A8A',
         }}>
           {count} reports for this business
         </span>

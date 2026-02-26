@@ -52,7 +52,7 @@ export default function CaseCard({ caseData, onViewDetails }) {
         }}>
           {isPhysical
             ? <Building2 size={16} aria-hidden="true" style={{ color: 'var(--terra-600, #C2410C)' }} />
-            : <Globe size={16} aria-hidden="true" style={{ color: '#1D4ED8' }} />
+            : <Globe size={16} aria-hidden="true" style={{ color: '#1E3A8A' }} />
           }
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,

@@ -4,21 +4,21 @@ const RAIL_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#5
 
 const CALLOUTS = [
   {
-    id: 5, label: 'Circular Profile', section: '§505.7.1', color: '#C2410C',
+    id: 5, label: 'Circular Profile', section: '§505.7.1', color: '#C2410C', textColor: '#8B2E08',
     x: 175, y: 48,
     plain: 'A circular handrail must have an outside diameter of 1.25 inches minimum to 2 inches maximum. This range ensures most people — including those with limited grip strength — can wrap their fingers comfortably around the rail. The surface must be smooth and free of sharp or abrasive elements. Edges must be rounded. The rail must be continuous along its full length, except where interrupted by a newel post at a stair turn.',
     legal: '"Circular cross sections shall have an outside diameter of 1 1/4 inches (32 mm) minimum and 2 inches (51 mm) maximum." Per §505.6: "Handrail gripping surfaces shall be continuous along their full length and shall not be obstructed along their tops or sides."',
     citation: '§505.7.1, §505.6'
   },
   {
-    id: 6, label: 'Non-Circular Profile', section: '§505.7.2', color: '#16A34A',
+    id: 6, label: 'Non-Circular Profile', section: '§505.7.2', color: '#16A34A', textColor: '#14532D',
     x: 580, y: 48,
     plain: 'Non-circular handrails (oval, rectangular with rounded corners, etc.) must have a cross-section dimension of 2.25 inches maximum, and a perimeter between 4 and 6.25 inches. The perimeter measurement ensures the rail is graspable — large flat rails that cannot be wrapped by a hand do not comply. All edges must be rounded, and the surface smooth. This profile is increasingly popular in modern architecture.',
     legal: '"Non-circular cross sections shall have a cross-section dimension of 2 1/4 inches (57 mm) maximum." "Non-circular cross sections shall have a perimeter dimension of 4 inches (100 mm) minimum and 6 1/4 inches (160 mm) maximum."',
     citation: '§505.7.2'
   },
   {
-    id: 7, label: 'Wall Clearance', section: '§505.5', color: '#2563EB',
+    id: 7, label: 'Wall Clearance', section: '§505.5', color: '#2563EB', textColor: '#1E3A8A',
     x: 380, y: 265,
     plain: 'There must be at least 1.5 inches of clear space between the handrail and the wall (or any adjacent surface). This gap ensures fingers are not pinched or scraped when gripping the rail. The space between the rail and wall must also be free of sharp or abrasive elements — no exposed bolt heads, rough concrete, or protruding brackets within the clearance zone.',
     legal: '"The clearance between handrail gripping surfaces and adjacent surfaces shall be 1 1/2 inches (38 mm) minimum."',
@@ -29,7 +29,7 @@ const CALLOUTS = [
 function makeLink(text) {
   return (
     <a href={RAIL_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -173,7 +173,7 @@ export default function HandrailDiagram() {
                 </circle>
               )}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
               <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="rail-focus-ring" />
             </g>
           ))}
@@ -214,6 +214,9 @@ export default function HandrailDiagram() {
         @keyframes railFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
         g[role="button"]:focus .rail-focus-ring { stroke: #C2410C; stroke-width: 2.5; }
         @media (max-width:768px) { .guide-two-col { flex-direction:column !important; gap:16px !important; } }
+              @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
+        }
       `}</style>
     </div>
   );

@@ -86,7 +86,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {isPhysical
               ? <Building2 size={20} aria-hidden="true" style={{ color: 'var(--terra-600, #C2410C)' }} />
-              : <Globe size={20} aria-hidden="true" style={{ color: '#1D4ED8' }} />
+              : <Globe size={20} aria-hidden="true" style={{ color: '#1E3A8A' }} />
             }
             <span id="case-detail-heading" style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 800,
@@ -212,7 +212,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
             display: 'flex', flexDirection: 'column', gap: '8px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <ContactIcon size={16} style={{ color: '#1D4ED8', flexShrink: 0 }} />
+              <ContactIcon size={16} style={{ color: '#1E3A8A', flexShrink: 0 }} />
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: '#1E3A5F' }}>
                 Contact Preference: {contactPrefLabel}
               </span>

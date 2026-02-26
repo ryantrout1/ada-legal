@@ -98,9 +98,9 @@ export default function GuideWebFirstSteps() {
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
-                { priority: 'Critical', color: '#DC2626', bg: '#FEE2E2', desc: 'Blocks access entirely — users cannot complete a task at all. Examples: form can\'t be submitted by keyboard, no captions on required video content, page has a keyboard trap.' },
+                { priority: 'Critical', color: '#991B1B', bg: '#FEE2E2', desc: 'Blocks access entirely — users cannot complete a task at all. Examples: form can\'t be submitted by keyboard, no captions on required video content, page has a keyboard trap.' },
                 { priority: 'Serious', color: '#D97706', bg: '#FEF3C7', desc: 'Makes tasks very difficult. Examples: poor contrast makes text hard to read, images of text with no alternative, focus order jumps unpredictably.' },
-                { priority: 'Moderate', color: '#2563EB', bg: '#DBEAFE', desc: 'Causes inconvenience but doesn\'t block access. Examples: missing skip navigation link, heading levels skipped, decorative images with unnecessary alt text.' },
+                { priority: 'Moderate', color: '#1E3A8A', bg: '#DBEAFE', desc: 'Causes inconvenience but doesn\'t block access. Examples: missing skip navigation link, heading levels skipped, decorative images with unnecessary alt text.' },
                 { priority: 'Minor', color: '#16A34A', bg: '#DCFCE7', desc: 'Best practice issues. Examples: link text says "click here" instead of something descriptive, redundant ARIA attributes.' }
               ].map((item, i, arr) => (
                 <div key={i} style={{
@@ -330,7 +330,7 @@ export default function GuideWebFirstSteps() {
                       fontSize: '0.75rem', fontWeight: 600, padding: '2px 10px',
                       borderRadius: '100px',
                       background: item.type === 'Automated' ? '#EDE9FE' : item.type === 'Manual' ? '#FEF3C7' : '#DBEAFE',
-                      color: item.type === 'Automated' ? '#5B2C6F' : item.type === 'Manual' ? '#92400E' : '#1D4ED8'
+                      color: item.type === 'Automated' ? '#5B2C6F' : item.type === 'Manual' ? '#92400E' : '#1E3A8A'
                     }}>{item.type}</span>
                   </div>
                   <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.desc}</p>

@@ -476,7 +476,7 @@ body.hc-mode div[style*="linear-gradient"] {
 
 .modal-light-theme input::placeholder,
 .modal-light-theme textarea::placeholder {
-  color: #9CA3AF !important;
+  color: #3F4752 !important;
 }
 
 .modal-light-theme option {
@@ -596,7 +596,7 @@ html {
 }
 .fb-subtitle {
   font-family: Manrope, sans-serif;
-  font-size: 0.85rem; color: #586577;
+  font-size: 0.85rem; color: #3D4A5C;
   margin: 0 0 20px; line-height: 1.5;
 }
 .fb-form {
@@ -607,8 +607,8 @@ html {
   font-size: 0.8125rem; font-weight: 600;
   color: #334155; display: block; margin-bottom: 4px;
 }
-.fb-optional { color: #5E6B7C; font-weight: 400; }
-.fb-required { color: #DC2626; }
+.fb-optional { color: #434E5E; font-weight: 400; }
+.fb-required { color: #991B1B; }
 .fb-select, .fb-input, .fb-textarea {
   font-family: Manrope, sans-serif; font-size: 0.9rem;
   padding: 10px 12px; border-radius: 8px;
@@ -623,10 +623,10 @@ html {
   outline: 2px solid #B7501F;
   outline-offset: -1px;
 }
-.fb-input::placeholder, .fb-textarea::placeholder { color: #6B7280; }
+.fb-input::placeholder, .fb-textarea::placeholder { color: #3F4752; }
 .fb-error {
   font-family: Manrope, sans-serif;
-  font-size: 0.85rem; color: #DC2626; margin: 0;
+  font-size: 0.85rem; color: #991B1B; margin: 0;
 }
 .fb-submit-btn {
   font-family: Manrope, sans-serif;

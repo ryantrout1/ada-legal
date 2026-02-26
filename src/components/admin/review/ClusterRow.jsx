@@ -30,7 +30,7 @@ function CompIndicator({ score }) {
     ? { dot: '#15803D', label: 'Ready',      color: '#15803D' }
     : score >= 50
       ? { dot: '#D97706', label: 'Partial',    color: '#B45309' }
-      : { dot: '#DC2626', label: 'Incomplete', color: '#B91C1C' };
+      : { dot: '#DC2626', label: 'Incomplete', color: '#991B1B' };
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: cfg.color }}>
       <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: cfg.dot, flexShrink: 0 }} />
@@ -124,7 +124,7 @@ export default function ClusterRow({ clusterId, cases, onBulkApprove, onBulkReje
             <span style={{
               display: 'inline-flex', alignItems: 'center', padding: '1px 8px', borderRadius: '100px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-              color: '#1D4ED8', backgroundColor: 'var(--info-100)', whiteSpace: 'nowrap',
+              color: '#1E3A8A', backgroundColor: 'var(--info-100)', whiteSpace: 'nowrap',
             }}>
               {cases.length} reports
             </span>
@@ -198,7 +198,7 @@ export default function ClusterRow({ clusterId, cases, onBulkApprove, onBulkReje
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: '6px',
                   padding: '8px 18px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                  fontWeight: 700, color: '#B91C1C', backgroundColor: 'transparent',
+                  fontWeight: 700, color: '#991B1B', backgroundColor: 'transparent',
                   border: '2px solid #B91C1C', borderRadius: '8px', cursor: 'pointer', minHeight: '44px',
                 }}
               >

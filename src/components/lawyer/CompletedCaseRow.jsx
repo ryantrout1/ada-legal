@@ -9,7 +9,7 @@ function formatDate(d) {
 
 const RESOLUTION_BADGE = {
   engaged: { label: 'Engaged', bg: '#DCFCE7', color: '#15803D' },
-  referred_out: { label: 'Referred Out', bg: '#DBEAFE', color: '#1D4ED8' },
+  referred_out: { label: 'Referred Out', bg: '#DBEAFE', color: '#1E3A8A' },
   not_viable: { label: 'Not Viable', bg: 'var(--slate-100)', color: 'var(--slate-600)' },
   claimant_unresponsive: { label: 'Unresponsive', bg: '#FEF3C7', color: '#B45309' },
   claimant_declined: { label: 'Declined', bg: '#FEF3C7', color: '#B45309' },
@@ -46,7 +46,7 @@ export default function CompletedCaseRow({ caseData, notes, onSaveNote }) {
           width: '20px', height: '20px', borderRadius: '4px', flexShrink: 0,
           backgroundColor: isPhysical ? 'var(--terra-100, #FEF1EC)' : '#DBEAFE'
         }}>
-          {isPhysical ? <Building2 size={10} style={{ color: 'var(--terra-600, #C2410C)' }} /> : <Globe size={10} style={{ color: '#1D4ED8' }} />}
+          {isPhysical ? <Building2 size={10} style={{ color: 'var(--terra-600, #C2410C)' }} /> : <Globe size={10} style={{ color: '#1E3A8A' }} />}
         </span>
         <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', flexShrink: 0 }}>
           {[c.city, c.state].filter(Boolean).join(', ')}

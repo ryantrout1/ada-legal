@@ -28,7 +28,7 @@ export default function StandardsStyles() {
         box-sizing: border-box;
       }
       .sg-search-input::placeholder {
-        color: #94A3B8;
+        color: #4B5563;
       }
       .sg-search-input:focus {
         border-color: #C2410C;

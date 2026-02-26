@@ -169,7 +169,7 @@ export default function KnowYourRightsSection() {
 
         <div style={{ textAlign: 'center', maxWidth: '700px', margin: '40px auto 0' }}>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem', color: '#94A3B8',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem', color: '#4B5563',
             lineHeight: 1.65, marginBottom: '24px'
           }}>
             Not sure which one applies? That's completely normal — many situations overlap. Our intake form asks simple questions to determine the right path for you. No legal knowledge required.
@@ -178,7 +178,7 @@ export default function KnowYourRightsSection() {
             onClick={() => openModal('report_violation')}
             style={{
               display: 'inline-block', fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-              fontWeight: 600, color: '#94A3B8', background: 'transparent', padding: '14px 28px',
+              fontWeight: 600, color: '#4B5563', background: 'transparent', padding: '14px 28px',
               borderRadius: '10px', cursor: 'pointer', border: '1px solid #CBD5E1',
               transition: 'background 0.2s, box-shadow 0.2s'
             }}
@@ -186,7 +186,7 @@ export default function KnowYourRightsSection() {
             Report a Violation — Coming Soon →
           </button>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#94A3B8',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#4B5563',
             fontStyle: 'italic', lineHeight: 1.55, textAlign: 'center',
             maxWidth: '700px', margin: '24px auto 0'
           }}>

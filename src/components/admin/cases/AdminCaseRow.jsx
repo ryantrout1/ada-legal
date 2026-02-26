@@ -26,7 +26,7 @@ const ACCENT_COLORS = {
   approved: '#15803D',
   assigned: '#C2410C',
   in_progress: '#C2410C',
-  closed: '#94A3B8',
+  closed: '#4B5563',
   rejected: '#B91C1C',
   expired: '#92400E'
 };
@@ -35,7 +35,7 @@ export default function AdminCaseRow({ caseData, lawyer, expanded, onToggle }) {
   const c = caseData;
   const isPhysical = c.violation_type === 'physical_space';
   const badge = STATUS_BADGE[c.status] || STATUS_BADGE.submitted;
-  const accent = ACCENT_COLORS[c.status] || '#94A3B8';
+  const accent = ACCENT_COLORS[c.status] || '#4B5563';
 
   return (
     <div style={{ borderBottom: '1px solid var(--slate-200)' }}>
@@ -69,7 +69,7 @@ export default function AdminCaseRow({ caseData, lawyer, expanded, onToggle }) {
         }}>
           {isPhysical
             ? <Building2 size={16} style={{ color: '#C2410C' }} />
-            : <Globe size={16} style={{ color: '#1D4ED8' }} />
+            : <Globe size={16} style={{ color: '#1E3A8A' }} />
           }
         </div>
 
@@ -139,7 +139,7 @@ export default function AdminCaseRow({ caseData, lawyer, expanded, onToggle }) {
         {/* Lawyer */}
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-          color: lawyer ? '#334155' : '#94A3B8',
+          color: lawyer ? '#334155' : '#4B5563',
           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
           flex: '0 1 130px', minWidth: 0
         }}>

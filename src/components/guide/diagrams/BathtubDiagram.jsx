@@ -4,49 +4,49 @@ const TUB_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#60
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Clear Floor Space', section: '§607.2', color: '#C2410C',
+    id: 1, label: 'Clear Floor Space', section: '§607.2', color: '#C2410C', textColor: '#8B2E08',
     x: 100, y: 42,
     plain: 'A clear floor space of at least 30 inches wide by 60 inches long must be provided alongside the bathtub, extending the full length of the tub. If a permanent seat is provided at the head end of the tub, the clear floor space must extend 12 inches beyond the seat wall — so the wheelchair can pull past the seat for an easier lateral transfer. The floor must be level and slip-resistant.',
     legal: '"A clearance in front of bathtubs shall extend the length of the bathtub and shall be 30 inches wide minimum." §607.2 EXCEPTION: "Where a permanent seat is provided at the head end of the bathtub, the clearance shall extend 12 inches minimum beyond the wall at the head end of the bathtub."',
     citation: '§607.2'
   },
   {
-    id: 2, label: 'Bathtub Seat', section: '§607.3', color: '#16A34A',
+    id: 2, label: 'Bathtub Seat', section: '§607.3', color: '#16A34A', textColor: '#14532D',
     x: 330, y: 42,
     plain: 'A seat is required in accessible bathtubs — either a permanent (built-in) seat at the head end or a removable seat. Permanent seats must be 15 inches deep minimum and extend from the back wall to or beyond the outer edge of the tub. Removable seats must also be 15 inches deep and span the full width of the tub. The top of the seat must be at the same height as the tub rim (17–19 inches) to allow a smooth transfer from a wheelchair.',
     legal: '"An in-tub seat or a seat at the head end of the bathtub shall be provided." §607.3 Permanent seats: "15 inches deep minimum, extending from the back wall to or beyond the outer edge of the bathtub." Removable: "15 inches deep minimum, capable of secure placement."',
     citation: '§607.3'
   },
   {
-    id: 3, label: 'Grab Bars (With Seat)', section: '§607.4.1', color: '#2563EB',
+    id: 3, label: 'Grab Bars (With Seat)', section: '§607.4.1', color: '#2563EB', textColor: '#1E3A8A',
     x: 100, y: 190,
     plain: 'When a permanent seat is provided at the head end: Two horizontal grab bars on the back (long) wall — one at 33–36 inches above the floor and one at 8–10 inches above the tub rim, each 24 inches long minimum starting near the seat end. One grab bar on the head-end wall at 33–36 inches above the floor, extending the full width of the tub. The lower back-wall bar helps with balance during transfer.',
     legal: '"Two grab bars on the back wall, one 33 to 36 inches above the floor and one 8 to 10 inches above the rim of the bathtub, each 24 inches long minimum, installed at the head end of the bathtub." Head-end wall: "one bar 33 to 36 inches above the floor, mounted on the head end wall at the front edge of the bathtub."',
     citation: '§607.4.1'
   },
   {
-    id: 4, label: 'Grab Bars (No Seat)', section: '§607.4.2', color: '#7C3AED',
+    id: 4, label: 'Grab Bars (No Seat)', section: '§607.4.2', color: '#7C3AED', textColor: '#5B21B6',
     x: 330, y: 190,
     plain: 'When no permanent seat is provided (removable seat only): Two grab bars on the back wall — the upper bar at 33–36 inches above the floor, 24 inches long minimum near the head. The lower bar at 8–10 inches above the rim, extending the full length of the tub. One additional bar on the head-end wall at 33–36 inches, full width. This provides maximum support for someone using a removable bath seat.',
     legal: '"Two grab bars on the back wall — upper: 33 to 36 inches above floor, 24 inches minimum starting at head end. Lower: 8 to 10 inches above rim, full length of tub." Head-end wall: "33 to 36 inches above floor, full width of wall."',
     citation: '§607.4.2'
   },
   {
-    id: 5, label: 'Controls & Shower', section: '§607.5 / §607.6', color: '#D97706',
+    id: 5, label: 'Controls & Shower', section: '§607.5 / §607.6', color: '#D97706', textColor: '#78350F',
     x: 560, y: 90,
     plain: 'Controls and the shower spray unit must be installed between the bathtub rim and the grab bar, on the end wall opposite the seat (the foot end or open end). This placement keeps controls within reach of someone seated on the tub seat or in a wheelchair alongside the tub. A hand-held shower spray with a hose at least 59 inches long is required. Controls must be operable with one hand — no twisting.',
     legal: '"Controls, faucets, and shower spray units shall be installed on an end wall between the bathtub rim and the grab bar." §607.6 "A shower spray unit with a hose 59 inches long minimum… shall be provided." Operable with one hand per §309.',
     citation: '§607.5, §607.6'
   },
   {
-    id: 6, label: 'Enclosures', section: '§607.7', color: '#DB2777',
+    id: 6, label: 'Enclosures', section: '§607.7', color: '#DB2777', textColor: '#9D174D',
     x: 560, y: 210,
     plain: 'Bathtub enclosures (shower curtains, glass doors) cannot have tracks mounted on the tub rim that would obstruct transfer. A person must be able to slide across the rim from a wheelchair or bath chair without catching on a metal track. Enclosures also must not obstruct access to the controls, faucets, or shower spray. Shower curtains are generally the best solution as they don\'t create physical barriers.',
     legal: '"Enclosures for bathtubs shall not obstruct controls, faucets, and shower spray units or obstruct transfer from wheelchairs onto bathtub seats or into bathtubs. Enclosures on bathtubs shall not have tracks mounted on their rims."',
     citation: '§607.7'
   },
   {
-    id: 7, label: 'Surface & Drainage', section: '§607.1', color: '#0EA5E9',
+    id: 7, label: 'Surface & Drainage', section: '§607.1', color: '#0EA5E9', textColor: '#0C4A6E',
     x: 710, y: 150,
     plain: 'The bathtub floor must be slip-resistant to prevent falls. While the Standards don\'t specify a precise coefficient of friction, the surface must meet the general §302 requirement for firm, stable, and slip-resistant finishes. The tub rim height should be approximately 17–19 inches above the floor to facilitate wheelchair transfer — matching standard wheelchair seat height. Drainage must prevent water accumulation on the adjacent floor.',
     legal: '"Bathtubs shall comply with §607." Floor surface per §302: "stable, firm, and slip-resistant." Rim height should permit transfer from wheelchair — typically 17 to 19 inches above the finish floor.',
@@ -57,7 +57,7 @@ const CALLOUTS = [
 function makeLink(text) {
   return (
     <a href={TUB_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -125,20 +125,20 @@ export default function BathtubDiagram() {
 
           {/* Seat at head end (left side) */}
           <rect x="60" y="65" width="48" height="100" rx="4" fill="#16A34A" opacity="0.08" stroke="#16A34A" strokeWidth="1.2" />
-          <text x="84" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#16A34A" fontWeight="600">SEAT</text>
+          <text x="84" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600">SEAT</text>
 
           {/* Controls at foot end (right side) */}
           <circle cx="330" cy="75" r="4" fill="#D97706" opacity="0.4" stroke="#D97706" strokeWidth="1" />
           <circle cx="320" cy="75" r="3" fill="#D97706" opacity="0.4" />
-          <text x="325" y="90" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#D97706" fontWeight="600">CONTROLS</text>
+          <text x="325" y="90" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F" fontWeight="600">CONTROLS</text>
 
           {/* Grab bar — back wall (long wall, top) */}
           <line x1="62" y1="67" x2="338" y2="67" stroke="#2563EB" strokeWidth="4" strokeLinecap="round" />
-          <text x="200" y="60" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#2563EB" fontWeight="600">GRAB BAR (back wall)</text>
+          <text x="200" y="60" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A" fontWeight="600">GRAB BAR (back wall)</text>
 
           {/* Grab bar — head-end wall */}
           <line x1="62" y1="67" x2="62" y2="163" stroke="#7C3AED" strokeWidth="4" strokeLinecap="round" />
-          <text x="50" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#7C3AED" fontWeight="600" transform="rotate(-90 50 120)">GRAB (head)</text>
+          <text x="50" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#5B21B6" fontWeight="600" transform="rotate(-90 50 120)">GRAB (head)</text>
 
           {/* Tub dimensions */}
           {/* Length */}
@@ -150,8 +150,8 @@ export default function BathtubDiagram() {
 
           {/* Clear floor space */}
           <rect x="60" y="200" width="280" height="70" rx="2" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1" strokeDasharray="5 3" />
-          <text x="200" y="238" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#C2410C" fontWeight="600">CLEAR FLOOR SPACE</text>
-          <text x="200" y="250" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#C2410C">{d('30', '760')} × {d('60', '1525')}</text>
+          <text x="200" y="238" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#8B2E08" fontWeight="600">CLEAR FLOOR SPACE</text>
+          <text x="200" y="250" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#8B2E08">{d('30', '760')} × {d('60', '1525')}</text>
 
           {/* Clear floor width dim */}
           <line x1="46" y1="200" x2="46" y2="270" stroke="#C2410C" strokeWidth="1" />
@@ -161,11 +161,11 @@ export default function BathtubDiagram() {
           <text x="44" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('30', '760')}</text>
 
           {/* Wheelchair hint */}
-          <text x="200" y="264" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="18" fill="#C2410C" opacity="0.15">♿</text>
+          <text x="200" y="264" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="18" fill="#8B2E08" opacity="0.15">♿</text>
 
           {/* 12" extension if permanent seat */}
           <line x1="60" y1="288" x2="20" y2="288" stroke="#C2410C" strokeWidth="1" strokeDasharray="3 2" />
-          <text x="40" y="298" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#C2410C">+{d('12', '305')} if perm. seat</text>
+          <text x="40" y="298" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#8B2E08">+{d('12', '305')} if perm. seat</text>
 
 
           {/* ===== DIVIDER ===== */}
@@ -192,24 +192,24 @@ export default function BathtubDiagram() {
 
           {/* Seat at head end */}
           <rect x="502" y="180" width="60" height="8" rx="2" fill="#16A34A" opacity="0.3" stroke="#16A34A" strokeWidth="1" />
-          <text x="532" y="176" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#16A34A" fontWeight="600">SEAT</text>
+          <text x="532" y="176" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D" fontWeight="600">SEAT</text>
 
           {/* Upper grab bar — 33-36" above floor */}
           <line x1="504" y1="118" x2="640" y2="118" stroke="#2563EB" strokeWidth="4" strokeLinecap="round" />
-          <text x="575" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#2563EB" fontWeight="600">GRAB BAR ({d('33–36', '840–915')} AFF)</text>
+          <text x="575" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A" fontWeight="600">GRAB BAR ({d('33–36', '840–915')} AFF)</text>
 
           {/* Lower grab bar — 8-10" above rim */}
           <line x1="504" y1="155" x2="640" y2="155" stroke="#7C3AED" strokeWidth="3.5" strokeLinecap="round" />
-          <text x="575" y="149" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#7C3AED" fontWeight="600">LOWER BAR ({d('8–10', '200–255')} above rim)</text>
+          <text x="575" y="149" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#5B21B6" fontWeight="600">LOWER BAR ({d('8–10', '200–255')} above rim)</text>
 
           {/* Controls on foot-end wall */}
           <circle cx="770" cy="140" r="6" fill="#D97706" opacity="0.3" stroke="#D97706" strokeWidth="1.2" />
           <circle cx="770" cy="160" r="4" fill="#D97706" opacity="0.3" />
-          <text x="770" y="130" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#D97706" fontWeight="600">CONTROLS</text>
+          <text x="770" y="130" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F" fontWeight="600">CONTROLS</text>
 
           {/* Shower spray hose */}
           <path d="M 770 160 Q 800 130 810 170 Q 815 200 790 210" fill="none" stroke="#D97706" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />
-          <text x="810" y="215" fontFamily="Manrope, sans-serif" fontSize="6" fill="#D97706">59" hose</text>
+          <text x="810" y="215" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F">59" hose</text>
 
           {/* Height dimensions */}
           {/* Rim height */}
@@ -242,7 +242,7 @@ export default function BathtubDiagram() {
                 </circle>
               )}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.color : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
+              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
               <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="tub-focus-ring" />
             </g>
           ))}
@@ -282,6 +282,9 @@ export default function BathtubDiagram() {
       <style>{`
         @keyframes tubFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
         g[role="button"]:focus .tub-focus-ring { stroke: #C2410C; stroke-width: 2.5; }
+              @media (prefers-reduced-motion: reduce) {
+          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
+        }
       `}</style>
     </div>
   );

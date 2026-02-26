@@ -36,7 +36,7 @@ export default function AssignLawyerDropdown({ caseData, approvedLawyers, onAssi
           display: 'inline-flex', alignItems: 'center', gap: '4px',
           padding: '4px 10px', minHeight: '36px',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-          color: '#1D4ED8', backgroundColor: 'transparent',
+          color: '#1E3A8A', backgroundColor: 'transparent',
           border: '1.5px solid #1D4ED8', borderRadius: '6px',
           cursor: saving ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap',
           opacity: saving ? 0.5 : 1,

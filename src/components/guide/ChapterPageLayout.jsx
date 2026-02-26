@@ -111,7 +111,7 @@ function SectionBlock({ index, number, title, plain, legal, diagram, isOpen, onT
             }}>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                color: '#586577', margin: 0, lineHeight: 1.5
+                color: '#3D4A5C', margin: 0, lineHeight: 1.5
               }}>
                 Does this standard describe a barrier you've encountered?
               </p>

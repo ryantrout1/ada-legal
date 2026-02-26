@@ -48,7 +48,7 @@ export default function AdminPageHeader({
         <div className="admin-search-filters-row" style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
           {onSearchChange && (
             <div style={{ position: 'relative', flex: '0 1 auto', width: '40%', minWidth: '200px', maxWidth: '400px' }}>
-              <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8', pointerEvents: 'none' }} />
+              <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#4B5563', pointerEvents: 'none' }} />
               <input
                 type="text"
                 placeholder={searchPlaceholder}

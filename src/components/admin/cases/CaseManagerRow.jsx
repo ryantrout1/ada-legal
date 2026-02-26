@@ -97,7 +97,7 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
           backgroundColor: isPhysical ? '#FEF1EC' : '#DBEAFE',
           display: 'flex', alignItems: 'center', justifyContent: 'center'
         }}>
-          {isPhysical ? <Building2 size={15} style={{ color: '#C2410C' }} /> : <Globe size={15} style={{ color: '#1D4ED8' }} />}
+          {isPhysical ? <Building2 size={15} style={{ color: '#C2410C' }} /> : <Globe size={15} style={{ color: '#1E3A8A' }} />}
         </div>
 
         {/* Name + ID */}
@@ -147,7 +147,7 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
           <span style={{
             display: 'inline-flex', alignItems: 'center', padding: '2px 7px', borderRadius: '100px',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700,
-            color: '#1D4ED8', backgroundColor: 'var(--info-100, #DBEAFE)', whiteSpace: 'nowrap', flexShrink: 0,
+            color: '#1E3A8A', backgroundColor: 'var(--info-100, #DBEAFE)', whiteSpace: 'nowrap', flexShrink: 0,
           }}>
             {clusterSize} reports
           </span>

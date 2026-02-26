@@ -54,7 +54,7 @@ export default function TriageCaseDetail({ caseData, titleRef }) {
     ? { dot: '#15803D', label: 'Ready', color: '#15803D' }
     : score >= 50
       ? { dot: '#D97706', label: 'Partial', color: '#B45309' }
-      : { dot: '#DC2626', label: 'Incomplete', color: '#B91C1C' };
+      : { dot: '#DC2626', label: 'Incomplete', color: '#991B1B' };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -66,11 +66,11 @@ export default function TriageCaseDetail({ caseData, titleRef }) {
             backgroundColor: isPhysical ? '#FEF1EC' : '#DBEAFE',
             display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}>
-            {isPhysical ? <Building2 size={15} style={{ color: '#C2410C' }} /> : <Globe size={15} style={{ color: '#1D4ED8' }} />}
+            {isPhysical ? <Building2 size={15} style={{ color: '#C2410C' }} /> : <Globe size={15} style={{ color: '#1E3A8A' }} />}
           </div>
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-            color: isPhysical ? '#C2410C' : '#1D4ED8', textTransform: 'uppercase',
+            color: isPhysical ? '#8B2E08' : '#1E3A8A', textTransform: 'uppercase',
           }}>
             {isPhysical ? 'Physical Space' : 'Digital Website'}
           </span>
@@ -112,7 +112,7 @@ export default function TriageCaseDetail({ caseData, titleRef }) {
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 12px',
             borderRadius: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            fontWeight: 700, color: '#1D4ED8', backgroundColor: '#DBEAFE',
+            fontWeight: 700, color: '#1E3A8A', backgroundColor: '#DBEAFE',
           }}>
             🔗 {c.ai_duplicate_cluster_size} reports
           </span>
@@ -144,18 +144,18 @@ export default function TriageCaseDetail({ caseData, titleRef }) {
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '14px',
       }}>
         <div>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#94A3B8', margin: '0 0 2px', textTransform: 'uppercase' }}>Business Type</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#4B5563', margin: '0 0 2px', textTransform: 'uppercase' }}>Business Type</p>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#1E293B', margin: 0 }}>{c.business_type || '—'}</p>
         </div>
         <div>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#94A3B8', margin: '0 0 2px', textTransform: 'uppercase' }}>Location</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#4B5563', margin: '0 0 2px', textTransform: 'uppercase' }}>Location</p>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#1E293B', margin: 0 }}>
             {[c.city, c.state].filter(Boolean).join(', ') || '—'}
             {c.street_address && <><br />{c.street_address}</>}
           </p>
         </div>
         <div>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#94A3B8', margin: '0 0 2px', textTransform: 'uppercase' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#4B5563', margin: '0 0 2px', textTransform: 'uppercase' }}>
             {isPhysical ? 'Violation Subtype' : 'URL / Domain'}
           </p>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#1E293B', margin: 0 }}>
@@ -163,11 +163,11 @@ export default function TriageCaseDetail({ caseData, titleRef }) {
           </p>
         </div>
         <div>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#94A3B8', margin: '0 0 2px', textTransform: 'uppercase' }}>Incident Date</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#4B5563', margin: '0 0 2px', textTransform: 'uppercase' }}>Incident Date</p>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#1E293B', margin: 0 }}>{formatDate(c.incident_date)}</p>
         </div>
         <div>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#94A3B8', margin: '0 0 2px', textTransform: 'uppercase' }}>Visited Before?</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#4B5563', margin: '0 0 2px', textTransform: 'uppercase' }}>Visited Before?</p>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#1E293B', margin: 0 }}>{VISITED_LABELS[c.visited_before] || '—'}</p>
         </div>
       </div>
@@ -204,18 +204,18 @@ export default function TriageCaseDetail({ caseData, titleRef }) {
       <div style={{
         backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '16px',
       }}>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#94A3B8', margin: '0 0 10px', textTransform: 'uppercase' }}>Claimant Contact</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: '#4B5563', margin: '0 0 10px', textTransform: 'uppercase' }}>Claimant Contact</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <User size={14} style={{ color: '#94A3B8' }} />
+            <User size={14} style={{ color: '#4B5563' }} />
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#1E293B' }}>{c.contact_name}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Mail size={14} style={{ color: '#94A3B8' }} />
+            <Mail size={14} style={{ color: '#4B5563' }} />
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#1E293B' }}>{c.contact_email}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Phone size={14} style={{ color: '#94A3B8' }} />
+            <Phone size={14} style={{ color: '#4B5563' }} />
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#1E293B' }}>{c.contact_phone}</span>
           </div>
         </div>

@@ -36,7 +36,7 @@ export default function PhotoGallery({ photos = [] }) {
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
           color: '#475569'
         }}>
-          <Camera size={14} aria-hidden="true" style={{ color: '#5E6B7C' }} />
+          <Camera size={14} aria-hidden="true" style={{ color: '#434E5E' }} />
           {photos.length} photo{photos.length !== 1 ? 's' : ''}
         </div>
         {photos.map((photo, i) => {
