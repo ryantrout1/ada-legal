@@ -170,9 +170,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
                   onFocus={(e) => e.target.style.borderColor = '#C2410C'}
                   onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
                 />
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#94A3B8', margin: '4px 0 0' }}>
-                  Only if you'd like a response
-                </p>
+
               </div>
 
               {error && <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', color: '#DC2626', margin: 0 }}>{error}</p>}
