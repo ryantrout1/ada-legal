@@ -89,7 +89,7 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
   });
 
   const th = (label, field) => (
-    <th scope="col" onClick={() => toggleSort(field)} style={{
+    <th scope="col" onClick={() => toggleSort(field)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSort(field); }}} tabIndex="0" role="button" style={{
       fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
       color: 'var(--slate-500)', textAlign: 'left', padding: '8px 10px',
       borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase',

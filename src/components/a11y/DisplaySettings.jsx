@@ -4,6 +4,7 @@ import { RotateCcw } from 'lucide-react';
 const DEFAULTS = {
   displayMode: 'default',
   fontSize: 'default',
+  lineSpacing: 'default',
   fontFamily: 'default'
 };
 
@@ -1090,6 +1091,13 @@ export const applyPreferences = (prefs) => {
     `;
   }
 
+  if (prefs.lineSpacing === 'relaxed') {
+    css += `#main-content p, #main-content li, #main-content td, #main-content dd { line-height: 2 !important; }`;
+  } else if (prefs.lineSpacing === 'loose') {
+    css += `#main-content p, #main-content li, #main-content td, #main-content dd { line-height: 2.5 !important; }`;
+  }
+
+
   // --- FONT FAMILY ---
   if (prefs.fontFamily === 'atkinson') {
     if (!document.getElementById('atkinson-font-link')) {
@@ -1268,6 +1276,20 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
             onClick={() => updatePref('fontSize', 'large', 'Font size changed to large')} />
           <OptionButton variant={variant} label={<span><span style={{ fontSize: '1.15rem' }}>Aa</span> XL</span>} active={prefs.fontSize === 'xl'} ariaPressed={String(prefs.fontSize === 'xl')}
             onClick={() => updatePref('fontSize', 'xl', 'Font size changed to extra large')} />
+        </div>
+      </fieldset>
+
+
+      {/* Line Spacing */}
+      <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '16px' }}>
+        <legend style={labelStyle}>Line Spacing</legend>
+        <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+          <OptionButton variant={variant} label="Default" active={prefs.lineSpacing === 'default'} ariaPressed={String(prefs.lineSpacing === 'default')}
+            onClick={() => updatePref('lineSpacing', 'default', 'Line spacing changed to default')} />
+          <OptionButton variant={variant} label="Relaxed" active={prefs.lineSpacing === 'relaxed'} ariaPressed={String(prefs.lineSpacing === 'relaxed')}
+            onClick={() => updatePref('lineSpacing', 'relaxed', 'Line spacing changed to relaxed')} />
+          <OptionButton variant={variant} label="Loose" active={prefs.lineSpacing === 'loose'} ariaPressed={String(prefs.lineSpacing === 'loose')}
+            onClick={() => updatePref('lineSpacing', 'loose', 'Line spacing changed to loose')} />
         </div>
       </fieldset>
 

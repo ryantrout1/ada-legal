@@ -66,7 +66,7 @@ export default function ProfileEditForm({ profile, onSave, onCancel }) {
       </div>
       <div style={{ position: 'relative' }}>
         <label style={labelStyle}>States of Practice</label>
-        <div onClick={() => setStatesOpen(!statesOpen)} style={{
+        <div onClick={() => setStatesOpen(!statesOpen)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setStatesOpen(!statesOpen); }}} role="button" tabIndex="0" style={{
           ...inputStyle, cursor: 'pointer', minHeight: '38px', display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center'
         }}>
           {form.states_of_practice.length === 0 && <span style={{ color: 'var(--slate-400)' }}>Select...</span>}

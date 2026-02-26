@@ -312,7 +312,7 @@ export default function AdminReview() {
       {triageOpen && <TriageMode filteredCases={displayCases} onExit={(s) => { setTriageOpen(false); const t = s.approved + s.rejected + s.flagged + s.skipped; if (t > 0) setToast({ type: 'success', message: `Session: ${t} reviewed — ${s.approved} approved, ${s.rejected} rejected, ${s.flagged} flagged, ${s.skipped} skipped` }); }} onCasesChanged={loadCases} />}
 
       {toast && (
-        <div role="alert" aria-live="assertive" style={{ position: 'fixed', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 1100, padding: '12px 24px', borderRadius: '10px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, boxShadow: '0 4px 16px rgba(0,0,0,0.15)', cursor: 'pointer', backgroundColor: toast.type === 'success' ? '#15803D' : '#D97706', color: 'white' }} onClick={() => setToast(null)}>
+        <div role="alert" aria-live="assertive" style={{ position: 'fixed', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 1100, padding: '12px 24px', borderRadius: '10px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, boxShadow: '0 4px 16px rgba(0,0,0,0.15)', cursor: 'pointer', backgroundColor: toast.type === 'success' ? '#15803D' : '#D97706', color: 'white' }} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); }}} tabIndex="0" onClick={() => setToast(null)}>
           ✓ {toast.message}
         </div>
       )}

@@ -95,7 +95,7 @@ export default function AuditPanel({
           from { transform: translateX(-100%); }
           to { transform: translateX(0); }
         }
-      `}</style>
+       @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }`}</style>
 
       {/* Header */}
       <div style={{

@@ -58,7 +58,8 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
     setStep(1);
     setForm({ resolution_type: '', resolution_notes: '', estimated_case_value: '', expected_timeline: '' });
     onCancel();
-  };
+  }
+;
 
   const selectStyle = {
     width: '100%', padding: '0.5rem 0.75rem',

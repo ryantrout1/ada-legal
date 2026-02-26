@@ -20,6 +20,8 @@ export default function ForceCloseModal({ open, caseData, onSubmit, onCancel, sa
     onCancel();
   };
 
+
+
   return (
     <div
       role="dialog" aria-modal="true" aria-labelledby="force-close-heading"

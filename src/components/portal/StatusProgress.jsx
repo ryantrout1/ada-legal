@@ -148,7 +148,7 @@ export default function StatusProgress({ status, closedEventDescription, expired
         </div>
       ) : null}
 
-      <style>{`@keyframes stepPulse { 0%,100%{box-shadow:0 0 0 0 rgba(194,65,12,0.3)} 50%{box-shadow:0 0 0 8px rgba(194,65,12,0)} }`}</style>
+      <style>{`@keyframes stepPulse { 0%,100%{box-shadow:0 0 0 0 rgba(194,65,12,0.3)} 50%{box-shadow:0 0 0 8px rgba(194,65,12,0)} } @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }`}</style>
     </div>
   );
 }

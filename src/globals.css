@@ -660,3 +660,10 @@ html {
   padding: 10px 24px; border-radius: 10px;
   cursor: pointer; min-height: 44px;
 }
+/* WCAG 2.2 AAA 1.4.8: Visual Presentation — max line width for readability */
+.guide-content p,
+.guide-content li,
+.guide-two-col p,
+.guide-two-col li {
+  max-width: 80ch;
+}

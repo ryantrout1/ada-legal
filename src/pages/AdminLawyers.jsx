@@ -182,7 +182,7 @@ export default function AdminLawyers() {
       </div>
 
       {toast && (
-        <div role="alert" aria-live="assertive" style={{ position: 'fixed', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 1100, backgroundColor: '#15803D', color: 'white', padding: '12px 24px', borderRadius: '10px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, boxShadow: '0 4px 16px rgba(0,0,0,0.15)', cursor: 'pointer' }} onClick={() => setToast('')}>
+        <div role="alert" aria-live="assertive" style={{ position: 'fixed', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 1100, backgroundColor: '#15803D', color: 'white', padding: '12px 24px', borderRadius: '10px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, boxShadow: '0 4px 16px rgba(0,0,0,0.15)', cursor: 'pointer' }} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); }}} tabIndex="0" onClick={() => setToast('')}>
           ✓ {toast}
         </div>
       )}
