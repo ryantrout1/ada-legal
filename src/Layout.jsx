@@ -518,6 +518,7 @@ export default function Layout({ children, currentPageName }) {
                 )}
                 
                 {user?.role === 'lawyer' && (
+
                   <>
                     <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
