@@ -75,7 +75,7 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
                   size={16}
                   className="pipeline-arrow"
                   style={{
-                    color: arrowHighlighted ? '#F97316' : '#CBD5E1',
+                    color: arrowHighlighted ? '#EA580C' : '#CBD5E1',
                     flexShrink: 0,
                     margin: '0 2px',
                     transition: 'color 0.3s',
@@ -101,7 +101,7 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
                   transition: 'box-shadow 0.15s, border-bottom-color 0.15s',
                   boxShadow: active ? '0 2px 8px rgba(0,0,0,0.12)' : 'none',
                   borderBottom: isBottleneck
-                    ? '3px solid #F97316'
+                    ? '3px solid #EA580C'
                     : active
                       ? '3px solid var(--slate-700)'
                       : '3px solid transparent',
@@ -133,8 +133,8 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
 
       <style>{`
         @keyframes bottleneckPulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0.25); }
-          50% { box-shadow: 0 0 0 4px rgba(249,115,22,0.12); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(234,88,12,0.25); }
+          50% { box-shadow: 0 0 0 4px rgba(234,88,12,0.12); }
         }
         .pipeline-bottleneck {
           animation: bottleneckPulse 2.5s ease-in-out infinite;
