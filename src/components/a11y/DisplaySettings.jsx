@@ -481,6 +481,23 @@ export const applyPreferences = (prefs) => {
         background-color: transparent !important;
       }
 
+      /* === Feedback modal — dark mode === */
+      .fb-panel {
+        background-color: #1E293B !important;
+        border: 1px solid #475569 !important;
+      }
+      .fb-submit-btn {
+        background-color: #C2410C !important;
+        border: none !important;
+      }
+      .fb-done-btn {
+        background-color: #334155 !important;
+        border: none !important;
+      }
+      .fb-success-icon-wrap {
+        background-color: #064E3B !important;
+      }
+
     `;
   }
 
