@@ -35,7 +35,7 @@ export default function ResidentialUnitDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="res-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="res-title">ADA §809 Residential Dwelling Units — Plan View</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">ACCESSIBLE DWELLING UNIT — PLAN VIEW</text>
+          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">ACCESSIBLE DWELLING UNIT — PLAN VIEW</text>
 
           {/* Unit outline */}
           <rect x="60" y="50" width="780" height="440" fill="white" stroke="#94A3B8" strokeWidth="2" rx="4" />
@@ -119,7 +119,7 @@ export default function ResidentialUnitDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

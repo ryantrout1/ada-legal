@@ -95,7 +95,7 @@ export default function TurningSpaceDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="#FAFAF9" />
 
           {/* LEFT: CIRCULAR */}
-          <text x="200" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">CIRCULAR TURNING SPACE</text>
+          <text x="200" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">CIRCULAR TURNING SPACE</text>
 
           <circle cx="200" cy="170" r="110" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="6 4" />
           {/* Wheelchair icon */}
@@ -119,7 +119,7 @@ export default function TurningSpaceDiagram() {
 
 
           {/* RIGHT: T-SHAPED */}
-          <text x="650" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">T-SHAPED TURNING SPACE</text>
+          <text x="650" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">T-SHAPED TURNING SPACE</text>
 
           {/* 60" bounding square (dashed) */}
           <rect x="470" y="65" width="220" height="220" fill="none" stroke="#94A3B8" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
@@ -176,7 +176,7 @@ export default function TurningSpaceDiagram() {
             </g>
           ))}
 
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

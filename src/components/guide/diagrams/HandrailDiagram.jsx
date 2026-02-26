@@ -93,11 +93,11 @@ export default function HandrailDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="#FAFAF9" />
 
           {/* ===== LEFT: CIRCULAR ===== */}
-          <text x="220" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">CIRCULAR CROSS-SECTION</text>
+          <text x="220" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">CIRCULAR CROSS-SECTION</text>
 
           {/* Wall */}
           <rect x={WALL_X_L} y="80" width="10" height="180" fill="#94A3B8" rx="1" />
-          <text x={WALL_X_L + 5} y="75" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">WALL</text>
+          <text x={WALL_X_L + 5} y="75" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">WALL</text>
 
           {/* Handrail circle — radius ~40px (maps to ~1.5" dia visually) */}
           <circle cx="220" cy={CY} r="40" fill="#FEF2F2" stroke="#C2410C" strokeWidth="2.5" />
@@ -127,11 +127,11 @@ export default function HandrailDiagram() {
 
 
           {/* ===== RIGHT: NON-CIRCULAR ===== */}
-          <text x="640" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">NON-CIRCULAR CROSS-SECTION</text>
+          <text x="640" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">NON-CIRCULAR CROSS-SECTION</text>
 
           {/* Wall */}
           <rect x={WALL_X_R} y="80" width="10" height="180" fill="#94A3B8" rx="1" />
-          <text x={WALL_X_R + 5} y="75" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">WALL</text>
+          <text x={WALL_X_R + 5} y="75" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">WALL</text>
 
           {/* Handrail — rounded rectangle (oval-ish) */}
           <rect x="588" y={CY - 30} width="80" height="60" rx="18" fill="#F0FDF4" stroke="#16A34A" strokeWidth="2.5" />
@@ -178,7 +178,7 @@ export default function HandrailDiagram() {
             </g>
           ))}
 
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

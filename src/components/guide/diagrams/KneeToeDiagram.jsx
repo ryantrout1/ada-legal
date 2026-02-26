@@ -90,19 +90,19 @@ export default function KneeToeDiagram() {
           <title id="knee-title">ADA §306 Knee and Toe Clearance — Side Cross-Section</title>
           <rect x="0" y="0" width="900" height="480" fill="#FAFAF9" />
 
-          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">SIDE CROSS-SECTION — CLEARANCE ENVELOPE</text>
+          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">SIDE CROSS-SECTION — CLEARANCE ENVELOPE</text>
 
           {/* Wall */}
           <rect x="140" y="60" width="12" height="390" fill="#94A3B8" rx="1" />
-          <text x="146" y="55" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">WALL</text>
+          <text x="146" y="55" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">WALL</text>
 
           {/* Floor */}
           <line x1="100" y1="440" x2="850" y2="440" stroke="#94A3B8" strokeWidth="2.5" />
-          <text x="130" y="460" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">FLOOR</text>
+          <text x="130" y="460" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">FLOOR</text>
 
           {/* Counter/desk surface */}
           <rect x="152" y="155" width="240" height="12" rx="3" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="272" y="148" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8" fontWeight="600">COUNTER / DESK SURFACE</text>
+          <text x="272" y="148" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" fontWeight="600">COUNTER / DESK SURFACE</text>
 
           {/* ===== CLEARANCE ENVELOPE ===== */}
           {/* Toe zone: floor(440) to 9"(347), 25" deep max from front edge(392) back to wall(152) */}
@@ -169,7 +169,7 @@ export default function KneeToeDiagram() {
 
           {/* Front edge line */}
           <line x1="392" y1="140" x2="392" y2="455" stroke="#94A3B8" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
-          <text x="396" y="138" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8">FRONT EDGE</text>
+          <text x="396" y="138" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">FRONT EDGE</text>
 
 
           {/* ===== WHEELCHAIR USER ===== */}
@@ -223,7 +223,7 @@ export default function KneeToeDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="475" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="475" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

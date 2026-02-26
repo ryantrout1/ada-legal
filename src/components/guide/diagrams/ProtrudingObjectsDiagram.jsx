@@ -90,7 +90,7 @@ export default function ProtrudingObjectsDiagram() {
           <title id="prot-title">ADA §307 Protruding Objects — Side Elevation with Detection Zones</title>
           <rect x="0" y="0" width="900" height="480" fill="#FAFAF9" />
 
-          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">SIDE ELEVATION — PROTRUSION LIMITS</text>
+          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">SIDE ELEVATION — PROTRUSION LIMITS</text>
 
           {/* Wall (left side, tall) */}
           <rect x="60" y="50" width="12" height="400" fill="#94A3B8" rx="1" />
@@ -216,7 +216,7 @@ export default function ProtrudingObjectsDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="475" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="475" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

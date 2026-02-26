@@ -37,11 +37,11 @@ export default function LoadingZoneDiagram() {
         <svg viewBox="0 0 900 420" role="img" aria-labelledby="lz-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="lz-title">ADA §503 Passenger Loading Zone — Plan View</title>
           <rect width="900" height="420" fill="#FAFAF9" />
-          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">PLAN VIEW — PASSENGER LOADING ZONE</text>
+          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW — PASSENGER LOADING ZONE</text>
 
           {/* Sidewalk/building */}
           <rect x="60" y="50" width="100" height="330" rx="4" fill="#E7E5E4" opacity="0.15" stroke="#94A3B8" strokeWidth="1" />
-          <text x="110" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8" fontWeight="500" transform="rotate(-90 110 220)">SIDEWALK → BUILDING</text>
+          <text x="110" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="500" transform="rotate(-90 110 220)">SIDEWALK → BUILDING</text>
 
           {/* Access aisle */}
           <rect x="170" y="50" width="120" height="330" rx="2" fill="#16A34A" opacity="0.05" stroke="#16A34A" strokeWidth="2" />
@@ -59,11 +59,11 @@ export default function LoadingZoneDiagram() {
           <rect x="320" y="100" width="160" height="220" rx="20" fill="#94A3B8" opacity="0.08" stroke="#94A3B8" strokeWidth="1.5" />
           <rect x="335" y="115" width="130" height="60" rx="8" fill="#94A3B8" opacity="0.05" />
           <rect x="335" y="240" width="130" height="50" rx="8" fill="#94A3B8" opacity="0.05" />
-          <text x="400" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">VEHICLE</text>
+          <text x="400" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">VEHICLE</text>
 
           {/* Road */}
           <rect x="510" y="50" width="350" height="330" rx="2" fill="#94A3B8" opacity="0.04" />
-          <text x="685" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="500">ROADWAY</text>
+          <text x="685" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">ROADWAY</text>
 
           {/* Dims: access aisle 60" */}
           <line x1="170" y1="395" x2="290" y2="395" stroke="#16A34A" strokeWidth="1" />
@@ -103,7 +103,7 @@ export default function LoadingZoneDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="412" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="412" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

@@ -36,8 +36,8 @@ export default function GolfDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="gf-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="gf-title">ADA §1006/§1007 Golf & Mini Golf Facilities</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="230" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">MINIATURE GOLF HOLE</text>
-          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">GOLF COURSE TEEING GROUND</text>
+          <text x="230" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">MINIATURE GOLF HOLE</text>
+          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">GOLF COURSE TEEING GROUND</text>
 
           {/* LEFT: Mini golf */}
           {/* Course outline */}
@@ -65,7 +65,7 @@ export default function GolfDiagram() {
 
           {/* Hole 2 */}
           <rect x="130" y="210" width="280" height="100" rx="8" fill="#94A3B8" opacity="0.03" stroke="#94A3B8" strokeWidth="1" />
-          <text x="270" y="265" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">HOLE 2</text>
+          <text x="270" y="265" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">HOLE 2</text>
 
           {/* Hole 3 (accessible) */}
           <rect x="130" y="330" width="280" height="120" rx="8" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" />
@@ -86,7 +86,7 @@ export default function GolfDiagram() {
           <rect x="650" y="120" width="60" height="30" rx="6" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="1" />
           <text x="680" y="139" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#7C3AED">TEE 2 ✓</text>
           <rect x="740" y="120" width="60" height="30" rx="6" fill="#94A3B8" opacity="0.05" stroke="#94A3B8" strokeWidth="1" />
-          <text x="770" y="139" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#94A3B8">TEE 3</text>
+          <text x="770" y="139" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#4B5563">TEE 3</text>
 
           <text x="680" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#7C3AED">3+ tees → at least 2 must be accessible</text>
 
@@ -111,7 +111,7 @@ export default function GolfDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

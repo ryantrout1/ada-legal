@@ -37,7 +37,7 @@ export default function OperablePartsDiagram() {
         <svg viewBox="0 0 900 480" role="img" aria-labelledby="op-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="op-title">ADA §309 Operable Parts — Front Elevation</title>
           <rect width="900" height="480" fill="#FAFAF9" />
-          <text x="350" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">FRONT ELEVATION — OPERABLE PARTS</text>
+          <text x="350" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">FRONT ELEVATION — OPERABLE PARTS</text>
 
           {/* Wall */}
           <rect x="100" y="50" width="400" height="390" fill="#E7E5E4" opacity="0.1" stroke="#94A3B8" strokeWidth="1" rx="2" />
@@ -116,7 +116,7 @@ export default function OperablePartsDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="470" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="470" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

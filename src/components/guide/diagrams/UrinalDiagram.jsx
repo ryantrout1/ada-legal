@@ -35,8 +35,8 @@ export default function UrinalDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="ur-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="ur-title">ADA §605 Urinals — Elevation & Plan View</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="220" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">FRONT ELEVATION VIEW</text>
-          <text x="660" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">PLAN VIEW (TOP DOWN)</text>
+          <text x="220" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">FRONT ELEVATION VIEW</text>
+          <text x="660" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW (TOP DOWN)</text>
 
           {/* ===== LEFT: Front elevation ===== */}
           {/* Wall */}
@@ -79,11 +79,11 @@ export default function UrinalDiagram() {
           {/* Wall */}
           <line x1="490" y1="120" x2="830" y2="120" stroke="#94A3B8" strokeWidth="2" />
           <rect x="490" y="100" width="340" height="20" fill="#94A3B8" opacity="0.06" />
-          <text x="660" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8" fontWeight="500">WALL</text>
+          <text x="660" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" fontWeight="500">WALL</text>
 
           {/* Urinal outline (half circle on wall) */}
           <path d="M630,120 L630,190 Q630,220 660,220 Q690,220 690,190 L690,120" fill="#E7E5E4" opacity="0.2" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="660" y="175" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8">URINAL</text>
+          <text x="660" y="175" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">URINAL</text>
 
           {/* Clear floor space rectangle */}
           <rect x="595" y="225" width="130" height="200" rx="4" fill="#16A34A" opacity="0.05" stroke="#16A34A" strokeWidth="2" />
@@ -129,7 +129,7 @@ export default function UrinalDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

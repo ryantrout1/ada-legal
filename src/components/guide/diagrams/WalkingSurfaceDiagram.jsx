@@ -37,8 +37,8 @@ export default function WalkingSurfaceDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="ws-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="ws-title">ADA §403 Walking Surfaces — Section & Plan View</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="280" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">PLAN VIEW — CORRIDOR WITH PASSING SPACE</text>
-          <text x="720" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">CROSS SECTION</text>
+          <text x="280" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW — CORRIDOR WITH PASSING SPACE</text>
+          <text x="720" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">CROSS SECTION</text>
 
           {/* ===== LEFT: Plan view corridor ===== */}
           {/* Walls */}
@@ -55,7 +55,7 @@ export default function WalkingSurfaceDiagram() {
 
           {/* Corridor floor fill */}
           <rect x="68" y="40" width="132" height="310" fill="#C2410C" opacity="0.03" />
-          <text x="134" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8" transform="rotate(-90 134 110)">CORRIDOR</text>
+          <text x="134" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" transform="rotate(-90 134 110)">CORRIDOR</text>
 
           {/* Wheelchair silhouette */}
           <circle cx="130" cy="160" r="10" fill="#475569" opacity="0.15" />
@@ -147,7 +147,7 @@ export default function WalkingSurfaceDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

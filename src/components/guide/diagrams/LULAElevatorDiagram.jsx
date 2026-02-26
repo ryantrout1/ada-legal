@@ -35,8 +35,8 @@ export default function LULAElevatorDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="lula-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="lula-title">ADA §408 LULA Elevators — Plan View</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="300" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">SIDE-OPENING DOOR CONFIG</text>
-          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">END-OPENING DOOR CONFIG</text>
+          <text x="300" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">SIDE-OPENING DOOR CONFIG</text>
+          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">END-OPENING DOOR CONFIG</text>
 
           {/* LEFT: Side-opening config */}
           <rect x="100" y="60" width="320" height="320" fill="#C2410C" opacity="0.03" stroke="#94A3B8" strokeWidth="2" rx="2" />
@@ -123,7 +123,7 @@ export default function LULAElevatorDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

@@ -117,13 +117,13 @@ export default function ShowerDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="#FAFAF9" />
 
           {/* ===== LEFT: TRANSFER SHOWER 36x36 ===== */}
-          <text x="170" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">TRANSFER SHOWER (36×36)</text>
+          <text x="170" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">TRANSFER SHOWER (36×36)</text>
 
           {/* Compartment walls — 3 sides, open on bottom */}
           <rect x="40" y="60" width="160" height="160" fill="#C2410C" opacity="0.03" stroke="#94A3B8" strokeWidth="2" />
           {/* Open side (entry) — dashed */}
           <line x1="40" y1="220" x2="200" y2="220" stroke="#94A3B8" strokeWidth="2" strokeDasharray="6 4" />
-          <text x="120" y="234" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8" fontWeight="600">ENTRY ({d('36', '915')} min)</text>
+          <text x="120" y="234" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" fontWeight="600">ENTRY ({d('36', '915')} min)</text>
 
           {/* Seat — on left wall */}
           <rect x="40" y="60" width="36" height="160" rx="2" fill="#2563EB" opacity="0.08" stroke="#2563EB" strokeWidth="1.2" />
@@ -178,13 +178,13 @@ export default function ShowerDiagram() {
 
 
           {/* ===== RIGHT: ROLL-IN SHOWER 60x30 ===== */}
-          <text x="580" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">STANDARD ROLL-IN SHOWER (60×30)</text>
+          <text x="580" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">STANDARD ROLL-IN SHOWER (60×30)</text>
 
           {/* Compartment — 3 walls, open on bottom (long side) */}
           <rect x="410" y="70" width="280" height="120" fill="#16A34A" opacity="0.03" stroke="#94A3B8" strokeWidth="2" />
           {/* Open side (entry) — dashed on long side */}
           <line x1="410" y1="190" x2="690" y2="190" stroke="#94A3B8" strokeWidth="2" strokeDasharray="6 4" />
-          <text x="550" y="204" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8" fontWeight="600">ENTRY ({d('60', '1525')} full width)</text>
+          <text x="550" y="204" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" fontWeight="600">ENTRY ({d('60', '1525')} full width)</text>
 
           {/* Grab bars — back wall */}
           <line x1="412" y1="72" x2="688" y2="72" stroke="#D97706" strokeWidth="4" strokeLinecap="round" />
@@ -255,7 +255,7 @@ export default function ShowerDiagram() {
             </g>
           ))}
 
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

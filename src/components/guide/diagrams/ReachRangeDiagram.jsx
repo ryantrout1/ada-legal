@@ -173,7 +173,7 @@ export default function ReachRangeDiagram() {
 
 
           {/* ===== PANEL 1: UNOBSTRUCTED FORWARD REACH ===== */}
-          <text x="115" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#94A3B8" letterSpacing="0.06em">
+          <text x="115" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#4B5563" letterSpacing="0.06em">
             UNOBSTRUCTED FORWARD
           </text>
 
@@ -214,7 +214,7 @@ export default function ReachRangeDiagram() {
 
 
           {/* ===== PANEL 2: OBSTRUCTED FORWARD REACH ===== */}
-          <text x="365" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#94A3B8" letterSpacing="0.06em">
+          <text x="365" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#4B5563" letterSpacing="0.06em">
             OBSTRUCTED FORWARD
           </text>
 
@@ -266,7 +266,7 @@ export default function ReachRangeDiagram() {
 
 
           {/* ===== PANEL 3: UNOBSTRUCTED SIDE REACH ===== */}
-          <text x="595" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#94A3B8" letterSpacing="0.06em">
+          <text x="595" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#4B5563" letterSpacing="0.06em">
             UNOBSTRUCTED SIDE
           </text>
 
@@ -306,7 +306,7 @@ export default function ReachRangeDiagram() {
 
 
           {/* ===== PANEL 4: OBSTRUCTED SIDE REACH ===== */}
-          <text x="820" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#94A3B8" letterSpacing="0.06em">
+          <text x="820" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#4B5563" letterSpacing="0.06em">
             OBSTRUCTED SIDE
           </text>
 
@@ -385,7 +385,7 @@ export default function ReachRangeDiagram() {
             </g>
           ))}
 
-          <text x="30" y="425" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8">
+          <text x="30" y="425" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563">
             Click or tap numbered callouts for details
           </text>
         </svg>

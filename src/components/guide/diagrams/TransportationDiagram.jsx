@@ -36,17 +36,17 @@ export default function TransportationDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="tr-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="tr-title">ADA §810 Transportation Facilities — Bus Stop & Rail Platform</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="220" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">BUS STOP — PLAN VIEW</text>
-          <text x="680" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">RAIL PLATFORM — ELEVATION</text>
+          <text x="220" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">BUS STOP — PLAN VIEW</text>
+          <text x="680" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">RAIL PLATFORM — ELEVATION</text>
 
           {/* ===== LEFT: Bus stop plan view ===== */}
           {/* Roadway */}
           <rect x="60" y="40" width="380" height="120" fill="#94A3B8" opacity="0.05" stroke="#94A3B8" strokeWidth="1" rx="2" />
-          <text x="250" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="500">ROADWAY</text>
+          <text x="250" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">ROADWAY</text>
 
           {/* Curb line */}
           <line x1="60" y1="160" x2="440" y2="160" stroke="#94A3B8" strokeWidth="3" />
-          <text x="450" y="164" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8">CURB</text>
+          <text x="450" y="164" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">CURB</text>
 
           {/* Boarding area */}
           <rect x="120" y="165" width="200" height="130" rx="4" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="2" />
@@ -54,7 +54,7 @@ export default function TransportationDiagram() {
 
           {/* Bus silhouette on road */}
           <rect x="130" y="60" width="180" height="80" rx="12" fill="#94A3B8" opacity="0.08" stroke="#94A3B8" strokeWidth="1" />
-          <text x="220" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">BUS</text>
+          <text x="220" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">BUS</text>
 
           {/* Boarding area dims */}
           <line x1="120" y1="310" x2="320" y2="310" stroke="#C2410C" strokeWidth="1" />
@@ -83,12 +83,12 @@ export default function TransportationDiagram() {
 
           {/* Sidewalk */}
           <rect x="60" y="440" width="380" height="40" rx="2" fill="#94A3B8" opacity="0.04" stroke="#94A3B8" strokeWidth="1" />
-          <text x="250" y="465" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8" fontWeight="500">SIDEWALK</text>
+          <text x="250" y="465" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" fontWeight="500">SIDEWALK</text>
 
           {/* ===== RIGHT: Rail platform elevation ===== */}
           {/* Platform */}
           <rect x="500" y="280" width="370" height="30" fill="#94A3B8" opacity="0.15" stroke="#94A3B8" strokeWidth="1.5" rx="2" />
-          <text x="685" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8" fontWeight="600">PLATFORM</text>
+          <text x="685" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="600">PLATFORM</text>
 
           {/* Detectable warning strip */}
           <rect x="500" y="270" width="370" height="10" fill="#D97706" opacity="0.2" stroke="#2563EB" strokeWidth="1.5" />
@@ -104,7 +104,7 @@ export default function TransportationDiagram() {
 
           {/* Train car */}
           <rect x="500" y="330" width="370" height="100" rx="8" fill="#94A3B8" opacity="0.06" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="685" y="385" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="500">RAIL VEHICLE</text>
+          <text x="685" y="385" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">RAIL VEHICLE</text>
           {/* Door opening */}
           <rect x="630" y="330" width="70" height="15" fill="#2563EB" opacity="0.1" stroke="#2563EB" strokeWidth="1" />
           <text x="665" y="342" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#2563EB" fontWeight="600">DOOR</text>
@@ -141,7 +141,7 @@ export default function TransportationDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

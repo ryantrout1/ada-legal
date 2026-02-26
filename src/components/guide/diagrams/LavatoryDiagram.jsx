@@ -109,11 +109,11 @@ export default function LavatoryDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="#FAFAF9" />
 
           {/* ===== LEFT: FRONT ELEVATION ===== */}
-          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">FRONT ELEVATION</text>
+          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">FRONT ELEVATION</text>
 
           {/* Wall */}
           <rect x="80" y="40" width="240" height="8" fill="#94A3B8" rx="1" />
-          <text x="200" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8">WALL</text>
+          <text x="200" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">WALL</text>
 
           {/* Counter/rim at 34" — y=108 (floor at y=280) */}
           <rect x="100" y="105" width="200" height="10" rx="3" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
@@ -164,11 +164,11 @@ export default function LavatoryDiagram() {
 
 
           {/* ===== RIGHT: SIDE SECTION ===== */}
-          <text x="660" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">SIDE SECTION</text>
+          <text x="660" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">SIDE SECTION</text>
 
           {/* Wall */}
           <rect x="460" y="40" width="8" height="240" fill="#94A3B8" rx="1" />
-          <text x="464" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8">WALL</text>
+          <text x="464" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">WALL</text>
 
           {/* Counter/rim */}
           <rect x="468" y="108" width="120" height="8" rx="2" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
@@ -243,7 +243,7 @@ export default function LavatoryDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

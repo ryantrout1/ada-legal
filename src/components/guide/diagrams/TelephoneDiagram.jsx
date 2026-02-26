@@ -35,15 +35,15 @@ export default function TelephoneDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="tel-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="tel-title">ADA §704 Telephones — Front Elevation & Plan View</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="250" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">FRONT ELEVATION</text>
-          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">PLAN VIEW</text>
+          <text x="250" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">FRONT ELEVATION</text>
+          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW</text>
 
           {/* LEFT: Front elevation */}
           {/* Wall */}
           <rect x="140" y="40" width="220" height="420" fill="#94A3B8" opacity="0.04" stroke="#94A3B8" strokeWidth="1" rx="2" />
           {/* Floor line */}
           <line x1="60" y1="460" x2="440" y2="460" stroke="#94A3B8" strokeWidth="2" />
-          <text x="250" y="478" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">FLOOR</text>
+          <text x="250" y="478" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">FLOOR</text>
 
           {/* Phone unit */}
           <rect x="200" y="160" width="100" height="140" rx="6" fill="#475569" opacity="0.08" stroke="#475569" strokeWidth="1.5" />
@@ -86,7 +86,7 @@ export default function TelephoneDiagram() {
           {/* RIGHT: Plan view */}
           {/* Wall */}
           <line x1="520" y1="120" x2="840" y2="120" stroke="#94A3B8" strokeWidth="3" />
-          <text x="680" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">WALL</text>
+          <text x="680" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">WALL</text>
 
           {/* Phone on wall */}
           <rect x="650" y="124" width="60" height="20" rx="3" fill="#475569" opacity="0.1" stroke="#475569" strokeWidth="1" />
@@ -126,7 +126,7 @@ export default function TelephoneDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

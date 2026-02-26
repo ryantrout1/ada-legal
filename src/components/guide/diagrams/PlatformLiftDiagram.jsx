@@ -36,18 +36,18 @@ export default function PlatformLiftDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="pl-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="pl-title">ADA §410 Platform Lifts — Elevation & Plan View</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="220" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">SIDE ELEVATION</text>
-          <text x="680" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">PLAN VIEW (TOP DOWN)</text>
+          <text x="220" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">SIDE ELEVATION</text>
+          <text x="680" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW (TOP DOWN)</text>
 
           {/* ===== LEFT: Side elevation ===== */}
           {/* Upper floor */}
           <rect x="60" y="120" width="180" height="12" fill="#94A3B8" opacity="0.25" rx="2" />
-          <text x="150" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8" fontWeight="500">UPPER LEVEL</text>
+          <text x="150" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" fontWeight="500">UPPER LEVEL</text>
 
           {/* Lower floor */}
           <rect x="60" y="400" width="180" height="12" fill="#94A3B8" opacity="0.25" rx="2" />
           <rect x="280" y="400" width="140" height="12" fill="#94A3B8" opacity="0.25" rx="2" />
-          <text x="340" y="395" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8" fontWeight="500">LOWER LEVEL</text>
+          <text x="340" y="395" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" fontWeight="500">LOWER LEVEL</text>
 
           {/* Lift shaft enclosure */}
           <rect x="240" y="120" width="100" height="292" fill="#7C3AED" opacity="0.03" stroke="#94A3B8" strokeWidth="1.5" strokeDasharray="6 3" />
@@ -150,7 +150,7 @@ export default function PlatformLiftDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

@@ -88,7 +88,7 @@ export default function GrabBarDetailDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="#FAFAF9" />
 
           {/* ===== LEFT: CROSS SECTIONS ===== */}
-          <text x="215" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">CROSS-SECTION PROFILES</text>
+          <text x="215" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">CROSS-SECTION PROFILES</text>
 
           {/* (A) Circular */}
           <text x="120" y="68" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#C2410C">(A) CIRCULAR</text>
@@ -143,11 +143,11 @@ export default function GrabBarDetailDiagram() {
 
 
           {/* ===== RIGHT: WALL MOUNTING ELEVATION ===== */}
-          <text x="670" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">WALL MOUNTING ELEVATION</text>
+          <text x="670" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">WALL MOUNTING ELEVATION</text>
 
           {/* Wall */}
           <rect x="470" y="40" width="380" height="12" fill="#94A3B8" rx="1" />
-          <text x="660" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8">WALL SURFACE</text>
+          <text x="660" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">WALL SURFACE</text>
 
           {/* Structural reinforcement (behind wall, shown dashed) */}
           <rect x="560" y="46" width="200" height="20" rx="2" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1" strokeDasharray="4 3" />
@@ -202,7 +202,7 @@ export default function GrabBarDetailDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 
