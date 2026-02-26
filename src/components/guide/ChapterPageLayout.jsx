@@ -6,6 +6,7 @@ import GuideStyles from './GuideStyles';
 import GuideHeroBanner from './GuideHeroBanner';
 import GuideReportCTA from './GuideReportCTA';
 import AutoCiteLinks from './AutoCiteLinks';
+import ShareBar from './ShareBar';
 
 const ALL_CHAPTERS = [
   { num: 1, name: 'Application & Administration', range: '§101–106', page: 'StandardsCh1' },
@@ -205,6 +206,11 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                 onToggle={() => setOpenIndex(openIndex === i ? null : i)}
               />
             ))}
+          </div>
+
+          {/* Share bar */}
+          <div style={{ marginTop: '32px', paddingTop: '20px', borderTop: '1px solid var(--slate-200)' }}>
+            <ShareBar />
           </div>
 
           {/* Bottom nav */}
