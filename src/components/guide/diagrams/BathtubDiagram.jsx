@@ -117,11 +117,11 @@ export default function BathtubDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="#FAFAF9" />
 
           {/* ===== LEFT: PLAN VIEW ===== */}
-          <text x="210" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">PLAN VIEW</text>
+          <text x="210" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">PLAN VIEW</text>
 
           {/* Bathtub outline — 60" long × ~30" wide at scale */}
           <rect x="60" y="65" width="280" height="100" rx="8" fill="#0EA5E9" opacity="0.04" stroke="#94A3B8" strokeWidth="2" />
-          <text x="200" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="600">BATHTUB</text>
+          <text x="200" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="600">BATHTUB</text>
 
           {/* Seat at head end (left side) */}
           <rect x="60" y="65" width="48" height="100" rx="4" fill="#16A34A" opacity="0.08" stroke="#16A34A" strokeWidth="1.2" />
@@ -173,22 +173,22 @@ export default function BathtubDiagram() {
 
 
           {/* ===== RIGHT: SIDE ELEVATION ===== */}
-          <text x="665" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">SIDE ELEVATION</text>
+          <text x="665" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">SIDE ELEVATION</text>
 
           {/* Floor line */}
           <line x1="460" y1="275" x2="870" y2="275" stroke="#94A3B8" strokeWidth="2" />
 
           {/* Tub body */}
           <rect x="500" y="185" width="280" height="90" rx="6" fill="#0EA5E9" opacity="0.04" stroke="#94A3B8" strokeWidth="2" />
-          <text x="640" y="245" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8" fontWeight="500">BATHTUB</text>
+          <text x="640" y="245" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="500">BATHTUB</text>
 
           {/* Tub rim */}
           <line x1="500" y1="185" x2="780" y2="185" stroke="#94A3B8" strokeWidth="2.5" />
-          <text x="820" y="188" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#94A3B8">RIM</text>
+          <text x="820" y="188" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#4B5563">RIM</text>
 
           {/* Back wall */}
           <rect x="494" y="55" width="8" height="220" fill="#94A3B8" rx="1" />
-          <text x="498" y="48" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8">WALL</text>
+          <text x="498" y="48" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">WALL</text>
 
           {/* Seat at head end */}
           <rect x="502" y="180" width="60" height="8" rx="2" fill="#16A34A" opacity="0.3" stroke="#16A34A" strokeWidth="1" />
@@ -247,7 +247,7 @@ export default function BathtubDiagram() {
             </g>
           ))}
 
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

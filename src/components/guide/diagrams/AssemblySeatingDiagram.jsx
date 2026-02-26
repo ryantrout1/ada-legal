@@ -53,7 +53,7 @@ export default function AssemblySeatingDiagram() {
           <rect width="900" height="420" fill="#FAFAF9" />
 
           {/* LEFT: Plan View */}
-          <text x="190" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">PLAN VIEW</text>
+          <text x="190" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW</text>
           {/* Row of seats */}
           {[0,1,2].map(i => <rect key={`s${i}`} x={60 + i * 50} y="60" width="40" height="40" rx="6" fill="#E7E5E4" opacity="0.3" stroke="#94A3B8" strokeWidth="1" />)}
           {/* Wheelchair space */}
@@ -86,7 +86,7 @@ export default function AssemblySeatingDiagram() {
           <line x1="450" y1="20" x2="450" y2="410" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
 
           {/* RIGHT: Sightline Elevation */}
-          <text x="670" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">SIGHTLINE ELEVATION</text>
+          <text x="670" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">SIGHTLINE ELEVATION</text>
           {/* Tiered platforms */}
           <rect x="470" y="310" width="380" height="90" fill="#E7E5E4" opacity="0.1" stroke="#94A3B8" strokeWidth="1" />
           <rect x="470" y="240" width="380" height="70" fill="#E7E5E4" opacity="0.15" stroke="#94A3B8" strokeWidth="1" />
@@ -97,8 +97,8 @@ export default function AssemblySeatingDiagram() {
           <line x1="560" y1="244" x2="560" y2="300" stroke="#475569" strokeWidth="2" strokeLinecap="round" />
           <line x1="560" y1="300" x2="550" y2="340" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" />
           <line x1="560" y1="300" x2="570" y2="340" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" />
-          <text x="560" y="355" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#94A3B8">Standing</text>
-          <text x="560" y="365" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#94A3B8">spectator</text>
+          <text x="560" y="355" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#4B5563">Standing</text>
+          <text x="560" y="365" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#4B5563">spectator</text>
 
           {/* Wheelchair user on elevated platform behind */}
           <circle cx="700" cy="210" r="8" fill="#E2E8F0" stroke="#475569" strokeWidth="1.2" />
@@ -112,7 +112,7 @@ export default function AssemblySeatingDiagram() {
           <line x1="708" y1="210" x2="480" y2="170" stroke="#7C3AED" strokeWidth="1.5" strokeDasharray="6 3" />
           <text x="530" y="165" fontFamily="Manrope, sans-serif" fontSize="7" fill="#7C3AED" fontWeight="600">Sightline clears standing head</text>
           {/* Performance area arrow */}
-          <text x="485" y="180" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8">← Stage / Field</text>
+          <text x="485" y="180" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">← Stage / Field</text>
 
           {/* Companion next to wheelchair user */}
           <circle cx="760" cy="215" r="7" fill="#16A34A" opacity="0.2" stroke="#16A34A" strokeWidth="1" />
@@ -127,7 +127,7 @@ export default function AssemblySeatingDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

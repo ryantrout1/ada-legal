@@ -51,7 +51,7 @@ export default function DrinkingFountainDiagram() {
         <svg viewBox="0 0 900 420" role="img" aria-labelledby="df-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="df-title">ADA §602 Drinking Fountains — Side Elevation</title>
           <rect width="900" height="420" fill="#FAFAF9" />
-          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">SIDE ELEVATION — HI-LO DRINKING FOUNTAIN</text>
+          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">SIDE ELEVATION — HI-LO DRINKING FOUNTAIN</text>
 
           {/* Wall */}
           <rect x="80" y="40" width="12" height="340" fill="#94A3B8" rx="1" />
@@ -130,7 +130,7 @@ export default function DrinkingFountainDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

@@ -27,11 +27,11 @@ export default function AssistiveListeningDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="als-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="als-title">ADA §706 Assistive Listening Systems — Assembly Area Cutaway</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">ASSEMBLY AREA — ASSISTIVE LISTENING COVERAGE</text>
+          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">ASSEMBLY AREA — ASSISTIVE LISTENING COVERAGE</text>
 
           {/* Stage */}
           <rect x="250" y="60" width="400" height="80" rx="6" fill="#475569" opacity="0.06" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="450" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="600">STAGE / SPEAKER AREA</text>
+          <text x="450" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="600">STAGE / SPEAKER AREA</text>
           {/* Podium */}
           <rect x="420" y="80" width="60" height="40" rx="4" fill="#475569" opacity="0.1" stroke="#475569" strokeWidth="1" />
           <text x="450" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#475569">PODIUM</text>
@@ -48,7 +48,7 @@ export default function AssistiveListeningDiagram() {
               ))}
             </g>
           ))}
-          <text x="130" y="290" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8" transform="rotate(-90, 130, 290)">SEATING ROWS</text>
+          <text x="130" y="290" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" transform="rotate(-90, 130, 290)">SEATING ROWS</text>
 
           {/* Signal waves from stage */}
           {[1, 2, 3].map(i => (
@@ -88,7 +88,7 @@ export default function AssistiveListeningDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

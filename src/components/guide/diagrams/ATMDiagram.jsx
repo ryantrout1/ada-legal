@@ -36,8 +36,8 @@ export default function ATMDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="atm-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="atm-title">ADA §707 ATMs & Fare Machines — Front Elevation</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="320" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">FRONT ELEVATION</text>
-          <text x="720" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">PLAN VIEW</text>
+          <text x="320" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">FRONT ELEVATION</text>
+          <text x="720" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW</text>
 
           {/* LEFT: Front elevation */}
           {/* Wall */}
@@ -97,7 +97,7 @@ export default function ATMDiagram() {
           {/* RIGHT: Plan view */}
           {/* Wall */}
           <line x1="570" y1="120" x2="870" y2="120" stroke="#94A3B8" strokeWidth="3" />
-          <text x="720" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">WALL</text>
+          <text x="720" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">WALL</text>
 
           {/* ATM on wall */}
           <rect x="690" y="124" width="60" height="24" rx="3" fill="#475569" opacity="0.1" stroke="#475569" strokeWidth="1" />
@@ -134,7 +134,7 @@ export default function ATMDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

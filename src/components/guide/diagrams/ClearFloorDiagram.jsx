@@ -88,11 +88,11 @@ export default function ClearFloorDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="#FAFAF9" />
 
           {/* ===== LEFT: FORWARD APPROACH ===== */}
-          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">FORWARD APPROACH</text>
+          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">FORWARD APPROACH</text>
 
           {/* Element (wall-mounted, at top) */}
           <rect x="130" y="56" width="140" height="12" rx="2" fill="#94A3B8" opacity="0.3" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="200" y="52" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8" fontWeight="600">ELEMENT</text>
+          <text x="200" y="52" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" fontWeight="600">ELEMENT</text>
 
           {/* Clear floor rectangle — 30 wide × 48 deep (toward element) */}
           <rect x="110" y="70" width="180" height="210" rx="4" fill="#16A34A" opacity="0.05" stroke="#16A34A" strokeWidth="2" />
@@ -137,11 +137,11 @@ export default function ClearFloorDiagram() {
 
 
           {/* ===== RIGHT: PARALLEL APPROACH ===== */}
-          <text x="620" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing="0.08em">PARALLEL APPROACH</text>
+          <text x="620" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">PARALLEL APPROACH</text>
 
           {/* Element (on side) */}
           <rect x="420" y="110" width="12" height="140" rx="2" fill="#94A3B8" opacity="0.3" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="418" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8" fontWeight="600" transform="rotate(-90 418 180)">ELEMENT</text>
+          <text x="418" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" fontWeight="600" transform="rotate(-90 418 180)">ELEMENT</text>
 
           {/* Clear floor rectangle — 48 long (parallel) × 30 wide */}
           <rect x="440" y="82" width="330" height="200" rx="4" fill="#2563EB" opacity="0.05" stroke="#2563EB" strokeWidth="2" />
@@ -185,7 +185,7 @@ export default function ClearFloorDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="312" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="312" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

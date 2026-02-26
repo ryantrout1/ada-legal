@@ -35,7 +35,7 @@ export default function BoatingDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="bt-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="bt-title">ADA §1003 Recreational Boating Facilities — Plan View</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">ACCESSIBLE BOAT SLIP & BOARDING PIER</text>
+          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">ACCESSIBLE BOAT SLIP & BOARDING PIER</text>
 
           {/* Water */}
           <rect x="0" y="280" width="900" height="240" fill="#2563EB" opacity="0.03" />
@@ -43,7 +43,7 @@ export default function BoatingDiagram() {
 
           {/* Land */}
           <rect x="0" y="40" width="900" height="100" fill="#94A3B8" opacity="0.04" />
-          <text x="100" y="90" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8" fontWeight="500">SHORE / PARKING</text>
+          <text x="100" y="90" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="500">SHORE / PARKING</text>
 
           {/* Gangway */}
           <rect x="180" y="140" width="60" height="140" rx="2" fill="#2563EB" opacity="0.06" stroke="#2563EB" strokeWidth="1.5" />
@@ -58,7 +58,7 @@ export default function BoatingDiagram() {
 
           {/* Main pier (floating) */}
           <rect x="60" y="294" width="780" height="50" fill="#D97706" opacity="0.04" stroke="#94A3B8" strokeWidth="2" rx="4" />
-          <text x="450" y="325" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8" fontWeight="600">FLOATING PIER</text>
+          <text x="450" y="325" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="600">FLOATING PIER</text>
 
           {/* Boat slip 1 (accessible) */}
           <rect x="80" y="350" width="200" height="140" fill="#C2410C" opacity="0.03" stroke="#C2410C" strokeWidth="1.5" rx="4" />
@@ -68,12 +68,12 @@ export default function BoatingDiagram() {
           <text x="180" y="352" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#C2410C" fontWeight="600">{d('60', '1525')} wide clear space — full length</text>
           {/* Boat outline */}
           <rect x="110" y="395" width="140" height="80" rx="20" fill="#94A3B8" opacity="0.04" stroke="#94A3B8" strokeWidth="1" />
-          <text x="180" y="440" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">BOAT</text>
+          <text x="180" y="440" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">BOAT</text>
 
           {/* Boat slip 2 */}
           <rect x="320" y="350" width="200" height="140" fill="#94A3B8" opacity="0.02" stroke="#94A3B8" strokeWidth="1" rx="4" />
           <rect x="350" y="395" width="140" height="80" rx="20" fill="#94A3B8" opacity="0.04" stroke="#94A3B8" strokeWidth="1" />
-          <text x="420" y="440" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8">BOAT</text>
+          <text x="420" y="440" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">BOAT</text>
 
           {/* Boarding pier */}
           <rect x="560" y="350" width="260" height="20" fill="#16A34A" opacity="0.06" stroke="#16A34A" strokeWidth="1.5" rx="2" />
@@ -94,7 +94,7 @@ export default function BoatingDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

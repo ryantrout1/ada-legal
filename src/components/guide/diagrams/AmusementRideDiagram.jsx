@@ -35,7 +35,7 @@ export default function AmusementRideDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="ar-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="ar-title">ADA §1002 Amusement Rides — Plan View</title>
           <rect width="900" height="520" fill="#FAFAF9" />
-          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">ACCESSIBLE LOADING AREA & RIDE VEHICLE</text>
+          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">ACCESSIBLE LOADING AREA & RIDE VEHICLE</text>
 
           {/* Loading platform */}
           <rect x="60" y="160" width="380" height="280" fill="#2563EB" opacity="0.03" stroke="#2563EB" strokeWidth="1.5" rx="6" />
@@ -60,7 +60,7 @@ export default function AmusementRideDiagram() {
 
           {/* Ride vehicle */}
           <rect x="500" y="160" width="360" height="280" fill="#C2410C" opacity="0.03" stroke="#94A3B8" strokeWidth="2" rx="12" />
-          <text x="680" y="185" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8" fontWeight="600">RIDE VEHICLE</text>
+          <text x="680" y="185" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="600">RIDE VEHICLE</text>
 
           {/* Wheelchair space on ride */}
           <rect x="520" y="220" width="140" height="180" rx="6" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="2" strokeDasharray="6 3" />
@@ -80,7 +80,7 @@ export default function AmusementRideDiagram() {
 
           {/* Level connection between platform and vehicle */}
           <line x1="440" y1="310" x2="500" y2="310" stroke="#94A3B8" strokeWidth="2" strokeDasharray="4 2" />
-          <text x="470" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#94A3B8">LEVEL</text>
+          <text x="470" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#4B5563">LEVEL</text>
 
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
@@ -89,7 +89,7 @@ export default function AmusementRideDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

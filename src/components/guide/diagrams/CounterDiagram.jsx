@@ -60,11 +60,11 @@ export default function CounterDiagram() {
           <rect width="900" height="420" fill="#FAFAF9" />
 
           {/* LEFT: Plan View */}
-          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">PLAN VIEW — CHECKOUT AISLE</text>
+          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW — CHECKOUT AISLE</text>
           <rect x="60" y="50" width="120" height="300" rx="4" fill="#E7E5E4" opacity="0.2" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="120" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#94A3B8" fontWeight="500">COUNTER</text>
+          <text x="120" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" fontWeight="500">COUNTER</text>
           <rect x="230" y="50" width="80" height="300" rx="4" fill="#E7E5E4" opacity="0.1" stroke="#94A3B8" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="270" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#94A3B8">MERCHANDISE</text>
+          <text x="270" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">MERCHANDISE</text>
           {/* Aisle */}
           <rect x="180" y="50" width="50" height="300" rx="0" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="6 3" />
           <text x="205" y="150" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#C2410C" fontWeight="600" transform="rotate(-90 205 150)">AISLE</text>
@@ -84,7 +84,7 @@ export default function CounterDiagram() {
           <line x1="380" y1="20" x2="380" y2="410" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
 
           {/* RIGHT: Front Elevation */}
-          <text x="640" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#94A3B8" letterSpacing=".08em">FRONT ELEVATION — COUNTER TYPES</text>
+          <text x="640" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">FRONT ELEVATION — COUNTER TYPES</text>
           {/* Floor */}
           <line x1="390" y1="380" x2="870" y2="380" stroke="#94A3B8" strokeWidth="2" />
 
@@ -124,7 +124,7 @@ export default function CounterDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.color}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">Click or tap numbered callouts for details</text>
+          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>
