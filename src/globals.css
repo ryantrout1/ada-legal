@@ -414,7 +414,7 @@ html {
    LANDING HERO — DEFAULT BACKGROUND
    ======================================== */
 .landing-hero-section {
-  background: #1E293B;
+  background: #1E293B !important;
 }
 
 /* ========================================

@@ -11,6 +11,7 @@ export default function LandingHeroNew() {
       className="landing-hero-section"
       style={{
         minHeight: '100vh',
+        background: '#1E293B',
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
