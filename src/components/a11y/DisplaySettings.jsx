@@ -135,21 +135,21 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Text colors === */
-      h1:not(#feedback-modal-panel *), h2:not(#feedback-modal-panel *), h3:not(#feedback-modal-panel *), h4:not(#feedback-modal-panel *), h5:not(#feedback-modal-panel *), h6:not(#feedback-modal-panel *) {
+      h1, h2, h3, h4, h5, h6 {
         color: #F1F5F9 !important;
       }
-      p:not(#feedback-modal-panel *), li:not(#feedback-modal-panel *), dd:not(#feedback-modal-panel *), dt:not(#feedback-modal-panel *), td:not(#feedback-modal-panel *), th:not(#feedback-modal-panel *), label:not(#feedback-modal-panel *), figcaption:not(#feedback-modal-panel *), blockquote:not(#feedback-modal-panel *) {
+      p, li, dd, dt, td, th, label, figcaption, blockquote {
         color: #E2E8F0 !important;
       }
-      span:not(#feedback-modal-panel *), small:not(#feedback-modal-panel *) {
+      span, small {
         color: #CBD5E1 !important;
       }
 
       /* === Links — bright orange on dark === */
-      a:not(#feedback-modal-panel *) {
+      a {
         color: #F97316 !important;
       }
-      a:not(#feedback-modal-panel *):hover {
+      a:hover {
         color: #FB923C !important;
       }
 
@@ -167,15 +167,15 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Form inputs === */
-      input:not(#feedback-modal-panel *), select:not(#feedback-modal-panel *), textarea:not(#feedback-modal-panel *) {
+      input, select, textarea {
         background-color: #151B24 !important;
         border-color: #475569 !important;
         color: #F1F5F9 !important;
       }
-      input:not(#feedback-modal-panel *)::placeholder, textarea:not(#feedback-modal-panel *)::placeholder {
+      input::placeholder, textarea::placeholder {
         color: #94A3B8 !important;
       }
-      input:not(#feedback-modal-panel *):focus, select:not(#feedback-modal-panel *):focus, textarea:not(#feedback-modal-panel *):focus {
+      input:focus, select:focus, textarea:focus {
         border-color: #C2410C !important;
       }
 
@@ -481,41 +481,6 @@ export const applyPreferences = (prefs) => {
         background-color: transparent !important;
       }
 
-      /* === MODAL EXEMPTIONS — DARK MODE === */
-      #feedback-modal-panel,
-      #feedback-modal-panel div,
-      #feedback-modal-panel form {
-        background-color: #FAF7F2 !important;
-        background: #FAF7F2 !important;
-        background-image: none !important;
-      }
-      #feedback-modal-panel h2 { color: #1E293B !important; }
-      #feedback-modal-panel p { color: #586577 !important; }
-      #feedback-modal-panel label { color: #334155 !important; }
-      #feedback-modal-panel span { color: #334155 !important; }
-      #feedback-modal-panel span.fb-optional { color: #94A3B8 !important; }
-      #feedback-modal-panel span.fb-required { color: #DC2626 !important; }
-      #feedback-modal-panel input,
-      #feedback-modal-panel textarea,
-      #feedback-modal-panel select {
-        background-color: #FFFFFF !important;
-        background: #FFFFFF !important;
-        color: #334155 !important;
-        border: 1px solid #D1D5DB !important;
-      }
-      #feedback-modal-panel input::placeholder,
-      #feedback-modal-panel textarea::placeholder { color: #9CA3AF !important; }
-      #feedback-modal-panel option { background-color: #FFFFFF !important; color: #334155 !important; }
-      #feedback-modal-panel button.fb-close-btn { color: #475569 !important; background: transparent !important; border: none !important; }
-      #feedback-modal-panel button.fb-submit-btn { background: #C2410C !important; color: #FFFFFF !important; border: none !important; }
-      #feedback-modal-panel button.fb-done-btn { background: #1E293B !important; color: #FFFFFF !important; border: none !important; }
-
-      .modal-light-theme,
-      .modal-light-theme div,
-      .modal-light-theme form { background: #FFFFFF !important; color: #334155 !important; }
-      .modal-light-theme h2, .modal-light-theme h3 { color: #1E293B !important; }
-      .modal-light-theme p, .modal-light-theme label { color: #475569 !important; }
-      .modal-light-theme input, .modal-light-theme textarea, .modal-light-theme select { background: #FFFFFF !important; color: #334155 !important; border: 1px solid #D1D5DB !important; }
     `;
   }
 
@@ -674,22 +639,22 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Text — MAXIMUM CONTRAST === */
-      h1:not(#feedback-modal-panel *), h2:not(#feedback-modal-panel *), h3:not(#feedback-modal-panel *), h4:not(#feedback-modal-panel *), h5:not(#feedback-modal-panel *), h6:not(#feedback-modal-panel *) {
+      h1, h2, h3, h4, h5, h6 {
         color: #FFFFFF !important;
       }
-      p:not(#feedback-modal-panel *), li:not(#feedback-modal-panel *), dd:not(#feedback-modal-panel *), dt:not(#feedback-modal-panel *), td:not(#feedback-modal-panel *), th:not(#feedback-modal-panel *), label:not(#feedback-modal-panel *), figcaption:not(#feedback-modal-panel *), blockquote:not(#feedback-modal-panel *) {
+      p, li, dd, dt, td, th, label, figcaption, blockquote {
         color: #F0F0F0 !important;
       }
-      span:not(#feedback-modal-panel *), small:not(#feedback-modal-panel *) {
+      span, small {
         color: #D0D0D0 !important;
       }
 
       /* === Links — gold on black === */
-      a:not(#feedback-modal-panel *) {
+      a {
         color: #FFD700 !important;
         text-decoration: underline !important;
       }
-      a:not(#feedback-modal-panel *):hover {
+      a:hover {
         color: #FFFFFF !important;
       }
 
@@ -718,20 +683,20 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Form inputs === */
-      input:not(#feedback-modal-panel *), select:not(#feedback-modal-panel *), textarea:not(#feedback-modal-panel *) {
+      input, select, textarea {
         background-color: #1A1A1A !important;
         border: 2px solid #FFFFFF !important;
         color: #FFFFFF !important;
       }
-      input:not(#feedback-modal-panel *)::placeholder, textarea:not(#feedback-modal-panel *)::placeholder {
+      input::placeholder, textarea::placeholder {
         color: #D0D0D0 !important;
       }
-      input:not(#feedback-modal-panel *):focus, select:not(#feedback-modal-panel *):focus, textarea:not(#feedback-modal-panel *):focus {
+      input:focus, select:focus, textarea:focus {
         border-color: #FFD700 !important;
       }
 
       /* === Buttons === */
-      button:not(#feedback-modal-panel *) {
+      button {
         border: 2px solid #FFFFFF !important;
       }
       /* Primary CTA buttons (terracotta) */
@@ -747,7 +712,7 @@ export const applyPreferences = (prefs) => {
         border: 2px solid #FFFFFF !important;
       }
       /* Button hover — invert */
-      button:not(#feedback-modal-panel *):hover {
+      button:hover {
         background-color: #FFFFFF !important;
         color: #000000 !important;
       }
@@ -993,112 +958,6 @@ export const applyPreferences = (prefs) => {
         border: none !important;
       }
 
-      /* ============================================
-         MODAL EXEMPTIONS — HIGH CONTRAST
-         Modals (feedback, coming soon, previews) must
-         keep their own light theme regardless of HC mode.
-         These use #id selectors for maximum specificity.
-         ============================================ */
-      #feedback-modal-panel,
-      #feedback-modal-panel div,
-      #feedback-modal-panel form {
-        background-color: #FAF7F2 !important;
-        background: #FAF7F2 !important;
-        background-image: none !important;
-        border-color: #D1D5DB !important;
-      }
-      #feedback-modal-panel h2 {
-        color: #1E293B !important;
-      }
-      #feedback-modal-panel p {
-        color: #586577 !important;
-      }
-      #feedback-modal-panel label {
-        color: #334155 !important;
-      }
-      #feedback-modal-panel span {
-        color: #334155 !important;
-      }
-      #feedback-modal-panel span.fb-optional {
-        color: #94A3B8 !important;
-      }
-      #feedback-modal-panel span.fb-required {
-        color: #DC2626 !important;
-      }
-      #feedback-modal-panel input,
-      #feedback-modal-panel textarea,
-      #feedback-modal-panel select {
-        background-color: #FFFFFF !important;
-        background: #FFFFFF !important;
-        color: #334155 !important;
-        border: 1px solid #D1D5DB !important;
-      }
-      #feedback-modal-panel input:focus,
-      #feedback-modal-panel textarea:focus,
-      #feedback-modal-panel select:focus {
-        border-color: #C75B2B !important;
-        outline: 2px solid #C75B2B !important;
-      }
-      #feedback-modal-panel input::placeholder,
-      #feedback-modal-panel textarea::placeholder {
-        color: #9CA3AF !important;
-      }
-      #feedback-modal-panel option {
-        background-color: #FFFFFF !important;
-        color: #334155 !important;
-      }
-      #feedback-modal-panel button.fb-close-btn {
-        color: #475569 !important;
-        background: transparent !important;
-        border: none !important;
-      }
-      #feedback-modal-panel button.fb-submit-btn {
-        background-color: #C2410C !important;
-        background: #C2410C !important;
-        color: #FFFFFF !important;
-        border: none !important;
-      }
-      #feedback-modal-panel button.fb-done-btn {
-        background-color: #1E293B !important;
-        background: #1E293B !important;
-        color: #FFFFFF !important;
-        border: none !important;
-      }
-      #feedback-modal-panel a {
-        color: #C2410C !important;
-      }
-
-      /* Coming Soon modal exemption */
-      .modal-light-theme,
-      .modal-light-theme div,
-      .modal-light-theme form {
-        background-color: #FFFFFF !important;
-        background: #FFFFFF !important;
-        color: #334155 !important;
-        border-color: #D1D5DB !important;
-      }
-      .modal-light-theme h2,
-      .modal-light-theme h3 {
-        color: #1E293B !important;
-      }
-      .modal-light-theme p,
-      .modal-light-theme label {
-        color: #475569 !important;
-      }
-      .modal-light-theme span {
-        color: #334155 !important;
-      }
-      .modal-light-theme input,
-      .modal-light-theme textarea,
-      .modal-light-theme select {
-        background-color: #FFFFFF !important;
-        background: #FFFFFF !important;
-        color: #334155 !important;
-        border: 1px solid #D1D5DB !important;
-      }
-      .modal-light-theme button {
-        border: none !important;
-      }
     `;
   }
 

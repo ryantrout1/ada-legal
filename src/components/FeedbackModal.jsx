@@ -52,170 +52,55 @@ export default function FeedbackModal({ isOpen, onClose }) {
         status: 'new',
       });
       base44.analytics.track({ eventName: 'feedback_submitted', properties: { feedback_type: form.feedback_type } });
-    } catch (err) {
-      console.error('Feedback submit error', err);
-    }
+    } catch (err) { console.error('Feedback submit error:', err); }
     setSubmitting(false);
     setSuccess(true);
   };
 
-  const inputStyle = {
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-    padding: '10px 12px', borderRadius: '8px',
-    border: '1px solid #D1D5DB', outline: 'none',
-    width: '100%', boxSizing: 'border-box',
-    backgroundColor: '#FFFFFF', color: '#334155',
-  };
-
-  const labelStyle = {
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-    fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px',
-  };
-
   return (
-    <div
-      role="dialog" aria-modal="true" aria-label="Submit feedback"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
-      style={{
-        position: 'fixed', inset: 0, zIndex: 10000,
-        backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(3px)',
-        display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end',
-        padding: '24px',
-      }}
-    >
-      <div
-        id="feedback-modal-panel"
-        style={{
-          backgroundColor: '#FAF7F2',
-          borderRadius: '16px', padding: '28px 24px',
-          width: '100%', maxWidth: '400px', position: 'relative',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
-          maxHeight: 'calc(100vh - 48px)', overflowY: 'auto',
-          color: '#334155',
-        }}
-      >
-        <button
-          onClick={onClose} aria-label="Close"
-          style={{
-            position: 'absolute', top: '12px', right: '12px',
-            background: 'transparent', border: 'none', cursor: 'pointer',
-            color: '#475569', padding: '4px', minWidth: '36px', minHeight: '36px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}
-        >
-          <X size={18} />
-        </button>
-
+    <div className="fb-overlay" role="dialog" aria-modal="true" aria-label="Submit feedback"
+         onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="fb-panel">
+        <button className="fb-close-btn" onClick={onClose} aria-label="Close"><X size={18} /></button>
         {!success ? (
           <>
-            <h2 style={{
-              fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700,
-              color: '#1E293B', margin: '0 0 4px',
-            }}>
-              Share Your Feedback
-            </h2>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-              color: '#586577', margin: '0 0 20px', lineHeight: 1.5,
-            }}>
-              Help us improve ADA Legal Link.
-            </p>
-
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <h2 className="fb-title">Share Your Feedback</h2>
+            <p className="fb-subtitle">Help us improve ADA Legal Link.</p>
+            <form className="fb-form" onSubmit={handleSubmit}>
               <div>
-                <label style={labelStyle} htmlFor="fb-type">Feedback type</label>
-                <select
-                  id="fb-type"
-                  value={form.feedback_type}
-                  onChange={(e) => setForm({ ...form, feedback_type: e.target.value })}
-                  style={{ ...inputStyle, minHeight: '40px', appearance: 'auto' }}
-                >
-                  {TYPES.map(t => (
-                    <option key={t.value} value={t.value} style={{ backgroundColor: '#FFFFFF', color: '#334155' }}>
-                      {t.label}
-                    </option>
-                  ))}
+                <label className="fb-label" htmlFor="fb-type">Feedback type</label>
+                <select id="fb-type" className="fb-select" value={form.feedback_type}
+                        onChange={(e) => setForm({ ...form, feedback_type: e.target.value })}>
+                  {TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                 </select>
               </div>
-
               <div>
-                <label style={labelStyle} htmlFor="fb-msg">
-                  Your feedback <span style={{ color: '#DC2626' }}>*</span>
-                </label>
-                <textarea
-                  id="fb-msg" ref={textareaRef} rows={4}
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  placeholder="What's on your mind?"
-                  style={{ ...inputStyle, resize: 'vertical', minHeight: '90px' }}
-                />
+                <label className="fb-label" htmlFor="fb-msg">Your feedback <span className="fb-required">*</span></label>
+                <textarea id="fb-msg" ref={textareaRef} className="fb-textarea" rows={4} value={form.message}
+                          onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="What's on your mind?" />
               </div>
-
               <div>
-                <label style={labelStyle} htmlFor="fb-name">
-                  Name <span style={{ color: '#94A3B8', fontWeight: 400 }}>(optional)</span>
-                </label>
-                <input
-                  id="fb-name" type="text"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Your name"
-                  style={inputStyle}
-                />
+                <label className="fb-label" htmlFor="fb-name">Name <span className="fb-optional">(optional)</span></label>
+                <input id="fb-name" type="text" className="fb-input" value={form.name}
+                       onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your name" />
               </div>
-
               <div>
-                <label style={labelStyle} htmlFor="fb-email">
-                  Email <span style={{ color: '#94A3B8', fontWeight: 400 }}>(optional)</span>
-                </label>
-                <input
-                  id="fb-email" type="email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="your@email.com"
-                  style={inputStyle}
-                />
+                <label className="fb-label" htmlFor="fb-email">Email <span className="fb-optional">(optional)</span></label>
+                <input id="fb-email" type="email" className="fb-input" value={form.email}
+                       onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="your@email.com" />
               </div>
-
-              {error && <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', color: '#DC2626', margin: 0 }}>{error}</p>}
-
-              <button
-                type="submit" disabled={submitting}
-                style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700,
-                  backgroundColor: '#C2410C', color: 'white', border: 'none',
-                  padding: '12px 20px', borderRadius: '10px', cursor: 'pointer',
-                  minHeight: '44px', opacity: submitting ? 0.7 : 1,
-                }}
-              >
+              {error && <p className="fb-error">{error}</p>}
+              <button type="submit" className="fb-submit-btn" disabled={submitting}>
                 {submitting ? 'Submitting...' : 'Submit Feedback'}
               </button>
             </form>
           </>
         ) : (
-          <div style={{ textAlign: 'center', padding: '16px 0' }}>
-            <div style={{
-              width: '52px', height: '52px', borderRadius: '50%', backgroundColor: '#F0FDF4',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px',
-            }}>
-              <CheckCircle size={26} color="#16A34A" />
-            </div>
-            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.2rem', fontWeight: 700, color: '#1E293B', margin: '0 0 6px' }}>
-              Thank you!
-            </h2>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#475569', margin: '0 0 18px', lineHeight: 1.5 }}>
-              Your feedback helps us build a better platform.
-            </p>
-            <button
-              onClick={onClose}
-              style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 600,
-                backgroundColor: '#1E293B', color: 'white', border: 'none',
-                padding: '10px 24px', borderRadius: '10px', cursor: 'pointer', minHeight: '44px',
-              }}
-            >
-              Done
-            </button>
+          <div className="fb-success-wrap">
+            <div className="fb-success-icon-wrap"><CheckCircle size={26} color="#16A34A" /></div>
+            <h2 className="fb-success-title">Thank you!</h2>
+            <p className="fb-success-body">Your feedback helps us build a better platform.</p>
+            <button className="fb-done-btn" onClick={onClose}>Done</button>
           </div>
         )}
       </div>
