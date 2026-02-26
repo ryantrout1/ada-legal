@@ -77,7 +77,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
           color: #1E293B !important;
         }
         #feedback-modal-panel p {
-          color: #64748B !important;
+          color: #586577 !important;
         }
         #feedback-modal-panel p.fb-error-msg {
           color: #DC2626 !important;
@@ -196,7 +196,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
               </h2>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                color: '#64748B', margin: '0 0 20px', lineHeight: 1.5,
+                color: '#586577', margin: '0 0 20px', lineHeight: 1.5,
               }}>
                 Help us improve ADA Legal Link.
               </p>

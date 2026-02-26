@@ -60,7 +60,7 @@ export default function LandingHeroNew() {
             lineHeight: 1.1, color: 'white', margin: '0 0 1.5rem', fontStyle: 'normal'
           }}>
             Understand your rights.<br />
-            <span style={{ color: '#EA580C' }}>Then enforce them.</span>
+            <span style={{ color: '#F97316' }}>Then enforce them.</span>
           </h1>
 
           <p className="landing-fade-up landing-delay-2" style={{
@@ -91,7 +91,7 @@ export default function LandingHeroNew() {
               minHeight: '44px', cursor: 'pointer',
               border: '1px solid #475569', transition: 'all 0.15s'
             }}>
-              Report a Violation <span style={{ color: '#C75B2B' }}>— Coming Soon</span>
+              Report a Violation <span style={{ color: '#FB923C' }}>— Coming Soon</span>
             </button>
           </div>
 
@@ -100,7 +100,7 @@ export default function LandingHeroNew() {
             color: '#94A3B8', marginTop: '1rem'
           }}>
             Not sure if what happened was a violation?{' '}
-            <button onClick={() => openModal('pathways')} style={{ color: '#EA580C', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit', padding: 0 }}>
+            <button onClick={() => openModal('pathways')} style={{ color: '#F97316', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit', padding: 0 }}>
               Find out in 60 seconds
             </button>
           </p>
@@ -131,7 +131,7 @@ export default function LandingHeroNew() {
                 <div key={i} style={{ padding: '8px 0' }}>
                   <p style={{
                     fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 800,
-                    color: '#EA580C', margin: '0 0 2px', fontStyle: 'normal'
+                    color: '#F97316', margin: '0 0 2px', fontStyle: 'normal'
                   }}>
                     {stat.value}
                   </p>
