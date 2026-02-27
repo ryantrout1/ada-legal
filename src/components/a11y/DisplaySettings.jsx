@@ -153,27 +153,24 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Community Voices — already dark, exempt from blanket === */
-      #main-content [aria-label="Community voices poll"] {
+      #main-content .cv-dark-section,
+      #main-content .cv-dark-section div,
+      #main-content .cv-dark-section p,
+      #main-content .cv-dark-section span {
         background-color: #0B1120 !important;
         background-image: unset !important;
       }
-      #main-content [aria-label="Community voices poll"] > div {
-        background-color: #0B1120 !important;
-        background-image: unset !important;
-      }
-      #main-content [aria-label="Community voices poll"] [role="img"] {
+      #main-content .cv-dark-section [role="img"] {
         background-color: rgba(255,255,255,0.015) !important;
       }
-      /* Dots — keep their inline colors */
-      #main-content [aria-label="Community voices poll"] [role="img"] div {
+      #main-content .cv-dark-section [aria-hidden="true"] {
         background-color: unset !important;
         background-image: unset !important;
       }
-      /* Progress bar fills — keep their inline colors */
-      #main-content [aria-label="Community voices poll"] [role="progressbar"] div {
+      #main-content .cv-dark-section [role="progressbar"] div {
         background-color: unset !important;
       }
-      #main-content [aria-label="Community voices poll"] [role="listitem"] {
+      #main-content .cv-dark-section [role="listitem"] {
         background-color: transparent !important;
       }
 
@@ -732,42 +729,38 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Community Voices — already dark, exempt from blanket override === */
-      #main-content [aria-label="Community voices poll"] {
+      #main-content .cv-dark-section,
+      #main-content .cv-dark-section div,
+      #main-content .cv-dark-section p,
+      #main-content .cv-dark-section span {
         background-color: #0B1120 !important;
         background-image: unset !important;
         border-color: unset !important;
       }
-      #main-content [aria-label="Community voices poll"] > div {
-        background-color: #0B1120 !important;
-        background-image: unset !important;
-        border-color: unset !important;
-      }
-      #main-content [aria-label="Community voices poll"] [role="img"] {
+      #main-content .cv-dark-section [role="img"] {
         background-color: rgba(255,255,255,0.015) !important;
         border-color: rgba(255,255,255,0.05) !important;
       }
-      /* Dots — keep their inline colors */
-      #main-content [aria-label="Community voices poll"] [role="img"] div {
+      #main-content .cv-dark-section [aria-hidden="true"] {
         background-color: unset !important;
         background-image: unset !important;
         border-color: unset !important;
       }
-      /* Progress bar fills — keep their inline colors */
-      #main-content [aria-label="Community voices poll"] [role="progressbar"] div {
+      #main-content .cv-dark-section [role="progressbar"] div {
         background-color: unset !important;
       }
-      #main-content [aria-label="Community voices poll"] [role="listitem"] {
+      #main-content .cv-dark-section [role="listitem"] {
         background-color: transparent !important;
         border-color: unset !important;
       }
-      #main-content [aria-label="Community voices poll"] h2 { color: #FFFFFF !important; }
-      #main-content [aria-label="Community voices poll"] p { color: #D0D0D0 !important; }
-      #main-content [aria-label="Community voices poll"] span { color: #E0E0E0 !important; }
-      #main-content [aria-label="Community voices poll"] button {
+      #main-content .cv-dark-section h2 { color: #FFFFFF !important; }
+      #main-content .cv-dark-section p { color: #D0D0D0 !important; }
+      #main-content .cv-dark-section span { color: #E0E0E0 !important; }
+      #main-content .cv-dark-section button {
         background-color: rgba(255,255,255,0.04) !important;
         border-color: rgba(255,255,255,0.15) !important;
       }
-      #main-content [aria-label="Community voices poll"] button span { color: #F0F0F0 !important; }
+      #main-content .cv-dark-section button span { color: #F0F0F0 !important; }
 
       /* === Text — MAXIMUM CONTRAST === */
       h1, h2, h3, h4, h5, h6 {
@@ -1328,58 +1321,52 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Community Voices — keep dark in warm mode === */
-      /* Section + direct layout containers get dark bg */
-      #main-content [aria-label="Community voices poll"] {
+      #main-content .cv-dark-section,
+      #main-content .cv-dark-section div,
+      #main-content .cv-dark-section section,
+      #main-content .cv-dark-section p,
+      #main-content .cv-dark-section span {
         background-color: #1A1610 !important;
         background-image: none !important;
       }
-      #main-content [aria-label="Community voices poll"] > div {
-        background-color: #1A1610 !important;
-        background-image: none !important;
-      }
-      /* Map container */
-      #main-content [aria-label="Community voices poll"] [role="img"] {
+      /* Map container — slightly lighter */
+      #main-content .cv-dark-section [role="img"] {
         background-color: rgba(255,255,255,0.02) !important;
         border-color: rgba(255,255,255,0.06) !important;
       }
-      /* Dots inside map — MUST keep their colors */
-      #main-content [aria-label="Community voices poll"] [role="img"] div {
+      /* Dots inside map — UNSET so inline styles work */
+      #main-content .cv-dark-section [aria-hidden="true"] {
         background-color: unset !important;
         background-image: unset !important;
       }
-      /* Result list items */
-      #main-content [aria-label="Community voices poll"] [role="listitem"] {
-        background-color: transparent !important;
-      }
       /* Progress bar track */
-      #main-content [aria-label="Community voices poll"] [role="progressbar"] {
+      #main-content .cv-dark-section [role="progressbar"] {
         background-color: rgba(255,255,255,0.06) !important;
       }
-      /* Progress bar fill — MUST keep color */
-      #main-content [aria-label="Community voices poll"] [role="progressbar"] div {
+      /* Progress bar fill — UNSET so inline color works */
+      #main-content .cv-dark-section [role="progressbar"] div {
         background-color: unset !important;
+        background-image: unset !important;
       }
-      /* Text colors */
-      #main-content [aria-label="Community voices poll"] h2 {
-        color: #FAF3E8 !important;
+      /* Result list items — transparent */
+      #main-content .cv-dark-section [role="listitem"] {
+        background-color: transparent !important;
       }
-      #main-content [aria-label="Community voices poll"] p,
-      #main-content [aria-label="Community voices poll"] span,
-      #main-content [aria-label="Community voices poll"] [role="listitem"] span {
+      /* Text */
+      #main-content .cv-dark-section h2 { color: #FAF3E8 !important; }
+      #main-content .cv-dark-section p,
+      #main-content .cv-dark-section span,
+      #main-content .cv-dark-section [role="listitem"] span {
         color: #C4B9A8 !important;
       }
       /* Buttons */
-      #main-content [aria-label="Community voices poll"] button {
+      #main-content .cv-dark-section button {
         background-color: rgba(255,255,255,0.025) !important;
         border-color: rgba(255,255,255,0.08) !important;
         color: #E2E8F0 !important;
       }
-      #main-content [aria-label="Community voices poll"] button span {
+      #main-content .cv-dark-section button span {
         color: #E2E8F0 !important;
-      }
-      /* Grid texture overlay */
-      #main-content [aria-label="Community voices poll"] > div:first-child {
-        background-color: transparent !important;
       }
 
       /* Header */
