@@ -220,7 +220,7 @@ export const applyPreferences = (prefs) => {
       [role="dialog"][aria-label="Display preferences"] button span {
         color: inherit !important;
       }
-      [role="dialog"][aria-label="Display preferences"] button svg rect {
+      [role="dialog"][aria-label="Display preferences"] button .ds-line {
         fill: #94A3B8 !important;
       }
       [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] {
@@ -231,7 +231,7 @@ export const applyPreferences = (prefs) => {
       [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] span {
         color: #C2410C !important;
       }
-      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] svg rect {
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] .ds-line-active {
         fill: white !important;
       }
 
@@ -880,7 +880,7 @@ export const applyPreferences = (prefs) => {
       [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] span {
         color: #FFFFFF !important;
       }
-      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] svg rect {
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] .ds-line-active {
         fill: #FFFFFF !important;
       }
       [role="dialog"][aria-label="Display preferences"] button[aria-pressed="false"] {
@@ -891,7 +891,7 @@ export const applyPreferences = (prefs) => {
       [role="dialog"][aria-label="Display preferences"] button[aria-pressed="false"] span {
         color: #FFFFFF !important;
       }
-      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="false"] svg rect {
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="false"] .ds-line {
         fill: #D0D0D0 !important;
       }
 
@@ -1282,7 +1282,7 @@ export const applyPreferences = (prefs) => {
       [role="dialog"][aria-label="Display preferences"] button span {
         color: inherit !important;
       }
-      [role="dialog"][aria-label="Display preferences"] button svg rect {
+      [role="dialog"][aria-label="Display preferences"] button .ds-line {
         fill: #6B6050 !important;
       }
       [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] {
@@ -1293,7 +1293,7 @@ export const applyPreferences = (prefs) => {
       [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] span {
         color: #C2410C !important;
       }
-      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] svg rect {
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] .ds-line-active {
         fill: white !important;
       }
 
@@ -1401,10 +1401,11 @@ function SpacingIcon({ level, active, isMobile }) {
   const gap = level === 'default' ? 3 : level === 'relaxed' ? 5 : 7;
   const color = active ? 'white' : isMobile ? 'rgba(255,255,255,0.7)' : '#64748B';
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style={{ flexShrink: 0 }}>
-      <rect x="2" y={3} width="14" height="2" rx="1" fill={color} />
-      <rect x="2" y={3 + 2 + gap} width="14" height="2" rx="1" fill={color} />
-      <rect x="2" y={3 + 4 + gap * 2} width="10" height="2" rx="1" fill={color} />
+    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style={{ flexShrink: 0 }} className="ds-spacing-icon">
+      <rect x="2" y={3} width="14" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
+      <rect x="2" y={3 + 2 + gap} width="14" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
+      <rect x="2" y={3 + 4 + gap * 2} width="10" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
+    </svg>
     </svg>
   );
 }
