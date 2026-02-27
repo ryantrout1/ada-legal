@@ -11,28 +11,76 @@ const OPTIONS = [
 ];
 
 // ─── US population hotspots for dot placement ───
+// Coordinates matched to SVG path viewBox 0 0 100 85
+// US land spans roughly x:6-88, y:8-74 in the viewBox
 const HOTSPOTS = [
-  { x: 12, y: 45, r: 4 }, { x: 80, y: 28, r: 3 }, { x: 42, y: 66, r: 4 },
-  { x: 74, y: 72, r: 3 }, { x: 60, y: 42, r: 2 }, { x: 23, y: 58, r: 3 },
-  { x: 78, y: 34, r: 2 }, { x: 69, y: 38, r: 2 }, { x: 66, y: 30, r: 2 },
-  { x: 14, y: 26, r: 2 }, { x: 52, y: 24, r: 2 }, { x: 56, y: 68, r: 2 },
-  { x: 31, y: 45, r: 2 }, { x: 77, y: 46, r: 2 }, { x: 54, y: 48, r: 2 },
+  { x: 8, y: 42, r: 2 },    // CA (LA/SF)
+  { x: 80, y: 26, r: 2 },   // NY
+  { x: 44, y: 68, r: 3 },   // TX
+  { x: 74, y: 66, r: 2 },   // FL
+  { x: 60, y: 38, r: 2 },   // IL/Chicago
+  { x: 22, y: 56, r: 2 },   // AZ/Phoenix
+  { x: 78, y: 34, r: 2 },   // PA
+  { x: 70, y: 36, r: 2 },   // OH
+  { x: 66, y: 28, r: 2 },   // MI
+  { x: 12, y: 18, r: 2 },   // WA/Seattle
+  { x: 52, y: 22, r: 2 },   // MN
+  { x: 58, y: 64, r: 2 },   // LA/MS
+  { x: 32, y: 42, r: 2 },   // CO/Denver
+  { x: 76, y: 46, r: 2 },   // VA
+  { x: 54, y: 44, r: 2 },   // MO
 ];
 
+// State centroids matched to SVG path
 const US_STATES = [
-  { x: 65.5, y: 62 }, { x: 13, y: 78 }, { x: 23, y: 58 }, { x: 56, y: 58 },
-  { x: 12, y: 45 }, { x: 31, y: 45 }, { x: 84, y: 32 }, { x: 82, y: 39 },
-  { x: 74, y: 72 }, { x: 71, y: 62 }, { x: 28, y: 82 }, { x: 20, y: 28 },
-  { x: 60, y: 42 }, { x: 64, y: 40 }, { x: 54, y: 36 }, { x: 44, y: 48 },
-  { x: 68, y: 48 }, { x: 56, y: 68 }, { x: 88, y: 18 }, { x: 80, y: 39 },
-  { x: 86, y: 30 }, { x: 66, y: 30 }, { x: 52, y: 24 }, { x: 60, y: 64 },
-  { x: 54, y: 48 }, { x: 27, y: 20 }, { x: 43, y: 38 }, { x: 16, y: 40 },
-  { x: 86, y: 24 }, { x: 82, y: 36 }, { x: 28, y: 56 }, { x: 80, y: 28 },
-  { x: 76, y: 54 }, { x: 43, y: 20 }, { x: 69, y: 38 }, { x: 46, y: 56 },
-  { x: 14, y: 26 }, { x: 78, y: 34 }, { x: 86, y: 32 }, { x: 75, y: 58 },
-  { x: 43, y: 28 }, { x: 66, y: 54 }, { x: 42, y: 66 }, { x: 23, y: 42 },
-  { x: 84, y: 22 }, { x: 77, y: 46 }, { x: 14, y: 16 }, { x: 74, y: 44 },
-  { x: 58, y: 28 }, { x: 29, y: 32 },
+  { x: 66, y: 58 },   // AL
+  { x: 22, y: 56 },   // AZ
+  { x: 56, y: 54 },   // AR
+  { x: 8, y: 40 },    // CA
+  { x: 32, y: 42 },   // CO
+  { x: 84, y: 30 },   // CT
+  { x: 82, y: 36 },   // DE
+  { x: 74, y: 68 },   // FL
+  { x: 70, y: 58 },   // GA
+  { x: 20, y: 26 },   // ID
+  { x: 60, y: 38 },   // IL
+  { x: 64, y: 38 },   // IN
+  { x: 54, y: 32 },   // IA
+  { x: 44, y: 46 },   // KS
+  { x: 68, y: 44 },   // KY
+  { x: 58, y: 64 },   // LA
+  { x: 88, y: 16 },   // ME
+  { x: 80, y: 36 },   // MD
+  { x: 86, y: 28 },   // MA
+  { x: 66, y: 28 },   // MI
+  { x: 52, y: 22 },   // MN
+  { x: 62, y: 60 },   // MS
+  { x: 54, y: 44 },   // MO
+  { x: 28, y: 18 },   // MT
+  { x: 44, y: 36 },   // NE
+  { x: 16, y: 38 },   // NV
+  { x: 86, y: 22 },   // NH
+  { x: 82, y: 34 },   // NJ
+  { x: 28, y: 56 },   // NM
+  { x: 80, y: 26 },   // NY
+  { x: 76, y: 50 },   // NC
+  { x: 44, y: 18 },   // ND
+  { x: 70, y: 36 },   // OH
+  { x: 46, y: 54 },   // OK
+  { x: 10, y: 22 },   // OR
+  { x: 78, y: 34 },   // PA
+  { x: 86, y: 30 },   // RI
+  { x: 74, y: 54 },   // SC
+  { x: 44, y: 24 },   // SD
+  { x: 66, y: 50 },   // TN
+  { x: 44, y: 68 },   // TX
+  { x: 24, y: 40 },   // UT
+  { x: 84, y: 20 },   // VT
+  { x: 78, y: 44 },   // VA
+  { x: 12, y: 14 },   // WA
+  { x: 74, y: 40 },   // WV
+  { x: 58, y: 26 },   // WI
+  { x: 30, y: 30 },   // WY
 ];
 
 // Deterministic seeded random for consistent dot placement
@@ -52,17 +100,17 @@ function generateDots(votes) {
       let x, y;
       if (rand() < 0.7) {
         const hs = HOTSPOTS[Math.floor(rand() * HOTSPOTS.length)];
-        x = hs.x + (rand() - 0.5) * hs.r * 4;
-        y = hs.y + (rand() - 0.5) * hs.r * 4;
+        x = hs.x + (rand() - 0.5) * hs.r * 3;
+        y = hs.y + (rand() - 0.5) * hs.r * 3;
       } else {
         const st = US_STATES[Math.floor(rand() * US_STATES.length)];
-        x = st.x + (rand() - 0.5) * 6;
-        y = st.y + (rand() - 0.5) * 6;
+        x = st.x + (rand() - 0.5) * 4;
+        y = st.y + (rand() - 0.5) * 4;
       }
       dots.push({
         id: `d${dotId++}`,
-        x: Math.max(5, Math.min(95, x)),
-        y: Math.max(8, Math.min(85, y)),
+        x: Math.max(6, Math.min(90, x)),
+        y: Math.max(10, Math.min(76, y)),
         optionId,
         delay: rand() * 4,
         size: 2 + rand() * 2,
@@ -171,8 +219,8 @@ export default function CommunityVoices() {
         setHasVoted(true);
         setButtonsVisible(false);
         setUserDot({
-          x: 23 + (Math.random() - 0.5) * 4,
-          y: 58 + (Math.random() - 0.5) * 4,
+          x: 22 + (Math.random() - 0.5) * 3,
+          y: 56 + (Math.random() - 0.5) * 3,
           optionId: saved,
         });
       }
@@ -186,8 +234,8 @@ export default function CommunityVoices() {
     setVotes(prev => ({ ...prev, [optionId]: prev[optionId] + 1 }));
 
     const dot = {
-      x: 23 + (Math.random() - 0.5) * 4,
-      y: 58 + (Math.random() - 0.5) * 4,
+      x: 22 + (Math.random() - 0.5) * 3,
+      y: 56 + (Math.random() - 0.5) * 3,
       optionId,
     };
     setUserDot(dot);
