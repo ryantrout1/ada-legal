@@ -1325,6 +1325,36 @@ export const applyPreferences = (prefs) => {
 
       /* Reduce blue light — subtle warm tint on images */
       img:not([src*="logo"]) { filter: sepia(0.08) !important; }
+
+      /* === Landing hero — warm overrides === */
+      .landing-hero-section,
+      .landing-hero-section > div,
+      .landing-hero-section div {
+        background: #FFF8EE !important;
+        background-image: none !important;
+      }
+      .landing-hero-section h1,
+      .landing-hero-section h2 { color: #1E1610 !important; }
+      .landing-hero-section p { color: #3A3025 !important; }
+      .landing-hero-section span { color: #6B6050 !important; }
+      .landing-hero-section a { color: #A0440A !important; }
+
+      /* Secondary / ghost buttons on warm bg */
+      .landing-btn-secondary,
+      button.landing-btn-secondary,
+      #main-content .landing-btn-secondary {
+        color: #3A3025 !important;
+        border-color: #C4B9A8 !important;
+        background-color: transparent !important;
+      }
+      .landing-btn-secondary span {
+        color: #A0440A !important;
+      }
+      .landing-btn-secondary:hover,
+      button.landing-btn-secondary:hover {
+        border-color: #C2410C !important;
+        color: #1E1610 !important;
+      }
     `;
   }
 
