@@ -89,6 +89,18 @@ function seededRandom(seed) {
   return () => { s = (s * 16807 + 0) % 2147483647; return s / 2147483647; };
 }
 
+// Transform SVG viewBox coords (0-100, 0-85) → container CSS % (left, top)
+// The SVG uses xMidYMid meet inside a 1.65:1 container
+// SVG aspect is 100/85 = 1.176, so it's letterboxed horizontally
+const SVG_SCALE_X = 100 / 85 / 1.65; // 0.713
+const SVG_OFFSET_X = (1 - SVG_SCALE_X) / 2 * 100; // 14.35%
+function svgToContainer(svgX, svgY) {
+  return {
+    x: SVG_OFFSET_X + svgX * SVG_SCALE_X,
+    y: svgY / 85 * 100,
+  };
+}
+
 function generateDots(votes) {
   const dots = [];
   const rand = seededRandom(42);
@@ -107,10 +119,14 @@ function generateDots(votes) {
         x = st.x + (rand() - 0.5) * 4;
         y = st.y + (rand() - 0.5) * 4;
       }
+      // Clamp to US land bounds in SVG coords, then transform
+      x = Math.max(6, Math.min(90, x));
+      y = Math.max(10, Math.min(76, y));
+      const pos = svgToContainer(x, y);
       dots.push({
         id: `d${dotId++}`,
-        x: Math.max(6, Math.min(90, x)),
-        y: Math.max(10, Math.min(76, y)),
+        x: pos.x,
+        y: pos.y,
         optionId,
         delay: rand() * 4,
         size: 2 + rand() * 2,
@@ -218,9 +234,13 @@ export default function CommunityVoices() {
         setSelectedId(saved);
         setHasVoted(true);
         setButtonsVisible(false);
+        const savedDot = svgToContainer(
+          22 + (Math.random() - 0.5) * 3,
+          56 + (Math.random() - 0.5) * 3
+        );
         setUserDot({
-          x: 22 + (Math.random() - 0.5) * 3,
-          y: 56 + (Math.random() - 0.5) * 3,
+          x: savedDot.x,
+          y: savedDot.y,
           optionId: saved,
         });
       }
@@ -233,11 +253,11 @@ export default function CommunityVoices() {
     setSelectedId(optionId);
     setVotes(prev => ({ ...prev, [optionId]: prev[optionId] + 1 }));
 
-    const dot = {
-      x: 22 + (Math.random() - 0.5) * 3,
-      y: 56 + (Math.random() - 0.5) * 3,
-      optionId,
-    };
+    const dot = svgToContainer(
+      22 + (Math.random() - 0.5) * 3,
+      56 + (Math.random() - 0.5) * 3
+    );
+    dot.optionId = optionId;
     setUserDot(dot);
     setRipples([{ x: dot.x, y: dot.y, id: Date.now() }]);
 
