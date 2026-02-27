@@ -211,6 +211,29 @@ export const applyPreferences = (prefs) => {
       [role="dialog"][aria-label="Display preferences"] p {
         color: #94A3B8 !important;
       }
+      /* Protect settings panel buttons from blanket overrides */
+      [role="dialog"][aria-label="Display preferences"] button {
+        background-color: transparent !important;
+        border-color: #334155 !important;
+        color: #E2E8F0 !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button span {
+        color: inherit !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button svg rect {
+        fill: #94A3B8 !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] {
+        border-color: #C2410C !important;
+        background-color: #3C1810 !important;
+        color: #C2410C !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] span {
+        color: #C2410C !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] svg rect {
+        fill: white !important;
+      }
 
       /* ============================================
          DARK MODE — ACCENT COLORS & BUTTONS
@@ -854,10 +877,22 @@ export const applyPreferences = (prefs) => {
         border: 2px solid #FFFFFF !important;
         color: #FFFFFF !important;
       }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] span {
+        color: #FFFFFF !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] svg rect {
+        fill: #FFFFFF !important;
+      }
       [role="dialog"][aria-label="Display preferences"] button[aria-pressed="false"] {
         background-color: #1A1A1A !important;
         border: 2px solid #FFFFFF !important;
         color: #FFFFFF !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="false"] span {
+        color: #FFFFFF !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="false"] svg rect {
+        fill: #D0D0D0 !important;
       }
 
       /* === Scrollbar high contrast === */
@@ -1234,6 +1269,32 @@ export const applyPreferences = (prefs) => {
       [role="dialog"][aria-label="Display preferences"] {
         background-color: #FFF8EE !important;
         border-color: #E0D5C4 !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] legend {
+        color: #6B6050 !important;
+      }
+      /* Protect settings panel buttons from blanket overrides */
+      [role="dialog"][aria-label="Display preferences"] button {
+        background-color: transparent !important;
+        border-color: #E0D5C4 !important;
+        color: #3A3025 !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button span {
+        color: inherit !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button svg rect {
+        fill: #6B6050 !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] {
+        border-color: #C2410C !important;
+        background-color: #FFF0E0 !important;
+        color: #C2410C !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] span {
+        color: #C2410C !important;
+      }
+      [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] svg rect {
+        fill: white !important;
       }
 
       /* CTA buttons keep terracotta */
