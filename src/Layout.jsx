@@ -626,7 +626,7 @@ export default function Layout({ children, currentPageName }) {
           backgroundColor: 'var(--slate-900)',
           color: 'var(--slate-400)',
           padding: '2rem 0',
-          marginTop: '4rem'
+          marginTop: 0
         }}>
           <div style={{
             maxWidth: '1400px',
