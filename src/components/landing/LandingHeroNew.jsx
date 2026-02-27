@@ -101,9 +101,9 @@ export default function LandingHeroNew() {
             color: '#4B5563', marginTop: '1rem'
           }}>
             Not sure if what happened was a violation?{' '}
-            <button onClick={() => openModal('pathways')} style={{ color: '#F97316', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit', padding: 0 }}>
+            <Link to={createPageUrl('RightsPathway')} style={{ color: '#F97316', textDecoration: 'underline', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit' }}>
               Find out in 60 seconds
-            </button>
+            </Link>
           </p>
         </div>
 
