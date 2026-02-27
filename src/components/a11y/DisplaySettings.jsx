@@ -1192,8 +1192,8 @@ export const applyPreferences = (prefs) => {
 
   // --- FONT SIZE ---
   if (prefs.fontSize === 'large') {
-    css += `html { font-size: 125% !important; }`;
     css += `
+      #main-content { font-size: 125% !important; }
       /* ============================================
          DIAGRAM SCALING — LARGE (1.15x)
          SVG diagrams use hardcoded px font sizes
@@ -1214,8 +1214,8 @@ export const applyPreferences = (prefs) => {
       }
     `;
   } else if (prefs.fontSize === 'xl') {
-    css += `html { font-size: 150% !important; }`;
     css += `
+      #main-content { font-size: 150% !important; }
       /* ============================================
          DIAGRAM SCALING — XL (1.3x)
          ============================================ */
@@ -1233,9 +1233,17 @@ export const applyPreferences = (prefs) => {
   }
 
   if (prefs.lineSpacing === 'relaxed') {
-    css += `#main-content p, #main-content li, #main-content td, #main-content dd { line-height: 2 !important; }`;
+    css += `
+      #main-content p, #main-content li, #main-content td, #main-content dd { line-height: 2 !important; }
+      footer[role="contentinfo"] p, footer[role="contentinfo"] li,
+      footer[role="contentinfo"] a, footer[role="contentinfo"] span { line-height: 2 !important; }
+    `;
   } else if (prefs.lineSpacing === 'loose') {
-    css += `#main-content p, #main-content li, #main-content td, #main-content dd { line-height: 2.5 !important; }`;
+    css += `
+      #main-content p, #main-content li, #main-content td, #main-content dd { line-height: 2.5 !important; }
+      footer[role="contentinfo"] p, footer[role="contentinfo"] li,
+      footer[role="contentinfo"] a, footer[role="contentinfo"] span { line-height: 2.5 !important; }
+    `;
   }
 
 
