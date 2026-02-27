@@ -1406,7 +1406,6 @@ function SpacingIcon({ level, active, isMobile }) {
       <rect x="2" y={3 + 2 + gap} width="14" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
       <rect x="2" y={3 + 4 + gap * 2} width="10" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
     </svg>
-    </svg>
   );
 }
 
