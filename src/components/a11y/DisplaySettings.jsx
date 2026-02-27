@@ -1323,6 +1323,118 @@ export const applyPreferences = (prefs) => {
       .fb-subtitle, .fb-success-body { color: #4A4035 !important; }
       .fb-label { color: #3A3025 !important; }
 
+      /* ============================================
+         WARM MODE — DIAGRAM SVG OVERRIDES
+         Warm-tone the diagram backgrounds, fix
+         contrast on structural lines and muted text.
+         ============================================ */
+
+      /* SVG backgrounds → warm cream (match page) */
+      #main-content svg[role="img"] rect[fill="#FAFAF9"],
+      #main-content svg[role="img"] rect[fill="#fafaf9"],
+      #main-content svg[role="img"] rect[fill="white"],
+      #main-content svg[role="img"] rect[fill="#FFFFFF"],
+      #main-content svg[role="img"] rect[fill="#ffffff"] {
+        fill: #FFF8EE !important;
+      }
+      #main-content svg[role="img"] rect[fill="#F8FAFC"],
+      #main-content svg[role="img"] rect[fill="#f8fafc"],
+      #main-content svg[role="img"] rect[fill="#F1F5F9"],
+      #main-content svg[role="img"] rect[fill="#f1f5f9"] {
+        fill: #FAF3E8 !important;
+      }
+
+      /* Structural area fills → warm light */
+      #main-content svg[role="img"] rect[fill="#E2E8F0"],
+      #main-content svg[role="img"] rect[fill="#e2e8f0"] {
+        fill: #E8DFD0 !important;
+        stroke: #C4B9A8 !important;
+      }
+      #main-content svg[role="img"] rect[fill="#E7E5E4"],
+      #main-content svg[role="img"] rect[fill="#e7e5e4"],
+      #main-content svg[role="img"] rect[fill="#D6D3D1"],
+      #main-content svg[role="img"] rect[fill="#d6d3d1"] {
+        fill: #E0D5C4 !important;
+        stroke: #C4B9A8 !important;
+      }
+
+      /* Polygons → warm */
+      #main-content svg[role="img"] polygon[fill="#F1F5F9"],
+      #main-content svg[role="img"] polygon[fill="#f1f5f9"] {
+        fill: #FAF3E8 !important;
+        stroke: #C4B9A8 !important;
+      }
+
+      /* Callout area fills → warm tinted */
+      #main-content svg[role="img"] rect[fill="#FEF2F2"] { fill: #FFF0E0 !important; }
+      #main-content svg[role="img"] rect[fill="#F0FDF4"] { fill: #F5F0E0 !important; }
+      #main-content svg[role="img"] rect[fill="#DBEAFE"] { fill: #E8E0D0 !important; }
+      #main-content svg[role="img"] rect[fill="#FFFBF7"] { fill: #FFF8EE !important; }
+
+      /* Structural lines → warm brown (3:1 on cream) */
+      #main-content svg[role="img"] line[stroke="#CBD5E1"],
+      #main-content svg[role="img"] line[stroke="#cbd5e1"],
+      #main-content svg[role="img"] line[stroke="#E2E8F0"],
+      #main-content svg[role="img"] line[stroke="#e2e8f0"] {
+        stroke: #96897A !important;
+      }
+      #main-content svg[role="img"] line[stroke="#94A3B8"],
+      #main-content svg[role="img"] line[stroke="#64748B"] {
+        stroke: #8C7F70 !important;
+      }
+
+      /* Rect strokes → warm */
+      #main-content svg[role="img"] rect[stroke="#CBD5E1"],
+      #main-content svg[role="img"] rect[stroke="#cbd5e1"],
+      #main-content svg[role="img"] rect[stroke="#A8A29E"],
+      #main-content svg[role="img"] rect[stroke="#D6D3D1"],
+      #main-content svg[role="img"] rect[stroke="#94A3B8"],
+      #main-content svg[role="img"] rect[stroke="#E2E8F0"] {
+        stroke: #96897A !important;
+      }
+
+      /* Muted text → warmer, higher contrast */
+      #main-content svg[role="img"] text[fill="#94A3B8"],
+      #main-content svg[role="img"] text[fill="#CBD5E1"],
+      #main-content svg[role="img"] text[fill="#cbd5e1"] {
+        fill: #6B6050 !important;
+      }
+      #main-content svg[role="img"] text[fill="#64748B"] {
+        fill: #5C5243 !important;
+      }
+      #main-content svg[role="img"] text[fill="#78716C"] {
+        fill: #5C5243 !important;
+      }
+
+      /* Neutral structural text → warm brown */
+      #main-content svg[role="img"] text[fill="#4B5563"],
+      #main-content svg[role="img"] text[fill="#374151"],
+      #main-content svg[role="img"] text[fill="#4B4540"],
+      #main-content svg[role="img"] text[fill="#57534E"] {
+        fill: #3A3025 !important;
+      }
+
+      /* Wall fills → warm dark */
+      #main-content svg[role="img"] rect[fill="#475569"] {
+        fill: #4A4035 !important;
+      }
+      #main-content svg[role="img"] rect[fill="#334155"] {
+        fill: #3A3025 !important;
+      }
+      #main-content svg[role="img"] rect[fill="#1A1F2B"] {
+        fill: #2A201A !important;
+      }
+
+      /* Ensure SVG background transparent */
+      #main-content svg[role="img"] {
+        background-color: transparent !important;
+      }
+
+      /* Diagram container border → warm */
+      #main-content .ada-diagram-wrap {
+        border-color: #E0D5C4 !important;
+      }
+
       /* Reduce blue light — subtle warm tint on images */
       img:not([src*="logo"]) { filter: sepia(0.08) !important; }
 
