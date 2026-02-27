@@ -522,6 +522,21 @@ export const applyPreferences = (prefs) => {
         fill: #1E293B !important;
       }
 
+      /* Callout number text — lighten dark colors for dark backgrounds */
+      #main-content svg[role="img"] g[role="button"] text[fill="#8B2E08"] { fill: #FB923C !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#14532D"] { fill: #4ADE80 !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#1E3A8A"] { fill: #60A5FA !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#5B21B6"] { fill: #A78BFA !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#78350F"] { fill: #FBBF24 !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#0C4A6E"] { fill: #38BDF8 !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#9D174D"] { fill: #F472B6 !important; }
+
+      /* Also fix general dark text labels in diagrams */
+      #main-content svg[role="img"] text[fill="#374151"],
+      #main-content svg[role="img"] text[fill="#4B5563"] {
+        fill: #94A3B8 !important;
+      }
+
       /* Wall fills */
       #main-content svg[role="img"] rect[fill="#475569"] {
         fill: #64748B !important;
@@ -1090,6 +1105,16 @@ export const applyPreferences = (prefs) => {
         fill: #000000 !important;
         stroke-width: 2.5 !important;
       }
+
+      /* Callout number text — max contrast on black circles */
+      #main-content svg[role="img"] g[role="button"] text[fill="#8B2E08"] { fill: #FB923C !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#14532D"] { fill: #4ADE80 !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#1E3A8A"] { fill: #60A5FA !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#5B21B6"] { fill: #C4B5FD !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#78350F"] { fill: #FCD34D !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#0C4A6E"] { fill: #7DD3FC !important; }
+      #main-content svg[role="img"] g[role="button"] text[fill="#9D174D"] { fill: #F9A8D4 !important; }
+
       /* Outer focus/pulse circles get white border */
       #main-content svg[role="img"] g[role="button"] circle[fill="none"][stroke="transparent"] {
         stroke: #FFFFFF !important;
