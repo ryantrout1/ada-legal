@@ -1760,7 +1760,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
             { key: 'default', icon: '🎨', label: 'Default' },
             { key: 'dark', icon: '🌙', label: 'Dark' },
             { key: 'warm', icon: '🌅', label: 'Warm' },
-            { key: 'high-contrast', icon: '◐', label: 'Contrast' },
+            { key: 'high-contrast', icon: null, label: 'Contrast', svg: true },
           ].map((m, i) => {
             const active = prefs.displayMode === m.key;
             return (
@@ -1781,7 +1781,14 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                   cursor: 'pointer', transition: 'all 0.15s',
                 }}
               >
-                <span aria-hidden="true" style={{ fontSize: '1rem', lineHeight: 1 }}>{m.icon}</span>
+                <span aria-hidden="true" style={{ fontSize: '1rem', lineHeight: 1 }}>
+                  {m.svg ? (
+                    <svg width="18" height="18" viewBox="0 0 18 18" style={{ display: 'block' }}>
+                      <circle cx="9" cy="9" r="8" fill="none" stroke={active ? accent : textSecondary} strokeWidth="1.5" />
+                      <path d="M9 1a8 8 0 0 1 0 16z" fill={active ? accent : textSecondary} />
+                    </svg>
+                  ) : m.icon}
+                </span>
                 <span style={{
                   fontSize: '0.65rem', fontWeight: active ? 700 : 600,
                   color: active ? accent : textSecondary,
