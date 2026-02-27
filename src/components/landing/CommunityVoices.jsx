@@ -392,10 +392,36 @@ export default function CommunityVoices() {
             overflow: 'hidden',
           }}
         >
-          {/* US silhouette */}
-          <svg viewBox="0 0 100 90" preserveAspectRatio="none" aria-hidden="true"
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.04 }}>
-            <path d="M12,12 L22,10 L28,14 L32,12 L42,14 L52,10 L58,12 L66,10 L74,14 L82,12 L90,16 L88,24 L90,32 L86,36 L84,42 L80,44 L78,48 L82,50 L80,54 L76,56 L78,60 L74,64 L76,70 L72,76 L68,72 L64,68 L60,64 L56,70 L52,66 L48,62 L44,60 L40,64 L36,60 L32,56 L28,58 L24,54 L20,48 L16,44 L12,40 L10,34 L12,28 L10,22 Z" fill="white" />
+          {/* US silhouette — smooth continental outline */}
+          <svg viewBox="0 0 100 85" preserveAspectRatio="xMidYMid meet" aria-hidden="true"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+            <defs>
+              <filter id="cv-glow">
+                <feGaussianBlur stdDeviation="1.2" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+            </defs>
+            <path filter="url(#cv-glow)" opacity="0.07" fill="white" stroke="rgba(255,255,255,0.12)" strokeWidth="0.3" d="
+              M 6,7 C 6,7 5,10 4,14 C 3,18 2,22 2,26 C 2,30 2,34 3,38
+              C 3,40 4,44 6,48 C 7,50 8,53 10,56
+              C 12,58 15,60 18,61 C 20,62 22,61 25,62
+              C 28,62 31,63 34,63 C 37,63 39,65 42,68
+              C 43,70 44,73 46,76 C 47,77 49,78 51,76
+              C 53,74 54,72 56,71 C 57,70 58,71 60,69
+              C 61,68 62,68 64,67 C 65,67 66,68 67,67
+              C 68,66 69,65 71,64 C 72,63 73,62 75,64
+              C 76,66 77,69 78,72 C 79,74 78,77 77,76
+              C 76,74 75,71 74,69 C 73,67 73,65 74,63
+              C 75,61 76,58 78,55 C 79,52 80,49 82,45
+              C 83,42 84,39 86,36 C 87,33 88,31 89,28
+              C 90,25 90,22 89,20 C 88,18 90,16 88,14
+              C 87,13 85,12 83,13 C 81,14 79,13 77,12
+              C 75,11 73,13 71,13 C 69,12 67,14 66,15
+              C 65,14 63,12 61,13 C 59,14 58,11 56,11
+              C 54,11 52,10 50,10 C 48,11 46,11 44,10
+              C 42,9 40,8 38,7 C 35,6 32,6 28,6
+              C 24,6 20,6 16,6 C 12,6 8,6 6,7 Z
+            " />
           </svg>
 
           {/* Dots */}
