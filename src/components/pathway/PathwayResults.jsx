@@ -6,8 +6,8 @@ import { ArrowRight, ExternalLink, RotateCcw } from 'lucide-react';
 import { useComingSoon } from '../useComingSoonModal';
 
 const urgencyColors = {
-  green: { border: '#16A34A', bg: '#F0FDF4', text: '#15803D', label: 'You have time' },
-  yellow: { border: '#D97706', bg: '#FFFBEB', text: '#92400E', label: 'Act soon' },
+  green: { border: '#16A34A', bg: '#F0FDF4', text: '#14532D', label: 'You have time' },
+  yellow: { border: '#D97706', bg: '#FFFBEB', text: '#7C2D12', label: 'Act soon' },
   red: { border: '#DC2626', bg: '#FEF2F2', text: '#991B1B', label: 'Urgent' }
 };
 
@@ -84,7 +84,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
             }}>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-                color: '#C2410C', margin: '0 0 4px', letterSpacing: '0.02em'
+                color: '#9A3412', margin: '0 0 4px', letterSpacing: '0.02em'
               }}>
                 <AutoCiteLinks>{s.section}</AutoCiteLinks>
               </p>
@@ -148,7 +148,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
       }}>
         <h2 style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.2rem', fontWeight: 700,
-          color: '#C2410C', margin: '0 0 8px'
+          color: '#9A3412', margin: '0 0 8px'
         }}>
           Recommended: {results.bestNextStep.action}
         </h2>
@@ -220,16 +220,16 @@ export default function PathwayResults({ results, answers, onStartOver }) {
             }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = '#C2410C'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; e.currentTarget.style.boxShadow = 'none'; }}
-            onFocus={e => { e.currentTarget.style.borderColor = '#C2410C'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(194,65,12,0.15)'; }}
+            onFocus={e => { e.currentTarget.style.borderColor = '#C2410C'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(194,65,12,0.4)'; }}
             onBlur={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; e.currentTarget.style.boxShadow = 'none'; }}
             >
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700,
-                color: '#C2410C', margin: '0 0 4px'
+                color: '#9A3412', margin: '0 0 4px'
               }}>{gl.title}</p>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                color: 'var(--slate-600)', lineHeight: 1.4, margin: 0
+                color: 'var(--slate-600)', lineHeight: 1.5, margin: 0
               }}>{gl.description}</p>
             </Link>
           ))}
@@ -247,7 +247,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
         }}>Ready to take action?</h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: '#4B5563', margin: '0 0 24px'
+          color: '#94A3B8', margin: '0 0 24px'
         }}>
           An attorney will review your case — at no cost to you.
         </p>

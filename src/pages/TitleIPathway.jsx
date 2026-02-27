@@ -40,7 +40,7 @@ export default function TitleIPathway() {
           <span style={{
             display: 'inline-block', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
             fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em',
-            background: '#FFFBEB', color: '#B45309', border: '1px solid #FEF3C7',
+            background: '#FFFBEB', color: '#7C2D12', border: '1px solid #FEF3C7',
             padding: '4px 12px', borderRadius: '100px', marginBottom: '16px'
           }}>
             ADA Title I — Employment
@@ -73,10 +73,10 @@ export default function TitleIPathway() {
             <span aria-hidden="true">🚨</span>
           </div>
           <div>
-            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '0.95rem', fontWeight: 700, color: '#B45309', margin: '0 0 8px' }}>
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '0.95rem', fontWeight: 700, color: '#7C2D12', margin: '0 0 8px' }}>
               Critical deadline: 180 days to file with the EEOC
             </h2>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: '#92400E', lineHeight: 1.6, margin: 0 }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: '#7C2D12', lineHeight: 1.6, margin: 0 }}>
               You must file a charge of discrimination with the EEOC within <strong>180 days</strong> of the discriminatory event. In states with a local anti-discrimination agency (most states), this extends to <strong>300 days</strong>. Missing this deadline means losing your right to pursue the claim. Do not wait.
             </p>
           </div>
@@ -120,7 +120,7 @@ export default function TitleIPathway() {
                   <div style={{
                     width: '40px', height: '40px', borderRadius: '50%', background: '#F1F5F9',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700, color: '#475569'
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700, color: '#334155'
                   }}>
                     {i + 1}
                   </div>
@@ -144,7 +144,7 @@ export default function TitleIPathway() {
           <a href="https://publicportal.eeoc.gov/Portal/Login" target="_blank" rel="noopener noreferrer"
             style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600,
-              color: 'white', background: '#C45D3E', padding: '14px 28px',
+              color: 'white', background: '#9A3412', padding: '14px 28px',
               borderRadius: '10px', textDecoration: 'none', minHeight: '48px',
               display: 'inline-flex', alignItems: 'center'
             }}>
@@ -174,6 +174,9 @@ export default function TitleIPathway() {
       <style>{`
         @media (max-width: 640px) {
           .pathway-info-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          * { transition: none !important; animation: none !important; }
         }
       `}</style>
     </div>

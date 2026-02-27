@@ -178,7 +178,7 @@ export default function RightsPathway() {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <span style={{
-            display: 'inline-block', background: '#C2410C', color: 'white',
+            display: 'inline-block', background: '#9A3412', color: 'white',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
             letterSpacing: '0.1em', textTransform: 'uppercase',
             padding: '4px 14px', borderRadius: '100px', marginBottom: '12px'
@@ -299,9 +299,7 @@ export default function RightsPathway() {
 
       <style>{`
         @media (prefers-reduced-motion: reduce) {
-          div[role="progressbar"] > div {
-            transition: none !important;
-          }
+          * { transition: none !important; animation: none !important; }
         }
       `}</style>
     </div>

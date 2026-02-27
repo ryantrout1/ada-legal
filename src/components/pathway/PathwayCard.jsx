@@ -31,7 +31,7 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
       }}
       onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-400)'; }}
       onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-200)'; }}
-      onFocus={e => { if (!isSelected) e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,65,12,0.15)'; }}
+      onFocus={e => { if (!isSelected) e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,65,12,0.4)'; }}
       onBlur={e => { if (!isSelected) e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)'; }}
     >
       <div aria-hidden="true" style={{
@@ -45,14 +45,14 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
       <div style={{ flex: 1, minWidth: 0 }}>
         <p style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.05rem', fontWeight: 600,
-          color: 'var(--slate-900)', margin: 0, lineHeight: 1.3
+          color: 'var(--slate-900)', margin: 0, lineHeight: 1.5
         }}>
           {title}
         </p>
         {subtitle && (
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-            color: '#475569', margin: '4px 0 0', lineHeight: 1.4
+            color: '#475569', margin: '4px 0 0', lineHeight: 1.5
           }}>
             {subtitle}
           </p>

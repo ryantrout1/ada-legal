@@ -120,7 +120,7 @@ export default function TitleIIPathway() {
                   <div style={{
                     width: '40px', height: '40px', borderRadius: '50%', background: '#F1F5F9',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700, color: '#475569'
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700, color: '#334155'
                   }}>
                     {i + 1}
                   </div>
@@ -144,7 +144,7 @@ export default function TitleIIPathway() {
           <a href="https://civilrights.justice.gov/report/" target="_blank" rel="noopener noreferrer"
             style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600,
-              color: 'white', background: '#C45D3E', padding: '14px 28px',
+              color: 'white', background: '#9A3412', padding: '14px 28px',
               borderRadius: '10px', textDecoration: 'none', minHeight: '48px',
               display: 'inline-flex', alignItems: 'center'
             }}>
@@ -174,6 +174,9 @@ export default function TitleIIPathway() {
       <style>{`
         @media (max-width: 640px) {
           .pathway-info-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          * { transition: none !important; animation: none !important; }
         }
       `}</style>
     </div>
