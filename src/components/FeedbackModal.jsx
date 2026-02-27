@@ -86,7 +86,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
           position: absolute; top: 12px; right: 12px;
           background: transparent; border: none; cursor: pointer;
           color: #475569; padding: 4px;
-          min-width: 36px; min-height: 36px;
+          min-width: 44px; min-height: 44px;
           display: flex; align-items: center; justify-content: center;
         }
         .fb-title {
@@ -110,7 +110,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
         .fb-select, .fb-input, .fb-textarea {
           font-family: Manrope, sans-serif; font-size: 0.9rem;
           padding: 10px 12px; border-radius: 8px;
-          border: 1px solid #D1D5DB; outline: none;
+          border: 1px solid #9CA3AF; outline: none;
           width: 100%; box-sizing: border-box;
           background-color: #FFFFFF; color: #334155;
         }
@@ -121,7 +121,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
           outline: 2px solid #B7501F;
           outline-offset: -1px;
         }
-        .fb-input::placeholder, .fb-textarea::placeholder { color: #3F4752; }
+        .fb-input::placeholder, .fb-textarea::placeholder { color: #6B7280; }
         .fb-error {
           font-family: Manrope, sans-serif;
           font-size: 0.85rem; color: #991B1B; margin: 0;

@@ -1138,6 +1138,135 @@ export const applyPreferences = (prefs) => {
   }
 
 
+  // --- WARM/SEPIA MODE ---
+  if (prefs.displayMode === 'warm') {
+    css += `
+      :root {
+        --slate-50: #FAF3E8 !important;
+        --slate-100: #F5EBDA !important;
+        --slate-200: #E0D5C4 !important;
+        --slate-300: #C4B9A8 !important;
+        --slate-400: #8A7F6F !important;
+        --slate-500: #6B6050 !important;
+        --slate-600: #4A4035 !important;
+        --slate-700: #3A3025 !important;
+        --slate-800: #2A201A !important;
+        --slate-900: #1E1610 !important;
+        --surface: #FFF8EE !important;
+      }
+      body {
+        background-color: #FAF3E8 !important;
+      }
+
+      /* === Blanket background — warm cream === */
+      #main-content,
+      #main-content > *,
+      #main-content div,
+      #main-content section,
+      #main-content article,
+      #main-content aside,
+      #main-content figure,
+      #main-content details,
+      #main-content fieldset,
+      #main-content nav,
+      #main-content header:not([role="banner"]),
+      #main-content footer:not([role="contentinfo"]),
+      #main-content form,
+      #main-content ul, #main-content ol, #main-content li,
+      #main-content table, #main-content tr, #main-content td, #main-content th {
+        background-color: #FFF8EE !important;
+        background-image: none !important;
+      }
+
+      /* === Dark sections → warm dark brown === */
+      section[style*="#1E293B"], div[style*="#1E293B"],
+      [style*="background: #1E293B"], [style*="background: '#1E293B'"],
+      section[style*="#1A1F2B"], div[style*="#1A1F2B"],
+      [style*="background: #1A1F2B"], [style*="background: '#1A1F2B'"],
+      section[style*="#0F172A"], div[style*="#0F172A"],
+      [style*="background: '#0F172A'"] {
+        background-color: #2A201A !important;
+        background-image: none !important;
+      }
+
+      /* Re-exempt interactive */
+      #main-content button, #main-content a,
+      #main-content [role="button"], #main-content [role="radio"],
+      #main-content [role="tab"], #main-content [role="switch"],
+      #main-content svg, #main-content img {
+        background-color: unset !important;
+        background-image: unset !important;
+      }
+
+      /* === Text colors — warm brown tones === */
+      h1, h2, h3, h4, h5, h6 { color: #1E1610 !important; }
+      p, li, dd, dt, td, th, label, figcaption, blockquote { color: #3A3025 !important; }
+      span, small { color: #4A4035 !important; }
+
+      /* Links */
+      a { color: #A0440A !important; }
+      a:hover { color: #7C2D12 !important; }
+
+      /* Header */
+      header[role="banner"] { background-color: #2A201A !important; }
+      header[role="banner"] a, header[role="banner"] span,
+      header[role="banner"] button, header[role="banner"] div { color: #FAF3E8 !important; }
+
+      /* Inputs */
+      input, select, textarea {
+        background-color: #FFFCF7 !important;
+        border-color: #C4B9A8 !important;
+        color: #1E1610 !important;
+      }
+      input::placeholder, textarea::placeholder { color: #8A7F6F !important; }
+
+      /* Card borders */
+      #main-content [style*="border"] { border-color: #E0D5C4 !important; }
+
+      /* Footer */
+      footer[role="contentinfo"], footer[role="contentinfo"] div {
+        background-color: #2A201A !important;
+      }
+      footer[role="contentinfo"] p, footer[role="contentinfo"] span,
+      footer[role="contentinfo"] a { color: #E0D5C4 !important; }
+
+      /* Display settings panel */
+      [role="dialog"][aria-label="Display preferences"] {
+        background-color: #FFF8EE !important;
+        border-color: #E0D5C4 !important;
+      }
+
+      /* CTA buttons keep terracotta */
+      #main-content button[style*="C2410C"],
+      #main-content a[style*="C2410C"] {
+        background-color: #C2410C !important;
+        color: #FFFFFF !important;
+      }
+
+      /* Radio cards */
+      #main-content [role="radio"] {
+        background-color: #FFF8EE !important;
+        border-color: #E0D5C4 !important;
+      }
+      #main-content [role="radio"][aria-checked="true"] {
+        background-color: #FFF0E0 !important;
+        border-color: #C2410C !important;
+      }
+
+      /* Feedback modal */
+      .fb-panel {
+        background-color: #FFF8EE !important;
+        border-color: #E0D5C4 !important;
+      }
+      .fb-title, .fb-success-title { color: #1E1610 !important; }
+      .fb-subtitle, .fb-success-body { color: #4A4035 !important; }
+      .fb-label { color: #3A3025 !important; }
+
+      /* Reduce blue light — subtle warm tint on images */
+      img:not([src*="logo"]) { filter: sepia(0.08) !important; }
+    `;
+  }
+
   // --- FONT FAMILY ---
   if (prefs.fontFamily === 'atkinson') {
     if (!document.getElementById('atkinson-font-link')) {
@@ -1155,6 +1284,38 @@ export const applyPreferences = (prefs) => {
         font-family: 'Atkinson Hyperlegible', Georgia, serif !important;
       }
     `;
+  } else if (prefs.fontFamily === 'opendyslexic') {
+    if (!document.getElementById('opendyslexic-font-link')) {
+      const link = document.createElement('link');
+      link.id = 'opendyslexic-font-link';
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.cdnfonts.com/css/opendyslexic';
+      document.head.appendChild(link);
+    }
+    css += `
+      body, input, select, textarea, button {
+        font-family: 'OpenDyslexic', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'OpenDyslexic', Georgia, serif !important;
+      }
+    `;
+  } else if (prefs.fontFamily === 'lexie') {
+    if (!document.getElementById('lexie-font-link')) {
+      const link = document.createElement('link');
+      link.id = 'lexie-font-link';
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap';
+      document.head.appendChild(link);
+    }
+    css += `
+      body, input, select, textarea, button {
+        font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Lexend', Georgia, serif !important;
+      }
+    `;
   }
 
   // Write all CSS at once — replaces previous content entirely
@@ -1163,12 +1324,15 @@ export const applyPreferences = (prefs) => {
   // Force high-contrast class on body for JS-based overrides
   if (prefs.displayMode === 'high-contrast') {
     document.body.classList.add('hc-mode');
-    document.body.classList.remove('dark-mode');
+    document.body.classList.remove('dark-mode', 'warm-mode');
   } else if (prefs.displayMode === 'dark') {
     document.body.classList.add('dark-mode');
-    document.body.classList.remove('hc-mode');
-  } else {
+    document.body.classList.remove('hc-mode', 'warm-mode');
+  } else if (prefs.displayMode === 'warm') {
+    document.body.classList.add('warm-mode');
     document.body.classList.remove('hc-mode', 'dark-mode');
+  } else {
+    document.body.classList.remove('hc-mode', 'dark-mode', 'warm-mode');
   }
 };
 
@@ -1296,11 +1460,13 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
       {/* Display Mode */}
       <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '16px' }}>
         <legend style={labelStyle}>Display Mode</legend>
-        <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+        <div style={{ display: 'flex', gap: '4px', marginTop: '8px', flexWrap: 'wrap' }}>
           <OptionButton ref={firstFocusRef} variant={variant} label="Default" active={prefs.displayMode === 'default'} ariaPressed={String(prefs.displayMode === 'default')}
             onClick={() => updatePref('displayMode', 'default', 'Display mode changed to default')} />
           <OptionButton variant={variant} label="Dark" active={prefs.displayMode === 'dark'} ariaPressed={String(prefs.displayMode === 'dark')}
             onClick={() => updatePref('displayMode', 'dark', 'Display mode changed to dark')} />
+          <OptionButton variant={variant} label="Warm" active={prefs.displayMode === 'warm'} ariaPressed={String(prefs.displayMode === 'warm')}
+            onClick={() => updatePref('displayMode', 'warm', 'Display mode changed to warm sepia')} />
           <OptionButton variant={variant} label="High Contrast" active={prefs.displayMode === 'high-contrast'} ariaPressed={String(prefs.displayMode === 'high-contrast')}
             onClick={() => updatePref('displayMode', 'high-contrast', 'Display mode changed to high contrast')} />
         </div>
@@ -1336,12 +1502,18 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
       {/* Font Family */}
       <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '16px' }}>
         <legend style={labelStyle}>Font Family</legend>
-        <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+        <div style={{ display: 'flex', gap: '4px', marginTop: '8px', flexWrap: 'wrap' }}>
           <OptionButton variant={variant} label="Default" active={prefs.fontFamily === 'default'} ariaPressed={String(prefs.fontFamily === 'default')}
             onClick={() => updatePref('fontFamily', 'default', 'Font changed to default')} />
           <OptionButton variant={variant} label={<span style={{ fontFamily: "'Atkinson Hyperlegible', sans-serif" }}>Atkinson Hyperlegible</span>}
             active={prefs.fontFamily === 'atkinson'} ariaPressed={String(prefs.fontFamily === 'atkinson')}
-            onClick={() => updatePref('fontFamily', 'atkinson', 'Font changed to Atkinson Hyperlegible')} />
+            onClick={() => updatePref('fontFamily', 'atkinson', 'Font changed to Atkinson Hyperlegible — designed for low vision readers')} />
+          <OptionButton variant={variant} label={<span style={{ fontFamily: "'OpenDyslexic', sans-serif" }}>OpenDyslexic</span>}
+            active={prefs.fontFamily === 'opendyslexic'} ariaPressed={String(prefs.fontFamily === 'opendyslexic')}
+            onClick={() => updatePref('fontFamily', 'opendyslexic', 'Font changed to OpenDyslexic — designed for readers with dyslexia')} />
+          <OptionButton variant={variant} label={<span style={{ fontFamily: "'Lexend', sans-serif" }}>Lexend</span>}
+            active={prefs.fontFamily === 'lexie'} ariaPressed={String(prefs.fontFamily === 'lexie')}
+            onClick={() => updatePref('fontFamily', 'lexie', 'Font changed to Lexend — designed to reduce reading fatigue')} />
         </div>
       </fieldset>
 
