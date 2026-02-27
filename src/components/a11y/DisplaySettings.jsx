@@ -1336,37 +1336,24 @@ export const applyPreferences = (prefs) => {
   }
 };
 
-function OptionButton({ label, active, onClick, ariaPressed, style: extraStyle, variant }) {
-  const isMobile = variant === 'inline';
+function SpacingIcon({ level, active, isMobile }) {
+  const gap = level === 'default' ? 3 : level === 'relaxed' ? 5 : 7;
+  const color = active ? 'white' : isMobile ? 'rgba(255,255,255,0.7)' : '#64748B';
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={ariaPressed}
-      style={{
-        flex: 1,
-        padding: '10px 8px',
-        minHeight: '44px',
-        borderRadius: '8px',
-        border: active
-          ? '2px solid #C2410C'
-          : isMobile
-            ? '2px solid rgba(255,255,255,0.2)'
-            : '2px solid var(--slate-200)',
-        background: active ? '#C2410C' : 'transparent',
-        color: active ? 'white' : isMobile ? 'white' : 'var(--slate-700)',
-        fontFamily: 'Manrope, sans-serif',
-        fontSize: '0.8125rem',
-        fontWeight: 600,
-        cursor: 'pointer',
-        transition: 'background 0.15s, border-color 0.15s, color 0.15s',
-        ...extraStyle
-      }}
-    >
-      {label}
-    </button>
+    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style={{ flexShrink: 0 }}>
+      <rect x="2" y={3} width="14" height="2" rx="1" fill={color} />
+      <rect x="2" y={3 + 2 + gap} width="14" height="2" rx="1" fill={color} />
+      <rect x="2" y={3 + 4 + gap * 2} width="10" height="2" rx="1" fill={color} />
+    </svg>
   );
 }
+
+const FONT_OPTIONS = [
+  { key: 'default', label: 'Default', desc: 'Standard site fonts', family: 'Georgia, serif' },
+  { key: 'atkinson', label: 'Atkinson', desc: 'Designed for low vision', family: "'Atkinson Hyperlegible', sans-serif" },
+  { key: 'opendyslexic', label: 'OpenDyslexic', desc: 'Designed for dyslexia', family: "'OpenDyslexic', sans-serif" },
+  { key: 'lexie', label: 'Lexend', desc: 'Reduces reading fatigue', family: "'Lexend', sans-serif" },
+];
 
 export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose }) {
   const [prefs, setPrefs] = useState(loadPreferences);
@@ -1439,13 +1426,19 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
   }, [variant, isOpen, onClose]);
 
   const isMobile = variant === 'inline';
+  const accent = '#C2410C';
+  const borderColor = isMobile ? 'rgba(255,255,255,0.2)' : 'var(--slate-200, #E2E8F0)';
+  const textPrimary = isMobile ? 'white' : 'var(--slate-700, #334155)';
+  const textSecondary = isMobile ? 'rgba(255,255,255,0.6)' : '#64748B';
+  const accentBg = isMobile ? 'rgba(194,65,12,0.2)' : '#FFF7ED';
+
   const labelStyle = {
     fontFamily: 'Manrope, sans-serif',
-    fontSize: '0.75rem',
+    fontSize: '0.7rem',
     fontWeight: 700,
     textTransform: 'uppercase',
-    letterSpacing: '0.05em',
-    color: isMobile ? 'rgba(255,255,255,0.6)' : '#475569',
+    letterSpacing: '0.06em',
+    color: textSecondary,
     margin: 0,
     padding: 0,
     border: 'none'
@@ -1457,102 +1450,230 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
         {announcement}
       </div>
 
-      {/* Display Mode */}
-      <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '16px' }}>
-        <legend style={labelStyle}>Display Mode</legend>
-        <div style={{ display: 'flex', gap: '4px', marginTop: '8px', flexWrap: 'wrap' }}>
-          <OptionButton ref={firstFocusRef} variant={variant} label="Default" active={prefs.displayMode === 'default'} ariaPressed={String(prefs.displayMode === 'default')}
-            onClick={() => updatePref('displayMode', 'default', 'Display mode changed to default')} />
-          <OptionButton variant={variant} label="Dark" active={prefs.displayMode === 'dark'} ariaPressed={String(prefs.displayMode === 'dark')}
-            onClick={() => updatePref('displayMode', 'dark', 'Display mode changed to dark')} />
-          <OptionButton variant={variant} label="Warm" active={prefs.displayMode === 'warm'} ariaPressed={String(prefs.displayMode === 'warm')}
-            onClick={() => updatePref('displayMode', 'warm', 'Display mode changed to warm sepia')} />
-          <OptionButton variant={variant} label="High Contrast" active={prefs.displayMode === 'high-contrast'} ariaPressed={String(prefs.displayMode === 'high-contrast')}
-            onClick={() => updatePref('displayMode', 'high-contrast', 'Display mode changed to high contrast')} />
+      {/* ═══════ DISPLAY MODE ═══════ */}
+      <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '18px' }}>
+        <legend style={labelStyle}>Display</legend>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', marginTop: '8px' }}>
+          {[
+            { key: 'default', icon: '☀️', label: 'Light' },
+            { key: 'dark', icon: '🌙', label: 'Dark' },
+            { key: 'warm', icon: '🌅', label: 'Warm' },
+            { key: 'high-contrast', icon: '◐', label: 'Contrast' },
+          ].map((m, i) => {
+            const active = prefs.displayMode === m.key;
+            return (
+              <button
+                key={m.key}
+                ref={i === 0 ? firstFocusRef : undefined}
+                type="button"
+                aria-pressed={String(active)}
+                onClick={() => updatePref('displayMode', m.key, `Display changed to ${m.label}`)}
+                style={{
+                  display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', justifyContent: 'center',
+                  gap: '3px', padding: '8px 2px',
+                  minHeight: '54px',
+                  borderRadius: '10px',
+                  border: active ? `2px solid ${accent}` : `1px solid ${borderColor}`,
+                  background: active ? accentBg : 'transparent',
+                  cursor: 'pointer', transition: 'all 0.15s',
+                }}
+              >
+                <span aria-hidden="true" style={{ fontSize: '1rem', lineHeight: 1 }}>{m.icon}</span>
+                <span style={{
+                  fontSize: '0.65rem', fontWeight: active ? 700 : 600,
+                  color: active ? accent : textSecondary,
+                  fontFamily: 'Manrope, sans-serif', lineHeight: 1.2,
+                }}>
+                  {m.label}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </fieldset>
 
-      {/* Font Size */}
-      <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '16px' }}>
-        <legend style={labelStyle}>Font Size</legend>
-        <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
-          <OptionButton variant={variant} label={<span><span style={{ fontSize: '0.8rem' }}>Aa</span> Default</span>} active={prefs.fontSize === 'default'} ariaPressed={String(prefs.fontSize === 'default')}
-            onClick={() => updatePref('fontSize', 'default', 'Font size changed to default')} />
-          <OptionButton variant={variant} label={<span><span style={{ fontSize: '1rem' }}>Aa</span> Large</span>} active={prefs.fontSize === 'large'} ariaPressed={String(prefs.fontSize === 'large')}
-            onClick={() => updatePref('fontSize', 'large', 'Font size changed to large')} />
-          <OptionButton variant={variant} label={<span><span style={{ fontSize: '1.15rem' }}>Aa</span> XL</span>} active={prefs.fontSize === 'xl'} ariaPressed={String(prefs.fontSize === 'xl')}
-            onClick={() => updatePref('fontSize', 'xl', 'Font size changed to extra large')} />
+      {/* ═══════ FONT FAMILY — 2x2 grid ═══════ */}
+      <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '18px' }}>
+        <legend style={labelStyle}>Font</legend>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginTop: '8px' }}>
+          {FONT_OPTIONS.map(f => {
+            const active = prefs.fontFamily === f.key;
+            return (
+              <button
+                key={f.key}
+                type="button"
+                aria-pressed={String(active)}
+                onClick={() => updatePref('fontFamily', f.key, `Font changed to ${f.label} — ${f.desc}`)}
+                style={{
+                  display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', justifyContent: 'center',
+                  gap: '2px', padding: '10px 6px',
+                  minHeight: '64px',
+                  borderRadius: '10px',
+                  border: active ? `2px solid ${accent}` : `1px solid ${borderColor}`,
+                  background: active ? accentBg : 'transparent',
+                  cursor: 'pointer', transition: 'all 0.15s',
+                }}
+              >
+                <span style={{
+                  fontFamily: f.family,
+                  fontSize: '1.15rem', fontWeight: 700,
+                  color: active ? accent : textPrimary,
+                  lineHeight: 1.2,
+                }}>
+                  Aa
+                </span>
+                <span style={{
+                  fontSize: '0.72rem', fontWeight: active ? 700 : 600,
+                  color: active ? accent : textPrimary,
+                  fontFamily: 'Manrope, sans-serif', lineHeight: 1.2,
+                }}>
+                  {f.label}
+                </span>
+                <span style={{
+                  fontSize: '0.6rem', fontWeight: 500,
+                  color: textSecondary,
+                  fontFamily: 'Manrope, sans-serif', lineHeight: 1.3,
+                }}>
+                  {f.desc}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </fieldset>
 
+      {/* ═══════ SIZE + SPACING — side by side ═══════ */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '18px' }}>
+        {/* Text Size */}
+        <fieldset style={{ flex: 1, border: 'none', margin: 0, padding: 0 }}>
+          <legend style={labelStyle}>Size</legend>
+          <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+            {[
+              { key: 'default', sz: '0.8rem', ariaLabel: 'Default text size' },
+              { key: 'large', sz: '1rem', ariaLabel: 'Large text size' },
+              { key: 'xl', sz: '1.2rem', ariaLabel: 'Extra large text size' },
+            ].map(s => {
+              const active = prefs.fontSize === s.key;
+              return (
+                <button
+                  key={s.key}
+                  type="button"
+                  aria-pressed={String(active)}
+                  aria-label={s.ariaLabel}
+                  onClick={() => updatePref('fontSize', s.key, s.ariaLabel)}
+                  style={{
+                    flex: 1,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    padding: '6px 4px',
+                    minHeight: '44px',
+                    borderRadius: '8px',
+                    border: active ? `2px solid ${accent}` : `1px solid ${borderColor}`,
+                    background: active ? accent : 'transparent',
+                    color: active ? 'white' : textPrimary,
+                    fontSize: s.sz, fontWeight: 700,
+                    fontFamily: 'Manrope, sans-serif',
+                    cursor: 'pointer', transition: 'all 0.15s',
+                  }}
+                >
+                  A
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
 
-      {/* Line Spacing */}
-      <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '16px' }}>
-        <legend style={labelStyle}>Line Spacing</legend>
-        <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
-          <OptionButton variant={variant} label="Default" active={prefs.lineSpacing === 'default'} ariaPressed={String(prefs.lineSpacing === 'default')}
-            onClick={() => updatePref('lineSpacing', 'default', 'Line spacing changed to default')} />
-          <OptionButton variant={variant} label="Relaxed" active={prefs.lineSpacing === 'relaxed'} ariaPressed={String(prefs.lineSpacing === 'relaxed')}
-            onClick={() => updatePref('lineSpacing', 'relaxed', 'Line spacing changed to relaxed')} />
-          <OptionButton variant={variant} label="Loose" active={prefs.lineSpacing === 'loose'} ariaPressed={String(prefs.lineSpacing === 'loose')}
-            onClick={() => updatePref('lineSpacing', 'loose', 'Line spacing changed to loose')} />
-        </div>
-      </fieldset>
+        {/* Line Spacing */}
+        <fieldset style={{ flex: 1, border: 'none', margin: 0, padding: 0 }}>
+          <legend style={labelStyle}>Spacing</legend>
+          <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+            {[
+              { key: 'default', ariaLabel: 'Default line spacing' },
+              { key: 'relaxed', ariaLabel: 'Relaxed line spacing' },
+              { key: 'loose', ariaLabel: 'Loose line spacing' },
+            ].map(s => {
+              const active = prefs.lineSpacing === s.key;
+              return (
+                <button
+                  key={s.key}
+                  type="button"
+                  aria-pressed={String(active)}
+                  aria-label={s.ariaLabel}
+                  onClick={() => updatePref('lineSpacing', s.key, s.ariaLabel)}
+                  style={{
+                    flex: 1,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    padding: '6px 4px',
+                    minHeight: '44px',
+                    borderRadius: '8px',
+                    border: active ? `2px solid ${accent}` : `1px solid ${borderColor}`,
+                    background: active ? accent : 'transparent',
+                    cursor: 'pointer', transition: 'all 0.15s',
+                  }}
+                >
+                  <SpacingIcon level={s.key} active={active} isMobile={isMobile} />
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+      </div>
 
-      {/* Font Family */}
-      <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '16px' }}>
-        <legend style={labelStyle}>Font Family</legend>
-        <div style={{ display: 'flex', gap: '4px', marginTop: '8px', flexWrap: 'wrap' }}>
-          <OptionButton variant={variant} label="Default" active={prefs.fontFamily === 'default'} ariaPressed={String(prefs.fontFamily === 'default')}
-            onClick={() => updatePref('fontFamily', 'default', 'Font changed to default')} />
-          <OptionButton variant={variant} label={<span style={{ fontFamily: "'Atkinson Hyperlegible', sans-serif" }}>Atkinson Hyperlegible</span>}
-            active={prefs.fontFamily === 'atkinson'} ariaPressed={String(prefs.fontFamily === 'atkinson')}
-            onClick={() => updatePref('fontFamily', 'atkinson', 'Font changed to Atkinson Hyperlegible — designed for low vision readers')} />
-          <OptionButton variant={variant} label={<span style={{ fontFamily: "'OpenDyslexic', sans-serif" }}>OpenDyslexic</span>}
-            active={prefs.fontFamily === 'opendyslexic'} ariaPressed={String(prefs.fontFamily === 'opendyslexic')}
-            onClick={() => updatePref('fontFamily', 'opendyslexic', 'Font changed to OpenDyslexic — designed for readers with dyslexia')} />
-          <OptionButton variant={variant} label={<span style={{ fontFamily: "'Lexend', sans-serif" }}>Lexend</span>}
-            active={prefs.fontFamily === 'lexie'} ariaPressed={String(prefs.fontFamily === 'lexie')}
-            onClick={() => updatePref('fontFamily', 'lexie', 'Font changed to Lexend — designed to reduce reading fatigue')} />
-        </div>
-      </fieldset>
-
-      {/* Reading Level */}
+      {/* ═══════ READING LEVEL ═══════ */}
       <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '16px' }}>
         <legend style={labelStyle}>Reading Level</legend>
-        <p style={{
-          fontFamily: 'Manrope, sans-serif',
-          fontSize: '0.6875rem',
-          color: isMobile ? 'rgba(255,255,255,0.5)' : 'var(--slate-400)',
-          margin: '4px 0 8px',
-          lineHeight: 1.4
-        }}>
-          Controls how guide content is displayed
-        </p>
-        <div style={{ display: 'flex', gap: '4px', marginTop: '4px', flexWrap: 'wrap' }}>
-          <OptionButton variant={variant} label="Simple" active={prefs.readingLevel === 'simple'} ariaPressed={String(prefs.readingLevel === 'simple')}
-            onClick={() => updatePref('readingLevel', 'simple', 'Reading level changed to simple — plain language summaries')} />
-          <OptionButton variant={variant} label="Standard" active={prefs.readingLevel === 'standard'} ariaPressed={String(prefs.readingLevel === 'standard')}
-            onClick={() => updatePref('readingLevel', 'standard', 'Reading level changed to standard')} />
-          <OptionButton variant={variant} label="Professional" active={prefs.readingLevel === 'professional'} ariaPressed={String(prefs.readingLevel === 'professional')}
-            onClick={() => updatePref('readingLevel', 'professional', 'Reading level changed to professional — includes legal citations')} />
+        <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+          {[
+            { key: 'simple', label: 'Simple', announce: 'Reading level changed to simple — plain language summaries' },
+            { key: 'standard', label: 'Standard', announce: 'Reading level changed to standard' },
+            { key: 'professional', label: 'Legal', announce: 'Reading level changed to professional — includes legal citations' },
+          ].map(r => {
+            const active = prefs.readingLevel === r.key;
+            return (
+              <button
+                key={r.key}
+                type="button"
+                aria-pressed={String(active)}
+                onClick={() => updatePref('readingLevel', r.key, r.announce)}
+                style={{
+                  flex: 1,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  padding: '8px 4px',
+                  minHeight: '44px',
+                  borderRadius: '8px',
+                  border: active ? `2px solid ${accent}` : `1px solid ${borderColor}`,
+                  background: active ? accent : 'transparent',
+                  color: active ? 'white' : textPrimary,
+                  fontSize: '0.75rem', fontWeight: 600,
+                  fontFamily: 'Manrope, sans-serif',
+                  cursor: 'pointer', transition: 'all 0.15s',
+                }}
+              >
+                {r.label}
+              </button>
+            );
+          })}
         </div>
       </fieldset>
 
-      {/* Reset */}
+      {/* ═══════ RESET ═══════ */}
       <button
         type="button"
         onClick={resetAll}
         aria-label="Reset all display preferences to defaults"
         style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-          width: '100%', padding: '8px', minHeight: '44px',
+          width: '100%',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          gap: '6px', padding: '8px',
+          minHeight: '44px',
+          borderRadius: '8px',
+          border: `1px solid ${borderColor}`,
           background: 'transparent',
-          border: isMobile ? '1px solid rgba(255,255,255,0.2)' : '1px solid var(--slate-200)',
-          borderRadius: '8px', cursor: 'pointer',
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
-          color: isMobile ? 'rgba(255,255,255,0.7)' : '#475569',
-          transition: 'background 0.15s'
+          color: textSecondary,
+          fontSize: '0.75rem', fontWeight: 600,
+          fontFamily: 'Manrope, sans-serif',
+          cursor: 'pointer',
         }}
       >
         <RotateCcw size={14} /> Reset to Defaults
@@ -1588,7 +1709,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
         width: '320px',
         backgroundColor: 'var(--surface, white)',
         border: '1px solid var(--slate-200)',
-        borderRadius: '12px',
+        borderRadius: '16px',
         boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
         padding: '20px',
         zIndex: 1000
