@@ -48,6 +48,27 @@ export default function Layout({ children, currentPageName }) {
     if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
     link.type = 'image/png';
     link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png';
+
+    // Open Graph / social media meta tags
+    const ogTags = {
+      'og:title': 'ADA Legal Link — Know Your Rights Under the ADA',
+      'og:description': 'Free ADA Standards guide with plain-language summaries, interactive diagrams, and direct connection to experienced ADA attorneys. WCAG 2.2 AAA compliant.',
+      'og:image': 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png',
+      'og:type': 'website',
+      'og:site_name': 'ADA Legal Link',
+      'twitter:card': 'summary',
+      'twitter:title': 'ADA Legal Link — Know Your Rights Under the ADA',
+      'twitter:description': 'Free ADA Standards guide with plain-language summaries and direct connection to ADA attorneys.',
+      'twitter:image': 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png',
+    };
+    Object.entries(ogTags).forEach(([key, value]) => {
+      const attr = key.startsWith('twitter:') ? 'name' : 'property';
+      let meta = document.querySelector(`meta[${attr}="${key}"]`);
+      if (!meta) { meta = document.createElement('meta'); meta.setAttribute(attr, key); document.head.appendChild(meta); }
+      meta.setAttribute('content', value);
+    });
+    // Page title
+    document.title = 'ADA Legal Link — Know Your Rights Under the ADA';
   }, []);
 
   React.useEffect(() => {

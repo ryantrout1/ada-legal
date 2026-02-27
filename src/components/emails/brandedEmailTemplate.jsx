@@ -25,7 +25,7 @@ export function brandedEmail({ heading, headingColor = '#1E293B', bodyHtml, port
     <div style="background-color: #1E293B; padding: 24px 32px; text-align: center;">
       <table role="presentation" style="margin: 0 auto;"><tr>
         <td style="vertical-align: middle; padding-right: 10px;">
-          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/f0c886271_ADALLLogo-transparent.png" alt="ADA Legal Link" width="32" height="32" style="display: block;" />
+          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png" alt="ADA Legal Link" width="32" height="32" style="display: block;" />
         </td>
         <td style="vertical-align: middle;">
           <span style="font-family: Georgia, serif; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 0.01em;">ADA Legal </span><span style="font-family: Georgia, serif; font-size: 22px; font-weight: 700; color: #C2410C; letter-spacing: 0.01em;">Link</span>
