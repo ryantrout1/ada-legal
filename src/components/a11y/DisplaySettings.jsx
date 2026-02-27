@@ -163,14 +163,7 @@ export const applyPreferences = (prefs) => {
       #main-content .cv-dark-section [role="img"] {
         background-color: rgba(255,255,255,0.015) !important;
       }
-      #main-content .cv-dark-section [aria-hidden="true"] {
-        background-color: unset !important;
-        background-image: unset !important;
-      }
-      #main-content .cv-dark-section [role="progressbar"] div {
-        background-color: unset !important;
-      }
-      #main-content .cv-dark-section [role="listitem"] {
+                  #main-content .cv-dark-section [role="listitem"] {
         background-color: transparent !important;
       }
 
@@ -741,15 +734,7 @@ export const applyPreferences = (prefs) => {
         background-color: rgba(255,255,255,0.015) !important;
         border-color: rgba(255,255,255,0.05) !important;
       }
-      #main-content .cv-dark-section [aria-hidden="true"] {
-        background-color: unset !important;
-        background-image: unset !important;
-        border-color: unset !important;
-      }
-      #main-content .cv-dark-section [role="progressbar"] div {
-        background-color: unset !important;
-      }
-      #main-content .cv-dark-section [role="listitem"] {
+                  #main-content .cv-dark-section [role="listitem"] {
         background-color: transparent !important;
         border-color: unset !important;
       }
@@ -1335,11 +1320,7 @@ export const applyPreferences = (prefs) => {
         border-color: rgba(255,255,255,0.06) !important;
       }
       /* Dots inside map — UNSET so inline styles work */
-      #main-content .cv-dark-section [aria-hidden="true"] {
-        background-color: unset !important;
-        background-image: unset !important;
-      }
-      /* Progress bar track */
+            /* Progress bar track */
       #main-content .cv-dark-section [role="progressbar"] {
         background-color: rgba(255,255,255,0.06) !important;
       }

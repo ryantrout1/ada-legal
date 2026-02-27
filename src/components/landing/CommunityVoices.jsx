@@ -187,7 +187,8 @@ function ResultBar({ option, count, total, delay, isUser }) {
         role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}
         aria-label={`${option.label}: ${pct}%`}
       >
-        <div style={{
+        <span style={{
+          display: 'block',
           height: '100%', borderRadius: 100,
           backgroundColor: option.color,
           width: `${pct}%`,
@@ -497,10 +498,11 @@ export default function CommunityVoices() {
           {dots.map(dot => {
             const opt = OPTIONS.find(o => o.id === dot.optionId);
             return (
-              <div
+              <span
                 key={dot.id}
                 aria-hidden="true"
                 style={{
+                  display: 'block',
                   position: 'absolute',
                   left: `${dot.x}%`, top: `${dot.y}%`,
                   width: dot.size, height: dot.size,
@@ -517,9 +519,10 @@ export default function CommunityVoices() {
 
           {/* User dot */}
           {userDot && (
-            <div
+            <span
               aria-hidden="true"
               style={{
+                display: 'block',
                 position: 'absolute',
                 left: `${userDot.x}%`, top: `${userDot.y}%`,
                 width: 7, height: 7,
@@ -535,10 +538,11 @@ export default function CommunityVoices() {
 
           {/* Ripple */}
           {ripples.map(r => (
-            <div
+            <span
               key={r.id}
               aria-hidden="true"
               style={{
+                display: 'block',
                 position: 'absolute',
                 left: `${r.x}%`, top: `${r.y}%`,
                 transform: 'translate(-50%, -50%)',
