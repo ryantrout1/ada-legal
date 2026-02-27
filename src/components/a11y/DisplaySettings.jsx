@@ -1368,11 +1368,8 @@ export const applyPreferences = (prefs) => {
       document.head.appendChild(link);
     }
     css += `
-      body, input, select, textarea, button {
+      * {
         font-family: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-      }
-      h1, h2, h3, h4, h5, h6 {
-        font-family: 'Atkinson Hyperlegible', Georgia, serif !important;
       }
     `;
   } else if (prefs.fontFamily === 'opendyslexic') {
@@ -1384,11 +1381,8 @@ export const applyPreferences = (prefs) => {
       document.head.appendChild(link);
     }
     css += `
-      body, input, select, textarea, button {
+      * {
         font-family: 'OpenDyslexic', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-      }
-      h1, h2, h3, h4, h5, h6 {
-        font-family: 'OpenDyslexic', Georgia, serif !important;
       }
     `;
   } else if (prefs.fontFamily === 'lexie') {
@@ -1400,11 +1394,8 @@ export const applyPreferences = (prefs) => {
       document.head.appendChild(link);
     }
     css += `
-      body, input, select, textarea, button {
+      * {
         font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-      }
-      h1, h2, h3, h4, h5, h6 {
-        font-family: 'Lexend', Georgia, serif !important;
       }
     `;
   }
