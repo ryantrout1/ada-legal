@@ -1537,7 +1537,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
         <legend style={labelStyle}>Display</legend>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', marginTop: '8px' }}>
           {[
-            { key: 'default', icon: '☀️', label: 'Light' },
+            { key: 'default', icon: '🎨', label: 'Default' },
             { key: 'dark', icon: '🌙', label: 'Dark' },
             { key: 'warm', icon: '🌅', label: 'Warm' },
             { key: 'high-contrast', icon: '◐', label: 'Contrast' },
