@@ -499,6 +499,16 @@ export const applyPreferences = (prefs) => {
         background-color: transparent !important;
       }
 
+      /* === Pathway radio cards — dark mode === */
+      #main-content [role="radio"] {
+        background-color: #1E293B !important;
+        border-color: #475569 !important;
+      }
+      #main-content [role="radio"][aria-checked="true"] {
+        background-color: #2D1B0E !important;
+        border-color: #C2410C !important;
+      }
+
       /* === Feedback modal — dark mode === */
       .fb-panel {
         background-color: #1E293B !important;
@@ -1029,6 +1039,19 @@ export const applyPreferences = (prefs) => {
       /* Diagram container border override for HC */
       #main-content div[style*="border-radius: 12px"] svg[role="img"] {
         border: none !important;
+      }
+
+      /* === Pathway radio cards — high contrast === */
+      #main-content [role="radio"] {
+        background-color: #1A1A1A !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      #main-content [role="radio"][aria-checked="true"] {
+        background-color: #1A1A1A !important;
+        border: 2px solid #FFB347 !important;
+      }
+      #main-content [role="radio"] p {
+        color: #F0F0F0 !important;
       }
 
       /* === Feedback modal — high contrast === */
