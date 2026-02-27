@@ -152,6 +152,16 @@ export const applyPreferences = (prefs) => {
         background-image: unset !important;
       }
 
+      /* === Community Voices — already dark, exempt from blanket === */
+      [aria-label="Community voices poll"],
+      [aria-label="Community voices poll"] *:not(button) {
+        background-color: unset !important;
+        background-image: unset !important;
+      }
+      [aria-label="Community voices poll"] {
+        background-color: #0B1120 !important;
+      }
+
       /* === Text colors === */
       h1, h2, h3, h4, h5, h6 {
         color: #F1F5F9 !important;
@@ -705,6 +715,29 @@ export const applyPreferences = (prefs) => {
         background-color: unset !important;
         background-image: unset !important;
       }
+
+      /* === Community Voices — already dark, exempt from blanket override === */
+      [aria-label="Community voices poll"],
+      [aria-label="Community voices poll"] *:not(button) {
+        background-color: unset !important;
+        background-image: unset !important;
+        border-color: unset !important;
+      }
+      [aria-label="Community voices poll"] {
+        background-color: #0B1120 !important;
+      }
+      [aria-label="Community voices poll"] [role="img"] {
+        background-color: rgba(255,255,255,0.015) !important;
+        border-color: rgba(255,255,255,0.05) !important;
+      }
+      [aria-label="Community voices poll"] h2 { color: #FFFFFF !important; }
+      [aria-label="Community voices poll"] p { color: #D0D0D0 !important; }
+      [aria-label="Community voices poll"] span { color: #E0E0E0 !important; }
+      [aria-label="Community voices poll"] button {
+        background-color: rgba(255,255,255,0.04) !important;
+        border-color: rgba(255,255,255,0.15) !important;
+      }
+      [aria-label="Community voices poll"] button span { color: #F0F0F0 !important; }
 
       /* === Text — MAXIMUM CONTRAST === */
       h1, h2, h3, h4, h5, h6 {
@@ -1262,6 +1295,39 @@ export const applyPreferences = (prefs) => {
       section[style*="#1E293B"] button {
         color: #C4B9A8 !important;
         border-color: #5C5243 !important;
+      }
+
+      /* === Community Voices — keep dark in warm mode === */
+      [aria-label="Community voices poll"],
+      [aria-label="Community voices poll"] div,
+      [aria-label="Community voices poll"] section {
+        background-color: #1A1610 !important;
+        background-image: none !important;
+      }
+      [aria-label="Community voices poll"] [role="img"],
+      [aria-label="Community voices poll"] [role="img"] div {
+        background-color: rgba(255,255,255,0.015) !important;
+      }
+      [aria-label="Community voices poll"] [role="listitem"] {
+        background-color: transparent !important;
+      }
+      [aria-label="Community voices poll"] h2 {
+        color: #FAF3E8 !important;
+      }
+      [aria-label="Community voices poll"] p,
+      [aria-label="Community voices poll"] span {
+        color: #C4B9A8 !important;
+      }
+      [aria-label="Community voices poll"] [role="listitem"] span {
+        color: #CBD5E1 !important;
+      }
+      [aria-label="Community voices poll"] button {
+        background-color: rgba(255,255,255,0.025) !important;
+        border-color: rgba(255,255,255,0.08) !important;
+        color: #E2E8F0 !important;
+      }
+      [aria-label="Community voices poll"] button span {
+        color: #E2E8F0 !important;
       }
 
       /* Header */
