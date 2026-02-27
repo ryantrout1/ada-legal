@@ -84,26 +84,23 @@ export default function LandingHeroNew() {
             }}>
               Explore the ADA Standards Guide →
             </Link>
-            <button onClick={() => openModal('report_violation')} className="landing-btn-secondary" style={{
+            <Link to={createPageUrl('RightsPathway')} className="landing-btn-secondary" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
               background: 'transparent', color: '#CBD5E1',
               padding: '12px 24px', borderRadius: '10px',
               fontSize: '0.9rem', fontWeight: 600, fontFamily: 'Manrope, sans-serif',
-              minHeight: '44px', cursor: 'pointer',
+              minHeight: '44px', textDecoration: 'none',
               border: '1px solid #475569', transition: 'all 0.15s'
             }}>
-              Report a Violation <span style={{ color: '#FB923C' }}>— Coming Soon</span>
-            </button>
+              Were Your Rights Violated? Find Out in 60 Seconds →
+            </Link>
           </div>
 
           <p className="landing-fade-up landing-delay-4" style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-            color: '#4B5563', marginTop: '1rem'
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
+            color: '#64748B', marginTop: '1rem'
           }}>
-            Not sure if what happened was a violation?{' '}
-            <Link to={createPageUrl('RightsPathway')} style={{ color: '#F97316', textDecoration: 'underline', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit' }}>
-              Find out in 60 seconds
-            </Link>
+            Attorney-connected violation reporting — launching soon.
           </p>
         </div>
 
