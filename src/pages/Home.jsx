@@ -9,6 +9,7 @@ import KnowYourRightsSection from '../components/landing/KnowYourRightsSection';
 import CommitmentSection from '../components/landing/CommitmentSection';
 import ForAttorneysNew from '../components/landing/ForAttorneysNew';
 import FinalCTANew from '../components/landing/FinalCTANew';
+import CommunityVoices from '../components/landing/CommunityVoices';
 
 export default function Home() {
   const [checked, setChecked] = useState(false);
@@ -44,6 +45,7 @@ export default function Home() {
       <LandingStyles />
       <LandingHeroNew />
       <StoriesSection />
+      <CommunityVoices />
       <HowItWorksNew />
       <KnowYourRightsSection />
       <CommitmentSection />
