@@ -139,7 +139,7 @@ export default function Layout({ children, currentPageName }) {
   return (
     <LiveAnnouncer>
     <ComingSoonProvider>
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }} role="presentation">
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', gap: 0 }} role="presentation">
       <style>{`
         /* Design System Variables */
         :root {
@@ -608,7 +608,7 @@ export default function Layout({ children, currentPageName }) {
       )}
 
       {/* Main Content */}
-      <main id="main-content" role="main" style={{ flex: 1 }}>
+      <main id="main-content" role="main" style={{ flex: 1, margin: 0 }}>
         {children}
       </main>
 

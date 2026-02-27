@@ -41,7 +41,7 @@ export default function Home() {
   if (!checked) return null;
 
   return (
-    <>
+    <div style={{ background: '#141820' }}>
       <LandingStyles />
       <LandingHeroNew />
       <StoriesSection />
@@ -51,6 +51,6 @@ export default function Home() {
       <CommitmentSection />
       <ForAttorneysNew />
       <FinalCTANew />
-    </>
+    </div>
   );
 }
