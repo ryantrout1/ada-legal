@@ -7,7 +7,7 @@ import { useComingSoon } from '../useComingSoonModal';
 
 const footerLinkStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-  color: '#CBD5E1', textDecoration: 'none', minHeight: '44px',
+  color: '#CBD5E1', textDecoration: 'none', minHeight: '36px',
   display: 'inline-flex', alignItems: 'center'
 };
 
