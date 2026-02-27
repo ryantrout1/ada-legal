@@ -251,7 +251,7 @@ export default function RightsPathway() {
               aria-label={stepQuestions[currentStepKey]}
               style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
             >
-              {getOptions().map(opt => (
+              {getOptions().map((opt, idx, arr) => (
                 <PathwayCard
                   key={opt.value}
                   emoji={opt.emoji}
@@ -259,6 +259,12 @@ export default function RightsPathway() {
                   subtitle={opt.subtitle}
                   isSelected={answers[currentStepKey] === opt.value}
                   onClick={() => handleSelect(currentStepKey, opt.value)}
+                  index={idx}
+                  totalOptions={arr.length}
+                  onArrowNav={(newIdx) => {
+                    const cards = document.querySelectorAll('[role="radiogroup"] [role="radio"]');
+                    cards[newIdx]?.focus();
+                  }}
                 />
               ))}
             </div>

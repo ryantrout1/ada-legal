@@ -1,16 +1,24 @@
 import React from 'react';
 
-export default function PathwayCard({ emoji, title, subtitle, isSelected, onClick }) {
+export default function PathwayCard({ emoji, title, subtitle, isSelected, onClick, index, totalOptions, onArrowNav }) {
   return (
     <div
       role="radio"
       aria-checked={isSelected}
-      tabIndex={0}
+      tabIndex={isSelected || index === 0 ? 0 : -1}
       onClick={onClick}
       onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           onClick();
+        }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          onArrowNav?.((index + 1) % totalOptions);
+        }
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          onArrowNav?.((index - 1 + totalOptions) % totalOptions);
         }
       }}
       style={{
@@ -31,8 +39,8 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
       }}
       onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-400)'; }}
       onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-200)'; }}
-      onFocus={e => { if (!isSelected) e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,65,12,0.4)'; }}
-      onBlur={e => { if (!isSelected) e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)'; }}
+      onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,65,12,0.6)'; e.currentTarget.style.outline = '2px solid #C2410C'; e.currentTarget.style.outlineOffset = '2px'; }}
+      onBlur={e => { e.currentTarget.style.boxShadow = isSelected ? '0 0 0 3px var(--terra-100)' : '0 1px 3px rgba(0,0,0,0.06)'; e.currentTarget.style.outline = 'none'; }}
     >
       <div aria-hidden="true" style={{
         width: '44px', height: '44px', borderRadius: '12px',

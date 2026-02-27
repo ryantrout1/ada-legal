@@ -1,10 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { useComingSoon } from '../useComingSoonModal';
 
 export default function FinalCTANew() {
-  const { openModal } = useComingSoon();
   return (
     <section aria-labelledby="cta-heading" style={{
       background: '#1E293B', padding: '100px 1.5rem', textAlign: 'center'
@@ -35,31 +33,28 @@ export default function FinalCTANew() {
           }}>
             Explore the ADA Standards Guide →
           </Link>
-          <button onClick={() => openModal('report_violation')} style={{
+          <Link to={createPageUrl('RightsPathway')} className="landing-btn-secondary" style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-            background: 'transparent', color: '#4B5563',
+            background: 'transparent', color: '#CBD5E1',
             padding: '18px 36px', borderRadius: '10px',
             fontSize: '1.1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
-            minHeight: '44px', cursor: 'pointer',
+            minHeight: '44px', textDecoration: 'none',
             border: '1px solid #475569', transition: 'all 0.15s'
           }}>
-            Report a Violation — Coming Soon
-          </button>
+            Were Your Rights Violated? Find Out →
+          </Link>
         </div>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-          color: '#4B5563', marginTop: '1.25rem', marginBottom: 0
+          color: '#64748B', marginTop: '1.25rem', marginBottom: 0
         }}>
           No account required. No cost. Your information is kept confidential.
         </p>
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-          color: '#4B5563', marginTop: '0.75rem', marginBottom: 0
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem',
+          color: '#64748B', marginTop: '0.75rem', marginBottom: 0, fontStyle: 'italic'
         }}>
-          Not sure where to start?{' '}
-          <button onClick={() => openModal('pathways')} style={{ color: '#F97316', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 'inherit', padding: 0 }}>
-            Take the Rights Assessment — Coming Soon
-          </button>
+          Attorney-connected violation reporting — launching soon.
         </p>
       </div>
     </section>

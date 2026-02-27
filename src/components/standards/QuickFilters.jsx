@@ -8,7 +8,7 @@ const FILTERS = [
   { key: 'website', label: 'Website Accessibility', Icon: Monitor },
   { key: 'design', label: 'Design Standards', Icon: FileText },
   { key: 'government', label: 'Government Entities', Icon: Users },
-  { key: 'complaint', label: 'Filing a Complaint (Coming Soon)', Icon: CheckCircle, isLink: true }
+  { key: 'complaint', label: 'Filing a Complaint', Icon: CheckCircle, isLink: true }
 ];
 
 export default function QuickFilters({ activeFilters, onToggle }) {

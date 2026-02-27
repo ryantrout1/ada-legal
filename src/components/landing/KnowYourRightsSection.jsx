@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { useComingSoon } from '../useComingSoonModal';
 
 const CARDS = [
   {
@@ -125,7 +124,6 @@ function RightsCard({ card }) {
 }
 
 export default function KnowYourRightsSection() {
-  const { openModal } = useComingSoon();
   return (
     <section
       aria-labelledby="kyr-heading"
@@ -174,17 +172,23 @@ export default function KnowYourRightsSection() {
           }}>
             Not sure which one applies? That's completely normal — many situations overlap. Our intake form asks simple questions to determine the right path for you. No legal knowledge required.
           </p>
-          <button
-            onClick={() => openModal('report_violation')}
+          <Link
+            to={createPageUrl('RightsPathway')}
             style={{
               display: 'inline-block', fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-              fontWeight: 600, color: '#4B5563', background: 'transparent', padding: '14px 28px',
-              borderRadius: '10px', cursor: 'pointer', border: '1px solid #CBD5E1',
-              transition: 'background 0.2s, box-shadow 0.2s'
+              fontWeight: 600, color: 'white', background: '#C2410C', padding: '14px 28px',
+              borderRadius: '10px', textDecoration: 'none', border: 'none',
+              transition: 'background 0.2s', minHeight: '44px'
             }}
           >
-            Report a Violation — Coming Soon →
-          </button>
+            Were Your Rights Violated? Find Out in 60 Seconds →
+          </Link>
+          <p style={{
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#64748B',
+            marginTop: '12px', marginBottom: 0
+          }}>
+            Attorney-connected violation reporting — launching soon.
+          </p>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#4B5563',
             fontStyle: 'italic', lineHeight: 1.55, textAlign: 'center',

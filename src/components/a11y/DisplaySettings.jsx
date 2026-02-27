@@ -1242,6 +1242,28 @@ export const applyPreferences = (prefs) => {
       a { color: #A0440A !important; }
       a:hover { color: #7C2D12 !important; }
 
+      /* === Preserve light text inside dark CTA sections === */
+      div[style*="#1A1F2B"] h1, div[style*="#1A1F2B"] h2,
+      div[style*="#1A1F2B"] h3, div[style*="#1E293B"] h1,
+      div[style*="#1E293B"] h2, div[style*="#1E293B"] h3,
+      section[style*="#1E293B"] h2, section[style*="#1E293B"] h3,
+      section[style*="#1A1F2B"] h2 { color: #FAF3E8 !important; }
+
+      div[style*="#1A1F2B"] p, div[style*="#1A1F2B"] span,
+      div[style*="#1A1F2B"] li, div[style*="#1E293B"] p,
+      div[style*="#1E293B"] span, div[style*="#1E293B"] li,
+      section[style*="#1E293B"] p, section[style*="#1E293B"] span,
+      section[style*="#1A1F2B"] p { color: #C4B9A8 !important; }
+
+      div[style*="#1A1F2B"] a, div[style*="#1E293B"] a,
+      section[style*="#1E293B"] a { color: #F97316 !important; }
+
+      div[style*="#1A1F2B"] button, div[style*="#1E293B"] button,
+      section[style*="#1E293B"] button {
+        color: #C4B9A8 !important;
+        border-color: #5C5243 !important;
+      }
+
       /* Header */
       header[role="banner"] { background-color: #2A201A !important; }
       header[role="banner"] a, header[role="banner"] span,
