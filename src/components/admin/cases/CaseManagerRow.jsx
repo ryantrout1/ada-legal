@@ -128,7 +128,7 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
         </div>
 
         {/* Status badge */}
-        <span style={{
+        <span className="cm-status-badge" style={{
           display: 'inline-block', padding: '3px 10px', borderRadius: '9999px',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700,
           color: 'white', backgroundColor: badge.bg,

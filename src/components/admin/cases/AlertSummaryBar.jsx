@@ -52,6 +52,7 @@ export default function AlertSummaryBar({
   return (
     <div className="alert-bar-container" style={{ position: 'relative' }}>
       <div
+        className="alert-summary-bar"
         role="status"
         aria-label={hasAlerts ? `${needsAttentionCount} cases need attention` : 'Summary statistics'}
         style={{
