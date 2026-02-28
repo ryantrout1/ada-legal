@@ -442,6 +442,35 @@ export const applyPreferences = (prefs) => {
         border-color: #2A3344 !important;
       }
 
+      /* === SVG Diagrams — dark mode === */
+      /* Background rects */
+      #main-content svg rect[fill="#FAFAF9"],
+      #main-content svg rect[fill="#fafaf9"] {
+        fill: #1A1F2B !important;
+      }
+      #main-content svg rect[fill="white"],
+      #main-content svg rect[fill="#FFFFFF"],
+      #main-content svg rect[fill="#ffffff"] {
+        fill: #1E293B !important;
+      }
+      /* All SVG text becomes light */
+      #main-content svg text {
+        fill: #CBD5E1 !important;
+      }
+      /* Preserve callout number text that's white on colored circles */
+      #main-content svg g[role="button"] text {
+        fill: inherit !important;
+      }
+      /* Strokes on diagram elements — lighten */
+      #main-content svg rect[stroke="#94A3B8"] {
+        stroke: #475569 !important;
+      }
+      /* Diagram container borders */
+      #main-content svg + div,
+      div[style*="background: white"][style*="border"] {
+        background-color: #1A1F2B !important;
+      }
+
       /* === Global footer (non-landing, already dark) === */
       footer[role="contentinfo"],
       footer[role="contentinfo"] div,
@@ -983,6 +1012,26 @@ export const applyPreferences = (prefs) => {
         border: 2px solid #FFFFFF !important;
       }
 
+      /* === SVG Diagrams — high contrast === */
+      #main-content svg rect[fill="#FAFAF9"],
+      #main-content svg rect[fill="#fafaf9"] {
+        fill: #000000 !important;
+      }
+      #main-content svg rect[fill="white"],
+      #main-content svg rect[fill="#FFFFFF"],
+      #main-content svg rect[fill="#ffffff"] {
+        fill: #000000 !important;
+      }
+      #main-content svg text {
+        fill: #FFFFFF !important;
+      }
+      #main-content svg g[role="button"] text {
+        fill: inherit !important;
+      }
+      #main-content svg rect[stroke="#94A3B8"] {
+        stroke: #FFFFFF !important;
+      }
+
       /* === Footer === */
       footer[role="contentinfo"],
       footer[role="contentinfo"] div,
@@ -1480,6 +1529,26 @@ export const applyPreferences = (prefs) => {
       #main-content .chapter-link {
         background-color: #F0E8D9 !important;
         border-color: #DDD2C3 !important;
+      }
+
+      /* === SVG Diagrams — warm mode === */
+      #main-content svg rect[fill="#FAFAF9"],
+      #main-content svg rect[fill="#fafaf9"] {
+        fill: #F5EDE0 !important;
+      }
+      #main-content svg rect[fill="white"],
+      #main-content svg rect[fill="#FFFFFF"],
+      #main-content svg rect[fill="#ffffff"] {
+        fill: #FBF6EF !important;
+      }
+      #main-content svg text {
+        fill: #3D3128 !important;
+      }
+      #main-content svg g[role="button"] text {
+        fill: inherit !important;
+      }
+      #main-content svg rect[stroke="#94A3B8"] {
+        stroke: #C4B5A0 !important;
       }
 
       /* Step divider line — warm gradient */
