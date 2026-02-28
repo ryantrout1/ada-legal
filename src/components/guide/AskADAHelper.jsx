@@ -45,7 +45,7 @@ function buildSystemPrompt(pageContext, readingLevel) {
     professional: `READING LEVEL: PROFESSIONAL — The user has selected "Professional" reading level, meaning they are comfortable with legal terminology. You can use ADA section numbers, legal terms, and reference specific regulatory language. Still be concise, but don't oversimplify. Include relevant citations and regulatory references.`,
   };
 
-  return `You are the ADA Standards Helper on ADA Legal Link — a platform co-founded by Gina, a quadriplegic attorney with 20 years of lived experience navigating ADA barriers.
+  return `You are the ADA Standards Helper on ADA Legal Link — a platform co-founded by Gina, a J.D. and ADA rights advocate with 20 years of lived experience navigating ADA barriers as a quadriplegic.
 
 YOUR ROLE: Help visitors understand ADA accessibility standards. You are warm, clear, and direct. You are NOT a lawyer and cannot give legal advice — but you can explain what the law says and what options exist.
 

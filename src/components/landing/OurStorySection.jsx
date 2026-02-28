@@ -39,8 +39,8 @@ export default function OurStorySection() {
             fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: '#94A3B8',
             lineHeight: 1.7, maxWidth: '650px', margin: '0 auto',
           }}>
-            ADA Legal Link was co-founded by Gina — a quadriplegic attorney who has
-            navigated ADA barriers for over 20 years. She didn't just study the law.
+            ADA Legal Link was co-founded by Gina — a J.D. and ADA rights advocate who has
+            navigated ADA barriers for over 20 years as a quadriplegic. She didn't just study the law.
             She lives the problem it was written to solve.
           </p>
         </div>

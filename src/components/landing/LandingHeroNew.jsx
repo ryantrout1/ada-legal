@@ -8,7 +8,7 @@ const HERO_QUOTES = [
     text: "The ADA was written to protect people like me. But 279 pages of legal standards don\u2019t help if you can\u2019t find what applies to you. I needed something better \u2014 so we built it.",
     name: 'Gina',
     initial: 'G',
-    role: 'Co-Founder \u00B7 Attorney \u00B7 Quadriplegic for 20 years',
+    role: 'Co-Founder \u00B7 J.D. \u00B7 ADA Rights Advocate',
   },
   {
     text: "Gina showed me what the ADA community actually needs. My job was to build something that lives up to that \u2014 accessible from the first line of code, not as an afterthought.",
@@ -20,7 +20,7 @@ const HERO_QUOTES = [
     text: "I\u2019ve spent 20 years fighting for access \u2014 in courtrooms, parking lots, and websites that don\u2019t work with my screen reader. This platform exists so you don\u2019t have to fight alone.",
     name: 'Gina',
     initial: 'G',
-    role: 'Co-Founder \u00B7 Attorney \u00B7 Quadriplegic for 20 years',
+    role: 'Co-Founder \u00B7 J.D. \u00B7 ADA Rights Advocate',
   },
   {
     text: "We didn\u2019t build this platform and then make it accessible. We built it accessible \u2014 because the people who need it most shouldn\u2019t have to work the hardest to use it.",
@@ -32,7 +32,7 @@ const HERO_QUOTES = [
     text: "Every diagram, every guide, every tool on this site was tested by someone who actually uses a wheelchair. If it doesn\u2019t work for me, it doesn\u2019t ship.",
     name: 'Gina',
     initial: 'G',
-    role: 'Co-Founder \u00B7 Attorney \u00B7 Quadriplegic for 20 years',
+    role: 'Co-Founder \u00B7 J.D. \u00B7 ADA Rights Advocate',
   },
   {
     text: "We built every feature asking the same question \u2014 does this actually help someone file a complaint, find an attorney, or understand their rights? If the answer was no, we cut it.",
