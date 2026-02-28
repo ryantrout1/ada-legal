@@ -431,6 +431,17 @@ export const applyPreferences = (prefs) => {
         border-radius: 4px;
       }
 
+      /* === Chapter number badges — dark mode === */
+      #main-content .chapter-num {
+        background-color: #1E293B !important;
+        border-color: #475569 !important;
+        color: #FFB347 !important;
+      }
+      #main-content .chapter-link {
+        background-color: #151A24 !important;
+        border-color: #2A3344 !important;
+      }
+
       /* === Global footer (non-landing, already dark) === */
       footer[role="contentinfo"],
       footer[role="contentinfo"] div,
@@ -961,6 +972,17 @@ export const applyPreferences = (prefs) => {
         border-radius: 4px;
       }
 
+      /* === Chapter number badges — high contrast === */
+      #main-content .chapter-num {
+        background-color: #000000 !important;
+        border: 2px solid #FFB347 !important;
+        color: #FFB347 !important;
+      }
+      #main-content .chapter-link {
+        background-color: #1A1A1A !important;
+        border: 2px solid #FFFFFF !important;
+      }
+
       /* === Footer === */
       footer[role="contentinfo"],
       footer[role="contentinfo"] div,
@@ -1447,6 +1469,17 @@ export const applyPreferences = (prefs) => {
       #main-content .step-number-circle {
         background-color: #3D3128 !important;
         color: #FBF6EF !important;
+      }
+
+      /* === Chapter number badges — warm mode === */
+      #main-content .chapter-num {
+        background-color: #3D3128 !important;
+        border-color: #5A4A3A !important;
+        color: #F5EDE0 !important;
+      }
+      #main-content .chapter-link {
+        background-color: #F0E8D9 !important;
+        border-color: #DDD2C3 !important;
       }
 
       /* Step divider line — warm gradient */

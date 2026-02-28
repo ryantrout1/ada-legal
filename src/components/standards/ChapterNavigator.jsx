@@ -50,7 +50,7 @@ export default function ChapterNavigator() {
           <li key={ch.num}>
             <Link
               to={createPageUrl(ch.page)}
-              className="sg-chapter-link"
+              className="sg-chapter-link chapter-link"
               style={{
                 display: 'flex', alignItems: 'center', gap: '14px',
                 background: '#FAF7F2', border: '1px solid var(--slate-200)',
@@ -58,7 +58,7 @@ export default function ChapterNavigator() {
                 textDecoration: 'none', minHeight: '44px', boxSizing: 'border-box'
               }}
             >
-              <span style={{
+              <span className="chapter-num" style={{
                 width: '34px', height: '34px', background: 'white',
                 border: '1px solid var(--slate-200)', borderRadius: '8px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
