@@ -1,10 +1,53 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { useComingSoon } from '../useComingSoonModal';
 
+const HERO_QUOTES = [
+  {
+    text: "The ADA was written to protect people like me. But 279 pages of legal standards don\u2019t help if you can\u2019t find what applies to you. I needed something better \u2014 so we built it.",
+    name: 'Gina',
+    initial: 'G',
+    role: 'Co-Founder \u00B7 Attorney \u00B7 Quadriplegic for 20 years',
+  },
+  {
+    text: "I\u2019ve spent 20 years fighting for access \u2014 in courtrooms, parking lots, and websites that don\u2019t work with my screen reader. This platform exists so you don\u2019t have to fight alone.",
+    name: 'Gina',
+    initial: 'G',
+    role: 'Co-Founder \u00B7 Attorney \u00B7 Quadriplegic for 20 years',
+  },
+  {
+    text: "Every diagram, every guide, every tool on this site was tested by someone who actually uses a wheelchair. If it doesn\u2019t work for me, it doesn\u2019t ship.",
+    name: 'Gina',
+    initial: 'G',
+    role: 'Co-Founder \u00B7 Attorney \u00B7 Quadriplegic for 20 years',
+  },
+  {
+    text: "Gina showed me what the ADA community actually needs. My job was to build something that lives up to that \u2014 accessible from the first line of code, not as an afterthought.",
+    name: 'Ryan',
+    initial: 'R',
+    role: 'Co-Founder \u00B7 Platform Architect',
+  },
+  {
+    text: "We didn\u2019t build this platform and then make it accessible. We built it accessible \u2014 because the people who need it most shouldn\u2019t have to work the hardest to use it.",
+    name: 'Ryan',
+    initial: 'R',
+    role: 'Co-Founder \u00B7 Platform Architect',
+  },
+  {
+    text: "We built every feature asking the same question \u2014 does this actually help someone file a complaint, find an attorney, or understand their rights? If the answer was no, we cut it.",
+    name: 'Ryan',
+    initial: 'R',
+    role: 'Co-Founder \u00B7 Platform Architect',
+  },
+];
+
 export default function LandingHeroNew() {
   const { openModal } = useComingSoon();
+
+  // Pick a random quote on each page load
+  const quote = useMemo(() => HERO_QUOTES[Math.floor(Math.random() * HERO_QUOTES.length)], []);
+
   return (
     <section
       aria-labelledby="hero-heading"
@@ -106,7 +149,7 @@ export default function LandingHeroNew() {
 
         {/* Right column — Gina's story + stats + WCAG */}
         <div className="landing-fade-up landing-delay-4">
-          {/* Gina quote card */}
+          {/* Quote card — random on each page load */}
           <div style={{
             background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: '16px', padding: '32px', position: 'relative', marginBottom: '1rem'
@@ -120,16 +163,13 @@ export default function LandingHeroNew() {
                 fontFamily: 'Fraunces, serif', fontSize: '1.1rem', color: '#E2E8F0',
                 lineHeight: 1.8, margin: '0 0 20px', fontStyle: 'italic',
               }}>
-                The ADA was written to protect people like me. But 279 pages of legal
-                standards don't help if you can't find what applies to you. I needed
-                something better — so we built it.
+                {quote.text}
               </p>
             </blockquote>
             <div style={{
               borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px',
               display: 'flex', alignItems: 'center', gap: '16px',
             }}>
-              {/* Placeholder avatar — replace with photo when available */}
               <div aria-hidden="true" style={{
                 width: '48px', height: '48px', borderRadius: '50%',
                 background: '#2A3344', border: '2px solid #C2410C',
@@ -139,17 +179,17 @@ export default function LandingHeroNew() {
                 <span style={{
                   fontFamily: 'Fraunces, serif', fontSize: '1.2rem', fontWeight: 700,
                   color: '#FB923C',
-                }}>G</span>
+                }}>{quote.initial}</span>
               </div>
               <div>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700,
                   color: 'white', margin: '0 0 2px',
-                }}>Gina</p>
+                }}>{quote.name}</p>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
                   color: '#64748B', margin: 0,
-                }}>Co-Founder · Attorney · Quadriplegic for 20 years</p>
+                }}>{quote.role}</p>
               </div>
             </div>
           </div>
