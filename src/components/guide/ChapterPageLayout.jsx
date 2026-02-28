@@ -363,6 +363,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
             pageTitle={`Chapter ${chapterNum}: ${title}`}
             pageSections={sections}
             pageType="physical"
+            readingLevel={readingLevel}
           />
 
           {/* Share bar */}
