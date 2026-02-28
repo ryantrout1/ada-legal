@@ -285,7 +285,7 @@ export default function AdminCases() {
           <NeedsAttentionSection unclaimed={unclaimed} awaitingContact={awaitingContact} lawyerMap={lawyerMap} approvedLawyers={approvedLawyers} onForceAssign={handleForceAssign} onForceClose={setForceCloseCase} onReclaim={handleReassign} saving={actionSaving} />
         )}
 
-        <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '12px', overflow: 'hidden' }}>
+        <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #948F88', borderRadius: '12px', overflow: 'hidden' }}>
           {sorted.length === 0 && (
             <div style={{ padding: '3rem', textAlign: 'center' }}>
               <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>No cases match your current filters.</p>

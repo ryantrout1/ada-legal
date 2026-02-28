@@ -151,7 +151,7 @@ export default function MyCases() {
         {/* Cases or Empty State */}
         {cases.length === 0 ? (
           <div style={{
-            backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+            backgroundColor: '#FFFFFF', border: '1px solid #948F88',
             borderRadius: '12px', padding: '48px 24px', textAlign: 'center',
             maxWidth: '480px', margin: '24px auto 0', width: '100%'
           }}>
@@ -179,7 +179,7 @@ export default function MyCases() {
           </div>
         ) : sorted.length === 0 ? (
           <div style={{
-            backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+            backgroundColor: '#FFFFFF', border: '1px solid #948F88',
             borderRadius: '12px', padding: '32px', textAlign: 'center'
           }}>
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: '#475569', margin: '0 0 8px' }}>

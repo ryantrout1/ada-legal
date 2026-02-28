@@ -70,7 +70,7 @@ export default function AlertSummaryBar({
         }}
       >
         {/* Left: attention count + summary stats */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: '1 1 auto', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: '1 1 auto', flexWrap: 'wrap', backgroundColor: hasAlerts ? '#FFFBEB' : '#FAF7F2' }}>
           {hasAlerts && (
             <>
               <button
