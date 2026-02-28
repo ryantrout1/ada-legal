@@ -638,10 +638,8 @@ export default function Layout({ children, currentPageName }) {
             textAlign: 'center'
           }}>
             <LogoBrand size={96} glow variant="dark-bg" className="footer-logo" style={{ display: 'block', margin: '0 auto 12px' }} aria-hidden="true" />
-            <p style={{ margin: 0, fontSize: '0.875rem' }}>
-              © 2026 <span style={{ color: '#4B5563' }}>ADA Legal</span>{' '}
-              <span style={{ color: '#C2410C', opacity: 0.7 }}>Link</span>.
-              {' '}All rights reserved.
+            <p style={{ margin: 0, fontSize: '0.875rem', color: '#94A3B8' }}>
+              © 2026 ADA Legal Link. All rights reserved.
             </p>
             <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem' }}>
               Connecting people with experienced ADA attorneys.
