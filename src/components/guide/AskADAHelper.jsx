@@ -137,6 +137,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const inputRef = useRef(null);
   const panelRef = useRef(null);
   const openBtnRef = useRef(null);
@@ -155,10 +156,10 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType }) {
 
   const suggestedQuestions = SUGGESTED_QUESTIONS[pageType] || SUGGESTED_QUESTIONS.default;
 
-  // Scroll to bottom on new messages
+  // Scroll to bottom on new messages — within the chat panel only
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [messages, isLoading]);
 
@@ -356,6 +357,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType }) {
 
       {/* Messages area */}
       <div
+        ref={messagesContainerRef}
         aria-live="polite"
         aria-relevant="additions"
         style={{
