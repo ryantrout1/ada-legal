@@ -1896,13 +1896,27 @@ export const applyPreferences = (prefs) => {
         background-color: #231912 !important;
         background-image: none !important;
       }
-      /* Glass cards inside dark sections */
+      /* Glass card containers inside dark sections */
       #main-content .warm-keep-dark div[style*="rgba(255"] {
         background-color: rgba(251,246,239,0.06) !important;
       }
+      /* Children INSIDE glass cards → transparent (no espresso bands) */
+      #main-content .warm-keep-dark div[style*="rgba(255"] div,
+      #main-content .warm-keep-dark div[style*="rgba(255"] blockquote,
+      #main-content .warm-keep-dark div[style*="rgba(255"] p {
+        background-color: transparent !important;
+      }
+      /* Borders inside dark sections */
       #main-content .warm-keep-dark div[style*="border: 1px solid rgba"],
-      #main-content .warm-keep-dark div[style*="border: 2px solid"] {
+      #main-content .warm-keep-dark div[style*="border: 2px solid"],
+      #main-content .warm-keep-dark div[style*="border-top: 1px"] {
         border-color: rgba(251,246,239,0.1) !important;
+      }
+      /* WCAG badge green tint → warm tint */
+      #main-content .warm-keep-dark span[style*="rgba(45,106,79"] {
+        background-color: rgba(194,65,12,0.15) !important;
+        border-color: rgba(194,65,12,0.3) !important;
+        color: #E8984A !important;
       }
 
       /* === Chapter number badges — warm mode === */
