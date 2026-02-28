@@ -296,7 +296,7 @@ export default function RightsPathway() {
         {/* Live region */}
         <div aria-live="polite" style={{
           position: 'absolute', width: '1px', height: '1px',
-          overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0, padding: 0, margin: '-1px'
+          overflow: 'hidden', clip: 'rect(0,0,0,0)', clipPath: 'inset(50%)', whiteSpace: 'nowrap', border: 0, padding: 0, margin: '-1px'
         }}>
           {showResults ? 'Your personalized rights summary is now displayed.' :
             `Step ${currentStepIndex + 1} of ${totalSteps}: ${stepQuestions[currentStepKey]}`}

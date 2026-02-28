@@ -567,7 +567,7 @@ export default function Intake() {
           {/* Screen reader step announcement */}
           <div aria-live="polite" className="sr-only" style={{
             position: 'absolute', width: '1px', height: '1px',
-            overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0
+            overflow: 'hidden', clip: 'rect(0,0,0,0)', clipPath: 'inset(50%)', whiteSpace: 'nowrap', border: 0
           }}>
             {submitted
               ? 'Your report has been submitted successfully.'
