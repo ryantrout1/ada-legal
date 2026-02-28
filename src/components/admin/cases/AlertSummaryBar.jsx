@@ -61,12 +61,12 @@ export default function AlertSummaryBar({
           gap: '6px 12px',
           padding: '8px 14px',
           minHeight: '40px',
-          backgroundColor: hasAlerts ? '#FFFBEB' : 'var(--slate-50)',
+          backgroundColor: hasAlerts ? '#FFFBEB' : '#FAF7F2',
           border: `1px solid ${hasAlerts ? '#FDE68A' : 'var(--slate-200)'}`,
           borderRadius: '8px',
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.85rem',
-          color: hasAlerts ? '#92400E' : 'var(--slate-600)',
+          color: hasAlerts ? '#92400E' : '#475569',
         }}
       >
         {/* Left: attention count + summary stats */}
