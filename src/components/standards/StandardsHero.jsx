@@ -1,6 +1,156 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Shield } from 'lucide-react';
 import ADAAssistant from '../guide/ADAAssistant';
+
+const QUOTES = [
+  {
+    text: "I kept being told 'that's just how the building is.' Turns out there are clear standards they're supposed to follow.",
+    attribution: "Person with a mobility disability"
+  },
+  {
+    text: "I couldn't order groceries online because the website didn't work with my screen reader. I had no idea that was an ADA violation.",
+    attribution: "Blind user"
+  },
+  {
+    text: "I tried reading the ADA standards on ADA.gov and gave up after 10 minutes. This explained my rights in plain English.",
+    attribution: "Someone denied service"
+  },
+  {
+    text: "I didn't know a restaurant without a ramp was actually breaking the law. I found the exact standard in 30 seconds.",
+    attribution: "Wheelchair user, first-time visitor"
+  }
+];
+
+function QuoteCarousel() {
+  const [index, setIndex] = useState(() => Math.floor(Math.random() * QUOTES.length));
+  const liveRef = useRef(null);
+  const total = QUOTES.length;
+
+  const go = useCallback((dir) => {
+    setIndex(prev => {
+      const next = (prev + dir + total) % total;
+      // Announce to screen readers after state update
+      setTimeout(() => {
+        if (liveRef.current) {
+          liveRef.current.textContent = `Quote ${next + 1} of ${total}: ${QUOTES[next].text} — ${QUOTES[next].attribution}`;
+        }
+      }, 50);
+      return next;
+    });
+  }, [total]);
+
+  // Keyboard support: left/right arrows when carousel is focused
+  const onKeyDown = useCallback((e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); go(1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(-1); }
+  }, [go]);
+
+  const q = QUOTES[index];
+
+  return (
+    <div
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Testimonials from users"
+      onKeyDown={onKeyDown}
+      style={{
+        background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: '16px', padding: '24px', borderLeft: '3px solid #C2410C',
+        paddingLeft: '20px', position: 'relative'
+      }}
+    >
+      {/* Live region for screen reader announcements */}
+      <div ref={liveRef} aria-live="polite" aria-atomic="true" className="sr-only" />
+
+      <div role="group" aria-roledescription="slide" aria-label={`Quote ${index + 1} of ${total}`}>
+        <p style={{
+          fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
+          color: '#E2E8F0', lineHeight: 1.6, margin: '0 0 0.75rem', fontStyle: 'italic'
+        }}>
+          "{q.text}"
+        </p>
+        <p style={{
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
+          color: '#94A3B8', margin: 0
+        }}>
+          — {q.attribution}
+        </p>
+      </div>
+
+      {/* Controls */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        marginTop: '16px', paddingTop: '12px',
+        borderTop: '1px solid rgba(255,255,255,0.06)'
+      }}>
+        {/* Dots */}
+        <div style={{ display: 'flex', gap: '6px' }} role="tablist" aria-label="Quote navigation">
+          {QUOTES.map((_, i) => (
+            <button
+              key={i}
+              role="tab"
+              aria-selected={i === index}
+              aria-label={`Quote ${i + 1} of ${total}`}
+              onClick={() => {
+                setIndex(i);
+                if (liveRef.current) {
+                  liveRef.current.textContent = `Quote ${i + 1} of ${total}: ${QUOTES[i].text} — ${QUOTES[i].attribution}`;
+                }
+              }}
+              style={{
+                width: i === index ? '20px' : '8px',
+                height: '8px',
+                borderRadius: '4px',
+                background: i === index ? '#C2410C' : 'rgba(255,255,255,0.15)',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                padding: 0,
+                minHeight: '8px'
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Prev/Next */}
+        <div style={{ display: 'flex', gap: '4px' }}>
+          <button
+            onClick={() => go(-1)}
+            aria-label="Previous quote"
+            style={{
+              width: '32px', height: '32px', borderRadius: '8px',
+              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+              color: '#94A3B8', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '14px', padding: 0, minHeight: '32px',
+              transition: 'background 0.15s'
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+          >
+            ‹
+          </button>
+          <button
+            onClick={() => go(1)}
+            aria-label="Next quote"
+            style={{
+              width: '32px', height: '32px', borderRadius: '8px',
+              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+              color: '#94A3B8', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '14px', padding: 0, minHeight: '32px',
+              transition: 'background 0.15s'
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+          >
+            ›
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function StandardsHero({ searchValue, onSearchChange }) {
   return (
@@ -97,26 +247,8 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
             </p>
           </div>
 
-          {/* Quote card */}
-          <div style={{
-            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '16px', padding: '24px', borderLeft: '3px solid #C2410C',
-            paddingLeft: '20px'
-          }}>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-              color: '#E2E8F0', lineHeight: 1.6, margin: '0 0 0.75rem', fontStyle: 'italic'
-            }}>
-              "I spent hours on ADA.gov trying to find the parking space
-              requirements for my business. This would have taken me 30 seconds."
-            </p>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-              color: '#4B5563', margin: 0
-            }}>
-              — Small business owner
-            </p>
-          </div>
+          {/* Quote carousel */}
+          <QuoteCarousel />
         </div>
       </div>
 
