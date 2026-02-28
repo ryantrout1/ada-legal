@@ -535,7 +535,7 @@ export default function Layout({ children, currentPageName }) {
                       My Cases
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', margin: '0 0 8px' }}>{user.email}</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#94A3B8', margin: '0 0 8px' }}>{user.email}</p>
                     </div>
                     <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
                       background: 'transparent', color: 'white', border: '1px solid white',
@@ -566,7 +566,7 @@ export default function Layout({ children, currentPageName }) {
                       Profile
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', margin: '0 0 8px' }}>{user.email}</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#94A3B8', margin: '0 0 8px' }}>{user.email}</p>
                     </div>
                     <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
                       background: 'transparent', color: 'white', border: '1px solid white',
@@ -605,7 +605,7 @@ export default function Layout({ children, currentPageName }) {
                       Feedback
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', margin: '0 0 8px' }}>{user.email}</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#94A3B8', margin: '0 0 8px' }}>{user.email}</p>
                     </div>
                     <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
                       background: 'transparent', color: 'white', border: '1px solid white',

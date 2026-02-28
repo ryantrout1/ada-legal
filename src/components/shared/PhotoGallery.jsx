@@ -145,7 +145,7 @@ export default function PhotoGallery({ photos = [] }) {
             <div style={{
               position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
-              color: 'rgba(255,255,255,0.7)'
+              color: '#CBD5E1'
             }}>
               {lightboxIndex + 1} / {photos.length}
             </div>

@@ -59,7 +59,7 @@ export default function EarlyAccessBanner() {
             transform: 'translateY(-50%)',
             background: 'none',
             border: 'none',
-            color: 'rgba(255,255,255,0.85)',
+            color: 'white',
             cursor: 'pointer',
             padding: '4px',
             display: 'flex',

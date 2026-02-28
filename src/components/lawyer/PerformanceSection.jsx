@@ -134,7 +134,7 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
             { label: 'On-Time Rate', value: onTimeRate !== null ? `${onTimeRate}%` : '—', color: rateColor },
           ].map((s, i) => (
             <div key={i} style={{ textAlign: 'center', flex: '1 1 0' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 2px' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 2px' }}>
                 {s.label}
               </p>
               <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: s.color || 'white', margin: 0 }}>
