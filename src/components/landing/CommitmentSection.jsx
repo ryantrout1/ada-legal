@@ -11,7 +11,7 @@ const items = [
 
 export default function CommitmentSection() {
   return (
-    <section aria-labelledby="commitment-heading" style={{
+    <section aria-labelledby="commitment-heading" className="warm-keep-dark" style={{
       background: '#1E293B', padding: '100px 1.5rem', position: 'relative', overflow: 'hidden'
     }}>
       <div aria-hidden="true" style={{

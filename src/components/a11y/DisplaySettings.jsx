@@ -1290,19 +1290,47 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Dark sections → rich espresso brown (keeps depth) === */
-      section[style*="#1E293B"], div[style*="#1E293B"],
-      [style*="background: #1E293B"], [style*="background: '#1E293B'"],
-      section[style*="#1A1F2B"], div[style*="#1A1F2B"],
-      [style*="background: #1A1F2B"], [style*="background: '#1A1F2B'"],
-      section[style*="#0F172A"], div[style*="#0F172A"],
-      [style*="background: '#0F172A'"] {
-        background-color: #23191280 !important;
+      /* Uses .warm-keep-dark class for reliable targeting.
+         The [style*=] attribute selectors are unreliable because
+         React may serialize colors differently per browser. */
+      #main-content .warm-keep-dark,
+      #main-content .warm-keep-dark > div,
+      #main-content .warm-keep-dark div {
+        background-color: #231912 !important;
         background-image: none !important;
       }
-      /* Give dark sections full opacity background */
-      section[style*="#1E293B"], section[style*="#1A1F2B"],
-      section[style*="#0F172A"] {
-        background-color: #231912 !important;
+      /* Re-exempt interactive inside dark sections */
+      #main-content .warm-keep-dark button,
+      #main-content .warm-keep-dark a,
+      #main-content .warm-keep-dark svg,
+      #main-content .warm-keep-dark img {
+        background-color: unset !important;
+        background-image: unset !important;
+      }
+      /* Commitment cards — warm glass on dark */
+      #main-content .warm-keep-dark .landing-commitment-card {
+        background-color: rgba(251,246,239,0.04) !important;
+        border: 1px solid rgba(251,246,239,0.08) !important;
+      }
+      /* Dark section text */
+      #main-content .warm-keep-dark h1,
+      #main-content .warm-keep-dark h2,
+      #main-content .warm-keep-dark h3 { color: #F5EDE0 !important; }
+      #main-content .warm-keep-dark p,
+      #main-content .warm-keep-dark span,
+      #main-content .warm-keep-dark li { color: #C7B9A6 !important; }
+      #main-content .warm-keep-dark a { color: #E8984A !important; }
+      #main-content .warm-keep-dark button {
+        color: #E8DDD0 !important;
+        border-color: #584A3B !important;
+      }
+      /* CTA buttons in dark sections */
+      #main-content .warm-keep-dark button[style*="C2410C"],
+      #main-content .warm-keep-dark a[style*="C2410C"],
+      #main-content .warm-keep-dark a[style*="terra-600"],
+      #main-content .warm-keep-dark button[style*="terra-600"] {
+        background-color: #B5520A !important;
+        color: #FBF6EF !important;
       }
 
       /* Re-exempt interactive */
@@ -1323,103 +1351,103 @@ export const applyPreferences = (prefs) => {
       a { color: #A0520A !important; }
       a:hover { color: #7C3D08 !important; }
 
-      /* === Preserve light text inside dark sections === */
-      div[style*="#1A1F2B"] h1, div[style*="#1A1F2B"] h2,
-      div[style*="#1A1F2B"] h3, div[style*="#1E293B"] h1,
-      div[style*="#1E293B"] h2, div[style*="#1E293B"] h3,
-      section[style*="#1E293B"] h2, section[style*="#1E293B"] h3,
-      section[style*="#1A1F2B"] h2 { color: #F5EDE0 !important; }
-
-      div[style*="#1A1F2B"] p, div[style*="#1A1F2B"] span,
-      div[style*="#1A1F2B"] li, div[style*="#1E293B"] p,
-      div[style*="#1E293B"] span, div[style*="#1E293B"] li,
-      section[style*="#1E293B"] p, section[style*="#1E293B"] span,
-      section[style*="#1A1F2B"] p { color: #C7B9A6 !important; }
-
-      div[style*="#1A1F2B"] a, div[style*="#1E293B"] a,
-      section[style*="#1E293B"] a { color: #E8984A !important; }
-
-      div[style*="#1A1F2B"] button, div[style*="#1E293B"] button,
-      section[style*="#1E293B"] button {
-        color: #E8DDD0 !important;
-        border-color: #584A3B !important;
-      }
+      /* (Dark section text is now handled by .warm-keep-dark rules above) */
 
       /* === Landing hero — warm dark treatment (preserve drama) === */
-      .landing-hero-section,
-      .landing-hero-section > div,
-      .landing-hero-section div {
+      #main-content .landing-hero-section,
+      #main-content .landing-hero-section > div,
+      #main-content .landing-hero-section div {
         background: #231912 !important;
         background-image: none !important;
       }
-      .landing-hero-section h1 { color: #FBF6EF !important; }
-      .landing-hero-section h2 { color: #FBF6EF !important; }
+      #main-content .landing-hero-section h1 { color: #FBF6EF !important; }
+      #main-content .landing-hero-section h2 { color: #FBF6EF !important; }
       /* "Then enforce them" tagline — warm amber gold */
-      .landing-hero-section h1 span,
-      .landing-hero-section h2 span[style*="F97316"] { color: #E8984A !important; }
-      .landing-hero-section p { color: #C7B9A6 !important; }
-      .landing-hero-section span { color: #9C8B78 !important; }
-      .landing-hero-section a:not([style*="C2410C"]) { color: #E8984A !important; }
+      #main-content .landing-hero-section h1 span,
+      #main-content .landing-hero-section h2 span[style*="F97316"] { color: #E8984A !important; }
+      #main-content .landing-hero-section p { color: #C7B9A6 !important; }
+      #main-content .landing-hero-section span { color: #9C8B78 !important; }
+      #main-content .landing-hero-section a:not([style*="C2410C"]) { color: #E8984A !important; }
       /* Hero stat cards — warm glass effect */
-      .landing-hero-section div[style*="rgba(255,255,255,0.0"] {
+      #main-content .landing-hero-section div[style*="rgba(255,255,255,0.0"] {
         background: rgba(251,246,239,0.04) !important;
         border-color: rgba(251,246,239,0.08) !important;
       }
       /* Hero CTA button — warm amber */
-      .landing-hero-section button[style*="C2410C"],
-      .landing-hero-section a[style*="C2410C"] {
+      #main-content .landing-hero-section button[style*="C2410C"],
+      #main-content .landing-hero-section a[style*="C2410C"] {
         background-color: #B5520A !important;
         color: #FBF6EF !important;
       }
       /* Hero secondary button */
-      .landing-hero-section button[style*="transparent"],
-      .landing-hero-section a[style*="transparent"] {
+      #main-content .landing-hero-section button[style*="transparent"],
+      #main-content .landing-hero-section a[style*="transparent"] {
         color: #C7B9A6 !important;
         border-color: #584A3B !important;
       }
-      /* Hero "ADA LEGAL LINK" label */
-      .landing-hero-section div[style*="width: '32px'"] {
+      /* Hero "ADA LEGAL LINK" accent bar */
+      #main-content .landing-hero-section div[style*="width: '32px'"] {
         background: #B5520A !important;
       }
 
       /* === Stories section — linen background for alternation === */
-      section[style*="#FAF7F2"], div[style*="#FAF7F2"],
-      [style*="background: '#FAF7F2'"] {
+      #main-content section[style*="#FAF7F2"],
+      #main-content div[style*="#FAF7F2"],
+      #main-content [style*="background: '#FAF7F2'"] {
         background-color: #F0E8D9 !important;
       }
 
-      /* === Story cards / white cards → warm cream === */
-      div[style*="background: '#FFFFFF'"],
-      div[style*="background: white"],
-      [style*="background: #FFFFFF"] {
+      /* === Story cards / white cards → warm cream with subtle shadow === */
+      #main-content div[style*="background: '#FFFFFF'"],
+      #main-content div[style*="background: white"],
+      #main-content [style*="background: #FFFFFF"] {
         background-color: #FBF6EF !important;
         border-color: #E8DDD0 !important;
+        box-shadow: 0 2px 8px rgba(43,34,27,0.06) !important;
       }
 
       /* === HowItWorks section — pure white → cream === */
-      section[style*="'#FFFFFF'"], div[style*="'#FFFFFF'"],
-      [style*="background: '#FFFFFF'"] {
+      #main-content section[style*="'#FFFFFF'"],
+      #main-content div[style*="'#FFFFFF'"] {
         background-color: #FBF6EF !important;
       }
 
       /* === KnowYourRights section === */
-      section[style*="#F8FAFC"], div[style*="#F8FAFC"],
-      [style*="background: '#F8FAFC'"] {
+      #main-content section[style*="#F8FAFC"],
+      #main-content div[style*="#F8FAFC"],
+      #main-content [style*="background: '#F8FAFC'"] {
         background-color: #F0E8D9 !important;
       }
 
       /* === ForAttorneys section === */
-      section[style*="'#FAF7F2'"] {
+      #main-content section[style*="'#FAF7F2'"] {
         background-color: #F0E8D9 !important;
       }
 
+      /* === Card elevation — make cards pop off backgrounds === */
+      #main-content .kyr-card {
+        background-color: #FBF6EF !important;
+        border-color: #DDD2C3 !important;
+        box-shadow: 0 2px 12px rgba(43,34,27,0.07) !important;
+      }
+      /* LawyerValueProps cards */
+      #main-content div[style*="var(--surface)"] {
+        box-shadow: 0 2px 12px rgba(43,34,27,0.07) !important;
+        border-color: #DDD2C3 !important;
+      }
+      /* Pricing card */
+      #main-content div[style*="var(--surface)"][style*="border"] {
+        box-shadow: 0 4px 20px rgba(43,34,27,0.08) !important;
+      }
+
       /* === Number step circles in HowItWorks === */
-      div[style*="background: '#1E293B'"][style*="color: 'white'"] {
+      #main-content .step-number-circle {
         background-color: #3D3128 !important;
+        color: #FBF6EF !important;
       }
 
       /* Step divider line — warm gradient */
-      div[style*="linear-gradient"] {
+      #main-content .landing-steps-line {
         background: linear-gradient(to right, #E8DDD0, #B5520A, #E8DDD0) !important;
       }
 
@@ -1427,6 +1455,14 @@ export const applyPreferences = (prefs) => {
       #main-content span[style*="background: '#FEF1EC'"],
       #main-content div[style*="background: '#FEF1EC'"] {
         background-color: #FAEBD7 !important;
+      }
+
+      /* === Tag pills / badges — give them visible borders === */
+      #main-content span[style*="background: 'white'"],
+      #main-content span[style*="background: '#FFFFFF'"],
+      #main-content div[style*="background: 'white'"] {
+        background-color: #FBF6EF !important;
+        border: 1px solid #C7B9A6 !important;
       }
 
       /* === Community Voices — keep dark, warm-tinted === */

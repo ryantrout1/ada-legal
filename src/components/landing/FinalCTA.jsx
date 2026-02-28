@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 export default function FinalCTA({ heading, subtitle, buttonText, buttonLink, variant }) {
   const isDark = variant === 'dark';
   return (
-    <section style={{
+    <section className={isDark ? 'warm-keep-dark' : ''} style={{
       backgroundColor: isDark ? 'var(--slate-900)' : 'var(--terra-100)',
       padding: 'clamp(3rem, 8vw, 4.5rem) 1.5rem',
       textAlign: 'center'

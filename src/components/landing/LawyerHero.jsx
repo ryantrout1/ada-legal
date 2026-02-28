@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 
 export default function LawyerHero() {
   return (
-    <section style={{
+    <section className="warm-keep-dark" style={{
       background: 'linear-gradient(160deg, var(--slate-900) 0%, #0F172A 100%)',
       color: 'white',
       padding: 'clamp(4rem, 10vw, 7rem) 1.5rem',

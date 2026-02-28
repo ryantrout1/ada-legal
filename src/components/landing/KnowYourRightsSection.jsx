@@ -54,6 +54,7 @@ function RightsCard({ card }) {
   return (
     <div
       tabIndex={0}
+      className="kyr-card"
       style={{
         background: '#F8FAFC',
         border: '1px solid #E2E8F0',

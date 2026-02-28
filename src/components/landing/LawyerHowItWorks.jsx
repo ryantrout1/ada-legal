@@ -47,7 +47,7 @@ export default function LawyerHowItWorks() {
         }}>
           {steps.map(s => (
             <div key={s.num} style={{ textAlign: 'center' }}>
-              <div style={{
+              <div className="step-number-circle" style={{
                 width: '48px', height: '48px', borderRadius: '50%',
                 backgroundColor: 'var(--slate-900)', color: 'white',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',

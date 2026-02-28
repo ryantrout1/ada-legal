@@ -4,7 +4,7 @@ import { createPageUrl } from '../../utils';
 
 export default function FinalCTANew() {
   return (
-    <section aria-labelledby="cta-heading" style={{
+    <section aria-labelledby="cta-heading" className="warm-keep-dark" style={{
       background: '#1E293B', padding: '100px 1.5rem', textAlign: 'center'
     }}>
       <div style={{ maxWidth: '680px', margin: '0 auto' }}>

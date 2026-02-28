@@ -71,7 +71,7 @@ export default function HowItWorksNew() {
           }}>
             {steps.map((s, i) => (
               <div key={i} role="listitem" style={{ textAlign: 'center' }}>
-                <div style={{
+                <div className="step-number-circle" style={{
                   width: '80px', height: '80px', borderRadius: '50%',
                   background: '#1E293B', color: 'white',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
