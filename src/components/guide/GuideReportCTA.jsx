@@ -29,7 +29,7 @@ export default function GuideReportCTA() {
           textDecoration: 'none', minHeight: '44px',
           transition: 'background 0.15s'
         }}>
-          Take the Rights Assessment <ArrowRight size={18} aria-hidden="true" />
+          Were Your Rights Violated? Find Out in 60 Seconds <ArrowRight size={18} aria-hidden="true" />
         </Link>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem',

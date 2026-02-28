@@ -10,6 +10,7 @@
 /* Prevent horizontal scroll from any overflow */
 html {
   overflow-x: hidden;
+  background-color: #1E293B;
 }
 
 /* Ensure minimum touch target on all interactive elements */
