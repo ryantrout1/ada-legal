@@ -1244,23 +1244,29 @@ export const applyPreferences = (prefs) => {
 
 
   // --- WARM/SEPIA MODE ---
+  // Design philosophy: Premium "reading room" aesthetic.
+  // - Hero + dark CTAs → deep espresso brown (keeps drama, not flat)
+  // - Light sections alternate cream (#FBF6EF) / linen (#F5EDE0)
+  // - Rich amber accent replaces cool terracotta
+  // - Warm gold for interactive elements instead of bright orange
+  // - Subtle paper texture feel through layered background tones
   if (prefs.displayMode === 'warm') {
     css += `
       :root {
-        --slate-50: #FAF3E8 !important;
-        --slate-100: #F5EBDA !important;
-        --slate-200: #E0D5C4 !important;
-        --slate-300: #C4B9A8 !important;
-        --slate-400: #8A7F6F !important;
-        --slate-500: #6B6050 !important;
-        --slate-600: #4A4035 !important;
-        --slate-700: #3A3025 !important;
-        --slate-800: #2A201A !important;
-        --slate-900: #1E1610 !important;
-        --surface: #FFF8EE !important;
+        --slate-50: #FBF6EF !important;
+        --slate-100: #F5EDE0 !important;
+        --slate-200: #E8DDD0 !important;
+        --slate-300: #C7B9A6 !important;
+        --slate-400: #9C8B78 !important;
+        --slate-500: #786756 !important;
+        --slate-600: #584A3B !important;
+        --slate-700: #3D3128 !important;
+        --slate-800: #2B221B !important;
+        --slate-900: #1C1613 !important;
+        --surface: #FBF6EF !important;
       }
       body {
-        background-color: #FAF3E8 !important;
+        background-color: #F5EDE0 !important;
       }
 
       /* === Blanket background — warm cream === */
@@ -1279,19 +1285,24 @@ export const applyPreferences = (prefs) => {
       #main-content form,
       #main-content ul, #main-content ol, #main-content li,
       #main-content table, #main-content tr, #main-content td, #main-content th {
-        background-color: #FFF8EE !important;
+        background-color: #FBF6EF !important;
         background-image: none !important;
       }
 
-      /* === Dark sections → warm dark brown === */
+      /* === Dark sections → rich espresso brown (keeps depth) === */
       section[style*="#1E293B"], div[style*="#1E293B"],
       [style*="background: #1E293B"], [style*="background: '#1E293B'"],
       section[style*="#1A1F2B"], div[style*="#1A1F2B"],
       [style*="background: #1A1F2B"], [style*="background: '#1A1F2B'"],
       section[style*="#0F172A"], div[style*="#0F172A"],
       [style*="background: '#0F172A'"] {
-        background-color: #2A201A !important;
+        background-color: #23191280 !important;
         background-image: none !important;
+      }
+      /* Give dark sections full opacity background */
+      section[style*="#1E293B"], section[style*="#1A1F2B"],
+      section[style*="#0F172A"] {
+        background-color: #231912 !important;
       }
 
       /* Re-exempt interactive */
@@ -1303,55 +1314,138 @@ export const applyPreferences = (prefs) => {
         background-image: unset !important;
       }
 
-      /* === Text colors — warm brown tones === */
-      h1, h2, h3, h4, h5, h6 { color: #1E1610 !important; }
-      p, li, dd, dt, td, th, label, figcaption, blockquote { color: #3A3025 !important; }
-      span, small { color: #4A4035 !important; }
+      /* === Text colors — warm ink tones === */
+      h1, h2, h3, h4, h5, h6 { color: #2B221B !important; }
+      p, li, dd, dt, td, th, label, figcaption, blockquote { color: #3D3128 !important; }
+      span, small { color: #584A3B !important; }
 
-      /* Links */
-      a { color: #A0440A !important; }
-      a:hover { color: #7C2D12 !important; }
+      /* Links — warm amber instead of cool terracotta */
+      a { color: #A0520A !important; }
+      a:hover { color: #7C3D08 !important; }
 
-      /* === Preserve light text inside dark CTA sections === */
+      /* === Preserve light text inside dark sections === */
       div[style*="#1A1F2B"] h1, div[style*="#1A1F2B"] h2,
       div[style*="#1A1F2B"] h3, div[style*="#1E293B"] h1,
       div[style*="#1E293B"] h2, div[style*="#1E293B"] h3,
       section[style*="#1E293B"] h2, section[style*="#1E293B"] h3,
-      section[style*="#1A1F2B"] h2 { color: #FAF3E8 !important; }
+      section[style*="#1A1F2B"] h2 { color: #F5EDE0 !important; }
 
       div[style*="#1A1F2B"] p, div[style*="#1A1F2B"] span,
       div[style*="#1A1F2B"] li, div[style*="#1E293B"] p,
       div[style*="#1E293B"] span, div[style*="#1E293B"] li,
       section[style*="#1E293B"] p, section[style*="#1E293B"] span,
-      section[style*="#1A1F2B"] p { color: #C4B9A8 !important; }
+      section[style*="#1A1F2B"] p { color: #C7B9A6 !important; }
 
       div[style*="#1A1F2B"] a, div[style*="#1E293B"] a,
-      section[style*="#1E293B"] a { color: #F97316 !important; }
+      section[style*="#1E293B"] a { color: #E8984A !important; }
 
       div[style*="#1A1F2B"] button, div[style*="#1E293B"] button,
       section[style*="#1E293B"] button {
-        color: #C4B9A8 !important;
-        border-color: #5C5243 !important;
+        color: #E8DDD0 !important;
+        border-color: #584A3B !important;
       }
 
-      /* === Community Voices — keep dark in warm mode === */
+      /* === Landing hero — warm dark treatment (preserve drama) === */
+      .landing-hero-section,
+      .landing-hero-section > div,
+      .landing-hero-section div {
+        background: #231912 !important;
+        background-image: none !important;
+      }
+      .landing-hero-section h1 { color: #FBF6EF !important; }
+      .landing-hero-section h2 { color: #FBF6EF !important; }
+      /* "Then enforce them" tagline — warm amber gold */
+      .landing-hero-section h1 span,
+      .landing-hero-section h2 span[style*="F97316"] { color: #E8984A !important; }
+      .landing-hero-section p { color: #C7B9A6 !important; }
+      .landing-hero-section span { color: #9C8B78 !important; }
+      .landing-hero-section a:not([style*="C2410C"]) { color: #E8984A !important; }
+      /* Hero stat cards — warm glass effect */
+      .landing-hero-section div[style*="rgba(255,255,255,0.0"] {
+        background: rgba(251,246,239,0.04) !important;
+        border-color: rgba(251,246,239,0.08) !important;
+      }
+      /* Hero CTA button — warm amber */
+      .landing-hero-section button[style*="C2410C"],
+      .landing-hero-section a[style*="C2410C"] {
+        background-color: #B5520A !important;
+        color: #FBF6EF !important;
+      }
+      /* Hero secondary button */
+      .landing-hero-section button[style*="transparent"],
+      .landing-hero-section a[style*="transparent"] {
+        color: #C7B9A6 !important;
+        border-color: #584A3B !important;
+      }
+      /* Hero "ADA LEGAL LINK" label */
+      .landing-hero-section div[style*="width: '32px'"] {
+        background: #B5520A !important;
+      }
+
+      /* === Stories section — linen background for alternation === */
+      section[style*="#FAF7F2"], div[style*="#FAF7F2"],
+      [style*="background: '#FAF7F2'"] {
+        background-color: #F0E8D9 !important;
+      }
+
+      /* === Story cards / white cards → warm cream === */
+      div[style*="background: '#FFFFFF'"],
+      div[style*="background: white"],
+      [style*="background: #FFFFFF"] {
+        background-color: #FBF6EF !important;
+        border-color: #E8DDD0 !important;
+      }
+
+      /* === HowItWorks section — pure white → cream === */
+      section[style*="'#FFFFFF'"], div[style*="'#FFFFFF'"],
+      [style*="background: '#FFFFFF'"] {
+        background-color: #FBF6EF !important;
+      }
+
+      /* === KnowYourRights section === */
+      section[style*="#F8FAFC"], div[style*="#F8FAFC"],
+      [style*="background: '#F8FAFC'"] {
+        background-color: #F0E8D9 !important;
+      }
+
+      /* === ForAttorneys section === */
+      section[style*="'#FAF7F2'"] {
+        background-color: #F0E8D9 !important;
+      }
+
+      /* === Number step circles in HowItWorks === */
+      div[style*="background: '#1E293B'"][style*="color: 'white'"] {
+        background-color: #3D3128 !important;
+      }
+
+      /* Step divider line — warm gradient */
+      div[style*="linear-gradient"] {
+        background: linear-gradient(to right, #E8DDD0, #B5520A, #E8DDD0) !important;
+      }
+
+      /* === Accent color badges (like "Filing Ready") === */
+      #main-content span[style*="background: '#FEF1EC'"],
+      #main-content div[style*="background: '#FEF1EC'"] {
+        background-color: #FAEBD7 !important;
+      }
+
+      /* === Community Voices — keep dark, warm-tinted === */
       #main-content .cv-dark-section,
       #main-content .cv-dark-section div,
       #main-content .cv-dark-section section,
       #main-content .cv-dark-section p,
       #main-content .cv-dark-section span {
-        background-color: #1A1610 !important;
+        background-color: #1C1613 !important;
         background-image: none !important;
       }
-      /* Map container — slightly lighter */
+      /* Map container */
       #main-content .cv-dark-section [role="img"] {
-        background-color: rgba(255,255,255,0.02) !important;
-        border-color: rgba(255,255,255,0.06) !important;
+        background-color: rgba(251,246,239,0.02) !important;
+        border-color: rgba(251,246,239,0.06) !important;
       }
-      /* Dots inside map — UNSET so inline styles work */
-            /* Progress bar track */
+      /* Progress bar track */
       #main-content .cv-dark-section [role="progressbar"] {
-        background-color: rgba(255,255,255,0.06) !important;
+        background-color: rgba(251,246,239,0.06) !important;
       }
       /* Progress bar fill — UNSET so inline color works */
       #main-content .cv-dark-section [role="progressbar"] div {
@@ -1363,102 +1457,104 @@ export const applyPreferences = (prefs) => {
         background-color: transparent !important;
       }
       /* Text */
-      #main-content .cv-dark-section h2 { color: #FAF3E8 !important; }
+      #main-content .cv-dark-section h2 { color: #F5EDE0 !important; }
       #main-content .cv-dark-section p,
       #main-content .cv-dark-section span,
       #main-content .cv-dark-section [role="listitem"] span {
-        color: #C4B9A8 !important;
+        color: #C7B9A6 !important;
       }
       /* Buttons */
       #main-content .cv-dark-section button {
-        background-color: rgba(255,255,255,0.025) !important;
-        border-color: rgba(255,255,255,0.08) !important;
-        color: #E2E8F0 !important;
+        background-color: rgba(251,246,239,0.03) !important;
+        border-color: rgba(251,246,239,0.08) !important;
+        color: #E8DDD0 !important;
       }
       #main-content .cv-dark-section button span {
-        color: #E2E8F0 !important;
+        color: #E8DDD0 !important;
       }
 
-      /* Header */
-      header[role="banner"] { background-color: #2A201A !important; }
+      /* === Header — rich dark warm === */
+      header[role="banner"] { background-color: #231912 !important; }
       header[role="banner"] a, header[role="banner"] span,
-      header[role="banner"] button, header[role="banner"] div { color: #FAF3E8 !important; }
+      header[role="banner"] button, header[role="banner"] div { color: #F5EDE0 !important; }
 
-      /* Inputs */
+      /* === Inputs — warm tinted === */
       input, select, textarea {
         background-color: #FFFCF7 !important;
-        border-color: #C4B9A8 !important;
-        color: #1E1610 !important;
+        border-color: #C7B9A6 !important;
+        color: #2B221B !important;
       }
-      input::placeholder, textarea::placeholder { color: #8A7F6F !important; }
+      input::placeholder, textarea::placeholder { color: #9C8B78 !important; }
 
-      /* Card borders */
-      #main-content [style*="border"] { border-color: #E0D5C4 !important; }
+      /* === Card borders — warm === */
+      #main-content [style*="border"] { border-color: #E8DDD0 !important; }
 
-      /* Footer */
+      /* === Footer — rich espresso === */
       footer[role="contentinfo"], footer[role="contentinfo"] div {
-        background-color: #2A201A !important;
+        background-color: #1C1613 !important;
       }
-      footer[role="contentinfo"] p, footer[role="contentinfo"] span,
-      footer[role="contentinfo"] a { color: #E0D5C4 !important; }
+      footer[role="contentinfo"] p, footer[role="contentinfo"] span { color: #C7B9A6 !important; }
+      footer[role="contentinfo"] a { color: #E8984A !important; }
 
-      /* Display settings panel */
+      /* === Display settings panel === */
       [role="dialog"][aria-label="Display preferences"] {
-        background-color: #FFF8EE !important;
-        border-color: #E0D5C4 !important;
+        background-color: #FBF6EF !important;
+        border-color: #E8DDD0 !important;
       }
       [role="dialog"][aria-label="Display preferences"] legend {
-        color: #6B6050 !important;
+        color: #786756 !important;
       }
-      /* Protect settings panel buttons from blanket overrides */
       [role="dialog"][aria-label="Display preferences"] button {
         background-color: transparent !important;
-        border-color: #E0D5C4 !important;
-        color: #3A3025 !important;
+        border-color: #E8DDD0 !important;
+        color: #3D3128 !important;
       }
       [role="dialog"][aria-label="Display preferences"] button span {
         color: inherit !important;
       }
       [role="dialog"][aria-label="Display preferences"] button .ds-line {
-        fill: #6B6050 !important;
+        fill: #786756 !important;
       }
       [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] {
-        border-color: #C2410C !important;
-        background-color: #FFF0E0 !important;
-        color: #C2410C !important;
+        border-color: #B5520A !important;
+        background-color: #FAEBD7 !important;
+        color: #B5520A !important;
       }
       [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] span {
-        color: #C2410C !important;
+        color: #B5520A !important;
       }
       [role="dialog"][aria-label="Display preferences"] button[aria-pressed="true"] .ds-line-active {
         fill: white !important;
       }
 
-      /* CTA buttons keep terracotta */
+      /* === CTA buttons — warm amber === */
       #main-content button[style*="C2410C"],
       #main-content a[style*="C2410C"] {
-        background-color: #C2410C !important;
+        background-color: #B5520A !important;
         color: #FFFFFF !important;
       }
 
-      /* Radio cards */
+      /* === Radio cards === */
       #main-content [role="radio"] {
-        background-color: #FFF8EE !important;
-        border-color: #E0D5C4 !important;
+        background-color: #FBF6EF !important;
+        border-color: #E8DDD0 !important;
       }
       #main-content [role="radio"][aria-checked="true"] {
-        background-color: #FFF0E0 !important;
-        border-color: #C2410C !important;
+        background-color: #FAEBD7 !important;
+        border-color: #B5520A !important;
       }
 
-      /* Feedback modal */
+      /* === Feedback modal === */
       .fb-panel {
-        background-color: #FFF8EE !important;
-        border-color: #E0D5C4 !important;
+        background-color: #FBF6EF !important;
+        border-color: #E8DDD0 !important;
       }
-      .fb-title, .fb-success-title { color: #1E1610 !important; }
-      .fb-subtitle, .fb-success-body { color: #4A4035 !important; }
-      .fb-label { color: #3A3025 !important; }
+      .fb-title, .fb-success-title { color: #2B221B !important; }
+      .fb-subtitle, .fb-success-body { color: #584A3B !important; }
+      .fb-label { color: #3D3128 !important; }
+      .fb-error {
+        color: #C44040 !important;
+      }
 
       /* ============================================
          WARM MODE — DIAGRAM SVG OVERRIDES
@@ -1472,52 +1568,52 @@ export const applyPreferences = (prefs) => {
       #main-content svg[role="img"] rect[fill="white"],
       #main-content svg[role="img"] rect[fill="#FFFFFF"],
       #main-content svg[role="img"] rect[fill="#ffffff"] {
-        fill: #FFF8EE !important;
+        fill: #FBF6EF !important;
       }
       #main-content svg[role="img"] rect[fill="#F8FAFC"],
       #main-content svg[role="img"] rect[fill="#f8fafc"],
       #main-content svg[role="img"] rect[fill="#F1F5F9"],
       #main-content svg[role="img"] rect[fill="#f1f5f9"] {
-        fill: #FAF3E8 !important;
+        fill: #F5EDE0 !important;
       }
 
       /* Structural area fills → warm light */
       #main-content svg[role="img"] rect[fill="#E2E8F0"],
       #main-content svg[role="img"] rect[fill="#e2e8f0"] {
-        fill: #E8DFD0 !important;
-        stroke: #C4B9A8 !important;
+        fill: #E8DDD0 !important;
+        stroke: #C7B9A6 !important;
       }
       #main-content svg[role="img"] rect[fill="#E7E5E4"],
       #main-content svg[role="img"] rect[fill="#e7e5e4"],
       #main-content svg[role="img"] rect[fill="#D6D3D1"],
       #main-content svg[role="img"] rect[fill="#d6d3d1"] {
-        fill: #E0D5C4 !important;
-        stroke: #C4B9A8 !important;
+        fill: #DDD2C3 !important;
+        stroke: #C7B9A6 !important;
       }
 
       /* Polygons → warm */
       #main-content svg[role="img"] polygon[fill="#F1F5F9"],
       #main-content svg[role="img"] polygon[fill="#f1f5f9"] {
-        fill: #FAF3E8 !important;
-        stroke: #C4B9A8 !important;
+        fill: #F5EDE0 !important;
+        stroke: #C7B9A6 !important;
       }
 
       /* Callout area fills → warm tinted */
-      #main-content svg[role="img"] rect[fill="#FEF2F2"] { fill: #FFF0E0 !important; }
-      #main-content svg[role="img"] rect[fill="#F0FDF4"] { fill: #F5F0E0 !important; }
-      #main-content svg[role="img"] rect[fill="#DBEAFE"] { fill: #E8E0D0 !important; }
-      #main-content svg[role="img"] rect[fill="#FFFBF7"] { fill: #FFF8EE !important; }
+      #main-content svg[role="img"] rect[fill="#FEF2F2"] { fill: #FAEBD7 !important; }
+      #main-content svg[role="img"] rect[fill="#F0FDF4"] { fill: #F0E8D9 !important; }
+      #main-content svg[role="img"] rect[fill="#DBEAFE"] { fill: #E8DDD0 !important; }
+      #main-content svg[role="img"] rect[fill="#FFFBF7"] { fill: #FBF6EF !important; }
 
       /* Structural lines → warm brown (3:1 on cream) */
       #main-content svg[role="img"] line[stroke="#CBD5E1"],
       #main-content svg[role="img"] line[stroke="#cbd5e1"],
       #main-content svg[role="img"] line[stroke="#E2E8F0"],
       #main-content svg[role="img"] line[stroke="#e2e8f0"] {
-        stroke: #96897A !important;
+        stroke: #9C8B78 !important;
       }
       #main-content svg[role="img"] line[stroke="#94A3B8"],
       #main-content svg[role="img"] line[stroke="#64748B"] {
-        stroke: #8C7F70 !important;
+        stroke: #8A7B6A !important;
       }
 
       /* Rect strokes → warm */
@@ -1527,20 +1623,20 @@ export const applyPreferences = (prefs) => {
       #main-content svg[role="img"] rect[stroke="#D6D3D1"],
       #main-content svg[role="img"] rect[stroke="#94A3B8"],
       #main-content svg[role="img"] rect[stroke="#E2E8F0"] {
-        stroke: #96897A !important;
+        stroke: #9C8B78 !important;
       }
 
       /* Muted text → warmer, higher contrast */
       #main-content svg[role="img"] text[fill="#94A3B8"],
       #main-content svg[role="img"] text[fill="#CBD5E1"],
       #main-content svg[role="img"] text[fill="#cbd5e1"] {
-        fill: #6B6050 !important;
+        fill: #786756 !important;
       }
       #main-content svg[role="img"] text[fill="#64748B"] {
-        fill: #5C5243 !important;
+        fill: #584A3B !important;
       }
       #main-content svg[role="img"] text[fill="#78716C"] {
-        fill: #5C5243 !important;
+        fill: #584A3B !important;
       }
 
       /* Neutral structural text → warm brown */
@@ -1548,18 +1644,18 @@ export const applyPreferences = (prefs) => {
       #main-content svg[role="img"] text[fill="#374151"],
       #main-content svg[role="img"] text[fill="#4B4540"],
       #main-content svg[role="img"] text[fill="#57534E"] {
-        fill: #3A3025 !important;
+        fill: #3D3128 !important;
       }
 
       /* Wall fills → warm dark */
       #main-content svg[role="img"] rect[fill="#475569"] {
-        fill: #4A4035 !important;
+        fill: #584A3B !important;
       }
       #main-content svg[role="img"] rect[fill="#334155"] {
-        fill: #3A3025 !important;
+        fill: #3D3128 !important;
       }
       #main-content svg[role="img"] rect[fill="#1A1F2B"] {
-        fill: #2A201A !important;
+        fill: #2B221B !important;
       }
 
       /* Ensure SVG background transparent */
@@ -1569,40 +1665,27 @@ export const applyPreferences = (prefs) => {
 
       /* Diagram container border → warm */
       #main-content .ada-diagram-wrap {
-        border-color: #E0D5C4 !important;
+        border-color: #E8DDD0 !important;
       }
 
       /* Reduce blue light — subtle warm tint on images */
       img:not([src*="logo"]) { filter: sepia(0.08) !important; }
 
-      /* === Landing hero — warm overrides === */
-      .landing-hero-section,
-      .landing-hero-section > div,
-      .landing-hero-section div {
-        background: #FFF8EE !important;
-        background-image: none !important;
-      }
-      .landing-hero-section h1,
-      .landing-hero-section h2 { color: #1E1610 !important; }
-      .landing-hero-section p { color: #3A3025 !important; }
-      .landing-hero-section span { color: #6B6050 !important; }
-      .landing-hero-section a { color: #A0440A !important; }
-
       /* Secondary / ghost buttons on warm bg */
       .landing-btn-secondary,
       button.landing-btn-secondary,
       #main-content .landing-btn-secondary {
-        color: #3A3025 !important;
-        border-color: #C4B9A8 !important;
+        color: #3D3128 !important;
+        border-color: #C7B9A6 !important;
         background-color: transparent !important;
       }
       .landing-btn-secondary span {
-        color: #A0440A !important;
+        color: #A0520A !important;
       }
       .landing-btn-secondary:hover,
       button.landing-btn-secondary:hover {
-        border-color: #C2410C !important;
-        color: #1E1610 !important;
+        border-color: #B5520A !important;
+        color: #2B221B !important;
       }
     `;
   }
