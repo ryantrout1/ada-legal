@@ -494,6 +494,28 @@ export const applyPreferences = (prefs) => {
         border: 1px solid #4A5568 !important;
       }
 
+      /* === Standards Guide resource cards — elevated from page bg === */
+      .sg-resource-card {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+      }
+      .sg-resource-card div,
+      .sg-resource-card p,
+      .sg-resource-card span {
+        background-color: transparent !important;
+      }
+      /* Card tag pills */
+      .sg-resource-card span[style*="border-radius: 100px"] {
+        background-color: #2D3748 !important;
+        border-color: #4A5568 !important;
+        color: #CBD5E1 !important;
+      }
+      /* Card divider lines */
+      .sg-resource-card div[style*="borderTop"] {
+        border-color: #2A3344 !important;
+      }
+
       /* === Global footer (non-landing, already dark) === */
       footer[role="contentinfo"],
       footer[role="contentinfo"] div,
@@ -1083,6 +1105,17 @@ export const applyPreferences = (prefs) => {
         border-radius: 4px;
       }
 
+      /* === Standards Guide resource cards — high contrast === */
+      .sg-resource-card {
+        background-color: #0A0A0A !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      .sg-resource-card div,
+      .sg-resource-card p,
+      .sg-resource-card span {
+        background-color: transparent !important;
+      }
+
       /* === Chapter number badges — high contrast === */
       #main-content .chapter-num {
         background-color: #000000 !important;
@@ -1660,6 +1693,17 @@ export const applyPreferences = (prefs) => {
       #main-content .step-number-circle {
         background-color: #3D3128 !important;
         color: #FBF6EF !important;
+      }
+
+      /* === Standards Guide resource cards — warm mode === */
+      .sg-resource-card {
+        background-color: #F5EDE0 !important;
+        border-color: #E8DDD0 !important;
+      }
+      .sg-resource-card div,
+      .sg-resource-card p,
+      .sg-resource-card span {
+        background-color: transparent !important;
       }
 
       /* === Chapter number badges — warm mode === */
