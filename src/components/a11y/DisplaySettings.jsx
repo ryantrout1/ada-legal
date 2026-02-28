@@ -902,14 +902,39 @@ export const applyPreferences = (prefs) => {
       #main-content th {
         background-color: #0A0A0A !important;
         background-image: none !important;
-        border-color: #FFFFFF !important;
       }
 
-      /* === Cards — slightly lighter black for depth === */
-      #main-content [style*="border-radius"],
-      #main-content [style*="borderRadius"] {
-        background-color: #1A1A1A !important;
-        border: 2px solid #FFFFFF !important;
+      /* === Card containers — elevated with visible border === */
+      .sg-resource-card,
+      .kyr-card,
+      .landing-stat-card,
+      .landing-story-card,
+      .landing-attorneys-grid > div,
+      .sg-chapter-link,
+      .guide-two-col > div > div[style*="border"],
+      #main-content div[style*="border-radius: 12px"][style*="overflow: hidden"],
+      #main-content div[style*="border-radius: 12px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 16px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 16px"][style*="border: 2px"],
+      #main-content div[style*="border-radius: 20px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 24px"][style*="border: 1px"] {
+        background-color: #0A0A0A !important;
+        border: 1px solid #FFFFFF !important;
+      }
+
+      /* Transparent children inside cards — no nested borders */
+      .sg-resource-card div, .sg-resource-card p, .sg-resource-card span,
+      .kyr-card div, .kyr-card p, .kyr-card span,
+      .landing-stat-card p, .landing-stat-card span,
+      .landing-story-card div, .landing-story-card p, .landing-story-card span,
+      .guide-two-col > div div, .guide-two-col > div p, .guide-two-col > div span {
+        background-color: transparent !important;
+        border-color: transparent !important;
+      }
+
+      /* Table cells — restore borders for data tables */
+      #main-content td, #main-content th {
+        border-color: #666666 !important;
       }
 
       /* === Pills, tags, badges === */
@@ -1181,33 +1206,37 @@ export const applyPreferences = (prefs) => {
         border-radius: 4px;
       }
 
-      /* === CARD ELEVATION — high contrast === */
-      .sg-resource-card,
-      .kyr-card,
-      .landing-stat-card,
-      .landing-story-card,
-      .landing-attorneys-grid > div,
-      .sg-chapter-link,
-      .guide-two-col > div {
-        background-color: #0A0A0A !important;
-        border: 2px solid #FFFFFF !important;
+      /* === Standards sidebar — high contrast === */
+      .sg-sidebar {
+        border-color: #666666 !important;
       }
-      .sg-resource-card div, .sg-resource-card p, .sg-resource-card span,
-      .kyr-card div, .kyr-card p, .kyr-card span,
-      .landing-stat-card p, .landing-stat-card span,
-      .landing-story-card div, .landing-story-card p, .landing-story-card span,
-      .guide-two-col > div div, .guide-two-col > div p, .guide-two-col > div span {
+      .sg-sidebar-link {
+        background-color: #0A0A0A !important;
+        border-color: transparent !important;
+        color: #FFFFFF !important;
+      }
+      .sg-sidebar-active {
+        background-color: #1A0A00 !important;
+        border-left-color: #FFB347 !important;
+        color: #FFB347 !important;
+      }
+      .sg-sidebar-link span {
         background-color: transparent !important;
       }
-      /* Diagram + generic bordered cards */
-      #main-content div[style*="border-radius: 12px"][style*="overflow: hidden"],
-      #main-content div[style*="border-radius: 12px"][style*="border: 1px"],
-      #main-content div[style*="border-radius: 16px"][style*="border: 1px"],
-      #main-content div[style*="border-radius: 16px"][style*="border: 2px"],
-      #main-content div[style*="border-radius: 20px"][style*="border: 1px"],
-      #main-content div[style*="border-radius: 24px"][style*="border: 1px"] {
+      /* Count badge */
+      .sg-sidebar-link span[style*="border-radius: 100px"] {
+        background-color: #1A1A1A !important;
+        border: 1px solid #FFB347 !important;
+        color: #FFB347 !important;
+      }
+
+      /* === Search results container === */
+      #main-content input[type="text"],
+      #main-content input[type="search"],
+      #main-content input {
         background-color: #0A0A0A !important;
-        border: 2px solid #FFFFFF !important;
+        border: 1px solid #FFFFFF !important;
+        color: #FFFFFF !important;
       }
 
       /* === Chapter number badges — high contrast === */
