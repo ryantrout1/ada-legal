@@ -7,6 +7,7 @@ import StoriesSection from '../components/landing/StoriesSection';
 import HowItWorksNew from '../components/landing/HowItWorksNew';
 import KnowYourRightsSection from '../components/landing/KnowYourRightsSection';
 import CommitmentSection from '../components/landing/CommitmentSection';
+import OurStorySection from '../components/landing/OurStorySection';
 import ForAttorneysNew from '../components/landing/ForAttorneysNew';
 import FinalCTANew from '../components/landing/FinalCTANew';
 import CommunityVoices from '../components/landing/CommunityVoices';
@@ -49,6 +50,7 @@ export default function Home() {
       <HowItWorksNew />
       <KnowYourRightsSection />
       <CommitmentSection />
+      <OurStorySection />
       <ForAttorneysNew />
       <FinalCTANew />
     </div>
