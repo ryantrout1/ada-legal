@@ -1191,42 +1191,38 @@ export const applyPreferences = (prefs) => {
   }
 
   // --- FONT SIZE ---
-  if (prefs.fontSize === 'large') {
+  // Strategy: Use CSS zoom on #main-content to scale ALL content
+  // (including rem-based text) without affecting nav/footer/settings.
+  // 
+  // Why zoom instead of font-size?
+  // - html { font-size: 125% } scales rem units globally → nav/footer reflow
+  // - #main-content { font-size: 125% } doesn't affect rem units (rem = root only)
+  // - #main-content { zoom: 1.25 } scales EVERYTHING visually, scoped to content
+  //
+  // zoom affects layout dimensions, so we compensate width to prevent
+  // horizontal overflow. This fixes WCAG 2.2 SC 3.2.2 (On Input).
+  if (prefs.fontSize === 'large' || prefs.fontSize === 'xl') {
+    const zoomMain = prefs.fontSize === 'large' ? '1.125' : '1.25';
+    const zoomDiag = prefs.fontSize === 'large' ? '1.15' : '1.3';
+    const mozW = prefs.fontSize === 'large' ? '86.96%' : '76.92%';
     css += `
-      #main-content { font-size: 125% !important; }
+      #main-content {
+        zoom: ${zoomMain} !important;
+      }
+
       /* ============================================
-         DIAGRAM SCALING — LARGE (1.15x)
-         SVG diagrams use hardcoded px font sizes
-         that don't respond to html font-size.
-         Use CSS zoom on the diagram wrapper to scale
-         the entire diagram including SVG text,
-         unit toggles, and callout panels.
+         DIAGRAM SCALING — ${prefs.fontSize.toUpperCase()}
+         Additional zoom on diagram wrappers on top of
+         the main-content zoom for extra readability.
          ============================================ */
       .ada-diagram-wrap {
-        zoom: 1.15 !important;
-        -moz-transform: scale(1.15) !important;
+        zoom: ${zoomDiag} !important;
+        -moz-transform: scale(${zoomDiag}) !important;
         -moz-transform-origin: top left !important;
       }
       @-moz-document url-prefix() {
         .ada-diagram-wrap {
-          width: 86.96% !important;
-        }
-      }
-    `;
-  } else if (prefs.fontSize === 'xl') {
-    css += `
-      #main-content { font-size: 150% !important; }
-      /* ============================================
-         DIAGRAM SCALING — XL (1.3x)
-         ============================================ */
-      .ada-diagram-wrap {
-        zoom: 1.3 !important;
-        -moz-transform: scale(1.3) !important;
-        -moz-transform-origin: top left !important;
-      }
-      @-moz-document url-prefix() {
-        .ada-diagram-wrap {
-          width: 76.92% !important;
+          width: ${mozW} !important;
         }
       }
     `;
