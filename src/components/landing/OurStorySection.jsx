@@ -6,7 +6,7 @@ export default function OurStorySection() {
       aria-labelledby="our-story-heading"
       style={{
         background: '#0F1219',
-        padding: '100px 1.5rem',
+        padding: '60px 1.5rem 100px',
         position: 'relative',
         overflow: 'hidden',
       }}
