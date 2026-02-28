@@ -4,6 +4,7 @@ export default function OurStorySection() {
   return (
     <section
       aria-labelledby="our-story-heading"
+      className="warm-keep-dark"
       style={{
         background: '#0F1219',
         padding: '60px 1.5rem 100px',

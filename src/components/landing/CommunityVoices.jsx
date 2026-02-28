@@ -293,7 +293,7 @@ export default function CommunityVoices() {
 
   return (
     <section
-      className="cv-dark-section"
+      className="cv-dark-section warm-keep-dark"
       aria-label="Community voices poll"
       style={{
         background: '#0F172A',
