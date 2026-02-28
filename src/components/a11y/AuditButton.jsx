@@ -115,7 +115,7 @@ export default function AuditButton({ currentPageName }) {
           setTimeout(resolve, 8000); // timeout after 8s
         });
         // Wait longer for JS to render and styles to apply
-        await new Promise(r => setTimeout(r, 4000));
+        await new Promise(r => setTimeout(r, 2000));
 
         // Inject CSS variable fallbacks for axe-core background resolution
         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -150,7 +150,9 @@ export default function AuditButton({ currentPageName }) {
         });
 
         if (iframe.contentWindow.axe) {
-          const res = await iframe.contentWindow.axe.run(iframeDoc, {
+          // Scope to #root to exclude Base44 preview toolbar injections
+          const scanRoot = iframeDoc.getElementById('root') || iframeDoc;
+          const res = await iframe.contentWindow.axe.run(scanRoot, {
             runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'] }
           });
           allResults.push({

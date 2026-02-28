@@ -62,7 +62,7 @@ export default function AlertSummaryBar({
           padding: '8px 14px',
           minHeight: '40px',
           backgroundColor: hasAlerts ? '#FFFBEB' : '#FAF7F2',
-          border: `1px solid ${hasAlerts ? '#FDE68A' : 'var(--slate-200)'}`,
+          border: `1px solid ${hasAlerts ? '#FDE68A' : '#E2E8F0'}`,
           borderRadius: '8px',
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.85rem',
