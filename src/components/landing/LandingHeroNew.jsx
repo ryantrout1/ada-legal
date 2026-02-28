@@ -141,7 +141,7 @@ export default function LandingHeroNew() {
 
           <p className="landing-fade-up landing-delay-4" style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-            color: '#64748B', marginTop: '1rem'
+            color: '#94A3B8', marginTop: '1rem'
           }}>
             Attorney-connected violation reporting — launching soon.
           </p>
@@ -188,7 +188,7 @@ export default function LandingHeroNew() {
                 }}>{quote.name}</p>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                  color: '#64748B', margin: 0,
+                  color: '#94A3B8', margin: 0,
                 }}>{quote.role}</p>
               </div>
             </div>
@@ -215,7 +215,7 @@ export default function LandingHeroNew() {
                 }}>{stat.value}</p>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem',
-                  color: '#64748B', margin: 0, fontWeight: 600,
+                  color: '#94A3B8', margin: 0, fontWeight: 600,
                 }}>{stat.label}</p>
               </div>
             ))}

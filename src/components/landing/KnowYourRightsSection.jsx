@@ -176,7 +176,7 @@ export default function KnowYourRightsSection() {
             Were Your Rights Violated? Find Out in 60 Seconds →
           </Link>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#64748B',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#94A3B8',
             marginTop: '12px', marginBottom: 0
           }}>
             Attorney-connected violation reporting — launching soon.

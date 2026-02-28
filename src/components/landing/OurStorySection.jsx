@@ -170,7 +170,7 @@ export default function OurStorySection() {
         }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-            color: '#64748B', margin: 0,
+            color: '#94A3B8', margin: 0,
           }}>
             Something not working? Something we missed?{' '}
             <span style={{ color: '#FB923C', fontWeight: 600 }}>

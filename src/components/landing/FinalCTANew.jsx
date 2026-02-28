@@ -46,13 +46,13 @@ export default function FinalCTANew() {
         </div>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-          color: '#64748B', marginTop: '1.25rem', marginBottom: 0
+          color: '#94A3B8', marginTop: '1.25rem', marginBottom: 0
         }}>
           No account required. No cost. Your information is kept confidential.
         </p>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem',
-          color: '#64748B', marginTop: '0.75rem', marginBottom: 0, fontStyle: 'italic'
+          color: '#94A3B8', marginTop: '0.75rem', marginBottom: 0, fontStyle: 'italic'
         }}>
           Attorney-connected violation reporting — launching soon.
         </p>
