@@ -382,7 +382,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
         </div>
       </div>
 
-      <GuideReportCTA hideHelper />
+      <GuideReportCTA />
     </>
   );
 }

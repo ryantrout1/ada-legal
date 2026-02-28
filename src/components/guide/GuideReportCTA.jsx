@@ -2,29 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { ArrowRight } from 'lucide-react';
-import AskADAHelper from './AskADAHelper';
 
-export default function GuideReportCTA({ pageTitle, pageType, hideHelper }) {
-  const fallbackTitle = typeof document !== 'undefined' 
-    ? document.title.replace(/ \| ADA Legal Link$/, '') 
-    : 'ADA Standards Guide';
-
+export default function GuideReportCTA() {
   return (
-    <>
-      {/* AI Helper — appears inside the content area before the CTA */}
-      {!hideHelper && (
-        <div className="guide-content-wrap">
-          <div className="guide-content">
-            <AskADAHelper
-              pageTitle={pageTitle || fallbackTitle}
-              pageSections={[]}
-              pageType={pageType || 'default'}
-            />
-          </div>
-        </div>
-      )}
-
-      <div role="region" aria-label="Take action on an ADA violation" style={{
+    <div role="region" aria-label="Take action on an ADA violation" style={{
       background: '#1A1F2B', padding: '64px 40px', textAlign: 'center'
     }}>
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>
@@ -65,7 +46,6 @@ export default function GuideReportCTA({ pageTitle, pageType, hideHelper }) {
           </Link>
         </div>
       </div>
-      </div>
-    </>
+    </div>
   );
 }
