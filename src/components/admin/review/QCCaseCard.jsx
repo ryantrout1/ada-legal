@@ -66,9 +66,9 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
 
   // Severity config
   const severityCfg = {
-    high:   { emoji: '🔴', label: 'High Severity', bg: 'var(--error-100)',   color: '#7F1D1D' },
-    medium: { emoji: '🟡', label: 'Medium',        bg: 'var(--warning-100)', color: '#92400E' },
-    low:    { emoji: '🟢', label: 'Low',            bg: 'var(--success-100)', color: '#14532D' },
+    high:   { emoji: '🔴', label: 'High Severity', bg: '#FEE2E2',  color: '#7F1D1D' },
+    medium: { emoji: '🟡', label: 'Medium',        bg: '#FEF3C7',  color: '#92400E' },
+    low:    { emoji: '🟢', label: 'Low',            bg: '#DCFCE7',  color: '#14532D' },
   };
   const sev = severityCfg[c.ai_severity] || null;
 

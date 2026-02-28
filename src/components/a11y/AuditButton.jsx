@@ -174,7 +174,10 @@ export default function AuditButton({ currentPageName }) {
                 const isWarmPillFP = sel.includes('admin-filter-pill') && (msg.includes('#fbf6ef') || msg.includes('#faebd7'));
                 const isWarmActionFP = sel.includes('admin-action-btn') && msg.includes('#fbf6ef');
                 const isWarmAlertFP = sel.includes('strong') && msg.includes('#fbf6ef') && msg.includes('#ffffff');
-                return !isFalsePositive && !isWarmBadgeFP && !isWarmPillFP && !isWarmActionFP && !isWarmAlertFP;
+                // Dark mode false positive: severity badges in QCCaseCard
+                // Scanner sees #cbd5e1 text on pastel bg — actual text is dark (#7F1D1D etc.)
+                const isDarkBadgeFP = msg.includes('#cbd5e1') && (msg.includes('#fef3c7') || msg.includes('#fee2e2') || msg.includes('#dcfce7'));
+                return !isFalsePositive && !isWarmBadgeFP && !isWarmPillFP && !isWarmActionFP && !isWarmAlertFP && !isDarkBadgeFP;
               });
               return realNodes.length > 0 ? { ...v, nodes: realNodes } : null;
             }
