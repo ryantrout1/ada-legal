@@ -35,7 +35,7 @@ const STAGES = [
   },
   {
     label: 'Monitoring',
-    color: '#D97706', bg: '#FEF3C7',
+    color: '#92400E', bg: '#FEF3C7',
     emails: [{ key: 'contact_reminder', recipient: 'Attorney', note: 'if no contact within 22 hours' }],
   },
   {

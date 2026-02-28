@@ -237,7 +237,7 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700, color: 'var(--slate-900)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Zap size={18} style={{ color: '#D97706' }} /> Triage Mode
+            <Zap size={18} style={{ color: '#92400E' }} /> Triage Mode
           </span>
           <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>
             Case {currentIdx + 1} of {total}

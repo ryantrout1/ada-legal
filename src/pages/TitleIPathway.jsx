@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 
 const INFO_CARDS = [
-  { icon: '📋', heading: 'Where to File', text: <>The <strong>Equal Employment Opportunity Commission (EEOC)</strong>. You can file online, in person at a local EEOC office, or by phone.</>, color: '#D97706', bg: '#FFFBEB' },
-  { icon: '🏢', heading: 'Which Employers', text: <>Title I applies to employers with <strong>15 or more employees</strong>, employment agencies, labor organizations, and joint labor-management committees.</>, color: '#D97706', bg: '#FFFBEB' },
-  { icon: '💰', heading: 'Cost to You', text: <><strong>Free to file.</strong> The EEOC investigates at no cost. If they issue a 'Right to Sue' letter, you can then hire an attorney — many work on contingency.</>, color: '#D97706', bg: '#FFFBEB' },
-  { icon: '⚖️', heading: 'What You Can Recover', text: <>Remedies may include <strong>back pay, reinstatement, reasonable accommodation</strong>, compensatory damages, and attorney's fees if the case goes to court.</>, color: '#D97706', bg: '#FFFBEB' }
+  { icon: '📋', heading: 'Where to File', text: <>The <strong>Equal Employment Opportunity Commission (EEOC)</strong>. You can file online, in person at a local EEOC office, or by phone.</>, color: '#92400E', bg: '#FFFBEB' },
+  { icon: '🏢', heading: 'Which Employers', text: <>Title I applies to employers with <strong>15 or more employees</strong>, employment agencies, labor organizations, and joint labor-management committees.</>, color: '#92400E', bg: '#FFFBEB' },
+  { icon: '💰', heading: 'Cost to You', text: <><strong>Free to file.</strong> The EEOC investigates at no cost. If they issue a 'Right to Sue' letter, you can then hire an attorney — many work on contingency.</>, color: '#92400E', bg: '#FFFBEB' },
+  { icon: '⚖️', heading: 'What You Can Recover', text: <>Remedies may include <strong>back pay, reinstatement, reasonable accommodation</strong>, compensatory damages, and attorney's fees if the case goes to court.</>, color: '#92400E', bg: '#FFFBEB' }
 ];
 
 const STEPS = [

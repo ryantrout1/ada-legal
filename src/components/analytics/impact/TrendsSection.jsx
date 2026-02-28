@@ -143,7 +143,7 @@ export default function TrendsSection({ cases }) {
           <div style={{ flex: '1 1 200px', padding: '12px', backgroundColor: 'var(--slate-50)', borderRadius: '8px' }}>
             <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fastest Growing Category</div>
             <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', marginTop: '2px', textTransform: 'capitalize' }}>
-              {callouts.fastestGrowing.cat.replace(/_/g, ' ')} <span style={{ fontWeight: 400, color: '#16A34A' }}>↑{callouts.fastestGrowing.growth}%</span>
+              {callouts.fastestGrowing.cat.replace(/_/g, ' ')} <span style={{ fontWeight: 400, color: '#15803D' }}>↑{callouts.fastestGrowing.growth}%</span>
             </div>
           </div>
         )}

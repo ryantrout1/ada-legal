@@ -171,7 +171,7 @@ export default function GuideNewConstruction() {
               }}>
                 <span style={{
                   fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
-                  color: '#16A34A', background: '#DCFCE7',
+                  color: '#15803D', background: '#DCFCE7',
                   padding: '4px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
                 }}>Maintenance</span>
                 <div>

@@ -7,7 +7,7 @@ export default function ReporterFunnel({ events }) {
 
   const steps = [
     { label: 'Reports Started', count: started, color: '#C2410C' },
-    { label: 'Reports Completed', count: completed, color: '#D97706' },
+    { label: 'Reports Completed', count: completed, color: '#92400E' },
     { label: 'Attorney Clicked', count: connected, color: '#15803D' },
   ];
 

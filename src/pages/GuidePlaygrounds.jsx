@@ -77,7 +77,7 @@ export default function GuidePlaygrounds() {
                 'Are there accessible swings (e.g., high-back bucket seats)?'
               ].map((item, i) => (
                 <div key={i} style={{ padding: '10px 20px', borderBottom: i < 4 ? '1px solid var(--slate-200)' : 'none', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                  <span style={{ color: '#16A34A', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                  <span style={{ color: '#15803D', fontWeight: 700, flexShrink: 0 }}>✓</span>
                   <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-700)', lineHeight: 1.6 }}>{item}</p>
                 </div>
               ))}

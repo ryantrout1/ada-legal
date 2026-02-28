@@ -75,7 +75,7 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
                   size={16}
                   className="pipeline-arrow"
                   style={{
-                    color: arrowHighlighted ? '#EA580C' : '#64748B',
+                    color: arrowHighlighted ? '#C2410C' : '#64748B',
                     flexShrink: 0,
                     margin: '0 2px',
                     transition: 'color 0.3s',
@@ -128,7 +128,7 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '10px 0 0', lineHeight: 1.5 }}>
         <strong style={{ color: 'var(--slate-700)' }}>{cases.length}</strong> total cases
         {' · '}
-        <strong style={{ color: needAttentionCount > 0 ? '#D97706' : 'var(--slate-700)' }}>{needAttentionCount}</strong> need attention
+        <strong style={{ color: needAttentionCount > 0 ? '#92400E' : 'var(--slate-700)' }}>{needAttentionCount}</strong> need attention
       </p>
 
       <style>{`

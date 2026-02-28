@@ -124,9 +124,9 @@ export default function AttorneyExpandedPanel({ lawyer, cases, contactLogs, acti
             {assigned > 0 && <div style={{ width: `${(assigned / totalBar) * 100}%`, backgroundColor: '#D97706', transition: 'width 0.3s' }} title={`${assigned} assigned`} />}
           </div>
           <div style={{ display: 'flex', gap: '16px', marginTop: '6px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem' }}>
-            <span style={{ color: '#16A34A', fontWeight: 600 }}>● {closed} closed</span>
+            <span style={{ color: '#15803D', fontWeight: 600 }}>● {closed} closed</span>
             <span style={{ color: '#1E3A8A', fontWeight: 600 }}>● {inProgress} active</span>
-            <span style={{ color: '#D97706', fontWeight: 600 }}>● {assigned} assigned</span>
+            <span style={{ color: '#92400E', fontWeight: 600 }}>● {assigned} assigned</span>
           </div>
         </div>
 
@@ -150,7 +150,7 @@ export default function AttorneyExpandedPanel({ lawyer, cases, contactLogs, acti
                     {formatDate(t.assignedAt)}
                   </span>
                   {t.hasContact ? (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: t.contactHrs <= 24 ? '#15803D' : '#D97706' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: t.contactHrs <= 24 ? '#15803D' : '#92400E' }}>
                       <CheckCircle size={12} /> {t.contactHrs}h
                     </span>
                   ) : t.overdue ? (

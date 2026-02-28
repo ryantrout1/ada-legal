@@ -5,13 +5,13 @@ import { ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
 const TYPE_LABELS = {
   suggestion: { label: 'Suggestion', color: '#1E3A8A', bg: '#EFF6FF' },
   bug_report: { label: 'Bug Report', color: '#991B1B', bg: '#FEF2F2' },
-  question: { label: 'Question', color: '#D97706', bg: '#FFFBEB' },
+  question: { label: 'Question', color: '#92400E', bg: '#FFFBEB' },
   general_feedback: { label: 'General', color: '#475569', bg: '#F1F5F9' },
 };
 
 const STATUS_LABELS = {
   new: { label: 'New', color: '#C2410C', bg: '#FEF1EC' },
-  reviewed: { label: 'Reviewed', color: '#16A34A', bg: '#F0FDF4' },
+  reviewed: { label: 'Reviewed', color: '#15803D', bg: '#F0FDF4' },
   archived: { label: 'Archived', color: '#64748B', bg: '#F1F5F9' },
 };
 

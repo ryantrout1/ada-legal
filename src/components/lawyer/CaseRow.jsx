@@ -86,7 +86,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
                   <AlertTriangle size={12} /> OVERDUE — {hoursSinceAssign - 24}h past deadline
                 </span>
               ) : (
-                <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#D97706' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#92400E' }}>
                   <Clock size={12} /> {24 - hoursSinceAssign}h remaining to make contact
                 </span>
               )}

@@ -6,7 +6,7 @@ import { CheckCircle, TrendingUp, Clock } from 'lucide-react';
 const RESOLUTION_COLORS = {
   engaged: '#15803D',
   referred_out: '#1D4ED8',
-  not_viable: '#94A3B8',
+  not_viable: '#64748B',
   claimant_unresponsive: '#D97706',
   claimant_declined: '#D97706',
   admin_closed: '#B91C1C'
@@ -100,7 +100,7 @@ export default function CaseOutcomesSection({ cases, filters, onFilterChange }) 
                     <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 11 }} />
                     <Bar dataKey="count" radius={[0, 3, 3, 0]} cursor="pointer" onClick={handleResClick}>
                       {resData.map(entry => (
-                        <Cell key={entry.type} fill={activeResolution ? (entry.type === activeResolution ? RESOLUTION_COLORS[entry.type] : (RESOLUTION_COLORS[entry.type] || '#94A3B8') + '40') : (RESOLUTION_COLORS[entry.type] || '#94A3B8')} />
+                        <Cell key={entry.type} fill={activeResolution ? (entry.type === activeResolution ? RESOLUTION_COLORS[entry.type] : (RESOLUTION_COLORS[entry.type] || '#64748B') + '40') : (RESOLUTION_COLORS[entry.type] || '#64748B')} />
                       ))}
                     </Bar>
                   </BarChart>

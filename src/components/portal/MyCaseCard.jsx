@@ -41,7 +41,7 @@ const CONTEXT_LINES = {
   in_progress: { text: 'Your attorney is actively working on your case.', color: '#15803D' },
   closed: null,
   rejected: { text: 'This report did not meet the criteria for our platform.', color: '#B91C1C' },
-  expired: { text: 'No attorney was matched within 90 days.', color: '#D97706' }
+  expired: { text: 'No attorney was matched within 90 days.', color: '#92400E' }
 };
 
 const RESOLUTION_LABELS = {

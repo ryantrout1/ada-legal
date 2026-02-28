@@ -256,7 +256,7 @@ export default function Layout({ children, currentPageName }) {
         !loading && !user && currentPageName === 'Home'
           ? {
               position: 'fixed', top: 0, left: 0, right: 0, width: '100%', zIndex: 1000,
-              backgroundColor: 'rgba(30,41,59,0.97)',
+              backgroundColor: '#1E293B',
               backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
               color: 'white', height: '72px',
               display: 'flex', alignItems: 'center',
@@ -287,7 +287,7 @@ export default function Layout({ children, currentPageName }) {
             fontWeight: 700
           }}>
             <LogoBrand size={44} variant="dark-bg" />
-            <span className="mobile-brand-text">ADA Legal <span style={{ color: '#F97316' }}>Link</span></span>
+            <span className="mobile-brand-text">ADA Legal <span style={{ color: '#C05621' }}>Link</span></span>
           </Link>
 
           {/* Mobile Menu Button */}
@@ -320,10 +320,10 @@ export default function Layout({ children, currentPageName }) {
               <>
                 {!user && (
                   <>
-                    <Link to={createPageUrl('StandardsGuide')} className="desktop-nav-public-links" style={{ color: currentPageName === 'StandardsGuide' ? '#FB923C' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} className="desktop-nav-public-links" style={{ color: currentPageName === 'StandardsGuide' ? '#C05621' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('LawyerLanding')} className="desktop-nav-public-links" style={{ color: currentPageName === 'LawyerLanding' ? '#FB923C' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
+                    <Link to={createPageUrl('LawyerLanding')} className="desktop-nav-public-links" style={{ color: currentPageName === 'LawyerLanding' ? '#C05621' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
                       For Attorneys
                     </Link>
                     <button
@@ -347,10 +347,10 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'user' && (
                   <>
-                    <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#FB923C' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#C05621' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('MyCases')} style={{ color: currentPageName === 'MyCases' ? '#FB923C' : 'white' }} aria-current={currentPageName === 'MyCases' ? 'page' : undefined}>
+                    <Link to={createPageUrl('MyCases')} style={{ color: currentPageName === 'MyCases' ? '#C05621' : 'white' }} aria-current={currentPageName === 'MyCases' ? 'page' : undefined}>
                       My Cases
                     </Link>
                     <UserAvatarMenu user={user} onLogout={handleLogout} />
@@ -359,19 +359,19 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'lawyer' && (
                   <>
-                    <Link to={createPageUrl('Home') + '?view=home'} style={{ color: currentPageName === 'Home' ? '#FB923C' : 'white' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
+                    <Link to={createPageUrl('Home') + '?view=home'} style={{ color: currentPageName === 'Home' ? '#C05621' : 'white' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
                       Home
                     </Link>
-                    <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#FB923C' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#C05621' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('Marketplace')} style={{ color: currentPageName === 'Marketplace' ? '#FB923C' : 'white' }} aria-current={currentPageName === 'Marketplace' ? 'page' : undefined}>
+                    <Link to={createPageUrl('Marketplace')} style={{ color: currentPageName === 'Marketplace' ? '#C05621' : 'white' }} aria-current={currentPageName === 'Marketplace' ? 'page' : undefined}>
                       Available Cases
                     </Link>
-                    <Link to={createPageUrl('LawyerDashboard')} style={{ color: currentPageName === 'LawyerDashboard' ? '#FB923C' : 'white' }} aria-current={currentPageName === 'LawyerDashboard' ? 'page' : undefined}>
+                    <Link to={createPageUrl('LawyerDashboard')} style={{ color: currentPageName === 'LawyerDashboard' ? '#C05621' : 'white' }} aria-current={currentPageName === 'LawyerDashboard' ? 'page' : undefined}>
                       My Cases
                     </Link>
-                    <Link to={createPageUrl('LawyerProfile')} style={{ color: currentPageName === 'LawyerProfile' ? '#FB923C' : 'white' }} aria-current={currentPageName === 'LawyerProfile' ? 'page' : undefined}>
+                    <Link to={createPageUrl('LawyerProfile')} style={{ color: currentPageName === 'LawyerProfile' ? '#C05621' : 'white' }} aria-current={currentPageName === 'LawyerProfile' ? 'page' : undefined}>
                       Profile
                     </Link>
                     <UserAvatarMenu user={user} onLogout={handleLogout} />
@@ -380,19 +380,19 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'admin' && (
                   <>
-                    <Link to={createPageUrl('Home') + '?view=home'} style={{ color: currentPageName === 'Home' ? '#FB923C' : 'white' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
+                    <Link to={createPageUrl('Home') + '?view=home'} style={{ color: currentPageName === 'Home' ? '#C05621' : 'white' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
                       Home
                     </Link>
-                    <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#FB923C' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#C05621' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('AdminReview')} style={{ color: currentPageName === 'AdminReview' ? '#FB923C' : 'white' }} aria-current={currentPageName === 'AdminReview' ? 'page' : undefined}>
+                    <Link to={createPageUrl('AdminReview')} style={{ color: currentPageName === 'AdminReview' ? '#C05621' : 'white' }} aria-current={currentPageName === 'AdminReview' ? 'page' : undefined}>
                       Review Queue
                     </Link>
-                    <Link to={createPageUrl('AdminCases')} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#FB923C' : 'white' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
+                    <Link to={createPageUrl('AdminCases')} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#C05621' : 'white' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
                       Case Manager
                     </Link>
-                    <Link to={createPageUrl('AdminLawyers')} style={{ color: currentPageName === 'AdminLawyers' ? '#FB923C' : 'white' }} aria-current={currentPageName === 'AdminLawyers' ? 'page' : undefined}>
+                    <Link to={createPageUrl('AdminLawyers')} style={{ color: currentPageName === 'AdminLawyers' ? '#C05621' : 'white' }} aria-current={currentPageName === 'AdminLawyers' ? 'page' : undefined}>
                       Lawyers
                     </Link>
                     <UserAvatarMenu user={user} onLogout={handleLogout} extraMenuItems={[
@@ -496,10 +496,10 @@ export default function Layout({ children, currentPageName }) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                 {!user && (
                   <>
-                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('LawyerLanding')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerLanding' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
+                    <Link to={createPageUrl('LawyerLanding')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerLanding' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
                       For Attorneys
                     </Link>
                     <button
@@ -528,7 +528,7 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'user' && (
                   <>
-                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
                     <Link to={createPageUrl('MyCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
@@ -550,10 +550,10 @@ export default function Layout({ children, currentPageName }) {
                 {user?.role === 'lawyer' && (
 
                   <>
-                    <Link to={createPageUrl('Home') + '?view=home'} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'Home' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
+                    <Link to={createPageUrl('Home') + '?view=home'} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'Home' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
                       Home
                     </Link>
-                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
                     <Link to={createPageUrl('Marketplace')} onClick={() => setMobileMenuOpen(false)} style={{ color: 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
@@ -580,28 +580,28 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'admin' && (
                   <>
-                    <Link to={createPageUrl('Home') + '?view=home'} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'Home' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
+                    <Link to={createPageUrl('Home') + '?view=home'} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'Home' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
                       Home
                     </Link>
-                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('AdminReview')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminReview' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                    <Link to={createPageUrl('AdminReview')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminReview' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Review Queue
                     </Link>
-                    <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                    <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Case Manager
                     </Link>
-                    <Link to={createPageUrl('AdminLawyers')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminLawyers' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                    <Link to={createPageUrl('AdminLawyers')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminLawyers' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Lawyers
                     </Link>
-                    <Link to={createPageUrl('AdminAnalytics')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminAnalytics' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                    <Link to={createPageUrl('AdminAnalytics')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminAnalytics' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Platform Intelligence
                     </Link>
-                    <Link to={createPageUrl('AdminEmails')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminEmails' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                    <Link to={createPageUrl('AdminEmails')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminEmails' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Email Templates
                     </Link>
-                    <Link to={createPageUrl('AdminFeedback')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminFeedback' ? '#FB923C' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
+                    <Link to={createPageUrl('AdminFeedback')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminFeedback' ? '#C05621' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }}>
                       Feedback
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>

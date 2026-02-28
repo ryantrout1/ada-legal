@@ -37,7 +37,7 @@ function AgingIndicator({ caseData, lawyer }) {
   }
   if (s === 'available') {
     const days = daysSince(c.approved_at || c.created_date);
-    const color = days >= 14 ? '#B91C1C' : days >= 7 ? '#D97706' : 'var(--slate-500)';
+    const color = days >= 14 ? '#B91C1C' : days >= 7 ? '#92400E' : 'var(--slate-500)';
     return <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: days >= 7 ? 700 : 400, color }}>Available {days}d{days >= 7 ? ' ⚠️' : ''}</span>;
   }
   if (s === 'assigned') {

@@ -99,9 +99,9 @@ export default function GuideWebFirstSteps() {
             }}>
               {[
                 { priority: 'Critical', color: '#991B1B', bg: '#FEE2E2', desc: 'Blocks access entirely — users cannot complete a task at all. Examples: form can\'t be submitted by keyboard, no captions on required video content, page has a keyboard trap.' },
-                { priority: 'Serious', color: '#D97706', bg: '#FEF3C7', desc: 'Makes tasks very difficult. Examples: poor contrast makes text hard to read, images of text with no alternative, focus order jumps unpredictably.' },
+                { priority: 'Serious', color: '#92400E', bg: '#FEF3C7', desc: 'Makes tasks very difficult. Examples: poor contrast makes text hard to read, images of text with no alternative, focus order jumps unpredictably.' },
                 { priority: 'Moderate', color: '#1E3A8A', bg: '#DBEAFE', desc: 'Causes inconvenience but doesn\'t block access. Examples: missing skip navigation link, heading levels skipped, decorative images with unnecessary alt text.' },
-                { priority: 'Minor', color: '#16A34A', bg: '#DCFCE7', desc: 'Best practice issues. Examples: link text says "click here" instead of something descriptive, redundant ARIA attributes.' }
+                { priority: 'Minor', color: '#15803D', bg: '#DCFCE7', desc: 'Best practice issues. Examples: link text says "click here" instead of something descriptive, redundant ARIA attributes.' }
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
