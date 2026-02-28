@@ -12,7 +12,7 @@ export default function GuideEmployment() {
       <GuideHeroBanner
         title="Employment & the ADA (Title I)"
         typeBadge="Title I"
-        badgeColor="#2D6A4F"
+        badgeColor="#15803D"
       />
 
       <div className="guide-content-wrap">

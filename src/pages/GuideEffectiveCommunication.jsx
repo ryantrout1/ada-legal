@@ -12,7 +12,7 @@ export default function GuideEffectiveCommunication() {
       <GuideHeroBanner
         title="Effective Communication"
         typeBadge="Guide"
-        badgeColor="#D4570A"
+        badgeColor="#C2410C"
       />
 
       <div className="guide-content-wrap">

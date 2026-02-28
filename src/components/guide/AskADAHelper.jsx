@@ -269,12 +269,12 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           style={{
             display: 'flex', alignItems: 'center', gap: '12px',
             width: '100%', padding: '16px 20px',
-            background: '#1E293B', border: '1px solid #334155',
+            background: '#1E293B', border: '2px solid #C2410C40',
             borderRadius: '12px', cursor: 'pointer',
             transition: 'all 0.15s', minHeight: '56px',
           }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = '#C2410C'; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = '#334155'; }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#C2410C'; e.currentTarget.style.background = '#253040'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(194,65,12,0.25)'; e.currentTarget.style.background = '#1E293B'; }}
         >
           <div style={{
             width: '36px', height: '36px', borderRadius: '10px',
@@ -298,7 +298,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
               Ask in plain language — we'll help you understand what the law says.
             </p>
           </div>
-          <ChevronRight size={18} style={{ color: '#64748B', flexShrink: 0 }} aria-hidden="true" />
+          <ChevronRight size={18} style={{ color: '#94A3B8', flexShrink: 0 }} aria-hidden="true" />
         </button>
       </div>
     );

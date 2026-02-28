@@ -57,7 +57,7 @@ export default function BoatingDiagram() {
           <text x="280" y="286" fontFamily="Manrope, sans-serif" fontSize="6" fill="#5B21B6">{d('36', '915')} wide min</text>
 
           {/* Main pier (floating) */}
-          <rect x="60" y="294" width="780" height="50" fill="#D97706" opacity="0.04" stroke="#94A3B8" strokeWidth="2" rx="4" />
+          <rect x="60" y="294" width="780" height="50" fill="#B45309" opacity="0.04" stroke="#94A3B8" strokeWidth="2" rx="4" />
           <text x="450" y="325" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="600">FLOATING PIER</text>
 
           {/* Boat slip 1 (accessible) */}
@@ -76,10 +76,10 @@ export default function BoatingDiagram() {
           <text x="420" y="440" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">BOAT</text>
 
           {/* Boarding pier */}
-          <rect x="560" y="350" width="260" height="20" fill="#16A34A" opacity="0.06" stroke="#16A34A" strokeWidth="1.5" rx="2" />
+          <rect x="560" y="350" width="260" height="20" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" rx="2" />
           <text x="690" y="364" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600">BOARDING PIER — {d('60', '1525')} wide min</text>
           {/* Launch ramp */}
-          <rect x="600" y="375" width="180" height="110" rx="4" fill="#16A34A" opacity="0.03" stroke="#16A34A" strokeWidth="1" strokeDasharray="4 2" />
+          <rect x="600" y="375" width="180" height="110" rx="4" fill="#15803D" opacity="0.03" stroke="#15803D" strokeWidth="1" strokeDasharray="4 2" />
           <text x="690" y="435" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D">LAUNCH AREA</text>
 
           {/* Accessible route from shore */}

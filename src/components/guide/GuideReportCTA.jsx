@@ -33,7 +33,7 @@ export default function GuideReportCTA() {
         </Link>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem',
-          color: '#64748B', marginTop: '16px', marginBottom: 0
+          color: '#94A3B8', marginTop: '16px', marginBottom: 0
         }}>
           Attorney-connected violation reporting — launching soon.
         </p>

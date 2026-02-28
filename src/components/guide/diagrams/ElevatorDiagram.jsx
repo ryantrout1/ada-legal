@@ -58,10 +58,10 @@ export default function ElevatorDiagram() {
           <rect x="60" y="50" width="300" height="320" rx="4" fill="white" stroke="#94A3B8" strokeWidth="2.5" />
           {/* Door opening (center) */}
           <rect x="135" y="46" width="150" height="8" rx="0" fill="#FAFAF9" stroke="none" />
-          <line x1="135" y1="50" x2="135" y2="42" stroke="#16A34A" strokeWidth="3" />
-          <line x1="285" y1="50" x2="285" y2="42" stroke="#16A34A" strokeWidth="3" />
-          <line x1="135" y1="42" x2="180" y2="42" stroke="#16A34A" strokeWidth="2" strokeDasharray="4 3" />
-          <line x1="240" y1="42" x2="285" y2="42" stroke="#16A34A" strokeWidth="2" strokeDasharray="4 3" />
+          <line x1="135" y1="50" x2="135" y2="42" stroke="#15803D" strokeWidth="3" />
+          <line x1="285" y1="50" x2="285" y2="42" stroke="#15803D" strokeWidth="3" />
+          <line x1="135" y1="42" x2="180" y2="42" stroke="#15803D" strokeWidth="2" strokeDasharray="4 3" />
+          <line x1="240" y1="42" x2="285" y2="42" stroke="#15803D" strokeWidth="2" strokeDasharray="4 3" />
           <text x="210" y="38" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600">DOOR ({d('42', '1065')} center)</text>
           {/* Cab width */}
           <line x1="60" y1="385" x2="360" y2="385" stroke="#C2410C" strokeWidth="1" />
@@ -110,14 +110,14 @@ export default function ElevatorDiagram() {
           {/* Star on floor 1 */}
           <text x="618" y="308" fontFamily="Manrope, sans-serif" fontSize="10" fill="#78350F">★</text>
           {/* Reach range zone */}
-          <line x1="590" y1="95" x2="590" y2="360" stroke="#D97706" strokeWidth="1" strokeDasharray="4 3" />
-          <rect x="540" y="95" width="46" height="12" rx="3" fill="#D97706" />
+          <line x1="590" y1="95" x2="590" y2="360" stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
+          <rect x="540" y="95" width="46" height="12" rx="3" fill="#B45309" />
           <text x="563" y="104" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fontWeight="700" fill="white">{d('48', '1220')}</text>
-          <rect x="540" y="350" width="46" height="12" rx="3" fill="#D97706" />
+          <rect x="540" y="350" width="46" height="12" rx="3" fill="#B45309" />
           <text x="563" y="359" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fontWeight="700" fill="white">{d('15', '380')}</text>
 
           {/* Hall call button note (outside) */}
-          <rect x="500" y="260" width="80" height="40" rx="6" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1" />
+          <rect x="500" y="260" width="80" height="40" rx="6" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1" />
           <text x="540" y="278" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F" fontWeight="600">Hall calls</text>
           <text x="540" y="290" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">≤ {d('42', '1065')}</text>
 

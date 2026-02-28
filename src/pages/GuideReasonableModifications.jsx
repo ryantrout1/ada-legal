@@ -12,7 +12,7 @@ export default function GuideReasonableModifications() {
       <GuideHeroBanner
         title="Reasonable Modifications"
         typeBadge="Guide"
-        badgeColor="#D4570A"
+        badgeColor="#C2410C"
       />
 
       <div className="guide-content-wrap">

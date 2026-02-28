@@ -49,17 +49,17 @@ export default function ResidentialUnitDiagram() {
           <text x="170" y="260" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#8B2E08" fontWeight="600">ROUTE — {d('36', '915')} min</text>
 
           {/* Kitchen */}
-          <rect x="280" y="55" width="260" height="180" fill="#16A34A" opacity="0.03" stroke="#16A34A" strokeWidth="1.5" rx="4" />
+          <rect x="280" y="55" width="260" height="180" fill="#15803D" opacity="0.03" stroke="#15803D" strokeWidth="1.5" rx="4" />
           <text x="410" y="80" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" fontWeight="700">KITCHEN</text>
           {/* Counter top */}
-          <rect x="290" y="90" width="240" height="15" rx="2" fill="#16A34A" opacity="0.08" />
+          <rect x="290" y="90" width="240" height="15" rx="2" fill="#15803D" opacity="0.08" />
           <text x="410" y="101" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#14532D">COUNTER — {d('34', '865')} max work surface</text>
           {/* Clearance */}
-          <line x1="290" y1="105" x2="290" y2="200" stroke="#16A34A" strokeWidth="1" strokeDasharray="3 2" />
-          <line x1="530" y1="105" x2="530" y2="200" stroke="#16A34A" strokeWidth="1" strokeDasharray="3 2" />
+          <line x1="290" y1="105" x2="290" y2="200" stroke="#15803D" strokeWidth="1" strokeDasharray="3 2" />
+          <line x1="530" y1="105" x2="530" y2="200" stroke="#15803D" strokeWidth="1" strokeDasharray="3 2" />
           <text x="410" y="160" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D">{d('40', '1015')} min clearance</text>
           {/* Sink */}
-          <rect x="380" y="195" width="60" height="30" rx="4" fill="#16A34A" opacity="0.06" stroke="#16A34A" strokeWidth="1" />
+          <rect x="380" y="195" width="60" height="30" rx="4" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1" />
           <text x="410" y="214" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#14532D">SINK</text>
 
           {/* Bathroom */}
@@ -80,15 +80,15 @@ export default function ResidentialUnitDiagram() {
           <text x="795" y="131" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#1E3A8A">LAV</text>
 
           {/* Bedroom */}
-          <rect x="280" y="260" width="260" height="220" fill="#D97706" opacity="0.03" stroke="#D97706" strokeWidth="1.5" rx="4" />
+          <rect x="280" y="260" width="260" height="220" fill="#B45309" opacity="0.03" stroke="#B45309" strokeWidth="1.5" rx="4" />
           <text x="410" y="285" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#78350F" fontWeight="700">BEDROOM</text>
           {/* Bed */}
-          <rect x="330" y="310" width="160" height="120" rx="6" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1" />
+          <rect x="330" y="310" width="160" height="120" rx="6" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1" />
           <text x="410" y="375" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#78350F">BED</text>
           {/* Clear space both sides */}
-          <rect x="290" y="310" width="36" height="120" rx="2" fill="#D97706" opacity="0.05" stroke="#D97706" strokeWidth="1" strokeDasharray="3 2" />
+          <rect x="290" y="310" width="36" height="120" rx="2" fill="#B45309" opacity="0.05" stroke="#B45309" strokeWidth="1" strokeDasharray="3 2" />
           <text x="308" y="375" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#78350F" transform="rotate(-90,308,375)">{d('36', '915')} min</text>
-          <rect x="494" y="310" width="36" height="120" rx="2" fill="#D97706" opacity="0.05" stroke="#D97706" strokeWidth="1" strokeDasharray="3 2" />
+          <rect x="494" y="310" width="36" height="120" rx="2" fill="#B45309" opacity="0.05" stroke="#B45309" strokeWidth="1" strokeDasharray="3 2" />
           <text x="512" y="375" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#78350F" transform="rotate(-90,512,375)">{d('36', '915')} min</text>
 
           {/* Living area */}

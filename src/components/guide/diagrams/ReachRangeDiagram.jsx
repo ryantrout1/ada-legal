@@ -222,40 +222,40 @@ export default function ReachRangeDiagram() {
           <rect x="408" y="100" width="6" height="240" fill="#94A3B8" rx="1" />
 
           {/* Counter / obstruction */}
-          <rect x="340" y="212" width="70" height="8" rx="1" fill="#16A34A" opacity="0.2" stroke="#16A34A" strokeWidth="1.2" />
+          <rect x="340" y="212" width="70" height="8" rx="1" fill="#15803D" opacity="0.2" stroke="#15803D" strokeWidth="1.2" />
           {/* Counter legs */}
-          <line x1="345" y1="220" x2="345" y2={GY} stroke="#16A34A" strokeWidth="1" opacity="0.4" />
-          <line x1="405" y1="220" x2="405" y2={GY} stroke="#16A34A" strokeWidth="1" opacity="0.4" />
+          <line x1="345" y1="220" x2="345" y2={GY} stroke="#15803D" strokeWidth="1" opacity="0.4" />
+          <line x1="405" y1="220" x2="405" y2={GY} stroke="#15803D" strokeWidth="1" opacity="0.4" />
 
           {/* Knee space under counter */}
-          <rect x="348" y="240" width="54" height="96" rx="2" fill="#16A34A" opacity="0.03" stroke="#16A34A" strokeWidth="0.8" strokeDasharray="3 3" />
+          <rect x="348" y="240" width="54" height="96" rx="2" fill="#15803D" opacity="0.03" stroke="#15803D" strokeWidth="0.8" strokeDasharray="3 3" />
 
           {/* Person in wheelchair */}
           <WheelchairPerson x={272} y={248} scale={1} />
 
           {/* Reach envelope — two zones */}
           {/* ≤20" deep = 48" max (y=116) */}
-          <line x1="250" y1="116" x2="420" y2="116" stroke="#16A34A" strokeWidth="1" strokeDasharray="3 2" />
+          <line x1="250" y1="116" x2="420" y2="116" stroke="#15803D" strokeWidth="1" strokeDasharray="3 2" />
           {/* 20–25" deep = 44" max (y=135) */}
-          <line x1="250" y1="135" x2="420" y2="135" stroke="#16A34A" strokeWidth="1" strokeDasharray="3 2" opacity="0.6" />
+          <line x1="250" y1="135" x2="420" y2="135" stroke="#15803D" strokeWidth="1" strokeDasharray="3 2" opacity="0.6" />
 
           {/* Dimension: 48" (≤20" obstruction) */}
-          <rect x="416" y="110" width="60" height="14" rx="3" fill="#16A34A" />
+          <rect x="416" y="110" width="60" height="14" rx="3" fill="#15803D" />
           <text x="446" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">
             {imp('48', '1220')} (≤20")
           </text>
 
           {/* Dimension: 44" (20–25" obstruction) */}
-          <rect x="416" y="129" width="64" height="14" rx="3" fill="#16A34A" opacity="0.8" />
+          <rect x="416" y="129" width="64" height="14" rx="3" fill="#15803D" opacity="0.8" />
           <text x="448" y="139" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">
             {imp('44', '1120')} (20–25")
           </text>
 
           {/* Obstruction depth dimension */}
-          <line x1="340" y1="228" x2="408" y2="228" stroke="#16A34A" strokeWidth="1" />
-          <line x1="340" y1="222" x2="340" y2="234" stroke="#16A34A" strokeWidth="1" />
-          <line x1="408" y1="222" x2="408" y2="234" stroke="#16A34A" strokeWidth="1" />
-          <rect x="348" y="230" width="50" height="12" rx="3" fill="#16A34A" opacity="0.85" />
+          <line x1="340" y1="228" x2="408" y2="228" stroke="#15803D" strokeWidth="1" />
+          <line x1="340" y1="222" x2="340" y2="234" stroke="#15803D" strokeWidth="1" />
+          <line x1="408" y1="222" x2="408" y2="234" stroke="#15803D" strokeWidth="1" />
+          <rect x="348" y="230" width="50" height="12" rx="3" fill="#15803D" opacity="0.85" />
           <text x="373" y="239" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">
             ≤ {imp('25', '635')} deep
           </text>
@@ -348,13 +348,13 @@ export default function ReachRangeDiagram() {
 
 
           {/* ===== CLEAR FLOOR SPACE note (spans panels 1 & 2) ===== */}
-          <rect x="55" y="355" width="130" height="28" rx="4" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1" strokeDasharray="4 3" />
+          <rect x="55" y="355" width="130" height="28" rx="4" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
           <text x="120" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">
             CLEAR FLOOR: {imp('30', '760')} × {imp('48', '1220')}
           </text>
           <text x="120" y="380" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">(forward approach)</text>
 
-          <rect x="535" y="355" width="130" height="28" rx="4" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1" strokeDasharray="4 3" />
+          <rect x="535" y="355" width="130" height="28" rx="4" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
           <text x="600" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">
             CLEAR FLOOR: {imp('30', '760')} × {imp('48', '1220')}
           </text>

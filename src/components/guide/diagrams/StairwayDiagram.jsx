@@ -107,15 +107,15 @@ export default function StairwayDiagram() {
           <text x={baseX + tW + 49} y={baseY - rH + 24} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('11', '280')} min</text>
 
           {/* Riser height dim */}
-          <line x1={baseX + 3 * tW - 10} y1={baseY - 2 * rH} x2={baseX + 3 * tW - 10} y2={baseY - 3 * rH} stroke="#16A34A" strokeWidth="1" />
-          <line x1={baseX + 3 * tW - 16} y1={baseY - 2 * rH} x2={baseX + 3 * tW - 4} y2={baseY - 2 * rH} stroke="#16A34A" strokeWidth="1" />
-          <line x1={baseX + 3 * tW - 16} y1={baseY - 3 * rH} x2={baseX + 3 * tW - 4} y2={baseY - 3 * rH} stroke="#16A34A" strokeWidth="1" />
-          <rect x={baseX + 3 * tW - 60} y={baseY - 3 * rH + 22} width="44" height="12" rx="3" fill="#16A34A" />
+          <line x1={baseX + 3 * tW - 10} y1={baseY - 2 * rH} x2={baseX + 3 * tW - 10} y2={baseY - 3 * rH} stroke="#15803D" strokeWidth="1" />
+          <line x1={baseX + 3 * tW - 16} y1={baseY - 2 * rH} x2={baseX + 3 * tW - 4} y2={baseY - 2 * rH} stroke="#15803D" strokeWidth="1" />
+          <line x1={baseX + 3 * tW - 16} y1={baseY - 3 * rH} x2={baseX + 3 * tW - 4} y2={baseY - 3 * rH} stroke="#15803D" strokeWidth="1" />
+          <rect x={baseX + 3 * tW - 60} y={baseY - 3 * rH + 22} width="44" height="12" rx="3" fill="#15803D" />
           <text x={baseX + 3 * tW - 38} y={baseY - 3 * rH + 31} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('4–7', '100–180')}</text>
 
           {/* Top ext 12" label */}
-          <line x1={baseX + 5 * tW} y1={baseY - 5 * rH - 40} x2={baseX + 5 * tW + 80} y2={baseY - 5 * rH - 40} stroke="#D97706" strokeWidth="1" />
-          <rect x={baseX + 5 * tW + 10} y={baseY - 5 * rH - 38} width="56" height="12" rx="3" fill="#D97706" />
+          <line x1={baseX + 5 * tW} y1={baseY - 5 * rH - 40} x2={baseX + 5 * tW + 80} y2={baseY - 5 * rH - 40} stroke="#B45309" strokeWidth="1" />
+          <rect x={baseX + 5 * tW + 10} y={baseY - 5 * rH - 38} width="56" height="12" rx="3" fill="#B45309" />
           <text x={baseX + 5 * tW + 38} y={baseY - 5 * rH - 29} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('12', '305')} min</text>
 
           {/* Bottom ext label */}

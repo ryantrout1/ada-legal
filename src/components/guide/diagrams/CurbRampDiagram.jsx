@@ -136,14 +136,14 @@ export default function CurbRampDiagram() {
           <text x="450" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="700">DETECTABLE WARNINGS ({d('36', '915')} deep)</text>
 
           {/* Top landing */}
-          <rect x="340" y="68" width="220" height="32" rx="2" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1.2" strokeDasharray="5 3" />
+          <rect x="340" y="68" width="220" height="32" rx="2" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1.2" strokeDasharray="5 3" />
           <text x="450" y="88" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">LANDING ({d('36', '915')} min)</text>
 
           {/* Width dimension */}
-          <line x1="350" y1="100" x2="550" y2="100" stroke="#16A34A" strokeWidth="1.2" />
-          <line x1="350" y1="94" x2="350" y2="106" stroke="#16A34A" strokeWidth="1" />
-          <line x1="550" y1="94" x2="550" y2="106" stroke="#16A34A" strokeWidth="1" />
-          <rect x="418" y="103" width="64" height="13" rx="3" fill="#16A34A" />
+          <line x1="350" y1="100" x2="550" y2="100" stroke="#15803D" strokeWidth="1.2" />
+          <line x1="350" y1="94" x2="350" y2="106" stroke="#15803D" strokeWidth="1" />
+          <line x1="550" y1="94" x2="550" y2="106" stroke="#15803D" strokeWidth="1" />
+          <rect x="418" y="103" width="64" height="13" rx="3" fill="#15803D" />
           <text x="450" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('36', '915')} min</text>
 
           {/* Counter slope note */}

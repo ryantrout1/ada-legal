@@ -35,17 +35,17 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
             <li>
               <Link to={createPageUrl('Home')} style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                color: '#4B5563', textDecoration: 'none'
+                color: '#94A3B8', textDecoration: 'none'
               }}>Home</Link>
             </li>
-            <li aria-hidden="true"><ChevronRight size={14} style={{ color: '#4B5563' }} /></li>
+            <li aria-hidden="true"><ChevronRight size={14} style={{ color: '#94A3B8' }} /></li>
             <li>
               <Link to={createPageUrl('StandardsGuide')} style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                color: '#4B5563', textDecoration: 'none'
+                color: '#94A3B8', textDecoration: 'none'
               }}>ADA Standards Guide</Link>
             </li>
-            <li aria-hidden="true"><ChevronRight size={14} style={{ color: '#4B5563' }} /></li>
+            <li aria-hidden="true"><ChevronRight size={14} style={{ color: '#94A3B8' }} /></li>
             <li>
               <span aria-current="page" style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
@@ -77,11 +77,11 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
         }}>
           {title}
         </h1>
-        <div style={{ opacity: 0.9 }}>
+        <div style={{ marginTop: '16px' }}>
           <style>{`
-            .guide-hero-share button { border-color: rgba(255,255,255,0.2) !important; background: rgba(255,255,255,0.08) !important; color: rgba(255,255,255,0.7) !important; }
-            .guide-hero-share button:hover { border-color: #C2410C !important; color: white !important; }
-            .guide-hero-share span { color: rgba(255,255,255,0.5) !important; }
+            .guide-hero-share button { border-color: rgba(255,255,255,0.35) !important; background: rgba(255,255,255,0.12) !important; color: rgba(255,255,255,0.85) !important; }
+            .guide-hero-share button:hover { border-color: #C2410C !important; color: white !important; background: rgba(194,65,12,0.3) !important; }
+            .guide-hero-share span { color: rgba(255,255,255,0.65) !important; }
           `}</style>
           <div className="guide-hero-share">
             <ShareBar />

@@ -95,7 +95,7 @@ export default function ClearFloorDiagram() {
           <text x="200" y="52" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" fontWeight="600">ELEMENT</text>
 
           {/* Clear floor rectangle — 30 wide × 48 deep (toward element) */}
-          <rect x="110" y="70" width="180" height="210" rx="4" fill="#16A34A" opacity="0.05" stroke="#16A34A" strokeWidth="2" />
+          <rect x="110" y="70" width="180" height="210" rx="4" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="2" />
 
           {/* Wheelchair icon (top-down) */}
           {/* Wheels */}
@@ -109,11 +109,11 @@ export default function ClearFloorDiagram() {
           {/* Person circle */}
           <circle cx="200" cy="180" r="14" fill="#E2E8F0" stroke="#475569" strokeWidth="1.5" />
           {/* Arrow toward element */}
-          <line x1="200" y1="130" x2="200" y2="80" stroke="#16A34A" strokeWidth="1.5" markerEnd="url(#clearArr)" />
+          <line x1="200" y1="130" x2="200" y2="80" stroke="#15803D" strokeWidth="1.5" markerEnd="url(#clearArr)" />
 
           <defs>
             <marker id="clearArr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-              <polygon points="0 0, 8 3, 0 6" fill="#16A34A" />
+              <polygon points="0 0, 8 3, 0 6" fill="#15803D" />
             </marker>
           </defs>
 

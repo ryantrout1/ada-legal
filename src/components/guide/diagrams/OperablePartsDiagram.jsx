@@ -45,7 +45,7 @@ export default function OperablePartsDiagram() {
           <line x1="80" y1="440" x2="520" y2="440" stroke="#94A3B8" strokeWidth="2" />
 
           {/* Operable zone highlight (15"-48" = y:220 to y:370) */}
-          <rect x="110" y="150" width="380" height="220" rx="4" fill="#16A34A" opacity="0.04" stroke="#16A34A" strokeWidth="2" strokeDasharray="6 3" />
+          <rect x="110" y="150" width="380" height="220" rx="4" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="2" strokeDasharray="6 3" />
           <text x="300" y="380" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" fontWeight="600">COMPLIANT ZONE: {d('15', '380')} – {d('48', '1220')}</text>
 
           {/* Height dims */}
@@ -81,7 +81,7 @@ export default function OperablePartsDiagram() {
           <text x="165" y="135" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#EF4444">✕ Thermostat</text>
 
           {/* NON-COMPLIANT controls (knobs) */}
-          <circle cx="430" cy="200" r="18" fill="#D97706" opacity="0.08" stroke="#D97706" strokeWidth="1.5" />
+          <circle cx="430" cy="200" r="18" fill="#B45309" opacity="0.08" stroke="#B45309" strokeWidth="1.5" />
           <text x="430" y="204" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">KNOB</text>
           <text x="430" y="230" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F">✕ Twist required</text>
 

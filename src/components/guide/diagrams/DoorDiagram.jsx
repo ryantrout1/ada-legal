@@ -173,38 +173,38 @@ export default function DoorDiagram() {
 
           {/* ===== MANEUVERING CLEARANCE ZONE (pull side) ===== */}
           <rect x="100" y="118" width="250" height="260" rx="4"
-            fill="#16A34A" opacity="0.05" stroke="#16A34A" strokeWidth="1.5" strokeDasharray="6 4" />
+            fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="1.5" strokeDasharray="6 4" />
           <text x="225" y="138" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">MANEUVERING CLEARANCE (PULL SIDE)</text>
 
           {/* Depth dimension: 60" */}
-          <line x1="62" y1="118" x2="62" y2="378" stroke="#16A34A" strokeWidth="1.2" />
-          <line x1="54" y1="118" x2="70" y2="118" stroke="#16A34A" strokeWidth="1.2" />
-          <line x1="54" y1="378" x2="70" y2="378" stroke="#16A34A" strokeWidth="1.2" />
-          <polygon points="62,123 58,133 66,133" fill="#16A34A" />
-          <polygon points="62,373 58,363 66,363" fill="#16A34A" />
-          <rect x="28" y="240" width="62" height="14" rx="3" fill="#16A34A" />
+          <line x1="62" y1="118" x2="62" y2="378" stroke="#15803D" strokeWidth="1.2" />
+          <line x1="54" y1="118" x2="70" y2="118" stroke="#15803D" strokeWidth="1.2" />
+          <line x1="54" y1="378" x2="70" y2="378" stroke="#15803D" strokeWidth="1.2" />
+          <polygon points="62,123 58,133 66,133" fill="#15803D" />
+          <polygon points="62,373 58,363 66,363" fill="#15803D" />
+          <rect x="28" y="240" width="62" height="14" rx="3" fill="#15803D" />
           <text x="59" y="250" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="white">
             {imp('60', '1525')}
           </text>
 
           {/* Latch-side clearance: 18" beyond latch */}
-          <line x1="100" y1="395" x2="195" y2="395" stroke="#16A34A" strokeWidth="1.2" />
-          <line x1="100" y1="387" x2="100" y2="403" stroke="#16A34A" strokeWidth="1.2" />
-          <line x1="195" y1="387" x2="195" y2="403" stroke="#16A34A" strokeWidth="1.2" />
-          <polygon points="105,395 115,391 115,399" fill="#16A34A" />
-          <polygon points="190,395 180,391 180,399" fill="#16A34A" />
-          <rect x="117" y="400" width="60" height="14" rx="3" fill="#16A34A" />
+          <line x1="100" y1="395" x2="195" y2="395" stroke="#15803D" strokeWidth="1.2" />
+          <line x1="100" y1="387" x2="100" y2="403" stroke="#15803D" strokeWidth="1.2" />
+          <line x1="195" y1="387" x2="195" y2="403" stroke="#15803D" strokeWidth="1.2" />
+          <polygon points="105,395 115,391 115,399" fill="#15803D" />
+          <polygon points="190,395 180,391 180,399" fill="#15803D" />
+          <rect x="117" y="400" width="60" height="14" rx="3" fill="#15803D" />
           <text x="147" y="410" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">
             {imp('18', '455')} min
           </text>
 
           {/* Wheelchair approach indicator */}
-          <circle cx="225" cy="330" r="28" fill="none" stroke="#16A34A" strokeWidth="1" strokeDasharray="4 3" opacity="0.4" />
+          <circle cx="225" cy="330" r="28" fill="none" stroke="#15803D" strokeWidth="1" strokeDasharray="4 3" opacity="0.4" />
           <text x="225" y="328" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="14" fill="#14532D" opacity="0.5">♿</text>
           <text x="225" y="345" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" opacity="0.5">approach</text>
           {/* Approach arrow */}
-          <line x1="225" y1="290" x2="225" y2="160" stroke="#16A34A" strokeWidth="1.5" opacity="0.4" />
-          <polygon points="225,160 220,172 230,172" fill="#16A34A" opacity="0.5" />
+          <line x1="225" y1="290" x2="225" y2="160" stroke="#15803D" strokeWidth="1.5" opacity="0.4" />
+          <polygon points="225,160 220,172 230,172" fill="#15803D" opacity="0.5" />
 
 
           {/* ===== DIVIDER ===== */}
@@ -246,7 +246,7 @@ export default function DoorDiagram() {
           <text x="680" y="444" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#9D174D">(push side — bottom {imp('10', '255')})</text>
 
           {/* Threshold */}
-          <rect x="590" y="451" width="180" height="4" rx="1" fill="#D97706" stroke="#D97706" strokeWidth="0.5" />
+          <rect x="590" y="451" width="180" height="4" rx="1" fill="#B45309" stroke="#B45309" strokeWidth="0.5" />
 
           {/* ===== RIGHT DIMENSION LINES ===== */}
 
@@ -267,10 +267,10 @@ export default function DoorDiagram() {
           </text>
 
           {/* Threshold dimension */}
-          <line x1="790" y1="451" x2="790" y2="455" stroke="#D97706" strokeWidth="1.5" />
-          <line x1="783" y1="451" x2="797" y2="451" stroke="#D97706" strokeWidth="1.5" />
-          <line x1="783" y1="455" x2="797" y2="455" stroke="#D97706" strokeWidth="1.5" />
-          <rect x="800" y="445" width="82" height="16" rx="3" fill="#D97706" />
+          <line x1="790" y1="451" x2="790" y2="455" stroke="#B45309" strokeWidth="1.5" />
+          <line x1="783" y1="451" x2="797" y2="451" stroke="#B45309" strokeWidth="1.5" />
+          <line x1="783" y1="455" x2="797" y2="455" stroke="#B45309" strokeWidth="1.5" />
+          <rect x="800" y="445" width="82" height="16" rx="3" fill="#B45309" />
           <text x="841" y="456" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">
             {imp('½', '13')} max new
           </text>

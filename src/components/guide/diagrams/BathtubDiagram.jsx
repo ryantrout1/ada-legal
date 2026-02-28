@@ -124,12 +124,12 @@ export default function BathtubDiagram() {
           <text x="200" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="600">BATHTUB</text>
 
           {/* Seat at head end (left side) */}
-          <rect x="60" y="65" width="48" height="100" rx="4" fill="#16A34A" opacity="0.08" stroke="#16A34A" strokeWidth="1.2" />
+          <rect x="60" y="65" width="48" height="100" rx="4" fill="#15803D" opacity="0.08" stroke="#15803D" strokeWidth="1.2" />
           <text x="84" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600">SEAT</text>
 
           {/* Controls at foot end (right side) */}
-          <circle cx="330" cy="75" r="4" fill="#D97706" opacity="0.4" stroke="#D97706" strokeWidth="1" />
-          <circle cx="320" cy="75" r="3" fill="#D97706" opacity="0.4" />
+          <circle cx="330" cy="75" r="4" fill="#B45309" opacity="0.4" stroke="#B45309" strokeWidth="1" />
+          <circle cx="320" cy="75" r="3" fill="#B45309" opacity="0.4" />
           <text x="325" y="90" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F" fontWeight="600">CONTROLS</text>
 
           {/* Grab bar — back wall (long wall, top) */}
@@ -191,7 +191,7 @@ export default function BathtubDiagram() {
           <text x="498" y="48" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">WALL</text>
 
           {/* Seat at head end */}
-          <rect x="502" y="180" width="60" height="8" rx="2" fill="#16A34A" opacity="0.3" stroke="#16A34A" strokeWidth="1" />
+          <rect x="502" y="180" width="60" height="8" rx="2" fill="#15803D" opacity="0.3" stroke="#15803D" strokeWidth="1" />
           <text x="532" y="176" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D" fontWeight="600">SEAT</text>
 
           {/* Upper grab bar — 33-36" above floor */}
@@ -203,12 +203,12 @@ export default function BathtubDiagram() {
           <text x="575" y="149" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#5B21B6" fontWeight="600">LOWER BAR ({d('8–10', '200–255')} above rim)</text>
 
           {/* Controls on foot-end wall */}
-          <circle cx="770" cy="140" r="6" fill="#D97706" opacity="0.3" stroke="#D97706" strokeWidth="1.2" />
-          <circle cx="770" cy="160" r="4" fill="#D97706" opacity="0.3" />
+          <circle cx="770" cy="140" r="6" fill="#B45309" opacity="0.3" stroke="#B45309" strokeWidth="1.2" />
+          <circle cx="770" cy="160" r="4" fill="#B45309" opacity="0.3" />
           <text x="770" y="130" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F" fontWeight="600">CONTROLS</text>
 
           {/* Shower spray hose */}
-          <path d="M 770 160 Q 800 130 810 170 Q 815 200 790 210" fill="none" stroke="#D97706" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />
+          <path d="M 770 160 Q 800 130 810 170 Q 815 200 790 210" fill="none" stroke="#B45309" strokeWidth="1" strokeDasharray="3 2" opacity="0.5" />
           <text x="810" y="215" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F">59" hose</text>
 
           {/* Height dimensions */}

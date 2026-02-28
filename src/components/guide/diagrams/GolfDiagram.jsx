@@ -41,10 +41,10 @@ export default function GolfDiagram() {
 
           {/* LEFT: Mini golf */}
           {/* Course outline */}
-          <rect x="60" y="50" width="380" height="430" fill="#16A34A" opacity="0.02" stroke="#94A3B8" strokeWidth="1" rx="8" />
+          <rect x="60" y="50" width="380" height="430" fill="#15803D" opacity="0.02" stroke="#94A3B8" strokeWidth="1" rx="8" />
 
           {/* Accessible route */}
-          <rect x="70" y="50" width="50" height="430" fill="#16A34A" opacity="0.04" stroke="#16A34A" strokeWidth="1.5" strokeDasharray="6 3" />
+          <rect x="70" y="50" width="50" height="430" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="1.5" strokeDasharray="6 3" />
           <text x="95" y="270" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600" transform="rotate(-90,95,270)">ACCESSIBLE ROUTE — {d('36', '915')} min</text>
 
           {/* Hole 1 (accessible) */}
@@ -60,7 +60,7 @@ export default function GolfDiagram() {
           <line x1="370" y1="140" x2="370" y2="105" stroke="#475569" strokeWidth="1" />
           <polygon points="370,105 385,110 370,115" fill="#C2410C" opacity="0.3" />
           {/* Playing surface */}
-          <rect x="240" y="105" width="160" height="70" rx="4" fill="#16A34A" opacity="0.04" stroke="#16A34A" strokeWidth="0.8" />
+          <rect x="240" y="105" width="160" height="70" rx="4" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="0.8" />
           <text x="320" y="170" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#14532D">turf/carpet surface OK</text>
 
           {/* Hole 2 */}
@@ -91,11 +91,11 @@ export default function GolfDiagram() {
           <text x="680" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#5B21B6">3+ tees → at least 2 must be accessible</text>
 
           {/* Golf car passage */}
-          <rect x="510" y="270" width="340" height="40" rx="4" fill="#D97706" opacity="0.04" stroke="#D97706" strokeWidth="1.5" strokeDasharray="6 3" />
+          <rect x="510" y="270" width="340" height="40" rx="4" fill="#B45309" opacity="0.04" stroke="#B45309" strokeWidth="1.5" strokeDasharray="6 3" />
           <text x="680" y="295" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">GOLF CAR PASSAGE — {d('48', '1220')} wide min (serves as accessible route)</text>
 
           {/* Putting green */}
-          <ellipse cx="680" cy="370" rx="140" ry="60" fill="#16A34A" opacity="0.04" stroke="#16A34A" strokeWidth="1" />
+          <ellipse cx="680" cy="370" rx="140" ry="60" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="1" />
           <text x="680" y="375" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" fontWeight="600">PUTTING GREEN</text>
           <circle cx="680" cy="390" r="4" fill="#475569" opacity="0.2" />
 

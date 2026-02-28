@@ -122,8 +122,8 @@ export default function LavatoryDiagram() {
           <ellipse cx="200" cy="115" rx="60" ry="20" fill="#F1F5F9" stroke="#94A3B8" strokeWidth="1.5" />
 
           {/* Faucet */}
-          <rect x="190" y="95" width="20" height="12" rx="3" fill="#D97706" opacity="0.2" stroke="#D97706" strokeWidth="1" />
-          <circle cx="200" cy="92" r="4" fill="#D97706" opacity="0.3" />
+          <rect x="190" y="95" width="20" height="12" rx="3" fill="#B45309" opacity="0.2" stroke="#B45309" strokeWidth="1" />
+          <circle cx="200" cy="92" r="4" fill="#B45309" opacity="0.3" />
           <text x="200" y="86" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F" fontWeight="600">FAUCET</text>
 
           {/* Pipes underneath */}
@@ -231,7 +231,7 @@ export default function LavatoryDiagram() {
           <text x="444" y="195" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('34', '865')}</text>
 
           {/* Clear floor space note */}
-          <rect x="660" y="282" width="140" height="24" rx="4" fill="#16A34A" opacity="0.06" stroke="#16A34A" strokeWidth="1" strokeDasharray="4 3" />
+          <rect x="660" y="282" width="140" height="24" rx="4" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1" strokeDasharray="4 3" />
           <text x="730" y="297" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600">Clear floor: {d('30', '760')} × {d('48', '1220')}</text>
 
 

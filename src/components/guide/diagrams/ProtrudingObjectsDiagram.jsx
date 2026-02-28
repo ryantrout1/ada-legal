@@ -105,8 +105,8 @@ export default function ProtrudingObjectsDiagram() {
           <text x="816" y="79" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">{d('80', '2030')}</text>
 
           {/* 27" cane detection line */}
-          <line x1="50" y1="318" x2="860" y2="318" stroke="#D97706" strokeWidth="1.5" strokeDasharray="6 3" />
-          <rect x="780" y="306" width="72" height="15" rx="4" fill="#D97706" />
+          <line x1="50" y1="318" x2="860" y2="318" stroke="#B45309" strokeWidth="1.5" strokeDasharray="6 3" />
+          <rect x="780" y="306" width="72" height="15" rx="4" fill="#B45309" />
           <text x="816" y="317" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">{d('27', '685')}</text>
 
           {/* Zone labels */}
@@ -114,7 +114,7 @@ export default function ProtrudingObjectsDiagram() {
           <text x="826" y="183" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#8B2E08" fontWeight="600">HAZARD</text>
           <text x="826" y="193" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#8B2E08">ZONE</text>
 
-          <rect x="800" y="365" width="52" height="30" rx="5" fill="#16A34A" opacity="0.06" stroke="#16A34A" strokeWidth="0.8" />
+          <rect x="800" y="365" width="52" height="30" rx="5" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="0.8" />
           <text x="826" y="378" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D" fontWeight="600">CANE</text>
           <text x="826" y="388" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D">DETECT</text>
 
@@ -145,17 +145,17 @@ export default function ProtrudingObjectsDiagram() {
           <rect x="260" y="50" width="12" height="400" fill="#94A3B8" rx="1" />
 
           {/* Object (drinking fountain, bottom edge below 27") */}
-          <rect x="272" y="330" width="60" height="60" rx="6" fill="#16A34A" opacity="0.1" stroke="#16A34A" strokeWidth="2" />
+          <rect x="272" y="330" width="60" height="60" rx="6" fill="#15803D" opacity="0.1" stroke="#15803D" strokeWidth="2" />
           <text x="302" y="365" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D" fontWeight="600">FOUNTAIN</text>
 
           {/* No limit arrow */}
-          <line x1="332" y1="360" x2="380" y2="360" stroke="#16A34A" strokeWidth="1.5" markerEnd="url(#protArr)" />
+          <line x1="332" y1="360" x2="380" y2="360" stroke="#15803D" strokeWidth="1.5" markerEnd="url(#protArr)" />
           <text x="362" y="352" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600">Any amount OK</text>
           <text x="362" y="380" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D">(cane detects it)</text>
 
           <defs>
             <marker id="protArr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
-              <polygon points="0 0, 7 2.5, 0 5" fill="#16A34A" />
+              <polygon points="0 0, 7 2.5, 0 5" fill="#15803D" />
             </marker>
           </defs>
 
@@ -189,9 +189,9 @@ export default function ProtrudingObjectsDiagram() {
           {/* Arm holding cane */}
           <line x1="720" y1="200" x2="690" y2="280" stroke="#475569" strokeWidth="2" strokeLinecap="round" />
           {/* Cane (sweeping) */}
-          <line x1="690" y1="280" x2="650" y2="435" stroke="#D97706" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="690" y1="280" x2="650" y2="435" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" />
           {/* Cane sweep arc */}
-          <path d="M 630 435 Q 650 420 670 435" fill="none" stroke="#D97706" strokeWidth="1.5" strokeDasharray="3 2" />
+          <path d="M 630 435 Q 650 420 670 435" fill="none" stroke="#B45309" strokeWidth="1.5" strokeDasharray="3 2" />
 
           {/* Cane detection zone label */}
           <text x="660" y="420" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">Cane sweep</text>

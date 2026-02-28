@@ -90,10 +90,10 @@ export default function CounterDiagram() {
 
           {/* (A) Sales counter — 36" high, 36" wide section */}
           <rect x="410" y="180" width="120" height="200" rx="2" fill="#E7E5E4" opacity="0.15" stroke="#94A3B8" strokeWidth="1.5" />
-          <rect x="410" y="210" width="120" height="8" rx="1" fill="#16A34A" opacity="0.15" stroke="#16A34A" strokeWidth="1.5" />
+          <rect x="410" y="210" width="120" height="8" rx="1" fill="#15803D" opacity="0.15" stroke="#15803D" strokeWidth="1.5" />
           <text x="470" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="700">(A) SALES</text>
-          <line x1="395" y1="210" x2="395" y2="380" stroke="#16A34A" strokeWidth="1" />
-          <rect x="396" y="285" width="38" height="12" rx="3" fill="#16A34A" />
+          <line x1="395" y1="210" x2="395" y2="380" stroke="#15803D" strokeWidth="1" />
+          <rect x="396" y="285" width="38" height="12" rx="3" fill="#15803D" />
           <text x="415" y="294" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('36', '915')}</text>
           <text x="470" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#14532D">{d('36', '915')} wide min</text>
 

@@ -126,26 +126,26 @@ export default function TurningSpaceDiagram() {
 
           {/* T-shape: top bar (horizontal arm) + vertical stem */}
           {/* Top arm: full 220px width, 70px tall (36") */}
-          <rect x="470" y="65" width="220" height="74" rx="2" fill="#16A34A" opacity="0.06" stroke="#16A34A" strokeWidth="1.5" />
+          <rect x="470" y="65" width="220" height="74" rx="2" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" />
           {/* Vertical stem: centered, 74px wide (36"), from bottom of arm to bottom of square */}
-          <rect x="543" y="139" width="74" height="146" rx="2" fill="#16A34A" opacity="0.06" stroke="#16A34A" strokeWidth="1.5" />
+          <rect x="543" y="139" width="74" height="146" rx="2" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" />
 
           {/* Arm labels */}
           <text x="580" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">ARM</text>
           <text x="580" y="225" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">STEM</text>
 
           {/* T-arm width dimension (36") */}
-          <line x1="470" y1="148" x2="543" y2="148" stroke="#16A34A" strokeWidth="1" />
-          <line x1="470" y1="142" x2="470" y2="154" stroke="#16A34A" strokeWidth="1" />
-          <line x1="543" y1="142" x2="543" y2="154" stroke="#16A34A" strokeWidth="1" />
-          <rect x="478" y="153" width="48" height="13" rx="3" fill="#16A34A" />
+          <line x1="470" y1="148" x2="543" y2="148" stroke="#15803D" strokeWidth="1" />
+          <line x1="470" y1="142" x2="470" y2="154" stroke="#15803D" strokeWidth="1" />
+          <line x1="543" y1="142" x2="543" y2="154" stroke="#15803D" strokeWidth="1" />
+          <rect x="478" y="153" width="48" height="13" rx="3" fill="#15803D" />
           <text x="502" y="162" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{imp('36', '915')} min</text>
 
           {/* Stem width dimension (36") */}
-          <line x1="543" y1="292" x2="617" y2="292" stroke="#16A34A" strokeWidth="1" />
-          <line x1="543" y1="286" x2="543" y2="298" stroke="#16A34A" strokeWidth="1" />
-          <line x1="617" y1="286" x2="617" y2="298" stroke="#16A34A" strokeWidth="1" />
-          <rect x="553" y="296" width="48" height="13" rx="3" fill="#16A34A" />
+          <line x1="543" y1="292" x2="617" y2="292" stroke="#15803D" strokeWidth="1" />
+          <line x1="543" y1="286" x2="543" y2="298" stroke="#15803D" strokeWidth="1" />
+          <line x1="617" y1="286" x2="617" y2="298" stroke="#15803D" strokeWidth="1" />
+          <rect x="553" y="296" width="48" height="13" rx="3" fill="#15803D" />
           <text x="577" y="305" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{imp('36', '915')} min</text>
 
           {/* Overall 60" width */}

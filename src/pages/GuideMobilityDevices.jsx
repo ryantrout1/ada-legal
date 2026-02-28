@@ -12,7 +12,7 @@ export default function GuideMobilityDevices() {
       <GuideHeroBanner
         title="Wheelchairs & Mobility Devices"
         typeBadge="Reference"
-        badgeColor="#D4570A"
+        badgeColor="#C2410C"
       />
 
       <div className="guide-content-wrap">

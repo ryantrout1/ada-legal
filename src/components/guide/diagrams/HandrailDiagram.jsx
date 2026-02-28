@@ -134,20 +134,20 @@ export default function HandrailDiagram() {
           <text x={WALL_X_R + 5} y="75" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">WALL</text>
 
           {/* Handrail — rounded rectangle (oval-ish) */}
-          <rect x="588" y={CY - 30} width="80" height="60" rx="18" fill="#F0FDF4" stroke="#16A34A" strokeWidth="2.5" />
-          <circle cx="628" cy={CY} r="2" fill="#16A34A" />
+          <rect x="588" y={CY - 30} width="80" height="60" rx="18" fill="#F0FDF4" stroke="#15803D" strokeWidth="2.5" />
+          <circle cx="628" cy={CY} r="2" fill="#15803D" />
 
           {/* Cross-section dimension (2.25" max height) */}
-          <line x1="628" y1={CY - 30} x2="628" y2={CY + 30} stroke="#16A34A" strokeWidth="1" />
-          <line x1="620" y1={CY - 30} x2="636" y2={CY - 30} stroke="#16A34A" strokeWidth="1" />
-          <line x1="620" y1={CY + 30} x2="636" y2={CY + 30} stroke="#16A34A" strokeWidth="1" />
-          <rect x="636" y={CY - 8} width="68" height="14" rx="3" fill="#16A34A" />
+          <line x1="628" y1={CY - 30} x2="628" y2={CY + 30} stroke="#15803D" strokeWidth="1" />
+          <line x1="620" y1={CY - 30} x2="636" y2={CY - 30} stroke="#15803D" strokeWidth="1" />
+          <line x1="620" y1={CY + 30} x2="636" y2={CY + 30} stroke="#15803D" strokeWidth="1" />
+          <rect x="636" y={CY - 8} width="68" height="14" rx="3" fill="#15803D" />
           <text x="670" y={CY + 3} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{imp('2.25', '57')} max</text>
 
           {/* Perimeter annotation */}
           <path d={`M 588 ${CY - 10} Q 580 ${CY - 35} 610 ${CY - 35} L 646 ${CY - 35} Q 672 ${CY - 35} 672 ${CY - 10} L 672 ${CY + 10} Q 672 ${CY + 35} 646 ${CY + 35} L 610 ${CY + 35} Q 584 ${CY + 35} 584 ${CY + 10} Z`}
-            fill="none" stroke="#16A34A" strokeWidth="1" strokeDasharray="4 3" opacity="0.4" />
-          <rect x="680" y={CY + 18} width="90" height="14" rx="3" fill="#16A34A" opacity="0.85" />
+            fill="none" stroke="#15803D" strokeWidth="1" strokeDasharray="4 3" opacity="0.4" />
+          <rect x="680" y={CY + 18} width="90" height="14" rx="3" fill="#15803D" opacity="0.85" />
           <text x="725" y={CY + 28} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">Perim. {imp('4–6.25', '100–160')}</text>
 
           {/* Wall clearance (1.5") */}

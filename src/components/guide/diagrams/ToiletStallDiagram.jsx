@@ -192,7 +192,7 @@ export default function ToiletStallDiagram() {
 
           {/* ===== CLEAR FLOOR SPACE ===== */}
           <rect x={SX + 2} y={SY + 2} width={SW - 4} height={SD - 4} rx="4"
-            fill="#D97706" opacity="0.04" stroke="#D97706" strokeWidth="1" strokeDasharray="6 4" />
+            fill="#B45309" opacity="0.04" stroke="#B45309" strokeWidth="1" strokeDasharray="6 4" />
 
           {/* ===== TOILET FIXTURE ===== */}
           {/* Bowl (oval) */}
@@ -200,7 +200,7 @@ export default function ToiletStallDiagram() {
           {/* Tank */}
           <rect x={TX - 30} y={SB - 28} width={60} height={24} rx="4" fill="#E2E8F0" stroke="#64748B" strokeWidth="1.5" />
           {/* Centerline indicator */}
-          <line x1={TX} y1={TY - 10} x2={TX} y2={SB - 28} stroke="#16A34A" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+          <line x1={TX} y1={TY - 10} x2={TX} y2={SB - 28} stroke="#15803D" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
           <text x={TX} y={TY + 24} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#374151">TOILET</text>
 
           {/* Flush control indicator (on open/right side) */}
@@ -226,7 +226,7 @@ export default function ToiletStallDiagram() {
 
           {/* ===== WHEELCHAIR TURNING INDICATOR ===== */}
           <circle cx={SX + SW / 2 + 40} cy={SY + SD / 2 - 40} r="60"
-            fill="none" stroke="#D97706" strokeWidth="1" strokeDasharray="5 4" opacity="0.3" />
+            fill="none" stroke="#B45309" strokeWidth="1" strokeDasharray="5 4" opacity="0.3" />
           <text x={SX + SW / 2 + 40} y={SY + SD / 2 - 40} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" opacity="0.5">♿ turning</text>
           <text x={SX + SW / 2 + 40} y={SY + SD / 2 - 30} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" opacity="0.5">radius</text>
 
@@ -255,10 +255,10 @@ export default function ToiletStallDiagram() {
           </text>
 
           {/* Toilet centerline to side wall */}
-          <line x1={SX} y1={SB - 100} x2={TX} y2={SB - 100} stroke="#16A34A" strokeWidth="1.2" />
-          <line x1={SX} y1={SB - 108} x2={SX} y2={SB - 92} stroke="#16A34A" strokeWidth="1.2" />
-          <line x1={TX} y1={SB - 108} x2={TX} y2={SB - 92} stroke="#16A34A" strokeWidth="1.2" />
-          <rect x={(SX + TX) / 2 - 36} y={SB - 120} width="72" height="14" rx="3" fill="#16A34A" />
+          <line x1={SX} y1={SB - 100} x2={TX} y2={SB - 100} stroke="#15803D" strokeWidth="1.2" />
+          <line x1={SX} y1={SB - 108} x2={SX} y2={SB - 92} stroke="#15803D" strokeWidth="1.2" />
+          <line x1={TX} y1={SB - 108} x2={TX} y2={SB - 92} stroke="#15803D" strokeWidth="1.2" />
+          <rect x={(SX + TX) / 2 - 36} y={SB - 120} width="72" height="14" rx="3" fill="#15803D" />
           <text x={(SX + TX) / 2} y={SB - 110} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">
             {imp('16–18', '405–455')}
           </text>
@@ -288,7 +288,7 @@ export default function ToiletStallDiagram() {
           </text>
 
           {/* Seat height note */}
-          <rect x={TX + 40} y={TY + 30} width="80" height="14" rx="3" fill="#16A34A" opacity="0.8" />
+          <rect x={TX + 40} y={TY + 30} width="80" height="14" rx="3" fill="#15803D" opacity="0.8" />
           <text x={TX + 80} y={TY + 40} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">
             ↕ {imp('17–19', '430–485')} seat
           </text>

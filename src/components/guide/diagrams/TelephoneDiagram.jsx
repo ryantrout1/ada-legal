@@ -56,7 +56,7 @@ export default function TelephoneDiagram() {
           <text x="265" y="270" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#1E3A8A" fontWeight="600">VOL</text>
 
           {/* Cord */}
-          <path d="M220,230 Q180,290 210,320" fill="none" stroke="#D97706" strokeWidth="1.5" strokeDasharray="3 2" />
+          <path d="M220,230 Q180,290 210,320" fill="none" stroke="#B45309" strokeWidth="1.5" strokeDasharray="3 2" />
           <text x="175" y="290" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F" fontWeight="600">{d('29', '735')} min</text>
 
           {/* TTY shelf */}
@@ -64,10 +64,10 @@ export default function TelephoneDiagram() {
           <text x="250" y="355" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="600">TTY SHELF</text>
 
           {/* Height dim: max operable part */}
-          <line x1="80" y1="160" x2="80" y2="460" stroke="#16A34A" strokeWidth="1" />
-          <line x1="74" y1="160" x2="86" y2="160" stroke="#16A34A" strokeWidth="1" />
-          <line x1="74" y1="460" x2="86" y2="460" stroke="#16A34A" strokeWidth="1" />
-          <rect x="55" y="303" width="52" height="14" rx="3" fill="#16A34A" />
+          <line x1="80" y1="160" x2="80" y2="460" stroke="#15803D" strokeWidth="1" />
+          <line x1="74" y1="160" x2="86" y2="160" stroke="#15803D" strokeWidth="1" />
+          <line x1="74" y1="460" x2="86" y2="460" stroke="#15803D" strokeWidth="1" />
+          <rect x="55" y="303" width="52" height="14" rx="3" fill="#15803D" />
           <text x="81" y="313" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('48', '1220')} max</text>
 
           {/* Shelf height dims */}

@@ -9,7 +9,7 @@ export default function GuideSwimmingPools() {
   return (
     <>
       <GuideStyles />
-      <GuideHeroBanner title="Swimming Pool Accessibility" typeBadge="§242 / §1009" badgeColor="#2D6A4F" />
+      <GuideHeroBanner title="Swimming Pool Accessibility" typeBadge="§242 / §1009" badgeColor="#15803D" />
 
       <div className="guide-content-wrap">
         <div className="guide-content">

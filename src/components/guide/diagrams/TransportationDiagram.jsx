@@ -70,10 +70,10 @@ export default function TransportationDiagram() {
           <text x="366" y="232" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('60', '1525')} min</text>
 
           {/* Bus shelter */}
-          <rect x="80" y="330" width="120" height="90" rx="6" fill="#16A34A" opacity="0.04" stroke="#16A34A" strokeWidth="1.5" />
+          <rect x="80" y="330" width="120" height="90" rx="6" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="1.5" />
           <text x="140" y="360" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">BUS SHELTER</text>
           {/* Clear space inside shelter */}
-          <rect x="95" y="370" width="90" height="40" rx="3" fill="#16A34A" opacity="0.08" stroke="#16A34A" strokeWidth="1" strokeDasharray="4 2" />
+          <rect x="95" y="370" width="90" height="40" rx="3" fill="#15803D" opacity="0.08" stroke="#15803D" strokeWidth="1" strokeDasharray="4 2" />
           <text x="140" y="394" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D">{d('30', '760')}×{d('48', '1220')} clear</text>
 
           {/* Accessible route arrow */}
@@ -91,7 +91,7 @@ export default function TransportationDiagram() {
           <text x="685" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="600">PLATFORM</text>
 
           {/* Detectable warning strip */}
-          <rect x="500" y="270" width="370" height="10" fill="#D97706" opacity="0.2" stroke="#2563EB" strokeWidth="1.5" />
+          <rect x="500" y="270" width="370" height="10" fill="#B45309" opacity="0.2" stroke="#2563EB" strokeWidth="1.5" />
           {/* Truncated dome dots */}
           {Array.from({ length: 30 }, (_, i) => (
             <circle key={`d${i}`} cx={510 + i * 12} cy="275" r="2" fill="#2563EB" opacity="0.3" />
@@ -123,7 +123,7 @@ export default function TransportationDiagram() {
           <line x1="580" y1="255" x2="570" y2="278" stroke="#475569" strokeWidth="1.5" opacity="0.2" />
 
           {/* Signage note */}
-          <rect x="760" y="180" width="100" height="60" rx="6" fill="#D97706" opacity="0.05" stroke="#D97706" strokeWidth="1" />
+          <rect x="760" y="180" width="100" height="60" rx="6" fill="#B45309" opacity="0.05" stroke="#B45309" strokeWidth="1" />
           <text x="810" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">STATION SIGN</text>
           <text x="810" y="212" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F">Raised chars</text>
           <text x="810" y="222" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F">+ Braille per §703</text>

@@ -75,10 +75,10 @@ export default function WalkingSurfaceDiagram() {
           <text x="132" y="500" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('36', '915')} min</text>
 
           {/* Dim: 32" narrowing */}
-          <line x1="68" y1="245" x2="190" y2="245" stroke="#D97706" strokeWidth="1" />
-          <line x1="68" y1="239" x2="68" y2="251" stroke="#D97706" strokeWidth="1" />
-          <line x1="190" y1="239" x2="190" y2="251" stroke="#D97706" strokeWidth="1" />
-          <rect x="101" y="248" width="52" height="12" rx="3" fill="#D97706" />
+          <line x1="68" y1="245" x2="190" y2="245" stroke="#B45309" strokeWidth="1" />
+          <line x1="68" y1="239" x2="68" y2="251" stroke="#B45309" strokeWidth="1" />
+          <line x1="190" y1="239" x2="190" y2="251" stroke="#B45309" strokeWidth="1" />
+          <rect x="101" y="248" width="52" height="12" rx="3" fill="#B45309" />
           <text x="127" y="257" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('32', '815')} min</text>
           <text x="129" y="275" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F">(24" max length)</text>
 
@@ -108,8 +108,8 @@ export default function WalkingSurfaceDiagram() {
           <rect x="540" y="350" width="320" height="20" fill="#94A3B8" opacity="0.06" />
 
           {/* Running slope arrow */}
-          <line x1="560" y1="340" x2="740" y2="325" stroke="#16A34A" strokeWidth="2" />
-          <polygon points="740,321 748,325 740,329" fill="#16A34A" />
+          <line x1="560" y1="340" x2="740" y2="325" stroke="#15803D" strokeWidth="2" />
+          <polygon points="740,321 748,325 740,329" fill="#15803D" />
           <text x="650" y="318" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" fontWeight="600">Running slope ≤ 1:20</text>
           <text x="650" y="330" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D">(direction of travel)</text>
 
@@ -124,13 +124,13 @@ export default function WalkingSurfaceDiagram() {
           <text x="700" y="395" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="600" fill="#78350F">CHANGES IN LEVEL</text>
           {/* ¼" vertical */}
           <line x1="580" y1="420" x2="640" y2="420" stroke="#94A3B8" strokeWidth="1.5" />
-          <line x1="640" y1="420" x2="640" y2="414" stroke="#D97706" strokeWidth="2" />
+          <line x1="640" y1="420" x2="640" y2="414" stroke="#B45309" strokeWidth="2" />
           <line x1="640" y1="414" x2="700" y2="414" stroke="#94A3B8" strokeWidth="1.5" />
           <text x="640" y="440" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F">¼" vertical OK</text>
 
           {/* ½" beveled */}
           <line x1="720" y1="420" x2="770" y2="420" stroke="#94A3B8" strokeWidth="1.5" />
-          <line x1="770" y1="420" x2="778" y2="412" stroke="#D97706" strokeWidth="2" />
+          <line x1="770" y1="420" x2="778" y2="412" stroke="#B45309" strokeWidth="2" />
           <line x1="778" y1="412" x2="840" y2="412" stroke="#94A3B8" strokeWidth="1.5" />
           <text x="780" y="440" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F">¼"–½" beveled 1:2</text>
 

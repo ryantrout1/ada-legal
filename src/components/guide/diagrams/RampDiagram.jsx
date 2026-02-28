@@ -165,9 +165,9 @@ export default function RampDiagram() {
           <line x1="240" y1="390" x2="720" y2="240" stroke="#DB2777" strokeWidth="1" strokeDasharray="6 3" />
 
           {/* Handrail - near side (full line with extensions) */}
-          <line x1="210" y1="300" x2="240" y2="300" stroke="#D97706" strokeWidth="2.5" strokeDasharray="4 3" />
-          <line x1="240" y1="300" x2="720" y2="150" stroke="#D97706" strokeWidth="2.5" />
-          <line x1="720" y1="150" x2="750" y2="150" stroke="#D97706" strokeWidth="2.5" strokeDasharray="4 3" />
+          <line x1="210" y1="300" x2="240" y2="300" stroke="#B45309" strokeWidth="2.5" strokeDasharray="4 3" />
+          <line x1="240" y1="300" x2="720" y2="150" stroke="#B45309" strokeWidth="2.5" />
+          <line x1="720" y1="150" x2="750" y2="150" stroke="#B45309" strokeWidth="2.5" strokeDasharray="4 3" />
 
           {/* Handrail extension labels */}
           <text x="225" y="292" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#78350F">{imp('12', '305')}</text>
@@ -190,12 +190,12 @@ export default function RampDiagram() {
           {/* --- DIMENSION LINES --- */}
 
           {/* Rise: vertical on right */}
-          <line x1="755" y1="180" x2="755" y2="330" stroke="#16A34A" strokeWidth="1.5" />
-          <line x1="748" y1="180" x2="762" y2="180" stroke="#16A34A" strokeWidth="1.5" />
-          <line x1="748" y1="330" x2="762" y2="330" stroke="#16A34A" strokeWidth="1.5" />
-          <polygon points="755,185 751,195 759,195" fill="#16A34A" />
-          <polygon points="755,325 751,315 759,315" fill="#16A34A" />
-          <rect x="762" y="243" width="80" height="16" rx="3" fill="#16A34A" />
+          <line x1="755" y1="180" x2="755" y2="330" stroke="#15803D" strokeWidth="1.5" />
+          <line x1="748" y1="180" x2="762" y2="180" stroke="#15803D" strokeWidth="1.5" />
+          <line x1="748" y1="330" x2="762" y2="330" stroke="#15803D" strokeWidth="1.5" />
+          <polygon points="755,185 751,195 759,195" fill="#15803D" />
+          <polygon points="755,325 751,315 759,315" fill="#15803D" />
+          <rect x="762" y="243" width="80" height="16" rx="3" fill="#15803D" />
           <text x="802" y="254" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="white">
             {imp('30', '760')} max
           </text>
@@ -223,10 +223,10 @@ export default function RampDiagram() {
           </text>
 
           {/* Handrail height dimension */}
-          <line x1="260" y1="300" x2="260" y2="325" stroke="#D97706" strokeWidth="1.2" strokeDasharray="3 2" />
-          <line x1="253" y1="300" x2="267" y2="300" stroke="#D97706" strokeWidth="1.2" />
-          <line x1="253" y1="325" x2="267" y2="325" stroke="#D97706" strokeWidth="1.2" />
-          <rect x="228" y="307" width="64" height="14" rx="3" fill="#D97706" />
+          <line x1="260" y1="300" x2="260" y2="325" stroke="#B45309" strokeWidth="1.2" strokeDasharray="3 2" />
+          <line x1="253" y1="300" x2="267" y2="300" stroke="#B45309" strokeWidth="1.2" />
+          <line x1="253" y1="325" x2="267" y2="325" stroke="#B45309" strokeWidth="1.2" />
+          <rect x="228" y="307" width="64" height="14" rx="3" fill="#B45309" />
           <text x="260" y="317" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="white">
             {imp('34–38', '865–965')}
           </text>

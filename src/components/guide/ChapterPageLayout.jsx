@@ -276,7 +276,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
       <GuideHeroBanner
         title={`Chapter ${chapterNum}: ${title}`}
         typeBadge={range}
-        badgeColor="#2D6A4F"
+        badgeColor="#15803D"
       />
 
       <div className="guide-content-wrap">

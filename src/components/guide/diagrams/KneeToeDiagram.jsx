@@ -110,7 +110,7 @@ export default function KneeToeDiagram() {
           {/* Front edge at x=392 (25" from wall at x=152, scale: ~9.6px/inch) */}
 
           {/* Toe clearance zone (full rectangle) */}
-          <rect x="152" y="347" width="240" height="93" rx="0" fill="#16A34A" opacity="0.06" stroke="#16A34A" strokeWidth="1.5" strokeDasharray="6 3" />
+          <rect x="152" y="347" width="240" height="93" rx="0" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" strokeDasharray="6 3" />
           <text x="272" y="400" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" fontWeight="600">TOE CLEARANCE</text>
           <text x="272" y="415" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D">below {d('9', '230')}</text>
 
@@ -122,7 +122,7 @@ export default function KneeToeDiagram() {
           <text x="360" y="275" fontFamily="Manrope, sans-serif" fontSize="8" fill="#5B21B6">{d('9', '230')}–{d('27', '685')}</text>
 
           {/* Taper line (sloped back edge of knee zone) */}
-          <line x1="315" y1="160" x2="286" y2="347" stroke="#D97706" strokeWidth="2" strokeDasharray="4 3" />
+          <line x1="315" y1="160" x2="286" y2="347" stroke="#B45309" strokeWidth="2" strokeDasharray="4 3" />
           <text x="280" y="256" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600" transform="rotate(-76 280 256)">TAPER</text>
 
           {/* ===== DIMENSION LINES ===== */}
@@ -135,23 +135,23 @@ export default function KneeToeDiagram() {
           <text x="113" y="303" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">{d('27', '685')}</text>
 
           {/* 9" height (floor to toe/knee boundary) */}
-          <line x1="128" y1="347" x2="128" y2="440" stroke="#16A34A" strokeWidth="1" />
-          <line x1="122" y1="347" x2="134" y2="347" stroke="#16A34A" strokeWidth="1" />
-          <rect x="90" y="385" width="40" height="14" rx="3" fill="#16A34A" />
+          <line x1="128" y1="347" x2="128" y2="440" stroke="#15803D" strokeWidth="1" />
+          <line x1="122" y1="347" x2="134" y2="347" stroke="#15803D" strokeWidth="1" />
+          <rect x="90" y="385" width="40" height="14" rx="3" fill="#15803D" />
           <text x="110" y="395" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">{d('9', '230')}</text>
 
           {/* 8" deep at 27" high */}
-          <line x1="315" y1="167" x2="392" y2="167" stroke="#D97706" strokeWidth="1" />
-          <line x1="315" y1="160" x2="315" y2="174" stroke="#D97706" strokeWidth="1" />
-          <line x1="392" y1="160" x2="392" y2="174" stroke="#D97706" strokeWidth="1" />
-          <rect x="326" y="170" width="58" height="13" rx="3" fill="#D97706" />
+          <line x1="315" y1="167" x2="392" y2="167" stroke="#B45309" strokeWidth="1" />
+          <line x1="315" y1="160" x2="315" y2="174" stroke="#B45309" strokeWidth="1" />
+          <line x1="392" y1="160" x2="392" y2="174" stroke="#B45309" strokeWidth="1" />
+          <rect x="326" y="170" width="58" height="13" rx="3" fill="#B45309" />
           <text x="355" y="179" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('8', '205')} min</text>
 
           {/* 11" deep at 9" high */}
-          <line x1="286" y1="340" x2="392" y2="340" stroke="#D97706" strokeWidth="1" />
-          <line x1="286" y1="333" x2="286" y2="347" stroke="#D97706" strokeWidth="1" />
-          <line x1="392" y1="333" x2="392" y2="347" stroke="#D97706" strokeWidth="1" />
-          <rect x="306" y="324" width="62" height="13" rx="3" fill="#D97706" />
+          <line x1="286" y1="340" x2="392" y2="340" stroke="#B45309" strokeWidth="1" />
+          <line x1="286" y1="333" x2="286" y2="347" stroke="#B45309" strokeWidth="1" />
+          <line x1="392" y1="333" x2="392" y2="347" stroke="#B45309" strokeWidth="1" />
+          <rect x="306" y="324" width="62" height="13" rx="3" fill="#B45309" />
           <text x="337" y="333" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('11', '280')} min</text>
 
           {/* 25" max total depth */}

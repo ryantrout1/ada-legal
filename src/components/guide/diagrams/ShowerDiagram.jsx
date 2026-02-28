@@ -165,7 +165,7 @@ export default function ShowerDiagram() {
           <text x="26" y="141" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('36', '915')}</text>
 
           {/* Clear floor space — adjacent */}
-          <rect x="40" y="222" width="160" height="72" rx="2" fill="#D97706" opacity="0.04" stroke="#D97706" strokeWidth="1" strokeDasharray="5 3" />
+          <rect x="40" y="222" width="160" height="72" rx="2" fill="#B45309" opacity="0.04" stroke="#B45309" strokeWidth="1" strokeDasharray="5 3" />
           <text x="120" y="262" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">CLEAR FLOOR SPACE</text>
           <text x="120" y="274" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">{d('36', '915')} × {d('48', '1220')}</text>
 
@@ -181,17 +181,17 @@ export default function ShowerDiagram() {
           <text x="580" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">STANDARD ROLL-IN SHOWER (60×30)</text>
 
           {/* Compartment — 3 walls, open on bottom (long side) */}
-          <rect x="410" y="70" width="280" height="120" fill="#16A34A" opacity="0.03" stroke="#94A3B8" strokeWidth="2" />
+          <rect x="410" y="70" width="280" height="120" fill="#15803D" opacity="0.03" stroke="#94A3B8" strokeWidth="2" />
           {/* Open side (entry) — dashed on long side */}
           <line x1="410" y1="190" x2="690" y2="190" stroke="#94A3B8" strokeWidth="2" strokeDasharray="6 4" />
           <text x="550" y="204" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" fontWeight="600">ENTRY ({d('60', '1525')} full width)</text>
 
           {/* Grab bars — back wall */}
-          <line x1="412" y1="72" x2="688" y2="72" stroke="#D97706" strokeWidth="4" strokeLinecap="round" />
+          <line x1="412" y1="72" x2="688" y2="72" stroke="#B45309" strokeWidth="4" strokeLinecap="round" />
           {/* Grab bars — left side wall */}
-          <line x1="412" y1="72" x2="412" y2="188" stroke="#D97706" strokeWidth="4" strokeLinecap="round" />
+          <line x1="412" y1="72" x2="412" y2="188" stroke="#B45309" strokeWidth="4" strokeLinecap="round" />
           {/* Grab bars — right side wall */}
-          <line x1="688" y1="72" x2="688" y2="188" stroke="#D97706" strokeWidth="4" strokeLinecap="round" />
+          <line x1="688" y1="72" x2="688" y2="188" stroke="#B45309" strokeWidth="4" strokeLinecap="round" />
 
           {/* Controls on back wall */}
           <circle cx="550" cy="78" r="5" fill="#DB2777" opacity="0.3" stroke="#DB2777" strokeWidth="1" />
@@ -202,17 +202,17 @@ export default function ShowerDiagram() {
           <text x="664" y="91" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A" fontWeight="500">SEAT (opt.)</text>
 
           {/* Width dimension */}
-          <line x1="410" y1="58" x2="690" y2="58" stroke="#16A34A" strokeWidth="1" />
-          <line x1="410" y1="52" x2="410" y2="64" stroke="#16A34A" strokeWidth="1" />
-          <line x1="690" y1="52" x2="690" y2="64" stroke="#16A34A" strokeWidth="1" />
-          <rect x="518" y="49" width="64" height="13" rx="3" fill="#16A34A" />
+          <line x1="410" y1="58" x2="690" y2="58" stroke="#15803D" strokeWidth="1" />
+          <line x1="410" y1="52" x2="410" y2="64" stroke="#15803D" strokeWidth="1" />
+          <line x1="690" y1="52" x2="690" y2="64" stroke="#15803D" strokeWidth="1" />
+          <rect x="518" y="49" width="64" height="13" rx="3" fill="#15803D" />
           <text x="550" y="58" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('60', '1525')}</text>
 
           {/* Depth dimension */}
-          <line x1="700" y1="70" x2="700" y2="190" stroke="#16A34A" strokeWidth="1" />
-          <line x1="694" y1="70" x2="706" y2="70" stroke="#16A34A" strokeWidth="1" />
-          <line x1="694" y1="190" x2="706" y2="190" stroke="#16A34A" strokeWidth="1" />
-          <rect x="708" y="122" width="40" height="13" rx="3" fill="#16A34A" />
+          <line x1="700" y1="70" x2="700" y2="190" stroke="#15803D" strokeWidth="1" />
+          <line x1="694" y1="70" x2="706" y2="70" stroke="#15803D" strokeWidth="1" />
+          <line x1="694" y1="190" x2="706" y2="190" stroke="#15803D" strokeWidth="1" />
+          <rect x="708" y="122" width="40" height="13" rx="3" fill="#15803D" />
           <text x="728" y="131" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('30', '760')}</text>
 
           {/* Wheelchair in roll-in */}
@@ -230,7 +230,7 @@ export default function ShowerDiagram() {
 
 
           {/* Grab bar height note */}
-          <rect x="410" y="215" width="140" height="28" rx="4" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1" strokeDasharray="4 3" />
+          <rect x="410" y="215" width="140" height="28" rx="4" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
           <text x="480" y="228" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">Grab bars: {d('33–36', '840–915')} AFF</text>
           <text x="480" y="239" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">Controls: {d('38–48', '965–1220')} AFF</text>
 

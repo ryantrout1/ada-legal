@@ -193,7 +193,7 @@ export default function Layout({ children, currentPageName }) {
         /* Base Styles */
         body {
           font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          background-color: var(--slate-50);
+          background-color: var(--slate-900);
           color: var(--slate-800);
           margin: 0;
           line-height: 1.6;

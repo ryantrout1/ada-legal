@@ -115,13 +115,13 @@ export default function GrabBarDetailDiagram() {
           <rect x="232" y="126" width="36" height="12" rx="3" fill="#2563EB" opacity="0.85" />
           <text x="250" y="135" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fontWeight="700" fill="white">{d('1.5', '38')}</text>
           {/* Bar oval */}
-          <rect x="270" y="110" width="80" height="60" rx="18" fill="#F0FDF4" stroke="#16A34A" strokeWidth="2.5" />
+          <rect x="270" y="110" width="80" height="60" rx="18" fill="#F0FDF4" stroke="#15803D" strokeWidth="2.5" />
           {/* Cross-section dim */}
-          <line x1="310" y1="110" x2="310" y2="170" stroke="#16A34A" strokeWidth="1" />
-          <rect x="352" y="126" width="56" height="12" rx="3" fill="#16A34A" />
+          <line x1="310" y1="110" x2="310" y2="170" stroke="#15803D" strokeWidth="1" />
+          <rect x="352" y="126" width="56" height="12" rx="3" fill="#15803D" />
           <text x="380" y="135" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fontWeight="700" fill="white">{d('2', '51')} max</text>
           {/* Perimeter */}
-          <rect x="262" y="174" width="96" height="12" rx="3" fill="#16A34A" opacity="0.85" />
+          <rect x="262" y="174" width="96" height="12" rx="3" fill="#15803D" opacity="0.85" />
           <text x="310" y="183" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fontWeight="700" fill="white">Perimeter: {d('4–6.25', '100–160')}</text>
 
           {/* (C) Clearance detail */}
@@ -150,7 +150,7 @@ export default function GrabBarDetailDiagram() {
           <text x="660" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">WALL SURFACE</text>
 
           {/* Structural reinforcement (behind wall, shown dashed) */}
-          <rect x="560" y="46" width="200" height="20" rx="2" fill="#D97706" opacity="0.06" stroke="#D97706" strokeWidth="1" strokeDasharray="4 3" />
+          <rect x="560" y="46" width="200" height="20" rx="2" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
           <text x="660" y="60" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F" fontWeight="600">BLOCKING / REINFORCEMENT</text>
 
           {/* Grab bar (horizontal, front view) */}
@@ -172,14 +172,14 @@ export default function GrabBarDetailDiagram() {
           <text x="478" y="219" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('33–36', '840–915')}</text>
 
           {/* 250 lb force arrows */}
-          <line x1="660" y1="162" x2="660" y2="200" stroke="#D97706" strokeWidth="1.5" markerEnd="url(#forceArrow)" />
-          <line x1="660" y1="154" x2="700" y2="154" stroke="#D97706" strokeWidth="1.5" markerEnd="url(#forceArrow)" />
-          <rect x="664" y="196" width="60" height="12" rx="3" fill="#D97706" />
+          <line x1="660" y1="162" x2="660" y2="200" stroke="#B45309" strokeWidth="1.5" markerEnd="url(#forceArrow)" />
+          <line x1="660" y1="154" x2="700" y2="154" stroke="#B45309" strokeWidth="1.5" markerEnd="url(#forceArrow)" />
+          <rect x="664" y="196" width="60" height="12" rx="3" fill="#B45309" />
           <text x="694" y="205" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fontWeight="700" fill="white">250 lbs force</text>
 
           <defs>
             <marker id="forceArrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-              <polygon points="0 0, 8 3, 0 6" fill="#D97706" />
+              <polygon points="0 0, 8 3, 0 6" fill="#B45309" />
             </marker>
           </defs>
 

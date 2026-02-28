@@ -9,7 +9,7 @@ export default function GuidePlaygrounds() {
   return (
     <>
       <GuideStyles />
-      <GuideHeroBanner title="Accessible Playgrounds" typeBadge="§240 / §1008" badgeColor="#2D6A4F" />
+      <GuideHeroBanner title="Accessible Playgrounds" typeBadge="§240 / §1008" badgeColor="#15803D" />
 
       <div className="guide-content-wrap">
         <div className="guide-content">

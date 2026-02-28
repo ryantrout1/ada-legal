@@ -52,10 +52,10 @@ export default function AssistiveListeningDiagram() {
 
           {/* Signal waves from stage */}
           {[1, 2, 3].map(i => (
-            <path key={i} d={`M450,130 Q${450 + i * 60},${130 + i * 20} ${450 + i * 80},${200 + i * 30}`} fill="none" stroke="#16A34A" strokeWidth="1" opacity={0.4 - i * 0.1} strokeDasharray="4 3" />
+            <path key={i} d={`M450,130 Q${450 + i * 60},${130 + i * 20} ${450 + i * 80},${200 + i * 30}`} fill="none" stroke="#15803D" strokeWidth="1" opacity={0.4 - i * 0.1} strokeDasharray="4 3" />
           ))}
           {[1, 2, 3].map(i => (
-            <path key={`l${i}`} d={`M450,130 Q${450 - i * 60},${130 + i * 20} ${450 - i * 80},${200 + i * 30}`} fill="none" stroke="#16A34A" strokeWidth="1" opacity={0.4 - i * 0.1} strokeDasharray="4 3" />
+            <path key={`l${i}`} d={`M450,130 Q${450 - i * 60},${130 + i * 20} ${450 - i * 80},${200 + i * 30}`} fill="none" stroke="#15803D" strokeWidth="1" opacity={0.4 - i * 0.1} strokeDasharray="4 3" />
           ))}
           <text x="450" y="152" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600">18 dB S/N ratio min</text>
 

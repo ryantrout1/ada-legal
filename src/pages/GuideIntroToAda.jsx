@@ -12,7 +12,7 @@ export default function GuideIntroToAda() {
       <GuideHeroBanner
         title="Introduction to the ADA"
         typeBadge="Overview"
-        badgeColor="#D4570A"
+        badgeColor="#C2410C"
       />
 
       <div className="guide-content-wrap">

@@ -44,10 +44,10 @@ export default function LoadingZoneDiagram() {
           <text x="110" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="500" transform="rotate(-90 110 220)">SIDEWALK → BUILDING</text>
 
           {/* Access aisle */}
-          <rect x="170" y="50" width="120" height="330" rx="2" fill="#16A34A" opacity="0.05" stroke="#16A34A" strokeWidth="2" />
+          <rect x="170" y="50" width="120" height="330" rx="2" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="2" />
           {/* Diagonal striping */}
           {[0,1,2,3,4,5,6,7,8,9,10,11].map(i => (
-            <line key={`s${i}`} x1="170" y1={50 + i * 30} x2="290" y2={80 + i * 30} stroke="#16A34A" strokeWidth="1" opacity="0.15" />
+            <line key={`s${i}`} x1="170" y1={50 + i * 30} x2="290" y2={80 + i * 30} stroke="#15803D" strokeWidth="1" opacity="0.15" />
           ))}
           <text x="230" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" fontWeight="700" transform="rotate(-90 230 200)">ACCESS AISLE</text>
 
@@ -66,10 +66,10 @@ export default function LoadingZoneDiagram() {
           <text x="685" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">ROADWAY</text>
 
           {/* Dims: access aisle 60" */}
-          <line x1="170" y1="395" x2="290" y2="395" stroke="#16A34A" strokeWidth="1" />
-          <line x1="170" y1="389" x2="170" y2="401" stroke="#16A34A" strokeWidth="1" />
-          <line x1="290" y1="389" x2="290" y2="401" stroke="#16A34A" strokeWidth="1" />
-          <rect x="198" y="398" width="52" height="12" rx="3" fill="#16A34A" />
+          <line x1="170" y1="395" x2="290" y2="395" stroke="#15803D" strokeWidth="1" />
+          <line x1="170" y1="389" x2="170" y2="401" stroke="#15803D" strokeWidth="1" />
+          <line x1="290" y1="389" x2="290" y2="401" stroke="#15803D" strokeWidth="1" />
+          <rect x="198" y="398" width="52" height="12" rx="3" fill="#15803D" />
           <text x="224" y="407" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('60', '1525')}</text>
 
           {/* Pull-up 96" */}
@@ -92,9 +92,9 @@ export default function LoadingZoneDiagram() {
           <text x="645" y="86" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#1E3A8A">(9 ft 6 in overhead)</text>
 
           {/* Accessible route arrow */}
-          <line x1="120" y1="140" x2="165" y2="140" stroke="#D97706" strokeWidth="1.5" markerEnd="url(#lzArr)" />
+          <line x1="120" y1="140" x2="165" y2="140" stroke="#B45309" strokeWidth="1.5" markerEnd="url(#lzArr)" />
           <text x="142" y="132" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F" fontWeight="600">→ Route</text>
-          <defs><marker id="lzArr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#D97706" /></marker></defs>
+          <defs><marker id="lzArr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#B45309" /></marker></defs>
 
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>

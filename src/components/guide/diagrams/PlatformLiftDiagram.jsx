@@ -139,7 +139,7 @@ export default function PlatformLiftDiagram() {
           <text x="670" y="417" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('32', '815')} min</text>
 
           {/* Where permitted note */}
-          <rect x="520" y="460" width="300" height="36" rx="8" fill="#D97706" opacity="0.05" stroke="#D97706" strokeWidth="1" />
+          <rect x="520" y="460" width="300" height="36" rx="8" fill="#B45309" opacity="0.05" stroke="#B45309" strokeWidth="1" />
           <text x="670" y="478" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#78350F" fontWeight="600">Permitted in specific locations per §206.7</text>
           <text x="670" y="490" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">Performance areas · Assembly · Courtrooms · Existing buildings</text>
 

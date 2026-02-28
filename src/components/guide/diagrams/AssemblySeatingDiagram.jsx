@@ -65,7 +65,7 @@ export default function AssemblySeatingDiagram() {
           <circle cx="240" cy="135" r="5" fill="none" stroke="#64748B" strokeWidth="0.8" />
           <circle cx="260" cy="135" r="5" fill="none" stroke="#64748B" strokeWidth="0.8" />
           {/* Companion seat */}
-          <rect x="300" y="60" width="40" height="40" rx="6" fill="#16A34A" opacity="0.1" stroke="#16A34A" strokeWidth="2" />
+          <rect x="300" y="60" width="40" height="40" rx="6" fill="#15803D" opacity="0.1" stroke="#15803D" strokeWidth="2" />
           <text x="320" y="83" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D" fontWeight="600">COMP.</text>
           {/* More seats */}
           {[0,1].map(i => <rect key={`s2${i}`} x={350 + i * 50} y="60" width="40" height="40" rx="6" fill="#E7E5E4" opacity="0.3" stroke="#94A3B8" strokeWidth="1" />)}
@@ -79,7 +79,7 @@ export default function AssemblySeatingDiagram() {
           <text x="322" y="104" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('48–60', '1220')}</text>
 
           {/* Accessible aisle */}
-          <rect x="60" y="110" width="380" height="35" rx="2" fill="#D97706" opacity="0.04" stroke="#D97706" strokeWidth="1" strokeDasharray="4 3" />
+          <rect x="60" y="110" width="380" height="35" rx="2" fill="#B45309" opacity="0.04" stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
           <text x="250" y="132" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="500">ACCESSIBLE AISLE ({d('36', '915')} min)</text>
 
           {/* DIVIDER */}
@@ -115,8 +115,8 @@ export default function AssemblySeatingDiagram() {
           <text x="485" y="180" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">← Stage / Field</text>
 
           {/* Companion next to wheelchair user */}
-          <circle cx="760" cy="215" r="7" fill="#16A34A" opacity="0.2" stroke="#16A34A" strokeWidth="1" />
-          <line x1="760" y1="222" x2="760" y2="260" stroke="#16A34A" strokeWidth="1.5" />
+          <circle cx="760" cy="215" r="7" fill="#15803D" opacity="0.2" stroke="#15803D" strokeWidth="1" />
+          <line x1="760" y1="222" x2="760" y2="260" stroke="#15803D" strokeWidth="1.5" />
           <text x="760" y="278" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#14532D" fontWeight="600">Comp.</text>
 
           {/* Callouts */}

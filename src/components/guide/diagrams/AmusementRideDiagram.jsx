@@ -54,7 +54,7 @@ export default function AmusementRideDiagram() {
           <line x1="120" y1="150" x2="120" y2="200" stroke="#7C3AED" strokeWidth="1.5" markerEnd="url(#arArr)" />
 
           {/* Signage */}
-          <rect x="320" y="210" width="100" height="40" rx="6" fill="#D97706" opacity="0.05" stroke="#D97706" strokeWidth="1" />
+          <rect x="320" y="210" width="100" height="40" rx="6" fill="#B45309" opacity="0.05" stroke="#B45309" strokeWidth="1" />
           <text x="370" y="232" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">ACCESS TYPE</text>
           <text x="370" y="244" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F">SIGNAGE</text>
 
@@ -69,13 +69,13 @@ export default function AmusementRideDiagram() {
           <text x="590" y="345" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#8B2E08">{d('36', '915')} × {d('48', '1220')} min</text>
 
           {/* Transfer seat */}
-          <rect x="700" y="260" width="120" height="100" rx="6" fill="#16A34A" opacity="0.05" stroke="#16A34A" strokeWidth="1.5" />
+          <rect x="700" y="260" width="120" height="100" rx="6" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="1.5" />
           <text x="760" y="305" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600">TRANSFER SEAT</text>
           <text x="760" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D">{d('24', '610')} w × {d('21', '535')} d</text>
           <text x="760" y="335" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D">14–17" height</text>
           {/* Transfer supports */}
-          <line x1="698" y1="275" x2="698" y2="345" stroke="#16A34A" strokeWidth="2.5" opacity="0.3" />
-          <line x1="822" y1="275" x2="822" y2="345" stroke="#16A34A" strokeWidth="2.5" opacity="0.3" />
+          <line x1="698" y1="275" x2="698" y2="345" stroke="#15803D" strokeWidth="2.5" opacity="0.3" />
+          <line x1="822" y1="275" x2="822" y2="345" stroke="#15803D" strokeWidth="2.5" opacity="0.3" />
           <text x="760" y="355" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#14532D">← supports →</text>
 
           {/* Level connection between platform and vehicle */}

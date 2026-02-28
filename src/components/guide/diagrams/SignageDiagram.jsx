@@ -90,13 +90,13 @@ export default function SignageDiagram() {
           <text x="326" y="343" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('18', '455')} min</text>
 
           {/* Height dims: 48-60" */}
-          <line x1="440" y1="195" x2="440" y2="440" stroke="#16A34A" strokeWidth="1" />
-          <line x1="434" y1="195" x2="446" y2="195" stroke="#16A34A" strokeWidth="1" />
-          <line x1="434" y1="315" x2="446" y2="315" stroke="#16A34A" strokeWidth="1" />
-          <line x1="434" y1="440" x2="446" y2="440" stroke="#16A34A" strokeWidth="1" />
-          <rect x="448" y="208" width="38" height="12" rx="3" fill="#16A34A" />
+          <line x1="440" y1="195" x2="440" y2="440" stroke="#15803D" strokeWidth="1" />
+          <line x1="434" y1="195" x2="446" y2="195" stroke="#15803D" strokeWidth="1" />
+          <line x1="434" y1="315" x2="446" y2="315" stroke="#15803D" strokeWidth="1" />
+          <line x1="434" y1="440" x2="446" y2="440" stroke="#15803D" strokeWidth="1" />
+          <rect x="448" y="208" width="38" height="12" rx="3" fill="#15803D" />
           <text x="467" y="217" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('60', '1525')}</text>
-          <rect x="448" y="348" width="38" height="12" rx="3" fill="#16A34A" />
+          <rect x="448" y="348" width="38" height="12" rx="3" fill="#15803D" />
           <text x="467" y="357" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('48', '1220')}</text>
           {/* Floor */}
           <line x1="40" y1="440" x2="480" y2="440" stroke="#94A3B8" strokeWidth="2" />

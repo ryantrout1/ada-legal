@@ -184,11 +184,11 @@ export default function ParkingDiagram() {
           <text x="205" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#1E3A8A" transform="rotate(-90, 205, 215)">ACCESS AISLE</text>
 
           {/* Car space */}
-          <rect x="240" y="82" width="110" height="260" rx="2" fill="#F0FDF4" stroke="#16A34A" strokeWidth="1.5" />
+          <rect x="240" y="82" width="110" height="260" rx="2" fill="#F0FDF4" stroke="#15803D" strokeWidth="1.5" />
           {/* Car silhouette */}
-          <rect x="258" y="120" width="74" height="160" rx="10" fill="#16A34A" opacity="0.06" />
-          <rect x="262" y="125" width="66" height="35" rx="6" fill="#16A34A" opacity="0.04" />
-          <rect x="262" y="250" width="66" height="25" rx="6" fill="#16A34A" opacity="0.04" />
+          <rect x="258" y="120" width="74" height="160" rx="10" fill="#15803D" opacity="0.06" />
+          <rect x="262" y="125" width="66" height="35" rx="6" fill="#15803D" opacity="0.04" />
+          <rect x="262" y="250" width="66" height="25" rx="6" fill="#15803D" opacity="0.04" />
           <text x="295" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" opacity="0.6">CAR</text>
           {/* ISA on ground */}
           <circle cx="295" cy="316" r="10" fill="none" stroke="#2563EB" strokeWidth="1.5" opacity="0.4" />
@@ -222,11 +222,11 @@ export default function ParkingDiagram() {
           </text>
 
           {/* Car width */}
-          <line x1="240" y1="362" x2="350" y2="362" stroke="#16A34A" strokeWidth="1.2" />
-          <line x1="350" y1="354" x2="350" y2="370" stroke="#16A34A" strokeWidth="1.2" />
-          <polygon points="245,362 255,358 255,366" fill="#16A34A" />
-          <polygon points="345,362 335,358 335,366" fill="#16A34A" />
-          <rect x="262" y="369" width="66" height="15" rx="3" fill="#16A34A" />
+          <line x1="240" y1="362" x2="350" y2="362" stroke="#15803D" strokeWidth="1.2" />
+          <line x1="350" y1="354" x2="350" y2="370" stroke="#15803D" strokeWidth="1.2" />
+          <polygon points="245,362 255,358 255,366" fill="#15803D" />
+          <polygon points="345,362 335,358 335,366" fill="#15803D" />
+          <rect x="262" y="369" width="66" height="15" rx="3" fill="#15803D" />
           <text x="295" y="379" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="white">
             {imp('96', '2440')} / {impFt("8'", '2440')}
           </text>
@@ -262,9 +262,9 @@ export default function ParkingDiagram() {
           <text x="665" y="194" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="#1E40AF">VAN ACCESSIBLE</text>
 
           {/* Van silhouette for scale */}
-          <rect x="720" y="220" width="100" height="160" rx="10" fill="#D97706" opacity="0.08" stroke="#D97706" strokeWidth="1" opacity="0.2" />
-          <rect x="725" y="225" width="90" height="40" rx="6" fill="#D97706" opacity="0.06" />
-          <rect x="725" y="345" width="90" height="30" rx="6" fill="#D97706" opacity="0.06" />
+          <rect x="720" y="220" width="100" height="160" rx="10" fill="#B45309" opacity="0.08" stroke="#B45309" strokeWidth="1" opacity="0.2" />
+          <rect x="725" y="225" width="90" height="40" rx="6" fill="#B45309" opacity="0.06" />
+          <rect x="725" y="345" width="90" height="30" rx="6" fill="#B45309" opacity="0.06" />
           <text x="770" y="305" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#78350F" opacity="0.4">VAN</text>
 
           {/* --- RIGHT DIMENSIONS --- */}
@@ -281,14 +281,14 @@ export default function ParkingDiagram() {
           </text>
 
           {/* Van clearance: 98" min */}
-          <line x1="840" y1="218" x2="840" y2="380" stroke="#D97706" strokeWidth="1.5" />
-          <line x1="833" y1="218" x2="847" y2="218" stroke="#D97706" strokeWidth="1.5" />
-          <line x1="833" y1="380" x2="847" y2="380" stroke="#D97706" strokeWidth="1.5" />
-          <polygon points="840,223 836,233 844,233" fill="#D97706" />
-          <polygon points="840,375 836,365 844,365" fill="#D97706" />
+          <line x1="840" y1="218" x2="840" y2="380" stroke="#B45309" strokeWidth="1.5" />
+          <line x1="833" y1="218" x2="847" y2="218" stroke="#B45309" strokeWidth="1.5" />
+          <line x1="833" y1="380" x2="847" y2="380" stroke="#B45309" strokeWidth="1.5" />
+          <polygon points="840,223 836,233 844,233" fill="#B45309" />
+          <polygon points="840,375 836,365 844,365" fill="#B45309" />
           {/* Overhead clearance line */}
-          <line x1="700" y1="218" x2="860" y2="218" stroke="#D97706" strokeWidth="1" strokeDasharray="5 3" />
-          <rect x="800" y="240" width="76" height="16" rx="3" fill="#D97706" />
+          <line x1="700" y1="218" x2="860" y2="218" stroke="#B45309" strokeWidth="1" strokeDasharray="5 3" />
+          <rect x="800" y="240" width="76" height="16" rx="3" fill="#B45309" />
           <text x="838" y="251" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="white">
             {imp('98', '2490')} min
           </text>

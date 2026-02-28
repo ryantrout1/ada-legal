@@ -63,7 +63,7 @@ export default function DrinkingFountainDiagram() {
           <path d="M 100 210 Q 110 245 152 245 Q 200 245 212 210" fill="#F1F5F9" stroke="#94A3B8" strokeWidth="1.5" />
           <rect x="92" y="160" width="10" height="40" rx="2" fill="#94A3B8" opacity="0.3" />
           {/* Spout */}
-          <rect x="150" y="192" width="20" height="10" rx="3" fill="#D97706" opacity="0.2" stroke="#D97706" strokeWidth="1" />
+          <rect x="150" y="192" width="20" height="10" rx="3" fill="#B45309" opacity="0.2" stroke="#B45309" strokeWidth="1" />
           {/* Water arc */}
           <path d="M 160 192 Q 165 178 172 182" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="3 2" />
           <text x="152" y="180" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A">{d('4', '100')}+ flow</text>
@@ -99,12 +99,12 @@ export default function DrinkingFountainDiagram() {
           <rect x="512" y="155" width="130" height="10" rx="3" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
           <path d="M 520 165 Q 530 200 577 200 Q 630 200 642 165" fill="#F1F5F9" stroke="#94A3B8" strokeWidth="1.5" />
           <rect x="512" y="110" width="10" height="45" rx="2" fill="#94A3B8" opacity="0.3" />
-          <rect x="575" y="147" width="20" height="10" rx="3" fill="#D97706" opacity="0.2" stroke="#D97706" strokeWidth="1" />
+          <rect x="575" y="147" width="20" height="10" rx="3" fill="#B45309" opacity="0.2" stroke="#B45309" strokeWidth="1" />
           {/* 38-43" height */}
-          <line x1="488" y1="155" x2="488" y2="380" stroke="#16A34A" strokeWidth="1" />
-          <line x1="482" y1="155" x2="494" y2="155" stroke="#16A34A" strokeWidth="1" />
-          <line x1="482" y1="380" x2="494" y2="380" stroke="#16A34A" strokeWidth="1" />
-          <rect x="462" y="260" width="50" height="13" rx="3" fill="#16A34A" />
+          <line x1="488" y1="155" x2="488" y2="380" stroke="#15803D" strokeWidth="1" />
+          <line x1="482" y1="155" x2="494" y2="155" stroke="#15803D" strokeWidth="1" />
+          <line x1="482" y1="380" x2="494" y2="380" stroke="#15803D" strokeWidth="1" />
+          <rect x="462" y="260" width="50" height="13" rx="3" fill="#15803D" />
           <text x="487" y="269" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('38–43', '965–1090')}</text>
           <text x="577" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="700">HIGH (Standing)</text>
 

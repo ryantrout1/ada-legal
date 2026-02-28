@@ -63,12 +63,12 @@ export default function ATMDiagram() {
 
           {/* Keypad */}
           {[0, 1, 2, 3].map(r => [0, 1, 2].map(c => (
-            <rect key={`k${r}${c}`} x={272 + c * 24} y={255 + r * 22} width="18" height="16" rx="3" fill="#16A34A" opacity="0.08" stroke="#16A34A" strokeWidth="0.8" />
+            <rect key={`k${r}${c}`} x={272 + c * 24} y={255 + r * 22} width="18" height="16" rx="3" fill="#15803D" opacity="0.08" stroke="#15803D" strokeWidth="0.8" />
           )))}
           <text x="310" y="352" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D" fontWeight="600">KEYPAD</text>
 
           {/* Braille label */}
-          <rect x="270" y="360" width="80" height="14" rx="3" fill="#D97706" opacity="0.08" stroke="#D97706" strokeWidth="1" />
+          <rect x="270" y="360" width="80" height="14" rx="3" fill="#B45309" opacity="0.08" stroke="#B45309" strokeWidth="1" />
           <text x="310" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#78350F" fontWeight="600">BRAILLE / AUDIO JACK</text>
 
           {/* Cash dispenser */}
@@ -76,10 +76,10 @@ export default function ATMDiagram() {
           <text x="310" y="391" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5" fill="#475569">CASH DISPENSE</text>
 
           {/* Height dim: max controls */}
-          <line x1="130" y1="130" x2="130" y2="450" stroke="#16A34A" strokeWidth="1" />
-          <line x1="124" y1="130" x2="136" y2="130" stroke="#16A34A" strokeWidth="1" />
-          <line x1="124" y1="450" x2="136" y2="450" stroke="#16A34A" strokeWidth="1" />
-          <rect x="105" y="283" width="52" height="14" rx="3" fill="#16A34A" />
+          <line x1="130" y1="130" x2="130" y2="450" stroke="#15803D" strokeWidth="1" />
+          <line x1="124" y1="130" x2="136" y2="130" stroke="#15803D" strokeWidth="1" />
+          <line x1="124" y1="450" x2="136" y2="450" stroke="#15803D" strokeWidth="1" />
+          <rect x="105" y="283" width="52" height="14" rx="3" fill="#15803D" />
           <text x="131" y="293" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('48', '1220')} max</text>
 
           {/* Screen visibility line at 40" */}
@@ -123,7 +123,7 @@ export default function ATMDiagram() {
           <text x="854" y="267" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('48', '1220')} min</text>
 
           {/* Speech note */}
-          <rect x="570" y="430" width="300" height="40" rx="8" fill="#D97706" opacity="0.05" stroke="#D97706" strokeWidth="1" />
+          <rect x="570" y="430" width="300" height="40" rx="8" fill="#B45309" opacity="0.05" stroke="#B45309" strokeWidth="1" />
           <text x="720" y="450" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#78350F" fontWeight="600">Speech output required · 3.5mm audio jack for privacy</text>
           <text x="720" y="464" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">Braille instructions for initiating speech mode</text>
 

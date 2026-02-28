@@ -12,7 +12,7 @@ export default function GuideHousing() {
       <GuideHeroBanner
         title="Housing, Apartments & the ADA"
         typeBadge="Title II & III + FHA"
-        badgeColor="#2D6A4F"
+        badgeColor="#15803D"
       />
 
       <div className="guide-content-wrap">

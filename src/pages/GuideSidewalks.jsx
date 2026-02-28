@@ -9,7 +9,7 @@ export default function GuideSidewalks() {
   return (
     <>
       <GuideStyles />
-      <GuideHeroBanner title="Sidewalks & Pedestrian Access" typeBadge="Title II" badgeColor="#2D6A4F" />
+      <GuideHeroBanner title="Sidewalks & Pedestrian Access" typeBadge="Title II" badgeColor="#15803D" />
 
       <div className="guide-content-wrap">
         <div className="guide-content">

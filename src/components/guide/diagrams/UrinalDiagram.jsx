@@ -86,27 +86,27 @@ export default function UrinalDiagram() {
           <text x="660" y="175" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">URINAL</text>
 
           {/* Clear floor space rectangle */}
-          <rect x="595" y="225" width="130" height="200" rx="4" fill="#16A34A" opacity="0.05" stroke="#16A34A" strokeWidth="2" />
+          <rect x="595" y="225" width="130" height="200" rx="4" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="2" />
           {/* CFS label */}
           <text x="660" y="330" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">CLEAR FLOOR</text>
           <text x="660" y="342" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">SPACE</text>
 
           {/* Centerline */}
-          <line x1="660" y1="120" x2="660" y2="425" stroke="#16A34A" strokeWidth="1" strokeDasharray="4 3" opacity="0.3" />
+          <line x1="660" y1="120" x2="660" y2="425" stroke="#15803D" strokeWidth="1" strokeDasharray="4 3" opacity="0.3" />
           <text x="660" y="440" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D">centerline</text>
 
           {/* Dim: 30" width */}
-          <line x1="595" y1="450" x2="725" y2="450" stroke="#16A34A" strokeWidth="1" />
-          <line x1="595" y1="444" x2="595" y2="456" stroke="#16A34A" strokeWidth="1" />
-          <line x1="725" y1="444" x2="725" y2="456" stroke="#16A34A" strokeWidth="1" />
-          <rect x="632" y="453" width="52" height="14" rx="3" fill="#16A34A" />
+          <line x1="595" y1="450" x2="725" y2="450" stroke="#15803D" strokeWidth="1" />
+          <line x1="595" y1="444" x2="595" y2="456" stroke="#15803D" strokeWidth="1" />
+          <line x1="725" y1="444" x2="725" y2="456" stroke="#15803D" strokeWidth="1" />
+          <rect x="632" y="453" width="52" height="14" rx="3" fill="#15803D" />
           <text x="658" y="463" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('30', '760')} min</text>
 
           {/* Dim: 48" depth */}
-          <line x1="740" y1="225" x2="740" y2="425" stroke="#16A34A" strokeWidth="1" />
-          <line x1="734" y1="225" x2="746" y2="225" stroke="#16A34A" strokeWidth="1" />
-          <line x1="734" y1="425" x2="746" y2="425" stroke="#16A34A" strokeWidth="1" />
-          <rect x="745" y="318" width="52" height="14" rx="3" fill="#16A34A" />
+          <line x1="740" y1="225" x2="740" y2="425" stroke="#15803D" strokeWidth="1" />
+          <line x1="734" y1="225" x2="746" y2="225" stroke="#15803D" strokeWidth="1" />
+          <line x1="734" y1="425" x2="746" y2="425" stroke="#15803D" strokeWidth="1" />
+          <rect x="745" y="318" width="52" height="14" rx="3" fill="#15803D" />
           <text x="771" y="328" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('48', '1220')} min</text>
 
           {/* Partition in plan */}
@@ -118,7 +118,7 @@ export default function UrinalDiagram() {
           <defs><marker id="urArr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#475569" opacity="0.4" /></marker></defs>
 
           {/* Scoping note */}
-          <rect x="490" y="470" width="340" height="34" rx="8" fill="#D97706" opacity="0.05" stroke="#D97706" strokeWidth="1" />
+          <rect x="490" y="470" width="340" height="34" rx="8" fill="#B45309" opacity="0.05" stroke="#B45309" strokeWidth="1" />
           <text x="660" y="490" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#78350F" fontWeight="600">At least 1 accessible urinal required where urinals are provided</text>
 
           {/* Callout markers */}

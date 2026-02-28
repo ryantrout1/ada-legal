@@ -47,7 +47,7 @@ export default function LULAElevatorDiagram() {
           {/* Side door opening */}
           <line x1="420" y1="60" x2="420" y2="140" stroke="#94A3B8" strokeWidth="3" />
           <line x1="420" y1="260" x2="420" y2="380" stroke="#94A3B8" strokeWidth="3" />
-          <line x1="418" y1="140" x2="418" y2="260" stroke="#16A34A" strokeWidth="4" />
+          <line x1="418" y1="140" x2="418" y2="260" stroke="#15803D" strokeWidth="4" />
           <text x="435" y="205" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">DOOR</text>
 
           {/* Wheelchair silhouette */}
@@ -71,10 +71,10 @@ export default function LULAElevatorDiagram() {
           <text x="61" y="223" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('51', '1295')} min</text>
 
           {/* Door width dim */}
-          <line x1="440" y1="140" x2="440" y2="260" stroke="#16A34A" strokeWidth="1" />
-          <line x1="434" y1="140" x2="446" y2="140" stroke="#16A34A" strokeWidth="1" />
-          <line x1="434" y1="260" x2="446" y2="260" stroke="#16A34A" strokeWidth="1" />
-          <rect x="448" y="193" width="52" height="14" rx="3" fill="#16A34A" />
+          <line x1="440" y1="140" x2="440" y2="260" stroke="#15803D" strokeWidth="1" />
+          <line x1="434" y1="140" x2="446" y2="140" stroke="#15803D" strokeWidth="1" />
+          <line x1="434" y1="260" x2="446" y2="260" stroke="#15803D" strokeWidth="1" />
+          <rect x="448" y="193" width="52" height="14" rx="3" fill="#15803D" />
           <text x="474" y="203" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('32', '815')} min</text>
 
           {/* Controls panel */}
@@ -89,7 +89,7 @@ export default function LULAElevatorDiagram() {
           {/* End door */}
           <line x1="540" y1="380" x2="600" y2="380" stroke="#94A3B8" strokeWidth="3" />
           <line x1="700" y1="380" x2="760" y2="380" stroke="#94A3B8" strokeWidth="3" />
-          <line x1="600" y1="378" x2="700" y2="378" stroke="#16A34A" strokeWidth="4" />
+          <line x1="600" y1="378" x2="700" y2="378" stroke="#15803D" strokeWidth="4" />
           <text x="650" y="396" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">DOOR</text>
 
           {/* Width dim */}
@@ -107,7 +107,7 @@ export default function LULAElevatorDiagram() {
           <text x="824" y="223" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('54', '1370')} min</text>
 
           {/* Speed/travel note */}
-          <rect x="540" y="460" width="220" height="36" rx="8" fill="#D97706" opacity="0.05" stroke="#D97706" strokeWidth="1" />
+          <rect x="540" y="460" width="220" height="36" rx="8" fill="#B45309" opacity="0.05" stroke="#B45309" strokeWidth="1" />
           <text x="650" y="478" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#78350F" fontWeight="600">Max travel: 25 ft · Max speed: 30 ft/min</text>
           <text x="650" y="490" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">Complies with ASME A17.1</text>
 
