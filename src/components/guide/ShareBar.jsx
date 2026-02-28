@@ -1,5 +1,41 @@
 import React, { useState } from 'react';
 import { Link2, Facebook, Twitter, Linkedin, Mail, Check } from 'lucide-react';
+import { getDisplayMode } from '../landing/BrandIcons';
+
+const MODE_STYLES = {
+  default: {
+    bg: '#1E293B',
+    border: '1px solid #1E293B',
+    color: '#FFFFFF',
+    hoverBg: '#334155',
+    accentColor: '#F97316',
+    labelColor: '#94A3B8',
+  },
+  dark: {
+    bg: '#000000',
+    border: '1px solid #475569',
+    color: '#FFFFFF',
+    hoverBg: '#1E293B',
+    accentColor: '#FFB347',
+    labelColor: '#94A3B8',
+  },
+  warm: {
+    bg: '#3D3128',
+    border: '1px solid #3D3128',
+    color: '#F5EDE0',
+    hoverBg: '#4A3C30',
+    accentColor: '#F97316',
+    labelColor: '#8B7B6B',
+  },
+  contrast: {
+    bg: '#000000',
+    border: '2px solid #FFFFFF',
+    color: '#FFFFFF',
+    hoverBg: '#1A1A1A',
+    accentColor: '#FFB347',
+    labelColor: '#FFFFFF',
+  },
+};
 
 export default function ShareBar() {
   const [copied, setCopied] = useState(false);
@@ -48,13 +84,16 @@ export default function ShareBar() {
     },
   ];
 
+  const mode = getDisplayMode();
+  const styles = MODE_STYLES[mode] || MODE_STYLES.default;
+
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap',
     }}>
       <span style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-        color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.06em',
+        color: styles.labelColor, textTransform: 'uppercase', letterSpacing: '0.06em',
         marginRight: '4px',
       }}>
         Share
@@ -67,16 +106,28 @@ export default function ShareBar() {
             onClick={b.onClick}
             aria-label={b.label}
             title={b.label}
+            className="brand-icon share-btn"
             style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               width: '34px', height: '34px', borderRadius: '8px',
-              border: '1px solid var(--slate-200)',
-              background: b.highlight ? '#F0FDF4' : 'white',
-              color: b.highlight ? '#16A34A' : 'var(--slate-500)',
+              border: styles.border,
+              background: b.highlight ? '#064E3B' : styles.bg,
+              color: b.highlight ? '#34D399' : styles.color,
               cursor: 'pointer', transition: 'all 0.15s', flexShrink: 0,
+              padding: 0, minHeight: '34px',
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#C2410C'; e.currentTarget.style.color = '#C2410C'; }}
-            onMouseLeave={e => { if (!b.highlight) { e.currentTarget.style.borderColor = 'var(--slate-200)'; e.currentTarget.style.color = 'var(--slate-500)'; } }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = styles.hoverBg;
+              e.currentTarget.style.color = styles.accentColor;
+              e.currentTarget.style.borderColor = styles.accentColor;
+            }}
+            onMouseLeave={e => {
+              if (!b.highlight) {
+                e.currentTarget.style.background = styles.bg;
+                e.currentTarget.style.color = styles.color;
+                e.currentTarget.style.borderColor = styles.border.split(' ').pop();
+              }
+            }}
           >
             <Icon size={15} />
           </button>
