@@ -1717,6 +1717,13 @@ export const applyPreferences = (prefs) => {
         background-color: rgba(251,246,239,0.04) !important;
         border: 1px solid rgba(251,246,239,0.08) !important;
       }
+      /* Hero glass cards — preserve subtle glass effect */
+      #main-content .landing-hero-section div[style*="rgba(255"] {
+        background-color: rgba(251,246,239,0.06) !important;
+      }
+      #main-content .landing-hero-section div[style*="border: 1px solid rgba"] {
+        border-color: rgba(251,246,239,0.1) !important;
+      }
       /* Dark section text */
       #main-content .warm-keep-dark h1,
       #main-content .warm-keep-dark h2,

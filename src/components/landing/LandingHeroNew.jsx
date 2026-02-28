@@ -51,7 +51,7 @@ export default function LandingHeroNew() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="landing-hero-section"
+      className="landing-hero-section warm-keep-dark"
       style={{
         minHeight: '100vh',
         background: '#1E293B',
