@@ -484,7 +484,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType }) {
       }}>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem',
-          color: 'var(--slate-400)', margin: 0, lineHeight: 1.5,
+          color: '#475569', margin: 0, lineHeight: 1.5,
         }}>
           This helper explains ADA standards — it does not provide legal advice. For your specific situation, use the{' '}
           <Link to={createPageUrl('RightsPathway')} style={{ color: '#C2410C', textDecoration: 'underline' }}>
