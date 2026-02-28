@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§404.2.3'
   },
   {
-    id: 2, label: 'Maneuvering Clearance', section: '§404.2.4', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Maneuvering Clearance', section: '§404.2.4', color: '#15803D', textColor: '#14532D',
     x: 125, y: 285,
     plain: 'Maneuvering clearance is the floor space in front of and behind a door that a wheelchair user needs to approach, open, and pass through. The required size depends on the approach direction (front, hinge-side, or latch-side) and whether you are pushing or pulling. For a front approach on the pull side, you need 60 inches of depth and 18 inches beyond the latch side. The push side requires less — typically 48 inches deep. The floor in this area must be level and clear of obstructions.',
     legal: '"Minimum maneuvering clearances at doors and gates shall comply with 404.2.4. Maneuvering clearances shall extend the full width of the doorway and the required latch side or hinge side clearance." "Floor or ground surface within the required maneuvering clearances shall be level and clear."',
@@ -32,21 +32,21 @@ const CALLOUTS = [
     citation: '§404.2.8, §404.2.8.1'
   },
   {
-    id: 5, label: 'Threshold', section: '§404.2.5', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Threshold', section: '§404.2.5', color: '#92400E', textColor: '#78350F',
     x: 620, y: 370,
     plain: 'Thresholds at doors cannot exceed ½ inch (13mm) in height for new construction. For existing or altered buildings, up to ¾ inch (19mm) is permitted. Any threshold over ¼ inch must be beveled with a slope no steeper than 1:2 (a 45-degree angle). This prevents wheelchair casters and walker legs from catching. The threshold must also comply with the changes-in-level provisions of §302.',
     legal: '"Thresholds, if provided at doorways, shall be 1/2 inch (13 mm) high maximum. Existing or altered thresholds 3/4 inch (19 mm) high maximum shall be permitted provided that they have a beveled edge on each side with a slope not steeper than 1:2."',
     citation: '§404.2.5'
   },
   {
-    id: 6, label: 'Door Surface', section: '§404.2.10', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Door Surface', section: '§404.2.10', color: '#BE185D', textColor: '#9D174D',
     x: 620, y: 445,
     plain: 'The bottom 10 inches of the push side of a swinging door must have a smooth, uninterrupted surface. This zone is where wheelchair footrests make contact when a person uses their chair to push the door open. No hardware, applied panels, or decorative features can project into this area because they could catch on footrests or leg supports. This applies the full width of the door. Tempered glass doors without stiles are exempt if they meet other bottom-rail requirements.',
     legal: '"Swinging door and gate surfaces within 10 inches (255 mm) of the finish floor or ground measured vertically shall have a smooth surface on the push side extending the full width of the door or gate." Exceptions: "Tempered glass doors without stiles" and "doors and gates that do not extend to within 10 inches of the finish floor."',
     citation: '§404.2.10'
   },
   {
-    id: 7, label: 'Two Doors in Series', section: '§404.2.6', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Two Doors in Series', section: '§404.2.6', color: '#0E7490', textColor: '#0C4A6E',
     x: 350, y: 475,
     plain: 'When two doors are in a series (a vestibule or airlock), the space between them must be at least 48 inches plus the width of any door swinging into that space. This allows a wheelchair user to fully clear the first door before needing to open the second. Both doors must be able to swing open simultaneously without hitting each other. The floor between the doors must be level.',
     legal: '"The distance between two hinged or pivoted doors in series shall be 48 inches (1220 mm) minimum plus the width of doors or gates swinging into the space."',

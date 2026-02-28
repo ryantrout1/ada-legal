@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§406.1'
   },
   {
-    id: 2, label: 'Width', section: '§406.1', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Width', section: '§406.1', color: '#15803D', textColor: '#14532D',
     x: 420, y: 42,
     plain: 'The clear width of a curb ramp must be at least 36 inches, measured between the flared sides (not including them). This provides enough room for a standard wheelchair to travel up or down without the wheels catching on the ramp edges. The width is measured perpendicular to the direction of travel at the narrowest point of the ramp run.',
     legal: '"Curb ramps shall be 36 inches wide minimum, exclusive of flared sides." Clear width per §405.5.',
@@ -32,21 +32,21 @@ const CALLOUTS = [
     citation: '§406.8'
   },
   {
-    id: 5, label: 'Top Landing', section: '§406.4', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Top Landing', section: '§406.4', color: '#92400E', textColor: '#78350F',
     x: 620, y: 90,
     plain: 'At the top of the curb ramp where it meets the sidewalk, a landing at least 36 inches long (in the direction of travel) and at least as wide as the ramp must be provided. The landing provides a level area for a wheelchair user to stop, change direction, or transition onto the sidewalk. Maximum slope of the landing is 1:48 (about 2%) for drainage. The landing must connect directly to an accessible route.',
     legal: '"A landing 36 inches minimum by 48 inches minimum shall be provided at the top of curb ramps." Per §406.4. Slope: 1:48 maximum in any direction. Must adjoin accessible route.',
     citation: '§406.4'
   },
   {
-    id: 6, label: 'Counter Slope', section: '§406.2', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Counter Slope', section: '§406.2', color: '#BE185D', textColor: '#9D174D',
     x: 220, y: 260,
     plain: 'Where the gutter or road surface meets the bottom of the curb ramp, the counter slope (the slope of the gutter pan or street going away from the ramp) must not exceed 1:20 (5%). If the counter slope is too steep, a wheelchair user descending the ramp could tip forward when the front casters hit the abrupt change in slope. The transition between ramp and street must be flush (no lip or gap).',
     legal: '"The counter slope of the gutter or street at the foot of a curb ramp shall not be steeper than 1:20."',
     citation: '§406.2'
   },
   {
-    id: 7, label: 'Parallel Curb Ramps', section: '§406.5', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Parallel Curb Ramps', section: '§406.5', color: '#0E7490', textColor: '#0C4A6E',
     x: 700, y: 220,
     plain: 'When the sidewalk is too narrow for a standard perpendicular curb ramp, a parallel curb ramp runs parallel to the curb with the ramp descending in the sidewalk direction. At the bottom of the parallel ramp, a 48-inch minimum turning space must be provided so the wheelchair user can turn 90 degrees to face the street before crossing. The ramp must still meet the 1:12 slope and 36-inch width requirements.',
     legal: '"Where a parallel curb ramp is provided, a turning space 48 inches minimum shall be provided at the bottom of the curb ramp." Running slope: 1:12 max. Width: 36 inches minimum.',

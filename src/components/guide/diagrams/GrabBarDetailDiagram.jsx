@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§609.2.1'
   },
   {
-    id: 2, label: 'Non-Circular Profile', section: '§609.2.2', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Non-Circular Profile', section: '§609.2.2', color: '#15803D', textColor: '#14532D',
     x: 310, y: 42,
     plain: 'Non-circular grab bars (oval, D-shaped, or rectangular with rounded corners) must have a maximum cross-section dimension of 2 inches, and a perimeter between 4 and 6.25 inches. The perimeter measurement ensures the bar is graspable. All edges must have a minimum radius of 0.01 inches (essentially rounded, not sharp). The surface must be smooth and non-abrasive.',
     legal: '"Non-circular cross sections shall have a cross-section dimension of 2 inches (51 mm) maximum. Non-circular cross sections shall have a perimeter dimension of 4 inches (100 mm) minimum and 6 1/4 inches (160 mm) maximum."',
@@ -32,21 +32,21 @@ const CALLOUTS = [
     citation: '§609.4'
   },
   {
-    id: 5, label: 'Structural Strength', section: '§609.8', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Structural Strength', section: '§609.8', color: '#92400E', textColor: '#78350F',
     x: 810, y: 42,
     plain: 'Grab bars must withstand 250 pounds of force applied vertically or horizontally at any point on the bar without permanent deformation. The wall behind must have structural reinforcement — typically wood blocking or metal plates between studs — to support the mounting hardware. The bending stress in the bar itself must not exceed the allowable stress for the material. This strength is critical because people rely on these bars to prevent falls.',
     legal: '"Grab bars, grab bar fittings, and any wall or other surfaces adjacent to grab bars shall be designed to resist a force of 250 pounds (1112 N) applied at any point on the grab bar." Bending stress shall not exceed allowable stress for material.',
     citation: '§609.8'
   },
   {
-    id: 6, label: 'Hazards', section: '§609.5', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Hazards', section: '§609.5', color: '#BE185D', textColor: '#9D174D',
     x: 620, y: 190,
     plain: 'The gripping surface must be free of sharp or abrasive elements. This includes the bar itself, any adjacent wall surfaces within 1.5 inches, and the mounting hardware. Edges where the bar meets the wall (at returns and fittings) must be rounded. No exposed screws, bolt heads, or rough welds are permitted on or near the gripping surface. The bar must provide a secure, comfortable grip without risk of skin injury.',
     legal: '"Grab bars and any wall or other surfaces adjacent to grab bars shall be free of sharp or abrasive elements and shall have rounded edges."',
     citation: '§609.5'
   },
   {
-    id: 7, label: 'Fittings', section: '§609.6 / §609.7', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Fittings', section: '§609.6 / §609.7', color: '#0E7490', textColor: '#0C4A6E',
     x: 810, y: 190,
     plain: 'Grab bars must not rotate within their fittings — any rotation could cause a sudden loss of grip and a fall. The space adjacent to the grab bar must be free of obstructions for 1.5 inches above the bar (so hands can wrap over the top) and 12 inches below (so no objects catch on arms or clothing during a transfer). Fittings must be smooth and securely anchored to structural reinforcement.',
     legal: '"Grab bars shall not rotate within their fittings." §609.3 "Space between the wall and the grab bar shall be 1 1/2 inches." Adjacent space: "free of sharp or abrasive elements." 1.5 inches above, 12 inches below must be unobstructed.',

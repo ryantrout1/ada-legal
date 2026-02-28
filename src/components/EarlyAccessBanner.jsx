@@ -70,7 +70,7 @@ export default function EarlyAccessBanner() {
             borderRadius: '4px',
           }}
           onMouseEnter={e => { e.currentTarget.style.color = 'white'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)'; }}
-          onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.85)'; e.currentTarget.style.backgroundColor = 'transparent'; }}
+          onMouseLeave={e => { e.currentTarget.style.color = 'white'; e.currentTarget.style.backgroundColor = 'transparent'; }}
         >
           <X size={16} />
         </button>

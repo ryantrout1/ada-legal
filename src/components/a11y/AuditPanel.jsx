@@ -5,7 +5,7 @@ import AuditSiteReport from './AuditSiteReport';
 const IMPACT_CONFIG = {
   critical: { color: '#991B1B', bg: '#FEE2E2', label: 'Critical' },
   serious:  { color: '#EA580C', bg: '#FFF7ED', label: 'Serious' },
-  moderate: { color: '#D97706', bg: '#FEF3C7', label: 'Moderate' },
+  moderate: { color: '#92400E', bg: '#FEF3C7', label: 'Moderate' },
   minor:    { color: '#1E3A8A', bg: '#DBEAFE', label: 'Minor' }
 };
 
@@ -190,7 +190,7 @@ export default function AuditPanel({
                     <p style={{ fontWeight: 700, color: '#15803D', margin: '0.5rem 0 0' }}>
                       No violations found!
                     </p>
-                    <p style={{ fontSize: '0.8125rem', color: '#16A34A', margin: '0.25rem 0 0' }}>
+                    <p style={{ fontSize: '0.8125rem', color: '#15803D', margin: '0.25rem 0 0' }}>
                       {results.passes} rules passed
                     </p>
                   </div>

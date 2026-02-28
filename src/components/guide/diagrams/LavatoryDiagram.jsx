@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§606.3'
   },
   {
-    id: 2, label: 'Clear Floor Space', section: '§606.2', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Clear Floor Space', section: '§606.2', color: '#15803D', textColor: '#14532D',
     x: 300, y: 42,
     plain: 'A clear floor space of 30 × 48 inches must be provided, centered on the lavatory and positioned for a forward approach. The clear space extends from the front edge of the lavatory outward 48 inches. Knee and toe clearance must be provided underneath the lavatory so the wheelchair user can pull up directly to the basin. The floor must be level (max 1:48 slope) and slip-resistant.',
     legal: '"A clear floor space complying with §305, positioned for a forward approach, shall be provided." §305.3: "30 inches minimum by 48 inches minimum." Knee and toe clearance per §306 is required.',
@@ -32,21 +32,21 @@ const CALLOUTS = [
     citation: '§306.2'
   },
   {
-    id: 5, label: 'Faucets', section: '§606.4', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Faucets', section: '§606.4', color: '#92400E', textColor: '#78350F',
     x: 500, y: 70,
     plain: 'Faucet controls must be operable with one hand and must not require tight grasping, pinching, or twisting of the wrist. Lever handles, push-type controls, and touch/sensor-activated faucets all comply. Traditional round knobs do not. If the faucet has a self-closing (metering) valve, it must remain open for at least 10 seconds to give the user enough time to wash their hands.',
     legal: '"Faucets shall comply with §309." §309.4: "Operable with one hand… shall not require tight grasping, pinching, or twisting of the wrist. The force required to activate operable parts shall be 5 pounds maximum." Self-closing faucets: "remain open for 10 seconds minimum."',
     citation: '§606.4'
   },
   {
-    id: 6, label: 'Pipe Protection', section: '§606.5', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Pipe Protection', section: '§606.5', color: '#BE185D', textColor: '#9D174D',
     x: 500, y: 195,
     plain: 'Hot water supply pipes and drain pipes under the lavatory must be insulated or otherwise configured to protect against contact. A wheelchair user\'s legs are directly under the sink and may have reduced sensation — exposed hot pipes can cause serious burns without the person feeling it. Protection covers (pipe wraps or molded covers) must be smooth with no sharp or abrasive surfaces that could injure skin or snag clothing.',
     legal: '"Water supply and drain pipes under lavatories and sinks shall be insulated or otherwise configured to protect against contact. There shall be no sharp or abrasive surfaces under lavatories and sinks."',
     citation: '§606.5'
   },
   {
-    id: 7, label: 'Exposed Pipes', section: '§606.5', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Exposed Pipes', section: '§606.5', color: '#0E7490', textColor: '#0C4A6E',
     x: 700, y: 130,
     plain: 'Pipe protection covers must not reduce the required knee and toe clearance underneath. If bulky insulation or covers take up too much space, the lavatory must be adjusted (raised higher or moved farther from the wall) to maintain clearances. Covers must be securely attached so they don\'t shift or come loose over time. All surfaces within the clearance zone must remain smooth and free of sharp edges.',
     legal: '"Water supply and drain pipes under lavatories and sinks shall be insulated or otherwise configured to protect against contact." Covers must not reduce knee/toe clearance per §306. Must be securely attached.',

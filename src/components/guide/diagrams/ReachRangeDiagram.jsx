@@ -13,7 +13,7 @@ const CALLOUTS = [
     citation: '§308.2.1'
   },
   {
-    id: 2, label: 'Obstructed Forward Reach', section: '§308.2.2', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Obstructed Forward Reach', section: '§308.2.2', color: '#15803D', textColor: '#14532D',
     x: 365, y: 60,
     plain: 'When reaching forward over a counter, shelf, or other obstruction, the maximum reach height decreases as the obstruction gets deeper. If the obstruction is up to 20 inches deep, the maximum high reach is 48 inches. If it is between 20 and 25 inches deep, the maximum drops to 44 inches. Obstructions deeper than 25 inches are not permitted for forward reach — you would need a side approach instead. The low reach remains 15 inches in all cases.',
     legal: '"Where the high forward reach is over an obstruction, the clear floor space shall extend beneath the element for a distance not less than the required reach depth over the obstruction." Obstruction ≤ 20 inches: high reach 48 inches max. Obstruction 20–25 inches: high reach 44 inches max.',
@@ -34,7 +34,7 @@ const CALLOUTS = [
     citation: '§308.3.2'
   },
   {
-    id: 5, label: 'Clear Floor Space', section: '§305', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Clear Floor Space', section: '§305', color: '#92400E', textColor: '#78350F',
     x: 115, y: 390,
     plain: 'A clear floor space of at least 30 inches wide × 48 inches deep is required at every element that a person needs to reach. The space can be oriented for either a forward approach (facing the element) or a parallel approach (alongside it). At least one full side of the clear floor space must adjoin an accessible route or another clear space. The floor must be level (max 1:48 slope) and the surface firm, stable, and slip-resistant.',
     legal: '"Clear floor or ground space shall comply with 305. The clear floor space shall be 30 inches (760 mm) minimum by 48 inches (1220 mm) minimum." Positioned for forward or parallel approach.',
@@ -42,7 +42,7 @@ const CALLOUTS = [
     altUrl: CLEAR_URL
   },
   {
-    id: 6, label: 'Operable Parts', section: '§309.4', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Operable Parts', section: '§309.4', color: '#BE185D', textColor: '#9D174D',
     x: 365, y: 390,
     plain: 'All controls, switches, outlets, and other operable parts within reach range must be usable with one hand and must not require tight grasping, pinching, or twisting of the wrist. The maximum operating force is 5 pounds. This applies to light switches, thermostats, electrical outlets, fire alarm pull stations, hand dryers, and any other controls or mechanisms a person needs to operate.',
     legal: '"Operable parts shall be operable with one hand and shall not require tight grasping, pinching, or twisting of the wrist. The force required to activate operable parts shall be 5 pounds (22.2 N) maximum."',
@@ -50,7 +50,7 @@ const CALLOUTS = [
     altUrl: OP_URL
   },
   {
-    id: 7, label: "Children's Reach", section: 'Advisory §308.1', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: "Children's Reach", section: 'Advisory §308.1', color: '#0E7490', textColor: '#0C4A6E',
     x: 595, y: 390,
     plain: "The Standards do not mandate separate children's reach ranges except at specific elements designed for children's use. However, the Advisory notes in §308.1 recommend reduced maximums based on age: ages 3–4 should have a forward reach maximum of 36 inches; ages 5–8 a maximum of 40 inches; and ages 9–12 a maximum of 44 inches. Facilities specifically designed for children (schools, daycare) should follow these advisories.",
     legal: '"Advisory 308.1: Where building elements are designed specifically for use by children ages 12 and younger, the following specifications may be used." Forward reach: ages 3–4: 36 inches max; ages 5–8: 40 inches max; ages 9–12: 44 inches max.',

@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§305.3'
   },
   {
-    id: 2, label: 'Forward Approach', section: '§305.5', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Forward Approach', section: '§305.5', color: '#15803D', textColor: '#14532D',
     x: 130, y: 170,
     plain: 'In a forward approach, the 48-inch dimension extends toward the element being accessed. The wheelchair faces the element head-on. This is the standard approach for lavatories, drinking fountains, counters, and any element that requires knee and toe clearance underneath. The user pulls straight up to the element with their knees extending under it.',
     legal: '"One full unobstructed side of the clear floor or ground space shall adjoin an accessible route or adjoin another clear floor or ground space." Forward approach: 48 inches toward element.',
@@ -32,21 +32,21 @@ const CALLOUTS = [
     citation: '§305.2'
   },
   {
-    id: 5, label: 'Knee/Toe Clearance', section: '§305.4', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Knee/Toe Clearance', section: '§305.4', color: '#92400E', textColor: '#78350F',
     x: 130, y: 280,
     plain: 'The clear floor space may extend under an element if knee and toe clearance per §306 is provided. This is essential for lavatories, desks, and counters where the wheelchair user needs to pull up underneath. Knee clearance: 27 inches high minimum, 8 inches deep minimum at that height. Toe clearance: below 9 inches, extending 17 to 25 inches from the front edge.',
     legal: '"Unless otherwise specified, clear floor or ground space may include knee and toe clearance complying with §306." This allows the clear space to extend under elements like lavatories and desks.',
     citation: '§305.4'
   },
   {
-    id: 6, label: 'Overlap', section: '§305.7', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Overlap', section: '§305.7', color: '#BE185D', textColor: '#9D174D',
     x: 370, y: 280,
     plain: 'Clear floor spaces are permitted to overlap with other clear floor spaces, accessible routes, turning spaces (§304), and maneuvering clearances at doors (§404). This is critical for compact designs — a single area can serve multiple purposes simultaneously. However, clear floor spaces cannot overlap restricted areas, hazardous zones, or areas behind barriers.',
     legal: '"Unless otherwise specified, clear floor or ground spaces, turning spaces, and accessible routes are permitted to overlap." Multiple clear spaces may share the same floor area.',
     citation: '§305.7'
   },
   {
-    id: 7, label: 'Alcoves', section: '§305.7', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Alcoves', section: '§305.7', color: '#0E7490', textColor: '#0C4A6E',
     x: 570, y: 280,
     plain: 'When a clear floor space is located in an alcove (recessed area), additional width is required for maneuvering. Forward approach in an alcove deeper than 15 inches: width must increase to 36 inches (from the standard 30). Parallel approach in an alcove deeper than 24 inches: width must also increase to 36 inches. The extra width gives the wheelchair room to turn into the alcove.',
     legal: '"Alcoves shall be 36 inches wide minimum where the depth exceeds 15 inches for forward approach, or 24 inches for parallel approach." Extra maneuvering width compensates for restricted movement.',

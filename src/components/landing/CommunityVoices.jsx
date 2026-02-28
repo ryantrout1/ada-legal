@@ -5,7 +5,7 @@ import trackEvent from '../analytics/trackEvent';
 // ─── Options ───
 const OPTIONS = [
   { id: 'rights', emoji: '🔍', label: 'I want to understand my rights', color: '#C2410C' },
-  { id: 'happened', emoji: '🌱', label: 'Something happened & I want to understand it', color: '#16A34A' },
+  { id: 'happened', emoji: '🌱', label: 'Something happened & I want to understand it', color: '#15803D' },
   { id: 'space', emoji: '🏢', label: 'I want my space accessible for everyone', color: '#2563EB' },
   { id: 'believe', emoji: '❤️', label: 'Access is a human right', color: '#9333EA' },
 ];

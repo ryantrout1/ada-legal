@@ -88,7 +88,7 @@ export default function OpsCoverageGaps({ cases, lawyers }) {
                   <td style={{ ...td, textAlign: 'center', fontWeight: 600, color: r.noCoverage ? '#B91C1C' : 'var(--slate-900)' }}>
                     {r.lawyers}
                   </td>
-                  <td style={{ ...td, textAlign: 'center', fontWeight: 700, color: r.demandScore > 5 ? '#B91C1C' : r.demandScore > 2 ? '#D97706' : 'var(--slate-700)' }}>
+                  <td style={{ ...td, textAlign: 'center', fontWeight: 700, color: r.demandScore > 5 ? '#B91C1C' : r.demandScore > 2 ? '#92400E' : 'var(--slate-700)' }}>
                     {r.demandScore === 999 ? '∞' : r.demandScore}
                   </td>
                   <td style={td}>

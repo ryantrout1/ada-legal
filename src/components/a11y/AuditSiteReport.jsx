@@ -63,7 +63,7 @@ export default function AuditSiteReport({ siteResults, runningSite, siteProgress
                   {p.error ? (
                     <span style={{ fontSize: '0.6875rem', color: '#991B1B' }}>{p.error}</span>
                   ) : p.violations.length === 0 ? (
-                    <span style={{ fontSize: '0.6875rem', color: '#16A34A', fontWeight: 600 }}>✓ Clean</span>
+                    <span style={{ fontSize: '0.6875rem', color: '#15803D', fontWeight: 600 }}>✓ Clean</span>
                   ) : (
                     <span style={{ fontSize: '0.6875rem', color: '#991B1B', fontWeight: 600 }}>
                       {p.violations.length} issue{p.violations.length !== 1 ? 's' : ''}

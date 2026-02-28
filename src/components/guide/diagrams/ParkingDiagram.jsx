@@ -19,7 +19,7 @@ const CALLOUTS = [
     linkOverride: null
   },
   {
-    id: 2, label: 'Standard Accessible Space', section: '§502.2', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Standard Accessible Space', section: '§502.2', color: '#15803D', textColor: '#14532D',
     x: 370, y: 190,
     plain: 'A standard accessible car space must be at least 96 inches (8 feet) wide. It must have an access aisle next to it, and must be located on the shortest accessible route to the building entrance. The space is measured from the center of the boundary markings, so the painted lines are shared between the space and the aisle.',
     legal: '"Car parking spaces shall be 96 inches (2440 mm) wide minimum." Per §502.3: access aisles "shall adjoin an accessible route." Per §208.3.1: spaces "shall be located on the shortest accessible route from parking to an entrance."',
@@ -43,7 +43,7 @@ const CALLOUTS = [
     linkOverride: null
   },
   {
-    id: 5, label: 'Van Vertical Clearance', section: '§502.5', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Van Vertical Clearance', section: '§502.5', color: '#92400E', textColor: '#78350F',
     x: 575, y: 265,
     plain: 'Van-accessible spaces must have at least 98 inches (8 feet 2 inches) of vertical clearance. This is not just over the parking space — it applies to the entire vehicle route from the parking facility entrance, through the space and access aisle, all the way to the facility exit. This ensures tall vans with roof-mounted wheelchair lifts can navigate the entire route safely.',
     legal: '"Van parking spaces, access aisles serving them, and a vehicular route from an entrance of the parking facility to the van parking spaces and from the van parking spaces to an exit from the parking facility shall provide a vertical clearance of 98 inches (2490 mm) minimum."',
@@ -51,7 +51,7 @@ const CALLOUTS = [
     linkOverride: null
   },
   {
-    id: 6, label: 'Surface & Slope', section: '§502.4', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Surface & Slope', section: '§502.4', color: '#BE185D', textColor: '#9D174D',
     x: 255, y: 340,
     plain: 'Accessible spaces and their access aisles must be firm, stable, and slip-resistant. The access aisle must be at the same level as the parking space — no curbs, steps, or level changes between them. The maximum slope in any direction is 1:48 (about 2%), which is essentially flat. Curb ramps must not project into access aisles because they create an uneven surface where wheelchairs could tip.',
     legal: '"Parking spaces and access aisles serving them shall have surface slopes not steeper than 1:48." "Access aisles shall be at the same level as the parking spaces they serve. Changes in level are not permitted."',
@@ -59,7 +59,7 @@ const CALLOUTS = [
     linkOverride: null
   },
   {
-    id: 7, label: 'Scoping (How Many?)', section: '§208.2', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Scoping (How Many?)', section: '§208.2', color: '#0E7490', textColor: '#0C4A6E',
     x: 115, y: 340,
     plain: 'The number of accessible spaces required depends on the total number of parking spaces in your lot or garage. See the table below. Medical facilities specializing in treating people with mobility impairments must provide 20% accessible spaces for outpatient areas. Of all accessible spaces, at least 1 in every 6 must be van-accessible.',
     legal: '"Parking facilities shall provide accessible parking spaces in accordance with Table 208.2." Per §208.2.4: "For every six or fraction of six accessible parking spaces required, at least one shall be a van parking space complying with 502."',

@@ -74,7 +74,7 @@ export default function ResourceCard({ card }) {
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--slate-500)'
             }}>
               {item.warning
-                ? <AlertTriangle size={14} style={{ color: '#D97706' }} aria-hidden="true" />
+                ? <AlertTriangle size={14} style={{ color: '#92400E' }} aria-hidden="true" />
                 : <Clock size={14} aria-hidden="true" />
               }
               {item.text}

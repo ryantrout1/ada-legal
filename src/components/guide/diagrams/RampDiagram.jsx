@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§405.2'
   },
   {
-    id: 2, label: 'Maximum Rise', section: '§405.6', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Maximum Rise', section: '§405.6', color: '#15803D', textColor: '#14532D',
     x: 700, y: 175,
     plain: 'A single ramp section — the sloped part between flat landings — can rise no more than 30 inches (about 2.5 feet). If you need to go higher, you add a flat landing and start another section. For example, reaching a level 5 feet up requires at least two ramp sections with a landing in between.',
     legal: '"The rise for any ramp run shall be 30 inches (760 mm) maximum."',
@@ -32,21 +32,21 @@ const CALLOUTS = [
     citation: '§405.7'
   },
   {
-    id: 5, label: 'Handrails', section: '§405.8 + §505', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Handrails', section: '§405.8 + §505', color: '#92400E', textColor: '#78350F',
     x: 580, y: 120,
     plain: 'Handrails are required on both sides of any ramp that rises more than 6 inches. They must be between 34 and 38 inches high, measured from the ramp surface to the top of the grip. Each handrail must extend 12 inches horizontally past the top and bottom of the ramp, giving people something to hold before stepping on or off the slope. The grip must be smooth, rounded, and continuous — no breaks or sharp edges.',
     legal: '"Ramp runs with a rise greater than 6 inches (150 mm) shall have handrails complying with 505." Handrails: "34 inches (865 mm) minimum and 38 inches (965 mm) maximum" high. Extensions: "12 inches (305 mm) minimum beyond the top" and bottom of ramp runs.',
     citation: '§405.8, §505.4, §505.10'
   },
   {
-    id: 6, label: 'Edge Protection', section: '§405.9', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Edge Protection', section: '§405.9', color: '#BE185D', textColor: '#9D174D',
     x: 320, y: 340,
     plain: 'Both sides of the ramp must have something to stop a wheelchair, walker, or cane from slipping off the edge. This can be a raised curb, a wall, a railing, or the ramp surface itself extending at least 12 inches past the handrail. The barrier must be solid enough that a 4-inch ball cannot pass through it.',
     legal: '"Edge protection complying with 405.9.1 or 405.9.2 shall be provided on each side of ramp runs and at each side of ramp landings." Options: floor extending 12 inches minimum beyond handrail, or "a curb or barrier that prevents the passage of a 4-inch diameter sphere."',
     citation: '§405.9'
   },
   {
-    id: 7, label: 'Cross Slope', section: '§405.3', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Cross Slope', section: '§405.3', color: '#0E7490', textColor: '#0C4A6E',
     x: 500, y: 370,
     plain: 'The sideways tilt of the ramp — called the cross slope — must be no more than 1:48 (about 2%). Too much sideways tilt causes a wheelchair to drift to one side, making the ramp dangerous. The ramp surface must also be firm, stable, and slip-resistant. Loose gravel, deep carpet, and wood chips do not meet this standard.',
     legal: '"Cross slope of ramp runs shall not be steeper than 1:48." Surface: "Floor or ground surfaces of ramp runs shall comply with 302," requiring firm, stable, and slip-resistant surfaces.',

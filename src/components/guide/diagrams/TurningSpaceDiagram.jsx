@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§304.3.1'
   },
   {
-    id: 2, label: 'T-Shaped Space', section: '§304.3.2', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'T-Shaped Space', section: '§304.3.2', color: '#15803D', textColor: '#14532D',
     x: 560, y: 50,
     plain: 'The T-shaped turning space is an alternative to the circular option, useful in tighter layouts like corridors or alcoves. It fits within a 60-inch square and consists of a T-shape where each arm of the T is at least 36 inches wide. The person in a wheelchair executes a three-point turn — rolling forward into one arm, backing into the stem, then rolling forward in the new direction. Each arm must be clear of obstructions.',
     legal: '"The floor or ground surface of a T-shaped turning space shall be a T-shaped space within a 60 inch (1525 mm) square minimum with arms and base 36 inches (915 mm) wide minimum." Each segment of the T shall be provided with clearance 36 inches minimum.',

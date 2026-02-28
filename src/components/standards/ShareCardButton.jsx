@@ -25,7 +25,7 @@ export default function ShareCardButton({ href }) {
         width: '30px', height: '30px', borderRadius: '7px',
         border: '1px solid var(--slate-200)',
         background: copied ? '#F0FDF4' : 'white',
-        color: copied ? '#16A34A' : 'var(--slate-500)',
+        color: copied ? '#15803D' : 'var(--slate-500)',
         cursor: 'pointer', transition: 'all 0.15s',
         position: 'relative', zIndex: 2, flexShrink: 0,
       }}

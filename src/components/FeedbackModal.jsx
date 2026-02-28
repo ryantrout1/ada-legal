@@ -308,7 +308,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
                   </>}
                   <p style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                    color: '#16A34A', margin: '10px 0 0', fontWeight: 600,
+                    color: '#15803D', margin: '10px 0 0', fontWeight: 600,
                   }}>✓ You've agreed to let us feature your words on our site.</p>
                 </>
               ) : (

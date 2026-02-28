@@ -99,7 +99,7 @@ export default function AccountabilityTable({ cases }) {
                   }}>{r.highestSev}</span>
                 </td>
                 <td style={td}>{new Date(r.firstReport).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
-                <td style={{ ...td, textAlign: 'center', fontWeight: 600, color: r.hasAttorney ? '#16A34A' : 'var(--slate-500)' }}>
+                <td style={{ ...td, textAlign: 'center', fontWeight: 600, color: r.hasAttorney ? '#15803D' : 'var(--slate-500)' }}>
                   {r.hasAttorney ? 'Yes' : 'No'}
                 </td>
               </tr>

@@ -12,7 +12,7 @@ const CALLOUTS = [
     citation: '§604.8.1.1, §604.8.1.2, §604.8.1.6'
   },
   {
-    id: 2, label: 'Toilet Position', section: '§604.2', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Toilet Position', section: '§604.2', color: '#15803D', textColor: '#14532D',
     x: 175, y: 295,
     plain: 'The center of the toilet must be between 16 and 18 inches from the side wall. This precise positioning ensures the side grab bar is within comfortable reach during a wheelchair transfer. The seat height must be between 17 and 19 inches above the floor — higher than a standard residential toilet (typically 15 inches) — making it much easier to transfer from a wheelchair.',
     legal: '"The centerline of the water closet shall be 16 inches (405 mm) minimum to 18 inches (455 mm) maximum from the side wall or partition." Seat height: "17 inches (430 mm) minimum and 19 inches (485 mm) maximum measured to the top of the seat."',
@@ -35,21 +35,21 @@ const CALLOUTS = [
     grabBar: true
   },
   {
-    id: 5, label: 'Clear Floor Space', section: '§604.3', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Clear Floor Space', section: '§604.3', color: '#92400E', textColor: '#78350F',
     x: 370, y: 240,
     plain: 'The clear floor space inside the stall must extend at least 60 inches from the side wall (the full width of the stall) and at least 56 inches from the rear wall. This provides enough room for a person using a wheelchair to enter the stall, position next to the toilet, and perform a lateral (side) transfer. No fixtures, dispensers, or trash cans may protrude into this clear space.',
     legal: '"Clearance around water closets shall be 60 inches (1525 mm) minimum measured perpendicular from the side wall and 56 inches (1420 mm) minimum measured perpendicular from the rear wall."',
     citation: '§604.3.1'
   },
   {
-    id: 6, label: 'Flush Controls', section: '§604.6', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Flush Controls', section: '§604.6', color: '#BE185D', textColor: '#9D174D',
     x: 250, y: 345,
     plain: 'The flush control must be on the open side of the toilet — the side where the wheelchair approaches, not the wall side. It must be hand-operated or automatic. If hand-operated, it must work with one hand and not require tight grasping, pinching, or twisting of the wrist. The maximum operating force is 5 pounds. Automatic flush sensors always comply with these requirements.',
     legal: '"Flush controls shall be hand operated or automatic. Hand operated flush controls shall comply with 309. Flush controls shall be located on the open side of the water closet."',
     citation: '§604.6'
   },
   {
-    id: 7, label: 'Toilet Paper Dispenser', section: '§604.7', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Toilet Paper Dispenser', section: '§604.7', color: '#0E7490', textColor: '#0C4A6E',
     x: 115, y: 130,
     plain: 'The toilet paper dispenser must be mounted 7 to 9 inches in front of the toilet (measured from the front edge of the toilet to the centerline of the dispenser). It must be between 15 and 48 inches above the floor. Critically, it must not obstruct the use of the grab bar — large dispensers that stick out from the wall can block a person from gripping the bar. The dispenser must allow continuous paper delivery (no controlled-delivery types that limit how much paper you can pull at once).',
     legal: '"Toilet paper dispensers shall be 7 inches (180 mm) minimum and 9 inches (230 mm) maximum in front of the water closet measured to the centerline of the dispenser. The outlet of the dispenser shall be 15 inches (380 mm) minimum and 48 inches (1220 mm) maximum above the finish floor." "Dispensers shall not be of a type that controls delivery or that does not allow continuous paper flow."',

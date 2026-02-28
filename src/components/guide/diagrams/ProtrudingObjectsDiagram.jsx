@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§307.2'
   },
   {
-    id: 2, label: 'Below 27 Inches', section: '§307.2', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Below 27 Inches', section: '§307.2', color: '#15803D', textColor: '#14532D',
     x: 280, y: 42,
     plain: 'Objects with leading edges at or below 27 inches above the floor have no protrusion limit. The reason is simple: a person using a long cane sweeps the cane at floor level in an arc. Any object at or below 27 inches will be detected by the cane before the person walks into it. Common examples include drinking fountains (mounted with rim at 27 inches or lower), benches, planters, and guard rails.',
     legal: '"Objects with leading edges at or below 27 inches above the finish floor may protrude any amount." These objects are within cane-detectable range.',
@@ -32,21 +32,21 @@ const CALLOUTS = [
     citation: '§307.4'
   },
   {
-    id: 5, label: 'Cane Detection', section: '§307.2', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Cane Detection', section: '§307.2', color: '#92400E', textColor: '#78350F',
     x: 180, y: 290,
     plain: 'The 27-inch line is the critical threshold for cane detection. A person using a long white cane typically sweeps in an arc approximately 27 inches above the floor. Objects above this line that protrude more than 4 inches are invisible to the cane and create a head or body impact hazard. Objects below 27 inches are detected by the cane sweep before the person reaches them. This is why 27 inches is the dividing line for protrusion rules.',
     legal: '"Objects with leading edges more than 27 inches above the finish floor" are subject to the 4-inch limit because they are outside the detectable zone of a long cane.',
     citation: '§307.2'
   },
   {
-    id: 6, label: 'Circulation Width', section: '§307.5', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Circulation Width', section: '§307.5', color: '#BE185D', textColor: '#9D174D',
     x: 480, y: 290,
     plain: 'Protruding objects cannot reduce the required clear width of an accessible route. The minimum clear width is 36 inches (narrowing to 32 inches at a single point for up to 24 inches). When measuring clear width, protruding objects are measured from their outermost edge, not from the wall. A hallway that is 40 inches wide with a 6-inch protrusion only has 34 inches of usable width.',
     legal: '"Protruding objects shall not reduce the clear width required for accessible routes." §403.5.1: "36 inches minimum." Objects encroaching into this width are violations.',
     citation: '§307.5'
   },
   {
-    id: 7, label: 'Common Violations', section: 'Advisory §307', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Common Violations', section: 'Advisory §307', color: '#0E7490', textColor: '#0C4A6E',
     x: 680, y: 290,
     plain: 'The most frequent §307 violations include: fire extinguisher cabinets (recessing into the wall solves this), AED boxes, wall-mounted display cases, open stairway undersides (must have a cane-detectable barrier when headroom drops below 80 inches), decorative wall sconces and artwork, building directories and signage brackets, drinking fountains mounted too high, and wall-mounted TV screens or monitors in waiting areas.',
     legal: 'Advisory §307.2: "Examples of protruding objects include wall-mounted fire extinguisher cabinets, drinking fountains, signs, and similar elements." Recessing objects into the wall or adding a cane-detectable apron below are common solutions.',

@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§505.7.1, §505.6'
   },
   {
-    id: 6, label: 'Non-Circular Profile', section: '§505.7.2', color: '#16A34A', textColor: '#14532D',
+    id: 6, label: 'Non-Circular Profile', section: '§505.7.2', color: '#15803D', textColor: '#14532D',
     x: 580, y: 48,
     plain: 'Non-circular handrails (oval, rectangular with rounded corners, etc.) must have a cross-section dimension of 2.25 inches maximum, and a perimeter between 4 and 6.25 inches. The perimeter measurement ensures the rail is graspable — large flat rails that cannot be wrapped by a hand do not comply. All edges must be rounded, and the surface smooth. This profile is increasingly popular in modern architecture.',
     legal: '"Non-circular cross sections shall have a cross-section dimension of 2 1/4 inches (57 mm) maximum." "Non-circular cross sections shall have a perimeter dimension of 4 inches (100 mm) minimum and 6 1/4 inches (160 mm) maximum."',

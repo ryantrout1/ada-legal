@@ -15,9 +15,9 @@ const ACCENT_COLORS = {
   available: '#15803D',
   assigned: '#C2410C',
   in_progress: '#C2410C',
-  closed: '#94A3B8',
+  closed: '#64748B',
   rejected: '#B91C1C',
-  expired: '#D97706'
+  expired: '#92400E'
 };
 
 const BADGE_CONFIG = {

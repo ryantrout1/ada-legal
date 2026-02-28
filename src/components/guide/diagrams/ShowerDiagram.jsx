@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§608.2.1'
   },
   {
-    id: 2, label: 'Roll-In Shower Size', section: '§608.3.1', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Roll-In Shower Size', section: '§608.3.1', color: '#15803D', textColor: '#14532D',
     x: 560, y: 42,
     plain: 'A standard roll-in shower is 60 × 30 inches (inside dimensions), open on the long 60-inch side so a wheelchair can roll directly in. There is no curb or threshold. This design requires more floor space than a transfer shower but allows the user to remain in their wheelchair (or a shower wheelchair). An alternate roll-in shower (§608.3.2) is 36 × 60 inches with a 36-inch entry on the long side.',
     legal: '"Standard roll-in type shower compartments shall be 30 inches minimum by 60 inches minimum clear inside dimension measured at center points of opposing sides." Threshold: level with floor, ½ inch max if beveled.',
@@ -32,21 +32,21 @@ const CALLOUTS = [
     citation: '§608.2.1.1'
   },
   {
-    id: 5, label: 'Grab Bars (Roll-In)', section: '§608.3.1.1', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Grab Bars (Roll-In)', section: '§608.3.1.1', color: '#92400E', textColor: '#78350F',
     x: 560, y: 240,
     plain: 'In a standard roll-in shower, grab bars are installed on three walls: the full length of the back wall and on both side walls extending from the entry to the back wall grab bar. Bars are mounted 33 to 36 inches above the shower floor. The maximum gap between a grab bar end and an adjacent wall is 6 inches. This three-wall configuration provides continuous support as the user moves within the shower.',
     legal: '"Grab bars shall be provided on the back wall and on the side walls. Grab bars on the back wall shall extend the length of the wall. Grab bars on the side walls shall extend from the edge of the shower to the grab bar on the back wall." 6 inches max from adjacent walls.',
     citation: '§608.3.1.1'
   },
   {
-    id: 6, label: 'Controls & Spray', section: '§608.5 / §608.6', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Controls & Spray', section: '§608.5 / §608.6', color: '#BE185D', textColor: '#9D174D',
     x: 270, y: 260,
     plain: 'Shower controls must be installed above the grab bar, between 38 and 48 inches above the shower floor. They must be operable with one hand and must not require tight grasping, pinching, or twisting. In transfer-type showers, a hand-held shower spray unit with a hose at least 59 inches long is required. In roll-in showers, a hand shower is also required. The spray unit must have an on/off control with a non-positive shut-off.',
     legal: '"Controls, faucets, and shower spray units shall be installed on the side wall opposite the seat 38 inches minimum and 48 inches maximum above the shower floor." §608.6 "A shower spray unit with a hose 59 inches long minimum… shall be provided."',
     citation: '§608.5, §608.6'
   },
   {
-    id: 7, label: 'Alternate Roll-In', section: '§608.3.2', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Alternate Roll-In', section: '§608.3.2', color: '#0E7490', textColor: '#0C4A6E',
     x: 720, y: 160,
     plain: 'The alternate roll-in shower is 36 × 60 inches with the entry (36 inches minimum) on the long side. A folding seat is provided on one end wall. Grab bars are installed on each side of the seat (both side walls) and on the back wall opposite the seat. This design accommodates both wheelchair roll-in use and seated bathing, combining the benefits of both shower types.',
     legal: '"Alternate roll-in type shower compartments shall be 36 inches wide and 60 inches deep minimum." Entry: 36 inches minimum on the long side. "A folding seat complying with §610 shall be provided on an end wall."',

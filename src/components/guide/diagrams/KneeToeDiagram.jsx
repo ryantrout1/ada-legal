@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§306.2'
   },
   {
-    id: 2, label: 'Toe Space Height', section: '§306.2.1', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Toe Space Height', section: '§306.2.1', color: '#15803D', textColor: '#14532D',
     x: 280, y: 42,
     plain: 'The toe clearance zone is defined as the space from the finish floor up to 9 inches above the floor. This is the area where a wheelchair\'s footrests and the user\'s feet extend under an element. Anything in this zone — pipes, structural supports, trash cans — reduces toe clearance and can block wheelchair access. The full 9-inch height must be maintained across the minimum required depth.',
     legal: '"Space under an element between the finish floor or ground and 9 inches (230 mm) above the finish floor or ground shall be considered toe clearance."',
@@ -32,21 +32,21 @@ const CALLOUTS = [
     citation: '§306.3.1'
   },
   {
-    id: 5, label: 'Knee Depth', section: '§306.3.3', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Knee Depth', section: '§306.3.3', color: '#92400E', textColor: '#78350F',
     x: 280, y: 250,
     plain: 'The knee clearance envelope tapers from front to back. At 27 inches above the floor, the clearance must be at least 8 inches deep (from the front edge back). At 9 inches above the floor (where it transitions to toe clearance), the depth must be at least 11 inches. Between these two heights, the clearance tapers linearly — creating a sloped profile that follows the natural shape of seated legs.',
     legal: '"At 27 inches above the finish floor: 8 inches deep minimum." "At 9 inches above the finish floor: 11 inches deep minimum, 25 inches deep maximum." The space between tapers linearly.',
     citation: '§306.3.3'
   },
   {
-    id: 6, label: 'Width', section: '§306.3.2', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Width', section: '§306.3.2', color: '#BE185D', textColor: '#9D174D',
     x: 480, y: 250,
     plain: 'Both knee clearance and toe clearance must be at least 30 inches wide. This width accommodates a standard wheelchair (typically 25–27 inches wide including wheels). The 30-inch measurement is taken perpendicular to the approach direction, between any vertical obstructions on either side. Pipe covers, structural elements, or equipment must not encroach into this 30-inch width.',
     legal: '"Knee clearance shall be 30 inches (760 mm) wide minimum." Toe clearance: "30 inches wide minimum." Both measured clear of any obstructions.',
     citation: '§306.3.2'
   },
   {
-    id: 7, label: 'Common Applications', section: 'Advisory §306', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Common Applications', section: 'Advisory §306', color: '#0E7490', textColor: '#0C4A6E',
     x: 650, y: 140,
     plain: 'Knee and toe clearance is required under lavatories (§606), dining and work surfaces (§902), sales and service counters (§904), and check-writing surfaces. Elements like pipes, valves, and enclosures underneath must not reduce the required clearance. When insulation or protection covers are added to pipes (as required at lavatories), they must fit within the clearance envelope without reducing it.',
     legal: 'Advisory §306: "Clearances are required under lavatories (§606), dining surfaces, work surfaces (§902), and sales and service counters (§904)." Elements cannot reduce required knee/toe clearance.',

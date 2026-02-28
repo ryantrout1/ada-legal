@@ -11,7 +11,7 @@ const CALLOUTS = [
     citation: '§607.2'
   },
   {
-    id: 2, label: 'Bathtub Seat', section: '§607.3', color: '#16A34A', textColor: '#14532D',
+    id: 2, label: 'Bathtub Seat', section: '§607.3', color: '#15803D', textColor: '#14532D',
     x: 330, y: 42,
     plain: 'A seat is required in accessible bathtubs — either a permanent (built-in) seat at the head end or a removable seat. Permanent seats must be 15 inches deep minimum and extend from the back wall to or beyond the outer edge of the tub. Removable seats must also be 15 inches deep and span the full width of the tub. The top of the seat must be at the same height as the tub rim (17–19 inches) to allow a smooth transfer from a wheelchair.',
     legal: '"An in-tub seat or a seat at the head end of the bathtub shall be provided." §607.3 Permanent seats: "15 inches deep minimum, extending from the back wall to or beyond the outer edge of the bathtub." Removable: "15 inches deep minimum, capable of secure placement."',
@@ -32,21 +32,21 @@ const CALLOUTS = [
     citation: '§607.4.2'
   },
   {
-    id: 5, label: 'Controls & Shower', section: '§607.5 / §607.6', color: '#D97706', textColor: '#78350F',
+    id: 5, label: 'Controls & Shower', section: '§607.5 / §607.6', color: '#92400E', textColor: '#78350F',
     x: 560, y: 90,
     plain: 'Controls and the shower spray unit must be installed between the bathtub rim and the grab bar, on the end wall opposite the seat (the foot end or open end). This placement keeps controls within reach of someone seated on the tub seat or in a wheelchair alongside the tub. A hand-held shower spray with a hose at least 59 inches long is required. Controls must be operable with one hand — no twisting.',
     legal: '"Controls, faucets, and shower spray units shall be installed on an end wall between the bathtub rim and the grab bar." §607.6 "A shower spray unit with a hose 59 inches long minimum… shall be provided." Operable with one hand per §309.',
     citation: '§607.5, §607.6'
   },
   {
-    id: 6, label: 'Enclosures', section: '§607.7', color: '#DB2777', textColor: '#9D174D',
+    id: 6, label: 'Enclosures', section: '§607.7', color: '#BE185D', textColor: '#9D174D',
     x: 560, y: 210,
     plain: 'Bathtub enclosures (shower curtains, glass doors) cannot have tracks mounted on the tub rim that would obstruct transfer. A person must be able to slide across the rim from a wheelchair or bath chair without catching on a metal track. Enclosures also must not obstruct access to the controls, faucets, or shower spray. Shower curtains are generally the best solution as they don\'t create physical barriers.',
     legal: '"Enclosures for bathtubs shall not obstruct controls, faucets, and shower spray units or obstruct transfer from wheelchairs onto bathtub seats or into bathtubs. Enclosures on bathtubs shall not have tracks mounted on their rims."',
     citation: '§607.7'
   },
   {
-    id: 7, label: 'Surface & Drainage', section: '§607.1', color: '#0891B2', textColor: '#0C4A6E',
+    id: 7, label: 'Surface & Drainage', section: '§607.1', color: '#0E7490', textColor: '#0C4A6E',
     x: 710, y: 150,
     plain: 'The bathtub floor must be slip-resistant to prevent falls. While the Standards don\'t specify a precise coefficient of friction, the surface must meet the general §302 requirement for firm, stable, and slip-resistant finishes. The tub rim height should be approximately 17–19 inches above the floor to facilitate wheelchair transfer — matching standard wheelchair seat height. Drainage must prevent water accumulation on the adjacent floor.',
     legal: '"Bathtubs shall comply with §607." Floor surface per §302: "stable, firm, and slip-resistant." Rim height should permit transfer from wheelchair — typically 17 to 19 inches above the finish floor.',
