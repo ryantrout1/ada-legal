@@ -85,6 +85,7 @@ function Message({ role, content, isLoading }) {
           borderRadius: role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
           background: role === 'user' ? '#C2410C' : 'var(--slate-100, #F1F5F9)',
           color: role === 'user' ? 'white' : 'var(--slate-800, #1E293B)',
+          border: role === 'user' ? 'none' : '1px solid var(--slate-200, #E2E8F0)',
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.9rem',
           lineHeight: 1.7,

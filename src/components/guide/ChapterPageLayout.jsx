@@ -53,7 +53,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
           background: 'transparent', border: 'none', textAlign: 'left'
         }}
       >
-        <span style={{
+        <span className="chapter-num" style={{
           fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
           color: '#C2410C', background: '#FFF7ED', padding: '2px 10px',
           borderRadius: '6px', flexShrink: 0, border: '1px solid #FFEDD5'

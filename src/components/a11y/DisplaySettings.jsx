@@ -147,7 +147,10 @@ export const applyPreferences = (prefs) => {
       #main-content svg,
       #main-content img,
       #main-content video,
-      #main-content canvas {
+      #main-content canvas,
+      #main-content .video-overlay,
+      #main-content [aria-label*="Video coming soon"] div,
+      #main-content [aria-label*="co-founder"] div {
         background-color: unset !important;
         background-image: unset !important;
       }
@@ -471,6 +474,13 @@ export const applyPreferences = (prefs) => {
         background-color: #1A1F2B !important;
       }
 
+      /* === Case Manager type pills — dark mode variants === */
+      .cm-type-pill {
+        background-color: #2D3748 !important;
+        color: #E2E8F0 !important;
+        border: 1px solid #4A5568 !important;
+      }
+
       /* === Global footer (non-landing, already dark) === */
       footer[role="contentinfo"],
       footer[role="contentinfo"] div,
@@ -497,8 +507,9 @@ export const applyPreferences = (prefs) => {
         color: white !important;
       }
       .ada-ai-bubble-assistant {
-        background-color: #0F1219 !important;
+        background-color: #151B24 !important;
         color: #E2E8F0 !important;
+        border: 1px solid #2A3344 !important;
       }
       .ada-ai-suggestion {
         background-color: #0F1219 !important;
@@ -822,6 +833,8 @@ export const applyPreferences = (prefs) => {
       #main-content img,
       #main-content video,
       #main-content canvas,
+      #main-content .video-overlay,
+      #main-content [aria-label*="co-founder"] div,
       #main-content .brand-icon {
         background-color: unset !important;
         background-image: unset !important;
@@ -1519,6 +1532,8 @@ export const applyPreferences = (prefs) => {
       #main-content [role="button"], #main-content [role="radio"],
       #main-content [role="tab"], #main-content [role="switch"],
       #main-content svg, #main-content img,
+      #main-content .video-overlay,
+      #main-content [aria-label*="co-founder"] div,
       #main-content .brand-icon {
         background-color: unset !important;
         background-image: unset !important;
@@ -1681,6 +1696,7 @@ export const applyPreferences = (prefs) => {
       .ada-ai-bubble-assistant {
         background-color: #F0E8D9 !important;
         color: #3D3128 !important;
+        border: 1px solid #D4C5B0 !important;
       }
       .ada-ai-suggestion {
         background-color: #F0E8D9 !important;

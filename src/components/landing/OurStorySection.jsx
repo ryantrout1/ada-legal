@@ -77,9 +77,9 @@ export default function OurStorySection() {
               }}
             />
             {/* Dark overlay with coming soon */}
-            <div style={{
+            <div className="video-overlay" style={{
               position: 'absolute', inset: 0,
-              background: 'linear-gradient(to top, rgba(15,18,25,0.85) 0%, rgba(15,18,25,0.4) 40%, rgba(15,18,25,0.2) 100%)',
+              background: 'linear-gradient(to top, rgba(15,18,25,0.75) 0%, rgba(15,18,25,0.25) 35%, rgba(15,18,25,0.08) 100%)',
               display: 'flex', flexDirection: 'column',
               alignItems: 'center', justifyContent: 'flex-end',
               padding: '0 20px 32px',

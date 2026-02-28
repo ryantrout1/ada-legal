@@ -113,12 +113,12 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
         {/* Pills area */}
         <div className="cm-pills" style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', flex: '0 1 auto' }}>
           {c.business_type && (
-            <span style={{ display: 'inline-block', padding: '2px 7px', borderRadius: '6px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: '#1E293B', backgroundColor: '#F1EFEA' }}>
+            <span className="cm-type-pill" style={{ display: 'inline-block', padding: '2px 7px', borderRadius: '6px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: '#1E293B', backgroundColor: '#F1EFEA' }}>
               {c.business_type}
             </span>
           )}
           {(c.violation_subtype || c.url_domain) && (
-            <span style={{ display: 'inline-block', padding: '2px 7px', borderRadius: '6px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: isPhysical ? '#7C2D12' : '#1E3A5F', backgroundColor: isPhysical ? '#FEF1EC' : '#DBEAFE' }}>
+            <span className="cm-type-pill" style={{ display: 'inline-block', padding: '2px 7px', borderRadius: '6px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: isPhysical ? '#7C2D12' : '#1E3A5F', backgroundColor: isPhysical ? '#FEF1EC' : '#DBEAFE' }}>
               {c.violation_subtype || c.url_domain}
             </span>
           )}
