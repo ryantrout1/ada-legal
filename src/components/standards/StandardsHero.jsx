@@ -5,19 +5,19 @@ import ADAAssistant from '../guide/ADAAssistant';
 const QUOTES = [
   {
     text: "I kept being told 'that's just how the building is.' Turns out there are clear standards they're supposed to follow.",
-    attribution: "Person with a mobility disability"
+    attribution: "The reason we built this"
   },
   {
     text: "I couldn't order groceries online because the website didn't work with my screen reader. I had no idea that was an ADA violation.",
-    attribution: "Blind user"
+    attribution: "The reason we built this"
   },
   {
     text: "I tried reading the ADA standards on ADA.gov and gave up after 10 minutes. This explained my rights in plain English.",
-    attribution: "Someone denied service"
+    attribution: "The reason we built this"
   },
   {
     text: "I didn't know a restaurant without a ramp was actually breaking the law. I found the exact standard in 30 seconds.",
-    attribution: "Wheelchair user, first-time visitor"
+    attribution: "The reason we built this"
   }
 ];
 
