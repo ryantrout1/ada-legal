@@ -155,6 +155,14 @@ export const applyPreferences = (prefs) => {
         background-image: unset !important;
       }
 
+      /* === Story video container — preserve photo + overlay === */
+      #main-content .story-video-container,
+      #main-content .story-video-container div,
+      #main-content .story-video-container img {
+        background-color: transparent !important;
+        background-image: unset !important;
+      }
+
       /* === Community Voices — already dark, exempt from blanket === */
       #main-content .cv-dark-section,
       #main-content .cv-dark-section div,
@@ -555,6 +563,21 @@ export const applyPreferences = (prefs) => {
         border-color: #2A3344 !important;
       }
 
+      /* === Story video container — NOT a white-bg card, keep transparent === */
+      #main-content .story-video-container {
+        background-color: #1A1F2B !important;
+      }
+      #main-content .story-video-container [role="img"],
+      #main-content .story-video-container [role="img"] div,
+      #main-content .story-video-container img {
+        background-color: transparent !important;
+        background-image: unset !important;
+      }
+      /* Restore the gradient overlay */
+      #main-content .story-video-container .video-overlay {
+        background: linear-gradient(to top, rgba(15,18,25,0.75) 0%, rgba(15,18,25,0.25) 35%, rgba(15,18,25,0.08) 100%) !important;
+      }
+
       /* MyCases + AdminCases page-level containers */
       #main-content > div[style*="background-color: rgb(250, 247, 242)"],
       #main-content > div[style*="background-color: rgb(248, 250, 252)"] {
@@ -932,6 +955,22 @@ export const applyPreferences = (prefs) => {
         border: 1px solid #FFFFFF !important;
       }
 
+      /* === Story video container — preserve photo (HC) === */
+      #main-content .story-video-container {
+        background-color: #0A0A0A !important;
+        border: 1px solid #FFFFFF !important;
+      }
+      #main-content .story-video-container [role="img"],
+      #main-content .story-video-container [role="img"] div,
+      #main-content .story-video-container img {
+        background-color: transparent !important;
+        background-image: unset !important;
+        border: none !important;
+      }
+      #main-content .story-video-container .video-overlay {
+        background: linear-gradient(to top, rgba(10,10,10,0.75) 0%, rgba(10,10,10,0.25) 35%, rgba(10,10,10,0.08) 100%) !important;
+      }
+
       /* Transparent children inside cards — no nested borders */
       .sg-resource-card div, .sg-resource-card p, .sg-resource-card span,
       .kyr-card div, .kyr-card p, .kyr-card span,
@@ -983,6 +1022,14 @@ export const applyPreferences = (prefs) => {
       #main-content [aria-label*="co-founder"] div,
       #main-content .brand-icon {
         background-color: unset !important;
+        background-image: unset !important;
+      }
+
+      /* === Story video container — preserve photo + overlay (HC) === */
+      #main-content .story-video-container,
+      #main-content .story-video-container div,
+      #main-content .story-video-container img {
+        background-color: transparent !important;
         background-image: unset !important;
       }
 
@@ -1712,6 +1759,13 @@ export const applyPreferences = (prefs) => {
         background-color: unset !important;
         background-image: unset !important;
       }
+      /* Story video — preserve photo behind overlay */
+      #main-content .warm-keep-dark .story-video-container,
+      #main-content .warm-keep-dark .story-video-container div,
+      #main-content .warm-keep-dark .story-video-container img {
+        background-color: transparent !important;
+        background-image: unset !important;
+      }
       /* Commitment cards — warm glass on dark */
       #main-content .warm-keep-dark .landing-commitment-card {
         background-color: rgba(251,246,239,0.04) !important;
@@ -1917,6 +1971,20 @@ export const applyPreferences = (prefs) => {
         background-color: rgba(194,65,12,0.15) !important;
         border-color: rgba(194,65,12,0.3) !important;
         color: #E8984A !important;
+      }
+
+      /* === Story video container — preserve photo in warm dark sections === */
+      #main-content .warm-keep-dark .story-video-container {
+        background-color: #1A1F2B !important;
+      }
+      #main-content .warm-keep-dark .story-video-container [role="img"],
+      #main-content .warm-keep-dark .story-video-container [role="img"] div,
+      #main-content .warm-keep-dark .story-video-container img {
+        background-color: transparent !important;
+        background-image: unset !important;
+      }
+      #main-content .warm-keep-dark .story-video-container .video-overlay {
+        background: linear-gradient(to top, rgba(35,25,18,0.75) 0%, rgba(35,25,18,0.25) 35%, rgba(35,25,18,0.08) 100%) !important;
       }
 
       /* === Chapter number badges — warm mode === */

@@ -47,7 +47,7 @@ export default function OurStorySection() {
         </div>
 
         {/* Video container / placeholder */}
-        <div style={{
+        <div className="story-video-container" style={{
           maxWidth: '720px', margin: '0 auto 2.5rem',
           borderRadius: '16px', overflow: 'hidden',
           border: '1px solid #2A3344',
