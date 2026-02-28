@@ -104,50 +104,81 @@ export default function LandingHeroNew() {
           </p>
         </div>
 
-        {/* Right column — What we built */}
+        {/* Right column — Gina's story + stats + WCAG */}
         <div className="landing-fade-up landing-delay-4">
+          {/* Gina quote card */}
           <div style={{
             background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '16px', padding: '28px 32px', marginBottom: '1rem'
+            borderRadius: '16px', padding: '32px', position: 'relative', marginBottom: '1rem'
           }}>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-              letterSpacing: '0.15em', textTransform: 'uppercase', color: '#4B5563',
-              margin: '0 0 1.25rem'
-            }}>
-              Inside the ADA Standards Guide
-            </p>
+            <div aria-hidden="true" style={{
+              fontFamily: 'Fraunces, serif', fontSize: '4rem', color: '#C2410C',
+              lineHeight: 1, marginBottom: '-10px', opacity: 0.6,
+            }}>"</div>
+            <blockquote style={{ margin: 0, padding: 0 }}>
+              <p style={{
+                fontFamily: 'Fraunces, serif', fontSize: '1.1rem', color: '#E2E8F0',
+                lineHeight: 1.8, margin: '0 0 20px', fontStyle: 'italic',
+              }}>
+                The ADA was written to protect people like me. But 279 pages of legal
+                standards don't help if you can't find what applies to you. I needed
+                something better — so we built it.
+              </p>
+            </blockquote>
             <div style={{
-              display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px'
+              borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px',
+              display: 'flex', alignItems: 'center', gap: '16px',
             }}>
-              {[
-                { value: '42', label: 'Interactive Diagrams', sub: 'with unit toggle & callouts' },
-                { value: '52', label: 'Guide Pages', sub: 'plain language + legal text' },
-                { value: '10', label: 'Chapters Covered', sub: 'all major ADA sections' },
-                { value: '60+', label: 'Searchable Items', sub: 'instant results, zero delay' }
-              ].map((stat, i) => (
-                <div key={i} style={{ padding: '8px 0' }}>
-                  <p style={{
-                    fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 800,
-                    color: '#F97316', margin: '0 0 2px', fontStyle: 'normal'
-                  }}>
-                    {stat.value}
-                  </p>
-                  <p style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-                    color: '#E2E8F0', margin: '0 0 2px', fontWeight: 600
-                  }}>
-                    {stat.label}
-                  </p>
-                  <p style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-                    color: '#4B5563', margin: 0
-                  }}>
-                    {stat.sub}
-                  </p>
-                </div>
-              ))}
+              {/* Placeholder avatar — replace with photo when available */}
+              <div aria-hidden="true" style={{
+                width: '48px', height: '48px', borderRadius: '50%',
+                background: '#2A3344', border: '2px solid #C2410C',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                <span style={{
+                  fontFamily: 'Fraunces, serif', fontSize: '1.2rem', fontWeight: 700,
+                  color: '#FB923C',
+                }}>G</span>
+              </div>
+              <div>
+                <p style={{
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700,
+                  color: 'white', margin: '0 0 2px',
+                }}>Gina</p>
+                <p style={{
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+                  color: '#64748B', margin: 0,
+                }}>Co-Founder · Attorney · Quadriplegic for 20 years</p>
+              </div>
             </div>
+          </div>
+
+          {/* Compact stats row */}
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '10px', marginBottom: '1rem',
+          }}>
+            {[
+              { value: '42', label: 'Diagrams' },
+              { value: '52', label: 'Guides' },
+              { value: '10', label: 'Chapters' },
+              { value: '60+', label: 'Searchable' },
+            ].map((stat, i) => (
+              <div key={i} style={{
+                background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+                borderRadius: '10px', padding: '14px 12px', textAlign: 'center',
+              }}>
+                <p style={{
+                  fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 800,
+                  color: '#F97316', margin: '0 0 2px', fontStyle: 'normal',
+                }}>{stat.value}</p>
+                <p style={{
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem',
+                  color: '#64748B', margin: 0, fontWeight: 600,
+                }}>{stat.label}</p>
+              </div>
+            ))}
           </div>
 
           {/* Accessibility commitment mini-card */}
