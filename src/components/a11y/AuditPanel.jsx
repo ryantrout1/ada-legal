@@ -49,6 +49,10 @@ function generateExportText(results, siteResults) {
       text += `  Violations: ${p.violations.length} | Passes: ${p.passes}\n`;
       p.violations.forEach(v => {
         text += `  [${(v.impact || '').toUpperCase()}] ${v.id}: ${v.help} (${v.nodes.length} elements)\n`;
+        v.nodes.forEach((n, ni) => {
+          text += `    Element ${ni + 1}: ${n.target.join(', ')}\n`;
+          text += `      Fix: ${n.failureSummary || 'See axe-core docs'}\n`;
+        });
       });
       text += '\n';
     });
