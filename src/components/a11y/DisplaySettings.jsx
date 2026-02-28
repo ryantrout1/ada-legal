@@ -1105,14 +1105,23 @@ export const applyPreferences = (prefs) => {
         border-left-width: 4px !important;
       }
 
-      /* === Step number circles === */
-      #main-content [style*="border-radius: 50%"],
-      #main-content [style*="borderRadius: 50%"],
+      /* === Step number circles (small, max ~60px) — NOT decorative bg circles === */
+      #main-content .step-number-circle,
+      #main-content span[style*="border-radius: 50%"],
+      #main-content div[style*="border-radius: 50%"][style*="width: 3"],
+      #main-content div[style*="border-radius: 50%"][style*="width: 4"],
+      #main-content div[style*="border-radius: 50%"][style*="width: 5"],
+      #main-content div[style*="border-radius: 50%"][style*="width: 6"],
       #main-content [style*="border-radius: 9999px"][style*="width: 3"],
       #main-content [style*="border-radius: 9999px"][style*="width: 4"] {
         border: 2px solid #FFFFFF !important;
         background-color: #1A1A1A !important;
         color: #FFFFFF !important;
+      }
+      /* Exempt decorative aria-hidden circles from borders */
+      #main-content div[aria-hidden="true"][style*="border-radius: 50%"] {
+        border: none !important;
+        background-color: transparent !important;
       }
 
       /* === Ghost / outline buttons & link-buttons — HIGH CONTRAST === */
