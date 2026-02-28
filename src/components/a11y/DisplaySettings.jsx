@@ -494,79 +494,102 @@ export const applyPreferences = (prefs) => {
         border: 1px solid #4A5568 !important;
       }
 
-      /* === Standards Guide resource cards — elevated from page bg === */
-      .sg-resource-card {
+      /* === CARD ELEVATION — catch ALL white-bg cards site-wide ===
+         Common pattern: background: 'white' + border + borderRadius
+         Diagrams, guide pages, pathway cards, admin cards, etc.
+         Use #151B24 to visually separate from #1E293B page bg === */
+
+      /* Named card classes */
+      .sg-resource-card,
+      .kyr-card,
+      .landing-stat-card,
+      .landing-story-card,
+      .landing-attorneys-grid > div {
         background-color: #151B24 !important;
         border-color: #2A3344 !important;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
       }
-      .sg-resource-card div,
-      .sg-resource-card p,
-      .sg-resource-card span {
+
+      /* GuideSection content cards (guide-two-col children) */
+      .guide-two-col > div {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+      }
+
+      /* Diagram containers — all use background: 'white' + borderRadius: 12 */
+      #main-content div[style*="border-radius: 12px"][style*="overflow: hidden"],
+      #main-content div[style*="border-radius: 12px"][style*="overflow:hidden"] {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+      }
+
+      /* Chapter page accordions */
+      #main-content div[style*="border-radius: 12px"][style*="margin-bottom: 12px"] {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+      }
+
+      /* Guide page content cards (background: white + border + borderRadius: 12/16px) */
+      #main-content div[style*="border-radius: 12px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 16px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 16px"][style*="border: 2px"],
+      #main-content div[style*="border-radius: 20px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 24px"][style*="border: 1px"] {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+      }
+
+      /* Pathway cards */
+      #main-content div[style*="border-radius: 24px"][style*="background: white"],
+      #main-content div[style*="border-radius: 20px"][style*="background: white"] {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+      }
+
+      /* Standards Guide components */
+      .sg-chapter-link {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+      }
+      .sg-filter-btn {
+        border-color: #2A3344 !important;
+      }
+
+      /* MyCases + AdminCases page-level containers */
+      #main-content > div[style*="background-color: rgb(250, 247, 242)"],
+      #main-content > div[style*="background-color: rgb(248, 250, 252)"] {
+        background-color: #0F1219 !important;
+      }
+
+      /* Transparent children inside all elevated cards */
+      .sg-resource-card div, .sg-resource-card p, .sg-resource-card span,
+      .kyr-card div, .kyr-card p, .kyr-card span,
+      .landing-stat-card p, .landing-stat-card span,
+      .landing-story-card div, .landing-story-card p, .landing-story-card span,
+      .guide-two-col > div div, .guide-two-col > div p, .guide-two-col > div span {
         background-color: transparent !important;
       }
-      /* Card tag pills */
+
+      /* Resource card tag pills */
       .sg-resource-card span[style*="border-radius: 100px"] {
         background-color: #2D3748 !important;
         border-color: #4A5568 !important;
         color: #CBD5E1 !important;
       }
-      /* Card divider lines */
       .sg-resource-card div[style*="borderTop"] {
         border-color: #2A3344 !important;
       }
 
-      /* === KnowYourRights cards — elevated from section bg === */
-      .kyr-card {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
-      }
-      .kyr-card div,
-      .kyr-card p,
-      .kyr-card span {
-        background-color: transparent !important;
-      }
-      .kyr-card span[style*="border-radius: 100px"] {
-        background-color: #2D3748 !important;
-        color: #CBD5E1 !important;
-      }
-
-      /* === ForAttorneys stat cards === */
-      .landing-stat-card {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
-      }
-      .landing-stat-card p,
-      .landing-stat-card span {
-        background-color: transparent !important;
-      }
-
-      /* === ForAttorneys feature grid cards === */
-      .landing-attorneys-grid > div {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
-      }
-
-      /* === Landing story cards (3 capability cards) === */
-      .landing-story-card {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
-      }
-      .landing-story-card div,
-      .landing-story-card p,
-      .landing-story-card span {
-        background-color: transparent !important;
-      }
+      /* Story card tag pills */
       .landing-story-card span[style*="border-radius: 9999px"] {
         background-color: #3C1810 !important;
         color: #F97316 !important;
       }
 
-      /* === Chapter page accordions (guide sections) === */
-      #main-content div[style*="borderRadius: '12px'"][style*="border: '1px"] {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
+      /* KYR card tag pills */
+      .kyr-card span[style*="border-radius: 100px"] {
+        background-color: #2D3748 !important;
+        color: #CBD5E1 !important;
       }
 
       /* === Global footer (non-landing, already dark) === */
@@ -1158,29 +1181,33 @@ export const applyPreferences = (prefs) => {
         border-radius: 4px;
       }
 
-      /* === Standards Guide resource cards — high contrast === */
-      .sg-resource-card {
-        background-color: #0A0A0A !important;
-        border: 2px solid #FFFFFF !important;
-      }
-      .sg-resource-card div,
-      .sg-resource-card p,
-      .sg-resource-card span {
-        background-color: transparent !important;
-      }
-
-      /* === Other cards — high contrast === */
+      /* === CARD ELEVATION — high contrast === */
+      .sg-resource-card,
       .kyr-card,
       .landing-stat-card,
       .landing-story-card,
-      .landing-attorneys-grid > div {
+      .landing-attorneys-grid > div,
+      .sg-chapter-link,
+      .guide-two-col > div {
         background-color: #0A0A0A !important;
         border: 2px solid #FFFFFF !important;
       }
+      .sg-resource-card div, .sg-resource-card p, .sg-resource-card span,
       .kyr-card div, .kyr-card p, .kyr-card span,
       .landing-stat-card p, .landing-stat-card span,
-      .landing-story-card div, .landing-story-card p, .landing-story-card span {
+      .landing-story-card div, .landing-story-card p, .landing-story-card span,
+      .guide-two-col > div div, .guide-two-col > div p, .guide-two-col > div span {
         background-color: transparent !important;
+      }
+      /* Diagram + generic bordered cards */
+      #main-content div[style*="border-radius: 12px"][style*="overflow: hidden"],
+      #main-content div[style*="border-radius: 12px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 16px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 16px"][style*="border: 2px"],
+      #main-content div[style*="border-radius: 20px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 24px"][style*="border: 1px"] {
+        background-color: #0A0A0A !important;
+        border: 2px solid #FFFFFF !important;
       }
 
       /* === Chapter number badges — high contrast === */
@@ -1762,29 +1789,33 @@ export const applyPreferences = (prefs) => {
         color: #FBF6EF !important;
       }
 
-      /* === Standards Guide resource cards — warm mode === */
-      .sg-resource-card {
-        background-color: #F5EDE0 !important;
-        border-color: #E8DDD0 !important;
-      }
-      .sg-resource-card div,
-      .sg-resource-card p,
-      .sg-resource-card span {
-        background-color: transparent !important;
-      }
-
-      /* === Other cards — warm mode === */
+      /* === CARD ELEVATION — warm mode === */
+      .sg-resource-card,
       .kyr-card,
       .landing-stat-card,
       .landing-story-card,
-      .landing-attorneys-grid > div {
+      .landing-attorneys-grid > div,
+      .sg-chapter-link,
+      .guide-two-col > div {
         background-color: #F5EDE0 !important;
         border-color: #E8DDD0 !important;
       }
+      .sg-resource-card div, .sg-resource-card p, .sg-resource-card span,
       .kyr-card div, .kyr-card p, .kyr-card span,
       .landing-stat-card p, .landing-stat-card span,
-      .landing-story-card div, .landing-story-card p, .landing-story-card span {
+      .landing-story-card div, .landing-story-card p, .landing-story-card span,
+      .guide-two-col > div div, .guide-two-col > div p, .guide-two-col > div span {
         background-color: transparent !important;
+      }
+      /* Diagram + generic bordered cards */
+      #main-content div[style*="border-radius: 12px"][style*="overflow: hidden"],
+      #main-content div[style*="border-radius: 12px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 16px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 16px"][style*="border: 2px"],
+      #main-content div[style*="border-radius: 20px"][style*="border: 1px"],
+      #main-content div[style*="border-radius: 24px"][style*="border: 1px"] {
+        background-color: #F5EDE0 !important;
+        border-color: #E8DDD0 !important;
       }
 
       /* === Chapter number badges — warm mode === */
