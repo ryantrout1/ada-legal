@@ -55,7 +55,7 @@ export default function AttorneyAlertBar({ lawyers, cases, contactLogs, onQuickA
                 <div key={l.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 0', flexWrap: 'wrap' }}>
                   <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-900)' }}>{l.full_name}</span>
                   <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>{l.firm_name}</span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-400)' }}>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
                     Applied {new Date(l.created_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   </span>
                   <button

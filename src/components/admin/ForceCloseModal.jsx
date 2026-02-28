@@ -87,7 +87,7 @@ export default function ForceCloseModal({ open, caseData, onSubmit, onCancel, sa
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           width: '100%', padding: '0.625rem 1.5rem',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700,
-          color: 'white', backgroundColor: (!canSubmit || saving) ? 'var(--slate-300)' : '#B91C1C',
+          color: 'white', backgroundColor: (!canSubmit || saving) ? 'var(--slate-500)' : '#B91C1C',
           border: 'none', borderRadius: 'var(--radius-md)',
           cursor: (!canSubmit || saving) ? 'not-allowed' : 'pointer', minHeight: '44px',
           marginBottom: '0.75rem'

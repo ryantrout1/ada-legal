@@ -134,7 +134,7 @@ export default function AttorneyExpandedPanel({ lawyer, cases, contactLogs, acti
         <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '16px' }}>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px' }}>Recent Assignments</p>
           {recentTimeline.length === 0 ? (
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)' }}>No assignments yet</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>No assignments yet</p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {recentTimeline.map(t => (
@@ -146,7 +146,7 @@ export default function AttorneyExpandedPanel({ lawyer, cases, contactLogs, acti
                   <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-900)', flex: '1 1 120px', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {t.business}
                   </span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-400)' }}>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)' }}>
                     {formatDate(t.assignedAt)}
                   </span>
                   {t.hasContact ? (

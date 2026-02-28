@@ -143,7 +143,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
             )}
           </div>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-400)', margin: 0
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)', margin: 0
           }}>
             {c.id?.slice(0, 8)}...
           </p>
@@ -313,15 +313,15 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 12px', textTransform: 'uppercase' }}>Claimant Contact</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <User size={14} style={{ color: 'var(--slate-400)' }} />
+                <User size={14} style={{ color: 'var(--slate-500)' }} />
                 <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_name}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Mail size={14} style={{ color: 'var(--slate-400)' }} />
+                <Mail size={14} style={{ color: 'var(--slate-500)' }} />
                 <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_email}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Phone size={14} style={{ color: 'var(--slate-400)' }} />
+                <Phone size={14} style={{ color: 'var(--slate-500)' }} />
                 <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_phone}</span>
               </div>
             </div>

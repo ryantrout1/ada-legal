@@ -75,7 +75,7 @@ export default function Marketplace() {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)' }}>
         <div style={{ textAlign: 'center', maxWidth: '480px' }}>
-          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Access Restricted</h2>
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Access Restricted</h1>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
             This page is for approved attorneys only. If you'd like to join the attorney network, please <a href={createPageUrl('LawyerRegister')} style={{ color: 'var(--terra-600)', fontWeight: 600 }}>apply here</a>.
           </p>
@@ -89,7 +89,7 @@ export default function Marketplace() {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)' }}>
         <div style={{ textAlign: 'center', maxWidth: '480px', backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-2xl)' }}>
           <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto var(--space-lg)', fontSize: '1.75rem' }}>⏳</div>
-          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Application Pending</h2>
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Application Pending</h1>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', lineHeight: 1.6, margin: 0 }}>
             Your application is currently under review. You'll receive an email once your account has been approved.
           </p>
@@ -102,7 +102,7 @@ export default function Marketplace() {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)' }}>
         <div style={{ textAlign: 'center', maxWidth: '480px', backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-2xl)' }}>
-          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Subscription Required</h2>
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Subscription Required</h1>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', lineHeight: 1.6, marginBottom: 'var(--space-lg)' }}>
             Your account is approved, but you need an active subscription to access available cases.
           </p>

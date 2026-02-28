@@ -55,7 +55,7 @@ function SubRow({ c, onExpand }) {
       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--slate-50)'}
       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
     >
-      <span style={{ fontSize: '0.75rem', color: 'var(--slate-400)', flex: '0 0 70px' }}>{c.id?.slice(0, 8)}…</span>
+      <span style={{ fontSize: '0.75rem', color: 'var(--slate-500)', flex: '0 0 70px' }}>{c.id?.slice(0, 8)}…</span>
       <span style={{ fontSize: '0.85rem', color: 'var(--slate-600)', flex: '1 1 200px', lineHeight: 1.4 }}>
         {c.ai_summary || c.narrative?.slice(0, 100) || '—'}
       </span>

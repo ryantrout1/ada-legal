@@ -45,7 +45,7 @@ export default function LawyerAlertsPopover({ overdueContacts, lawyerMap, onClos
           aria-label="Close"
           style={{
             background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
-            color: 'var(--slate-400)', display: 'flex', minHeight: '44px', minWidth: '44px',
+            color: 'var(--slate-500)', display: 'flex', minHeight: '44px', minWidth: '44px',
             alignItems: 'center', justifyContent: 'center',
           }}
         >

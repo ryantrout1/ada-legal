@@ -106,7 +106,7 @@ export default function ReviewActions({ caseData, onActionComplete }) {
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
               padding: '0.75rem 1.5rem', fontFamily: 'Manrope, sans-serif',
               fontSize: '0.9375rem', fontWeight: 700, color: 'white',
-              backgroundColor: processing ? 'var(--slate-400)' : '#15803D',
+              backgroundColor: processing ? 'var(--slate-500)' : '#15803D',
               border: 'none', borderRadius: 'var(--radius-md)',
               cursor: processing ? 'not-allowed' : 'pointer', minHeight: '48px'
             }}
@@ -175,7 +175,7 @@ export default function ReviewActions({ caseData, onActionComplete }) {
               style={{
                 padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
                 fontSize: '0.875rem', fontWeight: 700, color: 'white',
-                backgroundColor: (!rejectionReason.trim() || processing) ? 'var(--slate-400)' : '#B91C1C',
+                backgroundColor: (!rejectionReason.trim() || processing) ? 'var(--slate-500)' : '#B91C1C',
                 border: 'none', borderRadius: 'var(--radius-md)',
                 cursor: (!rejectionReason.trim() || processing) ? 'not-allowed' : 'pointer',
                 minHeight: '44px'
@@ -223,7 +223,7 @@ export default function ReviewActions({ caseData, onActionComplete }) {
               style={{
                 padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
                 fontSize: '0.875rem', fontWeight: 700, color: 'white',
-                backgroundColor: processing ? 'var(--slate-400)' : '#A16207',
+                backgroundColor: processing ? 'var(--slate-500)' : '#A16207',
                 border: 'none', borderRadius: 'var(--radius-md)',
                 cursor: processing ? 'not-allowed' : 'pointer', minHeight: '44px'
               }}

@@ -88,13 +88,13 @@ export default function AlertSummaryBar({
                 {needsAttentionCount} need attention
                 {attentionExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </button>
-              <span style={{ color: hasAlerts ? '#D4A574' : 'var(--slate-300)' }}>·</span>
+              <span style={{ color: hasAlerts ? '#D4A574' : 'var(--slate-500)' }}>·</span>
             </>
           )}
           <span>Today: <strong>{summaryStats.newToday}</strong> new</span>
-          <span style={{ color: hasAlerts ? '#D4A574' : 'var(--slate-300)' }}>·</span>
+          <span style={{ color: hasAlerts ? '#D4A574' : 'var(--slate-500)' }}>·</span>
           <span>This week: <strong>{summaryStats.approvedWeek}</strong> approved, <strong>{summaryStats.rejectedWeek}</strong> rejected</span>
-          <span style={{ color: hasAlerts ? '#D4A574' : 'var(--slate-300)' }}>·</span>
+          <span style={{ color: hasAlerts ? '#D4A574' : 'var(--slate-500)' }}>·</span>
           <span>Avg review: <strong>{summaryStats.avgReview}</strong></span>
         </div>
 

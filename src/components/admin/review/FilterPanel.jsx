@@ -165,7 +165,7 @@ export default function FilterPanel({ filters, onChange, open }) {
               </p>
               <div className="filter-date-row" style={{ display: 'flex', gap: '8px' }}>
                 <div style={{ flex: 1, position: 'relative' }}>
-                  <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-400)', pointerEvents: 'none' }} />
+                  <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-500)', pointerEvents: 'none' }} />
                   <input
                     type="date"
                     id="filter-date-after"
@@ -182,7 +182,7 @@ export default function FilterPanel({ filters, onChange, open }) {
                   />
                 </div>
                 <div style={{ flex: 1, position: 'relative' }}>
-                  <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-400)', pointerEvents: 'none' }} />
+                  <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-500)', pointerEvents: 'none' }} />
                   <input
                     type="date"
                     id="filter-date-before"
@@ -236,7 +236,7 @@ export default function FilterPanel({ filters, onChange, open }) {
                 {count} filter{count !== 1 ? 's' : ''} active · Clear All Filters
               </button>
             ) : (
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)', minHeight: '44px', display: 'inline-flex', alignItems: 'center' }}>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', minHeight: '44px', display: 'inline-flex', alignItems: 'center' }}>
                 No filters active
               </span>
             )}

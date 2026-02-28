@@ -150,11 +150,11 @@ export default function CompactPipelineBar({ cases, activeStatus, onStatusClick,
         }}
       >
         <span>⏱ {secondaryStats.pendingReview} pending</span>
-        <span style={{ margin: '0 6px', color: 'var(--slate-400)' }}>·</span>
+        <span style={{ margin: '0 6px', color: 'var(--slate-500)' }}>·</span>
         <span>👤 {secondaryStats.activeLawyers} lawyer{secondaryStats.activeLawyers !== 1 ? 's' : ''}</span>
-        <span style={{ margin: '0 6px', color: 'var(--slate-400)' }}>·</span>
+        <span style={{ margin: '0 6px', color: 'var(--slate-500)' }}>·</span>
         <span>📋 {secondaryStats.lawyerApps} app{secondaryStats.lawyerApps !== 1 ? 's' : ''}</span>
-        <span style={{ margin: '0 6px', color: 'var(--slate-400)' }}>·</span>
+        <span style={{ margin: '0 6px', color: 'var(--slate-500)' }}>·</span>
         <span>✓ {secondaryStats.compliance} contact</span>
       </div>
 

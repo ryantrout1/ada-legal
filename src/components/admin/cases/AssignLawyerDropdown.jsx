@@ -70,7 +70,7 @@ export default function AssignLawyerDropdown({ caseData, approvedLawyers, onAssi
           <div style={{ overflowY: 'auto', maxHeight: '220px' }}>
             {filtered.length > 0 && (
               <>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700, color: 'var(--slate-400)', textTransform: 'uppercase', padding: '4px 12px', margin: 0 }}>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', padding: '4px 12px', margin: 0 }}>
                   Licensed in {caseData.state || 'state'}
                 </p>
                 {filtered.map(l => (
@@ -95,7 +95,7 @@ export default function AssignLawyerDropdown({ caseData, approvedLawyers, onAssi
             {/* Show other lawyers if different from filtered */}
             {allLawyers.filter(l => !filtered.includes(l)).length > 0 && (
               <>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700, color: 'var(--slate-400)', textTransform: 'uppercase', padding: '8px 12px 4px', margin: 0, borderTop: '1px solid var(--slate-100)' }}>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', padding: '8px 12px 4px', margin: 0, borderTop: '1px solid var(--slate-100)' }}>
                   Other lawyers
                 </p>
                 {allLawyers.filter(l => !filtered.includes(l)).map(l => (

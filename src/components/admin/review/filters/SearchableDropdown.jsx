@@ -68,7 +68,7 @@ export default function SearchableDropdown({ label, id, options, selected, onCha
         }}
       >
         <span>{buttonLabel}</span>
-        <ChevronDown size={16} style={{ color: 'var(--slate-400)', flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+        <ChevronDown size={16} style={{ color: 'var(--slate-500)', flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
       </button>
 
       {/* Selected pills */}
@@ -112,7 +112,7 @@ export default function SearchableDropdown({ label, id, options, selected, onCha
           {/* Search input */}
           <div style={{ padding: '8px', borderBottom: '1px solid var(--slate-100)' }}>
             <div style={{ position: 'relative' }}>
-              <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-400)' }} />
+              <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-500)' }} />
               <input
                 ref={searchRef}
                 type="text"
@@ -133,7 +133,7 @@ export default function SearchableDropdown({ label, id, options, selected, onCha
           {/* Options list */}
           <div role="listbox" aria-label={label} style={{ overflowY: 'auto', padding: '4px' }}>
             {filtered.length === 0 && (
-              <p style={{ padding: '12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)', textAlign: 'center', margin: 0 }}>
+              <p style={{ padding: '12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', textAlign: 'center', margin: 0 }}>
                 No matches
               </p>
             )}

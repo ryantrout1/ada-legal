@@ -81,9 +81,9 @@ export default function OpsFunnel({ cases, contactLogs }) {
 
   return (
     <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '10px', padding: '16px' }}>
-      <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 12px' }}>
+      <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 12px' }}>
         Case Engagement Funnel
-      </h3>
+      </h2>
 
       {/* Accessible data table */}
       <div className="sr-only">

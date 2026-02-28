@@ -19,8 +19,8 @@ export default function AdminStatusBar({ cells, secondaryText }) {
         {cells.map((cell, i) => {
           const isZero = cell.value === 0 || cell.value === '0';
           const bgColor = cell.danger ? '#FEE2E2' : cell.warn ? '#FEF3C7' : cell.active ? (cell.bg || 'var(--slate-50)') : (isZero ? 'white' : (cell.bg || 'white'));
-          const numColor = isZero ? 'var(--slate-300)' : (cell.danger ? '#B91C1C' : cell.warn ? '#92400E' : (cell.color || 'var(--slate-800)'));
-          const labelColor = isZero ? 'var(--slate-400)' : 'var(--slate-500)';
+          const numColor = isZero ? 'var(--slate-500)' : (cell.danger ? '#B91C1C' : cell.warn ? '#92400E' : (cell.color || 'var(--slate-800)'));
+          const labelColor = isZero ? 'var(--slate-500)' : 'var(--slate-500)';
           const Tag = cell.onClick ? 'button' : 'div';
 
           return (

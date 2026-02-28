@@ -115,9 +115,9 @@ export default function AttorneyRow({ lawyer, cases, contactLogs, isExpanded, on
         {/* Performance indicators */}
         <div className="attorney-perf-indicators" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', flex: '1 1 auto' }}>
           <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-900)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Briefcase size={14} style={{ color: 'var(--slate-400)' }} /> {active} active
+            <Briefcase size={14} style={{ color: 'var(--slate-500)' }} /> {active} active
           </span>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-400)' }}>{total} total</span>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>{total} total</span>
           {rrPill}
           {avgHrs !== null && (
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: avgColor }}>
@@ -131,7 +131,7 @@ export default function AttorneyRow({ lawyer, cases, contactLogs, isExpanded, on
           <LawyerBadge label={lawyer.account_status} colorMap={accountColors} />
           <LawyerBadge label={lawyer.subscription_status} colorMap={subColors} />
           {statesDisplay && (
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-400)', whiteSpace: 'nowrap' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)', whiteSpace: 'nowrap' }}>
               {statesDisplay}
             </span>
           )}

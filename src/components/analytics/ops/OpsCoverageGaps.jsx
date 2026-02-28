@@ -61,9 +61,9 @@ export default function OpsCoverageGaps({ cases, lawyers }) {
 
   return (
     <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '10px', padding: '16px' }}>
-      <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 12px' }}>
+      <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 12px' }}>
         Coverage Gaps
-      </h3>
+      </h2>
       {rows.length === 0 ? (
         <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.875rem' }}>No geographic data yet</p>
       ) : (

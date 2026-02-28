@@ -105,7 +105,7 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {c.business_name}
           </p>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-400)', margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)', margin: 0 }}>
             {c.id?.slice(0, 8)}…
           </p>
         </div>
@@ -154,7 +154,7 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
         )}
 
         {/* Chevron */}
-        <span aria-hidden="true" style={{ color: 'var(--slate-400)', display: 'flex', alignItems: 'center', flexShrink: 0, padding: '4px' }}>
+        <span aria-hidden="true" style={{ color: 'var(--slate-500)', display: 'flex', alignItems: 'center', flexShrink: 0, padding: '4px' }}>
           {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </span>
       </div>

@@ -249,7 +249,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
                   {REJECTION_REASONS.find(r => r.value === reason)?.emailText || ''}
                   {comment ? ` ${comment}` : ''}
                 </p>
-                <p style={{ margin: '0', fontSize: '0.75rem', color: 'var(--slate-400)' }}>
+                <p style={{ margin: '0', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
                   + next steps, Standards Guide link, resubmit option, disclaimer
                 </p>
               </div>

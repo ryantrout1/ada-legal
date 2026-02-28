@@ -121,7 +121,7 @@ export default function SavedViews({ views, activeViewId, onApply, onRemove, onS
               cursor: 'pointer', border: '1px solid',
               backgroundColor: activeViewId === v.id ? 'var(--slate-900)' : 'white',
               color: activeViewId === v.id ? 'white' : 'var(--slate-700)',
-              borderColor: activeViewId === v.id ? 'var(--slate-900)' : 'var(--slate-300)',
+              borderColor: activeViewId === v.id ? 'var(--slate-900)' : 'var(--slate-500)',
               transition: 'all 0.15s',
             }}
           >

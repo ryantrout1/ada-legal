@@ -9,7 +9,7 @@ export default function StickyFooter({ viewingCount, totalCount, cases }) {
   return (
     <div style={{
       position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100,
-      backgroundColor: 'var(--slate-900)', color: 'var(--slate-300)',
+      backgroundColor: 'var(--slate-900)', color: 'var(--slate-500)',
       padding: '8px 24px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
       display: 'flex', justifyContent: 'center', gap: '6px', flexWrap: 'wrap',
       minHeight: '36px', alignItems: 'center',

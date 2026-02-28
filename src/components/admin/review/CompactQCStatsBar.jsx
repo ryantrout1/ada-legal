@@ -90,14 +90,14 @@ export default function CompactQCStatsBar({ cases, activeFilter, onFilterChange 
             >
               <span style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700, lineHeight: 1.2,
-                color: isZero ? 'var(--slate-300)' : cell.color,
+                color: isZero ? 'var(--slate-500)' : cell.color,
               }}>
                 {count}
               </span>
               <span style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
                 textTransform: 'uppercase', letterSpacing: '0.03em', lineHeight: 1.3,
-                color: isZero ? 'var(--slate-400)' : 'var(--slate-500)',
+                color: isZero ? 'var(--slate-500)' : 'var(--slate-500)',
               }}>
                 {cell.label}
               </span>

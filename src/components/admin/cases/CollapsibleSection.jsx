@@ -35,7 +35,7 @@ export default function CollapsibleSection({ id, title, icon, count, alertCount,
         <ChevronRight
           size={16}
           style={{
-            color: 'var(--slate-400)',
+            color: 'var(--slate-500)',
             transform: open ? 'rotate(90deg)' : 'rotate(0deg)',
             transition: 'transform 0.15s',
             flexShrink: 0,

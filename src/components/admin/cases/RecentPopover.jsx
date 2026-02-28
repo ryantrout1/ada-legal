@@ -50,7 +50,7 @@ export default function RecentPopover({ submissions, onClose }) {
           aria-label="Close"
           style={{
             background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
-            color: 'var(--slate-400)', display: 'flex', minHeight: '44px', minWidth: '44px',
+            color: 'var(--slate-500)', display: 'flex', minHeight: '44px', minWidth: '44px',
             alignItems: 'center', justifyContent: 'center',
           }}
         >

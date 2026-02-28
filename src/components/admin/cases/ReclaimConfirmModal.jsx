@@ -61,7 +61,7 @@ export default function ReclaimConfirmModal({ open, caseData, lawyerName, onConf
             style={{
               padding: '8px 20px', minHeight: '44px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-              color: 'white', backgroundColor: saving ? 'var(--slate-300)' : '#B91C1C',
+              color: 'white', backgroundColor: saving ? 'var(--slate-500)' : '#B91C1C',
               border: 'none', borderRadius: '8px',
               cursor: saving ? 'not-allowed' : 'pointer',
             }}
