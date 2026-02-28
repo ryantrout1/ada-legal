@@ -51,15 +51,18 @@ export default function Layout({ children, currentPageName }) {
 
     // Open Graph / social media meta tags
     const ogTags = {
-      'og:title': 'ADA Legal Link — Know Your Rights Under the ADA',
-      'og:description': 'Free ADA Standards guide with plain-language summaries, interactive diagrams, and direct connection to experienced ADA attorneys. WCAG 2.2 AAA compliant.',
-      'og:image': 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png',
+      'og:title': 'ADA Legal Link — Know the Law. Know Your Rights.',
+      'og:description': 'The complete ADA Accessibility Standards — reorganized for clarity, searchable by topic, and built to be fully accessible to everyone. 42 interactive diagrams. Free forever.',
+      'og:image': 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/og-social-card.png',
+      'og:image:width': '1200',
+      'og:image:height': '630',
       'og:type': 'website',
       'og:site_name': 'ADA Legal Link',
-      'twitter:card': 'summary',
-      'twitter:title': 'ADA Legal Link — Know Your Rights Under the ADA',
-      'twitter:description': 'Free ADA Standards guide with plain-language summaries and direct connection to ADA attorneys.',
-      'twitter:image': 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png',
+      'og:url': 'https://adalegallink.com',
+      'twitter:card': 'summary_large_image',
+      'twitter:title': 'ADA Legal Link — Know the Law. Know Your Rights.',
+      'twitter:description': 'The complete ADA Accessibility Standards — reorganized, searchable, and fully accessible. 42 interactive diagrams. Free forever.',
+      'twitter:image': 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/og-social-card.png',
     };
     Object.entries(ogTags).forEach(([key, value]) => {
       const attr = key.startsWith('twitter:') ? 'name' : 'property';
@@ -68,7 +71,7 @@ export default function Layout({ children, currentPageName }) {
       meta.setAttribute('content', value);
     });
     // Page title
-    document.title = 'ADA Legal Link — Know Your Rights Under the ADA';
+    document.title = 'ADA Legal Link — Know the Law. Know Your Rights.';
   }, []);
 
   React.useEffect(() => {
