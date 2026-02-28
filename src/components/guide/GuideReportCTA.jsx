@@ -5,6 +5,10 @@ import { ArrowRight } from 'lucide-react';
 import AskADAHelper from './AskADAHelper';
 
 export default function GuideReportCTA({ pageTitle, pageType, hideHelper }) {
+  const fallbackTitle = typeof document !== 'undefined' 
+    ? document.title.replace(/ \| ADA Legal Link$/, '') 
+    : 'ADA Standards Guide';
+
   return (
     <>
       {/* AI Helper — appears inside the content area before the CTA */}
@@ -12,7 +16,7 @@ export default function GuideReportCTA({ pageTitle, pageType, hideHelper }) {
         <div className="guide-content-wrap">
           <div className="guide-content">
             <AskADAHelper
-              pageTitle={pageTitle || document.title.replace(/ \| ADA Legal Link$/, '')}
+              pageTitle={pageTitle || fallbackTitle}
               pageSections={[]}
               pageType={pageType || 'default'}
             />
@@ -60,6 +64,7 @@ export default function GuideReportCTA({ pageTitle, pageType, hideHelper }) {
             Learn how it works
           </Link>
         </div>
+      </div>
       </div>
     </>
   );
