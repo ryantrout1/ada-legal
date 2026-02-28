@@ -117,8 +117,24 @@ export default function AuditButton({ currentPageName }) {
         // Wait a moment for JS to render
         await new Promise(r => setTimeout(r, 2000));
 
-        // Inject axe into iframe
+        // Inject CSS variable fallbacks for axe-core background resolution
         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const fallbackStyle = iframeDoc.createElement('style');
+        fallbackStyle.textContent = `
+          :root {
+            --slate-900: #1E293B; --slate-800: #334155; --slate-700: #475569;
+            --slate-600: #475569; --slate-500: #475569; --slate-400: #CBD5E1;
+            --slate-300: #E2E8F0; --slate-200: #948F88; --slate-100: #F1F5F9;
+            --slate-50: #FAF7F2; --surface: #FFFFFF;
+            --terra-600: #C2410C; --terra-400: #F97316; --terra-300: #FB923C;
+            --terra-100: #FFEDD5;
+          }
+          body { background-color: #FAF7F2 !important; }
+          #main-content { background-color: #FAF7F2 !important; }
+        `;
+        iframeDoc.head.appendChild(fallbackStyle);
+
+        // Inject axe into iframe
         const script = iframeDoc.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.2/axe.min.js';
         iframeDoc.head.appendChild(script);
