@@ -1242,7 +1242,7 @@ export const applyPreferences = (prefs) => {
         fill: #FF8C5A !important;
       }
       #main-content svg[role="img"] text[fill="#14532D"],
-      #main-content svg[role="img"] text[fill="#16A34A"] {
+      #main-content svg[role="img"] text[fill="#15803D"] {
         fill: #4ADE80 !important;
       }
       #main-content svg[role="img"] text[fill="#1E3A8A"],
@@ -1254,7 +1254,7 @@ export const applyPreferences = (prefs) => {
         fill: #A78BFA !important;
       }
       #main-content svg[role="img"] text[fill="#78350F"],
-      #main-content svg[role="img"] text[fill="#D97706"] {
+      #main-content svg[role="img"] text[fill="#B45309"] {
         fill: #FCD34D !important;
       }
       #main-content svg[role="img"] text[fill="#0C4A6E"],
@@ -1361,7 +1361,7 @@ export const applyPreferences = (prefs) => {
       }
       .fb-success-icon-wrap {
         background-color: #0A0A0A !important;
-        border: 2px solid #16A34A !important;
+        border: 2px solid #15803D !important;
       }
       .fb-error {
         color: #FF6B6B !important;
