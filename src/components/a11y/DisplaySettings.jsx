@@ -779,6 +779,16 @@ export const applyPreferences = (prefs) => {
         background-color: #1E293B !important;
         border: 1px solid #475569 !important;
       }
+      .fb-type-pill {
+        background-color: #0F1219 !important;
+        border-color: #475569 !important;
+        color: #CBD5E1 !important;
+      }
+      .fb-type-pill[aria-checked="true"] {
+        background-color: #3C1810 !important;
+        border-color: #C2410C !important;
+        color: #F97316 !important;
+      }
       .fb-submit-btn {
         background-color: #C2410C !important;
         border: none !important;
@@ -1545,6 +1555,16 @@ export const applyPreferences = (prefs) => {
         background: #000000 !important;
         border: 2px solid #FFFFFF !important;
       }
+      .fb-type-pill {
+        background-color: #000000 !important;
+        border: 2px solid #FFFFFF !important;
+        color: #FFFFFF !important;
+      }
+      .fb-type-pill[aria-checked="true"] {
+        background-color: #1A0A00 !important;
+        border-color: #FFB347 !important;
+        color: #FFB347 !important;
+      }
       .fb-submit-btn {
         background-color: #D4572A !important;
         color: #FFFFFF !important;
@@ -2096,6 +2116,16 @@ export const applyPreferences = (prefs) => {
       .fb-panel {
         background-color: #FBF6EF !important;
         border-color: #E8DDD0 !important;
+      }
+      .fb-type-pill {
+        background-color: #FFFFFF !important;
+        border-color: #D4C5B0 !important;
+        color: #3D3128 !important;
+      }
+      .fb-type-pill[aria-checked="true"] {
+        background-color: #FEF1EC !important;
+        border-color: #C2410C !important;
+        color: #9A3412 !important;
       }
       .fb-title, .fb-success-title { color: #2B221B !important; }
       .fb-subtitle, .fb-success-body { color: #584A3B !important; }

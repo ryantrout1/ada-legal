@@ -184,11 +184,36 @@ export default function FeedbackModal({ isOpen, onClose }) {
             <p className="fb-subtitle">Help us improve ADA Legal Link.</p>
             <form className="fb-form" onSubmit={handleReview}>
               <div>
-                <label className="fb-label" htmlFor="fb-type">Feedback type</label>
-                <select id="fb-type" className="fb-select" value={form.feedback_type}
-                        onChange={(e) => setForm({ ...form, feedback_type: e.target.value })}>
-                  {TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                </select>
+                <label className="fb-label" id="fb-type-label">Feedback type</label>
+                <div role="radiogroup" aria-labelledby="fb-type-label" style={{
+                  display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '4px'
+                }}>
+                  {TYPES.map(t => (
+                    <button
+                      key={t.value}
+                      type="button"
+                      role="radio"
+                      aria-checked={form.feedback_type === t.value}
+                      onClick={() => setForm({ ...form, feedback_type: t.value })}
+                      className="fb-type-pill"
+                      style={{
+                        fontFamily: 'Manrope, sans-serif',
+                        fontSize: '0.8125rem',
+                        fontWeight: form.feedback_type === t.value ? 700 : 500,
+                        padding: '8px 14px',
+                        borderRadius: '100px',
+                        border: form.feedback_type === t.value ? '2px solid #C2410C' : '1px solid #9CA3AF',
+                        background: form.feedback_type === t.value ? '#FEF1EC' : '#FFFFFF',
+                        color: form.feedback_type === t.value ? '#9A3412' : '#334155',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                        minHeight: '36px',
+                      }}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {form.feedback_type === 'testimonial' && (
