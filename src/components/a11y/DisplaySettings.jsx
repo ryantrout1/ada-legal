@@ -1066,8 +1066,15 @@ export const applyPreferences = (prefs) => {
       }
 
       /* === Buttons === */
-      button {
+      #main-content button {
         border: 2px solid #FFFFFF !important;
+      }
+      /* Inline text buttons (no visual button appearance) */
+      button[style*="background: none"],
+      button[style*="background:none"],
+      #main-content button[style*="background: none"],
+      #main-content button[style*="background:none"] {
+        border: none !important;
       }
       /* Primary CTA buttons (terracotta) */
       button[style*="background: var(--terra"],
