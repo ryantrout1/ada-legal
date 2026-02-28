@@ -58,40 +58,59 @@ export default function OurStorySection() {
           */}
           <div
             role="img"
-            aria-label="Video coming soon — Gina, co-founder and ADA attorney, shares why she built ADA Legal Link"
+            aria-label="Gina, co-founder of ADA Legal Link, in her wheelchair outdoors. Video coming soon."
             style={{
               aspectRatio: '16 / 9',
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center',
-              background: 'linear-gradient(135deg, #1A1F2B 0%, #0F1219 100%)',
               position: 'relative',
+              overflow: 'hidden',
             }}
           >
-            {/* Play button circle */}
+            {/* Gina's photo */}
+            <img
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6094acc3483b8e3b868bddce2/d5cb8191b_image.png"
+              alt=""
+              aria-hidden="true"
+              style={{
+                width: '100%', height: '100%',
+                objectFit: 'cover', objectPosition: 'center 20%',
+                display: 'block',
+              }}
+            />
+            {/* Dark overlay with coming soon */}
             <div style={{
-              width: '80px', height: '80px', borderRadius: '50%',
-              background: 'rgba(194, 65, 12, 0.15)',
-              border: '2px solid #C2410C',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              marginBottom: '20px',
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to top, rgba(15,18,25,0.85) 0%, rgba(15,18,25,0.4) 40%, rgba(15,18,25,0.2) 100%)',
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'flex-end',
+              padding: '0 20px 32px',
             }}>
-              <svg width="28" height="32" viewBox="0 0 28 32" fill="none" aria-hidden="true">
-                <path d="M4 2L26 16L4 30V2Z" fill="#C2410C" />
-              </svg>
+              {/* Play button */}
+              <div style={{
+                position: 'absolute', top: '50%', left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '72px', height: '72px', borderRadius: '50%',
+                background: 'rgba(194, 65, 12, 0.25)',
+                border: '2px solid rgba(194, 65, 12, 0.6)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                backdropFilter: 'blur(4px)',
+              }}>
+                <svg width="24" height="28" viewBox="0 0 28 32" fill="none" aria-hidden="true">
+                  <path d="M4 2L26 16L4 30V2Z" fill="rgba(255,255,255,0.9)" />
+                </svg>
+              </div>
+              <p style={{
+                fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
+                color: 'white', margin: '0 0 4px', textAlign: 'center',
+              }}>
+                Video Coming Soon
+              </p>
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+                color: '#CBD5E1', margin: 0, textAlign: 'center',
+              }}>
+                Hear directly from Gina about why this platform exists.
+              </p>
             </div>
-            <p style={{
-              fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 600,
-              color: 'white', margin: '0 0 6px', textAlign: 'center',
-            }}>
-              Coming Soon
-            </p>
-            <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-              color: '#64748B', margin: 0, textAlign: 'center',
-              padding: '0 20px',
-            }}>
-              Hear directly from our co-founder about why this platform exists.
-            </p>
           </div>
         </div>
 
