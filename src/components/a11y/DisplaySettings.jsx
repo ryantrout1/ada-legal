@@ -1890,6 +1890,21 @@ export const applyPreferences = (prefs) => {
         border-color: #E8DDD0 !important;
       }
 
+      /* === Re-override: dark sections stay dark even after card elevation === */
+      #main-content .warm-keep-dark div,
+      #main-content .warm-keep-dark div[style*="border-radius"] {
+        background-color: #231912 !important;
+        background-image: none !important;
+      }
+      /* Glass cards inside dark sections */
+      #main-content .warm-keep-dark div[style*="rgba(255"] {
+        background-color: rgba(251,246,239,0.06) !important;
+      }
+      #main-content .warm-keep-dark div[style*="border: 1px solid rgba"],
+      #main-content .warm-keep-dark div[style*="border: 2px solid"] {
+        border-color: rgba(251,246,239,0.1) !important;
+      }
+
       /* === Chapter number badges — warm mode === */
       #main-content .chapter-num {
         background-color: #3D3128 !important;
