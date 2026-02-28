@@ -38,6 +38,22 @@ export default function GuideStyles() {
           padding: 28px 16px !important;
         }
       }
+
+      /* Diagram interactive element focus styles */
+      .ada-diagram-wrap g[role="button"]:focus-visible {
+        outline: 2px solid #F97316;
+        outline-offset: 3px;
+        border-radius: 50%;
+      }
+      .ada-diagram-wrap g[role="button"]:focus {
+        outline: 2px solid #F97316;
+        outline-offset: 3px;
+      }
+      /* Unit toggle button focus */
+      .ada-diagram-wrap button:focus-visible {
+        outline: 2px solid #F97316;
+        outline-offset: 2px;
+      }
     `}</style>
   );
 }

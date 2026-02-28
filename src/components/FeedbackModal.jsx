@@ -125,6 +125,12 @@ export default function FeedbackModal({ isOpen, onClose }) {
         }
         .fb-select { min-height: 40px; appearance: auto; }
         .fb-textarea { resize: vertical; min-height: 90px; }
+        .fb-select:focus-visible, .fb-input:focus-visible, .fb-textarea:focus-visible {
+          border-color: #B7501F;
+          outline: 2px solid #B7501F;
+          outline-offset: -1px;
+        }
+        /* Fallback for browsers without focus-visible */
         .fb-select:focus, .fb-input:focus, .fb-textarea:focus {
           border-color: #B7501F;
           outline: 2px solid #B7501F;

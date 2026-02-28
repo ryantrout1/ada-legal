@@ -19,6 +19,12 @@ const CARDS = [
 export default function ViolationTypeStep({ value, onChange }) {
   return (
     <div>
+      <style>{`
+        .vtype-card:focus-visible {
+          outline: 3px solid #F97316 !important;
+          outline-offset: 2px !important;
+        }
+      `}</style>
       <p style={{
         fontFamily: 'Manrope, sans-serif',
         fontSize: '1.0625rem',
@@ -45,6 +51,7 @@ export default function ViolationTypeStep({ value, onChange }) {
           return (
             <div
               key={card.value}
+              className="vtype-card"
               role="radio"
               aria-checked={isSelected}
               tabIndex={0}

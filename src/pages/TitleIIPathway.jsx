@@ -72,9 +72,9 @@ export default function TitleIIPathway() {
               }}>
                 <span aria-hidden="true">{card.icon}</span>
               </div>
-              <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '0.95rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px' }}>
+              <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '0.95rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px' }}>
                 {card.heading}
-              </h3>
+              </h2>
               <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>
                 {card.text}
               </p>
