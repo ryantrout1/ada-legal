@@ -19,7 +19,7 @@ const CATEGORY_LABELS = {
   'Other': 'Other',
 };
 
-const SEV_COLORS = { high: '#DC2626', medium: '#D97706', low: '#16A34A' };
+const SEV_COLORS = { high: '#DC2626', medium: '#92400E', low: '#15803D' };
 
 export default function ViolationLandscape({ cases }) {
   const [showTable, setShowTable] = useState(false);
@@ -68,8 +68,8 @@ export default function ViolationLandscape({ cases }) {
                 <th style={{ textAlign: 'left', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', borderBottom: '2px solid var(--slate-200)' }}>Category</th>
                 <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', borderBottom: '2px solid var(--slate-200)' }}>Total</th>
                 <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#991B1B', borderBottom: '2px solid var(--slate-200)' }}>High</th>
-                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#D97706', borderBottom: '2px solid var(--slate-200)' }}>Medium</th>
-                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#16A34A', borderBottom: '2px solid var(--slate-200)' }}>Low</th>
+                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#92400E', borderBottom: '2px solid var(--slate-200)' }}>Medium</th>
+                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#15803D', borderBottom: '2px solid var(--slate-200)' }}>Low</th>
                 <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', borderBottom: '2px solid var(--slate-200)' }}>%</th>
               </tr>
             </thead>
@@ -79,8 +79,8 @@ export default function ViolationLandscape({ cases }) {
                   <td style={{ padding: '6px 8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, borderBottom: '1px solid var(--slate-100)' }}>{d.name}</td>
                   <td style={{ padding: '6px 8px', textAlign: 'center', fontWeight: 700, fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)' }}>{d.total}</td>
                   <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)', color: '#991B1B' }}>{d.high}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)', color: '#D97706' }}>{d.medium}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)', color: '#16A34A' }}>{d.low}</td>
+                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)', color: '#92400E' }}>{d.medium}</td>
+                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)', color: '#15803D' }}>{d.low}</td>
                   <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)', color: 'var(--slate-500)' }}>{totalCases > 0 ? Math.round((d.total / totalCases) * 100) : 0}%</td>
                 </tr>
               ))}

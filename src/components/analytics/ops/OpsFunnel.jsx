@@ -66,8 +66,8 @@ export default function OpsFunnel({ cases, contactLogs }) {
   function barColor(convRate) {
     if (convRate === null) return '#C2410C';
     if (convRate < 25) return '#DC2626';
-    if (convRate < 50) return '#D97706';
-    return '#16A34A';
+    if (convRate < 50) return '#92400E';
+    return '#15803D';
   }
 
   function formatTime(hrs) {

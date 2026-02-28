@@ -96,8 +96,8 @@ export default function CaseLifecycle({ events }) {
   };
 
   const STATUS_COLORS = {
-    available: '#16A34A', assigned: '#2563EB', rejected: '#DC2626',
-    closed: '#475569', 'in progress': '#D97706', expired: '#92400E'
+    available: '#15803D', assigned: '#2563EB', rejected: '#DC2626',
+    closed: '#475569', 'in progress': '#92400E', expired: '#92400E'
   };
 
   return (

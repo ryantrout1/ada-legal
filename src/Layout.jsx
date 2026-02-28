@@ -639,7 +639,7 @@ export default function Layout({ children, currentPageName }) {
       {currentPageName !== 'Home' && (
         <footer role="contentinfo" style={{
           backgroundColor: 'var(--slate-900)',
-          color: 'var(--slate-500)',
+          color: '#94A3B8',
           padding: '2rem 0',
           marginTop: 0
         }}>
@@ -653,7 +653,7 @@ export default function Layout({ children, currentPageName }) {
             <p style={{ margin: 0, fontSize: '0.875rem', color: '#94A3B8' }}>
               © 2026 ADA Legal Link. All rights reserved.
             </p>
-            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem' }}>
+            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem', color: '#94A3B8' }}>
               Connecting people with experienced ADA attorneys.
             </p>
           </div>

@@ -15,7 +15,7 @@ const STATUS_BADGE = {
   submitted:    { bg: '#64748B', label: 'SUBMITTED' },
   under_review: { bg: '#1D4ED8', label: 'UNDER REVIEW' },
   available:    { bg: '#C2410C', label: 'AVAILABLE' },
-  assigned:     { bg: '#D97706', label: 'ASSIGNED' },
+  assigned:     { bg: '#B45309', label: 'ASSIGNED' },
   in_progress:  { bg: '#15803D', label: 'IN PROGRESS' },
   closed:       { bg: '#475569', label: 'CLOSED' },
   rejected:     { bg: '#B91C1C', label: 'REJECTED' },

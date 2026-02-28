@@ -7,8 +7,8 @@ const RESOLUTION_COLORS = {
   engaged: '#15803D',
   referred_out: '#1D4ED8',
   not_viable: '#64748B',
-  claimant_unresponsive: '#D97706',
-  claimant_declined: '#D97706',
+  claimant_unresponsive: '#92400E',
+  claimant_declined: '#92400E',
   admin_closed: '#B91C1C'
 };
 
