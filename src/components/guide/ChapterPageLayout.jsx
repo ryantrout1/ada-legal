@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, ArrowRight, BookOpen, Scale, Sparkles } from
 import GuideStyles from './GuideStyles';
 import GuideHeroBanner from './GuideHeroBanner';
 import GuideReportCTA from './GuideReportCTA';
+import AskADAHelper from './AskADAHelper';
 import AutoCiteLinks from './AutoCiteLinks';
 import ShareBar from './ShareBar';
 import { loadPreferences } from '../a11y/DisplaySettings';
@@ -357,6 +358,13 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
             ))}
           </div>
 
+          {/* AI Standards Helper — with full section context */}
+          <AskADAHelper
+            pageTitle={`Chapter ${chapterNum}: ${title}`}
+            pageSections={sections}
+            pageType="physical"
+          />
+
           {/* Share bar */}
           <div style={{ marginTop: '32px', paddingTop: '20px', borderTop: '1px solid var(--slate-200)' }}>
             <ShareBar />
@@ -374,7 +382,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
         </div>
       </div>
 
-      <GuideReportCTA />
+      <GuideReportCTA hideHelper />
     </>
   );
 }

@@ -480,6 +480,56 @@ export const applyPreferences = (prefs) => {
         background-color: #0F1219 !important;
       }
 
+      /* === AI Standards Helper — dark mode === */
+      .ada-ai-trigger {
+        background-color: #0F1219 !important;
+        border-color: #334155 !important;
+      }
+      .ada-ai-panel {
+        background-color: #1A1F2B !important;
+        border-color: #334155 !important;
+      }
+      .ada-ai-panel div {
+        background-color: transparent !important;
+      }
+      .ada-ai-bubble-user {
+        background-color: #C2410C !important;
+        color: white !important;
+      }
+      .ada-ai-bubble-assistant {
+        background-color: #0F1219 !important;
+        color: #E2E8F0 !important;
+      }
+      .ada-ai-suggestion {
+        background-color: #0F1219 !important;
+        border-color: #334155 !important;
+        color: #CBD5E1 !important;
+      }
+      .ada-ai-suggestion:hover {
+        border-color: #C2410C !important;
+        background-color: #1E293B !important;
+      }
+      .ada-ai-input {
+        background-color: #0F1219 !important;
+        border-color: #475569 !important;
+        color: #E2E8F0 !important;
+      }
+      .ada-ai-input::placeholder {
+        color: #64748B !important;
+      }
+      .ada-ai-send {
+        background-color: #C2410C !important;
+        color: white !important;
+      }
+      .ada-ai-send:disabled {
+        background-color: #334155 !important;
+        color: #64748B !important;
+      }
+      .ada-ai-panel form {
+        background-color: #1A1F2B !important;
+        border-color: #334155 !important;
+      }
+
       /* ============================================
          SVG DIAGRAMS — DARK MODE
          All 42 interactive diagrams use inline SVG
@@ -1032,6 +1082,64 @@ export const applyPreferences = (prefs) => {
         stroke: #FFFFFF !important;
       }
 
+      /* === AI Standards Helper — high contrast === */
+      .ada-ai-trigger {
+        background-color: #000000 !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      .ada-ai-panel {
+        background-color: #000000 !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      .ada-ai-panel div {
+        background-color: transparent !important;
+      }
+      .ada-ai-bubble-user {
+        background-color: #C2410C !important;
+        color: white !important;
+        border: 1px solid #FFFFFF !important;
+      }
+      .ada-ai-bubble-assistant {
+        background-color: #1A1A1A !important;
+        color: #FFFFFF !important;
+        border: 1px solid #FFFFFF !important;
+      }
+      .ada-ai-suggestion {
+        background-color: #000000 !important;
+        border: 2px solid #FFFFFF !important;
+        color: #FFFFFF !important;
+      }
+      .ada-ai-suggestion:hover {
+        border-color: #FFB347 !important;
+        color: #FFB347 !important;
+      }
+      .ada-ai-input {
+        background-color: #000000 !important;
+        border: 2px solid #FFFFFF !important;
+        color: #FFFFFF !important;
+      }
+      .ada-ai-input::placeholder {
+        color: #AAAAAA !important;
+      }
+      .ada-ai-send {
+        background-color: #C2410C !important;
+        color: white !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      .ada-ai-send:disabled {
+        background-color: #1A1A1A !important;
+        color: #666666 !important;
+        border: 2px solid #666666 !important;
+      }
+      .ada-ai-panel form {
+        background-color: #000000 !important;
+        border-color: #FFFFFF !important;
+      }
+      .ada-ai-header {
+        background-color: #000000 !important;
+        border-color: #FFFFFF !important;
+      }
+
       /* === Footer === */
       footer[role="contentinfo"],
       footer[role="contentinfo"] div,
@@ -1549,6 +1657,63 @@ export const applyPreferences = (prefs) => {
       }
       #main-content svg rect[stroke="#94A3B8"] {
         stroke: #C4B5A0 !important;
+      }
+
+      /* === AI Standards Helper — warm mode === */
+      .ada-ai-trigger {
+        background-color: #3D3128 !important;
+        border-color: #5A4A3A !important;
+      }
+      .ada-ai-trigger p {
+        color: #F5EDE0 !important;
+      }
+      .ada-ai-panel {
+        background-color: #FBF6EF !important;
+        border-color: #DDD2C3 !important;
+      }
+      .ada-ai-panel div {
+        background-color: transparent !important;
+      }
+      .ada-ai-bubble-user {
+        background-color: #C2410C !important;
+        color: white !important;
+      }
+      .ada-ai-bubble-assistant {
+        background-color: #F0E8D9 !important;
+        color: #3D3128 !important;
+      }
+      .ada-ai-suggestion {
+        background-color: #F0E8D9 !important;
+        border-color: #DDD2C3 !important;
+        color: #3D3128 !important;
+      }
+      .ada-ai-suggestion:hover {
+        border-color: #C2410C !important;
+        background-color: #FAEBD7 !important;
+      }
+      .ada-ai-input {
+        background-color: #FFFFFF !important;
+        border-color: #C4B5A0 !important;
+        color: #3D3128 !important;
+      }
+      .ada-ai-input::placeholder {
+        color: #8B7B6B !important;
+      }
+      .ada-ai-send {
+        background-color: #C2410C !important;
+        color: white !important;
+      }
+      .ada-ai-send:disabled {
+        background-color: #DDD2C3 !important;
+        color: #8B7B6B !important;
+      }
+      .ada-ai-panel form {
+        background-color: #F5EDE0 !important;
+        border-color: #DDD2C3 !important;
+      }
+      .ada-ai-header {
+        background-color: #3D3128 !important;
+        border-color: #5A4A3A !important;
       }
 
       /* Step divider line — warm gradient */
