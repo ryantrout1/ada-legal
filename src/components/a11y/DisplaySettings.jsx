@@ -563,15 +563,15 @@ export const applyPreferences = (prefs) => {
         border-color: #2A3344 !important;
       }
 
-      /* === Story video container — NOT a white-bg card, keep transparent === */
+      /* === Story video container — NOT a white-bg card, preserve photo === */
       #main-content .story-video-container {
         background-color: #1A1F2B !important;
       }
-      #main-content .story-video-container [role="img"],
-      #main-content .story-video-container [role="img"] div,
-      #main-content .story-video-container img {
+      #main-content .story-video-container .story-photo-frame,
+      #main-content .story-video-container .story-photo-img,
+      #main-content .story-video-container [role="img"] div {
         background-color: transparent !important;
-        background-image: unset !important;
+        background-image: none !important;
       }
       /* Restore the gradient overlay */
       #main-content .story-video-container .video-overlay {
@@ -960,11 +960,11 @@ export const applyPreferences = (prefs) => {
         background-color: #0A0A0A !important;
         border: 1px solid #FFFFFF !important;
       }
-      #main-content .story-video-container [role="img"],
-      #main-content .story-video-container [role="img"] div,
-      #main-content .story-video-container img {
+      #main-content .story-video-container .story-photo-frame,
+      #main-content .story-video-container .story-photo-img,
+      #main-content .story-video-container [role="img"] div {
         background-color: transparent !important;
-        background-image: unset !important;
+        background-image: none !important;
         border: none !important;
       }
       #main-content .story-video-container .video-overlay {
@@ -1977,11 +1977,11 @@ export const applyPreferences = (prefs) => {
       #main-content .warm-keep-dark .story-video-container {
         background-color: #1A1F2B !important;
       }
-      #main-content .warm-keep-dark .story-video-container [role="img"],
-      #main-content .warm-keep-dark .story-video-container [role="img"] div,
-      #main-content .warm-keep-dark .story-video-container img {
+      #main-content .warm-keep-dark .story-video-container .story-photo-frame,
+      #main-content .warm-keep-dark .story-video-container .story-photo-img,
+      #main-content .warm-keep-dark .story-video-container [role="img"] div {
         background-color: transparent !important;
-        background-image: unset !important;
+        background-image: none !important;
       }
       #main-content .warm-keep-dark .story-video-container .video-overlay {
         background: linear-gradient(to top, rgba(35,25,18,0.75) 0%, rgba(35,25,18,0.25) 35%, rgba(35,25,18,0.08) 100%) !important;

@@ -60,6 +60,7 @@ export default function OurStorySection() {
           <div
             role="img"
             aria-label="Gina, co-founder of ADA Legal Link, in her wheelchair outdoors. Video coming soon."
+            className="story-photo-frame"
             style={{
               aspectRatio: '16 / 9',
               position: 'relative',
@@ -71,15 +72,18 @@ export default function OurStorySection() {
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/d5cb8191b_image.png"
               alt=""
               aria-hidden="true"
+              className="story-photo-img"
               style={{
+                position: 'absolute', inset: 0,
                 width: '100%', height: '100%',
                 objectFit: 'cover', objectPosition: 'center 20%',
                 display: 'block',
+                zIndex: 0,
               }}
             />
             {/* Dark overlay with coming soon */}
             <div className="video-overlay" style={{
-              position: 'absolute', inset: 0,
+              position: 'absolute', inset: 0, zIndex: 1,
               background: 'linear-gradient(to top, rgba(15,18,25,0.75) 0%, rgba(15,18,25,0.25) 35%, rgba(15,18,25,0.08) 100%)',
               display: 'flex', flexDirection: 'column',
               alignItems: 'center', justifyContent: 'flex-end',
