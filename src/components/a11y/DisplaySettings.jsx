@@ -731,7 +731,8 @@ export const applyPreferences = (prefs) => {
       #main-content svg,
       #main-content img,
       #main-content video,
-      #main-content canvas {
+      #main-content canvas,
+      #main-content .brand-icon {
         background-color: unset !important;
         background-image: unset !important;
       }
@@ -1303,7 +1304,8 @@ export const applyPreferences = (prefs) => {
       #main-content .warm-keep-dark button,
       #main-content .warm-keep-dark a,
       #main-content .warm-keep-dark svg,
-      #main-content .warm-keep-dark img {
+      #main-content .warm-keep-dark img,
+      #main-content .warm-keep-dark .brand-icon {
         background-color: unset !important;
         background-image: unset !important;
       }
@@ -1337,7 +1339,8 @@ export const applyPreferences = (prefs) => {
       #main-content button, #main-content a,
       #main-content [role="button"], #main-content [role="radio"],
       #main-content [role="tab"], #main-content [role="switch"],
-      #main-content svg, #main-content img {
+      #main-content svg, #main-content img,
+      #main-content .brand-icon {
         background-color: unset !important;
         background-image: unset !important;
       }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
+import BrandIcon from './BrandIcons';
 
 const CARDS = [
   {
@@ -8,12 +9,12 @@ const CARDS = [
     subtitle: 'Private Businesses & Public Accommodations',
     accentColor: '#C45D3E',
     iconBg: '#FFF7ED',
-    icon: '🏪',
+    iconName: 'titleIII',
     badge: { text: 'We handle this', bg: '#ECFDF5', color: '#047857', border: '#D1FAE5' },
     body: 'Covers any private business open to the public — their physical spaces, websites, and apps. If a store, restaurant, hotel, doctor\'s office, or website wasn\'t accessible, this is your Title.',
     tags: ['Restaurants', 'Hotels', 'Retail stores', 'Websites', 'Doctor\'s offices', 'Theaters'],
     tagsLabel: 'Examples covered by Title III',
-    filingIcon: '⚖️',
+    filingIconName: 'filing',
     filingIconBg: '#FFF7ED',
     filingText: <><strong style={{ color: 'var(--slate-700)' }}>File through us</strong> — we connect you with a vetted ADA attorney at no cost to you</>,
     subtitleColor: '#C2410C'
@@ -23,12 +24,12 @@ const CARDS = [
     subtitle: 'State & Local Government Services',
     accentColor: '#2563EB',
     iconBg: '#EFF6FF',
-    icon: '🏛️',
+    iconName: 'titleII',
     badge: { text: "We'll guide you", bg: '#F1F5F9', color: '#475569', border: '#E2E8F0' },
     body: 'Covers all services, programs, and facilities of state and local governments — courthouses, public transit, DMVs, public schools, parks, and voting locations.',
     tags: ['Courthouses', 'Public transit', 'DMVs', 'Public schools', 'Parks', 'Voting locations'],
     tagsLabel: 'Examples covered by Title II',
-    filingIcon: '📋',
+    filingIconName: 'clipboard',
     filingIconBg: '#EFF6FF',
     filingText: <><strong style={{ color: 'var(--slate-700)' }}>File with the DOJ</strong> — we'll walk you through the complaint process step by step</>,
     subtitleColor: '#2563EB'
@@ -38,12 +39,12 @@ const CARDS = [
     subtitle: 'Employment Discrimination',
     accentColor: '#D97706',
     iconBg: '#FFFBEB',
-    icon: '💼',
+    iconName: 'titleI',
     badge: { text: "We'll guide you", bg: '#F1F5F9', color: '#475569', border: '#E2E8F0' },
     body: 'Covers hiring, firing, promotions, and reasonable accommodations at work. Applies to employers with 15 or more employees. Has a strict 180-day filing deadline.',
     tags: ['Hiring bias', 'Denied accommodations', 'Wrongful termination', 'Harassment', 'Promotion denial'],
     tagsLabel: 'Examples covered by Title I',
-    filingIcon: '⏰',
+    filingIconName: 'clock',
     filingIconBg: '#FFFBEB',
     filingText: <><strong style={{ color: 'var(--slate-700)' }}>File with the EEOC</strong> — we'll explain the process and critical deadlines</>,
     subtitleColor: '#D97706'
@@ -70,12 +71,7 @@ function RightsCard({ card }) {
       <div style={{ height: '4px', background: card.accentColor, borderRadius: '16px 16px 0 0' }} />
       <div style={{ padding: '28px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-          <div style={{
-            width: '44px', height: '44px', borderRadius: '10px', background: card.iconBg,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', flexShrink: 0
-          }}>
-            <span aria-hidden="true">{card.icon}</span>
-          </div>
+          <BrandIcon name={card.iconName} size={44} />
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.68rem', fontWeight: 700,
             textTransform: 'uppercase', letterSpacing: '0.06em',
@@ -109,12 +105,7 @@ function RightsCard({ card }) {
         </div>
 
         <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '14px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{
-            width: '28px', height: '28px', borderRadius: '50%', background: card.filingIconBg,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', flexShrink: 0
-          }}>
-            <span aria-hidden="true">{card.filingIcon}</span>
-          </div>
+          <BrandIcon name={card.filingIconName} size={28} viewBox={20} />
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: '#475569', margin: 0, lineHeight: 1.5 }}>
             {card.filingText}
           </p>

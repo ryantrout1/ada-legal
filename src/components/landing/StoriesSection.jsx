@@ -1,24 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
+import BrandIcon from './BrandIcons';
 
 const capabilities = [
   {
-    icon: '📐',
+    iconName: 'diagrams',
     heading: 'Interactive Diagrams',
     body: 'Parking spaces, restrooms, ramps, elevators, signage — 42 interactive diagrams with numbered callouts, unit toggle (imperial/metric), and full keyboard navigation. Tap any callout to see the plain language explanation alongside the official legal standard.',
     tag: 'Standards Guide',
     link: 'StandardsGuide'
   },
   {
-    icon: '🔍',
+    iconName: 'search',
     heading: 'Instant Search',
     body: 'Type any ADA topic — parking, grab bars, service animals, website accessibility — and get instant results from 60+ indexed items. No loading, no API calls, no delays. Built to work with screen readers and keyboard navigation.',
     tag: 'Search',
     link: 'StandardsGuide'
   },
   {
-    icon: '⚖️',
+    iconName: 'legalOptions',
     heading: 'Know Your Legal Options',
     body: 'Understand the difference between filing a DOJ complaint and hiring an attorney. Learn what to expect from demand letters, settlements, and court. Know your deadlines, your remedies, and your rights — before you need a lawyer.',
     tag: 'Legal Guides',
@@ -68,12 +69,8 @@ export default function StoriesSection() {
               transition: 'transform 0.2s, box-shadow 0.2s',
               display: 'flex', flexDirection: 'column'
             }}>
-              <div aria-hidden="true" style={{
-                width: '48px', height: '48px', borderRadius: '12px',
-                background: '#FEF1EC', display: 'flex', alignItems: 'center',
-                justifyContent: 'center', fontSize: '1.5rem', marginBottom: '1.25rem'
-              }}>
-                {s.icon}
+              <div style={{ marginBottom: '1.25rem' }}>
+                <BrandIcon name={s.iconName} size={48} />
               </div>
               <h3 style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 600,

@@ -1,12 +1,13 @@
 import React from 'react';
+import BrandIcon from './BrandIcons';
 
 const items = [
-  { icon: '♿', title: 'Built Accessible, For Accessibility', desc: 'Our ADA Standards Guide is WCAG 2.2 AAA compliant — the highest level of web accessibility — because the community that uses it deserves nothing less. Keyboard navigable, screen reader optimized, high contrast supported.' },
-  { icon: '🔒', title: 'Your Privacy, Protected', desc: 'Attorneys only see what they need. Your personal details are never shared publicly.' },
-  { icon: '✓', title: 'Vetted Attorneys Only', desc: 'Licensed, verified, and experienced in ADA litigation. No exceptions.' },
-  { icon: '$0', title: 'Always Free to Report', desc: 'No cost to report or get matched. Free for people with disabilities, always.' },
-  { icon: '📊', title: 'Full Transparency', desc: "Track your case in real time. Know what's happening and who's handling it." },
-  { icon: '1:1', title: 'Exclusive Attention', desc: 'One case, one attorney. No bidding wars, no competing interests.' }
+  { iconName: 'accessible', title: 'Built Accessible, For Accessibility', desc: 'Our ADA Standards Guide is WCAG 2.2 AAA compliant — the highest level of web accessibility — because the community that uses it deserves nothing less. Keyboard navigable, screen reader optimized, high contrast supported.' },
+  { iconName: 'privacy', title: 'Your Privacy, Protected', desc: 'Attorneys only see what they need. Your personal details are never shared publicly.' },
+  { iconName: 'vetted', title: 'Vetted Attorneys Only', desc: 'Licensed, verified, and experienced in ADA litigation. No exceptions.' },
+  { iconName: 'free', title: 'Always Free to Report', desc: 'No cost to report or get matched. Free for people with disabilities, always.' },
+  { iconName: 'transparent', title: 'Full Transparency', desc: "Track your case in real time. Know what's happening and who's handling it." },
+  { iconName: 'exclusive', title: 'Exclusive Attention', desc: 'One case, one attorney. No bidding wars, no competing interests.' }
 ];
 
 export default function CommitmentSection() {
@@ -55,16 +56,7 @@ export default function CommitmentSection() {
               borderRadius: '10px', padding: '24px',
               transition: 'background 0.15s'
             }}>
-              <div aria-hidden="true" style={{
-                width: '40px', height: '40px', borderRadius: '8px',
-                background: 'rgba(194,65,12,0.12)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#FB923C', fontFamily: 'Manrope, sans-serif',
-                fontSize: item.icon.length > 2 ? '0.75rem' : '1.1rem',
-                fontWeight: 700, flexShrink: 0
-              }}>
-                {item.icon}
-              </div>
+              <BrandIcon name={item.iconName} size={40} variant="dark-bg" />
               <div>
                 <h3 style={{
                   fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
