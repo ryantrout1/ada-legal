@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import trackEvent from '../analytics/trackEvent';
+import BrandIcon from './BrandIcons';
 
 // ─── Options ───
 const OPTIONS = [
-  { id: 'rights', emoji: '🔍', label: 'I want to understand my rights', color: '#C2410C' },
-  { id: 'happened', emoji: '🌱', label: 'Something happened & I want to understand it', color: '#15803D' },
-  { id: 'space', emoji: '🏢', label: 'I want my space accessible for everyone', color: '#2563EB' },
-  { id: 'believe', emoji: '❤️', label: 'Access is a human right', color: '#9333EA' },
+  { id: 'rights', icon: 'search', label: 'I want to understand my rights', color: '#C2410C' },
+  { id: 'happened', icon: 'legalOptions', label: 'Something happened & I want to understand it', color: '#15803D' },
+  { id: 'space', icon: 'accessible', label: 'I want my space accessible for everyone', color: '#2563EB' },
+  { id: 'believe', icon: 'heart', label: 'Access is a human right', color: '#9333EA' },
 ];
 
 // ─── US population hotspots for dot placement ───
@@ -171,7 +172,7 @@ function ResultBar({ option, count, total, delay, isUser }) {
           fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
           fontWeight: isUser ? 700 : 600, color: isUser ? '#F8FAFC' : '#CBD5E1',
         }}>
-          <span aria-hidden="true">{option.emoji}</span>&nbsp;&nbsp;{option.label}
+          <span aria-hidden="true" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }}><BrandIcon name={option.icon} size={22} variant="dark-bg" /></span>{option.label}
         </span>
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
@@ -401,10 +402,11 @@ export default function CommunityVoices() {
                   onBlur={e => { e.currentTarget.style.outline = 'none'; }}
                 >
                   <span aria-hidden="true" style={{
-                    fontSize: '1.3rem', lineHeight: 1,
+                    lineHeight: 1,
                     width: 36, textAlign: 'center', flexShrink: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
-                    {opt.emoji}
+                    <BrandIcon name={opt.icon} size={32} variant="dark-bg" />
                   </span>
                   <span style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem',

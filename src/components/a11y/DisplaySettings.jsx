@@ -159,9 +159,22 @@ export const applyPreferences = (prefs) => {
       #main-content .cv-dark-section,
       #main-content .cv-dark-section div,
       #main-content .cv-dark-section p,
-      #main-content .cv-dark-section span {
+      #main-content .cv-dark-section > div > span,
+      #main-content .cv-dark-section > div > div > span {
         background-color: #0B1120 !important;
         background-image: unset !important;
+      }
+      /* Vote button spans — transparent so button bg shows through */
+      #main-content .cv-dark-section button span,
+      #main-content .cv-dark-section [role="radio"] span,
+      #main-content .cv-dark-section [role="radiogroup"] span {
+        background-color: transparent !important;
+      }
+      /* Vote buttons — keep their subtle transparent bg */
+      #main-content .cv-dark-section button,
+      #main-content .cv-dark-section [role="radio"] {
+        background-color: rgba(255,255,255,0.025) !important;
+        border-color: rgba(255,255,255,0.08) !important;
       }
       #main-content .cv-dark-section [role="img"] {
         background-color: rgba(255,255,255,0.015) !important;
@@ -844,10 +857,16 @@ export const applyPreferences = (prefs) => {
       #main-content .cv-dark-section,
       #main-content .cv-dark-section div,
       #main-content .cv-dark-section p,
-      #main-content .cv-dark-section span {
+      #main-content .cv-dark-section > div > span,
+      #main-content .cv-dark-section > div > div > span {
         background-color: #0B1120 !important;
         background-image: unset !important;
         border-color: unset !important;
+      }
+      #main-content .cv-dark-section button span,
+      #main-content .cv-dark-section [role="radio"] span,
+      #main-content .cv-dark-section [role="radiogroup"] span {
+        background-color: transparent !important;
       }
       #main-content .cv-dark-section [role="img"] {
         background-color: rgba(255,255,255,0.015) !important;
@@ -1756,9 +1775,15 @@ export const applyPreferences = (prefs) => {
       #main-content .cv-dark-section div,
       #main-content .cv-dark-section section,
       #main-content .cv-dark-section p,
-      #main-content .cv-dark-section span {
+      #main-content .cv-dark-section > div > span,
+      #main-content .cv-dark-section > div > div > span {
         background-color: #1C1613 !important;
         background-image: none !important;
+      }
+      #main-content .cv-dark-section button span,
+      #main-content .cv-dark-section [role="radio"] span,
+      #main-content .cv-dark-section [role="radiogroup"] span {
+        background-color: transparent !important;
       }
       /* Map container */
       #main-content .cv-dark-section [role="img"] {

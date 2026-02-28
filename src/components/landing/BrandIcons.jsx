@@ -169,6 +169,13 @@ const ICON_PATHS = {
     </>
   ),
 
+  // CommunityVoices icons
+  heart: (s, a) => (
+    <>
+      <path d="M13 21.35l-1.45-1.32C6.11 15.36 2 11.28 2 7.5 2 4.42 4.42 2 7.5 2c1.74 0 3.41.81 4.5 2.09C13.09 2.81 14.76 2 16.5 2 19.58 2 22 4.42 22 7.5c0 3.78-4.11 7.86-9.55 12.54L13 21.35z" fill={a} stroke={s} strokeWidth="1" />
+    </>
+  ),
+
   // CommitmentSection icons
   accessible: (s, a) => (
     <>
