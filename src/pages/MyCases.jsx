@@ -95,7 +95,7 @@ export default function MyCases() {
   const sorted = sortCases(filteredCases);
 
   return (
-    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: '1.5rem' }}>
+    <div style={{ backgroundColor: '#FAF7F2', minHeight: 'calc(100vh - 200px)', padding: '1.5rem' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
         {/* Header */}
