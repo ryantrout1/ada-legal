@@ -69,7 +69,7 @@ function RightsCard({ card }) {
       onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}
     >
       <div style={{ height: '4px', background: card.accentColor, borderRadius: '16px 16px 0 0' }} />
-      <div style={{ padding: '28px' }}>
+      <div style={{ padding: '28px', display: 'flex', flexDirection: 'column', height: 'calc(100% - 4px)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
           <BrandIcon name={card.iconName} size={44} />
           <span style={{
@@ -104,7 +104,7 @@ function RightsCard({ card }) {
           ))}
         </div>
 
-        <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '14px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '14px', display: 'flex', alignItems: 'center', gap: '10px', marginTop: 'auto' }}>
           <BrandIcon name={card.filingIconName} size={28} viewBox={20} />
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: '#475569', margin: 0, lineHeight: 1.5 }}>
             {card.filingText}
