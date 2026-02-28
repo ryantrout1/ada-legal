@@ -15,7 +15,7 @@ export default function GuideTopSearches({ events }) {
   if (queries.length === 0) {
     return (
       <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '32px', textAlign: 'center' }}>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)' }}>No search data yet</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>No search data yet</p>
       </div>
     );
   }
@@ -30,7 +30,7 @@ export default function GuideTopSearches({ events }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         {queries.map(([query, count], i) => (
           <div key={query} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-400)', width: '22px', textAlign: 'right', flexShrink: 0 }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-500)', width: '22px', textAlign: 'right', flexShrink: 0 }}>
               {i + 1}
             </span>
             <div style={{ flex: 1, position: 'relative', height: '28px', backgroundColor: 'white', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--slate-200)' }}>

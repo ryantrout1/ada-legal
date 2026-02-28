@@ -112,7 +112,7 @@ export default function CompactPipelineBar({ cases, activeStatus, onStatusClick,
                 fontSize: '1.25rem',
                 fontWeight: 700,
                 lineHeight: 1,
-                color: isEmpty ? 'var(--slate-300)' : NUM_COLOR[stage.key],
+                color: isEmpty ? 'var(--slate-500)' : NUM_COLOR[stage.key],
               }}>
                 {count}
               </span>
@@ -123,7 +123,7 @@ export default function CompactPipelineBar({ cases, activeStatus, onStatusClick,
                 textTransform: 'uppercase',
                 letterSpacing: '0.03em',
                 marginTop: '1px',
-                color: isEmpty ? 'var(--slate-400)' : 'var(--slate-500)',
+                color: isEmpty ? 'var(--slate-500)' : 'var(--slate-500)',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -150,11 +150,11 @@ export default function CompactPipelineBar({ cases, activeStatus, onStatusClick,
         }}
       >
         <span>⏱ {secondaryStats.pendingReview} pending</span>
-        <span style={{ margin: '0 6px', color: 'var(--slate-300)' }}>·</span>
+        <span style={{ margin: '0 6px', color: 'var(--slate-400)' }}>·</span>
         <span>👤 {secondaryStats.activeLawyers} lawyer{secondaryStats.activeLawyers !== 1 ? 's' : ''}</span>
-        <span style={{ margin: '0 6px', color: 'var(--slate-300)' }}>·</span>
+        <span style={{ margin: '0 6px', color: 'var(--slate-400)' }}>·</span>
         <span>📋 {secondaryStats.lawyerApps} app{secondaryStats.lawyerApps !== 1 ? 's' : ''}</span>
-        <span style={{ margin: '0 6px', color: 'var(--slate-300)' }}>·</span>
+        <span style={{ margin: '0 6px', color: 'var(--slate-400)' }}>·</span>
         <span>✓ {secondaryStats.compliance} contact</span>
       </div>
 

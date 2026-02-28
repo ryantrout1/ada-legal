@@ -111,7 +111,7 @@ export default function OpsFunnel({ cases, contactLogs }) {
                     ↓ {stage.convRate}%
                   </span>
                   {stage.avgTime !== null && (
-                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', color: 'var(--slate-400)' }}>
+                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', color: 'var(--slate-500)' }}>
                       Avg {formatTime(stage.avgTime)}
                     </span>
                   )}

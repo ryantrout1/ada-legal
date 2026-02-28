@@ -81,7 +81,7 @@ export default function AuditPanel({
   };
 
   return (
-    <aside role="complementary" aria-label="Accessibility audit panel" style={{
+    <div role="dialog" aria-label="Accessibility audit panel" aria-modal="false" style={{
       position: 'fixed', top: 0, left: 0, bottom: 0,
       width: 'min(420px, 100vw)', zIndex: 10000,
       backgroundColor: '#FFFFFF', borderRight: '2px solid #E2E8F0',
@@ -228,6 +228,6 @@ export default function AuditPanel({
           />
         )}
       </div>
-    </aside>
+    </div>
   );
 }

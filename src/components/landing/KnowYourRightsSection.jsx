@@ -7,7 +7,7 @@ const CARDS = [
   {
     title: 'Title III',
     subtitle: 'Private Businesses & Public Accommodations',
-    accentColor: '#C45D3E',
+    accentColor: '#B14A2E',
     iconBg: '#FFF7ED',
     iconName: 'titleIII',
     badge: { text: 'We handle this', bg: '#ECFDF5', color: '#047857', border: '#D1FAE5' },
@@ -37,7 +37,7 @@ const CARDS = [
   {
     title: 'Title I',
     subtitle: 'Employment Discrimination',
-    accentColor: '#D97706',
+    accentColor: '#B45309',
     iconBg: '#FFFBEB',
     iconName: 'titleI',
     badge: { text: "We'll guide you", bg: '#F1F5F9', color: '#475569', border: '#E2E8F0' },
@@ -47,7 +47,7 @@ const CARDS = [
     filingIconName: 'clock',
     filingIconBg: '#FFFBEB',
     filingText: <><strong style={{ color: 'var(--slate-700)' }}>File with the EEOC</strong> — we'll explain the process and critical deadlines</>,
-    subtitleColor: '#D97706'
+    subtitleColor: '#B45309'
   }
 ];
 
@@ -130,7 +130,7 @@ export default function KnowYourRightsSection() {
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', fontWeight: 700,
-            textTransform: 'uppercase', letterSpacing: '0.1em', color: '#C45D3E',
+            textTransform: 'uppercase', letterSpacing: '0.1em', color: '#B14A2E',
             margin: '0 0 12px'
           }}>
             Know Your Rights
@@ -176,7 +176,7 @@ export default function KnowYourRightsSection() {
             Were Your Rights Violated? Find Out in 60 Seconds →
           </Link>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#94A3B8',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#64748B',
             marginTop: '12px', marginBottom: 0
           }}>
             Attorney-connected violation reporting — launching soon.

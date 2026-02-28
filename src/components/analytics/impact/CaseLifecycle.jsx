@@ -102,9 +102,9 @@ export default function CaseLifecycle({ events }) {
 
   return (
     <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '20px' }}>
-      <h4 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 16px' }}>
+      <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 16px' }}>
         Case Lifecycle
-      </h4>
+      </h3>
 
       {/* Timing cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', marginBottom: '20px' }}>
@@ -121,9 +121,9 @@ export default function CaseLifecycle({ events }) {
       {/* Status transitions chart */}
       {statusData.length > 0 && (
         <>
-          <h5 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 10px' }}>
+          <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 10px' }}>
             Status Transitions
-          </h5>
+          </h4>
           <div aria-hidden="true" style={{ width: '100%', height: Math.max(160, statusData.length * 36) }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={statusData} layout="vertical" barSize={20} margin={{ left: 10, right: 20, top: 5, bottom: 5 }}>
@@ -143,7 +143,7 @@ export default function CaseLifecycle({ events }) {
         </>
       )}
       {statusData.length === 0 && (
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)' }}>No status change data yet</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>No status change data yet</p>
       )}
     </div>
   );

@@ -30,7 +30,7 @@ const RESOLVED_COLORS = {
 };
 
 /* Zero-case styling — nearly invisible */
-const ZERO_STYLE = { bg: '#FAFAF9', numColor: '#CBD5E1', labelColor: '#434E5E', border: 'none' };
+const ZERO_STYLE = { bg: '#FAFAF9', numColor: '#64748B', labelColor: '#434E5E', border: 'none' };
 
 function getCardStyle(key, count) {
   if (count === 0) return ZERO_STYLE;
@@ -75,7 +75,7 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
                   size={16}
                   className="pipeline-arrow"
                   style={{
-                    color: arrowHighlighted ? '#EA580C' : '#CBD5E1',
+                    color: arrowHighlighted ? '#EA580C' : '#64748B',
                     flexShrink: 0,
                     margin: '0 2px',
                     transition: 'color 0.3s',

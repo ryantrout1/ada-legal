@@ -18,7 +18,7 @@ export default function EarlyAccessBanner() {
   return (
     <>
       <div
-        role="banner"
+        role="status"
         aria-label="Early access announcement"
         style={{
           background: '#C2410C',
@@ -65,8 +65,8 @@ export default function EarlyAccessBanner() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            minWidth: '28px',
-            minHeight: '28px',
+            minWidth: '44px',
+            minHeight: '44px',
             borderRadius: '4px',
           }}
           onMouseEnter={e => { e.currentTarget.style.color = 'white'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)'; }}

@@ -86,7 +86,7 @@ export default function LawyerActivitySection({ lawyers, cases, contactLogs }) {
                         <AlertTriangle size={14} /> Yes
                       </span>
                     ) : (
-                      <span style={{ color: 'var(--slate-400)' }}>No</span>
+                      <span style={{ color: 'var(--slate-500)' }}>No</span>
                     )}
                   </td>
                 </tr>

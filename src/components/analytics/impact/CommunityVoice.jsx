@@ -64,7 +64,7 @@ export default function CommunityVoice({ cases }) {
       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '0 0 16px' }}>Community Voice — Most mentioned barriers</p>
 
       {phraseList.length === 0 ? (
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-400)' }}>Not enough narrative data to analyze</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)' }}>Not enough narrative data to analyze</p>
       ) : (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
           {phraseList.map(([phrase, count]) => {
@@ -87,7 +87,7 @@ export default function CommunityVoice({ cases }) {
                   whiteSpace: 'nowrap',
                 }}
               >
-                {phrase} <sup style={{ fontSize: '0.6em', color: 'var(--slate-400)' }}>{count}</sup>
+                {phrase} <sup style={{ fontSize: '0.6em', color: 'var(--slate-500)' }}>{count}</sup>
               </span>
             );
           })}

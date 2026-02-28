@@ -59,7 +59,7 @@ export default function MatchRateByState({ cases, filters, onFilterChange }) {
         {[
           { label: 'Matched', color: '#15803D' },
           { label: 'Expired', color: '#B91C1C' },
-          { label: 'Available', color: '#CBD5E1' }
+          { label: 'Available', color: '#64748B' }
         ].map(l => (
           <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
             <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: l.color }} />

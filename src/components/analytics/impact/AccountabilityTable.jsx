@@ -85,7 +85,7 @@ export default function AccountabilityTable({ cases }) {
                       }}>{vt}</span>
                     ))}
                     {r.violationTypes.length > 3 && (
-                      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', color: 'var(--slate-400)' }}>+{r.violationTypes.length - 3}</span>
+                      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', color: 'var(--slate-500)' }}>+{r.violationTypes.length - 3}</span>
                     )}
                   </div>
                 </td>
@@ -108,7 +108,7 @@ export default function AccountabilityTable({ cases }) {
         </table>
       </div>
 
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-400)', marginTop: '16px', fontStyle: 'italic' }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)', marginTop: '16px', fontStyle: 'italic' }}>
         This data represents reports submitted by community members and has not been independently verified. Report counts indicate community concern, not confirmed violations.
       </p>
     </div>

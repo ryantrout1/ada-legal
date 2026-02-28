@@ -17,7 +17,7 @@ export default function GuideTopSectionsChart({ events }) {
   if (data.length === 0) {
     return (
       <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '32px', textAlign: 'center' }}>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)' }}>No section view data yet</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>No section view data yet</p>
       </div>
     );
   }

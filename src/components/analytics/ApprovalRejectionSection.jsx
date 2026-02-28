@@ -56,7 +56,7 @@ export default function ApprovalRejectionSection({ cases }) {
         <div style={statBox}>
           <p style={statLabel}>Top Rejection Reasons</p>
           {topReasons.length === 0 ? (
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-400)', margin: 0 }}>No rejections yet</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)', margin: 0 }}>No rejections yet</p>
           ) : (
             <ol style={{ margin: 0, paddingLeft: '1.25rem' }}>
               {topReasons.map(([reason, count]) => (
@@ -64,7 +64,7 @@ export default function ApprovalRejectionSection({ cases }) {
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
                   color: 'var(--slate-700)', marginBottom: '0.25rem'
                 }}>
-                  {reason} <span style={{ color: 'var(--slate-400)' }}>({count})</span>
+                  {reason} <span style={{ color: 'var(--slate-500)' }}>({count})</span>
                 </li>
               ))}
             </ol>
