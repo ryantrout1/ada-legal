@@ -276,7 +276,7 @@ export default function Layout({ children, currentPageName }) {
             justifyContent: 'space-between',
             alignItems: 'center'
         }}>
-          <Link to={createPageUrl('Home')} style={{
+          <Link to={user ? createPageUrl('Home') + '?view=home' : createPageUrl('Home')} style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.75rem',
@@ -359,6 +359,9 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'lawyer' && (
                   <>
+                    <Link to={createPageUrl('Home') + '?view=home'} style={{ color: currentPageName === 'Home' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
+                      Home
+                    </Link>
                     <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
@@ -377,6 +380,9 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'admin' && (
                   <>
+                    <Link to={createPageUrl('Home') + '?view=home'} style={{ color: currentPageName === 'Home' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
+                      Home
+                    </Link>
                     <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
@@ -544,6 +550,9 @@ export default function Layout({ children, currentPageName }) {
                 {user?.role === 'lawyer' && (
 
                   <>
+                    <Link to={createPageUrl('Home') + '?view=home'} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'Home' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
+                      Home
+                    </Link>
                     <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
@@ -571,6 +580,9 @@ export default function Layout({ children, currentPageName }) {
                 
                 {user?.role === 'admin' && (
                   <>
+                    <Link to={createPageUrl('Home') + '?view=home'} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'Home' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'Home' ? 'page' : undefined}>
+                      Home
+                    </Link>
                     <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#D4570A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>

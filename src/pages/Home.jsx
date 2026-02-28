@@ -16,6 +16,13 @@ export default function Home() {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
+    // Allow logged-in users to view the landing page via ?view=home
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('view') === 'home') {
+      setChecked(true);
+      return;
+    }
+
     async function checkRole() {
       try {
         const user = await base44.auth.me();
