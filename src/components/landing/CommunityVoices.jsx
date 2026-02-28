@@ -356,7 +356,7 @@ export default function CommunityVoices() {
           >
             <p id="cv-prompt" style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-              fontWeight: 700, color: '#475569', textAlign: 'center',
+              fontWeight: 700, color: '#94A3B8', textAlign: 'center',
               margin: '0 0 14px', textTransform: 'uppercase', letterSpacing: '0.08em',
             }}>
               I'm here because...
@@ -430,7 +430,7 @@ export default function CommunityVoices() {
           >
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-              fontWeight: 700, color: '#475569', textAlign: 'center',
+              fontWeight: 700, color: '#94A3B8', textAlign: 'center',
               margin: '0 0 14px', textTransform: 'uppercase', letterSpacing: '0.08em',
             }}>
               Community Breakdown
@@ -559,7 +559,7 @@ export default function CommunityVoices() {
           <div aria-hidden="true" style={{
             position: 'absolute', bottom: 14, right: 16,
             fontFamily: 'Manrope, sans-serif', fontSize: '0.68rem',
-            fontWeight: 600, color: '#475569',
+            fontWeight: 600, color: '#94A3B8',
             display: 'flex', alignItems: 'center', gap: 6,
           }}>
             <span style={{
@@ -576,7 +576,7 @@ export default function CommunityVoices() {
           <p style={{
             textAlign: 'center',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem',
-            color: '#475569', marginTop: 14,
+            color: '#94A3B8', marginTop: 14,
             animation: 'cvFadeUp 0.5s 0.6s both',
           }}>
             Every dot is a real person in the ADA community.{' '}

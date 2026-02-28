@@ -1529,6 +1529,21 @@ export const applyPreferences = (prefs) => {
       p, li, dd, dt, td, th, label, figcaption, blockquote { color: #3D3128 !important; }
       span, small { color: #584A3B !important; }
 
+      /* Preserve white text on colored backgrounds (badges, pills, alerts) */
+      .cm-case-row span[style*="background"],
+      .cm-case-row span[style*="Background"] { color: white !important; }
+      .admin-filter-pill[aria-pressed="true"],
+      .admin-filter-pill[aria-current="true"],
+      .admin-filter-pill.active { color: white !important; background-color: #C2410C !important; }
+      .admin-action-btn { color: white !important; background-color: #C2410C !important; }
+      
+      /* Status badge spans in case rows — preserve colored backgrounds with white text */
+      .cm-case-row[role="button"] > span:nth-child(4) { color: white !important; }
+
+      /* AlertSummaryBar — preserve text colors on warm cream bg */
+      #main-content > div > div:first-child span { color: #3D3128 !important; }
+      #main-content > div > div:first-child strong { color: #2B221B !important; }
+
       /* Links — warm amber instead of cool terracotta */
       a { color: #A0520A !important; }
       a:hover { color: #7C3D08 !important; }
