@@ -67,7 +67,7 @@ export default function OurStorySection() {
           >
             {/* Gina's photo */}
             <img
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6094acc3483b8e3b868bddce2/d5cb8191b_image.png"
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/d5cb8191b_image.png"
               alt=""
               aria-hidden="true"
               style={{
