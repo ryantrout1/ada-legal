@@ -114,11 +114,17 @@ export default function AuditButton({ currentPageName }) {
           iframe.onerror = reject;
           setTimeout(resolve, 8000); // timeout after 8s
         });
-        // Wait a moment for JS to render
-        await new Promise(r => setTimeout(r, 2000));
+        // Wait longer for JS to render and styles to apply
+        await new Promise(r => setTimeout(r, 4000));
 
         // Inject CSS variable fallbacks for axe-core background resolution
         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        
+        // Force background computation by setting inline style on body and main
+        const iframeBody = iframeDoc.body;
+        if (iframeBody) iframeBody.style.backgroundColor = '#FAF7F2';
+        const mainEl = iframeDoc.getElementById('main-content');
+        if (mainEl) mainEl.style.backgroundColor = '#FAF7F2';
         const fallbackStyle = iframeDoc.createElement('style');
         fallbackStyle.textContent = `
           :root {
