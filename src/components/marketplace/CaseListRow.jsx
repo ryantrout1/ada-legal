@@ -50,7 +50,7 @@ export default function CaseListRow({ caseData, onViewDetails, isEven }) {
           onMouseLeave={() => setShowTip(false)}
         >
           {criteria.map((cr, i) => (
-            <span key={i} style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: cr.met ? color : 'var(--slate-300)', display: 'inline-block' }} />
+            <span key={i} style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: cr.met ? color : 'var(--slate-500)', display: 'inline-block' }} />
           ))}
           {showTip && (
             <div style={{

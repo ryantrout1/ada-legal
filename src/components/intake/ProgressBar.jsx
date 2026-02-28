@@ -61,7 +61,7 @@ export default function ProgressBar({ currentStep, totalOverride, labelsOverride
         style={{
           width: '100%',
           height: '0.5rem',
-          backgroundColor: 'var(--slate-300)',
+          backgroundColor: 'var(--slate-500)',
           borderRadius: '0.25rem',
           overflow: 'hidden'
         }}
@@ -116,7 +116,7 @@ export default function ProgressBar({ currentStep, totalOverride, labelsOverride
               ? 'var(--terra-600)'
               : isCompleted
                 ? 'var(--success-600, #16A34A)'
-                : 'var(--slate-400)',
+                : 'var(--slate-500)',
             cursor: canClick ? 'pointer' : 'default',
             transition: 'all 0.15s',
             minHeight: '28px'

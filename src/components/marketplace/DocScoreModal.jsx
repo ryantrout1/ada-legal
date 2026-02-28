@@ -73,7 +73,7 @@ export default function DocScoreModal({ open, onClose, caseData }) {
           }}>
             <div style={{ display: 'flex', gap: '4px' }}>
               {criteria.map((cr, i) => (
-                <span key={i} style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: cr.met ? caseSpecific.color : 'var(--slate-300)' }} />
+                <span key={i} style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: cr.met ? caseSpecific.color : 'var(--slate-500)' }} />
               ))}
             </div>
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: caseSpecific.color }}>
@@ -86,7 +86,7 @@ export default function DocScoreModal({ open, onClose, caseData }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
           {criteria.map((cr, i) => (
             <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '0.875rem', color: cr.met ? '#15803D' : 'var(--slate-300)', flexShrink: 0, marginTop: '1px' }}>
+              <span style={{ fontSize: '0.875rem', color: cr.met ? '#15803D' : 'var(--slate-500)', flexShrink: 0, marginTop: '1px' }}>
                 {cr.met ? '●' : '○'}
               </span>
               <div>

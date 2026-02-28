@@ -82,7 +82,7 @@ export default function ViolationTypeStep({ value, onChange }) {
                 justifyContent: 'center'
               }}
               onMouseEnter={e => {
-                if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-400)';
+                if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-500)';
               }}
               onMouseLeave={e => {
                 if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-200)';

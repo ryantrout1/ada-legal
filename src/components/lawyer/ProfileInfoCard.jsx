@@ -76,10 +76,10 @@ export default function ProfileInfoCard({ profile, onSave }) {
           <div>
             <p style={labelStyle}>Email</p>
             <div style={{ position: 'relative' }}>
-              <input style={{ ...inputStyle, backgroundColor: 'var(--slate-50)', color: 'var(--slate-400)', paddingRight: '36px' }} value={p.email} disabled />
-              <Lock size={14} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-400)' }} title="Email cannot be changed — contact support" />
+              <input style={{ ...inputStyle, backgroundColor: 'var(--slate-50)', color: 'var(--slate-500)', paddingRight: '36px' }} value={p.email} disabled />
+              <Lock size={14} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-500)' }} title="Email cannot be changed — contact support" />
             </div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-400)', margin: '4px 0 0' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)', margin: '4px 0 0' }}>
               Email cannot be changed — contact support
             </p>
           </div>
@@ -100,7 +100,7 @@ export default function ProfileInfoCard({ profile, onSave }) {
               display: 'inline-flex', alignItems: 'center', gap: '6px',
               padding: '0 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
               fontWeight: 700, color: 'white',
-              backgroundColor: saving ? 'var(--slate-400)' : 'var(--terra-600)',
+              backgroundColor: saving ? 'var(--slate-500)' : 'var(--terra-600)',
               border: 'none', borderRadius: '10px', cursor: saving ? 'not-allowed' : 'pointer', minHeight: '44px'
             }}>
               <Save size={16} /> {saving ? 'Saving…' : 'Save Changes'}
@@ -125,7 +125,7 @@ export default function ProfileInfoCard({ profile, onSave }) {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <p style={{ ...labelStyle, margin: 0 }}>Email</p>
-              <Lock size={10} style={{ color: 'var(--slate-400)' }} />
+              <Lock size={10} style={{ color: 'var(--slate-500)' }} />
             </div>
             <p style={{ ...valueStyle, marginTop: '4px' }}>{p.email}</p>
           </div>

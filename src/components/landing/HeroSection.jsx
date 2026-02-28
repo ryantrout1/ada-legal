@@ -35,7 +35,7 @@ export default function HeroSection() {
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-          color: 'var(--slate-300)',
+          color: 'var(--slate-500)',
           maxWidth: '640px',
           margin: '0 auto 2.5rem',
           lineHeight: 1.6

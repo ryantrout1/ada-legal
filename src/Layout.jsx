@@ -639,7 +639,7 @@ export default function Layout({ children, currentPageName }) {
       {currentPageName !== 'Home' && (
         <footer role="contentinfo" style={{
           backgroundColor: 'var(--slate-900)',
-          color: 'var(--slate-400)',
+          color: 'var(--slate-500)',
           padding: '2rem 0',
           marginTop: 0
         }}>

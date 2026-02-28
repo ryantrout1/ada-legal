@@ -174,7 +174,7 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)' }}>Fastest response</span>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)' }}>{fastestHrs !== null ? `${fastestHrs}h` : '—'}</span>
             </div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-400)', margin: '4px 0 0', fontStyle: 'italic' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)', margin: '4px 0 0', fontStyle: 'italic' }}>
               Your goal: contact within 24 hours of assignment
             </p>
             {onTimeRate !== null && onTimeRate < 50 && (
@@ -264,7 +264,7 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
                       <td style={{ ...tdStyle, fontWeight: 600, color: 'var(--slate-800)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                           {c.business_name}
-                          <ArrowUpRight size={12} style={{ color: 'var(--slate-400)' }} />
+                          <ArrowUpRight size={12} style={{ color: 'var(--slate-500)' }} />
                         </div>
                       </td>
                       <td style={tdStyle}>{[c.city, c.state].filter(Boolean).join(', ') || '—'}</td>

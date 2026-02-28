@@ -25,12 +25,12 @@ export default function ShareCardButton({ href }) {
         width: '30px', height: '30px', borderRadius: '7px',
         border: '1px solid var(--slate-200)',
         background: copied ? '#F0FDF4' : 'white',
-        color: copied ? '#16A34A' : 'var(--slate-400)',
+        color: copied ? '#16A34A' : 'var(--slate-500)',
         cursor: 'pointer', transition: 'all 0.15s',
         position: 'relative', zIndex: 2, flexShrink: 0,
       }}
       onMouseEnter={e => { if (!copied) { e.currentTarget.style.borderColor = '#C2410C'; e.currentTarget.style.color = '#C2410C'; } }}
-      onMouseLeave={e => { if (!copied) { e.currentTarget.style.borderColor = 'var(--slate-200)'; e.currentTarget.style.color = 'var(--slate-400)'; } }}
+      onMouseLeave={e => { if (!copied) { e.currentTarget.style.borderColor = 'var(--slate-200)'; e.currentTarget.style.color = 'var(--slate-500)'; } }}
     >
       {copied ? <Check size={14} /> : <Share2 size={14} />}
     </button>

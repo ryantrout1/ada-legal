@@ -321,7 +321,7 @@ export default function SuccessStep({ caseData, caseId, isLoggedIn }) {
           style={{
             width: '100%', padding: '0.875rem',
             fontFamily: 'Manrope, sans-serif', fontSize: '1.0625rem', fontWeight: 700,
-            color: 'white', backgroundColor: inviting ? 'var(--slate-400)' : 'var(--terra-600)',
+            color: 'white', backgroundColor: inviting ? 'var(--slate-500)' : 'var(--terra-600)',
             border: 'none', borderRadius: 'var(--radius-md)',
             cursor: inviting ? 'not-allowed' : 'pointer',
             minHeight: '52px', transition: 'background-color 0.2s',

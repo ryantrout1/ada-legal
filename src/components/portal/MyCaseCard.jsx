@@ -143,7 +143,7 @@ export default function MyCaseCard({ caseData }) {
 
         {/* Arrow */}
         <div style={{ display: 'flex', alignItems: 'center', paddingRight: '16px', flexShrink: 0 }}>
-          <ChevronRight size={18} style={{ color: 'var(--slate-400)' }} />
+          <ChevronRight size={18} style={{ color: 'var(--slate-500)' }} />
         </div>
       </div>
     </Link>

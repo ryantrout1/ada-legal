@@ -23,7 +23,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
     ? [...contactLogs].sort((a, b) => new Date(b.logged_at || b.created_date) - new Date(a.logged_at || a.created_date))[0] 
     : null;
 
-  const borderColor = group === 'needs_action' ? '#B91C1C' : group === 'in_progress' ? '#15803D' : 'var(--slate-300)';
+  const borderColor = group === 'needs_action' ? '#B91C1C' : group === 'in_progress' ? '#15803D' : 'var(--slate-500)';
   const prefLabel = { phone: 'Phone', email: 'Email', no_preference: 'No Preference' };
 
   return (
@@ -51,7 +51,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
       }}>
         <button type="button" onClick={() => setExpanded(!expanded)} style={{
           background: 'none', border: 'none', cursor: 'pointer', padding: 0, flexShrink: 0,
-          color: 'var(--slate-400)'
+          color: 'var(--slate-500)'
         }}>
           {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
         </button>
@@ -233,7 +233,7 @@ function Info({ icon: Icon, label, value }) {
   if (!value) return null;
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.375rem' }}>
-      <Icon size={12} style={{ color: 'var(--slate-400)', flexShrink: 0, marginTop: '3px' }} />
+      <Icon size={12} style={{ color: 'var(--slate-500)', flexShrink: 0, marginTop: '3px' }} />
       <div>
         <span style={{ display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</span>
         <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-800)', wordBreak: 'break-word' }}>{value}</span>

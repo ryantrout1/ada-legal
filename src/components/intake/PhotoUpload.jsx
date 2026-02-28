@@ -94,7 +94,7 @@ export default function PhotoUpload({ photos = [], onChange }) {
           tabIndex={0}
           aria-label={`Upload photo. ${photos.length} of ${MAX_PHOTOS} added.`}
           style={{
-            border: `2px dashed ${dragOver ? '#C2410C' : 'var(--slate-300)'}`,
+            border: `2px dashed ${dragOver ? '#C2410C' : 'var(--slate-500)'}`,
             borderRadius: 'var(--radius-md)',
             padding: '24px',
             textAlign: 'center',
@@ -105,7 +105,7 @@ export default function PhotoUpload({ photos = [], onChange }) {
             minHeight: '44px'
           }}
           onFocus={e => { e.currentTarget.style.borderColor = '#C2410C'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,65,12,0.15)'; }}
-          onBlur={e => { if (!dragOver) { e.currentTarget.style.borderColor = 'var(--slate-300)'; e.currentTarget.style.boxShadow = 'none'; } }}
+          onBlur={e => { if (!dragOver) { e.currentTarget.style.borderColor = 'var(--slate-500)'; e.currentTarget.style.boxShadow = 'none'; } }}
         >
           <input
             ref={fileInputRef}

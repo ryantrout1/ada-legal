@@ -36,7 +36,7 @@ export default function ContactLogHistory({ logs }) {
             padding: '0.5rem 0.75rem', backgroundColor: 'var(--slate-50)',
             borderRadius: 'var(--radius-sm)', border: '1px solid var(--slate-100)'
           }}>
-            <Icon size={16} style={{ color: 'var(--slate-400)', flexShrink: 0, marginTop: '2px' }} />
+            <Icon size={16} style={{ color: 'var(--slate-500)', flexShrink: 0, marginTop: '2px' }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <span style={{

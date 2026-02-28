@@ -233,7 +233,7 @@ export default function LawyerRegister() {
               width: '100%', padding: '0.875rem',
               fontFamily: 'Manrope, sans-serif', fontSize: '1.0625rem', fontWeight: 700,
               color: 'white',
-              backgroundColor: submitting ? 'var(--slate-400)' : 'var(--terra-600)',
+              backgroundColor: submitting ? 'var(--slate-500)' : 'var(--terra-600)',
               border: 'none', borderRadius: 'var(--radius-md)',
               cursor: submitting ? 'not-allowed' : 'pointer',
               minHeight: '52px', transition: 'background-color 0.2s'

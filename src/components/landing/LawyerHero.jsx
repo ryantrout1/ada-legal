@@ -38,7 +38,7 @@ export default function LawyerHero() {
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-          color: 'var(--slate-300)',
+          color: 'var(--slate-500)',
           maxWidth: '580px', margin: '0 auto 2.5rem', lineHeight: 1.6
         }}>
           Stop chasing leads. Receive vetted, exclusive ADA violation cases matched to your state and practice area.

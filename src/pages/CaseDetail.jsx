@@ -84,7 +84,7 @@ export default function CaseDetail() {
           }}>
             <ArrowLeft size={16} /> My Cases
           </Link>
-          <span style={{ color: 'var(--slate-400)' }}>/</span>
+          <span style={{ color: 'var(--slate-500)' }}>/</span>
           <span style={{ color: '#475569' }}>Case #{c.id?.slice(0, 8)}</span>
         </div>
 

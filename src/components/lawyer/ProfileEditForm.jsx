@@ -58,7 +58,7 @@ export default function ProfileEditForm({ profile, onSave, onCancel }) {
       <div>
         <label style={labelStyle}>Email</label>
         <input style={{ ...inputStyle, backgroundColor: 'var(--slate-50)', color: 'var(--slate-500)' }} value={profile.email} disabled />
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-400)' }}>Cannot be changed</span>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)' }}>Cannot be changed</span>
       </div>
       <div>
         <label style={labelStyle}>Phone</label>
@@ -69,7 +69,7 @@ export default function ProfileEditForm({ profile, onSave, onCancel }) {
         <div onClick={() => setStatesOpen(!statesOpen)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setStatesOpen(!statesOpen); }}} role="button" tabIndex="0" style={{
           ...inputStyle, cursor: 'pointer', minHeight: '38px', display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center'
         }}>
-          {form.states_of_practice.length === 0 && <span style={{ color: 'var(--slate-400)' }}>Select...</span>}
+          {form.states_of_practice.length === 0 && <span style={{ color: 'var(--slate-500)' }}>Select...</span>}
           {form.states_of_practice.map(s => (
             <span key={s} style={{
               display: 'inline-flex', alignItems: 'center', gap: '2px',
@@ -110,7 +110,7 @@ export default function ProfileEditForm({ profile, onSave, onCancel }) {
         <button type="button" onClick={handleSave} disabled={saving} style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
           padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-          fontWeight: 700, color: 'white', backgroundColor: saving ? 'var(--slate-400)' : 'var(--terra-600)',
+          fontWeight: 700, color: 'white', backgroundColor: saving ? 'var(--slate-500)' : 'var(--terra-600)',
           border: 'none', borderRadius: 'var(--radius-md)', cursor: saving ? 'not-allowed' : 'pointer',
           minHeight: '44px'
         }}>

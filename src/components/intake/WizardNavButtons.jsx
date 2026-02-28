@@ -30,7 +30,7 @@ export default function WizardNavButtons({ onBack, onContinue, canContinue, back
             transition: 'all 0.2s'
           }}
           onMouseEnter={e => { e.target.style.borderColor = 'var(--slate-500)'; }}
-          onMouseLeave={e => { e.target.style.borderColor = 'var(--slate-300)'; }}
+          onMouseLeave={e => { e.target.style.borderColor = 'var(--slate-500)'; }}
         >
           <ArrowLeft size={18} aria-hidden="true" />
           {backLabel || 'Back'}
@@ -49,7 +49,7 @@ export default function WizardNavButtons({ onBack, onContinue, canContinue, back
           fontSize: '1rem',
           fontWeight: 600,
           color: 'white',
-          backgroundColor: canContinue ? 'var(--terra-600)' : 'var(--slate-400)',
+          backgroundColor: canContinue ? 'var(--terra-600)' : 'var(--slate-500)',
           border: 'none',
           borderRadius: 'var(--radius-md)',
           cursor: canContinue ? 'pointer' : 'not-allowed',

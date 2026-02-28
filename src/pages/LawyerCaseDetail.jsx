@@ -13,7 +13,7 @@ function DetailRow({ icon: Icon, label, value }) {
   if (!value) return null;
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: 'var(--space-md)' }}>
-      <Icon size={18} style={{ color: 'var(--slate-400)', flexShrink: 0, marginTop: '2px' }} />
+      <Icon size={18} style={{ color: 'var(--slate-500)', flexShrink: 0, marginTop: '2px' }} />
       <div>
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,

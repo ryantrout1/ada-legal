@@ -19,7 +19,7 @@ export default function CaseHelpCard({ caseId }) {
       <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 600, color: 'white', margin: '0 0 8px' }}>
         Questions about your case?
       </h2>
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--slate-300)', margin: '0 0 16px', lineHeight: 1.5 }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--slate-500)', margin: '0 0 16px', lineHeight: 1.5 }}>
         Our team is here to help. Reference your case number when contacting us.
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
@@ -32,7 +32,7 @@ export default function CaseHelpCard({ caseId }) {
         <button type="button" onClick={handleCopy} style={{
           display: 'inline-flex', alignItems: 'center', gap: '6px',
           padding: '0 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-          fontWeight: 600, color: 'var(--slate-300)',
+          fontWeight: 600, color: 'var(--slate-500)',
           backgroundColor: 'rgba(255,255,255,0.1)', border: 'none',
           borderRadius: '8px', cursor: 'pointer', minHeight: '36px'
         }}>

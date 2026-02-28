@@ -186,7 +186,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
               <div style={{ display: 'flex', gap: '4px' }}>
                 {docScore.criteria.map((cr, i) => (
-                  <span key={i} style={{ width: '9px', height: '9px', borderRadius: '50%', backgroundColor: cr.met ? docScore.color : 'var(--slate-300)' }} />
+                  <span key={i} style={{ width: '9px', height: '9px', borderRadius: '50%', backgroundColor: cr.met ? docScore.color : 'var(--slate-500)' }} />
                 ))}
               </div>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: docScore.color }}>
@@ -196,8 +196,8 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '4px 16px' }}>
               {docScore.criteria.map((cr, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '0.85rem', color: cr.met ? '#15803D' : 'var(--slate-300)', flexShrink: 0 }}>{cr.met ? '●' : '○'}</span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', color: cr.met ? 'var(--slate-800)' : 'var(--slate-400)' }}>{cr.label}</span>
+                  <span style={{ fontSize: '0.85rem', color: cr.met ? '#15803D' : 'var(--slate-500)', flexShrink: 0 }}>{cr.met ? '●' : '○'}</span>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', color: cr.met ? 'var(--slate-800)' : 'var(--slate-500)' }}>{cr.label}</span>
                 </div>
               ))}
             </div>

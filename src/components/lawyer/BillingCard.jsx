@@ -20,7 +20,7 @@ export default function BillingCard({ profile }) {
         Billing & Subscription
       </h2>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-        <CreditCard size={18} style={{ color: 'var(--slate-400)' }} />
+        <CreditCard size={18} style={{ color: 'var(--slate-500)' }} />
         <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-700)' }}>
           Subscription Status:
         </span>

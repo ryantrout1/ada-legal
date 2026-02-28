@@ -29,7 +29,7 @@ export default function InProgressCard({ caseData, contactLogs, notes, onLogCont
         onMouseEnter={e => { if (!expanded) e.currentTarget.style.backgroundColor = '#F0FDF4'; }}
         onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
       >
-        {expanded ? <ChevronDown size={14} style={{ color: 'var(--slate-400)', flexShrink: 0 }} /> : <ChevronRight size={14} style={{ color: 'var(--slate-400)', flexShrink: 0 }} />}
+        {expanded ? <ChevronDown size={14} style={{ color: 'var(--slate-500)', flexShrink: 0 }} /> : <ChevronRight size={14} style={{ color: 'var(--slate-500)', flexShrink: 0 }} />}
         <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#15803D', flexShrink: 0 }} />
         <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)' }}>
           {c.business_name}

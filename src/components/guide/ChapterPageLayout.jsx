@@ -60,7 +60,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
         }}>{number}</span>
         <span style={{ flex: 1 }}>{title}</span>
         <ChevronRight size={16} style={{
-          color: 'var(--slate-400)', flexShrink: 0,
+          color: 'var(--slate-500)', flexShrink: 0,
           transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
           transition: 'transform 0.25s ease'
         }} aria-hidden="true" />
@@ -332,7 +332,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
               ) : (
                 <><Scale size={14} aria-hidden="true" /> Viewing in <strong>Professional</strong> mode — legal text first</>
               )}
-              <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: 'var(--slate-400)' }}>
+              <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
                 Change in Display Settings ⚙
               </span>
             </div>

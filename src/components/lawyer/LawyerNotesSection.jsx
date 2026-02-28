@@ -25,17 +25,17 @@ export default function LawyerNotesSection({ notes, onSaveNote }) {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-        <Lock size={13} style={{ color: 'var(--slate-400)' }} />
+        <Lock size={13} style={{ color: 'var(--slate-500)' }} />
         <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
           My Notes
         </span>
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', color: 'var(--slate-400)', fontStyle: 'italic' }}>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', color: 'var(--slate-500)', fontStyle: 'italic' }}>
           (private — only you can see these)
         </span>
       </div>
 
       {sorted.length === 0 && !adding && (
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)', fontStyle: 'italic', margin: '0 0 8px' }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', fontStyle: 'italic', margin: '0 0 8px' }}>
           No notes yet.
         </p>
       )}
@@ -69,7 +69,7 @@ export default function LawyerNotesSection({ notes, onSaveNote }) {
             <button type="button" onClick={handleSave} disabled={saving || !text.trim()} style={{
               padding: '0 16px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
               fontWeight: 700, color: 'white',
-              backgroundColor: (saving || !text.trim()) ? 'var(--slate-300)' : 'var(--terra-600)',
+              backgroundColor: (saving || !text.trim()) ? 'var(--slate-500)' : 'var(--terra-600)',
               border: 'none', borderRadius: '8px', cursor: (saving || !text.trim()) ? 'not-allowed' : 'pointer',
               minHeight: '36px'
             }}>{saving ? 'Saving…' : 'Save Note'}</button>

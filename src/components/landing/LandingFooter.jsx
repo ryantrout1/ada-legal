@@ -4,20 +4,20 @@ export default function LandingFooter() {
   return (
     <div style={{
       backgroundColor: '#0F172A',
-      color: 'var(--slate-400)',
+      color: 'var(--slate-500)',
       padding: '2.5rem 1.5rem 2rem'
     }}>
       <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
         <p style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.125rem',
-          color: 'var(--slate-300)', fontWeight: 600,
+          color: 'var(--slate-500)', fontWeight: 600,
           marginBottom: '1.25rem', marginTop: 0
         }}>
           ADA Legal Link
         </p>
         <div style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-          color: 'var(--slate-400)', lineHeight: 1.7
+          color: 'var(--slate-500)', lineHeight: 1.7
         }}>
           <p style={{ margin: '0 0 0.75rem' }}>
             ADA Legal Link is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship.

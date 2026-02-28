@@ -36,8 +36,8 @@ export default function CompletedCaseRow({ caseData, notes, onSaveNote }) {
         onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
         onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
       >
-        {expanded ? <ChevronDown size={14} style={{ color: 'var(--slate-400)', flexShrink: 0 }} /> : <ChevronRight size={14} style={{ color: 'var(--slate-400)', flexShrink: 0 }} />}
-        <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--slate-400)', flexShrink: 0 }} />
+        {expanded ? <ChevronDown size={14} style={{ color: 'var(--slate-500)', flexShrink: 0 }} /> : <ChevronRight size={14} style={{ color: 'var(--slate-500)', flexShrink: 0 }} />}
+        <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--slate-500)', flexShrink: 0 }} />
         <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-800)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {c.business_name}
         </span>
@@ -56,7 +56,7 @@ export default function CompletedCaseRow({ caseData, notes, onSaveNote }) {
           fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
           backgroundColor: badge.bg, color: badge.color
         }}>{badge.label}</span>
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)', flexShrink: 0 }}>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', flexShrink: 0 }}>
           {formatDate(c.closed_at)}
         </span>
       </button>

@@ -266,8 +266,8 @@ export default function LawyerDashboard() {
             display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none',
             cursor: 'pointer', padding: 0, marginBottom: completedOpen ? '8px' : 0
           }}>
-            {completedOpen ? <ChevronDown size={15} style={{ color: 'var(--slate-400)' }} /> : <ChevronRight size={15} style={{ color: 'var(--slate-400)' }} />}
-            <div style={{ width: '4px', height: '20px', borderRadius: '2px', backgroundColor: 'var(--slate-300)' }} />
+            {completedOpen ? <ChevronDown size={15} style={{ color: 'var(--slate-500)' }} /> : <ChevronRight size={15} style={{ color: 'var(--slate-500)' }} />}
+            <div style={{ width: '4px', height: '20px', borderRadius: '2px', backgroundColor: 'var(--slate-500)' }} />
             <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
               Completed
             </h2>

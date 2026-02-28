@@ -21,7 +21,7 @@ export default function ContactTimeline({ logs }) {
 
   if (sorted.length === 0) {
     return (
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)', fontStyle: 'italic', margin: 0 }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', fontStyle: 'italic', margin: 0 }}>
         No contacts logged yet.
       </p>
     );
@@ -64,7 +64,7 @@ export default function ContactTimeline({ logs }) {
                 <span style={{ fontSize: '0.8125rem' }}>{METHOD_EMOJIS[log.contact_method] || '💬'}</span>
                 {hasNotes && !isExpanded && (
                   <span style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-400)',
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)',
                     overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0
                   }}>{log.notes}</span>
                 )}

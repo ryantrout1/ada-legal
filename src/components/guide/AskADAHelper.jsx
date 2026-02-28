@@ -483,7 +483,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
             background: input.trim() && !isLoading ? '#C2410C' : 'var(--slate-200, #E2E8F0)',
             border: 'none', cursor: input.trim() && !isLoading ? 'pointer' : 'default',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: input.trim() && !isLoading ? 'white' : 'var(--slate-400)',
+            color: input.trim() && !isLoading ? 'white' : 'var(--slate-500)',
             flexShrink: 0, transition: 'all 0.15s',
           }}
         >

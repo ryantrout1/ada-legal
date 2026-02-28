@@ -102,7 +102,7 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
       {/* Narrative */}
       <div style={{ marginBottom: 'var(--space-lg)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: 'var(--space-xs)' }}>
-          <FileText size={14} style={{ color: 'var(--slate-400)' }} />
+          <FileText size={14} style={{ color: 'var(--slate-500)' }} />
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
             color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em'

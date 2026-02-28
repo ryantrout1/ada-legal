@@ -26,7 +26,7 @@ export default function DocScoreDots({ caseData, showLabel = true, tooltipPlacem
         {criteria.map((cr, i) => (
           <span key={i} style={{
             width: '8px', height: '8px', borderRadius: '50%',
-            backgroundColor: cr.met ? color : 'var(--slate-300)',
+            backgroundColor: cr.met ? color : 'var(--slate-500)',
             display: 'inline-block'
           }} />
         ))}
@@ -65,7 +65,7 @@ export default function DocScoreDots({ caseData, showLabel = true, tooltipPlacem
           </p>
           {criteria.map((cr, i) => (
             <div key={i} style={{ display: 'flex', gap: '6px', marginBottom: '4px', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '0.75rem', color: cr.met ? '#15803D' : 'var(--slate-300)', flexShrink: 0, lineHeight: 1.4 }}>
+              <span style={{ fontSize: '0.75rem', color: cr.met ? '#15803D' : 'var(--slate-500)', flexShrink: 0, lineHeight: 1.4 }}>
                 {cr.met ? '●' : '○'}
               </span>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-600)', lineHeight: 1.4 }}>

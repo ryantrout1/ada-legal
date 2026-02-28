@@ -135,7 +135,7 @@ export default function LogContactModal({ open, onCancel, onSubmit, saving, busi
           <button type="button" onClick={handleSubmit} disabled={saving} style={{
             padding: '0 24px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
             fontWeight: 700, color: 'white',
-            backgroundColor: saving ? 'var(--slate-400)' : 'var(--terra-600)',
+            backgroundColor: saving ? 'var(--slate-500)' : 'var(--terra-600)',
             border: 'none', borderRadius: '10px',
             cursor: saving ? 'not-allowed' : 'pointer', minHeight: '44px',
             transition: 'background-color 0.15s'

@@ -35,7 +35,7 @@ export default function CaseCard({ caseData, onViewDetails }) {
         opacity: cardOpacity,
         position: 'relative'
       }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--slate-400)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'; }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--slate-500)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'; }}
       onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; e.currentTarget.style.boxShadow = 'none'; }}
     >
       {/* Green accent bar for new cases */}

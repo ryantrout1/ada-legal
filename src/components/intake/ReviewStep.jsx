@@ -140,7 +140,7 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
             fontSize: '1.0625rem',
             fontWeight: 700,
             color: 'white',
-            backgroundColor: consent && !submitting ? 'var(--terra-600)' : 'var(--slate-400)',
+            backgroundColor: consent && !submitting ? 'var(--terra-600)' : 'var(--slate-500)',
             border: 'none',
             borderRadius: 'var(--radius-md)',
             cursor: consent && !submitting ? 'pointer' : 'not-allowed',

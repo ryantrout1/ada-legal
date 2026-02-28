@@ -160,7 +160,7 @@ export default function MyCases() {
               backgroundColor: 'var(--slate-100)', display: 'flex',
               alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px'
             }}>
-              <FileText size={28} aria-hidden="true" style={{ color: 'var(--slate-400)' }} />
+              <FileText size={28} aria-hidden="true" style={{ color: 'var(--slate-500)' }} />
             </div>
             <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 8px' }}>
               No cases yet
@@ -202,7 +202,7 @@ export default function MyCases() {
           backgroundColor: 'var(--slate-900)', borderRadius: '12px', padding: '16px 24px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px'
         }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--slate-300)', margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--slate-500)', margin: 0 }}>
             Questions? Contact us at{' '}
             <a href="mailto:support@adalegalconnect.com" style={{ color: 'white', fontWeight: 600, textDecoration: 'underline' }}>
               support@adalegalconnect.com

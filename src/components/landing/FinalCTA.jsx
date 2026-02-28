@@ -23,7 +23,7 @@ export default function FinalCTA({ heading, subtitle, buttonText, buttonLink, va
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: isDark ? 'var(--slate-300)' : 'var(--slate-600)',
+          color: isDark ? 'var(--slate-500)' : 'var(--slate-600)',
           marginBottom: '2rem', lineHeight: 1.6
         }}>
           {subtitle}

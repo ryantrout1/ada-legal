@@ -37,7 +37,7 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
         gap: '16px',
         minHeight: '64px'
       }}
-      onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-400)'; }}
+      onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-500)'; }}
       onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-200)'; }}
       onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,65,12,0.6)'; e.currentTarget.style.outline = '2px solid #C2410C'; e.currentTarget.style.outlineOffset = '2px'; }}
       onBlur={e => { e.currentTarget.style.boxShadow = isSelected ? '0 0 0 3px var(--terra-100)' : '0 1px 3px rgba(0,0,0,0.06)'; e.currentTarget.style.outline = 'none'; }}

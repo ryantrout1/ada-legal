@@ -131,7 +131,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: 'var(--space-lg)' }}>
               <button type="button" onClick={handleClose} style={cancelStyle}>Cancel</button>
               <button type="button" disabled={!canProceedStep1} onClick={() => setStep(2)} style={{
-                ...btnStyle, backgroundColor: canProceedStep1 ? 'var(--terra-600)' : 'var(--slate-300)',
+                ...btnStyle, backgroundColor: canProceedStep1 ? 'var(--terra-600)' : 'var(--slate-500)',
                 cursor: canProceedStep1 ? 'pointer' : 'not-allowed'
               }}>
                 Next
@@ -177,7 +177,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--space-lg)' }}>
               <button type="button" onClick={() => setStep(1)} style={cancelStyle}>← Back</button>
               <button type="button" disabled={!canProceedStep2} onClick={() => setStep(3)} style={{
-                ...btnStyle, backgroundColor: canProceedStep2 ? 'var(--terra-600)' : 'var(--slate-300)',
+                ...btnStyle, backgroundColor: canProceedStep2 ? 'var(--terra-600)' : 'var(--slate-500)',
                 cursor: canProceedStep2 ? 'pointer' : 'not-allowed'
               }}>
                 Review
@@ -216,7 +216,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
             </div>
 
             <button type="button" disabled={saving} onClick={handleSubmit} style={{
-              ...btnStyle, width: '100%', backgroundColor: saving ? 'var(--slate-400)' : 'var(--terra-600)',
+              ...btnStyle, width: '100%', backgroundColor: saving ? 'var(--slate-500)' : 'var(--terra-600)',
               cursor: saving ? 'not-allowed' : 'pointer', marginBottom: '0.75rem'
             }}>
               {saving ? 'Closing Case…' : 'Confirm & Close Case'}

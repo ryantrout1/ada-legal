@@ -141,7 +141,7 @@ export default function InitiateSupportModal({ open, onCancel, onConfirm, proces
                   minHeight: '44px', transition: 'all 0.15s',
                   opacity: processing ? 0.5 : 1
                 }}
-                onMouseEnter={e => { if (!processing) e.currentTarget.style.borderColor = 'var(--slate-400)'; }}
+                onMouseEnter={e => { if (!processing) e.currentTarget.style.borderColor = 'var(--slate-500)'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; }}
               >
                 Cancel
@@ -154,13 +154,13 @@ export default function InitiateSupportModal({ open, onCancel, onConfirm, proces
                 style={{
                   padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
                   fontSize: '0.9375rem', fontWeight: 700, color: 'white',
-                  backgroundColor: processing ? 'var(--slate-400)' : 'var(--terra-600)',
+                  backgroundColor: processing ? 'var(--slate-500)' : 'var(--terra-600)',
                   border: 'none', borderRadius: 'var(--radius-md)',
                   cursor: processing ? 'not-allowed' : 'pointer',
                   minHeight: '44px', transition: 'background-color 0.15s'
                 }}
                 onMouseEnter={e => { if (!processing) e.currentTarget.style.backgroundColor = 'var(--terra-700)'; }}
-                onMouseLeave={e => { if (!processing) e.currentTarget.style.backgroundColor = processing ? 'var(--slate-400)' : 'var(--terra-600)'; }}
+                onMouseLeave={e => { if (!processing) e.currentTarget.style.backgroundColor = processing ? 'var(--slate-500)' : 'var(--terra-600)'; }}
               >
                 {processing ? 'Assigning…' : 'Confirm — Initiate Support'}
               </button>

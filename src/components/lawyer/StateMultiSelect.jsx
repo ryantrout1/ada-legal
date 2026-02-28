@@ -71,7 +71,7 @@ export default function StateMultiSelect({ selected, onChange, error }) {
         }}
       >
         {selected.length === 0 && (
-          <span style={{ color: 'var(--slate-400)' }}>Select state(s)…</span>
+          <span style={{ color: 'var(--slate-500)' }}>Select state(s)…</span>
         )}
         {selected.map(s => (
           <span key={s} style={{
@@ -96,7 +96,7 @@ export default function StateMultiSelect({ selected, onChange, error }) {
           </span>
         ))}
         <ChevronDown size={16} style={{
-          marginLeft: 'auto', color: 'var(--slate-400)', flexShrink: 0
+          marginLeft: 'auto', color: 'var(--slate-500)', flexShrink: 0
         }} />
       </div>
 
