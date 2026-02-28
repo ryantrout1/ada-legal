@@ -516,6 +516,59 @@ export const applyPreferences = (prefs) => {
         border-color: #2A3344 !important;
       }
 
+      /* === KnowYourRights cards — elevated from section bg === */
+      .kyr-card {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+      }
+      .kyr-card div,
+      .kyr-card p,
+      .kyr-card span {
+        background-color: transparent !important;
+      }
+      .kyr-card span[style*="border-radius: 100px"] {
+        background-color: #2D3748 !important;
+        color: #CBD5E1 !important;
+      }
+
+      /* === ForAttorneys stat cards === */
+      .landing-stat-card {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+      }
+      .landing-stat-card p,
+      .landing-stat-card span {
+        background-color: transparent !important;
+      }
+
+      /* === ForAttorneys feature grid cards === */
+      .landing-attorneys-grid > div {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+      }
+
+      /* === Landing story cards (3 capability cards) === */
+      .landing-story-card {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+      }
+      .landing-story-card div,
+      .landing-story-card p,
+      .landing-story-card span {
+        background-color: transparent !important;
+      }
+      .landing-story-card span[style*="border-radius: 9999px"] {
+        background-color: #3C1810 !important;
+        color: #F97316 !important;
+      }
+
+      /* === Chapter page accordions (guide sections) === */
+      #main-content div[style*="borderRadius: '12px'"][style*="border: '1px"] {
+        background-color: #151B24 !important;
+        border-color: #2A3344 !important;
+      }
+
       /* === Global footer (non-landing, already dark) === */
       footer[role="contentinfo"],
       footer[role="contentinfo"] div,
@@ -1116,6 +1169,20 @@ export const applyPreferences = (prefs) => {
         background-color: transparent !important;
       }
 
+      /* === Other cards — high contrast === */
+      .kyr-card,
+      .landing-stat-card,
+      .landing-story-card,
+      .landing-attorneys-grid > div {
+        background-color: #0A0A0A !important;
+        border: 2px solid #FFFFFF !important;
+      }
+      .kyr-card div, .kyr-card p, .kyr-card span,
+      .landing-stat-card p, .landing-stat-card span,
+      .landing-story-card div, .landing-story-card p, .landing-story-card span {
+        background-color: transparent !important;
+      }
+
       /* === Chapter number badges — high contrast === */
       #main-content .chapter-num {
         background-color: #000000 !important;
@@ -1703,6 +1770,20 @@ export const applyPreferences = (prefs) => {
       .sg-resource-card div,
       .sg-resource-card p,
       .sg-resource-card span {
+        background-color: transparent !important;
+      }
+
+      /* === Other cards — warm mode === */
+      .kyr-card,
+      .landing-stat-card,
+      .landing-story-card,
+      .landing-attorneys-grid > div {
+        background-color: #F5EDE0 !important;
+        border-color: #E8DDD0 !important;
+      }
+      .kyr-card div, .kyr-card p, .kyr-card span,
+      .landing-stat-card p, .landing-stat-card span,
+      .landing-story-card div, .landing-story-card p, .landing-story-card span {
         background-color: transparent !important;
       }
 
