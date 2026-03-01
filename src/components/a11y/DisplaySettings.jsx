@@ -2770,8 +2770,9 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
 
       {/* ═══════ READING LEVEL ═══════ */}
       <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '16px' }}>
-        <legend style={labelStyle}>Reading Level</legend>
-        <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+        <legend style={labelStyle}>ADA Guide Reading Level</legend>
+        <p style={{ fontSize: '0.65rem', color: textSecondary, margin: '2px 0 8px', lineHeight: 1.4 }}>Controls how content is written in the ADA Standards Guide</p>
+        <div style={{ display: 'flex', gap: '4px' }}>
           {[
             { key: 'simple', label: 'Simple', announce: 'Reading level changed to simple — plain language summaries' },
             { key: 'standard', label: 'Standard', announce: 'Reading level changed to standard' },

@@ -312,31 +312,65 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
             color: 'var(--slate-700)', lineHeight: 1.75, marginBottom: '32px'
           }}>{overview}</div>
 
-          {/* Reading level indicator */}
-          {readingLevel !== 'standard' && (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 16px',
-              marginBottom: '16px',
-              borderRadius: '8px',
-              background: readingLevel === 'simple' ? '#EFF6FF' : '#F8FAFC',
-              border: `1px solid ${readingLevel === 'simple' ? '#93C5FD' : 'var(--slate-200)'}`,
-              fontFamily: 'Manrope, sans-serif',
-              fontSize: '0.8125rem',
-              color: readingLevel === 'simple' ? '#1E40AF' : 'var(--slate-600)'
-            }}>
-              {readingLevel === 'simple' ? (
-                <><Sparkles size={14} aria-hidden="true" /> Viewing in <strong>Simple</strong> mode — plain-language summaries</>
-              ) : (
-                <><Scale size={14} aria-hidden="true" /> Viewing in <strong>Professional</strong> mode — legal text first</>
-              )}
-              <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
-                Change in Display Settings ⚙
-              </span>
+          {/* Inline reading level bar — always visible, interactive */}
+          <div role="group" aria-label="Reading level" style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            padding: '8px 12px',
+            marginBottom: '20px',
+            borderRadius: '8px',
+            background: '#F8F8FA',
+            border: '1px solid var(--slate-200)',
+            fontFamily: 'Manrope, sans-serif',
+            flexWrap: 'wrap',
+          }}>
+            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--slate-600)', whiteSpace: 'nowrap' }}>Reading level</span>
+            <div style={{ display: 'flex', gap: '3px' }}>
+              {[
+                { key: 'simple', label: 'Simple', desc: 'Plain language' },
+                { key: 'standard', label: 'Standard', desc: 'Default view' },
+                { key: 'professional', label: 'Legal', desc: 'Full citations' },
+              ].map(r => {
+                const active = readingLevel === r.key;
+                return (
+                  <button
+                    key={r.key}
+                    type="button"
+                    aria-pressed={String(active)}
+                    title={r.desc}
+                    onClick={() => {
+                      setReadingLevel(r.key);
+                      try {
+                        const prefs = JSON.parse(localStorage.getItem('ada-display-prefs') || '{}');
+                        prefs.readingLevel = r.key;
+                        localStorage.setItem('ada-display-prefs', JSON.stringify(prefs));
+                      } catch {}
+                    }}
+                    style={{
+                      padding: '5px 14px',
+                      minHeight: '32px',
+                      borderRadius: '6px',
+                      border: active ? '2px solid #C2410C' : '1px solid var(--slate-200)',
+                      background: active ? '#C2410C' : 'white',
+                      color: active ? 'white' : 'var(--slate-600)',
+                      fontSize: '0.72rem', fontWeight: active ? 700 : 500,
+                      fontFamily: 'Manrope, sans-serif',
+                      cursor: 'pointer', transition: 'all 0.15s',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {r.label}
+                  </button>
+                );
+              })}
             </div>
-          )}
+            <span style={{ fontSize: '0.65rem', color: 'var(--slate-500)', marginLeft: 'auto' }}>
+              {readingLevel === 'simple' && '📖 Plain-language summaries'}
+              {readingLevel === 'standard' && ''}
+              {readingLevel === 'professional' && '⚖️ Includes legal citations'}
+            </span>
+          </div>
 
           {/* Sections */}
           <div role="region" aria-label="Standards sections">
