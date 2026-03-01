@@ -56,7 +56,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
       >
         <span className="chapter-num" style={{
           fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
-          color: '#C2410C', background: '#FFF7ED', padding: '2px 10px',
+          color: '#9A3412', background: '#FFF7ED', padding: '2px 10px',
           borderRadius: '6px', flexShrink: 0, border: '1px solid #FFEDD5'
         }}>{number}</span>
         <span style={{ flex: 1 }}>{title}</span>
@@ -99,7 +99,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                     padding: '20px'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                      <Sparkles size={16} style={{ color: '#C2410C' }} aria-hidden="true" />
+                      <Sparkles size={16} style={{ color: '#9A3412' }} aria-hidden="true" />
                       <p style={{
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
                         color: 'var(--slate-800)', margin: 0
@@ -177,7 +177,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                 <details style={{ marginTop: '8px' }}>
                   <summary style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                    fontWeight: 600, color: '#C2410C', cursor: 'pointer',
+                    fontWeight: 600, color: '#9A3412', cursor: 'pointer',
                     padding: '8px 0', minHeight: '44px',
                     display: 'flex', alignItems: 'center', gap: '6px'
                   }}>
@@ -214,7 +214,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
               <Link to={createPageUrl('Intake')} onClick={() => base44.analytics.track({ eventName: 'guide_to_report_conversion', properties: { source: `chapter_${chapterNum}_inline` } })} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
-                color: '#C2410C', textDecoration: 'none',
+                color: '#9A3412', textDecoration: 'none',
                 padding: '6px 14px', borderRadius: '8px',
                 border: '1px solid rgba(194,65,12,0.2)',
                 background: 'rgba(194,65,12,0.04)',
@@ -265,7 +265,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
   const linkStyle = {
     display: 'inline-flex', alignItems: 'center', gap: '6px',
     fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
-    color: '#C2410C', textDecoration: 'none', padding: '8px 0', minHeight: '44px'
+    color: '#9A3412', textDecoration: 'none', padding: '8px 0', minHeight: '44px'
   };
 
   return (

@@ -33,7 +33,7 @@ export default function StandardsSidebar({ activeId }) {
                 marginLeft: '-2px',
                 borderLeft: isActive ? '2px solid #C2410C' : '2px solid transparent',
                 background: isActive ? '#FEF1EC' : 'transparent',
-                color: isActive ? '#C2410C' : 'var(--slate-700)',
+                color: isActive ? '#9A3412' : 'var(--slate-700)',
                 textDecoration: 'none',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 500,
                 borderRadius: '0 6px 6px 0',

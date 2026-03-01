@@ -113,7 +113,7 @@ function formatResponse(text) {
     if (/^§\d{3,4}/.test(part)) {
       return (
         <span key={i} style={{
-          fontWeight: 600, color: '#C2410C',
+          fontWeight: 600, color: '#9A3412',
           background: 'rgba(194,65,12,0.08)', padding: '1px 4px',
           borderRadius: '3px', fontSize: '0.85rem',
         }}>{part}</span>
@@ -125,7 +125,7 @@ function formatResponse(text) {
           key={i}
           to={createPageUrl('RightsPathway')}
           style={{
-            color: '#C2410C', fontWeight: 600,
+            color: '#9A3412', fontWeight: 600,
             textDecoration: 'underline', textUnderlineOffset: '2px',
           }}
         >
@@ -294,12 +294,12 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-              color: '#94A3B8', margin: 0,
+              color: '#B0BEC5', margin: 0,
             }}>
               Ask in plain language — we'll help you understand what the law says.
             </p>
           </div>
-          <ChevronRight size={18} style={{ color: '#94A3B8', flexShrink: 0 }} aria-hidden="true" />
+          <ChevronRight size={18} style={{ color: '#B0BEC5', flexShrink: 0 }} aria-hidden="true" />
         </button>
       </div>
     );
@@ -346,7 +346,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
               style={{
                 background: 'transparent', border: '1px solid #475569',
                 borderRadius: '8px', padding: '6px', cursor: 'pointer',
-                color: '#94A3B8', minHeight: '36px', minWidth: '36px',
+                color: '#B0BEC5', minHeight: '36px', minWidth: '36px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
@@ -359,7 +359,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
             style={{
               background: 'transparent', border: '1px solid #475569',
               borderRadius: '8px', padding: '6px', cursor: 'pointer',
-              color: '#94A3B8', minHeight: '36px', minWidth: '36px',
+              color: '#B0BEC5', minHeight: '36px', minWidth: '36px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
           >
@@ -414,7 +414,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
                     e.currentTarget.style.background = 'var(--slate-50, #F8FAFC)';
                   }}
                 >
-                  <ChevronRight size={14} style={{ color: '#C2410C', flexShrink: 0 }} aria-hidden="true" />
+                  <ChevronRight size={14} style={{ color: '#9A3412', flexShrink: 0 }} aria-hidden="true" />
                   {q}
                 </button>
               ))}
@@ -502,7 +502,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           color: '#475569', margin: 0, lineHeight: 1.5,
         }}>
           This helper explains ADA standards — it does not provide legal advice. For your specific situation, use the{' '}
-          <Link to={createPageUrl('RightsPathway')} style={{ color: '#C2410C', textDecoration: 'underline' }}>
+          <Link to={createPageUrl('RightsPathway')} style={{ color: '#9A3412', textDecoration: 'underline' }}>
             Rights Pathway
           </Link>.
         </p>

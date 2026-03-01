@@ -42,7 +42,7 @@ export default function PricingSection() {
       }}>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-          color: 'var(--terra-600)', textTransform: 'uppercase', letterSpacing: '0.1em',
+          color: '#9A3412', textTransform: 'uppercase', letterSpacing: '0.1em',
           marginBottom: '0.5rem', marginTop: 0
         }}>
           Platform Access
@@ -54,7 +54,7 @@ export default function PricingSection() {
               display: 'flex', alignItems: 'center', gap: '0.75rem',
               marginBottom: '0.75rem'
             }}>
-              <Check size={18} style={{ color: 'var(--success-600)', flexShrink: 0 }} />
+              <Check size={18} style={{ color: '#15803D', flexShrink: 0 }} aria-hidden="true" />
               <span style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
                 color: 'var(--slate-700)'

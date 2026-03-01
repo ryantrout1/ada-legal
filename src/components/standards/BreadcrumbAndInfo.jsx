@@ -50,7 +50,7 @@ export default function BreadcrumbAndInfo() {
             background: 'var(--terra-100)', display: 'flex',
             alignItems: 'center', justifyContent: 'center', flexShrink: 0
           }}>
-            <Info size={18} style={{ color: '#C2410C' }} aria-hidden="true" />
+            <Info size={18} style={{ color: '#9A3412' }} aria-hidden="true" />
           </div>
           <div>
             <p style={{

@@ -71,7 +71,7 @@ function QuoteCarousel() {
         </p>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-          color: '#94A3B8', margin: 0
+          color: '#B0BEC5', margin: 0
         }}>
           — {q.attribution}
         </p>
@@ -120,7 +120,7 @@ function QuoteCarousel() {
             style={{
               width: '32px', height: '32px', borderRadius: '8px',
               background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-              color: '#94A3B8', cursor: 'pointer',
+              color: '#B0BEC5', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '14px', padding: 0, minHeight: '32px',
               transition: 'background 0.15s'
@@ -136,7 +136,7 @@ function QuoteCarousel() {
             style={{
               width: '32px', height: '32px', borderRadius: '8px',
               background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-              color: '#94A3B8', cursor: 'pointer',
+              color: '#B0BEC5', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '14px', padding: 0, minHeight: '32px',
               transition: 'background 0.15s'
@@ -183,7 +183,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
             <div aria-hidden="true" style={{ width: '32px', height: '2px', background: '#C2410C' }} />
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-              letterSpacing: '0.15em', textTransform: 'uppercase', color: '#D4570A'
+              letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9A3412'
             }}>
               ADA Standards Guide
             </span>
@@ -194,7 +194,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
             fontWeight: 700, lineHeight: 1.1, color: 'white', margin: '0 0 1.5rem'
           }}>
             Know the law.<br />
-            <span style={{ color: '#D4570A' }}>Know your rights.</span>
+            <span style={{ color: '#9A3412' }}>Know your rights.</span>
           </h1>
 
           <p style={{
@@ -218,17 +218,17 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
             borderRadius: '16px', padding: '28px 32px', marginBottom: '16px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-              <Shield size={16} style={{ color: '#D4570A' }} aria-hidden="true" />
+              <Shield size={16} style={{ color: '#9A3412' }} aria-hidden="true" />
               <span style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-                letterSpacing: '0.1em', textTransform: 'uppercase', color: '#D4570A'
+                letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9A3412'
               }}>
                 Official Source
               </span>
             </div>
             <p style={{
               fontFamily: 'Fraunces, serif', fontSize: '2.5rem', fontWeight: 800,
-              color: '#D4570A', margin: '0 0 0.5rem'
+              color: '#9A3412', margin: '0 0 0.5rem'
             }}>
               243
             </p>

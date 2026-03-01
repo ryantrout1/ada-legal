@@ -21,7 +21,7 @@ export default function EarlyAccessBanner() {
         role="status"
         aria-label="Early access announcement"
         style={{
-          background: '#C2410C',
+          background: '#9A3412',
           color: 'white',
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.875rem',

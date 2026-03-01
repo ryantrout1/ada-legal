@@ -202,7 +202,7 @@ export default function ADAAssistant() {
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
           <Search size={18} style={{
             position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
-            color: '#64748B', pointerEvents: 'none'
+            color: '#4B5563', pointerEvents: 'none'
           }} />
           <input
             id="ada-search-input"
@@ -324,7 +324,7 @@ export default function ADAAssistant() {
                     {item.section && (
                       <span style={{
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
-                        color: '#C2410C', background: 'rgba(194,65,12,0.08)',
+                        color: '#9A3412', background: 'rgba(194,65,12,0.08)',
                         padding: '1px 6px', borderRadius: '4px'
                       }}>
                         {item.section}
@@ -343,7 +343,7 @@ export default function ADAAssistant() {
                   </div>
                   <p style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                    color: '#64748B', margin: 0, lineHeight: 1.5
+                    color: '#4B5563', margin: 0, lineHeight: 1.5
                   }}>
                     {item.desc}
                   </p>
@@ -375,18 +375,18 @@ export default function ADAAssistant() {
             <div>
               <span style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', fontWeight: 600,
-                color: '#C2410C'
+                color: '#9A3412'
               }}>
                 Experienced a violation?
               </span>
               <span style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                color: '#64748B', marginLeft: '6px'
+                color: '#4B5563', marginLeft: '6px'
               }}>
                 Report it — we'll connect you with an attorney.
               </span>
             </div>
-            <ArrowRight size={16} style={{ color: '#C2410C', flexShrink: 0 }} />
+            <ArrowRight size={16} style={{ color: '#9A3412', flexShrink: 0 }} />
           </Link>
         </div>
       )}
@@ -398,7 +398,7 @@ export default function ADAAssistant() {
           borderRadius: '14px', padding: '20px', textAlign: 'center',
           boxShadow: '0 8px 30px rgba(0,0,0,0.15)'
         }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#64748B', margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#4B5563', margin: 0 }}>
             No results for "{query}" — try different keywords or browse the categories below.
           </p>
         </div>

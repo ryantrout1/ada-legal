@@ -17,7 +17,7 @@ export default function GuideReportCTA() {
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: '#94A3B8', lineHeight: 1.7, margin: '0 0 28px'
+          color: '#B0BEC5', lineHeight: 1.7, margin: '0 0 28px'
         }}>
           Answer a few simple questions and we'll show you exactly what applies to your situation — in 60 seconds.
         </p>
@@ -33,14 +33,14 @@ export default function GuideReportCTA() {
         </Link>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem',
-          color: '#94A3B8', marginTop: '16px', marginBottom: 0
+          color: '#B0BEC5', marginTop: '16px', marginBottom: 0
         }}>
           Attorney-connected violation reporting — launching soon.
         </p>
         <div style={{ marginTop: '16px' }}>
           <Link to={createPageUrl('Home')} style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-            color: '#94A3B8', textDecoration: 'underline'
+            color: '#B0BEC5', textDecoration: 'underline'
           }}>
             Learn how it works
           </Link>
