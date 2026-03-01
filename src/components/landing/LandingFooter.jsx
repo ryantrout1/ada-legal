@@ -26,7 +26,7 @@ export default function LandingFooter() {
             The information on this site is for general informational purposes only and does not constitute legal counsel. Attorney listings do not constitute endorsements. Results may vary.
           </p>
           <p style={{ margin: '0 0 0.75rem' }}>
-            <a href="mailto:support@adalegalconnect.com" style={{ color: 'var(--terra-300)', textDecoration: 'underline' }}>
+            <a href="mailto:support@adalegalconnect.com" style={{ color: '#FDBA74', textDecoration: 'underline' }}>
               Contact Us: support@adalegalconnect.com
             </a>
           </p>

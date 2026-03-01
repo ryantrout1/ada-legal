@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 
 export default function LawyerHero() {
   return (
-    <section className="warm-keep-dark" style={{
+    <section aria-labelledby="lawyer-hero-heading" className="warm-keep-dark" style={{
       background: 'linear-gradient(160deg, var(--slate-900) 0%, #0F172A 100%)',
       color: 'white',
       padding: 'clamp(4rem, 10vw, 7rem) 1.5rem',
@@ -27,7 +27,7 @@ export default function LawyerHero() {
         }}>
           For Attorneys
         </span>
-        <h1 style={{
+        <h1 id="lawyer-hero-heading" style={{
           fontFamily: 'Fraunces, serif',
           fontSize: 'clamp(2rem, 5vw, 3.25rem)',
           fontWeight: 700, lineHeight: 1.1,

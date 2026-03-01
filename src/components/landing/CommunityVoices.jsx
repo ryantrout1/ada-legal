@@ -5,10 +5,10 @@ import BrandIcon from './BrandIcons';
 
 // ─── Options ───
 const OPTIONS = [
-  { id: 'rights', icon: 'search', label: 'I want to understand my rights', color: '#C2410C' },
-  { id: 'happened', icon: 'legalOptions', label: 'Something happened & I want to understand it', color: '#15803D' },
-  { id: 'space', icon: 'accessible', label: 'I want my space accessible for everyone', color: '#2563EB' },
-  { id: 'believe', icon: 'heart', label: 'Access is a human right', color: '#9333EA' },
+  { id: 'rights', icon: 'search', label: 'I want to understand my rights', color: '#C2410C', textColor: '#FB923C' },
+  { id: 'happened', icon: 'legalOptions', label: 'Something happened & I want to understand it', color: '#15803D', textColor: '#4ADE80' },
+  { id: 'space', icon: 'accessible', label: 'I want my space accessible for everyone', color: '#2563EB', textColor: '#93C5FD' },
+  { id: 'believe', icon: 'heart', label: 'Access is a human right', color: '#9333EA', textColor: '#C4B5FD' },
 ];
 
 // ─── US population hotspots for dot placement ───
@@ -176,7 +176,7 @@ function ResultBar({ option, count, total, delay, isUser }) {
         </span>
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-          fontWeight: 700, color: option.color, minWidth: 48, textAlign: 'right',
+          fontWeight: 700, color: option.textColor || option.color, minWidth: 48, textAlign: 'right',
         }}>
           {pct}%
         </span>

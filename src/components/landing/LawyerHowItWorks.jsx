@@ -20,12 +20,12 @@ const steps = [
 
 export default function LawyerHowItWorks() {
   return (
-    <section style={{
+    <section aria-labelledby="lawyer-how-heading" style={{
       backgroundColor: 'var(--slate-50)',
       padding: 'clamp(3rem, 8vw, 5rem) 1.5rem'
     }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        <h2 style={{
+        <h2 id="lawyer-how-heading" style={{
           fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)',
           fontWeight: 700, textAlign: 'center', color: 'var(--slate-900)',
           marginBottom: '0.75rem', marginTop: 0

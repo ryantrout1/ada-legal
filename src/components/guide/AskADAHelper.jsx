@@ -93,7 +93,7 @@ function Message({ role, content, isLoading }) {
         }}
       >
         {isLoading ? (
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--slate-500, #64748B)' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--slate-600, #4B5563)' }}>
             <Loader2 size={16} style={{ animation: 'ada-ai-spin 1s linear infinite' }} aria-hidden="true" />
             Thinking...
           </span>

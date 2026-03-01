@@ -239,7 +239,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
         }}>Ready to take action?</h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: '#94A3B8', margin: '0 0 24px'
+          color: '#B0BEC5', margin: '0 0 24px'
         }}>
           Explore the ADA standards that apply to your situation, or review your rights assessment results above.
         </p>

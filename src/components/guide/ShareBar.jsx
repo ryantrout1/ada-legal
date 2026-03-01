@@ -9,7 +9,7 @@ const MODE_STYLES = {
     color: '#FFFFFF',
     hoverBg: '#334155',
     accentColor: '#F97316',
-    labelColor: '#94A3B8',
+    labelColor: '#4B5563',
   },
   dark: {
     bg: '#000000',
@@ -17,7 +17,7 @@ const MODE_STYLES = {
     color: '#FFFFFF',
     hoverBg: '#1E293B',
     accentColor: '#FFB347',
-    labelColor: '#94A3B8',
+    labelColor: '#B0BEC5',
   },
   warm: {
     bg: '#3D3128',
@@ -25,7 +25,7 @@ const MODE_STYLES = {
     color: '#F5EDE0',
     hoverBg: '#4A3C30',
     accentColor: '#F97316',
-    labelColor: '#8B7B6B',
+    labelColor: '#5C4F42',
   },
   contrast: {
     bg: '#000000',
@@ -109,12 +109,12 @@ export default function ShareBar() {
             className="brand-icon share-btn"
             style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              width: '34px', height: '34px', borderRadius: '8px',
+              width: '44px', height: '44px', borderRadius: '8px',
               border: styles.border,
               background: b.highlight ? '#064E3B' : styles.bg,
               color: b.highlight ? '#34D399' : styles.color,
               cursor: 'pointer', transition: 'all 0.15s', flexShrink: 0,
-              padding: 0, minHeight: '34px',
+              padding: 0, minHeight: '44px',
             }}
             onMouseEnter={e => {
               e.currentTarget.style.background = styles.hoverBg;

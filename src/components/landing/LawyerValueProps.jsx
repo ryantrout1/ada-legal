@@ -21,11 +21,11 @@ const props = [
 
 export default function LawyerValueProps() {
   return (
-    <section style={{
+    <section aria-labelledby="lawyer-value-heading" style={{
       maxWidth: '1000px', margin: '0 auto',
       padding: 'clamp(3rem, 8vw, 5rem) 1.5rem'
     }}>
-      <h2 style={{
+      <h2 id="lawyer-value-heading" style={{
         fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)',
         fontWeight: 700, textAlign: 'center', color: 'var(--slate-900)',
         marginBottom: '0.75rem', marginTop: 0
