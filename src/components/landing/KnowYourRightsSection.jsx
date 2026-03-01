@@ -10,7 +10,7 @@ const CARDS = [
     accentColor: '#B14A2E',
     iconBg: '#FFF7ED',
     iconName: 'titleIII',
-    badge: { text: 'We handle this', bg: '#ECFDF5', color: '#047857', border: '#D1FAE5' },
+    badge: { text: 'We handle this', bg: '#ECFDF5', color: '#065F46', border: '#D1FAE5' },
     body: 'Covers any private business open to the public — their physical spaces, websites, and apps. If a store, restaurant, hotel, doctor\'s office, or website wasn\'t accessible, this is your Title.',
     tags: ['Restaurants', 'Hotels', 'Retail stores', 'Websites', 'Doctor\'s offices', 'Theaters'],
     tagsLabel: 'Examples covered by Title III',
@@ -25,7 +25,7 @@ const CARDS = [
     accentColor: '#2563EB',
     iconBg: '#EFF6FF',
     iconName: 'titleII',
-    badge: { text: "We'll guide you", bg: '#F1F5F9', color: '#475569', border: '#E2E8F0' },
+    badge: { text: "We'll guide you", bg: '#F1F5F9', color: '#334155', border: '#E2E8F0' },
     body: 'Covers all services, programs, and facilities of state and local governments — courthouses, public transit, DMVs, public schools, parks, and voting locations.',
     tags: ['Courthouses', 'Public transit', 'DMVs', 'Public schools', 'Parks', 'Voting locations'],
     tagsLabel: 'Examples covered by Title II',
@@ -40,7 +40,7 @@ const CARDS = [
     accentColor: '#B45309',
     iconBg: '#FFFBEB',
     iconName: 'titleI',
-    badge: { text: "We'll guide you", bg: '#F1F5F9', color: '#475569', border: '#E2E8F0' },
+    badge: { text: "We'll guide you", bg: '#F1F5F9', color: '#334155', border: '#E2E8F0' },
     body: 'Covers hiring, firing, promotions, and reasonable accommodations at work. Applies to employers with 15 or more employees. Has a strict 180-day filing deadline.',
     tags: ['Hiring bias', 'Denied accommodations', 'Wrongful termination', 'Harassment', 'Promotion denial'],
     tagsLabel: 'Examples covered by Title I',
@@ -54,7 +54,6 @@ const CARDS = [
 function RightsCard({ card }) {
   return (
     <div
-      tabIndex={0}
       className="kyr-card"
       style={{
         background: '#F8FAFC',
@@ -88,7 +87,7 @@ function RightsCard({ card }) {
         <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', fontWeight: 600, color: card.subtitleColor, margin: '0 0 12px' }}>
           {card.subtitle}
         </p>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#475569', lineHeight: 1.65, margin: '0 0 16px' }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#3D4A5C', lineHeight: 1.65, margin: '0 0 16px' }}>
           {card.body}
         </p>
 
@@ -97,7 +96,7 @@ function RightsCard({ card }) {
             <span key={tag} role="listitem" style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 500,
               padding: '4px 10px', borderRadius: '100px', background: 'white',
-              border: '1px solid #E2E8F0', color: '#475569'
+              border: '1px solid #E2E8F0', color: '#3D4A5C'
             }}>
               {tag}
             </span>
@@ -106,7 +105,7 @@ function RightsCard({ card }) {
 
         <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '14px', display: 'flex', alignItems: 'center', gap: '10px', marginTop: 'auto' }}>
           <BrandIcon name={card.filingIconName} size={28} viewBox={20} />
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: '#475569', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: '#3D4A5C', margin: 0, lineHeight: 1.5 }}>
             {card.filingText}
           </p>
         </div>
@@ -142,7 +141,7 @@ export default function KnowYourRightsSection() {
             The ADA protects you in three key areas
           </h2>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: '#475569',
+            fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: '#3D4A5C',
             maxWidth: '620px', margin: '0 auto', lineHeight: 1.6
           }}>
             The Americans with Disabilities Act is organized into Titles, each covering a different type of discrimination. Understanding which Title applies to your situation determines where you file and what happens next.
@@ -176,7 +175,7 @@ export default function KnowYourRightsSection() {
             Were Your Rights Violated? Find Out in 60 Seconds →
           </Link>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#64748B',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#4B5563',
             marginTop: '12px', marginBottom: 0
           }}>
             Attorney-connected violation reporting — launching soon.

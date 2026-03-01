@@ -29,17 +29,26 @@ export default function LandingStyles() {
         background: rgba(255,255,255,0.06) !important;
       }
 
-      /* Button hovers */
-      .landing-btn-primary:hover {
+      /* Button hovers + focus */
+      .landing-btn-primary:hover,
+      .landing-btn-primary:focus-visible {
         background: #9A3412 !important;
       }
-      .landing-btn-secondary:hover {
+      .landing-btn-secondary:hover,
+      .landing-btn-secondary:focus-visible {
         border-color: #CBD5E1 !important;
         color: white !important;
       }
-      .landing-btn-attorney:hover {
+      .landing-btn-attorney:hover,
+      .landing-btn-attorney:focus-visible {
         background: #C2410C !important;
         color: white !important;
+      }
+      .landing-btn-primary:focus-visible,
+      .landing-btn-secondary:focus-visible,
+      .landing-btn-attorney:focus-visible {
+        outline: 3px solid #F97316 !important;
+        outline-offset: 2px !important;
       }
       .landing-footer-link:hover {
         color: #F97316 !important;
@@ -51,6 +60,11 @@ export default function LandingStyles() {
           grid-template-columns: 1fr !important;
           padding-top: 2rem !important;
           padding-bottom: 2rem !important;
+        }
+        .landing-hero-right {
+          max-width: 560px !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
         }
         .landing-stories-grid {
           grid-template-columns: 1fr !important;
@@ -79,6 +93,19 @@ export default function LandingStyles() {
         }
       }
 
+      @media (max-width: 768px) {
+        .landing-hero-buttons a {
+          width: 100% !important;
+          justify-content: center !important;
+          box-sizing: border-box !important;
+          max-width: 100% !important;
+          text-align: center !important;
+        }
+        .landing-hero-buttons {
+          flex-direction: column !important;
+        }
+      }
+
       @media (max-width: 600px) {
         .landing-hero-buttons {
           flex-direction: column !important;
@@ -86,6 +113,8 @@ export default function LandingStyles() {
         .landing-hero-buttons a {
           width: 100% !important;
           justify-content: center !important;
+          box-sizing: border-box !important;
+          max-width: 100% !important;
         }
         .landing-steps-grid {
           grid-template-columns: 1fr !important;
@@ -107,6 +136,12 @@ export default function LandingStyles() {
         }
       }
 
+      @media (max-width: 480px) {
+        .landing-hero-stats-grid {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+      }
+
       /* Reduced motion */
       @media (prefers-reduced-motion: reduce) {
         .landing-fade-up {
@@ -125,6 +160,9 @@ export default function LandingStyles() {
         .landing-story-card:hover,
         .landing-stat-card:hover {
           transform: none !important;
+        }
+        .landing-scroll-hint {
+          animation: none !important;
         }
       }
 

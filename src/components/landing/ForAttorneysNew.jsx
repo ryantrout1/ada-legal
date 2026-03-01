@@ -44,7 +44,7 @@ export default function ForAttorneysNew() {
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
-            color: '#475569', lineHeight: 1.6, margin: '0 0 2rem'
+            color: '#3D4A5C', lineHeight: 1.6, margin: '0 0 2rem'
           }}>
             Stop chasing leads. We deliver documented ADA violations directly to you — pre-screened, exclusive, and ready for action.
           </p>
@@ -66,7 +66,7 @@ export default function ForAttorneysNew() {
                 </div>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-                  color: '#475569', lineHeight: 1.5
+                  color: '#3D4A5C', lineHeight: 1.5
                 }}>
                   {f}
                 </span>
@@ -104,7 +104,7 @@ export default function ForAttorneysNew() {
               </p>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                color: '#475569', margin: 0, lineHeight: 1.4
+                color: '#3D4A5C', margin: 0, lineHeight: 1.4
               }}>
                 {s.label}
               </p>

@@ -49,7 +49,7 @@ export default function HowItWorksNew() {
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
-            color: '#475569', margin: 0, maxWidth: '520px',
+            color: '#3D4A5C', margin: 0, maxWidth: '520px',
             marginLeft: 'auto', marginRight: 'auto'
           }}>
             Start by learning your rights. When you're ready, we guide you through everything — no legal knowledge required, no upfront costs.
@@ -89,14 +89,14 @@ export default function HowItWorksNew() {
                 </h3>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-                  color: '#475569', lineHeight: 1.6, margin: '0 0 0.75rem',
+                  color: '#3D4A5C', lineHeight: 1.6, margin: '0 0 0.75rem',
                   maxWidth: '280px', marginLeft: 'auto', marginRight: 'auto'
                 }}>
                   {s.desc}
                 </p>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                  fontWeight: 700, color: '#C2410C'
+                  fontWeight: 700, color: '#9A3412'
                 }}>
                   {s.time}
                 </span>

@@ -26,7 +26,7 @@ export default function CommitmentSection() {
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FB923C',
+            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FDBA74',
             margin: '0 0 0.75rem'
           }} aria-hidden="true">
             Our Commitment

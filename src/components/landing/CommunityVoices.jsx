@@ -335,7 +335,7 @@ export default function CommunityVoices() {
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-            color: '#94A3B8', margin: 0, lineHeight: 1.6,
+            color: '#B0BEC5', margin: 0, lineHeight: 1.6,
           }}>
             {hasVoted
               ? `You're one of ${totalVotes.toLocaleString()} people standing up for accessibility.`
@@ -357,7 +357,7 @@ export default function CommunityVoices() {
           >
             <p id="cv-prompt" style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-              fontWeight: 700, color: '#94A3B8', textAlign: 'center',
+              fontWeight: 700, color: '#B0BEC5', textAlign: 'center',
               margin: '0 0 14px', textTransform: 'uppercase', letterSpacing: '0.08em',
             }}>
               I'm here because...
@@ -432,7 +432,7 @@ export default function CommunityVoices() {
           >
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-              fontWeight: 700, color: '#94A3B8', textAlign: 'center',
+              fontWeight: 700, color: '#B0BEC5', textAlign: 'center',
               margin: '0 0 14px', textTransform: 'uppercase', letterSpacing: '0.08em',
             }}>
               Community Breakdown
@@ -561,7 +561,7 @@ export default function CommunityVoices() {
           <div aria-hidden="true" style={{
             position: 'absolute', bottom: 14, right: 16,
             fontFamily: 'Manrope, sans-serif', fontSize: '0.68rem',
-            fontWeight: 600, color: '#94A3B8',
+            fontWeight: 600, color: '#B0BEC5',
             display: 'flex', alignItems: 'center', gap: 6,
           }}>
             <span style={{
@@ -578,7 +578,7 @@ export default function CommunityVoices() {
           <p style={{
             textAlign: 'center',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem',
-            color: '#94A3B8', marginTop: 14,
+            color: '#B0BEC5', marginTop: 14,
             animation: 'cvFadeUp 0.5s 0.6s both',
           }}>
             Every dot is a real person in the ADA community.{' '}

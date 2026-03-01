@@ -22,7 +22,7 @@ export default function LawyerHero() {
       <div style={{ maxWidth: '820px', margin: '0 auto', textAlign: 'center', position: 'relative' }}>
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-          color: 'var(--terra-400)', textTransform: 'uppercase', letterSpacing: '0.1em',
+          color: '#FDBA74', textTransform: 'uppercase', letterSpacing: '0.1em',
           marginBottom: '1rem', display: 'block'
         }}>
           For Attorneys
@@ -38,7 +38,7 @@ export default function LawyerHero() {
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-          color: 'var(--slate-500)',
+          color: '#B0BEC5',
           maxWidth: '580px', margin: '0 auto 2.5rem', lineHeight: 1.6
         }}>
           Stop chasing leads. Receive vetted, exclusive ADA violation cases matched to your state and practice area.

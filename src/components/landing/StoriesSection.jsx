@@ -52,7 +52,7 @@ export default function StoriesSection() {
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
-            color: '#475569', margin: 0, maxWidth: '640px', marginLeft: 'auto', marginRight: 'auto'
+            color: '#3D4A5C', margin: 0, maxWidth: '640px', marginLeft: 'auto', marginRight: 'auto'
           }}>
             We took 279 pages of federal accessibility standards and turned them into something anyone can understand, search, and act on — fully accessible to the community it serves.
           </p>
@@ -80,7 +80,7 @@ export default function StoriesSection() {
               </h3>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-                color: '#475569', lineHeight: 1.6, margin: '0 0 1.25rem',
+                color: '#3D4A5C', lineHeight: 1.6, margin: '0 0 1.25rem',
                 flex: 1
               }}>
                 {s.body}
@@ -88,7 +88,7 @@ export default function StoriesSection() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{
                   display: 'inline-block', fontFamily: 'Manrope, sans-serif',
-                  fontSize: '0.8rem', fontWeight: 700, color: '#C2410C',
+                  fontSize: '0.8rem', fontWeight: 700, color: '#7C2D12',
                   background: '#FEF1EC', padding: '0.3rem 0.75rem',
                   borderRadius: '9999px'
                 }}>
@@ -96,7 +96,9 @@ export default function StoriesSection() {
                 </span>
                 <Link to={createPageUrl(s.link)} style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                  fontWeight: 600, color: '#C2410C', textDecoration: 'none'
+                  fontWeight: 600, color: '#C2410C', textDecoration: 'none',
+                  minHeight: '44px', display: 'inline-flex', alignItems: 'center',
+                  padding: '8px 12px', margin: '-8px -12px', borderRadius: '6px'
                 }}>
                   Explore →
                 </Link>

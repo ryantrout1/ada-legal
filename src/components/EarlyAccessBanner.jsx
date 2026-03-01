@@ -44,7 +44,8 @@ export default function EarlyAccessBanner() {
             fontSize: 'inherit',
             fontWeight: 700,
             cursor: 'pointer',
-            padding: 0,
+            padding: '4px 8px',
+            minHeight: '44px',
           }}
         >
           Share your feedback!

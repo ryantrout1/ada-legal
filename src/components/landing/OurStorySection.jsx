@@ -25,7 +25,7 @@ export default function OurStorySection() {
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FB923C',
+            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FDBA74',
             margin: '0 0 0.75rem',
           }}>
             Our Story
@@ -37,7 +37,7 @@ export default function OurStorySection() {
             Built by someone who lives it.
           </h2>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: '#94A3B8',
+            fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: '#B0BEC5',
             lineHeight: 1.7, maxWidth: '650px', margin: '0 auto',
           }}>
             ADA Legal Link was co-founded by Gina — a J.D. and ADA rights advocate who has
@@ -139,7 +139,7 @@ export default function OurStorySection() {
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-              color: '#94A3B8', lineHeight: 1.7, margin: 0,
+              color: '#B0BEC5', lineHeight: 1.7, margin: 0,
             }}>
               Every feature on this platform was shaped by someone who uses a
               wheelchair, fights ADA cases, and knows firsthand when a ramp is
@@ -159,7 +159,7 @@ export default function OurStorySection() {
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-              color: '#94A3B8', lineHeight: 1.7, margin: 0,
+              color: '#B0BEC5', lineHeight: 1.7, margin: 0,
             }}>
               This platform will grow based on your feedback. We got the
               foundations right — accessible, private, free — but the community
@@ -175,10 +175,10 @@ export default function OurStorySection() {
         }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-            color: '#94A3B8', margin: 0,
+            color: '#B0BEC5', margin: 0,
           }}>
             Something not working? Something we missed?{' '}
-            <span style={{ color: '#FB923C', fontWeight: 600 }}>
+            <span style={{ color: '#FDBA74', fontWeight: 600 }}>
               We want to hear it.
             </span>{' '}
             Use the Feedback button — every message goes directly to our team.

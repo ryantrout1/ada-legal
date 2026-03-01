@@ -14,7 +14,7 @@ export default function FinalCTANew() {
         }}>
           The ADA was written so every person could participate fully in American life.
           <br />
-          <span style={{ color: '#F97316' }}>We built this to keep that promise.</span>
+          <span style={{ color: '#FB923C' }}>We built this to keep that promise.</span>
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
@@ -46,13 +46,13 @@ export default function FinalCTANew() {
         </div>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-          color: '#94A3B8', marginTop: '1.25rem', marginBottom: 0
+          color: '#B0BEC5', marginTop: '1.25rem', marginBottom: 0
         }}>
           No account required. No cost. Your information is kept confidential.
         </p>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem',
-          color: '#94A3B8', marginTop: '0.75rem', marginBottom: 0, fontStyle: 'italic'
+          color: '#B0BEC5', marginTop: '0.75rem', marginBottom: 0, fontStyle: 'italic'
         }}>
           Attorney-connected violation reporting — launching soon.
         </p>

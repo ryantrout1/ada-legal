@@ -93,7 +93,7 @@ export default function LandingHeroNew() {
             <div aria-hidden="true" style={{ width: '32px', height: '2px', background: '#C2410C' }} />
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-              letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FB923C'
+              letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FDBA74'
             }}>
               ADA Legal Link
             </span>
@@ -141,14 +141,14 @@ export default function LandingHeroNew() {
 
           <p className="landing-fade-up landing-delay-4" style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-            color: '#94A3B8', marginTop: '1rem'
+            color: '#B0BEC5', marginTop: '1rem'
           }}>
             Attorney-connected violation reporting — launching soon.
           </p>
         </div>
 
         {/* Right column — Gina's story + stats + WCAG */}
-        <div className="landing-fade-up landing-delay-4">
+        <div className="landing-fade-up landing-delay-4 landing-hero-right">
           {/* Quote card — random on each page load */}
           <div style={{
             background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
@@ -188,14 +188,14 @@ export default function LandingHeroNew() {
                 }}>{quote.name}</p>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                  color: '#94A3B8', margin: 0,
+                  color: '#B0BEC5', margin: 0,
                 }}>{quote.role}</p>
               </div>
             </div>
           </div>
 
           {/* Compact stats row */}
-          <div style={{
+          <div className="landing-hero-stats-grid" style={{
             display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '10px', marginBottom: '1rem',
           }}>
@@ -215,7 +215,7 @@ export default function LandingHeroNew() {
                 }}>{stat.value}</p>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem',
-                  color: '#94A3B8', margin: 0, fontWeight: 600,
+                  color: '#B0BEC5', margin: 0, fontWeight: 600,
                 }}>{stat.label}</p>
               </div>
             ))}
