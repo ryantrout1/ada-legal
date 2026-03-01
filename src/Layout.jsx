@@ -374,20 +374,20 @@ export default function Layout({ children, currentPageName }) {
                   </>
                 )}
 
-                {/* ── Admin: Primary = Case Manager, Review Queue, Platform Intelligence ── */}
+                {/* ── Admin: Soft-launch priority = Feedback, Intelligence, Review Queue, Case Manager ── */}
                 {user?.role === 'admin' && (
                   <>
-                    <Link to={createPageUrl('AdminCases')} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', background: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
-                      Case Manager
-                    </Link>
-                    <Link to={createPageUrl('AdminReview')} style={{ color: currentPageName === 'AdminReview' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', background: currentPageName === 'AdminReview' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminReview' ? 'page' : undefined}>
-                      Review Queue
-                    </Link>
                     <Link to={createPageUrl('AdminFeedback')} style={{ color: currentPageName === 'AdminFeedback' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', background: currentPageName === 'AdminFeedback' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminFeedback' ? 'page' : undefined}>
                       Feedback
                     </Link>
                     <Link to={createPageUrl('AdminAnalytics')} style={{ color: currentPageName === 'AdminAnalytics' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', background: currentPageName === 'AdminAnalytics' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminAnalytics' ? 'page' : undefined}>
                       Intelligence
+                    </Link>
+                    <Link to={createPageUrl('AdminReview')} style={{ color: currentPageName === 'AdminReview' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', background: currentPageName === 'AdminReview' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminReview' ? 'page' : undefined}>
+                      Review Queue
+                    </Link>
+                    <Link to={createPageUrl('AdminCases')} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', background: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
+                      Case Manager
                     </Link>
                     <UserAvatarMenu user={user} onLogout={handleLogout} extraMenuItems={[
                       { to: createPageUrl('AdminLawyers'), icon: <User size={15} />, label: 'Lawyers' },
@@ -580,17 +580,17 @@ export default function Layout({ children, currentPageName }) {
                 {/* ── Admin ── */}
                 {user?.role === 'admin' && (
                   <>
-                    <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
-                      Case Manager
-                    </Link>
-                    <Link to={createPageUrl('AdminReview')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminReview' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
-                      Review Queue
-                    </Link>
                     <Link to={createPageUrl('AdminFeedback')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminFeedback' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
                       Feedback
                     </Link>
                     <Link to={createPageUrl('AdminAnalytics')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminAnalytics' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
                       Intelligence
+                    </Link>
+                    <Link to={createPageUrl('AdminReview')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminReview' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
+                      Review Queue
+                    </Link>
+                    <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
+                      Case Manager
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '4px 16px 0', padding: '8px 0 0' }}>
                       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>More</p>
