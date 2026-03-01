@@ -322,7 +322,7 @@ export default function CommunityVoices() {
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.72rem',
             fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em',
-            color: '#C2410C', margin: '0 0 12px',
+            color: '#FDBA74', margin: '0 0 12px',
           }}>
             Community Voices
           </p>
@@ -415,7 +415,7 @@ export default function CommunityVoices() {
                     {opt.label}
                   </span>
                   <span aria-hidden="true" style={{
-                    marginLeft: 'auto', color: '#334155', fontSize: '1.1rem',
+                    marginLeft: 'auto', color: '#8B9DB5', fontSize: '1.1rem',
                     transition: 'color 0.2s', flexShrink: 0,
                   }}>
                     →

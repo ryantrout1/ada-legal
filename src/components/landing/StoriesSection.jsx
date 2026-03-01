@@ -39,7 +39,7 @@ export default function StoriesSection() {
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#C2410C',
+            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9A3412',
             margin: '0 0 0.75rem'
           }} aria-hidden="true">
             What We Built
@@ -96,7 +96,7 @@ export default function StoriesSection() {
                 </span>
                 <Link to={createPageUrl(s.link)} style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                  fontWeight: 600, color: '#C2410C', textDecoration: 'none',
+                  fontWeight: 600, color: '#9A3412', textDecoration: 'none',
                   minHeight: '44px', display: 'inline-flex', alignItems: 'center',
                   padding: '8px 12px', margin: '-8px -12px', borderRadius: '6px'
                 }}>

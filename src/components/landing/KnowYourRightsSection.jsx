@@ -17,7 +17,7 @@ const CARDS = [
     filingIconName: 'filing',
     filingIconBg: '#FFF7ED',
     filingText: <><strong style={{ color: 'var(--slate-700)' }}>File through us</strong> — we connect you with a vetted ADA attorney at no cost to you</>,
-    subtitleColor: '#C2410C'
+    subtitleColor: '#9A3412'
   },
   {
     title: 'Title II',
@@ -32,7 +32,7 @@ const CARDS = [
     filingIconName: 'clipboard',
     filingIconBg: '#EFF6FF',
     filingText: <><strong style={{ color: 'var(--slate-700)' }}>File with the DOJ</strong> — we'll walk you through the complaint process step by step</>,
-    subtitleColor: '#2563EB'
+    subtitleColor: '#1E40AF'
   },
   {
     title: 'Title I',
@@ -47,7 +47,7 @@ const CARDS = [
     filingIconName: 'clock',
     filingIconBg: '#FFFBEB',
     filingText: <><strong style={{ color: 'var(--slate-700)' }}>File with the EEOC</strong> — we'll explain the process and critical deadlines</>,
-    subtitleColor: '#B45309'
+    subtitleColor: '#7C2D12'
   }
 ];
 
@@ -129,7 +129,7 @@ export default function KnowYourRightsSection() {
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', fontWeight: 700,
-            textTransform: 'uppercase', letterSpacing: '0.1em', color: '#B14A2E',
+            textTransform: 'uppercase', letterSpacing: '0.1em', color: '#9A3412',
             margin: '0 0 12px'
           }}>
             Know Your Rights

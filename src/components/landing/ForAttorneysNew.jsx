@@ -31,7 +31,7 @@ export default function ForAttorneysNew() {
         <div>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#C2410C',
+            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9A3412',
             margin: '0 0 0.75rem'
           }} aria-hidden="true">
             For Attorneys
@@ -76,7 +76,7 @@ export default function ForAttorneysNew() {
 
           <Link to={createPageUrl('LawyerLanding')} className="landing-btn-attorney" style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-            background: 'transparent', color: '#C2410C',
+            background: 'transparent', color: '#9A3412',
             padding: '14px 28px', borderRadius: '10px',
             fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
             textDecoration: 'none', minHeight: '44px',
@@ -111,7 +111,7 @@ export default function ForAttorneysNew() {
               {s.note && (
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-                  color: '#596778', margin: '0.25rem 0 0', fontWeight: 600
+                  color: '#4B5563', margin: '0.25rem 0 0', fontWeight: 600
                 }}>
                   {s.note}
                 </p>

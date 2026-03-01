@@ -104,7 +104,7 @@ export default function LandingHeroNew() {
             lineHeight: 1.1, color: 'white', margin: '0 0 1.5rem', fontStyle: 'normal'
           }}>
             Understand your rights.<br />
-            <span style={{ color: '#F97316' }}>Then enforce them.</span>
+            <span style={{ color: '#FB923C' }}>Then enforce them.</span>
           </h1>
 
           <p className="landing-fade-up landing-delay-2" style={{
@@ -211,7 +211,7 @@ export default function LandingHeroNew() {
               }}>
                 <p style={{
                   fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 800,
-                  color: '#F97316', margin: '0 0 2px', fontStyle: 'normal',
+                  color: '#FB923C', margin: '0 0 2px', fontStyle: 'normal',
                 }}>{stat.value}</p>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem',

@@ -36,7 +36,7 @@ export default function HowItWorksNew() {
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#C2410C',
+            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9A3412',
             margin: '0 0 0.75rem'
           }} aria-hidden="true">
             How It Works

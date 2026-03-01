@@ -287,7 +287,7 @@ export default function Layout({ children, currentPageName }) {
             fontWeight: 700
           }}>
             <LogoBrand size={44} variant="dark-bg" />
-            <span className="mobile-brand-text">ADA Legal <span style={{ color: '#E8722A' }}>Link</span></span>
+            <span className="mobile-brand-text">ADA Legal <span style={{ color: '#FBB040' }}>Link</span></span>
           </Link>
 
           {/* Mobile Menu Button */}
@@ -321,10 +321,10 @@ export default function Layout({ children, currentPageName }) {
                 {/* ── Visitor (logged out) ── */}
                 {!user && (
                   <>
-                    <Link to={createPageUrl('StandardsGuide')} className="desktop-nav-public-links" style={{ color: currentPageName === 'StandardsGuide' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none', minHeight: '44px', display: 'inline-flex', alignItems: 'center', padding: '6px 12px' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} className="desktop-nav-public-links" style={{ color: currentPageName === 'StandardsGuide' ? '#FBB040' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none', minHeight: '44px', display: 'inline-flex', alignItems: 'center', padding: '6px 12px' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('LawyerLanding')} className="desktop-nav-public-links" style={{ color: currentPageName === 'LawyerLanding' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none', minHeight: '44px', display: 'inline-flex', alignItems: 'center', padding: '6px 12px' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
+                    <Link to={createPageUrl('LawyerLanding')} className="desktop-nav-public-links" style={{ color: currentPageName === 'LawyerLanding' ? '#FBB040' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 500, textDecoration: 'none', minHeight: '44px', display: 'inline-flex', alignItems: 'center', padding: '6px 12px' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
                       For Attorneys
                     </Link>
                     <button
@@ -349,7 +349,7 @@ export default function Layout({ children, currentPageName }) {
                 {/* ── User: Primary = My Cases ── */}
                 {user?.role === 'user' && (
                   <>
-                    <Link to={createPageUrl('MyCases')} style={{ color: currentPageName === 'MyCases' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'MyCases' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'MyCases' ? 'page' : undefined}>
+                    <Link to={createPageUrl('MyCases')} style={{ color: currentPageName === 'MyCases' ? '#FBB040' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'MyCases' ? 'rgba(251,176,64,0.08)' : 'transparent' }} aria-current={currentPageName === 'MyCases' ? 'page' : undefined}>
                       My Cases
                     </Link>
                     <UserAvatarMenu user={user} onLogout={handleLogout} extraMenuItems={[
@@ -361,10 +361,10 @@ export default function Layout({ children, currentPageName }) {
                 {/* ── Lawyer: Primary = Available Cases, My Cases ── */}
                 {user?.role === 'lawyer' && (
                   <>
-                    <Link to={createPageUrl('Marketplace')} style={{ color: currentPageName === 'Marketplace' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'Marketplace' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'Marketplace' ? 'page' : undefined}>
+                    <Link to={createPageUrl('Marketplace')} style={{ color: currentPageName === 'Marketplace' ? '#FBB040' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'Marketplace' ? 'rgba(251,176,64,0.08)' : 'transparent' }} aria-current={currentPageName === 'Marketplace' ? 'page' : undefined}>
                       Available Cases
                     </Link>
-                    <Link to={createPageUrl('LawyerDashboard')} style={{ color: currentPageName === 'LawyerDashboard' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'LawyerDashboard' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'LawyerDashboard' ? 'page' : undefined}>
+                    <Link to={createPageUrl('LawyerDashboard')} style={{ color: currentPageName === 'LawyerDashboard' ? '#FBB040' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'LawyerDashboard' ? 'rgba(251,176,64,0.08)' : 'transparent' }} aria-current={currentPageName === 'LawyerDashboard' ? 'page' : undefined}>
                       My Cases
                     </Link>
                     <UserAvatarMenu user={user} onLogout={handleLogout} extraMenuItems={[
@@ -377,16 +377,16 @@ export default function Layout({ children, currentPageName }) {
                 {/* ── Admin: Soft-launch priority = Feedback, Intelligence, Review Queue, Case Manager ── */}
                 {user?.role === 'admin' && (
                   <>
-                    <Link to={createPageUrl('AdminFeedback')} style={{ color: currentPageName === 'AdminFeedback' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'AdminFeedback' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminFeedback' ? 'page' : undefined}>
+                    <Link to={createPageUrl('AdminFeedback')} style={{ color: currentPageName === 'AdminFeedback' ? '#FBB040' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'AdminFeedback' ? 'rgba(251,176,64,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminFeedback' ? 'page' : undefined}>
                       Feedback
                     </Link>
-                    <Link to={createPageUrl('AdminAnalytics')} style={{ color: currentPageName === 'AdminAnalytics' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'AdminAnalytics' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminAnalytics' ? 'page' : undefined}>
+                    <Link to={createPageUrl('AdminAnalytics')} style={{ color: currentPageName === 'AdminAnalytics' ? '#FBB040' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'AdminAnalytics' ? 'rgba(251,176,64,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminAnalytics' ? 'page' : undefined}>
                       Intelligence
                     </Link>
-                    <Link to={createPageUrl('AdminReview')} style={{ color: currentPageName === 'AdminReview' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'AdminReview' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminReview' ? 'page' : undefined}>
+                    <Link to={createPageUrl('AdminReview')} style={{ color: currentPageName === 'AdminReview' ? '#FBB040' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'AdminReview' ? 'rgba(251,176,64,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminReview' ? 'page' : undefined}>
                       Review Queue
                     </Link>
-                    <Link to={createPageUrl('AdminCases')} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
+                    <Link to={createPageUrl('AdminCases')} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#FBB040' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? 'rgba(251,176,64,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
                       Case Manager
                     </Link>
                     <UserAvatarMenu user={user} onLogout={handleLogout} extraMenuItems={[
@@ -491,10 +491,10 @@ export default function Layout({ children, currentPageName }) {
                 {/* ── Visitor ── */}
                 {!user && (
                   <>
-                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#FBB040' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('LawyerLanding')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerLanding' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
+                    <Link to={createPageUrl('LawyerLanding')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerLanding' ? '#FBB040' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem' }} aria-current={currentPageName === 'LawyerLanding' ? 'page' : undefined}>
                       For Attorneys
                     </Link>
                     <button
@@ -524,13 +524,13 @@ export default function Layout({ children, currentPageName }) {
                 {/* ── User ── */}
                 {user?.role === 'user' && (
                   <>
-                    <Link to={createPageUrl('MyCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'MyCases' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }} aria-current={currentPageName === 'MyCases' ? 'page' : undefined}>
+                    <Link to={createPageUrl('MyCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'MyCases' ? '#FBB040' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }} aria-current={currentPageName === 'MyCases' ? 'page' : undefined}>
                       My Cases
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '4px 16px 0', padding: '8px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: '#A0B0C4', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>Resources</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: '#B4C0CF', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>Resources</p>
                     </div>
-                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#E8722A' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
@@ -549,19 +549,19 @@ export default function Layout({ children, currentPageName }) {
                 {/* ── Lawyer ── */}
                 {user?.role === 'lawyer' && (
                   <>
-                    <Link to={createPageUrl('Marketplace')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'Marketplace' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
+                    <Link to={createPageUrl('Marketplace')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'Marketplace' ? '#FBB040' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
                       Available Cases
                     </Link>
-                    <Link to={createPageUrl('LawyerDashboard')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerDashboard' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
+                    <Link to={createPageUrl('LawyerDashboard')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerDashboard' ? '#FBB040' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
                       My Cases
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '4px 16px 0', padding: '8px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: '#A0B0C4', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>More</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: '#B4C0CF', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>More</p>
                     </div>
-                    <Link to={createPageUrl('LawyerProfile')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerProfile' ? '#E8722A' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
+                    <Link to={createPageUrl('LawyerProfile')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerProfile' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
                       Profile
                     </Link>
-                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#E8722A' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
@@ -580,28 +580,28 @@ export default function Layout({ children, currentPageName }) {
                 {/* ── Admin ── */}
                 {user?.role === 'admin' && (
                   <>
-                    <Link to={createPageUrl('AdminFeedback')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminFeedback' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
+                    <Link to={createPageUrl('AdminFeedback')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminFeedback' ? '#FBB040' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
                       Feedback
                     </Link>
-                    <Link to={createPageUrl('AdminAnalytics')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminAnalytics' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
+                    <Link to={createPageUrl('AdminAnalytics')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminAnalytics' ? '#FBB040' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
                       Intelligence
                     </Link>
-                    <Link to={createPageUrl('AdminReview')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminReview' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
+                    <Link to={createPageUrl('AdminReview')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminReview' ? '#FBB040' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
                       Review Queue
                     </Link>
-                    <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
+                    <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#FBB040' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
                       Case Manager
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '4px 16px 0', padding: '8px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: '#A0B0C4', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>More</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: '#B4C0CF', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>More</p>
                     </div>
-                    <Link to={createPageUrl('AdminLawyers')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminLawyers' ? '#E8722A' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
+                    <Link to={createPageUrl('AdminLawyers')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminLawyers' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
                       Lawyers
                     </Link>
-                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#E8722A' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
-                    <Link to={createPageUrl('AdminEmails')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminEmails' ? '#E8722A' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
+                    <Link to={createPageUrl('AdminEmails')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminEmails' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
                       Email Templates
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
