@@ -9,6 +9,7 @@ import GuideReportCTA from './GuideReportCTA';
 import AskADAHelper from './AskADAHelper';
 import AutoCiteLinks from './AutoCiteLinks';
 import ShareBar from './ShareBar';
+import trackEvent from '../analytics/trackEvent';
 import { loadPreferences } from '../a11y/DisplaySettings';
 
 const ALL_CHAPTERS = [
@@ -346,6 +347,11 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                         prefs.readingLevel = r.key;
                         localStorage.setItem('ada-display-prefs', JSON.stringify(prefs));
                       } catch {}
+                      trackEvent('guide_reading_level_changed', {
+                        level: r.key,
+                        chapter: chapterNum,
+                        source: 'inline_bar',
+                      }, `StandardsCh${chapterNum}`);
                     }}
                     style={{
                       padding: '5px 14px',
@@ -385,7 +391,19 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                 simple={s.simple || null}
                 diagram={s.diagram || null}
                 isOpen={openIndex === i}
-                onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+                onToggle={() => {
+                  const willOpen = openIndex !== i;
+                  setOpenIndex(willOpen ? i : null);
+                  if (willOpen) {
+                    trackEvent('guide_section_opened', {
+                      chapter: chapterNum,
+                      chapter_title: title,
+                      section_number: s.number,
+                      section_title: s.title,
+                      reading_level: readingLevel,
+                    }, `StandardsCh${chapterNum}`);
+                  }
+                }}
                 readingLevel={readingLevel}
                 chapterNum={chapterNum}
               />

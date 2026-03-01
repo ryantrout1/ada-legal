@@ -10,6 +10,7 @@ import IntelSeverityDist from './IntelSeverityDist';
 import IntelBusinesses from './IntelBusinesses';
 import IntelSupplyGaps from './IntelSupplyGaps';
 import IntelCaseDetail from './IntelCaseDetail';
+import IntelGuide from './IntelGuide';
 import { fmtDate } from './IntelShared';
 
 export default function PlatformIntelligence() {
@@ -95,6 +96,7 @@ export default function PlatformIntelligence() {
         <button style={tabStyle('impact')} onClick={() => setTab('impact')}>Violation Intelligence</button>
         <button style={tabStyle('supply')} onClick={() => setTab('supply')}>Supply & Gaps</button>
         <button style={tabStyle('cases')} onClick={() => setTab('cases')}>Case Detail</button>
+        <button style={tabStyle('guide')} onClick={() => setTab('guide')}>Guide Intelligence</button>
       </div>
 
       {/* Tab content */}
@@ -111,6 +113,8 @@ export default function PlatformIntelligence() {
       {tab === 'supply' && <IntelSupplyGaps data={data} />}
 
       {tab === 'cases' && <IntelCaseDetail data={data} />}
+
+      {tab === 'guide' && <IntelGuide />}
     </div>
   );
 }
