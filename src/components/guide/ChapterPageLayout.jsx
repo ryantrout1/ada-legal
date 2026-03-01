@@ -367,7 +367,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
             </div>
             <span style={{ fontSize: '0.65rem', color: 'var(--slate-500)', marginLeft: 'auto' }}>
               {readingLevel === 'simple' && '📖 Plain-language summaries'}
-              {readingLevel === 'standard' && ''}
+              {readingLevel === 'standard' && '📄 Plain language + legal text'}
               {readingLevel === 'professional' && '⚖️ Includes legal citations'}
             </span>
           </div>
