@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 /**
  * BrandIcons — Bold Glyph icon system for ADA Legal Link
@@ -17,7 +17,7 @@ import React from 'react';
  *   <BrandIcon name="privacy" size={40} variant="dark-bg" />
  */
 
-// Detect display mode from body class or CSS custom property
+// Detect display mode from body class
 function getDisplayMode() {
   if (typeof document === 'undefined') return 'default';
   const body = document.body;
@@ -25,6 +25,21 @@ function getDisplayMode() {
   if (body.classList.contains('display-dark')) return 'dark';
   if (body.classList.contains('display-warm')) return 'warm';
   return 'default';
+}
+
+// Hook that re-renders when body class changes (display mode switch)
+function useDisplayMode() {
+  const [mode, setMode] = useState(getDisplayMode);
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setMode(getDisplayMode());
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  return mode;
 }
 
 const MODE_COLORS = {
@@ -236,7 +251,7 @@ const ICON_PATHS = {
  * @param {number} viewBox - SVG viewBox size (default 26)
  */
 export default function BrandIcon({ name, size = 48, variant = 'default', borderRadius, viewBox = 26 }) {
-  const mode = getDisplayMode();
+  const mode = useDisplayMode();
   const colors = variant === 'dark-bg' ? DARK_BG_COLORS[mode] : MODE_COLORS[mode];
   const iconFn = ICON_PATHS[name];
   if (!iconFn) return null;
