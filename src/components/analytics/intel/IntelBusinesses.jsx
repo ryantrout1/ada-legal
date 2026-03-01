@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { S, Dot, Tag, Sev, Panel, PanelHead, catName, fmtDate, getSeverity, getViews } from './IntelShared';
+import { S, Dot, Tag, Panel, PanelHead, catName, fmtDate, getSeverity, getViews } from './IntelShared';
 
 export default function IntelBusinesses({ data }) {
   const [expanded, setExpanded] = useState(null);
