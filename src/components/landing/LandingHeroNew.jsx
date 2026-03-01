@@ -150,8 +150,8 @@ export default function LandingHeroNew() {
         {/* Right column — Gina's story + stats + WCAG */}
         <div className="landing-fade-up landing-delay-4 landing-hero-right">
           {/* Quote card — random on each page load */}
-          <div style={{
-            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+          <div className="hero-glass-card" style={{
+            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
             borderRadius: '16px', padding: '32px', position: 'relative', marginBottom: '1rem'
           }}>
             <div aria-hidden="true" style={{
@@ -167,7 +167,7 @@ export default function LandingHeroNew() {
               </p>
             </blockquote>
             <div style={{
-              borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px',
+              borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: '16px',
               display: 'flex', alignItems: 'center', gap: '16px',
             }}>
               <div aria-hidden="true" style={{
@@ -205,8 +205,8 @@ export default function LandingHeroNew() {
               { value: '10', label: 'Chapters' },
               { value: '60+', label: 'Searchable' },
             ].map((stat, i) => (
-              <div key={i} style={{
-                background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+              <div key={i} className="hero-glass-card" style={{
+                background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)',
                 borderRadius: '10px', padding: '14px 12px', textAlign: 'center',
               }}>
                 <p style={{
@@ -222,8 +222,8 @@ export default function LandingHeroNew() {
           </div>
 
           {/* Accessibility commitment mini-card */}
-          <div style={{
-            background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+          <div className="hero-glass-card" style={{
+            background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)',
             borderRadius: '10px', padding: '20px 24px', borderLeft: '3px solid #C2410C'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>

@@ -29,6 +29,11 @@ export default function LandingStyles() {
         background: rgba(255,255,255,0.06) !important;
       }
 
+      /* Hero glass cards — no shadow, subtle glass only */
+      .hero-glass-card {
+        box-shadow: none !important;
+      }
+
       /* Button hovers + focus */
       .landing-btn-primary:hover,
       .landing-btn-primary:focus-visible {

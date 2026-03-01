@@ -875,6 +875,20 @@ export const applyPreferences = (prefs) => {
         background-image: none !important;
         background-color: #000000 !important;
       }
+      /* Glass cards in hero — preserve subtle layering */
+      .landing-hero-section .hero-glass-card {
+        background-color: rgba(255,255,255,0.04) !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        box-shadow: none !important;
+      }
+      .landing-hero-section .hero-glass-card div,
+      .landing-hero-section .hero-glass-card blockquote,
+      .landing-hero-section .hero-glass-card p,
+      .landing-hero-section .hero-glass-card span,
+      .landing-hero-section .hero-glass-card strong {
+        background-color: transparent !important;
+        background: transparent !important;
+      }
 
       /* === All sections with dark navy inline bg === */
       section[style*="#1E293B"],
@@ -944,6 +958,8 @@ export const applyPreferences = (prefs) => {
       .landing-story-card,
       .landing-attorneys-grid > div,
       .sg-chapter-link,
+      .hero-glass-card,
+      .landing-commitment-card,
       .guide-two-col > div > div[style*="border"],
       #main-content div[style*="border-radius: 12px"][style*="overflow: hidden"],
       #main-content div[style*="border-radius: 12px"][style*="border: 1px"],
@@ -953,6 +969,18 @@ export const applyPreferences = (prefs) => {
       #main-content div[style*="border-radius: 24px"][style*="border: 1px"] {
         background-color: #0A0A0A !important;
         border: 1px solid #FFFFFF !important;
+        box-shadow: none !important;
+      }
+      /* Glass card internals — transparent in HC */
+      .hero-glass-card div,
+      .hero-glass-card blockquote,
+      .hero-glass-card p,
+      .hero-glass-card span,
+      .hero-glass-card strong,
+      .landing-commitment-card div,
+      .landing-commitment-card p,
+      .landing-commitment-card span {
+        background-color: transparent !important;
       }
 
       /* === Story video container — preserve photo (HC) === */
@@ -1771,13 +1799,7 @@ export const applyPreferences = (prefs) => {
         background-color: rgba(251,246,239,0.04) !important;
         border: 1px solid rgba(251,246,239,0.08) !important;
       }
-      /* Hero glass cards — preserve subtle glass effect */
-      #main-content .landing-hero-section div[style*="rgba(255"] {
-        background-color: rgba(251,246,239,0.06) !important;
-      }
-      #main-content .landing-hero-section div[style*="border: 1px solid rgba"] {
-        border-color: rgba(251,246,239,0.1) !important;
-      }
+      /* Hero glass cards + CV vote buttons — handled after the blanket re-override below */
       /* Dark section text */
       #main-content .warm-keep-dark h1,
       #main-content .warm-keep-dark h2,
@@ -1837,11 +1859,7 @@ export const applyPreferences = (prefs) => {
       #main-content .landing-hero-section p { color: #C7B9A6 !important; }
       #main-content .landing-hero-section span { color: #9C8B78 !important; }
       #main-content .landing-hero-section a:not([style*="C2410C"]) { color: #E8984A !important; }
-      /* Hero stat cards — warm glass effect */
-      #main-content .landing-hero-section div[style*="rgba(255,255,255,0.0"] {
-        background: rgba(251,246,239,0.04) !important;
-        border-color: rgba(251,246,239,0.08) !important;
-      }
+      /* Hero stat cards — handled by .hero-glass-card rules above */
       /* Hero CTA button — warm amber */
       #main-content .landing-hero-section button[style*="C2410C"],
       #main-content .landing-hero-section a[style*="C2410C"] {
@@ -1950,21 +1968,31 @@ export const applyPreferences = (prefs) => {
         background-color: #231912 !important;
         background-image: none !important;
       }
-      /* Glass card containers inside dark sections */
-      #main-content .warm-keep-dark div[style*="rgba(255"] {
-        background-color: rgba(251,246,239,0.06) !important;
+      /* Glass cards INSIDE dark sections — override the blanket above */
+      #main-content .warm-keep-dark .hero-glass-card,
+      #main-content .warm-keep-dark .landing-commitment-card {
+        background-color: rgba(251,246,239,0.05) !important;
+        border: 1px solid rgba(251,246,239,0.08) !important;
+        box-shadow: none !important;
       }
-      /* Children INSIDE glass cards → transparent (no espresso bands) */
-      #main-content .warm-keep-dark div[style*="rgba(255"] div,
-      #main-content .warm-keep-dark div[style*="rgba(255"] blockquote,
-      #main-content .warm-keep-dark div[style*="rgba(255"] p {
+      #main-content .warm-keep-dark .hero-glass-card div,
+      #main-content .warm-keep-dark .hero-glass-card blockquote,
+      #main-content .warm-keep-dark .hero-glass-card p,
+      #main-content .warm-keep-dark .hero-glass-card span,
+      #main-content .warm-keep-dark .hero-glass-card strong,
+      #main-content .warm-keep-dark .landing-commitment-card div,
+      #main-content .warm-keep-dark .landing-commitment-card p,
+      #main-content .warm-keep-dark .landing-commitment-card span {
         background-color: transparent !important;
+        background: transparent !important;
       }
-      /* Borders inside dark sections */
-      #main-content .warm-keep-dark div[style*="border: 1px solid rgba"],
-      #main-content .warm-keep-dark div[style*="border: 2px solid"],
-      #main-content .warm-keep-dark div[style*="border-top: 1px"] {
-        border-color: rgba(251,246,239,0.1) !important;
+      #main-content .warm-keep-dark .hero-glass-card div[style*="border-top"] {
+        border-color: rgba(251,246,239,0.08) !important;
+      }
+      /* CommunityVoices vote buttons — warm glass */
+      #main-content .cv-dark-section button[role="radio"] {
+        background-color: rgba(251,246,239,0.025) !important;
+        border: 1px solid rgba(251,246,239,0.08) !important;
       }
       /* WCAG badge green tint → warm tint */
       #main-content .warm-keep-dark span[style*="rgba(45,106,79"] {
