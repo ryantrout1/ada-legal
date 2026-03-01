@@ -383,6 +383,9 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('AdminReview')} style={{ color: currentPageName === 'AdminReview' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', background: currentPageName === 'AdminReview' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminReview' ? 'page' : undefined}>
                       Review Queue
                     </Link>
+                    <Link to={createPageUrl('AdminFeedback')} style={{ color: currentPageName === 'AdminFeedback' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', background: currentPageName === 'AdminFeedback' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminFeedback' ? 'page' : undefined}>
+                      Feedback
+                    </Link>
                     <Link to={createPageUrl('AdminAnalytics')} style={{ color: currentPageName === 'AdminAnalytics' ? '#E8722A' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', background: currentPageName === 'AdminAnalytics' ? 'rgba(232,114,42,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminAnalytics' ? 'page' : undefined}>
                       Intelligence
                     </Link>
@@ -390,7 +393,6 @@ export default function Layout({ children, currentPageName }) {
                       { to: createPageUrl('AdminLawyers'), icon: <User size={15} />, label: 'Lawyers' },
                       { to: createPageUrl('StandardsGuide'), icon: <Eye size={15} />, label: 'ADA Standards Guide' },
                       { to: createPageUrl('AdminEmails'), icon: <Mail size={15} />, label: 'Email Templates' },
-                      { to: createPageUrl('AdminFeedback'), icon: <MessageSquare size={15} />, label: 'Feedback' },
                     ]} />
                   </>
                 )}
@@ -584,6 +586,9 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('AdminReview')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminReview' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
                       Review Queue
                     </Link>
+                    <Link to={createPageUrl('AdminFeedback')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminFeedback' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
+                      Feedback
+                    </Link>
                     <Link to={createPageUrl('AdminAnalytics')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminAnalytics' ? '#E8722A' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
                       Intelligence
                     </Link>
@@ -598,9 +603,6 @@ export default function Layout({ children, currentPageName }) {
                     </Link>
                     <Link to={createPageUrl('AdminEmails')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminEmails' ? '#E8722A' : '#94A3B8', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
                       Email Templates
-                    </Link>
-                    <Link to={createPageUrl('AdminFeedback')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminFeedback' ? '#E8722A' : '#94A3B8', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
-                      Feedback
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
                       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#94A3B8', margin: '0 0 8px' }}>{user.email}</p>
