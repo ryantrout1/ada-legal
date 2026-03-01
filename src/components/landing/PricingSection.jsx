@@ -47,18 +47,6 @@ export default function PricingSection() {
         }}>
           Platform Access
         </p>
-        <div style={{
-          fontFamily: 'Fraunces, serif', fontSize: '3rem', fontWeight: 700,
-          color: 'var(--slate-900)', lineHeight: 1.1, marginBottom: '0.25rem'
-        }}>
-          $499<span style={{ fontSize: '1.25rem', fontWeight: 500, color: 'var(--slate-500)' }}>/mo</span>
-        </div>
-        <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-          color: 'var(--slate-500)', marginBottom: '2rem'
-        }}>
-          Billed monthly · Cancel anytime
-        </p>
 
         <div style={{ textAlign: 'left', marginBottom: '2rem' }}>
           {features.map(f => (
