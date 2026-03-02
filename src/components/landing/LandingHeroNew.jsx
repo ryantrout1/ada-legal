@@ -69,14 +69,6 @@ export default function LandingHeroNew() {
         background: 'radial-gradient(circle, rgba(194,65,12,0.07) 0%, transparent 70%)',
         pointerEvents: 'none'
       }} />
-      {/* Logo watermark */}
-      <div aria-hidden="true" className="section-watermark" style={{
-        position: 'absolute', bottom: '5%', right: '2%',
-        width: '240px', height: '240px',
-        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png)',
-        backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
-        opacity: 0.04, pointerEvents: 'none',
-      }} />
       {/* Noise overlay */}
       <div aria-hidden="true" style={{
         position: 'absolute', inset: 0,
@@ -85,7 +77,7 @@ export default function LandingHeroNew() {
       }} />
 
       <div className="landing-hero-grid" style={{
-        maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem',
+        maxWidth: '1200px', margin: '0 auto', padding: '0 2.5rem',
         display: 'grid', gridTemplateColumns: '55% 45%', gap: '3rem',
         alignItems: 'center', position: 'relative', width: '100%'
       }}>
