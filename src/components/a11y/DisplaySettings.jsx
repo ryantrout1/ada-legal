@@ -60,14 +60,14 @@ export const applyPreferences = (prefs) => {
 
       /* === Base page background === */
       body {
-        background-color: #0F1219 !important;
+        background-color: #0B0E14 !important;
       }
 
       /* === Swap CSS variables (catches components using var()) === */
       :root {
-        --slate-50: #0F1219 !important;
-        --slate-100: #151B24 !important;
-        --slate-200: #374151 !important;
+        --slate-50: #0B0E14 !important;
+        --slate-100: #0F1520 !important;
+        --slate-200: #1E293B !important;
         --slate-300: #475569 !important;
         --slate-400: #94A3B8 !important;
         --slate-500: #CBD5E1 !important;
@@ -75,14 +75,14 @@ export const applyPreferences = (prefs) => {
         --slate-700: #E2E8F0 !important;
         --slate-800: #F1F5F9 !important;
         --slate-900: #F8FAFC !important;
-        --surface: #1E293B !important;
+        --surface: #111827 !important;
       }
 
       /* ============================================
          BLANKET BACKGROUND OVERRIDE
          Force ALL container elements inside #main-content to dark.
          !important in <style> beats non-!important inline styles.
-         Already-dark elements (#1E293B) → no visible change.
+         Already-dark elements (#111827) → no visible change.
          Light elements (#FFF, #FAF7F2, etc) → forced dark.
          ============================================ */
       #main-content,
@@ -105,7 +105,7 @@ export const applyPreferences = (prefs) => {
       #main-content tr,
       #main-content td,
       #main-content th {
-        background-color: #1E293B !important;
+        background-color: #111827 !important;
         background-image: none !important;
       }
 
@@ -212,7 +212,7 @@ export const applyPreferences = (prefs) => {
 
       /* === Header background — force dark regardless of var() === */
       header[role="banner"] {
-        background-color: #1E293B !important;
+        background-color: #111827 !important;
       }
 
       /* === Header already dark — keep text white === */
@@ -225,7 +225,7 @@ export const applyPreferences = (prefs) => {
 
       /* === Form inputs === */
       input, select, textarea {
-        background-color: #151B24 !important;
+        background-color: #0F1520 !important;
         border-color: #475569 !important;
         color: #F1F5F9 !important;
       }
@@ -238,13 +238,13 @@ export const applyPreferences = (prefs) => {
 
       /* === Card/container borders — visible on dark === */
       #main-content [style*="border"] {
-        border-color: #374151 !important;
+        border-color: #1E293B !important;
       }
 
       /* === The settings dropdown === */
       [role="dialog"][aria-label="Display preferences"] {
-        background-color: #1E293B !important;
-        border-color: #374151 !important;
+        background-color: #111827 !important;
+        border-color: #1E293B !important;
       }
       [role="dialog"][aria-label="Display preferences"] legend,
       [role="dialog"][aria-label="Display preferences"] p {
@@ -448,22 +448,22 @@ export const applyPreferences = (prefs) => {
 
       /* === Scrollbar dark === */
       ::-webkit-scrollbar {
-        background: #0F1219;
+        background: #0B0E14;
       }
       ::-webkit-scrollbar-thumb {
-        background: #374151;
+        background: #1E293B;
         border-radius: 4px;
       }
 
       /* === Chapter number badges — dark mode === */
       #main-content .chapter-num {
-        background-color: #1E293B !important;
+        background-color: #111827 !important;
         border-color: #475569 !important;
         color: #FFB347 !important;
       }
       #main-content .chapter-link {
         background-color: #151A24 !important;
-        border-color: #2A3344 !important;
+        border-color: #1E2736 !important;
       }
 
       /* === SVG Diagrams — dark mode === */
@@ -475,7 +475,7 @@ export const applyPreferences = (prefs) => {
       #main-content svg rect[fill="white"],
       #main-content svg rect[fill="#FFFFFF"],
       #main-content svg rect[fill="#ffffff"] {
-        fill: #1E293B !important;
+        fill: #111827 !important;
       }
       /* All SVG text becomes light */
       #main-content svg text {
@@ -505,7 +505,7 @@ export const applyPreferences = (prefs) => {
       /* === CARD ELEVATION — catch ALL white-bg cards site-wide ===
          Common pattern: background: 'white' + border + borderRadius
          Diagrams, guide pages, pathway cards, admin cards, etc.
-         Use #151B24 to visually separate from #1E293B page bg === */
+         Use #0F1520 to visually separate from #111827 page bg === */
 
       /* Named card classes */
       .sg-resource-card,
@@ -513,28 +513,28 @@ export const applyPreferences = (prefs) => {
       .landing-stat-card,
       .landing-story-card,
       .landing-attorneys-grid > div {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
+        background-color: #0F1520 !important;
+        border-color: #1E2736 !important;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
       }
 
       /* GuideSection content cards (guide-two-col children) */
       .guide-two-col > div {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
+        background-color: #0F1520 !important;
+        border-color: #1E2736 !important;
       }
 
       /* Diagram containers — all use background: 'white' + borderRadius: 12 */
       #main-content div[style*="border-radius: 12px"][style*="overflow: hidden"],
       #main-content div[style*="border-radius: 12px"][style*="overflow:hidden"] {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
+        background-color: #0F1520 !important;
+        border-color: #1E2736 !important;
       }
 
       /* Chapter page accordions */
       #main-content div[style*="border-radius: 12px"][style*="margin-bottom: 12px"] {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
+        background-color: #0F1520 !important;
+        border-color: #1E2736 !important;
       }
 
       /* Guide page content cards (background: white + border + borderRadius: 12/16px) */
@@ -543,24 +543,24 @@ export const applyPreferences = (prefs) => {
       #main-content div[style*="border-radius: 16px"][style*="border: 2px"],
       #main-content div[style*="border-radius: 20px"][style*="border: 1px"],
       #main-content div[style*="border-radius: 24px"][style*="border: 1px"] {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
+        background-color: #0F1520 !important;
+        border-color: #1E2736 !important;
       }
 
       /* Pathway cards */
       #main-content div[style*="border-radius: 24px"][style*="background: white"],
       #main-content div[style*="border-radius: 20px"][style*="background: white"] {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
+        background-color: #0F1520 !important;
+        border-color: #1E2736 !important;
       }
 
       /* Standards Guide components */
       .sg-chapter-link {
-        background-color: #151B24 !important;
-        border-color: #2A3344 !important;
+        background-color: #0F1520 !important;
+        border-color: #1E2736 !important;
       }
       .sg-filter-btn {
-        border-color: #2A3344 !important;
+        border-color: #1E2736 !important;
       }
 
       /* === Story video container — NOT a white-bg card, preserve photo === */
@@ -581,7 +581,7 @@ export const applyPreferences = (prefs) => {
       /* MyCases + AdminCases page-level containers */
       #main-content > div[style*="background-color: rgb(250, 247, 242)"],
       #main-content > div[style*="background-color: rgb(248, 250, 252)"] {
-        background-color: #0F1219 !important;
+        background-color: #0B0E14 !important;
       }
 
       /* Transparent children inside all elevated cards */
@@ -600,7 +600,7 @@ export const applyPreferences = (prefs) => {
         color: #CBD5E1 !important;
       }
       .sg-resource-card div[style*="borderTop"] {
-        border-color: #2A3344 !important;
+        border-color: #1E2736 !important;
       }
 
       /* Story card tag pills */
@@ -621,12 +621,12 @@ export const applyPreferences = (prefs) => {
       footer[role="contentinfo"] p,
       footer[role="contentinfo"] span,
       footer[role="contentinfo"] a {
-        background-color: #0F1219 !important;
+        background-color: #0B0E14 !important;
       }
 
       /* === AI Standards Helper — dark mode === */
       .ada-ai-trigger {
-        background-color: #0F1219 !important;
+        background-color: #0B0E14 !important;
         border-color: #334155 !important;
       }
       .ada-ai-panel {
@@ -641,21 +641,21 @@ export const applyPreferences = (prefs) => {
         color: white !important;
       }
       .ada-ai-bubble-assistant {
-        background-color: #151B24 !important;
+        background-color: #0F1520 !important;
         color: #E2E8F0 !important;
-        border: 1px solid #2A3344 !important;
+        border: 1px solid #1E2736 !important;
       }
       .ada-ai-suggestion {
-        background-color: #0F1219 !important;
+        background-color: #0B0E14 !important;
         border-color: #334155 !important;
         color: #CBD5E1 !important;
       }
       .ada-ai-suggestion:hover {
         border-color: #C2410C !important;
-        background-color: #1E293B !important;
+        background-color: #111827 !important;
       }
       .ada-ai-input {
-        background-color: #0F1219 !important;
+        background-color: #0B0E14 !important;
         border-color: #475569 !important;
         color: #E2E8F0 !important;
       }
@@ -687,7 +687,7 @@ export const applyPreferences = (prefs) => {
       #main-content svg[role="img"] rect[fill="white"],
       #main-content svg[role="img"] rect[fill="#FFFFFF"],
       #main-content svg[role="img"] rect[fill="#ffffff"] {
-        fill: #1E293B !important;
+        fill: #111827 !important;
       }
 
       /* Landing / floor / structural rects (light grays) */
@@ -700,7 +700,7 @@ export const applyPreferences = (prefs) => {
       #main-content svg[role="img"] rect[fill="#e7e5e4"],
       #main-content svg[role="img"] rect[fill="#D6D3D1"],
       #main-content svg[role="img"] rect[fill="#d6d3d1"] {
-        fill: #374151 !important;
+        fill: #1E293B !important;
         stroke: #4A5568 !important;
       }
       #main-content svg[role="img"] rect[fill="#F1F5F9"],
@@ -722,7 +722,7 @@ export const applyPreferences = (prefs) => {
       #main-content svg[role="img"] rect[fill="#F0FDF4"],
       #main-content svg[role="img"] rect[fill="#DBEAFE"],
       #main-content svg[role="img"] rect[fill="#FFFBF7"] {
-        fill: #1E293B !important;
+        fill: #111827 !important;
       }
 
       /* Dashed / structural lines */
@@ -754,7 +754,7 @@ export const applyPreferences = (prefs) => {
 
       /* Inactive callout circles (white fill) */
       #main-content svg[role="img"] g[role="button"] circle[fill="white"] {
-        fill: #1E293B !important;
+        fill: #111827 !important;
       }
 
       /* Callout number text — lighten dark colors for dark backgrounds */
@@ -767,7 +767,7 @@ export const applyPreferences = (prefs) => {
       #main-content svg[role="img"] g[role="button"] text[fill="#9D174D"] { fill: #F472B6 !important; }
 
       /* Also fix general dark text labels in diagrams */
-      #main-content svg[role="img"] text[fill="#374151"],
+      #main-content svg[role="img"] text[fill="#1E293B"],
       #main-content svg[role="img"] text[fill="#4B5563"] {
         fill: #94A3B8 !important;
       }
@@ -789,7 +789,7 @@ export const applyPreferences = (prefs) => {
 
       /* === Pathway radio cards — dark mode === */
       #main-content [role="radio"] {
-        background-color: #1E293B !important;
+        background-color: #111827 !important;
         border-color: #475569 !important;
       }
       #main-content [role="radio"][aria-checked="true"] {
@@ -799,11 +799,11 @@ export const applyPreferences = (prefs) => {
 
       /* === Feedback modal — dark mode === */
       .fb-panel {
-        background-color: #1E293B !important;
+        background-color: #111827 !important;
         border: 1px solid #475569 !important;
       }
       .fb-type-pill {
-        background-color: #0F1219 !important;
+        background-color: #0B0E14 !important;
         border-color: #475569 !important;
         color: #CBD5E1 !important;
       }
