@@ -136,7 +136,31 @@ Before committing any public-facing component, verify:
 - [ ] All decorative images have `aria-hidden="true"` AND `alt=""`
 - [ ] All `<section>` elements have `aria-labelledby` pointing to a valid heading
 - [ ] External links have `rel="noopener noreferrer"`
+- [ ] Every interactive element has a CSS class with an explicit `focus-visible` rule
+- [ ] Nested container padding does not stack beyond 48px total horizontal on mobile
+- [ ] All body text has `lineHeight` of at least 1.5 (headings exempt)
 - [ ] No `color: 'white'` — use `var(--dark-heading)` or `var(--btn-text)`
 - [ ] No `role="img"` on containers that contain visible text children
 - [ ] Placeholder/non-functional links have sr-only status text (e.g., "coming soon")
 - [ ] Per-card accent colors use design tokens, not hardcoded hex
+
+### FIX-15: All interactive elements need explicit focus-visible styles
+**SC:** 2.4.11 Focus Appearance (AAA)
+**Problem:** StoriesSection "Explore →" links and KYR CTA link had no CSS class
+with a focus-visible rule — fell back to browser default which does not meet AAA
+minimum contrast/area requirements.
+**Fix:** Add a class (`landing-link-accent` or `landing-btn-primary`) with a
+`focus-visible` rule using `outline: 3px solid var(--accent-light)`.
+
+### FIX-16: Nested padding must not stack on mobile viewports
+**SC:** 1.4.10 Reflow
+**Problem:** Hero inner grid had `padding: 0 2.5rem` (40px/side) that stacked with
+the section-level `24px` override at ≤900px, leaving only ~192px for content at 320px.
+**Fix:** Zero out inner grid padding at the 900px breakpoint where the section
+already provides horizontal padding.
+
+### FIX-17: Body text line-height must be at least 1.5
+**SC:** 1.4.8 Visual Presentation (AAA)
+**Problem:** ForAttorneys stat label text had `lineHeight: 1.4` — below the AAA
+minimum of 1.5 for paragraph/body text (headings are exempt).
+**Fix:** Change to `lineHeight: 1.5`.
