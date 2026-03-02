@@ -15,11 +15,12 @@ export default function CommitmentSection() {
     <section aria-labelledby="commitment-heading" className="warm-keep-dark" style={{
       background: '#1E293B', padding: '100px 1.5rem 60px', position: 'relative', overflow: 'hidden'
     }}>
-      <div aria-hidden="true" style={{
-        position: 'absolute', top: '-20%', right: '-10%',
-        width: '500px', height: '500px', borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(194,65,12,0.08) 0%, transparent 70%)',
-        pointerEvents: 'none'
+      <div aria-hidden="true" className="section-watermark" style={{
+        position: 'absolute', top: '10%', right: '-5%',
+        width: '280px', height: '280px',
+        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png)',
+        backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
+        opacity: 0.03, pointerEvents: 'none',
       }} />
 
       <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative' }}>

@@ -62,18 +62,20 @@ export default function LandingHeroNew() {
         paddingTop: '72px'
       }}
     >
-      {/* Background glows */}
+      {/* Subtle background glow */}
       <div aria-hidden="true" style={{
         position: 'absolute', top: '-10%', right: '-5%',
         width: '600px', height: '600px', borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(194,65,12,0.1) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(194,65,12,0.07) 0%, transparent 70%)',
         pointerEvents: 'none'
       }} />
-      <div aria-hidden="true" style={{
-        position: 'absolute', bottom: '-15%', left: '-10%',
-        width: '500px', height: '500px', borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(194,65,12,0.06) 0%, transparent 70%)',
-        pointerEvents: 'none'
+      {/* Logo watermark */}
+      <div aria-hidden="true" className="section-watermark" style={{
+        position: 'absolute', bottom: '5%', right: '2%',
+        width: '240px', height: '240px',
+        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png)',
+        backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
+        opacity: 0.04, pointerEvents: 'none',
       }} />
       {/* Noise overlay */}
       <div aria-hidden="true" style={{

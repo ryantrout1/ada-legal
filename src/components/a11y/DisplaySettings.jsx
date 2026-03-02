@@ -199,19 +199,31 @@ export const applyPreferences = (prefs) => {
         background-image: unset !important;
       }
 
-      /* === Cards inside dark sections — subtle elevation === */
-      #main-content .warm-keep-dark div[style*="border-radius"],
-      #main-content .warm-keep-dark div[style*="borderRadius"] {
+      /* === Decorative elements in dark sections — hide completely === */
+      #main-content .warm-keep-dark div[aria-hidden="true"]:not(.hero-glass-card):not(.story-video-container) {
+        background: transparent !important;
+        background-color: transparent !important;
+        background-image: none !important;
+      }
+      #main-content .section-watermark {
+        opacity: 0 !important;
+      }
+
+      /* === Cards inside dark sections — subtle elevation === 
+         Only target divs with explicit border (real cards), 
+         NOT decorative circles or layout wrappers */
+      #main-content .warm-keep-dark div[style*="border: 1px"],
+      #main-content .warm-keep-dark div[style*="border: 2px"] {
         background-color: rgba(255,255,255,0.03) !important;
         border-color: rgba(255,255,255,0.08) !important;
         box-shadow: none !important;
       }
-      #main-content .warm-keep-dark div[style*="border-radius"] div,
-      #main-content .warm-keep-dark div[style*="border-radius"] p,
-      #main-content .warm-keep-dark div[style*="border-radius"] span,
-      #main-content .warm-keep-dark div[style*="borderRadius"] div,
-      #main-content .warm-keep-dark div[style*="borderRadius"] p,
-      #main-content .warm-keep-dark div[style*="borderRadius"] span {
+      #main-content .warm-keep-dark div[style*="border: 1px"] div,
+      #main-content .warm-keep-dark div[style*="border: 1px"] p,
+      #main-content .warm-keep-dark div[style*="border: 1px"] span,
+      #main-content .warm-keep-dark div[style*="border: 2px"] div,
+      #main-content .warm-keep-dark div[style*="border: 2px"] p,
+      #main-content .warm-keep-dark div[style*="border: 2px"] span {
         background-color: transparent !important;
       }
 

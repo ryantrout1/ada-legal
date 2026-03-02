@@ -12,12 +12,13 @@ export default function OurStorySection() {
         overflow: 'hidden',
       }}
     >
-      {/* Subtle accent glow */}
-      <div aria-hidden="true" style={{
-        position: 'absolute', top: '10%', left: '-5%',
-        width: '400px', height: '400px', borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(194,65,12,0.06) 0%, transparent 70%)',
-        pointerEvents: 'none',
+      {/* Subtle logo watermark */}
+      <div aria-hidden="true" className="section-watermark" style={{
+        position: 'absolute', bottom: '5%', right: '-3%',
+        width: '320px', height: '320px',
+        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png)',
+        backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
+        opacity: 0.03, pointerEvents: 'none',
       }} />
 
       <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative' }}>
