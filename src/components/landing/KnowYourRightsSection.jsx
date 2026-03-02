@@ -173,6 +173,7 @@ export default function KnowYourRightsSection() {
           </p>
           <Link
             to={createPageUrl('RightsPathway')}
+            className="landing-btn-primary"
             style={{
               display: 'inline-block', fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
               fontWeight: 600, color: 'var(--btn-text)', background: 'var(--accent)', padding: '14px 28px',

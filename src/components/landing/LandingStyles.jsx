@@ -64,6 +64,10 @@ export default function LandingStyles() {
         border-radius: 4px !important;
         color: var(--accent-light) !important;
       }
+      .landing-link-accent:focus-visible {
+        outline: 3px solid var(--accent-light) !important;
+        outline-offset: 2px !important;
+      }
 
       /* Screen reader only utility */
       .sr-only {
@@ -84,6 +88,8 @@ export default function LandingStyles() {
           grid-template-columns: 1fr !important;
           padding-top: 2rem !important;
           padding-bottom: 2rem !important;
+          padding-left: 0 !important;
+          padding-right: 0 !important;
         }
         .landing-hero-right {
           max-width: 560px !important;

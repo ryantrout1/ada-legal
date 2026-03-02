@@ -112,7 +112,7 @@ export default function ForAttorneysNew() {
               </p>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                color: 'var(--body)', margin: 0, lineHeight: 1.4
+                color: 'var(--body)', margin: 0, lineHeight: 1.5
               }}>
                 {s.label}
               </p>

@@ -94,7 +94,7 @@ export default function StoriesSection() {
                 }}>
                   {s.tag}
                 </span>
-                <Link to={createPageUrl(s.link)} style={{
+                <Link to={createPageUrl(s.link)} className="landing-link-accent" style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
                   fontWeight: 600, color: 'var(--section-label)', textDecoration: 'none',
                   minHeight: '44px', display: 'inline-flex', alignItems: 'center',
