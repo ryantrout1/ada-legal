@@ -4,7 +4,7 @@ const TUB_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#60
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Clear Floor Space', section: '§607.2', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Clear Floor Space', section: '§607.2', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 100, y: 42,
     plain: 'A clear floor space of at least 30 inches wide by 60 inches long must be provided alongside the bathtub, extending the full length of the tub. If a permanent seat is provided at the head end of the tub, the clear floor space must extend 12 inches beyond the seat wall — so the wheelchair can pull past the seat for an easier lateral transfer. The floor must be level and slip-resistant.',
     legal: '"A clearance in front of bathtubs shall extend the length of the bathtub and shall be 30 inches wide minimum." §607.2 EXCEPTION: "Where a permanent seat is provided at the head end of the bathtub, the clearance shall extend 12 inches minimum beyond the wall at the head end of the bathtub."',
@@ -57,7 +57,7 @@ const CALLOUTS = [
 function makeLink(text) {
   return (
     <a href={TUB_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -117,11 +117,11 @@ export default function BathtubDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="var(--page-bg-subtle)" />
 
           {/* ===== LEFT: PLAN VIEW ===== */}
-          <text x="210" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">PLAN VIEW</text>
+          <text x="210" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">PLAN VIEW</text>
 
           {/* Bathtub outline — 60" long × ~30" wide at scale */}
           <rect x="60" y="65" width="280" height="100" rx="8" fill="#0EA5E9" opacity="0.04" stroke="#94A3B8" strokeWidth="2" />
-          <text x="200" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="600">BATHTUB</text>
+          <text x="200" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="600">BATHTUB</text>
 
           {/* Seat at head end (left side) */}
           <rect x="60" y="65" width="48" height="100" rx="4" fill="#15803D" opacity="0.08" stroke="#15803D" strokeWidth="1.2" />
@@ -173,22 +173,22 @@ export default function BathtubDiagram() {
 
 
           {/* ===== RIGHT: SIDE ELEVATION ===== */}
-          <text x="665" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">SIDE ELEVATION</text>
+          <text x="665" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">SIDE ELEVATION</text>
 
           {/* Floor line */}
           <line x1="460" y1="275" x2="870" y2="275" stroke="#94A3B8" strokeWidth="2" />
 
           {/* Tub body */}
           <rect x="500" y="185" width="280" height="90" rx="6" fill="#0EA5E9" opacity="0.04" stroke="#94A3B8" strokeWidth="2" />
-          <text x="640" y="245" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="500">BATHTUB</text>
+          <text x="640" y="245" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)" fontWeight="500">BATHTUB</text>
 
           {/* Tub rim */}
           <line x1="500" y1="185" x2="780" y2="185" stroke="#94A3B8" strokeWidth="2.5" />
-          <text x="820" y="188" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#4B5563">RIM</text>
+          <text x="820" y="188" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="var(--body-secondary)">RIM</text>
 
           {/* Back wall */}
           <rect x="494" y="55" width="8" height="220" fill="#94A3B8" rx="1" />
-          <text x="498" y="48" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">WALL</text>
+          <text x="498" y="48" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">WALL</text>
 
           {/* Seat at head end */}
           <rect x="502" y="180" width="60" height="8" rx="2" fill="#15803D" opacity="0.3" stroke="#15803D" strokeWidth="1" />
@@ -247,7 +247,7 @@ export default function BathtubDiagram() {
             </g>
           ))}
 
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 
@@ -281,7 +281,7 @@ export default function BathtubDiagram() {
 
       <style>{`
         @keyframes tubFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
-        g[role="button"]:focus .tub-focus-ring { stroke: #C2410C; stroke-width: 2.5; }
+        g[role="button"]:focus .tub-focus-ring { stroke: var(--accent); stroke-width: 2.5; }
               @media (prefers-reduced-motion: reduce) {
           .ada-diagram-wrap * { animation: none !important; transition: none !important; }
         }

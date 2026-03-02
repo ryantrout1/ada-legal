@@ -11,7 +11,7 @@ const SCOPING_TABLE = [
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Van-Accessible Space', section: '§502.2', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Van-Accessible Space', section: '§502.2', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 115, y: 190,
     plain: 'A van-accessible parking space must be at least 132 inches (11 feet) wide to allow room for a wheelchair ramp or lift to deploy from the side of a van. An alternative layout is allowed: a standard 96-inch (8-foot) space paired with an extra-wide 96-inch access aisle. For every 6 accessible spaces (or fraction of 6), at least 1 must be van-accessible.',
     legal: '"Car parking spaces shall be 96 inches (2440 mm) wide minimum. Van parking spaces shall be 132 inches (3350 mm) wide minimum." Alternative: van space of 96 inches with 96-inch access aisle. Per §208.2.4: "For every six or fraction of six accessible parking spaces, at least one shall be a van parking space."',
@@ -44,7 +44,7 @@ const CALLOUTS = [
   },
   {
     id: 5, label: 'Van Vertical Clearance', section: '§502.5', color: '#92400E', textColor: '#78350F',
-    x: 575, y: 265,
+    x: 575, y: 225,
     plain: 'Van-accessible spaces must have at least 98 inches (8 feet 2 inches) of vertical clearance. This is not just over the parking space — it applies to the entire vehicle route from the parking facility entrance, through the space and access aisle, all the way to the facility exit. This ensures tall vans with roof-mounted wheelchair lifts can navigate the entire route safely.',
     legal: '"Van parking spaces, access aisles serving them, and a vehicular route from an entrance of the parking facility to the van parking spaces and from the van parking spaces to an exit from the parking facility shall provide a vertical clearance of 98 inches (2490 mm) minimum."',
     citation: '§502.5',
@@ -72,7 +72,7 @@ const CALLOUTS = [
 function makeLink(text, url) {
   return (
     <a href={url || STD_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -161,11 +161,11 @@ export default function ParkingDiagram() {
 
           {/* ===== LEFT: PLAN VIEW ===== */}
           {/* Divider label */}
-          <text x="230" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">PLAN VIEW (TOP-DOWN)</text>
+          <text x="230" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">PLAN VIEW (TOP-DOWN)</text>
 
           {/* Sidewalk strip */}
           <rect x="30" y="42" width="430" height="36" rx="3" fill="#D6D3D1" stroke="#A8A29E" strokeWidth="1" />
-          <text x="245" y="64" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="600" fill="#4B4540">SIDEWALK / ACCESSIBLE ROUTE TO ENTRANCE →</text>
+          <text x="245" y="64" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="600" fill="var(--body)">SIDEWALK / ACCESSIBLE ROUTE TO ENTRANCE →</text>
 
           {/* Van space */}
           <rect x="30" y="82" width="140" height="260" rx="2" fill="#FEF2F2" stroke="#C2410C" strokeWidth="1.5" />
@@ -196,8 +196,8 @@ export default function ParkingDiagram() {
 
           {/* Non-accessible space (dashed) */}
           <rect x="350" y="82" width="110" height="260" rx="2" fill="none" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="5 4" />
-          <text x="405" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">STANDARD</text>
-          <text x="405" y="218" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">SPACE</text>
+          <text x="405" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">STANDARD</text>
+          <text x="405" y="218" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">SPACE</text>
 
           {/* --- LEFT DIMENSIONS --- */}
           {/* Van width */}
@@ -244,11 +244,11 @@ export default function ParkingDiagram() {
 
 
           {/* ===== RIGHT: SIGNAGE ELEVATION ===== */}
-          <text x="690" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">SIGNAGE DETAIL (ELEVATION)</text>
+          <text x="690" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">SIGNAGE DETAIL (ELEVATION)</text>
 
           {/* Ground line */}
           <rect x="510" y="380" width="360" height="20" rx="2" fill="#E7E5E4" stroke="#D6D3D1" strokeWidth="1" />
-          <text x="690" y="394" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B4540">GROUND LEVEL</text>
+          <text x="690" y="394" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body)">GROUND LEVEL</text>
 
           {/* Sign post */}
           <rect x="618" y="105" width="6" height="275" fill="#78716C" rx="1" />
@@ -318,7 +318,7 @@ export default function ParkingDiagram() {
             </g>
           ))}
 
-          <text x="50" y="432" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563">
+          <text x="50" y="432" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">
             Click or tap numbered callouts for details
           </text>
         </svg>
@@ -422,7 +422,7 @@ export default function ParkingDiagram() {
           to { opacity: 1; transform: translateY(0); }
         }
         g[role="button"]:focus .park-focus-ring {
-          stroke: #C2410C; stroke-width: 2.5;
+          stroke: var(--accent); stroke-width: 2.5;
         }
         @media (max-width: 768px) {
           .guide-two-col { flex-direction: column !important; gap: 16px !important; }

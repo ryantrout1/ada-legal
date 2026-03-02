@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#408-limited-uselimited-application-elevators';
 const CALLOUTS = [
-  { id: 1, label: 'Car Size', section: '§408.4.1', color: '#C2410C', textColor: '#8B2E08', x: 150, y: 100, plain: 'LULA elevator cars must have a clear floor area of at least 51 inches deep by 51 inches wide for side-opening doors, or 54 inches deep by 36 inches wide for center or end-opening doors. These are smaller than standard passenger elevators but large enough for one wheelchair user.', legal: '"Inside dimensions: 51 inches wide by 51 inches deep with side opening doors, or 54 inches deep by 36 inches wide with end/center opening doors."', citation: '§408.4.1' },
+  { id: 1, label: 'Car Size', section: '§408.4.1', color: 'var(--section-label)', textColor: '#8B2E08', x: 150, y: 100, plain: 'LULA elevator cars must have a clear floor area of at least 51 inches deep by 51 inches wide for side-opening doors, or 54 inches deep by 36 inches wide for center or end-opening doors. These are smaller than standard passenger elevators but large enough for one wheelchair user.', legal: '"Inside dimensions: 51 inches wide by 51 inches deep with side opening doors, or 54 inches deep by 36 inches wide with end/center opening doors."', citation: '§408.4.1' },
   { id: 2, label: 'Door Width', section: '§408.4.2', color: '#15803D', textColor: '#14532D', x: 400, y: 100, plain: 'LULA elevator doors must provide a clear width of at least 32 inches (815 mm). Doors must be automatic or power-operated with reopening devices that prevent closing on a person.', legal: '"Elevator doors shall provide a clear width of 32 inches minimum."', citation: '§408.4.2' },
   { id: 3, label: 'Controls', section: '§408.4.6', color: '#2563EB', textColor: '#1E3A8A', x: 650, y: 100, plain: 'Car controls must be between 15 and 48 inches above the floor for a forward approach, or between 15 and 54 inches for a side approach. Buttons must be raised or flush. All controls must have both visual and tactile indicators.', legal: '"Controls shall comply with 309." Reach ranges per §308.', citation: '§408.4.6, §309' },
   { id: 4, label: 'Where Permitted', section: '§206.6', color: '#7C3AED', textColor: '#5B21B6', x: 150, y: 340, plain: 'LULA elevators can be used instead of standard elevators in certain situations: buildings where a standard elevator is not required (2 stories or fewer), or as part of an accessible route within a facility. They cannot substitute for passenger elevators required by §206.6.', legal: '§206.6: "In buildings not required to have a full passenger elevator, LULA elevators shall be permitted."', citation: '§206.6' },
   { id: 5, label: 'Speed & Travel', section: '§408.4', color: '#92400E', textColor: '#78350F', x: 400, y: 340, plain: 'LULA elevators are limited to a maximum travel distance of 25 feet and a maximum speed of 30 feet per minute. They are designed for low-traffic, short-distance vertical travel — typically 1-2 stories. They must comply with ASME A17.1 safety standards.', legal: 'Per ASME A17.1: maximum travel 25 feet, maximum speed 30 feet per minute.', citation: '§408.1' }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function LULAElevatorDiagram() {
@@ -35,8 +35,8 @@ export default function LULAElevatorDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="lula-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="lula-title">ADA §408 LULA Elevators — Plan View</title>
           <rect width="900" height="520" fill="var(--page-bg-subtle)" />
-          <text x="300" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">SIDE-OPENING DOOR CONFIG</text>
-          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">END-OPENING DOOR CONFIG</text>
+          <text x="300" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">SIDE-OPENING DOOR CONFIG</text>
+          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">END-OPENING DOOR CONFIG</text>
 
           {/* LEFT: Side-opening config */}
           <rect x="100" y="60" width="320" height="320" fill="#C2410C" opacity="0.03" stroke="#94A3B8" strokeWidth="2" rx="2" />
@@ -123,7 +123,7 @@ export default function LULAElevatorDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

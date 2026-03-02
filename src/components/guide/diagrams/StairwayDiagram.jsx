@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STAIR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#504-stairways';
 const CALLOUTS = [
-  { id: 1, label: 'Treads', section: '§504.2', color: '#C2410C', textColor: '#8B2E08', x: 80, y: 42,
+  { id: 1, label: 'Treads', section: '§504.2', color: 'var(--section-label)', textColor: '#8B2E08', x: 80, y: 42,
     plain: 'All treads within a single flight of stairs must be uniform depth — no variation is permitted. The standard minimum tread depth is 11 inches, measured from the leading edge of the nosing to the riser behind. Uniform tread depth is critical because people develop a rhythm when ascending or descending stairs; a sudden change in depth causes trips and falls.',
     legal: '"All steps on a flight of stairs shall have uniform riser heights and uniform tread depths." Treads: "11 inches deep minimum."',
     citation: '§504.2' },
@@ -32,7 +32,7 @@ const CALLOUTS = [
     citation: '§504.7' }
 ];
 
-function makeLink(t) { return (<a href={STAIR_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STAIR_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function StairwayDiagram() {
@@ -62,7 +62,7 @@ export default function StairwayDiagram() {
         <svg viewBox="0 0 900 480" role="img" aria-labelledby="stair-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="stair-title">ADA §504 Stairways — Side Elevation with Nosing Detail</title>
           <rect width="900" height="480" fill="var(--page-bg-subtle)" />
-          <text x="350" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">SIDE ELEVATION</text>
+          <text x="350" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">SIDE ELEVATION</text>
 
           {/* Stair steps */}
           {steps.map(i => {
@@ -80,10 +80,10 @@ export default function StairwayDiagram() {
           })}
           {/* Top landing */}
           <rect x={baseX + 5 * tW} y={baseY - 5 * rH} width={160} height={rH} fill="#E7E5E4" opacity="0.2" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x={baseX + 5 * tW + 80} y={baseY - 5 * rH + 35} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">TOP LANDING</text>
+          <text x={baseX + 5 * tW + 80} y={baseY - 5 * rH + 35} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">TOP LANDING</text>
           {/* Bottom landing */}
           <rect x={40} y={baseY} width={80} height={rH} fill="#E7E5E4" opacity="0.2" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x={80} y={baseY + 35} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">BOTTOM</text>
+          <text x={80} y={baseY + 35} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">BOTTOM</text>
 
           {/* Handrail */}
           {/* Top extension (12" horizontal) */}
@@ -123,7 +123,7 @@ export default function StairwayDiagram() {
           <text x={baseX - tW - 5} y={baseY + rH - 31} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fontWeight="700" fill="white">slope + {d('12', '305')}</text>
 
           {/* Nosing inset */}
-          <text x="760" y="50" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#4B5563">NOSING PROFILES</text>
+          <text x="760" y="50" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="var(--body-secondary)">NOSING PROFILES</text>
           {/* (A) Angled */}
           <rect x="700" y="60" width="120" height="70" rx="4" fill="white" stroke="#2563EB" strokeWidth="1" />
           <text x="760" y="76" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600">(A) Angled</text>
@@ -156,7 +156,7 @@ export default function StairwayDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="470" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="470" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

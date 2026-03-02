@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const LZ_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#503-passenger-loading-zones';
 const CALLOUTS = [
-  { id: 1, label: 'Pull-Up Space', section: '§503.2', color: '#C2410C', textColor: '#8B2E08', x: 100, y: 42, plain: 'The vehicle pull-up space must be 96 inches (8 feet) wide minimum and 20 feet long minimum. This width accommodates full-size vehicles including vans with side-mounted wheelchair lifts. The space must be level and firm with no grade changes that would impede lift deployment.', legal: '"Passenger loading zones shall provide a vehicular pull-up space 96 inches wide minimum and 20 feet long minimum."', citation: '§503.2' },
+  { id: 1, label: 'Pull-Up Space', section: '§503.2', color: 'var(--section-label)', textColor: '#8B2E08', x: 100, y: 42, plain: 'The vehicle pull-up space must be 96 inches (8 feet) wide minimum and 20 feet long minimum. This width accommodates full-size vehicles including vans with side-mounted wheelchair lifts. The space must be level and firm with no grade changes that would impede lift deployment.', legal: '"Passenger loading zones shall provide a vehicular pull-up space 96 inches wide minimum and 20 feet long minimum."', citation: '§503.2' },
   { id: 2, label: 'Access Aisle', section: '§503.3', color: '#15803D', textColor: '#14532D', x: 300, y: 42, plain: 'An access aisle 60 inches (5 feet) wide minimum and 20 feet long minimum must run alongside the pull-up space. The aisle must be at the same level as the vehicle floor — no curb between the aisle and the pull-up space. The aisle must connect directly to an accessible route leading to the building entrance.', legal: '"Access aisles serving passenger loading zones shall be 60 inches wide minimum and 20 feet long minimum, at the same level as the vehicle pull-up space."', citation: '§503.3' },
   { id: 3, label: 'Vertical Clearance', section: '§503.4', color: '#2563EB', textColor: '#1E3A8A', x: 500, y: 42, plain: 'A minimum vertical clearance of 114 inches (9 feet 6 inches) must be maintained at the pull-up space and along the entire vehicle route to and from the loading zone. This height accommodates raised-roof vans and vehicles with roof-mounted wheelchair lifts. Covered entrances, porte-cochères, and parking garage entries must all meet this clearance.', legal: '"Vehicle pull-up spaces, access aisles, and vehicular routes serving them shall provide a vertical clearance of 114 inches minimum."', citation: '§503.4' },
   { id: 4, label: 'Floor Surface', section: '§503.4', color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 260, plain: 'The access aisle and pull-up space must have firm, stable, slip-resistant surfaces. Maximum slope is 1:48 in any direction. No level changes are permitted between the aisle and pull-up space — the surface must be flush. This is critical for wheelchair ramp deployment from the vehicle.', legal: 'Surface per §302: "firm, stable, and slip-resistant." Slope: "not steeper than 1:48." No level changes between aisle and pull-up space.', citation: '§302' },
@@ -11,7 +11,7 @@ const CALLOUTS = [
   { id: 7, label: 'Mechanical Access', section: '§503.5', color: '#0E7490', textColor: '#0C4A6E', x: 700, y: 150, plain: 'When a wheelchair lift or ramp deploys from the vehicle, it must not reduce the access aisle clear width below 60 inches. The deployed lift platform or ramp must land entirely within the pull-up space and aisle without encroaching on adjacent traffic lanes or walkways.', legal: '"Vehicle ramps or lifts shall not reduce the clear width of the access aisle below 60 inches when deployed."', citation: '§503.5' }
 ];
 
-function makeLink(t) { return (<a href={LZ_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={LZ_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function LoadingZoneDiagram() {
@@ -37,11 +37,11 @@ export default function LoadingZoneDiagram() {
         <svg viewBox="0 0 900 420" role="img" aria-labelledby="lz-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="lz-title">ADA §503 Passenger Loading Zone — Plan View</title>
           <rect width="900" height="420" fill="var(--page-bg-subtle)" />
-          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW — PASSENGER LOADING ZONE</text>
+          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">PLAN VIEW — PASSENGER LOADING ZONE</text>
 
           {/* Sidewalk/building */}
           <rect x="60" y="50" width="100" height="330" rx="4" fill="#E7E5E4" opacity="0.15" stroke="#94A3B8" strokeWidth="1" />
-          <text x="110" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="500" transform="rotate(-90 110 220)">SIDEWALK → BUILDING</text>
+          <text x="110" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)" fontWeight="500" transform="rotate(-90 110 220)">SIDEWALK → BUILDING</text>
 
           {/* Access aisle */}
           <rect x="170" y="50" width="120" height="330" rx="2" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="2" />
@@ -59,11 +59,11 @@ export default function LoadingZoneDiagram() {
           <rect x="320" y="100" width="160" height="220" rx="20" fill="#94A3B8" opacity="0.08" stroke="#94A3B8" strokeWidth="1.5" />
           <rect x="335" y="115" width="130" height="60" rx="8" fill="#94A3B8" opacity="0.05" />
           <rect x="335" y="240" width="130" height="50" rx="8" fill="#94A3B8" opacity="0.05" />
-          <text x="400" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">VEHICLE</text>
+          <text x="400" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">VEHICLE</text>
 
           {/* Road */}
           <rect x="510" y="50" width="350" height="330" rx="2" fill="#94A3B8" opacity="0.04" />
-          <text x="685" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">ROADWAY</text>
+          <text x="685" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="500">ROADWAY</text>
 
           {/* Dims: access aisle 60" */}
           <line x1="170" y1="395" x2="290" y2="395" stroke="#15803D" strokeWidth="1" />
@@ -103,7 +103,7 @@ export default function LoadingZoneDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="412" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="412" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#706-assistive-listening-systems';
 const CALLOUTS = [
-  { id: 1, label: 'System Types', section: '§706.2', color: '#C2410C', textColor: '#8B2E08', x: 120, y: 100, plain: 'Assistive listening systems may use induction loop, FM, infrared, or digital technology. Induction loop is preferred for hearing aid users because it works directly with the T-coil in hearing aids — no separate receiver needed. FM and infrared require handheld receivers.', legal: '"Assistive listening systems shall comply with §706." Systems include induction loop, FM, infrared, or other approved technologies.', citation: '§706.2' },
+  { id: 1, label: 'System Types', section: '§706.2', color: 'var(--section-label)', textColor: '#8B2E08', x: 120, y: 100, plain: 'Assistive listening systems may use induction loop, FM, infrared, or digital technology. Induction loop is preferred for hearing aid users because it works directly with the T-coil in hearing aids — no separate receiver needed. FM and infrared require handheld receivers.', legal: '"Assistive listening systems shall comply with §706." Systems include induction loop, FM, infrared, or other approved technologies.', citation: '§706.2' },
   { id: 2, label: 'Signal-to-Noise Ratio', section: '§706.3', color: '#15803D', textColor: '#14532D', x: 350, y: 100, plain: 'The system must provide a minimum 18 dB signal-to-noise ratio improvement. This ensures that spoken audio is clearly audible above ambient background noise. The system must cover the entire seating area uniformly.', legal: '"The signal-to-noise ratio for the assistive listening system shall be not less than 18 dB." Coverage area must be the entire seating area.', citation: '§706.3' },
   { id: 3, label: 'Receivers', section: '§706.2', color: '#2563EB', textColor: '#1E3A8A', x: 580, y: 100, plain: 'The number of receivers is based on the seating capacity (per §219.3 table). At least 25% of receivers must be hearing-aid compatible (neckloops that work with T-coils). The remaining 75% can be standard receivers with earbuds or headphones.', legal: '"At least 25 percent, but no fewer than two, of the receivers shall be hearing-aid compatible." Remaining receivers: standard earbuds/headphones.', citation: '§706.2, §219.3' },
   { id: 4, label: 'Signage', section: '§706.4', color: '#7C3AED', textColor: '#5B21B6', x: 120, y: 340, plain: 'The International Symbol of Access for Hearing Loss must be posted at each assembly area where an assistive listening system is provided. The sign must indicate that the system is available and where to obtain receivers.', legal: '"Each assembly area required to provide an assistive listening system shall provide signs informing patrons of the availability of the system." Sign: International Symbol of Access for Hearing Loss per §703.7.2.4.', citation: '§706.4' },
   { id: 5, label: 'Scoping', section: '§219.2', color: '#92400E', textColor: '#78350F', x: 350, y: 340, plain: 'Assistive listening systems are required in assembly areas with audio amplification. Areas with 50 or more fixed seats must follow the scoping table. Courtrooms always require them. Areas under 50 seats are generally not required to have ALS unless audio amplification is integral to the space\'s use.', legal: '§219.2: "In each assembly area where audible communication is integral to the use of the space, an assistive listening system shall be provided." Scoping per Table 219.3.', citation: '§219.2' }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function AssistiveListeningDiagram() {
@@ -27,11 +27,11 @@ export default function AssistiveListeningDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="als-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="als-title">ADA §706 Assistive Listening Systems — Assembly Area Cutaway</title>
           <rect width="900" height="520" fill="var(--page-bg-subtle)" />
-          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">ASSEMBLY AREA — ASSISTIVE LISTENING COVERAGE</text>
+          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">ASSEMBLY AREA — ASSISTIVE LISTENING COVERAGE</text>
 
           {/* Stage */}
           <rect x="250" y="60" width="400" height="80" rx="6" fill="#475569" opacity="0.06" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="450" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="600">STAGE / SPEAKER AREA</text>
+          <text x="450" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="600">STAGE / SPEAKER AREA</text>
           {/* Podium */}
           <rect x="420" y="80" width="60" height="40" rx="4" fill="#475569" opacity="0.1" stroke="#475569" strokeWidth="1" />
           <text x="450" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#475569">PODIUM</text>
@@ -48,7 +48,7 @@ export default function AssistiveListeningDiagram() {
               ))}
             </g>
           ))}
-          <text x="130" y="290" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" transform="rotate(-90, 130, 290)">SEATING ROWS</text>
+          <text x="130" y="290" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)" transform="rotate(-90, 130, 290)">SEATING ROWS</text>
 
           {/* Signal waves from stage */}
           {[1, 2, 3].map(i => (
@@ -88,7 +88,7 @@ export default function AssistiveListeningDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

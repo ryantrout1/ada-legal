@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#810-transportation-facilities';
 const CALLOUTS = [
-  { id: 1, label: 'Bus Boarding Area', section: '§810.2', color: '#C2410C', textColor: '#8B2E08', x: 120, y: 100, plain: 'Bus stops must have a firm, stable surface with a clear area at least 96 inches long (parallel to the road) and 60 inches deep (perpendicular from the curb). This allows a wheelchair lift to deploy. The slope must not exceed 1:48 in any direction. The boarding area must connect to an accessible route.', legal: '"Bus boarding and alighting areas shall provide a clear length of 96 inches minimum, measured perpendicular to the curb or vehicle roadway edge, and a clear width of 60 inches minimum, measured parallel to the vehicle roadway." Slope: "not steeper than 1:48."', citation: '§810.2.1, §810.2.2, §810.2.3' },
+  { id: 1, label: 'Bus Boarding Area', section: '§810.2', color: 'var(--section-label)', textColor: '#8B2E08', x: 120, y: 100, plain: 'Bus stops must have a firm, stable surface with a clear area at least 96 inches long (parallel to the road) and 60 inches deep (perpendicular from the curb). This allows a wheelchair lift to deploy. The slope must not exceed 1:48 in any direction. The boarding area must connect to an accessible route.', legal: '"Bus boarding and alighting areas shall provide a clear length of 96 inches minimum, measured perpendicular to the curb or vehicle roadway edge, and a clear width of 60 inches minimum, measured parallel to the vehicle roadway." Slope: "not steeper than 1:48."', citation: '§810.2.1, §810.2.2, §810.2.3' },
   { id: 2, label: 'Bus Shelters', section: '§810.3', color: '#15803D', textColor: '#14532D', x: 350, y: 100, plain: 'If a bus shelter is provided, it must have a minimum clear floor space of 30 × 48 inches inside, entirely within the shelter. The shelter must be connected to the boarding area by an accessible route. A wheelchair user must be able to enter the shelter and reach the seating or waiting area.', legal: '"Bus shelters shall provide a minimum clear floor or ground space of 30 inches by 48 inches, entirely within the shelter. Bus shelters shall be connected by an accessible route to a boarding and alighting area."', citation: '§810.3' },
   { id: 3, label: 'Detectable Warnings', section: '§810.5.2', color: '#2563EB', textColor: '#1E3A8A', x: 580, y: 100, plain: 'Rail platform edges not protected by guards or screens must have detectable warning surfaces (truncated domes) along the full length of the platform edge. The detectable warning must be 24 inches deep and extend the full length of the public use area of the platform. The domes provide tactile and visual cues to people who are blind or have low vision.', legal: '"Platform boarding edges not protected by platform screens or guards shall have detectable warnings 24 inches deep running the full length of the public use area of the platform."', citation: '§810.5.2, §705' },
   { id: 4, label: 'Platform Gap', section: '§810.5.3', color: '#7C3AED', textColor: '#5B21B6', x: 120, y: 340, plain: 'The horizontal gap between the rail vehicle door and the platform edge must be as small as practicable — the standard aims for 3 inches maximum. The vertical difference between the vehicle floor and the platform must also be minimized. Bridge plates or ramps may be used to span gaps.', legal: '"The horizontal gap between the vehicle floor and platform shall be as small as practicable." Advisory: "The platform-to-vehicle gap should be minimized to enable independent boarding."', citation: '§810.5.3' },
@@ -10,7 +10,7 @@ const CALLOUTS = [
   { id: 6, label: 'Accessible Route to Platform', section: '§810.5.1', color: '#0E7490', textColor: '#0C4A6E', x: 580, y: 340, plain: 'An accessible route must connect each entry point of the transit station to all boarding platforms, fare collection areas, and key destination points within the station. If the station has multiple levels, elevators or platform lifts must be provided. Fare gates must include at least one accessible gate wide enough for a wheelchair (32 inches minimum clear width).', legal: '"Each platform shall be connected to the station entrance by an accessible route complying with 402."', citation: '§810.5.1, §402' }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function TransportationDiagram() {
@@ -36,17 +36,17 @@ export default function TransportationDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="tr-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="tr-title">ADA §810 Transportation Facilities — Bus Stop & Rail Platform</title>
           <rect width="900" height="520" fill="var(--page-bg-subtle)" />
-          <text x="220" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">BUS STOP — PLAN VIEW</text>
-          <text x="680" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">RAIL PLATFORM — ELEVATION</text>
+          <text x="220" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">BUS STOP — PLAN VIEW</text>
+          <text x="680" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">RAIL PLATFORM — ELEVATION</text>
 
           {/* ===== LEFT: Bus stop plan view ===== */}
           {/* Roadway */}
           <rect x="60" y="40" width="380" height="120" fill="#94A3B8" opacity="0.05" stroke="#94A3B8" strokeWidth="1" rx="2" />
-          <text x="250" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">ROADWAY</text>
+          <text x="250" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="500">ROADWAY</text>
 
           {/* Curb line */}
           <line x1="60" y1="160" x2="440" y2="160" stroke="#94A3B8" strokeWidth="3" />
-          <text x="450" y="164" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">CURB</text>
+          <text x="450" y="164" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">CURB</text>
 
           {/* Boarding area */}
           <rect x="120" y="165" width="200" height="130" rx="4" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="2" />
@@ -54,7 +54,7 @@ export default function TransportationDiagram() {
 
           {/* Bus silhouette on road */}
           <rect x="130" y="60" width="180" height="80" rx="12" fill="#94A3B8" opacity="0.08" stroke="#94A3B8" strokeWidth="1" />
-          <text x="220" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">BUS</text>
+          <text x="220" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">BUS</text>
 
           {/* Boarding area dims */}
           <line x1="120" y1="310" x2="320" y2="310" stroke="#C2410C" strokeWidth="1" />
@@ -83,12 +83,12 @@ export default function TransportationDiagram() {
 
           {/* Sidewalk */}
           <rect x="60" y="440" width="380" height="40" rx="2" fill="#94A3B8" opacity="0.04" stroke="#94A3B8" strokeWidth="1" />
-          <text x="250" y="465" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" fontWeight="500">SIDEWALK</text>
+          <text x="250" y="465" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)" fontWeight="500">SIDEWALK</text>
 
           {/* ===== RIGHT: Rail platform elevation ===== */}
           {/* Platform */}
           <rect x="500" y="280" width="370" height="30" fill="#94A3B8" opacity="0.15" stroke="#94A3B8" strokeWidth="1.5" rx="2" />
-          <text x="685" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="600">PLATFORM</text>
+          <text x="685" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)" fontWeight="600">PLATFORM</text>
 
           {/* Detectable warning strip */}
           <rect x="500" y="270" width="370" height="10" fill="#B45309" opacity="0.2" stroke="#2563EB" strokeWidth="1.5" />
@@ -104,7 +104,7 @@ export default function TransportationDiagram() {
 
           {/* Train car */}
           <rect x="500" y="330" width="370" height="100" rx="8" fill="#94A3B8" opacity="0.06" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="685" y="385" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">RAIL VEHICLE</text>
+          <text x="685" y="385" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="500">RAIL VEHICLE</text>
           {/* Door opening */}
           <rect x="630" y="330" width="70" height="15" fill="#2563EB" opacity="0.1" stroke="#2563EB" strokeWidth="1" />
           <text x="665" y="342" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A" fontWeight="600">DOOR</text>
@@ -141,7 +141,7 @@ export default function TransportationDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

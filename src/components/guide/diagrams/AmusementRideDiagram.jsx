@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#1002-amusement-rides';
 const CALLOUTS = [
-  { id: 1, label: 'Wheelchair Space on Ride', section: '§1002.4', color: '#C2410C', textColor: '#8B2E08', x: 120, y: 100, plain: 'The wheelchair space on the ride must be at least 36 inches wide by 48 inches deep. It must have an accessible lap bar or restraint system. The space must be level with the loading platform so a wheelchair user can roll directly on.', legal: '"Wheelchair spaces in amusement rides shall comply with §1002.4." Space: 36×48" min. Level with loading platform.', citation: '§1002.4' },
+  { id: 1, label: 'Wheelchair Space on Ride', section: '§1002.4', color: 'var(--section-label)', textColor: '#8B2E08', x: 120, y: 100, plain: 'The wheelchair space on the ride must be at least 36 inches wide by 48 inches deep. It must have an accessible lap bar or restraint system. The space must be level with the loading platform so a wheelchair user can roll directly on.', legal: '"Wheelchair spaces in amusement rides shall comply with §1002.4." Space: 36×48" min. Level with loading platform.', citation: '§1002.4' },
   { id: 2, label: 'Transfer Seat', section: '§1002.5', color: '#15803D', textColor: '#14532D', x: 350, y: 100, plain: 'Transfer seats must be 14 to 17 inches high, at least 24 inches wide, and at least 21 inches deep. Transfer supports (armrests or grab bars) must be provided on both sides to help a person move from their wheelchair onto the ride seat.', legal: '"Transfer seats shall have a height of 14 inches minimum and 17 inches maximum. Width: 24 inches minimum. Depth: 21 inches minimum."', citation: '§1002.5' },
   { id: 3, label: 'Loading/Unloading Area', section: '§1002.3', color: '#2563EB', textColor: '#1E3A8A', x: 580, y: 100, plain: 'The loading and unloading area must have a firm, level surface at least 60 inches wide by 60 inches deep. It must be connected to the accessible route through the facility. The platform must be at the same level as the ride vehicle floor.', legal: '"Load and unload areas serving amusement rides shall comply with §1002.3." Level surface: 60×60" min. Connected to accessible route.', citation: '§1002.3' },
   { id: 4, label: 'Accessible Route to Ride', section: '§1002.2', color: '#7C3AED', textColor: '#5B21B6', x: 120, y: 340, plain: 'An accessible route complying with Chapter 4 must connect the entrance to the ride queue and the loading area. If the queue line has switchbacks or barriers, the accessible route must bypass them or an equivalent accessible queue must be provided.', legal: '"Accessible routes serving amusement rides shall comply with Chapter 4." Queue lines must also have accessible routes.', citation: '§1002.2' },
   { id: 5, label: 'Signage', section: '§1002.6', color: '#92400E', textColor: '#78350F', x: 350, y: 340, plain: 'Each ride must display signage indicating what type of accessible boarding is available: wheelchair space on the ride vehicle, transfer seat, or transfer device. This helps visitors plan which rides they can use.', legal: '"Amusement rides shall display signage indicating the type of access provided (wheelchair space, transfer seat, or transfer device)."', citation: '§1002.6' }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function AmusementRideDiagram() {
@@ -35,7 +35,7 @@ export default function AmusementRideDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="ar-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="ar-title">ADA §1002 Amusement Rides — Plan View</title>
           <rect width="900" height="520" fill="var(--page-bg-subtle)" />
-          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">ACCESSIBLE LOADING AREA & RIDE VEHICLE</text>
+          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">ACCESSIBLE LOADING AREA & RIDE VEHICLE</text>
 
           {/* Loading platform */}
           <rect x="60" y="160" width="380" height="280" fill="#2563EB" opacity="0.03" stroke="#2563EB" strokeWidth="1.5" rx="6" />
@@ -60,7 +60,7 @@ export default function AmusementRideDiagram() {
 
           {/* Ride vehicle */}
           <rect x="500" y="160" width="360" height="280" fill="#C2410C" opacity="0.03" stroke="#94A3B8" strokeWidth="2" rx="12" />
-          <text x="680" y="185" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563" fontWeight="600">RIDE VEHICLE</text>
+          <text x="680" y="185" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)" fontWeight="600">RIDE VEHICLE</text>
 
           {/* Wheelchair space on ride */}
           <rect x="520" y="220" width="140" height="180" rx="6" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="2" strokeDasharray="6 3" />
@@ -80,7 +80,7 @@ export default function AmusementRideDiagram() {
 
           {/* Level connection between platform and vehicle */}
           <line x1="440" y1="310" x2="500" y2="310" stroke="#94A3B8" strokeWidth="2" strokeDasharray="4 2" />
-          <text x="470" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#4B5563">LEVEL</text>
+          <text x="470" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="var(--body-secondary)">LEVEL</text>
 
           {CALLOUTS.map(c => (
             <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
@@ -89,7 +89,7 @@ export default function AmusementRideDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

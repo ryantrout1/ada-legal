@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#809-residential-dwelling-units';
 const CALLOUTS = [
-  { id: 1, label: 'Accessible Route Within Unit', section: '§809.2', color: '#C2410C', textColor: '#8B2E08', x: 120, y: 100, plain: 'An accessible route at least 36 inches wide must connect all rooms and spaces within the dwelling unit — from the entry door through hallways, to the bedroom, bathroom, kitchen, and living area. Thresholds must be ½ inch maximum height.', legal: '"Accessible routes within residential dwelling units shall comply with §402." Thresholds: "½ inch high maximum."', citation: '§809.2' },
+  { id: 1, label: 'Accessible Route Within Unit', section: '§809.2', color: 'var(--section-label)', textColor: '#8B2E08', x: 120, y: 100, plain: 'An accessible route at least 36 inches wide must connect all rooms and spaces within the dwelling unit — from the entry door through hallways, to the bedroom, bathroom, kitchen, and living area. Thresholds must be ½ inch maximum height.', legal: '"Accessible routes within residential dwelling units shall comply with §402." Thresholds: "½ inch high maximum."', citation: '§809.2' },
   { id: 2, label: 'Kitchen', section: '§809.3', color: '#15803D', textColor: '#14532D', x: 350, y: 100, plain: 'Clearance between opposing counters must be 40 inches minimum (60 inches for U-shaped kitchens). At least one work surface must be 34 inches maximum height with knee clearance underneath. Sink and cooktop controls must be accessible.', legal: '"Kitchens shall comply with §804." Clearance: "40 inches minimum between opposing base cabinets, countertops, appliances, or walls." U-shaped: 60 inches for turning.', citation: '§809.3, §804' },
   { id: 3, label: 'Bathroom', section: '§809.4', color: '#2563EB', textColor: '#1E3A8A', x: 580, y: 100, plain: 'Walls must be reinforced for future grab bar installation at the toilet, tub, and shower. Clear floor space is required at the toilet, tub/shower, and lavatory. Either a roll-in shower or a tub with fold-down seat must be provided.', legal: '"Bathrooms shall comply with §603." Reinforcement: walls must support future installation of grab bars per §604, §607, §608.', citation: '§809.4, §603' },
   { id: 4, label: 'Controls & Outlets', section: '§809.5', color: '#7C3AED', textColor: '#5B21B6', x: 120, y: 340, plain: 'Light switches, electrical outlets, thermostats, and other environmental controls must be between 15 and 48 inches above the floor. All must be operable with one hand and not require tight grasping or twisting. This includes the circuit breaker panel.', legal: '"Lighting controls, electrical switches, and receptacle outlets, as well as environmental controls, shall comply with §309." Reach: 15"–48".', citation: '§809.5, §309' },
   { id: 5, label: 'Clear Floor Space at Bed', section: '§806.2.3', color: '#92400E', textColor: '#78350F', x: 350, y: 340, plain: 'A clear floor space at least 30 inches wide must be provided on both sides of the bed (or one side in some single-bed configurations). The clear space must connect to the accessible route within the unit.', legal: '"Clear floor space 36 inches wide minimum shall be provided along both sides of a bed." Clear space connects to accessible route per §402.', citation: '§806.2.3' }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function ResidentialUnitDiagram() {
@@ -35,7 +35,7 @@ export default function ResidentialUnitDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="res-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="res-title">ADA §809 Residential Dwelling Units — Plan View</title>
           <rect width="900" height="520" fill="var(--page-bg-subtle)" />
-          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">ACCESSIBLE DWELLING UNIT — PLAN VIEW</text>
+          <text x="450" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">ACCESSIBLE DWELLING UNIT — PLAN VIEW</text>
 
           {/* Unit outline */}
           <rect x="60" y="50" width="780" height="440" fill="white" stroke="#94A3B8" strokeWidth="2" rx="4" />
@@ -93,7 +93,7 @@ export default function ResidentialUnitDiagram() {
 
           {/* Living area */}
           <rect x="560" y="260" width="270" height="220" fill="#94A3B8" opacity="0.03" stroke="#94A3B8" strokeWidth="1" rx="4" />
-          <text x="695" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="600">LIVING AREA</text>
+          <text x="695" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="600">LIVING AREA</text>
 
           {/* Controls marker */}
           <rect x="68" y="140" width="8" height="8" rx="2" fill="#7C3AED" stroke="#7C3AED" strokeWidth="1" />
@@ -119,7 +119,7 @@ export default function ResidentialUnitDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

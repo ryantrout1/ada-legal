@@ -4,7 +4,7 @@ const DOOR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Clear Width', section: '§404.2.3', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Clear Width', section: '§404.2.3', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 200, y: 80,
     plain: 'When the door is open to 90 degrees, the clear opening must be at least 32 inches wide. This is measured between the face of the door and the opposite door stop — not the full width of the door frame. A standard 36-inch door typically provides about 32 inches of clear width. Any projections into this clear width that are below 34 inches above the floor (like a closer arm) are limited to 4 inches maximum on each side.',
     legal: '"Door openings shall provide a clear width of 32 inches (815 mm) minimum. Clear openings of doorways with swinging doors shall be measured between the face of the door and the stop, with the door open 90 degrees." Projections: "into the clear opening width between 34 inches (865 mm) and 80 inches (2032 mm) above the finish floor or ground shall not exceed 4 inches (100 mm)."',
@@ -57,7 +57,7 @@ const CALLOUTS = [
 function makeLink(text, url) {
   return (
     <a href={url || DOOR_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -133,7 +133,7 @@ export default function DoorDiagram() {
           <rect x="0" y="0" width="900" height="520" fill="var(--page-bg-subtle)" />
 
           {/* ===== LEFT: PLAN VIEW ===== */}
-          <text x="220" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">
+          <text x="220" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">
             PLAN VIEW — PULL SIDE APPROACH
           </text>
 
@@ -212,13 +212,13 @@ export default function DoorDiagram() {
 
 
           {/* ===== RIGHT: ELEVATION DETAIL ===== */}
-          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">
+          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">
             ELEVATION — FRONT VIEW
           </text>
 
           {/* Floor line */}
           <rect x="510" y="455" width="340" height="14" rx="2" fill="#E7E5E4" stroke="#D6D3D1" strokeWidth="1" />
-          <text x="680" y="466" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B4540">FLOOR</text>
+          <text x="680" y="466" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body)">FLOOR</text>
 
           {/* Door frame */}
           <rect x="590" y="55" width="180" height="400" rx="2" fill="none" stroke="#475569" strokeWidth="3" />
@@ -326,7 +326,7 @@ export default function DoorDiagram() {
             </g>
           ))}
 
-          <text x="50" y="508" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563">
+          <text x="50" y="508" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">
             Click or tap numbered callouts for details
           </text>
         </svg>
@@ -405,7 +405,7 @@ export default function DoorDiagram() {
           to { opacity: 1; transform: translateY(0); }
         }
         g[role="button"]:focus .door-focus-ring {
-          stroke: #C2410C; stroke-width: 2.5;
+          stroke: var(--accent); stroke-width: 2.5;
         }
         @media (max-width: 768px) {
           .guide-two-col { flex-direction: column !important; gap: 16px !important; }

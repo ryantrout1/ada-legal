@@ -6,7 +6,7 @@ const OP_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#309
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Unobstructed Forward Reach', section: '§308.2.1', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Unobstructed Forward Reach', section: '§308.2.1', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 115, y: 60,
     plain: 'When a wheelchair user approaches an element head-on with nothing in the way, the reach range is 15 inches minimum to 48 inches maximum above the floor. This covers controls like elevator buttons, light switches, and thermostats mounted on a wall. A clear floor space of 30 × 48 inches must be provided in front of the element so the wheelchair can pull straight up to it.',
     legal: '"Where a forward reach is unobstructed, the high forward reach shall be 48 inches (1220 mm) maximum and the low forward reach shall be 15 inches (380 mm) minimum above the finish floor or ground."',
@@ -61,7 +61,7 @@ const CALLOUTS = [
 function makeLink(text, url) {
   return (
     <a href={url} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -173,7 +173,7 @@ export default function ReachRangeDiagram() {
 
 
           {/* ===== PANEL 1: UNOBSTRUCTED FORWARD REACH ===== */}
-          <text x="115" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#4B5563" letterSpacing="0.06em">
+          <text x="115" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.06em">
             UNOBSTRUCTED FORWARD
           </text>
 
@@ -214,7 +214,7 @@ export default function ReachRangeDiagram() {
 
 
           {/* ===== PANEL 2: OBSTRUCTED FORWARD REACH ===== */}
-          <text x="365" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#4B5563" letterSpacing="0.06em">
+          <text x="365" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.06em">
             OBSTRUCTED FORWARD
           </text>
 
@@ -266,7 +266,7 @@ export default function ReachRangeDiagram() {
 
 
           {/* ===== PANEL 3: UNOBSTRUCTED SIDE REACH ===== */}
-          <text x="595" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#4B5563" letterSpacing="0.06em">
+          <text x="595" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.06em">
             UNOBSTRUCTED SIDE
           </text>
 
@@ -306,7 +306,7 @@ export default function ReachRangeDiagram() {
 
 
           {/* ===== PANEL 4: OBSTRUCTED SIDE REACH ===== */}
-          <text x="820" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="#4B5563" letterSpacing="0.06em">
+          <text x="820" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.06em">
             OBSTRUCTED SIDE
           </text>
 
@@ -385,7 +385,7 @@ export default function ReachRangeDiagram() {
             </g>
           ))}
 
-          <text x="30" y="425" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563">
+          <text x="30" y="425" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">
             Click or tap numbered callouts for details
           </text>
         </svg>
@@ -464,7 +464,7 @@ export default function ReachRangeDiagram() {
           to { opacity: 1; transform: translateY(0); }
         }
         g[role="button"]:focus .reach-focus-ring {
-          stroke: #C2410C; stroke-width: 2.5;
+          stroke: var(--accent); stroke-width: 2.5;
         }
         @media (max-width: 768px) {
           .guide-two-col { flex-direction: column !important; gap: 16px !important; }

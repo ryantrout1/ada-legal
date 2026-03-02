@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#1006-golf-facilities';
 const CALLOUTS = [
-  { id: 1, label: 'Mini Golf — Accessible Holes', section: '§1007.2', color: '#C2410C', textColor: '#8B2E08', x: 120, y: 100, plain: 'At least 50% of miniature golf holes must be on an accessible route. The accessible holes must include the start hole and the last hole of the course. This ensures a wheelchair user can play a meaningful portion of the course.', legal: '"At least 50 percent of holes on miniature golf courses shall comply with §1007.3." Must include first and last holes.', citation: '§1007.2' },
+  { id: 1, label: 'Mini Golf — Accessible Holes', section: '§1007.2', color: 'var(--section-label)', textColor: '#8B2E08', x: 120, y: 100, plain: 'At least 50% of miniature golf holes must be on an accessible route. The accessible holes must include the start hole and the last hole of the course. This ensures a wheelchair user can play a meaningful portion of the course.', legal: '"At least 50 percent of holes on miniature golf courses shall comply with §1007.3." Must include first and last holes.', citation: '§1007.2' },
   { id: 2, label: 'Mini Golf — Route', section: '§1007.3', color: '#15803D', textColor: '#14532D', x: 350, y: 100, plain: 'The accessible route to each accessible hole must be at least 36 inches wide. Carpet or synthetic turf is acceptable as a floor surface. Running slope must not exceed 1:20, and cross slope must not exceed 1:48.', legal: '"Accessible routes serving miniature golf holes shall comply with Chapter 4 except as modified." Width: 36" min. Carpet and synthetic turf surfaces are permitted.', citation: '§1007.3' },
   { id: 3, label: 'Mini Golf — Start of Play', section: '§1007.7', color: '#2563EB', textColor: '#1E3A8A', x: 580, y: 100, plain: 'Each accessible hole must have a clear space of 48 × 60 inches at the start of play area. One long side of this space must adjoin the accessible route. This provides room for a wheelchair user to position and swing a putter.', legal: '"Start of play areas shall be 48 inches minimum by 60 inches minimum." One long side adjoining the accessible route.', citation: '§1007.7' },
   { id: 4, label: 'Golf — Teeing Grounds', section: '§1006.2', color: '#7C3AED', textColor: '#5B21B6', x: 120, y: 340, plain: 'If one teeing ground per hole is provided, all must be accessible. If two are provided, at least one per hole must be accessible. If three or more, at least two per hole must be on an accessible route.', legal: '§1006.2: "Where one teeing ground is provided, it shall be accessible. Where two, at least one. Where three or more, at least two shall be accessible."', citation: '§1006.2' },
@@ -10,7 +10,7 @@ const CALLOUTS = [
   { id: 6, label: 'Golf — Weather Shelters', section: '§1006.4', color: '#0E7490', textColor: '#0C4A6E', x: 580, y: 340, plain: 'If weather shelters are provided on the course, an accessible route must lead to and into each shelter. The shelter must have the required clear floor space for a wheelchair user.', legal: '"If weather shelters are provided, an accessible route shall connect the shelter to the course." Clear floor space per §305 required inside.', citation: '§1006.4' }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function GolfDiagram() {
@@ -36,8 +36,8 @@ export default function GolfDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="gf-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="gf-title">ADA §1006/§1007 Golf & Mini Golf Facilities</title>
           <rect width="900" height="520" fill="var(--page-bg-subtle)" />
-          <text x="230" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">MINIATURE GOLF HOLE</text>
-          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">GOLF COURSE TEEING GROUND</text>
+          <text x="230" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">MINIATURE GOLF HOLE</text>
+          <text x="680" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">GOLF COURSE TEEING GROUND</text>
 
           {/* LEFT: Mini golf */}
           {/* Course outline */}
@@ -65,7 +65,7 @@ export default function GolfDiagram() {
 
           {/* Hole 2 */}
           <rect x="130" y="210" width="280" height="100" rx="8" fill="#94A3B8" opacity="0.03" stroke="#94A3B8" strokeWidth="1" />
-          <text x="270" y="265" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">HOLE 2</text>
+          <text x="270" y="265" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">HOLE 2</text>
 
           {/* Hole 3 (accessible) */}
           <rect x="130" y="330" width="280" height="120" rx="8" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" />
@@ -86,7 +86,7 @@ export default function GolfDiagram() {
           <rect x="650" y="120" width="60" height="30" rx="6" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="1" />
           <text x="680" y="139" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#5B21B6">TEE 2 ✓</text>
           <rect x="740" y="120" width="60" height="30" rx="6" fill="#94A3B8" opacity="0.05" stroke="#94A3B8" strokeWidth="1" />
-          <text x="770" y="139" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#4B5563">TEE 3</text>
+          <text x="770" y="139" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="var(--body-secondary)">TEE 3</text>
 
           <text x="680" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#5B21B6">3+ tees → at least 2 must be accessible</text>
 
@@ -111,7 +111,7 @@ export default function GolfDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

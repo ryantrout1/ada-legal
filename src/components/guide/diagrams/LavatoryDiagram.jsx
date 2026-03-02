@@ -4,7 +4,7 @@ const LAV_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#60
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Height', section: '§606.3', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Height', section: '§606.3', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 100, y: 42,
     plain: 'The rim or counter surface of the lavatory must be no higher than 34 inches above the finish floor. This height allows a wheelchair user to reach the faucet and use the sink comfortably from a seated position. If a counter surrounds the bowl, the measurement is taken from the higher of the rim or the counter surface — whichever is taller governs.',
     legal: '"Lavatories and sinks shall be installed with the front of the higher of the rim or counter surface 34 inches maximum above the finish floor or ground."',
@@ -57,7 +57,7 @@ const CALLOUTS = [
 function makeLink(text) {
   return (
     <a href={LAV_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -109,11 +109,11 @@ export default function LavatoryDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="var(--page-bg-subtle)" />
 
           {/* ===== LEFT: FRONT ELEVATION ===== */}
-          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">FRONT ELEVATION</text>
+          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">FRONT ELEVATION</text>
 
           {/* Wall */}
           <rect x="80" y="40" width="240" height="8" fill="#94A3B8" rx="1" />
-          <text x="200" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">WALL</text>
+          <text x="200" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">WALL</text>
 
           {/* Counter/rim at 34" — y=108 (floor at y=280) */}
           <rect x="100" y="105" width="200" height="10" rx="3" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
@@ -164,11 +164,11 @@ export default function LavatoryDiagram() {
 
 
           {/* ===== RIGHT: SIDE SECTION ===== */}
-          <text x="660" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">SIDE SECTION</text>
+          <text x="660" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">SIDE SECTION</text>
 
           {/* Wall */}
           <rect x="460" y="40" width="8" height="240" fill="#94A3B8" rx="1" />
-          <text x="464" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">WALL</text>
+          <text x="464" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">WALL</text>
 
           {/* Counter/rim */}
           <rect x="468" y="108" width="120" height="8" rx="2" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
@@ -243,7 +243,7 @@ export default function LavatoryDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

@@ -4,7 +4,7 @@ const TURN_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#3
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Circular Space', section: '§304.3.1', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Circular Space', section: '§304.3.1', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 160, y: 50,
     plain: 'The most common turning space option is a clear circular area with a 60-inch (5-foot) diameter. This allows a wheelchair user to make a full 360-degree turn. The entire circle must be free of obstructions at floor level — no columns, trash cans, or furniture legs within the circle. This is equivalent to the turning radius of a standard manual or power wheelchair.',
     legal: '"The turning space shall be a space complying with 304.3.1 or 304.3.2. The floor or ground surface of a circular turning space shall be a circular space with a 60 inch (1525 mm) diameter minimum. The floor or ground surface shall comply with 302."',
@@ -36,7 +36,7 @@ const CALLOUTS = [
 function makeLink(text) {
   return (
     <a href={TURN_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -95,7 +95,7 @@ export default function TurningSpaceDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="var(--page-bg-subtle)" />
 
           {/* LEFT: CIRCULAR */}
-          <text x="200" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">CIRCULAR TURNING SPACE</text>
+          <text x="200" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">CIRCULAR TURNING SPACE</text>
 
           <circle cx="200" cy="170" r="110" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="6 4" />
           {/* Wheelchair icon */}
@@ -119,7 +119,7 @@ export default function TurningSpaceDiagram() {
 
 
           {/* RIGHT: T-SHAPED */}
-          <text x="650" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">T-SHAPED TURNING SPACE</text>
+          <text x="650" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">T-SHAPED TURNING SPACE</text>
 
           {/* 60" bounding square (dashed) */}
           <rect x="470" y="65" width="220" height="220" fill="none" stroke="#94A3B8" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
@@ -176,7 +176,7 @@ export default function TurningSpaceDiagram() {
             </g>
           ))}
 
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 
@@ -210,7 +210,7 @@ export default function TurningSpaceDiagram() {
 
       <style>{`
         @keyframes turnFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
-        g[role="button"]:focus .turn-focus-ring { stroke: #C2410C; stroke-width: 2.5; }
+        g[role="button"]:focus .turn-focus-ring { stroke: var(--accent); stroke-width: 2.5; }
         @media (max-width:768px) { .guide-two-col { flex-direction:column !important; gap:16px !important; } }
               @media (prefers-reduced-motion: reduce) {
           .ada-diagram-wrap * { animation: none !important; transition: none !important; }

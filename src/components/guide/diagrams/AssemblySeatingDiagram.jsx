@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const SEAT_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#802-wheelchair-spaces-companion-seats-and-designated-aisle-seats';
 const CALLOUTS = [
-  { id: 1, label: 'Wheelchair Space Size', section: '§802.1', color: '#C2410C', textColor: '#8B2E08', x: 100, y: 42,
+  { id: 1, label: 'Wheelchair Space Size', section: '§802.1', color: 'var(--section-label)', textColor: '#8B2E08', x: 100, y: 42,
     plain: 'Each wheelchair space must be 36 inches wide minimum. Depth depends on entry direction: 48 inches minimum for front or rear entry, 60 inches minimum for side entry. The space must be level (max 1:48 slope) with a firm, stable surface. Multiple wheelchair spaces can be adjacent or separated; when adjacent, they must be separated by an armrest or fixed companion seat.',
     legal: '"Wheelchair spaces shall be 36 inches wide minimum." Depth: "48 inches minimum where entered from the front or rear; 60 inches minimum where entered from the side."', citation: '§802.1' },
   { id: 2, label: 'Companion Seat', section: '§802.3', color: '#15803D', textColor: '#14532D', x: 300, y: 42,
@@ -25,7 +25,7 @@ const CALLOUTS = [
     legal: '§221.2.1 Table: "4 to 25 = 1; 26 to 50 = 2; 51 to 150 = 4; 151 to 300 = 5; 301 to 500 = 6; 501 to 5000 = 6 + 1/150; 5001+ = 36 + 1/200."', citation: '§221.2' }
 ];
 
-function makeLink(t) { return (<a href={SEAT_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={SEAT_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function AssemblySeatingDiagram() {
@@ -53,7 +53,7 @@ export default function AssemblySeatingDiagram() {
           <rect width="900" height="420" fill="var(--page-bg-subtle)" />
 
           {/* LEFT: Plan View */}
-          <text x="190" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW</text>
+          <text x="190" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">PLAN VIEW</text>
           {/* Row of seats */}
           {[0,1,2].map(i => <rect key={`s${i}`} x={60 + i * 50} y="60" width="40" height="40" rx="6" fill="#E7E5E4" opacity="0.3" stroke="#94A3B8" strokeWidth="1" />)}
           {/* Wheelchair space */}
@@ -86,7 +86,7 @@ export default function AssemblySeatingDiagram() {
           <line x1="450" y1="20" x2="450" y2="410" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
 
           {/* RIGHT: Sightline Elevation */}
-          <text x="670" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">SIGHTLINE ELEVATION</text>
+          <text x="670" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">SIGHTLINE ELEVATION</text>
           {/* Tiered platforms */}
           <rect x="470" y="310" width="380" height="90" fill="#E7E5E4" opacity="0.1" stroke="#94A3B8" strokeWidth="1" />
           <rect x="470" y="240" width="380" height="70" fill="#E7E5E4" opacity="0.15" stroke="#94A3B8" strokeWidth="1" />
@@ -97,8 +97,8 @@ export default function AssemblySeatingDiagram() {
           <line x1="560" y1="244" x2="560" y2="300" stroke="#475569" strokeWidth="2" strokeLinecap="round" />
           <line x1="560" y1="300" x2="550" y2="340" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" />
           <line x1="560" y1="300" x2="570" y2="340" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" />
-          <text x="560" y="355" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#4B5563">Standing</text>
-          <text x="560" y="365" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#4B5563">spectator</text>
+          <text x="560" y="355" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="var(--body-secondary)">Standing</text>
+          <text x="560" y="365" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="var(--body-secondary)">spectator</text>
 
           {/* Wheelchair user on elevated platform behind */}
           <circle cx="700" cy="210" r="8" fill="#E2E8F0" stroke="#475569" strokeWidth="1.2" />
@@ -112,7 +112,7 @@ export default function AssemblySeatingDiagram() {
           <line x1="708" y1="210" x2="480" y2="170" stroke="#7C3AED" strokeWidth="1.5" strokeDasharray="6 3" />
           <text x="530" y="165" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="600">Sightline clears standing head</text>
           {/* Performance area arrow */}
-          <text x="485" y="180" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">← Stage / Field</text>
+          <text x="485" y="180" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">← Stage / Field</text>
 
           {/* Companion next to wheelchair user */}
           <circle cx="760" cy="215" r="7" fill="#15803D" opacity="0.2" stroke="#15803D" strokeWidth="1" />
@@ -127,7 +127,7 @@ export default function AssemblySeatingDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

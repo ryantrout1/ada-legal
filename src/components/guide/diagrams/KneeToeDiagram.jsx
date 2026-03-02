@@ -4,7 +4,7 @@ const KNEE_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#3
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Maximum Depth', section: '§306.2', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Maximum Depth', section: '§306.2', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 80, y: 42,
     plain: 'Both toe clearance and knee clearance share the same horizontal space under an element. The maximum depth for both is 25 inches from the front edge. Toe clearance extends from the floor up to 9 inches; knee clearance occupies the zone from 9 inches up to 27 inches. The entire clearance envelope is 25 inches deep maximum, measured horizontally from the leading edge of the element toward the wall.',
     legal: '"Toe clearance shall be permitted to extend 25 inches maximum under an element." §306.3.3 Knee clearance "25 inches deep maximum at 9 inches above the finish floor." Both zones share the same 25-inch horizontal envelope.',
@@ -55,7 +55,7 @@ const CALLOUTS = [
 ];
 
 function makeLink(text) {
-  return (<a href={KNEE_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
+  return (<a href={KNEE_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
 }
 function parseCitations(text) {
   return text.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p);
@@ -90,19 +90,19 @@ export default function KneeToeDiagram() {
           <title id="knee-title">ADA §306 Knee and Toe Clearance — Side Cross-Section</title>
           <rect x="0" y="0" width="900" height="480" fill="var(--page-bg-subtle)" />
 
-          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">SIDE CROSS-SECTION — CLEARANCE ENVELOPE</text>
+          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">SIDE CROSS-SECTION — CLEARANCE ENVELOPE</text>
 
           {/* Wall */}
           <rect x="140" y="60" width="12" height="390" fill="#94A3B8" rx="1" />
-          <text x="146" y="55" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">WALL</text>
+          <text x="146" y="55" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">WALL</text>
 
           {/* Floor */}
           <line x1="100" y1="440" x2="850" y2="440" stroke="#94A3B8" strokeWidth="2.5" />
-          <text x="130" y="460" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">FLOOR</text>
+          <text x="130" y="460" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">FLOOR</text>
 
           {/* Counter/desk surface */}
           <rect x="152" y="155" width="240" height="12" rx="3" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="272" y="148" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" fontWeight="600">COUNTER / DESK SURFACE</text>
+          <text x="272" y="148" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)" fontWeight="600">COUNTER / DESK SURFACE</text>
 
           {/* ===== CLEARANCE ENVELOPE ===== */}
           {/* Toe zone: floor(440) to 9"(347), 25" deep max from front edge(392) back to wall(152) */}
@@ -169,7 +169,7 @@ export default function KneeToeDiagram() {
 
           {/* Front edge line */}
           <line x1="392" y1="140" x2="392" y2="455" stroke="#94A3B8" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
-          <text x="396" y="138" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">FRONT EDGE</text>
+          <text x="396" y="138" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">FRONT EDGE</text>
 
 
           {/* ===== WHEELCHAIR USER ===== */}
@@ -223,7 +223,7 @@ export default function KneeToeDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="475" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="475" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

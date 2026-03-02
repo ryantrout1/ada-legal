@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const ELV_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#407-elevators';
 const CALLOUTS = [
-  { id: 1, label: 'Cab Size', section: '§407.4.1', color: '#C2410C', textColor: '#8B2E08', x: 100, y: 42,
+  { id: 1, label: 'Cab Size', section: '§407.4.1', color: 'var(--section-label)', textColor: '#8B2E08', x: 100, y: 42,
     plain: 'Elevator cab dimensions depend on door configuration. Most common: center-opening door requires 80 inches deep × 51 inches wide minimum; side-opening door requires 68 inches deep × 51 inches wide. LULA (Limited Use/Limited Application) elevators may be 54 × 36 inches minimum. The cab must provide enough space for a wheelchair to enter, turn, and reach controls.',
     legal: '"Inside dimensions per Table 407.4.1." Center-opening: 80 × 51 inches min. Side-opening: 68 × 51 inches min.', citation: '§407.4.1' },
   { id: 2, label: 'Door Width', section: '§407.4.3', color: '#15803D', textColor: '#14532D', x: 300, y: 42,
@@ -25,7 +25,7 @@ const CALLOUTS = [
     legal: '"Floor designations… provided in raised characters and Braille complying with §703.2 and §703.3 on both jambs." Height: "48 inches above the finish floor." Characters: "2 inches high minimum."', citation: '§407.4.7.1' }
 ];
 
-function makeLink(t) { return (<a href={ELV_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={ELV_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function ElevatorDiagram() {
@@ -53,7 +53,7 @@ export default function ElevatorDiagram() {
           <rect width="900" height="420" fill="var(--page-bg-subtle)" />
 
           {/* LEFT: Cab Plan View */}
-          <text x="210" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW — ELEVATOR CAB</text>
+          <text x="210" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">PLAN VIEW — ELEVATOR CAB</text>
           {/* Cab walls */}
           <rect x="60" y="50" width="300" height="320" rx="4" fill="white" stroke="#94A3B8" strokeWidth="2.5" />
           {/* Door opening (center) */}
@@ -91,7 +91,7 @@ export default function ElevatorDiagram() {
           <line x1="475" y1="20" x2="475" y2="410" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
 
           {/* RIGHT: Control Panel Elevation */}
-          <text x="690" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">CONTROL PANEL ELEVATION</text>
+          <text x="690" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">CONTROL PANEL ELEVATION</text>
           {/* Panel background */}
           <rect x="600" y="50" width="180" height="330" rx="8" fill="var(--dark-bg)" stroke="#64748B" strokeWidth="1.5" />
           {/* Floor buttons */}
@@ -102,8 +102,8 @@ export default function ElevatorDiagram() {
             </React.Fragment>
           ))}
           {/* Braille labels */}
-          <text x="720" y="170" fontFamily="Manrope, sans-serif" fontSize="6" fill="#4B5563">← Braille + raised</text>
-          <text x="720" y="180" fontFamily="Manrope, sans-serif" fontSize="6" fill="#4B5563">   characters each</text>
+          <text x="720" y="170" fontFamily="Manrope, sans-serif" fontSize="6" fill="var(--body-secondary)">← Braille + raised</text>
+          <text x="720" y="180" fontFamily="Manrope, sans-serif" fontSize="6" fill="var(--body-secondary)">   characters each</text>
           {/* Emergency controls at bottom */}
           <rect x="620" y="330" width="140" height="35" rx="4" fill="#EF4444" opacity="0.1" stroke="#EF4444" strokeWidth="1" />
           <text x="690" y="350" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#EF4444" fontWeight="600">🔔 ALARM  📞 PHONE  ⏹ STOP</text>
@@ -134,7 +134,7 @@ export default function ElevatorDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

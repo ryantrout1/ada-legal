@@ -5,7 +5,7 @@ const GRAB_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#6
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Stall Dimensions', section: '§604.8', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Stall Dimensions', section: '§604.8', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 450, y: 56,
     plain: 'A wheelchair-accessible toilet stall must be at least 60 inches (5 feet) wide and at least 56 inches deep if the toilet is wall-mounted, or 59 inches deep if it is floor-mounted. The extra 3 inches for floor-mounted toilets accounts for the base taking up floor space. The door must swing outward so it does not reduce the maneuvering room inside the stall. Self-closing hinges are allowed, but the door must close slowly enough for safe use.',
     legal: '"Wheelchair accessible compartments with floor-mounted water closets shall be 60 inches (1525 mm) wide minimum… and 59 inches (1500 mm) deep minimum." Wall-hung: "56 inches (1420 mm) deep minimum." Door: "shall not swing into the minimum required compartment area."',
@@ -60,7 +60,7 @@ const CALLOUTS = [
 function makeLink(text, url) {
   return (
     <a href={url} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -160,7 +160,7 @@ export default function ToiletStallDiagram() {
           <rect x="0" y="0" width="700" height="540" fill="var(--page-bg-subtle)" />
 
           {/* Label */}
-          <text x="350" y="32" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">
+          <text x="350" y="32" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">
             PLAN VIEW (TOP-DOWN) — WHEELCHAIR-ACCESSIBLE STALL
           </text>
 
@@ -176,8 +176,8 @@ export default function ToiletStallDiagram() {
           <line x1={SR - 80} y1={SY} x2={SR} y2={SY} stroke="#475569" strokeWidth="3" />
 
           {/* Wall labels */}
-          <text x={SX - 8} y={(SY + SB) / 2} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" transform={`rotate(-90, ${SX - 8}, ${(SY + SB) / 2})`}>SIDE WALL</text>
-          <text x={(SX + SR) / 2} y={SB + 16} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">REAR WALL</text>
+          <text x={SX - 8} y={(SY + SB) / 2} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)" transform={`rotate(-90, ${SX - 8}, ${(SY + SB) / 2})`}>SIDE WALL</text>
+          <text x={(SX + SR) / 2} y={SB + 16} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">REAR WALL</text>
 
           {/* ===== DOOR (swings outward) ===== */}
           {/* Door leaf shown swung open (arc outside stall) */}
@@ -185,7 +185,7 @@ export default function ToiletStallDiagram() {
           <path d={`M ${SX + 100} ${SY} A 50 50 0 0 1 ${SX + 100} ${SY - 50}`}
             fill="none" stroke="#94A3B8" strokeWidth="1" strokeDasharray="4 3" />
           <text x={SX + 130} y={SY - 25} fontFamily="Manrope, sans-serif" fontSize="8" fill="#374151">DOOR</text>
-          <text x={SX + 130} y={SY - 14} fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">(swings out)</text>
+          <text x={SX + 130} y={SY - 14} fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">(swings out)</text>
 
           {/* Door opening indicator */}
           <line x1={SX + 100} y1={SY} x2={SR - 80} y2={SY} stroke="#475569" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
@@ -325,7 +325,7 @@ export default function ToiletStallDiagram() {
             </g>
           ))}
 
-          <text x="40" y="525" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563">
+          <text x="40" y="525" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">
             Click or tap numbered callouts for details
           </text>
         </svg>
@@ -404,7 +404,7 @@ export default function ToiletStallDiagram() {
           to { opacity: 1; transform: translateY(0); }
         }
         g[role="button"]:focus .wc-focus-ring {
-          stroke: #C2410C; stroke-width: 2.5;
+          stroke: var(--accent); stroke-width: 2.5;
         }
         @media (max-width: 768px) {
           .guide-two-col { flex-direction: column !important; gap: 16px !important; }

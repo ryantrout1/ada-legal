@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const CTR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#904-sales-and-service-counters';
 const CALLOUTS = [
-  { id: 1, label: 'Checkout Aisle Width', section: '§904.3', color: '#C2410C', textColor: '#8B2E08', x: 100, y: 42,
+  { id: 1, label: 'Checkout Aisle Width', section: '§904.3', color: 'var(--section-label)', textColor: '#8B2E08', x: 100, y: 42,
     plain: 'Accessible checkout aisles must be 36 inches wide minimum, measured between the counter edge and any opposing fixture or display. At least one checkout aisle in each checkout area must be accessible and on an accessible route. The aisle must be wide enough for a wheelchair to pass through its entire length without obstruction.',
     legal: '"Checkout aisles shall have a clear width of 36 inches (915 mm) minimum." At least one aisle per checkout area shall be accessible.',
     citation: '§904.3' },
@@ -32,7 +32,7 @@ const CALLOUTS = [
     citation: '§227' }
 ];
 
-function makeLink(t) { return (<a href={CTR_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={CTR_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function CounterDiagram() {
@@ -60,11 +60,11 @@ export default function CounterDiagram() {
           <rect width="900" height="420" fill="var(--page-bg-subtle)" />
 
           {/* LEFT: Plan View */}
-          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW — CHECKOUT AISLE</text>
+          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">PLAN VIEW — CHECKOUT AISLE</text>
           <rect x="60" y="50" width="120" height="300" rx="4" fill="#E7E5E4" opacity="0.2" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="120" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" fontWeight="500">COUNTER</text>
+          <text x="120" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)" fontWeight="500">COUNTER</text>
           <rect x="230" y="50" width="80" height="300" rx="4" fill="#E7E5E4" opacity="0.1" stroke="#94A3B8" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="270" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">MERCHANDISE</text>
+          <text x="270" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">MERCHANDISE</text>
           {/* Aisle */}
           <rect x="180" y="50" width="50" height="300" rx="0" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="6 3" />
           <text x="205" y="150" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#8B2E08" fontWeight="600" transform="rotate(-90 205 150)">AISLE</text>
@@ -84,7 +84,7 @@ export default function CounterDiagram() {
           <line x1="380" y1="20" x2="380" y2="410" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
 
           {/* RIGHT: Front Elevation */}
-          <text x="640" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">FRONT ELEVATION — COUNTER TYPES</text>
+          <text x="640" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">FRONT ELEVATION — COUNTER TYPES</text>
           {/* Floor */}
           <line x1="390" y1="380" x2="870" y2="380" stroke="#94A3B8" strokeWidth="2" />
 
@@ -124,7 +124,7 @@ export default function CounterDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const SIGN_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#703-signs';
 const CALLOUTS = [
-  { id: 1, label: 'Mounting Location', section: '§703.4.1', color: '#C2410C', textColor: '#8B2E08', x: 80, y: 42,
+  { id: 1, label: 'Mounting Location', section: '§703.4.1', color: 'var(--section-label)', textColor: '#8B2E08', x: 80, y: 42,
     plain: 'Room identification signs must be mounted on the wall on the latch side of the door. If the door has a closer, the sign must be at least 18 inches from the centerline of the door frame, so a person reading the sign in Braille is not hit by the opening door. If there is no wall space on the latch side, the sign goes on the nearest adjacent wall. For double doors, the sign goes to the right of the right-hand door.',
     legal: '"Where a tactile sign is provided at a door, the sign shall be located alongside the door at the latch side." Where the door has a closer: "18 inches minimum from the centerline of the door."',
     citation: '§703.4.1' },
@@ -32,7 +32,7 @@ const CALLOUTS = [
     citation: '§703.6' }
 ];
 
-function makeLink(t) { return (<a href={SIGN_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={SIGN_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function SignageDiagram() {
@@ -60,13 +60,13 @@ export default function SignageDiagram() {
           <rect width="900" height="480" fill="var(--page-bg-subtle)" />
 
           {/* MAIN VIEW: Door + Sign */}
-          <text x="250" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">WALL ELEVATION</text>
+          <text x="250" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">WALL ELEVATION</text>
           {/* Wall */}
           <rect x="40" y="40" width="440" height="400" fill="#E7E5E4" opacity="0.15" stroke="#94A3B8" strokeWidth="1" rx="2" />
           {/* Door */}
           <rect x="120" y="80" width="160" height="360" rx="4" fill="white" stroke="#94A3B8" strokeWidth="2" />
           <circle cx="260" cy="270" r="6" fill="#94A3B8" opacity="0.4" />
-          <text x="200" y="70" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">DOOR</text>
+          <text x="200" y="70" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">DOOR</text>
           {/* Door frame */}
           <line x1="118" y1="78" x2="118" y2="442" stroke="#64748B" strokeWidth="3" />
           <line x1="282" y1="78" x2="282" y2="442" stroke="#64748B" strokeWidth="3" />
@@ -80,7 +80,7 @@ export default function SignageDiagram() {
           <text x="370" y="245" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="22" fontWeight="700" fill="white">204</text>
           {/* Braille dots */}
           {[0,1,2].map(i => [0,1].map(j => <circle key={`b${i}${j}`} cx={345 + i * 18} cy={275 + j * 8} r="2" fill="white" opacity="0.6" />))}
-          <text x="370" y="305" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#4B5563">BRAILLE</text>
+          <text x="370" y="305" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="var(--body-secondary)">BRAILLE</text>
 
           {/* 18" from frame dim */}
           <line x1="282" y1="330" x2="370" y2="330" stroke="#C2410C" strokeWidth="1" />
@@ -105,7 +105,7 @@ export default function SignageDiagram() {
           <line x1="510" y1="30" x2="510" y2="470" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
 
           {/* INSET A: Raised Characters */}
-          <text x="640" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">DETAIL INSETS</text>
+          <text x="640" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">DETAIL INSETS</text>
           <rect x="530" y="45" width="180" height="160" rx="8" fill="white" stroke="#2563EB" strokeWidth="1.5" />
           <text x="620" y="62" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#1E3A8A">(A) RAISED CHARACTERS</text>
           {/* Sample character */}
@@ -118,7 +118,7 @@ export default function SignageDiagram() {
           <text x="548" y="120" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#1E3A8A" fontWeight="600">{d('⅝–2', '16–50')}</text>
           {/* Raised detail */}
           <text x="620" y="170" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A">Uppercase · Sans Serif · Raised 1/32" min</text>
-          <text x="620" y="195" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">High contrast with background</text>
+          <text x="620" y="195" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">High contrast with background</text>
 
           {/* INSET B: Braille */}
           <rect x="530" y="220" width="180" height="160" rx="8" fill="white" stroke="#7C3AED" strokeWidth="1.5" />
@@ -130,7 +130,7 @@ export default function SignageDiagram() {
           <text x="650" y="273" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#78350F" fontWeight="600">← 0.090–0.100"</text>
           {/* Dot size */}
           <text x="620" y="345" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6">Dome Ø 0.059–0.063" · 3/8" min below text</text>
-          <text x="620" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">Grade 2 contracted Braille</text>
+          <text x="620" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">Grade 2 contracted Braille</text>
 
           {/* PICTOGRAM note */}
           <rect x="730" y="90" width="150" height="110" rx="8" fill="#0EA5E9" opacity="0.04" stroke="#0891B2" strokeWidth="1" />
@@ -151,7 +151,7 @@ export default function SignageDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="470" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="470" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

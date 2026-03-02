@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#403-walking-surfaces';
 const CALLOUTS = [
-  { id: 1, label: 'Clear Width', section: '§403.5.1', color: '#C2410C', textColor: '#8B2E08', x: 100, y: 80, plain: 'The clear width of a walking surface must be 36 inches (915 mm) minimum. At a point where someone in a wheelchair must turn around, a 60-inch (1525 mm) turning space or T-shaped space is required. The 36-inch clear width is measured between walls, railings, or other obstructions — not including the flare at the base of handrails.', legal: '"The clear width of walking surfaces shall be 36 inches minimum." §403.5.1: "The clear width of walking surfaces shall be 36 inches (915 mm) minimum." EXCEPTION: "The clear width shall be permitted to be reduced to 32 inches (815 mm) minimum for a length of 24 inches (610 mm) maximum provided that reduced-width segments are separated by segments that are 48 inches (1220 mm) long minimum and 36 inches (915 mm) wide minimum."', citation: '§403.5.1' },
+  { id: 1, label: 'Clear Width', section: '§403.5.1', color: 'var(--section-label)', textColor: '#8B2E08', x: 100, y: 80, plain: 'The clear width of a walking surface must be 36 inches (915 mm) minimum. At a point where someone in a wheelchair must turn around, a 60-inch (1525 mm) turning space or T-shaped space is required. The 36-inch clear width is measured between walls, railings, or other obstructions — not including the flare at the base of handrails.', legal: '"The clear width of walking surfaces shall be 36 inches minimum." §403.5.1: "The clear width of walking surfaces shall be 36 inches (915 mm) minimum." EXCEPTION: "The clear width shall be permitted to be reduced to 32 inches (815 mm) minimum for a length of 24 inches (610 mm) maximum provided that reduced-width segments are separated by segments that are 48 inches (1220 mm) long minimum and 36 inches (915 mm) wide minimum."', citation: '§403.5.1' },
   { id: 2, label: 'Running Slope', section: '§403.3', color: '#15803D', textColor: '#14532D', x: 300, y: 80, plain: 'The running slope (the slope in the direction of travel) must not be steeper than 1:20 (5%). If the slope exceeds 1:20, it becomes a ramp and must comply with §405 — including handrails, landings, and edge protection. Walking surfaces at door landings must not exceed 1:48 (about 2%) slope.', legal: '"The running slope of walking surfaces shall not be steeper than 1:20." Advisory 403.3: "A slope steeper than 1:20 is a ramp and must comply with §405."', citation: '§403.3' },
   { id: 3, label: 'Cross Slope', section: '§403.3', color: '#2563EB', textColor: '#1E3A8A', x: 500, y: 80, plain: 'The cross slope (perpendicular to the direction of travel) must not exceed 1:48 (about 2%). Excessive cross slope causes wheelchairs to drift sideways and makes it extremely difficult for users to maintain a straight path. This applies to all walking surfaces, including sidewalks, corridors, and floor surfaces along accessible routes.', legal: '"The cross slope of walking surfaces shall not be steeper than 1:48."', citation: '§403.3' },
   { id: 4, label: 'Surface Requirements', section: '§403.2', color: '#7C3AED', textColor: '#5B21B6', x: 700, y: 80, plain: 'All walking surfaces must be firm, stable, and slip-resistant. This applies to both indoor and outdoor surfaces. Carpet must be securely attached with a firm cushion or backing and have a maximum pile height of ½ inch. Openings in floor surfaces (like grates) must not allow passage of a ½-inch sphere and must be oriented so the long dimension is perpendicular to the dominant direction of travel.', legal: '"Floor or ground surfaces shall be stable, firm, and slip-resistant." §302.2: "Carpet or carpet tile shall be securely attached and shall have a firm cushion, pad, or backing or no cushion or pad. Carpet or carpet tile shall have a level loop, textured loop, level cut pile, or level cut/uncut pile texture. Pile height shall be ½ inch maximum."', citation: '§403.2, §302' },
@@ -11,7 +11,7 @@ const CALLOUTS = [
   { id: 7, label: 'Gratings & Openings', section: '§302.3', color: '#0E7490', textColor: '#0C4A6E', x: 500, y: 300, plain: 'Any gratings, grates, or openings in walking surfaces on accessible routes must have gaps no wider than ½ inch in one direction. Elongated openings (like the slits in a floor grate) must be oriented so the long dimension runs perpendicular to the dominant direction of travel. This prevents wheelchair caster wheels and cane tips from getting caught.', legal: '"Openings in floor or ground surfaces shall not allow passage of a sphere more than ½ inch in diameter. Elongated openings shall be placed so that the long dimension is perpendicular to the dominant direction of travel."', citation: '§302.3' }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function WalkingSurfaceDiagram() {
@@ -37,8 +37,8 @@ export default function WalkingSurfaceDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="ws-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="ws-title">ADA §403 Walking Surfaces — Section & Plan View</title>
           <rect width="900" height="520" fill="var(--page-bg-subtle)" />
-          <text x="280" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW — CORRIDOR WITH PASSING SPACE</text>
-          <text x="720" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">CROSS SECTION</text>
+          <text x="280" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">PLAN VIEW — CORRIDOR WITH PASSING SPACE</text>
+          <text x="720" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">CROSS SECTION</text>
 
           {/* ===== LEFT: Plan view corridor ===== */}
           {/* Walls */}
@@ -55,7 +55,7 @@ export default function WalkingSurfaceDiagram() {
 
           {/* Corridor floor fill */}
           <rect x="68" y="40" width="132" height="310" fill="#C2410C" opacity="0.03" />
-          <text x="134" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" transform="rotate(-90 134 110)">CORRIDOR</text>
+          <text x="134" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)" transform="rotate(-90 134 110)">CORRIDOR</text>
 
           {/* Wheelchair silhouette */}
           <circle cx="130" cy="160" r="10" fill="#475569" opacity="0.15" />
@@ -147,7 +147,7 @@ export default function WalkingSurfaceDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

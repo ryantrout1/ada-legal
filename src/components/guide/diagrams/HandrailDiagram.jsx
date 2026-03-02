@@ -4,7 +4,7 @@ const RAIL_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#5
 
 const CALLOUTS = [
   {
-    id: 5, label: 'Circular Profile', section: '§505.7.1', color: '#C2410C', textColor: '#8B2E08',
+    id: 5, label: 'Circular Profile', section: '§505.7.1', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 175, y: 48,
     plain: 'A circular handrail must have an outside diameter of 1.25 inches minimum to 2 inches maximum. This range ensures most people — including those with limited grip strength — can wrap their fingers comfortably around the rail. The surface must be smooth and free of sharp or abrasive elements. Edges must be rounded. The rail must be continuous along its full length, except where interrupted by a newel post at a stair turn.',
     legal: '"Circular cross sections shall have an outside diameter of 1 1/4 inches (32 mm) minimum and 2 inches (51 mm) maximum." Per §505.6: "Handrail gripping surfaces shall be continuous along their full length and shall not be obstructed along their tops or sides."',
@@ -29,7 +29,7 @@ const CALLOUTS = [
 function makeLink(text) {
   return (
     <a href={RAIL_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -93,11 +93,11 @@ export default function HandrailDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="var(--page-bg-subtle)" />
 
           {/* ===== LEFT: CIRCULAR ===== */}
-          <text x="220" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">CIRCULAR CROSS-SECTION</text>
+          <text x="220" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">CIRCULAR CROSS-SECTION</text>
 
           {/* Wall */}
           <rect x={WALL_X_L} y="80" width="10" height="180" fill="#94A3B8" rx="1" />
-          <text x={WALL_X_L + 5} y="75" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">WALL</text>
+          <text x={WALL_X_L + 5} y="75" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">WALL</text>
 
           {/* Handrail circle — radius ~40px (maps to ~1.5" dia visually) */}
           <circle cx="220" cy={CY} r="40" fill="#FEF2F2" stroke="#C2410C" strokeWidth="2.5" />
@@ -127,11 +127,11 @@ export default function HandrailDiagram() {
 
 
           {/* ===== RIGHT: NON-CIRCULAR ===== */}
-          <text x="640" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">NON-CIRCULAR CROSS-SECTION</text>
+          <text x="640" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">NON-CIRCULAR CROSS-SECTION</text>
 
           {/* Wall */}
           <rect x={WALL_X_R} y="80" width="10" height="180" fill="#94A3B8" rx="1" />
-          <text x={WALL_X_R + 5} y="75" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">WALL</text>
+          <text x={WALL_X_R + 5} y="75" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">WALL</text>
 
           {/* Handrail — rounded rectangle (oval-ish) */}
           <rect x="588" y={CY - 30} width="80" height="60" rx="18" fill="#F0FDF4" stroke="#15803D" strokeWidth="2.5" />
@@ -178,7 +178,7 @@ export default function HandrailDiagram() {
             </g>
           ))}
 
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 
@@ -212,7 +212,7 @@ export default function HandrailDiagram() {
 
       <style>{`
         @keyframes railFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
-        g[role="button"]:focus .rail-focus-ring { stroke: #C2410C; stroke-width: 2.5; }
+        g[role="button"]:focus .rail-focus-ring { stroke: var(--accent); stroke-width: 2.5; }
         @media (max-width:768px) { .guide-two-col { flex-direction:column !important; gap:16px !important; } }
               @media (prefers-reduced-motion: reduce) {
           .ada-diagram-wrap * { animation: none !important; transition: none !important; }

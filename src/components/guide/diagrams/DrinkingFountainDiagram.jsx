@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const DF_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#602-drinking-fountains';
 const CALLOUTS = [
-  { id: 1, label: 'Wheelchair Height', section: '§602.4', color: '#C2410C', textColor: '#8B2E08', x: 100, y: 42,
+  { id: 1, label: 'Wheelchair Height', section: '§602.4', color: 'var(--section-label)', textColor: '#8B2E08', x: 100, y: 42,
     plain: 'The spout of the wheelchair-accessible fountain must be no higher than 36 inches above the finish floor. The spout must be at the front of the unit and the water flow must be at least 4 inches high to allow insertion of a cup or bottle. The spout direction must be nearly parallel to the front of the unit so a person in a wheelchair can drink without tilting their head awkwardly.',
     legal: '"Spout outlets of drinking fountains for wheelchair users shall be 36 inches maximum above the finish floor or ground." Water flow: "4 inches high minimum."', citation: '§602.4' },
   { id: 2, label: 'Standing Height', section: '§602.5', color: '#15803D', textColor: '#14532D', x: 300, y: 42,
@@ -25,7 +25,7 @@ const CALLOUTS = [
     legal: 'Advisory: Bottle fillers provided in addition to fountains should comply with reach range and clear floor space requirements. Not a substitute for accessible drinking fountains.', citation: '§602' }
 ];
 
-function makeLink(t) { return (<a href={DF_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={DF_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function DrinkingFountainDiagram() {
@@ -51,7 +51,7 @@ export default function DrinkingFountainDiagram() {
         <svg viewBox="0 0 900 420" role="img" aria-labelledby="df-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="df-title">ADA §602 Drinking Fountains — Side Elevation</title>
           <rect width="900" height="420" fill="var(--page-bg-subtle)" />
-          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">SIDE ELEVATION — HI-LO DRINKING FOUNTAIN</text>
+          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">SIDE ELEVATION — HI-LO DRINKING FOUNTAIN</text>
 
           {/* Wall */}
           <rect x="80" y="40" width="12" height="340" fill="#94A3B8" rx="1" />
@@ -130,7 +130,7 @@ export default function DrinkingFountainDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

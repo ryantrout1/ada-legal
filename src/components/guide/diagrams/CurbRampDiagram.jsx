@@ -4,7 +4,7 @@ const CURB_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Running Slope', section: '§406.1', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Running Slope', section: '§406.1', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 220, y: 42,
     plain: 'The running slope of a curb ramp (measured in the direction of travel) must not be steeper than 1:12. This means for every 1 inch of height change, the ramp must extend at least 12 inches horizontally. A typical 6-inch curb requires a minimum 72-inch (6-foot) ramp. Steeper slopes make wheelchair descent dangerous and ascent exhausting. Cross slope must not exceed 1:48 (2%).',
     legal: '"Curb ramp runs shall have a running slope not steeper than 1:12." Per §405.2 as referenced. Cross slope per §405.3: "not steeper than 1:48."',
@@ -55,7 +55,7 @@ const CALLOUTS = [
 ];
 
 function makeLink(text) {
-  return (<a href={CURB_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
+  return (<a href={CURB_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
 }
 function parseCitations(text) {
   return text.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p);
@@ -90,7 +90,7 @@ export default function CurbRampDiagram() {
           {/* ===== ISOMETRIC CURB RAMP ===== */}
           {/* Street level surface */}
           <polygon points="50,260 450,280 850,260 450,240" fill="#94A3B8" opacity="0.08" stroke="#94A3B8" strokeWidth="1" />
-          <text x="450" y="275" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">STREET</text>
+          <text x="450" y="275" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="500">STREET</text>
 
           {/* Curb line */}
           <line x1="100" y1="230" x2="800" y2="230" stroke="#94A3B8" strokeWidth="2.5" />
@@ -99,8 +99,8 @@ export default function CurbRampDiagram() {
 
           {/* Sidewalk (elevated) */}
           <rect x="100" y="60" width="700" height="160" rx="2" fill="#E7E5E4" opacity="0.15" stroke="#94A3B8" strokeWidth="1" />
-          <text x="200" y="85" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">SIDEWALK</text>
-          <text x="680" y="85" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563" fontWeight="500">SIDEWALK</text>
+          <text x="200" y="85" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="500">SIDEWALK</text>
+          <text x="680" y="85" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="500">SIDEWALK</text>
 
           {/* Ramp run (center, going from sidewalk down to street) */}
           <polygon points="350,100 550,100 580,230 320,230" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
@@ -167,7 +167,7 @@ export default function CurbRampDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

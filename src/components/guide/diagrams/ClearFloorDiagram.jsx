@@ -4,7 +4,7 @@ const CLEAR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Dimensions', section: '§305.3', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Dimensions', section: '§305.3', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 200, y: 42,
     plain: 'The minimum clear floor or ground space is 30 inches wide by 48 inches deep. These dimensions are measured in the clear — no fixed obstructions (columns, fixtures, equipment) may encroach into this area. The space must be large enough for a standard wheelchair and its occupant to park and operate whatever element is being accessed. Larger clear spaces may be required in alcoves or at specific elements.',
     legal: '"Clear floor or ground spaces shall be 30 inches (760 mm) minimum by 48 inches (1220 mm) minimum."',
@@ -55,7 +55,7 @@ const CALLOUTS = [
 ];
 
 function makeLink(text) {
-  return (<a href={CLEAR_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
+  return (<a href={CLEAR_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
 }
 function parseCitations(text) {
   return text.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p);
@@ -88,11 +88,11 @@ export default function ClearFloorDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="var(--page-bg-subtle)" />
 
           {/* ===== LEFT: FORWARD APPROACH ===== */}
-          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">FORWARD APPROACH</text>
+          <text x="200" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">FORWARD APPROACH</text>
 
           {/* Element (wall-mounted, at top) */}
           <rect x="130" y="56" width="140" height="12" rx="2" fill="#94A3B8" opacity="0.3" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="200" y="52" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" fontWeight="600">ELEMENT</text>
+          <text x="200" y="52" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)" fontWeight="600">ELEMENT</text>
 
           {/* Clear floor rectangle — 30 wide × 48 deep (toward element) */}
           <rect x="110" y="70" width="180" height="210" rx="4" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="2" />
@@ -137,11 +137,11 @@ export default function ClearFloorDiagram() {
 
 
           {/* ===== RIGHT: PARALLEL APPROACH ===== */}
-          <text x="620" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">PARALLEL APPROACH</text>
+          <text x="620" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">PARALLEL APPROACH</text>
 
           {/* Element (on side) */}
           <rect x="420" y="110" width="12" height="140" rx="2" fill="#94A3B8" opacity="0.3" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="418" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" fontWeight="600" transform="rotate(-90 418 180)">ELEMENT</text>
+          <text x="418" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)" fontWeight="600" transform="rotate(-90 418 180)">ELEMENT</text>
 
           {/* Clear floor rectangle — 48 long (parallel) × 30 wide */}
           <rect x="440" y="82" width="330" height="200" rx="4" fill="#2563EB" opacity="0.05" stroke="#2563EB" strokeWidth="2" />
@@ -185,7 +185,7 @@ export default function ClearFloorDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="312" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="312" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

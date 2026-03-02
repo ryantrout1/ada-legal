@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#707-automatic-teller-machines-and-fare-machines';
 const CALLOUTS = [
-  { id: 1, label: 'Clear Floor Space', section: '§707.2', color: '#C2410C', textColor: '#8B2E08', x: 120, y: 100, plain: 'A clear floor space of 30 × 48 inches is required for a forward approach to the ATM. The space must be centered on the machine and allow forward reach to all controls and the card slot.', legal: '"A clear floor or ground space complying with §305 shall be provided."', citation: '§707.2' },
+  { id: 1, label: 'Clear Floor Space', section: '§707.2', color: 'var(--section-label)', textColor: '#8B2E08', x: 120, y: 100, plain: 'A clear floor space of 30 × 48 inches is required for a forward approach to the ATM. The space must be centered on the machine and allow forward reach to all controls and the card slot.', legal: '"A clear floor or ground space complying with §305 shall be provided."', citation: '§707.2' },
   { id: 2, label: 'Operable Parts', section: '§707.3', color: '#15803D', textColor: '#14532D', x: 350, y: 100, plain: 'All controls must be between 15 and 48 inches above the floor. Input keys must be raised or flush, with 0.025-inch minimum contrast from the background. The numeric keypad must follow standard telephone layout (1-2-3 across the top).', legal: '"Input controls shall be tactilely discernible without activation." Keypad layout: "Numeric keys shall be arranged in a 12-key ascending or descending telephone keypad layout."', citation: '§707.3' },
   { id: 3, label: 'Privacy', section: '§707.4', color: '#2563EB', textColor: '#1E3A8A', x: 580, y: 100, plain: 'If the ATM function requires entering personal information (like a PIN), the machine must provide visual shielding from casual observation. This can be a privacy screen filter, recessed alcove, or side panels.', legal: '"Where personal identification numbers or other personal information is entered, a mechanism to provide visual shielding shall be provided."', citation: '§707.4' },
   { id: 4, label: 'Display Screen', section: '§707.5', color: '#7C3AED', textColor: '#5B21B6', x: 120, y: 340, plain: 'The screen must be visible from a point 40 inches above the center of the clear floor space (seated eye height). Characters must be high contrast, sans-serif font, and sized appropriately for the viewing distance.', legal: '"Characters displayed on the screen shall be in a sans serif font. Characters shall be 3/16 inch high minimum based on the uppercase letter I."', citation: '§707.5' },
@@ -10,7 +10,7 @@ const CALLOUTS = [
   { id: 6, label: 'Input Controls', section: '§707.6', color: '#0E7490', textColor: '#0C4A6E', x: 580, y: 340, plain: 'Controls must be operable with one hand and must not require simultaneous actions (like pressing two buttons at once). Function keys must have contrast. Tactile markings are required on at least the "Enter" and "Clear" keys.', legal: '"Input controls shall be operable with one hand and shall not require tight grasping, pinching, or twisting of the wrist." Function keys: contrast ≥ 0.025 inch.', citation: '§707.6' }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function ATMDiagram() {
@@ -36,8 +36,8 @@ export default function ATMDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="atm-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="atm-title">ADA §707 ATMs & Fare Machines — Front Elevation</title>
           <rect width="900" height="520" fill="var(--page-bg-subtle)" />
-          <text x="320" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">FRONT ELEVATION</text>
-          <text x="720" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW</text>
+          <text x="320" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">FRONT ELEVATION</text>
+          <text x="720" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">PLAN VIEW</text>
 
           {/* LEFT: Front elevation */}
           {/* Wall */}
@@ -97,7 +97,7 @@ export default function ATMDiagram() {
           {/* RIGHT: Plan view */}
           {/* Wall */}
           <line x1="570" y1="120" x2="870" y2="120" stroke="#94A3B8" strokeWidth="3" />
-          <text x="720" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563">WALL</text>
+          <text x="720" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">WALL</text>
 
           {/* ATM on wall */}
           <rect x="690" y="124" width="60" height="24" rx="3" fill="#475569" opacity="0.1" stroke="#475569" strokeWidth="1" />
@@ -134,7 +134,7 @@ export default function ATMDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

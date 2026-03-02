@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#410-platform-lifts';
 const CALLOUTS = [
-  { id: 1, label: 'Platform Size', section: '§410.2', color: '#C2410C', textColor: '#8B2E08', x: 120, y: 80, plain: 'The platform must provide a clear floor space at least 36 inches wide by 48 inches deep (915 × 1220 mm). If the platform is entered from the narrow (36-inch) end, the clear floor space must be at least 36 × 60 inches (915 × 1525 mm) to allow a wheelchair user to turn and exit forward.', legal: '"Platform lifts shall provide a clear floor space complying with 305."', citation: '§410.2, §305' },
+  { id: 1, label: 'Platform Size', section: '§410.2', color: 'var(--section-label)', textColor: '#8B2E08', x: 120, y: 80, plain: 'The platform must provide a clear floor space at least 36 inches wide by 48 inches deep (915 × 1220 mm). If the platform is entered from the narrow (36-inch) end, the clear floor space must be at least 36 × 60 inches (915 × 1525 mm) to allow a wheelchair user to turn and exit forward.', legal: '"Platform lifts shall provide a clear floor space complying with 305."', citation: '§410.2, §305' },
   { id: 2, label: 'Floor Surfaces', section: '§410.3', color: '#15803D', textColor: '#14532D', x: 350, y: 80, plain: 'The platform floor must be firm, stable, and slip-resistant. The gap between the platform edge and the landing must not exceed ¾ inch (19 mm). The transition between the platform and the landing must be level — no lips, bumps, or changes in level greater than ¼ inch.', legal: '"Floor surfaces in platform lifts shall comply with 302." Gap: per ASME A18.1, maximum ¾ inch gap between platform and landing.', citation: '§410.3, §302' },
   { id: 3, label: 'Doors & Gates', section: '§410.5', color: '#2563EB', textColor: '#1E3A8A', x: 580, y: 80, plain: 'Doors and gates on platform lifts must provide at least 32 inches (815 mm) of clear width. Doors must not require tight grasping, pinching, or twisting to operate. Power-operated doors that open automatically or with a push button are preferred. Doors must remain open long enough for a wheelchair user to enter or exit.', legal: '"Platform lifts shall comply with ASME A18.1. Platform lifts shall not be attendant-operated."', citation: '§410.1, §410.5' },
   { id: 4, label: 'Controls', section: '§410.4', color: '#7C3AED', textColor: '#5B21B6', x: 120, y: 300, plain: 'Lift controls must be operable with one hand and not require tight grasping, pinching, or twisting. The force to operate must not exceed 5 pounds. Controls must be between 15 and 48 inches above the floor. Platform lifts must NOT require an attendant to operate — the user must be able to call and operate the lift independently.', legal: '"Platform lifts shall not be attendant-operated." Controls: "Operable parts shall comply with 309."', citation: '§410.1, §309' },
@@ -10,7 +10,7 @@ const CALLOUTS = [
   { id: 6, label: 'ASME A18.1 Safety', section: '§410.1', color: '#0E7490', textColor: '#0C4A6E', x: 580, y: 300, plain: 'All platform lifts must comply with ASME A18.1 Safety Standard. This includes requirements for: enclosure walls on sides not used for entry/exit, a grab bar on the full length of non-entry walls, emergency stop controls, non-skid surfaces, maximum speed of 12 inches per second, and capacity ratings. Annual inspections are typically required by state codes.', legal: '"Platform lifts shall comply with ASME A18.1 listed in 105.2.2."', citation: '§410.1' }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function PlatformLiftDiagram() {
@@ -36,18 +36,18 @@ export default function PlatformLiftDiagram() {
         <svg viewBox="0 0 900 520" role="img" aria-labelledby="pl-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="pl-title">ADA §410 Platform Lifts — Elevation & Plan View</title>
           <rect width="900" height="520" fill="var(--page-bg-subtle)" />
-          <text x="220" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">SIDE ELEVATION</text>
-          <text x="680" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">PLAN VIEW (TOP DOWN)</text>
+          <text x="220" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">SIDE ELEVATION</text>
+          <text x="680" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">PLAN VIEW (TOP DOWN)</text>
 
           {/* ===== LEFT: Side elevation ===== */}
           {/* Upper floor */}
           <rect x="60" y="120" width="180" height="12" fill="#94A3B8" opacity="0.25" rx="2" />
-          <text x="150" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" fontWeight="500">UPPER LEVEL</text>
+          <text x="150" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)" fontWeight="500">UPPER LEVEL</text>
 
           {/* Lower floor */}
           <rect x="60" y="400" width="180" height="12" fill="#94A3B8" opacity="0.25" rx="2" />
           <rect x="280" y="400" width="140" height="12" fill="#94A3B8" opacity="0.25" rx="2" />
-          <text x="340" y="395" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#4B5563" fontWeight="500">LOWER LEVEL</text>
+          <text x="340" y="395" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)" fontWeight="500">LOWER LEVEL</text>
 
           {/* Lift shaft enclosure */}
           <rect x="240" y="120" width="100" height="292" fill="#7C3AED" opacity="0.03" stroke="#94A3B8" strokeWidth="1.5" strokeDasharray="6 3" />
@@ -150,7 +150,7 @@ export default function PlatformLiftDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

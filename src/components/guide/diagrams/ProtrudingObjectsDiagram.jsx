@@ -4,7 +4,7 @@ const PROT_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#3
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Wall-Mounted Limit', section: '§307.2', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Wall-Mounted Limit', section: '§307.2', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 80, y: 42,
     plain: 'Objects mounted on walls with their leading edges between 27 and 80 inches above the floor may protrude no more than 4 inches into the circulation path. This is the most commonly violated provision — fire extinguisher cabinets, AED boxes, display cases, and wall-mounted shelves frequently exceed the 4-inch limit. People who are blind or have low vision cannot detect objects above 27 inches with a cane, so the 4-inch limit prevents them from walking into hazards.',
     legal: '"Objects with leading edges more than 27 inches (685 mm) and not more than 80 inches (2030 mm) above the finish floor or ground shall protrude 4 inches (100 mm) maximum horizontally into the circulation path."',
@@ -55,7 +55,7 @@ const CALLOUTS = [
 ];
 
 function makeLink(text) {
-  return (<a href={PROT_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
+  return (<a href={PROT_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
 }
 function parseCitations(text) {
   return text.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p);
@@ -90,7 +90,7 @@ export default function ProtrudingObjectsDiagram() {
           <title id="prot-title">ADA §307 Protruding Objects — Side Elevation with Detection Zones</title>
           <rect x="0" y="0" width="900" height="480" fill="var(--page-bg-subtle)" />
 
-          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">SIDE ELEVATION — PROTRUSION LIMITS</text>
+          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">SIDE ELEVATION — PROTRUSION LIMITS</text>
 
           {/* Wall (left side, tall) */}
           <rect x="60" y="50" width="12" height="400" fill="#94A3B8" rx="1" />
@@ -216,7 +216,7 @@ export default function ProtrudingObjectsDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="475" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="475" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

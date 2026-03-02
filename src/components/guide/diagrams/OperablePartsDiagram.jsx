@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const OP_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#309-operable-parts';
 const CALLOUTS = [
-  { id: 1, label: 'Height Range', section: '§309.3', color: '#C2410C', textColor: '#8B2E08', x: 100, y: 42, plain: 'All operable parts must be located between 15 inches minimum and 48 inches maximum above the floor. This range matches the reach ranges in §308 for both forward and side approaches. Controls mounted above 48 inches are inaccessible to most wheelchair users. Controls below 15 inches require excessive bending.', legal: '"Operable parts shall be placed within one or more of the reach ranges specified in §308." Forward/side unobstructed: 15 to 48 inches.', citation: '§309.3' },
+  { id: 1, label: 'Height Range', section: '§309.3', color: 'var(--section-label)', textColor: '#8B2E08', x: 100, y: 42, plain: 'All operable parts must be located between 15 inches minimum and 48 inches maximum above the floor. This range matches the reach ranges in §308 for both forward and side approaches. Controls mounted above 48 inches are inaccessible to most wheelchair users. Controls below 15 inches require excessive bending.', legal: '"Operable parts shall be placed within one or more of the reach ranges specified in §308." Forward/side unobstructed: 15 to 48 inches.', citation: '§309.3' },
   { id: 2, label: 'One-Hand Operation', section: '§309.4', color: '#15803D', textColor: '#14532D', x: 300, y: 42, plain: 'Every operable part must be usable with one hand without requiring tight grasping, pinching, or twisting of the wrist. This accommodates people with limited hand function, arthritis, amputation, or prosthetics. Lever handles, push buttons, rocker switches, and touch-activated controls all comply. Round doorknobs do not.', legal: '"Operable parts shall be operable with one hand and shall not require tight grasping, pinching, or twisting of the wrist."', citation: '§309.4' },
   { id: 3, label: 'Force', section: '§309.4', color: '#2563EB', textColor: '#1E3A8A', x: 500, y: 42, plain: 'The maximum force required to activate any operable part is 5 pounds. This applies to light switches, door handles (not the door itself), faucet controls, dispensers, and all other manually operated elements. Stiff toggle switches, tight rotary controls, and heavy push mechanisms fail this requirement.', legal: '"The force required to activate operable parts shall be 5 pounds (22.2 N) maximum."', citation: '§309.4' },
   { id: 4, label: 'Compliant Types', section: 'Advisory §309', color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 280, plain: 'Controls that comply include: lever door handles, push/pull door handles, push buttons (elevator, crosswalk), rocker light switches, paddle-style faucets, sensor-activated faucets and doors, toggle switches with wide paddles, and touch screens (if within reach range). These all operate without grasping or twisting.', legal: 'Advisory §309: "Lever-operated, push-type, and electronically controlled mechanisms are examples of acceptable designs."', citation: '§309' },
@@ -11,7 +11,7 @@ const CALLOUTS = [
   { id: 7, label: 'Common Applications', section: '§309.1', color: '#0E7490', textColor: '#0C4A6E', x: 700, y: 160, plain: 'Section 309 applies to: light switches, thermostats, fire alarm pull stations, electrical outlets, communication jacks (phone/data), window hardware (locks, cranks), cabinet and drawer hardware, bathroom faucets and flush controls, towel and soap dispensers, vending machine controls, and elevator buttons.', legal: '"Operable parts on accessible elements, accessible routes, and in accessible rooms and spaces shall comply with §309." All manually operated controls.', citation: '§309.1' }
 ];
 
-function makeLink(t) { return (<a href={OP_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
+function makeLink(t) { return (<a href={OP_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
 function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
 
 export default function OperablePartsDiagram() {
@@ -37,7 +37,7 @@ export default function OperablePartsDiagram() {
         <svg viewBox="0 0 900 480" role="img" aria-labelledby="op-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="op-title">ADA §309 Operable Parts — Front Elevation</title>
           <rect width="900" height="480" fill="var(--page-bg-subtle)" />
-          <text x="350" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing=".08em">FRONT ELEVATION — OPERABLE PARTS</text>
+          <text x="350" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">FRONT ELEVATION — OPERABLE PARTS</text>
 
           {/* Wall */}
           <rect x="100" y="50" width="400" height="390" fill="#E7E5E4" opacity="0.1" stroke="#94A3B8" strokeWidth="1" rx="2" />
@@ -116,7 +116,7 @@ export default function OperablePartsDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="470" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="470" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>

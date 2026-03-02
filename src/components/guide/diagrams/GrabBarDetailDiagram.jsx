@@ -4,7 +4,7 @@ const GRAB_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#6
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Circular Profile', section: '§609.2.1', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Circular Profile', section: '§609.2.1', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 120, y: 42,
     plain: 'A circular grab bar must have an outside diameter of 1.25 inches minimum to 2 inches maximum. This size range allows most people — including those with limited grip strength or arthritis — to wrap their fingers securely around the bar. The gripping surface must be smooth, continuous, and free of any sharp or abrasive elements. Edges must be rounded.',
     legal: '"Circular cross sections shall have an outside diameter of 1 1/4 inches (32 mm) minimum and 2 inches (51 mm) maximum."',
@@ -55,7 +55,7 @@ const CALLOUTS = [
 ];
 
 function makeLink(text) {
-  return (<a href={GRAB_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
+  return (<a href={GRAB_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
 }
 function parseCitations(text) {
   return text.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p);
@@ -88,7 +88,7 @@ export default function GrabBarDetailDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="var(--page-bg-subtle)" />
 
           {/* ===== LEFT: CROSS SECTIONS ===== */}
-          <text x="215" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">CROSS-SECTION PROFILES</text>
+          <text x="215" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">CROSS-SECTION PROFILES</text>
 
           {/* (A) Circular */}
           <text x="120" y="68" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#8B2E08">(A) CIRCULAR</text>
@@ -143,11 +143,11 @@ export default function GrabBarDetailDiagram() {
 
 
           {/* ===== RIGHT: WALL MOUNTING ELEVATION ===== */}
-          <text x="670" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">WALL MOUNTING ELEVATION</text>
+          <text x="670" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">WALL MOUNTING ELEVATION</text>
 
           {/* Wall */}
           <rect x="470" y="40" width="380" height="12" fill="#94A3B8" rx="1" />
-          <text x="660" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563">WALL SURFACE</text>
+          <text x="660" y="36" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">WALL SURFACE</text>
 
           {/* Structural reinforcement (behind wall, shown dashed) */}
           <rect x="560" y="46" width="200" height="20" rx="2" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
@@ -202,7 +202,7 @@ export default function GrabBarDetailDiagram() {
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
             </g>
           ))}
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

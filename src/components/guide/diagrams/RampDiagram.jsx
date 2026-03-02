@@ -4,7 +4,7 @@ const RAMP_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Running Slope', section: '§405.2', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Running Slope', section: '§405.2', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 390, y: 260,
     plain: 'The maximum slope for an ADA ramp is 1:12. That means for every 1 inch of height, the ramp must go at least 12 inches forward. A ramp covering a 30-inch rise must be at least 30 feet long. In existing buildings where space is tight, steeper slopes are allowed for very short rises — up to 1:10 for 6 inches of rise, or 1:8 for just 3 inches.',
     legal: '"Ramp runs shall have a running slope not steeper than 1:12." In existing sites, slopes up to 1:10 (max 6-inch rise) or 1:8 (max 3-inch rise) are permitted where necessary due to space limitations.',
@@ -57,7 +57,7 @@ const CALLOUTS = [
 function sectionLink(citation) {
   return (
     <a href={RAMP_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
       aria-label={`${citation} on ADA.gov (opens in new tab)`}>
       {citation}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -283,7 +283,7 @@ export default function RampDiagram() {
           ))}
 
           {/* Legend */}
-          <text x="50" y="480" fontFamily="Manrope, sans-serif" fontSize="10" fill="#4B5563">
+          <text x="50" y="480" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">
             Click or tap numbered callouts for details
           </text>
         </svg>
@@ -373,7 +373,7 @@ export default function RampDiagram() {
           to { opacity: 1; transform: translateY(0); }
         }
         g[role="button"]:focus .callout-focus-ring {
-          stroke: #C2410C;
+          stroke: var(--accent);
           stroke-width: 2.5;
         }
         g[role="button"]:hover circle:first-of-type,

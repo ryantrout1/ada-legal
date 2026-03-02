@@ -4,7 +4,7 @@ const SHOWER_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Transfer Shower Size', section: '§608.2.1', color: '#C2410C', textColor: '#8B2E08',
+    id: 1, label: 'Transfer Shower Size', section: '§608.2.1', color: 'var(--section-label)', textColor: '#8B2E08',
     x: 135, y: 42,
     plain: 'A transfer-type shower compartment must be exactly 36 × 36 inches (inside dimensions). The person transfers from a wheelchair onto the built-in seat, so a clear floor space of 36 × 48 inches must be provided adjacent to the open side. The entry must be at least 36 inches wide with no curb or threshold (maximum ½ inch if beveled). This compact design is ideal for smaller restrooms.',
     legal: '"Transfer type shower compartments shall be 36 inches by 36 inches inside finished dimensions measured at the center points of opposing sides." Clear floor space: 36 inches wide minimum by 48 inches long minimum positioned adjacent to the open face of the compartment.',
@@ -57,7 +57,7 @@ const CALLOUTS = [
 function makeLink(text) {
   return (
     <a href={SHOWER_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: '#C2410C', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted #C2410C' }}
+      style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
       {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
     </a>
@@ -117,13 +117,13 @@ export default function ShowerDiagram() {
           <rect x="0" y="0" width="900" height="320" fill="var(--page-bg-subtle)" />
 
           {/* ===== LEFT: TRANSFER SHOWER 36x36 ===== */}
-          <text x="170" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">TRANSFER SHOWER (36×36)</text>
+          <text x="170" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">TRANSFER SHOWER (36×36)</text>
 
           {/* Compartment walls — 3 sides, open on bottom */}
           <rect x="40" y="60" width="160" height="160" fill="#C2410C" opacity="0.03" stroke="#94A3B8" strokeWidth="2" />
           {/* Open side (entry) — dashed */}
           <line x1="40" y1="220" x2="200" y2="220" stroke="#94A3B8" strokeWidth="2" strokeDasharray="6 4" />
-          <text x="120" y="234" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" fontWeight="600">ENTRY ({d('36', '915')} min)</text>
+          <text x="120" y="234" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)" fontWeight="600">ENTRY ({d('36', '915')} min)</text>
 
           {/* Seat — on left wall */}
           <rect x="40" y="60" width="36" height="160" rx="2" fill="#2563EB" opacity="0.08" stroke="#2563EB" strokeWidth="1.2" />
@@ -178,13 +178,13 @@ export default function ShowerDiagram() {
 
 
           {/* ===== RIGHT: ROLL-IN SHOWER 60x30 ===== */}
-          <text x="580" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#4B5563" letterSpacing="0.08em">STANDARD ROLL-IN SHOWER (60×30)</text>
+          <text x="580" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">STANDARD ROLL-IN SHOWER (60×30)</text>
 
           {/* Compartment — 3 walls, open on bottom (long side) */}
           <rect x="410" y="70" width="280" height="120" fill="#15803D" opacity="0.03" stroke="#94A3B8" strokeWidth="2" />
           {/* Open side (entry) — dashed on long side */}
           <line x1="410" y1="190" x2="690" y2="190" stroke="#94A3B8" strokeWidth="2" strokeDasharray="6 4" />
-          <text x="550" y="204" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#4B5563" fontWeight="600">ENTRY ({d('60', '1525')} full width)</text>
+          <text x="550" y="204" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)" fontWeight="600">ENTRY ({d('60', '1525')} full width)</text>
 
           {/* Grab bars — back wall */}
           <line x1="412" y1="72" x2="688" y2="72" stroke="#B45309" strokeWidth="4" strokeLinecap="round" />
@@ -255,7 +255,7 @@ export default function ShowerDiagram() {
             </g>
           ))}
 
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="#4B5563">Click or tap numbered callouts for details</text>
+          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 
@@ -289,7 +289,7 @@ export default function ShowerDiagram() {
 
       <style>{`
         @keyframes showerFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
-        g[role="button"]:focus .shower-focus-ring { stroke: #C2410C; stroke-width: 2.5; }
+        g[role="button"]:focus .shower-focus-ring { stroke: var(--accent); stroke-width: 2.5; }
               @media (prefers-reduced-motion: reduce) {
           .ada-diagram-wrap * { animation: none !important; transition: none !important; }
         }
