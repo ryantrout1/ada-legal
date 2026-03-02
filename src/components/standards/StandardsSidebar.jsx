@@ -46,10 +46,11 @@ export default function StandardsSidebar({ activeId }) {
               }} />
               <span style={{ flex: 1 }}>{cat.label}</span>
               <span style={{
-                background: isActive ? 'var(--card-bg-tinted)' : 'var(--border-lighter)',
+                background: isActive ? 'var(--card-bg-tinted)' : 'var(--page-bg-subtle)',
                 padding: '2px 8px', borderRadius: '100px',
                 fontSize: '0.7rem', fontWeight: 600,
-                color: isActive ? 'var(--section-label)' : 'var(--body)'
+                color: isActive ? 'var(--section-label)' : 'var(--body-secondary)',
+                border: '1px solid var(--border)'
               }}>
                 {cat.count}
               </span>
