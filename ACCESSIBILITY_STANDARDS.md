@@ -209,3 +209,37 @@ Exceptions retained:
 - [x] prefers-contrast increases border widths
 - [x] No horizontal overflow at 320px viewport (filter row uses intentional overflow-x:auto)
 - [x] Padding at 320px: 16px each side = 288px available content width
+
+---
+
+## Guide System Complete Migration
+
+Completed: 2026-03-02
+
+### Scope: 97 files across 5 tiers
+
+**Tier 1 — Shared components (44 pages):** GuideSection, GuideLegalCallout, GuideStyles
+**Tier 2 — Chapter system (10 pages):** ChapterPageLayout
+**Tier 3 — Support components:** CiteLink, AutoCiteLinks, ShareBar, AskADAHelper, GuideHeroBanner
+**Tier 4 — Individual pages:** 44 guide page files
+**Tier 5 — Diagrams:** 43 diagram component files
+
+### Token Migration Results
+- var(--slate-*): 0 remaining (was 400+)
+- var(--terra-*): 0 remaining
+- Hardcoded hex: 0 in shared components, ~16 decorative callout tints in pages,
+  SVG drawing colors in diagrams (intentionally retained)
+
+### WCAG Fixes Applied
+- Reading level buttons: 32px → 44px touch targets
+- Report Violation button: 36px → 44px
+- Focus-visible rules added for: guide links, accordion headers, share buttons,
+  details/summary, diagram controls, unit toggles
+- prefers-reduced-motion: disables transitions in guide content
+- prefers-contrast: increases border width on legal callouts
+
+### Decorative Colors Intentionally Retained
+- Diagram SVG fills/strokes (technical illustration colors)
+- Callout category tints: #DCFCE7 (green), #FEF3C7 (yellow), #FEE2E2 (red),
+  #EDE9FE (purple), #DBEAFE (blue) — always inside card-bg containers,
+  text over them uses proper tokens
