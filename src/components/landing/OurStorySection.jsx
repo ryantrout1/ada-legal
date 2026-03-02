@@ -59,8 +59,6 @@ export default function OurStorySection() {
             Aspect ratio: 16:9
           */}
           <div
-            role="img"
-            aria-label="Gina, co-founder of ADA Legal Link, in her wheelchair outdoors. Video coming soon."
             className="story-photo-frame"
             style={{
               aspectRatio: '16 / 9',
@@ -71,8 +69,7 @@ export default function OurStorySection() {
             {/* Gina's photo */}
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/d5cb8191b_image.png"
-              alt=""
-              aria-hidden="true"
+              alt="Gina, co-founder of ADA Legal Link, in her wheelchair outdoors"
               className="story-photo-img"
               style={{
                 position: 'absolute', inset: 0,

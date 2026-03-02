@@ -69,7 +69,7 @@ export default function ForAttorneysNew() {
                   justifyContent: 'center', flexShrink: 0, marginTop: '2px'
                 }}>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                    <path d="M2 6L5 9L10 3" stroke="#C2410C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M2 6L5 9L10 3" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
                 <span style={{

@@ -7,47 +7,47 @@ const CARDS = [
   {
     title: 'Title III',
     subtitle: 'Private Businesses & Public Accommodations',
-    accentColor: '#B14A2E',
+    accentColor: 'var(--accent)',
     iconBg: '#FFF7ED',
     iconName: 'titleIII',
-    badge: { text: 'We handle this', bg: '#ECFDF5', color: '#065F46', border: '#D1FAE5' },
+    badge: { text: 'We handle this', bg: 'var(--card-bg-tinted)', color: 'var(--section-label)', border: 'var(--border)' },
     body: 'Covers any private business open to the public — their physical spaces, websites, and apps. If a store, restaurant, hotel, doctor\'s office, or website wasn\'t accessible, this is your Title.',
     tags: ['Restaurants', 'Hotels', 'Retail stores', 'Websites', 'Doctor\'s offices', 'Theaters'],
     tagsLabel: 'Examples covered by Title III',
     filingIconName: 'filing',
     filingIconBg: '#FFF7ED',
-    filingText: <><strong style={{ color: 'var(--slate-700)' }}>File through us</strong> — we connect you with a vetted ADA attorney at no cost to you</>,
-    subtitleColor: '#9A3412'
+    filingText: <><strong style={{ color: 'var(--heading)' }}>File through us</strong> — we connect you with a vetted ADA attorney at no cost to you</>,
+    subtitleColor: 'var(--section-label)'
   },
   {
     title: 'Title II',
     subtitle: 'State & Local Government Services',
-    accentColor: '#2563EB',
+    accentColor: 'var(--link)',
     iconBg: '#EFF6FF',
     iconName: 'titleII',
-    badge: { text: "We'll guide you", bg: '#F1F5F9', color: '#334155', border: '#E2E8F0' },
+    badge: { text: "We'll guide you", bg: 'var(--card-bg)', color: 'var(--body-secondary)', border: 'var(--border)' },
     body: 'Covers all services, programs, and facilities of state and local governments — courthouses, public transit, DMVs, public schools, parks, and voting locations.',
     tags: ['Courthouses', 'Public transit', 'DMVs', 'Public schools', 'Parks', 'Voting locations'],
     tagsLabel: 'Examples covered by Title II',
     filingIconName: 'clipboard',
     filingIconBg: '#EFF6FF',
-    filingText: <><strong style={{ color: 'var(--slate-700)' }}>File with the DOJ</strong> — we'll walk you through the complaint process step by step</>,
-    subtitleColor: '#1E40AF'
+    filingText: <><strong style={{ color: 'var(--heading)' }}>File with the DOJ</strong> — we'll walk you through the complaint process step by step</>,
+    subtitleColor: 'var(--link)'
   },
   {
     title: 'Title I',
     subtitle: 'Employment Discrimination',
-    accentColor: '#B45309',
+    accentColor: 'var(--accent-light)',
     iconBg: '#FFFBEB',
     iconName: 'titleI',
-    badge: { text: "We'll guide you", bg: '#F1F5F9', color: '#334155', border: '#E2E8F0' },
+    badge: { text: "We'll guide you", bg: 'var(--card-bg)', color: 'var(--body-secondary)', border: 'var(--border)' },
     body: 'Covers hiring, firing, promotions, and reasonable accommodations at work. Applies to employers with 15 or more employees. Has a strict 180-day filing deadline.',
     tags: ['Hiring bias', 'Denied accommodations', 'Wrongful termination', 'Harassment', 'Promotion denial'],
     tagsLabel: 'Examples covered by Title I',
     filingIconName: 'clock',
     filingIconBg: '#FFFBEB',
-    filingText: <><strong style={{ color: 'var(--slate-700)' }}>File with the EEOC</strong> — we'll explain the process and critical deadlines</>,
-    subtitleColor: '#7C2D12'
+    filingText: <><strong style={{ color: 'var(--heading)' }}>File with the EEOC</strong> — we'll explain the process and critical deadlines</>,
+    subtitleColor: 'var(--section-label)'
   }
 ];
 

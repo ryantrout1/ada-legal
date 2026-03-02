@@ -29,7 +29,7 @@ export default function CommitmentSection() {
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
             letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--dark-label)',
             margin: '0 0 0.75rem'
-          }} aria-hidden="true">
+          }} >
             Our Commitment
           </p>
           <h2 id="commitment-heading" style={{

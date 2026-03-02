@@ -74,9 +74,9 @@ export default function LandingFooterNew() {
           <div>
             <p style={colHeadingStyle}>Legal</p>
             <nav aria-label="Legal footer links" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <a href="#accessibility" className="landing-footer-link" style={footerLinkStyle}>Accessibility Statement</a>
-              <a href="#privacy" className="landing-footer-link" style={footerLinkStyle}>Privacy</a>
-              <a href="#terms" className="landing-footer-link" style={footerLinkStyle}>Terms</a>
+              <a href="#accessibility" className="landing-footer-link" style={footerLinkStyle}>Accessibility Statement<span className="sr-only"> (coming soon)</span></a>
+              <a href="#privacy" className="landing-footer-link" style={footerLinkStyle}>Privacy<span className="sr-only"> (coming soon)</span></a>
+              <a href="#terms" className="landing-footer-link" style={footerLinkStyle}>Terms<span className="sr-only"> (coming soon)</span></a>
               <a href="mailto:support@adalegalconnect.com" className="landing-footer-link" style={footerLinkStyle}>Contact Us</a>
             </nav>
           </div>

@@ -33,7 +33,7 @@ export default function StoriesSection() {
       background: 'var(--page-bg-alt)',
       padding: '100px 1.5rem',
       borderTop: '1px solid transparent',
-      borderImage: 'linear-gradient(to right, transparent, var(--slate-200), transparent) 1'
+      borderImage: 'linear-gradient(to right, transparent, var(--border), transparent) 1'
     }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
