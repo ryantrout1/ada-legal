@@ -24,14 +24,14 @@ export default function QuickFilters({ activeFilters, onToggle }) {
 
   return (
     <div style={{
-      background: '#FFFFFF',
-      borderBottom: '1px solid var(--slate-200)',
+      background: 'var(--card-bg)',
+      borderBottom: '1px solid var(--border)',
       padding: 'clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px)'
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <p style={{
           fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
-          color: 'var(--slate-900)', margin: '0 0 16px'
+          color: 'var(--heading)', margin: '0 0 16px'
         }}>
           I need information about:
         </p>

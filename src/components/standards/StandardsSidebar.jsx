@@ -1,11 +1,11 @@
 import React from 'react';
 
 const CATEGORIES = [
-  { id: 'rights', label: 'Know Your Rights', color: '#D4570A', count: 8 },
-  { id: 'business', label: 'Business Compliance', color: '#9A3412', count: 12 },
-  { id: 'design-standards', label: 'Design Standards', color: '#2D6A4F', count: 10 },
-  { id: 'web-access', label: 'Web & Digital', color: '#5B2C6F', count: 6 },
-  { id: 'government', label: 'Government (Title II)', color: '#8B1A1A', count: 7 }
+  { id: 'rights', label: 'Know Your Rights', color: 'var(--accent)', count: 8 },
+  { id: 'business', label: 'Business Compliance', color: 'var(--section-label)', count: 12 },
+  { id: 'design-standards', label: 'Design Standards', color: 'var(--accent-success)', count: 10 },
+  { id: 'web-access', label: 'Web & Digital', color: 'var(--link)', count: 6 },
+  { id: 'government', label: 'Government (Title II)', color: 'var(--accent)', count: 7 }
 ];
 
 export default function StandardsSidebar({ activeId }) {
@@ -14,11 +14,11 @@ export default function StandardsSidebar({ activeId }) {
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
         letterSpacing: '0.12em', textTransform: 'uppercase',
-        color: 'var(--slate-600)', margin: '0 0 16px', paddingLeft: '16px'
+        color: 'var(--body)', margin: '0 0 16px', paddingLeft: '16px'
       }}>
         Browse by Category
       </p>
-      <div style={{ borderLeft: '2px solid var(--slate-200)' }}>
+      <div style={{ borderLeft: '2px solid var(--border)' }}>
         {CATEGORIES.map(cat => {
           const isActive = activeId === cat.id;
           return (
@@ -31,9 +31,9 @@ export default function StandardsSidebar({ activeId }) {
                 display: 'flex', alignItems: 'center', gap: '10px',
                 padding: '10px 14px 10px 16px',
                 marginLeft: '-2px',
-                borderLeft: isActive ? '2px solid #C2410C' : '2px solid transparent',
-                background: isActive ? '#FEF1EC' : 'transparent',
-                color: isActive ? '#9A3412' : 'var(--slate-700)',
+                borderLeft: isActive ? '2px solid var(--accent)' : '2px solid transparent',
+                background: isActive ? 'var(--card-bg-tinted)' : 'transparent',
+                color: isActive ? 'var(--section-label)' : 'var(--body)',
                 textDecoration: 'none',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 500,
                 borderRadius: '0 6px 6px 0',
@@ -46,10 +46,10 @@ export default function StandardsSidebar({ activeId }) {
               }} />
               <span style={{ flex: 1 }}>{cat.label}</span>
               <span style={{
-                background: isActive ? '#FDDCCC' : 'var(--slate-100)',
+                background: isActive ? 'var(--card-bg-tinted)' : 'var(--border-lighter)',
                 padding: '2px 8px', borderRadius: '100px',
                 fontSize: '0.7rem', fontWeight: 600,
-                color: isActive ? '#9A3412' : 'var(--slate-600)'
+                color: isActive ? 'var(--section-label)' : 'var(--body)'
               }}>
                 {cat.count}
               </span>

@@ -361,7 +361,7 @@ export default function ResourceSections() {
             <section id={section.id} aria-labelledby={`${section.id}-heading`} style={{ scrollMarginTop: '96px' }}>
               <div style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                paddingBottom: '16px', borderBottom: '2px solid var(--slate-200)',
+                paddingBottom: '16px', borderBottom: '2px solid var(--border)',
                 marginBottom: '20px', flexWrap: 'wrap', gap: '8px'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -373,14 +373,14 @@ export default function ResourceSections() {
                   </div>
                   <h2 id={`${section.id}-heading`} style={{
                     fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700,
-                    color: 'var(--slate-900)', margin: 0
+                    color: 'var(--heading)', margin: 0
                   }}>
                     {section.title}
                   </h2>
                 </div>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                  color: 'var(--slate-500)'
+                  color: 'var(--body-secondary)'
                 }}>
                   {section.count} chapters
                 </span>

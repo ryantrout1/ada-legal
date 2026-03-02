@@ -11,7 +11,7 @@ export default function ResourceCard({ card }) {
 
   return (
     <div className="sg-resource-card" style={{
-      background: 'white', border: '1px solid var(--slate-200)',
+      background: 'var(--card-bg)', border: '1px solid var(--border)',
       borderRadius: '16px', padding: '28px', position: 'relative',
       boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.03)'
     }}>
@@ -26,7 +26,7 @@ export default function ResourceCard({ card }) {
           }} />
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-            textTransform: 'uppercase', letterSpacing: '0.08em', color: dotColor
+            textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--section-label)'
           }}>
             {type}
           </span>
@@ -37,7 +37,7 @@ export default function ResourceCard({ card }) {
       {/* Title as stretched link */}
       <h3 style={{
         fontFamily: 'Fraunces, serif', fontSize: '1.0625rem', fontWeight: 600,
-        color: 'var(--slate-900)', margin: '0 0 8px', lineHeight: 1.3
+        color: 'var(--heading)', margin: '0 0 8px', lineHeight: 1.3
       }}>
         {isInternal ? (
           <Link to={createPageUrl(pageName)} className="sg-card-link" style={{
@@ -57,7 +57,7 @@ export default function ResourceCard({ card }) {
       {/* Description */}
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-        color: 'var(--slate-600)', lineHeight: 1.6, margin: 0
+        color: 'var(--body)', lineHeight: 1.6, margin: 0
       }}>
         {description}
       </p>
@@ -65,16 +65,16 @@ export default function ResourceCard({ card }) {
       {/* Meta row */}
       {meta && (
         <div style={{
-          borderTop: '1px solid var(--slate-200)', marginTop: '16px', paddingTop: '12px',
+          borderTop: '1px solid var(--border)', marginTop: '16px', paddingTop: '12px',
           display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap'
         }}>
           {meta.map((item, i) => (
             <span key={i} style={{
               display: 'inline-flex', alignItems: 'center', gap: '5px',
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--slate-500)'
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)'
             }}>
               {item.warning
-                ? <AlertTriangle size={14} style={{ color: '#92400E' }} aria-hidden="true" />
+                ? <AlertTriangle size={14} style={{ color: 'var(--section-label)' }} aria-hidden="true" />
                 : <Clock size={14} aria-hidden="true" />
               }
               {item.text}
@@ -91,9 +91,9 @@ export default function ResourceCard({ card }) {
         }}>
           {tags.map((tag, i) => (
             <span key={i} style={{
-              background: 'var(--slate-100)', padding: '3px 10px', borderRadius: '100px',
+              background: 'var(--border-lighter)', padding: '3px 10px', borderRadius: '100px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
-              color: 'var(--slate-600)'
+              color: 'var(--body)'
             }}>
               {tag}
             </span>

@@ -54,7 +54,7 @@ export default function StandardsGuide() {
       <StandardsHero searchValue={searchValue} onSearchChange={handleSearchChange} />
       <QuickFilters activeFilters={activeFilters} onToggle={handleToggleFilter} />
       <BreadcrumbAndInfo />
-      <div style={{ background: 'var(--slate-50)' }}>
+      <div style={{ background: 'var(--page-bg-subtle)' }}>
         <div className="sg-body-grid">
           <StandardsSidebar activeId={activeSidebarId} />
           <ResourceSections />
