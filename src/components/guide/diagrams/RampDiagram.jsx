@@ -111,8 +111,8 @@ export default function RampDiagram() {
           style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: !metric ? 700 : 500,
             padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)',
-            background: !metric ? 'var(--dark-bg)' : 'white', color: !metric ? 'white' : 'var(--body)',
-            cursor: 'pointer', minHeight: '28px'
+            background: !metric ? 'var(--heading)' : 'var(--card-bg)', color: !metric ? 'var(--page-bg)' : 'var(--body)',
+            cursor: 'pointer', minHeight: '44px'
           }}
           aria-pressed={!metric}
         >Imperial</button>
@@ -121,8 +121,8 @@ export default function RampDiagram() {
           style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: metric ? 700 : 500,
             padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)',
-            background: metric ? 'var(--dark-bg)' : 'white', color: metric ? 'white' : 'var(--body)',
-            cursor: 'pointer', minHeight: '28px'
+            background: metric ? 'var(--heading)' : 'var(--card-bg)', color: metric ? 'var(--page-bg)' : 'var(--body)',
+            cursor: 'pointer', minHeight: '44px'
           }}
           aria-pressed={metric}
         >Metric</button>
@@ -348,7 +348,7 @@ export default function RampDiagram() {
             {/* Legal text */}
             <aside style={{ flex: '1 1 40%', minWidth: 0 }}>
               <div style={{
-                background: '#FFFBF7', borderLeft: '3px solid #C2410C',
+                background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)',
                 borderRadius: '0 10px 10px 0', padding: '16px 18px'
               }}>
                 <p style={{

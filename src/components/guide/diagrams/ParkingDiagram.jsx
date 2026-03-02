@@ -138,8 +138,8 @@ export default function ParkingDiagram() {
               style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isActive ? 700 : 500,
                 padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)',
-                background: isActive ? 'var(--dark-bg)' : 'white', color: isActive ? 'white' : 'var(--body)',
-                cursor: 'pointer', minHeight: '28px'
+                background: isActive ? 'var(--heading)' : 'var(--card-bg)', color: isActive ? 'var(--page-bg)' : 'var(--body)',
+                cursor: 'pointer', minHeight: '44px'
               }} aria-pressed={isActive}>{u}</button>
           );
         })}
@@ -398,7 +398,7 @@ export default function ParkingDiagram() {
             </div>
             <aside style={{ flex: '1 1 40%', minWidth: 0 }}>
               <div style={{
-                background: '#FFFBF7', borderLeft: '3px solid #C2410C',
+                background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)',
                 borderRadius: '0 10px 10px 0', padding: '16px 18px'
               }}>
                 <p style={{
