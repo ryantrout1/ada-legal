@@ -91,6 +91,31 @@ with no programmatic association to their parent step.
 **Fix:** Add visually hidden prefix text or use `aria-label` on the containing
 element to associate the time with the step.
 
+### FIX-12: role="img" containers hide visible child text from screen readers
+**SC:** 1.3.1 Info and Relationships
+**Problem:** `role="img"` on a container with both an image and visible overlay text
+("Video Coming Soon") causes the text to be inaccessible — `role="img"` overrides
+all child semantics. *(OurStorySection)*
+**Fix:** Remove `role="img"` from the container. Give the `<img>` a descriptive `alt`
+attribute instead. Overlay text is then naturally accessible.
+
+### FIX-13: Placeholder anchor links need accessible status indication
+**SC:** 2.4.4 Link Purpose
+**Problem:** Footer links pointing to `#accessibility`, `#privacy`, `#terms` navigate
+nowhere — the fragment targets don't exist. Screen reader users have no way to know
+these are non-functional placeholders. *(LandingFooterNew)*
+**Fix:** Add `<span className="sr-only"> (coming soon)</span>` inside each link so
+assistive technology users know the destination is not yet available.
+
+### FIX-14: Card-level hardcoded hex colors don't adapt across display modes
+**SC:** 1.4.3 Contrast (Minimum)
+**Problem:** KYR Title cards used hardcoded hex for accent strips (`#B14A2E`, `#2563EB`,
+`#B45309`), subtitle colors, and badge colors. These don't update in dark/warm/HC modes.
+*(KnowYourRightsSection)*
+**Fix:** Replace with design tokens: `var(--accent)`, `var(--link)`, `var(--accent-light)`
+for accent strips; `var(--section-label)`, `var(--link)` for subtitles; `var(--card-bg)`,
+`var(--body-secondary)`, `var(--border)` for badges.
+
 ---
 
 ## PRE-FLIGHT CHECKLIST FOR EVERY NEW PAGE
@@ -112,3 +137,6 @@ Before committing any public-facing component, verify:
 - [ ] All `<section>` elements have `aria-labelledby` pointing to a valid heading
 - [ ] External links have `rel="noopener noreferrer"`
 - [ ] No `color: 'white'` — use `var(--dark-heading)` or `var(--btn-text)`
+- [ ] No `role="img"` on containers that contain visible text children
+- [ ] Placeholder/non-functional links have sr-only status text (e.g., "coming soon")
+- [ ] Per-card accent colors use design tokens, not hardcoded hex
