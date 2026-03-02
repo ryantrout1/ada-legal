@@ -83,7 +83,7 @@ function Message({ role, content, isLoading }) {
           maxWidth: '85%',
           padding: '12px 16px',
           borderRadius: role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-          background: role === 'user' ? '#C2410C' : 'var(--slate-100, #F1F5F9)',
+          background: role === 'user' ? 'var(--accent)' : 'var(--page-bg-subtle)',
           color: role === 'user' ? 'white' : 'var(--slate-800, #1E293B)',
           border: role === 'user' ? 'none' : '1px solid var(--slate-200, #E2E8F0)',
           fontFamily: 'Manrope, sans-serif',
@@ -113,7 +113,7 @@ function formatResponse(text) {
     if (/^§\d{3,4}/.test(part)) {
       return (
         <span key={i} style={{
-          fontWeight: 600, color: '#9A3412',
+          fontWeight: 600, color: 'var(--section-label)',
           background: 'rgba(194,65,12,0.08)', padding: '1px 4px',
           borderRadius: '3px', fontSize: '0.85rem',
         }}>{part}</span>
@@ -125,7 +125,7 @@ function formatResponse(text) {
           key={i}
           to={createPageUrl('RightsPathway')}
           style={{
-            color: '#9A3412', fontWeight: 600,
+            color: 'var(--section-label)', fontWeight: 600,
             textDecoration: 'underline', textUnderlineOffset: '2px',
           }}
         >
@@ -270,11 +270,11 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           style={{
             display: 'flex', alignItems: 'center', gap: '12px',
             width: '100%', padding: '16px 20px',
-            background: '#1E293B', border: '2px solid #C2410C40',
+            background: 'var(--dark-bg)', border: '2px solid rgba(194,65,12,0.25)',
             borderRadius: '12px', cursor: 'pointer',
             transition: 'all 0.15s', minHeight: '56px',
           }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = '#C2410C'; e.currentTarget.style.background = '#253040'; }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = '#253040'; }}
           onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(194,65,12,0.25)'; e.currentTarget.style.background = '#1E293B'; }}
         >
           <div style={{
@@ -283,23 +283,23 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
           }}>
-            <MessageCircle size={18} style={{ color: '#FB923C' }} aria-hidden="true" />
+            <MessageCircle size={18} style={{ color: 'var(--accent-light)' }} aria-hidden="true" />
           </div>
           <div style={{ textAlign: 'left', flex: 1 }}>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700,
-              color: 'white', margin: '0 0 2px',
+              color: 'var(--dark-heading)', margin: '0 0 2px',
             }}>
               Have a question about this standard?
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-              color: '#B0BEC5', margin: 0,
+              color: 'var(--dark-muted)', margin: 0,
             }}>
               Ask in plain language — we'll help you understand what the law says.
             </p>
           </div>
-          <ChevronRight size={18} style={{ color: '#B0BEC5', flexShrink: 0 }} aria-hidden="true" />
+          <ChevronRight size={18} style={{ color: 'var(--dark-muted)', flexShrink: 0 }} aria-hidden="true" />
         </button>
       </div>
     );
@@ -326,13 +326,13 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
       <div className="ada-ai-header" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '14px 20px',
-        background: '#1E293B', borderBottom: '1px solid #334155',
+        background: 'var(--dark-bg)', borderBottom: '1px solid #334155',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <MessageCircle size={18} style={{ color: '#FB923C' }} aria-hidden="true" />
+          <MessageCircle size={18} style={{ color: 'var(--accent-light)' }} aria-hidden="true" />
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-            color: 'white',
+            color: 'var(--dark-heading)',
           }}>
             Ask About This Standard
           </span>
@@ -346,7 +346,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
               style={{
                 background: 'transparent', border: '1px solid #475569',
                 borderRadius: '8px', padding: '6px', cursor: 'pointer',
-                color: '#B0BEC5', minHeight: '36px', minWidth: '36px',
+                color: 'var(--dark-muted)', minHeight: '36px', minWidth: '36px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
@@ -359,7 +359,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
             style={{
               background: 'transparent', border: '1px solid #475569',
               borderRadius: '8px', padding: '6px', cursor: 'pointer',
-              color: '#B0BEC5', minHeight: '36px', minWidth: '36px',
+              color: 'var(--dark-muted)', minHeight: '36px', minWidth: '36px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
           >
@@ -406,7 +406,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
                     minHeight: '48px', transition: 'all 0.15s',
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = '#C2410C';
+                    e.currentTarget.style.borderColor = 'var(--accent)';
                     e.currentTarget.style.background = '#FFF7ED';
                   }}
                   onMouseLeave={e => {
@@ -414,7 +414,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
                     e.currentTarget.style.background = 'var(--slate-50, #F8FAFC)';
                   }}
                 >
-                  <ChevronRight size={14} style={{ color: '#9A3412', flexShrink: 0 }} aria-hidden="true" />
+                  <ChevronRight size={14} style={{ color: 'var(--section-label)', flexShrink: 0 }} aria-hidden="true" />
                   {q}
                 </button>
               ))}
@@ -471,7 +471,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
             color: 'var(--slate-800)', background: 'white',
             minHeight: '48px', outline: 'none',
           }}
-          onFocus={e => { e.currentTarget.style.borderColor = '#C2410C'; }}
+          onFocus={e => { e.currentTarget.style.borderColor = 'var(--accent)'; }}
           onBlur={e => { e.currentTarget.style.borderColor = 'var(--slate-300, #CBD5E1)'; }}
         />
         <button
@@ -502,7 +502,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           color: '#475569', margin: 0, lineHeight: 1.5,
         }}>
           This helper explains ADA standards — it does not provide legal advice. For your specific situation, use the{' '}
-          <Link to={createPageUrl('RightsPathway')} style={{ color: '#9A3412', textDecoration: 'underline' }}>
+          <Link to={createPageUrl('RightsPathway')} style={{ color: 'var(--section-label)', textDecoration: 'underline' }}>
             Rights Pathway
           </Link>.
         </p>

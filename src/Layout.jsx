@@ -239,7 +239,7 @@ export default function Layout({ children, currentPageName }) {
           position: 'absolute',
           top: '-200px',
           left: '16px',
-          background: '#C2410C',
+          background: 'var(--accent)',
           color: 'white',
           padding: '12px 24px',
           borderRadius: '0 0 8px 8px',
@@ -266,7 +266,7 @@ export default function Layout({ children, currentPageName }) {
         !loading && !user && currentPageName === 'Home'
           ? {
               position: 'fixed', top: 0, left: 0, right: 0, width: '100%', zIndex: 1000,
-              backgroundColor: '#1E293B',
+              backgroundColor: 'var(--dark-bg)',
               backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
               color: 'white', height: '72px',
               display: 'flex', alignItems: 'center',
@@ -297,7 +297,7 @@ export default function Layout({ children, currentPageName }) {
             fontWeight: 700
           }}>
             <LogoBrand size={44} variant="dark-bg" />
-            <span className="mobile-brand-text">ADA Legal <span style={{ color: '#FBB040' }}>Link</span></span>
+            <span className="mobile-brand-text">ADA Legal <span style={{ color: 'var(--accent-lighter)' }}>Link</span></span>
           </Link>
 
           {/* Mobile: Eye (Display Settings) + Hamburger (Menu) */}
@@ -508,7 +508,7 @@ export default function Layout({ children, currentPageName }) {
               left: 0,
               right: 0,
               maxHeight: 'calc(100vh - 72px)',
-              backgroundColor: '#1A1F2B',
+              backgroundColor: 'var(--dark-card-bg)',
               zIndex: 999,
               overflowY: 'auto',
               WebkitOverflowScrolling: 'touch',
@@ -523,7 +523,7 @@ export default function Layout({ children, currentPageName }) {
               display: 'flex', justifyContent: 'flex-end',
               padding: '8px 12px 0',
               position: 'sticky', top: 0,
-              backgroundColor: '#1A1F2B', zIndex: 1,
+              backgroundColor: 'var(--dark-card-bg)', zIndex: 1,
             }}>
               <button
                 onClick={() => {
@@ -585,7 +585,7 @@ export default function Layout({ children, currentPageName }) {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: '#1A1F2B',
+              backgroundColor: 'var(--dark-card-bg)',
               zIndex: 999,
               overflowY: 'auto',
               WebkitOverflowScrolling: 'touch',
@@ -635,13 +635,13 @@ export default function Layout({ children, currentPageName }) {
                       My Cases
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '4px 16px 0', padding: '8px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: '#B4C0CF', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>Resources</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: 'var(--dark-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>Resources</p>
                     </div>
                     <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
                       ADA Standards Guide
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#B0BEC5', margin: '0 0 8px' }}>{user.email}</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--dark-muted)', margin: '0 0 8px' }}>{user.email}</p>
                     </div>
                     <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
                       background: 'transparent', color: 'white', border: '1px solid white',
@@ -663,7 +663,7 @@ export default function Layout({ children, currentPageName }) {
                       My Cases
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '4px 16px 0', padding: '8px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: '#B4C0CF', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>More</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: 'var(--dark-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>More</p>
                     </div>
                     <Link to={createPageUrl('LawyerProfile')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'LawyerProfile' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
                       Profile
@@ -672,7 +672,7 @@ export default function Layout({ children, currentPageName }) {
                       ADA Standards Guide
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#B0BEC5', margin: '0 0 8px' }}>{user.email}</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--dark-muted)', margin: '0 0 8px' }}>{user.email}</p>
                     </div>
                     <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
                       background: 'transparent', color: 'white', border: '1px solid white',
@@ -700,7 +700,7 @@ export default function Layout({ children, currentPageName }) {
                       Case Manager
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '4px 16px 0', padding: '8px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: '#B4C0CF', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>More</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: 'var(--dark-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>More</p>
                     </div>
                     <Link to={createPageUrl('AdminLawyers')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminLawyers' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
                       Lawyers
@@ -712,7 +712,7 @@ export default function Layout({ children, currentPageName }) {
                       Email Templates
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
-                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#B0BEC5', margin: '0 0 8px' }}>{user.email}</p>
+                      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--dark-muted)', margin: '0 0 8px' }}>{user.email}</p>
                     </div>
                     <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} style={{
                       background: 'transparent', color: 'white', border: '1px solid white',
@@ -746,7 +746,7 @@ export default function Layout({ children, currentPageName }) {
       {currentPageName !== 'Home' && (
         <footer role="contentinfo" style={{
           backgroundColor: 'var(--slate-900)',
-          color: '#B0BEC5',
+          color: 'var(--dark-muted)',
           padding: '2rem 0',
           marginTop: 0
         }}>
@@ -757,10 +757,10 @@ export default function Layout({ children, currentPageName }) {
             textAlign: 'center'
           }}>
             <LogoBrand size={96} glow variant="dark-bg" className="footer-logo" style={{ display: 'block', margin: '0 auto 12px' }} aria-hidden="true" />
-            <p style={{ margin: 0, fontSize: '0.875rem', color: '#B0BEC5' }}>
+            <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--dark-muted)' }}>
               © 2026 ADA Legal Link. All rights reserved.
             </p>
-            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem', color: '#B0BEC5' }}>
+            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem', color: 'var(--dark-muted)' }}>
               Connecting people with experienced ADA attorneys.
             </p>
           </div>

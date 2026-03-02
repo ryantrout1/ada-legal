@@ -4,18 +4,18 @@ import { getDisplayMode } from '../landing/BrandIcons';
 
 const MODE_STYLES = {
   default: {
-    bg: '#1E293B',
+    bg: 'var(--dark-bg)',
     border: '1px solid #1E293B',
-    color: '#FFFFFF',
-    hoverBg: '#334155',
-    accentColor: '#F97316',
-    labelColor: '#4B5563',
+    color: 'var(--dark-heading)',
+    hoverBg: 'var(--dark-card-bg)',
+    accentColor: 'var(--accent-light)',
+    labelColor: 'var(--body-secondary)',
   },
   dark: {
     bg: '#000000',
     border: '1px solid #475569',
-    color: '#FFFFFF',
-    hoverBg: '#1E293B',
+    color: 'var(--dark-heading)',
+    hoverBg: 'var(--dark-bg)',
     accentColor: '#FFB347',
     labelColor: '#B0BEC5',
   },
@@ -24,16 +24,16 @@ const MODE_STYLES = {
     border: '1px solid #3D3128',
     color: '#F5EDE0',
     hoverBg: '#4A3C30',
-    accentColor: '#F97316',
+    accentColor: 'var(--accent-light)',
     labelColor: '#5C4F42',
   },
   contrast: {
     bg: '#000000',
     border: '2px solid #FFFFFF',
-    color: '#FFFFFF',
+    color: 'var(--dark-heading)',
     hoverBg: '#1A1A1A',
     accentColor: '#FFB347',
-    labelColor: '#FFFFFF',
+    labelColor: 'var(--dark-heading)',
   },
 };
 

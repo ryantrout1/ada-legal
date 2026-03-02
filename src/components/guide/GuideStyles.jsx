@@ -4,7 +4,7 @@ export default function GuideStyles() {
   return (
     <style>{`
       .guide-content-wrap {
-        background: #FAF7F2;
+        background: var(--page-bg-alt);
         padding: 60px 40px;
       }
       .guide-content {
@@ -41,17 +41,17 @@ export default function GuideStyles() {
 
       /* Diagram interactive element focus styles */
       .ada-diagram-wrap g[role="button"]:focus-visible {
-        outline: 2px solid #F97316;
+        outline: 2px solid var(--accent-light);
         outline-offset: 3px;
         border-radius: 50%;
       }
       .ada-diagram-wrap g[role="button"]:focus {
-        outline: 2px solid #F97316;
+        outline: 2px solid var(--accent-light);
         outline-offset: 3px;
       }
       /* Unit toggle button focus */
       .ada-diagram-wrap button:focus-visible {
-        outline: 2px solid #F97316;
+        outline: 2px solid var(--accent-light);
         outline-offset: 2px;
       }
     `}</style>
