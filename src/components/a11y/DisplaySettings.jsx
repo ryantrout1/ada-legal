@@ -163,13 +163,32 @@ export const applyPreferences = (prefs) => {
         background-image: unset !important;
       }
 
-      /* === Community Voices — already dark, exempt from blanket === */
+      /* === All dark sections → match body bg seamlessly === */
+      #main-content .warm-keep-dark,
+      #main-content .warm-keep-dark > div {
+        background-color: #0B0E14 !important;
+        background-image: none !important;
+      }
+      /* Re-exempt interactive + media inside dark sections */
+      #main-content .warm-keep-dark button,
+      #main-content .warm-keep-dark a,
+      #main-content .warm-keep-dark svg,
+      #main-content .warm-keep-dark img,
+      #main-content .warm-keep-dark video,
+      #main-content .warm-keep-dark .story-video-container,
+      #main-content .warm-keep-dark .story-video-container div,
+      #main-content .warm-keep-dark .story-video-container img {
+        background-color: unset !important;
+        background-image: unset !important;
+      }
+
+      /* === Community Voices — match body dark bg seamlessly === */
       #main-content .cv-dark-section,
       #main-content .cv-dark-section div,
       #main-content .cv-dark-section p,
       #main-content .cv-dark-section > div > span,
       #main-content .cv-dark-section > div > div > span {
-        background-color: #0B1120 !important;
+        background-color: #0B0E14 !important;
         background-image: unset !important;
       }
       /* Vote button spans — transparent so button bg shows through */
@@ -462,7 +481,7 @@ export const applyPreferences = (prefs) => {
         color: #FFB347 !important;
       }
       #main-content .chapter-link {
-        background-color: #151A24 !important;
+        background-color: #0F1520 !important;
         border-color: #1E2736 !important;
       }
 
@@ -470,7 +489,7 @@ export const applyPreferences = (prefs) => {
       /* Background rects */
       #main-content svg rect[fill="#FAFAF9"],
       #main-content svg rect[fill="#fafaf9"] {
-        fill: #1A1F2B !important;
+        fill: #111827 !important;
       }
       #main-content svg rect[fill="white"],
       #main-content svg rect[fill="#FFFFFF"],
@@ -492,7 +511,7 @@ export const applyPreferences = (prefs) => {
       /* Diagram container borders */
       #main-content svg + div,
       div[style*="background: white"][style*="border"] {
-        background-color: #1A1F2B !important;
+        background-color: #111827 !important;
       }
 
       /* === Case Manager type pills — dark mode variants === */
@@ -565,7 +584,7 @@ export const applyPreferences = (prefs) => {
 
       /* === Story video container — NOT a white-bg card, preserve photo === */
       #main-content .story-video-container {
-        background-color: #1A1F2B !important;
+        background-color: #111827 !important;
       }
       #main-content .story-video-container .story-photo-frame,
       #main-content .story-video-container .story-photo-img,
@@ -575,7 +594,7 @@ export const applyPreferences = (prefs) => {
       }
       /* Restore the gradient overlay */
       #main-content .story-video-container .video-overlay {
-        background: linear-gradient(to top, rgba(15,18,25,0.75) 0%, rgba(15,18,25,0.25) 35%, rgba(15,18,25,0.08) 100%) !important;
+        background: linear-gradient(to top, rgba(11,14,20,0.75) 0%, rgba(11,14,20,0.25) 35%, rgba(11,14,20,0.08) 100%) !important;
       }
 
       /* MyCases + AdminCases page-level containers */
@@ -630,7 +649,7 @@ export const applyPreferences = (prefs) => {
         border-color: #334155 !important;
       }
       .ada-ai-panel {
-        background-color: #1A1F2B !important;
+        background-color: #111827 !important;
         border-color: #334155 !important;
       }
       .ada-ai-panel div {
@@ -671,7 +690,7 @@ export const applyPreferences = (prefs) => {
         color: #64748B !important;
       }
       .ada-ai-panel form {
-        background-color: #1A1F2B !important;
+        background-color: #111827 !important;
         border-color: #334155 !important;
       }
 
