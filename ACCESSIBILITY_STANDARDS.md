@@ -164,3 +164,48 @@ already provides horizontal padding.
 **Problem:** ForAttorneys stat label text had `lineHeight: 1.4` — below the AAA
 minimum of 1.5 for paragraph/body text (headings are exempt).
 **Fix:** Change to `lineHeight: 1.5`.
+
+---
+
+## Standards Guide Page Audit
+
+Completed: 2026-03-02
+
+### Phase 1: Token Migration (12 files)
+All hardcoded hex, `var(--slate-*)`, and `var(--terra-*)` values migrated to
+DisplaySettings design tokens across: StandardsStyles, StandardsHero, QuickFilters,
+BreadcrumbAndInfo, StandardsSidebar, ResourceSection, ResourceCard, ChapterNavigator,
+ShareCardButton, GuideReportCTA, ADAAssistant, StandardsGuide page.
+
+Exceptions retained:
+- `dotColor` hex in ResourceSections data (decorative 6px dots, aria-hidden)
+- `iconBg` hex in ResourceSections data (icon background squares with white aria-hidden icons)
+- `CAT_COLORS` rgba backgrounds/borders in ADAAssistant (decorative tints)
+
+### Phase 2: WCAG 2.2 AAA + Mobile Audit
+
+**Findings fixed:**
+- ADAAssistant clear button 28px → 44px touch target
+- ADAAssistant starter chips missing minHeight: 44px
+- ADAAssistant all hex colors → tokens
+- ADAAssistant CAT_COLORS text → semantic tokens for AAA contrast
+- BreadcrumbAndInfo Home link + attorney link missing focus-visible class
+- Resource type label text color changed from per-section hex (some fail AAA)
+  to var(--section-label) which passes 7:1
+
+**Audit checks passed:**
+- [x] Zero hardcoded hex in display properties (except decorative data dots/icons)
+- [x] Zero var(--slate-*) or var(--terra-*) references
+- [x] 10 focus-visible rules covering all interactive element classes
+- [x] All interactive elements ≥ 44px touch targets
+- [x] All grids reflow: hero 1fr@900px, body 1fr@960px, cards 1fr@600px, chapters auto-fit
+- [x] Heading hierarchy h1→h2(×6)→h3 — no skipped levels
+- [x] All body text lineHeight ≥ 1.5
+- [x] All aria-hidden only on decorative elements
+- [x] Search input has label, role="search", role="combobox", aria-expanded, live region
+- [x] Breadcrumb has nav[aria-label="Breadcrumb"] with aria-current="page"
+- [x] Resource sections have section[aria-labelledby] with matching h2 IDs
+- [x] prefers-reduced-motion disables all transitions/transforms
+- [x] prefers-contrast increases border widths
+- [x] No horizontal overflow at 320px viewport (filter row uses intentional overflow-x:auto)
+- [x] Padding at 320px: 16px each side = 288px available content width
