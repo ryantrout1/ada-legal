@@ -507,19 +507,21 @@ export default function Layout({ children, currentPageName }) {
               top: '72px',
               left: 0,
               right: 0,
-              bottom: 0,
+              maxHeight: 'calc(100vh - 72px)',
               backgroundColor: '#1A1F2B',
               zIndex: 999,
               overflowY: 'auto',
               WebkitOverflowScrolling: 'touch',
               padding: '0 0 24px',
-              display: 'none'
+              display: 'none',
+              borderBottom: '2px solid rgba(255,255,255,0.1)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
             }}
           >
             {/* Close bar */}
             <div style={{
               display: 'flex', justifyContent: 'flex-end',
-              padding: '12px 16px 4px',
+              padding: '8px 12px 0',
               position: 'sticky', top: 0,
               backgroundColor: '#1A1F2B', zIndex: 1,
             }}>

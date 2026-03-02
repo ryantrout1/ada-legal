@@ -2596,9 +2596,11 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
 
   const isMobile = variant === 'inline';
   const accent = '#C2410C';
+  const accentLight = '#FB923C';
   const borderColor = isMobile ? 'rgba(255,255,255,0.25)' : 'var(--slate-200, #E2E8F0)';
-  const textPrimary = isMobile ? '#F1F5F9' : 'var(--slate-700, #334155)';
-  const textSecondary = isMobile ? '#B0BEC5' : '#64748B';
+  const textPrimary = isMobile ? '#FFFFFF' : 'var(--slate-700, #334155)';
+  const textSecondary = isMobile ? '#CBD5E1' : '#64748B';
+  const textMuted = isMobile ? '#94A3B8' : '#64748B';
   const accentBg = isMobile ? 'rgba(194,65,12,0.2)' : '#FFF7ED';
 
   const labelStyle = {
@@ -2630,7 +2632,6 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
             { key: 'high-contrast', label: 'Contrast' },
           ].map((m, i) => {
             const active = prefs.displayMode === m.key;
-            const iconColor = active ? accent : textSecondary;
             return (
               <button
                 key={m.key}
@@ -2649,45 +2650,45 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                   cursor: 'pointer', transition: 'all 0.15s',
                 }}
               >
-                <span aria-hidden="true" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px' }}>
+                <span aria-hidden="true" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px' }}>
                   {m.key === 'default' && (
-                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                      <circle cx="11" cy="11" r="5" fill={active ? '#FDBA74' : '#E2E8F0'} />
-                      <circle cx="11" cy="11" r="4" fill={active ? '#FB923C' : '#CBD5E1'} />
-                      <circle cx="9.5" cy="9.5" r="1.5" fill={active ? '#FDE68A' : '#F8FAFC'} opacity="0.8" />
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="4.5" fill={active ? '#FB923C' : '#CBD5E1'} />
+                      <circle cx="10.8" cy="10.8" r="1.5" fill={active ? '#FDE68A' : '#F1F5F9'} opacity="0.7" />
                       {[0,45,90,135,180,225,270,315].map((angle, j) => {
                         const rad = angle * Math.PI / 180;
-                        const x1 = 11 + 7 * Math.cos(rad), y1 = 11 + 7 * Math.sin(rad);
-                        const x2 = 11 + 9.5 * Math.cos(rad), y2 = 11 + 9.5 * Math.sin(rad);
-                        return <line key={j} x1={x1} y1={y1} x2={x2} y2={y2} stroke={active ? '#FB923C' : '#94A3B8'} strokeWidth="1.5" strokeLinecap="round" />;
+                        const x1 = 12 + 7.2 * Math.cos(rad), y1 = 12 + 7.2 * Math.sin(rad);
+                        const x2 = 12 + 9.8 * Math.cos(rad), y2 = 12 + 9.8 * Math.sin(rad);
+                        return <line key={j} x1={x1} y1={y1} x2={x2} y2={y2} stroke={active ? '#FB923C' : '#CBD5E1'} strokeWidth="2" strokeLinecap="round" />;
                       })}
                     </svg>
                   )}
                   {m.key === 'dark' && (
-                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                      <path d="M14 4a8 8 0 1 0 4.5 13.5A6.5 6.5 0 0 1 14 4z" fill={active ? '#FDBA74' : '#94A3B8'} />
-                      <circle cx="15.5" cy="6" r="1" fill={active ? '#FDE68A' : '#CBD5E1'} opacity="0.7" />
-                      <circle cx="18" cy="9" r="0.6" fill={active ? '#FDE68A' : '#CBD5E1'} opacity="0.5" />
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M15 3a9 9 0 1 0 5.2 15.5A7.5 7.5 0 0 1 15 3z" fill={active ? '#FDBA74' : '#CBD5E1'} />
+                      <circle cx="17" cy="6.5" r="1.2" fill={active ? '#FDE68A' : '#E2E8F0'} opacity="0.8" />
+                      <circle cx="20" cy="10" r="0.8" fill={active ? '#FDE68A' : '#E2E8F0'} opacity="0.6" />
                     </svg>
                   )}
                   {m.key === 'warm' && (
-                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                      <rect x="2" y="10" width="18" height="10" rx="2" fill={active ? '#92400E' : '#475569'} opacity="0.3" />
-                      <rect x="3" y="7" width="16" height="8" rx="1.5" fill={active ? '#FDBA74' : '#94A3B8'} />
-                      <rect x="3" y="7" width="16" height="3.5" rx="1.5" fill={active ? '#FB923C' : '#64748B'} />
-                      <circle cx="11" cy="17" r="1.5" fill={active ? '#FDBA74' : '#94A3B8'} opacity="0.6" />
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <ellipse cx="12" cy="20" rx="9" ry="2" fill={active ? '#92400E' : '#475569'} opacity="0.3" />
+                      <rect x="10.5" y="13" width="3" height="6" rx="1.5" fill={active ? '#D97706' : '#94A3B8'} />
+                      <ellipse cx="12" cy="8" rx="4" ry="6" fill={active ? '#FB923C' : '#CBD5E1'} opacity="0.7" />
+                      <ellipse cx="12" cy="7" rx="2.5" ry="4.5" fill={active ? '#FDBA74' : '#E2E8F0'} opacity="0.9" />
+                      <ellipse cx="12" cy="6.5" rx="1.2" ry="2.5" fill={active ? '#FDE68A' : '#F1F5F9'} />
                     </svg>
                   )}
                   {m.key === 'high-contrast' && (
-                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                      <circle cx="11" cy="11" r="9" stroke={iconColor} strokeWidth="1.8" fill="none" />
-                      <path d="M11 2a9 9 0 0 1 0 18z" fill={iconColor} />
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="9.5" stroke={active ? accentLight : '#CBD5E1'} strokeWidth="2" fill="none" />
+                      <path d="M12 2.5a9.5 9.5 0 0 1 0 19z" fill={active ? accentLight : '#CBD5E1'} />
                     </svg>
                   )}
                 </span>
                 <span style={{
-                  fontSize: '0.65rem', fontWeight: active ? 700 : 600,
-                  color: active ? accent : textSecondary,
+                  fontSize: '0.7rem', fontWeight: active ? 700 : 600,
+                  color: active ? accentLight : textPrimary,
                   fontFamily: 'Manrope, sans-serif', lineHeight: 1.2,
                 }}>
                   {m.label}
@@ -2724,21 +2725,21 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                 <span style={{
                   fontFamily: f.family,
                   fontSize: '1.15rem', fontWeight: 700,
-                  color: active ? accent : textPrimary,
+                  color: active ? accentLight : textPrimary,
                   lineHeight: 1.2,
                 }}>
                   Aa
                 </span>
                 <span style={{
                   fontSize: '0.72rem', fontWeight: active ? 700 : 600,
-                  color: active ? accent : textPrimary,
+                  color: active ? accentLight : textPrimary,
                   fontFamily: 'Manrope, sans-serif', lineHeight: 1.2,
                 }}>
                   {f.label}
                 </span>
                 <span style={{
                   fontSize: '0.62rem', fontWeight: 500,
-                  color: textSecondary,
+                  color: active ? '#FDBA74' : textSecondary,
                   fontFamily: 'Manrope, sans-serif', lineHeight: 1.3,
                 }}>
                   {f.desc}
@@ -2891,9 +2892,9 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
     return (
       <div style={{ padding: '16px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
           textTransform: 'uppercase', letterSpacing: '0.08em',
-          color: '#FDBA74', margin: '0 0 12px'
+          color: '#FB923C', margin: '0 0 12px'
         }}>
           Display Settings
         </p>
