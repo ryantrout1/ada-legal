@@ -12,7 +12,7 @@ export default function GuideIntroToAda() {
       <GuideHeroBanner
         title="Introduction to the ADA"
         typeBadge="Overview"
-        badgeColor="#C2410C"
+        badgeColor="var(--accent)"
       />
 
       <div className="guide-content-wrap">
@@ -34,7 +34,7 @@ export default function GuideIntroToAda() {
                   consistent, enforceable standards addressing discrimination against
                   individuals with disabilities."
                 </p>
-                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>
                   Source: Americans with Disabilities Act of 1990, as amended
                 </p>
               </>
@@ -83,7 +83,7 @@ export default function GuideIntroToAda() {
                 <p style={{ margin: '0 0 12px', paddingLeft: '12px' }}>
                   (C) being regarded as having such an impairment.
                 </p>
-                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>
                   As amended by the ADA Amendments Act of 2008 (P.L. 110-325)
                 </p>
               </>
@@ -124,7 +124,7 @@ export default function GuideIntroToAda() {
             each covering a different area of life:</p>
 
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '20px 0'
             }}>
               {[
@@ -136,22 +136,22 @@ export default function GuideIntroToAda() {
               ].map((t, i) => (
                 <div key={t.num} style={{
                   display: 'flex', gap: '16px', padding: '16px 20px',
-                  borderBottom: i < 4 ? '1px solid var(--slate-200)' : 'none',
+                  borderBottom: i < 4 ? '1px solid var(--border)' : 'none',
                   alignItems: 'flex-start'
                 }}>
                   <span style={{
                     fontFamily: 'Fraunces, serif', fontSize: '0.9rem', fontWeight: 700,
-                    color: '#C2410C', background: '#FEF1EC',
+                    color: 'var(--accent)', background: 'var(--card-bg-tinted)',
                     padding: '4px 10px', borderRadius: '6px', flexShrink: 0,
                     minWidth: '36px', textAlign: 'center'
                   }}>{t.num}</span>
                   <div>
-                    <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--slate-900)' }}>
-                      {t.name} <span style={{ fontSize: '0.8rem', color: 'var(--slate-500)', fontWeight: 400 }}>
+                    <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--heading)' }}>
+                      {t.name} <span style={{ fontSize: '0.8rem', color: 'var(--body-secondary)', fontWeight: 400 }}>
                         — Enforced by {t.agency}
                       </span>
                     </p>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
+                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>
                       {t.desc}
                     </p>
                   </div>
@@ -194,7 +194,7 @@ export default function GuideIntroToAda() {
                   <strong>Title IV:</strong> Federal Communications Commission (FCC)
                   — 47 CFR Part 64
                 </p>
-                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>
                   Source: ADA.gov enforcement overview
                 </p>
               </>

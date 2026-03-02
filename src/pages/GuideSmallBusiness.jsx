@@ -12,7 +12,7 @@ export default function GuideSmallBusiness() {
       <GuideHeroBanner
         title="Small Business ADA Primer"
         typeBadge="Primer"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -44,7 +44,7 @@ export default function GuideSmallBusiness() {
                   <li>Schools, nurseries, day care centers</li>
                   <li>Gyms, bowling alleys, golf courses</li>
                 </ol>
-                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>
                   28 CFR Part 36 — Nondiscrimination on the Basis of Disability by
                   Public Accommodations and in Commercial Facilities
                 </p>
@@ -79,16 +79,16 @@ export default function GuideSmallBusiness() {
               Every business open to the public has three core ADA duties:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               <div style={{
-                padding: '16px 20px', borderBottom: '1px solid var(--slate-200)'
+                padding: '16px 20px', borderBottom: '1px solid var(--border)'
               }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)', fontFamily: 'Fraunces, serif', fontSize: '1.05rem' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)', fontFamily: 'Fraunces, serif', fontSize: '1.05rem' }}>
                   1. Remove barriers in existing buildings
                 </p>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>
                   If your building was built before the ADA, you must remove
                   <strong> architectural barriers</strong> where it is "readily
                   achievable" — meaning it can be done without much difficulty
@@ -96,12 +96,12 @@ export default function GuideSmallBusiness() {
                 </p>
               </div>
               <div style={{
-                padding: '16px 20px', borderBottom: '1px solid var(--slate-200)'
+                padding: '16px 20px', borderBottom: '1px solid var(--border)'
               }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)', fontFamily: 'Fraunces, serif', fontSize: '1.05rem' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)', fontFamily: 'Fraunces, serif', fontSize: '1.05rem' }}>
                   2. Make reasonable modifications
                 </p>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>
                   You must change your policies, practices, or procedures when
                   needed so a person with a disability can use your business.
                   For example, allowing a service animal even if you have a
@@ -109,10 +109,10 @@ export default function GuideSmallBusiness() {
                 </p>
               </div>
               <div style={{ padding: '16px 20px' }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)', fontFamily: 'Fraunces, serif', fontSize: '1.05rem' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)', fontFamily: 'Fraunces, serif', fontSize: '1.05rem' }}>
                   3. Communicate effectively
                 </p>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>
                   You must take steps to communicate with customers who have
                   hearing, vision, or speech disabilities. This might mean
                   providing written notes, reading a menu aloud, or offering
@@ -266,16 +266,16 @@ export default function GuideSmallBusiness() {
               help small businesses cover the cost of ADA compliance:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               <div style={{
-                padding: '16px 20px', borderBottom: '1px solid var(--slate-200)'
+                padding: '16px 20px', borderBottom: '1px solid var(--border)'
               }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>
                   Disabled Access Credit (IRS Section 44)
                 </p>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>
                   Small businesses with 30 or fewer full-time employees OR $1
                   million or less in gross receipts can claim a tax credit of up
                   to <strong>$5,000 per year</strong> for ADA-related expenses.
@@ -283,10 +283,10 @@ export default function GuideSmallBusiness() {
                 </p>
               </div>
               <div style={{ padding: '16px 20px' }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>
                   Barrier Removal Deduction (IRS Section 190)
                 </p>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>
                   Any business (no size limit) can deduct up to <strong>$15,000
                   per year</strong> for costs related to removing architectural
                   or transportation barriers. This can be used alongside Section 44.

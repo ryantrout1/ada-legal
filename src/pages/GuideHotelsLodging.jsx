@@ -12,7 +12,7 @@ export default function GuideHotelsLodging() {
       <GuideHeroBanner
         title="Hotels & Lodging Accessibility"
         typeBadge="Guide"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -36,9 +36,9 @@ export default function GuideHotelsLodging() {
                 }} role="table" aria-label="Accessible guest room scoping table">
                   <thead>
                     <tr>
-                      <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '2px solid var(--slate-200)', fontWeight: 700 }}>Total Rooms</th>
-                      <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '2px solid var(--slate-200)', fontWeight: 700 }}>Mobility</th>
-                      <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '2px solid var(--slate-200)', fontWeight: 700 }}>Communication</th>
+                      <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '2px solid var(--border)', fontWeight: 700 }}>Total Rooms</th>
+                      <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '2px solid var(--border)', fontWeight: 700 }}>Mobility</th>
+                      <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '2px solid var(--border)', fontWeight: 700 }}>Communication</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -55,9 +55,9 @@ export default function GuideHotelsLodging() {
                       ['501–1000', '2% + 3', '4% + 2']
                     ].map(([total, mob, comm], i) => (
                       <tr key={i}>
-                        <td style={{ padding: '5px 8px', borderBottom: '1px solid var(--slate-200)' }}>{total}</td>
-                        <td style={{ padding: '5px 8px', borderBottom: '1px solid var(--slate-200)' }}>{mob}</td>
-                        <td style={{ padding: '5px 8px', borderBottom: '1px solid var(--slate-200)' }}>{comm}</td>
+                        <td style={{ padding: '5px 8px', borderBottom: '1px solid var(--border)' }}>{total}</td>
+                        <td style={{ padding: '5px 8px', borderBottom: '1px solid var(--border)' }}>{mob}</td>
+                        <td style={{ padding: '5px 8px', borderBottom: '1px solid var(--border)' }}>{comm}</td>
                       </tr>
                     ))}
                   </tbody>

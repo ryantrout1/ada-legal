@@ -12,7 +12,7 @@ export default function GuideMedicalFacilities() {
       <GuideHeroBanner
         title="Medical Facility Accessibility"
         typeBadge="Guide"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -103,7 +103,7 @@ export default function GuideMedicalFacilities() {
               also be accessible or alternative methods must be provided:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -114,12 +114,12 @@ export default function GuideMedicalFacilities() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
-                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--slate-900)' }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--heading)' }}>
                     {item.title}
                   </p>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>
                     {item.desc}
                   </p>
                 </div>
@@ -224,7 +224,7 @@ export default function GuideMedicalFacilities() {
               depends on the type of facility:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -235,11 +235,11 @@ export default function GuideMedicalFacilities() {
               ].map((row, i, arr) => (
                 <div key={i} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none',
+                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                   gap: '12px', flexWrap: 'wrap'
                 }}>
-                  <span style={{ fontWeight: 600, color: 'var(--slate-900)', fontSize: '0.9rem' }}>{row.type}</span>
-                  <span style={{ color: 'var(--slate-600)', fontSize: '0.9rem', textAlign: 'right' }}>{row.requirement}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--heading)', fontSize: '0.9rem' }}>{row.type}</span>
+                  <span style={{ color: 'var(--body)', fontSize: '0.9rem', textAlign: 'right' }}>{row.requirement}</span>
                 </div>
               ))}
             </div>

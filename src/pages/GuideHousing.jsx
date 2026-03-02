@@ -12,7 +12,7 @@ export default function GuideHousing() {
       <GuideHeroBanner
         title="Housing, Apartments & the ADA"
         typeBadge="Title II & III + FHA"
-        badgeColor="#15803D"
+        badgeColor="var(--accent-success)"
       />
 
       <div className="guide-content-wrap">
@@ -94,7 +94,7 @@ export default function GuideHousing() {
               elevators) must meet <strong>seven design requirements</strong>:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -108,14 +108,14 @@ export default function GuideHousing() {
               ].map((item, i) => (
                 <div key={i} style={{
                   display: 'flex', gap: '12px', padding: '10px 20px',
-                  borderBottom: i < 6 ? '1px solid var(--slate-200)' : 'none',
+                  borderBottom: i < 6 ? '1px solid var(--border)' : 'none',
                   alignItems: 'flex-start'
                 }}>
                   <span style={{
                     fontFamily: 'Fraunces, serif', fontSize: '1rem',
-                    fontWeight: 700, color: '#C2410C', flexShrink: 0, width: '24px'
+                    fontWeight: 700, color: 'var(--accent)', flexShrink: 0, width: '24px'
                   }}>{i + 1}</span>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-700)', lineHeight: 1.6 }}>{item}</p>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{item}</p>
                 </div>
               ))}
             </div>
@@ -249,7 +249,7 @@ export default function GuideHousing() {
               disability, you have several options:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -259,16 +259,16 @@ export default function GuideHousing() {
               ].map((item, i) => (
                 <div key={i} style={{
                   display: 'flex', gap: '14px', padding: '14px 20px',
-                  borderBottom: i < 2 ? '1px solid var(--slate-200)' : 'none',
+                  borderBottom: i < 2 ? '1px solid var(--border)' : 'none',
                   alignItems: 'flex-start'
                 }}>
                   <span style={{
                     fontFamily: 'Fraunces, serif', fontSize: '1.25rem',
-                    fontWeight: 700, color: '#C2410C', flexShrink: 0, width: '28px'
+                    fontWeight: 700, color: 'var(--accent)', flexShrink: 0, width: '28px'
                   }}>{item.num}</span>
                   <div>
-                    <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>{item.title}</p>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.desc}</p>
+                    <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>{item.title}</p>
+                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -277,14 +277,14 @@ export default function GuideHousing() {
             <p style={{ marginTop: '16px' }}>
               <strong>File a Fair Housing complaint:</strong>{' '}
               <a href="https://www.hud.gov/program_offices/fair_housing_equal_opp/online-complaint" target="_blank" rel="noopener noreferrer"
-                style={{ color: '#C2410C', fontWeight: 600 }}>
+                style={{ color: 'var(--accent)', fontWeight: 600 }}>
                 hud.gov — Online Complaint
               </a>
             </p>
             <p>
               <strong>File an ADA complaint (government housing):</strong>{' '}
               <a href="https://civilrights.justice.gov/" target="_blank" rel="noopener noreferrer"
-                style={{ color: '#C2410C', fontWeight: 600 }}>
+                style={{ color: 'var(--accent)', fontWeight: 600 }}>
                 civilrights.justice.gov
               </a>
             </p>

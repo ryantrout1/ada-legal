@@ -12,7 +12,7 @@ export default function GuideSignage() {
       <GuideHeroBanner
         title="ADA Signage Requirements"
         typeBadge="Checklist"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">

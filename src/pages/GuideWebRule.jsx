@@ -12,7 +12,7 @@ export default function GuideWebRule() {
       <GuideHeroBanner
         title="Title II Web & Mobile App Accessibility Rule"
         typeBadge="New Rule"
-        badgeColor="#5B2C6F"
+        badgeColor="var(--link)"
       />
 
       <div className="guide-content-wrap">
@@ -138,7 +138,7 @@ export default function GuideWebRule() {
               population served:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -147,16 +147,16 @@ export default function GuideWebRule() {
               ].map((row, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                    <span style={{ fontWeight: 600, color: 'var(--slate-900)', fontSize: '0.95rem' }}>{row.entity}</span>
+                    <span style={{ fontWeight: 600, color: 'var(--heading)', fontSize: '0.95rem' }}>{row.entity}</span>
                     <span style={{
-                      background: '#FEF3C7', color: '#92400E', padding: '2px 10px',
+                      background: '#FEF3C7', color: 'var(--section-label)', padding: '2px 10px',
                       borderRadius: '100px', fontSize: '0.8125rem', fontWeight: 600
                     }}>{row.deadline}</span>
                   </div>
-                  <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--slate-500)' }}>{row.note}</p>
+                  <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--body-secondary)' }}>{row.note}</p>
                 </div>
               ))}
             </div>

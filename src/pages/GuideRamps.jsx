@@ -13,7 +13,7 @@ export default function GuideRamps() {
       <GuideHeroBanner
         title="Ramps & Slope Requirements"
         typeBadge="Technical"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -50,7 +50,7 @@ export default function GuideRamps() {
               the breakdown:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -60,11 +60,11 @@ export default function GuideRamps() {
               ].map((row, i, arr) => (
                 <div key={i} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '12px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none',
+                  padding: '12px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                   gap: '12px', flexWrap: 'wrap'
                 }}>
-                  <span style={{ fontWeight: 600, color: 'var(--slate-900)', fontSize: '0.9rem' }}>{row.level}</span>
-                  <span style={{ color: 'var(--slate-600)', fontSize: '0.9rem' }}>{row.action}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--heading)', fontSize: '0.9rem' }}>{row.level}</span>
+                  <span style={{ color: 'var(--body)', fontSize: '0.9rem' }}>{row.action}</span>
                 </div>
               ))}
             </div>

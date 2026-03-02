@@ -12,7 +12,7 @@ export default function GuideServiceAnimals() {
       <GuideHeroBanner
         title="Service Animals & the ADA"
         typeBadge="Reference"
-        badgeColor="#C2410C"
+        badgeColor="var(--accent)"
       />
 
       <div className="guide-content-wrap">

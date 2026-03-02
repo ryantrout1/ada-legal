@@ -12,7 +12,7 @@ export default function GuideDigitalBarriers() {
       <GuideHeroBanner
         title="Website & App Barriers: Your Rights"
         typeBadge="Digital Rights"
-        badgeColor="#5B2C6F"
+        badgeColor="var(--link)"
       />
 
       <div className="guide-content-wrap">
@@ -71,7 +71,7 @@ export default function GuideDigitalBarriers() {
             title="What Counts as a Digital Barrier?"
           >
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -85,16 +85,16 @@ export default function GuideDigitalBarriers() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   display: 'flex', gap: '14px', padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none',
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                   alignItems: 'flex-start'
                 }}>
                   <span style={{
                     fontFamily: 'Fraunces, serif', fontSize: '1.25rem',
-                    fontWeight: 700, color: '#5B2C6F', flexShrink: 0, width: '28px'
+                    fontWeight: 700, color: 'var(--link)', flexShrink: 0, width: '28px'
                   }}>{item.num}</span>
                   <div>
-                    <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>{item.title}</p>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.desc}</p>
+                    <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>{item.title}</p>
+                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -189,7 +189,7 @@ export default function GuideDigitalBarriers() {
               <strong>Option 3: File a government complaint.</strong> For government
               websites: file with the DOJ at{' '}
               <a href="https://civilrights.justice.gov/" target="_blank"
-                 rel="noopener noreferrer" style={{ color: '#C2410C', fontWeight: 600 }}>
+                 rel="noopener noreferrer" style={{ color: 'var(--accent)', fontWeight: 600 }}>
                 civilrights.justice.gov
               </a>. For business websites: you can file with the DOJ, but individual
               website complaints rarely result in DOJ action. Private legal action is

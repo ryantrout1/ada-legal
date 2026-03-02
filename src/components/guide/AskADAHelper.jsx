@@ -84,8 +84,8 @@ function Message({ role, content, isLoading }) {
           padding: '12px 16px',
           borderRadius: role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
           background: role === 'user' ? 'var(--accent)' : 'var(--page-bg-subtle)',
-          color: role === 'user' ? 'white' : 'var(--slate-800, #1E293B)',
-          border: role === 'user' ? 'none' : '1px solid var(--slate-200, #E2E8F0)',
+          color: role === 'user' ? 'var(--page-bg)' : 'var(--heading)',
+          border: role === 'user' ? 'none' : '1px solid var(--border)',
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.9rem',
           lineHeight: 1.7,
@@ -93,7 +93,7 @@ function Message({ role, content, isLoading }) {
         }}
       >
         {isLoading ? (
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--slate-600, #4B5563)' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--body)' }}>
             <Loader2 size={16} style={{ animation: 'ada-ai-spin 1s linear infinite' }} aria-hidden="true" />
             Thinking...
           </span>
@@ -274,8 +274,8 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
             borderRadius: '12px', cursor: 'pointer',
             transition: 'all 0.15s', minHeight: '56px',
           }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = '#253040'; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(194,65,12,0.25)'; e.currentTarget.style.background = '#1E293B'; }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--dark-card-bg)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(194,65,12,0.25)'; e.currentTarget.style.background = 'var(--dark-bg)'; }}
         >
           <div style={{
             width: '36px', height: '36px', borderRadius: '10px',
@@ -315,8 +315,8 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
       className="ada-ai-panel"
       style={{
         margin: '24px 0',
-        background: 'white',
-        border: '1px solid var(--slate-200)',
+        background: 'var(--card-bg)',
+        border: '1px solid var(--border)',
         borderRadius: '16px',
         overflow: 'hidden',
         boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
@@ -326,7 +326,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
       <div className="ada-ai-header" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '14px 20px',
-        background: 'var(--dark-bg)', borderBottom: '1px solid #334155',
+        background: 'var(--dark-bg)', borderBottom: '1px solid var(--dark-border)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <MessageCircle size={18} style={{ color: 'var(--accent-light)' }} aria-hidden="true" />
@@ -344,7 +344,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
               aria-label="Start over"
               title="Start over"
               style={{
-                background: 'transparent', border: '1px solid #475569',
+                background: 'transparent', border: '1px solid var(--dark-border)',
                 borderRadius: '8px', padding: '6px', cursor: 'pointer',
                 color: 'var(--dark-muted)', minHeight: '36px', minWidth: '36px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -357,7 +357,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
             onClick={() => setIsOpen(false)}
             aria-label="Close helper"
             style={{
-              background: 'transparent', border: '1px solid #475569',
+              background: 'transparent', border: '1px solid var(--dark-border)',
               borderRadius: '8px', padding: '6px', cursor: 'pointer',
               color: 'var(--dark-muted)', minHeight: '36px', minWidth: '36px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -385,7 +385,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           <div>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-              color: 'var(--slate-600)', lineHeight: 1.7, margin: '0 0 16px',
+              color: 'var(--body)', lineHeight: 1.7, margin: '0 0 16px',
             }}>
               Ask anything about the standards on this page. You can type your question or tap one below.
             </p>
@@ -399,19 +399,19 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
                     display: 'flex', alignItems: 'center', gap: '10px',
                     width: '100%', textAlign: 'left',
                     padding: '12px 16px', borderRadius: '10px',
-                    background: 'var(--slate-50, #F8FAFC)',
-                    border: '1px solid var(--slate-200, #E2E8F0)',
+                    background: 'var(--page-bg-subtle)',
+                    border: '1px solid var(--border)',
                     cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
-                    fontSize: '0.875rem', color: 'var(--slate-700, #334155)',
+                    fontSize: '0.875rem', color: 'var(--body)',
                     minHeight: '48px', transition: 'all 0.15s',
                   }}
                   onMouseEnter={e => {
                     e.currentTarget.style.borderColor = 'var(--accent)';
-                    e.currentTarget.style.background = '#FFF7ED';
+                    e.currentTarget.style.background = 'var(--card-bg-tinted)';
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = 'var(--slate-200, #E2E8F0)';
-                    e.currentTarget.style.background = 'var(--slate-50, #F8FAFC)';
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                    e.currentTarget.style.background = 'var(--page-bg-subtle)';
                   }}
                 >
                   <ChevronRight size={14} style={{ color: 'var(--section-label)', flexShrink: 0 }} aria-hidden="true" />
@@ -434,9 +434,9 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
       {/* Error */}
       {error && (
         <div role="alert" style={{
-          padding: '8px 20px', background: '#FEF2F2',
-          borderTop: '1px solid #FECACA',
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: '#991B1B',
+          padding: '8px 20px', background: 'var(--card-bg-tinted)',
+          borderTop: '1px solid var(--border)',
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--section-label)',
         }}>
           {error}
         </div>
@@ -447,8 +447,8 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
         onSubmit={handleSubmit}
         style={{
           display: 'flex', alignItems: 'center', gap: '8px',
-          padding: '12px 16px', borderTop: '1px solid var(--slate-200)',
-          background: 'var(--slate-50, #F8FAFC)',
+          padding: '12px 16px', borderTop: '1px solid var(--border)',
+          background: 'var(--page-bg-subtle)',
         }}
       >
         <label htmlFor="ada-ai-input" className="sr-only">
@@ -466,13 +466,13 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           className="ada-ai-input"
           style={{
             flex: 1, padding: '12px 16px',
-            borderRadius: '10px', border: '1px solid var(--slate-300, #CBD5E1)',
+            borderRadius: '10px', border: '1px solid var(--border)',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-            color: 'var(--slate-800)', background: 'white',
+            color: 'var(--heading)', background: 'var(--card-bg)',
             minHeight: '48px', outline: 'none',
           }}
           onFocus={e => { e.currentTarget.style.borderColor = 'var(--accent)'; }}
-          onBlur={e => { e.currentTarget.style.borderColor = 'var(--slate-300, #CBD5E1)'; }}
+          onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)'; }}
         />
         <button
           type="submit"
@@ -481,10 +481,10 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           className="ada-ai-send"
           style={{
             width: '48px', height: '48px', borderRadius: '10px',
-            background: input.trim() && !isLoading ? '#C2410C' : 'var(--slate-200, #E2E8F0)',
+            background: input.trim() && !isLoading ? 'var(--accent)' : 'var(--border)',
             border: 'none', cursor: input.trim() && !isLoading ? 'pointer' : 'default',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: input.trim() && !isLoading ? 'white' : 'var(--slate-500)',
+            color: input.trim() && !isLoading ? 'var(--page-bg)' : 'var(--body-secondary)',
             flexShrink: 0, transition: 'all 0.15s',
           }}
         >
@@ -494,12 +494,12 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
 
       {/* Disclaimer */}
       <div style={{
-        padding: '8px 20px 10px', background: 'var(--slate-50, #F8FAFC)',
-        borderTop: '1px solid var(--slate-100, #F1F5F9)',
+        padding: '8px 20px 10px', background: 'var(--page-bg-subtle)',
+        borderTop: '1px solid var(--border-lighter)',
       }}>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem',
-          color: '#475569', margin: 0, lineHeight: 1.5,
+          color: 'var(--body-secondary)', margin: 0, lineHeight: 1.5,
         }}>
           This helper explains ADA standards — it does not provide legal advice. For your specific situation, use the{' '}
           <Link to={createPageUrl('RightsPathway')} style={{ color: 'var(--section-label)', textDecoration: 'underline' }}>

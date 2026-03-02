@@ -12,7 +12,7 @@ export default function GuideParking() {
       <GuideHeroBanner
         title="Accessible Parking Rights"
         typeBadge="Reference"
-        badgeColor="#C2410C"
+        badgeColor="var(--accent)"
       />
 
       <div className="guide-content-wrap">
@@ -41,7 +41,7 @@ export default function GuideParking() {
                   <p style={{ margin: '0 0 2px' }}>301–400 → 8 accessible</p>
                   <p style={{ margin: 0 }}>401–500 → 9 accessible</p>
                 </div>
-                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>
                   For lots over 500: 2% of first 500, plus 1 for each additional
                   100 or fraction thereof.
                 </p>
@@ -203,7 +203,7 @@ export default function GuideParking() {
               These are the most frequently reported accessible parking problems:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -216,12 +216,12 @@ export default function GuideParking() {
               ].map((item, i) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < 5 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < 5 ? '1px solid var(--border)' : 'none'
                 }}>
-                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--slate-900)' }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--heading)' }}>
                     {item.title}
                   </p>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>
                     {item.desc}
                   </p>
                 </div>
@@ -281,7 +281,7 @@ export default function GuideParking() {
                   href="https://www.ada.gov/file-a-complaint/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: '#C2410C' }}
+                  style={{ color: 'var(--accent)' }}
                 >
                   ADA.gov
                 </a>{' '}

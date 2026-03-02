@@ -12,7 +12,7 @@ export default function GuideWebTesting() {
       <GuideHeroBanner
         title="How to Test Your Website for Accessibility"
         typeBadge="Guide"
-        badgeColor="#5B2C6F"
+        badgeColor="var(--link)"
       />
 
       <div className="guide-content-wrap">
@@ -67,7 +67,7 @@ export default function GuideWebTesting() {
               issues</strong>.
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -77,11 +77,11 @@ export default function GuideWebTesting() {
               ].map((tool, i, arr) => (
                 <div key={i} style={{
                   padding: '16px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
-                  <p style={{ margin: '0 0 6px', fontWeight: 700, color: 'var(--slate-900)' }}>{tool.name}</p>
-                  <p style={{ margin: '0 0 8px', fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{tool.what}</p>
-                  <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+                  <p style={{ margin: '0 0 6px', fontWeight: 700, color: 'var(--heading)' }}>{tool.name}</p>
+                  <p style={{ margin: '0 0 8px', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>{tool.what}</p>
+                  <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>
                     <strong>Catches:</strong> {tool.catches}
                   </p>
                 </div>
@@ -132,7 +132,7 @@ export default function GuideWebTesting() {
               miss. Here's a <strong>step-by-step checklist</strong>:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -145,10 +145,10 @@ export default function GuideWebTesting() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
-                  <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>{item.step}</p>
-                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.how}</p>
+                  <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>{item.step}</p>
+                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.how}</p>
                 </div>
               ))}
             </div>
@@ -166,7 +166,7 @@ export default function GuideWebTesting() {
               icons</strong>.
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -176,16 +176,16 @@ export default function GuideWebTesting() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '16px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <p style={{ margin: 0, fontWeight: 700, color: 'var(--slate-900)' }}>{item.name}</p>
+                    <p style={{ margin: 0, fontWeight: 700, color: 'var(--heading)' }}>{item.name}</p>
                     <span style={{
                       fontSize: '0.75rem', fontWeight: 600, padding: '2px 10px',
-                      borderRadius: '100px', background: '#DCFCE7', color: '#166534'
+                      borderRadius: '100px', background: '#DCFCE7', color: 'var(--accent-success)'
                     }}>{item.cost}</span>
                   </div>
-                  <p style={{ margin: '6px 0 0', fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.how}</p>
+                  <p style={{ margin: '6px 0 0', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.how}</p>
                 </div>
               ))}
             </div>
@@ -206,7 +206,7 @@ export default function GuideWebTesting() {
               consistently finds the <strong>same issues</strong> year after year:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -219,16 +219,16 @@ export default function GuideWebTesting() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <p style={{ margin: 0, fontWeight: 600, color: 'var(--slate-900)' }}>{item.issue}</p>
+                    <p style={{ margin: 0, fontWeight: 600, color: 'var(--heading)' }}>{item.issue}</p>
                     <span style={{
                       fontSize: '0.75rem', fontWeight: 600, padding: '2px 10px',
-                      borderRadius: '100px', background: '#FEE2E2', color: '#991B1B'
+                      borderRadius: '100px', background: '#FEE2E2', color: 'var(--section-label)'
                     }}>{item.pct}</span>
                   </div>
-                  <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>
+                  <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7 }}>
                     <strong>Fix:</strong> {item.fix}
                   </p>
                 </div>

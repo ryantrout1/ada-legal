@@ -13,7 +13,7 @@ export default function GuideReachRanges() {
       <GuideHeroBanner
         title="Reach Ranges & Operable Parts"
         typeBadge="Technical"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -71,7 +71,7 @@ export default function GuideReachRanges() {
               can reach. The ADA accounts for this with a sliding scale:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -81,11 +81,11 @@ export default function GuideReachRanges() {
               ].map((row, i, arr) => (
                 <div key={i} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none',
+                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                   gap: '12px', flexWrap: 'wrap'
                 }}>
-                  <span style={{ fontWeight: 600, color: 'var(--slate-900)', fontSize: '0.9rem' }}>{row.depth}</span>
-                  <span style={{ color: 'var(--slate-600)', fontSize: '0.9rem' }}>{row.reach}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--heading)', fontSize: '0.9rem' }}>{row.depth}</span>
+                  <span style={{ color: 'var(--body)', fontSize: '0.9rem' }}>{row.reach}</span>
                 </div>
               ))}
             </div>
@@ -218,7 +218,7 @@ export default function GuideReachRanges() {
               §308.1 recommend reduced reach heights by age group:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -228,11 +228,11 @@ export default function GuideReachRanges() {
               ].map((row, i, arr) => (
                 <div key={i} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none',
+                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                   gap: '12px', flexWrap: 'wrap'
                 }}>
-                  <span style={{ fontWeight: 600, color: 'var(--slate-900)', fontSize: '0.9rem' }}>{row.age}</span>
-                  <span style={{ color: 'var(--slate-600)', fontSize: '0.9rem' }}>Forward: {row.forward}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--heading)', fontSize: '0.9rem' }}>{row.age}</span>
+                  <span style={{ color: 'var(--body)', fontSize: '0.9rem' }}>Forward: {row.forward}</span>
                 </div>
               ))}
             </div>

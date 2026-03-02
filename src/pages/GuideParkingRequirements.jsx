@@ -13,7 +13,7 @@ export default function GuideParkingRequirements() {
       <GuideHeroBanner
         title="Accessible Parking Requirements"
         typeBadge="Checklist"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -39,8 +39,8 @@ export default function GuideParkingRequirements() {
                 }} role="table" aria-label="Accessible parking scoping table">
                   <thead>
                     <tr>
-                      <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '2px solid var(--slate-200)', fontWeight: 700 }}>Total Spaces</th>
-                      <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '2px solid var(--slate-200)', fontWeight: 700 }}>Min. Accessible</th>
+                      <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '2px solid var(--border)', fontWeight: 700 }}>Total Spaces</th>
+                      <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '2px solid var(--border)', fontWeight: 700 }}>Min. Accessible</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -51,8 +51,8 @@ export default function GuideParkingRequirements() {
                       ['501–1000', '2% of total'], ['1001+', '20 + 1 per 100 over 1000']
                     ].map(([total, min], i) => (
                       <tr key={i}>
-                        <td style={{ padding: '5px 8px', borderBottom: '1px solid var(--slate-200)' }}>{total}</td>
-                        <td style={{ padding: '5px 8px', borderBottom: '1px solid var(--slate-200)' }}>{min}</td>
+                        <td style={{ padding: '5px 8px', borderBottom: '1px solid var(--border)' }}>{total}</td>
+                        <td style={{ padding: '5px 8px', borderBottom: '1px solid var(--border)' }}>{min}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -121,24 +121,24 @@ export default function GuideParkingRequirements() {
             </p>
             <p>Two configurations are allowed:</p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               <div style={{
-                padding: '14px 20px', borderBottom: '1px solid var(--slate-200)'
+                padding: '14px 20px', borderBottom: '1px solid var(--border)'
               }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>
                   Option A: Wide space
                 </p>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)' }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)' }}>
                   <strong>132 inches (11 ft)</strong> wide parking space + <strong>60 inches (5 ft)</strong> access aisle
                 </p>
               </div>
               <div style={{ padding: '14px 20px' }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>
                   Option B: Wide aisle
                 </p>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)' }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)' }}>
                   <strong>96 inches (8 ft)</strong> wide parking space + <strong>96 inches (8 ft)</strong> access aisle
                 </p>
               </div>
@@ -178,7 +178,7 @@ export default function GuideParkingRequirements() {
           >
             <p>Here are the minimum dimensions:</p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -190,11 +190,11 @@ export default function GuideParkingRequirements() {
               ].map((row, i, arr) => (
                 <div key={i} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none',
+                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                   gap: '12px', flexWrap: 'wrap'
                 }}>
-                  <span style={{ fontWeight: 600, color: 'var(--slate-900)', fontSize: '0.9rem' }}>{row.label}</span>
-                  <span style={{ color: 'var(--slate-600)', fontSize: '0.9rem' }}>{row.value}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--heading)', fontSize: '0.9rem' }}>{row.label}</span>
+                  <span style={{ color: 'var(--body)', fontSize: '0.9rem' }}>{row.value}</span>
                 </div>
               ))}
             </div>

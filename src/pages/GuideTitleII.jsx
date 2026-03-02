@@ -12,7 +12,7 @@ export default function GuideTitleII() {
       <GuideHeroBanner
         title="Title II: State & Local Government Obligations"
         typeBadge="Overview"
-        badgeColor="#8B1A1A"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">

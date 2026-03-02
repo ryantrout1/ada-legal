@@ -12,7 +12,7 @@ export default function GuideEffectiveCommunication() {
       <GuideHeroBanner
         title="Effective Communication"
         typeBadge="Guide"
-        badgeColor="#C2410C"
+        badgeColor="var(--accent)"
       />
 
       <div className="guide-content-wrap">
@@ -99,7 +99,7 @@ export default function GuideEffectiveCommunication() {
               on the person's disability and the situation. Common examples include:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -109,12 +109,12 @@ export default function GuideEffectiveCommunication() {
               ].map((row, i) => (
                 <div key={row.group} style={{
                   padding: '14px 20px',
-                  borderBottom: i < 2 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < 2 ? '1px solid var(--border)' : 'none'
                 }}>
-                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--slate-900)' }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--heading)' }}>
                     {row.group}
                   </p>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>
                     {row.items}
                   </p>
                 </div>
@@ -209,7 +209,7 @@ export default function GuideEffectiveCommunication() {
               importance</strong> of the communication:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -220,12 +220,12 @@ export default function GuideEffectiveCommunication() {
               ].map((row, i) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < 3 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < 3 ? '1px solid var(--border)' : 'none'
                 }}>
-                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--slate-900)', fontSize: '0.9rem' }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--heading)', fontSize: '0.9rem' }}>
                     {row.situation}
                   </p>
-                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
+                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.6 }}>
                     {row.aid}
                   </p>
                 </div>

@@ -12,7 +12,7 @@ export default function GuideAdaProtections() {
       <GuideHeroBanner
         title="Who the ADA Protects"
         typeBadge="Overview"
-        badgeColor="#C2410C"
+        badgeColor="var(--accent)"
       />
 
       <div className="guide-content-wrap">
@@ -40,7 +40,7 @@ export default function GuideAdaProtections() {
                   (C) being regarded as having such an impairment (as described in
                   paragraph (3)).
                 </p>
-                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>
                   As amended by the ADA Amendments Act of 2008 (P.L. 110-325)
                 </p>
               </>

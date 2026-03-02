@@ -12,7 +12,7 @@ export default function GuideSocialMedia() {
       <GuideHeroBanner
         title="Social Media & Digital Content Accessibility"
         typeBadge="Guide"
-        badgeColor="#5B2C6F"
+        badgeColor="var(--link)"
       />
 
       <div className="guide-content-wrap">
@@ -210,7 +210,7 @@ export default function GuideSocialMedia() {
               Small formatting choices make a big difference for accessibility:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -221,30 +221,30 @@ export default function GuideSocialMedia() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
-                  <p style={{ margin: '0 0 6px', fontWeight: 700, color: 'var(--slate-900)' }}>{item.practice}</p>
+                  <p style={{ margin: '0 0 6px', fontWeight: 700, color: 'var(--heading)' }}>{item.practice}</p>
                   <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '0 0 4px' }}>
                     <span style={{
                       fontSize: '0.75rem', padding: '2px 8px', borderRadius: '6px',
-                      background: '#FEE2E2', color: '#991B1B', fontWeight: 600
+                      background: '#FEE2E2', color: 'var(--section-label)', fontWeight: 600
                     }}>Avoid</span>
                     <code style={{
-                      fontSize: '0.8rem', background: '#FEF2F2', padding: '2px 6px',
-                      borderRadius: '4px', color: '#7F1D1D', wordBreak: 'break-all'
+                      fontSize: '0.8rem', background: 'var(--card-bg-tinted)', padding: '2px 6px',
+                      borderRadius: '4px', color: 'var(--section-label)', wordBreak: 'break-all'
                     }}>{item.bad}</code>
                   </div>
                   <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '0 0 6px' }}>
                     <span style={{
                       fontSize: '0.75rem', padding: '2px 8px', borderRadius: '6px',
-                      background: '#DCFCE7', color: '#166534', fontWeight: 600
+                      background: '#DCFCE7', color: 'var(--accent-success)', fontWeight: 600
                     }}>Better</span>
                     <code style={{
-                      fontSize: '0.8rem', background: '#F0FDF4', padding: '2px 6px',
-                      borderRadius: '4px', color: '#14532D', wordBreak: 'break-all'
+                      fontSize: '0.8rem', background: 'var(--card-bg-tinted)', padding: '2px 6px',
+                      borderRadius: '4px', color: 'var(--accent-success)', wordBreak: 'break-all'
                     }}>{item.good}</code>
                   </div>
-                  <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--slate-500)', lineHeight: 1.6 }}>{item.why}</p>
+                  <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--body-secondary)', lineHeight: 1.6 }}>{item.why}</p>
                 </div>
               ))}
             </div>

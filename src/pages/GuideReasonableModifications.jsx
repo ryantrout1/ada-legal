@@ -12,7 +12,7 @@ export default function GuideReasonableModifications() {
       <GuideHeroBanner
         title="Reasonable Modifications"
         typeBadge="Guide"
-        badgeColor="#C2410C"
+        badgeColor="var(--accent)"
       />
 
       <div className="guide-content-wrap">
@@ -69,23 +69,23 @@ export default function GuideReasonableModifications() {
               things depending on the context:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               <div style={{
                 display: 'flex', gap: '16px', padding: '16px 20px',
-                borderBottom: '1px solid var(--slate-200)', alignItems: 'flex-start'
+                borderBottom: '1px solid var(--border)', alignItems: 'flex-start'
               }}>
                 <span style={{
                   fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
-                  color: '#C2410C', background: '#FEF1EC',
+                  color: 'var(--accent)', background: 'var(--card-bg-tinted)',
                   padding: '4px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
                 }}>Title II / III</span>
                 <div>
-                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--slate-900)' }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--heading)' }}>
                     Reasonable Modification
                   </p>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>
                     Changes to policies, practices, or procedures by government
                     agencies and businesses. Example: a restaurant allowing a
                     service animal despite a "no pets" policy.
@@ -97,14 +97,14 @@ export default function GuideReasonableModifications() {
               }}>
                 <span style={{
                   fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
-                  color: '#C2410C', background: '#FEF1EC',
+                  color: 'var(--accent)', background: 'var(--card-bg-tinted)',
                   padding: '4px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
                 }}>Title I</span>
                 <div>
-                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--slate-900)' }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--heading)' }}>
                     Reasonable Accommodation
                   </p>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>
                     Changes in the workplace by employers. Example: providing a
                     standing desk, modified schedule, or screen reader software for
                     an employee.

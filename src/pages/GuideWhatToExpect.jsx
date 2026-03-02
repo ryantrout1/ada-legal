@@ -12,7 +12,7 @@ export default function GuideWhatToExpect() {
       <GuideHeroBanner
         title="What to Expect: The ADA Legal Process"
         typeBadge="Process Guide"
-        badgeColor="#C2410C"
+        badgeColor="var(--accent)"
       />
 
       <div className="guide-content-wrap">
@@ -274,7 +274,7 @@ export default function GuideWhatToExpect() {
             title="Common Questions About the Process"
           >
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '8px 0'
             }}>
               {[
@@ -305,16 +305,16 @@ export default function GuideWhatToExpect() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '16px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
                   <p style={{
                     margin: '0 0 8px', fontWeight: 700,
-                    color: 'var(--slate-900)', fontSize: '0.95rem',
+                    color: 'var(--heading)', fontSize: '0.95rem',
                     fontStyle: 'italic'
                   }}>{item.q}</p>
                   <p style={{
                     margin: 0, fontSize: '0.9rem',
-                    color: 'var(--slate-600)', lineHeight: 1.75
+                    color: 'var(--body)', lineHeight: 1.75
                   }}>{item.a}</p>
                 </div>
               ))}

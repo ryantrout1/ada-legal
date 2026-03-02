@@ -27,9 +27,9 @@ function getDesignStandardUrl(sectionNum) {
 }
 
 const linkStyle = {
-  color: '#9A3412',
+  color: 'var(--section-label)',
   textDecoration: 'none',
-  borderBottom: '1px dotted #C2410C',
+  borderBottom: '1px dotted var(--accent)',
   fontWeight: 'inherit'
 };
 

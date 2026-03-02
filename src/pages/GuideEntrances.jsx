@@ -13,7 +13,7 @@ export default function GuideEntrances() {
       <GuideHeroBanner
         title="Accessible Entrances & Doors"
         typeBadge="Checklist"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -136,7 +136,7 @@ export default function GuideEntrances() {
                   shall have a slope not steeper than 1:48 and shall comply with
                   §302.
                 </p>
-                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+                <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>
                   The specific clearances vary by approach direction (front, hinge
                   side, latch side) and whether the user is pulling or pushing.
                   See Table 404.2.4.1 for swinging doors and 404.2.4.2 for sliding
@@ -151,7 +151,7 @@ export default function GuideEntrances() {
               The amount of space depends on how you approach the door:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -163,11 +163,11 @@ export default function GuideEntrances() {
               ].map((row, i, arr) => (
                 <div key={i} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none',
+                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                   gap: '12px', flexWrap: 'wrap'
                 }}>
-                  <span style={{ fontWeight: 600, color: 'var(--slate-900)', fontSize: '0.9rem' }}>{row.approach}</span>
-                  <span style={{ color: 'var(--slate-600)', fontSize: '0.9rem' }}>{row.clearance}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--heading)', fontSize: '0.9rem' }}>{row.approach}</span>
+                  <span style={{ color: 'var(--body)', fontSize: '0.9rem' }}>{row.clearance}</span>
                 </div>
               ))}
             </div>

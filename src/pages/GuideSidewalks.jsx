@@ -9,7 +9,7 @@ export default function GuideSidewalks() {
   return (
     <>
       <GuideStyles />
-      <GuideHeroBanner title="Sidewalks & Pedestrian Access" typeBadge="Title II" badgeColor="#15803D" />
+      <GuideHeroBanner title="Sidewalks & Pedestrian Access" typeBadge="Title II" badgeColor="var(--accent-success)" />
 
       <div className="guide-content-wrap">
         <div className="guide-content">
@@ -65,7 +65,7 @@ export default function GuideSidewalks() {
 
           <GuideSection id="common-barriers" title="Common Barriers & Complaints">
             <p>The most frequently reported sidewalk accessibility barriers include:</p>
-            <div style={{ background: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', overflow: 'hidden', margin: '16px 0' }}>
+            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', margin: '16px 0' }}>
               {[
                 'Missing curb ramps at intersections',
                 'Sidewalks blocked by utility poles, signs, or overgrown vegetation',
@@ -74,9 +74,9 @@ export default function GuideSidewalks() {
                 'Missing detectable warnings at curb ramps',
                 'Insufficient pedestrian crossing time at signals'
               ].map((item, i) => (
-                <div key={i} style={{ padding: '10px 20px', borderBottom: i < 5 ? '1px solid var(--slate-200)' : 'none', display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <span style={{ color: '#C2410C', fontWeight: 700, flexShrink: 0 }}>•</span>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-700)', lineHeight: 1.6 }}>{item}</p>
+                <div key={i} style={{ padding: '10px 20px', borderBottom: i < 5 ? '1px solid var(--border)' : 'none', display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <span style={{ color: 'var(--accent)', fontWeight: 700, flexShrink: 0 }}>•</span>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{item}</p>
                 </div>
               ))}
             </div>
@@ -85,7 +85,7 @@ export default function GuideSidewalks() {
           <GuideSection id="filing-complaint" title="Filing a Complaint">
             <p>If your city's sidewalks have accessibility barriers, you have several options:</p>
             <ul style={{ paddingLeft: '1.25rem', margin: '8px 0 16px' }}>
-              <li style={{ marginBottom: '8px' }}><strong>File with the DOJ:</strong> <a href="https://civilrights.justice.gov/" target="_blank" rel="noopener noreferrer" style={{ color: '#C2410C', fontWeight: 600 }}>civilrights.justice.gov</a></li>
+              <li style={{ marginBottom: '8px' }}><strong>File with the DOJ:</strong> <a href="https://civilrights.justice.gov/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontWeight: 600 }}>civilrights.justice.gov</a></li>
               <li style={{ marginBottom: '8px' }}>Many cities have <strong>ADA coordinators</strong> who handle sidewalk complaints directly</li>
               <li style={{ marginBottom: '8px' }}>Some cities have <strong>transition plans</strong> that prioritize curb ramp installation — you can request a copy</li>
               <li style={{ marginBottom: '8px' }}>Document the barrier with <strong>photos, location, and measurements</strong> if possible</li>

@@ -12,7 +12,7 @@ export default function GuideRestaurantsRetail() {
       <GuideHeroBanner
         title="Restaurants & Retail Accessibility"
         typeBadge="Guide"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -200,7 +200,7 @@ export default function GuideRestaurantsRetail() {
               lanes</strong>. The number required depends on the total:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -211,11 +211,11 @@ export default function GuideRestaurantsRetail() {
               ].map((row, i, arr) => (
                 <div key={i} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none',
+                  padding: '10px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                   gap: '12px'
                 }}>
-                  <span style={{ fontWeight: 600, color: 'var(--slate-900)', fontSize: '0.9rem' }}>{row.total}</span>
-                  <span style={{ color: 'var(--slate-600)', fontSize: '0.9rem' }}>{row.accessible}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--heading)', fontSize: '0.9rem' }}>{row.total}</span>
+                  <span style={{ color: 'var(--body)', fontSize: '0.9rem' }}>{row.accessible}</span>
                 </div>
               ))}
             </div>

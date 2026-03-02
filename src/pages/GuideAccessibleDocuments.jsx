@@ -12,7 +12,7 @@ export default function GuideAccessibleDocuments() {
       <GuideHeroBanner
         title="Making Documents Accessible"
         typeBadge="Guide"
-        badgeColor="#5B2C6F"
+        badgeColor="var(--link)"
       />
 
       <div className="guide-content-wrap">
@@ -79,7 +79,7 @@ export default function GuideAccessibleDocuments() {
               properly structured. Here's what an accessible PDF requires:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -93,10 +93,10 @@ export default function GuideAccessibleDocuments() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
-                  <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>{item.req}</p>
-                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.desc}</p>
+                  <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>{item.req}</p>
+                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -268,7 +268,7 @@ export default function GuideAccessibleDocuments() {
             title="Tools for Checking Document Accessibility"
           >
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -279,16 +279,16 @@ export default function GuideAccessibleDocuments() {
               ].map((tool, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <p style={{ margin: 0, fontWeight: 700, color: 'var(--slate-900)' }}>{tool.name}</p>
+                    <p style={{ margin: 0, fontWeight: 700, color: 'var(--heading)' }}>{tool.name}</p>
                     <span style={{
                       fontSize: '0.75rem', fontWeight: 600, padding: '2px 10px',
-                      borderRadius: '100px', background: '#EDE9FE', color: '#5B2C6F'
+                      borderRadius: '100px', background: '#EDE9FE', color: 'var(--link)'
                     }}>{tool.format}</span>
                   </div>
-                  <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{tool.desc}</p>
+                  <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7 }}>{tool.desc}</p>
                 </div>
               ))}
             </div>

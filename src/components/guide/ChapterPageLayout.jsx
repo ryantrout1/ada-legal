@@ -37,7 +37,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
   return (
     <div style={{
       background: isOpen ? 'var(--page-bg-alt)' : 'var(--page-bg)',
-      border: '1px solid var(--slate-200)',
+      border: '1px solid var(--border)',
       borderRadius: '12px', marginBottom: '12px', overflow: 'hidden',
       transition: 'background 0.2s ease'
     }}>
@@ -49,7 +49,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
         style={{
           width: '100%', padding: '16px 20px', cursor: 'pointer',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 600,
-          color: 'var(--slate-900)', display: 'flex',
+          color: 'var(--heading)', display: 'flex',
           alignItems: 'center', gap: '12px', minHeight: '44px',
           background: 'transparent', border: 'none', textAlign: 'left'
         }}
@@ -57,11 +57,11 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
         <span className="chapter-num" style={{
           fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
           color: 'var(--section-label)', background: 'var(--card-bg-warm)', padding: '2px 10px',
-          borderRadius: '6px', flexShrink: 0, border: '1px solid #FFEDD5'
+          borderRadius: '6px', flexShrink: 0, border: '1px solid var(--border)'
         }}>{number}</span>
         <span style={{ flex: 1 }}>{title}</span>
         <ChevronRight size={16} style={{
-          color: 'var(--slate-500)', flexShrink: 0,
+          color: 'var(--body-secondary)', flexShrink: 0,
           transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
           transition: 'transform 0.25s ease'
         }} aria-hidden="true" />
@@ -77,8 +77,8 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
           transition: isOpen ? 'max-height 0.5s ease-in' : 'max-height 0.3s ease-out'
         }}
       >
-        <div style={{ borderTop: '1px solid var(--slate-200)' }}>
-          <div style={{ padding: '24px', background: 'white' }}>
+        <div style={{ borderTop: '1px solid var(--border)' }}>
+          <div style={{ padding: '24px', background: 'var(--card-bg)' }}>
 
             {/* ===== SIMPLE MODE ===== */}
             {showSimple && (
@@ -86,7 +86,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                 {simple ? (
                   <div style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-                    color: 'var(--slate-700)', lineHeight: 1.85
+                    color: 'var(--body)', lineHeight: 1.85
                   }}>
                     {simple}
                   </div>
@@ -94,7 +94,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                   /* Placeholder until Gina writes simple summaries */
                   <div style={{
                     background: 'var(--card-bg-warm)',
-                    border: '1px solid #FDBA7440',
+                    border: '1px solid var(--border)',
                     borderRadius: '10px',
                     padding: '20px'
                   }}>
@@ -102,22 +102,22 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                       <Sparkles size={16} style={{ color: 'var(--section-label)' }} aria-hidden="true" />
                       <p style={{
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-                        color: 'var(--slate-800)', margin: 0
+                        color: 'var(--heading)', margin: 0
                       }}>
                         Simple summary coming soon
                       </p>
                     </div>
                     <p style={{
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                      color: 'var(--slate-600)', margin: 0, lineHeight: 1.6
+                      color: 'var(--body)', margin: 0, lineHeight: 1.6
                     }}>
                       We're writing plain-language summaries for every section. In the meantime, here's the standard explanation:
                     </p>
                     <div style={{
                       marginTop: '16px', paddingTop: '16px',
-                      borderTop: '1px solid var(--slate-200)',
+                      borderTop: '1px solid var(--border)',
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                      color: 'var(--slate-700)', lineHeight: 1.75
+                      color: 'var(--body)', lineHeight: 1.75
                     }}>
                       <AutoCiteLinks>{plain}</AutoCiteLinks>
                     </div>
@@ -132,22 +132,22 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                 <div style={{ flex: '1 1 55%', minWidth: 0 }}>
                   <div style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                    color: 'var(--slate-700)', lineHeight: 1.75
+                    color: 'var(--body)', lineHeight: 1.75
                   }}><AutoCiteLinks>{plain}</AutoCiteLinks></div>
                 </div>
                 <div role="note" aria-label="Official legal text" style={{ flex: '1 1 40%', minWidth: 0 }}>
                   <div style={{
-                    background: 'var(--page-bg-subtle)', border: '1px solid var(--slate-200)',
+                    background: 'var(--page-bg-subtle)', border: '1px solid var(--border)',
                     borderRadius: '10px', padding: '16px'
                   }}>
                     <p style={{
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
                       letterSpacing: '0.1em', textTransform: 'uppercase',
-                      color: 'var(--slate-500)', margin: '0 0 8px'
+                      color: 'var(--body-secondary)', margin: '0 0 8px'
                     }}>Official Standard</p>
                     <div style={{
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                      color: 'var(--slate-600)', lineHeight: 1.7
+                      color: 'var(--body)', lineHeight: 1.7
                     }}><AutoCiteLinks>{legal}</AutoCiteLinks></div>
                   </div>
                 </div>
@@ -158,20 +158,20 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
             {showLegal && (
               <div>
                 <div style={{
-                  background: 'var(--page-bg-subtle)', border: '1px solid var(--slate-200)',
+                  background: 'var(--page-bg-subtle)', border: '1px solid var(--border)',
                   borderRadius: '10px', padding: '20px', marginBottom: '16px'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                    <Scale size={14} style={{ color: 'var(--slate-500)' }} aria-hidden="true" />
+                    <Scale size={14} style={{ color: 'var(--body-secondary)' }} aria-hidden="true" />
                     <p style={{
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
                       letterSpacing: '0.1em', textTransform: 'uppercase',
-                      color: 'var(--slate-500)', margin: 0
+                      color: 'var(--body-secondary)', margin: 0
                     }}>Official Standard</p>
                   </div>
                   <div style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                    color: 'var(--slate-700)', lineHeight: 1.75
+                    color: 'var(--body)', lineHeight: 1.75
                   }}><AutoCiteLinks>{legal}</AutoCiteLinks></div>
                 </div>
                 <details style={{ marginTop: '8px' }}>
@@ -185,7 +185,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                   </summary>
                   <div style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                    color: 'var(--slate-600)', lineHeight: 1.7,
+                    color: 'var(--body)', lineHeight: 1.7,
                     padding: '12px 0'
                   }}><AutoCiteLinks>{plain}</AutoCiteLinks></div>
                 </details>
@@ -201,7 +201,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
             {/* Inline violation CTA */}
             <div style={{
               marginTop: '20px', paddingTop: '16px',
-              borderTop: '1px solid var(--slate-200)',
+              borderTop: '1px solid var(--border)',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               flexWrap: 'wrap', gap: '8px'
             }}>
@@ -218,7 +218,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                 padding: '6px 14px', borderRadius: '8px',
                 border: '1px solid rgba(194,65,12,0.2)',
                 background: 'rgba(194,65,12,0.04)',
-                minHeight: '36px',
+                minHeight: '44px',
                 transition: 'background 0.2s'
               }}>
                 Report a Violation <ArrowRight size={14} aria-hidden="true" />
@@ -272,12 +272,12 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
     <>
       <GuideStyles />
       <style>{`
-        button:focus-visible { outline: 2px solid #C2410C; outline-offset: 2px; border-radius: 10px; }
+        button:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; border-radius: 10px; }
       `}</style>
       <GuideHeroBanner
         title={`Chapter ${chapterNum}: ${title}`}
         typeBadge={range}
-        badgeColor="#15803D"
+        badgeColor="var(--accent-success)"
       />
 
       <div className="guide-content-wrap">
@@ -286,7 +286,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
           <nav aria-label="Chapter navigation" style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             flexWrap: 'wrap', gap: '8px', marginBottom: '24px', paddingBottom: '20px',
-            borderBottom: '1px solid var(--slate-200)'
+            borderBottom: '1px solid var(--border)'
           }}>
             <div>
               {prev && (
@@ -296,7 +296,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
               )}
             </div>
             <Link to={createPageUrl('StandardsGuide') + '#design-standards'} style={{
-              ...linkStyle, color: 'var(--slate-600)', fontWeight: 500
+              ...linkStyle, color: 'var(--body)', fontWeight: 500
             }}>All Chapters</Link>
             <div>
               {next && (
@@ -310,7 +310,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
           {/* Overview */}
           <div style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-            color: 'var(--slate-700)', lineHeight: 1.75, marginBottom: '32px'
+            color: 'var(--body)', lineHeight: 1.75, marginBottom: '32px'
           }}>{overview}</div>
 
           {/* Inline reading level bar — always visible, interactive */}
@@ -322,11 +322,11 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
             marginBottom: '20px',
             borderRadius: '8px',
             background: 'var(--page-bg-subtle)',
-            border: '1px solid var(--slate-200)',
+            border: '1px solid var(--border)',
             fontFamily: 'Manrope, sans-serif',
             flexWrap: 'wrap',
           }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--slate-600)', whiteSpace: 'nowrap' }}>Reading level</span>
+            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--body)', whiteSpace: 'nowrap' }}>Reading level</span>
             <div style={{ display: 'flex', gap: '3px' }}>
               {[
                 { key: 'simple', label: 'Simple', desc: 'Plain language' },
@@ -355,11 +355,11 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                     }}
                     style={{
                       padding: '5px 14px',
-                      minHeight: '32px',
+                      minHeight: '44px',
                       borderRadius: '6px',
-                      border: active ? '2px solid #C2410C' : '1px solid var(--slate-200)',
+                      border: active ? '2px solid var(--accent)' : '1px solid var(--border)',
                       background: active ? 'var(--accent)' : 'var(--page-bg)',
-                      color: active ? 'white' : 'var(--slate-600)',
+                      color: active ? 'var(--page-bg)' : 'var(--body)',
                       fontSize: '0.72rem', fontWeight: active ? 700 : 500,
                       fontFamily: 'Manrope, sans-serif',
                       cursor: 'pointer', transition: 'all 0.15s',
@@ -371,7 +371,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                 );
               })}
             </div>
-            <span style={{ fontSize: '0.65rem', color: 'var(--slate-500)', marginLeft: 'auto' }}>
+            <span style={{ fontSize: '0.65rem', color: 'var(--body-secondary)', marginLeft: 'auto' }}>
               {readingLevel === 'simple' && '📖 Plain-language summaries'}
               {readingLevel === 'standard' && '📄 Plain language + legal text'}
               {readingLevel === 'professional' && '⚖️ Includes legal citations'}
@@ -419,7 +419,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
           />
 
           {/* Share bar */}
-          <div style={{ marginTop: '32px', paddingTop: '20px', borderTop: '1px solid var(--slate-200)' }}>
+          <div style={{ marginTop: '32px', paddingTop: '20px', borderTop: '1px solid var(--border)' }}>
             <ShareBar />
           </div>
 
@@ -427,7 +427,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
           <nav aria-label="Chapter navigation" style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             flexWrap: 'wrap', gap: '8px', marginTop: '32px', paddingTop: '20px',
-            borderTop: '1px solid var(--slate-200)'
+            borderTop: '1px solid var(--border)'
           }}>
             <div>{prev && <Link to={createPageUrl(prev.page)} style={linkStyle}><ChevronLeft size={16} aria-hidden="true" /> Previous Chapter</Link>}</div>
             <div>{next && <Link to={createPageUrl(next.page)} style={linkStyle}>Next Chapter <ChevronRight size={16} aria-hidden="true" /></Link>}</div>

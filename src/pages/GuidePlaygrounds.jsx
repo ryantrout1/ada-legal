@@ -9,7 +9,7 @@ export default function GuidePlaygrounds() {
   return (
     <>
       <GuideStyles />
-      <GuideHeroBanner title="Accessible Playgrounds" typeBadge="§240 / §1008" badgeColor="#15803D" />
+      <GuideHeroBanner title="Accessible Playgrounds" typeBadge="§240 / §1008" badgeColor="var(--accent-success)" />
 
       <div className="guide-content-wrap">
         <div className="guide-content">
@@ -68,7 +68,7 @@ export default function GuidePlaygrounds() {
 
           <GuideSection id="tips" title="Tips for Parents & Advocates">
             <p>When evaluating a playground for accessibility, look for:</p>
-            <div style={{ background: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', overflow: 'hidden', margin: '16px 0' }}>
+            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', margin: '16px 0' }}>
               {[
                 'Is there a paved accessible route from the parking lot or sidewalk to the play area?',
                 'Are ground-level components (swings, sensory panels) reachable on an accessible surface?',
@@ -76,9 +76,9 @@ export default function GuidePlaygrounds() {
                 'Do elevated structures have ramps or at least transfer platforms?',
                 'Are there accessible swings (e.g., high-back bucket seats)?'
               ].map((item, i) => (
-                <div key={i} style={{ padding: '10px 20px', borderBottom: i < 4 ? '1px solid var(--slate-200)' : 'none', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                  <span style={{ color: '#15803D', fontWeight: 700, flexShrink: 0 }}>✓</span>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-700)', lineHeight: 1.6 }}>{item}</p>
+                <div key={i} style={{ padding: '10px 20px', borderBottom: i < 4 ? '1px solid var(--border)' : 'none', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                  <span style={{ color: 'var(--accent-success)', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{item}</p>
                 </div>
               ))}
             </div>

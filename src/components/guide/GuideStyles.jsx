@@ -54,6 +54,42 @@ export default function GuideStyles() {
         outline: 2px solid var(--accent-light);
         outline-offset: 2px;
       }
+      /* Guide link focus */
+      .guide-content a:focus-visible {
+        outline: 3px solid var(--accent-light);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      /* Accordion header focus */
+      .guide-content button:focus-visible {
+        outline: 3px solid var(--accent-light);
+        outline-offset: 2px;
+        border-radius: 10px;
+      }
+      /* Share button focus */
+      .share-btn:focus-visible {
+        outline: 3px solid var(--accent-light) !important;
+        outline-offset: 2px !important;
+      }
+      /* Details/summary focus */
+      .guide-content details summary:focus-visible {
+        outline: 3px solid var(--accent-light);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .guide-two-col,
+        .guide-content button,
+        .ada-diagram-wrap button,
+        .share-btn {
+          transition: none !important;
+        }
+      }
+      @media (prefers-contrast: more) {
+        .guide-content div[role="note"] {
+          border-width: 2px !important;
+        }
+      }
     `}</style>
   );
 }

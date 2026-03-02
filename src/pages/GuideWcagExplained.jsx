@@ -12,7 +12,7 @@ export default function GuideWcagExplained() {
       <GuideHeroBanner
         title="WCAG 2.1 Level AA — What It Requires"
         typeBadge="Standard"
-        badgeColor="#5B2C6F"
+        badgeColor="var(--link)"
       />
 
       <div className="guide-content-wrap">
@@ -28,7 +28,7 @@ export default function GuideWcagExplained() {
               one of these ideas — remembered by the acronym <strong>POUR</strong>:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -40,17 +40,17 @@ export default function GuideWcagExplained() {
                 <div key={i} style={{
                   display: 'flex', alignItems: 'flex-start', gap: '16px',
                   padding: '16px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
                   <span style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     width: '36px', height: '36px', borderRadius: '8px',
-                    background: '#5B2C6F', color: 'white', fontWeight: 700,
+                    background: 'var(--link)', color: 'var(--page-bg)', fontWeight: 700,
                     fontFamily: 'Fraunces, serif', fontSize: '1.125rem', flexShrink: 0
                   }}>{item.letter}</span>
                   <div>
-                    <p style={{ margin: '0 0 2px', fontWeight: 700, color: 'var(--slate-900)' }}>{item.name}</p>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.desc}</p>
+                    <p style={{ margin: '0 0 2px', fontWeight: 700, color: 'var(--heading)' }}>{item.name}</p>
+                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -235,7 +235,7 @@ export default function GuideWcagExplained() {
               <li style={{ marginBottom: '10px' }}>
                 <strong>Page language declared:</strong> The HTML must specify the
                 language (e.g., <code style={{
-                  background: 'var(--slate-100)', padding: '1px 6px',
+                  background: 'var(--border-lighter)', padding: '1px 6px',
                   borderRadius: '4px', fontSize: '0.85em'
                 }}>lang="en"</code>) so screen readers pronounce words correctly.
               </li>
@@ -304,7 +304,7 @@ export default function GuideWcagExplained() {
               WCAG organizes its requirements into <strong>three levels</strong>:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -314,18 +314,18 @@ export default function GuideWcagExplained() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <span style={{ fontWeight: 700, color: 'var(--slate-900)', fontSize: '0.95rem' }}>{item.level}</span>
+                    <span style={{ fontWeight: 700, color: 'var(--heading)', fontSize: '0.95rem' }}>{item.level}</span>
                     <span style={{
                       fontSize: '0.75rem', fontWeight: 600, padding: '2px 10px',
                       borderRadius: '100px',
-                      background: item.note === 'Not required by ADA' ? 'var(--slate-100)' : '#DCFCE7',
-                      color: item.note === 'Not required by ADA' ? 'var(--slate-500)' : '#166534'
+                      background: item.note === 'Not required by ADA' ? 'var(--border-lighter)' : '#DCFCE7',
+                      color: item.note === 'Not required by ADA' ? 'var(--body-secondary)' : 'var(--accent-success)'
                     }}>{item.note}</span>
                   </div>
-                  <p style={{ margin: '4px 0 0', fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.desc}</p>
+                  <p style={{ margin: '4px 0 0', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -340,7 +340,7 @@ export default function GuideWcagExplained() {
               on government and business websites:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -353,16 +353,16 @@ export default function GuideWcagExplained() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <p style={{ margin: 0, fontWeight: 600, color: 'var(--slate-900)' }}>{item.failure}</p>
+                    <p style={{ margin: 0, fontWeight: 600, color: 'var(--heading)' }}>{item.failure}</p>
                     <span style={{
-                      fontSize: '0.75rem', color: '#5B2C6F', background: '#F3E8FF',
+                      fontSize: '0.75rem', color: 'var(--link)', background: '#F3E8FF',
                       padding: '2px 8px', borderRadius: '100px', fontWeight: 600, whiteSpace: 'nowrap'
                     }}>SC {item.criterion}</span>
                   </div>
-                  <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.example}</p>
+                  <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.example}</p>
                 </div>
               ))}
             </div>

@@ -12,7 +12,7 @@ export default function GuideVoting() {
       <GuideHeroBanner
         title="Voting & Election Accessibility"
         typeBadge="Specialized"
-        badgeColor="#8B1A1A"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -75,7 +75,7 @@ export default function GuideVoting() {
               five key areas:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -87,10 +87,10 @@ export default function GuideVoting() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
-                  <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>{item.area}</p>
-                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.items}</p>
+                  <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>{item.area}</p>
+                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.items}</p>
                 </div>
               ))}
             </div>
@@ -268,7 +268,7 @@ export default function GuideVoting() {
               violations:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -281,10 +281,10 @@ export default function GuideVoting() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
-                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--slate-900)' }}>{item.violation}</p>
-                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.detail}</p>
+                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--heading)' }}>{item.violation}</p>
+                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.detail}</p>
                 </div>
               ))}
             </div>

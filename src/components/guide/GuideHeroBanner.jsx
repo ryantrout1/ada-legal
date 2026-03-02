@@ -81,7 +81,7 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
         <div style={{ marginTop: '16px' }}>
           <style>{`
             .guide-hero-share button { border-color: rgba(255,255,255,0.35) !important; background: rgba(255,255,255,0.12) !important; color: rgba(255,255,255,0.85) !important; }
-            .guide-hero-share button:hover { border-color: #C2410C !important; color: white !important; background: rgba(194,65,12,0.3) !important; }
+            .guide-hero-share button:hover { border-color: var(--accent) !important; color: white !important; background: rgba(194,65,12,0.3) !important; }
             .guide-hero-share span { color: rgba(255,255,255,0.65) !important; }
           `}</style>
           <div className="guide-hero-share">

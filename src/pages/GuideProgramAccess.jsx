@@ -12,7 +12,7 @@ export default function GuideProgramAccess() {
       <GuideHeroBanner
         title="Program Accessibility"
         typeBadge="Guide"
-        badgeColor="#8B1A1A"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -78,7 +78,7 @@ export default function GuideProgramAccess() {
               accessible without necessarily renovating every building:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -91,10 +91,10 @@ export default function GuideProgramAccess() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
-                  <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>{item.method}</p>
-                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.desc}</p>
+                  <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>{item.method}</p>
+                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.desc}</p>
                 </div>
               ))}
             </div>

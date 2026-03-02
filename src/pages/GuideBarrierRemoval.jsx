@@ -12,7 +12,7 @@ export default function GuideBarrierRemoval() {
       <GuideHeroBanner
         title="Barrier Removal: What's 'Readily Achievable'?"
         typeBadge="Legal Standard"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -163,7 +163,7 @@ export default function GuideBarrierRemoval() {
               order</strong>:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -174,16 +174,16 @@ export default function GuideBarrierRemoval() {
               ].map((item, i) => (
                 <div key={i} style={{
                   display: 'flex', gap: '14px', padding: '14px 20px',
-                  borderBottom: i < 3 ? '1px solid var(--slate-200)' : 'none',
+                  borderBottom: i < 3 ? '1px solid var(--border)' : 'none',
                   alignItems: 'flex-start'
                 }}>
                   <span style={{
                     fontFamily: 'Fraunces, serif', fontSize: '1.25rem',
-                    fontWeight: 700, color: '#C2410C', flexShrink: 0, width: '28px'
+                    fontWeight: 700, color: 'var(--accent)', flexShrink: 0, width: '28px'
                   }}>{item.num}</span>
                   <div>
-                    <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>{item.title}</p>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.desc}</p>
+                    <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>{item.title}</p>
+                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.desc}</p>
                   </div>
                 </div>
               ))}

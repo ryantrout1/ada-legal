@@ -14,7 +14,7 @@ export default function GuideTurningHandrails() {
       <GuideHeroBanner
         title="Turning Spaces & Handrail Profiles"
         typeBadge="Technical"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -90,7 +90,7 @@ export default function GuideTurningHandrails() {
             </ul>
           </GuideSection>
 
-          <hr style={{ border: 'none', borderTop: '2px solid var(--slate-200)', margin: '48px 0' }} />
+          <hr style={{ border: 'none', borderTop: '2px solid var(--border)', margin: '48px 0' }} />
 
           <HandrailDiagram />
 

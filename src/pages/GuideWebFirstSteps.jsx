@@ -12,7 +12,7 @@ export default function GuideWebFirstSteps() {
       <GuideHeroBanner
         title="First Steps Toward Web Compliance"
         typeBadge="Action Plan"
-        badgeColor="#5B2C6F"
+        badgeColor="var(--link)"
       />
 
       <div className="guide-content-wrap">
@@ -94,25 +94,25 @@ export default function GuideWebFirstSteps() {
               accessibility problems are equally serious. Focus first on:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
-                { priority: 'Critical', color: '#991B1B', bg: '#FEE2E2', desc: 'Blocks access entirely — users cannot complete a task at all. Examples: form can\'t be submitted by keyboard, no captions on required video content, page has a keyboard trap.' },
-                { priority: 'Serious', color: '#92400E', bg: '#FEF3C7', desc: 'Makes tasks very difficult. Examples: poor contrast makes text hard to read, images of text with no alternative, focus order jumps unpredictably.' },
-                { priority: 'Moderate', color: '#1E3A8A', bg: '#DBEAFE', desc: 'Causes inconvenience but doesn\'t block access. Examples: missing skip navigation link, heading levels skipped, decorative images with unnecessary alt text.' },
-                { priority: 'Minor', color: '#15803D', bg: '#DCFCE7', desc: 'Best practice issues. Examples: link text says "click here" instead of something descriptive, redundant ARIA attributes.' }
+                { priority: 'Critical', color: 'var(--section-label)', bg: '#FEE2E2', desc: 'Blocks access entirely — users cannot complete a task at all. Examples: form can\'t be submitted by keyboard, no captions on required video content, page has a keyboard trap.' },
+                { priority: 'Serious', color: 'var(--section-label)', bg: '#FEF3C7', desc: 'Makes tasks very difficult. Examples: poor contrast makes text hard to read, images of text with no alternative, focus order jumps unpredictably.' },
+                { priority: 'Moderate', color: 'var(--link)', bg: '#DBEAFE', desc: 'Causes inconvenience but doesn\'t block access. Examples: missing skip navigation link, heading levels skipped, decorative images with unnecessary alt text.' },
+                { priority: 'Minor', color: 'var(--accent-success)', bg: '#DCFCE7', desc: 'Best practice issues. Examples: link text says "click here" instead of something descriptive, redundant ARIA attributes.' }
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
                   <span style={{
                     display: 'inline-block', fontSize: '0.75rem', fontWeight: 700,
                     padding: '2px 10px', borderRadius: '100px',
                     background: item.bg, color: item.color, marginBottom: '6px'
                   }}>{item.priority}</span>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.desc}</p>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -309,7 +309,7 @@ export default function GuideWebFirstSteps() {
             title="Useful Testing Tools"
           >
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -322,18 +322,18 @@ export default function GuideWebFirstSteps() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <p style={{ margin: 0, fontWeight: 600, color: 'var(--slate-900)' }}>{item.name}</p>
+                    <p style={{ margin: 0, fontWeight: 600, color: 'var(--heading)' }}>{item.name}</p>
                     <span style={{
                       fontSize: '0.75rem', fontWeight: 600, padding: '2px 10px',
                       borderRadius: '100px',
                       background: item.type === 'Automated' ? '#EDE9FE' : item.type === 'Manual' ? '#FEF3C7' : '#DBEAFE',
-                      color: item.type === 'Automated' ? '#5B2C6F' : item.type === 'Manual' ? '#92400E' : '#1E3A8A'
+                      color: item.type === 'Automated' ? 'var(--link)' : item.type === 'Manual' ? 'var(--section-label)' : 'var(--link)'
                     }}>{item.type}</span>
                   </div>
-                  <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>{item.desc}</p>
+                  <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7 }}>{item.desc}</p>
                 </div>
               ))}
             </div>

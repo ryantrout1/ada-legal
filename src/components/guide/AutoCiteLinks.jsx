@@ -25,7 +25,7 @@ function getStdUrl(num) {
   return anchor ? `${DESIGN_STANDARDS_BASE}#${anchor}` : DESIGN_STANDARDS_BASE;
 }
 
-const lnk = { color: '#9A3412', textDecoration: 'none', borderBottom: '1px dotted #9A3412' };
+const lnk = { color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--section-label)' };
 const arrow = { fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' };
 
 function makeLink(text, url, label) {

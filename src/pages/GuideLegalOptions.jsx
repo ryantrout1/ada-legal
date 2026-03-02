@@ -24,7 +24,7 @@ function ComparisonTable() {
         {/* Header */}
         <div style={{
           display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
-          background: '#1A1F2B', borderRadius: '12px 12px 0 0', overflow: 'hidden'
+          background: 'var(--dark-bg)', borderRadius: '12px 12px 0 0', overflow: 'hidden'
         }}>
           {headers.map((h, i) => (
             <div key={i} style={{
@@ -39,10 +39,10 @@ function ComparisonTable() {
         {COMPARISON_ROWS.map((row, ri) => (
           <div key={ri} style={{
             display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
-            borderLeft: '1px solid var(--slate-200)',
-            borderRight: '1px solid var(--slate-200)',
-            borderBottom: '1px solid var(--slate-200)',
-            background: ri % 2 === 0 ? '#FAFAF9' : 'white',
+            borderLeft: '1px solid var(--border)',
+            borderRight: '1px solid var(--border)',
+            borderBottom: '1px solid var(--border)',
+            background: ri % 2 === 0 ? 'var(--page-bg-subtle)' : 'white',
             borderRadius: ri === COMPARISON_ROWS.length - 1 ? '0 0 12px 12px' : undefined,
             overflow: 'hidden'
           }}>
@@ -52,9 +52,9 @@ function ComparisonTable() {
                 fontFamily: 'Manrope, sans-serif',
                 fontSize: ci === 0 ? '0.8rem' : '0.8rem',
                 fontWeight: ci === 0 ? 700 : 500,
-                color: ci === 0 ? 'var(--slate-900)' : 'var(--slate-600)',
+                color: ci === 0 ? 'var(--heading)' : 'var(--body)',
                 lineHeight: 1.5,
-                borderRight: ci < keys.length - 1 ? '1px solid var(--slate-200)' : 'none'
+                borderRight: ci < keys.length - 1 ? '1px solid var(--border)' : 'none'
               }}>{row[k]}</div>
             ))}
           </div>
@@ -71,7 +71,7 @@ export default function GuideLegalOptions() {
       <GuideHeroBanner
         title="Your Legal Options After an ADA Violation"
         typeBadge="Know Your Rights"
-        badgeColor="#C2410C"
+        badgeColor="var(--accent)"
       />
 
       <div className="guide-content-wrap">
@@ -149,7 +149,7 @@ export default function GuideLegalOptions() {
               (EEOC) —{' '}
               <a href="https://www.eeoc.gov/filing-charge-discrimination"
                  target="_blank" rel="noopener noreferrer"
-                 style={{ color: '#C2410C', fontWeight: 600 }}>
+                 style={{ color: 'var(--accent)', fontWeight: 600 }}>
                 eeoc.gov/filing-charge-discrimination
               </a>
             </p>
@@ -209,7 +209,7 @@ export default function GuideLegalOptions() {
               Rights Division —{' '}
               <a href="https://civilrights.justice.gov/"
                  target="_blank" rel="noopener noreferrer"
-                 style={{ color: '#C2410C', fontWeight: 600 }}>
+                 style={{ color: 'var(--accent)', fontWeight: 600 }}>
                 civilrights.justice.gov
               </a>
             </p>
@@ -264,7 +264,7 @@ export default function GuideLegalOptions() {
               <strong>Where to file complaint:</strong> DOJ —{' '}
               <a href="https://civilrights.justice.gov/"
                  target="_blank" rel="noopener noreferrer"
-                 style={{ color: '#C2410C', fontWeight: 600 }}>
+                 style={{ color: 'var(--accent)', fontWeight: 600 }}>
                 civilrights.justice.gov
               </a>{' '}
               — but the DOJ generally only takes "pattern or practice" cases, not
@@ -338,7 +338,7 @@ export default function GuideLegalOptions() {
               <strong>Where to file:</strong> HUD Office of Fair Housing —{' '}
               <a href="https://www.hud.gov/program_offices/fair_housing_equal_opp/online-complaint"
                  target="_blank" rel="noopener noreferrer"
-                 style={{ color: '#C2410C', fontWeight: 600 }}>
+                 style={{ color: 'var(--accent)', fontWeight: 600 }}>
                 hud.gov — online complaint
               </a>
             </p>
@@ -378,7 +378,7 @@ export default function GuideLegalOptions() {
             </p>
 
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               {[
@@ -405,22 +405,22 @@ export default function GuideLegalOptions() {
               ].map((item, i, arr) => (
                 <div key={i} style={{
                   padding: '14px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--slate-200)' : 'none',
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                   display: 'flex', gap: '14px', alignItems: 'flex-start'
                 }}>
                   <span style={{
                     fontFamily: 'Fraunces, serif', fontSize: '1.1rem',
-                    fontWeight: 700, color: '#C2410C', flexShrink: 0, width: '24px',
+                    fontWeight: 700, color: 'var(--accent)', flexShrink: 0, width: '24px',
                     marginTop: '2px'
                   }}>→</span>
                   <div>
                     <p style={{
                       margin: '0 0 4px', fontWeight: 700,
-                      color: 'var(--slate-900)', fontStyle: i < 4 ? 'italic' : 'normal'
+                      color: 'var(--heading)', fontStyle: i < 4 ? 'italic' : 'normal'
                     }}>{item.scenario}</p>
                     <p style={{
                       margin: 0, fontSize: '0.9rem',
-                      color: 'var(--slate-600)', lineHeight: 1.7
+                      color: 'var(--body)', lineHeight: 1.7
                     }}>{item.action}</p>
                   </div>
                 </div>

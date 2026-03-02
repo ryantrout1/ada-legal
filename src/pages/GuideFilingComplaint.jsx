@@ -12,7 +12,7 @@ export default function GuideFilingComplaint() {
       <GuideHeroBanner
         title="How to File an ADA Complaint"
         typeBadge="Guide"
-        badgeColor="#C2410C"
+        badgeColor="var(--accent)"
       />
 
       <div className="guide-content-wrap">
@@ -104,7 +104,7 @@ export default function GuideFilingComplaint() {
             </p>
 
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '20px 0'
             }}>
               {[
@@ -116,18 +116,18 @@ export default function GuideFilingComplaint() {
               ].map((s, i) => (
                 <div key={s.step} style={{
                   display: 'flex', gap: '16px', padding: '16px 20px',
-                  borderBottom: i < 4 ? '1px solid var(--slate-200)' : 'none',
+                  borderBottom: i < 4 ? '1px solid var(--border)' : 'none',
                   alignItems: 'flex-start'
                 }}>
                   <span style={{
                     fontFamily: 'Fraunces, serif', fontSize: '0.9rem', fontWeight: 700,
-                    color: '#C2410C', background: '#FEF1EC',
+                    color: 'var(--accent)', background: 'var(--card-bg-tinted)',
                     padding: '4px 10px', borderRadius: '6px', flexShrink: 0,
                     minWidth: '28px', textAlign: 'center'
                   }}>{s.step}</span>
                   <div>
-                    <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--slate-900)' }}>{s.title}</p>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>{s.desc}</p>
+                    <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--heading)' }}>{s.title}</p>
+                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{s.desc}</p>
                   </div>
                 </div>
               ))}
@@ -237,7 +237,7 @@ export default function GuideFilingComplaint() {
                 rel="noopener noreferrer"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: '8px',
-                  background: '#C2410C', color: 'white',
+                  background: 'var(--accent)', color: 'var(--page-bg)',
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
                   padding: '12px 24px', borderRadius: '10px',
                   textDecoration: 'none', minHeight: '44px'

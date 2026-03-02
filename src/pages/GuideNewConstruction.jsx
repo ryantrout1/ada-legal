@@ -12,7 +12,7 @@ export default function GuideNewConstruction() {
       <GuideHeroBanner
         title="New Construction & Alterations"
         typeBadge="Legal Standard"
-        badgeColor="#9A3412"
+        badgeColor="var(--section-label)"
       />
 
       <div className="guide-content-wrap">
@@ -71,36 +71,36 @@ export default function GuideNewConstruction() {
               standards apply depends on <strong>when the design work began</strong>:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               <div style={{
-                padding: '14px 20px', borderBottom: '1px solid var(--slate-200)'
+                padding: '14px 20px', borderBottom: '1px solid var(--border)'
               }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>
                   Before September 15, 2010
                 </p>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>
                   Must comply with the <strong>1991 ADA Standards for Accessible
                   Design</strong> (ADAAG).
                 </p>
               </div>
               <div style={{
-                padding: '14px 20px', borderBottom: '1px solid var(--slate-200)'
+                padding: '14px 20px', borderBottom: '1px solid var(--border)'
               }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>
                   September 15, 2010 – March 14, 2012
                 </p>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>
                   Could use either the 1991 Standards or the <strong>2010 ADA
                   Standards</strong> (safe harbor period).
                 </p>
               </div>
               <div style={{ padding: '14px 20px' }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--slate-900)' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)' }}>
                   March 15, 2012 and after
                 </p>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.7 }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>
                   Must comply with the <strong>2010 ADA Standards for Accessible
                   Design</strong>. These are the current standards in effect today.
                 </p>
@@ -162,23 +162,23 @@ export default function GuideNewConstruction() {
               alteration requirements. The key distinction:
             </p>
             <div style={{
-              background: 'white', border: '1px solid var(--slate-200)',
+              background: 'var(--card-bg)', border: '1px solid var(--border)',
               borderRadius: '12px', overflow: 'hidden', margin: '16px 0'
             }}>
               <div style={{
                 display: 'flex', gap: '16px', padding: '16px 20px',
-                borderBottom: '1px solid var(--slate-200)', alignItems: 'flex-start'
+                borderBottom: '1px solid var(--border)', alignItems: 'flex-start'
               }}>
                 <span style={{
                   fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
-                  color: '#15803D', background: '#DCFCE7',
+                  color: 'var(--accent-success)', background: '#DCFCE7',
                   padding: '4px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
                 }}>Maintenance</span>
                 <div>
-                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--slate-900)' }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--heading)' }}>
                     Does NOT trigger accessibility requirements
                   </p>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>
                     Painting walls, re-roofing, replacing light bulbs, patching
                     holes, replacing broken hardware with the same type, or
                     fixing plumbing leaks.
@@ -190,14 +190,14 @@ export default function GuideNewConstruction() {
               }}>
                 <span style={{
                   fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
-                  color: '#C2410C', background: '#FEF1EC',
+                  color: 'var(--accent)', background: 'var(--card-bg-tinted)',
                   padding: '4px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
                 }}>Alteration</span>
                 <div>
-                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--slate-900)' }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--heading)' }}>
                     DOES trigger accessibility requirements
                   </p>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>
                     Moving walls, installing new flooring, renovating a restroom,
                     reconfiguring a sales area, widening or relocating doorways,
                     or upgrading electrical/plumbing systems in a way that affects

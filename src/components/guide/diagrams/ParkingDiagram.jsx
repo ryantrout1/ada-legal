@@ -130,15 +130,15 @@ export default function ParkingDiagram() {
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
       {/* Unit toggle */}
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px', gap: '8px', alignItems: 'center' }}>
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--slate-500)' }}>Units:</span>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
         {['Imperial', 'Metric'].map(u => {
           const isActive = u === 'Metric' ? metric : !metric;
           return (
             <button key={u} onClick={() => setMetric(u === 'Metric')}
               style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isActive ? 700 : 500,
-                padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--slate-200)',
-                background: isActive ? '#1A1F2B' : 'white', color: isActive ? 'white' : 'var(--slate-600)',
+                padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)',
+                background: isActive ? 'var(--dark-bg)' : 'white', color: isActive ? 'white' : 'var(--body)',
                 cursor: 'pointer', minHeight: '28px'
               }} aria-pressed={isActive}>{u}</button>
           );
@@ -146,7 +146,7 @@ export default function ParkingDiagram() {
       </div>
 
       {/* SVG */}
-      <div style={{ background: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', overflow: 'hidden' }}>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <svg viewBox="0 0 900 440" role="img" aria-labelledby="park-title park-desc"
           style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="park-title">ADA §502 Accessible Parking Spaces Diagram</title>
@@ -156,7 +156,7 @@ export default function ParkingDiagram() {
             above. Right: signage elevation detail showing ISA sign at 60 inches minimum height and 98-inch van vertical clearance.
           </desc>
 
-          <rect x="0" y="0" width="900" height="440" fill="#FAFAF9" />
+          <rect x="0" y="0" width="900" height="440" fill="var(--page-bg-subtle)" />
           <HatchPattern />
 
           {/* ===== LEFT: PLAN VIEW ===== */}
@@ -332,23 +332,23 @@ export default function ParkingDiagram() {
       {/* Info panel */}
       {activeCallout && (
         <div ref={panelRef} style={{
-          marginTop: '12px', background: 'white', border: '1px solid var(--slate-200)',
+          marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)',
           borderRadius: '12px', overflow: 'hidden', animation: 'parkFadeIn 0.25s ease-out'
         }}>
           {/* Header */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '14px 20px', borderBottom: '1px solid var(--slate-200)', background: '#FAFAF9',
+            padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)',
             flexWrap: 'wrap', gap: '8px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                 width: '26px', height: '26px', borderRadius: '50%',
-                background: activeCallout.color, color: 'white',
+                background: activeCallout.color, color: 'var(--page-bg)',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700
               }}>{activeCallout.id}</span>
-              <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--slate-900)' }}>
+              <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>
                 {activeCallout.label}
               </span>
               <span style={{
@@ -359,9 +359,9 @@ export default function ParkingDiagram() {
             </div>
             <button onClick={() => setActive(null)} aria-label="Close panel"
               style={{
-                background: 'none', border: '1px solid var(--slate-200)', borderRadius: '8px',
+                background: 'none', border: '1px solid var(--border)', borderRadius: '8px',
                 padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-600)', minHeight: '44px'
+                fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px'
               }}>Close <span aria-hidden="true">✕</span></button>
           </div>
 
@@ -370,7 +370,7 @@ export default function ParkingDiagram() {
             <div style={{ flex: '1 1 55%', minWidth: 0 }}>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                color: 'var(--slate-700)', lineHeight: 1.75, margin: 0
+                color: 'var(--body)', lineHeight: 1.75, margin: 0
               }}>{activeCallout.plain}</p>
 
               {/* Scoping table for callout 7 */}
@@ -381,15 +381,15 @@ export default function ParkingDiagram() {
                 }} role="table" aria-label="Accessible parking scoping table">
                   <thead>
                     <tr>
-                      <th style={{ textAlign: 'left', padding: '8px 10px', borderBottom: '2px solid var(--slate-200)', fontWeight: 700, color: 'var(--slate-900)', fontSize: '0.8rem' }}>Total Spaces</th>
-                      <th style={{ textAlign: 'left', padding: '8px 10px', borderBottom: '2px solid var(--slate-200)', fontWeight: 700, color: 'var(--slate-900)', fontSize: '0.8rem' }}>Accessible Required</th>
+                      <th style={{ textAlign: 'left', padding: '8px 10px', borderBottom: '2px solid var(--border)', fontWeight: 700, color: 'var(--heading)', fontSize: '0.8rem' }}>Total Spaces</th>
+                      <th style={{ textAlign: 'left', padding: '8px 10px', borderBottom: '2px solid var(--border)', fontWeight: 700, color: 'var(--heading)', fontSize: '0.8rem' }}>Accessible Required</th>
                     </tr>
                   </thead>
                   <tbody>
                     {SCOPING_TABLE.map(([total, req], i) => (
                       <tr key={i}>
-                        <td style={{ padding: '6px 10px', borderBottom: '1px solid var(--slate-100)', color: 'var(--slate-700)' }}>{total}</td>
-                        <td style={{ padding: '6px 10px', borderBottom: '1px solid var(--slate-100)', color: 'var(--slate-700)', fontWeight: 600 }}>{req}</td>
+                        <td style={{ padding: '6px 10px', borderBottom: '1px solid var(--border-lighter)', color: 'var(--body)' }}>{total}</td>
+                        <td style={{ padding: '6px 10px', borderBottom: '1px solid var(--border-lighter)', color: 'var(--body)', fontWeight: 600 }}>{req}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -404,11 +404,11 @@ export default function ParkingDiagram() {
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
                   letterSpacing: '0.1em', textTransform: 'uppercase',
-                  color: 'var(--slate-500)', margin: '0 0 8px'
+                  color: 'var(--body-secondary)', margin: '0 0 8px'
                 }}>Official Standard — {parseCitations(activeCallout.citation, activeCallout.linkOverride)}</p>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                  color: 'var(--slate-600)', lineHeight: 1.7, margin: 0, fontStyle: 'italic'
+                  color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic'
                 }}>{parseCitations(activeCallout.legal, activeCallout.linkOverride)}</p>
               </div>
             </aside>
