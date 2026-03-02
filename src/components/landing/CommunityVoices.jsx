@@ -213,6 +213,29 @@ export default function CommunityVoices() {
 
   const totalVotes = Object.values(votes).reduce((a, b) => a + b, 0);
 
+  // Admin utility: purge all votes (call from browser console: window.__purgeCommunityVotes())
+  useEffect(() => {
+    window.__purgeCommunityVotes = async () => {
+      try {
+        const records = await base44.entities.CommunityVote.getAll();
+        console.log(`Deleting ${records.length} CommunityVote records...`);
+        for (const r of records) {
+          await base44.entities.CommunityVote.delete(r.id);
+        }
+        localStorage.removeItem(STORAGE_KEY);
+        console.log('Done. All CommunityVote records deleted. Reload the page.');
+        setVotes({ rights: 0, happened: 0, space: 0, believe: 0 });
+        setHasVoted(false);
+        setSelectedId(null);
+        setButtonsVisible(true);
+        setUserDot(null);
+      } catch (err) {
+        console.error('Purge failed:', err);
+      }
+    };
+    return () => { delete window.__purgeCommunityVotes; };
+  }, []);
+
   // Load votes from Base44 on mount
   useEffect(() => {
     async function loadVotes() {
@@ -226,8 +249,8 @@ export default function CommunityVoices() {
         });
         setVotes(counts);
       } catch {
-        // Entity not created yet or error — use seed data
-        setVotes({ rights: 87, happened: 68, space: 38, believe: 54 });
+        // Entity not created yet or no records — start from zero
+        setVotes({ rights: 0, happened: 0, space: 0, believe: 0 });
       }
 
       // Check if user already voted
