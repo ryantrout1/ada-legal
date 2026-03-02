@@ -2596,9 +2596,9 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
 
   const isMobile = variant === 'inline';
   const accent = '#C2410C';
-  const borderColor = isMobile ? 'rgba(255,255,255,0.2)' : 'var(--slate-200, #E2E8F0)';
-  const textPrimary = isMobile ? 'white' : 'var(--slate-700, #334155)';
-  const textSecondary = isMobile ? 'rgba(255,255,255,0.6)' : '#64748B';
+  const borderColor = isMobile ? 'rgba(255,255,255,0.25)' : 'var(--slate-200, #E2E8F0)';
+  const textPrimary = isMobile ? '#F1F5F9' : 'var(--slate-700, #334155)';
+  const textSecondary = isMobile ? '#B0BEC5' : '#64748B';
   const accentBg = isMobile ? 'rgba(194,65,12,0.2)' : '#FFF7ED';
 
   const labelStyle = {
@@ -2607,7 +2607,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
     fontWeight: 700,
     textTransform: 'uppercase',
     letterSpacing: '0.06em',
-    color: textSecondary,
+    color: isMobile ? '#E2E8F0' : textSecondary,
     margin: 0,
     padding: 0,
     border: 'none'
@@ -2624,12 +2624,13 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
         <legend style={labelStyle}>Display</legend>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', marginTop: '8px' }}>
           {[
-            { key: 'default', icon: '🎨', label: 'Default' },
-            { key: 'dark', icon: '🌙', label: 'Dark' },
-            { key: 'warm', icon: '🌅', label: 'Warm' },
-            { key: 'high-contrast', icon: null, label: 'Contrast', svg: true },
+            { key: 'default', label: 'Default' },
+            { key: 'dark', label: 'Dark' },
+            { key: 'warm', label: 'Warm' },
+            { key: 'high-contrast', label: 'Contrast' },
           ].map((m, i) => {
             const active = prefs.displayMode === m.key;
+            const iconColor = active ? accent : textSecondary;
             return (
               <button
                 key={m.key}
@@ -2640,21 +2641,49 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                 style={{
                   display: 'flex', flexDirection: 'column',
                   alignItems: 'center', justifyContent: 'center',
-                  gap: '3px', padding: '8px 2px',
-                  minHeight: '54px',
+                  gap: '5px', padding: '10px 2px',
+                  minHeight: '58px',
                   borderRadius: '10px',
                   border: active ? `2px solid ${accent}` : `1px solid ${borderColor}`,
                   background: active ? accentBg : 'transparent',
                   cursor: 'pointer', transition: 'all 0.15s',
                 }}
               >
-                <span aria-hidden="true" style={{ fontSize: '1rem', lineHeight: 1 }}>
-                  {m.svg ? (
-                    <svg width="18" height="18" viewBox="0 0 18 18" style={{ display: 'block' }}>
-                      <circle cx="9" cy="9" r="8" fill="none" stroke={active ? accent : textSecondary} strokeWidth="1.5" />
-                      <path d="M9 1a8 8 0 0 1 0 16z" fill={active ? accent : textSecondary} />
+                <span aria-hidden="true" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px' }}>
+                  {m.key === 'default' && (
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                      <circle cx="11" cy="11" r="5" fill={active ? '#FDBA74' : '#E2E8F0'} />
+                      <circle cx="11" cy="11" r="4" fill={active ? '#FB923C' : '#CBD5E1'} />
+                      <circle cx="9.5" cy="9.5" r="1.5" fill={active ? '#FDE68A' : '#F8FAFC'} opacity="0.8" />
+                      {[0,45,90,135,180,225,270,315].map((angle, j) => {
+                        const rad = angle * Math.PI / 180;
+                        const x1 = 11 + 7 * Math.cos(rad), y1 = 11 + 7 * Math.sin(rad);
+                        const x2 = 11 + 9.5 * Math.cos(rad), y2 = 11 + 9.5 * Math.sin(rad);
+                        return <line key={j} x1={x1} y1={y1} x2={x2} y2={y2} stroke={active ? '#FB923C' : '#94A3B8'} strokeWidth="1.5" strokeLinecap="round" />;
+                      })}
                     </svg>
-                  ) : m.icon}
+                  )}
+                  {m.key === 'dark' && (
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                      <path d="M14 4a8 8 0 1 0 4.5 13.5A6.5 6.5 0 0 1 14 4z" fill={active ? '#FDBA74' : '#94A3B8'} />
+                      <circle cx="15.5" cy="6" r="1" fill={active ? '#FDE68A' : '#CBD5E1'} opacity="0.7" />
+                      <circle cx="18" cy="9" r="0.6" fill={active ? '#FDE68A' : '#CBD5E1'} opacity="0.5" />
+                    </svg>
+                  )}
+                  {m.key === 'warm' && (
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                      <rect x="2" y="10" width="18" height="10" rx="2" fill={active ? '#92400E' : '#475569'} opacity="0.3" />
+                      <rect x="3" y="7" width="16" height="8" rx="1.5" fill={active ? '#FDBA74' : '#94A3B8'} />
+                      <rect x="3" y="7" width="16" height="3.5" rx="1.5" fill={active ? '#FB923C' : '#64748B'} />
+                      <circle cx="11" cy="17" r="1.5" fill={active ? '#FDBA74' : '#94A3B8'} opacity="0.6" />
+                    </svg>
+                  )}
+                  {m.key === 'high-contrast' && (
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                      <circle cx="11" cy="11" r="9" stroke={iconColor} strokeWidth="1.8" fill="none" />
+                      <path d="M11 2a9 9 0 0 1 0 18z" fill={iconColor} />
+                    </svg>
+                  )}
                 </span>
                 <span style={{
                   fontSize: '0.65rem', fontWeight: active ? 700 : 600,
@@ -2708,7 +2737,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                   {f.label}
                 </span>
                 <span style={{
-                  fontSize: '0.6rem', fontWeight: 500,
+                  fontSize: '0.62rem', fontWeight: 500,
                   color: textSecondary,
                   fontFamily: 'Manrope, sans-serif', lineHeight: 1.3,
                 }}>
@@ -2864,7 +2893,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
           textTransform: 'uppercase', letterSpacing: '0.08em',
-          color: '#94A3B8', margin: '0 0 12px'
+          color: '#FDBA74', margin: '0 0 12px'
         }}>
           Display Settings
         </p>
