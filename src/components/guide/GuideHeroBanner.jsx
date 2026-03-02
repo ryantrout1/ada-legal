@@ -16,11 +16,12 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
     <header aria-labelledby="guide-page-heading" style={{
       background: '#1A1F2B', position: 'relative', overflow: 'hidden'
     }}>
-      <div aria-hidden="true" style={{
-        position: 'absolute', top: '-20%', right: '-5%',
-        width: '500px', height: '500px', borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(194,65,12,0.08) 0%, transparent 70%)',
-        pointerEvents: 'none'
+      <div aria-hidden="true" className="section-watermark" style={{
+        position: 'absolute', bottom: '-10%', right: '2%',
+        width: '200px', height: '200px',
+        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png)',
+        backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
+        opacity: 0.04, pointerEvents: 'none',
       }} />
       <div style={{
         maxWidth: '800px', margin: '0 auto',

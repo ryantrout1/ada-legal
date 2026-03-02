@@ -20,8 +20,16 @@ const stats = [
 export default function ForAttorneysNew() {
   return (
     <section aria-labelledby="attorneys-heading" style={{
-      background: '#FAF7F2', padding: '100px 1.5rem'
+      background: '#FAF7F2', padding: '100px 1.5rem',
+      position: 'relative', overflow: 'hidden'
     }}>
+      <div aria-hidden="true" className="section-watermark" style={{
+        position: 'absolute', top: '10%', left: '-3%',
+        width: '260px', height: '260px',
+        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png)',
+        backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
+        opacity: 0.025, pointerEvents: 'none',
+      }} />
       <div className="landing-attorneys-grid" style={{
         maxWidth: '1100px', margin: '0 auto',
         display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px',

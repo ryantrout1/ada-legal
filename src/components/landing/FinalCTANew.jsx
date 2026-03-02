@@ -5,8 +5,16 @@ import { createPageUrl } from '../../utils';
 export default function FinalCTANew() {
   return (
     <section aria-labelledby="cta-heading" className="warm-keep-dark" style={{
-      background: '#1E293B', padding: '100px 1.5rem', textAlign: 'center'
+      background: '#1E293B', padding: '100px 1.5rem', textAlign: 'center',
+      position: 'relative', overflow: 'hidden'
     }}>
+      <div aria-hidden="true" className="section-watermark" style={{
+        position: 'absolute', bottom: '5%', left: '3%',
+        width: '200px', height: '200px',
+        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png)',
+        backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
+        opacity: 0.04, pointerEvents: 'none',
+      }} />
       <div style={{ maxWidth: '680px', margin: '0 auto' }}>
         <h2 id="cta-heading" style={{
           fontFamily: 'Fraunces, serif', fontSize: '2.25rem', fontWeight: 700,

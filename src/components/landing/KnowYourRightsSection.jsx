@@ -122,9 +122,17 @@ export default function KnowYourRightsSection() {
         background: '#FFFFFF',
         borderTop: '1px solid #F1F5F9',
         borderBottom: '1px solid #F1F5F9',
-        padding: '80px 24px'
+        padding: '80px 24px',
+        position: 'relative', overflow: 'hidden'
       }}
     >
+      <div aria-hidden="true" className="section-watermark" style={{
+        position: 'absolute', bottom: '-2%', left: '-2%',
+        width: '280px', height: '280px',
+        backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6994acc34810e36068eddec2/96059e9a4_ADALL-logo-transparent.png)',
+        backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',
+        opacity: 0.025, pointerEvents: 'none',
+      }} />
       <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <p style={{
