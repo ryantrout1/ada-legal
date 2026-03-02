@@ -38,7 +38,7 @@ export default function HowItWorksNew() {
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
             letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--section-label)',
             margin: '0 0 0.75rem'
-          }} aria-hidden="true">
+          }}>
             How It Works
           </p>
           <h2 id="how-heading" style={{
@@ -79,7 +79,8 @@ export default function HowItWorksNew() {
                   margin: '0 auto 1.5rem', fontStyle: 'normal',
                   position: 'relative'
                 }}>
-                  {s.num}
+                  <span aria-hidden="true">{s.num}</span>
+                  <span className="sr-only">Step {s.num}.</span>
                 </div>
                 <h3 style={{
                   fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600,
@@ -94,12 +95,13 @@ export default function HowItWorksNew() {
                 }}>
                   {s.desc}
                 </p>
-                <span style={{
+                <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                  fontWeight: 700, color: 'var(--section-label)'
+                  fontWeight: 700, color: 'var(--section-label)', margin: 0
                 }}>
+                  <span className="sr-only">Estimated time: </span>
                   {s.time}
-                </span>
+                </p>
               </div>
             ))}
           </div>

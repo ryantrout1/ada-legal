@@ -41,7 +41,7 @@ export default function LandingStyles() {
       }
       .landing-btn-secondary:hover,
       .landing-btn-secondary:focus-visible {
-        border-color: #CBD5E1 !important;
+        border-color: var(--dark-body-secondary) !important;
         color: var(--btn-text) !important;
       }
       .landing-btn-attorney:hover,
@@ -57,6 +57,25 @@ export default function LandingStyles() {
       }
       .landing-footer-link:hover {
         color: var(--accent-light) !important;
+      }
+      .landing-footer-link:focus-visible {
+        outline: 3px solid var(--accent-light) !important;
+        outline-offset: 2px !important;
+        border-radius: 4px !important;
+        color: var(--accent-light) !important;
+      }
+
+      /* Screen reader only utility */
+      .sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0,0,0,0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
       }
 
       /* Responsive */
@@ -144,6 +163,14 @@ export default function LandingStyles() {
       @media (max-width: 480px) {
         .landing-hero-stats-grid {
           grid-template-columns: repeat(2, 1fr) !important;
+        }
+      }
+      @media (max-width: 360px) {
+        .landing-hero-stats-grid {
+          grid-template-columns: 1fr !important;
+        }
+        .landing-steps-grid {
+          grid-template-columns: 1fr !important;
         }
       }
 

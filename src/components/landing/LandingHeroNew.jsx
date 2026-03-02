@@ -159,39 +159,40 @@ export default function LandingHeroNew() {
               }}>
                 {quote.text}
               </p>
-            </blockquote>
-            <div style={{
-              borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: '16px',
-              display: 'flex', alignItems: 'center', gap: '16px',
-            }}>
-              <div aria-hidden="true" style={{
-                width: '48px', height: '48px', borderRadius: '50%',
-                background: 'var(--dark-card-bg)', border: '2px solid var(--accent)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0,
+              <footer style={{
+                borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: '16px',
+                display: 'flex', alignItems: 'center', gap: '16px',
               }}>
-                <span style={{
-                  fontFamily: 'Fraunces, serif', fontSize: '1.2rem', fontWeight: 700,
-                  color: 'var(--accent-light)',
-                }}>{quote.initial}</span>
-              </div>
-              <div>
-                <p style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700,
-                  color: 'var(--dark-heading)', margin: '0 0 2px',
-                }}>{quote.name}</p>
-                <p style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                  color: 'var(--dark-muted)', margin: 0,
-                }}>{quote.role}</p>
-              </div>
-            </div>
+                <div aria-hidden="true" style={{
+                  width: '48px', height: '48px', borderRadius: '50%',
+                  background: 'var(--dark-card-bg)', border: '2px solid var(--accent)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  <span style={{
+                    fontFamily: 'Fraunces, serif', fontSize: '1.2rem', fontWeight: 700,
+                    color: 'var(--accent-light)',
+                  }}>{quote.initial}</span>
+                </div>
+                <div>
+                  <cite style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700,
+                    color: 'var(--dark-heading)', display: 'block', fontStyle: 'normal',
+                    margin: '0 0 2px',
+                  }}>{quote.name}</cite>
+                  <span style={{
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+                    color: 'var(--dark-muted)', display: 'block',
+                  }}>{quote.role}</span>
+                </div>
+              </footer>
+            </blockquote>
           </div>
 
           {/* Compact stats row */}
-          <div className="landing-hero-stats-grid" style={{
+          <ul className="landing-hero-stats-grid" aria-label="Platform statistics" style={{
             display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '10px', marginBottom: '1rem',
+            gap: '10px', marginBottom: '1rem', listStyle: 'none', padding: 0, margin: '0 0 1rem',
           }}>
             {[
               { value: '42', label: 'Diagrams' },
@@ -199,21 +200,21 @@ export default function LandingHeroNew() {
               { value: '10', label: 'Chapters' },
               { value: '60+', label: 'Searchable' },
             ].map((stat, i) => (
-              <div key={i} className="hero-glass-card" style={{
+              <li key={i} className="hero-glass-card" aria-label={`${stat.value} ${stat.label}`} style={{
                 background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)',
                 borderRadius: '10px', padding: '14px 12px', textAlign: 'center',
               }}>
-                <p style={{
+                <p aria-hidden="true" style={{
                   fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 800,
                   color: 'var(--accent-light)', margin: '0 0 2px', fontStyle: 'normal',
                 }}>{stat.value}</p>
-                <p style={{
+                <p aria-hidden="true" style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem',
                   color: 'var(--dark-muted)', margin: 0, fontWeight: 600,
                 }}>{stat.label}</p>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
 
           {/* Accessibility commitment mini-card */}
           <div className="hero-glass-card" style={{
@@ -272,7 +273,7 @@ export default function LandingHeroNew() {
           pointerEvents: 'none'
         }}
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--dark-heading)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </div>

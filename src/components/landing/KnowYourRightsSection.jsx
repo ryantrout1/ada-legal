@@ -81,7 +81,7 @@ function RightsCard({ card }) {
           </span>
         </div>
 
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 4px' }}>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 4px' }}>
           {card.title}
         </h3>
         <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', fontWeight: 600, color: card.subtitleColor, margin: '0 0 12px' }}>
@@ -103,7 +103,7 @@ function RightsCard({ card }) {
           ))}
         </div>
 
-        <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '14px', display: 'flex', alignItems: 'center', gap: '10px', marginTop: 'auto' }}>
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '14px', display: 'flex', alignItems: 'center', gap: '10px', marginTop: 'auto' }}>
           <BrandIcon name={card.filingIconName} size={28} viewBox={20} />
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body)', margin: 0, lineHeight: 1.5 }}>
             {card.filingText}
@@ -144,7 +144,7 @@ export default function KnowYourRightsSection() {
           </p>
           <h2 id="kyr-heading" style={{
             fontFamily: 'Fraunces, serif', fontSize: '2rem', fontWeight: 700,
-            color: 'var(--slate-900)', margin: '0 0 16px'
+            color: 'var(--heading)', margin: '0 0 16px'
           }}>
             The ADA protects you in three key areas
           </h2>

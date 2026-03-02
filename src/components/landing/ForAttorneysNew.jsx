@@ -41,7 +41,7 @@ export default function ForAttorneysNew() {
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
             letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--section-label)',
             margin: '0 0 0.75rem'
-          }} aria-hidden="true">
+          }}>
             For Attorneys
           </p>
           <h2 id="attorneys-heading" style={{
@@ -88,7 +88,7 @@ export default function ForAttorneysNew() {
             padding: '14px 28px', borderRadius: '10px',
             fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
             textDecoration: 'none', minHeight: '44px',
-            border: '2px solid #C2410C', transition: 'all 0.15s'
+            border: '2px solid var(--accent)', transition: 'all 0.15s'
           }}>
             Learn More & Apply →
           </Link>
@@ -100,7 +100,7 @@ export default function ForAttorneysNew() {
         }}>
           {stats.map((s, i) => (
             <div key={i} className="landing-stat-card" style={{
-              background: 'var(--page-bg)', border: '1px solid var(--slate-200)',
+              background: 'var(--page-bg)', border: '1px solid var(--border)',
               borderRadius: '10px', padding: '24px', textAlign: 'center',
               transition: 'transform 0.2s, box-shadow 0.2s'
             }}>

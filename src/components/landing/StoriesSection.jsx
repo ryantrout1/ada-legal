@@ -41,7 +41,7 @@ export default function StoriesSection() {
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
             letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--section-label)',
             margin: '0 0 0.75rem'
-          }} aria-hidden="true">
+          }}>
             What We Built
           </p>
           <h2 id="stories-heading" style={{
@@ -64,7 +64,7 @@ export default function StoriesSection() {
         }}>
           {capabilities.map((s, i) => (
             <article key={i} className="landing-story-card" style={{
-              background: 'var(--page-bg)', border: '1px solid var(--slate-200)',
+              background: 'var(--page-bg)', border: '1px solid var(--border)',
               borderRadius: '16px', padding: '32px',
               transition: 'transform 0.2s, box-shadow 0.2s',
               display: 'flex', flexDirection: 'column'
