@@ -150,6 +150,14 @@ export default function LandingStyles() {
           flex-direction: column !important;
           gap: 0.5rem !important;
         }
+        .landing-btn-primary,
+        .landing-btn-secondary,
+        .landing-btn-attorney {
+          width: 100% !important;
+          justify-content: center !important;
+          box-sizing: border-box !important;
+          text-align: center !important;
+        }
         .landing-watermark {
           display: none !important;
         }
