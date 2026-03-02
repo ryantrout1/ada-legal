@@ -94,15 +94,14 @@ function QuoteCarousel() {
                 }
               }}
               style={{
-                width: i === index ? '20px' : '8px',
-                height: '8px',
+                width: '44px',
+                height: '44px',
                 borderRadius: '4px',
-                background: i === index ? 'var(--accent)' : 'rgba(255,255,255,0.15)',
+                background: 'transparent',
                 border: 'none',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 padding: 0,
-                minHeight: '44px', minWidth: '44px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 position: 'relative'
               }}
