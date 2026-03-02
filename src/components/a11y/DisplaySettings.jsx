@@ -2597,11 +2597,12 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
   const isMobile = variant === 'inline';
   const accent = '#C2410C';
   const accentLight = '#FB923C';
+  const accentFill = isMobile ? '#7C2D12' : '#C2410C';
   const borderColor = isMobile ? 'rgba(255,255,255,0.25)' : 'var(--slate-200, #E2E8F0)';
   const textPrimary = isMobile ? '#FFFFFF' : 'var(--slate-700, #334155)';
   const textSecondary = isMobile ? '#CBD5E1' : '#64748B';
   const textMuted = isMobile ? '#94A3B8' : '#64748B';
-  const accentBg = isMobile ? 'rgba(194,65,12,0.2)' : '#FFF7ED';
+  const accentBg = isMobile ? 'rgba(251,146,60,0.15)' : '#FFF7ED';
 
   const labelStyle = {
     fontFamily: 'Manrope, sans-serif',
@@ -2645,7 +2646,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                   gap: '5px', padding: '10px 2px',
                   minHeight: '58px',
                   borderRadius: '10px',
-                  border: active ? `2px solid ${accent}` : `1px solid ${borderColor}`,
+                  border: active ? `2px solid ${accentLight}` : `1px solid ${borderColor}`,
                   background: active ? accentBg : 'transparent',
                   cursor: 'pointer', transition: 'all 0.15s',
                 }}
@@ -2717,7 +2718,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                   gap: '2px', padding: '10px 6px',
                   minHeight: '64px',
                   borderRadius: '10px',
-                  border: active ? `2px solid ${accent}` : `1px solid ${borderColor}`,
+                  border: active ? `2px solid ${accentLight}` : `1px solid ${borderColor}`,
                   background: active ? accentBg : 'transparent',
                   cursor: 'pointer', transition: 'all 0.15s',
                 }}
@@ -2775,8 +2776,8 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                     padding: '6px 4px',
                     minHeight: '44px',
                     borderRadius: '8px',
-                    border: active ? `2px solid ${accent}` : `1px solid ${borderColor}`,
-                    background: active ? accent : 'transparent',
+                    border: active ? `2px solid ${accentLight}` : `1px solid ${borderColor}`,
+                    background: active ? accentFill : 'transparent',
                     color: active ? 'white' : textPrimary,
                     fontSize: s.sz, fontWeight: 700,
                     fontFamily: 'Manrope, sans-serif',
@@ -2813,8 +2814,8 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                     padding: '6px 4px',
                     minHeight: '44px',
                     borderRadius: '8px',
-                    border: active ? `2px solid ${accent}` : `1px solid ${borderColor}`,
-                    background: active ? accent : 'transparent',
+                    border: active ? `2px solid ${accentLight}` : `1px solid ${borderColor}`,
+                    background: active ? accentFill : 'transparent',
                     cursor: 'pointer', transition: 'all 0.15s',
                   }}
                 >
@@ -2849,8 +2850,8 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                   padding: '8px 4px',
                   minHeight: '44px',
                   borderRadius: '8px',
-                  border: active ? `2px solid ${accent}` : `1px solid ${borderColor}`,
-                  background: active ? accent : 'transparent',
+                  border: active ? `2px solid ${accentLight}` : `1px solid ${borderColor}`,
+                  background: active ? accentFill : 'transparent',
                   color: active ? 'white' : textPrimary,
                   fontSize: '0.75rem', fontWeight: 600,
                   fontFamily: 'Manrope, sans-serif',
