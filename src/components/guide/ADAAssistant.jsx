@@ -137,11 +137,11 @@ function searchContent(query) {
 }
 
 const CAT_COLORS = {
-  "Design Standards": { bg: 'rgba(194,65,12,0.1)', text: '#C2410C', border: 'rgba(194,65,12,0.2)' },
-  "Know Your Rights": { bg: 'rgba(22,163,98,0.1)', text: '#16A362', border: 'rgba(22,163,98,0.2)' },
-  "Business Compliance": { bg: 'rgba(37,99,235,0.1)', text: '#2563EB', border: 'rgba(37,99,235,0.2)' },
-  "Web & Digital": { bg: 'rgba(124,58,237,0.1)', text: '#7C3AED', border: 'rgba(124,58,237,0.2)' },
-  "Government": { bg: 'rgba(217,119,6,0.1)', text: '#D97706', border: 'rgba(217,119,6,0.2)' },
+  "Design Standards": { bg: 'rgba(194,65,12,0.1)', text: 'var(--section-label)', border: 'rgba(194,65,12,0.2)' },
+  "Know Your Rights": { bg: 'rgba(22,163,98,0.1)', text: 'var(--accent-success)', border: 'rgba(22,163,98,0.2)' },
+  "Business Compliance": { bg: 'rgba(37,99,235,0.1)', text: 'var(--link)', border: 'rgba(37,99,235,0.2)' },
+  "Web & Digital": { bg: 'rgba(124,58,237,0.1)', text: 'var(--link)', border: 'rgba(124,58,237,0.2)' },
+  "Government": { bg: 'rgba(217,119,6,0.1)', text: 'var(--section-label)', border: 'rgba(217,119,6,0.2)' },
 };
 
 const STARTERS = [
@@ -202,7 +202,7 @@ export default function ADAAssistant() {
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
           <Search size={18} style={{
             position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
-            color: '#4B5563', pointerEvents: 'none'
+            color: 'var(--dark-body-secondary)', pointerEvents: 'none'
           }} />
           <input
             id="ada-search-input"
@@ -221,7 +221,7 @@ export default function ADAAssistant() {
             style={{
               width: '100%', padding: '14px 44px 14px 44px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-              background: 'rgba(255,255,255,0.06)', color: 'white',
+              background: 'rgba(255,255,255,0.06)', color: 'var(--dark-heading)',
               border: '1px solid rgba(255,255,255,0.12)',
               borderRadius: '12px', outline: 'none',
               minHeight: '48px', boxSizing: 'border-box',
@@ -237,11 +237,11 @@ export default function ADAAssistant() {
               style={{
                 position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
                 background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '6px',
-                width: '28px', height: '28px', display: 'flex', alignItems: 'center',
+                width: '44px', height: '44px', display: 'flex', alignItems: 'center',
                 justifyContent: 'center', cursor: 'pointer'
               }}
             >
-              <X size={14} style={{ color: '#4B5563' }} />
+              <X size={14} style={{ color: 'var(--body-secondary)' }} />
             </button>
           )}
         </div>
@@ -257,9 +257,9 @@ export default function ADAAssistant() {
               style={{
                 background: 'rgba(255,255,255,0.06)',
                 border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '100px', padding: '6px 14px',
+                borderRadius: '100px', padding: '6px 14px', minHeight: '44px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem',
-                color: '#CBD5E1', cursor: 'pointer',
+                color: 'var(--dark-body)', cursor: 'pointer',
                 transition: 'all 0.2s', lineHeight: 1.5
               }}
               onMouseEnter={e => { e.target.style.background = 'rgba(194,65,12,0.15)'; e.target.style.borderColor = 'rgba(194,65,12,0.3)'; e.target.style.color = '#FED7AA'; }}
@@ -279,8 +279,8 @@ export default function ADAAssistant() {
           aria-label="Search results"
           style={{
             marginTop: '8px',
-            background: 'white',
-            border: '1px solid #E2E8F0',
+            background: 'var(--card-bg)',
+            border: '1px solid var(--border)',
             borderRadius: '14px',
             boxShadow: '0 8px 30px rgba(0,0,0,0.15)',
             overflow: 'hidden',
@@ -291,7 +291,7 @@ export default function ADAAssistant() {
           <div style={{
             padding: '10px 16px 6px',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-            letterSpacing: '0.08em', textTransform: 'uppercase', color: '#4B5563'
+            letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--body-secondary)'
           }}>
             {results.length} result{results.length !== 1 ? 's' : ''}
           </div>
@@ -306,10 +306,10 @@ export default function ADAAssistant() {
                 style={{
                   display: 'flex', alignItems: 'center', gap: '12px',
                   padding: '12px 16px', textDecoration: 'none',
-                  borderTop: '1px solid #F1F5F9',
+                  borderTop: '1px solid var(--border-lighter)',
                   transition: 'background 0.15s', cursor: 'pointer'
                 }}
-                onMouseEnter={e => e.currentTarget.style.background = '#FAFAF9'}
+                onMouseEnter={e => e.currentTarget.style.background = 'var(--page-bg-subtle)'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 onClick={() => { setQuery(''); setFocused(false); }}
               >
@@ -317,14 +317,14 @@ export default function ADAAssistant() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '2px' }}>
                     <span style={{
                       fontFamily: 'Fraunces, serif', fontSize: '0.95rem', fontWeight: 700,
-                      color: '#1A1F2B'
+                      color: 'var(--heading)'
                     }}>
                       {item.title}
                     </span>
                     {item.section && (
                       <span style={{
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
-                        color: '#9A3412', background: 'rgba(194,65,12,0.08)',
+                        color: 'var(--section-label)', background: 'var(--card-bg-tinted)',
                         padding: '1px 6px', borderRadius: '4px'
                       }}>
                         {item.section}
@@ -343,7 +343,7 @@ export default function ADAAssistant() {
                   </div>
                   <p style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                    color: '#4B5563', margin: 0, lineHeight: 1.5
+                    color: 'var(--body)', margin: 0, lineHeight: 1.5
                   }}>
                     {item.desc}
                   </p>
@@ -354,7 +354,7 @@ export default function ADAAssistant() {
                     {item.category}
                   </span>
                 </div>
-                <ArrowRight size={16} style={{ color: '#4B5563', flexShrink: 0 }} />
+                <ArrowRight size={16} style={{ color: 'var(--body-secondary)', flexShrink: 0 }} />
               </Link>
             );
           })}
@@ -366,27 +366,27 @@ export default function ADAAssistant() {
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '12px 16px', textDecoration: 'none',
-              borderTop: '1px solid #F1F5F9',
-              background: 'linear-gradient(135deg, #FFF7ED 0%, #FFFBF7 100%)'
+              borderTop: '1px solid var(--border-lighter)',
+              background: 'var(--card-bg-tinted)'
             }}
-            onMouseEnter={e => e.currentTarget.style.background = '#FFF7ED'}
-            onMouseLeave={e => e.currentTarget.style.background = 'linear-gradient(135deg, #FFF7ED 0%, #FFFBF7 100%)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--card-bg-tinted)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--card-bg-tinted)'}
           >
             <div>
               <span style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', fontWeight: 600,
-                color: '#9A3412'
+                color: 'var(--section-label)'
               }}>
                 Experienced a violation?
               </span>
               <span style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                color: '#4B5563', marginLeft: '6px'
+                color: 'var(--body-secondary)', marginLeft: '6px'
               }}>
                 Report it — we'll connect you with an attorney.
               </span>
             </div>
-            <ArrowRight size={16} style={{ color: '#9A3412', flexShrink: 0 }} />
+            <ArrowRight size={16} style={{ color: 'var(--section-label)', flexShrink: 0 }} />
           </Link>
         </div>
       )}
@@ -394,11 +394,11 @@ export default function ADAAssistant() {
       {/* No results message */}
       {query.length >= 2 && focused && results.length === 0 && (
         <div style={{
-          marginTop: '8px', background: 'white', border: '1px solid #E2E8F0',
+          marginTop: '8px', background: 'var(--card-bg)', border: '1px solid var(--border)',
           borderRadius: '14px', padding: '20px', textAlign: 'center',
           boxShadow: '0 8px 30px rgba(0,0,0,0.15)'
         }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#4B5563', margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: 0 }}>
             No results for "{query}" — try different keywords or browse the categories below.
           </p>
         </div>

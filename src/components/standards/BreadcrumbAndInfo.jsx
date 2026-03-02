@@ -17,7 +17,7 @@ export default function BreadcrumbAndInfo() {
             margin: 0, padding: 0, fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem'
           }}>
             <li>
-              <Link to={createPageUrl('Home')} style={{
+              <Link to={createPageUrl('Home')} className="sg-cta-link" style={{
                 color: 'var(--link)', textDecoration: 'none', minHeight: '44px',
                 display: 'inline-flex', alignItems: 'center'
               }}>
@@ -67,7 +67,7 @@ export default function BreadcrumbAndInfo() {
               This guide presents the official 2010 ADA Standards for Accessible
               Design with plain-language explanations. All citations reference ADA.gov.
               For legal advice,{' '}
-              <Link to={createPageUrl('Intake')} style={{
+              <Link to={createPageUrl('Intake')} className="sg-cta-link" style={{
                 color: 'var(--link)', fontWeight: 600, textDecoration: 'none'
               }}>
                 connect with an ADA attorney
