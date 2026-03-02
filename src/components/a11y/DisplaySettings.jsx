@@ -163,23 +163,56 @@ export const applyPreferences = (prefs) => {
         background-image: unset !important;
       }
 
-      /* === All dark sections → match body bg seamlessly === */
+      /* === All dark sections → force body bg on ALL nested divs === */
       #main-content .warm-keep-dark,
-      #main-content .warm-keep-dark > div {
+      #main-content .warm-keep-dark div {
         background-color: #0B0E14 !important;
         background-image: none !important;
       }
-      /* Re-exempt interactive + media inside dark sections */
+
+      /* === Hero section — glass cards get subtle layering === */
+      .landing-hero-section .hero-glass-card {
+        background-color: rgba(255,255,255,0.04) !important;
+        border: 1px solid rgba(255,255,255,0.06) !important;
+        box-shadow: none !important;
+      }
+      .landing-hero-section .hero-glass-card div,
+      .landing-hero-section .hero-glass-card blockquote,
+      .landing-hero-section .hero-glass-card p,
+      .landing-hero-section .hero-glass-card span,
+      .landing-hero-section .hero-glass-card strong {
+        background-color: transparent !important;
+        background: transparent !important;
+      }
+
+      /* === Re-exempt interactive + media inside ALL dark sections === */
       #main-content .warm-keep-dark button,
       #main-content .warm-keep-dark a,
       #main-content .warm-keep-dark svg,
       #main-content .warm-keep-dark img,
       #main-content .warm-keep-dark video,
+      #main-content .warm-keep-dark canvas,
       #main-content .warm-keep-dark .story-video-container,
       #main-content .warm-keep-dark .story-video-container div,
       #main-content .warm-keep-dark .story-video-container img {
         background-color: unset !important;
         background-image: unset !important;
+      }
+
+      /* === Cards inside dark sections — subtle elevation === */
+      #main-content .warm-keep-dark div[style*="border-radius"],
+      #main-content .warm-keep-dark div[style*="borderRadius"] {
+        background-color: rgba(255,255,255,0.03) !important;
+        border-color: rgba(255,255,255,0.08) !important;
+        box-shadow: none !important;
+      }
+      #main-content .warm-keep-dark div[style*="border-radius"] div,
+      #main-content .warm-keep-dark div[style*="border-radius"] p,
+      #main-content .warm-keep-dark div[style*="border-radius"] span,
+      #main-content .warm-keep-dark div[style*="borderRadius"] div,
+      #main-content .warm-keep-dark div[style*="borderRadius"] p,
+      #main-content .warm-keep-dark div[style*="borderRadius"] span {
+        background-color: transparent !important;
       }
 
       /* === Community Voices — match body dark bg seamlessly === */
@@ -638,9 +671,11 @@ export const applyPreferences = (prefs) => {
       footer[role="contentinfo"],
       footer[role="contentinfo"] div,
       footer[role="contentinfo"] p,
-      footer[role="contentinfo"] span,
-      footer[role="contentinfo"] a {
+      footer[role="contentinfo"] span {
         background-color: #0B0E14 !important;
+      }
+      footer[role="contentinfo"] a {
+        background-color: transparent !important;
       }
 
       /* === AI Standards Helper — dark mode === */
