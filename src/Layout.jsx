@@ -22,7 +22,9 @@ export default function Layout({ children, currentPageName }) {
   const [loading, setLoading] = React.useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [mobileSettingsOpen, setMobileSettingsOpen] = React.useState(false);
   const settingsButtonRef = React.useRef(null);
+  const mobileSettingsButtonRef = React.useRef(null);
 
   // Fix 1: Ensure meta viewport allows zooming (remove any platform-injected restrictions)
   React.useEffect(() => {
@@ -75,29 +77,36 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   React.useEffect(() => {
-    if (mobileMenuOpen) {
+    if (mobileMenuOpen || mobileSettingsOpen) {
       document.body.style.overflow = 'hidden';
-      setTimeout(() => {
-        const firstLink = document.querySelector('#mobile-nav-panel a, #mobile-nav-panel button');
-        if (firstLink) firstLink.focus();
-      }, 50);
+      if (mobileMenuOpen) {
+        setTimeout(() => {
+          const firstLink = document.querySelector('#mobile-nav-panel a, #mobile-nav-panel button');
+          if (firstLink) firstLink.focus();
+        }, 50);
+      }
     } else {
       document.body.style.overflow = '';
     }
     return () => { document.body.style.overflow = ''; };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, mobileSettingsOpen]);
 
   React.useEffect(() => {
-    if (!mobileMenuOpen) return;
+    if (!mobileMenuOpen && !mobileSettingsOpen) return;
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
-        setMobileMenuOpen(false);
-        document.querySelector('.mobile-menu-btn')?.focus();
+        if (mobileSettingsOpen) {
+          setMobileSettingsOpen(false);
+          mobileSettingsButtonRef.current?.focus();
+        }
+        if (mobileMenuOpen) {
+          setMobileMenuOpen(false);
+        }
       }
     };
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, mobileSettingsOpen]);
 
   React.useEffect(() => {
     async function loadUser() {
@@ -137,6 +146,7 @@ export default function Layout({ children, currentPageName }) {
     }
     setMobileMenuOpen(false);
     setSettingsOpen(false);
+    setMobileSettingsOpen(false);
   }, [currentPageName]);
 
   return (
@@ -290,25 +300,53 @@ export default function Layout({ children, currentPageName }) {
             <span className="mobile-brand-text">ADA Legal <span style={{ color: '#FBB040' }}>Link</span></span>
           </Link>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            style={{
-              display: 'none',
-              background: 'transparent',
-              border: 'none',
-              color: 'white',
-              cursor: 'pointer',
-              padding: '0.5rem',
-              minWidth: '44px',
-              minHeight: '44px'
-            }}
-            className="mobile-menu-btn"
-            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile: Eye (Display Settings) + Hamburger (Menu) */}
+          <div className="mobile-header-buttons" style={{ display: 'none', alignItems: 'center', gap: '4px' }}>
+            <button
+              ref={mobileSettingsButtonRef}
+              onClick={() => {
+                setMobileSettingsOpen(!mobileSettingsOpen);
+                if (mobileMenuOpen) setMobileMenuOpen(false);
+              }}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'white',
+                cursor: 'pointer',
+                padding: '0.5rem',
+                minWidth: '44px',
+                minHeight: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '8px',
+              }}
+              aria-label="Display settings"
+              aria-expanded={mobileSettingsOpen}
+              aria-haspopup="dialog"
+            >
+              <Eye size={22} aria-hidden="true" />
+            </button>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(!mobileMenuOpen);
+                if (mobileSettingsOpen) setMobileSettingsOpen(false);
+              }}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'white',
+                cursor: 'pointer',
+                padding: '0.5rem',
+                minWidth: '44px',
+                minHeight: '44px'
+              }}
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
 
           {/* Desktop Navigation — Approach 2: Ops Strip + Utility Menu */}
           <nav aria-label="Main navigation" style={{
@@ -442,6 +480,54 @@ export default function Layout({ children, currentPageName }) {
 
       </header>
 
+      {/* Mobile Display Settings — panel triggered by Eye icon */}
+      {mobileSettingsOpen && (
+        <>
+          <div
+            className="mobile-settings-overlay"
+            onClick={() => setMobileSettingsOpen(false)}
+            style={{
+              position: 'fixed',
+              top: '72px',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.4)',
+              zIndex: 998,
+              display: 'none'
+            }}
+            aria-hidden="true"
+          />
+          <div
+            className="mobile-settings-panel"
+            role="dialog"
+            aria-label="Display settings"
+            style={{
+              position: 'fixed',
+              top: '72px',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: '#1A1F2B',
+              zIndex: 999,
+              overflowY: 'auto',
+              WebkitOverflowScrolling: 'touch',
+              padding: '8px 0 24px',
+              display: 'none'
+            }}
+          >
+            <DisplaySettings
+              variant="inline"
+              isOpen={true}
+              onClose={() => {
+                setMobileSettingsOpen(false);
+                mobileSettingsButtonRef.current?.focus();
+              }}
+            />
+          </div>
+        </>
+      )}
+
       {/* Mobile Navigation — Fixed Overlay (outside header to avoid backdrop-filter containing block issue) */}
       {mobileMenuOpen && (
         <>
@@ -480,12 +566,6 @@ export default function Layout({ children, currentPageName }) {
               display: 'none'
             }}
           >
-            {/* Display Settings — inline in mobile menu */}
-            <DisplaySettings
-              variant="inline"
-              isOpen={true}
-              onClose={() => {}}
-            />
             {!loading && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                 {/* ── Visitor ── */}
@@ -664,6 +744,12 @@ export default function Layout({ children, currentPageName }) {
         .mobile-nav-overlay {
           display: none !important;
         }
+        .mobile-settings-overlay {
+          display: none !important;
+        }
+        .mobile-settings-panel {
+          display: none !important;
+        }
         /* AAA target size: desktop nav links */
         .desktop-nav a {
           min-height: 44px !important;
@@ -671,8 +757,8 @@ export default function Layout({ children, currentPageName }) {
           align-items: center !important;
         }
         @media (max-width: 860px) {
-          .mobile-menu-btn {
-            display: block !important;
+          .mobile-header-buttons {
+            display: flex !important;
           }
           .desktop-nav {
             display: none !important;
@@ -684,6 +770,12 @@ export default function Layout({ children, currentPageName }) {
             display: block !important;
           }
           .mobile-nav-overlay {
+            display: block !important;
+          }
+          .mobile-settings-panel {
+            display: block !important;
+          }
+          .mobile-settings-overlay {
             display: block !important;
           }
         }
