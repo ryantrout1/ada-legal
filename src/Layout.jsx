@@ -512,10 +512,35 @@ export default function Layout({ children, currentPageName }) {
               zIndex: 999,
               overflowY: 'auto',
               WebkitOverflowScrolling: 'touch',
-              padding: '8px 0 24px',
+              padding: '0 0 24px',
               display: 'none'
             }}
           >
+            {/* Close bar */}
+            <div style={{
+              display: 'flex', justifyContent: 'flex-end',
+              padding: '12px 16px 4px',
+              position: 'sticky', top: 0,
+              backgroundColor: '#1A1F2B', zIndex: 1,
+            }}>
+              <button
+                onClick={() => {
+                  setMobileSettingsOpen(false);
+                  mobileSettingsButtonRef.current?.focus();
+                }}
+                aria-label="Close display settings"
+                style={{
+                  background: 'transparent', border: 'none',
+                  color: 'white', cursor: 'pointer',
+                  padding: '8px',
+                  minWidth: '44px', minHeight: '44px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  borderRadius: '8px',
+                }}
+              >
+                <X size={24} />
+              </button>
+            </div>
             <DisplaySettings
               variant="inline"
               isOpen={true}
