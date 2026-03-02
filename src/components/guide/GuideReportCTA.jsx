@@ -6,24 +6,24 @@ import { ArrowRight } from 'lucide-react';
 export default function GuideReportCTA() {
   return (
     <div role="region" aria-label="Take action on an ADA violation" style={{
-      background: '#1A1F2B', padding: '64px 40px', textAlign: 'center'
+      background: 'var(--dark-card-bg)', padding: '64px 40px', textAlign: 'center'
     }}>
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>
         <h2 style={{
           fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-          fontWeight: 700, color: 'white', margin: '0 0 12px'
+          fontWeight: 700, color: 'var(--dark-heading)', margin: '0 0 12px'
         }}>
           Think you experienced an ADA violation?
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: '#B0BEC5', lineHeight: 1.7, margin: '0 0 28px'
+          color: 'var(--dark-muted)', lineHeight: 1.7, margin: '0 0 28px'
         }}>
           Answer a few simple questions and we'll show you exactly what applies to your situation — in 60 seconds.
         </p>
         <Link to={createPageUrl('RightsPathway')} style={{
           display: 'inline-flex', alignItems: 'center', gap: '8px',
-          background: '#C2410C', color: 'white',
+          background: 'var(--accent)', color: 'var(--dark-heading)',
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600,
           padding: '14px 28px', borderRadius: '10px',
           textDecoration: 'none', minHeight: '44px',
@@ -33,14 +33,14 @@ export default function GuideReportCTA() {
         </Link>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem',
-          color: '#B0BEC5', marginTop: '16px', marginBottom: 0
+          color: 'var(--dark-muted)', marginTop: '16px', marginBottom: 0
         }}>
           Attorney-connected violation reporting — launching soon.
         </p>
         <div style={{ marginTop: '16px' }}>
           <Link to={createPageUrl('Home')} style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-            color: '#B0BEC5', textDecoration: 'underline'
+            color: 'var(--dark-muted)', textDecoration: 'underline'
           }}>
             Learn how it works
           </Link>

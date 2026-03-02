@@ -36,7 +36,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
 
   return (
     <div style={{
-      background: isOpen ? '#FAF7F2' : 'white',
+      background: isOpen ? 'var(--page-bg-alt)' : 'var(--page-bg)',
       border: '1px solid var(--slate-200)',
       borderRadius: '12px', marginBottom: '12px', overflow: 'hidden',
       transition: 'background 0.2s ease'
@@ -56,7 +56,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
       >
         <span className="chapter-num" style={{
           fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
-          color: '#9A3412', background: '#FFF7ED', padding: '2px 10px',
+          color: 'var(--section-label)', background: 'var(--card-bg-warm)', padding: '2px 10px',
           borderRadius: '6px', flexShrink: 0, border: '1px solid #FFEDD5'
         }}>{number}</span>
         <span style={{ flex: 1 }}>{title}</span>
@@ -93,13 +93,13 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                 ) : (
                   /* Placeholder until Gina writes simple summaries */
                   <div style={{
-                    background: '#FFF8F5',
+                    background: 'var(--card-bg-warm)',
                     border: '1px solid #FDBA7440',
                     borderRadius: '10px',
                     padding: '20px'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                      <Sparkles size={16} style={{ color: '#9A3412' }} aria-hidden="true" />
+                      <Sparkles size={16} style={{ color: 'var(--section-label)' }} aria-hidden="true" />
                       <p style={{
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
                         color: 'var(--slate-800)', margin: 0
@@ -137,7 +137,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                 </div>
                 <div role="note" aria-label="Official legal text" style={{ flex: '1 1 40%', minWidth: 0 }}>
                   <div style={{
-                    background: '#F8FAFC', border: '1px solid var(--slate-200)',
+                    background: 'var(--page-bg-subtle)', border: '1px solid var(--slate-200)',
                     borderRadius: '10px', padding: '16px'
                   }}>
                     <p style={{
@@ -158,7 +158,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
             {showLegal && (
               <div>
                 <div style={{
-                  background: '#F8FAFC', border: '1px solid var(--slate-200)',
+                  background: 'var(--page-bg-subtle)', border: '1px solid var(--slate-200)',
                   borderRadius: '10px', padding: '20px', marginBottom: '16px'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
@@ -177,7 +177,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                 <details style={{ marginTop: '8px' }}>
                   <summary style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                    fontWeight: 600, color: '#9A3412', cursor: 'pointer',
+                    fontWeight: 600, color: 'var(--section-label)', cursor: 'pointer',
                     padding: '8px 0', minHeight: '44px',
                     display: 'flex', alignItems: 'center', gap: '6px'
                   }}>
@@ -207,14 +207,14 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
             }}>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                color: '#3D4A5C', margin: 0, lineHeight: 1.5
+                color: 'var(--body)', margin: 0, lineHeight: 1.5
               }}>
                 Does this standard describe a barrier you've encountered?
               </p>
               <Link to={createPageUrl('Intake')} onClick={() => base44.analytics.track({ eventName: 'guide_to_report_conversion', properties: { source: `chapter_${chapterNum}_inline` } })} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
-                color: '#9A3412', textDecoration: 'none',
+                color: 'var(--section-label)', textDecoration: 'none',
                 padding: '6px 14px', borderRadius: '8px',
                 border: '1px solid rgba(194,65,12,0.2)',
                 background: 'rgba(194,65,12,0.04)',
@@ -265,7 +265,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
   const linkStyle = {
     display: 'inline-flex', alignItems: 'center', gap: '6px',
     fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
-    color: '#9A3412', textDecoration: 'none', padding: '8px 0', minHeight: '44px'
+    color: 'var(--section-label)', textDecoration: 'none', padding: '8px 0', minHeight: '44px'
   };
 
   return (
@@ -321,7 +321,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
             padding: '8px 12px',
             marginBottom: '20px',
             borderRadius: '8px',
-            background: '#F8F8FA',
+            background: 'var(--page-bg-subtle)',
             border: '1px solid var(--slate-200)',
             fontFamily: 'Manrope, sans-serif',
             flexWrap: 'wrap',
@@ -358,7 +358,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                       minHeight: '32px',
                       borderRadius: '6px',
                       border: active ? '2px solid #C2410C' : '1px solid var(--slate-200)',
-                      background: active ? '#C2410C' : 'white',
+                      background: active ? 'var(--accent)' : 'var(--page-bg)',
                       color: active ? 'white' : 'var(--slate-600)',
                       fontSize: '0.72rem', fontWeight: active ? 700 : 500,
                       fontFamily: 'Manrope, sans-serif',

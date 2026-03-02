@@ -30,26 +30,26 @@ const steps = [
 export default function HowItWorksNew() {
   return (
     <section id="how-it-works" aria-labelledby="how-heading" style={{
-      background: '#FFFFFF', padding: '100px 1.5rem'
+      background: 'var(--page-bg)', padding: '100px 1.5rem'
     }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9A3412',
+            letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--section-label)',
             margin: '0 0 0.75rem'
           }} aria-hidden="true">
             How It Works
           </p>
           <h2 id="how-heading" style={{
             fontFamily: 'Fraunces, serif', fontSize: '2.5rem', fontWeight: 700,
-            color: '#1E293B', margin: '0 0 0.75rem', fontStyle: 'normal'
+            color: 'var(--heading)', margin: '0 0 0.75rem', fontStyle: 'normal'
           }}>
             From understanding to action
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
-            color: '#3D4A5C', margin: 0, maxWidth: '520px',
+            color: 'var(--body)', margin: 0, maxWidth: '520px',
             marginLeft: 'auto', marginRight: 'auto'
           }}>
             Start by learning your rights. When you're ready, we guide you through everything — no legal knowledge required, no upfront costs.
@@ -73,7 +73,7 @@ export default function HowItWorksNew() {
               <div key={i} role="listitem" style={{ textAlign: 'center' }}>
                 <div className="step-number-circle" style={{
                   width: '80px', height: '80px', borderRadius: '50%',
-                  background: '#1E293B', color: 'white',
+                  background: 'var(--heading)', color: 'var(--page-bg)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 800,
                   margin: '0 auto 1.5rem', fontStyle: 'normal',
@@ -83,20 +83,20 @@ export default function HowItWorksNew() {
                 </div>
                 <h3 style={{
                   fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600,
-                  color: '#1E293B', margin: '0 0 0.75rem', fontStyle: 'normal'
+                  color: 'var(--heading)', margin: '0 0 0.75rem', fontStyle: 'normal'
                 }}>
                   {s.title}
                 </h3>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-                  color: '#3D4A5C', lineHeight: 1.6, margin: '0 0 0.75rem',
+                  color: 'var(--body)', lineHeight: 1.6, margin: '0 0 0.75rem',
                   maxWidth: '280px', marginLeft: 'auto', marginRight: 'auto'
                 }}>
                   {s.desc}
                 </p>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                  fontWeight: 700, color: '#9A3412'
+                  fontWeight: 700, color: 'var(--section-label)'
                 }}>
                   {s.time}
                 </span>

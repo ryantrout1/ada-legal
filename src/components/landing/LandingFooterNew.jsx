@@ -7,21 +7,21 @@ import { useComingSoon } from '../useComingSoonModal';
 
 const footerLinkStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-  color: '#CBD5E1', textDecoration: 'none', minHeight: '44px',
+  color: 'var(--dark-body-secondary)', textDecoration: 'none', minHeight: '44px',
   display: 'inline-flex', alignItems: 'center'
 };
 
 const colHeadingStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
   letterSpacing: '0.12em', textTransform: 'uppercase',
-  color: '#B0BEC5', margin: '0 0 12px'
+  color: 'var(--dark-muted)', margin: '0 0 12px'
 };
 
 export default function LandingFooterNew() {
   const { openModal } = useComingSoon();
   return (
     <footer role="contentinfo" style={{
-      background: '#141820', padding: '56px 1.5rem 32px',
+      background: 'var(--dark-bg-footer)', padding: '56px 1.5rem 32px',
       borderTop: '1px solid rgba(255,255,255,0.05)'
     }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -36,14 +36,14 @@ export default function LandingFooterNew() {
               <LogoBrand size={24} variant="dark-bg" />
               <span style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 700,
-                color: 'white'
+                color: 'var(--dark-heading)'
               }}>
                 ADA Legal Link
               </span>
             </div>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-              color: '#B0BEC5', lineHeight: 1.7, margin: 0
+              color: 'var(--dark-muted)', lineHeight: 1.7, margin: 0
             }}>
               ADA Legal Link is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship. Attorney listings do not constitute endorsements. Results may vary.
             </p>
@@ -90,7 +90,7 @@ export default function LandingFooterNew() {
         }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-            color: '#B0BEC5', margin: 0
+            color: 'var(--dark-muted)', margin: 0
           }}>
             © 2026 ADA Legal Link. All rights reserved.
           </p>
@@ -99,7 +99,7 @@ export default function LandingFooterNew() {
             background: 'rgba(45,106,79,0.2)', border: '1px solid rgba(45,106,79,0.4)',
             borderRadius: '100px', padding: '4px 12px',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-            color: '#7DCEA0'
+            color: 'var(--accent-success)'
           }}>
             <CheckCircle size={14} aria-hidden="true" />
             WCAG 2.2 AAA Conformant

@@ -20,7 +20,7 @@ const stats = [
 export default function ForAttorneysNew() {
   return (
     <section aria-labelledby="attorneys-heading" style={{
-      background: '#FAF7F2', padding: '100px 1.5rem',
+      background: 'var(--page-bg-alt)', padding: '100px 1.5rem',
       position: 'relative', overflow: 'hidden'
     }}>
       <div aria-hidden="true" className="section-watermark" style={{
@@ -39,20 +39,20 @@ export default function ForAttorneysNew() {
         <div>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9A3412',
+            letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--section-label)',
             margin: '0 0 0.75rem'
           }} aria-hidden="true">
             For Attorneys
           </p>
           <h2 id="attorneys-heading" style={{
             fontFamily: 'Fraunces, serif', fontSize: '2.25rem', fontWeight: 700,
-            color: '#1E293B', margin: '0 0 1rem', fontStyle: 'normal'
+            color: 'var(--heading)', margin: '0 0 1rem', fontStyle: 'normal'
           }}>
             Grow your ADA practice with pre-qualified cases
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
-            color: '#3D4A5C', lineHeight: 1.6, margin: '0 0 2rem'
+            color: 'var(--body)', lineHeight: 1.6, margin: '0 0 2rem'
           }}>
             Stop chasing leads. We deliver documented ADA violations directly to you — pre-screened, exclusive, and ready for action.
           </p>
@@ -65,7 +65,7 @@ export default function ForAttorneysNew() {
               }}>
                 <div aria-hidden="true" style={{
                   width: '22px', height: '22px', borderRadius: '50%',
-                  background: '#FEF1EC', display: 'flex', alignItems: 'center',
+                  background: 'var(--card-bg-tinted)', display: 'flex', alignItems: 'center',
                   justifyContent: 'center', flexShrink: 0, marginTop: '2px'
                 }}>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -74,7 +74,7 @@ export default function ForAttorneysNew() {
                 </div>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-                  color: '#3D4A5C', lineHeight: 1.5
+                  color: 'var(--body)', lineHeight: 1.5
                 }}>
                   {f}
                 </span>
@@ -84,7 +84,7 @@ export default function ForAttorneysNew() {
 
           <Link to={createPageUrl('LawyerLanding')} className="landing-btn-attorney" style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-            background: 'transparent', color: '#9A3412',
+            background: 'transparent', color: 'var(--section-label)',
             padding: '14px 28px', borderRadius: '10px',
             fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
             textDecoration: 'none', minHeight: '44px',
@@ -100,26 +100,26 @@ export default function ForAttorneysNew() {
         }}>
           {stats.map((s, i) => (
             <div key={i} className="landing-stat-card" style={{
-              background: '#FFFFFF', border: '1px solid var(--slate-200)',
+              background: 'var(--page-bg)', border: '1px solid var(--slate-200)',
               borderRadius: '10px', padding: '24px', textAlign: 'center',
               transition: 'transform 0.2s, box-shadow 0.2s'
             }}>
               <p style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 800,
-                color: '#1E293B', margin: '0 0 0.5rem', fontStyle: 'normal'
+                color: 'var(--heading)', margin: '0 0 0.5rem', fontStyle: 'normal'
               }}>
                 {s.value}
               </p>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                color: '#3D4A5C', margin: 0, lineHeight: 1.4
+                color: 'var(--body)', margin: 0, lineHeight: 1.4
               }}>
                 {s.label}
               </p>
               {s.note && (
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-                  color: '#4B5563', margin: '0.25rem 0 0', fontWeight: 600
+                  color: 'var(--body-secondary)', margin: '0.25rem 0 0', fontWeight: 600
                 }}>
                   {s.note}
                 </p>

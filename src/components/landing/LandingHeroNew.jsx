@@ -54,7 +54,7 @@ export default function LandingHeroNew() {
       className="landing-hero-section warm-keep-dark"
       style={{
         minHeight: '100vh',
-        background: '#1E293B',
+        background: 'var(--dark-bg)',
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
@@ -92,10 +92,10 @@ export default function LandingHeroNew() {
         {/* Left column */}
         <div>
           <div className="landing-fade-up" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-            <div aria-hidden="true" style={{ width: '32px', height: '2px', background: '#C2410C' }} />
+            <div aria-hidden="true" style={{ width: '32px', height: '2px', background: 'var(--accent)' }} />
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-              letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FDBA74'
+              letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--dark-label)'
             }}>
               ADA Legal Link
             </span>
@@ -103,15 +103,15 @@ export default function LandingHeroNew() {
 
           <h1 id="hero-heading" className="landing-fade-up landing-delay-1" style={{
             fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.75rem, 6vw, 3.25rem)', fontWeight: 700,
-            lineHeight: 1.1, color: 'white', margin: '0 0 1.5rem', fontStyle: 'normal'
+            lineHeight: 1.1, color: 'var(--dark-heading)', margin: '0 0 1.5rem', fontStyle: 'normal'
           }}>
             Understand your rights.<br />
-            <span style={{ color: '#FB923C' }}>Then enforce them.</span>
+            <span style={{ color: 'var(--accent-light)' }}>Then enforce them.</span>
           </h1>
 
           <p className="landing-fade-up landing-delay-2" style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.125rem',
-            color: '#CBD5E1', lineHeight: 1.7, margin: '0 0 2rem', maxWidth: '540px'
+            color: 'var(--dark-body-secondary)', lineHeight: 1.7, margin: '0 0 2rem', maxWidth: '540px'
           }}>
             We turned 279 pages of ADA standards into an interactive, accessible resource center — with 42 diagrams, 52 guides, and instant search. When you're ready, we connect you with an attorney at no cost.
           </p>
@@ -121,7 +121,7 @@ export default function LandingHeroNew() {
           }}>
             <Link to={createPageUrl('StandardsGuide')} className="landing-btn-primary" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-              background: '#C2410C', color: 'white',
+              background: 'var(--accent)', color: 'var(--btn-text)',
               padding: '16px 32px', borderRadius: '10px',
               fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
               textDecoration: 'none', minHeight: '44px', border: 'none',
@@ -131,11 +131,11 @@ export default function LandingHeroNew() {
             </Link>
             <Link to={createPageUrl('RightsPathway')} className="landing-btn-secondary" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-              background: 'transparent', color: '#CBD5E1',
+              background: 'transparent', color: 'var(--dark-body-secondary)',
               padding: '12px 24px', borderRadius: '10px',
               fontSize: '0.9rem', fontWeight: 600, fontFamily: 'Manrope, sans-serif',
               minHeight: '44px', textDecoration: 'none',
-              border: '1px solid #475569', transition: 'all 0.15s'
+              border: '1px solid var(--dark-border)', transition: 'all 0.15s'
             }}>
               Were Your Rights Violated? Find Out in 60 Seconds →
             </Link>
@@ -143,26 +143,26 @@ export default function LandingHeroNew() {
 
           <p className="landing-fade-up landing-delay-4" style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-            color: '#B0BEC5', marginTop: '1rem'
+            color: 'var(--dark-muted)', marginTop: '1rem'
           }}>
             Attorney-connected violation reporting — launching soon.
           </p>
         </div>
 
-        {/* Right column — Gina's story + stats + WCAG */}
+        {/* Right column — quote card + stats + WCAG */}
         <div className="landing-fade-up landing-delay-4 landing-hero-right">
           {/* Quote card — random on each page load */}
           <div className="hero-glass-card" style={{
-            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+            background: 'var(--glass-bg)', border: '1px solid var(--glass-border)',
             borderRadius: '16px', padding: '32px', position: 'relative', marginBottom: '1rem'
           }}>
             <div aria-hidden="true" style={{
-              fontFamily: 'Fraunces, serif', fontSize: '4rem', color: '#C2410C',
+              fontFamily: 'Fraunces, serif', fontSize: '4rem', color: 'var(--accent)',
               lineHeight: 1, marginBottom: '-10px', opacity: 0.6,
             }}>"</div>
             <blockquote style={{ margin: 0, padding: 0 }}>
               <p style={{
-                fontFamily: 'Fraunces, serif', fontSize: '1.1rem', color: '#E2E8F0',
+                fontFamily: 'Fraunces, serif', fontSize: '1.1rem', color: 'var(--dark-body)',
                 lineHeight: 1.8, margin: '0 0 20px', fontStyle: 'italic',
               }}>
                 {quote.text}
@@ -174,23 +174,23 @@ export default function LandingHeroNew() {
             }}>
               <div aria-hidden="true" style={{
                 width: '48px', height: '48px', borderRadius: '50%',
-                background: '#2A3344', border: '2px solid #C2410C',
+                background: 'var(--dark-card-bg)', border: '2px solid var(--accent)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0,
               }}>
                 <span style={{
                   fontFamily: 'Fraunces, serif', fontSize: '1.2rem', fontWeight: 700,
-                  color: '#FB923C',
+                  color: 'var(--accent-light)',
                 }}>{quote.initial}</span>
               </div>
               <div>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700,
-                  color: 'white', margin: '0 0 2px',
+                  color: 'var(--dark-heading)', margin: '0 0 2px',
                 }}>{quote.name}</p>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                  color: '#B0BEC5', margin: 0,
+                  color: 'var(--dark-muted)', margin: 0,
                 }}>{quote.role}</p>
               </div>
             </div>
@@ -213,11 +213,11 @@ export default function LandingHeroNew() {
               }}>
                 <p style={{
                   fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 800,
-                  color: '#FB923C', margin: '0 0 2px', fontStyle: 'normal',
+                  color: 'var(--accent-light)', margin: '0 0 2px', fontStyle: 'normal',
                 }}>{stat.value}</p>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem',
-                  color: '#B0BEC5', margin: 0, fontWeight: 600,
+                  color: 'var(--dark-muted)', margin: 0, fontWeight: 600,
                 }}>{stat.label}</p>
               </div>
             ))}
@@ -226,21 +226,21 @@ export default function LandingHeroNew() {
           {/* Accessibility commitment mini-card */}
           <div className="hero-glass-card" style={{
             background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)',
-            borderRadius: '10px', padding: '20px 24px', borderLeft: '3px solid #C2410C'
+            borderRadius: '10px', padding: '20px 24px', borderLeft: '3px solid var(--accent)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-                color: '#E2E8F0', lineHeight: 1.6, margin: 0, fontStyle: 'normal', flex: '1 1 0'
+                color: 'var(--dark-body)', lineHeight: 1.6, margin: 0, fontStyle: 'normal', flex: '1 1 0'
               }}>
-                <strong style={{ color: 'white' }}>WCAG 2.2 AAA compliant.</strong> The highest level of web accessibility — built for the community it serves. Keyboard navigable. Screen reader optimized. High contrast supported.
+                <strong style={{ color: 'var(--dark-heading)' }}>WCAG 2.2 AAA compliant.</strong> The highest level of web accessibility — built for the community it serves. Keyboard navigable. Screen reader optimized. High contrast supported.
               </p>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: '6px', flexShrink: 0,
                 background: 'rgba(45,106,79,0.2)', border: '1px solid rgba(45,106,79,0.4)',
                 borderRadius: '100px', padding: '5px 14px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-                color: '#7DCEA0', whiteSpace: 'nowrap', letterSpacing: '0.02em'
+                color: 'var(--accent-success)', whiteSpace: 'nowrap', letterSpacing: '0.02em'
               }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 WCAG 2.2 AAA

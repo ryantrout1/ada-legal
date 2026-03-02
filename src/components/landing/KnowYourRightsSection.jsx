@@ -56,8 +56,8 @@ function RightsCard({ card }) {
     <div
       className="kyr-card"
       style={{
-        background: '#F8FAFC',
-        border: '1px solid #E2E8F0',
+        background: 'var(--page-bg-subtle)',
+        border: '1px solid var(--border)',
         borderRadius: '16px',
         padding: 0,
         overflow: 'hidden',
@@ -87,7 +87,7 @@ function RightsCard({ card }) {
         <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', fontWeight: 600, color: card.subtitleColor, margin: '0 0 12px' }}>
           {card.subtitle}
         </p>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#3D4A5C', lineHeight: 1.65, margin: '0 0 16px' }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.65, margin: '0 0 16px' }}>
           {card.body}
         </p>
 
@@ -95,8 +95,8 @@ function RightsCard({ card }) {
           {card.tags.map(tag => (
             <span key={tag} role="listitem" style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 500,
-              padding: '4px 10px', borderRadius: '100px', background: 'white',
-              border: '1px solid #E2E8F0', color: '#3D4A5C'
+              padding: '4px 10px', borderRadius: '100px', background: 'var(--card-bg)',
+              border: '1px solid var(--border)', color: 'var(--body)'
             }}>
               {tag}
             </span>
@@ -105,7 +105,7 @@ function RightsCard({ card }) {
 
         <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '14px', display: 'flex', alignItems: 'center', gap: '10px', marginTop: 'auto' }}>
           <BrandIcon name={card.filingIconName} size={28} viewBox={20} />
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: '#3D4A5C', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body)', margin: 0, lineHeight: 1.5 }}>
             {card.filingText}
           </p>
         </div>
@@ -119,9 +119,9 @@ export default function KnowYourRightsSection() {
     <section
       aria-labelledby="kyr-heading"
       style={{
-        background: '#FFFFFF',
-        borderTop: '1px solid #F1F5F9',
-        borderBottom: '1px solid #F1F5F9',
+        background: 'var(--page-bg)',
+        borderTop: '1px solid var(--border-lighter)',
+        borderBottom: '1px solid var(--border-lighter)',
         padding: '80px 24px',
         position: 'relative', overflow: 'hidden'
       }}
@@ -137,7 +137,7 @@ export default function KnowYourRightsSection() {
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', fontWeight: 700,
-            textTransform: 'uppercase', letterSpacing: '0.1em', color: '#9A3412',
+            textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--section-label)',
             margin: '0 0 12px'
           }}>
             Know Your Rights
@@ -149,7 +149,7 @@ export default function KnowYourRightsSection() {
             The ADA protects you in three key areas
           </h2>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: '#3D4A5C',
+            fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: 'var(--body)',
             maxWidth: '620px', margin: '0 auto', lineHeight: 1.6
           }}>
             The Americans with Disabilities Act is organized into Titles, each covering a different type of discrimination. Understanding which Title applies to your situation determines where you file and what happens next.
@@ -166,7 +166,7 @@ export default function KnowYourRightsSection() {
 
         <div style={{ textAlign: 'center', maxWidth: '700px', margin: '40px auto 0' }}>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem', color: '#4B5563',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem', color: 'var(--body-secondary)',
             lineHeight: 1.65, marginBottom: '24px'
           }}>
             Not sure which one applies? That's completely normal — many situations overlap. Our intake form asks simple questions to determine the right path for you. No legal knowledge required.
@@ -175,7 +175,7 @@ export default function KnowYourRightsSection() {
             to={createPageUrl('RightsPathway')}
             style={{
               display: 'inline-block', fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-              fontWeight: 600, color: 'white', background: '#C2410C', padding: '14px 28px',
+              fontWeight: 600, color: 'var(--btn-text)', background: 'var(--accent)', padding: '14px 28px',
               borderRadius: '10px', textDecoration: 'none', border: 'none',
               transition: 'background 0.2s', minHeight: '44px'
             }}
@@ -183,13 +183,13 @@ export default function KnowYourRightsSection() {
             Were Your Rights Violated? Find Out in 60 Seconds →
           </Link>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#4B5563',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: 'var(--body-secondary)',
             marginTop: '12px', marginBottom: 0
           }}>
             Attorney-connected violation reporting — launching soon.
           </p>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#4B5563',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: 'var(--body-secondary)',
             fontStyle: 'italic', lineHeight: 1.55, textAlign: 'center',
             maxWidth: '700px', margin: '24px auto 0'
           }}>

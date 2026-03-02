@@ -37,26 +37,26 @@ export default function LandingStyles() {
       /* Button hovers + focus */
       .landing-btn-primary:hover,
       .landing-btn-primary:focus-visible {
-        background: #9A3412 !important;
+        background: var(--link) !important;
       }
       .landing-btn-secondary:hover,
       .landing-btn-secondary:focus-visible {
         border-color: #CBD5E1 !important;
-        color: white !important;
+        color: var(--btn-text) !important;
       }
       .landing-btn-attorney:hover,
       .landing-btn-attorney:focus-visible {
-        background: #C2410C !important;
-        color: white !important;
+        background: var(--accent) !important;
+        color: var(--btn-text) !important;
       }
       .landing-btn-primary:focus-visible,
       .landing-btn-secondary:focus-visible,
       .landing-btn-attorney:focus-visible {
-        outline: 3px solid #F97316 !important;
+        outline: 3px solid var(--accent-light) !important;
         outline-offset: 2px !important;
       }
       .landing-footer-link:hover {
-        color: #F97316 !important;
+        color: var(--accent-light) !important;
       }
 
       /* Responsive */

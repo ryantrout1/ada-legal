@@ -30,7 +30,7 @@ const capabilities = [
 export default function StoriesSection() {
   return (
     <section aria-labelledby="stories-heading" style={{
-      background: '#FAF7F2',
+      background: 'var(--page-bg-alt)',
       padding: '100px 1.5rem',
       borderTop: '1px solid transparent',
       borderImage: 'linear-gradient(to right, transparent, var(--slate-200), transparent) 1'
@@ -39,20 +39,20 @@ export default function StoriesSection() {
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9A3412',
+            letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--section-label)',
             margin: '0 0 0.75rem'
           }} aria-hidden="true">
             What We Built
           </p>
           <h2 id="stories-heading" style={{
             fontFamily: 'Fraunces, serif', fontSize: '2.5rem', fontWeight: 700,
-            color: '#1E293B', margin: '0 0 0.75rem', fontStyle: 'normal'
+            color: 'var(--heading)', margin: '0 0 0.75rem', fontStyle: 'normal'
           }}>
             The ADA, made accessible
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
-            color: '#3D4A5C', margin: 0, maxWidth: '640px', marginLeft: 'auto', marginRight: 'auto'
+            color: 'var(--body)', margin: 0, maxWidth: '640px', marginLeft: 'auto', marginRight: 'auto'
           }}>
             We took 279 pages of federal accessibility standards and turned them into something anyone can understand, search, and act on — fully accessible to the community it serves.
           </p>
@@ -64,7 +64,7 @@ export default function StoriesSection() {
         }}>
           {capabilities.map((s, i) => (
             <article key={i} className="landing-story-card" style={{
-              background: '#FFFFFF', border: '1px solid var(--slate-200)',
+              background: 'var(--page-bg)', border: '1px solid var(--slate-200)',
               borderRadius: '16px', padding: '32px',
               transition: 'transform 0.2s, box-shadow 0.2s',
               display: 'flex', flexDirection: 'column'
@@ -74,13 +74,13 @@ export default function StoriesSection() {
               </div>
               <h3 style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 600,
-                color: '#1E293B', margin: '0 0 0.75rem', lineHeight: 1.3, fontStyle: 'normal'
+                color: 'var(--heading)', margin: '0 0 0.75rem', lineHeight: 1.3, fontStyle: 'normal'
               }}>
                 {s.heading}
               </h3>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-                color: '#3D4A5C', lineHeight: 1.6, margin: '0 0 1.25rem',
+                color: 'var(--body)', lineHeight: 1.6, margin: '0 0 1.25rem',
                 flex: 1
               }}>
                 {s.body}
@@ -88,15 +88,15 @@ export default function StoriesSection() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{
                   display: 'inline-block', fontFamily: 'Manrope, sans-serif',
-                  fontSize: '0.8rem', fontWeight: 700, color: '#7C2D12',
-                  background: '#FEF1EC', padding: '0.3rem 0.75rem',
+                  fontSize: '0.8rem', fontWeight: 700, color: 'var(--link)',
+                  background: 'var(--card-bg-tinted)', padding: '0.3rem 0.75rem',
                   borderRadius: '9999px'
                 }}>
                   {s.tag}
                 </span>
                 <Link to={createPageUrl(s.link)} style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                  fontWeight: 600, color: '#9A3412', textDecoration: 'none',
+                  fontWeight: 600, color: 'var(--section-label)', textDecoration: 'none',
                   minHeight: '44px', display: 'inline-flex', alignItems: 'center',
                   padding: '8px 12px', margin: '-8px -12px', borderRadius: '6px'
                 }}>

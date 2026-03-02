@@ -6,7 +6,7 @@ export default function OurStorySection() {
       aria-labelledby="our-story-heading"
       className="warm-keep-dark"
       style={{
-        background: '#0F1219',
+        background: 'var(--dark-bg-deep)',
         padding: '60px 1.5rem 100px',
         position: 'relative',
         overflow: 'hidden',
@@ -26,19 +26,19 @@ export default function OurStorySection() {
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FDBA74',
+            letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--dark-label)',
             margin: '0 0 0.75rem',
           }}>
             Our Story
           </p>
           <h2 id="our-story-heading" style={{
             fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 4vw, 2.25rem)',
-            fontWeight: 700, color: 'white', margin: '0 0 1rem', lineHeight: 1.2,
+            fontWeight: 700, color: 'var(--dark-heading)', margin: '0 0 1rem', lineHeight: 1.2,
           }}>
             Built by someone who lives it.
           </h2>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: '#B0BEC5',
+            fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: 'var(--dark-muted)',
             lineHeight: 1.7, maxWidth: '650px', margin: '0 auto',
           }}>
             ADA Legal Link was co-founded by Gina — a J.D. and ADA rights advocate who has
@@ -51,8 +51,8 @@ export default function OurStorySection() {
         <div className="story-video-container" style={{
           maxWidth: '720px', margin: '0 auto 2.5rem',
           borderRadius: '16px', overflow: 'hidden',
-          border: '1px solid #2A3344',
-          background: '#1A1F2B',
+          border: '1px solid var(--dark-card-border)',
+          background: 'var(--dark-card-bg)',
         }}>
           {/* 
             PLACEHOLDER — replace with <video> or embed once footage is ready.
@@ -106,13 +106,13 @@ export default function OurStorySection() {
               </div>
               <p style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
-                color: 'white', margin: '0 0 4px', textAlign: 'center',
+                color: 'var(--dark-heading)', margin: '0 0 4px', textAlign: 'center',
               }}>
                 Video Coming Soon
               </p>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                color: '#CBD5E1', margin: 0, textAlign: 'center',
+                color: 'var(--dark-body-secondary)', margin: 0, textAlign: 'center',
               }}>
                 Hear directly from Gina about why this platform exists.
               </p>
@@ -129,18 +129,18 @@ export default function OurStorySection() {
           margin: '0 auto',
         }}>
           <div style={{
-            background: '#1A1F2B', border: '1px solid #2A3344',
+            background: 'var(--dark-card-bg)', border: '1px solid var(--dark-card-border)',
             borderRadius: '12px', padding: '24px',
           }}>
             <p style={{
               fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700,
-              color: 'white', margin: '0 0 8px',
+              color: 'var(--dark-heading)', margin: '0 0 8px',
             }}>
               Lived experience, not theory.
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-              color: '#B0BEC5', lineHeight: 1.7, margin: 0,
+              color: 'var(--dark-muted)', lineHeight: 1.7, margin: 0,
             }}>
               Every feature on this platform was shaped by someone who uses a
               wheelchair, fights ADA cases, and knows firsthand when a ramp is
@@ -149,18 +149,18 @@ export default function OurStorySection() {
           </div>
 
           <div style={{
-            background: '#1A1F2B', border: '1px solid #2A3344',
+            background: 'var(--dark-card-bg)', border: '1px solid var(--dark-card-border)',
             borderRadius: '12px', padding: '24px',
           }}>
             <p style={{
               fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700,
-              color: 'white', margin: '0 0 8px',
+              color: 'var(--dark-heading)', margin: '0 0 8px',
             }}>
               Built with you, not for you.
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-              color: '#B0BEC5', lineHeight: 1.7, margin: 0,
+              color: 'var(--dark-muted)', lineHeight: 1.7, margin: 0,
             }}>
               This platform will grow based on your feedback. We got the
               foundations right — accessible, private, free — but the community
@@ -172,14 +172,14 @@ export default function OurStorySection() {
         {/* Feedback callout */}
         <div style={{
           textAlign: 'center', marginTop: '2.5rem',
-          padding: '20px', borderTop: '1px solid #2A3344',
+          padding: '20px', borderTop: '1px solid var(--dark-card-border)',
         }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-            color: '#B0BEC5', margin: 0,
+            color: 'var(--dark-muted)', margin: 0,
           }}>
             Something not working? Something we missed?{' '}
-            <span style={{ color: '#FDBA74', fontWeight: 600 }}>
+            <span style={{ color: 'var(--dark-label)', fontWeight: 600 }}>
               We want to hear it.
             </span>{' '}
             Use the Feedback button — every message goes directly to our team.

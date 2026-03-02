@@ -13,7 +13,7 @@ const items = [
 export default function CommitmentSection() {
   return (
     <section aria-labelledby="commitment-heading" className="warm-keep-dark" style={{
-      background: '#1E293B', padding: '100px 1.5rem 60px', position: 'relative', overflow: 'hidden'
+      background: 'var(--dark-bg)', padding: '100px 1.5rem 60px', position: 'relative', overflow: 'hidden'
     }}>
       <div aria-hidden="true" className="section-watermark" style={{
         position: 'absolute', top: '10%', right: '-5%',
@@ -27,20 +27,20 @@ export default function CommitmentSection() {
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
-            letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FDBA74',
+            letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--dark-label)',
             margin: '0 0 0.75rem'
           }} aria-hidden="true">
             Our Commitment
           </p>
           <h2 id="commitment-heading" style={{
             fontFamily: 'Fraunces, serif', fontSize: '2.25rem', fontWeight: 700,
-            color: 'white', margin: '0 0 0.75rem', fontStyle: 'normal'
+            color: 'var(--dark-heading)', margin: '0 0 0.75rem', fontStyle: 'normal'
           }}>
             Built on principles that matter
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem',
-            color: '#CBD5E1', margin: 0, maxWidth: '520px',
+            color: 'var(--dark-body-secondary)', margin: 0, maxWidth: '520px',
             marginLeft: 'auto', marginRight: 'auto'
           }}>
             Every decision we make is guided by these commitments to the people we serve.
@@ -61,13 +61,13 @@ export default function CommitmentSection() {
               <div>
                 <h3 style={{
                   fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
-                  color: 'white', margin: '0 0 0.375rem', fontStyle: 'normal'
+                  color: 'var(--dark-heading)', margin: '0 0 0.375rem', fontStyle: 'normal'
                 }}>
                   {item.title}
                 </h3>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem',
-                  color: '#CBD5E1', lineHeight: 1.6, margin: 0
+                  color: 'var(--dark-body-secondary)', lineHeight: 1.6, margin: 0
                 }}>
                   {item.desc}
                 </p>

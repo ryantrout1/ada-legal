@@ -14,7 +14,7 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
 
   return (
     <header aria-labelledby="guide-page-heading" style={{
-      background: '#1A1F2B', position: 'relative', overflow: 'hidden'
+      background: 'var(--dark-card-bg)', position: 'relative', overflow: 'hidden'
     }}>
       <div aria-hidden="true" className="section-watermark" style={{
         position: 'absolute', bottom: '-10%', right: '2%',
@@ -36,21 +36,21 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
             <li>
               <Link to={createPageUrl('Home')} style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                color: '#B0BEC5', textDecoration: 'none'
+                color: 'var(--dark-muted)', textDecoration: 'none'
               }}>Home</Link>
             </li>
-            <li aria-hidden="true"><ChevronRight size={14} style={{ color: '#B0BEC5' }} /></li>
+            <li aria-hidden="true"><ChevronRight size={14} style={{ color: 'var(--dark-muted)' }} /></li>
             <li>
               <Link to={createPageUrl('StandardsGuide')} style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                color: '#B0BEC5', textDecoration: 'none'
+                color: 'var(--dark-muted)', textDecoration: 'none'
               }}>ADA Standards Guide</Link>
             </li>
-            <li aria-hidden="true"><ChevronRight size={14} style={{ color: '#B0BEC5' }} /></li>
+            <li aria-hidden="true"><ChevronRight size={14} style={{ color: 'var(--dark-muted)' }} /></li>
             <li>
               <span aria-current="page" style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                color: '#E2E8F0'
+                color: 'var(--dark-body)'
               }}>{title}</span>
             </li>
           </ol>
@@ -59,8 +59,8 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
         {/* Badge */}
         <span style={{
           display: 'inline-block',
-          background: badgeColor || '#C2410C',
-          color: 'white',
+          background: badgeColor || 'var(--accent)',
+          color: 'var(--dark-heading)',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
           letterSpacing: '0.08em', textTransform: 'uppercase',
           padding: '4px 12px', borderRadius: '100px',
@@ -74,7 +74,7 @@ export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
           fontFamily: 'Fraunces, serif',
           fontSize: 'clamp(1.75rem, 3vw, 2.25rem)',
           fontWeight: 700, lineHeight: 1.15,
-          color: 'white', margin: '0 0 16px'
+          color: 'var(--dark-heading)', margin: '0 0 16px'
         }}>
           {title}
         </h1>
