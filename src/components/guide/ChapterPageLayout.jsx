@@ -198,7 +198,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
               </div>
             )}
 
-            {/* Inline violation CTA */}
+            {/* Inline violation CTA — disabled until reporting feature is ready
             <div style={{
               marginTop: '20px', paddingTop: '16px',
               borderTop: '1px solid var(--border)',
@@ -224,6 +224,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
                 Report a Violation <ArrowRight size={14} aria-hidden="true" />
               </Link>
             </div>
+            */}
           </div>
         </div>
       </div>
