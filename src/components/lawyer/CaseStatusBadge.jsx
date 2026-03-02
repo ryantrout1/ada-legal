@@ -1,14 +1,14 @@
 import React from 'react';
 
 const STATUS_CONFIG = {
-  submitted:    { label: 'Submitted',    bg: '#E2E8F0', color: '#475569' },
+  submitted:    { label: 'Submitted',    bg: 'var(--border)', color: 'var(--body-secondary)' },
   under_review: { label: 'Under Review', bg: '#FEF3C7', color: '#92400E' },
   approved:     { label: 'Approved',     bg: '#DBEAFE', color: '#1E3A8A' },
   rejected:     { label: 'Rejected',     bg: '#FEE2E2', color: '#B91C1C' },
   available:    { label: 'Available',    bg: '#DCFCE7', color: '#15803D' },
   assigned:     { label: 'Assigned',     bg: '#DBEAFE', color: '#1E3A8A' },
   in_progress:  { label: 'In Progress',  bg: '#FEF3C7', color: '#92400E' },
-  closed:       { label: 'Closed',       bg: '#E2E8F0', color: '#475569' }
+  closed:       { label: 'Closed',       bg: 'var(--border)', color: 'var(--body-secondary)' }
 };
 
 export default function CaseStatusBadge({ status }) {

@@ -26,7 +26,7 @@ function HorizontalBar({ label, count, total, color, active, faded, onClick }) {
         display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem',
         cursor: onClick ? 'pointer' : 'default',
         opacity: faded ? 0.5 : 1,
-        borderLeft: active ? `3px solid var(--terra-600)` : '3px solid transparent',
+        borderLeft: active ? `3px solid var(--section-label)` : '3px solid transparent',
         paddingLeft: active ? '0.25rem' : '0.25rem',
         borderRadius: '2px',
         transition: 'opacity 0.15s, border-color 0.15s'
@@ -35,7 +35,7 @@ function HorizontalBar({ label, count, total, color, active, faded, onClick }) {
       onMouseLeave={e => { if (onClick) e.currentTarget.style.opacity = faded ? '0.5' : '1'; }}
     >
       <span style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-700)',
+        fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body)',
         minWidth: '120px', textAlign: 'right', flexShrink: 0
       }}>{label}</span>
       <div style={{ flex: 1, height: '14px', backgroundColor: SLATE_BAR_BG, borderRadius: '3px', overflow: 'hidden' }}>
@@ -46,9 +46,9 @@ function HorizontalBar({ label, count, total, color, active, faded, onClick }) {
       </div>
       <span style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-        color: 'var(--slate-800)', minWidth: '60px', flexShrink: 0
+        color: 'var(--heading)', minWidth: '60px', flexShrink: 0
       }}>
-        {count} <span style={{ fontWeight: 400, color: 'var(--slate-500)' }}>({Math.round(pct)}%)</span>
+        {count} <span style={{ fontWeight: 400, color: 'var(--body-secondary)' }}>({Math.round(pct)}%)</span>
       </span>
     </div>
   );
@@ -57,17 +57,17 @@ function HorizontalBar({ label, count, total, color, active, faded, onClick }) {
 function SectionCard({ title, subtitle, children }) {
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
       borderRadius: 'var(--radius-md)', padding: '12px'
     }}>
       <h3 style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-        color: 'var(--slate-900)', margin: '0 0 0.15rem 0'
+        color: 'var(--heading)', margin: '0 0 0.15rem 0'
       }}>{title}</h3>
       {subtitle && (
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem',
-          color: 'var(--slate-500)', margin: '0 0 0.5rem 0'
+          color: 'var(--body-secondary)', margin: '0 0 0.5rem 0'
         }}>{subtitle}</p>
       )}
       {children}
@@ -143,16 +143,16 @@ export default function ViolationTypeSection({ cases, filters, onFilterChange })
                 padding: '0.5rem 0.875rem', backgroundColor: '#FEF1EC', borderRadius: '6px', flex: '1 1 180px',
                 cursor: 'pointer',
                 opacity: hasVTypeFilter && !physicalActive ? 0.5 : 1,
-                borderLeft: physicalActive ? '3px solid var(--terra-600)' : '3px solid transparent',
+                borderLeft: physicalActive ? '3px solid var(--section-label)' : '3px solid transparent',
                 transition: 'opacity 0.15s'
               }}
             >
               <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: TERRA, flexShrink: 0 }} />
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)' }}>Physical Space</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)' }}>Physical Space</span>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.125rem', fontWeight: 700, color: TERRA, marginLeft: 'auto' }}>
                 {physical.length}
               </span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>({pctPhysical}%)</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>({pctPhysical}%)</span>
             </div>
             <div
               onClick={() => handleViolationTypeClick('digital_website')}
@@ -161,16 +161,16 @@ export default function ViolationTypeSection({ cases, filters, onFilterChange })
                 padding: '0.5rem 0.875rem', backgroundColor: '#EFF6FF', borderRadius: '6px', flex: '1 1 180px',
                 cursor: 'pointer',
                 opacity: hasVTypeFilter && !digitalActive ? 0.5 : 1,
-                borderLeft: digitalActive ? '3px solid var(--terra-600)' : '3px solid transparent',
+                borderLeft: digitalActive ? '3px solid var(--section-label)' : '3px solid transparent',
                 transition: 'opacity 0.15s'
               }}
             >
               <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: INFO, flexShrink: 0 }} />
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)' }}>Digital / Website</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)' }}>Digital / Website</span>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.125rem', fontWeight: 700, color: INFO, marginLeft: 'auto' }}>
                 {digital.length}
               </span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>({pctDigital}%)</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>({pctDigital}%)</span>
             </div>
           </div>
         </SectionCard>
@@ -196,7 +196,7 @@ export default function ViolationTypeSection({ cases, filters, onFilterChange })
         <SectionCard title="Business Type Distribution" subtitle={`${total} total cases`}>
           {sortedBiz.map(b => (
             <HorizontalBar
-              key={b} label={b} count={bizCounts[b]} total={total} color="var(--slate-700)"
+              key={b} label={b} count={bizCounts[b]} total={total} color="var(--body)"
               active={activeBusinessType === b}
               faded={activeBusinessType !== null && activeBusinessType !== b}
               onClick={() => handleBusinessTypeClick(b)}

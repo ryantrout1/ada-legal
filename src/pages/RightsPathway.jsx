@@ -172,13 +172,13 @@ export default function RightsPathway() {
 
   return (
     <div ref={topRef} style={{
-      minHeight: '100vh', background: 'var(--slate-50)', padding: '48px 24px 64px'
+      minHeight: '100vh', background: 'var(--page-bg-subtle)', padding: '48px 24px 64px'
     }}>
       <div style={{ maxWidth: '640px', margin: '0 auto' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <span style={{
-            display: 'inline-block', background: '#9A3412', color: 'white',
+            display: 'inline-block', background: 'var(--section-label)', color: 'var(--btn-text)',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
             letterSpacing: '0.1em', textTransform: 'uppercase',
             padding: '4px 14px', borderRadius: '100px', marginBottom: '12px'
@@ -187,13 +187,13 @@ export default function RightsPathway() {
           </span>
           <h1 style={{
             fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-            fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px'
+            fontWeight: 700, color: 'var(--heading)', margin: '0 0 8px'
           }}>
             Know Your Rights
           </h1>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-            color: '#475569', margin: 0, lineHeight: 1.6
+            color: 'var(--body-secondary)', margin: 0, lineHeight: 1.6
           }}>
             Answer a few questions and we'll show you exactly what the law says about your situation.
           </p>
@@ -205,7 +205,7 @@ export default function RightsPathway() {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
               <span style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
-                color: 'var(--slate-600)'
+                color: 'var(--body)'
               }}>
                 Step {currentStepIndex + 1} of {totalSteps}: {STEP_LABELS[currentStepKey]}
               </span>
@@ -217,12 +217,12 @@ export default function RightsPathway() {
               aria-valuemax={100}
               aria-label={`Step ${currentStepIndex + 1} of ${totalSteps}`}
               style={{
-                height: '6px', borderRadius: '100px', background: 'var(--slate-200)',
+                height: '6px', borderRadius: '100px', background: 'var(--border)',
                 overflow: 'hidden'
               }}
             >
               <div style={{
-                height: '100%', borderRadius: '100px', background: '#C2410C',
+                height: '100%', borderRadius: '100px', background: 'var(--accent)',
                 width: `${progressPct}%`, transition: 'width 0.3s ease'
               }} />
             </div>
@@ -232,7 +232,7 @@ export default function RightsPathway() {
         {/* Wizard Steps */}
         {!showResults && (
           <div style={{
-            background: 'white', border: '1px solid var(--slate-200)', borderRadius: '20px',
+            background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '20px',
             padding: '32px'
           }}>
             <h2
@@ -240,7 +240,7 @@ export default function RightsPathway() {
               tabIndex={-1}
               style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700,
-                color: 'var(--slate-900)', margin: '0 0 20px', outline: 'none'
+                color: 'var(--heading)', margin: '0 0 20px', outline: 'none'
               }}
             >
               {stepQuestions[currentStepKey]}
@@ -275,10 +275,10 @@ export default function RightsPathway() {
                 <button onClick={handleBack} style={{
                   background: 'transparent', border: 'none', cursor: 'pointer',
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 600,
-                  color: '#475569', padding: '8px 4px', minHeight: '44px',
+                  color: 'var(--body-secondary)', padding: '8px 4px', minHeight: '44px',
                   borderRadius: '6px', outline: 'none'
                 }}
-                onFocus={e => { e.currentTarget.style.outline = '2px solid #C2410C'; e.currentTarget.style.outlineOffset = '2px'; }}
+                onFocus={e => { e.currentTarget.style.outline = '2px solid var(--accent)'; e.currentTarget.style.outlineOffset = '2px'; }}
                 onBlur={e => { e.currentTarget.style.outline = 'none'; }}
                 >
                   ← Back

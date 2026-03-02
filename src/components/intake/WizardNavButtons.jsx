@@ -21,16 +21,16 @@ export default function WizardNavButtons({ onBack, onContinue, canContinue, back
             fontFamily: 'Manrope, sans-serif',
             fontSize: '1rem',
             fontWeight: 600,
-            color: 'var(--slate-700)',
+            color: 'var(--body)',
             backgroundColor: 'transparent',
-            border: '2px solid var(--slate-300)',
+            border: '2px solid var(--border)',
             borderRadius: 'var(--radius-md)',
             cursor: 'pointer',
             minHeight: '48px',
             transition: 'all 0.2s'
           }}
-          onMouseEnter={e => { e.target.style.borderColor = 'var(--slate-500)'; }}
-          onMouseLeave={e => { e.target.style.borderColor = 'var(--slate-500)'; }}
+          onMouseEnter={e => { e.target.style.borderColor = 'var(--body-secondary)'; }}
+          onMouseLeave={e => { e.target.style.borderColor = 'var(--body-secondary)'; }}
         >
           <ArrowLeft size={18} aria-hidden="true" />
           {backLabel || 'Back'}
@@ -49,7 +49,7 @@ export default function WizardNavButtons({ onBack, onContinue, canContinue, back
           fontSize: '1rem',
           fontWeight: 600,
           color: 'white',
-          backgroundColor: canContinue ? 'var(--terra-600)' : 'var(--slate-500)',
+          backgroundColor: canContinue ? 'var(--section-label)' : 'var(--body-secondary)',
           border: 'none',
           borderRadius: 'var(--radius-md)',
           cursor: canContinue ? 'pointer' : 'not-allowed',
@@ -57,8 +57,8 @@ export default function WizardNavButtons({ onBack, onContinue, canContinue, back
           transition: 'all 0.2s',
           opacity: canContinue ? 1 : 0.7
         }}
-        onMouseEnter={e => { if (canContinue) e.target.style.backgroundColor = 'var(--terra-700)'; }}
-        onMouseLeave={e => { if (canContinue) e.target.style.backgroundColor = 'var(--terra-600)'; }}
+        onMouseEnter={e => { if (canContinue) e.target.style.backgroundColor = 'var(--section-label)'; }}
+        onMouseLeave={e => { if (canContinue) e.target.style.backgroundColor = 'var(--section-label)'; }}
       >
         {continueLabel || 'Continue'}
         <ArrowRight size={18} aria-hidden="true" />

@@ -56,22 +56,22 @@ export default function UnderservedAreas({ cases, lawyers }) {
 
   const th = {
     fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-    color: 'var(--slate-500)', textAlign: 'left', padding: '0.4rem 0.75rem',
-    borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase', letterSpacing: '0.04em'
+    color: 'var(--body-secondary)', textAlign: 'left', padding: '0.4rem 0.75rem',
+    borderBottom: '2px solid var(--border)', textTransform: 'uppercase', letterSpacing: '0.04em'
   };
   const td = {
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)',
-    padding: '0.35rem 0.75rem', borderBottom: '1px solid var(--slate-100)'
+    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)',
+    padding: '0.35rem 0.75rem', borderBottom: '1px solid var(--border-lighter)'
   };
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
       borderRadius: 'var(--radius-md)', padding: '12px'
     }}>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-        color: 'var(--slate-800)', marginBottom: '0.5rem', marginTop: 0
+        color: 'var(--heading)', marginBottom: '0.5rem', marginTop: 0
       }}>Underserved Areas</p>
       <div style={{ overflow: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -92,7 +92,7 @@ export default function UnderservedAreas({ cases, lawyers }) {
                 <td style={{ ...td, fontWeight: 600 }}>{r.state}</td>
                 <td style={td}>{r.city}</td>
                 <td style={{ ...td, textAlign: 'center', fontWeight: 600 }}>{r.count}</td>
-                <td style={{ ...td, textAlign: 'center', color: r.activeLawyers === 0 ? '#B91C1C' : 'var(--slate-700)', fontWeight: r.activeLawyers === 0 ? 600 : 400 }}>
+                <td style={{ ...td, textAlign: 'center', color: r.activeLawyers === 0 ? '#B91C1C' : 'var(--body)', fontWeight: r.activeLawyers === 0 ? 600 : 400 }}>
                   {r.activeLawyers}
                 </td>
                 <td style={{ ...td, textAlign: 'center' }}>{r.avgDaysUnclaimed}d</td>

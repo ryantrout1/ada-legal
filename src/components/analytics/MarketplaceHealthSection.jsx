@@ -41,13 +41,13 @@ export default function MarketplaceHealthSection({ cases, contactLogs }) {
     <div>
       <h2 style={{
         fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
-        color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
+        color: 'var(--heading)', marginBottom: '0.5rem', marginTop: 0
       }}>Marketplace Health</h2>
       <div style={{ display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap' }}>
         <StatCard label="Available Now" count={availableNow} bgColor="#DCFCE7" textColor="#15803D" icon={ShoppingCart} />
-        <StatCard label="Avg Time to Assignment" count={avgAssignHrs} bgColor="var(--surface)" borderColor="var(--slate-200)" icon={Timer} />
+        <StatCard label="Avg Time to Assignment" count={avgAssignHrs} bgColor="var(--surface)" borderColor="var(--border)" icon={Timer} />
         <StatCard label="Contact Compliance" count={complianceRate} bgColor="#DBEAFE" textColor="#1D4ED8" icon={ShieldCheck} />
-        <StatCard label="Unclaimed 72hrs+" count={unclaimed72} bgColor={unclaimed72 > 0 ? '#FEE2E2' : 'var(--surface)'} textColor={unclaimed72 > 0 ? '#B91C1C' : 'var(--slate-700)'} borderColor={unclaimed72 > 0 ? '#FECACA' : 'var(--slate-200)'} icon={AlertTriangle} />
+        <StatCard label="Unclaimed 72hrs+" count={unclaimed72} bgColor={unclaimed72 > 0 ? '#FEE2E2' : 'var(--surface)'} textColor={unclaimed72 > 0 ? '#B91C1C' : 'var(--body)'} borderColor={unclaimed72 > 0 ? '#FECACA' : 'var(--border)'} icon={AlertTriangle} />
       </div>
     </div>
   );

@@ -13,14 +13,14 @@ function DetailRow({ icon: Icon, label, value }) {
   if (!value) return null;
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: 'var(--space-md)' }}>
-      <Icon size={18} style={{ color: 'var(--slate-500)', flexShrink: 0, marginTop: '2px' }} />
+      <Icon size={18} style={{ color: 'var(--body-secondary)', flexShrink: 0, marginTop: '2px' }} />
       <div>
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-          color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em'
+          color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em'
         }}>{label}</span>
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-800)',
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--heading)',
           margin: '2px 0 0 0', lineHeight: 1.5
         }}>{value}</p>
       </div>
@@ -64,7 +64,7 @@ export default function LawyerCaseDetail() {
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)' }}>
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)' }}>Loading case…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading case…</p>
       </div>
     );
   }
@@ -74,21 +74,21 @@ export default function LawyerCaseDetail() {
 
   return (
     <div style={{
-      backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)',
+      backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)',
       padding: 'var(--space-xl) var(--space-lg)'
     }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <Link to={createPageUrl('LawyerDashboard')} style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
-          color: 'var(--terra-600)', textDecoration: 'none', marginBottom: 'var(--space-lg)'
+          color: 'var(--section-label)', textDecoration: 'none', marginBottom: 'var(--space-lg)'
         }}>
           <ArrowLeft size={16} /> Back to My Cases
         </Link>
 
         {/* Header */}
         <div style={{
-          backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+          backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
           borderRadius: '16px', padding: 'var(--space-xl)', marginBottom: 'var(--space-lg)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: 'var(--space-lg)' }}>
@@ -105,7 +105,7 @@ export default function LawyerCaseDetail() {
             <div>
               <h1 style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700,
-                color: 'var(--slate-900)', margin: 0
+                color: 'var(--heading)', margin: 0
               }}>
                 {c.business_name}
               </h1>
@@ -156,18 +156,18 @@ export default function LawyerCaseDetail() {
 
         {/* Narrative */}
         <div style={{
-          backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+          backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
           borderRadius: '16px', padding: 'var(--space-xl)'
         }}>
           <h2 style={{
             fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
-            color: 'var(--slate-900)', marginBottom: 'var(--space-md)', marginTop: 0
+            color: 'var(--heading)', marginBottom: 'var(--space-md)', marginTop: 0
           }}>
             Full Narrative
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-            color: 'var(--slate-700)', lineHeight: 1.7, whiteSpace: 'pre-wrap',
+            color: 'var(--body)', lineHeight: 1.7, whiteSpace: 'pre-wrap',
             margin: 0
           }}>
             {c.narrative}

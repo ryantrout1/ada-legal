@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 export default function LawyerHero() {
   return (
     <section aria-labelledby="lawyer-hero-heading" className="warm-keep-dark" style={{
-      background: 'linear-gradient(160deg, var(--slate-900) 0%, #0F172A 100%)',
+      background: 'linear-gradient(160deg, var(--heading) 0%, #0F172A 100%)',
       color: 'white',
       padding: 'clamp(4rem, 10vw, 7rem) 1.5rem',
       position: 'relative',
@@ -47,14 +47,14 @@ export default function LawyerHero() {
           to={createPageUrl('LawyerRegister')}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.625rem',
-            background: 'var(--terra-600)', color: 'white',
+            background: 'var(--section-label)', color: 'white',
             padding: '0.875rem 2rem', borderRadius: 'var(--radius-md)',
             fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
             textDecoration: 'none', minHeight: '48px',
             transition: 'background 0.15s'
           }}
-          onMouseEnter={e => e.currentTarget.style.background = 'var(--terra-700)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'var(--terra-600)'}
+          onMouseEnter={e => e.currentTarget.style.background = 'var(--section-label)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'var(--section-label)'}
         >
           Apply Now <ArrowRight size={18} />
         </Link>

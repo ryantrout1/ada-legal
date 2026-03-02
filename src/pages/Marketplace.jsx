@@ -66,7 +66,7 @@ export default function Marketplace() {
       }}>
         <h1 style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', clipPath: 'inset(50%)', whiteSpace: 'nowrap', border: 0 }}>Case Marketplace</h1>
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading available cases…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body)' }}>Loading available cases…</p>
       </div>
     );
   }
@@ -75,9 +75,9 @@ export default function Marketplace() {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)' }}>
         <div style={{ textAlign: 'center', maxWidth: '480px' }}>
-          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Access Restricted</h1>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
-            This page is for approved attorneys only. If you'd like to join the attorney network, please <a href={createPageUrl('LawyerRegister')} style={{ color: 'var(--terra-600)', fontWeight: 600 }}>apply here</a>.
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--heading)', marginBottom: 'var(--space-sm)' }}>Access Restricted</h1>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--body)', lineHeight: 1.6 }}>
+            This page is for approved attorneys only. If you'd like to join the attorney network, please <a href={createPageUrl('LawyerRegister')} style={{ color: 'var(--section-label)', fontWeight: 600 }}>apply here</a>.
           </p>
         </div>
       </div>
@@ -87,10 +87,10 @@ export default function Marketplace() {
   if (accessState === 'pending') {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)' }}>
-        <div style={{ textAlign: 'center', maxWidth: '480px', backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-2xl)' }}>
+        <div style={{ textAlign: 'center', maxWidth: '480px', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-2xl)' }}>
           <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto var(--space-lg)', fontSize: '1.75rem' }}>⏳</div>
-          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Application Pending</h1>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', lineHeight: 1.6, margin: 0 }}>
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--heading)', marginBottom: 'var(--space-sm)' }}>Application Pending</h1>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--body)', lineHeight: 1.6, margin: 0 }}>
             Your application is currently under review. You'll receive an email once your account has been approved.
           </p>
         </div>
@@ -101,14 +101,14 @@ export default function Marketplace() {
   if (accessState === 'no_sub') {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl)' }}>
-        <div style={{ textAlign: 'center', maxWidth: '480px', backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-2xl)' }}>
-          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-sm)' }}>Subscription Required</h1>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', lineHeight: 1.6, marginBottom: 'var(--space-lg)' }}>
+        <div style={{ textAlign: 'center', maxWidth: '480px', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-2xl)' }}>
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--heading)', marginBottom: 'var(--space-sm)' }}>Subscription Required</h1>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--body)', lineHeight: 1.6, marginBottom: 'var(--space-lg)' }}>
             Your account is approved, but you need an active subscription to access available cases.
           </p>
           <a href={createPageUrl('LawyerSubscription')} style={{
             display: 'inline-block', padding: '0.75rem 2rem', fontFamily: 'Manrope, sans-serif',
-            fontSize: '1rem', fontWeight: 700, color: 'white', backgroundColor: 'var(--terra-600)',
+            fontSize: '1rem', fontWeight: 700, color: 'var(--btn-text)', backgroundColor: 'var(--section-label)',
             borderRadius: 'var(--radius-md)', textDecoration: 'none'
           }}>Activate Subscription</a>
         </div>
@@ -232,9 +232,9 @@ export default function Marketplace() {
   const hasActiveFilters = filters.state !== 'my_states' || filters.violationType !== 'all' || filters.businessType !== 'all' || filters.posted !== 'any' || filters.documentation !== 'all';
 
   return (
-    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl) var(--space-lg)' }}>
+    <div style={{ backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl) var(--space-lg)' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', fontWeight: 700, color: 'var(--slate-900)', marginBottom: 'var(--space-md)' }}>
+        <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', fontWeight: 700, color: 'var(--heading)', marginBottom: 'var(--space-md)' }}>
           Available Cases
         </h1>
 
@@ -244,14 +244,14 @@ export default function Marketplace() {
             <button type="button" onClick={() => setScoreModalOpen(true)} style={{
               background: 'none', border: 'none', cursor: 'pointer', padding: 0,
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-              color: '#475569', display: 'inline-flex', alignItems: 'center', gap: '4px'
+              color: 'var(--body-secondary)', display: 'inline-flex', alignItems: 'center', gap: '4px'
             }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'var(--terra-600)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = '#475569'; }}
+              onMouseEnter={e => { e.currentTarget.style.color = 'var(--section-label)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'var(--body-secondary)'; }}
             >
               <HelpCircle size={14} /> How are cases scored?
             </button>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-600)' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body)' }}>
               {filteredCases.length} case{filteredCases.length !== 1 ? 's' : ''}
             </span>
             <ViewToggle view={viewMode} onChange={setViewMode} />
@@ -260,20 +260,20 @@ export default function Marketplace() {
 
         {filteredCases.length === 0 && (
           <div style={{
-            backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+            backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
             borderRadius: '16px', padding: 'var(--space-2xl)', textAlign: 'center'
           }}>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-700)', margin: '0 0 8px' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600, color: 'var(--body)', margin: '0 0 8px' }}>
               No cases match these filters
             </p>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569', margin: '0 0 16px' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)', margin: '0 0 16px' }}>
               There {cases.length === 1 ? 'is' : 'are'} {cases.length} case{cases.length !== 1 ? 's' : ''} available with different criteria
             </p>
             {hasActiveFilters && (
               <button type="button" onClick={resetFilters} style={{
-                background: 'none', border: '1px solid var(--slate-300)', borderRadius: 'var(--radius-md)',
+                background: 'none', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)',
                 padding: '8px 20px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.875rem', fontWeight: 600, color: 'var(--terra-600)'
+                fontSize: '0.875rem', fontWeight: 600, color: 'var(--section-label)'
               }}>Reset Filters</button>
             )}
           </div>
@@ -291,7 +291,7 @@ export default function Marketplace() {
           </div>
         ) : (
           filteredCases.length > 0 && (
-            <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', overflow: 'auto' }}>
+            <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <caption className="sr-only">Available cases</caption>
                 <thead>
@@ -299,8 +299,8 @@ export default function Marketplace() {
                     {['Type', 'Business', 'City / State', 'Subtype', 'Score', '', 'Posted', 'Reports', ''].map(h => (
                       <th key={h} scope="col" style={{
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700,
-                        color: '#475569', textAlign: 'left', padding: '6px 0.75rem',
-                        borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase',
+                        color: 'var(--body-secondary)', textAlign: 'left', padding: '6px 0.75rem',
+                        borderBottom: '2px solid var(--border)', textTransform: 'uppercase',
                         letterSpacing: '0.04em', whiteSpace: 'nowrap'
                       }}>{h}</th>
                     ))}

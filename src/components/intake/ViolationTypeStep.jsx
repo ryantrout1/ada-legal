@@ -28,7 +28,7 @@ export default function ViolationTypeStep({ value, onChange }) {
       <p style={{
         fontFamily: 'Manrope, sans-serif',
         fontSize: '1.0625rem',
-        color: 'var(--slate-600)',
+        color: 'var(--body)',
         marginBottom: 'var(--space-xl)',
         lineHeight: 1.6
       }}>
@@ -64,14 +64,14 @@ export default function ViolationTypeStep({ value, onChange }) {
               }}
               style={{
                 backgroundColor: isSelected ? '#FFF8F5' : 'var(--surface)',
-                border: isSelected ? '2px solid #C2410C' : '1px solid var(--slate-200)',
+                border: isSelected ? '2px solid #C2410C' : '1px solid var(--border)',
                 borderRadius: '16px',
                 padding: 'var(--space-xl)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 outline: 'none',
                 boxShadow: isSelected
-                  ? '0 0 0 3px var(--terra-100)'
+                  ? '0 0 0 3px var(--card-bg-tinted)'
                   : '0 1px 3px rgba(0,0,0,0.06)',
                 display: 'flex',
                 flexDirection: 'column',
@@ -82,23 +82,23 @@ export default function ViolationTypeStep({ value, onChange }) {
                 justifyContent: 'center'
               }}
               onMouseEnter={e => {
-                if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-500)';
+                if (!isSelected) e.currentTarget.style.borderColor = 'var(--body-secondary)';
               }}
               onMouseLeave={e => {
-                if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-200)';
+                if (!isSelected) e.currentTarget.style.borderColor = 'var(--border)';
               }}
               onFocus={e => {
-                if (!isSelected) e.currentTarget.style.borderColor = 'var(--terra-400)';
+                if (!isSelected) e.currentTarget.style.borderColor = 'var(--accent)';
               }}
               onBlur={e => {
-                if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-200)';
+                if (!isSelected) e.currentTarget.style.borderColor = 'var(--border)';
               }}
             >
               <div style={{
                 width: '64px',
                 height: '64px',
                 borderRadius: '50%',
-                backgroundColor: isSelected ? 'var(--terra-100)' : 'var(--slate-100)',
+                backgroundColor: isSelected ? 'var(--card-bg-tinted)' : 'var(--border-lighter)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -108,7 +108,7 @@ export default function ViolationTypeStep({ value, onChange }) {
                   size={30}
                   aria-hidden="true"
                   style={{
-                    color: isSelected ? 'var(--terra-600)' : 'var(--slate-500)',
+                    color: isSelected ? 'var(--section-label)' : 'var(--body-secondary)',
                     transition: 'color 0.2s'
                   }}
                 />
@@ -118,7 +118,7 @@ export default function ViolationTypeStep({ value, onChange }) {
                 fontFamily: 'Fraunces, serif',
                 fontSize: '1.25rem',
                 fontWeight: 600,
-                color: 'var(--slate-900)',
+                color: 'var(--heading)',
                 margin: 0
               }}>
                 {card.title}
@@ -127,7 +127,7 @@ export default function ViolationTypeStep({ value, onChange }) {
               <p style={{
                 fontFamily: 'Manrope, sans-serif',
                 fontSize: '0.9375rem',
-                color: 'var(--slate-600)',
+                color: 'var(--body)',
                 margin: 0,
                 lineHeight: 1.5
               }}>
@@ -139,7 +139,7 @@ export default function ViolationTypeStep({ value, onChange }) {
                   fontFamily: 'Manrope, sans-serif',
                   fontSize: '0.8125rem',
                   fontWeight: 600,
-                  color: 'var(--terra-600)',
+                  color: 'var(--section-label)',
                   marginTop: 'var(--space-xs)'
                 }}>
                   ✓ Selected

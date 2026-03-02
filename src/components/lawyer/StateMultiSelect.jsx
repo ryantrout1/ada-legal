@@ -63,21 +63,21 @@ export default function StateMultiSelect({ selected, onChange, error }) {
         style={{
           width: '100%', minHeight: '44px', padding: '0.375rem 0.75rem',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-          color: 'var(--slate-800)', backgroundColor: 'var(--surface)',
-          border: `2px solid ${error ? 'var(--error-600)' : 'var(--slate-200)'}`,
+          color: 'var(--heading)', backgroundColor: 'var(--surface)',
+          border: `2px solid ${error ? 'var(--error-600)' : 'var(--border)'}`,
           borderRadius: 'var(--radius-md)', cursor: 'pointer',
           display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px',
           boxSizing: 'border-box'
         }}
       >
         {selected.length === 0 && (
-          <span style={{ color: 'var(--slate-500)' }}>Select state(s)…</span>
+          <span style={{ color: 'var(--body-secondary)' }}>Select state(s)…</span>
         )}
         {selected.map(s => (
           <span key={s} style={{
             display: 'inline-flex', alignItems: 'center', gap: '4px',
-            padding: '2px 8px', backgroundColor: 'var(--terra-100)',
-            color: 'var(--terra-800)', borderRadius: '4px',
+            padding: '2px 8px', backgroundColor: 'var(--card-bg-tinted)',
+            color: 'var(--section-label)', borderRadius: '4px',
             fontSize: '0.8125rem', fontWeight: 600
           }}>
             {s}
@@ -87,7 +87,7 @@ export default function StateMultiSelect({ selected, onChange, error }) {
               aria-label={`Remove ${STATE_NAMES[s]}`}
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
-                padding: '4px', display: 'flex', color: 'var(--terra-600)',
+                padding: '4px', display: 'flex', color: 'var(--section-label)',
                 minWidth: '24px', minHeight: '24px', alignItems: 'center', justifyContent: 'center'
               }}
             >
@@ -96,14 +96,14 @@ export default function StateMultiSelect({ selected, onChange, error }) {
           </span>
         ))}
         <ChevronDown size={16} style={{
-          marginLeft: 'auto', color: 'var(--slate-500)', flexShrink: 0
+          marginLeft: 'auto', color: 'var(--body-secondary)', flexShrink: 0
         }} />
       </div>
 
       {open && (
         <div style={{
           position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 50,
-          backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+          backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
           borderRadius: 'var(--radius-md)', boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
           marginTop: '4px', maxHeight: '260px', display: 'flex', flexDirection: 'column'
         }}>
@@ -117,7 +117,7 @@ export default function StateMultiSelect({ selected, onChange, error }) {
               style={{
                 width: '100%', padding: '0.5rem 0.625rem',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-sm)',
+                border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
                 outline: 'none', boxSizing: 'border-box'
               }}
             />
@@ -132,11 +132,11 @@ export default function StateMultiSelect({ selected, onChange, error }) {
                   style={{
                     padding: '0.5rem 0.75rem', cursor: 'pointer',
                     display: 'flex', alignItems: 'center', gap: '0.5rem',
-                    backgroundColor: isSelected ? 'var(--terra-50)' : 'transparent',
+                    backgroundColor: isSelected ? 'var(--card-bg-tinted)' : 'transparent',
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                    color: 'var(--slate-800)'
+                    color: 'var(--heading)'
                   }}
-                  onMouseEnter={e => { if (!isSelected) e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
+                  onMouseEnter={e => { if (!isSelected) e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'; }}
                   onMouseLeave={e => { if (!isSelected) e.currentTarget.style.backgroundColor = 'transparent'; }}
                 >
                   <input
@@ -145,10 +145,10 @@ export default function StateMultiSelect({ selected, onChange, error }) {
                     readOnly
                     tabIndex={-1}
                     aria-hidden="true"
-                    style={{ accentColor: '#C2410C', cursor: 'pointer' }}
+                    style={{ accentColor: 'var(--accent)', cursor: 'pointer' }}
                   />
                   <span style={{ fontWeight: 600 }}>{s}</span>
-                  <span style={{ color: 'var(--slate-500)' }}>— {STATE_NAMES[s]}</span>
+                  <span style={{ color: 'var(--body-secondary)' }}>— {STATE_NAMES[s]}</span>
                 </div>
               );
             })}

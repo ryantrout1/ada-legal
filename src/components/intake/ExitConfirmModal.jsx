@@ -39,18 +39,18 @@ export default function ExitConfirmModal({ open, onStay }) {
     >
       <div style={{
         backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--slate-200)', padding: 'var(--space-2xl)',
+        border: '1px solid var(--border)', padding: 'var(--space-2xl)',
         maxWidth: '420px', width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.15)'
       }}>
         <h2 id="exit-heading" style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700,
-          color: 'var(--slate-900)', margin: '0 0 var(--space-md) 0'
+          color: 'var(--heading)', margin: '0 0 var(--space-md) 0'
         }}>
           Leave this form?
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-          color: 'var(--slate-600)', lineHeight: 1.6,
+          color: 'var(--body)', lineHeight: 1.6,
           margin: '0 0 var(--space-xl) 0'
         }}>
           Your progress has been saved automatically. You can return to this form later and pick up where you left off.
@@ -60,8 +60,8 @@ export default function ExitConfirmModal({ open, onStay }) {
             type="button" onClick={handleLeave}
             style={{
               padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-              fontSize: '0.9375rem', fontWeight: 600, color: 'var(--slate-600)',
-              backgroundColor: 'transparent', border: '2px solid var(--slate-300)',
+              fontSize: '0.9375rem', fontWeight: 600, color: 'var(--body)',
+              backgroundColor: 'transparent', border: '2px solid var(--border)',
               borderRadius: 'var(--radius-md)', cursor: 'pointer', minHeight: '44px'
             }}
           >
@@ -73,7 +73,7 @@ export default function ExitConfirmModal({ open, onStay }) {
             style={{
               padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
               fontSize: '0.9375rem', fontWeight: 700, color: 'white',
-              backgroundColor: 'var(--terra-600)', border: 'none',
+              backgroundColor: 'var(--section-label)', border: 'none',
               borderRadius: 'var(--radius-md)', cursor: 'pointer', minHeight: '44px'
             }}
           >

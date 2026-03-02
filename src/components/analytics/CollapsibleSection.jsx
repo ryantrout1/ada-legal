@@ -42,12 +42,12 @@ export default function CollapsibleSection({ id, title, children }) {
         }}
       >
         {collapsed
-          ? <ChevronRight size={16} style={{ color: 'var(--slate-500)', flexShrink: 0 }} />
-          : <ChevronDown size={16} style={{ color: 'var(--slate-500)', flexShrink: 0 }} />
+          ? <ChevronRight size={16} style={{ color: 'var(--body-secondary)', flexShrink: 0 }} />
+          : <ChevronDown size={16} style={{ color: 'var(--body-secondary)', flexShrink: 0 }} />
         }
         <h2 style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.0625rem', fontWeight: 600,
-          color: 'var(--slate-900)', margin: 0, lineHeight: 1.3
+          color: 'var(--heading)', margin: 0, lineHeight: 1.3
         }}>{title}</h2>
       </button>
       {!collapsed && children}

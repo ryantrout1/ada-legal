@@ -3,14 +3,14 @@ import React from 'react';
 const selectStyle = {
   minHeight: '40px', padding: '0.375rem 0.625rem',
   fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-  color: 'var(--slate-800)', backgroundColor: 'var(--surface)',
-  border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-md)',
+  color: 'var(--heading)', backgroundColor: 'var(--surface)',
+  border: '1px solid var(--border)', borderRadius: 'var(--radius-md)',
   outline: 'none', cursor: 'pointer', minWidth: '120px', width: '100%', maxWidth: '180px'
 };
 
 const labelStyle = {
   display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem',
-  fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase',
+  fontWeight: 700, color: 'var(--body)', textTransform: 'uppercase',
   letterSpacing: '0.05em', marginBottom: '3px'
 };
 

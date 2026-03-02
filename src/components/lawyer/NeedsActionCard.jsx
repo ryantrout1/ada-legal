@@ -16,7 +16,7 @@ export default function NeedsActionCard({ caseData, contactLogs, notes, onLogCon
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: highlighted ? '2px solid #16A34A' : '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: highlighted ? '2px solid #16A34A' : '1px solid var(--border)',
       borderLeft: '4px solid #B91C1C', borderRadius: '12px', overflow: 'hidden',
       boxShadow: highlighted ? '0 0 0 3px rgba(22,163,74,0.2)' : 'none',
       animation: highlighted ? 'highlightPulse 1.5s ease-in-out 2' : 'none'
@@ -34,21 +34,21 @@ export default function NeedsActionCard({ caseData, contactLogs, notes, onLogCon
         onMouseEnter={e => { if (!expanded) e.currentTarget.style.backgroundColor = '#FEF2F2'; }}
         onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
       >
-        {expanded ? <ChevronDown size={14} style={{ color: 'var(--slate-500)', flexShrink: 0 }} /> : <ChevronRight size={14} style={{ color: 'var(--slate-500)', flexShrink: 0 }} />}
+        {expanded ? <ChevronDown size={14} style={{ color: 'var(--body-secondary)', flexShrink: 0 }} /> : <ChevronRight size={14} style={{ color: 'var(--body-secondary)', flexShrink: 0 }} />}
         <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#B91C1C', flexShrink: 0 }} />
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)' }}>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)' }}>
           {c.business_name}
         </span>
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: '3px',
           padding: '2px 8px', borderRadius: '9999px', fontSize: '0.6875rem', fontWeight: 700,
-          backgroundColor: isPhysical ? 'var(--terra-100, #FEF1EC)' : '#DBEAFE',
-          color: isPhysical ? 'var(--terra-600, #C2410C)' : '#1E3A8A', flexShrink: 0
+          backgroundColor: isPhysical ? 'var(--card-bg-tinted)' : '#DBEAFE',
+          color: isPhysical ? 'var(--accent)' : '#1E3A8A', flexShrink: 0
         }}>
           {isPhysical ? <Building2 size={10} /> : <Globe size={10} />}
           {isPhysical ? 'Physical' : 'Digital'}
         </span>
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', flex: 1, minWidth: '60px' }}>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', flex: 1, minWidth: '60px' }}>
           {[c.city, c.state].filter(Boolean).join(', ')}
         </span>
         <span style={{
@@ -62,12 +62,12 @@ export default function NeedsActionCard({ caseData, contactLogs, notes, onLogCon
         <button type="button" onClick={(e) => { e.stopPropagation(); onLogContact(c); }} style={{
           display: 'inline-flex', alignItems: 'center', gap: '4px',
           padding: '0 14px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-          fontWeight: 700, color: 'white', backgroundColor: 'var(--terra-600)',
+          fontWeight: 700, color: 'white', backgroundColor: 'var(--section-label)',
           border: 'none', borderRadius: '8px', cursor: 'pointer', minHeight: '34px', flexShrink: 0,
           transition: 'background-color 0.15s'
         }}
-          onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--terra-700)'; }}
-          onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--terra-600)'; }}
+          onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--section-label)'; }}
+          onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--section-label)'; }}
         >Log Contact</button>
       </div>
 

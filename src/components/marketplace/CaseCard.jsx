@@ -27,7 +27,7 @@ export default function CaseCard({ caseData, onViewDetails }) {
     <div
       style={{
         backgroundColor: 'var(--surface)',
-        border: '1px solid var(--slate-200)',
+        border: '1px solid var(--border)',
         borderRadius: '12px',
         overflow: 'hidden',
         transition: 'border-color 0.15s, box-shadow 0.15s',
@@ -35,12 +35,12 @@ export default function CaseCard({ caseData, onViewDetails }) {
         opacity: cardOpacity,
         position: 'relative'
       }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--slate-500)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; e.currentTarget.style.boxShadow = 'none'; }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--body-secondary)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
     >
       {/* Green accent bar for new cases */}
       {freshness.type === 'new' && (
-        <div style={{ height: '4px', backgroundColor: '#15803D', width: '100%' }} />
+        <div style={{ height: '4px', backgroundColor: 'var(--accent-success)', width: '100%' }} />
       )}
 
       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -48,15 +48,15 @@ export default function CaseCard({ caseData, onViewDetails }) {
         <div style={{
           display: 'flex', alignItems: 'center', gap: '8px',
           padding: '8px 12px', borderRadius: 'var(--radius-sm)',
-          backgroundColor: isPhysical ? 'var(--terra-100, #FEF1EC)' : '#DBEAFE'
+          backgroundColor: isPhysical ? 'var(--card-bg-tinted)' : '#DBEAFE'
         }}>
           {isPhysical
-            ? <Building2 size={16} aria-hidden="true" style={{ color: 'var(--terra-600, #C2410C)' }} />
-            : <Globe size={16} aria-hidden="true" style={{ color: '#1E3A8A' }} />
+            ? <Building2 size={16} aria-hidden="true" style={{ color: 'var(--accent)' }} />
+            : <Globe size={16} aria-hidden="true" style={{ color: 'var(--link)' }} />
           }
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-            color: isPhysical ? '#7C2D12' : '#1E3A5F'
+            color: isPhysical ? 'var(--section-label)' : 'var(--link)'
           }}>
             {isPhysical ? 'Physical Space' : 'Digital / Website'}
           </span>
@@ -65,10 +65,10 @@ export default function CaseCard({ caseData, onViewDetails }) {
 
         {/* Row 2: Business type + location */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)' }}>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)' }}>
             {c.business_type || '—'}
           </span>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)' }}>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)' }}>
             {[c.city, c.state].filter(Boolean).join(', ') || '—'}
           </span>
         </div>
@@ -79,8 +79,8 @@ export default function CaseCard({ caseData, onViewDetails }) {
             <span style={{
               display: 'inline-block', padding: '2px 10px', borderRadius: '6px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
-              color: '#1E293B', backgroundColor: 'var(--slate-50)',
-              border: '1px solid var(--slate-200)'
+              color: 'var(--dark-bg)', backgroundColor: 'var(--page-bg-subtle)',
+              border: '1px solid var(--border)'
             }}>
               {isPhysical ? c.violation_subtype : extractDomain(c.url_domain)}
             </span>
@@ -90,7 +90,7 @@ export default function CaseCard({ caseData, onViewDetails }) {
         {/* Row 4: Narrative preview */}
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-          color: 'var(--slate-600)', lineHeight: 1.55, margin: 0,
+          color: 'var(--body)', lineHeight: 1.55, margin: 0,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
           overflow: 'hidden', textOverflow: 'ellipsis', minHeight: '2.5em'
         }}>
@@ -105,12 +105,12 @@ export default function CaseCard({ caseData, onViewDetails }) {
 
         {/* Row 5: Footer — date + view details */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2px' }}>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: freshness.type === 'old' ? '#92400E' : '#475569' }}>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: freshness.type === 'old' ? 'var(--section-label)' : 'var(--body-secondary)' }}>
             {freshness.type === 'old' ? `Posted ${freshness.daysAgo} days ago` : `Posted ${formatDate(c.approved_at)}`}
             {freshness.type === 'new' && (
               <span style={{
                 display: 'inline-block', marginLeft: '6px', padding: '1px 6px', borderRadius: '4px',
-                fontSize: '0.625rem', fontWeight: 800, color: '#15803D', backgroundColor: '#DCFCE7',
+                fontSize: '0.625rem', fontWeight: 800, color: 'var(--accent-success)', backgroundColor: '#DCFCE7',
                 textTransform: 'uppercase', letterSpacing: '0.04em', verticalAlign: 'middle'
               }}>NEW</span>
             )}
@@ -121,7 +121,7 @@ export default function CaseCard({ caseData, onViewDetails }) {
             style={{
               background: 'none', border: 'none', padding: 0, cursor: 'pointer',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-              color: 'var(--terra-600)'
+              color: 'var(--section-label)'
             }}
             onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline'; }}
             onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none'; }}

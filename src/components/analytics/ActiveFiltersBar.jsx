@@ -19,12 +19,12 @@ export default function ActiveFiltersBar({ filters, onRemove, onClearAll }) {
     <div style={{
       display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap',
       padding: '0.625rem 1rem',
-      backgroundColor: 'var(--terra-100)', borderRadius: 'var(--radius-md)',
-      border: '1px solid var(--terra-200)'
+      backgroundColor: 'var(--card-bg-tinted)', borderRadius: 'var(--radius-md)',
+      border: '1px solid var(--border)'
     }}>
       <span style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-        color: 'var(--terra-600)', marginRight: '0.25rem'
+        color: 'var(--section-label)', marginRight: '0.25rem'
       }}>Filtered by:</span>
 
       {entries.map(([key, value]) => (
@@ -36,11 +36,11 @@ export default function ActiveFiltersBar({ filters, onRemove, onClearAll }) {
             display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
             padding: '0.25rem 0.625rem',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-            color: 'var(--terra-600)', backgroundColor: 'white',
-            border: '1px solid var(--terra-200)', borderRadius: '9999px',
+            color: 'var(--section-label)', backgroundColor: 'white',
+            border: '1px solid var(--border)', borderRadius: '9999px',
             cursor: 'pointer', transition: 'background-color 0.1s'
           }}
-          onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--terra-50)'; }}
+          onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--card-bg-tinted)'; }}
           onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'white'; }}
         >
           {FILTER_LABELS[key]}: {value}
@@ -54,7 +54,7 @@ export default function ActiveFiltersBar({ filters, onRemove, onClearAll }) {
         style={{
           background: 'none', border: 'none', cursor: 'pointer',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-          color: 'var(--terra-600)', marginLeft: 'auto', padding: '0.25rem 0.5rem',
+          color: 'var(--section-label)', marginLeft: 'auto', padding: '0.25rem 0.5rem',
           textDecoration: 'underline'
         }}
       >

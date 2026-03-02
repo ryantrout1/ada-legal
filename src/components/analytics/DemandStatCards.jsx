@@ -43,7 +43,7 @@ export default function DemandStatCards({ cases, lawyers }) {
   );
   const expiredCount = cases.filter(c => c.status === 'expired').length;
   let unmatchedRate = '—';
-  let unmatchedColor = 'var(--slate-700)';
+  let unmatchedColor = 'var(--body)';
   let unmatchedBg = 'var(--surface)';
   if (reachedAvailable.length > 0) {
     const rate = Math.round((expiredCount / reachedAvailable.length) * 100);
@@ -79,9 +79,9 @@ export default function DemandStatCards({ cases, lawyers }) {
 
   return (
     <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-      <CompactStatCard label="Avg Days to Match" count={avgDaysToMatch} bgColor="var(--surface)" borderColor="var(--slate-200)" icon={Clock} />
+      <CompactStatCard label="Avg Days to Match" count={avgDaysToMatch} bgColor="var(--surface)" borderColor="var(--border)" icon={Clock} />
       <CompactStatCard label="Unmatched Rate" count={unmatchedRate} bgColor={unmatchedBg} textColor={unmatchedColor} icon={TrendingDown} />
-      <CompactStatCard label="Avg Views Before Claim" count={avgViews} bgColor="var(--surface)" borderColor="var(--slate-200)" icon={Eye} />
+      <CompactStatCard label="Avg Views Before Claim" count={avgViews} bgColor="var(--surface)" borderColor="var(--border)" icon={Eye} />
       <CompactStatCard label="Supply Gaps" count={gapCount} bgColor={gapBg} textColor={gapColor} icon={MapPin} />
     </div>
   );

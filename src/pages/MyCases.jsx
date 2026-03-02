@@ -68,7 +68,7 @@ export default function MyCases() {
       }}>
         <h1 style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', clipPath: 'inset(50%)', whiteSpace: 'nowrap', border: 0 }}>My Cases</h1>
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading your cases…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading your cases…</p>
       </div>
     );
   }
@@ -101,11 +101,11 @@ export default function MyCases() {
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+            <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 600, color: 'var(--heading)', margin: 0 }}>
               My Cases
             </h1>
             {cases.length > 0 && (
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: '#475569', margin: '4px 0 0' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: 'var(--body-secondary)', margin: '4px 0 0' }}>
                 You have {activeCaseCount} active case{activeCaseCount !== 1 ? 's' : ''}
               </p>
             )}
@@ -113,7 +113,7 @@ export default function MyCases() {
           <Link to={createPageUrl('Intake')} style={{
             display: 'inline-flex', alignItems: 'center', gap: '6px',
             padding: '0 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-            fontWeight: 700, color: 'white', backgroundColor: 'var(--terra-600, #C2410C)',
+            fontWeight: 700, color: 'white', backgroundColor: 'var(--accent)',
             borderRadius: '10px', textDecoration: 'none', minHeight: '44px'
           }}>
             Report New Violation <ArrowRight size={16} />
@@ -136,8 +136,8 @@ export default function MyCases() {
                     display: 'inline-flex', alignItems: 'center', gap: '4px',
                     padding: '6px 14px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
                     fontWeight: 600, border: 'none', borderRadius: '8px', cursor: 'pointer',
-                    color: active ? 'white' : '#475569',
-                    backgroundColor: active ? 'var(--slate-900)' : 'var(--slate-100)',
+                    color: active ? 'white' : 'var(--body-secondary)',
+                    backgroundColor: active ? 'var(--heading)' : 'var(--border-lighter)',
                     minHeight: '36px', transition: 'background-color 0.15s, color 0.15s'
                   }}
                 >
@@ -157,21 +157,21 @@ export default function MyCases() {
           }}>
             <div style={{
               width: '64px', height: '64px', borderRadius: '50%',
-              backgroundColor: 'var(--slate-100)', display: 'flex',
+              backgroundColor: 'var(--border-lighter)', display: 'flex',
               alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px'
             }}>
-              <FileText size={28} aria-hidden="true" style={{ color: 'var(--slate-500)' }} />
+              <FileText size={28} aria-hidden="true" style={{ color: 'var(--body-secondary)' }} />
             </div>
-            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 8px' }}>
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 8px' }}>
               No cases yet
             </h2>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: '#475569', margin: '0 0 20px', lineHeight: 1.6 }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: 'var(--body-secondary)', margin: '0 0 20px', lineHeight: 1.6 }}>
               When you report an ADA violation, you can track its progress here.
             </p>
             <Link to={createPageUrl('Intake')} style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '0 24px', fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-              fontWeight: 700, color: 'white', backgroundColor: 'var(--terra-600, #C2410C)',
+              fontWeight: 700, color: 'white', backgroundColor: 'var(--accent)',
               borderRadius: '10px', textDecoration: 'none', minHeight: '48px'
             }}>
               Report a Violation <ArrowRight size={18} />
@@ -182,13 +182,13 @@ export default function MyCases() {
             backgroundColor: '#FFFFFF', border: '1px solid #948F88',
             borderRadius: '12px', padding: '32px', textAlign: 'center'
           }}>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: '#475569', margin: '0 0 8px' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: 'var(--body-secondary)', margin: '0 0 8px' }}>
               No cases match this filter.
             </p>
             <button type="button" onClick={() => setFilter('all')} style={{
               background: 'none', border: 'none', cursor: 'pointer',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-              color: 'var(--terra-600, #C2410C)', padding: '4px', minHeight: '44px'
+              color: 'var(--accent)', padding: '4px', minHeight: '44px'
             }}>View all cases</button>
           </div>
         ) : (
@@ -199,10 +199,10 @@ export default function MyCases() {
 
         {/* Help Footer */}
         <div style={{
-          backgroundColor: 'var(--slate-900)', borderRadius: '12px', padding: '16px 24px',
+          backgroundColor: 'var(--heading)', borderRadius: '12px', padding: '16px 24px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px'
         }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--slate-500)', margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body-secondary)', margin: 0 }}>
             Questions? Contact us at{' '}
             <a href="mailto:support@adalegalconnect.com" style={{ color: 'white', fontWeight: 600, textDecoration: 'underline' }}>
               support@adalegalconnect.com

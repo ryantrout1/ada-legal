@@ -7,7 +7,7 @@ export default function CompactStatCard({ label, count, bgColor, textColor, bord
       aria-label={`${label}: ${count ?? '—'}`}
       style={{
         backgroundColor: bgColor || 'var(--surface)',
-        border: `1px solid ${borderColor || bgColor || 'var(--slate-200)'}`,
+        border: `1px solid ${borderColor || bgColor || 'var(--border)'}`,
         borderRadius: 'var(--radius-md)',
         padding: '12px',
         flex: '1 1 11rem',
@@ -20,13 +20,13 @@ export default function CompactStatCard({ label, count, bgColor, textColor, bord
       }}>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
-          color: textColor || 'var(--slate-700)', margin: 0
+          color: textColor || 'var(--body)', margin: 0
         }}>{label}</p>
-        {Icon && <Icon size={16} aria-hidden="true" style={{ color: textColor || 'var(--slate-500)', opacity: 0.7 }} />}
+        {Icon && <Icon size={16} aria-hidden="true" style={{ color: textColor || 'var(--body-secondary)', opacity: 0.7 }} />}
       </div>
       <p style={{
         fontFamily: 'Fraunces, serif', fontSize: '1.7rem', fontWeight: 700,
-        color: textColor || 'var(--slate-900)', margin: 0, lineHeight: 1.2
+        color: textColor || 'var(--heading)', margin: 0, lineHeight: 1.2
       }} aria-hidden="true">
         {count ?? '—'}
       </p>

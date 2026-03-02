@@ -39,21 +39,21 @@ export default function AccountabilityTable({ cases }) {
 
   const th = {
     fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-    color: 'var(--slate-500)', textAlign: 'left', padding: '8px 10px',
-    borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase', letterSpacing: '0.04em',
+    color: 'var(--body-secondary)', textAlign: 'left', padding: '8px 10px',
+    borderBottom: '2px solid var(--border)', textTransform: 'uppercase', letterSpacing: '0.04em',
     whiteSpace: 'nowrap',
   };
   const td = {
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)',
-    padding: '8px 10px', borderBottom: '1px solid var(--slate-100)', verticalAlign: 'top',
+    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)',
+    padding: '8px 10px', borderBottom: '1px solid var(--border-lighter)', verticalAlign: 'top',
   };
 
   return (
-    <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '20px' }}>
-      <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 4px' }}>
+    <div style={{ backgroundColor: 'white', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px' }}>
+      <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 4px' }}>
         Which businesses have the most reports?
       </h3>
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '0 0 16px' }}>Business Accountability — Top 25</p>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', margin: '0 0 16px' }}>Business Accountability — Top 25</p>
 
       <div style={{ overflow: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '700px' }}>
@@ -71,7 +71,7 @@ export default function AccountabilityTable({ cases }) {
           <tbody>
             {rows.map((r, i) => (
               <tr key={i}>
-                <td style={{ ...td, fontWeight: 600, color: 'var(--slate-900)' }}>{r.businessName}</td>
+                <td style={{ ...td, fontWeight: 600, color: 'var(--heading)' }}>{r.businessName}</td>
                 <td style={td}>{r.location}</td>
                 <td style={{ ...td, textAlign: 'center', fontWeight: 700, fontSize: '0.9375rem' }}>{r.total}</td>
                 <td style={td}>
@@ -80,12 +80,12 @@ export default function AccountabilityTable({ cases }) {
                       <span key={vt} style={{
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 600,
                         padding: '2px 8px', borderRadius: '100px',
-                        backgroundColor: 'var(--slate-100)', color: 'var(--slate-600)',
+                        backgroundColor: 'var(--border-lighter)', color: 'var(--body)',
                         textTransform: 'capitalize', whiteSpace: 'nowrap',
                       }}>{vt}</span>
                     ))}
                     {r.violationTypes.length > 3 && (
-                      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', color: 'var(--slate-500)' }}>+{r.violationTypes.length - 3}</span>
+                      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', color: 'var(--body-secondary)' }}>+{r.violationTypes.length - 3}</span>
                     )}
                   </div>
                 </td>
@@ -94,12 +94,12 @@ export default function AccountabilityTable({ cases }) {
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600,
                     padding: '2px 10px', borderRadius: '100px',
                     backgroundColor: sevColors[r.highestSev]?.bg || '#F1F5F9',
-                    color: sevColors[r.highestSev]?.text || 'var(--slate-700)',
+                    color: sevColors[r.highestSev]?.text || 'var(--body)',
                     textTransform: 'capitalize',
                   }}>{r.highestSev}</span>
                 </td>
                 <td style={td}>{new Date(r.firstReport).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
-                <td style={{ ...td, textAlign: 'center', fontWeight: 600, color: r.hasAttorney ? '#15803D' : 'var(--slate-500)' }}>
+                <td style={{ ...td, textAlign: 'center', fontWeight: 600, color: r.hasAttorney ? '#15803D' : 'var(--body-secondary)' }}>
                   {r.hasAttorney ? 'Yes' : 'No'}
                 </td>
               </tr>
@@ -108,7 +108,7 @@ export default function AccountabilityTable({ cases }) {
         </table>
       </div>
 
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)', marginTop: '16px', fontStyle: 'italic' }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)', marginTop: '16px', fontStyle: 'italic' }}>
         This data represents reports submitted by community members and has not been independently verified. Report counts indicate community concern, not confirmed violations.
       </p>
     </div>

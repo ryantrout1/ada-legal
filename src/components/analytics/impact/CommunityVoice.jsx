@@ -57,14 +57,14 @@ export default function CommunityVoice({ cases }) {
   const maxCount = phraseList.length > 0 ? phraseList[0][1] : 1;
 
   return (
-    <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '20px' }}>
-      <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 4px' }}>
+    <div style={{ backgroundColor: 'white', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px' }}>
+      <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 4px' }}>
         What are people saying?
       </h3>
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '0 0 16px' }}>Community Voice — Most mentioned barriers</p>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', margin: '0 0 16px' }}>Community Voice — Most mentioned barriers</p>
 
       {phraseList.length === 0 ? (
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)' }}>Not enough narrative data to analyze</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)' }}>Not enough narrative data to analyze</p>
       ) : (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
           {phraseList.map(([phrase, count]) => {
@@ -87,7 +87,7 @@ export default function CommunityVoice({ cases }) {
                   whiteSpace: 'nowrap',
                 }}
               >
-                {phrase} <sup style={{ fontSize: '0.6em', color: 'var(--slate-500)' }}>{count}</sup>
+                {phrase} <sup style={{ fontSize: '0.6em', color: 'var(--body-secondary)' }}>{count}</sup>
               </span>
             );
           })}

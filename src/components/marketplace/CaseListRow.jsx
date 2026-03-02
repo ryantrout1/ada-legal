@@ -23,25 +23,25 @@ export default function CaseListRow({ caseData, onViewDetails, isEven }) {
   return (
     <tr style={{
       cursor: 'default', transition: 'background-color 0.1s',
-      backgroundColor: isEven ? 'var(--slate-50)' : 'white',
+      backgroundColor: isEven ? 'var(--page-bg-subtle)' : 'white',
       height: '48px', opacity: freshness.type === 'old' ? 0.85 : 1
     }}
-      onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#F8FAFC'; }}
-      onMouseLeave={e => { e.currentTarget.style.backgroundColor = isEven ? 'var(--slate-50)' : 'white'; }}
+      onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'; }}
+      onMouseLeave={e => { e.currentTarget.style.backgroundColor = isEven ? 'var(--page-bg-subtle)' : 'white'; }}
     >
       <td style={td}>
         <span style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           width: '24px', height: '24px', borderRadius: '4px',
-          backgroundColor: isPhysical ? 'var(--terra-100, #FEF1EC)' : '#DBEAFE'
+          backgroundColor: isPhysical ? 'var(--card-bg-tinted)' : '#DBEAFE'
         }}>
           {isPhysical
-            ? <Building2 size={12} style={{ color: 'var(--terra-600, #C2410C)' }} />
-            : <Globe size={12} style={{ color: '#1E3A8A' }} />
+            ? <Building2 size={12} style={{ color: 'var(--accent)' }} />
+            : <Globe size={12} style={{ color: 'var(--link)' }} />
           }
         </span>
       </td>
-      <td style={{ ...td, fontWeight: 700, color: 'var(--slate-800)' }}>{c.business_type || '—'}</td>
+      <td style={{ ...td, fontWeight: 700, color: 'var(--heading)' }}>{c.business_type || '—'}</td>
       <td style={td}>{[c.city, c.state].filter(Boolean).join(', ') || '—'}</td>
       <td style={td}>{isPhysical ? (c.violation_subtype || '—') : extractDomain(c.url_domain)}</td>
       <td style={td}>
@@ -50,13 +50,13 @@ export default function CaseListRow({ caseData, onViewDetails, isEven }) {
           onMouseLeave={() => setShowTip(false)}
         >
           {criteria.map((cr, i) => (
-            <span key={i} style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: cr.met ? color : 'var(--slate-500)', display: 'inline-block' }} />
+            <span key={i} style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: cr.met ? color : 'var(--body-secondary)', display: 'inline-block' }} />
           ))}
           {showTip && (
             <div style={{
               position: 'absolute', bottom: '100%', left: 0, marginBottom: '6px',
-              padding: '4px 8px', borderRadius: '4px', backgroundColor: 'var(--slate-900)',
-              color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem',
+              padding: '4px 8px', borderRadius: '4px', backgroundColor: 'var(--heading)',
+              color: 'var(--btn-text)', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem',
               whiteSpace: 'nowrap', zIndex: 50
             }}>
               {label} — {score} of 6
@@ -66,20 +66,20 @@ export default function CaseListRow({ caseData, onViewDetails, isEven }) {
       </td>
       <td style={td}>
         {freshness.type === 'new' && (
-          <span style={{ padding: '1px 5px', borderRadius: '4px', fontSize: '0.5625rem', fontWeight: 800, color: '#15803D', backgroundColor: '#DCFCE7', textTransform: 'uppercase' }}>NEW</span>
+          <span style={{ padding: '1px 5px', borderRadius: '4px', fontSize: '0.5625rem', fontWeight: 800, color: 'var(--accent-success)', backgroundColor: '#DCFCE7', textTransform: 'uppercase' }}>NEW</span>
         )}
         {freshness.type === 'old' && (
-          <span style={{ fontSize: '0.6875rem', color: '#92400E', fontWeight: 600 }}>{freshness.daysAgo}d</span>
+          <span style={{ fontSize: '0.6875rem', color: 'var(--section-label)', fontWeight: 600 }}>{freshness.daysAgo}d</span>
         )}
       </td>
       <td style={td}>
-        <span style={{ fontSize: '0.75rem', color: freshness.type === 'old' ? '#92400E' : '#475569' }}>
+        <span style={{ fontSize: '0.75rem', color: freshness.type === 'old' ? 'var(--section-label)' : 'var(--body-secondary)' }}>
           {formatDate(c.approved_at)}
         </span>
       </td>
       <td style={td}>
         {c.ai_duplicate_cluster_size >= 2 && (
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600, color: '#1E3A8A' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600, color: 'var(--link)' }}>
             <BarChart3 size={12} aria-hidden="true" />
             {c.ai_duplicate_cluster_size}
           </span>
@@ -88,7 +88,7 @@ export default function CaseListRow({ caseData, onViewDetails, isEven }) {
       <td style={td}>
         <button type="button" onClick={() => onViewDetails(c)} style={{
           background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--terra-600)'
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--section-label)'
         }}
           onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline'; }}
           onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none'; }}
@@ -99,6 +99,6 @@ export default function CaseListRow({ caseData, onViewDetails, isEven }) {
 }
 
 const td = {
-  fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)',
-  padding: '0 0.75rem', borderBottom: '1px solid var(--slate-100)', whiteSpace: 'nowrap'
+  fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)',
+  padding: '0 0.75rem', borderBottom: '1px solid var(--border-lighter)', whiteSpace: 'nowrap'
 };

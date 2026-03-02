@@ -94,7 +94,7 @@ export default function PhotoUpload({ photos = [], onChange }) {
           tabIndex={0}
           aria-label={`Upload photo. ${photos.length} of ${MAX_PHOTOS} added.`}
           style={{
-            border: `2px dashed ${dragOver ? '#C2410C' : 'var(--slate-500)'}`,
+            border: `2px dashed ${dragOver ? '#C2410C' : 'var(--body-secondary)'}`,
             borderRadius: 'var(--radius-md)',
             padding: '24px',
             textAlign: 'center',
@@ -105,7 +105,7 @@ export default function PhotoUpload({ photos = [], onChange }) {
             minHeight: '44px'
           }}
           onFocus={e => { e.currentTarget.style.borderColor = '#C2410C'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,65,12,0.15)'; }}
-          onBlur={e => { if (!dragOver) { e.currentTarget.style.borderColor = 'var(--slate-500)'; e.currentTarget.style.boxShadow = 'none'; } }}
+          onBlur={e => { if (!dragOver) { e.currentTarget.style.borderColor = 'var(--body-secondary)'; e.currentTarget.style.boxShadow = 'none'; } }}
         >
           <input
             ref={fileInputRef}
@@ -119,24 +119,24 @@ export default function PhotoUpload({ photos = [], onChange }) {
           />
           <div style={{
             width: '48px', height: '48px', borderRadius: '50%',
-            backgroundColor: dragOver ? 'var(--terra-100)' : 'var(--slate-100)',
+            backgroundColor: dragOver ? 'var(--card-bg-tinted)' : 'var(--border-lighter)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             margin: '0 auto 12px', transition: 'background 0.15s'
           }}>
             {dragOver
               ? <Upload size={22} aria-hidden="true" style={{ color: '#C2410C' }} />
-              : <Camera size={22} aria-hidden="true" style={{ color: 'var(--slate-500)' }} />
+              : <Camera size={22} aria-hidden="true" style={{ color: 'var(--body-secondary)' }} />
             }
           </div>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
-            fontWeight: 600, color: 'var(--slate-700)', margin: '0 0 4px'
+            fontWeight: 600, color: 'var(--body)', margin: '0 0 4px'
           }}>
             {dragOver ? 'Drop photos here' : 'Tap or click to add photos'}
           </p>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-            color: 'var(--slate-500)', margin: 0
+            color: 'var(--body-secondary)', margin: 0
           }}>
             Up to {MAX_PHOTOS} photos, {MAX_SIZE_MB}MB each. JPG, PNG, or WebP.
           </p>
@@ -160,8 +160,8 @@ export default function PhotoUpload({ photos = [], onChange }) {
           {photos.map((photo, i) => (
             <div key={i} style={{
               position: 'relative', borderRadius: '10px', overflow: 'hidden',
-              border: '1px solid var(--slate-200)', aspectRatio: '1',
-              backgroundColor: 'var(--slate-100)'
+              border: '1px solid var(--border)', aspectRatio: '1',
+              backgroundColor: 'var(--border-lighter)'
             }}>
               <img
                 src={photo.data}
@@ -194,7 +194,7 @@ export default function PhotoUpload({ photos = [], onChange }) {
       {photos.length > 0 && (
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-          color: 'var(--slate-500)', margin: '8px 0 0'
+          color: 'var(--body-secondary)', margin: '8px 0 0'
         }}>
           {photos.length} of {MAX_PHOTOS} photos added
           {canAddMore && ' — click above to add more'}

@@ -27,14 +27,14 @@ export default function LawyerValueProps() {
     }}>
       <h2 id="lawyer-value-heading" style={{
         fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)',
-        fontWeight: 700, textAlign: 'center', color: 'var(--slate-900)',
+        fontWeight: 700, textAlign: 'center', color: 'var(--heading)',
         marginBottom: '0.75rem', marginTop: 0
       }}>
         Why Attorneys Choose Us
       </h2>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-        color: 'var(--slate-600)', textAlign: 'center',
+        color: 'var(--body)', textAlign: 'center',
         maxWidth: '480px', margin: '0 auto clamp(2rem, 5vw, 3.5rem)'
       }}>
         A platform built for the way you actually practice.
@@ -50,14 +50,14 @@ export default function LawyerValueProps() {
           return (
             <div key={p.title} style={{
               backgroundColor: 'var(--surface)',
-              border: '1px solid var(--slate-200)',
+              border: '1px solid var(--border)',
               borderRadius: '12px',
               padding: '2rem',
               textAlign: 'center'
             }}>
               <div style={{
                 width: '48px', height: '48px', borderRadius: '50%',
-                backgroundColor: 'var(--slate-900)', color: 'white',
+                backgroundColor: 'var(--heading)', color: 'var(--btn-text)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 margin: '0 auto 1.25rem'
               }}>
@@ -65,13 +65,13 @@ export default function LawyerValueProps() {
               </div>
               <h3 style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
-                color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
+                color: 'var(--heading)', marginBottom: '0.5rem', marginTop: 0
               }}>
                 {p.title}
               </h3>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                color: 'var(--slate-600)', lineHeight: 1.6, margin: 0
+                color: 'var(--body)', lineHeight: 1.6, margin: 0
               }}>
                 {p.desc}
               </p>

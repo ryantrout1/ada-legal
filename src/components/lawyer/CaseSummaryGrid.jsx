@@ -11,8 +11,8 @@ function extractDomain(url) {
   catch { return url.split('/')[0]; }
 }
 
-const labelStyle = { fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 2px' };
-const valueStyle = { fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 };
+const labelStyle = { fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 2px' };
+const valueStyle = { fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: 0 };
 
 export default function CaseSummaryGrid({ caseData }) {
   const c = caseData;
@@ -30,7 +30,7 @@ export default function CaseSummaryGrid({ caseData }) {
 
   return (
     <div style={{
-      backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '14px',
+      backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '14px',
       display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px'
     }}>
       {items.map((item, i) => (

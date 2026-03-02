@@ -18,14 +18,14 @@ export default function ForAttorneysSection() {
       <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
         <h2 style={{
           fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)',
-          fontWeight: 700, color: 'var(--slate-900)',
+          fontWeight: 700, color: 'var(--heading)',
           marginBottom: '0.75rem', marginTop: 0
         }}>
           For Attorneys
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: 'var(--slate-600)', lineHeight: 1.6,
+          color: 'var(--body)', lineHeight: 1.6,
           maxWidth: '520px', margin: '0 auto clamp(2rem, 5vw, 2.5rem)'
         }}>
           Join a platform built for ADA practitioners. Get matched with real clients who need your help.
@@ -41,9 +41,9 @@ export default function ForAttorneysSection() {
               <div key={p.text} style={{
                 display: 'flex', alignItems: 'center', gap: '0.75rem',
                 fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-                color: 'var(--slate-700)'
+                color: 'var(--body)'
               }}>
-                <Icon size={20} aria-hidden="true" style={{ color: 'var(--terra-600)', flexShrink: 0 }} />
+                <Icon size={20} aria-hidden="true" style={{ color: 'var(--section-label)', flexShrink: 0 }} />
                 <span>{p.text}</span>
               </div>
             );
@@ -55,12 +55,12 @@ export default function ForAttorneysSection() {
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
             fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-            color: 'var(--terra-600)', textDecoration: 'none',
-            padding: '0.75rem 1.5rem', border: '2px solid var(--terra-600)',
+            color: 'var(--section-label)', textDecoration: 'none',
+            padding: '0.75rem 1.5rem', border: '2px solid var(--section-label)',
             borderRadius: 'var(--radius-md)', minHeight: '48px',
             transition: 'all 0.15s'
           }}
-          onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--terra-50)'; }}
+          onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--card-bg-tinted)'; }}
           onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
         >
           Learn More <ArrowRight size={18} aria-hidden="true" />

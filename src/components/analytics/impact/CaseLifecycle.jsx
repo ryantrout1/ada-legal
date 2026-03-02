@@ -101,8 +101,8 @@ export default function CaseLifecycle({ events }) {
   };
 
   return (
-    <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '20px' }}>
-      <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 16px' }}>
+    <div style={{ backgroundColor: 'white', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px' }}>
+      <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 16px' }}>
         Case Lifecycle
       </h3>
 
@@ -121,14 +121,14 @@ export default function CaseLifecycle({ events }) {
       {/* Status transitions chart */}
       {statusData.length > 0 && (
         <>
-          <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 10px' }}>
+          <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 10px' }}>
             Status Transitions
           </h4>
           <div aria-hidden="true" style={{ width: '100%', height: Math.max(160, statusData.length * 36) }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={statusData} layout="vertical" barSize={20} margin={{ left: 10, right: 20, top: 5, bottom: 5 }}>
-                <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
-                <YAxis type="category" dataKey="name" width={100} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-700)', textTransform: 'capitalize' }} />
+                <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--body-secondary)' }} />
+                <YAxis type="category" dataKey="name" width={100} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--body)', textTransform: 'capitalize' }} />
                 <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
                 <Bar dataKey="count" fill="#C2410C" radius={[0, 6, 6, 0]} />
               </BarChart>
@@ -143,7 +143,7 @@ export default function CaseLifecycle({ events }) {
         </>
       )}
       {statusData.length === 0 && (
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>No status change data yet</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>No status change data yet</p>
       )}
     </div>
   );

@@ -6,16 +6,16 @@ export default function AccountSettingsCard() {
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
       borderRadius: '12px', padding: '24px'
     }}>
-      <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 20px' }}>
+      <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 20px' }}>
         Account Settings
       </h2>
 
       {/* Notification Preferences */}
       <div style={{ marginBottom: '24px' }}>
-        <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 12px' }}>
+        <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 12px' }}>
           Notification Preferences
         </h3>
         {[
@@ -28,22 +28,22 @@ export default function AccountSettingsCard() {
             padding: '8px 0', cursor: 'not-allowed', opacity: 0.5
           }}>
             <input type="checkbox" disabled style={{ width: '18px', height: '18px' }} />
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-600)' }}>{label}</span>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)' }}>{label}</span>
             <span style={{
               display: 'inline-block', padding: '1px 8px', borderRadius: '4px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-              color: 'var(--slate-500)', backgroundColor: 'var(--slate-100)', marginLeft: 'auto'
+              color: 'var(--body-secondary)', backgroundColor: 'var(--border-lighter)', marginLeft: 'auto'
             }}>Coming soon</span>
           </label>
         ))}
       </div>
 
-      <div style={{ borderTop: '1px solid var(--slate-200)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {/* Download Data */}
         <button type="button" title="Contact support to request your data" style={{
           background: 'none', border: 'none', cursor: 'help',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
-          color: 'var(--slate-600)', padding: '4px 0', textAlign: 'left', textDecoration: 'underline',
+          color: 'var(--body)', padding: '4px 0', textAlign: 'left', textDecoration: 'underline',
           textDecorationStyle: 'dotted'
         }}>
           Download My Data

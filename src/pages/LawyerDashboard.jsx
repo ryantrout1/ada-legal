@@ -163,15 +163,15 @@ export default function LawyerDashboard() {
       }}>
         <h1 style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', clipPath: 'inset(50%)', whiteSpace: 'nowrap', border: 0 }}>Attorney Dashboard</h1>
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)' }}>Loading your cases…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body)' }}>Loading your cases…</p>
       </div>
     );
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: '1.5rem' }}>
+    <div style={{ backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)', padding: '1.5rem' }}>
       <div style={{ maxWidth: '960px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
+        <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
           My Cases
         </h1>
 
@@ -179,15 +179,15 @@ export default function LawyerDashboard() {
 
         {cases.length === 0 && (
           <div style={{
-            backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+            backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
             borderRadius: '16px', padding: '3rem', textAlign: 'center'
           }}>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-600)', marginBottom: '1rem' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--body)', marginBottom: '1rem' }}>
               You have no assigned cases yet.
             </p>
             <Link to={createPageUrl('Marketplace')} style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-              color: 'var(--terra-600)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px'
+              color: 'var(--section-label)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px'
             }}>
               Browse Available Cases <ArrowRight size={16} />
             </Link>
@@ -198,7 +198,7 @@ export default function LawyerDashboard() {
         <div id="needs-action">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
             <div style={{ width: '4px', height: '20px', borderRadius: '2px', backgroundColor: '#B91C1C' }} />
-            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--heading)', margin: 0 }}>
               Needs Action
             </h2>
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: '#B91C1C' }}>({needsAction.length})</span>
@@ -232,15 +232,15 @@ export default function LawyerDashboard() {
         <div id="in-progress">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
             <div style={{ width: '4px', height: '20px', borderRadius: '2px', backgroundColor: '#15803D' }} />
-            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--heading)', margin: 0 }}>
               In Progress
             </h2>
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: '#15803D' }}>({inProgress.length})</span>
           </div>
           {inProgress.length === 0 ? (
-            <div style={{ padding: '16px 20px', backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '10px' }}>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-600)' }}>
-                No active cases. <Link to={createPageUrl('Marketplace')} style={{ color: 'var(--terra-600)', fontWeight: 600, textDecoration: 'none' }}>Browse available cases</Link> to get started.
+            <div style={{ padding: '16px 20px', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px' }}>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)' }}>
+                No active cases. <Link to={createPageUrl('Marketplace')} style={{ color: 'var(--section-label)', fontWeight: 600, textDecoration: 'none' }}>Browse available cases</Link> to get started.
               </span>
             </div>
           ) : (
@@ -266,17 +266,17 @@ export default function LawyerDashboard() {
             display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none',
             cursor: 'pointer', padding: 0, marginBottom: completedOpen ? '8px' : 0
           }}>
-            {completedOpen ? <ChevronDown size={15} style={{ color: 'var(--slate-500)' }} /> : <ChevronRight size={15} style={{ color: 'var(--slate-500)' }} />}
-            <div style={{ width: '4px', height: '20px', borderRadius: '2px', backgroundColor: 'var(--slate-500)' }} />
-            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+            {completedOpen ? <ChevronDown size={15} style={{ color: 'var(--body-secondary)' }} /> : <ChevronRight size={15} style={{ color: 'var(--body-secondary)' }} />}
+            <div style={{ width: '4px', height: '20px', borderRadius: '2px', backgroundColor: 'var(--body-secondary)' }} />
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--heading)', margin: 0 }}>
               Completed
             </h2>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-600)' }}>({completed.length})</span>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--body)' }}>({completed.length})</span>
           </button>
           {completedOpen && (
             completed.length === 0 ? (
-              <div style={{ padding: '16px 20px', backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '10px' }}>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-600)' }}>
+              <div style={{ padding: '16px 20px', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px' }}>
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)' }}>
                   No resolved cases yet.
                 </span>
               </div>

@@ -26,7 +26,7 @@ export default function DocScoreDots({ caseData, showLabel = true, tooltipPlacem
         {criteria.map((cr, i) => (
           <span key={i} style={{
             width: '8px', height: '8px', borderRadius: '50%',
-            backgroundColor: cr.met ? color : 'var(--slate-500)',
+            backgroundColor: cr.met ? color : 'var(--body-secondary)',
             display: 'inline-block'
           }} />
         ))}
@@ -44,7 +44,7 @@ export default function DocScoreDots({ caseData, showLabel = true, tooltipPlacem
         style={{
           background: 'none', border: 'none', cursor: 'pointer', padding: 0,
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-          color: '#475569', lineHeight: 1
+          color: 'var(--body-secondary)', lineHeight: 1
         }}
       >ⓘ</button>
 
@@ -56,19 +56,19 @@ export default function DocScoreDots({ caseData, showLabel = true, tooltipPlacem
           marginBottom: tooltipPlacement === 'above' ? '8px' : 0,
           marginTop: tooltipPlacement === 'above' ? 0 : '8px',
           zIndex: 100,
-          backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+          backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
           borderRadius: 'var(--radius-md)', boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
           padding: '12px 14px', width: '280px'
         }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-800)', margin: '0 0 8px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 8px' }}>
             Documentation Score: {score}/7 — {label}
           </p>
           {criteria.map((cr, i) => (
             <div key={i} style={{ display: 'flex', gap: '6px', marginBottom: '4px', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '0.75rem', color: cr.met ? '#15803D' : 'var(--slate-500)', flexShrink: 0, lineHeight: 1.4 }}>
+              <span style={{ fontSize: '0.75rem', color: cr.met ? 'var(--accent-success)' : 'var(--body-secondary)', flexShrink: 0, lineHeight: 1.4 }}>
                 {cr.met ? '●' : '○'}
               </span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-600)', lineHeight: 1.4 }}>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body)', lineHeight: 1.4 }}>
                 {cr.label}
               </span>
             </div>

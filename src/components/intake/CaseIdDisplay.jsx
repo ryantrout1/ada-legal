@@ -33,9 +33,9 @@ export default function CaseIdDisplay({ caseId }) {
       }}>
         <code style={{
           fontFamily: 'monospace', fontSize: 'clamp(1.125rem, 3vw, 1.5rem)', fontWeight: 700,
-          color: 'var(--slate-900)', backgroundColor: 'white',
+          color: 'var(--heading)', backgroundColor: 'white',
           padding: '0.5rem 1rem', borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--slate-200)', userSelect: 'all',
+          border: '1px solid var(--border)', userSelect: 'all',
           wordBreak: 'break-all'
         }}>
           {shortId}
@@ -48,9 +48,9 @@ export default function CaseIdDisplay({ caseId }) {
             display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
             padding: '0.5rem 0.875rem', fontFamily: 'Manrope, sans-serif',
             fontSize: '0.8125rem', fontWeight: 700,
-            color: copied ? '#065F46' : 'var(--slate-700)',
+            color: copied ? '#065F46' : 'var(--body)',
             backgroundColor: copied ? '#DCFCE7' : 'white',
-            border: '1px solid', borderColor: copied ? '#86EFAC' : 'var(--slate-200)',
+            border: '1px solid', borderColor: copied ? '#86EFAC' : 'var(--border)',
             borderRadius: 'var(--radius-sm)', cursor: 'pointer',
             minHeight: '40px', transition: 'all 0.15s'
           }}

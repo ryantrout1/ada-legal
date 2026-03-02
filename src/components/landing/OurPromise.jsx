@@ -13,20 +13,20 @@ const values = [
 export default function OurPromise() {
   return (
     <section style={{
-      backgroundColor: 'var(--slate-50)',
+      backgroundColor: 'var(--page-bg-subtle)',
       padding: 'clamp(3rem, 8vw, 5rem) 1.5rem'
     }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <h2 style={{
           fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)',
-          fontWeight: 700, textAlign: 'center', color: 'var(--slate-900)',
+          fontWeight: 700, textAlign: 'center', color: 'var(--heading)',
           marginBottom: '0.75rem', marginTop: 0
         }}>
           Our Promise
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: 'var(--slate-600)', textAlign: 'center',
+          color: 'var(--body)', textAlign: 'center',
           maxWidth: '520px', margin: '0 auto clamp(2rem, 5vw, 3rem)'
         }}>
           The principles that guide everything we build.
@@ -42,27 +42,27 @@ export default function OurPromise() {
             return (
               <div key={v.title} style={{
                 backgroundColor: 'var(--surface)',
-                border: '1px solid var(--slate-200)',
+                border: '1px solid var(--border)',
                 borderRadius: '12px',
                 padding: '1.5rem'
               }}>
                 <div style={{
                   width: '40px', height: '40px', borderRadius: 'var(--radius-sm)',
-                  backgroundColor: 'var(--terra-100)',
+                  backgroundColor: 'var(--card-bg-tinted)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   marginBottom: '1rem'
                 }}>
-                  <Icon size={20} style={{ color: 'var(--terra-600)' }} />
+                  <Icon size={20} style={{ color: 'var(--section-label)' }} />
                 </div>
                 <h3 style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-                  color: 'var(--slate-900)', marginBottom: '0.375rem', marginTop: 0
+                  color: 'var(--heading)', marginBottom: '0.375rem', marginTop: 0
                 }}>
                   {v.title}
                 </h3>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                  color: 'var(--slate-600)', lineHeight: 1.6, margin: 0
+                  color: 'var(--body)', lineHeight: 1.6, margin: 0
                 }}>
                   {v.desc}
                 </p>

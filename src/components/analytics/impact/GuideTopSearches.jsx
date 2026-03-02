@@ -14,8 +14,8 @@ export default function GuideTopSearches({ events }) {
 
   if (queries.length === 0) {
     return (
-      <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '32px', textAlign: 'center' }}>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>No search data yet</p>
+      <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '32px', textAlign: 'center' }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>No search data yet</p>
       </div>
     );
   }
@@ -23,17 +23,17 @@ export default function GuideTopSearches({ events }) {
   const maxCount = queries[0][1];
 
   return (
-    <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '16px' }}>
-      <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 12px' }}>
+    <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '16px' }}>
+      <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 12px' }}>
         Top Search Queries
       </h4>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         {queries.map(([query, count], i) => (
           <div key={query} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-500)', width: '22px', textAlign: 'right', flexShrink: 0 }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--body-secondary)', width: '22px', textAlign: 'right', flexShrink: 0 }}>
               {i + 1}
             </span>
-            <div style={{ flex: 1, position: 'relative', height: '28px', backgroundColor: 'white', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--slate-200)' }}>
+            <div style={{ flex: 1, position: 'relative', height: '28px', backgroundColor: 'white', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--border)' }}>
               <div style={{
                 position: 'absolute', top: 0, left: 0, height: '100%',
                 width: `${(count / maxCount) * 100}%`,
@@ -41,13 +41,13 @@ export default function GuideTopSearches({ events }) {
               }} />
               <span style={{
                 position: 'relative', zIndex: 1, fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                color: 'var(--slate-700)', padding: '0 10px', lineHeight: '28px',
+                color: 'var(--body)', padding: '0 10px', lineHeight: '28px',
                 whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block',
               }}>
                 "{query}"
               </span>
             </div>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-600)', minWidth: '32px', textAlign: 'right', flexShrink: 0 }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--body)', minWidth: '32px', textAlign: 'right', flexShrink: 0 }}>
               {count}
             </span>
           </div>

@@ -32,9 +32,9 @@ export default function UserJourneyEngagement() {
 
   if (loading) {
     return (
-      <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
+      <div style={{ backgroundColor: 'white', border: '1px solid var(--border)', borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
         <div className="a11y-spinner" aria-hidden="true" style={{ margin: '0 auto 8px' }} />
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)' }}>Loading engagement data…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)' }}>Loading engagement data…</p>
       </div>
     );
   }
@@ -43,15 +43,15 @@ export default function UserJourneyEngagement() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Section header */}
       <div style={{
-        backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px',
+        backgroundColor: 'white', border: '1px solid var(--border)', borderRadius: '12px',
         padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         flexWrap: 'wrap', gap: '12px'
       }}>
         <div>
-          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: 0 }}>
             User Journey & Engagement
           </h3>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '2px 0 0' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', margin: '2px 0 0' }}>
             {filteredEvents.length.toLocaleString()} events tracked
           </p>
         </div>

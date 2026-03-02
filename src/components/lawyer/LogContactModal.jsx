@@ -46,10 +46,10 @@ export default function LogContactModal({ open, onCancel, onSubmit, saving, busi
       <label key={value} style={{
         display: 'inline-flex', alignItems: 'center', gap: '6px',
         padding: '8px 16px', borderRadius: '8px', cursor: 'pointer',
-        border: active ? '2px solid var(--terra-600)' : `2px solid ${errors[group] ? '#FECACA' : 'var(--slate-200)'}`,
-        backgroundColor: active ? 'var(--terra-50, #FFF7ED)' : 'white',
+        border: active ? '2px solid var(--section-label)' : `2px solid ${errors[group] ? '#FECACA' : 'var(--border)'}`,
+        backgroundColor: active ? 'var(--card-bg-tinted)' : 'white',
         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: active ? 700 : 500,
-        color: active ? 'var(--terra-600)' : 'var(--slate-700)',
+        color: active ? 'var(--section-label)' : 'var(--body)',
         transition: 'all 0.1s', minHeight: '44px'
       }}>
         <input type="radio" name={group} checked={active}
@@ -79,7 +79,7 @@ export default function LogContactModal({ open, onCancel, onSubmit, saving, busi
         maxWidth: '500px', width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.15)'
       }}>
         {/* Header */}
-        <div style={{ backgroundColor: 'var(--slate-900)', padding: '16px 24px' }}>
+        <div style={{ backgroundColor: 'var(--heading)', padding: '16px 24px' }}>
           <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 700, color: 'white', margin: 0 }}>
             Log Contact{businessName ? ` — ${businessName}` : ''}
           </h2>
@@ -89,7 +89,7 @@ export default function LogContactModal({ open, onCancel, onSubmit, saving, busi
         <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Contact Type */}
           <div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 8px' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 8px' }}>
               Contact Type {errors.contact_type && <span style={{ color: '#B91C1C', fontSize: '0.75rem' }}>— Required</span>}
             </p>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -99,7 +99,7 @@ export default function LogContactModal({ open, onCancel, onSubmit, saving, busi
 
           {/* Contact Method */}
           <div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 8px' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 8px' }}>
               Contact Method {errors.contact_method && <span style={{ color: '#B91C1C', fontSize: '0.75rem' }}>— Required</span>}
             </p>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -109,7 +109,7 @@ export default function LogContactModal({ open, onCancel, onSubmit, saving, busi
 
           {/* Notes */}
           <div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 8px' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 8px' }}>
               Notes
             </p>
             <textarea
@@ -117,7 +117,7 @@ export default function LogContactModal({ open, onCancel, onSubmit, saving, busi
               rows={3} placeholder="What was discussed? Any next steps?"
               style={{
                 width: '100%', padding: '12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                color: 'var(--slate-800)', border: '2px solid var(--slate-200)', borderRadius: '10px',
+                color: 'var(--heading)', border: '2px solid var(--border)', borderRadius: '10px',
                 outline: 'none', boxSizing: 'border-box', resize: 'vertical', minHeight: '80px',
                 backgroundColor: 'var(--surface)'
               }}
@@ -130,12 +130,12 @@ export default function LogContactModal({ open, onCancel, onSubmit, saving, busi
           <button type="button" onClick={onCancel} disabled={saving} style={{
             background: 'none', border: 'none', cursor: saving ? 'not-allowed' : 'pointer',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-            color: 'var(--slate-500)', padding: '8px'
+            color: 'var(--body-secondary)', padding: '8px'
           }}>Cancel</button>
           <button type="button" onClick={handleSubmit} disabled={saving} style={{
             padding: '0 24px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
             fontWeight: 700, color: 'white',
-            backgroundColor: saving ? 'var(--slate-500)' : 'var(--terra-600)',
+            backgroundColor: saving ? 'var(--body-secondary)' : 'var(--section-label)',
             border: 'none', borderRadius: '10px',
             cursor: saving ? 'not-allowed' : 'pointer', minHeight: '44px',
             transition: 'background-color 0.15s'

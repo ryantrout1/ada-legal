@@ -34,7 +34,7 @@ function isCurrent(stepIdx, currentIdx, status) {
 
 const STATUS_MESSAGES = {
   submitted: {
-    bg: 'var(--slate-50)',
+    bg: 'var(--page-bg-subtle)',
     text: 'Your report has been received. Our team is reviewing it for completeness. This usually takes less than 24 hours.'
   },
   under_review: {
@@ -50,7 +50,7 @@ const STATUS_MESSAGES = {
     text: 'Your case has been approved and is now available to attorneys in your area. An attorney will reach out to you soon.'
   },
   assigned: {
-    bg: 'var(--terra-100, #FEF1EC)',
+    bg: 'var(--card-bg-tinted)',
     text: 'An attorney has been assigned to your case and should contact you within 24 hours using your preferred contact method.'
   },
   in_progress: {
@@ -77,7 +77,7 @@ export default function StatusProgress({ status, closedEventDescription, expired
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
       borderRadius: '12px', padding: '24px'
     }}>
       {/* Step Progress */}
@@ -92,8 +92,8 @@ export default function StatusProgress({ status, closedEventDescription, expired
                 <div style={{
                   width: '32px', height: '32px', borderRadius: '50%',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  backgroundColor: completed ? '#15803D' : current ? 'var(--terra-600, #C2410C)' : 'transparent',
-                  border: future ? '2px solid var(--slate-300)' : 'none',
+                  backgroundColor: completed ? 'var(--accent-success)' : current ? 'var(--accent)' : 'transparent',
+                  border: future ? '2px solid var(--border)' : 'none',
                   animation: current ? 'stepPulse 2s ease-in-out infinite' : 'none',
                   transition: 'background-color 0.3s'
                 }}>
@@ -102,14 +102,14 @@ export default function StatusProgress({ status, closedEventDescription, expired
                 </div>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-                  color: completed ? '#15803D' : current ? 'var(--terra-600, #C2410C)' : '#78716C',
+                  color: completed ? 'var(--accent-success)' : current ? 'var(--accent)' : 'var(--body-secondary)',
                   textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.03em'
                 }}>{step.label}</span>
               </div>
               {i < STEPS.length - 1 && (
                 <div style={{
                   flex: 1, height: '2px', margin: '0 4px',
-                  backgroundColor: completed ? '#15803D' : 'var(--slate-200)',
+                  backgroundColor: completed ? 'var(--accent-success)' : 'var(--border)',
                   marginBottom: '20px', transition: 'background-color 0.3s'
                 }} />
               )}
@@ -121,10 +121,10 @@ export default function StatusProgress({ status, closedEventDescription, expired
       {/* Status message */}
       {status === 'closed' && closedEventDescription ? (
         <div style={{ backgroundColor: '#F1F5F9', borderRadius: '10px', padding: '16px' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 4px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 4px' }}>
             Case Resolution
           </p>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-700)', lineHeight: 1.7, margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.7, margin: 0 }}>
             {closedEventDescription}
           </p>
         </div>
@@ -136,13 +136,13 @@ export default function StatusProgress({ status, closedEventDescription, expired
           <Link to={createPageUrl('Intake')} style={{
             display: 'inline-flex', alignItems: 'center', gap: '6px',
             padding: '0 16px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-            fontWeight: 700, color: 'white', backgroundColor: 'var(--terra-600)',
+            fontWeight: 700, color: 'white', backgroundColor: 'var(--section-label)',
             borderRadius: '8px', textDecoration: 'none', minHeight: '44px'
           }}>Submit New Report →</Link>
         </div>
       ) : msg.text ? (
         <div style={{ backgroundColor: msg.bg, borderRadius: '10px', padding: '16px' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-700)', lineHeight: 1.7, margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.7, margin: 0 }}>
             {msg.text}
           </p>
         </div>

@@ -61,7 +61,7 @@ export default function InitiateSupportModal({ open, onCancel, onConfirm, proces
     >
       <div style={{
         backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--slate-200)', padding: 'var(--space-2xl)',
+        border: '1px solid var(--border)', padding: 'var(--space-2xl)',
         maxWidth: '480px', width: '100%',
         boxShadow: '0 20px 60px rgba(0,0,0,0.15)'
       }}>
@@ -80,7 +80,7 @@ export default function InitiateSupportModal({ open, onCancel, onConfirm, proces
               id="initiate-modal-body"
               style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                color: 'var(--slate-600)', lineHeight: 1.6,
+                color: 'var(--body)', lineHeight: 1.6,
                 margin: '0 0 var(--space-xl) 0'
               }}
             >
@@ -93,8 +93,8 @@ export default function InitiateSupportModal({ open, onCancel, onConfirm, proces
                 onClick={onDismissError}
                 style={{
                   padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-                  fontSize: '0.9375rem', fontWeight: 700, color: 'white',
-                  backgroundColor: 'var(--terra-600)', border: 'none',
+                  fontSize: '0.9375rem', fontWeight: 700, color: 'var(--btn-text)',
+                  backgroundColor: 'var(--section-label)', border: 'none',
                   borderRadius: 'var(--radius-md)', cursor: 'pointer', minHeight: '44px'
                 }}
               >
@@ -108,7 +108,7 @@ export default function InitiateSupportModal({ open, onCancel, onConfirm, proces
               id="initiate-modal-heading"
               style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700,
-                color: 'var(--slate-900)', margin: '0 0 var(--space-md) 0'
+                color: 'var(--heading)', margin: '0 0 var(--space-md) 0'
               }}
             >
               Initiate Support for This Case?
@@ -117,7 +117,7 @@ export default function InitiateSupportModal({ open, onCancel, onConfirm, proces
               id="initiate-modal-body"
               style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                color: 'var(--slate-600)', lineHeight: 1.6,
+                color: 'var(--body)', lineHeight: 1.6,
                 margin: '0 0 var(--space-xl) 0'
               }}
             >
@@ -135,14 +135,14 @@ export default function InitiateSupportModal({ open, onCancel, onConfirm, proces
                 disabled={processing}
                 style={{
                   padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-                  fontSize: '0.9375rem', fontWeight: 600, color: 'var(--slate-700)',
-                  backgroundColor: 'transparent', border: '2px solid var(--slate-200)',
+                  fontSize: '0.9375rem', fontWeight: 600, color: 'var(--body)',
+                  backgroundColor: 'transparent', border: '2px solid var(--border)',
                   borderRadius: 'var(--radius-md)', cursor: processing ? 'not-allowed' : 'pointer',
                   minHeight: '44px', transition: 'all 0.15s',
                   opacity: processing ? 0.5 : 1
                 }}
-                onMouseEnter={e => { if (!processing) e.currentTarget.style.borderColor = 'var(--slate-500)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; }}
+                onMouseEnter={e => { if (!processing) e.currentTarget.style.borderColor = 'var(--body-secondary)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; }}
               >
                 Cancel
               </button>
@@ -153,14 +153,14 @@ export default function InitiateSupportModal({ open, onCancel, onConfirm, proces
                 disabled={processing}
                 style={{
                   padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-                  fontSize: '0.9375rem', fontWeight: 700, color: 'white',
-                  backgroundColor: processing ? 'var(--slate-500)' : 'var(--terra-600)',
+                  fontSize: '0.9375rem', fontWeight: 700, color: 'var(--btn-text)',
+                  backgroundColor: processing ? 'var(--body-secondary)' : 'var(--section-label)',
                   border: 'none', borderRadius: 'var(--radius-md)',
                   cursor: processing ? 'not-allowed' : 'pointer',
                   minHeight: '44px', transition: 'background-color 0.15s'
                 }}
-                onMouseEnter={e => { if (!processing) e.currentTarget.style.backgroundColor = 'var(--terra-700)'; }}
-                onMouseLeave={e => { if (!processing) e.currentTarget.style.backgroundColor = processing ? 'var(--slate-500)' : 'var(--terra-600)'; }}
+                onMouseEnter={e => { if (!processing) e.currentTarget.style.backgroundColor = 'var(--section-label)'; }}
+                onMouseLeave={e => { if (!processing) e.currentTarget.style.backgroundColor = processing ? 'var(--body-secondary)' : 'var(--section-label)'; }}
               >
                 {processing ? 'Assigning…' : 'Confirm — Initiate Support'}
               </button>

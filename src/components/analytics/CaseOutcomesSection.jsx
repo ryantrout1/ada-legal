@@ -37,7 +37,7 @@ export default function CaseOutcomesSection({ cases, filters, onFilterChange }) 
   const totalClosed = closedCases.length;
   const engagedCount = closedCases.filter(c => c.resolution_type === 'engaged').length;
   const engagementRate = totalClosed > 0 ? Math.round((engagedCount / totalClosed) * 100) : null;
-  const rateColor = engagementRate === null ? 'var(--slate-700)' : engagementRate >= 30 ? '#15803D' : engagementRate >= 15 ? '#92400E' : '#B91C1C';
+  const rateColor = engagementRate === null ? 'var(--body)' : engagementRate >= 30 ? '#15803D' : engagementRate >= 15 ? '#92400E' : '#B91C1C';
   const rateBg = engagementRate === null ? 'var(--surface)' : engagementRate >= 30 ? '#DCFCE7' : engagementRate >= 15 ? '#FEF3C7' : '#FEE2E2';
 
   const casesWithTime = closedCases.filter(c => c.assigned_at && c.closed_at);
@@ -60,13 +60,13 @@ export default function CaseOutcomesSection({ cases, filters, onFilterChange }) 
   const handleResClick = (data) => { if (!data?.type) return; onFilterChange('resolutionType', data.type === activeResolution ? null : data.type); };
   const handleValClick = (data) => { if (!data?.value) return; onFilterChange('caseValue', data.value === activeValue ? null : data.value); };
 
-  const cardStyle = { backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-md)', padding: '12px' };
-  const subhead = { fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-800)', marginBottom: '0.375rem', marginTop: 0 };
+  const cardStyle = { backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '12px' };
+  const subhead = { fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--heading)', marginBottom: '0.375rem', marginTop: 0 };
 
   // No closed cases — compact message
   if (totalClosed === 0) {
     return (
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)', margin: 0 }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)', margin: 0 }}>
         No resolved cases yet.
       </p>
     );
@@ -79,13 +79,13 @@ export default function CaseOutcomesSection({ cases, filters, onFilterChange }) 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <CompactStatCard label="Cases Resolved" count={totalClosed} bgColor="#F1F5F9" textColor="#475569" icon={CheckCircle} />
           <CompactStatCard label="Engagement Rate" count={engagementRate !== null ? `${engagementRate}%` : '—'} bgColor={rateBg} textColor={rateColor} icon={TrendingUp} />
-          <CompactStatCard label="Avg Time to Resolution" count={avgDays} bgColor="var(--surface)" borderColor="var(--slate-200)" icon={Clock} />
+          <CompactStatCard label="Avg Time to Resolution" count={avgDays} bgColor="var(--surface)" borderColor="var(--border)" icon={Clock} />
         </div>
 
         <div style={cardStyle}>
           <p style={subhead}>Resolution Type Breakdown</p>
           {resData.length === 0 ? (
-            <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.8125rem' }}>No data</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)', fontSize: '0.8125rem' }}>No data</p>
           ) : (
             <>
               <div style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}>
@@ -94,9 +94,9 @@ export default function CaseOutcomesSection({ cases, filters, onFilterChange }) 
               <div aria-hidden="true" style={{ width: '100%', height: Math.max(120, resData.length * 26) }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={resData} layout="vertical" barSize={14} margin={{ left: 10, right: 15, top: 2, bottom: 2 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" horizontal={false} />
-                    <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-500)' }} />
-                    <YAxis type="category" dataKey="name" width={110} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-700)' }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
+                    <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--body-secondary)' }} />
+                    <YAxis type="category" dataKey="name" width={110} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--body)' }} />
                     <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 11 }} />
                     <Bar dataKey="count" radius={[0, 3, 3, 0]} cursor="pointer" onClick={handleResClick}>
                       {resData.map(entry => (
@@ -121,9 +121,9 @@ export default function CaseOutcomesSection({ cases, filters, onFilterChange }) 
           <div aria-hidden="true" style={{ width: '100%', height: Math.max(100, valData.length * 26) }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={valData} layout="vertical" barSize={14} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" horizontal={false} />
-                <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-500)' }} />
-                <YAxis type="category" dataKey="name" width={70} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-700)' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
+                <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--body-secondary)' }} />
+                <YAxis type="category" dataKey="name" width={70} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--body)' }} />
                 <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 11 }} />
                 <Bar dataKey="count" radius={[0, 3, 3, 0]} cursor="pointer" onClick={handleValClick}>
                   {valData.map(entry => (<Cell key={entry.value} fill={activeValue ? (entry.value === activeValue ? '#C2410C' : '#C2410C40') : '#C2410C'} />))}

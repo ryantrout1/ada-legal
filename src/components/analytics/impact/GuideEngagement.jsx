@@ -37,20 +37,20 @@ export default function GuideEngagement() {
 
   if (loading) {
     return (
-      <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '40px', textAlign: 'center' }}>
+      <div style={{ backgroundColor: 'white', border: '1px solid var(--border)', borderRadius: '12px', padding: '40px', textAlign: 'center' }}>
         <div className="a11y-spinner" style={{ margin: '0 auto' }} />
       </div>
     );
   }
 
   return (
-    <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '20px' }}>
+    <div style={{ backgroundColor: 'white', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
         <div>
-          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: 0 }}>
             How are people using the Standards Guide?
           </h3>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '2px 0 0' }}>Guide Engagement</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', margin: '2px 0 0' }}>Guide Engagement</p>
         </div>
         <select
           aria-label="Date range for guide engagement"
@@ -59,8 +59,8 @@ export default function GuideEngagement() {
           style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
             padding: '8px 12px', borderRadius: '8px',
-            border: '1px solid var(--slate-300)', background: 'white',
-            color: 'var(--slate-600)', cursor: 'pointer', minHeight: '38px',
+            border: '1px solid var(--border)', background: 'white',
+            color: 'var(--body)', cursor: 'pointer', minHeight: '38px',
           }}
         >
           <option value="7">Last 7 days</option>

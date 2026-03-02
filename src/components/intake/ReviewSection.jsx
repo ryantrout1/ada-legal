@@ -6,7 +6,7 @@ export default function ReviewSection({ title, onEdit, children }) {
     <div style={{
       marginBottom: 'var(--space-xl)',
       paddingBottom: 'var(--space-xl)',
-      borderBottom: '1px solid var(--slate-200)'
+      borderBottom: '1px solid var(--border)'
     }}>
       <div style={{
         display: 'flex',
@@ -18,7 +18,7 @@ export default function ReviewSection({ title, onEdit, children }) {
           fontFamily: 'Fraunces, serif',
           fontSize: '1.125rem',
           fontWeight: 600,
-          color: 'var(--slate-900)',
+          color: 'var(--heading)',
           margin: 0
         }}>
           {title}
@@ -34,16 +34,16 @@ export default function ReviewSection({ title, onEdit, children }) {
             fontFamily: 'Manrope, sans-serif',
             fontSize: '0.8125rem',
             fontWeight: 600,
-            color: 'var(--terra-600)',
+            color: 'var(--section-label)',
             backgroundColor: 'transparent',
-            border: '1px solid var(--terra-600)',
+            border: '1px solid var(--section-label)',
             borderRadius: 'var(--radius-sm)',
             cursor: 'pointer',
             minHeight: '44px',
             transition: 'all 0.15s'
           }}
           onMouseEnter={e => {
-            e.currentTarget.style.backgroundColor = 'var(--terra-50)';
+            e.currentTarget.style.backgroundColor = 'var(--card-bg-tinted)';
           }}
           onMouseLeave={e => {
             e.currentTarget.style.backgroundColor = 'transparent';
@@ -73,14 +73,14 @@ export function ReviewItem({ label, value }) {
         fontFamily: 'Manrope, sans-serif',
         fontSize: '0.875rem',
         fontWeight: 600,
-        color: 'var(--slate-600)'
+        color: 'var(--body)'
       }}>
         {label}
       </dt>
       <dd style={{
         fontFamily: 'Manrope, sans-serif',
         fontSize: '0.9375rem',
-        color: 'var(--slate-800)',
+        color: 'var(--heading)',
         margin: 0,
         wordBreak: 'break-word'
       }}>

@@ -14,8 +14,8 @@ export default function ReporterFunnel({ events }) {
   const maxCount = Math.max(started, 1);
 
   return (
-    <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '20px' }}>
-      <h4 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 16px' }}>
+    <div style={{ backgroundColor: 'white', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px' }}>
+      <h4 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 16px' }}>
         Reporter Funnel
       </h4>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -28,7 +28,7 @@ export default function ReporterFunnel({ events }) {
               {convRate !== null && (
                 <div style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-                  color: 'var(--slate-500)', textAlign: 'center', marginBottom: '2px'
+                  color: 'var(--body-secondary)', textAlign: 'center', marginBottom: '2px'
                 }}>
                   ↓ {convRate}% conversion
                 </div>
@@ -49,7 +49,7 @@ export default function ReporterFunnel({ events }) {
                 </div>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                  fontWeight: 600, color: 'var(--slate-700)', whiteSpace: 'nowrap'
+                  fontWeight: 600, color: 'var(--body)', whiteSpace: 'nowrap'
                 }}>
                   {step.label}
                 </span>

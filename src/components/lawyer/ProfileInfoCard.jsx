@@ -4,16 +4,16 @@ import StateMultiSelect from './StateMultiSelect';
 
 const labelStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-  color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em',
+  color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em',
   margin: '0 0 4px'
 };
 const valueStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 600,
-  color: 'var(--slate-900)', margin: 0
+  color: 'var(--heading)', margin: 0
 };
 const inputStyle = {
   width: '100%', padding: '8px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-  color: 'var(--slate-800)', border: '2px solid var(--slate-200)', borderRadius: '8px',
+  color: 'var(--heading)', border: '2px solid var(--border)', borderRadius: '8px',
   outline: 'none', boxSizing: 'border-box', minHeight: '44px'
 };
 
@@ -44,19 +44,19 @@ export default function ProfileInfoCard({ profile, onSave }) {
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
       borderRadius: '12px', padding: '24px'
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+        <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: 0 }}>
           Attorney Information
         </h2>
         {!editing && (
           <button type="button" onClick={startEdit} style={{
             display: 'inline-flex', alignItems: 'center', gap: '6px',
             padding: '0 14px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            fontWeight: 600, color: 'var(--terra-600)', backgroundColor: 'var(--terra-50, #FFF7ED)',
-            border: '1px solid var(--terra-200, #FED7AA)', borderRadius: '8px', cursor: 'pointer', minHeight: '38px'
+            fontWeight: 600, color: 'var(--section-label)', backgroundColor: 'var(--card-bg-tinted)',
+            border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', minHeight: '38px'
           }}>
             <Pencil size={14} /> Edit Profile
           </button>
@@ -76,10 +76,10 @@ export default function ProfileInfoCard({ profile, onSave }) {
           <div>
             <p style={labelStyle}>Email</p>
             <div style={{ position: 'relative' }}>
-              <input style={{ ...inputStyle, backgroundColor: 'var(--slate-50)', color: 'var(--slate-500)', paddingRight: '36px' }} value={p.email} disabled />
-              <Lock size={14} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-500)' }} title="Email cannot be changed — contact support" />
+              <input style={{ ...inputStyle, backgroundColor: 'var(--page-bg-subtle)', color: 'var(--body-secondary)', paddingRight: '36px' }} value={p.email} disabled />
+              <Lock size={14} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--body-secondary)' }} title="Email cannot be changed — contact support" />
             </div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)', margin: '4px 0 0' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)', margin: '4px 0 0' }}>
               Email cannot be changed — contact support
             </p>
           </div>
@@ -100,7 +100,7 @@ export default function ProfileInfoCard({ profile, onSave }) {
               display: 'inline-flex', alignItems: 'center', gap: '6px',
               padding: '0 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
               fontWeight: 700, color: 'white',
-              backgroundColor: saving ? 'var(--slate-500)' : 'var(--terra-600)',
+              backgroundColor: saving ? 'var(--body-secondary)' : 'var(--section-label)',
               border: 'none', borderRadius: '10px', cursor: saving ? 'not-allowed' : 'pointer', minHeight: '44px'
             }}>
               <Save size={16} /> {saving ? 'Saving…' : 'Save Changes'}
@@ -108,7 +108,7 @@ export default function ProfileInfoCard({ profile, onSave }) {
             <button type="button" onClick={() => setEditing(false)} style={{
               background: 'none', border: 'none', cursor: 'pointer',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-              color: 'var(--slate-500)', padding: '8px'
+              color: 'var(--body-secondary)', padding: '8px'
             }}>Cancel</button>
           </div>
         </div>
@@ -125,7 +125,7 @@ export default function ProfileInfoCard({ profile, onSave }) {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <p style={{ ...labelStyle, margin: 0 }}>Email</p>
-              <Lock size={10} style={{ color: 'var(--slate-500)' }} />
+              <Lock size={10} style={{ color: 'var(--body-secondary)' }} />
             </div>
             <p style={{ ...valueStyle, marginTop: '4px' }}>{p.email}</p>
           </div>
@@ -140,7 +140,7 @@ export default function ProfileInfoCard({ profile, onSave }) {
                 <span key={s} style={{
                   display: 'inline-block', padding: '3px 10px', borderRadius: '6px',
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-                  color: 'var(--terra-600, #C2410C)', backgroundColor: 'var(--terra-100, #FEF1EC)'
+                  color: 'var(--accent)', backgroundColor: 'var(--card-bg-tinted)'
                 }}>{s}</span>
               ))}
               {(p.states_of_practice || []).length === 0 && <p style={valueStyle}>—</p>}

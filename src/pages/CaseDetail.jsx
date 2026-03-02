@@ -9,14 +9,14 @@ import CaseTimeline from '../components/portal/CaseTimeline';
 import CaseHelpCard from '../components/portal/CaseHelpCard';
 
 const STATUS_BADGE_CONFIG = {
-  submitted: { label: 'Submitted', bg: '#475569' },
+  submitted: { label: 'Submitted', bg: 'var(--body-secondary)' },
   under_review: { label: 'Under Review', bg: '#1D4ED8' },
   approved: { label: 'Matched & Waiting', bg: '#15803D' },
   available: { label: 'Matched & Waiting', bg: '#15803D' },
-  assigned: { label: 'Attorney Assigned', bg: 'var(--terra-600, #C2410C)' },
+  assigned: { label: 'Attorney Assigned', bg: 'var(--accent)' },
   in_progress: { label: 'Attorney Working Your Case', bg: '#15803D' },
-  closed: { label: 'Closed', bg: 'var(--slate-600)' },
-  expired: { label: 'Expired', bg: '#475569' },
+  closed: { label: 'Closed', bg: 'var(--body)' },
+  expired: { label: 'Expired', bg: 'var(--body-secondary)' },
   rejected: { label: 'Not Approved', bg: '#B91C1C' }
 };
 
@@ -62,7 +62,7 @@ export default function CaseDetail() {
         minHeight: 'calc(100vh - 200px)', gap: '1rem'
       }}>
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading case…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading case…</p>
       </div>
     );
   }
@@ -73,28 +73,28 @@ export default function CaseDetail() {
   const closedEvent = events.find(e => e.event_type === 'closed');
 
   return (
-    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: '1.5rem' }}>
+    <div style={{ backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)', padding: '1.5rem' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
         {/* Breadcrumb */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
           <Link to={createPageUrl('MyCases')} style={{
             display: 'inline-flex', alignItems: 'center', gap: '6px',
-            color: 'var(--terra-600)', fontWeight: 600, textDecoration: 'none'
+            color: 'var(--section-label)', fontWeight: 600, textDecoration: 'none'
           }}>
             <ArrowLeft size={16} /> My Cases
           </Link>
-          <span style={{ color: 'var(--slate-500)' }}>/</span>
-          <span style={{ color: '#475569' }}>Case #{c.id?.slice(0, 8)}</span>
+          <span style={{ color: 'var(--body-secondary)' }}>/</span>
+          <span style={{ color: 'var(--body-secondary)' }}>Case #{c.id?.slice(0, 8)}</span>
         </div>
 
         {/* Page Header */}
         <div style={{
-          backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+          backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
           borderRadius: '12px', padding: '24px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px'
         }}>
-          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 600, color: 'var(--heading)', margin: 0 }}>
             {c.business_name}
           </h1>
           <span role="status" aria-label={`Case status: ${badge.label}`} style={{
@@ -153,10 +153,10 @@ export default function CaseDetail() {
 
         {/* Timeline */}
         <div style={{
-          backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+          backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
           borderRadius: '12px', padding: '24px'
         }}>
-          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 16px' }}>
+          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 16px' }}>
             Timeline
           </h2>
           <CaseTimeline events={events} />

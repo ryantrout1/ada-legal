@@ -72,7 +72,7 @@ export default function MyCaseCard({ caseData }) {
     >
       <div
         style={{
-          backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+          backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
           borderRadius: '12px', overflow: 'hidden',
           display: 'flex', cursor: 'pointer',
           transition: 'box-shadow 0.15s, transform 0.15s'
@@ -98,7 +98,7 @@ export default function MyCaseCard({ caseData }) {
             }
             <p style={{
               fontFamily: 'Fraunces, serif', fontSize: '1.05rem', fontWeight: 600,
-              color: 'var(--slate-900)', margin: 0, flex: 1, minWidth: 0,
+              color: 'var(--heading)', margin: 0, flex: 1, minWidth: 0,
               overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
             }}>
               {c.business_name}
@@ -123,7 +123,7 @@ export default function MyCaseCard({ caseData }) {
               <span style={{
                 display: 'inline-block', padding: '1px 8px', borderRadius: '6px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
-                color: '#475569', backgroundColor: 'var(--slate-100)'
+                color: '#475569', backgroundColor: 'var(--border-lighter)'
               }}>{pill}</span>
             )}
           </div>
@@ -143,7 +143,7 @@ export default function MyCaseCard({ caseData }) {
 
         {/* Arrow */}
         <div style={{ display: 'flex', alignItems: 'center', paddingRight: '16px', flexShrink: 0 }}>
-          <ChevronRight size={18} style={{ color: 'var(--slate-500)' }} />
+          <ChevronRight size={18} style={{ color: 'var(--body-secondary)' }} />
         </div>
       </div>
     </Link>

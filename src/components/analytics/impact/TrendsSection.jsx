@@ -71,18 +71,18 @@ export default function TrendsSection({ cases }) {
   }, [cases]);
 
   return (
-    <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '20px' }}>
+    <div style={{ backgroundColor: 'white', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
         <div>
-          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: 0 }}>
             How is reporting trending?
           </h3>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '2px 0 0' }}>Patterns & Trends</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', margin: '2px 0 0' }}>Patterns & Trends</p>
         </div>
         <button onClick={() => setShowTable(!showTable)} style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', padding: '6px 12px', minHeight: '44px',
-          border: '1px solid var(--slate-300)', borderRadius: '6px', backgroundColor: 'white',
-          cursor: 'pointer', color: 'var(--slate-600)',
+          border: '1px solid var(--border)', borderRadius: '6px', backgroundColor: 'white',
+          cursor: 'pointer', color: 'var(--body)',
         }}>
           {showTable ? 'Show Chart' : 'Show Data Table'}
         </button>
@@ -92,15 +92,15 @@ export default function TrendsSection({ cases }) {
         <div style={{ overflow: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead><tr>
-              <th style={{ textAlign: 'left', padding: '6px 8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-500)', borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase' }}>Month</th>
-              <th style={{ textAlign: 'center', padding: '6px 8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-500)', borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase' }}>Physical</th>
-              <th style={{ textAlign: 'center', padding: '6px 8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-500)', borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase' }}>Digital</th>
+              <th style={{ textAlign: 'left', padding: '6px 8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--body-secondary)', borderBottom: '2px solid var(--border)', textTransform: 'uppercase' }}>Month</th>
+              <th style={{ textAlign: 'center', padding: '6px 8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--body-secondary)', borderBottom: '2px solid var(--border)', textTransform: 'uppercase' }}>Physical</th>
+              <th style={{ textAlign: 'center', padding: '6px 8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--body-secondary)', borderBottom: '2px solid var(--border)', textTransform: 'uppercase' }}>Digital</th>
             </tr></thead>
             <tbody>{chartData.map(d => (
               <tr key={d.month}>
-                <td style={{ padding: '6px 8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)' }}>{d.month}</td>
-                <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)' }}>{d.physical}</td>
-                <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)' }}>{d.digital}</td>
+                <td style={{ padding: '6px 8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--border-lighter)' }}>{d.month}</td>
+                <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--border-lighter)' }}>{d.physical}</td>
+                <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--border-lighter)' }}>{d.digital}</td>
               </tr>
             ))}</tbody>
           </table>
@@ -116,9 +116,9 @@ export default function TrendsSection({ cases }) {
           <div aria-hidden="true" style={{ width: '100%', height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ left: 0, right: 10, top: 5, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" />
-                <XAxis dataKey="month" tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
-                <YAxis allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis dataKey="month" tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--body-secondary)' }} />
+                <YAxis allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--body-secondary)' }} />
                 <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
                 <Legend wrapperStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
                 <Line type="monotone" dataKey="physical" stroke="#C2410C" strokeWidth={2} name="Physical" dot={{ r: 3 }} />
@@ -132,26 +132,26 @@ export default function TrendsSection({ cases }) {
       {/* Callouts */}
       <div style={{ display: 'flex', gap: '12px', marginTop: '16px', flexWrap: 'wrap' }}>
         {callouts.topBizType && (
-          <div style={{ flex: '1 1 200px', padding: '12px', backgroundColor: 'var(--slate-50)', borderRadius: '8px' }}>
-            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Most Reported Business Type</div>
-            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', marginTop: '2px' }}>
-              {callouts.topBizType.name} <span style={{ fontWeight: 400, color: 'var(--slate-500)' }}>({callouts.topBizType.count})</span>
+          <div style={{ flex: '1 1 200px', padding: '12px', backgroundColor: 'var(--page-bg-subtle)', borderRadius: '8px' }}>
+            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Most Reported Business Type</div>
+            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', marginTop: '2px' }}>
+              {callouts.topBizType.name} <span style={{ fontWeight: 400, color: 'var(--body-secondary)' }}>({callouts.topBizType.count})</span>
             </div>
           </div>
         )}
         {callouts.fastestGrowing && (
-          <div style={{ flex: '1 1 200px', padding: '12px', backgroundColor: 'var(--slate-50)', borderRadius: '8px' }}>
-            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fastest Growing Category</div>
-            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', marginTop: '2px', textTransform: 'capitalize' }}>
+          <div style={{ flex: '1 1 200px', padding: '12px', backgroundColor: 'var(--page-bg-subtle)', borderRadius: '8px' }}>
+            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fastest Growing Category</div>
+            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', marginTop: '2px', textTransform: 'capitalize' }}>
               {callouts.fastestGrowing.cat.replace(/_/g, ' ')} <span style={{ fontWeight: 400, color: '#15803D' }}>↑{callouts.fastestGrowing.growth}%</span>
             </div>
           </div>
         )}
         {callouts.topBusiness && (
-          <div style={{ flex: '1 1 200px', padding: '12px', backgroundColor: 'var(--slate-50)', borderRadius: '8px' }}>
-            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Most Reported Business</div>
-            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', marginTop: '2px' }}>
-              {callouts.topBusiness.name} <span style={{ fontWeight: 400, color: 'var(--slate-500)' }}>({callouts.topBusiness.count})</span>
+          <div style={{ flex: '1 1 200px', padding: '12px', backgroundColor: 'var(--page-bg-subtle)', borderRadius: '8px' }}>
+            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Most Reported Business</div>
+            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', marginTop: '2px' }}>
+              {callouts.topBusiness.name} <span style={{ fontWeight: 400, color: 'var(--body-secondary)' }}>({callouts.topBusiness.count})</span>
             </div>
           </div>
         )}

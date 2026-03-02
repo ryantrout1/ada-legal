@@ -38,12 +38,12 @@ export default function MatchRateByViolation({ cases, filters, onFilterChange })
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
       borderRadius: 'var(--radius-md)', padding: '12px'
     }}>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-        color: 'var(--slate-800)', marginBottom: '0.5rem', marginTop: 0
+        color: 'var(--heading)', marginBottom: '0.5rem', marginTop: 0
       }}>Match Rate by Violation Type</p>
       {data.map(d => {
         const isActive = d.type === activeType;
@@ -56,12 +56,12 @@ export default function MatchRateByViolation({ cases, filters, onFilterChange })
             style={{
               display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem',
               cursor: 'pointer', opacity: faded ? 0.45 : 1,
-              borderLeft: isActive ? '3px solid var(--terra-600)' : '3px solid transparent',
+              borderLeft: isActive ? '3px solid var(--section-label)' : '3px solid transparent',
               paddingLeft: '0.25rem', transition: 'opacity 0.15s'
             }}
           >
             <span style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-700)',
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body)',
               minWidth: '110px', textAlign: 'right', flexShrink: 0
             }}>{d.label}</span>
             <div style={{ flex: 1, height: '14px', display: 'flex', borderRadius: '3px', overflow: 'hidden', backgroundColor: '#F1F5F9' }}>
@@ -77,9 +77,9 @@ export default function MatchRateByViolation({ cases, filters, onFilterChange })
             </div>
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-              color: 'var(--slate-800)', minWidth: '70px', flexShrink: 0
+              color: 'var(--heading)', minWidth: '70px', flexShrink: 0
             }}>
-              {d.total} <span style={{ fontWeight: 400, color: 'var(--slate-500)' }}>({matchRate}%)</span>
+              {d.total} <span style={{ fontWeight: 400, color: 'var(--body-secondary)' }}>({matchRate}%)</span>
             </span>
           </div>
         );

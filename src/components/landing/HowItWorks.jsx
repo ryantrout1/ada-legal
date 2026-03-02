@@ -26,14 +26,14 @@ export default function HowItWorks() {
     }}>
       <h2 style={{
         fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)',
-        fontWeight: 700, textAlign: 'center', color: 'var(--slate-900)',
+        fontWeight: 700, textAlign: 'center', color: 'var(--heading)',
         marginBottom: '0.75rem', marginTop: 0
       }}>
         How It Works
       </h2>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-        color: 'var(--slate-600)', textAlign: 'center',
+        color: 'var(--body)', textAlign: 'center',
         maxWidth: '520px', margin: '0 auto clamp(2rem, 5vw, 3.5rem)'
       }}>
         Three simple steps from report to resolution.
@@ -48,7 +48,7 @@ export default function HowItWorks() {
           <div key={s.num} style={{ textAlign: 'center' }}>
             <div style={{
               width: '48px', height: '48px', borderRadius: '50%',
-              backgroundColor: 'var(--slate-900)', color: 'white',
+              backgroundColor: 'var(--heading)', color: 'white',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700,
               margin: '0 auto 1.25rem'
@@ -57,13 +57,13 @@ export default function HowItWorks() {
             </div>
             <h3 style={{
               fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600,
-              color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
+              color: 'var(--heading)', marginBottom: '0.5rem', marginTop: 0
             }}>
               {s.title}
             </h3>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-              color: 'var(--slate-600)', lineHeight: 1.6, margin: 0
+              color: 'var(--body)', lineHeight: 1.6, margin: 0
             }}>
               {s.desc}
             </p>

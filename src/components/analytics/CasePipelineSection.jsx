@@ -25,13 +25,13 @@ export default function CasePipelineSection({ cases }) {
     <div>
       <h2 style={{
         fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
-        color: 'var(--slate-900)', marginBottom: '0.5rem', marginTop: 0
+        color: 'var(--heading)', marginBottom: '0.5rem', marginTop: 0
       }}>Case Pipeline</h2>
       <div style={{ display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap' }}>
         <StatCard label="Submitted This Month" count={submittedThisMonth} bgColor="#DBEAFE" textColor="#1D4ED8" icon={FileText} />
         <StatCard label="Approved This Month" count={approvedThisMonth} bgColor="#DCFCE7" textColor="#15803D" icon={CheckCircle} />
         <StatCard label="Assigned This Month" count={assignedThisMonth} bgColor="#F3E8FF" textColor="#7C3AED" icon={UserCheck} />
-        <StatCard label="Avg Review Time" count={avgReviewHrs} bgColor="var(--surface)" borderColor="var(--slate-200)" icon={Clock} />
+        <StatCard label="Avg Review Time" count={avgReviewHrs} bgColor="var(--surface)" borderColor="var(--border)" icon={Clock} />
       </div>
     </div>
   );

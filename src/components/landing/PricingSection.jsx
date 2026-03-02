@@ -20,14 +20,14 @@ export default function PricingSection() {
     }}>
       <h2 id="pricing-heading" style={{
         fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)',
-        fontWeight: 700, textAlign: 'center', color: 'var(--slate-900)',
+        fontWeight: 700, textAlign: 'center', color: 'var(--heading)',
         marginBottom: '0.75rem', marginTop: 0
       }}>
         Simple, Transparent Pricing
       </h2>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-        color: 'var(--slate-600)', textAlign: 'center',
+        color: 'var(--body)', textAlign: 'center',
         maxWidth: '400px', margin: '0 auto clamp(2rem, 5vw, 2.5rem)'
       }}>
         One plan, everything included.
@@ -35,14 +35,14 @@ export default function PricingSection() {
 
       <div style={{
         backgroundColor: 'var(--surface)',
-        border: '2px solid var(--slate-900)',
+        border: '2px solid var(--heading)',
         borderRadius: '16px',
         padding: '2.5rem 2rem',
         textAlign: 'center'
       }}>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-          color: '#9A3412', textTransform: 'uppercase', letterSpacing: '0.1em',
+          color: 'var(--section-label)', textTransform: 'uppercase', letterSpacing: '0.1em',
           marginBottom: '0.5rem', marginTop: 0
         }}>
           Platform Access
@@ -57,7 +57,7 @@ export default function PricingSection() {
               <Check size={18} style={{ color: '#15803D', flexShrink: 0 }} aria-hidden="true" />
               <span style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                color: 'var(--slate-700)'
+                color: 'var(--body)'
               }}>{f}</span>
             </div>
           ))}
@@ -67,15 +67,15 @@ export default function PricingSection() {
           to={createPageUrl('LawyerRegister')}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.625rem',
-            background: 'var(--terra-600)', color: 'white',
+            background: 'var(--section-label)', color: 'var(--btn-text)',
             padding: '0.875rem 2.5rem', borderRadius: 'var(--radius-md)',
             fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
             textDecoration: 'none', minHeight: '48px',
             transition: 'background 0.15s',
             width: '100%', justifyContent: 'center', boxSizing: 'border-box'
           }}
-          onMouseEnter={e => e.currentTarget.style.background = 'var(--terra-700)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'var(--terra-600)'}
+          onMouseEnter={e => e.currentTarget.style.background = 'var(--section-label)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'var(--section-label)'}
         >
           Apply Now <ArrowRight size={18} />
         </Link>

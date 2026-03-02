@@ -11,16 +11,16 @@ function formatDate(d) {
 const statusColors = {
   assigned: { bg: '#FEF3C7', text: '#92400E' },
   in_progress: { bg: '#DCFCE7', text: '#15803D' },
-  closed: { bg: '#F1F5F9', text: '#475569' }
+  closed: { bg: 'var(--page-bg-subtle)', text: 'var(--body-secondary)' }
 };
 
 const resolutionBadge = {
   engaged: { label: 'Engaged', bg: '#DCFCE7', color: '#15803D' },
   referred_out: { label: 'Referred Out', bg: '#DBEAFE', color: '#1E3A8A' },
-  not_viable: { label: 'Not Viable', bg: 'var(--slate-100)', color: 'var(--slate-600)' },
+  not_viable: { label: 'Not Viable', bg: 'var(--border-lighter)', color: 'var(--body)' },
   claimant_unresponsive: { label: 'Reporter Unresponsive', bg: '#FEF3C7', color: '#B45309' },
   claimant_declined: { label: 'Reporter Declined', bg: '#FEF3C7', color: '#B45309' },
-  admin_closed: { label: 'Admin Closed', bg: 'var(--slate-100)', color: 'var(--slate-600)' }
+  admin_closed: { label: 'Admin Closed', bg: 'var(--border-lighter)', color: 'var(--body)' }
 };
 
 export default function PerformanceSection({ cases, contactLogs, lawyerProfile }) {
@@ -91,8 +91,8 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
   const th = (label, field) => (
     <th scope="col" onClick={() => toggleSort(field)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSort(field); }}} tabIndex="0" role="button" style={{
       fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-      color: 'var(--slate-500)', textAlign: 'left', padding: '8px 10px',
-      borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase',
+      color: 'var(--body-secondary)', textAlign: 'left', padding: '8px 10px',
+      borderBottom: '2px solid var(--border)', textTransform: 'uppercase',
       letterSpacing: '0.04em', whiteSpace: 'nowrap', cursor: 'pointer', userSelect: 'none'
     }}>
       {label} {sortField === field ? (sortDir === -1 ? '↓' : '↑') : ''}
@@ -100,14 +100,14 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
   );
 
   const tdStyle = {
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)',
-    padding: '8px 10px', borderBottom: '1px solid var(--slate-100)', whiteSpace: 'nowrap'
+    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)',
+    padding: '8px 10px', borderBottom: '1px solid var(--border-lighter)', whiteSpace: 'nowrap'
   };
 
   const barSegments = [
     { key: 'engaged', label: 'Engaged', color: '#15803D', bg: '#DCFCE7' },
     { key: 'referred_out', label: 'Referred', color: '#1E3A8A', bg: '#DBEAFE' },
-    { key: 'not_viable', label: 'Not Viable', color: 'var(--slate-600)', bg: 'var(--slate-100)' },
+    { key: 'not_viable', label: 'Not Viable', color: 'var(--body)', bg: 'var(--border-lighter)' },
     { key: 'claimant_unresponsive', label: 'Unresponsive', color: '#B45309', bg: '#FEF3C7' },
     { key: 'claimant_declined', label: 'Declined', color: '#B45309', bg: '#FEF3C7' },
   ];
@@ -116,14 +116,14 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Summary Bar */}
       <div style={{
-        backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+        backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
         borderRadius: '12px', padding: '24px'
       }}>
-        <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 16px' }}>
+        <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 16px' }}>
           My Performance
         </h2>
         <div style={{
-          backgroundColor: 'var(--slate-900)', borderRadius: '12px', padding: '16px 24px',
+          backgroundColor: 'var(--heading)', borderRadius: '12px', padding: '16px 24px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px'
         }}>
           {[
@@ -148,33 +148,33 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
       {/* Detail Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
         {/* Response Performance */}
-        <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '24px' }}>
-          <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 16px' }}>
+        <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '24px' }}>
+          <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 16px' }}>
             Response Performance
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)' }}>Avg time to first contact</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)' }}>{avgHrs !== null ? `${avgHrs}h` : '—'}</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)' }}>Avg time to first contact</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)' }}>{avgHrs !== null ? `${avgHrs}h` : '—'}</span>
             </div>
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)' }}>On-time contact rate</span>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: onTimeRate === null ? 'var(--slate-900)' : onTimeRate >= 80 ? '#15803D' : onTimeRate >= 50 ? '#B45309' : '#B91C1C' }}>
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)' }}>On-time contact rate</span>
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: onTimeRate === null ? 'var(--heading)' : onTimeRate >= 80 ? '#15803D' : onTimeRate >= 50 ? '#B45309' : '#B91C1C' }}>
                   {onTimeRate !== null ? `${onTimeRate}%` : '—'}
                 </span>
               </div>
               {onTimeRate !== null && (
-                <div style={{ height: '6px', borderRadius: '3px', backgroundColor: 'var(--slate-100)' }}>
+                <div style={{ height: '6px', borderRadius: '3px', backgroundColor: 'var(--border-lighter)' }}>
                   <div style={{ height: '100%', borderRadius: '3px', width: `${onTimeRate}%`, backgroundColor: onTimeRate >= 80 ? '#15803D' : onTimeRate >= 50 ? '#D97706' : '#B91C1C', transition: 'width 0.5s' }} />
                 </div>
               )}
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)' }}>Fastest response</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)' }}>{fastestHrs !== null ? `${fastestHrs}h` : '—'}</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)' }}>Fastest response</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)' }}>{fastestHrs !== null ? `${fastestHrs}h` : '—'}</span>
             </div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)', margin: '4px 0 0', fontStyle: 'italic' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)', margin: '4px 0 0', fontStyle: 'italic' }}>
               Your goal: contact within 24 hours of assignment
             </p>
             {onTimeRate !== null && onTimeRate < 50 && (
@@ -188,19 +188,19 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
         </div>
 
         {/* Case Outcomes */}
-        <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '24px' }}>
-          <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 16px' }}>
+        <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '24px' }}>
+          <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 16px' }}>
             Case Outcomes
           </h3>
           {resolvedCount === 0 ? (
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)', lineHeight: 1.6, margin: 0 }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)', lineHeight: 1.6, margin: 0 }}>
               No resolved cases yet. Your outcomes will appear here as you close cases.
             </p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)' }}>Total resolved</span>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)' }}>{resolvedCount}</span>
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)' }}>Total resolved</span>
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)' }}>{resolvedCount}</span>
               </div>
               {barSegments.map(seg => {
                 const count = resolutionCounts[seg.key] || 0;
@@ -210,16 +210,16 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
                   <div key={seg.key}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
                       <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: seg.color, fontWeight: 600 }}>{seg.label}</span>
-                      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>{count} ({pct}%)</span>
+                      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>{count} ({pct}%)</span>
                     </div>
-                    <div style={{ height: '6px', borderRadius: '3px', backgroundColor: 'var(--slate-100)' }}>
+                    <div style={{ height: '6px', borderRadius: '3px', backgroundColor: 'var(--border-lighter)' }}>
                       <div style={{ height: '100%', borderRadius: '3px', width: `${pct}%`, backgroundColor: seg.color, transition: 'width 0.5s' }} />
                     </div>
                   </div>
                 );
               })}
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)' }}>Engagement rate</span>
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)' }}>Engagement rate</span>
                 <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: '#15803D' }}>{engagementRate}%</span>
               </div>
             </div>
@@ -228,48 +228,48 @@ export default function PerformanceSection({ cases, contactLogs, lawyerProfile }
       </div>
 
       {/* Case History Table */}
-      <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '24px' }}>
-        <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 12px' }}>
+      <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '24px' }}>
+        <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>
           Case History
         </h3>
         {sortedCases.length === 0 ? (
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-500)', margin: 0 }}>
-            No cases yet. <Link to={createPageUrl('Marketplace')} style={{ color: 'var(--terra-600)', fontWeight: 600, textDecoration: 'none' }}>Browse available cases to get started.</Link>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: 0 }}>
+            No cases yet. <Link to={createPageUrl('Marketplace')} style={{ color: 'var(--section-label)', fontWeight: 600, textDecoration: 'none' }}>Browse available cases to get started.</Link>
           </p>
         ) : (
-          <div style={{ overflow: 'auto', borderRadius: '8px', border: '1px solid var(--slate-200)' }}>
+          <div style={{ overflow: 'auto', borderRadius: '8px', border: '1px solid var(--border)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'white' }}>
               <caption className="sr-only">Case history</caption>
               <thead>
-                <tr style={{ backgroundColor: 'var(--slate-50)' }}>
+                <tr style={{ backgroundColor: 'var(--page-bg-subtle)' }}>
                   {th('Business', 'business_name')}
                   {th('City, State', 'city')}
-                  <th scope="col" style={{ ...tdStyle, fontWeight: 700, fontSize: '0.6875rem', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em', borderBottom: '2px solid var(--slate-200)' }}>Type</th>
+                  <th scope="col" style={{ ...tdStyle, fontWeight: 700, fontSize: '0.6875rem', color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', borderBottom: '2px solid var(--border)' }}>Type</th>
                   {th('Assigned', 'assigned_at')}
                   {th('Status', 'status')}
-                  <th scope="col" style={{ ...tdStyle, fontWeight: 700, fontSize: '0.6875rem', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em', borderBottom: '2px solid var(--slate-200)' }}>Resolution</th>
+                  <th scope="col" style={{ ...tdStyle, fontWeight: 700, fontSize: '0.6875rem', color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', borderBottom: '2px solid var(--border)' }}>Resolution</th>
                 </tr>
               </thead>
               <tbody>
                 {sortedCases.map(c => {
-                  const sc = statusColors[c.status] || { bg: '#F1F5F9', text: '#475569' };
+                  const sc = statusColors[c.status] || { bg: 'var(--page-bg-subtle)', text: 'var(--body-secondary)' };
                   const isPhysical = c.violation_type === 'physical_space';
-                  const rb = c.status === 'closed' ? (resolutionBadge[c.resolution_type] || { label: '—', bg: 'var(--slate-100)', color: 'var(--slate-600)' }) : null;
+                  const rb = c.status === 'closed' ? (resolutionBadge[c.resolution_type] || { label: '—', bg: 'var(--border-lighter)', color: 'var(--body)' }) : null;
                   return (
                     <tr key={c.id} style={{ cursor: 'pointer', transition: 'background-color 0.1s' }}
                       onClick={() => { window.location.href = createPageUrl('LawyerDashboard') + `?highlight=${c.id}`; }}
-                      onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
+                      onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'; }}
                       onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                     >
-                      <td style={{ ...tdStyle, fontWeight: 600, color: 'var(--slate-800)' }}>
+                      <td style={{ ...tdStyle, fontWeight: 600, color: 'var(--heading)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                           {c.business_name}
-                          <ArrowUpRight size={12} style={{ color: 'var(--slate-500)' }} />
+                          <ArrowUpRight size={12} style={{ color: 'var(--body-secondary)' }} />
                         </div>
                       </td>
                       <td style={tdStyle}>{[c.city, c.state].filter(Boolean).join(', ') || '—'}</td>
                       <td style={tdStyle}>
-                        {isPhysical ? <Building2 size={14} style={{ color: 'var(--terra-600, #C2410C)' }} /> : <Globe size={14} style={{ color: '#1E3A8A' }} />}
+                        {isPhysical ? <Building2 size={14} style={{ color: 'var(--accent)' }} /> : <Globe size={14} style={{ color: '#1E3A8A' }} />}
                       </td>
                       <td style={tdStyle}>{formatDate(c.assigned_at)}</td>
                       <td style={tdStyle}>

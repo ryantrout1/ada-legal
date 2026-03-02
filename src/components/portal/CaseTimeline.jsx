@@ -3,13 +3,13 @@ import React from 'react';
 const DOT_COLORS = {
   submitted: '#475569',
   reviewed: '#1D4ED8',
-  approved: '#15803D',
+  approved: 'var(--accent-success)',
   rejected: '#B91C1C',
-  available: '#15803D',
-  assigned: 'var(--terra-600, #C2410C)',
-  contact_logged: '#15803D',
+  available: 'var(--accent-success)',
+  assigned: 'var(--accent)',
+  contact_logged: 'var(--accent-success)',
   reclaimed: '#92400E',
-  closed: 'var(--slate-600)'
+  closed: 'var(--body)'
 };
 
 function formatDateTime(d) {
@@ -36,10 +36,10 @@ export default function CaseTimeline({ events }) {
     <div role="list" aria-label="Case timeline" style={{ position: 'relative', paddingLeft: '24px' }}>
       <div style={{
         position: 'absolute', left: '7px', top: '8px', bottom: '8px',
-        width: '2px', backgroundColor: 'var(--slate-200)'
+        width: '2px', backgroundColor: 'var(--border)'
       }} />
       {sorted.map((ev, i) => {
-        const color = DOT_COLORS[ev.event_type] || 'var(--slate-500)';
+        const color = DOT_COLORS[ev.event_type] || 'var(--body-secondary)';
         return (
           <div role="listitem" key={ev.id || i} style={{
             position: 'relative', marginBottom: i < sorted.length - 1 ? '12px' : 0
@@ -50,7 +50,7 @@ export default function CaseTimeline({ events }) {
               backgroundColor: color
             }} />
             <div style={{
-              backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '12px 14px'
+              backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '12px 14px'
             }}>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
@@ -60,7 +60,7 @@ export default function CaseTimeline({ events }) {
               </p>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                color: 'var(--slate-800)', margin: 0, lineHeight: 1.5
+                color: 'var(--heading)', margin: 0, lineHeight: 1.5
               }}>
                 {ev.event_description}
               </p>

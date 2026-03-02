@@ -14,9 +14,9 @@ const inputStyle = {
   padding: '0.625rem 0.75rem',
   fontFamily: 'Manrope, sans-serif',
   fontSize: '1rem',
-  color: 'var(--slate-800)',
+  color: 'var(--heading)',
   backgroundColor: 'var(--surface)',
-  border: '2px solid var(--slate-200)',
+  border: '2px solid var(--border)',
   borderRadius: 'var(--radius-md)',
   outline: 'none',
   transition: 'border-color 0.15s, box-shadow 0.15s',
@@ -29,7 +29,7 @@ const focusHandler = (e) => {
 };
 
 const blurHandler = (e) => {
-  e.target.style.borderColor = 'var(--slate-200)';
+  e.target.style.borderColor = 'var(--border)';
   e.target.style.boxShadow = 'none';
 };
 
@@ -42,7 +42,7 @@ export default function IncidentStep({ data, onChange, errors }) {
       <p style={{
         fontFamily: 'Manrope, sans-serif',
         fontSize: '1.0625rem',
-        color: 'var(--slate-600)',
+        color: 'var(--body)',
         marginBottom: 'var(--space-xl)',
         lineHeight: 1.6
       }}>
@@ -98,13 +98,13 @@ export default function IncidentStep({ data, onChange, errors }) {
                     gap: '0.5rem',
                     padding: '0.625rem 1rem',
                     backgroundColor: isSelected ? '#FFF8F5' : 'var(--surface)',
-                    border: `2px solid ${isSelected ? '#C2410C' : 'var(--slate-200)'}`,
+                    border: `2px solid ${isSelected ? '#C2410C' : 'var(--border)'}`,
                     borderRadius: 'var(--radius-md)',
                     cursor: 'pointer',
                     transition: 'all 0.15s',
                     fontFamily: 'Manrope, sans-serif',
                     fontSize: '0.9375rem',
-                    color: 'var(--slate-800)',
+                    color: 'var(--heading)',
                     minHeight: '44px'
                   }}
                 >
@@ -149,7 +149,7 @@ export default function IncidentStep({ data, onChange, errors }) {
           style={{
             fontFamily: 'Manrope, sans-serif',
             fontSize: '0.8125rem',
-            color: charCount >= 50 ? 'var(--success-600)' : 'var(--slate-500)',
+            color: charCount >= 50 ? 'var(--success-600)' : 'var(--body-secondary)',
             margin: 'var(--space-xs) 0 0 0',
             lineHeight: 1.4
           }}

@@ -48,9 +48,9 @@ const inputStyle = {
   padding: '0.625rem 0.75rem',
   fontFamily: 'Manrope, sans-serif',
   fontSize: '1rem',
-  color: 'var(--slate-800)',
+  color: 'var(--heading)',
   backgroundColor: 'var(--surface)',
-  border: '2px solid var(--slate-200)',
+  border: '2px solid var(--border)',
   borderRadius: 'var(--radius-md)',
   outline: 'none',
   transition: 'border-color 0.15s, box-shadow 0.15s',
@@ -63,7 +63,7 @@ const focusHandler = (e) => {
 };
 
 const blurHandler = (e) => {
-  e.target.style.borderColor = 'var(--slate-200)';
+  e.target.style.borderColor = 'var(--border)';
   e.target.style.boxShadow = 'none';
 };
 
@@ -75,7 +75,7 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
       <p style={{
         fontFamily: 'Manrope, sans-serif',
         fontSize: '1.0625rem',
-        color: 'var(--slate-600)',
+        color: 'var(--body)',
         marginBottom: 'var(--space-xl)',
         lineHeight: 1.6
       }}>

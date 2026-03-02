@@ -9,16 +9,16 @@ export default function CaseExpandedView({ caseData, contactLogs, notes, urgent,
   const logLabel = contactLogs.length > 0 ? 'Log Follow-Up' : 'Log Contact';
 
   return (
-    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', borderTop: '1px solid var(--slate-100)' }}>
+    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', borderTop: '1px solid var(--border-lighter)' }}>
       <ClaimantContactCard caseData={c} urgent={urgent} />
       <CaseSummaryGrid caseData={c} />
 
       {/* Narrative */}
       <div style={{
-        borderLeft: '3px solid var(--terra-600, #C2410C)',
+        borderLeft: '3px solid var(--accent)',
         backgroundColor: '#FFF8F5', borderRadius: '0 10px 10px 0', padding: '16px'
       }}>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-900)', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap' }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--heading)', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap' }}>
           {c.narrative || '—'}
         </p>
       </div>
@@ -35,18 +35,18 @@ export default function CaseExpandedView({ caseData, contactLogs, notes, urgent,
           <button type="button" onClick={() => onLogContact(c)} style={{
             display: 'inline-flex', alignItems: 'center', gap: '6px',
             padding: '0 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-            fontWeight: 700, color: 'white', backgroundColor: 'var(--terra-600)',
+            fontWeight: 700, color: 'white', backgroundColor: 'var(--section-label)',
             border: 'none', borderRadius: '10px', cursor: 'pointer', minHeight: '44px',
             transition: 'background-color 0.15s'
           }}
-            onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--terra-700)'; }}
-            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--terra-600)'; }}
+            onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--section-label)'; }}
+            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--section-label)'; }}
           >{logLabel}</button>
           <button type="button" onClick={() => onResolve(c)} style={{
             display: 'inline-flex', alignItems: 'center', gap: '6px',
             padding: '0 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-            fontWeight: 700, color: 'var(--slate-600)', backgroundColor: 'transparent',
-            border: '1px solid var(--slate-300)', borderRadius: '10px', cursor: 'pointer', minHeight: '44px'
+            fontWeight: 700, color: 'var(--body)', backgroundColor: 'transparent',
+            border: '1px solid var(--border)', borderRadius: '10px', cursor: 'pointer', minHeight: '44px'
           }}>Resolve Case</button>
         </div>
       )}

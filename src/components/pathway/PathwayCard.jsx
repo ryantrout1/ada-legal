@@ -22,29 +22,29 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
         }
       }}
       style={{
-        backgroundColor: isSelected ? '#FFF8F5' : 'var(--surface)',
-        border: isSelected ? '2px solid #C2410C' : '1px solid var(--slate-200)',
+        backgroundColor: isSelected ? 'var(--card-bg-tinted)' : 'var(--surface)',
+        border: isSelected ? '2px solid var(--accent)' : '1px solid var(--border)',
         borderRadius: '16px',
         padding: '20px 24px',
         cursor: 'pointer',
         transition: 'all 0.2s ease',
         outline: 'none',
         boxShadow: isSelected
-          ? '0 0 0 3px var(--terra-100)'
+          ? '0 0 0 3px var(--card-bg-tinted)'
           : '0 1px 3px rgba(0,0,0,0.06)',
         display: 'flex',
         alignItems: 'center',
         gap: '16px',
         minHeight: '64px'
       }}
-      onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-500)'; }}
-      onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--slate-200)'; }}
-      onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,65,12,0.6)'; e.currentTarget.style.outline = '2px solid #C2410C'; e.currentTarget.style.outlineOffset = '2px'; }}
-      onBlur={e => { e.currentTarget.style.boxShadow = isSelected ? '0 0 0 3px var(--terra-100)' : '0 1px 3px rgba(0,0,0,0.06)'; e.currentTarget.style.outline = 'none'; }}
+      onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--body-secondary)'; }}
+      onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--border)'; }}
+      onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,65,12,0.6)'; e.currentTarget.style.outline = '2px solid var(--accent)'; e.currentTarget.style.outlineOffset = '2px'; }}
+      onBlur={e => { e.currentTarget.style.boxShadow = isSelected ? '0 0 0 3px var(--card-bg-tinted)' : '0 1px 3px rgba(0,0,0,0.06)'; e.currentTarget.style.outline = 'none'; }}
     >
       <div aria-hidden="true" style={{
         width: '44px', height: '44px', borderRadius: '12px',
-        background: isSelected ? 'var(--terra-100)' : 'var(--slate-100)',
+        background: isSelected ? 'var(--card-bg-tinted)' : 'var(--border-lighter)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: '1.25rem', flexShrink: 0, transition: 'background 0.2s'
       }}>
@@ -53,14 +53,14 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
       <div style={{ flex: 1, minWidth: 0 }}>
         <p style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.05rem', fontWeight: 600,
-          color: 'var(--slate-900)', margin: 0, lineHeight: 1.5
+          color: 'var(--heading)', margin: 0, lineHeight: 1.5
         }}>
           {title}
         </p>
         {subtitle && (
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-            color: '#475569', margin: '4px 0 0', lineHeight: 1.5
+            color: 'var(--body-secondary)', margin: '4px 0 0', lineHeight: 1.5
           }}>
             {subtitle}
           </p>
@@ -69,7 +69,7 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
       {isSelected && (
         <span aria-hidden="true" style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-          fontWeight: 600, color: 'var(--terra-600)', flexShrink: 0
+          fontWeight: 600, color: 'var(--section-label)', flexShrink: 0
         }}>
           ✓
         </span>

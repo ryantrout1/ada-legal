@@ -426,7 +426,7 @@ export default function Intake() {
 
   return (
     <div style={{
-      backgroundColor: 'var(--slate-50)',
+      backgroundColor: 'var(--page-bg-subtle)',
       minHeight: 'calc(100vh - 200px)',
       padding: 'var(--space-xl) var(--space-lg)'
     }}>
@@ -444,7 +444,7 @@ export default function Intake() {
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
-                color: 'var(--slate-500)', display: 'flex', alignItems: 'center', gap: '0.25rem',
+                color: 'var(--body-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem',
                 padding: '0.375rem 0.5rem'
               }}
               aria-label="Exit form"
@@ -516,7 +516,7 @@ export default function Intake() {
           fontFamily: 'Fraunces, serif',
           fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
           fontWeight: 700,
-          color: 'var(--slate-900)',
+          color: 'var(--heading)',
           marginBottom: 'var(--space-xs)',
           textAlign: 'center'
         }}>
@@ -526,7 +526,7 @@ export default function Intake() {
           <p style={{
             fontFamily: 'Manrope, sans-serif',
             fontSize: '1rem',
-            color: 'var(--slate-500)',
+            color: 'var(--body-secondary)',
             textAlign: 'center',
             marginBottom: 'var(--space-2xl)'
           }}>
@@ -557,7 +557,7 @@ export default function Intake() {
           } : {
             backgroundColor: 'var(--surface)',
             borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--slate-200)',
+            border: '1px solid var(--border)',
             padding: 'clamp(1.5rem, 4vw, 2.5rem)',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
           }}
@@ -677,7 +677,7 @@ export default function Intake() {
           {/* Pathway context banner */}
           {isFromPathway && !submitted && step <= 5 && (
             <div style={{
-              background: '#FFF8F5', border: '1px solid #FDBA7440',
+              background: 'var(--card-bg-tinted)', border: '1px solid #FDBA7440',
               borderRadius: 'var(--radius-md)', padding: '12px 16px',
               marginBottom: 'var(--space-xl)', display: 'flex',
               alignItems: 'flex-start', gap: '10px'
@@ -685,7 +685,7 @@ export default function Intake() {
               <span aria-hidden="true" style={{ fontSize: '1.1rem', flexShrink: 0, marginTop: '1px' }}>✓</span>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                color: 'var(--slate-700)', margin: 0, lineHeight: 1.5
+                color: 'var(--body)', margin: 0, lineHeight: 1.5
               }}>
                 We've carried over your answers from the Rights Pathway. Just fill in the remaining details below.
               </p>

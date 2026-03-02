@@ -43,23 +43,23 @@ export default function LawyerActivitySection({ lawyers, cases, contactLogs }) {
 
   const th = {
     fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-    color: 'var(--slate-500)', textAlign: 'left', padding: '0.4rem 0.75rem',
-    borderBottom: '2px solid var(--slate-200)', textTransform: 'uppercase',
+    color: 'var(--body-secondary)', textAlign: 'left', padding: '0.4rem 0.75rem',
+    borderBottom: '2px solid var(--border)', textTransform: 'uppercase',
     letterSpacing: '0.05em'
   };
   const td = {
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)',
-    padding: '0.35rem 0.75rem', borderBottom: '1px solid var(--slate-100)'
+    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)',
+    padding: '0.35rem 0.75rem', borderBottom: '1px solid var(--border-lighter)'
   };
 
   return (
     <div>
       <div style={{
-        backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+        backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
         borderRadius: 'var(--radius-md)', overflow: 'auto'
       }}>
         {approvedLawyers.length === 0 ? (
-          <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', padding: '12px', textAlign: 'center' }}>No approved lawyers yet</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)', padding: '12px', textAlign: 'center' }}>No approved lawyers yet</p>
         ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
@@ -75,7 +75,7 @@ export default function LawyerActivitySection({ lawyers, cases, contactLogs }) {
             <tbody>
               {approvedLawyers.map(l => (
                 <tr key={l.id}>
-                  <td style={{ ...td, fontWeight: 600, color: 'var(--slate-900)' }}>{l.name}</td>
+                  <td style={{ ...td, fontWeight: 600, color: 'var(--heading)' }}>{l.name}</td>
                   <td style={td}>{l.firm}</td>
                   <td style={{ ...td, textAlign: 'center', fontWeight: 600 }}>{l.activeCases}</td>
                   <td style={{ ...td, textAlign: 'center' }}>{l.totalCases}</td>
@@ -86,7 +86,7 @@ export default function LawyerActivitySection({ lawyers, cases, contactLogs }) {
                         <AlertTriangle size={14} /> Yes
                       </span>
                     ) : (
-                      <span style={{ color: 'var(--slate-500)' }}>No</span>
+                      <span style={{ color: 'var(--body-secondary)' }}>No</span>
                     )}
                   </td>
                 </tr>

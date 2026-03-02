@@ -7,18 +7,18 @@ import StateMultiSelect from '../components/lawyer/StateMultiSelect';
 const inputStyle = {
   width: '100%', minHeight: '44px', padding: '0.625rem 0.75rem',
   fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-  color: 'var(--slate-800)', backgroundColor: 'var(--surface)',
-  border: '2px solid var(--slate-200)', borderRadius: 'var(--radius-md)',
+  color: 'var(--heading)', backgroundColor: 'var(--surface)',
+  border: '2px solid var(--border)', borderRadius: 'var(--radius-md)',
   outline: 'none', transition: 'border-color 0.15s, box-shadow 0.15s',
   boxSizing: 'border-box'
 };
 
 const focusHandler = (e) => {
-  e.target.style.borderColor = '#1D4ED8';
+  e.target.style.borderColor = 'var(--link)';
   e.target.style.boxShadow = '0 0 0 3px rgba(29,78,216,0.15)';
 };
 const blurHandler = (e) => {
-  e.target.style.borderColor = 'var(--slate-200)';
+  e.target.style.borderColor = 'var(--border)';
   e.target.style.boxShadow = 'none';
 };
 
@@ -81,13 +81,13 @@ export default function LawyerRegister() {
   if (submitted) {
     return (
       <div style={{
-        backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)',
+        backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)',
         padding: 'var(--space-xl) var(--space-lg)'
       }}>
         <div style={{ maxWidth: '620px', margin: '0 auto', textAlign: 'center' }}>
           <div style={{
             backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--slate-200)', padding: 'clamp(2rem, 4vw, 3rem)',
+            border: '1px solid var(--border)', padding: 'clamp(2rem, 4vw, 3rem)',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
           }}>
             <div style={{
@@ -100,13 +100,13 @@ export default function LawyerRegister() {
             </div>
             <h2 style={{
               fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 700,
-              color: 'var(--slate-900)', marginBottom: 'var(--space-sm)'
+              color: 'var(--heading)', marginBottom: 'var(--space-sm)'
             }}>
               Application Submitted
             </h2>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '1.0625rem',
-              color: 'var(--slate-600)', lineHeight: 1.6, maxWidth: '440px',
+              color: 'var(--body)', lineHeight: 1.6, maxWidth: '440px',
               margin: '0 auto'
             }}>
               Our team will review your application and notify you by email within 48 hours.
@@ -119,21 +119,21 @@ export default function LawyerRegister() {
 
   return (
     <div style={{
-      backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)',
+      backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)',
       padding: 'var(--space-xl) var(--space-lg)'
     }}>
       <div style={{ maxWidth: '620px', margin: '0 auto' }}>
         <h1 style={{
           fontFamily: 'Fraunces, serif',
           fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
-          fontWeight: 700, color: 'var(--slate-900)',
+          fontWeight: 700, color: 'var(--heading)',
           marginBottom: 'var(--space-xs)', textAlign: 'center'
         }}>
           Join ADA Legal Link
         </h1>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: 'var(--slate-500)', textAlign: 'center',
+          color: 'var(--body-secondary)', textAlign: 'center',
           marginBottom: 'var(--space-2xl)'
         }}>
           Apply to receive exclusive, pre-screened ADA violation cases.
@@ -141,7 +141,7 @@ export default function LawyerRegister() {
 
         <div style={{
           backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--slate-200)',
+          border: '1px solid var(--border)',
           padding: 'clamp(1.5rem, 4vw, 2.5rem)',
           boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
         }}>
@@ -196,7 +196,7 @@ export default function LawyerRegister() {
               style={{
                 display: 'flex', alignItems: 'flex-start', gap: '0.75rem',
                 cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.9375rem', color: 'var(--slate-700)', lineHeight: 1.5
+                fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.5
               }}
             >
               <input
@@ -205,7 +205,7 @@ export default function LawyerRegister() {
                 checked={form.rules_accepted}
                 onChange={e => update('rules_accepted', e.target.checked)}
                 style={{
-                  width: '20px', height: '20px', accentColor: '#C2410C',
+                  width: '20px', height: '20px', accentColor: 'var(--accent)',
                   cursor: 'pointer', flexShrink: 0, marginTop: '2px'
                 }}
               />
@@ -232,14 +232,14 @@ export default function LawyerRegister() {
             style={{
               width: '100%', padding: '0.875rem',
               fontFamily: 'Manrope, sans-serif', fontSize: '1.0625rem', fontWeight: 700,
-              color: 'white',
-              backgroundColor: submitting ? 'var(--slate-500)' : 'var(--terra-600)',
+              color: 'var(--btn-text)',
+              backgroundColor: submitting ? 'var(--body-secondary)' : 'var(--section-label)',
               border: 'none', borderRadius: 'var(--radius-md)',
               cursor: submitting ? 'not-allowed' : 'pointer',
               minHeight: '52px', transition: 'background-color 0.2s'
             }}
-            onMouseEnter={e => { if (!submitting) e.target.style.backgroundColor = 'var(--terra-700)'; }}
-            onMouseLeave={e => { if (!submitting) e.target.style.backgroundColor = 'var(--terra-600)'; }}
+            onMouseEnter={e => { if (!submitting) e.target.style.backgroundColor = 'var(--section-label)'; }}
+            onMouseLeave={e => { if (!submitting) e.target.style.backgroundColor = 'var(--section-label)'; }}
           >
             {submitting ? 'Submitting…' : 'Submit Application'}
           </button>

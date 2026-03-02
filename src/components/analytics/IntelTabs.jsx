@@ -21,7 +21,7 @@ export default function IntelTabs({ activeTab, onChange }) {
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
             padding: '10px 16px', minHeight: '44px',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: activeTab === t.id ? 700 : 500,
-            color: activeTab === t.id ? 'var(--slate-900)' : 'var(--slate-500)',
+            color: activeTab === t.id ? 'var(--heading)' : 'var(--body-secondary)',
             backgroundColor: activeTab === t.id ? 'white' : 'transparent',
             border: 'none', borderRadius: '8px', cursor: 'pointer',
             boxShadow: activeTab === t.id ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',

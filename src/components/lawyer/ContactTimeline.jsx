@@ -21,7 +21,7 @@ export default function ContactTimeline({ logs }) {
 
   if (sorted.length === 0) {
     return (
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', fontStyle: 'italic', margin: 0 }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', fontStyle: 'italic', margin: 0 }}>
         No contacts logged yet.
       </p>
     );
@@ -29,13 +29,13 @@ export default function ContactTimeline({ logs }) {
 
   return (
     <div>
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 8px' }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 8px' }}>
         Contact History
       </p>
       <div style={{ position: 'relative', paddingLeft: '20px' }}>
-        <div style={{ position: 'absolute', left: '7px', top: '6px', bottom: '6px', width: '2px', backgroundColor: 'var(--slate-200)' }} />
+        <div style={{ position: 'absolute', left: '7px', top: '6px', bottom: '6px', width: '2px', backgroundColor: 'var(--border)' }} />
         {sorted.map((log, i) => {
-          const badgeColor = TYPE_BADGE_COLORS[log.contact_type] || { bg: 'var(--slate-100)', color: 'var(--slate-600)' };
+          const badgeColor = TYPE_BADGE_COLORS[log.contact_type] || { bg: 'var(--border-lighter)', color: 'var(--body)' };
           const isExpanded = expandedId === log.id;
           const hasNotes = log.notes && log.notes.trim().length > 0;
           return (
@@ -53,7 +53,7 @@ export default function ContactTimeline({ logs }) {
                 background: 'none', border: 'none', cursor: hasNotes ? 'pointer' : 'default',
                 textAlign: 'left', padding: '2px 0'
               }}>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-700)' }}>
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--body)' }}>
                   {formatDateTime(log.logged_at || log.created_date)}
                 </span>
                 <span style={{
@@ -64,16 +64,16 @@ export default function ContactTimeline({ logs }) {
                 <span style={{ fontSize: '0.8125rem' }}>{METHOD_EMOJIS[log.contact_method] || '💬'}</span>
                 {hasNotes && !isExpanded && (
                   <span style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)',
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)',
                     overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0
                   }}>{log.notes}</span>
                 )}
               </button>
               {isExpanded && hasNotes && (
                 <p style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)',
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)',
                   lineHeight: 1.5, margin: '4px 0 0', whiteSpace: 'pre-wrap',
-                  padding: '8px 10px', backgroundColor: 'var(--slate-50)', borderRadius: '6px'
+                  padding: '8px 10px', backgroundColor: 'var(--page-bg-subtle)', borderRadius: '6px'
                 }}>{log.notes}</p>
               )}
             </div>

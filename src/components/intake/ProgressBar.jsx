@@ -42,14 +42,14 @@ export default function ProgressBar({ currentStep, totalOverride, labelsOverride
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.875rem',
           fontWeight: 600,
-          color: 'var(--slate-700)'
+          color: 'var(--body)'
         }}>
           Step {currentStep} of {total} — {labels[currentStep - 1] || ''}
         </span>
         <span style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.75rem',
-          color: 'var(--slate-500)',
+          color: 'var(--body-secondary)',
           fontStyle: 'italic'
         }}>
           {estimatedMinutes}
@@ -61,7 +61,7 @@ export default function ProgressBar({ currentStep, totalOverride, labelsOverride
         style={{
           width: '100%',
           height: '0.5rem',
-          backgroundColor: 'var(--slate-500)',
+          backgroundColor: 'var(--body-secondary)',
           borderRadius: '0.25rem',
           overflow: 'hidden'
         }}
@@ -74,7 +74,7 @@ export default function ProgressBar({ currentStep, totalOverride, labelsOverride
         <div style={{
           width: `${progress}%`,
           height: '100%',
-          backgroundColor: 'var(--terra-600)',
+          backgroundColor: 'var(--section-label)',
           borderRadius: '0.25rem',
           transition: 'width 0.3s ease'
         }} />
@@ -103,20 +103,20 @@ export default function ProgressBar({ currentStep, totalOverride, labelsOverride
             fontWeight: isCurrent ? 700 : 500,
             borderRadius: '100px',
             border: isCurrent
-              ? '2px solid var(--terra-600)'
+              ? '2px solid var(--section-label)'
               : isCompleted
                 ? '1px solid var(--success-600, #16A34A)'
-                : '1px solid var(--slate-200)',
+                : '1px solid var(--border)',
             backgroundColor: isCurrent
               ? '#FFF8F5'
               : isCompleted
                 ? '#F0FDF4'
                 : 'transparent',
             color: isCurrent
-              ? 'var(--terra-600)'
+              ? 'var(--section-label)'
               : isCompleted
                 ? 'var(--success-600, #16A34A)'
-                : 'var(--slate-500)',
+                : 'var(--body-secondary)',
             cursor: canClick ? 'pointer' : 'default',
             transition: 'all 0.15s',
             minHeight: '28px'

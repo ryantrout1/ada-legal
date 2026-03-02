@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 export default function HeroSection() {
   return (
     <section style={{
-      background: 'linear-gradient(160deg, var(--slate-900) 0%, #0F172A 100%)',
+      background: 'linear-gradient(160deg, var(--heading) 0%, #0F172A 100%)',
       color: 'white',
       padding: 'clamp(4rem, 10vw, 7rem) 1.5rem',
       position: 'relative',
@@ -35,7 +35,7 @@ export default function HeroSection() {
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-          color: 'var(--slate-500)',
+          color: 'var(--body-secondary)',
           maxWidth: '640px',
           margin: '0 auto 2.5rem',
           lineHeight: 1.6
@@ -47,14 +47,14 @@ export default function HeroSection() {
             to={createPageUrl('Intake')}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.625rem',
-              background: 'var(--terra-600)', color: 'white',
+              background: 'var(--section-label)', color: 'white',
               padding: '0.875rem 2rem', borderRadius: 'var(--radius-md)',
               fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
               textDecoration: 'none', minHeight: '48px',
               transition: 'background 0.15s'
             }}
-            onMouseEnter={e => e.currentTarget.style.background = 'var(--terra-700)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'var(--terra-600)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--section-label)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--section-label)'}
           >
             Report a Violation <ArrowRight size={18} aria-hidden="true" />
           </Link>

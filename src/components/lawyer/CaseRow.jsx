@@ -23,12 +23,12 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
     ? [...contactLogs].sort((a, b) => new Date(b.logged_at || b.created_date) - new Date(a.logged_at || a.created_date))[0] 
     : null;
 
-  const borderColor = group === 'needs_action' ? '#B91C1C' : group === 'in_progress' ? '#15803D' : 'var(--slate-500)';
+  const borderColor = group === 'needs_action' ? '#B91C1C' : group === 'in_progress' ? '#15803D' : 'var(--body-secondary)';
   const prefLabel = { phone: 'Phone', email: 'Email', no_preference: 'No Preference' };
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: highlighted ? '2px solid #16A34A' : '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: highlighted ? '2px solid #16A34A' : '1px solid var(--border)',
       borderLeft: `4px solid ${borderColor}`, borderRadius: 'var(--radius-sm)',
       marginBottom: '0.5rem',
       boxShadow: highlighted ? '0 0 0 3px rgba(22,163,74,0.2)' : 'none',
@@ -51,13 +51,13 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
       }}>
         <button type="button" onClick={() => setExpanded(!expanded)} style={{
           background: 'none', border: 'none', cursor: 'pointer', padding: 0, flexShrink: 0,
-          color: 'var(--slate-500)'
+          color: 'var(--body-secondary)'
         }}>
           {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
         </button>
 
         <div style={{ flex: 1, minWidth: 0 }}>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)' }}>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)' }}>
             {c.business_name}
           </span>
           <span style={{
@@ -69,7 +69,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
             {isPhysical ? 'Physical' : 'Digital'}
           </span>
           <span style={{ marginLeft: '0.375rem' }}><SourceBadge source={c.intake_source} /></span>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)', marginLeft: '0.5rem' }}>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)', marginLeft: '0.5rem' }}>
             {[c.city, c.state].filter(Boolean).join(', ')}
           </span>
         </div>
@@ -78,7 +78,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.15rem', minWidth: 0 }}>
           {group === 'needs_action' && (
             <>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-600)' }}>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body)' }}>
                 Assigned {formatDate(c.assigned_at)}
               </span>
               {hoursSinceAssign > 24 ? (
@@ -93,12 +93,12 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
             </>
           )}
           {group === 'in_progress' && lastLog && (
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-600)' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body)' }}>
               Last: {METHOD_LABELS[lastLog.contact_method] || lastLog.contact_method} — {formatDate(lastLog.logged_at || lastLog.created_date)}
             </span>
           )}
           {group === 'completed' && (
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-600)' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body)' }}>
               Closed {formatDate(c.closed_at || c.updated_date)}
             </span>
           )}
@@ -111,7 +111,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
               <button type="button" onClick={() => onLogContact(c)} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
                 padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                fontWeight: 700, color: 'white', backgroundColor: 'var(--terra-600)',
+                fontWeight: 700, color: 'white', backgroundColor: 'var(--section-label)',
                 border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
                 whiteSpace: 'nowrap', minHeight: '36px'
               }}>
@@ -120,8 +120,8 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
               <button type="button" onClick={() => onResolve(c)} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
                 padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                fontWeight: 700, color: '#475569', backgroundColor: 'transparent',
-                border: '1px solid #475569', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+                fontWeight: 700, color: 'var(--body-secondary)', backgroundColor: 'transparent',
+                border: '1px solid var(--body-secondary)', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
                 whiteSpace: 'nowrap', minHeight: '36px'
               }}>
                 Resolve Case
@@ -133,8 +133,8 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
               <button type="button" onClick={() => onLogContact(c)} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
                 padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                fontWeight: 700, color: 'var(--terra-600)', backgroundColor: 'transparent',
-                border: '1px solid var(--terra-600)', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+                fontWeight: 700, color: 'var(--section-label)', backgroundColor: 'transparent',
+                border: '1px solid var(--section-label)', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
                 whiteSpace: 'nowrap', minHeight: '36px'
               }}>
                 Log Follow-Up
@@ -142,8 +142,8 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
               <button type="button" onClick={() => onResolve(c)} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
                 padding: '0.375rem 0.875rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                fontWeight: 700, color: '#475569', backgroundColor: 'transparent',
-                border: '1px solid #475569', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+                fontWeight: 700, color: 'var(--body-secondary)', backgroundColor: 'transparent',
+                border: '1px solid var(--body-secondary)', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
                 whiteSpace: 'nowrap', minHeight: '36px'
               }}>
                 Resolve Case
@@ -156,7 +156,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
       {/* Expanded detail */}
       {expanded && (
         <div style={{
-          padding: '0 1rem 1rem 2.5rem', borderTop: '1px solid var(--slate-100)'
+          padding: '0 1rem 1rem 2.5rem', borderTop: '1px solid var(--border-lighter)'
         }}>
           <div style={{ paddingTop: '0.75rem' }}>
             {/* Claimant contact — prominently at top */}
@@ -166,7 +166,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
               border: '2px solid #FDBA74'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.625rem' }}>
-                <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>
+                <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>
                   Reporter Contact
                 </h4>
                 <span style={{
@@ -186,10 +186,10 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
             </div>
 
             {/* Case details */}
-            <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 0.5rem' }}>
+            <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 0.5rem' }}>
               Case Details
             </h4>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.5rem', marginBottom: '1rem', padding: '0.75rem', backgroundColor: 'var(--slate-50)', borderRadius: 'var(--radius-sm)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.5rem', marginBottom: '1rem', padding: '0.75rem', backgroundColor: 'var(--page-bg-subtle)', borderRadius: 'var(--radius-sm)' }}>
               <Info icon={Building2} label="Business Type" value={c.business_type} />
               <Info icon={MapPin} label="Location" value={isPhysical ? [c.street_address, c.city, c.state].filter(Boolean).join(', ') : [c.city, c.state].filter(Boolean).join(', ')} />
               {isPhysical && <Info icon={Building2} label="Violation" value={c.violation_subtype} />}
@@ -199,10 +199,10 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
             </div>
 
             {/* Narrative */}
-            <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 0.5rem' }}>
+            <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 0.5rem' }}>
               Narrative
             </h4>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-700)', lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: '0 0 1rem' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: '0 0 1rem' }}>
               {c.narrative || '—'}
             </p>
 
@@ -216,7 +216,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
             {/* Contact history */}
             {contactLogs.length > 0 && (
               <>
-                <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 0.5rem' }}>
+                <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 0.5rem' }}>
                   Contact History
                 </h4>
                 <ContactLogHistory logs={contactLogs} />
@@ -233,10 +233,10 @@ function Info({ icon: Icon, label, value }) {
   if (!value) return null;
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.375rem' }}>
-      <Icon size={12} style={{ color: 'var(--slate-500)', flexShrink: 0, marginTop: '3px' }} />
+      <Icon size={12} style={{ color: 'var(--body-secondary)', flexShrink: 0, marginTop: '3px' }} />
       <div>
-        <span style={{ display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</span>
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-800)', wordBreak: 'break-word' }}>{value}</span>
+        <span style={{ display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700, color: 'var(--body)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</span>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--heading)', wordBreak: 'break-word' }}>{value}</span>
       </div>
     </div>
   );

@@ -64,8 +64,8 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
   const selectStyle = {
     width: '100%', padding: '0.5rem 0.75rem',
     fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-    border: '2px solid var(--slate-200)', borderRadius: 'var(--radius-md)',
-    color: 'var(--slate-800)', outline: 'none', backgroundColor: 'white'
+    border: '2px solid var(--border)', borderRadius: 'var(--radius-md)',
+    color: 'var(--heading)', outline: 'none', backgroundColor: 'white'
   };
 
   return (
@@ -82,7 +82,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
       }}>
         <h2 id="resolve-heading" style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700,
-          color: 'var(--slate-900)', margin: '0 0 var(--space-lg) 0'
+          color: 'var(--heading)', margin: '0 0 var(--space-lg) 0'
         }}>
           Resolve Case — {caseData.business_name}
         </h2>
@@ -92,7 +92,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
           {[1, 2, 3].map(s => (
             <div key={s} style={{
               flex: 1, height: '4px', borderRadius: '2px',
-              backgroundColor: s <= step ? 'var(--terra-600)' : 'var(--slate-200)'
+              backgroundColor: s <= step ? 'var(--section-label)' : 'var(--border)'
             }} />
           ))}
         </div>
@@ -100,7 +100,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
         {/* Step 1: Resolution Type */}
         {step === 1 && (
           <div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 0.75rem' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 0.75rem' }}>
               How was this case resolved?
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -108,20 +108,20 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
                 <label key={opt.value} style={{
                   display: 'flex', alignItems: 'flex-start', gap: '0.75rem',
                   padding: '0.75rem', borderRadius: 'var(--radius-md)', cursor: 'pointer',
-                  border: form.resolution_type === opt.value ? '2px solid var(--terra-600)' : '2px solid var(--slate-200)',
-                  backgroundColor: form.resolution_type === opt.value ? 'var(--terra-50)' : 'white'
+                  border: form.resolution_type === opt.value ? '2px solid var(--section-label)' : '2px solid var(--border)',
+                  backgroundColor: form.resolution_type === opt.value ? 'var(--card-bg-tinted)' : 'white'
                 }}>
                   <input
                     type="radio" name="resolution_type"
                     checked={form.resolution_type === opt.value}
                     onChange={() => setForm(p => ({ ...p, resolution_type: opt.value }))}
-                    style={{ marginTop: '3px', accentColor: 'var(--terra-600)' }}
+                    style={{ marginTop: '3px', accentColor: 'var(--section-label)' }}
                   />
                   <div>
-                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-800)' }}>
+                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)' }}>
                       {opt.label}
                     </span>
-                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)', display: 'block', marginTop: '2px' }}>
+                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)', display: 'block', marginTop: '2px' }}>
                       {opt.desc}
                     </span>
                   </div>
@@ -131,7 +131,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: 'var(--space-lg)' }}>
               <button type="button" onClick={handleClose} style={cancelStyle}>Cancel</button>
               <button type="button" disabled={!canProceedStep1} onClick={() => setStep(2)} style={{
-                ...btnStyle, backgroundColor: canProceedStep1 ? 'var(--terra-600)' : 'var(--slate-500)',
+                ...btnStyle, backgroundColor: canProceedStep1 ? 'var(--section-label)' : 'var(--body-secondary)',
                 cursor: canProceedStep1 ? 'pointer' : 'not-allowed'
               }}>
                 Next
@@ -145,7 +145,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
           <div>
             {isEngaged && (
               <>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 0.5rem' }}>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 0.5rem' }}>
                   Estimated Case Value *
                 </p>
                 <select value={form.estimated_case_value} onChange={e => setForm(p => ({ ...p, estimated_case_value: e.target.value }))} style={{ ...selectStyle, marginBottom: '1rem' }}>
@@ -153,7 +153,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
                   {VALUE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
 
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 0.5rem' }}>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 0.5rem' }}>
                   Expected Timeline *
                 </p>
                 <select value={form.expected_timeline} onChange={e => setForm(p => ({ ...p, expected_timeline: e.target.value }))} style={{ ...selectStyle, marginBottom: '1rem' }}>
@@ -163,7 +163,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
               </>
             )}
 
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 0.5rem' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 0.5rem' }}>
               Resolution Notes *
             </p>
             <textarea
@@ -177,7 +177,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--space-lg)' }}>
               <button type="button" onClick={() => setStep(1)} style={cancelStyle}>← Back</button>
               <button type="button" disabled={!canProceedStep2} onClick={() => setStep(3)} style={{
-                ...btnStyle, backgroundColor: canProceedStep2 ? 'var(--terra-600)' : 'var(--slate-500)',
+                ...btnStyle, backgroundColor: canProceedStep2 ? 'var(--section-label)' : 'var(--body-secondary)',
                 cursor: canProceedStep2 ? 'pointer' : 'not-allowed'
               }}>
                 Review
@@ -189,11 +189,11 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
         {/* Step 3: Confirmation */}
         {step === 3 && (
           <div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 0.75rem' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 0.75rem' }}>
               Please confirm your resolution:
             </p>
 
-            <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: 'var(--radius-md)', padding: '1rem', marginBottom: '1rem' }}>
+            <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: 'var(--radius-md)', padding: '1rem', marginBottom: '1rem' }}>
               <SummaryRow label="Resolution Type" value={RESOLUTION_LABELS[form.resolution_type] || form.resolution_type} />
               {isEngaged && (
                 <>
@@ -216,7 +216,7 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
             </div>
 
             <button type="button" disabled={saving} onClick={handleSubmit} style={{
-              ...btnStyle, width: '100%', backgroundColor: saving ? 'var(--slate-500)' : 'var(--terra-600)',
+              ...btnStyle, width: '100%', backgroundColor: saving ? 'var(--body-secondary)' : 'var(--section-label)',
               cursor: saving ? 'not-allowed' : 'pointer', marginBottom: '0.75rem'
             }}>
               {saving ? 'Closing Case…' : 'Confirm & Close Case'}
@@ -236,10 +236,10 @@ export default function ResolveCaseModal({ open, caseData, onSubmit, onCancel, s
 function SummaryRow({ label, value }) {
   return (
     <div style={{ marginBottom: '0.5rem' }}>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--body)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
         {label}
       </span>
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-800)', margin: '2px 0 0' }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--heading)', margin: '2px 0 0' }}>
         {value || '—'}
       </p>
     </div>
@@ -256,5 +256,5 @@ const btnStyle = {
 const cancelStyle = {
   background: 'none', border: 'none', cursor: 'pointer',
   fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-  color: 'var(--slate-600)', padding: '0.5rem'
+  color: 'var(--body)', padding: '0.5rem'
 };

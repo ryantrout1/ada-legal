@@ -17,7 +17,7 @@ export default function GuideEngagementStats({ totalViews, uniqueSections, total
         const Icon = c.icon;
         return (
           <div key={c.key} style={{
-            padding: '16px', backgroundColor: 'var(--slate-50)', borderRadius: '10px',
+            padding: '16px', backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px',
             display: 'flex', alignItems: 'center', gap: '12px',
           }}>
             <div style={{
@@ -27,10 +27,10 @@ export default function GuideEngagementStats({ totalViews, uniqueSections, total
               <Icon size={18} color={c.color} />
             </div>
             <div>
-              <div style={{ fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700, color: 'var(--slate-900)', lineHeight: 1.1 }}>
+              <div style={{ fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700, color: 'var(--heading)', lineHeight: 1.1 }}>
                 {values[c.key].toLocaleString()}
               </div>
-              <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: 'var(--slate-500)', marginTop: '2px' }}>
+              <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: 'var(--body-secondary)', marginTop: '2px' }}>
                 {c.label}
               </div>
             </div>

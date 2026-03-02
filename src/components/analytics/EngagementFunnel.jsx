@@ -27,12 +27,12 @@ export default function EngagementFunnel({ cases, contactLogs }) {
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
       borderRadius: 'var(--radius-md)', padding: '12px'
     }}>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-        color: 'var(--slate-800)', marginBottom: '0.625rem', marginTop: 0
+        color: 'var(--heading)', marginBottom: '0.625rem', marginTop: 0
       }}>Case Engagement Funnel</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
         {stages.map((stage, i) => {
@@ -43,7 +43,7 @@ export default function EngagementFunnel({ cases, contactLogs }) {
           return (
             <div key={stage.label} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-600)',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body)',
                 minWidth: '72px', textAlign: 'right', flexShrink: 0
               }}>{stage.label}</span>
               <div style={{ flex: 1, height: '16px', backgroundColor: '#F1F5F9', borderRadius: '3px', overflow: 'hidden', position: 'relative' }}>
@@ -63,14 +63,14 @@ export default function EngagementFunnel({ cases, contactLogs }) {
                 {barWidth <= 12 && (
                   <span style={{
                     position: 'absolute', left: `${barWidth + 1}%`, top: '50%', transform: 'translateY(-50%)',
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--slate-700)'
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--body)'
                   }}>
                     {stage.count}
                   </span>
                 )}
               </div>
               <span style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)',
                 minWidth: '70px', flexShrink: 0
               }}>
                 {convRate !== null ? `${stage.count} of ${prev} — ${convRate}%` : ''}

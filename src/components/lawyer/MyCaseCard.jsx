@@ -18,7 +18,7 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
       borderRadius: '16px', padding: 'var(--space-xl)',
       transition: 'border-color 0.15s, box-shadow 0.15s'
     }}>
@@ -43,7 +43,7 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
               to={createPageUrl('LawyerCaseDetail') + `?id=${c.id}`}
               style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 700,
-                color: 'var(--slate-900)', textDecoration: 'none'
+                color: 'var(--heading)', textDecoration: 'none'
               }}
             >
               {c.business_name}
@@ -68,7 +68,7 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
         gap: 'var(--space-md)', marginBottom: 'var(--space-md)',
-        padding: 'var(--space-md)', backgroundColor: 'var(--slate-50)',
+        padding: 'var(--space-md)', backgroundColor: 'var(--page-bg-subtle)',
         borderRadius: 'var(--radius-md)'
       }}>
         <InfoItem icon={Building2} label="Business Type" value={c.business_type} />
@@ -102,15 +102,15 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
       {/* Narrative */}
       <div style={{ marginBottom: 'var(--space-lg)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: 'var(--space-xs)' }}>
-          <FileText size={14} style={{ color: 'var(--slate-500)' }} />
+          <FileText size={14} style={{ color: 'var(--body-secondary)' }} />
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-            color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em'
+            color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em'
           }}>Narrative</span>
         </div>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-          color: 'var(--slate-700)', lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: 0
+          color: 'var(--body)', lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: 0
         }}>
           {c.narrative}
         </p>
@@ -130,13 +130,13 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
           width: '100%', padding: '0.875rem',
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-          color: 'white', backgroundColor: 'var(--terra-600)',
+          color: 'white', backgroundColor: 'var(--section-label)',
           border: 'none', borderRadius: 'var(--radius-md)',
           cursor: 'pointer', minHeight: '52px', transition: 'background-color 0.15s',
           marginBottom: 'var(--space-lg)'
         }}
-        onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--terra-700)'; }}
-        onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--terra-600)'; }}
+        onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--section-label)'; }}
+        onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--section-label)'; }}
       >
         <Phone size={18} />
         Log Contact Made
@@ -146,7 +146,7 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
       <div>
         <h3 style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-          color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em',
+          color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em',
           marginBottom: 'var(--space-sm)', marginTop: 0
         }}>Contact History</h3>
         <ContactLogHistory logs={contactLogs} />
@@ -159,15 +159,15 @@ function InfoItem({ icon: Icon, label, value }) {
   if (!value) return null;
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-      <Icon size={14} aria-hidden="true" style={{ color: 'var(--slate-500)', flexShrink: 0, marginTop: '3px' }} />
+      <Icon size={14} aria-hidden="true" style={{ color: 'var(--body-secondary)', flexShrink: 0, marginTop: '3px' }} />
       <div>
         <span style={{
           display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem',
-          fontWeight: 700, color: 'var(--slate-600)', textTransform: 'uppercase',
+          fontWeight: 700, color: 'var(--body)', textTransform: 'uppercase',
           letterSpacing: '0.04em'
         }}>{label}</span>
         <span style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-800)',
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--heading)',
           wordBreak: 'break-word'
         }}>{value}</span>
       </div>

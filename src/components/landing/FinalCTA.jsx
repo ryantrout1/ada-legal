@@ -7,7 +7,7 @@ export default function FinalCTA({ heading, subtitle, buttonText, buttonLink, va
   const isDark = variant === 'dark';
   return (
     <section aria-labelledby="final-cta-heading" className={isDark ? 'warm-keep-dark' : ''} style={{
-      backgroundColor: isDark ? 'var(--slate-900)' : 'var(--terra-100)',
+      backgroundColor: isDark ? 'var(--heading)' : 'var(--card-bg-tinted)',
       padding: 'clamp(3rem, 8vw, 4.5rem) 1.5rem',
       textAlign: 'center'
     }}>
@@ -16,14 +16,14 @@ export default function FinalCTA({ heading, subtitle, buttonText, buttonLink, va
           fontFamily: 'Fraunces, serif',
           fontSize: 'clamp(1.5rem, 3.5vw, 2rem)',
           fontWeight: 700,
-          color: isDark ? 'white' : 'var(--slate-900)',
+          color: isDark ? 'white' : 'var(--heading)',
           marginBottom: '0.75rem', marginTop: 0
         }}>
           {heading}
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: isDark ? '#B0BEC5' : 'var(--slate-600)',
+          color: isDark ? '#B0BEC5' : 'var(--body)',
           marginBottom: '2rem', lineHeight: 1.6
         }}>
           {subtitle}
@@ -32,14 +32,14 @@ export default function FinalCTA({ heading, subtitle, buttonText, buttonLink, va
           to={buttonLink}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.625rem',
-            background: 'var(--terra-600)', color: 'white',
+            background: 'var(--section-label)', color: 'white',
             padding: '0.875rem 2rem', borderRadius: 'var(--radius-md)',
             fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
             textDecoration: 'none', minHeight: '48px',
             transition: 'background 0.15s'
           }}
-          onMouseEnter={e => e.currentTarget.style.background = 'var(--terra-700)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'var(--terra-600)'}
+          onMouseEnter={e => e.currentTarget.style.background = 'var(--section-label)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'var(--section-label)'}
         >
           {buttonText} <ArrowRight size={18} />
         </Link>

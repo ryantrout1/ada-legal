@@ -13,12 +13,12 @@ const urgencyColors = {
 function Card({ title, children }) {
   return (
     <div style={{
-      background: 'white', border: '1px solid var(--slate-200)', borderRadius: '16px',
+      background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '16px',
       padding: '28px 32px', marginBottom: '16px'
     }}>
       <h2 style={{
         fontFamily: 'Fraunces, serif', fontSize: '1.2rem', fontWeight: 700,
-        color: 'var(--slate-900)', margin: '0 0 16px'
+        color: 'var(--heading)', margin: '0 0 16px'
       }}>{title}</h2>
       {children}
     </div>
@@ -33,7 +33,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
     <div>
       {/* Header */}
       <div style={{
-        background: '#1A1F2B', borderRadius: '16px', padding: '32px',
+        background: 'var(--dark-bg)', borderRadius: '16px', padding: '32px',
         marginBottom: '16px', position: 'relative', overflow: 'hidden'
       }}>
         <div aria-hidden="true" style={{
@@ -43,7 +43,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
         }} />
         <div style={{ position: 'relative' }}>
           <span style={{
-            display: 'inline-block', background: '#C2410C', color: 'white',
+            display: 'inline-block', background: 'var(--accent)', color: 'var(--btn-text)',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
             letterSpacing: '0.08em', textTransform: 'uppercase',
             padding: '4px 12px', borderRadius: '100px', marginBottom: '12px'
@@ -52,13 +52,13 @@ export default function PathwayResults({ results, answers, onStartOver }) {
           </span>
           <h1 style={{
             fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-            fontWeight: 700, color: 'white', margin: '0 0 12px', lineHeight: 1.2
+            fontWeight: 700, color: 'var(--btn-text)', margin: '0 0 12px', lineHeight: 1.2
           }}>
             {results.title}
           </h1>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-            color: '#CBD5E1', lineHeight: 1.7, margin: 0, maxWidth: '640px'
+            color: 'var(--dark-muted)', lineHeight: 1.7, margin: 0, maxWidth: '640px'
           }}>
             {results.summary}
           </p>
@@ -67,7 +67,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
 
       {/* Law Applies */}
       <Card title="What Law Applies">
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: 'var(--slate-700)', lineHeight: 1.75, margin: 0 }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>
           <AutoCiteLinks>{results.lawApplies}</AutoCiteLinks>
         </p>
       </Card>
@@ -77,22 +77,22 @@ export default function PathwayResults({ results, answers, onStartOver }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {results.sections.map((s, i) => (
             <div key={i} style={{
-              background: 'var(--slate-50)', border: '1px solid var(--slate-200)',
+              background: 'var(--page-bg-subtle)', border: '1px solid var(--border)',
               borderRadius: '10px', padding: '14px 18px'
             }}>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-                color: '#9A3412', margin: '0 0 4px', letterSpacing: '0.02em'
+                color: 'var(--section-label)', margin: '0 0 4px', letterSpacing: '0.02em'
               }}>
                 <AutoCiteLinks>{s.section}</AutoCiteLinks>
               </p>
               <p style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
-                color: 'var(--slate-900)', margin: '0 0 4px'
+                color: 'var(--heading)', margin: '0 0 4px'
               }}>{s.title}</p>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                color: 'var(--slate-600)', lineHeight: 1.6, margin: 0
+                color: 'var(--body)', lineHeight: 1.6, margin: 0
               }}>
                 <AutoCiteLinks>{s.description}</AutoCiteLinks>
               </p>
@@ -133,7 +133,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
           {results.remedies.map((r, i) => (
             <li key={i} style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-              color: 'var(--slate-700)', lineHeight: 1.7, marginBottom: '6px'
+              color: 'var(--body)', lineHeight: 1.7, marginBottom: '6px'
             }}>{r}</li>
           ))}
         </ul>
@@ -141,18 +141,18 @@ export default function PathwayResults({ results, answers, onStartOver }) {
 
       {/* Best Next Step */}
       <div style={{
-        background: 'var(--terra-100)', border: '1px solid #C2410C20',
+        background: 'var(--card-bg-tinted)', border: '1px solid var(--accent)20',
         borderRadius: '16px', padding: '28px 32px', marginBottom: '16px'
       }}>
         <h2 style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.2rem', fontWeight: 700,
-          color: '#9A3412', margin: '0 0 8px'
+          color: 'var(--section-label)', margin: '0 0 8px'
         }}>
           Recommended: {results.bestNextStep.action}
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-          color: 'var(--slate-700)', lineHeight: 1.7, margin: 0
+          color: 'var(--body)', lineHeight: 1.7, margin: 0
         }}>
           {results.bestNextStep.description}
         </p>
@@ -164,17 +164,17 @@ export default function PathwayResults({ results, answers, onStartOver }) {
           {results.filingPaths.map((fp, i) => (
             <div key={i} style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-              gap: '12px', background: 'var(--slate-50)', border: '1px solid var(--slate-200)',
+              gap: '12px', background: 'var(--page-bg-subtle)', border: '1px solid var(--border)',
               borderRadius: '10px', padding: '14px 18px'
             }}>
               <div style={{ flex: 1 }}>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700,
-                  color: 'var(--slate-900)', margin: '0 0 4px'
+                  color: 'var(--heading)', margin: '0 0 4px'
                 }}>{fp.agency}</p>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                  color: 'var(--slate-600)', lineHeight: 1.5, margin: 0
+                  color: 'var(--body)', lineHeight: 1.5, margin: 0
                 }}>{fp.description}</p>
               </div>
               {fp.url ? (
@@ -183,7 +183,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: '4px',
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
-                    color: '#C2410C', textDecoration: 'none', flexShrink: 0, marginTop: '2px',
+                    color: 'var(--accent)', textDecoration: 'none', flexShrink: 0, marginTop: '2px',
                     minHeight: '44px', padding: '0 8px'
                   }}>
                   Visit <ExternalLink size={14} aria-hidden="true" />
@@ -191,7 +191,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
               ) : fp.agency.toLowerCase().includes('attorney') ? (
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-                  color: '#64748B', fontStyle: 'italic'
+                  color: 'var(--body-secondary)', fontStyle: 'italic'
                 }}>
                   Coming soon
                 </span>
@@ -206,22 +206,22 @@ export default function PathwayResults({ results, answers, onStartOver }) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '10px' }}>
           {results.guideLinks.map((gl, i) => (
             <Link key={i} to={createPageUrl(gl.page)} style={{
-              display: 'block', background: 'var(--slate-50)', border: '1px solid var(--slate-200)',
+              display: 'block', background: 'var(--page-bg-subtle)', border: '1px solid var(--border)',
               borderRadius: '10px', padding: '14px 16px', textDecoration: 'none',
               transition: 'border-color 0.15s, box-shadow 0.15s', outline: 'none'
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#C2410C'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; e.currentTarget.style.boxShadow = 'none'; }}
-            onFocus={e => { e.currentTarget.style.borderColor = '#C2410C'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(194,65,12,0.4)'; }}
-            onBlur={e => { e.currentTarget.style.borderColor = 'var(--slate-200)'; e.currentTarget.style.boxShadow = 'none'; }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
+            onFocus={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(194,65,12,0.4)'; }}
+            onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
             >
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700,
-                color: '#9A3412', margin: '0 0 4px'
+                color: 'var(--section-label)', margin: '0 0 4px'
               }}>{gl.title}</p>
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                color: 'var(--slate-600)', lineHeight: 1.5, margin: 0
+                color: 'var(--body)', lineHeight: 1.5, margin: 0
               }}>{gl.description}</p>
             </Link>
           ))}
@@ -230,22 +230,22 @@ export default function PathwayResults({ results, answers, onStartOver }) {
 
       {/* CTA */}
       <div style={{
-        background: '#1A1F2B', borderRadius: '16px', padding: 'clamp(24px, 4vw, 40px) clamp(20px, 4vw, 32px)',
+        background: 'var(--dark-bg)', borderRadius: '16px', padding: 'clamp(24px, 4vw, 40px) clamp(20px, 4vw, 32px)',
         textAlign: 'center', marginBottom: '16px'
       }}>
         <h2 style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700,
-          color: 'white', margin: '0 0 8px'
+          color: 'var(--btn-text)', margin: '0 0 8px'
         }}>Ready to take action?</h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: '#B0BEC5', margin: '0 0 24px'
+          color: 'var(--dark-muted)', margin: '0 0 24px'
         }}>
           Explore the ADA standards that apply to your situation, or review your rights assessment results above.
         </p>
         <Link to={createPageUrl('StandardsGuide')} style={{
           display: 'inline-flex', alignItems: 'center', gap: '8px',
-          background: '#C2410C', color: 'white',
+          background: 'var(--accent)', color: 'var(--btn-text)',
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
           padding: '16px 32px', borderRadius: '10px', textDecoration: 'none',
           minHeight: '44px', transition: 'background 0.15s'
@@ -254,7 +254,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
         </Link>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem',
-          color: '#64748B', marginTop: '16px', marginBottom: 0, fontStyle: 'italic'
+          color: 'var(--body-secondary)', marginTop: '16px', marginBottom: 0, fontStyle: 'italic'
         }}>
           Attorney-connected violation reporting — launching soon.
         </p>
@@ -264,10 +264,10 @@ export default function PathwayResults({ results, answers, onStartOver }) {
       <div style={{ textAlign: 'center', paddingBottom: '32px' }}>
         <button onClick={onStartOver} style={{
           display: 'inline-flex', alignItems: 'center', gap: '6px',
-          background: 'transparent', border: '1px solid var(--slate-200)',
+          background: 'transparent', border: '1px solid var(--border)',
           borderRadius: '10px', padding: '12px 24px', cursor: 'pointer',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 600,
-          color: 'var(--slate-600)', minHeight: '44px', transition: 'border-color 0.15s'
+          color: 'var(--body)', minHeight: '44px', transition: 'border-color 0.15s'
         }}>
           <RotateCcw size={16} aria-hidden="true" /> Start Over
         </button>

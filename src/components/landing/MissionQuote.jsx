@@ -3,7 +3,7 @@ import React from 'react';
 export default function MissionQuote() {
   return (
     <section style={{
-      backgroundColor: 'var(--slate-900)',
+      backgroundColor: 'var(--heading)',
       padding: 'clamp(3rem, 8vw, 5rem) 1.5rem'
     }}>
       <div style={{ maxWidth: '720px', margin: '0 auto', textAlign: 'center' }}>
@@ -21,7 +21,7 @@ export default function MissionQuote() {
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.875rem',
-          color: 'var(--slate-500)',
+          color: 'var(--body-secondary)',
           marginTop: '1.5rem',
           marginBottom: 0,
           fontWeight: 600,

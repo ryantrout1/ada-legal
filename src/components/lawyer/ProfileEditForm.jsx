@@ -11,13 +11,13 @@ const US_STATES = [
 const inputStyle = {
   width: '100%', padding: '0.5rem 0.75rem',
   fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-  border: '2px solid var(--slate-200)', borderRadius: 'var(--radius-md)',
-  color: 'var(--slate-800)', outline: 'none', boxSizing: 'border-box'
+  border: '2px solid var(--border)', borderRadius: 'var(--radius-md)',
+  color: 'var(--heading)', outline: 'none', boxSizing: 'border-box'
 };
 
 const labelStyle = {
   display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-  color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px'
+  color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px'
 };
 
 export default function ProfileEditForm({ profile, onSave, onCancel }) {
@@ -57,8 +57,8 @@ export default function ProfileEditForm({ profile, onSave, onCancel }) {
       </div>
       <div>
         <label style={labelStyle}>Email</label>
-        <input style={{ ...inputStyle, backgroundColor: 'var(--slate-50)', color: 'var(--slate-500)' }} value={profile.email} disabled />
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)' }}>Cannot be changed</span>
+        <input style={{ ...inputStyle, backgroundColor: 'var(--page-bg-subtle)', color: 'var(--body-secondary)' }} value={profile.email} disabled />
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)' }}>Cannot be changed</span>
       </div>
       <div>
         <label style={labelStyle}>Phone</label>
@@ -69,12 +69,12 @@ export default function ProfileEditForm({ profile, onSave, onCancel }) {
         <div onClick={() => setStatesOpen(!statesOpen)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setStatesOpen(!statesOpen); }}} role="button" tabIndex="0" style={{
           ...inputStyle, cursor: 'pointer', minHeight: '38px', display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center'
         }}>
-          {form.states_of_practice.length === 0 && <span style={{ color: 'var(--slate-500)' }}>Select...</span>}
+          {form.states_of_practice.length === 0 && <span style={{ color: 'var(--body-secondary)' }}>Select...</span>}
           {form.states_of_practice.map(s => (
             <span key={s} style={{
               display: 'inline-flex', alignItems: 'center', gap: '2px',
               padding: '1px 6px', fontSize: '0.75rem', fontWeight: 600,
-              backgroundColor: 'var(--terra-100)', color: 'var(--terra-600)', borderRadius: '4px'
+              backgroundColor: 'var(--card-bg-tinted)', color: 'var(--section-label)', borderRadius: '4px'
             }}>
               {s}
               <X size={10} onClick={e => { e.stopPropagation(); toggleState(s); }} style={{ cursor: 'pointer' }} />
@@ -85,7 +85,7 @@ export default function ProfileEditForm({ profile, onSave, onCancel }) {
           <div style={{
             position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 20,
             maxHeight: '200px', overflow: 'auto', backgroundColor: 'white',
-            border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
             boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
           }}>
             {US_STATES.map(st => (
@@ -93,7 +93,7 @@ export default function ProfileEditForm({ profile, onSave, onCancel }) {
                 display: 'flex', alignItems: 'center', gap: '0.5rem',
                 padding: '0.375rem 0.75rem', cursor: 'pointer', fontSize: '0.8125rem',
                 fontFamily: 'Manrope, sans-serif',
-                backgroundColor: form.states_of_practice.includes(st) ? 'var(--terra-50)' : 'white'
+                backgroundColor: form.states_of_practice.includes(st) ? 'var(--card-bg-tinted)' : 'white'
               }}>
                 <input type="checkbox" checked={form.states_of_practice.includes(st)} onChange={() => toggleState(st)} />
                 {st}
@@ -110,7 +110,7 @@ export default function ProfileEditForm({ profile, onSave, onCancel }) {
         <button type="button" onClick={handleSave} disabled={saving} style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
           padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-          fontWeight: 700, color: 'white', backgroundColor: saving ? 'var(--slate-500)' : 'var(--terra-600)',
+          fontWeight: 700, color: 'white', backgroundColor: saving ? 'var(--body-secondary)' : 'var(--section-label)',
           border: 'none', borderRadius: 'var(--radius-md)', cursor: saving ? 'not-allowed' : 'pointer',
           minHeight: '44px'
         }}>
@@ -119,7 +119,7 @@ export default function ProfileEditForm({ profile, onSave, onCancel }) {
         <button type="button" onClick={onCancel} style={{
           background: 'none', border: 'none', cursor: 'pointer',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-          color: 'var(--slate-500)', padding: '0.5rem'
+          color: 'var(--body-secondary)', padding: '0.5rem'
         }}>
           Cancel
         </button>

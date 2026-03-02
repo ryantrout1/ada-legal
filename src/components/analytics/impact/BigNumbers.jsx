@@ -50,16 +50,16 @@ export default function BigNumbers({ cases }) {
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
       {cards.map(c => (
         <div key={c.label} style={{
-          backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px',
+          backgroundColor: 'white', border: '1px solid var(--border)', borderRadius: '12px',
           padding: '24px 20px', textAlign: 'center',
         }}>
-          <div style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: 'var(--slate-900)', lineHeight: 1.1 }}>
+          <div style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: 'var(--heading)', lineHeight: 1.1 }}>
             {c.number}
           </div>
-          <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--terra-600)', marginTop: '8px' }}>
+          <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--section-label)', marginTop: '8px' }}>
             {c.label}
           </div>
-          <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', marginTop: '4px' }}>
+          <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', marginTop: '4px' }}>
             {c.sub}
           </div>
         </div>

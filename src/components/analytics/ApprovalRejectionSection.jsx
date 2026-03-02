@@ -21,24 +21,24 @@ export default function ApprovalRejectionSection({ cases }) {
     .slice(0, 3);
 
   const statBox = {
-    backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+    backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
     borderRadius: 'var(--radius-lg)', padding: 'var(--space-lg)',
     flex: '1 1 200px', minWidth: '180px'
   };
   const statLabel = {
     fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
-    color: 'var(--slate-500)', margin: '0 0 var(--space-xs) 0'
+    color: 'var(--body-secondary)', margin: '0 0 var(--space-xs) 0'
   };
   const statValue = {
     fontFamily: 'Fraunces, serif', fontSize: '2rem', fontWeight: 700,
-    color: 'var(--slate-900)', margin: 0, lineHeight: 1.2
+    color: 'var(--heading)', margin: 0, lineHeight: 1.2
   };
 
   return (
     <div>
       <h2 style={{
         fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600,
-        color: 'var(--slate-900)', marginBottom: 'var(--space-md)', marginTop: 0
+        color: 'var(--heading)', marginBottom: 'var(--space-md)', marginTop: 0
       }}>Approval & Rejection</h2>
       <div style={{ display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap' }}>
         <div style={statBox}>
@@ -51,20 +51,20 @@ export default function ApprovalRejectionSection({ cases }) {
         </div>
         <div style={statBox}>
           <p style={statLabel}>Rejection Rate</p>
-          <p style={{ ...statValue, color: rejectionRate > 0 ? '#B91C1C' : 'var(--slate-900)' }}>{rejectionRate}%</p>
+          <p style={{ ...statValue, color: rejectionRate > 0 ? '#B91C1C' : 'var(--heading)' }}>{rejectionRate}%</p>
         </div>
         <div style={statBox}>
           <p style={statLabel}>Top Rejection Reasons</p>
           {topReasons.length === 0 ? (
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--slate-500)', margin: 0 }}>No rejections yet</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)', margin: 0 }}>No rejections yet</p>
           ) : (
             <ol style={{ margin: 0, paddingLeft: '1.25rem' }}>
               {topReasons.map(([reason, count]) => (
                 <li key={reason} style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                  color: 'var(--slate-700)', marginBottom: '0.25rem'
+                  color: 'var(--body)', marginBottom: '0.25rem'
                 }}>
-                  {reason} <span style={{ color: 'var(--slate-500)' }}>({count})</span>
+                  {reason} <span style={{ color: 'var(--body-secondary)' }}>({count})</span>
                 </li>
               ))}
             </ol>

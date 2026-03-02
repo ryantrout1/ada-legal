@@ -162,11 +162,11 @@ export default function ExportAnalytics({ cases, lawyers, contactLogs, filters }
         display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
         padding: '0.5rem 1rem',
         fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
-        color: 'var(--slate-700)', backgroundColor: 'transparent',
-        border: '1px solid var(--slate-700)', borderRadius: 'var(--radius-md)',
+        color: 'var(--body)', backgroundColor: 'transparent',
+        border: '1px solid var(--body)', borderRadius: 'var(--radius-md)',
         cursor: 'pointer', minHeight: '40px', transition: 'background-color 0.15s'
       }}
-      onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--slate-100)'; }}
+      onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--border-lighter)'; }}
       onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
     >
       <Download size={16} /> Export Report

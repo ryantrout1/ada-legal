@@ -5,7 +5,7 @@ export default function StatPills({ needsAction, inProgress, completed, onScroll
   const pills = [
     { id: 'needs-action', label: 'Needs Action', count: needsAction, bg: '#FEE2E2', color: '#B91C1C', Icon: AlertTriangle, pulse: needsAction > 0 },
     { id: 'in-progress', label: 'In Progress', count: inProgress, bg: '#DCFCE7', color: '#15803D', Icon: Clock, pulse: false },
-    { id: 'completed', label: 'Completed', count: completed, bg: 'var(--slate-100)', color: 'var(--slate-600)', Icon: CheckCircle, pulse: false },
+    { id: 'completed', label: 'Completed', count: completed, bg: 'var(--border-lighter)', color: 'var(--body)', Icon: CheckCircle, pulse: false },
   ];
 
   return (

@@ -16,15 +16,15 @@ export default function GuideTopSectionsChart({ events }) {
 
   if (data.length === 0) {
     return (
-      <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '32px', textAlign: 'center' }}>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>No section view data yet</p>
+      <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '32px', textAlign: 'center' }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>No section view data yet</p>
       </div>
     );
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '16px' }}>
-      <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 12px' }}>
+    <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '16px' }}>
+      <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 12px' }}>
         Most Viewed Sections
       </h4>
       <div className="sr-only">
@@ -36,8 +36,8 @@ export default function GuideTopSectionsChart({ events }) {
       <div aria-hidden="true" style={{ width: '100%', height: Math.max(200, data.length * 32) }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} layout="vertical" barSize={18} margin={{ left: 0, right: 20, top: 0, bottom: 0 }}>
-            <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-500)' }} />
-            <YAxis type="category" dataKey="name" width={140} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-700)' }} />
+            <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--body-secondary)' }} />
+            <YAxis type="category" dataKey="name" width={140} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--body)' }} />
             <Tooltip
               contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }}
               formatter={(value, name, props) => [value, 'Views']}

@@ -40,20 +40,20 @@ export default function ViolationLandscape({ cases }) {
   const totalCases = cases.length;
 
   return (
-    <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '20px' }}>
+    <div style={{ backgroundColor: 'white', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
         <div>
-          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: 0 }}>
+          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: 0 }}>
             What barriers are people reporting most?
           </h3>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '2px 0 0' }}>Violation Landscape</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', margin: '2px 0 0' }}>Violation Landscape</p>
         </div>
         <button
           onClick={() => setShowTable(!showTable)}
           style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', padding: '6px 12px', minHeight: '44px',
-            border: '1px solid var(--slate-300)', borderRadius: '6px', backgroundColor: 'white',
-            cursor: 'pointer', color: 'var(--slate-600)',
+            border: '1px solid var(--border)', borderRadius: '6px', backgroundColor: 'white',
+            cursor: 'pointer', color: 'var(--body)',
           }}
         >
           {showTable ? 'Show Chart' : 'Show Data Table'}
@@ -65,23 +65,23 @@ export default function ViolationLandscape({ cases }) {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
-                <th style={{ textAlign: 'left', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', borderBottom: '2px solid var(--slate-200)' }}>Category</th>
-                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', borderBottom: '2px solid var(--slate-200)' }}>Total</th>
-                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#991B1B', borderBottom: '2px solid var(--slate-200)' }}>High</th>
-                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#92400E', borderBottom: '2px solid var(--slate-200)' }}>Medium</th>
-                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#15803D', borderBottom: '2px solid var(--slate-200)' }}>Low</th>
-                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', borderBottom: '2px solid var(--slate-200)' }}>%</th>
+                <th style={{ textAlign: 'left', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', borderBottom: '2px solid var(--border)' }}>Category</th>
+                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', borderBottom: '2px solid var(--border)' }}>Total</th>
+                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#991B1B', borderBottom: '2px solid var(--border)' }}>High</th>
+                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#92400E', borderBottom: '2px solid var(--border)' }}>Medium</th>
+                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#15803D', borderBottom: '2px solid var(--border)' }}>Low</th>
+                <th style={{ textAlign: 'center', padding: '8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', borderBottom: '2px solid var(--border)' }}>%</th>
               </tr>
             </thead>
             <tbody>
               {data.map(d => (
                 <tr key={d.name}>
-                  <td style={{ padding: '6px 8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, borderBottom: '1px solid var(--slate-100)' }}>{d.name}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'center', fontWeight: 700, fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)' }}>{d.total}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)', color: '#991B1B' }}>{d.high}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)', color: '#92400E' }}>{d.medium}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)', color: '#15803D' }}>{d.low}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--slate-100)', color: 'var(--slate-500)' }}>{totalCases > 0 ? Math.round((d.total / totalCases) * 100) : 0}%</td>
+                  <td style={{ padding: '6px 8px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, borderBottom: '1px solid var(--border-lighter)' }}>{d.name}</td>
+                  <td style={{ padding: '6px 8px', textAlign: 'center', fontWeight: 700, fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--border-lighter)' }}>{d.total}</td>
+                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--border-lighter)', color: '#991B1B' }}>{d.high}</td>
+                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--border-lighter)', color: '#92400E' }}>{d.medium}</td>
+                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--border-lighter)', color: '#15803D' }}>{d.low}</td>
+                  <td style={{ padding: '6px 8px', textAlign: 'center', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', borderBottom: '1px solid var(--border-lighter)', color: 'var(--body-secondary)' }}>{totalCases > 0 ? Math.round((d.total / totalCases) * 100) : 0}%</td>
                 </tr>
               ))}
             </tbody>
@@ -99,8 +99,8 @@ export default function ViolationLandscape({ cases }) {
           <div aria-hidden="true" style={{ width: '100%', height: Math.max(200, data.length * 36) }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data} layout="vertical" barSize={20} margin={{ left: 10, right: 30, top: 5, bottom: 5 }}>
-                <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
-                <YAxis type="category" dataKey="name" width={120} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-700)' }} />
+                <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--body-secondary)' }} />
+                <YAxis type="category" dataKey="name" width={120} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--body)' }} />
                 <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
                 <Legend wrapperStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
                 <Bar dataKey="high" stackId="a" fill={SEV_COLORS.high} name="High Severity" radius={[0, 0, 0, 0]} />

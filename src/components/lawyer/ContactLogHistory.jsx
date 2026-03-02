@@ -17,7 +17,7 @@ export default function ContactLogHistory({ logs }) {
     return (
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-        color: 'var(--slate-600)', fontStyle: 'italic', margin: 0
+        color: 'var(--body)', fontStyle: 'italic', margin: 0
       }}>
         No contact logs yet.
       </p>
@@ -33,29 +33,29 @@ export default function ContactLogHistory({ logs }) {
         return (
           <div key={log.id} style={{
             display: 'flex', alignItems: 'flex-start', gap: '0.625rem',
-            padding: '0.5rem 0.75rem', backgroundColor: 'var(--slate-50)',
-            borderRadius: 'var(--radius-sm)', border: '1px solid var(--slate-100)'
+            padding: '0.5rem 0.75rem', backgroundColor: 'var(--page-bg-subtle)',
+            borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-lighter)'
           }}>
-            <Icon size={16} style={{ color: 'var(--slate-500)', flexShrink: 0, marginTop: '2px' }} />
+            <Icon size={16} style={{ color: 'var(--body-secondary)', flexShrink: 0, marginTop: '2px' }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700,
-                  color: 'var(--slate-700)'
+                  color: 'var(--body)'
                 }}>{TYPE_LABELS[log.contact_type] || log.contact_type}</span>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-                  color: 'var(--slate-600)'
+                  color: 'var(--body)'
                 }}>via {METHOD_LABELS[log.contact_method] || log.contact_method}</span>
                 <span style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-                  color: 'var(--slate-600)', marginLeft: 'auto'
+                  color: 'var(--body)', marginLeft: 'auto'
                 }}>{formatDate(log.logged_at || log.created_date)}</span>
               </div>
               {log.notes && (
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                  color: 'var(--slate-600)', margin: '4px 0 0 0', lineHeight: 1.5
+                  color: 'var(--body)', margin: '4px 0 0 0', lineHeight: 1.5
                 }}>{log.notes}</p>
               )}
             </div>

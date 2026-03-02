@@ -45,11 +45,11 @@ export default function PipelineMarketplaceSection({ cases, contactLogs }) {
       <CompactStatCard label="Submitted This Month" count={submittedThisMonth} bgColor="#DBEAFE" textColor="#1D4ED8" icon={FileText} />
       <CompactStatCard label="Approved This Month" count={approvedThisMonth} bgColor="#DCFCE7" textColor="#15803D" icon={CheckCircle} />
       <CompactStatCard label="Assigned This Month" count={assignedThisMonth} bgColor="#F3E8FF" textColor="#7C3AED" icon={UserCheck} />
-      <CompactStatCard label="Avg Review Time" count={avgReviewHrs} bgColor="var(--surface)" borderColor="var(--slate-200)" icon={Clock} />
+      <CompactStatCard label="Avg Review Time" count={avgReviewHrs} bgColor="var(--surface)" borderColor="var(--border)" icon={Clock} />
       <CompactStatCard label="Available Now" count={availableNow} bgColor="#DCFCE7" textColor="#15803D" icon={ShoppingCart} />
-      <CompactStatCard label="Avg Time to Assign" count={avgAssignHrs} bgColor="var(--surface)" borderColor="var(--slate-200)" icon={Timer} />
+      <CompactStatCard label="Avg Time to Assign" count={avgAssignHrs} bgColor="var(--surface)" borderColor="var(--border)" icon={Timer} />
       <CompactStatCard label="Contact Compliance" count={complianceRate} bgColor="#DBEAFE" textColor="#1D4ED8" icon={ShieldCheck} />
-      <CompactStatCard label="Unclaimed 72hrs+" count={unclaimed72} bgColor={unclaimed72 > 0 ? '#FEE2E2' : 'var(--surface)'} textColor={unclaimed72 > 0 ? '#B91C1C' : 'var(--slate-700)'} borderColor={unclaimed72 > 0 ? '#FECACA' : 'var(--slate-200)'} icon={AlertTriangle} />
+      <CompactStatCard label="Unclaimed 72hrs+" count={unclaimed72} bgColor={unclaimed72 > 0 ? '#FEE2E2' : 'var(--surface)'} textColor={unclaimed72 > 0 ? '#B91C1C' : 'var(--body)'} borderColor={unclaimed72 > 0 ? '#FECACA' : 'var(--border)'} icon={AlertTriangle} />
     </div>
   );
 }

@@ -5,15 +5,15 @@ function DetailRow({ icon: Icon, label, value }) {
   if (!value) return null;
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: 'var(--space-md)' }}>
-      <Icon size={18} aria-hidden="true" style={{ color: 'var(--slate-500)', flexShrink: 0, marginTop: '2px' }} />
+      <Icon size={18} aria-hidden="true" style={{ color: 'var(--body-secondary)', flexShrink: 0, marginTop: '2px' }} />
       <div>
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-          color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.05em'
+          color: 'var(--body)', textTransform: 'uppercase', letterSpacing: '0.05em'
         }}>{label}</span>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-          color: 'var(--slate-800)', margin: '2px 0 0 0', lineHeight: 1.5
+          color: 'var(--heading)', margin: '2px 0 0 0', lineHeight: 1.5
         }}>{value}</p>
       </div>
     </div>
@@ -66,11 +66,11 @@ export default function SubmissionDetails({ caseData }) {
         <div style={{ marginTop: 'var(--space-lg)' }}>
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-            color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '0.05em'
+            color: 'var(--body)', textTransform: 'uppercase', letterSpacing: '0.05em'
           }}>Narrative</span>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-            color: 'var(--slate-700)', lineHeight: 1.7, whiteSpace: 'pre-wrap',
+            color: 'var(--body)', lineHeight: 1.7, whiteSpace: 'pre-wrap',
             marginTop: '0.375rem'
           }}>
             {c.narrative}

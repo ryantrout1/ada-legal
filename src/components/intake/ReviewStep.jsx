@@ -13,7 +13,7 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
       <p style={{
         fontFamily: 'Manrope, sans-serif',
         fontSize: '1.0625rem',
-        color: 'var(--slate-600)',
+        color: 'var(--body)',
         marginBottom: 'var(--space-xl)',
         lineHeight: 1.6
       }}>
@@ -55,7 +55,7 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
             <ReviewItem label="Photos" value={`${data.photos.length} attached`} />
             <dt style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-              fontWeight: 600, color: 'var(--slate-600)'
+              fontWeight: 600, color: 'var(--body)'
             }}> </dt>
             <dd style={{ margin: 0 }}>
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -66,7 +66,7 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
                     alt={`Violation photo ${i + 1}`}
                     style={{
                       width: '60px', height: '60px', objectFit: 'cover',
-                      borderRadius: '6px', border: '1px solid var(--slate-200)'
+                      borderRadius: '6px', border: '1px solid var(--border)'
                     }}
                   />
                 ))}
@@ -95,7 +95,7 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
             cursor: 'pointer',
             fontFamily: 'Manrope, sans-serif',
             fontSize: '0.9375rem',
-            color: 'var(--slate-800)',
+            color: 'var(--heading)',
             lineHeight: 1.5
           }}
         >
@@ -120,7 +120,7 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.8125rem',
-          color: 'var(--slate-500)',
+          color: 'var(--body-secondary)',
           fontStyle: 'italic',
           lineHeight: 1.5,
           marginTop: 'var(--space-md)',
@@ -140,7 +140,7 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
             fontSize: '1.0625rem',
             fontWeight: 700,
             color: 'white',
-            backgroundColor: consent && !submitting ? 'var(--terra-600)' : 'var(--slate-500)',
+            backgroundColor: consent && !submitting ? 'var(--section-label)' : 'var(--body-secondary)',
             border: 'none',
             borderRadius: 'var(--radius-md)',
             cursor: consent && !submitting ? 'pointer' : 'not-allowed',
@@ -148,8 +148,8 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
             transition: 'all 0.2s',
             opacity: consent && !submitting ? 1 : 0.7
           }}
-          onMouseEnter={e => { if (consent && !submitting) e.target.style.backgroundColor = 'var(--terra-700)'; }}
-          onMouseLeave={e => { if (consent && !submitting) e.target.style.backgroundColor = 'var(--terra-600)'; }}
+          onMouseEnter={e => { if (consent && !submitting) e.target.style.backgroundColor = 'var(--section-label)'; }}
+          onMouseLeave={e => { if (consent && !submitting) e.target.style.backgroundColor = 'var(--section-label)'; }}
         >
           {submitting ? 'Submitting…' : 'Submit Report →'}
         </button>

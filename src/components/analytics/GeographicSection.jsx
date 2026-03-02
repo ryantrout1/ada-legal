@@ -60,12 +60,12 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
   };
 
   const cardStyle = {
-    backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+    backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
     borderRadius: 'var(--radius-md)', padding: '12px'
   };
   const subhead = {
     fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-    color: 'var(--slate-800)', marginBottom: '0.5rem', marginTop: 0
+    color: 'var(--heading)', marginBottom: '0.5rem', marginTop: 0
   };
 
   return (
@@ -74,7 +74,7 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
         <div style={cardStyle}>
           <p style={subhead}>Cases by State</p>
           {stateData.length === 0 ? (
-            <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.8125rem' }}>No data yet</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)', fontSize: '0.8125rem' }}>No data yet</p>
           ) : (
             <>
             <div style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}>
@@ -87,9 +87,9 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
             <div aria-hidden="true" style={{ width: '100%', height: Math.max(120, stateData.length * 22) }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stateData} layout="vertical" barSize={12} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" horizontal={false} />
-                  <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
-                  <YAxis type="category" dataKey="name" width={32} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-700)' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
+                  <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--body-secondary)' }} />
+                  <YAxis type="category" dataKey="name" width={32} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--body)' }} />
                   <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
                   <Bar dataKey="count" radius={[0, 3, 3, 0]} cursor="pointer" onClick={handleStateClick}>
                     {stateData.map(entry => (
@@ -109,7 +109,7 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
         <div style={cardStyle}>
           <p style={subhead}>Top 10 Cities</p>
           {cityData.length === 0 ? (
-            <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--slate-500)', fontSize: '0.8125rem' }}>No data yet</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)', fontSize: '0.8125rem' }}>No data yet</p>
           ) : (
             <>
             <div style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}>
@@ -122,9 +122,9 @@ export default function GeographicSection({ cases, filters, onFilterChange }) {
             <div aria-hidden="true" style={{ width: '100%', height: Math.max(120, cityData.length * 22) }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={cityData} layout="vertical" barSize={12} margin={{ left: 5, right: 15, top: 2, bottom: 2 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" horizontal={false} />
-                  <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--slate-500)' }} />
-                  <YAxis type="category" dataKey="name" width={70} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-700)' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
+                  <XAxis type="number" allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, fill: 'var(--body-secondary)' }} />
+                  <YAxis type="category" dataKey="name" width={70} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--body)' }} />
                   <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
                   <Bar dataKey="count" radius={[0, 3, 3, 0]} cursor="pointer" onClick={handleCityClick}>
                     {cityData.map(entry => (

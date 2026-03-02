@@ -23,15 +23,15 @@ export default function GuideActivityChart({ events, days, range }) {
 
   if (data.length === 0) {
     return (
-      <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '32px', textAlign: 'center' }}>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>No activity data yet</p>
+      <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '32px', textAlign: 'center' }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>No activity data yet</p>
       </div>
     );
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '16px' }}>
-      <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 12px' }}>
+    <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '16px' }}>
+      <h4 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 12px' }}>
         Guide Activity Over Time
       </h4>
       <div className="sr-only">
@@ -43,13 +43,13 @@ export default function GuideActivityChart({ events, days, range }) {
       <div aria-hidden="true" style={{ width: '100%', height: 240 }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ left: 0, right: 10, top: 5, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--slate-200)" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="label"
-              tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-500)' }}
+              tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--body-secondary)' }}
               interval={Math.max(0, Math.floor(data.length / 7) - 1)}
             />
-            <YAxis allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--slate-500)' }} />
+            <YAxis allowDecimals={false} tick={{ fontFamily: 'Manrope, sans-serif', fontSize: 10, fill: 'var(--body-secondary)' }} />
             <Tooltip contentStyle={{ fontFamily: 'Manrope, sans-serif', fontSize: 12 }} />
             <Line type="monotone" dataKey="views" stroke="#C2410C" strokeWidth={2} name="Guide Views" dot={false} activeDot={{ r: 4 }} />
           </LineChart>

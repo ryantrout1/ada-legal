@@ -12,7 +12,7 @@ const labelStyle = {
 };
 const valStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 600,
-  color: 'var(--slate-900)', margin: 0
+  color: 'var(--heading)', margin: 0
 };
 
 export default function WhatYouReported({ caseData }) {
@@ -25,28 +25,28 @@ export default function WhatYouReported({ caseData }) {
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
       borderRadius: '12px', padding: '24px'
     }}>
-      <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 16px' }}>
+      <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 16px' }}>
         What You Reported
       </h2>
 
       {/* Violation Summary Card */}
-      <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px' }}>
+      <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px' }}>
         {/* Type Header */}
         <div style={{
           padding: '10px 16px',
-          backgroundColor: isPhysical ? 'var(--terra-100, #FEF1EC)' : '#DBEAFE',
+          backgroundColor: isPhysical ? 'var(--card-bg-tinted)' : '#DBEAFE',
           display: 'flex', alignItems: 'center', gap: '8px'
         }}>
           {isPhysical
-            ? <Building2 size={16} style={{ color: 'var(--terra-600, #C2410C)' }} />
+            ? <Building2 size={16} style={{ color: 'var(--accent)' }} />
             : <Globe size={16} style={{ color: '#1E3A8A' }} />
           }
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-            color: isPhysical ? 'var(--terra-600, #C2410C)' : '#1E3A8A'
+            color: isPhysical ? 'var(--accent)' : '#1E3A8A'
           }}>
             {isPhysical ? 'Physical Space Violation' : 'Digital / Website Violation'}
           </span>
@@ -96,18 +96,18 @@ export default function WhatYouReported({ caseData }) {
       {/* Narrative */}
       {c.narrative && (
         <div style={{
-          borderLeft: '3px solid var(--terra-600, #C2410C)',
+          borderLeft: '3px solid var(--accent)',
           backgroundColor: '#FFF8F5', borderRadius: '0 10px 10px 0', padding: '16px',
           marginBottom: '16px'
         }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-900)', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--heading)', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap' }}>
             {c.narrative}
           </p>
         </div>
       )}
 
       {/* Contact Info */}
-      <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '12px', padding: '16px' }}>
+      <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '12px', padding: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>
             Your Contact Info
@@ -115,7 +115,7 @@ export default function WhatYouReported({ caseData }) {
           <span style={{
             display: 'inline-block', padding: '3px 10px', borderRadius: '8px',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-            color: 'var(--terra-600, #C2410C)', backgroundColor: 'var(--terra-100, #FEF1EC)'
+            color: 'var(--accent)', backgroundColor: 'var(--card-bg-tinted)'
           }}>You prefer: {prefLabel}</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>

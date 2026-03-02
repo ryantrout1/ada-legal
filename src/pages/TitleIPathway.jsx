@@ -18,22 +18,22 @@ const STEPS = [
 
 export default function TitleIPathway() {
   return (
-    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: '40px 24px' }}>
+    <div style={{ backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)', padding: '40px 24px' }}>
       <div style={{ maxWidth: '780px', margin: '0 auto' }}>
 
         <Link to={createPageUrl('StandardsGuide')} style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: '#475569',
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: 'var(--body-secondary)',
           textDecoration: 'none', display: 'inline-block', marginBottom: '24px'
         }}
-          onMouseEnter={e => { e.currentTarget.style.color = '#C2410C'; }}
-          onMouseLeave={e => { e.currentTarget.style.color = '#475569'; }}
+          onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent)'; }}
+          onMouseLeave={e => { e.currentTarget.style.color = 'var(--body-secondary)'; }}
         >
           ← Back to Standards Guide
         </Link>
 
         {/* Hero card */}
         <div style={{
-          background: 'white', border: '1px solid #E2E8F0', borderRadius: '24px',
+          background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '24px',
           padding: 'clamp(32px, 5vw, 48px)', boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
           marginBottom: '32px'
         }}>
@@ -47,12 +47,12 @@ export default function TitleIPathway() {
           </span>
           <h1 style={{
             fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3.5vw, 2rem)',
-            fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 16px', lineHeight: 1.25
+            fontWeight: 700, color: 'var(--heading)', margin: '0 0 16px', lineHeight: 1.25
           }}>
             Workplace disability discrimination has a strict filing deadline — here's what you need to know right now
           </h1>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '1.02rem', color: '#475569',
+            fontFamily: 'Manrope, sans-serif', fontSize: '1.02rem', color: 'var(--body-secondary)',
             lineHeight: 1.6, margin: 0
           }}>
             Title I of the ADA covers employment discrimination. These complaints are filed with the Equal Employment Opportunity Commission (EEOC), not through private lawsuits initially. Time is critical — here's your pathway.
@@ -86,7 +86,7 @@ export default function TitleIPathway() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', marginBottom: '32px' }} className="pathway-info-grid">
           {INFO_CARDS.map(card => (
             <div key={card.heading} style={{
-              background: 'white', border: '1px solid #E2E8F0', borderRadius: '16px', padding: '24px'
+              background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px'
             }}>
               <div style={{
                 width: '40px', height: '40px', borderRadius: '10px', background: card.bg,
@@ -95,10 +95,10 @@ export default function TitleIPathway() {
               }}>
                 <span aria-hidden="true">{card.icon}</span>
               </div>
-              <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '0.95rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px' }}>
+              <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '0.95rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 8px' }}>
                 {card.heading}
               </h3>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: 'var(--body-secondary)', lineHeight: 1.6, margin: 0 }}>
                 {card.text}
               </p>
             </div>
@@ -107,10 +107,10 @@ export default function TitleIPathway() {
 
         {/* Steps */}
         <div style={{
-          background: 'white', border: '1px solid #E2E8F0', borderRadius: '24px',
+          background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '24px',
           padding: 'clamp(32px, 5vw, 48px)', marginBottom: '32px'
         }}>
-          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 32px' }}>
+          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 32px' }}>
             How to file your Title I complaint
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
@@ -118,19 +118,19 @@ export default function TitleIPathway() {
               <div key={i} style={{ display: 'flex', gap: '20px', position: 'relative' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
                   <div style={{
-                    width: '40px', height: '40px', borderRadius: '50%', background: '#F1F5F9',
+                    width: '40px', height: '40px', borderRadius: '50%', background: 'var(--page-bg-subtle)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700, color: '#334155'
+                    fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700, color: 'var(--body)'
                   }}>
                     {i + 1}
                   </div>
-                  {i < STEPS.length - 1 && <div style={{ width: '2px', flex: 1, background: '#E2E8F0', margin: '4px 0' }} />}
+                  {i < STEPS.length - 1 && <div style={{ width: '2px', flex: 1, background: 'var(--border)', margin: '4px 0' }} />}
                 </div>
                 <div style={{ paddingBottom: i < STEPS.length - 1 ? '28px' : '0' }}>
-                  <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--slate-900)', margin: '8px 0 8px' }}>
+                  <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '8px 0 8px' }}>
                     {step.title}
                   </h3>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#475569', lineHeight: 1.65, margin: 0 }}>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body-secondary)', lineHeight: 1.65, margin: 0 }}>
                     {step.text}
                   </p>
                 </div>
@@ -144,7 +144,7 @@ export default function TitleIPathway() {
           <a href="https://publicportal.eeoc.gov/Portal/Login" target="_blank" rel="noopener noreferrer"
             style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600,
-              color: 'white', background: '#9A3412', padding: '14px 28px',
+              color: 'var(--btn-text)', background: 'var(--section-label)', padding: '14px 28px',
               borderRadius: '10px', textDecoration: 'none', minHeight: '48px',
               display: 'inline-flex', alignItems: 'center'
             }}>
@@ -153,8 +153,8 @@ export default function TitleIPathway() {
           <a href="tel:+18006694000"
             style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600,
-              color: '#334155', background: 'white', padding: '14px 28px',
-              borderRadius: '10px', textDecoration: 'none', border: '2px solid #E2E8F0',
+              color: 'var(--body)', background: 'var(--card-bg)', padding: '14px 28px',
+              borderRadius: '10px', textDecoration: 'none', border: '2px solid var(--border)',
               minHeight: '48px', display: 'inline-flex', alignItems: 'center'
             }}>
             Call EEOC: (800) 669-4000
@@ -163,9 +163,9 @@ export default function TitleIPathway() {
 
         {/* Reassurance */}
         <div style={{
-          background: '#F1F5F9', borderRadius: '16px', padding: '24px', textAlign: 'center'
+          background: 'var(--page-bg-subtle)', borderRadius: '16px', padding: '24px', textAlign: 'center'
         }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem', color: '#475569', lineHeight: 1.65, margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem', color: 'var(--body-secondary)', lineHeight: 1.65, margin: 0 }}>
             <strong>Not sure if this is the right path?</strong> Some situations involve both employment discrimination and access to a business or service. If your employer is also a public-facing business and the violation happened in a space open to the public, you may have both Title I and Title III claims. When in doubt, file with the EEOC first (because of the strict deadline), then come back to explore your other options.
           </p>
         </div>

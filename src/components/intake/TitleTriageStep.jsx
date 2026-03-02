@@ -98,7 +98,7 @@ export default function TitleTriageStep({ onSelectTitleIII }) {
 
               <h2 style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700,
-                color: 'var(--slate-900)', margin: '0 0 8px', lineHeight: 1.35
+                color: 'var(--heading)', margin: '0 0 8px', lineHeight: 1.35
               }}>
                 {card.heading}
               </h2>

@@ -17,17 +17,17 @@ export default function ClusterIndicator({ caseData }) {
       <div style={{
         display: 'flex', alignItems: 'center', gap: '6px',
       }}>
-        <BarChart3 size={14} aria-hidden="true" style={{ color: '#1E3A8A', flexShrink: 0 }} />
+        <BarChart3 size={14} aria-hidden="true" style={{ color: 'var(--link)', flexShrink: 0 }} />
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 600,
-          color: '#1E3A8A',
+          color: 'var(--link)',
         }}>
           {count} reports for this business
         </span>
       </div>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 400,
-        color: '#475569', margin: '2px 0 0 20px', lineHeight: 1.4,
+        color: 'var(--body-secondary)', margin: '2px 0 0 20px', lineHeight: 1.4,
       }}>
         Multiple reports strengthen the legal case
       </p>

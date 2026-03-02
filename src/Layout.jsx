@@ -203,8 +203,8 @@ export default function Layout({ children, currentPageName }) {
         /* Base Styles */
         body {
           font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          background-color: var(--slate-900);
-          color: var(--slate-800);
+          background-color: var(--heading);
+          color: var(--heading);
           margin: 0;
           line-height: 1.6;
           -webkit-font-smoothing: antialiased;
@@ -212,7 +212,7 @@ export default function Layout({ children, currentPageName }) {
         
         h1, h2, h3, h4, h5, h6 {
           font-family: 'Fraunces', Georgia, serif;
-          color: var(--slate-900);
+          color: var(--heading);
           font-weight: 600;
           line-height: 1.2;
         }
@@ -223,12 +223,12 @@ export default function Layout({ children, currentPageName }) {
         
         /* Links */
         a {
-          color: var(--terra-600);
+          color: var(--section-label);
           text-decoration: none;
         }
         
         a:hover {
-          color: var(--terra-700);
+          color: var(--section-label);
           text-decoration: underline;
         }
       `}</style>
@@ -273,7 +273,7 @@ export default function Layout({ children, currentPageName }) {
               boxShadow: 'none', border: 'none', outline: 'none'
             }
           : {
-              backgroundColor: 'var(--slate-900)',
+              backgroundColor: 'var(--heading)',
               color: 'white', height: '72px',
               display: 'flex', alignItems: 'center',
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
@@ -368,7 +368,7 @@ export default function Layout({ children, currentPageName }) {
                     <button
                       onClick={() => base44.auth.redirectToLogin()}
                       style={{
-                        background: 'var(--terra-600)',
+                        background: 'var(--section-label)',
                         color: 'white',
                         border: 'none',
                         padding: '0.5rem 1.5rem',
@@ -607,7 +607,7 @@ export default function Layout({ children, currentPageName }) {
                     <button
                       onClick={() => { setMobileMenuOpen(false); base44.auth.redirectToLogin(); }}
                       style={{
-                        background: 'var(--terra-600)',
+                        background: 'var(--section-label)',
                         color: 'white',
                         border: 'none',
                         padding: '0.75rem',
@@ -745,7 +745,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Global footer — hidden on landing page */}
       {currentPageName !== 'Home' && (
         <footer role="contentinfo" style={{
-          backgroundColor: 'var(--slate-900)',
+          backgroundColor: 'var(--heading)',
           color: 'var(--dark-muted)',
           padding: '2rem 0',
           marginTop: 0
