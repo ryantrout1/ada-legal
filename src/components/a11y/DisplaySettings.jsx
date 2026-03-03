@@ -320,6 +320,7 @@ export const applyPreferences = (prefs) => {
   styleEl.textContent = css;
 
   // Force high-contrast class on body for JS-based overrides
+  document.documentElement.setAttribute('data-reading-level', prefs.readingLevel || 'standard');
   if (prefs.displayMode === 'high-contrast') {
     document.body.classList.add('hc-mode');
     document.body.classList.remove('dark-mode', 'warm-mode');

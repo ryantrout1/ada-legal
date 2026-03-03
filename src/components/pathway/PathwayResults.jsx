@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import AutoCiteLinks from '../guide/AutoCiteLinks';
 import { ArrowRight, ExternalLink, RotateCcw } from 'lucide-react';
+import { useReadingLevel } from '../a11y/ReadingLevelContext';
 
 const urgencyColors = {
   green: { border: '#16A34A', bg: '#F0FDF4', text: '#14532D', label: 'You have time' },
@@ -26,6 +27,7 @@ function Card({ title, children }) {
 }
 
 export default function PathwayResults({ results, answers, onStartOver }) {
+  const { readingLevel } = useReadingLevel();
   const urgency = urgencyColors[results.deadline.urgency] || urgencyColors.yellow;
   const intakeParams = new URLSearchParams({ source: 'pathway', type: answers.category || '', location: answers.location || '', timing: answers.timing || '', barrier: answers.barrier || '' }).toString();
 
@@ -72,7 +74,8 @@ export default function PathwayResults({ results, answers, onStartOver }) {
         </p>
       </Card>
 
-      {/* Relevant Standards */}
+      {/* Relevant Standards — hidden in simple mode to reduce complexity */}
+      {readingLevel !== 'simple' && (
       <Card title="Relevant Standards">
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {results.sections.map((s, i) => (
@@ -100,6 +103,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
           ))}
         </div>
       </Card>
+      )}
 
       {/* Deadline */}
       <div style={{
@@ -159,7 +163,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
       </div>
 
       {/* Filing Paths */}
-      <Card title="Where to File">
+      <Card title={readingLevel === 'simple' ? "Where to Get Help" : "Where to File"}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {results.filingPaths.map((fp, i) => (
             <div key={i} style={{
@@ -177,7 +181,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
                   color: 'var(--body)', lineHeight: 1.5, margin: 0
                 }}>{fp.description}</p>
               </div>
-              {fp.url ? (
+              {readingLevel !== 'simple' && fp.url ? (
                 <a href={fp.url} target="_blank" rel="noopener noreferrer"
                   aria-label={`${fp.agency} (opens in new tab)`}
                   className="pw-link"
