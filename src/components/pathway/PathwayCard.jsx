@@ -7,6 +7,7 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
       aria-checked={isSelected}
       tabIndex={isSelected || index === 0 ? 0 : -1}
       onClick={onClick}
+      className="pw-card"
       onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -28,7 +29,6 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
         padding: '20px 24px',
         cursor: 'pointer',
         transition: 'all 0.2s ease',
-        outline: 'none',
         boxShadow: isSelected
           ? '0 0 0 3px var(--card-bg-tinted)'
           : '0 1px 3px rgba(0,0,0,0.06)',
@@ -39,8 +39,6 @@ export default function PathwayCard({ emoji, title, subtitle, isSelected, onClic
       }}
       onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--body-secondary)'; }}
       onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--border)'; }}
-      onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,65,12,0.6)'; e.currentTarget.style.outline = '2px solid var(--accent)'; e.currentTarget.style.outlineOffset = '2px'; }}
-      onBlur={e => { e.currentTarget.style.boxShadow = isSelected ? '0 0 0 3px var(--card-bg-tinted)' : '0 1px 3px rgba(0,0,0,0.06)'; e.currentTarget.style.outline = 'none'; }}
     >
       <div aria-hidden="true" style={{
         width: '44px', height: '44px', borderRadius: '12px',

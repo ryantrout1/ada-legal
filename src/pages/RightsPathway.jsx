@@ -171,14 +171,14 @@ export default function RightsPathway() {
   const progressPct = showResults ? 100 : totalSteps > 0 ? (currentStepIndex / totalSteps) * 100 : 0;
 
   return (
-    <div ref={topRef} style={{
+    <div ref={topRef} className="pw-page-wrap" style={{
       minHeight: '100vh', background: 'var(--page-bg-subtle)', padding: '48px 24px 64px'
     }}>
       <div style={{ maxWidth: '640px', margin: '0 auto' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <span style={{
-            display: 'inline-block', background: 'var(--section-label)', color: 'var(--btn-text)',
+            display: 'inline-block', background: 'var(--section-label)', color: 'white',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
             letterSpacing: '0.1em', textTransform: 'uppercase',
             padding: '4px 14px', borderRadius: '100px', marginBottom: '12px'
@@ -231,7 +231,7 @@ export default function RightsPathway() {
 
         {/* Wizard Steps */}
         {!showResults && (
-          <div style={{
+          <div className="pw-card-inner" style={{
             background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '20px',
             padding: '32px'
           }}>
@@ -272,15 +272,12 @@ export default function RightsPathway() {
             {/* Back button */}
             {currentStepIndex > 0 && (
               <div style={{ marginTop: '20px' }}>
-                <button onClick={handleBack} style={{
+                <button onClick={handleBack} className="pw-btn" style={{
                   background: 'transparent', border: 'none', cursor: 'pointer',
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 600,
                   color: 'var(--body-secondary)', padding: '8px 4px', minHeight: '44px',
-                  borderRadius: '6px', outline: 'none'
-                }}
-                onFocus={e => { e.currentTarget.style.outline = '2px solid var(--accent)'; e.currentTarget.style.outlineOffset = '2px'; }}
-                onBlur={e => { e.currentTarget.style.outline = 'none'; }}
-                >
+                  borderRadius: '6px'
+                }}>
                   ← Back
                 </button>
               </div>
@@ -304,8 +301,39 @@ export default function RightsPathway() {
       </div>
 
       <style>{`
+        .pw-card:focus-visible {
+          outline: 3px solid var(--accent-light) !important;
+          outline-offset: 2px !important;
+          box-shadow: 0 0 0 3px rgba(194,65,12,0.4) !important;
+        }
+        .pw-btn:focus-visible {
+          outline: 3px solid var(--accent-light);
+          outline-offset: 2px;
+        }
+        .pw-link:focus-visible {
+          outline: 3px solid var(--accent-light);
+          outline-offset: 2px;
+          border-radius: 10px;
+        }
+        @media (max-width: 360px) {
+          .pw-page-wrap {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+          }
+          .pw-card-inner {
+            padding: 28px 20px !important;
+          }
+        }
         @media (prefers-reduced-motion: reduce) {
           * { transition: none !important; animation: none !important; }
+        }
+        @media (prefers-contrast: more) {
+          .pw-card {
+            border-width: 2px !important;
+          }
+          .pw-card-inner {
+            border-width: 2px !important;
+          }
         }
       `}</style>
     </div>

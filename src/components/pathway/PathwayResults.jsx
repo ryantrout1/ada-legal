@@ -52,7 +52,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
           </span>
           <h1 style={{
             fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-            fontWeight: 700, color: 'var(--btn-text)', margin: '0 0 12px', lineHeight: 1.2
+            fontWeight: 700, color: 'var(--dark-heading)', margin: '0 0 12px', lineHeight: 1.2
           }}>
             {results.title}
           </h1>
@@ -141,7 +141,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
 
       {/* Best Next Step */}
       <div style={{
-        background: 'var(--card-bg-tinted)', border: '1px solid var(--accent)20',
+        background: 'var(--card-bg-tinted)', border: '1px solid var(--border)',
         borderRadius: '16px', padding: '28px 32px', marginBottom: '16px'
       }}>
         <h2 style={{
@@ -180,6 +180,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
               {fp.url ? (
                 <a href={fp.url} target="_blank" rel="noopener noreferrer"
                   aria-label={`${fp.agency} (opens in new tab)`}
+                  className="pw-link"
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: '4px',
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
@@ -203,17 +204,15 @@ export default function PathwayResults({ results, answers, onStartOver }) {
 
       {/* Guide Links */}
       <Card title="Learn More">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '10px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px' }}>
           {results.guideLinks.map((gl, i) => (
-            <Link key={i} to={createPageUrl(gl.page)} style={{
+            <Link key={i} to={createPageUrl(gl.page)} className="pw-link" style={{
               display: 'block', background: 'var(--page-bg-subtle)', border: '1px solid var(--border)',
               borderRadius: '10px', padding: '14px 16px', textDecoration: 'none',
-              transition: 'border-color 0.15s, box-shadow 0.15s', outline: 'none'
+              transition: 'border-color 0.15s, box-shadow 0.15s', minHeight: '44px'
             }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
-            onFocus={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(194,65,12,0.4)'; }}
-            onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; }}
             >
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700,
@@ -235,7 +234,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
       }}>
         <h2 style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700,
-          color: 'var(--btn-text)', margin: '0 0 8px'
+          color: 'var(--dark-heading)', margin: '0 0 8px'
         }}>Ready to take action?</h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
@@ -243,7 +242,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
         }}>
           Explore the ADA standards that apply to your situation, or review your rights assessment results above.
         </p>
-        <Link to={createPageUrl('StandardsGuide')} style={{
+        <Link to={createPageUrl('StandardsGuide')} className="pw-link" style={{
           display: 'inline-flex', alignItems: 'center', gap: '8px',
           background: 'var(--accent)', color: 'var(--btn-text)',
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
@@ -262,7 +261,7 @@ export default function PathwayResults({ results, answers, onStartOver }) {
 
       {/* Start Over */}
       <div style={{ textAlign: 'center', paddingBottom: '32px' }}>
-        <button onClick={onStartOver} style={{
+        <button onClick={onStartOver} className="pw-btn" style={{
           display: 'inline-flex', alignItems: 'center', gap: '6px',
           background: 'transparent', border: '1px solid var(--border)',
           borderRadius: '10px', padding: '12px 24px', cursor: 'pointer',
