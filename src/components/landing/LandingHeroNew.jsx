@@ -59,7 +59,7 @@ export default function LandingHeroNew() {
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
-        paddingTop: '72px'
+        paddingTop: '72px', paddingBottom: 'clamp(80px, 12vw, 120px)'
       }}
     >
       {/* Subtle background glow */}
