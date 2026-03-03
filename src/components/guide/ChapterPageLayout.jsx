@@ -272,9 +272,6 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
   return (
     <>
       <GuideStyles />
-      <style>{`
-        button:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; border-radius: 10px; }
-      `}</style>
       <GuideHeroBanner
         title={`Chapter ${chapterNum}: ${title}`}
         typeBadge={range}
@@ -360,7 +357,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                       borderRadius: '6px',
                       border: active ? '2px solid var(--accent)' : '1px solid var(--border)',
                       background: active ? 'var(--accent)' : 'var(--page-bg)',
-                      color: active ? 'var(--page-bg)' : 'var(--body)',
+                      color: active ? 'var(--dark-heading)' : 'var(--body)',
                       fontSize: '0.72rem', fontWeight: active ? 700 : 500,
                       fontFamily: 'Manrope, sans-serif',
                       cursor: 'pointer', transition: 'all 0.15s',
@@ -425,7 +422,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
           </div>
 
           {/* Bottom nav */}
-          <nav aria-label="Chapter navigation" style={{
+          <nav aria-label="Chapter pagination" style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             flexWrap: 'wrap', gap: '8px', marginTop: '32px', paddingTop: '20px',
             borderTop: '1px solid var(--border)'
