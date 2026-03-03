@@ -31,8 +31,8 @@ export default function DashboardCollapsible({ id, title, icon: Icon, iconColor,
         marginBottom: collapsed ? 0 : '8px'
       }}>
         {collapsed
-          ? <ChevronRight size={15} style={{ color: '#475569', flexShrink: 0 }} />
-          : <ChevronDown size={15} style={{ color: '#475569', flexShrink: 0 }} />
+          ? <ChevronRight size={15} style={{ color: 'var(--body-secondary)', flexShrink: 0 }} />
+          : <ChevronDown size={15} style={{ color: 'var(--body-secondary)', flexShrink: 0 }} />
         }
         {Icon && <Icon size={16} style={{ color: iconColor || 'var(--slate-600)', flexShrink: 0 }} />}
         <h2 style={{
@@ -42,7 +42,7 @@ export default function DashboardCollapsible({ id, title, icon: Icon, iconColor,
         {count !== undefined && (
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-            color: iconColor || '#475569', backgroundColor: 'var(--slate-100)',
+            color: iconColor || 'var(--body-secondary)', backgroundColor: 'var(--slate-100)',
             borderRadius: '9999px', padding: '1px 8px', marginLeft: '4px'
           }}>{count}</span>
         )}

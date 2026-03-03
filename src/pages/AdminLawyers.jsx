@@ -92,7 +92,7 @@ export default function AdminLawyers() {
       { key: 'total', label: 'Total Attorneys', value: total, color: 'var(--slate-800)' },
       { key: 'active', label: 'Active', value: active, bg: '#F0FDF4', color: '#15803D' },
       { key: 'pending', label: 'Pending Approval', value: pending, bg: pending > 0 ? '#FEF3C7' : undefined, color: '#92400E', pulse: pending > 0 },
-      { key: 'inactive', label: 'Inactive', value: inactive, color: '#64748B' },
+      { key: 'inactive', label: 'Inactive', value: inactive, color: 'var(--body-secondary)' },
       { key: 'suspended', label: 'Suspended', value: suspended, bg: suspended > 0 ? '#FEF2F2' : undefined, color: '#B91C1C' },
     ];
   }, [lawyers]);
@@ -136,9 +136,17 @@ export default function AdminLawyers() {
   if (loading) {
     return (
       <div role="status" aria-label="Loading attorneys" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
         <h1 className="sr-only">Attorney Network</h1>
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading attorneys…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading attorneys…</p>
       </div>
     );
   }
@@ -162,14 +170,14 @@ export default function AdminLawyers() {
             <div style={{ padding: '48px 24px', textAlign: 'center' }}>
               {lawyers.length === 0 ? (
                 <>
-                  <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: '1.5rem' }}>⚖️</div>
+                  <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'var(--page-bg-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: '1.5rem' }}>⚖️</div>
                   <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 8px' }}>No attorneys have joined yet</p>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569', margin: 0 }}>When lawyers register on the For Attorneys page, they'll appear here for your review.</p>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)', margin: 0 }}>When lawyers register on the For Attorneys page, they'll appear here for your review.</p>
                 </>
               ) : (
                 <>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: '0 0 8px' }}>No attorneys match these filters.</p>
-                  <button type="button" onClick={() => { setSearch(''); setStatusFilter('all'); }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, color: '#C2410C', padding: '4px', minHeight: '44px' }}>Reset filters</button>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: '0 0 8px' }}>No attorneys match these filters.</p>
+                  <button type="button" onClick={() => { setSearch(''); setStatusFilter('all'); }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, color: 'var(--accent)', padding: '4px', minHeight: '44px' }}>Reset filters</button>
                 </>
               )}
             </div>

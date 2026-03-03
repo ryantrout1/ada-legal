@@ -16,7 +16,7 @@ export default function CaseExpandedView({ caseData, contactLogs, notes, urgent,
       {/* Narrative */}
       <div style={{
         borderLeft: '3px solid var(--accent)',
-        backgroundColor: '#FFF8F5', borderRadius: '0 10px 10px 0', padding: '16px'
+        backgroundColor: 'var(--card-bg-tinted)', borderRadius: '0 10px 10px 0', padding: '16px'
       }}>
         <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--heading)', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap' }}>
           {c.narrative || '—'}

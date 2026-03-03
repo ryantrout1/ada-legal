@@ -42,12 +42,12 @@ function sortCases(cases, sortBy, lawyerMap, needsAttentionIds) {
 }
 
 const STAGES = [
-  { key: 'submitted', label: 'Submitted', color: '#9A3412', bg: 'rgba(251,146,60,0.08)', accent: '#FB923C' },
+  { key: 'submitted', label: 'Submitted', color: 'var(--section-label)', bg: 'rgba(251,146,60,0.08)', accent: 'var(--accent-light)' },
   { key: 'under_review', label: 'In Review', color: '#1E3A8A', bg: 'rgba(59,130,246,0.08)', accent: '#3B82F6' },
-  { key: 'available', label: 'Available', color: '#9A3412', bg: 'rgba(194,65,12,0.08)', accent: '#EA580C' },
+  { key: 'available', label: 'Available', color: 'var(--section-label)', bg: 'rgba(194,65,12,0.08)', accent: 'var(--accent)' },
   { key: 'assigned', label: 'Assigned', color: '#92400E', bg: 'rgba(217,119,6,0.08)', accent: '#D97706' },
   { key: 'in_progress', label: 'In Progress', color: '#15803D', bg: 'rgba(22,163,74,0.08)', accent: '#16A34A' },
-  { key: 'closed', label: 'Closed', color: '#64748B', bg: 'rgba(148,163,184,0.05)' },
+  { key: 'closed', label: 'Closed', color: 'var(--body-secondary)', bg: 'rgba(148,163,184,0.05)' },
   { key: 'rejected', label: 'Rejected', color: '#991B1B', bg: 'rgba(220,38,38,0.05)' },
 ];
 const ACTIVE_KEYS = new Set(['submitted', 'under_review', 'available', 'assigned', 'in_progress']);
@@ -240,15 +240,23 @@ export default function AdminCases() {
   if (loading) {
     return (
       <div role="status" aria-label="Loading Case Manager" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
         <h1 className="sr-only">Case Manager</h1>
         <div className="a11y-spinner" aria-hidden="true" />
-        <p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading cases…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading cases…</p>
       </div>
     );
   }
 
   return (
-    <div style={{ backgroundColor: '#FAF7F2', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)', paddingBottom: '60px' }}>
+    <div style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)', paddingBottom: '60px' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <AdminPageHeader
           title="Case Manager"
@@ -276,7 +284,7 @@ export default function AdminCases() {
           sortDropdown={<AdminSortDropdown value={sortBy} onChange={setSortBy} options={SORT_OPTIONS} />}
           listHeader={
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-500)' }}>
-              {pipelineStatus ? <>{sorted.length} <span style={{ textTransform: 'capitalize' }}>{pipelineStatus.replace('_', ' ')}</span> · <button onClick={() => setPipelineStatus(null)} style={{ background: 'none', border: 'none', color: '#C2410C', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', textDecoration: 'underline', padding: 0 }}>Clear filter</button></> : `All (${sorted.length})`}
+              {pipelineStatus ? <>{sorted.length} <span style={{ textTransform: 'capitalize' }}>{pipelineStatus.replace('_', ' ')}</span> · <button onClick={() => setPipelineStatus(null)} style={{ background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', textDecoration: 'underline', padding: 0 }}>Clear filter</button></> : `All (${sorted.length})`}
             </span>
           }
         />
@@ -285,10 +293,10 @@ export default function AdminCases() {
           <NeedsAttentionSection unclaimed={unclaimed} awaitingContact={awaitingContact} lawyerMap={lawyerMap} approvedLawyers={approvedLawyers} onForceAssign={handleForceAssign} onForceClose={setForceCloseCase} onReclaim={handleReassign} saving={actionSaving} />
         )}
 
-        <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #948F88', borderRadius: '12px', overflow: 'hidden' }}>
+        <div style={{ backgroundColor: 'var(--card-bg)', border: '1px solid #948F88', borderRadius: '12px', overflow: 'hidden' }}>
           {sorted.length === 0 && (
             <div style={{ padding: '3rem', textAlign: 'center' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>No cases match your current filters.</p>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: 0 }}>No cases match your current filters.</p>
             </div>
           )}
           {sorted.map(c => {

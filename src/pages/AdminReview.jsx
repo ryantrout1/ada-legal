@@ -226,11 +226,19 @@ export default function AdminReview() {
   };
 
   if (loading) {
-    return (<div role="status" aria-label="Loading review queue" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}><div className="a11y-spinner" aria-hidden="true" /><p style={{ fontFamily: 'Manrope, sans-serif', color: '#475569' }}>Loading review queue…</p></div>);
+    return (<div role="status" aria-label="Loading review queue" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}><div className="a11y-spinner" aria-hidden="true" /><p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading review queue…</p></div>);
   }
 
   return (
     <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <AdminPageHeader
           title="QC Review Queue"
@@ -268,7 +276,7 @@ export default function AdminReview() {
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-500)' }}>
               {dashboardFilter ? <><span style={{ textTransform: 'capitalize' }}>{dashboardFilter}</span> ({displayCases.length})</> : `All (${displayCases.length})`}
               {dashboardFilter && (
-                <> · <button onClick={() => setDashboardFilter(null)} style={{ background: 'none', border: 'none', color: '#C2410C', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', textDecoration: 'underline', padding: 0 }}>Clear filter</button></>
+                <> · <button onClick={() => setDashboardFilter(null)} style={{ background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', textDecoration: 'underline', padding: 0 }}>Clear filter</button></>
               )}
             </span>
           }
@@ -287,7 +295,7 @@ export default function AdminReview() {
           <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '48px 24px', textAlign: 'center' }}>
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}><CheckCircle size={28} style={{ color: '#15803D' }} /></div>
             <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 8px' }}>All caught up — no cases pending review</h2>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>New submissions will appear here automatically.</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: 0 }}>New submissions will appear here automatically.</p>
           </div>
         ) : viewMode === 'list' ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

@@ -63,6 +63,14 @@ export default function MyCases() {
   if (loading) {
     return (
       <div role="status" aria-label="Loading your cases" style={{
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
         display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
         minHeight: 'calc(100vh - 200px)', gap: '1rem'
       }}>
@@ -95,7 +103,7 @@ export default function MyCases() {
   const sorted = sortCases(filteredCases);
 
   return (
-    <div style={{ backgroundColor: '#FAF7F2', minHeight: 'calc(100vh - 200px)', padding: '1.5rem' }}>
+    <div style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: '1.5rem' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
         {/* Header */}
@@ -151,7 +159,7 @@ export default function MyCases() {
         {/* Cases or Empty State */}
         {cases.length === 0 ? (
           <div style={{
-            backgroundColor: '#FFFFFF', border: '1px solid #948F88',
+            backgroundColor: 'var(--card-bg)', border: '1px solid #948F88',
             borderRadius: '12px', padding: '48px 24px', textAlign: 'center',
             maxWidth: '480px', margin: '24px auto 0', width: '100%'
           }}>
@@ -179,7 +187,7 @@ export default function MyCases() {
           </div>
         ) : sorted.length === 0 ? (
           <div style={{
-            backgroundColor: '#FFFFFF', border: '1px solid #948F88',
+            backgroundColor: 'var(--card-bg)', border: '1px solid #948F88',
             borderRadius: '12px', padding: '32px', textAlign: 'center'
           }}>
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: 'var(--body-secondary)', margin: '0 0 8px' }}>

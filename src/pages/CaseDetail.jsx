@@ -58,6 +58,14 @@ export default function CaseDetail() {
   if (loading) {
     return (
       <div role="status" aria-label="Loading case details" style={{
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
         display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
         minHeight: 'calc(100vh - 200px)', gap: '1rem'
       }}>
@@ -122,25 +130,25 @@ export default function CaseDetail() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <User size={16} style={{ color: '#15803D' }} />
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#1E293B', fontWeight: 600 }}>
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--heading)', fontWeight: 600 }}>
                   {lawyer.full_name}
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Building2 size={16} style={{ color: '#15803D' }} />
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#1E293B' }}>
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--heading)' }}>
                   {lawyer.firm_name}
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Mail size={16} style={{ color: '#15803D' }} />
-                <a href={`mailto:${lawyer.email}`} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#1E293B', textDecoration: 'none' }}>
+                <a href={`mailto:${lawyer.email}`} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--heading)', textDecoration: 'none' }}>
                   {lawyer.email}
                 </a>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Phone size={16} style={{ color: '#15803D' }} />
-                <a href={`tel:${lawyer.phone}`} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#1E293B', textDecoration: 'none' }}>
+                <a href={`tel:${lawyer.phone}`} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--heading)', textDecoration: 'none' }}>
                   {lawyer.phone}
                 </a>
               </div>

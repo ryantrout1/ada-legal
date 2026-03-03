@@ -33,10 +33,10 @@ export default function PendingLawyersBanner({ lawyers }) {
           }}>
             <div>
               <span style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: '#1E293B'
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--heading)'
               }}>{l.full_name}</span>
               <span style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#64748B', marginLeft: '0.5rem'
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', marginLeft: '0.5rem'
               }}>
                 {l.firm_name}
               </span>

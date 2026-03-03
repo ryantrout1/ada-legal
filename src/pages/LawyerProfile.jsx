@@ -52,6 +52,14 @@ export default function LawyerProfile() {
   if (loading) {
     return (
       <div role="status" aria-label="Loading profile" style={{
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
         display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
         minHeight: 'calc(100vh - 200px)', gap: '1rem'
       }}>

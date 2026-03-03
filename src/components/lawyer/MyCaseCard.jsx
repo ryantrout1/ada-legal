@@ -87,7 +87,7 @@ export default function MyCaseCard({ caseData, contactLogs, onLogContact }) {
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
         gap: 'var(--space-sm)', marginBottom: 'var(--space-md)',
-        padding: 'var(--space-md)', backgroundColor: '#FFF7ED',
+        padding: 'var(--space-md)', backgroundColor: 'var(--card-bg-warm)',
         borderRadius: 'var(--radius-md)', border: '1px solid #FED7AA'
       }}>
         <InfoItem icon={User} label="Reporter" value={c.contact_name} />

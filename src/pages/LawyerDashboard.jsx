@@ -170,6 +170,14 @@ export default function LawyerDashboard() {
 
   return (
     <div style={{ backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)', padding: '1.5rem' }}>
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
       <div style={{ maxWidth: '960px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
           My Cases

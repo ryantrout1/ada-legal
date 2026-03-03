@@ -11,7 +11,7 @@ function formatDate(dateStr) {
 export default function CompactSubmissionsTable({ cases }) {
   if (!cases || cases.length === 0) {
     return (
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569', margin: 0 }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)', margin: 0 }}>
         No pending submissions at this time.
       </p>
 
@@ -20,7 +20,7 @@ export default function CompactSubmissionsTable({ cases }) {
 
   const th = {
     fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-    color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em',
+    color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em',
     padding: '6px 10px', textAlign: 'left', borderBottom: '2px solid var(--slate-200)'
   };
   const td = {
@@ -49,7 +49,7 @@ export default function CompactSubmissionsTable({ cases }) {
             <tbody>
               {cases.map(c => (
                 <tr key={c.id}>
-                  <td style={{ ...td, fontFamily: 'monospace', fontSize: '0.75rem', color: '#475569' }}>
+                  <td style={{ ...td, fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>
                     {c.id?.slice(0, 8)}
                   </td>
                   <td style={{ ...td, fontWeight: 600 }}>{c.business_name || '—'}</td>

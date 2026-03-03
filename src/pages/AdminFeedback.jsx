@@ -61,6 +61,14 @@ export default function AdminFeedback() {
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: '80px 24px' }}>
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
         <div className="a11y-spinner" />
       </div>
     );
@@ -114,7 +122,7 @@ function FilterSelect({ label, value, onChange, options }) {
         fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
         padding: '8px 12px', borderRadius: '8px',
         border: '1px solid #E2E8F0', background: 'white',
-        color: '#334155', minHeight: '38px', cursor: 'pointer',
+        color: 'var(--body)', minHeight: '38px', cursor: 'pointer',
       }}
     >
       {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}

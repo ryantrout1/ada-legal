@@ -162,7 +162,7 @@ export default function CaseRow({ caseData, contactLogs, group, onLogContact, on
             {/* Claimant contact — prominently at top */}
             <div style={{
               padding: '0.875rem', marginBottom: '1rem',
-              backgroundColor: '#FFF7ED', borderRadius: 'var(--radius-md)',
+              backgroundColor: 'var(--card-bg-warm)', borderRadius: 'var(--radius-md)',
               border: '2px solid #FDBA74'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.625rem' }}>

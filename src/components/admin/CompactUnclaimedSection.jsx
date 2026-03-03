@@ -14,7 +14,7 @@ function formatDuration(dateStr) {
 export default function CompactUnclaimedSection({ cases }) {
   if (!cases || cases.length === 0) {
     return (
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569', margin: 0 }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)', margin: 0 }}>
         No unclaimed cases over 72 hours.
       </p>
 
@@ -50,7 +50,7 @@ export default function CompactUnclaimedSection({ cases }) {
               color: 'var(--slate-800)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
             }}>{c.business_name}</span>
             <span style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569',
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)',
               whiteSpace: 'nowrap', flexShrink: 0
             }}>{[c.city, c.state].filter(Boolean).join(', ')}</span>
             <span style={{
