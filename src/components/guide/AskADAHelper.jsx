@@ -39,18 +39,29 @@ const SUGGESTED_QUESTIONS = {
 };
 
 function buildSystemPrompt(pageContext, readingLevel) {
-  const levels = { simple: "SIMPLE. Short sentences under 15 words. No legal terms.", standard: "STANDARD. Plain language. Reference ADA section numbers.", professional: "PROFESSIONAL. Legal terminology OK. Include citations." };
-  const CHMAP = "Ch1:Ground/Floor(302) | Ch2:Ramps(405),Elevators(407) | Ch3:Parking(502),Routes(402) | Ch4:Doors(404) | Ch5:Fountains(602),Toilets(604),Grab Bars(609),Showers(608) | Ch6:Bathtubs(607),Kitchens(804) | Ch7:Signs(703),Alarms(702) | Ch8:Assembly(802),Dining(803),Pools(1009) | Ch9:Play(1008),Exercise(1010) | Ch10:Controls(309),Reach(308),Counters(904)";
-  return "You are the ADA Standards Guide assistant on ADA Legal Link.
+  const levels = { simple: "SIMPLE. Short sentences under 15 words.", standard: "STANDARD. Plain language. Reference ADA section numbers.", professional: "PROFESSIONAL. Legal terminology OK. Include citations." };
+  const CHMAP = "Ch1:Ground/Floor(302)|Ch2:Ramps(405),Elevators(407)|Ch3:Parking(502),Routes(402)|Ch4:Doors(404)|Ch5:Fountains(602),Toilets(604),Grab Bars(609),Showers(608)|Ch6:Bathtubs(607),Kitchens(804)|Ch7:Signs(703),Alarms(702)|Ch8:Assembly(802),Dining(803),Pools(1009)|Ch9:Play(1008),Exercise(1010)|Ch10:Controls(309),Reach(308),Counters(904)";
+  const level = levels[readingLevel] || levels.standard;
+  return `You are the ADA Standards Guide assistant on ADA Legal Link.
 
-CRITICAL: ONLY answer using the ADA STANDARDS CONTENT provided below. Do NOT use general knowledge. If the topic is on this page, quote section numbers from the content. If not on this page, say which Chapter covers it using the map. NEVER give general descriptions, installation tips, or product recommendations. NEVER provide legal advice - explain what standards say and direct to Rights Pathway. Keep to 3-4 sentences. No lists or markdown. Safe for all ages. If unrelated to ADA, say you only help with ADA standards.
+CRITICAL RULES:
+1. ONLY answer using the ADA STANDARDS CONTENT provided below. Do NOT use general knowledge.
+2. If the topic IS on this page, answer from that content only. Quote section numbers.
+3. If the topic is NOT on this page, say which Chapter covers it using the chapter map.
+4. NEVER give general descriptions, installation tips, or product recommendations.
+5. NEVER provide legal advice. Explain what the standards say. Direct to Rights Pathway.
+6. Keep responses to 3-4 sentences max.
+7. No bullet points or markdown. Natural sentences only.
+8. If someone describes a violation, validate them, explain the standard, direct to Rights Pathway.
+9. Safe for all audiences and ages.
+10. If unrelated to ADA, say you only help with ADA accessibility standards.
 
-" + (levels[readingLevel] || levels.standard) + "
+${level}
 
-" + pageContext + "
-CHAPTER MAP: " + CHMAP + "
+${pageContext}
+CHAPTER MAP: ${CHMAP}
 
-TONE: Warm, clear, direct. A knowledgeable guide for these specific standards.";
+TONE: Warm, clear, direct.`;
 }
 
 function Message({ role, content, isLoading }) {
