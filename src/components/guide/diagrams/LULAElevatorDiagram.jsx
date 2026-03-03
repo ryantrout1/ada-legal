@@ -104,7 +104,7 @@ export default function LULAElevatorDiagram() {
 
           {/* End-opening: Reach range indicator */}
           <line x1="554" y1="135" x2="554" y2="205" stroke="#2563EB" strokeWidth="0.5" strokeDasharray="3 2" opacity="0.4" />
-          <text x="554" y="128" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#1E3A8A">15"–48"</text>
+          <text x="554" y="128" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#1E3A8A">15″–48″</text>
 
           {/* Width dim */}
           <line x1="540" y1="410" x2="760" y2="410" stroke="#C2410C" strokeWidth="1" />
