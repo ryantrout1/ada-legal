@@ -21,6 +21,9 @@ export default function GuideEmployment() {
           <GuideSection
             id="who-covered"
             title="Who Is Covered"
+            simpleContent={
+              <><p>Title I of the ADA covers jobs. It applies to employers with 15 or more workers.</p><p>It protects you if you have a disability and can do the main parts of the job, with or without help.</p><p>This covers hiring, firing, pay, promotions, and all job conditions.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -57,6 +60,9 @@ export default function GuideEmployment() {
           <GuideSection
             id="reasonable-accommodation"
             title="What Is a Reasonable Accommodation?"
+            simpleContent={
+              <><p>A reasonable accommodation is a change that helps you do your job. Examples:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>A special desk or chair</li><li style={{ marginBottom: "6px" }}>Software that reads the screen</li><li style={{ marginBottom: "6px" }}>Extra breaks for medical needs</li><li style={{ marginBottom: "6px" }}>Working from home</li><li style={{ marginBottom: "6px" }}>A modified schedule</li></ul><p>The employer does not have to say yes if the change is too expensive or too hard.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -105,6 +111,9 @@ export default function GuideEmployment() {
           <GuideSection
             id="interactive-process"
             title="The Interactive Process"
+            simpleContent={
+              <><p>When you ask for help at work, your employer must talk with you about it. This is called the interactive process.</p><p>You explain what you need. They figure out what they can do. You work together to find an answer.</p><p>The employer cannot just say no without trying.</p></>
+            }
           >
             <p>
               The accommodation process is a <strong>collaborative dialogue</strong>
@@ -141,6 +150,9 @@ export default function GuideEmployment() {
           <GuideSection
             id="employer-prohibitions"
             title="What Employers Cannot Do"
+            simpleContent={
+              <><p>Your employer cannot:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Ask about your disability in a job interview</li><li style={{ marginBottom: "6px" }}>Require a medical exam before making a job offer</li><li style={{ marginBottom: "6px" }}>Fire you because of your disability</li><li style={{ marginBottom: "6px" }}>Pay you less because of your disability</li><li style={{ marginBottom: "6px" }}>Punish you for asking for help</li></ul></>
+            }
           >
             <p>
               Title I includes <strong>specific prohibitions</strong> on employer
@@ -184,6 +196,9 @@ export default function GuideEmployment() {
           <GuideSection
             id="filing-complaint"
             title="Filing a Title I Complaint"
+            simpleContent={
+              <><p>If your employer breaks the rules, you can file a complaint with the EEOC.</p><p>You must file within 180 days (300 days in some states).</p><p>The EEOC will investigate. If they find a problem, they will try to fix it. If not, you may be able to sue.</p></>
+            }
           >
             <p>
               Employment discrimination complaints under the ADA are filed with the

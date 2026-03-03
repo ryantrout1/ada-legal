@@ -25,6 +25,9 @@ export default function GuideTurningHandrails() {
           <GuideSection
             id="turning-where"
             title="Where Are Turning Spaces Required?"
+            simpleContent={
+              <><p>Turning spaces are needed wherever a wheelchair needs to turn around. Common places include:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>At the end of a hallway</li><li style={{ marginBottom: "6px" }}>Inside accessible restrooms</li><li style={{ marginBottom: "6px" }}>In elevator lobbies</li></ul><p>The space must be at least 60 inches across for a full turn.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -68,6 +71,9 @@ export default function GuideTurningHandrails() {
           <GuideSection
             id="turning-tips"
             title="Design Tips"
+            simpleContent={
+              <><p>When designing turning spaces:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>A circular space needs 60 inches diameter</li><li style={{ marginBottom: "6px" }}>A T-shaped space can fit in a 60-by-60-inch area</li><li style={{ marginBottom: "6px" }}>The floor must be flat and clear of objects</li></ul></>
+            }
           >
             <p>
               The circular space is simpler but needs a full 5-foot clear diameter.
@@ -97,6 +103,9 @@ export default function GuideTurningHandrails() {
           <GuideSection
             id="handrail-where"
             title="Where Are Handrails Required?"
+            simpleContent={
+              <><p>Handrails are required on both sides of stairs and ramps.</p><p>They help people keep their balance. They must be between 34 and 38 inches high.</p><p>Handrails must be smooth and easy to grip.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -135,6 +144,9 @@ export default function GuideTurningHandrails() {
           <GuideSection
             id="handrail-extensions"
             title="Handrail Extensions"
+            simpleContent={
+              <><p>Handrails must extend past the top and bottom of stairs and ramps.</p><p>At the top, they extend 12 inches past the last step. At the bottom, they extend the length of one tread plus 12 inches.</p><p>This gives people something to hold as they start and finish.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>

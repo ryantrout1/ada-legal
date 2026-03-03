@@ -21,6 +21,13 @@ export default function GuideTitleII() {
           <GuideSection
             id="scope"
             title="Who Title II Covers"
+            simpleContent={
+              <>
+                <p>Title II covers all state and local government services and programs.</p>
+                <p>This includes city halls, courts, public schools, buses, parks, and government websites.</p>
+                <p>It applies no matter how small the government is.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -70,6 +77,13 @@ export default function GuideTitleII() {
           <GuideSection
             id="program-access"
             title="Program Access"
+            simpleContent={
+              <>
+                <p>People with disabilities must be able to use government programs and services.</p>
+                <p>The government does not have to make every building accessible. But it must make sure every program can be reached.</p>
+                <p>For example: If a meeting is held upstairs, the government must move it or offer another way to attend.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -116,6 +130,16 @@ export default function GuideTitleII() {
           <GuideSection
             id="effective-communication"
             title="Effective Communication"
+            simpleContent={
+              <>
+                <p>The government must communicate in ways that work for people with disabilities.</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Sign language interpreters for deaf people.</li>
+                  <li style={{ marginBottom: "6px" }}>Documents in Braille or large print for blind people.</li>
+                  <li style={{ marginBottom: "6px" }}>Accessible websites and electronic documents.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -174,6 +198,13 @@ export default function GuideTitleII() {
           <GuideSection
             id="reasonable-modifications"
             title="Reasonable Modifications"
+            simpleContent={
+              <>
+                <p>The government must change its rules when needed to serve people with disabilities.</p>
+                <p>For example: If a court bans all animals, it must still allow service dogs.</p>
+                <p>The change must be made unless it would fundamentally change the program.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -223,6 +254,13 @@ export default function GuideTitleII() {
           <GuideSection
             id="self-evaluation"
             title="Self-Evaluation & Transition Plans"
+            simpleContent={
+              <>
+                <p>Governments were required to review all their programs for accessibility.</p>
+                <p>They must also create a plan to fix any problems. This is called a transition plan.</p>
+                <p>If your city has not done this, they are behind on their obligations.</p>
+              </>
+            }
           >
             <p>
               Title II requires every public entity to:
@@ -257,6 +295,13 @@ export default function GuideTitleII() {
           <GuideSection
             id="ada-coordinator"
             title="ADA Coordinator & Grievance Procedures"
+            simpleContent={
+              <>
+                <p>Any government with 50 or more employees must have an ADA coordinator.</p>
+                <p>This person handles complaints and makes sure the government follows the law.</p>
+                <p>They must also have a formal process for people to file grievances.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -306,6 +351,12 @@ export default function GuideTitleII() {
           <GuideSection
             id="integration-mandate"
             title="The Integration Mandate (Olmstead)"
+            simpleContent={
+              <>
+                <p>The Supreme Court ruled in Olmstead v. L.C. that people with disabilities have the right to live in the community, not in institutions.</p>
+                <p>This means governments must provide services in the most integrated setting possible.</p>
+              </>
+            }
           >
             <p>
               Title II includes an <strong>integration mandate</strong> — the
@@ -345,6 +396,13 @@ export default function GuideTitleII() {
           <GuideSection
             id="construction"
             title="New Construction & Alterations"
+            simpleContent={
+              <>
+                <p>New government buildings must be fully accessible from day one.</p>
+                <p>When old buildings are remodeled, the changed areas must be made accessible.</p>
+                <p>The 2010 ADA Standards set the specific rules for measurements and features.</p>
+              </>
+            }
           >
             <p>
               When a public entity builds a <strong>new facility</strong> or

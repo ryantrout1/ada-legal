@@ -24,6 +24,9 @@ export default function GuideReachRanges() {
           <GuideSection
             id="forward-unobstructed"
             title="Unobstructed Forward Reach"
+            simpleContent={
+              <><p>When nothing is in the way, a person in a wheelchair can reach between 15 and 48 inches high.</p><p>Things like light switches and controls must be within this range.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -52,6 +55,9 @@ export default function GuideReachRanges() {
           <GuideSection
             id="forward-obstructed"
             title="Obstructed Forward Reach"
+            simpleContent={
+              <><p>When something is in the way, like a counter, the maximum reach height is lower.</p><p>The deeper the counter, the lower things must be placed. A 20-inch deep counter means things must be no higher than 48 inches. A 25-inch counter means no higher than 44 inches.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -99,6 +105,9 @@ export default function GuideReachRanges() {
           <GuideSection
             id="side-reach"
             title="Side Reach Ranges"
+            simpleContent={
+              <><p>When reaching to the side, a person in a wheelchair can reach between 15 and 48 inches high.</p><p>If something is in the way, the maximum height drops depending on how far they have to reach over.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -139,6 +148,9 @@ export default function GuideReachRanges() {
           <GuideSection
             id="operable-parts"
             title="Operable Parts"
+            simpleContent={
+              <><p>Controls, switches, and handles must be easy to use:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>No tight gripping or twisting required</li><li style={{ marginBottom: "6px" }}>Can be used with one hand</li><li style={{ marginBottom: "6px" }}>Less than 5 pounds of force to operate</li></ul><p>Round door knobs are not accessible. Lever handles are.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -174,6 +186,9 @@ export default function GuideReachRanges() {
           <GuideSection
             id="clear-floor"
             title="Clear Floor Space"
+            simpleContent={
+              <><p>There must be a flat, clear space in front of things you need to reach.</p><p>This space must be at least 30 by 48 inches, big enough for a wheelchair.</p><p>The floor must be flat and firm.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -211,6 +226,9 @@ export default function GuideReachRanges() {
           <GuideSection
             id="children"
             title="Children's Reach Ranges"
+            simpleContent={
+              <><p>Spaces built for children use lower reach ranges:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Ages 3-4: 20 to 36 inches high</li><li style={{ marginBottom: "6px" }}>Ages 5-8: 18 to 40 inches high</li><li style={{ marginBottom: "6px" }}>Ages 9-12: 16 to 44 inches high</li></ul></>
+            }
           >
             <p>
               The ADA Standards do not <em>require</em> children's reach ranges except at elements

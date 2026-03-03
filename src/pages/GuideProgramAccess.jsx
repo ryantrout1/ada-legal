@@ -21,6 +21,13 @@ export default function GuideProgramAccess() {
           <GuideSection
             id="definition"
             title="What Program Access Means"
+            simpleContent={
+              <>
+                <p>Program access means people with disabilities must be able to use government services.</p>
+                <p>If a service is offered in a building, people with disabilities must be able to get to it.</p>
+                <p>This does not mean every room in every building must be accessible.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -72,6 +79,17 @@ export default function GuideProgramAccess() {
           <GuideSection
             id="methods"
             title="Methods to Achieve Program Access"
+            simpleContent={
+              <>
+                <p>Governments can provide access in different ways:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Move the service to an accessible location.</li>
+                  <li style={{ marginBottom: "6px" }}>Provide the service at home or online.</li>
+                  <li style={{ marginBottom: "6px" }}>Modify the building to add access.</li>
+                  <li style={{ marginBottom: "6px" }}>Use assistive devices or aids.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               Government entities can use a variety of methods to make programs
@@ -103,6 +121,13 @@ export default function GuideProgramAccess() {
           <GuideSection
             id="not-every-building"
             title="Not Every Building Has to Be Accessible"
+            simpleContent={
+              <>
+                <p>The government does not have to make every building accessible.</p>
+                <p>But it must make sure every program is accessible when looked at as a whole.</p>
+                <p>If a program is only offered in one building, that building must be accessible.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -148,6 +173,13 @@ export default function GuideProgramAccess() {
           <GuideSection
             id="transition-plans"
             title="Transition Plans"
+            simpleContent={
+              <>
+                <p>If changes to buildings are needed, the government must create a written plan with deadlines.</p>
+                <p>This plan should say what will be fixed, when, and who is responsible.</p>
+                <p>The public should be able to see this plan.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -204,6 +236,13 @@ export default function GuideProgramAccess() {
           <GuideSection
             id="undue-burden"
             title="Undue Financial & Administrative Burden"
+            simpleContent={
+              <>
+                <p>A government does not have to take an action if it would be too expensive or too difficult.</p>
+                <p>But the bar is high. The government must show it really cannot afford it.</p>
+                <p>Even if one solution is too expensive, they must try another way.</p>
+              </>
+            }
           >
             <p>
               Title II recognizes that some changes may be extremely costly or
@@ -248,6 +287,13 @@ export default function GuideProgramAccess() {
           <GuideSection
             id="historic-preservation"
             title="Historic Preservation"
+            simpleContent={
+              <>
+                <p>Historic buildings have some flexibility, but they are not exempt from the ADA.</p>
+                <p>Changes must be made unless they would threaten or destroy the historic features.</p>
+                <p>Even then, alternative methods of access must be provided.</p>
+              </>
+            }
           >
             <p>
               Many government facilities are in <strong>historic
@@ -274,6 +320,13 @@ export default function GuideProgramAccess() {
           <GuideSection
             id="self-evaluation"
             title="Self-Evaluation Requirement"
+            simpleContent={
+              <>
+                <p>Every government was required to review its programs and find problems.</p>
+                <p>This review is called a self-evaluation. It should cover policies, practices, and buildings.</p>
+                <p>If problems were found, a plan to fix them must be created and followed.</p>
+              </>
+            }
           >
             <p>
               Title II requires every public entity to conduct a <strong>self-

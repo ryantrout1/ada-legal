@@ -21,6 +21,9 @@ export default function GuideHousing() {
           <GuideSection
             id="which-law"
             title="Which Law Applies?"
+            simpleContent={
+              <><p>Housing is covered by different laws depending on the type:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>The Fair Housing Act covers most apartments and houses</li><li style={{ marginBottom: "6px" }}>The ADA covers public housing run by the government</li><li style={{ marginBottom: "6px" }}>Section 504 covers housing that gets federal money</li></ul><p>These laws work together to protect you.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -68,6 +71,9 @@ export default function GuideHousing() {
           <GuideSection
             id="fha-design"
             title="The Fair Housing Act — Design Requirements"
+            simpleContent={
+              <><p>Apartments built after March 1991 with 4 or more units must follow design rules:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>An accessible way into the building</li><li style={{ marginBottom: "6px" }}>Doors wide enough for wheelchairs</li><li style={{ marginBottom: "6px" }}>Light switches and outlets at reachable heights</li><li style={{ marginBottom: "6px" }}>Bathroom walls strong enough for grab bars later</li></ul></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -130,6 +136,9 @@ export default function GuideHousing() {
           <GuideSection
             id="reasonable-accommodations"
             title="Reasonable Accommodations"
+            simpleContent={
+              <><p>You can ask your landlord for a change in rules to help with your disability. Examples:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Keeping a service animal even if pets are not allowed</li><li style={{ marginBottom: "6px" }}>A reserved parking spot close to your door</li><li style={{ marginBottom: "6px" }}>Allowing a live-in aide</li></ul><p>The landlord must say yes unless it is too expensive or changes the housing program.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -181,6 +190,9 @@ export default function GuideHousing() {
           <GuideSection
             id="reasonable-modifications"
             title="Reasonable Modifications"
+            simpleContent={
+              <><p>You can also make physical changes to your home, like adding a ramp or grab bars.</p><p>The landlord must allow it. But in most cases, you pay for it.</p><p>In government housing, the housing authority usually pays.</p></>
+            }
           >
             <p>
               Tenants have the right to make <strong>reasonable physical modifications</strong>
@@ -206,6 +218,9 @@ export default function GuideHousing() {
           <GuideSection
             id="public-housing"
             title="Public Housing & Government Programs (ADA Title II)"
+            simpleContent={
+              <><p>Public housing run by the government must follow the ADA. This means:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Some units must be fully accessible</li><li style={{ marginBottom: "6px" }}>Offices and common areas must be accessible</li><li style={{ marginBottom: "6px" }}>Websites and applications must be accessible</li></ul></>
+            }
           >
             <p>
               Public housing authorities (PHAs) are government entities covered by
@@ -243,6 +258,9 @@ export default function GuideHousing() {
           <GuideSection
             id="filing-complaint"
             title="Filing a Housing Complaint"
+            simpleContent={
+              <><p>If you face housing discrimination because of a disability, you can:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>File a complaint with HUD (within one year)</li><li style={{ marginBottom: "6px" }}>File a lawsuit in court (within two years)</li><li style={{ marginBottom: "6px" }}>Contact your state or local fair housing agency</li></ul></>
+            }
           >
             <p>
               If you believe you've experienced housing discrimination based on

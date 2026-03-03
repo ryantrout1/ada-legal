@@ -21,6 +21,9 @@ export default function GuideVoting() {
           <GuideSection
             id="overview"
             title="Your Right to Vote Accessibly"
+            simpleContent={
+              <><p>The ADA gives you the right to vote independently and privately, even if you have a disability.</p><p>Polling places must be accessible. You must be able to get inside and use the voting machines.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -67,6 +70,9 @@ export default function GuideVoting() {
           <GuideSection
             id="polling-places"
             title="Polling Place Physical Accessibility"
+            simpleContent={
+              <><p>Polling places must be physically accessible:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Ramps and accessible entrances</li><li style={{ marginBottom: "6px" }}>Wide enough paths for wheelchairs</li><li style={{ marginBottom: "6px" }}>Voting booths at wheelchair height</li><li style={{ marginBottom: "6px" }}>Accessible parking nearby</li></ul><p>If a building is not accessible, the election office must move the polling place.</p></>
+            }
           >
             <p>
               The <strong>physical building</strong> used as a polling place must
@@ -105,6 +111,9 @@ export default function GuideVoting() {
           <GuideSection
             id="voting-equipment"
             title="Accessible Voting Equipment"
+            simpleContent={
+              <><p>At least one voting machine at each polling place must be accessible.</p><p>It must work for people who are blind (with audio), people in wheelchairs (at the right height), and people who cannot use their hands (with alternative controls).</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -159,6 +168,9 @@ export default function GuideVoting() {
           <GuideSection
             id="curbside-voting"
             title="Curbside Voting"
+            simpleContent={
+              <><p>If you cannot get inside the polling place, you can vote curbside.</p><p>Poll workers bring the ballot to your car. You vote there and hand it back.</p><p>Curbside voting should be available at every polling place.</p></>
+            }
           >
             <p>
               <strong>Curbside voting</strong> allows a voter to remain in their
@@ -201,6 +213,9 @@ export default function GuideVoting() {
           <GuideSection
             id="communication"
             title="Effective Communication at the Polls"
+            simpleContent={
+              <><p>Polling places must communicate effectively with voters who have disabilities:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Large print ballots for people with low vision</li><li style={{ marginBottom: "6px" }}>Help reading the ballot if you ask for it</li><li style={{ marginBottom: "6px" }}>Clear and simple instructions</li></ul></>
+            }
           >
             <p>
               The effective communication obligation applies fully to
@@ -233,6 +248,9 @@ export default function GuideVoting() {
           <GuideSection
             id="absentee"
             title="Absentee & Mail-In Ballot Accessibility"
+            simpleContent={
+              <><p>Absentee and mail-in voting must also be accessible.</p><p>The application form must be available in accessible formats. Some states offer online voting tools that work with screen readers.</p></>
+            }
           >
             <p>
               Absentee and mail-in voting must also be accessible:
@@ -261,6 +279,9 @@ export default function GuideVoting() {
           <GuideSection
             id="common-violations"
             title="Common Violations"
+            simpleContent={
+              <><p>Common voting accessibility problems include:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Polling places in buildings without ramps</li><li style={{ marginBottom: "6px" }}>Broken accessible voting machines</li><li style={{ marginBottom: "6px" }}>Poll workers who do not know how to help</li><li style={{ marginBottom: "6px" }}>No curbside voting option</li></ul></>
+            }
           >
             <p>
               The DOJ's surveys and enforcement actions have identified these as

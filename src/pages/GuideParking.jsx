@@ -21,6 +21,9 @@ export default function GuideParking() {
           <GuideSection
             id="federal-requirements"
             title="Federal Requirements for Accessible Parking"
+            simpleContent={
+              <><p>Parking lots must have a certain number of accessible spaces based on the total number of spaces:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>1 to 25 total spaces: 1 accessible space</li><li style={{ marginBottom: "6px" }}>26 to 50 total spaces: 2 accessible spaces</li><li style={{ marginBottom: "6px" }}>51 to 75 total spaces: 3 accessible spaces</li></ul><p>Accessible spaces must be closest to the accessible entrance.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -71,6 +74,9 @@ export default function GuideParking() {
           <GuideSection
             id="van-accessible"
             title="Van-Accessible Spaces"
+            simpleContent={
+              <><p>Some accessible spaces must be van-accessible. These are wider to fit wheelchair ramps that come out the side of vans.</p><p>For every 6 accessible spaces, at least 1 must be van-accessible.</p><p>Van spaces need at least 8 feet wide with an 8-foot loading zone next to them.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -111,6 +117,9 @@ export default function GuideParking() {
           <GuideSection
             id="signage"
             title="Signage Requirements"
+            simpleContent={
+              <><p>Every accessible parking space must have a sign with the wheelchair symbol.</p><p>The sign must be high enough that other cars do not block it (at least 60 inches high).</p><p>Van-accessible spaces must say "Van Accessible" on the sign.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -151,6 +160,9 @@ export default function GuideParking() {
           <GuideSection
             id="access-aisles"
             title="Access Aisles"
+            simpleContent={
+              <><p>Every accessible space needs a striped loading zone next to it. This is called an access aisle.</p><p>The aisle must be at least 5 feet wide. It gives room for a wheelchair to get in and out of the car.</p><p>No one should park in the striped area.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -198,6 +210,9 @@ export default function GuideParking() {
           <GuideSection
             id="common-violations"
             title="Common Parking Violations"
+            simpleContent={
+              <><p>Common problems with accessible parking include:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Not enough accessible spaces</li><li style={{ marginBottom: "6px" }}>Spaces too far from the entrance</li><li style={{ marginBottom: "6px" }}>Missing or blocked access aisles</li><li style={{ marginBottom: "6px" }}>Surfaces that are cracked or too steep</li><li style={{ marginBottom: "6px" }}>Missing or damaged signs</li></ul></>
+            }
           >
             <p>
               These are the most frequently reported accessible parking problems:
@@ -232,6 +247,9 @@ export default function GuideParking() {
           <GuideSection
             id="state-permits"
             title="State Disabled Parking Permits"
+            simpleContent={
+              <><p>Each state has its own rules for disabled parking permits (placards and license plates).</p><p>A valid permit from one state works in all 50 states.</p><p>You get a permit from your state motor vehicle office with a form from your doctor.</p></>
+            }
           >
             <p>
               Disabled parking <strong>permits</strong> (placards and plates) are
@@ -260,6 +278,9 @@ export default function GuideParking() {
           <GuideSection
             id="reporting"
             title="How to Report Parking Violations"
+            simpleContent={
+              <><p>You can report parking violations in several ways:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Call local parking enforcement</li><li style={{ marginBottom: "6px" }}>File a complaint with the Department of Justice</li><li style={{ marginBottom: "6px" }}>Report to your state attorney general</li></ul><p>Taking photos of the violation can help your complaint.</p></>
+            }
           >
             <p>
               If you encounter an accessible parking violation, you have several

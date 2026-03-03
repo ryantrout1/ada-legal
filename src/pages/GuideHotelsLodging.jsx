@@ -21,6 +21,9 @@ export default function GuideHotelsLodging() {
           <GuideSection
             id="scoping"
             title="How Many Accessible Guest Rooms Are Required?"
+            simpleContent={
+              <><p>Hotels must have a certain number of accessible guest rooms. The more rooms a hotel has, the more accessible rooms it needs.</p><p>Accessible rooms must have wider doors, lower controls, and accessible bathrooms.</p><p>Some rooms must also have visual alarms and other features for deaf guests.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -93,6 +96,9 @@ export default function GuideHotelsLodging() {
           <GuideSection
             id="bathing"
             title="Roll-In Showers vs. Bathtub Rooms"
+            simpleContent={
+              <><p>Accessible bathrooms can have either a roll-in shower or a bathtub with a seat.</p><p>Most accessible rooms must have a roll-in shower. Some can have a bathtub instead.</p><p>Both types must have grab bars and enough space for a wheelchair.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -143,6 +149,9 @@ export default function GuideHotelsLodging() {
           <GuideSection
             id="reservations"
             title="Reservation System Requirements"
+            simpleContent={
+              <><p>Hotels must let you book an accessible room the same way anyone books a room.</p><p>They must describe what makes the room accessible. They cannot require extra steps to book it.</p><p>They must hold the room for you and not give it away to someone who does not need it.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -206,6 +215,9 @@ export default function GuideHotelsLodging() {
           <GuideSection
             id="dispersion"
             title="Dispersion Across Room Types"
+            simpleContent={
+              <><p>Accessible rooms cannot all be the cheapest rooms. They must be spread across different types and price levels.</p><p>If a hotel has suites, some suites must be accessible. If it has ocean-view rooms, some of those must be accessible too.</p></>
+            }
           >
             <p>
               Accessible rooms must be <strong>dispersed</strong> across the
@@ -241,6 +253,9 @@ export default function GuideHotelsLodging() {
           <GuideSection
             id="communication-features"
             title="Guest Room Communication Features"
+            simpleContent={
+              <><p>Some hotel rooms must have features for deaf or hard-of-hearing guests:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Visual fire alarms with flashing lights</li><li style={{ marginBottom: "6px" }}>A doorbell or door knock alert with a flashing light</li><li style={{ marginBottom: "6px" }}>A phone with volume control</li><li style={{ marginBottom: "6px" }}>Closed captioning on the TV</li></ul></>
+            }
           >
             <p>
               Rooms designated as <strong>communication-accessible</strong> must

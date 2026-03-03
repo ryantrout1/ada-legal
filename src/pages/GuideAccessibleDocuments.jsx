@@ -21,6 +21,14 @@ export default function GuideAccessibleDocuments() {
           <GuideSection
             id="why-documents"
             title="Why Document Accessibility Matters"
+            simpleContent={
+              <>
+                <p>Many documents posted online cannot be read by people who are blind or have low vision.</p>
+                <p>If a PDF or Word file is not set up correctly, a screen reader cannot read it.</p>
+                <p>Government websites must make their documents accessible. Businesses should too.</p>
+                <p>An inaccessible document is like a locked door. The information is there, but some people cannot get to it.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -71,6 +79,19 @@ export default function GuideAccessibleDocuments() {
           <GuideSection
             id="pdfs"
             title="Accessible PDFs"
+            simpleContent={
+              <>
+                <p>PDFs are the most common documents online. But many of them do not work with screen readers.</p>
+                <p>To be accessible, a PDF needs:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Tags that mark headings, lists, and tables</li>
+                  <li style={{ marginBottom: '6px' }}>A correct reading order so content makes sense</li>
+                  <li style={{ marginBottom: '6px' }}>Descriptions for images (called alt text)</li>
+                  <li style={{ marginBottom: '6px' }}>Labels on form fields so people know what to fill in</li>
+                  <li style={{ marginBottom: '6px' }}>The document language set (like English)</li>
+                </ul>
+              </>
+            }
           >
             <p>
               PDFs are the most common — and most problematic — document format
@@ -105,6 +126,13 @@ export default function GuideAccessibleDocuments() {
           <GuideSection
             id="scanned-documents"
             title="Scanned Documents Require OCR"
+            simpleContent={
+              <>
+                <p>A scanned document is just a picture of text. A screen reader cannot read pictures.</p>
+                <p>You must run a tool called OCR to turn the picture into real text. Then you still need to add tags and descriptions.</p>
+                <p>Example: A city scans a form and posts it online. A blind person hears nothing when they try to read it. After running OCR and adding tags, the form works.</p>
+              </>
+            }
           >
             <p>
               A scanned document is just a <strong>picture of text</strong>.
@@ -138,6 +166,19 @@ export default function GuideAccessibleDocuments() {
           <GuideSection
             id="word-documents"
             title="Accessible Word Documents"
+            simpleContent={
+              <>
+                <p>Word documents can be accessible if you use the right tools:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Use heading styles (Heading 1, Heading 2) instead of just making text big and bold</li>
+                  <li style={{ marginBottom: '6px' }}>Add descriptions to images (right-click and choose "Edit Alt Text")</li>
+                  <li style={{ marginBottom: '6px' }}>Use real tables, not spaces or tabs</li>
+                  <li style={{ marginBottom: '6px' }}>Use real bulleted or numbered lists</li>
+                  <li style={{ marginBottom: '6px' }}>Make link text clear. Say "Read the full report" not "Click here"</li>
+                  <li style={{ marginBottom: '6px' }}>Run the Accessibility Checker in Word (Review menu)</li>
+                </ul>
+              </>
+            }
           >
             <p>
               Microsoft Word documents are often more accessible than PDFs
@@ -179,6 +220,18 @@ export default function GuideAccessibleDocuments() {
           <GuideSection
             id="presentations"
             title="Accessible Presentations"
+            simpleContent={
+              <>
+                <p>PowerPoint and Google Slides must also be accessible when shared online:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Every slide needs a unique title</li>
+                  <li style={{ marginBottom: '6px' }}>Set the reading order so content is read correctly</li>
+                  <li style={{ marginBottom: '6px' }}>Add descriptions to all images and charts</li>
+                  <li style={{ marginBottom: '6px' }}>Make sure text has enough contrast with the background</li>
+                  <li style={{ marginBottom: '6px' }}>Do not use color alone to show meaning. Add labels or patterns too.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               PowerPoint and Google Slides presentations posted online or shared
@@ -214,6 +267,16 @@ export default function GuideAccessibleDocuments() {
           <GuideSection
             id="title-ii-exception"
             title="The Preexisting Documents Exception"
+            simpleContent={
+              <>
+                <p>Old documents posted before a deadline do not have to be fixed right away. But there are rules:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Any new document posted after the deadline must be accessible</li>
+                  <li style={{ marginBottom: '6px' }}>If someone with a disability asks for an old document, you must make it accessible or give them the information another way</li>
+                  <li style={{ marginBottom: '6px' }}>This rule only applies to files like PDFs and Word documents, not web pages</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -266,6 +329,17 @@ export default function GuideAccessibleDocuments() {
           <GuideSection
             id="tools"
             title="Tools for Checking Document Accessibility"
+            simpleContent={
+              <>
+                <p>There are free and built-in tools to check if your documents are accessible:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Microsoft Accessibility Checker</strong> — Built into Word, PowerPoint, and Excel. Go to Review, then Check Accessibility.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Adobe Acrobat Pro</strong> — Has a full accessibility check for PDFs.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>PAC (PDF Accessibility Checker)</strong> — A free tool that tests PDFs.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Grackle Suite</strong> — Works inside Google Docs, Slides, and Sheets.</li>
+                </ul>
+              </>
+            }
           >
             <div style={{
               background: 'var(--card-bg)', border: '1px solid var(--border)',

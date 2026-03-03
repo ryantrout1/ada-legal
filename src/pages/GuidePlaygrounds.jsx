@@ -16,6 +16,9 @@ export default function GuidePlaygrounds() {
 
           <GuideSection id="what-required" title="What the ADA Requires"
             legalContent={<><p style={{ margin: '0 0 12px' }}><strong>§240.1 — Scope</strong></p><p style={{ margin: 0 }}>"Play areas for children ages 2 and over shall comply with §240. Where separate play areas are provided within a site for specific age groups, each play area shall comply with §240."</p></>}>
+            simpleContent={
+              <><p>Playgrounds built or changed after 2012 must follow ADA rules.</p><p>There must be an accessible path to the playground and to the play equipment.</p><p>Some equipment must be reachable from ground level for kids who use wheelchairs.</p></>
+            }
             <p>The 2010 ADA Standards include <strong>specific requirements for play areas</strong> (§240 scoping, §1008 technical). These apply to:</p>
             <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
               <li style={{ marginBottom: '6px' }}>Newly constructed and altered play areas at <strong>parks, schools, daycare centers, restaurants</strong>, and other public/commercial facilities</li>
@@ -26,6 +29,9 @@ export default function GuidePlaygrounds() {
 
           <GuideSection id="ground-level" title="Ground-Level Play Components"
             legalContent={<><p style={{ margin: '0 0 12px' }}><strong>§240.2.1 — Ground-Level Play Components</strong></p><p style={{ margin: 0 }}>"Ground level play components that are provided to comply with §240.2.1 shall be on an accessible route and shall be dispersed throughout the play area."</p></>}>
+            simpleContent={
+              <><p>Ground-level play components are pieces of equipment on the ground, like spring rockers or sandboxes.</p><p>A certain number of these must be on an accessible route so all kids can reach them.</p></>
+            }
             <p>Ground-level play components must be <strong>on an accessible route</strong>. Requirements:</p>
             <ul style={{ paddingLeft: '1.25rem', margin: '8px 0 16px' }}>
               <li style={{ marginBottom: '6px' }}>The number of accessible ground-level components depends on the <strong>total ground-level play components</strong> provided (per the scoping table in §240.2.1)</li>
@@ -36,6 +42,9 @@ export default function GuidePlaygrounds() {
 
           <GuideSection id="elevated" title="Elevated Play Components"
             legalContent={<><p style={{ margin: '0 0 12px' }}><strong>§240.2.2 — Elevated Play Components</strong></p><p style={{ margin: 0 }}>"Where elevated play components are provided, at least 50 percent shall be on an accessible route."</p></>}>
+            simpleContent={
+              <><p>Elevated equipment is above the ground, like slides and climbing structures.</p><p>At least 50% of elevated play pieces must be reachable by a ramp or transfer platform.</p></>
+            }
             <p>At least <strong>50% of elevated play components</strong> must be on an accessible route:</p>
             <ul style={{ paddingLeft: '1.25rem', margin: '8px 0 16px' }}>
               <li style={{ marginBottom: '8px' }}><strong>Ramps</strong> provide the highest level of accessibility — a wheelchair user can roll directly up</li>
@@ -46,6 +55,9 @@ export default function GuidePlaygrounds() {
 
           <GuideSection id="routes" title="Accessible Routes Within Play Areas">
             <p>Accessible routes within play areas have <strong>special surface requirements</strong>:</p>
+            simpleContent={
+              <><p>There must be a smooth, firm path from the parking lot to the playground.</p><p>The surface inside the playground must also be accessible. Loose gravel and sand are hard for wheelchairs.</p><p>Rubber surfaces and poured-in-place rubber work best.</p></>
+            }
             <ul style={{ paddingLeft: '1.25rem', margin: '8px 0 16px' }}>
               <li style={{ marginBottom: '8px' }}>Ground surfaces must be <strong>firm, stable, and slip-resistant</strong> while still meeting fall attenuation requirements (ASTM F1292)</li>
               <li style={{ marginBottom: '8px' }}><strong>Engineered wood fiber</strong>, poured-in-place rubber, and rubber tiles can meet both requirements</li>
@@ -59,6 +71,9 @@ export default function GuidePlaygrounds() {
 
           <GuideSection id="transfer" title="Transfer Platforms & Steps"
             legalContent={<><p style={{ margin: '0 0 12px' }}><strong>§1008.3 — Transfer Platforms & Steps</strong></p><p style={{ margin: 0 }}>"Transfer platforms shall have a clear width of 24 inches minimum. The transfer platform height shall be 11 inches minimum and 18 inches maximum." Transfer steps: "8 inches high maximum, 14 inches deep minimum, 24 inches wide minimum."</p></>}>
+            simpleContent={
+              <><p>Transfer platforms let a child move from their wheelchair onto the play equipment.</p><p>They must be 11 to 18 inches high with a flat surface at least 24 by 14 inches.</p><p>Transfer steps between levels must be 8 inches high.</p></>
+            }
             <ul style={{ paddingLeft: '1.25rem', margin: '8px 0 16px' }}>
               <li style={{ marginBottom: '8px' }}><strong>Transfer platforms:</strong> 24 inches deep minimum, 14–18 inches high, at least 24 inches wide</li>
               <li style={{ marginBottom: '8px' }}><strong>Transfer steps:</strong> 8 inches high maximum, 14 inches deep minimum, 24 inches wide minimum</li>
@@ -68,6 +83,9 @@ export default function GuidePlaygrounds() {
 
           <GuideSection id="tips" title="Tips for Parents & Advocates">
             <p>When evaluating a playground for accessibility, look for:</p>
+            simpleContent={
+              <><p>If you find a playground that is not accessible, here is what you can do:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Talk to the park department or school</li><li style={{ marginBottom: "6px" }}>File a complaint with the Department of Justice</li><li style={{ marginBottom: "6px" }}>Contact a disability rights organization</li></ul><p>All children deserve to play together.</p></>
+            }
             <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', margin: '16px 0' }}>
               {[
                 'Is there a paved accessible route from the parking lot or sidewalk to the play area?',

@@ -21,6 +21,9 @@ export default function GuideEmergencyManagement() {
           <GuideSection
             id="overview"
             title="The ADA Applies in Emergencies"
+            simpleContent={
+              <><p>The ADA still applies during emergencies like storms, fires, and disasters.</p><p>Emergency shelters, warnings, and transportation must be accessible to people with disabilities.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -65,6 +68,9 @@ export default function GuideEmergencyManagement() {
           <GuideSection
             id="shelters"
             title="Accessible Emergency Shelters"
+            simpleContent={
+              <><p>Emergency shelters must be accessible. This means:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Wheelchair-accessible entrances and restrooms</li><li style={{ marginBottom: "6px" }}>Cots at wheelchair height</li><li style={{ marginBottom: "6px" }}>A quiet space for people with sensory needs</li><li style={{ marginBottom: "6px" }}>Sign language interpreters or communication help</li></ul></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -124,6 +130,9 @@ export default function GuideEmergencyManagement() {
           <GuideSection
             id="evacuation"
             title="Evacuation Plans for People with Disabilities"
+            simpleContent={
+              <><p>Buildings and cities must have plans to evacuate people with disabilities.</p><p>This includes people in wheelchairs, blind people, deaf people, and people who need help moving.</p><p>Fire alarms must have both sound and flashing lights.</p></>
+            }
           >
             <p>
               Government evacuation plans must <strong>specifically
@@ -154,6 +163,9 @@ export default function GuideEmergencyManagement() {
           <GuideSection
             id="notifications"
             title="Accessible Emergency Notifications"
+            simpleContent={
+              <><p>Emergency warnings must reach everyone, including people who are deaf or blind:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Text alerts and visual warnings for deaf people</li><li style={{ marginBottom: "6px" }}>Audio alerts for blind people</li><li style={{ marginBottom: "6px" }}>Easy-to-understand language for people with learning disabilities</li></ul></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -210,6 +222,9 @@ export default function GuideEmergencyManagement() {
           <GuideSection
             id="service-animals"
             title="Service Animals in Shelters"
+            simpleContent={
+              <><p>Service animals must be allowed in emergency shelters. They cannot be separated from their owners.</p><p>Other pets may go to a separate area, but service animals stay with the person.</p></>
+            }
           >
             <p>
               People with disabilities must be allowed to bring their <strong>
@@ -250,6 +265,9 @@ export default function GuideEmergencyManagement() {
           <GuideSection
             id="dme-medications"
             title="Medical Equipment & Medications"
+            simpleContent={
+              <><p>People with disabilities may need their medical equipment and medicine during an emergency.</p><p>Shelters must plan for things like wheelchairs, oxygen tanks, and refrigerated medicine.</p><p>Power must be available for equipment that needs electricity.</p></>
+            }
           >
             <p>
               Many people with disabilities depend on <strong>durable medical
@@ -285,6 +303,9 @@ export default function GuideEmergencyManagement() {
           <GuideSection
             id="transportation"
             title="Accessible Emergency Transportation"
+            simpleContent={
+              <><p>Emergency transportation must include accessible vehicles.</p><p>People who use wheelchairs cannot be left behind because buses are not accessible.</p><p>Plans must include how to move people who cannot walk or drive.</p></>
+            }
           >
             <p>
               Evacuation transportation must be <strong>accessible</strong>:
@@ -314,6 +335,9 @@ export default function GuideEmergencyManagement() {
           <GuideSection
             id="fema-resources"
             title="FEMA Partnership & Resources"
+            simpleContent={
+              <><p>FEMA works with disability groups to improve emergency plans.</p><p>They provide guides and training to help communities include people with disabilities in their emergency planning.</p><p>You can request accessible FEMA services if you have a disability.</p></>
+            }
           >
             <p>
               FEMA and the DOJ work together to ensure disaster response

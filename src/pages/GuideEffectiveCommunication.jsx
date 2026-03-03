@@ -22,6 +22,9 @@ export default function GuideEffectiveCommunication() {
           <GuideSection
             id="what-it-means"
             title="What Is Effective Communication?"
+            simpleContent={
+              <><p>The ADA says that communication with people with disabilities must be just as good as communication with everyone else.</p><p>This means businesses and government offices must find ways to share information that work for people who are deaf, blind, or have other disabilities.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -63,6 +66,9 @@ export default function GuideEffectiveCommunication() {
           <GuideSection
             id="auxiliary-aids"
             title="Auxiliary Aids and Services"
+            simpleContent={
+              <><p>Auxiliary aids are tools and services that help people communicate. Examples include:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Sign language interpreters for deaf people</li><li style={{ marginBottom: "6px" }}>Written notes or real-time captions</li><li style={{ marginBottom: "6px" }}>Braille or large print documents</li><li style={{ marginBottom: "6px" }}>Screen readers for computers</li><li style={{ marginBottom: "6px" }}>Audio descriptions for blind people</li></ul></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -126,6 +132,9 @@ export default function GuideEffectiveCommunication() {
           <GuideSection
             id="primary-consideration"
             title="Primary Consideration"
+            simpleContent={
+              <><p>When you need help communicating, the business or government office must listen to what you want first.</p><p>They should give you the type of help you ask for. They can only say no if it would be too expensive or change how they do business.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -169,6 +178,9 @@ export default function GuideEffectiveCommunication() {
           <GuideSection
             id="companions"
             title="Communication with Companions"
+            simpleContent={
+              <><p>If you bring someone with you who has a disability, the business must communicate with them too.</p><p>For example, if a deaf parent brings a child to the doctor, the doctor must provide an interpreter for the parent.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -202,6 +214,9 @@ export default function GuideEffectiveCommunication() {
           <GuideSection
             id="interpreter-required"
             title="When Is an Interpreter Required?"
+            simpleContent={
+              <><p>A sign language interpreter is needed for important or complex conversations. Examples:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Medical appointments with a doctor</li><li style={{ marginBottom: "6px" }}>Meetings with a lawyer</li><li style={{ marginBottom: "6px" }}>Job interviews</li><li style={{ marginBottom: "6px" }}>Police questioning</li></ul><p>For simple tasks like buying coffee, written notes may be enough.</p></>
+            }
           >
             <p>
               Not every interaction requires a sign language interpreter. The
@@ -237,6 +252,9 @@ export default function GuideEffectiveCommunication() {
           <GuideSection
             id="vri"
             title="Video Remote Interpreting (VRI)"
+            simpleContent={
+              <><p>Video Remote Interpreting (VRI) uses a video screen to connect with a sign language interpreter.</p><p>It can work well for short conversations. But it must have a clear picture, good sound, and no delays.</p><p>VRI does not always work for medical or legal settings. An in-person interpreter may be better.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -288,6 +306,9 @@ export default function GuideEffectiveCommunication() {
           <GuideSection
             id="limits"
             title="Undue Burden and Fundamental Alteration"
+            simpleContent={
+              <><p>A business does not have to provide communication help if it would cost too much or change how they do business.</p><p>But they must still try to find another way to communicate. They cannot just do nothing.</p></>
+            }
           >
             <p>
               A business or government agency does not have to provide a specific
@@ -320,6 +341,9 @@ export default function GuideEffectiveCommunication() {
           <GuideSection
             id="relay-services"
             title="Telecommunications Relay Services"
+            simpleContent={
+              <><p>Relay services help people who are deaf or have speech disabilities make phone calls.</p><p>A relay operator types what the hearing person says, and speaks what the deaf person types.</p><p>Businesses must accept relay calls and cannot refuse them or hang up.</p></>
+            }
           >
             <p>
               <strong>Title IV</strong> of the ADA requires telephone companies to

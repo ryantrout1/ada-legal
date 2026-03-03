@@ -21,6 +21,13 @@ export default function GuideEducation() {
           <GuideSection
             id="overview"
             title="How the ADA Applies to Education"
+            simpleContent={
+              <>
+                <p>The ADA protects students with disabilities in schools and colleges.</p>
+                <p>Public schools and government colleges follow Title II. Private schools follow Title III.</p>
+                <p>Schools must make changes so students with disabilities can learn alongside everyone else.</p>
+              </>
+            }
           >
             <p>
               Education is one of the most important areas where the ADA
@@ -55,6 +62,18 @@ export default function GuideEducation() {
           <GuideSection
             id="k12"
             title="Public K–12 Schools (Title II)"
+            simpleContent={
+              <>
+                <p>Public schools must be accessible to students with disabilities. This includes:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Ramps, elevators, and accessible classrooms</li>
+                  <li style={{ marginBottom: "6px" }}>Sign language interpreters and Braille materials</li>
+                  <li style={{ marginBottom: "6px" }}>Access to all activities, including sports and field trips</li>
+                  <li style={{ marginBottom: "6px" }}>Accessible school websites and online tools</li>
+                </ul>
+                <p>Schools cannot say no just because it costs money. They must find a way.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -118,6 +137,17 @@ export default function GuideEducation() {
           <GuideSection
             id="universities"
             title="Public Universities (Title II)"
+            simpleContent={
+              <>
+                <p>Public colleges and universities must be accessible. This means:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Students can request extra time on tests or note-taking help</li>
+                  <li style={{ marginBottom: "6px" }}>Classrooms, labs, and dorms must be accessible</li>
+                  <li style={{ marginBottom: "6px" }}>Course materials must work with screen readers</li>
+                  <li style={{ marginBottom: "6px" }}>There should be a disability services office to help students</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -173,6 +203,13 @@ export default function GuideEducation() {
           <GuideSection
             id="private-schools"
             title="Private Schools & Universities (Title III)"
+            simpleContent={
+              <>
+                <p>Private schools must also follow the ADA (Title III), unless they are religious schools.</p>
+                <p>They must remove barriers that are easy to fix. They must provide help like interpreters or large-print materials.</p>
+                <p>Religious schools are not covered by the ADA, but some state laws may still apply.</p>
+              </>
+            }
           >
             <p>
               Private schools and universities that are open to the public are
@@ -207,6 +244,19 @@ export default function GuideEducation() {
           <GuideSection
             id="testing"
             title="Testing Accommodations"
+            simpleContent={
+              <>
+                <p>Students with disabilities can get changes to how tests are given. Common examples:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Extra time on tests</li>
+                  <li style={{ marginBottom: "6px" }}>A separate, quiet room</li>
+                  <li style={{ marginBottom: "6px" }}>A computer instead of writing by hand</li>
+                  <li style={{ marginBottom: "6px" }}>A reader or scribe to help</li>
+                  <li style={{ marginBottom: "6px" }}>Large print or Braille tests</li>
+                </ul>
+                <p>The school cannot change what the test measures. They can only change how it is given.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -267,6 +317,14 @@ export default function GuideEducation() {
           <GuideSection
             id="standardized-tests"
             title="Standardized Testing (SAT, GRE, Bar Exam)"
+            simpleContent={
+              <>
+                <p>Big tests like the SAT, GRE, and Bar Exam must also provide accommodations.</p>
+                <p>You need to request help ahead of time. You may need to show proof of your disability.</p>
+                <p>Testing companies cannot flag your score as "accommodated" if you got extra time.</p>
+                <p>If your request is denied, you can file a complaint with the Department of Justice.</p>
+              </>
+            }
           >
             <p>
               The DOJ has taken <strong>significant enforcement action</strong>
@@ -304,6 +362,18 @@ export default function GuideEducation() {
           <GuideSection
             id="online-learning"
             title="Online Learning Accessibility"
+            simpleContent={
+              <>
+                <p>Online classes and learning tools must also be accessible. This means:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Videos must have captions</li>
+                  <li style={{ marginBottom: "6px" }}>Course websites must work with screen readers</li>
+                  <li style={{ marginBottom: "6px" }}>Documents must be in accessible formats</li>
+                  <li style={{ marginBottom: "6px" }}>Live online classes should have captioning</li>
+                </ul>
+                <p>This applies to both public and private schools.</p>
+              </>
+            }
           >
             <p>
               Online courses and learning platforms must be accessible whether

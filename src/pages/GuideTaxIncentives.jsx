@@ -21,6 +21,9 @@ export default function GuideTaxIncentives() {
           <GuideSection
             id="overview"
             title="Two Federal Tax Incentives"
+            simpleContent={
+              <><p>The federal government offers two tax benefits to help businesses pay for accessibility improvements:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>A tax credit (Section 44) for small businesses</li><li style={{ marginBottom: "6px" }}>A tax deduction (Section 190) for any business</li></ul><p>These can save money when making your business accessible.</p></>
+            }
           >
             <p>
               The federal government offers <strong>two tax incentives</strong> to
@@ -51,6 +54,9 @@ export default function GuideTaxIncentives() {
           <GuideSection
             id="section-44"
             title="Section 44: Disabled Access Credit"
+            simpleContent={
+              <><p>Small businesses (under $1 million in revenue or under 30 employees) can get a tax credit.</p><p>The credit covers 50% of accessibility costs between $250 and $10,250.</p><p>That means you can save up to $5,000 per year.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -112,6 +118,9 @@ export default function GuideTaxIncentives() {
           <GuideSection
             id="section-190"
             title="Section 190: Barrier Removal Deduction"
+            simpleContent={
+              <><p>Any business can deduct up to $15,000 per year for removing barriers.</p><p>This is a tax deduction, not a credit. It lowers your taxable income.</p><p>It covers things like ramps, wider doors, and accessible restrooms.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -170,6 +179,9 @@ export default function GuideTaxIncentives() {
           <GuideSection
             id="using-both"
             title="Using Both Incentives Together"
+            simpleContent={
+              <><p>Small businesses can use both the credit and the deduction in the same year.</p><p>For example, if you spend $20,000, you could get a $5,000 credit and a $15,000 deduction.</p><p>This makes accessibility improvements much more affordable.</p></>
+            }
           >
             <p>
               A qualifying small business can use <strong>both Section 44 and
@@ -197,6 +209,9 @@ export default function GuideTaxIncentives() {
           <GuideSection
             id="what-qualifies"
             title="What Expenses Qualify?"
+            simpleContent={
+              <><p>Expenses that qualify include:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Building ramps and widening doors</li><li style={{ marginBottom: "6px" }}>Making restrooms accessible</li><li style={{ marginBottom: "6px" }}>Adding Braille or raised-letter signs</li><li style={{ marginBottom: "6px" }}>Making websites accessible</li><li style={{ marginBottom: "6px" }}>Hiring sign language interpreters</li></ul></>
+            }
           >
             <p>
               Both incentives cover a wide range of accessibility expenses:
@@ -231,6 +246,9 @@ export default function GuideTaxIncentives() {
           <GuideSection
             id="how-to-claim"
             title="How to Claim on Your Tax Return"
+            simpleContent={
+              <><p>To claim the tax credit, use IRS Form 8826. To claim the deduction, report it on your business tax return.</p><p>Keep receipts and records of what you spent. Talk to your tax professional about how to claim these benefits.</p></>
+            }
           >
             <p>
               Here's how to take advantage of each incentive:

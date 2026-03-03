@@ -21,6 +21,9 @@ export default function GuideMedicalFacilities() {
           <GuideSection
             id="overview"
             title="Why Medical Accessibility Matters"
+            simpleContent={
+              <><p>Doctors offices, hospitals, and clinics must be accessible to people with disabilities.</p><p>This is one of the most important areas of the ADA. If you cannot get into the building or onto the exam table, you cannot get healthcare.</p></>
+            }
           >
             <p>
               People with disabilities need healthcare like everyone else — often
@@ -40,6 +43,9 @@ export default function GuideMedicalFacilities() {
           <GuideSection
             id="exam-rooms"
             title="Accessible Examination Rooms"
+            simpleContent={
+              <><p>Medical exam rooms must be accessible. This means:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Doors wide enough for wheelchairs (at least 32 inches)</li><li style={{ marginBottom: "6px" }}>Enough space to move around in the room</li><li style={{ marginBottom: "6px" }}>Exam tables that can lower down for wheelchair transfers</li><li style={{ marginBottom: "6px" }}>Accessible weight scales</li></ul></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -97,6 +103,9 @@ export default function GuideMedicalFacilities() {
           <GuideSection
             id="equipment"
             title="Accessible Medical Equipment"
+            simpleContent={
+              <><p>Medical equipment must be usable by people with disabilities:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Height-adjustable exam tables</li><li style={{ marginBottom: "6px" }}>Wheelchair-accessible weight scales</li><li style={{ marginBottom: "6px" }}>Accessible mammography and x-ray equipment</li></ul><p>Staff must be trained to help patients transfer safely.</p></>
+            }
           >
             <p>
               Beyond exam tables, other <strong>medical equipment</strong> must
@@ -140,6 +149,9 @@ export default function GuideMedicalFacilities() {
           <GuideSection
             id="communication"
             title="Effective Communication in Healthcare"
+            simpleContent={
+              <><p>Medical offices must communicate effectively with patients who have disabilities:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Sign language interpreters for deaf patients</li><li style={{ marginBottom: "6px" }}>Large print or Braille materials for blind patients</li><li style={{ marginBottom: "6px" }}>Simple language for patients with learning disabilities</li></ul><p>The medical office pays for these services, not the patient.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -198,6 +210,9 @@ export default function GuideMedicalFacilities() {
           <GuideSection
             id="scoping"
             title="Scoping for Medical Care Facilities"
+            simpleContent={
+              <><p>When building or remodeling a medical facility, a certain number of exam rooms must be accessible.</p><p>The number depends on the size of the facility. At least one exam room on each floor should be accessible.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -254,6 +269,9 @@ export default function GuideMedicalFacilities() {
           <GuideSection
             id="enforcement"
             title="DOJ Enforcement in Healthcare"
+            simpleContent={
+              <><p>The Department of Justice has taken action against medical facilities that are not accessible.</p><p>If you cannot access medical care because of your disability, you can file a complaint with the DOJ or file a lawsuit.</p></>
+            }
           >
             <p>
               The Department of Justice has been <strong>actively

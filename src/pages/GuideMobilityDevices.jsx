@@ -21,6 +21,9 @@ export default function GuideMobilityDevices() {
           <GuideSection
             id="wheelchairs-always"
             title="Wheelchairs Are Always Allowed"
+            simpleContent={
+              <><p>Manual and power wheelchairs are always allowed in public places. No business can say no.</p><p>This includes stores, restaurants, parks, and any other place open to the public.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -66,6 +69,9 @@ export default function GuideMobilityDevices() {
           <GuideSection
             id="opdmd"
             title="Other Power-Driven Mobility Devices (OPDMDs)"
+            simpleContent={
+              <><p>Other power-driven mobility devices (OPDMDs) include things like Segways and golf carts used by people with disabilities.</p><p>Businesses must allow these unless they have a good reason not to, like safety concerns.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -113,6 +119,9 @@ export default function GuideMobilityDevices() {
           <GuideSection
             id="five-factors"
             title="The Five Assessment Factors"
+            simpleContent={
+              <><p>When deciding if an OPDMD is allowed, a business looks at five things:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>The type and size of the device</li><li style={{ marginBottom: "6px" }}>Whether the space can safely fit the device</li><li style={{ marginBottom: "6px" }}>Whether it creates a safety risk</li><li style={{ marginBottom: "6px" }}>Whether it would damage the business</li><li style={{ marginBottom: "6px" }}>Whether there are other ways to access the area</li></ul></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -183,6 +192,9 @@ export default function GuideMobilityDevices() {
           <GuideSection
             id="what-they-can-ask"
             title="What They Can and Cannot Ask"
+            simpleContent={
+              <><p>A business can ask if you need the device because of a disability. They cannot ask what your disability is.</p><p>They can ask you to show a valid disability parking tag or similar proof.</p><p>They cannot ban all mobility devices just because one type might be a problem.</p></>
+            }
           >
             <p>
               The rules about questions are similar to service animals:
@@ -219,6 +231,9 @@ export default function GuideMobilityDevices() {
           <GuideSection
             id="storage"
             title="Storage and Handling"
+            simpleContent={
+              <><p>Businesses must allow you to keep your mobility device with you. They cannot make you leave it at the door.</p><p>If there is truly not enough space, they must find another way for you to move around the store.</p></>
+            }
           >
             <p>
               Businesses must allow you to keep your mobility device with you.

@@ -21,6 +21,13 @@ export default function GuideAdaCoordinators() {
           <GuideSection
             id="requirement"
             title="Who Must Designate an ADA Coordinator?"
+            simpleContent={
+              <>
+                <p>Any government with 50 or more employees must have a person in charge of ADA compliance.</p>
+                <p>This person is called the ADA coordinator.</p>
+                <p>Smaller governments should also have one, but it is not legally required.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -64,6 +71,17 @@ export default function GuideAdaCoordinators() {
           <GuideSection
             id="responsibilities"
             title="Coordinator Responsibilities"
+            simpleContent={
+              <>
+                <p>The ADA coordinator:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Handles disability complaints and requests.</li>
+                  <li style={{ marginBottom: "6px" }}>Makes sure government programs are accessible.</li>
+                  <li style={{ marginBottom: "6px" }}>Trains staff about the ADA.</li>
+                  <li style={{ marginBottom: "6px" }}>Coordinates building and program changes.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               While the regulation doesn't list every specific duty, the ADA
@@ -95,6 +113,12 @@ export default function GuideAdaCoordinators() {
           <GuideSection
             id="public-notice"
             title="Making Coordinator Information Public"
+            simpleContent={
+              <>
+                <p>The government must tell the public who the ADA coordinator is and how to reach them.</p>
+                <p>This information should be on the government website and in public buildings.</p>
+              </>
+            }
           >
             <p>
               The entire purpose of having an ADA Coordinator is defeated if
@@ -137,6 +161,13 @@ export default function GuideAdaCoordinators() {
           <GuideSection
             id="grievance"
             title="Grievance Procedures"
+            simpleContent={
+              <>
+                <p>Governments with 50+ employees must have a written process for filing ADA complaints.</p>
+                <p>The process should be simple and easy to find.</p>
+                <p>Anyone should be able to file a complaint, and it should be resolved promptly.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -195,6 +226,13 @@ export default function GuideAdaCoordinators() {
           <GuideSection
             id="self-evaluation"
             title="Self-Evaluation"
+            simpleContent={
+              <>
+                <p>The government must review all its services to check for accessibility problems.</p>
+                <p>This includes buildings, websites, policies, and communication methods.</p>
+                <p>The results should be kept on file and shared with the public.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -257,6 +295,13 @@ export default function GuideAdaCoordinators() {
           <GuideSection
             id="transition-plan"
             title="Transition Plans"
+            simpleContent={
+              <>
+                <p>If problems are found during the self-evaluation, the government must make a plan to fix them.</p>
+                <p>The plan should include deadlines and the people responsible.</p>
+                <p>The public should have a chance to comment on the plan.</p>
+              </>
+            }
           >
             <p>
               If the self-evaluation identifies <strong>physical barriers</strong>

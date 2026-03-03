@@ -21,6 +21,9 @@ export default function GuideSignage() {
           <GuideSection
             id="room-signs"
             title="Room Identification Signs"
+            simpleContent={
+              <><p>Signs that tell you the name or number of a room must follow ADA rules.</p><p>They must be on the wall next to the door on the latch side. They must have raised letters and Braille.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -84,6 +87,9 @@ export default function GuideSignage() {
           <GuideSection
             id="raised-characters"
             title="Raised Characters and Braille"
+            simpleContent={
+              <><p>Room signs must have letters you can feel with your fingers (raised characters) and Braille.</p><p>Letters must be between 5/8 inch and 2 inches tall. They must be uppercase and non-italic.</p><p>The Braille must be placed directly below the text.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -147,6 +153,9 @@ export default function GuideSignage() {
           <GuideSection
             id="directional-signs"
             title="Directional and Informational Signs"
+            simpleContent={
+              <><p>Signs that point to rooms or exits (like "Restrooms" with an arrow) have different rules.</p><p>They do not need raised letters or Braille. But they must have good contrast and be easy to read.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -200,6 +209,9 @@ export default function GuideSignage() {
           <GuideSection
             id="isa-symbol"
             title="International Symbol of Accessibility (ISA)"
+            simpleContent={
+              <><p>The International Symbol of Accessibility (the wheelchair symbol) must be used on:</p><ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}><li style={{ marginBottom: "6px" }}>Accessible parking spaces</li><li style={{ marginBottom: "6px" }}>Accessible entrances</li><li style={{ marginBottom: "6px" }}>Accessible restrooms</li><li style={{ marginBottom: "6px" }}>Accessible routes</li></ul></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -248,6 +260,9 @@ export default function GuideSignage() {
           <GuideSection
             id="exit-signs"
             title="Exit Signs"
+            simpleContent={
+              <><p>Exit signs must be clearly visible. Accessible exits must be marked with the accessibility symbol if not all exits are accessible.</p><p>Emergency exit signs must have both visual and tactile features.</p></>
+            }
           >
             <p>
               Exit signs have requirements under both the ADA and the fire/life
@@ -283,6 +298,9 @@ export default function GuideSignage() {
           <GuideSection
             id="parking-signage"
             title="Parking Signage"
+            simpleContent={
+              <><p>Accessible parking signs must show the wheelchair symbol. They must be at least 60 inches above the ground.</p><p>Van-accessible spaces must also say "Van Accessible" on the sign.</p></>
+            }
           >
             <p>
               Accessible parking signs have their own specific requirements
@@ -310,6 +328,9 @@ export default function GuideSignage() {
           <GuideSection
             id="finish-contrast"
             title="Finish and Contrast Requirements"
+            simpleContent={
+              <><p>Signs must have good contrast so people with low vision can read them.</p><p>Light letters on a dark background (or dark letters on a light background) work best.</p><p>Signs should not be behind glass or in areas with glare.</p></>
+            }
           >
             <p>
               For all ADA signs to be readable, the finish and contrast must meet

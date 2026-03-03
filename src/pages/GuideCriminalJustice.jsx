@@ -21,6 +21,13 @@ export default function GuideCriminalJustice() {
           <GuideSection
             id="overview"
             title="The ADA Applies Throughout the Justice System"
+            simpleContent={
+              <>
+                <p>The ADA covers every part of the justice system. This includes police, courts, jails, and prisons.</p>
+                <p>About 40% of people in state prisons have a disability.</p>
+                <p>People with disabilities must get equal access to all programs and services in the justice system.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -58,6 +65,17 @@ export default function GuideCriminalJustice() {
           <GuideSection
             id="law-enforcement"
             title="Law Enforcement Encounters"
+            simpleContent={
+              <>
+                <p>Police officers must treat people with disabilities fairly. This means:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>A person who does not respond may be deaf, not ignoring them</li>
+                  <li style={{ marginBottom: "6px" }}>Officers must find ways to communicate, like writing notes</li>
+                  <li style={{ marginBottom: "6px" }}>If someone cannot get on the ground because of a disability, officers must change the procedure</li>
+                  <li style={{ marginBottom: "6px" }}>A person in a mental health crisis needs help, not force</li>
+                </ul>
+              </>
+            }
           >
             <p>
               Police officers interact with people with disabilities every
@@ -101,6 +119,17 @@ export default function GuideCriminalJustice() {
           <GuideSection
             id="arrests"
             title="Arrests & Mobility Devices"
+            simpleContent={
+              <>
+                <p>When police arrest someone with a disability, they must follow special rules:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Keep the wheelchair or other device with the person</li>
+                  <li style={{ marginBottom: "6px" }}>Use a vehicle that can fit the wheelchair</li>
+                  <li style={{ marginBottom: "6px" }}>Change how handcuffs are used if needed</li>
+                  <li style={{ marginBottom: "6px" }}>Make sure the person gets their medicine</li>
+                </ul>
+              </>
+            }
           >
             <p>
               Arresting a person who uses a wheelchair, prosthetic limb, cane,
@@ -137,6 +166,17 @@ export default function GuideCriminalJustice() {
           <GuideSection
             id="courts"
             title="Court Accessibility"
+            simpleContent={
+              <>
+                <p>Courts must be accessible to everyone, including people with disabilities:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Deaf people must get a sign language interpreter. The court pays for it.</li>
+                  <li style={{ marginBottom: "6px" }}>Courtrooms must be wheelchair accessible.</li>
+                  <li style={{ marginBottom: "6px" }}>Court papers must be available in large print, Braille, or digital formats.</li>
+                  <li style={{ marginBottom: "6px" }}>People with disabilities cannot be kept off juries. Courts must provide what they need to serve.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -199,6 +239,18 @@ export default function GuideCriminalJustice() {
           <GuideSection
             id="jails-prisons"
             title="Jails & Prisons"
+            simpleContent={
+              <>
+                <p>People in jail or prison still have ADA rights. Jails and prisons must provide:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Cells that fit wheelchairs with grab bars and low bunks</li>
+                  <li style={{ marginBottom: "6px" }}>Medicine, medical care, and mental health care</li>
+                  <li style={{ marginBottom: "6px" }}>Sign language interpreters for deaf inmates</li>
+                  <li style={{ marginBottom: "6px" }}>Access to work programs, classes, and religious services</li>
+                  <li style={{ marginBottom: "6px" }}>A way to file complaints in accessible formats</li>
+                </ul>
+              </>
+            }
           >
             <p>
               People with disabilities don't lose their ADA rights when
@@ -229,6 +281,16 @@ export default function GuideCriminalJustice() {
           <GuideSection
             id="parole-probation"
             title="Parole & Probation"
+            simpleContent={
+              <>
+                <p>Parole and probation offices must also follow the ADA:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Offices must be in accessible buildings</li>
+                  <li style={{ marginBottom: "6px" }}>Deaf people must get interpreters at meetings</li>
+                  <li style={{ marginBottom: "6px" }}>Rules may need to change for people with disabilities. For example, simpler written instructions for someone with a learning disability.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               Parole and probation offices are government programs subject to
@@ -263,6 +325,17 @@ export default function GuideCriminalJustice() {
           <GuideSection
             id="enforcement"
             title="DOJ Enforcement Actions"
+            simpleContent={
+              <>
+                <p>The Department of Justice has taken action when the justice system breaks ADA rules. Examples include:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Jails that did not have accessible cells</li>
+                  <li style={{ marginBottom: "6px" }}>Police who used too much force against people with mental health conditions</li>
+                  <li style={{ marginBottom: "6px" }}>Courts that did not provide sign language interpreters</li>
+                  <li style={{ marginBottom: "6px" }}>Prisons that did not help inmates with disabilities</li>
+                </ul>
+              </>
+            }
           >
             <p>
               The DOJ has brought numerous enforcement actions in the criminal

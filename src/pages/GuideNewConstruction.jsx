@@ -21,6 +21,9 @@ export default function GuideNewConstruction() {
           <GuideSection
             id="new-construction"
             title="New Construction Must Be Fully Accessible"
+            simpleContent={
+              <><p>Any new building open to the public must be fully accessible from the start.</p><p>There are no exceptions. It costs very little to build accessible from the beginning.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -65,6 +68,9 @@ export default function GuideNewConstruction() {
           <GuideSection
             id="which-standards"
             title="Which Standards Apply?"
+            simpleContent={
+              <><p>New buildings must follow the 2010 ADA Standards for Accessible Design.</p><p>These standards cover everything from door widths to restroom layouts to parking spaces.</p><p>Some states have their own building codes that may require even more.</p></>
+            }
           >
             <p>
               The ADA's design requirements have been updated over time. Which
@@ -111,6 +117,9 @@ export default function GuideNewConstruction() {
           <GuideSection
             id="alterations"
             title="Alterations: What Triggers Compliance?"
+            simpleContent={
+              <><p>When you remodel or change a building, the changed parts must be made accessible.</p><p>This applies to things like adding walls, moving doors, or changing the layout.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -155,6 +164,9 @@ export default function GuideNewConstruction() {
           <GuideSection
             id="maintenance-vs-alteration"
             title="Alteration vs. Maintenance"
+            simpleContent={
+              <><p>Regular maintenance, like painting or fixing a leaky faucet, does not trigger ADA requirements.</p><p>But if you change the use or layout of a space, that is an alteration and accessibility rules apply.</p></>
+            }
           >
             <p>
               Not every change to a building counts as an "alteration" under the
@@ -220,6 +232,9 @@ export default function GuideNewConstruction() {
           <GuideSection
             id="path-of-travel"
             title="The Path of Travel Rule"
+            simpleContent={
+              <><p>When you remodel part of a building, you may also need to fix the path to get there.</p><p>This includes hallways, doors, restrooms, and drinking fountains along the way.</p><p>You must spend up to 20% of the remodel cost on making the path accessible.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -281,6 +296,9 @@ export default function GuideNewConstruction() {
           <GuideSection
             id="primary-function"
             title="What Is a 'Primary Function Area'?"
+            simpleContent={
+              <><p>A primary function area is a space where the main activity happens, like a dining room, office, or lobby.</p><p>When you remodel a primary function area, the path of travel rule applies.</p><p>Storage rooms and mechanical spaces are not primary function areas.</p></>
+            }
           >
             <p>
               A <strong>primary function area</strong> is any area where the main
@@ -315,6 +333,9 @@ export default function GuideNewConstruction() {
           <GuideSection
             id="historic"
             title="Historic Facilities"
+            simpleContent={
+              <><p>Historic buildings must still be made accessible, but there is more flexibility.</p><p>If making a building accessible would damage its historic character, other solutions can be used.</p><p>But the goal is always to provide as much access as possible.</p></>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
