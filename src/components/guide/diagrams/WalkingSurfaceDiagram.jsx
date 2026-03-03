@@ -3,8 +3,8 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#403-walking-surfaces';
 const CALLOUTS = [
   { id: 1, label: 'Clear Width', section: '§403.5.1', color: 'var(--section-label)', textColor: '#8B2E08', x: 100, y: 80, plain: 'The clear width of a walking surface must be 36 inches (915 mm) minimum. At a point where someone in a wheelchair must turn around, a 60-inch (1525 mm) turning space or T-shaped space is required. The 36-inch clear width is measured between walls, railings, or other obstructions — not including the flare at the base of handrails.', legal: '"The clear width of walking surfaces shall be 36 inches minimum." §403.5.1: "The clear width of walking surfaces shall be 36 inches (915 mm) minimum." EXCEPTION: "The clear width shall be permitted to be reduced to 32 inches (815 mm) minimum for a length of 24 inches (610 mm) maximum provided that reduced-width segments are separated by segments that are 48 inches (1220 mm) long minimum and 36 inches (915 mm) wide minimum."', citation: '§403.5.1' },
-  { id: 2, label: 'Running Slope', section: '§403.3', color: '#15803D', textColor: '#14532D', x: 300, y: 80, plain: 'The running slope (the slope in the direction of travel) must not be steeper than 1:20 (5%). If the slope exceeds 1:20, it becomes a ramp and must comply with §405 — including handrails, landings, and edge protection. Walking surfaces at door landings must not exceed 1:48 (about 2%) slope.', legal: '"The running slope of walking surfaces shall not be steeper than 1:20." Advisory 403.3: "A slope steeper than 1:20 is a ramp and must comply with §405."', citation: '§403.3' },
-  { id: 3, label: 'Cross Slope', section: '§403.3', color: '#2563EB', textColor: '#1E3A8A', x: 500, y: 80, plain: 'The cross slope (perpendicular to the direction of travel) must not exceed 1:48 (about 2%). Excessive cross slope causes wheelchairs to drift sideways and makes it extremely difficult for users to maintain a straight path. This applies to all walking surfaces, including sidewalks, corridors, and floor surfaces along accessible routes.', legal: '"The cross slope of walking surfaces shall not be steeper than 1:48."', citation: '§403.3' },
+  { id: 2, label: 'Running Slope', section: '§403.3', color: '#15803D', textColor: '#14532D', x: 330, y: 80, plain: 'The running slope (the slope in the direction of travel) must not be steeper than 1:20 (5%). If the slope exceeds 1:20, it becomes a ramp and must comply with §405 — including handrails, landings, and edge protection. Walking surfaces at door landings must not exceed 1:48 (about 2%) slope.', legal: '"The running slope of walking surfaces shall not be steeper than 1:20." Advisory 403.3: "A slope steeper than 1:20 is a ramp and must comply with §405."', citation: '§403.3' },
+  { id: 3, label: 'Cross Slope', section: '§403.3', color: '#2563EB', textColor: '#1E3A8A', x: 510, y: 80, plain: 'The cross slope (perpendicular to the direction of travel) must not exceed 1:48 (about 2%). Excessive cross slope causes wheelchairs to drift sideways and makes it extremely difficult for users to maintain a straight path. This applies to all walking surfaces, including sidewalks, corridors, and floor surfaces along accessible routes.', legal: '"The cross slope of walking surfaces shall not be steeper than 1:48."', citation: '§403.3' },
   { id: 4, label: 'Surface Requirements', section: '§403.2', color: '#7C3AED', textColor: '#5B21B6', x: 700, y: 80, plain: 'All walking surfaces must be firm, stable, and slip-resistant. This applies to both indoor and outdoor surfaces. Carpet must be securely attached with a firm cushion or backing and have a maximum pile height of ½ inch. Openings in floor surfaces (like grates) must not allow passage of a ½-inch sphere and must be oriented so the long dimension is perpendicular to the dominant direction of travel.', legal: '"Floor or ground surfaces shall be stable, firm, and slip-resistant." §302.2: "Carpet or carpet tile shall be securely attached and shall have a firm cushion, pad, or backing or no cushion or pad. Carpet or carpet tile shall have a level loop, textured loop, level cut pile, or level cut/uncut pile texture. Pile height shall be ½ inch maximum."', citation: '§403.2, §302' },
   { id: 5, label: 'Changes in Level', section: '§403.4', color: '#92400E', textColor: '#78350F', x: 100, y: 300, plain: 'Changes in level along the walking surface up to ¼ inch may be vertical (a sharp step). Changes between ¼ inch and ½ inch must be beveled with a slope no steeper than 1:2. Changes greater than ½ inch must be treated as a ramp (§405) or curb ramp (§406). This means even small uneven pavement joints, raised thresholds, or carpet edges matter.', legal: '"Changes in level of ¼ inch high maximum shall be permitted to be vertical. Changes in level between ¼ inch high minimum and ½ inch high maximum shall be beveled with a slope not steeper than 1:2." §303.4: "Changes in level greater than ½ inch high shall comply with 405 (Ramps) or 406 (Curb Ramps)."', citation: '§303.2, §303.3, §303.4' },
   { id: 6, label: 'Passing Spaces', section: '§403.5.3', color: '#BE185D', textColor: '#9D174D', x: 300, y: 300, plain: 'On corridors less than 60 inches wide, passing spaces must be provided every 200 feet. A passing space is either a 60×60 inch area or a T-shaped intersection of two corridors. This allows two wheelchair users traveling in opposite directions to pass each other.', legal: '"An accessible route with a clear width less than 60 inches shall provide passing spaces at intervals of 200 feet maximum. Passing spaces shall be either a space 60 inches minimum by 60 inches minimum, or an intersection of two walking surfaces providing a T-shaped space."', citation: '§403.5.3' },
@@ -102,7 +102,72 @@ export default function WalkingSurfaceDiagram() {
           <text x="380" y="428" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#0C4A6E">↑ travel</text>
           <defs><marker id="wsArr2" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0 0,6 2,0 4" fill="#0EA5E9" opacity="0.5" /></marker></defs>
 
-          {/* ===== RIGHT: Cross section ===== */}
+          {/* ===== CALLOUT 2: Running Slope illustration ===== */}
+          <rect x="250" y="100" width="160" height="170" rx="6" fill="#15803D" opacity="0.03" stroke="#15803D" strokeWidth="1" />
+          <text x="330" y="118" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#14532D" fontWeight="600">RUNNING SLOPE</text>
+          {/* Ground line with gentle slope */}
+          <line x1="270" y1="230" x2="390" y2="215" stroke="#15803D" strokeWidth="2" />
+          <line x1="270" y1="230" x2="390" y2="230" stroke="#94A3B8" strokeWidth="1" strokeDasharray="4 2" />
+          {/* Slope angle indicator */}
+          <path d="M 270 230 L 310 230 L 310 226.7" fill="none" stroke="#15803D" strokeWidth="1" />
+          {/* Arrows showing travel direction */}
+          <line x1="280" y1="200" x2="370" y2="200" stroke="#15803D" strokeWidth="1" opacity="0.5" markerEnd="url(#wsArr)" />
+          <text x="325" y="195" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#14532D">direction of travel</text>
+          {/* Labels */}
+          <text x="330" y="248" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">Max slope 1:20 (5%)</text>
+          <text x="330" y="260" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#14532D">Steeper = ramp (§405)</text>
+
+          {/* ===== CALLOUT 3: Cross Slope illustration ===== */}
+          <rect x="430" y="100" width="160" height="170" rx="6" fill="#2563EB" opacity="0.03" stroke="#2563EB" strokeWidth="1" />
+          <text x="510" y="118" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#1E3A8A" fontWeight="600">CROSS SLOPE</text>
+          {/* Front view of walkway with slight cross slope */}
+          <line x1="450" y1="220" x2="570" y2="217" stroke="#2563EB" strokeWidth="2.5" />
+          {/* Flat reference line */}
+          <line x1="450" y1="220" x2="570" y2="220" stroke="#94A3B8" strokeWidth="1" strokeDasharray="4 2" />
+          {/* Side curb walls */}
+          <rect x="445" y="195" width="8" height="25" fill="#94A3B8" opacity="0.2" rx="1" />
+          <rect x="568" y="192" width="8" height="25" fill="#94A3B8" opacity="0.2" rx="1" />
+          {/* Arrow showing perpendicular direction */}
+          <line x1="510" y1="170" x2="510" y2="145" stroke="#2563EB" strokeWidth="1" opacity="0.4" markerEnd="url(#wsArr)" />
+          <line x1="510" y1="170" x2="510" y2="195" stroke="#2563EB" strokeWidth="1" opacity="0.4" />
+          <text x="510" y="140" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A">perpendicular</text>
+          <text x="510" y="148" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A">to travel</text>
+          {/* Labels */}
+          <text x="510" y="242" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#1E3A8A" fontWeight="600">Max slope 1:48 (≈2%)</text>
+          <text x="510" y="254" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#1E3A8A">Prevents wheelchair drift</text>
+
+          {/* ===== CALLOUT 4: Surface Requirements illustration ===== */}
+          <rect x="610" y="100" width="180" height="170" rx="6" fill="#7C3AED" opacity="0.03" stroke="#7C3AED" strokeWidth="1" />
+          <text x="700" y="118" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#5B21B6" fontWeight="600">SURFACE REQUIREMENTS</text>
+          {/* Three surface type boxes */}
+          <rect x="625" y="135" width="65" height="55" rx="4" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="0.5" />
+          <text x="657" y="153" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="600">Firm</text>
+          {/* Solid surface pattern */}
+          <line x1="635" y1="163" x2="680" y2="163" stroke="#7C3AED" strokeWidth="2" opacity="0.3" />
+          <line x1="635" y1="170" x2="680" y2="170" stroke="#7C3AED" strokeWidth="2" opacity="0.3" />
+          <line x1="635" y1="177" x2="680" y2="177" stroke="#7C3AED" strokeWidth="2" opacity="0.3" />
+
+          <rect x="700" y="135" width="65" height="55" rx="4" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="0.5" />
+          <text x="732" y="153" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="600">Stable</text>
+          {/* Grid pattern */}
+          <line x1="710" y1="163" x2="755" y2="163" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
+          <line x1="710" y1="170" x2="755" y2="170" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
+          <line x1="710" y1="177" x2="755" y2="177" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
+          <line x1="720" y1="158" x2="720" y2="183" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
+          <line x1="732" y1="158" x2="732" y2="183" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
+          <line x1="744" y1="158" x2="744" y2="183" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
+
+          {/* Carpet with pile height callout */}
+          <rect x="625" y="200" width="140" height="50" rx="4" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="0.5" />
+          <text x="695" y="216" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="600">Carpet Pile</text>
+          {/* Carpet fibers */}
+          {[0,1,2,3,4,5,6,7,8,9].map(i => (
+            <line key={`cp${i}`} x1={640 + i * 12} y1="235" x2={640 + i * 12} y2={226 + (i % 3)} stroke="#7C3AED" strokeWidth="1.5" opacity="0.25" />
+          ))}
+          <text x="695" y="245" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#5B21B6">½" max pile height</text>
+
+          {/* Summary label */}
+          <text x="700" y="265" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="600">Slip-resistant required</text>
           {/* Floor line */}
           <line x1="540" y1="350" x2="860" y2="350" stroke="#94A3B8" strokeWidth="2" />
           <rect x="540" y="350" width="320" height="20" fill="#94A3B8" opacity="0.06" />
