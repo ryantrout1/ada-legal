@@ -92,6 +92,20 @@ export default function LULAElevatorDiagram() {
           <line x1="600" y1="378" x2="700" y2="378" stroke="#15803D" strokeWidth="4" />
           <text x="650" y="396" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">DOOR</text>
 
+          {/* End-opening: Wheelchair silhouette */}
+          <circle cx="650" cy="190" r="12" fill="#475569" opacity="0.1" />
+          <rect x="638" y="204" width="24" height="28" rx="3" fill="#475569" opacity="0.08" />
+          <circle cx="634" cy="232" r="9" fill="none" stroke="#475569" strokeWidth="1.2" opacity="0.15" />
+          <circle cx="666" cy="232" r="9" fill="none" stroke="#475569" strokeWidth="1.2" opacity="0.15" />
+
+          {/* End-opening: Controls panel on side wall */}
+          <rect x="548" y="140" width="12" height="60" rx="2" fill="#2563EB" opacity="0.15" stroke="#2563EB" strokeWidth="1" />
+          <text x="570" y="175" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A" fontWeight="600">CONTROLS</text>
+
+          {/* End-opening: Reach range indicator */}
+          <line x1="554" y1="135" x2="554" y2="205" stroke="#2563EB" strokeWidth="0.5" strokeDasharray="3 2" opacity="0.4" />
+          <text x="554" y="128" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#1E3A8A">15"–48"</text>
+
           {/* Width dim */}
           <line x1="540" y1="410" x2="760" y2="410" stroke="#C2410C" strokeWidth="1" />
           <line x1="540" y1="404" x2="540" y2="416" stroke="#C2410C" strokeWidth="1" />
