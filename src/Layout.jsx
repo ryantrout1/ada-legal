@@ -203,8 +203,8 @@ export default function Layout({ children, currentPageName }) {
         /* Base Styles */
         body {
           font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          background-color: var(--heading);
-          color: var(--heading);
+          background-color: var(--page-bg);
+          color: var(--body);
           margin: 0;
           line-height: 1.6;
           -webkit-font-smoothing: antialiased;
@@ -273,7 +273,7 @@ export default function Layout({ children, currentPageName }) {
               boxShadow: 'none', border: 'none', outline: 'none'
             }
           : {
-              backgroundColor: 'var(--heading)',
+              backgroundColor: 'var(--dark-bg)',
               color: 'white', height: '72px',
               display: 'flex', alignItems: 'center',
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
@@ -730,7 +730,7 @@ export default function Layout({ children, currentPageName }) {
       )}
 
       {/* Main Content */}
-      <main id="main-content" role="main" style={{ flex: 1, margin: 0, backgroundColor: '#FAF7F2' }}>
+      <main id="main-content" role="main" style={{ flex: 1, margin: 0, backgroundColor: 'var(--page-bg)' }}>
         {children}
       </main>
 
@@ -745,7 +745,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Global footer — hidden on landing page */}
       {currentPageName !== 'Home' && (
         <footer role="contentinfo" style={{
-          backgroundColor: 'var(--heading)',
+          backgroundColor: 'var(--dark-bg)',
           color: 'var(--dark-muted)',
           padding: '2rem 0',
           marginTop: 0
