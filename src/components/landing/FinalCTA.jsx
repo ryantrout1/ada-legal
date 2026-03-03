@@ -29,10 +29,10 @@ export default function FinalCTA({ heading, subtitle, buttonText, buttonLink, va
           {subtitle}
         </p>
         <Link
-          to={buttonLink}
+          to={buttonLink} className="landing-cta"
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.625rem',
-            background: 'var(--section-label)', color: 'white',
+            background: 'var(--section-label)', color: 'var(--dark-heading)',
             padding: '0.875rem 2rem', borderRadius: 'var(--radius-md)',
             fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
             textDecoration: 'none', minHeight: '48px',

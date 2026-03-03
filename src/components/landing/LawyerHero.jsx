@@ -7,7 +7,7 @@ export default function LawyerHero() {
   return (
     <section aria-labelledby="lawyer-hero-heading" className="warm-keep-dark" style={{
       background: 'linear-gradient(160deg, var(--heading) 0%, #0F172A 100%)',
-      color: 'white',
+      color: 'var(--dark-heading)',
       padding: 'clamp(4rem, 10vw, 7rem) 1.5rem',
       position: 'relative',
       overflow: 'hidden'
@@ -44,10 +44,10 @@ export default function LawyerHero() {
           Stop chasing leads. Receive vetted, exclusive ADA violation cases matched to your state and practice area.
         </p>
         <Link
-          to={createPageUrl('LawyerRegister')}
+          to={createPageUrl('LawyerRegister')} className="landing-cta"
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.625rem',
-            background: 'var(--section-label)', color: 'white',
+            background: 'var(--section-label)', color: 'var(--dark-heading)',
             padding: '0.875rem 2rem', borderRadius: 'var(--radius-md)',
             fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
             textDecoration: 'none', minHeight: '48px',

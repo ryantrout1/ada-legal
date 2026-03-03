@@ -10,6 +10,18 @@ import { createPageUrl } from '../utils';
 export default function LawyerLanding() {
   return (
     <div>
+      <style>{`
+        .landing-cta:focus-visible {
+          outline: 3px solid var(--accent-light);
+          outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          * { transition: none !important; animation: none !important; }
+        }
+        @media (prefers-contrast: more) {
+          .landing-cta { border: 2px solid currentColor !important; }
+        }
+      `}</style>
       <LawyerHero />
       <LawyerValueProps />
       <LawyerHowItWorks />

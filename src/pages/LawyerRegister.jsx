@@ -9,7 +9,7 @@ const inputStyle = {
   fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
   color: 'var(--heading)', backgroundColor: 'var(--surface)',
   border: '2px solid var(--border)', borderRadius: 'var(--radius-md)',
-  outline: 'none', transition: 'border-color 0.15s, box-shadow 0.15s',
+  transition: 'border-color 0.15s, box-shadow 0.15s',
   boxSizing: 'border-box'
 };
 
@@ -122,6 +122,23 @@ export default function LawyerRegister() {
       backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)',
       padding: 'var(--space-xl) var(--space-lg)'
     }}>
+      <style>{`
+        .lawyer-reg-btn:focus-visible {
+          outline: 3px solid var(--accent-light);
+          outline-offset: 2px;
+        }
+        input:focus-visible, select:focus-visible, textarea:focus-visible {
+          border-color: var(--link) !important;
+          box-shadow: 0 0 0 3px rgba(29,78,216,0.15) !important;
+          outline: none;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          * { transition: none !important; animation: none !important; }
+        }
+        @media (prefers-contrast: more) {
+          input, select, textarea { border-width: 3px !important; }
+        }
+      `}</style>
       <div style={{ maxWidth: '620px', margin: '0 auto' }}>
         <h1 style={{
           fontFamily: 'Fraunces, serif',
@@ -227,12 +244,12 @@ export default function LawyerRegister() {
 
           <button
             type="button"
-            onClick={handleSubmit}
+            onClick={handleSubmit} className="lawyer-reg-btn"
             disabled={submitting}
             style={{
               width: '100%', padding: '0.875rem',
               fontFamily: 'Manrope, sans-serif', fontSize: '1.0625rem', fontWeight: 700,
-              color: 'var(--btn-text)',
+              color: 'var(--dark-heading)',
               backgroundColor: submitting ? 'var(--body-secondary)' : 'var(--section-label)',
               border: 'none', borderRadius: 'var(--radius-md)',
               cursor: submitting ? 'not-allowed' : 'pointer',

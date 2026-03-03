@@ -233,6 +233,11 @@ export default function Marketplace() {
 
   return (
     <div style={{ backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)', padding: 'var(--space-xl) var(--space-lg)' }}>
+      <style>{`
+        button:focus-visible, a:focus-visible { outline: 3px solid var(--accent-light); outline-offset: 2px; }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a { border-width: 2px !important; } }
+      `}</style>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', fontWeight: 700, color: 'var(--heading)', marginBottom: 'var(--space-md)' }}>
           Available Cases
@@ -273,7 +278,7 @@ export default function Marketplace() {
               <button type="button" onClick={resetFilters} style={{
                 background: 'none', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)',
                 padding: '8px 20px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.875rem', fontWeight: 600, color: 'var(--section-label)'
+                fontSize: '0.875rem', fontWeight: 600, color: 'var(--section-label)', minHeight: '44px'
               }}>Reset Filters</button>
             )}
           </div>
