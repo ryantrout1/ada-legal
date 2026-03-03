@@ -93,20 +93,20 @@ export default function ElevatorDiagram() {
           {/* RIGHT: Control Panel Elevation */}
           <text x="690" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">CONTROL PANEL ELEVATION</text>
           {/* Panel background */}
-          <rect x="600" y="50" width="180" height="330" rx="8" fill="var(--dark-bg)" stroke="#64748B" strokeWidth="1.5" />
+          <rect x="600" y="50" width="180" height="330" rx="8" fill="#F1F5F9" stroke="#94A3B8" strokeWidth="1.5" />
           {/* Floor buttons */}
           {[1,2,3,4,5].map(f => (
             <React.Fragment key={f}>
-              <circle cx={640 + (f % 2 === 0 ? 60 : 0)} cy={300 - (Math.floor((f - 1) / 2)) * 50} r="12" fill="#334155" stroke="#64748B" strokeWidth="1" />
-              <text x={640 + (f % 2 === 0 ? 60 : 0)} y={304 - (Math.floor((f - 1) / 2)) * 50} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{f}</text>
+              <circle cx={640 + (f % 2 === 0 ? 60 : 0)} cy={300 - (Math.floor((f - 1) / 2)) * 50} r="12" fill="white" stroke="#64748B" strokeWidth="1.5" />
+              <text x={640 + (f % 2 === 0 ? 60 : 0)} y={304 - (Math.floor((f - 1) / 2)) * 50} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="#334155">{f}</text>
             </React.Fragment>
           ))}
           {/* Braille labels */}
-          <text x="720" y="170" fontFamily="Manrope, sans-serif" fontSize="6" fill="var(--body-secondary)">← Braille + raised</text>
-          <text x="720" y="180" fontFamily="Manrope, sans-serif" fontSize="6" fill="var(--body-secondary)">   characters each</text>
+          <text x="720" y="170" fontFamily="Manrope, sans-serif" fontSize="6" fill="#64748B">← Braille + raised</text>
+          <text x="720" y="180" fontFamily="Manrope, sans-serif" fontSize="6" fill="#64748B">   characters each</text>
           {/* Emergency controls at bottom */}
-          <rect x="620" y="330" width="140" height="35" rx="4" fill="#EF4444" opacity="0.1" stroke="#EF4444" strokeWidth="1" />
-          <text x="690" y="350" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#EF4444" fontWeight="600">🔔 ALARM  📞 PHONE  ⏹ STOP</text>
+          <rect x="620" y="330" width="140" height="35" rx="4" fill="#FEF2F2" stroke="#EF4444" strokeWidth="1" />
+          <text x="690" y="352" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#B91C1C" fontWeight="600">ALARM  PHONE  STOP</text>
           {/* Star on floor 1 */}
           <text x="618" y="308" fontFamily="Manrope, sans-serif" fontSize="10" fill="#78350F">★</text>
           {/* Reach range zone */}
