@@ -473,7 +473,11 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           background: 'var(--page-bg-subtle)',
         }}
       >
-        <label htmlFor="ada-ai-input" className="sr-only">
+        <label htmlFor="ada-ai-input" style={{
+          position: 'absolute', width: '1px', height: '1px',
+          padding: 0, margin: '-1px', overflow: 'hidden',
+          clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0,
+        }}>
           Type your question about ADA standards
         </label>
         <input
