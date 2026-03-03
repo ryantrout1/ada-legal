@@ -35,7 +35,7 @@ function isCurrent(stepIdx, currentIdx, status) {
 const STATUS_MESSAGES = {
   submitted: {
     bg: 'var(--page-bg-subtle)',
-    text: 'Your report has been received. Our team is reviewing it for completeness. This usually takes less than 24 hours.'
+    text: 'Your report has been received and is being reviewed by our team for completeness.'
   },
   under_review: {
     bg: '#DBEAFE',
@@ -51,7 +51,7 @@ const STATUS_MESSAGES = {
   },
   assigned: {
     bg: 'var(--card-bg-tinted)',
-    text: 'An attorney has been assigned to your case and should contact you within 24 hours using your preferred contact method.'
+    text: 'An attorney has been assigned to your case and will contact you using your preferred contact method.'
   },
   in_progress: {
     bg: '#DCFCE7',

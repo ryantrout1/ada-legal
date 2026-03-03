@@ -15,15 +15,15 @@ const steps = [
   },
   {
     num: '3',
-    title: 'We Review & Match',
-    desc: 'Our team reviews every submission. Your case enters our attorney network, visible only to qualified ADA lawyers in your area.',
-    time: 'Within 24 hours'
+    title: 'We Review Your Report',
+    desc: 'Our team reviews every submission for completeness. Qualifying cases enter our attorney network, visible only to licensed ADA lawyers in your area.',
+    time: 'Thorough review'
   },
   {
     num: '4',
     title: 'An Attorney Reaches Out',
-    desc: 'A licensed ADA attorney accepts your case exclusively and contacts you directly — at no cost to you.',
-    time: 'Usually within 48 hours'
+    desc: 'When an attorney accepts your case, they contact you directly and exclusively — at no cost to you.',
+    time: 'At no cost to you'
   }
 ];
 

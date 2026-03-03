@@ -54,7 +54,7 @@ export function caseApprovedEmail(c, portalUrl) {
       <ul style="padding-left: 20px;">
         <li>An attorney in your area will review your case details.</li>
         <li>Once an attorney initiates support, you will receive another email notification.</li>
-        <li>The attorney will contact you within 24 hours of being assigned.</li>
+        <li>The attorney will contact you after being assigned to your case.</li>
       </ul>
     `,
     portalUrl,
@@ -105,10 +105,10 @@ export function attorneyAssignedEmail(c, lawyerName, firmName, portalUrl) {
       </table>
       <p><strong>What happens next?</strong></p>
       <ul style="padding-left: 20px;">
-        <li>The assigned attorney will contact you within <strong>24 hours</strong> using your preferred contact method (<strong>${prefLabel(c.contact_preference)}</strong>).</li>
+        <li>The assigned attorney will contact you using your preferred contact method (<strong>${prefLabel(c.contact_preference)}</strong>).</li>
         <li>Please ensure your contact information is up to date and be ready to discuss your case.</li>
       </ul>
-      <p>If you do not hear from an attorney within 24 hours, please reply to this email.</p>
+      <p>If you have any questions, please reply to this email.</p>
     `,
     portalUrl,
     portalLabel: 'View Your Case'

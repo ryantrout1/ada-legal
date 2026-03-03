@@ -33,15 +33,15 @@ const BADGE_CONFIG = {
 };
 
 const CONTEXT_LINES = {
-  submitted: { text: 'Our team is reviewing your report — usually within 24 hours.', color: '#1E3A8A' },
-  under_review: { text: 'Our team is reviewing your report — usually within 24 hours.', color: '#1E3A8A' },
+  submitted: { text: 'Our team is reviewing your report — We will be in touch.', color: '#1E3A8A' },
+  under_review: { text: 'Our team is reviewing your report — We will be in touch.', color: '#1E3A8A' },
   approved: { text: 'Approved and visible to attorneys in your area.', color: '#15803D' },
   available: { text: 'Approved and visible to attorneys in your area.', color: '#15803D' },
   assigned: { text: 'An attorney has your case and should contact you soon.', color: '#C2410C' },
   in_progress: { text: 'Your attorney is actively working on your case.', color: '#15803D' },
   closed: null,
   rejected: { text: 'This report did not meet the criteria for our platform.', color: '#B91C1C' },
-  expired: { text: 'No attorney was matched within 90 days.', color: '#92400E' }
+  expired: { text: 'This case was not matched with an attorney.', color: '#92400E' }
 };
 
 const RESOLUTION_LABELS = {

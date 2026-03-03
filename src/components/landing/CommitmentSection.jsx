@@ -5,7 +5,7 @@ const items = [
   { iconName: 'accessible', title: 'Built Accessible, For Accessibility', desc: 'Our ADA Standards Guide is WCAG 2.2 AAA compliant — the highest level of web accessibility — because the community that uses it deserves nothing less. Keyboard navigable, screen reader optimized, high contrast supported.' },
   { iconName: 'privacy', title: 'Your Privacy, Protected', desc: 'Attorneys only see what they need. Your personal details are never shared publicly.' },
   { iconName: 'vetted', title: 'Vetted Attorneys Only', desc: 'Licensed, verified, and experienced in ADA litigation. No exceptions.' },
-  { iconName: 'free', title: 'Always Free to Report', desc: 'No cost to report or get matched. Free for people with disabilities, always.' },
+  { iconName: 'free', title: 'Always Free to Report', desc: 'No cost to submit a report. Free for people with disabilities, always.' },
   { iconName: 'transparent', title: 'Full Transparency', desc: "Track your case in real time. Know what's happening and who's handling it." },
   { iconName: 'exclusive', title: 'Exclusive Attention', desc: 'One case, one attorney. No bidding wars, no competing interests.' }
 ];
