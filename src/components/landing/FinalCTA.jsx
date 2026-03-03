@@ -16,14 +16,14 @@ export default function FinalCTA({ heading, subtitle, buttonText, buttonLink, va
           fontFamily: 'Fraunces, serif',
           fontSize: 'clamp(1.5rem, 3.5vw, 2rem)',
           fontWeight: 700,
-          color: isDark ? 'white' : 'var(--heading)',
+          color: isDark ? 'var(--dark-heading)' : 'var(--heading)',
           marginBottom: '0.75rem', marginTop: 0
         }}>
           {heading}
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
-          color: isDark ? '#B0BEC5' : 'var(--body)',
+          color: isDark ? 'var(--dark-muted)' : 'var(--body)',
           marginBottom: '2rem', lineHeight: 1.6
         }}>
           {subtitle}

@@ -3,21 +3,21 @@ import React from 'react';
 export default function LandingFooter() {
   return (
     <div style={{
-      backgroundColor: '#0F172A',
-      color: '#B0BEC5',
+      backgroundColor: 'var(--dark-bg-deep)',
+      color: 'var(--dark-muted)',
       padding: '2.5rem 1.5rem 2rem'
     }}>
       <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
         <p style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.125rem',
-          color: '#B0BEC5', fontWeight: 600,
+          color: 'var(--dark-muted)', fontWeight: 600,
           marginBottom: '1.25rem', marginTop: 0
         }}>
           ADA Legal Link
         </p>
         <div style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-          color: '#B0BEC5', lineHeight: 1.7
+          color: 'var(--dark-muted)', lineHeight: 1.7
         }}>
           <p style={{ margin: '0 0 0.75rem' }}>
             ADA Legal Link is not a law firm and does not provide legal advice. By submitting a report, you are not entering into an attorney-client relationship.

@@ -31,14 +31,14 @@ export default function LawyerHero() {
           fontFamily: 'Fraunces, serif',
           fontSize: 'clamp(2rem, 5vw, 3.25rem)',
           fontWeight: 700, lineHeight: 1.1,
-          color: 'white', marginBottom: '1.5rem', marginTop: 0
+          color: 'var(--dark-heading)', marginBottom: '1.5rem', marginTop: 0
         }}>
           Pre-Screened ADA Cases,<br />Delivered to You
         </h1>
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-          color: '#B0BEC5',
+          color: 'var(--dark-muted)',
           maxWidth: '580px', margin: '0 auto 2.5rem', lineHeight: 1.6
         }}>
           Stop chasing leads. Receive vetted, exclusive ADA violation cases matched to your state and practice area.

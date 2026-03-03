@@ -108,7 +108,7 @@ export default function Marketplace() {
           </p>
           <a href={createPageUrl('LawyerSubscription')} style={{
             display: 'inline-block', padding: '0.75rem 2rem', fontFamily: 'Manrope, sans-serif',
-            fontSize: '1rem', fontWeight: 700, color: 'var(--btn-text)', backgroundColor: 'var(--section-label)',
+            fontSize: '1rem', fontWeight: 700, color: 'var(--dark-heading)', backgroundColor: 'var(--section-label)',
             borderRadius: 'var(--radius-md)', textDecoration: 'none'
           }}>Activate Subscription</a>
         </div>
@@ -247,9 +247,10 @@ export default function Marketplace() {
           <MarketplaceFilters filters={filters} onChange={setFilters} lawyerStates={lawyerStates} />
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '0.25rem' }}>
             <button type="button" onClick={() => setScoreModalOpen(true)} style={{
-              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+              background: 'none', border: 'none', cursor: 'pointer', padding: '8px 4px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-              color: 'var(--body-secondary)', display: 'inline-flex', alignItems: 'center', gap: '4px'
+              color: 'var(--body-secondary)', display: 'inline-flex', alignItems: 'center', gap: '4px',
+              minHeight: '44px'
             }}
               onMouseEnter={e => { e.currentTarget.style.color = 'var(--section-label)'; }}
               onMouseLeave={e => { e.currentTarget.style.color = 'var(--body-secondary)'; }}

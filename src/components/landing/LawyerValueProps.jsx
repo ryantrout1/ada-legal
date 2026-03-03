@@ -57,7 +57,7 @@ export default function LawyerValueProps() {
             }}>
               <div style={{
                 width: '48px', height: '48px', borderRadius: '50%',
-                backgroundColor: 'var(--heading)', color: 'var(--btn-text)',
+                backgroundColor: 'var(--heading)', color: 'var(--dark-heading)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 margin: '0 auto 1.25rem'
               }}>

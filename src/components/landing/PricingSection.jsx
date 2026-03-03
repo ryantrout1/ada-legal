@@ -64,10 +64,10 @@ export default function PricingSection() {
         </div>
 
         <Link
-          to={createPageUrl('LawyerRegister')}
+          to={createPageUrl('LawyerRegister')} className="landing-cta"
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.625rem',
-            background: 'var(--section-label)', color: 'var(--btn-text)',
+            background: 'var(--section-label)', color: 'var(--dark-heading)',
             padding: '0.875rem 2.5rem', borderRadius: 'var(--radius-md)',
             fontSize: '1rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif',
             textDecoration: 'none', minHeight: '48px',

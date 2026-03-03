@@ -49,7 +49,7 @@ export default function LawyerHowItWorks() {
             <div key={s.num} style={{ textAlign: 'center' }}>
               <div className="step-number-circle" style={{
                 width: '48px', height: '48px', borderRadius: '50%',
-                backgroundColor: 'var(--heading)', color: 'white',
+                backgroundColor: 'var(--heading)', color: 'var(--dark-heading)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700,
                 margin: '0 auto 1.25rem'
