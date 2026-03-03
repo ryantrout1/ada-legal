@@ -230,12 +230,13 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
 
       const sysPrompt = buildSystemPrompt(pageContext, readingLevel || 'standard');
       console.log('[AskADAHelper] system_prompt length:', sysPrompt.length);
-      console.log('[AskADAHelper] system_prompt preview:', sysPrompt.substring(0, 300));
       console.log('[AskADAHelper] pageContext length:', pageContext.length);
 
+      // Base44 InvokeLLM ignores system_prompt param — must embed in prompt itself
+      const fullPrompt = `${sysPrompt}\n\n--- CONVERSATION ---\n${recentHistory}\n\n--- INSTRUCTIONS ---\nRespond to the user's latest message using ONLY the ADA STANDARDS CONTENT above. Keep it short (3-4 sentences max), cite section numbers, plain language, one clear next step. If this topic is not on the current page, tell the user which chapter to check.`;
+
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `${recentHistory}\n\nRespond to the user's latest message. Remember: keep it short (3-4 sentences max), answer first, plain language, one clear next step.`,
-        system_prompt: sysPrompt,
+        prompt: fullPrompt,
         temperature: 0.3,
       });
 
