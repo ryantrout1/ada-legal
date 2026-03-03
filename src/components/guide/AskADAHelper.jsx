@@ -178,6 +178,11 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
     return ctx;
   }, [pageTitle, pageSections]);
 
+  // Debug: verify content extraction (remove after confirming)
+  React.useEffect(() => {
+    if (pageContext) console.log('[AskADAHelper] pageContext length:', pageContext.length, 'preview:', pageContext.substring(0, 200));
+  }, [pageContext]);
+
   const suggestedQuestions = SUGGESTED_QUESTIONS[pageType] || SUGGESTED_QUESTIONS.default;
 
   // Scroll to bottom on new messages — within the chat panel only
