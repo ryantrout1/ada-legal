@@ -228,9 +228,14 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
         `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
       ).join('\n');
 
+      const sysPrompt = buildSystemPrompt(pageContext, readingLevel || 'standard');
+      console.log('[AskADAHelper] system_prompt length:', sysPrompt.length);
+      console.log('[AskADAHelper] system_prompt preview:', sysPrompt.substring(0, 300));
+      console.log('[AskADAHelper] pageContext length:', pageContext.length);
+
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `${recentHistory}\n\nRespond to the user's latest message. Remember: keep it short (3-4 sentences max), answer first, plain language, one clear next step.`,
-        system_prompt: buildSystemPrompt(pageContext, readingLevel || 'standard'),
+        system_prompt: sysPrompt,
         temperature: 0.3,
       });
 
