@@ -157,8 +157,8 @@ export default function RampDiagram() {
           <line x1="240" y1="330" x2="720" y2="180" stroke="#64748B" strokeWidth="2" />
 
           {/* Top landing */}
-          <rect x="720" y="120" width="140" height="60" rx="2" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="790" y="155" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#374151">Top Landing</text>
+          <rect x="720" y="180" width="140" height="60" rx="2" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
+          <text x="790" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#374151">Top Landing</text>
 
           {/* Edge protection (curb along bottom of ramp) */}
           <line x1="240" y1="390" x2="720" y2="240" stroke="#DB2777" strokeWidth="3" opacity="0.5" />
@@ -212,13 +212,13 @@ export default function RampDiagram() {
           </text>
 
           {/* Top landing dimension */}
-          <line x1="720" y1="108" x2="860" y2="108" stroke="#7C3AED" strokeWidth="1.5" />
-          <line x1="720" y1="100" x2="720" y2="116" stroke="#7C3AED" strokeWidth="1.5" />
-          <line x1="860" y1="100" x2="860" y2="116" stroke="#7C3AED" strokeWidth="1.5" />
-          <polygon points="725,108 735,104 735,112" fill="#7C3AED" />
-          <polygon points="855,108 845,104 845,112" fill="#7C3AED" />
-          <rect x="747" y="92" width="86" height="16" rx="3" fill="#7C3AED" />
-          <text x="790" y="103" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="white">
+          <line x1="720" y1="168" x2="860" y2="168" stroke="#7C3AED" strokeWidth="1.5" />
+          <line x1="720" y1="160" x2="720" y2="176" stroke="#7C3AED" strokeWidth="1.5" />
+          <line x1="860" y1="160" x2="860" y2="176" stroke="#7C3AED" strokeWidth="1.5" />
+          <polygon points="725,168 735,164 735,172" fill="#7C3AED" />
+          <polygon points="855,168 845,164 845,172" fill="#7C3AED" />
+          <rect x="747" y="152" width="86" height="16" rx="3" fill="#7C3AED" />
+          <text x="790" y="163" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="white">
             {impFt('5', '1525')} min
           </text>
 
