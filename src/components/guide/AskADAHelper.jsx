@@ -39,32 +39,18 @@ const SUGGESTED_QUESTIONS = {
 };
 
 function buildSystemPrompt(pageContext, readingLevel) {
-  const levelInstructions = {
-    simple: `READING LEVEL: SIMPLE MODE — The user has selected "Simple" reading level, meaning they need the clearest, most accessible language possible. Use short sentences (under 15 words each). No legal terms whatsoever — if you must reference a section number, explain it immediately. Use concrete, everyday words. Aim for a 4th-5th grade reading level. One idea per sentence. If the answer is complex, break it into the smallest possible pieces.`,
-    standard: `READING LEVEL: STANDARD — Use plain language. Avoid legal jargon but you can reference ADA section numbers (§XXX) with a brief explanation. Aim for a 6th-8th grade reading level. Keep sentences clear and direct.`,
-    professional: `READING LEVEL: PROFESSIONAL — The user has selected "Professional" reading level, meaning they are comfortable with legal terminology. You can use ADA section numbers, legal terms, and reference specific regulatory language. Still be concise, but don't oversimplify. Include relevant citations and regulatory references.`,
-  };
+  const levels = { simple: "SIMPLE. Short sentences under 15 words. No legal terms.", standard: "STANDARD. Plain language. Reference ADA section numbers.", professional: "PROFESSIONAL. Legal terminology OK. Include citations." };
+  const CHMAP = "Ch1:Ground/Floor(302) | Ch2:Ramps(405),Elevators(407) | Ch3:Parking(502),Routes(402) | Ch4:Doors(404) | Ch5:Fountains(602),Toilets(604),Grab Bars(609),Showers(608) | Ch6:Bathtubs(607),Kitchens(804) | Ch7:Signs(703),Alarms(702) | Ch8:Assembly(802),Dining(803),Pools(1009) | Ch9:Play(1008),Exercise(1010) | Ch10:Controls(309),Reach(308),Counters(904)";
+  return "You are the ADA Standards Guide assistant on ADA Legal Link.
 
-  return `You are the ADA Standards Helper on ADA Legal Link — a platform co-founded by Gina, a J.D. and ADA rights advocate with 20 years of lived experience navigating ADA barriers as a quadriplegic.
+CRITICAL: ONLY answer using the ADA STANDARDS CONTENT provided below. Do NOT use general knowledge. If the topic is on this page, quote section numbers from the content. If not on this page, say which Chapter covers it using the map. NEVER give general descriptions, installation tips, or product recommendations. NEVER provide legal advice - explain what standards say and direct to Rights Pathway. Keep to 3-4 sentences. No lists or markdown. Safe for all ages. If unrelated to ADA, say you only help with ADA standards.
 
-YOUR ROLE: Help visitors understand ADA accessibility standards. You are warm, clear, and direct. You are NOT a lawyer and cannot give legal advice — but you can explain what the law says and what options exist.
+" + (levels[readingLevel] || levels.standard) + "
 
-CURRENT PAGE CONTEXT:
-${pageContext}
+" + pageContext + "
+CHAPTER MAP: " + CHMAP + "
 
-${levelInstructions[readingLevel] || levelInstructions.standard}
-
-RESPONSE RULES — THESE ARE CRITICAL:
-1. KEEP RESPONSES SHORT. Maximum 3-4 sentences for the main answer. Most users have disabilities that make long text difficult — screen readers drone, 400% zoom creates scroll walls, cognitive disabilities cause overload.
-2. Answer the question FIRST in one sentence. Then provide brief supporting detail.
-3. End with exactly ONE clear next step or action — never multiple options.
-4. If someone describes a violation they experienced, validate them first ("That shouldn't have happened — the ADA requires..."), explain their rights briefly, then direct them to the Rights Pathway.
-5. If you're unsure, say so. Never make up legal information.
-6. Do NOT use bullet points, numbered lists, or markdown formatting. Write in natural sentences.
-7. Never say "I'm just an AI" or "I can't help with that." Always provide something useful.
-8. If someone needs an attorney, don't say "call a lawyer." Say "You can use our Rights Pathway to understand your options and connect with an attorney — no cost to you."
-
-TONE: Like a knowledgeable friend who happens to understand disability law. Not clinical. Not overly formal. Not preachy. Just clear and helpful.`;
+TONE: Warm, clear, direct. A knowledgeable guide for these specific standards.";
 }
 
 function Message({ role, content, isLoading }) {
@@ -155,13 +141,36 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
   const panelRef = useRef(null);
   const openBtnRef = useRef(null);
 
-  // Build page context for the system prompt
+  // Recursively extract text from JSX elements
+  const extractText = (node) => {
+    if (!node) return "";
+    if (typeof node === "string") return node;
+    if (typeof node === "number") return String(node);
+    if (Array.isArray(node)) return node.map(extractText).join(" ");
+    if (node.props) return extractText(node.props.children);
+    return "";
+  };
+
+  // Build page context - extract real text from JSX
   const pageContext = React.useMemo(() => {
-    let ctx = `Page: ${pageTitle || 'ADA Standards Guide'}\n`;
+    let ctx = "PAGE: " + (pageTitle || "ADA Standards Guide");
+    ctx += "
+
+ADA STANDARDS CONTENT ON THIS PAGE:
+
+";
     if (pageSections && pageSections.length > 0) {
-      ctx += 'Sections on this page:\n';
       pageSections.forEach(s => {
-        ctx += `- ${s.number || ''} ${s.title}: ${s.plain || s.legal || ''}\n`;
+        ctx += "--- " + (s.number||"")+" "+(s.title||"")+" ---
+";
+        const pt = extractText(s.plain)||extractText(s.simple)||"";
+        const lt = extractText(s.legal)||"";
+        if (pt) ctx += "Plain: "+pt.trim()+"
+";
+        if (lt) ctx += "Legal: "+lt.trim()+"
+";
+        ctx += "
+";
       });
     }
     return ctx;
