@@ -105,21 +105,21 @@ export default function ProgressBar({ currentStep, totalOverride, labelsOverride
             border: isCurrent
               ? '2px solid var(--section-label)'
               : isCompleted
-                ? '1px solid var(--success-600, #16A34A)'
+                ? '1px solid var(--accent-success)'
                 : '1px solid var(--border)',
             backgroundColor: isCurrent
-              ? '#FFF8F5'
+              ? 'var(--card-bg-tinted)'
               : isCompleted
-                ? '#F0FDF4'
+                ? 'var(--page-bg-subtle)'
                 : 'transparent',
             color: isCurrent
               ? 'var(--section-label)'
               : isCompleted
-                ? 'var(--success-600, #16A34A)'
+                ? 'var(--accent-success)'
                 : 'var(--body-secondary)',
             cursor: canClick ? 'pointer' : 'default',
             transition: 'all 0.15s',
-            minHeight: '28px'
+            minHeight: '44px'
           };
 
           if (canClick) {

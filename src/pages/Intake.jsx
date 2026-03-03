@@ -445,7 +445,8 @@ export default function Intake() {
                 background: 'none', border: 'none', cursor: 'pointer',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
                 color: 'var(--body-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem',
-                padding: '0.375rem 0.5rem'
+                padding: '0.375rem 0.5rem',
+                minHeight: '44px'
               }}
               aria-label="Exit form"
             >
@@ -504,7 +505,7 @@ export default function Intake() {
                 borderRadius: 'var(--radius-sm)',
                 padding: '0.375rem 0.75rem',
                 cursor: 'pointer',
-                minHeight: '36px'
+                minHeight: '44px'
               }}
             >
               Start over
@@ -663,7 +664,10 @@ export default function Intake() {
                           color: '#991B1B',
                           textDecoration: 'underline',
                           cursor: 'pointer',
-                          textAlign: 'left'
+                          textAlign: 'left',
+                          minHeight: '44px',
+                          display: 'flex',
+                          alignItems: 'center'
                         }}
                       >
                         {FIELD_LABELS[field] || field}: {msg}
@@ -763,6 +767,28 @@ export default function Intake() {
       </div>
 
       <ExitConfirmModal open={showExitConfirm} onStay={() => setShowExitConfirm(false)} />
+
+      <style>{`
+        .intake-triage-card:focus-visible,
+        .intake-nav-btn:focus-visible {
+          outline: 3px solid var(--accent-light) !important;
+          outline-offset: 2px !important;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          * { transition: none !important; animation: none !important; }
+        }
+        @media (prefers-contrast: more) {
+          .intake-triage-card {
+            border-width: 3px !important;
+          }
+        }
+        @media (max-width: 360px) {
+          [role="form"] {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

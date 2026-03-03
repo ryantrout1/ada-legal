@@ -13,6 +13,7 @@ export default function WizardNavButtons({ onBack, onContinue, canContinue, back
         <button
           type="button"
           onClick={onBack}
+          className="intake-nav-btn"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -30,7 +31,7 @@ export default function WizardNavButtons({ onBack, onContinue, canContinue, back
             transition: 'all 0.2s'
           }}
           onMouseEnter={e => { e.target.style.borderColor = 'var(--body-secondary)'; }}
-          onMouseLeave={e => { e.target.style.borderColor = 'var(--body-secondary)'; }}
+          onMouseLeave={e => { e.target.style.borderColor = 'var(--border)'; }}
         >
           <ArrowLeft size={18} aria-hidden="true" />
           {backLabel || 'Back'}
@@ -40,6 +41,7 @@ export default function WizardNavButtons({ onBack, onContinue, canContinue, back
         type="button"
         onClick={onContinue}
         disabled={!canContinue}
+        className="intake-nav-btn"
         style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -48,7 +50,7 @@ export default function WizardNavButtons({ onBack, onContinue, canContinue, back
           fontFamily: 'Manrope, sans-serif',
           fontSize: '1rem',
           fontWeight: 600,
-          color: 'white',
+          color: 'var(--dark-heading)',
           backgroundColor: canContinue ? 'var(--section-label)' : 'var(--body-secondary)',
           border: 'none',
           borderRadius: 'var(--radius-md)',
@@ -57,8 +59,6 @@ export default function WizardNavButtons({ onBack, onContinue, canContinue, back
           transition: 'all 0.2s',
           opacity: canContinue ? 1 : 0.7
         }}
-        onMouseEnter={e => { if (canContinue) e.target.style.backgroundColor = 'var(--section-label)'; }}
-        onMouseLeave={e => { if (canContinue) e.target.style.backgroundColor = 'var(--section-label)'; }}
       >
         {continueLabel || 'Continue'}
         <ArrowRight size={18} aria-hidden="true" />

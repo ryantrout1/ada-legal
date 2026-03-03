@@ -68,7 +68,7 @@ export default function ExitConfirmModal({ open, onStay }) {
             Save &amp; Exit
           </button>
           <button
-            ref={stayRef}
+            ref={stayRef} className="intake-nav-btn"
             type="button" onClick={onStay}
             style={{
               padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',

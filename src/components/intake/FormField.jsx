@@ -31,7 +31,7 @@ export default function FormField({ label, id, required, error, helperText, chil
             fontSize: '0.8125rem',
             color: 'var(--body-secondary)',
             margin: '0 0 var(--space-xs) 0',
-            lineHeight: 1.4
+            lineHeight: 1.5
           }}
         >
           {helperText}
@@ -50,7 +50,7 @@ export default function FormField({ label, id, required, error, helperText, chil
             fontSize: '0.8125rem',
             color: '#B91C1C',
             margin: 'var(--space-xs) 0 0 0',
-            lineHeight: 1.4
+            lineHeight: 1.5
           }}
         >
           <AlertCircle size={14} aria-hidden="true" style={{ flexShrink: 0 }} />

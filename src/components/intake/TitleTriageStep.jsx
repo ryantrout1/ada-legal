@@ -50,7 +50,7 @@ export default function TitleTriageStep({ onSelectTitleIII }) {
     <div>
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '1.02rem', color: '#475569',
+          fontFamily: 'Manrope, sans-serif', fontSize: '1.02rem', color: 'var(--body-secondary)',
           maxWidth: '560px', margin: '0 auto', lineHeight: 1.6
         }}>
           Your answer helps us connect you with the right resources. Select the option that best describes your situation.
@@ -64,16 +64,16 @@ export default function TitleTriageStep({ onSelectTitleIII }) {
             type="button"
             onClick={() => handleSelect(card)}
             style={{
-              background: 'white', border: '2px solid #E2E8F0', borderRadius: '16px',
+              background: 'var(--card-bg)', border: '2px solid var(--border)', borderRadius: '16px',
               padding: '24px', display: 'flex', alignItems: 'flex-start', gap: '20px',
               cursor: 'pointer', textAlign: 'left', width: '100%',
               transition: 'border-color 0.2s, box-shadow 0.2s, transform 0.2s',
-              outline: 'none'
+              minHeight: '64px'
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#FB923C'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}
-            onFocus={e => { e.currentTarget.style.borderColor = '#FB923C'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37,99,235,0.2)'; }}
-            onBlur={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = 'none'; }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            onFocus={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37,99,235,0.2)'; }}
+            onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
           >
             <div style={{
               width: '56px', height: '56px', borderRadius: '14px', background: card.iconBg,
@@ -103,13 +103,13 @@ export default function TitleTriageStep({ onSelectTitleIII }) {
                 {card.heading}
               </h2>
               <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem', color: '#475569',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem', color: 'var(--body-secondary)',
                 margin: '0 0 8px', lineHeight: 1.55
               }}>
                 {card.description}
               </p>
               <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#434E5E',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: 'var(--body)',
                 margin: 0, lineHeight: 1.5, fontStyle: 'italic'
               }}>
                 {card.examples}
@@ -117,13 +117,13 @@ export default function TitleTriageStep({ onSelectTitleIII }) {
             </div>
 
             <div style={{ flexShrink: 0, alignSelf: 'center', transition: 'transform 0.2s, color 0.2s' }} className={`triage-chevron-${card.id}`}>
-              <ChevronRight size={24} style={{ color: '#CBD5E1' }} aria-hidden="true" />
+              <ChevronRight size={24} style={{ color: 'var(--body-secondary)' }} aria-hidden="true" />
             </div>
           </button>
         ))}
       </div>
       <p style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: '#434E5E',
+        fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: 'var(--body)',
         fontStyle: 'italic', lineHeight: 1.55, textAlign: 'center',
         maxWidth: '780px', margin: '20px auto 0'
       }}>
