@@ -58,14 +58,6 @@ export default function CaseDetail() {
   if (loading) {
     return (
       <div role="status" aria-label="Loading case details" style={{
-      <style>{`
-        button:focus-visible, a:focus-visible, select:focus-visible,
-        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
-          outline: 3px solid var(--accent-light); outline-offset: 2px;
-        }
-        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
-        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
-      `}</style>
         display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
         minHeight: 'calc(100vh - 200px)', gap: '1rem'
       }}>
@@ -82,6 +74,12 @@ export default function CaseDetail() {
 
   return (
     <div style={{ backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)', padding: '1.5rem' }}>
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent-light); outline-offset: 2px; }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
       <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
         {/* Breadcrumb */}
