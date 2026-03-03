@@ -21,6 +21,17 @@ export default function GuideAdaProtections() {
           <GuideSection
             id="three-prong"
             title="The Three-Part Definition of Disability"
+            simpleContent={
+              <>
+                <p>The ADA says you have a disability if any one of these is true:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>You have a condition that makes daily life harder (like walking, seeing, or breathing).</li>
+                  <li style={{ marginBottom: '6px' }}>You had a disability in the past (like cancer that went away).</li>
+                  <li style={{ marginBottom: '6px' }}>Someone treats you like you have a disability, even if you do not.</li>
+                </ul>
+                <p>You only need to meet one of these three to be protected.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -75,6 +86,19 @@ export default function GuideAdaProtections() {
           <GuideSection
             id="major-life-activities"
             title="What Are Major Life Activities?"
+            simpleContent={
+              <>
+                <p>Major life activities are things most people do every day. Some examples:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Walking, standing, lifting, bending</li>
+                  <li style={{ marginBottom: '6px' }}>Seeing, hearing, speaking</li>
+                  <li style={{ marginBottom: '6px' }}>Breathing, eating, sleeping</li>
+                  <li style={{ marginBottom: '6px' }}>Thinking, reading, learning, concentrating</li>
+                  <li style={{ marginBottom: '6px' }}>Working, caring for yourself</li>
+                </ul>
+                <p>Body functions count too, like how your immune system, brain, or heart works.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -120,6 +144,14 @@ export default function GuideAdaProtections() {
           <GuideSection
             id="substantially-limits"
             title="What Does 'Substantially Limits' Mean?"
+            simpleContent={
+              <>
+                <p>Your condition does not have to completely stop you from doing something.</p>
+                <p>It just has to make things much harder than for most people.</p>
+                <p>After 2008, the law says courts should focus on whether you were treated unfairly, not on proving how bad your disability is.</p>
+                <p>Things like glasses or medicine do not count against you. The law looks at you without those aids.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -176,6 +208,13 @@ export default function GuideAdaProtections() {
           <GuideSection
             id="episodic"
             title="Episodic Conditions and Remission"
+            simpleContent={
+              <>
+                <p>Some disabilities come and go. You are still protected.</p>
+                <p>Examples include epilepsy, multiple sclerosis, and cancer in remission.</p>
+                <p>The law looks at how bad the condition is when it is active, not when you feel fine.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -220,6 +259,14 @@ export default function GuideAdaProtections() {
           <GuideSection
             id="regarded-as"
             title="The 'Regarded As' Prong"
+            simpleContent={
+              <>
+                <p>You are protected even if you do not actually have a disability.</p>
+                <p>If someone treats you unfairly because they think you have one, that counts.</p>
+                <p>For example: A boss fires you because they think you have HIV, even though you do not. That is still discrimination.</p>
+                <p>You do not need to prove your condition is real. You just need to show they acted on their belief.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -276,6 +323,16 @@ export default function GuideAdaProtections() {
           <GuideSection
             id="not-covered"
             title="Who Is Not Covered?"
+            simpleContent={
+              <>
+                <p>A few things are not covered by the ADA:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Current illegal drug use (but past drug addiction in recovery is protected).</li>
+                  <li style={{ marginBottom: '6px' }}>Temporary conditions like a broken bone usually are not covered, unless very serious.</li>
+                  <li style={{ marginBottom: '6px' }}>Minor common conditions like a cold or the flu.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               A few situations are <strong>specifically excluded</strong> from
@@ -309,6 +366,17 @@ export default function GuideAdaProtections() {
           <GuideSection
             id="related-laws"
             title="Relationship to Other Laws"
+            simpleContent={
+              <>
+                <p>Other laws may also protect you:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Section 504</strong> covers schools and programs that get government money.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Fair Housing Act</strong> covers your rights in apartments and housing.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>State laws</strong> in your state may give you more protection than the ADA.</li>
+                </ul>
+                <p>You can use more than one law at the same time.</p>
+              </>
+            }
           >
             <p>
               The ADA's definition of disability works alongside other federal

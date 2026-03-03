@@ -22,6 +22,13 @@ export default function GuideServiceAnimals() {
           <GuideSection
             id="definition"
             title="What Is a Service Animal?"
+            simpleContent={
+              <>
+                <p>A service animal is a dog that is trained to do a specific task for a person with a disability.</p>
+                <p>Examples: guiding a blind person, alerting a deaf person to sounds, or stopping someone from falling during a seizure.</p>
+                <p>Only dogs can be service animals under the ADA (with one exception for miniature horses).</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -57,6 +64,13 @@ export default function GuideServiceAnimals() {
           <GuideSection
             id="miniature-horses"
             title="Miniature Horses"
+            simpleContent={
+              <>
+                <p>Miniature horses can also be service animals in some cases.</p>
+                <p>The business must allow them if the horse is trained, housebroken, and the space is big enough.</p>
+                <p>This is the only exception. No other animals besides dogs and miniature horses are covered.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -91,6 +105,13 @@ export default function GuideServiceAnimals() {
           <GuideSection
             id="not-service-animals"
             title="Emotional Support Animals Are Not Service Animals"
+            simpleContent={
+              <>
+                <p>Emotional support animals (ESAs) are not service animals under the ADA.</p>
+                <p>A pet that makes you feel better does not count. The animal must be trained to do a specific task.</p>
+                <p>ESAs may be protected under the Fair Housing Act for housing, but businesses do not have to allow them.</p>
+              </>
+            }
           >
             <p>
               This is one of the most common areas of confusion. Under the ADA,
@@ -117,6 +138,16 @@ export default function GuideServiceAnimals() {
           <GuideSection
             id="two-questions"
             title="The Two Questions Businesses Can Ask"
+            simpleContent={
+              <>
+                <p>A business can only ask you two questions about your service animal:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Is this animal required because of a disability?</li>
+                  <li style={{ marginBottom: '6px' }}>What task has the animal been trained to do?</li>
+                </ul>
+                <p>They cannot ask about your disability. They cannot ask for papers or a vest. They cannot make the dog show its task.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -160,6 +191,18 @@ export default function GuideServiceAnimals() {
           <GuideSection
             id="where-allowed"
             title="Where Service Animals Must Be Allowed"
+            simpleContent={
+              <>
+                <p>Service animals must be allowed anywhere the public can go. This includes:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Restaurants and stores</li>
+                  <li style={{ marginBottom: '6px' }}>Hotels and hospitals</li>
+                  <li style={{ marginBottom: '6px' }}>Government buildings and schools</li>
+                  <li style={{ marginBottom: '6px' }}>Taxis and rideshare vehicles</li>
+                </ul>
+                <p>A business cannot charge you extra for having a service animal.</p>
+              </>
+            }
           >
             <p>
               Service animals must be allowed <strong>anywhere the public is
@@ -186,6 +229,16 @@ export default function GuideServiceAnimals() {
           <GuideSection
             id="exclusion"
             title="When a Service Animal Can Be Removed"
+            simpleContent={
+              <>
+                <p>A business can only ask you to remove your service animal if:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>The animal is out of control and you are not stopping it.</li>
+                  <li style={{ marginBottom: '6px' }}>The animal is not housebroken.</li>
+                </ul>
+                <p>Even then, the business must still let you stay. They only remove the animal, not you.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -225,6 +278,17 @@ export default function GuideServiceAnimals() {
           <GuideSection
             id="other-rules"
             title="Other Important Rules"
+            simpleContent={
+              <>
+                <p>Here are more things to know about service animals:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>You are responsible for caring for and controlling your animal.</li>
+                  <li style={{ marginBottom: '6px' }}>Your animal does not need a special vest, tag, or certificate.</li>
+                  <li style={{ marginBottom: '6px' }}>Allergies or fear of dogs are not reasons to deny your animal entry.</li>
+                  <li style={{ marginBottom: '6px' }}>If your animal causes damage, the business can charge you for the damage only.</li>
+                </ul>
+              </>
+            }
           >
             <ul style={{ paddingLeft: '1.25rem', margin: '8px 0 16px' }}>
               <li style={{ marginBottom: '10px' }}>

@@ -21,6 +21,18 @@ export default function GuideWhatToExpect() {
           <GuideSection
             id="document"
             title="Step 1 — Document the Violation"
+            simpleContent={
+              <>
+                <p>Write down what happened as soon as you can.</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>What happened and when.</li>
+                  <li style={{ marginBottom: '6px' }}>Where it happened (name and address).</li>
+                  <li style={{ marginBottom: '6px' }}>Take photos if you can.</li>
+                  <li style={{ marginBottom: '6px' }}>Write down names of people who saw it.</li>
+                </ul>
+                <p>Good notes make your case stronger.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>Standing — Why Documentation Matters</strong></p>
@@ -74,6 +86,13 @@ export default function GuideWhatToExpect() {
           <GuideSection
             id="report"
             title="Step 2 — Report It Through ADA Legal Link"
+            simpleContent={
+              <>
+                <p>Tell us what happened using our simple form.</p>
+                <p>We will review your report and match you with a lawyer who handles ADA cases.</p>
+                <p>This is free to you. You do not pay anything to report.</p>
+              </>
+            }
           >
             <p>
               Our intake form collects the information an attorney needs to evaluate
@@ -109,6 +128,13 @@ export default function GuideWhatToExpect() {
           <GuideSection
             id="demand-letter"
             title="Step 3 — Attorney Review & Demand Letter"
+            simpleContent={
+              <>
+                <p>Your lawyer will look at your case and decide the best plan.</p>
+                <p>Usually, the lawyer sends a letter to the business or government. The letter explains what they did wrong and asks them to fix it.</p>
+                <p>Many cases get resolved at this stage without going to court.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>What Is a Demand Letter?</strong></p>
@@ -166,6 +192,14 @@ export default function GuideWhatToExpect() {
           <GuideSection
             id="settlement"
             title="Step 4 — Negotiation & Settlement"
+            simpleContent={
+              <>
+                <p>Most ADA cases end with a settlement. This means both sides agree on a solution.</p>
+                <p>The business may agree to fix the problem (like adding a ramp or fixing their website).</p>
+                <p>In some cases, you may also get money.</p>
+                <p>Your lawyer handles the negotiation. You do not have to do it yourself.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>Typical Settlement Components</strong></p>
@@ -217,6 +251,14 @@ export default function GuideWhatToExpect() {
           <GuideSection
             id="court"
             title="Step 5 — If It Goes to Court"
+            simpleContent={
+              <>
+                <p>Most cases never go to court. But if the other side will not settle, your lawyer can file a lawsuit.</p>
+                <p>A judge can order the business to make changes.</p>
+                <p>In many states, you can also get money damages.</p>
+                <p>The losing side usually has to pay your lawyer fees.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>42 U.S.C. §12205</strong></p>
@@ -272,6 +314,14 @@ export default function GuideWhatToExpect() {
           <GuideSection
             id="common-questions"
             title="Common Questions About the Process"
+            simpleContent={
+              <>
+                <p><strong>How long does it take?</strong> Most cases settle in 2 to 6 months. Court cases take longer.</p>
+                <p><strong>Does it cost me money?</strong> ADA lawyers usually work on a fee-shifting basis. The business pays your lawyer if you win.</p>
+                <p><strong>Will I have to go to court?</strong> Probably not. Most cases settle before that.</p>
+                <p><strong>Can I get fired for filing?</strong> No. The ADA protects you from retaliation.</p>
+              </>
+            }
           >
             <div style={{
               background: 'var(--card-bg)', border: '1px solid var(--border)',

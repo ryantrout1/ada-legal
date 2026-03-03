@@ -22,6 +22,14 @@ export default function GuideIntroToAda() {
           <GuideSection
             id="what-is-ada"
             title="What Is the ADA?"
+            simpleContent={
+              <>
+                <p>The ADA is a law that protects people with disabilities.</p>
+                <p>It says businesses and the government must treat people with disabilities fairly.</p>
+                <p>This includes things like jobs, buses, restaurants, and websites.</p>
+                <p>The law was signed in 1990. It was updated in 2008 to protect more people.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -65,6 +73,14 @@ export default function GuideIntroToAda() {
           <GuideSection
             id="who-protected"
             title="Who Is Protected?"
+            simpleContent={
+              <>
+                <p>You are protected if you have a disability that makes daily life harder.</p>
+                <p>This includes trouble walking, seeing, hearing, breathing, or learning.</p>
+                <p>You are also protected if you had a disability in the past, like cancer that went away.</p>
+                <p>You are even protected if someone thinks you have a disability, even if you do not.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -119,6 +135,18 @@ export default function GuideIntroToAda() {
           <GuideSection
             id="five-titles"
             title="The Five Titles of the ADA"
+            simpleContent={
+              <>
+                <p>The ADA has five parts. Each part covers a different area of life:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Title I — Jobs.</strong> Employers cannot treat you unfairly because of a disability.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Title II — Government.</strong> Government buildings and services must be accessible.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Title III — Businesses.</strong> Stores, restaurants, hotels, and doctors must let everyone in.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Title IV — Phone services.</strong> Phone companies must help people who are deaf or hard of hearing.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Title V — Other rules.</strong> You cannot be punished for using your ADA rights.</li>
+                </ul>
+              </>
+            }
           >
             <p>The ADA is divided into five sections called <strong>titles</strong>,
             each covering a different area of life:</p>
@@ -173,6 +201,17 @@ export default function GuideIntroToAda() {
           <GuideSection
             id="enforcement"
             title="How the ADA Is Enforced"
+            simpleContent={
+              <>
+                <p>If someone breaks the ADA, you can take action.</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Job problems?</strong> File a complaint with the EEOC within 180 days.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Government or business problems?</strong> File a complaint with the Department of Justice. You can also sue.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Lawsuits against businesses</strong> can force them to fix the problem. Some states also let you get money.</li>
+                </ul>
+                <p>Many states have their own laws that give you even more protection.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -232,6 +271,17 @@ export default function GuideIntroToAda() {
           <GuideSection
             id="related-laws"
             title="Related Laws You Should Know"
+            simpleContent={
+              <>
+                <p>The ADA is not the only law that helps people with disabilities. Here are others:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Section 504</strong> — Protects you at places that get government money, like schools.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Fair Housing Act</strong> — Protects you from unfair treatment in housing. Covers emotional support animals too.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Air Carrier Access Act</strong> — Covers your rights on airplanes.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>State laws</strong> — Many states have stronger protections than the federal ADA.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               The ADA isn't the only law protecting people with disabilities. These

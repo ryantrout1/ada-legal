@@ -21,6 +21,13 @@ export default function GuideReasonableModifications() {
           <GuideSection
             id="what-is-it"
             title="What Is a Reasonable Modification?"
+            simpleContent={
+              <>
+                <p>A reasonable modification is a change to a rule or policy to help a person with a disability.</p>
+                <p>For example: A store has a "no animals" rule, but they must allow service dogs. That is a modification.</p>
+                <p>Businesses must make these changes unless it would cause a major problem for them.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -63,6 +70,16 @@ export default function GuideReasonableModifications() {
           <GuideSection
             id="modification-vs-accommodation"
             title="Modification vs. Accommodation"
+            simpleContent={
+              <>
+                <p>These two words mean similar things but are used in different situations:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Modification:</strong> Changing a rule or policy at a business or government service (Title II and III).</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Accommodation:</strong> Changing something at work to help you do your job (Title I — employment).</li>
+                </ul>
+                <p>Both mean the same idea: making changes so people with disabilities can participate equally.</p>
+              </>
+            }
           >
             <p>
               You'll hear two similar terms in ADA law. They mean slightly different
@@ -122,6 +139,18 @@ export default function GuideReasonableModifications() {
           <GuideSection
             id="examples"
             title="Common Examples of Reasonable Modifications"
+            simpleContent={
+              <>
+                <p>Here are examples of modifications businesses must make:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Letting someone use a wheelchair in a store that normally does not allow wheeled devices.</li>
+                  <li style={{ marginBottom: '6px' }}>Bringing items to the door for someone who cannot enter.</li>
+                  <li style={{ marginBottom: '6px' }}>Allowing extra time for someone who moves slowly.</li>
+                  <li style={{ marginBottom: '6px' }}>Reading a menu out loud for a blind customer.</li>
+                  <li style={{ marginBottom: '6px' }}>Allowing a service animal where pets are not normally allowed.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               Modifications can look different depending on the business or agency.
@@ -161,6 +190,17 @@ export default function GuideReasonableModifications() {
           <GuideSection
             id="when-not-required"
             title="When Modifications Are Not Required"
+            simpleContent={
+              <>
+                <p>A business does not have to make a change if it would:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Completely change the nature of what they do.</li>
+                  <li style={{ marginBottom: '6px' }}>Create a safety risk that cannot be fixed.</li>
+                  <li style={{ marginBottom: '6px' }}>Cost so much that it would cause serious financial harm.</li>
+                </ul>
+                <p>But the business must prove this. They cannot just say no without a good reason.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -210,6 +250,13 @@ export default function GuideReasonableModifications() {
           <GuideSection
             id="interactive-process"
             title="The Interactive Process"
+            simpleContent={
+              <>
+                <p>When you ask for a modification, the business should work with you to find a solution.</p>
+                <p>This back-and-forth is called the "interactive process."</p>
+                <p>They cannot just say no. They must talk with you and try to find something that works.</p>
+              </>
+            }
           >
             <p>
               When someone requests a modification, the business or agency should
@@ -238,6 +285,13 @@ export default function GuideReasonableModifications() {
           <GuideSection
             id="documentation"
             title="Documentation Considerations"
+            simpleContent={
+              <>
+                <p>A business can ask for some proof that you need a modification, but there are limits.</p>
+                <p>They can ask what you need and why. They cannot ask for your full medical records.</p>
+                <p>For service animals, they can only ask two questions (see our Service Animals guide).</p>
+              </>
+            }
           >
             <p>
               Under Titles II and III, businesses and government agencies generally
@@ -265,6 +319,16 @@ export default function GuideReasonableModifications() {
           <GuideSection
             id="vs-barrier-removal"
             title="Modification vs. Barrier Removal"
+            simpleContent={
+              <>
+                <p>These are two different things:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Modification:</strong> Changing a rule or policy (like allowing a service animal).</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Barrier removal:</strong> Fixing a physical problem (like adding a ramp or widening a door).</li>
+                </ul>
+                <p>Both are required under the ADA. A business must do both when needed.</p>
+              </>
+            }
           >
             <p>
               It's important not to confuse reasonable modifications with

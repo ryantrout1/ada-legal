@@ -80,6 +80,16 @@ export default function GuideLegalOptions() {
           <GuideSection
             id="complaint-vs-lawsuit"
             title="Filing a Government Complaint Is Not the Same as Getting a Lawyer"
+            simpleContent={
+              <>
+                <p>There are two different ways to take action after an ADA violation:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Government complaint:</strong> You ask the government to look into it. This is free but slow.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Private lawsuit:</strong> A lawyer files a case for you. This can get faster results and may force changes.</li>
+                </ul>
+                <p>You can do both at the same time. They are separate paths.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>Key Distinction</strong></p>
@@ -123,6 +133,14 @@ export default function GuideLegalOptions() {
           <GuideSection
             id="title-i-eeoc"
             title="Title I — Employment Discrimination (EEOC)"
+            simpleContent={
+              <>
+                <p>If your employer treated you unfairly because of a disability, you can file with the EEOC.</p>
+                <p>You must file within 180 days (300 days in some states).</p>
+                <p>The EEOC will look into it. If they find a problem, they may help you settle or give you the right to sue.</p>
+                <p>You may be able to get your job back, back pay, or money for damages.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>42 U.S.C. §12117(a)</strong></p>
@@ -183,6 +201,13 @@ export default function GuideLegalOptions() {
           <GuideSection
             id="title-ii-doj"
             title="Title II — Government Services (DOJ)"
+            simpleContent={
+              <>
+                <p>If a government building or service was not accessible, you can file with the DOJ.</p>
+                <p>This covers things like courthouses, public buses, schools, voting places, and government websites.</p>
+                <p>You can also sue the government directly. You may be able to get money damages under Title II.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>28 CFR §35.170(a)</strong></p>
@@ -237,6 +262,14 @@ export default function GuideLegalOptions() {
           <GuideSection
             id="title-iii-businesses"
             title="Title III — Businesses & Public Accommodations (DOJ or Private Lawsuit)"
+            simpleContent={
+              <>
+                <p>If a business like a store, restaurant, or hotel was not accessible, you have options.</p>
+                <p>You can file a complaint with the DOJ. You can also have a lawyer sue the business.</p>
+                <p>Under federal law, a lawsuit can force the business to fix the problem. In many states, you can also get money.</p>
+                <p>The business usually has to pay your lawyer if you win. This is called fee shifting.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>42 U.S.C. §12188(a)(1)</strong></p>
@@ -311,6 +344,13 @@ export default function GuideLegalOptions() {
           <GuideSection
             id="fair-housing"
             title="Fair Housing (HUD)"
+            simpleContent={
+              <>
+                <p>If you had a housing problem because of your disability, you can file with HUD.</p>
+                <p>This covers apartments, houses, and landlords.</p>
+                <p>The Fair Housing Act also protects emotional support animals, which the ADA does not.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -365,6 +405,17 @@ export default function GuideLegalOptions() {
           <GuideSection
             id="comparison"
             title="Quick Comparison: Your Filing Options"
+            simpleContent={
+              <>
+                <p>Here is a quick look at your choices:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>EEOC (jobs):</strong> 180-300 day deadline. Can get money and job back.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>DOJ (government/business):</strong> 180 day suggested deadline. Government investigates.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Private lawsuit (business):</strong> No set federal deadline. Lawyer files for you. Business pays lawyer fees if you win.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>HUD (housing):</strong> 1 year deadline. Covers landlord and housing issues.</li>
+                </ul>
+              </>
+            }
           >
             <ComparisonTable />
           </GuideSection>
@@ -372,6 +423,16 @@ export default function GuideLegalOptions() {
           <GuideSection
             id="which-path"
             title="Which Path Is Right for You?"
+            simpleContent={
+              <>
+                <p>Not sure what to do? Here is a simple guide:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>If you want the problem fixed fast, talk to a lawyer.</li>
+                  <li style={{ marginBottom: '6px' }}>If you want the government to handle it, file a complaint.</li>
+                  <li style={{ marginBottom: '6px' }}>If you are not sure, report it here on ADA Legal Link and we will help you decide.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               If you're unsure which path to take, here's a simple starting point:

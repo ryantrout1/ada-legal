@@ -22,6 +22,13 @@ export default function GuideFilingComplaint() {
           <GuideSection
             id="who-can-file"
             title="Who Can File a Complaint?"
+            simpleContent={
+              <>
+                <p>Anyone can file an ADA complaint. You do not need a lawyer.</p>
+                <p>You can file for yourself. A family member or friend can also file for you.</p>
+                <p>You can even file if you saw discrimination happen to someone else.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -53,6 +60,17 @@ export default function GuideFilingComplaint() {
           <GuideSection
             id="where-to-file"
             title="Where to File"
+            simpleContent={
+              <>
+                <p>Where you file depends on what happened:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Job discrimination?</strong> File with the EEOC.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Government building or service?</strong> File with the Department of Justice (DOJ).</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Business like a store or restaurant?</strong> File with the DOJ or talk to a lawyer about suing.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Housing?</strong> File with HUD (Department of Housing).</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -97,6 +115,18 @@ export default function GuideFilingComplaint() {
           <GuideSection
             id="step-by-step"
             title="DOJ Complaint Process: Step by Step"
+            simpleContent={
+              <>
+                <p>Here is how filing a government complaint works:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Step 1:</strong> Write down what happened. Include dates and details.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Step 2:</strong> Send your complaint to the DOJ online, by mail, or by fax.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Step 3:</strong> The DOJ reviews it and may send it to the right agency.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Step 4:</strong> The agency looks into it. They may try to work it out or take action.</li>
+                </ul>
+                <p>This process is free. It usually takes several months.</p>
+              </>
+            }
           >
             <p>
               Here's what happens when you file a complaint with the Department of
@@ -147,6 +177,18 @@ export default function GuideFilingComplaint() {
           <GuideSection
             id="what-to-include"
             title="What to Include in Your Complaint"
+            simpleContent={
+              <>
+                <p>Your complaint should include:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Your name and how to reach you.</li>
+                  <li style={{ marginBottom: '6px' }}>The name and address of the place that discriminated.</li>
+                  <li style={{ marginBottom: '6px' }}>What happened and when it happened.</li>
+                  <li style={{ marginBottom: '6px' }}>Photos or documents if you have them.</li>
+                </ul>
+                <p>Write it in your own words. It does not have to be perfect.</p>
+              </>
+            }
           >
             <p>A strong complaint includes:</p>
             <ul style={{ paddingLeft: '1.25rem', margin: '8px 0 16px' }}>
@@ -183,6 +225,17 @@ export default function GuideFilingComplaint() {
           <GuideSection
             id="timeline"
             title="Timeline and Deadlines"
+            simpleContent={
+              <>
+                <p>There are time limits for filing. Act quickly:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Job complaints (EEOC):</strong> You have 180 days. Some states give you 300 days.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>DOJ complaints:</strong> File within 180 days. They may still accept it later.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Lawsuits:</strong> There is no set federal deadline for ADA lawsuits, but do not wait. State deadlines vary.</li>
+                </ul>
+                <p>The sooner you act, the stronger your case.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -226,6 +279,12 @@ export default function GuideFilingComplaint() {
           <GuideSection
             id="file-online"
             title="File Your DOJ Complaint Online"
+            simpleContent={
+              <>
+                <p>You can file your complaint online at ADA.gov. It is free.</p>
+                <p>You can also report a violation right here on ADA Legal Link. We will connect you with an attorney who can help you decide the best next step.</p>
+              </>
+            }
           >
             <p>
               The fastest way to file is through the DOJ's online form:

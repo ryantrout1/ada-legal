@@ -21,6 +21,13 @@ export default function GuideWhyAttorney() {
           <GuideSection
             id="private-enforcement"
             title="The ADA Is Primarily Enforced Through Private Lawsuits"
+            simpleContent={
+              <>
+                <p>The government does not fix every ADA violation. Most of the time, it is up to regular people to take action.</p>
+                <p>This means if a business breaks the ADA, you usually need a lawyer to make them fix it.</p>
+                <p>This is how the law was designed to work. It relies on people like you to hold businesses accountable.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>Congress designed it this way.</strong></p>
@@ -59,6 +66,17 @@ export default function GuideWhyAttorney() {
           <GuideSection
             id="what-attorneys-do"
             title="What an ADA Attorney Does That You Can't Do Alone"
+            simpleContent={
+              <>
+                <p>An ADA lawyer knows the rules and how to use them. They can:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Tell you if you have a strong case.</li>
+                  <li style={{ marginBottom: '6px' }}>Write legal letters that businesses take seriously.</li>
+                  <li style={{ marginBottom: '6px' }}>Negotiate a settlement for you.</li>
+                  <li style={{ marginBottom: '6px' }}>File a lawsuit if needed.</li>
+                </ul>
+              </>
+            }
           >
             <div style={{
               background: 'var(--card-bg)', border: '1px solid var(--border)',
@@ -93,6 +111,17 @@ export default function GuideWhyAttorney() {
           <GuideSection
             id="risk-pro-se"
             title="The Risk of Going Alone"
+            simpleContent={
+              <>
+                <p>You can try to handle an ADA case yourself, but it is risky.</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>You might miss deadlines that end your case.</li>
+                  <li style={{ marginBottom: '6px' }}>Businesses have their own lawyers who know the tricks.</li>
+                  <li style={{ marginBottom: '6px' }}>You might settle for much less than your case is worth.</li>
+                  <li style={{ marginBottom: '6px' }}>AI tools and filing services cannot replace real legal advice.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>Pro Se ADA Filings Are Surging — and Failing</strong></p>
@@ -147,6 +176,17 @@ export default function GuideWhyAttorney() {
           <GuideSection
             id="how-we-help"
             title="How ADA Legal Link Connects You"
+            simpleContent={
+              <>
+                <p>ADA Legal Link makes it easy to find the right lawyer.</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Tell us what happened using our simple form.</li>
+                  <li style={{ marginBottom: '6px' }}>We match you with lawyers who specialize in ADA cases.</li>
+                  <li style={{ marginBottom: '6px' }}>A lawyer reviews your case, usually within 48 hours.</li>
+                  <li style={{ marginBottom: '6px' }}>You do not pay anything to get connected.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               ADA Legal Link is a platform that connects people who have
