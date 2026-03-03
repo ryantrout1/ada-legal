@@ -164,24 +164,15 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
 
   // Build page context - extract real text from JSX
   const pageContext = React.useMemo(() => {
-    let ctx = "PAGE: " + (pageTitle || "ADA Standards Guide");
-    ctx += "
-
-ADA STANDARDS CONTENT ON THIS PAGE:
-
-";
+    let ctx = "PAGE: " + (pageTitle || "ADA Standards Guide") + "\n\nADA STANDARDS CONTENT ON THIS PAGE:\n\n";
     if (pageSections && pageSections.length > 0) {
       pageSections.forEach(s => {
-        ctx += "--- " + (s.number||"")+" "+(s.title||"")+" ---
-";
+        ctx += "--- " + (s.number||"")+" "+(s.title||"")+" ---\n";
         const pt = extractText(s.plain)||extractText(s.simple)||"";
         const lt = extractText(s.legal)||"";
-        if (pt) ctx += "Plain: "+pt.trim()+"
-";
-        if (lt) ctx += "Legal: "+lt.trim()+"
-";
-        ctx += "
-";
+        if (pt) ctx += "Plain: "+pt.trim()+"\n";
+        if (lt) ctx += "Legal: "+lt.trim()+"\n";
+        ctx += "\n";
       });
     }
     return ctx;
