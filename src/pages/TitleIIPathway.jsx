@@ -25,8 +25,7 @@ export default function TitleIIPathway() {
           fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: 'var(--body-secondary)',
           textDecoration: 'none', display: 'inline-block', marginBottom: '24px'
         }}
-          onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent)'; }}
-          onMouseLeave={e => { e.currentTarget.style.color = 'var(--body-secondary)'; }}
+          className="pathway-link"
         >
           ← Back to Standards Guide
         </Link>
@@ -144,7 +143,7 @@ export default function TitleIIPathway() {
           <a href="https://civilrights.justice.gov/report/" target="_blank" rel="noopener noreferrer"
             style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600,
-              color: 'var(--btn-text)', background: 'var(--section-label)', padding: '14px 28px',
+              color: 'var(--dark-heading)', background: 'var(--section-label)', padding: '14px 28px',
               borderRadius: '10px', textDecoration: 'none', minHeight: '48px',
               display: 'inline-flex', alignItems: 'center'
             }}>
@@ -175,6 +174,8 @@ export default function TitleIIPathway() {
         @media (max-width: 640px) {
           .pathway-info-grid { grid-template-columns: 1fr !important; }
         }
+        .pathway-link:focus-visible, .pathway-btn:focus-visible { outline: 3px solid var(--accent-light); outline-offset: 2px; }
+        @media (prefers-contrast: more) { .pathway-btn { border-width: 3px !important; } }
         @media (prefers-reduced-motion: reduce) {
           * { transition: none !important; animation: none !important; }
         }
