@@ -21,6 +21,13 @@ export default function GuideDigitalBarriers() {
           <GuideSection
             id="websites-covered"
             title="Websites Are Covered by the ADA"
+            simpleContent={
+              <>
+                <p>Yes, websites and apps are covered by the ADA.</p>
+                <p>If a business or government has a website, it must work for people with disabilities.</p>
+                <p>This includes screen readers, keyboard navigation, and captions on videos.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>DOJ Guidance (March 2022)</strong></p>
@@ -69,6 +76,17 @@ export default function GuideDigitalBarriers() {
           <GuideSection
             id="common-barriers"
             title="What Counts as a Digital Barrier?"
+            simpleContent={
+              <>
+                <p>Here are common problems on websites that block people with disabilities:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Images with no description (alt text) for blind users.</li>
+                  <li style={{ marginBottom: "6px" }}>Videos with no captions for deaf users.</li>
+                  <li style={{ marginBottom: "6px" }}>Forms that do not work with a keyboard.</li>
+                  <li style={{ marginBottom: "6px" }}>Text that is too small or hard to read.</li>
+                </ul>
+              </>
+            }
           >
             <div style={{
               background: 'var(--card-bg)', border: '1px solid var(--border)',
@@ -104,6 +122,17 @@ export default function GuideDigitalBarriers() {
           <GuideSection
             id="document-digital"
             title="How to Document a Digital Barrier"
+            simpleContent={
+              <>
+                <p>If you find a website barrier, save the evidence:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Take screenshots of the problem.</li>
+                  <li style={{ marginBottom: "6px" }}>Write down the website address (URL) and the date.</li>
+                  <li style={{ marginBottom: "6px" }}>Note what you were trying to do and what went wrong.</li>
+                  <li style={{ marginBottom: "6px" }}>Record the screen if you can.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>What Courts Look For</strong></p>
@@ -160,6 +189,16 @@ export default function GuideDigitalBarriers() {
           <GuideSection
             id="what-to-do"
             title="What Can You Do About It?"
+            simpleContent={
+              <>
+                <p>You have options when a website is not accessible:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Report it here on ADA Legal Link.</li>
+                  <li style={{ marginBottom: "6px" }}>File a complaint with the DOJ.</li>
+                  <li style={{ marginBottom: "6px" }}>A lawyer can send a demand letter or file a lawsuit.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>No Pre-Suit Notice Required (Federal)</strong></p>
@@ -206,6 +245,13 @@ export default function GuideDigitalBarriers() {
           <GuideSection
             id="lawsuit-trends"
             title="Website Lawsuits Are Increasing"
+            simpleContent={
+              <>
+                <p>More and more people are suing over website barriers. Courts agree that websites must be accessible.</p>
+                <p>Thousands of website lawsuits are filed every year.</p>
+                <p>Businesses that fix their websites early avoid lawsuits and reach more customers.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}><strong>Key Statistics</strong></p>
@@ -247,6 +293,13 @@ export default function GuideDigitalBarriers() {
           <GuideSection
             id="overlays"
             title="A Note About 'Accessibility Widgets' and Overlays"
+            simpleContent={
+              <>
+                <p>Some websites use "accessibility widgets" or overlays. These are plug-ins that claim to fix accessibility problems.</p>
+                <p>Most experts say these tools do not work well. They can actually make things worse.</p>
+                <p>Using an overlay does not protect a business from lawsuits.</p>
+              </>
+            }
           >
             <p>
               If you're a business owner, you may have been sold an "accessibility

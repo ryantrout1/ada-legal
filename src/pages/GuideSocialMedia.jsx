@@ -21,6 +21,13 @@ export default function GuideSocialMedia() {
           <GuideSection
             id="overview"
             title="Why Social Media Accessibility Matters"
+            simpleContent={
+              <>
+                <p>Social media posts should be accessible to everyone, including people with disabilities.</p>
+                <p>Government agencies must make their social media accessible under Title II of the ADA.</p>
+                <p>Businesses should also make their posts accessible to reach more people.</p>
+              </>
+            }
           >
             <p>
               Government agencies and businesses increasingly use social media to
@@ -40,6 +47,13 @@ export default function GuideSocialMedia() {
           <GuideSection
             id="alt-text"
             title="Alt Text on Images"
+            simpleContent={
+              <>
+                <p>When you post a picture, add alt text that describes what is in the image.</p>
+                <p>Most social media platforms (Facebook, Instagram, X/Twitter) have a place to add alt text.</p>
+                <p>Keep it short but descriptive. Say what is important in the image.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -90,6 +104,13 @@ export default function GuideSocialMedia() {
           <GuideSection
             id="captions"
             title="Captions on Videos"
+            simpleContent={
+              <>
+                <p>All videos should have captions so deaf and hard-of-hearing people can follow along.</p>
+                <p>Most platforms can auto-generate captions, but you should check them for mistakes.</p>
+                <p>Captions also help people watching videos in quiet places or noisy environments.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -141,6 +162,13 @@ export default function GuideSocialMedia() {
           <GuideSection
             id="audio-descriptions"
             title="Audio Descriptions for Video"
+            simpleContent={
+              <>
+                <p>Audio descriptions explain what is happening visually in a video for blind users.</p>
+                <p>This is especially important when the visuals tell part of the story that the audio does not.</p>
+                <p>For example: a chart shown on screen should also be described in words.</p>
+              </>
+            }
           >
             <p>
               <strong>Audio descriptions</strong> narrate important visual
@@ -178,6 +206,13 @@ export default function GuideSocialMedia() {
           <GuideSection
             id="plain-language"
             title="Plain Language in Posts"
+            simpleContent={
+              <>
+                <p>Write posts in plain, simple language.</p>
+                <p>Use short sentences. Avoid jargon and slang that not everyone knows.</p>
+                <p>This helps people with cognitive disabilities and people who do not speak English fluently.</p>
+              </>
+            }
           >
             <p>
               Social media posts should be written in <strong>clear, simple
@@ -205,6 +240,13 @@ export default function GuideSocialMedia() {
           <GuideSection
             id="hashtags-and-design"
             title="Accessible Hashtags & Graphics"
+            simpleContent={
+              <>
+                <p>Use CamelCase for hashtags: #AccessibleDesign instead of #accessibledesign. This helps screen readers read them correctly.</p>
+                <p>If you make graphics with text, also put the text in the post itself.</p>
+                <p>Do not use fancy fonts or special characters that screen readers cannot read.</p>
+              </>
+            }
           >
             <p>
               Small formatting choices make a big difference for accessibility:
@@ -253,6 +295,13 @@ export default function GuideSocialMedia() {
           <GuideSection
             id="title-ii-exception"
             title="Title II Web Rule & Social Media"
+            simpleContent={
+              <>
+                <p>The new Title II web rule has some exceptions for social media.</p>
+                <p>Content posted by the public (like comments) does not have to meet WCAG standards.</p>
+                <p>But content posted by the government agency itself must be accessible.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -308,6 +357,13 @@ export default function GuideSocialMedia() {
           <GuideSection
             id="live-streams"
             title="Live Streams & Real-Time Captioning"
+            simpleContent={
+              <>
+                <p>Live streams should have live captions when possible.</p>
+                <p>If live captions are not possible, provide captions after the event.</p>
+                <p>Let your audience know ahead of time if captions will be available.</p>
+              </>
+            }
           >
             <p>
               Live video is increasingly used for public meetings, press

@@ -21,6 +21,12 @@ export default function GuideWebTesting() {
           <GuideSection
             id="why-test"
             title="Why Testing Matters"
+            simpleContent={
+              <>
+                <p>Testing your website helps you find and fix problems before someone files a complaint.</p>
+                <p>There are two kinds of testing: automated tools and manual testing. You need both.</p>
+              </>
+            }
           >
             <p>
               Making a website accessible isn't a one-time task — it requires
@@ -40,6 +46,13 @@ export default function GuideWebTesting() {
           <GuideSection
             id="automated-tools"
             title="Automated Testing Tools"
+            simpleContent={
+              <>
+                <p>Automated tools scan your website and find common problems quickly.</p>
+                <p>They can check things like missing alt text, low contrast, and broken links.</p>
+                <p>But they only find about 30-40% of problems. You still need manual testing too.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -99,6 +112,16 @@ export default function GuideWebTesting() {
           <GuideSection
             id="manual-testing"
             title="Manual Testing"
+            simpleContent={
+              <>
+                <p>Manual testing means a person checks the website by using it.</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Try using the site with only a keyboard (no mouse).</li>
+                  <li style={{ marginBottom: "6px" }}>Check that you can reach every button, link, and form.</li>
+                  <li style={{ marginBottom: "6px" }}>Make sure the tab order makes sense.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -157,6 +180,13 @@ export default function GuideWebTesting() {
           <GuideSection
             id="screen-reader-testing"
             title="Screen Reader Testing"
+            simpleContent={
+              <>
+                <p>A screen reader reads the website out loud for blind users.</p>
+                <p>Test with a screen reader to make sure all content makes sense when read aloud.</p>
+                <p>Free options include NVDA for Windows and VoiceOver (built into Mac and iPhone).</p>
+              </>
+            }
           >
             <p>
               Screen readers convert on-screen content to speech or Braille
@@ -200,6 +230,18 @@ export default function GuideWebTesting() {
           <GuideSection
             id="common-issues"
             title="Most Common Issues Found"
+            simpleContent={
+              <>
+                <p>The most common problems testers find:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Images without alt text.</li>
+                  <li style={{ marginBottom: "6px" }}>Poor color contrast.</li>
+                  <li style={{ marginBottom: "6px" }}>Forms without labels.</li>
+                  <li style={{ marginBottom: "6px" }}>Keyboard traps (you get stuck and cannot move on).</li>
+                  <li style={{ marginBottom: "6px" }}>Missing page titles and headings.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               Research from WebAIM's annual survey of the top 1 million websites
@@ -239,6 +281,16 @@ export default function GuideWebTesting() {
           <GuideSection
             id="testing-frequency"
             title="How Often to Test"
+            simpleContent={
+              <>
+                <p>Test your website regularly:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Automated scans: at least once a month.</li>
+                  <li style={{ marginBottom: "6px" }}>Manual testing: at least every few months.</li>
+                  <li style={{ marginBottom: "6px" }}>After any major update or redesign.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               Accessibility testing should be part of your <strong>regular

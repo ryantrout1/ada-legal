@@ -21,6 +21,12 @@ export default function GuideWebFirstSteps() {
           <GuideSection
             id="overview"
             title="Getting Started"
+            simpleContent={
+              <>
+                <p>Making your website accessible does not have to happen all at once.</p>
+                <p>Follow these steps to get started. Each step brings you closer to compliance.</p>
+              </>
+            }
           >
             <p>
               If your organization is covered by the ADA's Title II web rule —
@@ -38,6 +44,13 @@ export default function GuideWebFirstSteps() {
           <GuideSection
             id="audit"
             title="Step 1: Conduct an Accessibility Audit"
+            simpleContent={
+              <>
+                <p>First, find out what is wrong with your website.</p>
+                <p>Use a free tool like WAVE or axe to scan your pages. They will list the problems.</p>
+                <p>You should also have someone test your site with a keyboard and a screen reader.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -88,6 +101,16 @@ export default function GuideWebFirstSteps() {
           <GuideSection
             id="prioritize"
             title="Step 2: Prioritize Issues by Severity"
+            simpleContent={
+              <>
+                <p>Fix the worst problems first:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Things that completely block access (like forms that do not work).</li>
+                  <li style={{ marginBottom: "6px" }}>Pages people use the most (like your homepage and contact page).</li>
+                  <li style={{ marginBottom: "6px" }}>Missing alt text on important images.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               Once you know the issues, <strong>prioritize them</strong>. Not all
@@ -127,6 +150,13 @@ export default function GuideWebFirstSteps() {
           <GuideSection
             id="remediation-plan"
             title="Step 3: Create a Remediation Plan"
+            simpleContent={
+              <>
+                <p>Make a written plan with deadlines for fixing each problem.</p>
+                <p>Assign someone to be in charge. Track progress.</p>
+                <p>Having a plan shows good faith if someone files a complaint.</p>
+              </>
+            }
           >
             <p>
               With priorities set, create a <strong>written remediation
@@ -164,6 +194,13 @@ export default function GuideWebFirstSteps() {
           <GuideSection
             id="vendor-contracts"
             title="Step 4: Build Accessibility Into Vendor Contracts"
+            simpleContent={
+              <>
+                <p>If you hire someone to build your website, put accessibility in the contract.</p>
+                <p>Require them to meet WCAG 2.1 Level AA.</p>
+                <p>You are still responsible even if your vendor makes the site inaccessible.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -217,6 +254,12 @@ export default function GuideWebFirstSteps() {
           <GuideSection
             id="training"
             title="Step 5: Train Content Creators"
+            simpleContent={
+              <>
+                <p>Anyone who adds content to your website needs basic accessibility training.</p>
+                <p>They should know how to add alt text, use headings correctly, and create accessible documents.</p>
+              </>
+            }
           >
             <p>
               Most accessibility issues are introduced when <strong>content is
@@ -252,6 +295,13 @@ export default function GuideWebFirstSteps() {
           <GuideSection
             id="ongoing-testing"
             title="Step 6: Establish Ongoing Testing"
+            simpleContent={
+              <>
+                <p>Accessibility is not a one-time fix. Test regularly.</p>
+                <p>Run automated scans every month. Do manual testing a few times per year.</p>
+                <p>Test whenever you add new features or redesign pages.</p>
+              </>
+            }
           >
             <p>
               Accessibility isn't a one-time fix. <strong>New content is added
@@ -281,6 +331,13 @@ export default function GuideWebFirstSteps() {
           <GuideSection
             id="document-efforts"
             title="Step 7: Document Everything"
+            simpleContent={
+              <>
+                <p>Keep records of what you have done to improve accessibility.</p>
+                <p>Save audit results, training records, and your remediation plan.</p>
+                <p>This documentation can help protect you if someone files a complaint.</p>
+              </>
+            }
           >
             <p>
               Keep records of your accessibility work. This matters for two
@@ -307,6 +364,16 @@ export default function GuideWebFirstSteps() {
           <GuideSection
             id="tools"
             title="Useful Testing Tools"
+            simpleContent={
+              <>
+                <p>Here are free tools you can use to test your website:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}><strong>WAVE:</strong> A browser tool that shows accessibility problems on any page.</li>
+                  <li style={{ marginBottom: "6px" }}><strong>axe DevTools:</strong> A browser extension for finding and fixing issues.</li>
+                  <li style={{ marginBottom: "6px" }}><strong>Lighthouse:</strong> Built into Chrome. Includes an accessibility score.</li>
+                </ul>
+              </>
+            }
           >
             <div style={{
               background: 'var(--card-bg)', border: '1px solid var(--border)',

@@ -21,6 +21,12 @@ export default function GuideWcagExplained() {
           <GuideSection
             id="overview"
             title="The Four Principles (POUR)"
+            simpleContent={
+              <>
+                <p>WCAG stands for Web Content Accessibility Guidelines. It is a set of rules for making websites work for everyone.</p>
+                <p>There are four main ideas: content must be Perceivable, Operable, Understandable, and Robust (POUR).</p>
+              </>
+            }
           >
             <p>
               The <strong>Web Content Accessibility Guidelines (WCAG) 2.1</strong>
@@ -66,6 +72,16 @@ export default function GuideWcagExplained() {
           <GuideSection
             id="perceivable"
             title="Perceivable"
+            simpleContent={
+              <>
+                <p>People must be able to see or hear your content.</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Images need text descriptions.</li>
+                  <li style={{ marginBottom: "6px" }}>Videos need captions.</li>
+                  <li style={{ marginBottom: "6px" }}>Text must be big enough and have good contrast.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -133,6 +149,16 @@ export default function GuideWcagExplained() {
           <GuideSection
             id="operable"
             title="Operable"
+            simpleContent={
+              <>
+                <p>People must be able to use your website without a mouse.</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Everything must work with just a keyboard.</li>
+                  <li style={{ marginBottom: "6px" }}>Users must have enough time to read and use content.</li>
+                  <li style={{ marginBottom: "6px" }}>Nothing should flash in a way that causes seizures.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -200,6 +226,16 @@ export default function GuideWcagExplained() {
           <GuideSection
             id="understandable"
             title="Understandable"
+            simpleContent={
+              <>
+                <p>Your website must be easy to understand and use.</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Text should be clear and simple.</li>
+                  <li style={{ marginBottom: "6px" }}>Pages should work in a predictable way.</li>
+                  <li style={{ marginBottom: "6px" }}>Forms should help users avoid and fix mistakes.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -261,6 +297,12 @@ export default function GuideWcagExplained() {
           <GuideSection
             id="robust"
             title="Robust"
+            simpleContent={
+              <>
+                <p>Your website must work with different devices and assistive technology.</p>
+                <p>This means using proper HTML code so screen readers and other tools can understand your content.</p>
+              </>
+            }
           >
             <p>
               Content must work reliably with <strong>current and future
@@ -299,6 +341,16 @@ export default function GuideWcagExplained() {
           <GuideSection
             id="levels"
             title="Level A vs. AA vs. AAA"
+            simpleContent={
+              <>
+                <p>WCAG has three levels:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}><strong>Level A:</strong> The bare minimum. Fixes the worst barriers.</li>
+                  <li style={{ marginBottom: "6px" }}><strong>Level AA:</strong> The standard most laws require. This is what most websites should aim for.</li>
+                  <li style={{ marginBottom: "6px" }}><strong>Level AAA:</strong> The highest level. Nice to have but not usually required by law.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               WCAG organizes its requirements into <strong>three levels</strong>:
@@ -334,6 +386,18 @@ export default function GuideWcagExplained() {
           <GuideSection
             id="common-failures"
             title="Common Failures with Examples"
+            simpleContent={
+              <>
+                <p>The most common website accessibility problems are:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Missing alt text on images.</li>
+                  <li style={{ marginBottom: "6px" }}>Low contrast text that is hard to read.</li>
+                  <li style={{ marginBottom: "6px" }}>Forms without labels.</li>
+                  <li style={{ marginBottom: "6px" }}>Links that just say "click here" without explaining where they go.</li>
+                  <li style={{ marginBottom: "6px" }}>Videos without captions.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               These are the accessibility issues found <strong>most often</strong>

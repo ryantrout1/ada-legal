@@ -21,6 +21,12 @@ export default function GuideWebRule() {
           <GuideSection
             id="what-the-rule-requires"
             title="What the Rule Requires"
+            simpleContent={
+              <>
+                <p>The government made a new rule: all state and local government websites must follow WCAG 2.1 Level AA.</p>
+                <p>This means government websites must work with screen readers, keyboards, and other tools people with disabilities use.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -72,6 +78,17 @@ export default function GuideWebRule() {
           <GuideSection
             id="who-it-applies-to"
             title="Who It Applies To"
+            simpleContent={
+              <>
+                <p>This rule applies to state and local governments. This includes:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>City and county websites.</li>
+                  <li style={{ marginBottom: "6px" }}>Public school and university websites.</li>
+                  <li style={{ marginBottom: "6px" }}>State agency websites.</li>
+                  <li style={{ marginBottom: "6px" }}>Public library websites.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               This rule applies to <strong>Title II entities</strong> — that
@@ -112,6 +129,15 @@ export default function GuideWebRule() {
           <GuideSection
             id="deadlines"
             title="Compliance Deadlines"
+            simpleContent={
+              <>
+                <p>Governments must make their websites accessible by a deadline:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}><strong>Large governments</strong> (50,000+ people): April 2026.</li>
+                  <li style={{ marginBottom: "6px" }}><strong>Small governments</strong> (under 50,000): April 2027.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -171,6 +197,16 @@ export default function GuideWebRule() {
           <GuideSection
             id="exceptions"
             title="What's Excepted?"
+            simpleContent={
+              <>
+                <p>A few things are not covered by this rule:</p>
+                <ul style={{ paddingLeft: "1.25rem", margin: "8px 0" }}>
+                  <li style={{ marginBottom: "6px" }}>Archived content that is not being updated.</li>
+                  <li style={{ marginBottom: "6px" }}>Content posted by the public (like comments).</li>
+                  <li style={{ marginBottom: "6px" }}>Content from other organizations that is linked but not controlled.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -238,6 +274,13 @@ export default function GuideWebRule() {
           <GuideSection
             id="conforming-alternate"
             title="Conforming Alternate Versions"
+            simpleContent={
+              <>
+                <p>A government can offer an alternative accessible version of content instead of fixing the original.</p>
+                <p>But the accessible version must be just as easy to find and use as the original.</p>
+                <p>It cannot be hidden or harder to get to.</p>
+              </>
+            }
           >
             <p>
               In some cases, a government entity may provide a <strong>conforming
@@ -275,6 +318,12 @@ export default function GuideWebRule() {
           <GuideSection
             id="other-obligations"
             title="Other Obligations Still Apply"
+            simpleContent={
+              <>
+                <p>This new rule adds to existing obligations. Governments already had to make their services accessible under Title II of the ADA.</p>
+                <p>Even before this rule, people could file complaints about inaccessible government websites.</p>
+              </>
+            }
           >
             <p>
               Meeting WCAG 2.1 Level AA is the <strong>technical floor</strong>,
