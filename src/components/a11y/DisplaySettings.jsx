@@ -38,6 +38,8 @@ const savePreferences = (prefs) => {
   try {
     localStorage.setItem('ada-display-prefs', JSON.stringify(prefs));
   } catch {}
+  // Notify ReadingLevelContext and any other listeners of preference changes
+  try { window.dispatchEvent(new CustomEvent('ada-prefs-changed')); } catch {}
 };
 
 export const applyPreferences = (prefs) => {

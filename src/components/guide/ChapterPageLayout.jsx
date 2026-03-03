@@ -11,6 +11,7 @@ import AutoCiteLinks from './AutoCiteLinks';
 import ShareBar from './ShareBar';
 import trackEvent from '../analytics/trackEvent';
 import { loadPreferences } from '../a11y/DisplaySettings';
+import { useReadingLevel } from '../a11y/ReadingLevelContext';
 
 const ALL_CHAPTERS = [
   { num: 1, name: 'Application & Administration', range: '§101–106', page: 'StandardsCh1' },
@@ -234,34 +235,12 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
 
 export default function ChapterPageLayout({ chapterNum, title, range, overview, sections }) {
   const [openIndex, setOpenIndex] = useState(null);
-  const [readingLevel, setReadingLevel] = useState(() => {
-    const prefs = loadPreferences();
-    return prefs.readingLevel || 'standard';
-  });
+  const { readingLevel, setReadingLevel } = useReadingLevel();
   const currentIdx = ALL_CHAPTERS.findIndex(c => c.num === chapterNum);
   const prev = currentIdx > 0 ? ALL_CHAPTERS[currentIdx - 1] : null;
   const next = currentIdx < ALL_CHAPTERS.length - 1 ? ALL_CHAPTERS[currentIdx + 1] : null;
 
-  // Listen for preference changes (DisplaySettings writes to localStorage)
-  useEffect(() => {
-    const handleStorage = () => {
-      const prefs = loadPreferences();
-      setReadingLevel(prefs.readingLevel || 'standard');
-    };
-    window.addEventListener('storage', handleStorage);
-    // Also poll for same-tab changes (localStorage events don't fire in same tab)
-    const interval = setInterval(() => {
-      const prefs = loadPreferences();
-      setReadingLevel(prev => {
-        const next = prefs.readingLevel || 'standard';
-        return next !== prev ? next : prev;
-      });
-    }, 500);
-    return () => {
-      window.removeEventListener('storage', handleStorage);
-      clearInterval(interval);
-    };
-  }, []);
+  // Reading level is now managed by ReadingLevelContext
 
   const linkStyle = {
     display: 'inline-flex', alignItems: 'center', gap: '6px',
@@ -344,6 +323,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                         const prefs = JSON.parse(localStorage.getItem('ada-display-prefs') || '{}');
                         prefs.readingLevel = r.key;
                         localStorage.setItem('ada-display-prefs', JSON.stringify(prefs));
+                        window.dispatchEvent(new CustomEvent('ada-prefs-changed'));
                       } catch {}
                       trackEvent('guide_reading_level_changed', {
                         level: r.key,

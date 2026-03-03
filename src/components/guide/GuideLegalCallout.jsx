@@ -1,7 +1,14 @@
 import React from 'react';
 import AutoCiteLinks from './AutoCiteLinks';
+import { useReadingLevel } from '../a11y/ReadingLevelContext';
 
 export default function GuideLegalCallout({ citation, children }) {
+  const { readingLevel } = useReadingLevel();
+
+  if (readingLevel === 'simple') {
+    return null;
+  }
+
   return (
     <div role="note" aria-label="Legal citation" style={{
       background: 'var(--card-bg)', border: '1px solid var(--border)',
