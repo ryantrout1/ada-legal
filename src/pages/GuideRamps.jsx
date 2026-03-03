@@ -24,6 +24,13 @@ export default function GuideRamps() {
           <GuideSection
             id="when-required"
             title="When Is a Ramp Required?"
+            simpleContent={
+              <>
+                <p>A ramp is needed any time there is a change in height along an accessible path.</p>
+                <p>If there is a step, curb, or level change greater than 1/2 inch, a ramp must be provided.</p>
+                <p>This applies to entrances, hallways, and paths between buildings and parking.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -78,6 +85,13 @@ export default function GuideRamps() {
           <GuideSection
             id="maximum-slope"
             title="Maximum Slope"
+            simpleContent={
+              <>
+                <p>The steepest a ramp can be is 1:12. This means for every 1 inch of height, the ramp is 12 inches long.</p>
+                <p>A flatter ramp is always better and easier to use.</p>
+                <p>In some older buildings, steeper ramps (up to 1:8) may be allowed for short distances.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -130,6 +144,13 @@ export default function GuideRamps() {
           <GuideSection
             id="rise-per-run"
             title="Maximum Rise Per Run"
+            simpleContent={
+              <>
+                <p>A single ramp section can go up no more than 30 inches before there must be a flat landing.</p>
+                <p>At the standard 1:12 slope, that means each section can be up to 30 feet long.</p>
+                <p>If you need to go higher, you add another ramp section with a landing in between.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -158,6 +179,14 @@ export default function GuideRamps() {
           <GuideSection
             id="landings"
             title="Landing Requirements"
+            simpleContent={
+              <>
+                <p>Landings are the flat areas at the top, bottom, and turns of a ramp.</p>
+                <p>Every ramp must have landings at least 60 inches long.</p>
+                <p>Landings must be at least as wide as the ramp.</p>
+                <p>If the ramp changes direction, the landing must be 60 by 60 inches.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -211,6 +240,14 @@ export default function GuideRamps() {
           <GuideSection
             id="handrails"
             title="Handrail Requirements"
+            simpleContent={
+              <>
+                <p>Ramps that rise more than 6 inches must have handrails on both sides.</p>
+                <p>Handrails must be between 34 and 38 inches high.</p>
+                <p>They must extend 12 inches past the top and bottom of the ramp.</p>
+                <p>The grip must be round or easy to hold, between 1.25 and 2 inches across.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -268,6 +305,13 @@ export default function GuideRamps() {
           <GuideSection
             id="edge-protection"
             title="Edge Protection"
+            simpleContent={
+              <>
+                <p>Ramps must have something along the edges to stop wheels from rolling off.</p>
+                <p>This can be a curb, wall, railing, or raised edge at least 2 inches high.</p>
+                <p>This keeps wheelchair users safe, especially on outdoor ramps.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -304,6 +348,13 @@ export default function GuideRamps() {
           <GuideSection
             id="cross-slope-surface"
             title="Cross Slope and Surface"
+            simpleContent={
+              <>
+                <p>The side-to-side slope (cross slope) of a ramp must be very small: no more than 1:48.</p>
+                <p>The surface must be firm, stable, and slip-resistant.</p>
+                <p>Outdoor ramps should drain water but must not have grates that catch wheelchair wheels.</p>
+              </>
+            }
           >
             <p>
               In addition to the running slope (the main slope of the ramp), the

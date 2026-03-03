@@ -21,6 +21,13 @@ export default function GuideBarrierRemoval() {
           <GuideSection
             id="definition"
             title="What Does 'Readily Achievable' Mean?"
+            simpleContent={
+              <>
+                <p>"Readily achievable" means easy to do without much cost or trouble.</p>
+                <p>If a change is simple and affordable, the business must do it.</p>
+                <p>What counts as easy depends on how big and wealthy the business is.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -65,6 +72,17 @@ export default function GuideBarrierRemoval() {
           <GuideSection
             id="factors"
             title="Factors That Determine 'Readily Achievable'"
+            simpleContent={
+              <>
+                <p>Courts look at several things to decide if a change is readily achievable:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>How much the change costs.</li>
+                  <li style={{ marginBottom: '6px' }}>How much money the business makes.</li>
+                  <li style={{ marginBottom: '6px' }}>How big the business is and how many locations it has.</li>
+                  <li style={{ marginBottom: '6px' }}>How the change affects the building.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -132,6 +150,17 @@ export default function GuideBarrierRemoval() {
           <GuideSection
             id="priority-order"
             title="Priority Order for Barrier Removal"
+            simpleContent={
+              <>
+                <p>The ADA says businesses should fix things in this order:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>First:</strong> Getting in the door (entrances and paths).</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Second:</strong> Using services inside (counters, seating, displays).</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Third:</strong> Using restrooms.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Fourth:</strong> Everything else (phones, fountains, parking).</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -193,6 +222,18 @@ export default function GuideBarrierRemoval() {
           <GuideSection
             id="examples"
             title="Examples of Readily Achievable Changes"
+            simpleContent={
+              <>
+                <p>These are common changes that are usually easy to make:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Adding a ramp over a small step.</li>
+                  <li style={{ marginBottom: '6px' }}>Moving furniture so wheelchairs can pass.</li>
+                  <li style={{ marginBottom: '6px' }}>Lowering a shelf or counter.</li>
+                  <li style={{ marginBottom: '6px' }}>Adding grab bars in a restroom.</li>
+                  <li style={{ marginBottom: '6px' }}>Fixing uneven sidewalks outside the business.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -257,6 +298,13 @@ export default function GuideBarrierRemoval() {
           <GuideSection
             id="ongoing"
             title="An Ongoing Obligation"
+            simpleContent={
+              <>
+                <p>Barrier removal is not a one-time task. Businesses must keep checking.</p>
+                <p>As costs go down and new solutions appear, more changes become "readily achievable."</p>
+                <p>A business that could not afford a ramp five years ago may be able to now.</p>
+              </>
+            }
           >
             <p>
               Barrier removal is <strong>not a one-time task</strong>. The ADA
@@ -293,6 +341,13 @@ export default function GuideBarrierRemoval() {
           <GuideSection
             id="alternatives"
             title="If Barrier Removal Isn't Readily Achievable"
+            simpleContent={
+              <>
+                <p>If a change is too hard or too expensive, the business must still try another way.</p>
+                <p>Examples: Bring items to the curb. Offer a phone line for ordering. Move services to a ground floor.</p>
+                <p>The goal is always to serve the customer, even if the building is not perfect.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>

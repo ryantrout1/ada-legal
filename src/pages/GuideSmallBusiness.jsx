@@ -21,6 +21,17 @@ export default function GuideSmallBusiness() {
           <GuideSection
             id="who-is-covered"
             title="Which Businesses Are Covered?"
+            simpleContent={
+              <>
+                <p>Almost every business that serves the public must follow the ADA. This includes:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Stores, restaurants, and hotels</li>
+                  <li style={{ marginBottom: '6px' }}>Doctors, dentists, and hospitals</li>
+                  <li style={{ marginBottom: '6px' }}>Gyms, theaters, and salons</li>
+                </ul>
+                <p>There is no minimum size. Even a one-person shop must follow the rules.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -74,6 +85,16 @@ export default function GuideSmallBusiness() {
           <GuideSection
             id="three-obligations"
             title="Three Main Obligations"
+            simpleContent={
+              <>
+                <p>Every business must do three things:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Remove barriers</strong> if it is easy and affordable to do so.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Change policies</strong> when needed to serve people with disabilities.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Provide help</strong> so people with disabilities can use your services.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               Every business open to the public has three core ADA duties:
@@ -125,6 +146,16 @@ export default function GuideSmallBusiness() {
           <GuideSection
             id="new-vs-existing"
             title="New Construction vs. Existing Buildings"
+            simpleContent={
+              <>
+                <p>The rules are different depending on when a building was built:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>New buildings</strong> (after 1993) must be fully accessible.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Remodeled buildings</strong> must make the changed areas accessible.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Older buildings</strong> must remove barriers if it is easy and affordable.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -176,6 +207,14 @@ export default function GuideSmallBusiness() {
           <GuideSection
             id="readily-achievable"
             title="The 'Readily Achievable' Standard"
+            simpleContent={
+              <>
+                <p>"Readily achievable" means easy to do and not too expensive.</p>
+                <p>What counts as easy depends on the size and money of the business.</p>
+                <p>A large chain store is expected to do more than a small family shop.</p>
+                <p>Examples: adding a ramp, widening a doorway, or rearranging tables.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -226,6 +265,17 @@ export default function GuideSmallBusiness() {
           <GuideSection
             id="staff-training"
             title="Staff Training"
+            simpleContent={
+              <>
+                <p>Your employees should know the basics of the ADA.</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Service animals must be allowed in.</li>
+                  <li style={{ marginBottom: '6px' }}>Offer help but do not force it.</li>
+                  <li style={{ marginBottom: '6px' }}>Never ask about someone's disability.</li>
+                  <li style={{ marginBottom: '6px' }}>Be ready to make simple changes when asked.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               The ADA doesn't specifically list "training" as a requirement, but
@@ -260,6 +310,16 @@ export default function GuideSmallBusiness() {
           <GuideSection
             id="tax-incentives"
             title="Tax Incentives for ADA Compliance"
+            simpleContent={
+              <>
+                <p>There are tax breaks to help you pay for accessibility changes:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}><strong>Tax credit:</strong> Small businesses can get up to $5,000 per year off their taxes.</li>
+                  <li style={{ marginBottom: '6px' }}><strong>Tax deduction:</strong> All businesses can deduct up to $15,000 per year for barrier removal.</li>
+                </ul>
+                <p>Talk to your accountant about these. They can save you money.</p>
+              </>
+            }
           >
             <p>
               The federal government offers <strong>two tax incentives</strong> to
@@ -303,6 +363,17 @@ export default function GuideSmallBusiness() {
           <GuideSection
             id="first-steps"
             title="Practical First Steps"
+            simpleContent={
+              <>
+                <p>Here is how to start making your business accessible:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Walk through your space as if you used a wheelchair. Look for problems.</li>
+                  <li style={{ marginBottom: '6px' }}>Check your entrance, parking, restroom, and checkout area.</li>
+                  <li style={{ marginBottom: '6px' }}>Fix the easiest and cheapest problems first.</li>
+                  <li style={{ marginBottom: '6px' }}>Train your staff on the basics.</li>
+                </ul>
+              </>
+            }
           >
             <p>
               If you're a small business owner and want to start improving ADA

@@ -21,6 +21,13 @@ export default function GuideRestaurantsRetail() {
           <GuideSection
             id="dining-surfaces"
             title="Accessible Dining Surfaces"
+            simpleContent={
+              <>
+                <p>At least 5% of dining tables (but no less than one) must be accessible.</p>
+                <p>An accessible table is 28 to 34 inches high with knee space underneath.</p>
+                <p>Wheelchair users should not be stuck in a separate area. They get the same choices as everyone else.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -79,6 +86,13 @@ export default function GuideRestaurantsRetail() {
           <GuideSection
             id="food-service-lines"
             title="Food Service Lines"
+            simpleContent={
+              <>
+                <p>Buffets, cafeteria lines, and salad bars must be reachable from a wheelchair.</p>
+                <p>The aisle must be at least 36 inches wide.</p>
+                <p>If a counter is too high, staff must offer to serve the food.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -129,6 +143,13 @@ export default function GuideRestaurantsRetail() {
           <GuideSection
             id="counters"
             title="Sales and Service Counters"
+            simpleContent={
+              <>
+                <p>At least one section of a counter must be no higher than 36 inches.</p>
+                <p>This applies to checkout counters, order counters, and reception desks.</p>
+                <p>If the counter is too high, the business must provide another way to serve you.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -175,6 +196,13 @@ export default function GuideRestaurantsRetail() {
           <GuideSection
             id="checkout-aisles"
             title="Checkout Aisles"
+            simpleContent={
+              <>
+                <p>At least one checkout aisle must be wide enough for a wheelchair (at least 36 inches).</p>
+                <p>The accessible aisle must be clearly marked.</p>
+                <p>Card readers and pin pads must be low enough to reach from a wheelchair.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -229,6 +257,13 @@ export default function GuideRestaurantsRetail() {
           <GuideSection
             id="display-aisles"
             title="Display Aisles and Merchandise"
+            simpleContent={
+              <>
+                <p>Store aisles must be wide enough for a wheelchair to pass. The minimum is 36 inches.</p>
+                <p>Products should be within reach. Anything important should be between 15 and 48 inches high.</p>
+                <p>If something is out of reach, staff must help when asked.</p>
+              </>
+            }
           >
             <p>
               Retail display aisles must be wide enough for customers using
@@ -254,6 +289,14 @@ export default function GuideRestaurantsRetail() {
           <GuideSection
             id="outdoor-dining"
             title="Outdoor Dining Areas"
+            simpleContent={
+              <>
+                <p>Outdoor patios and dining areas must also be accessible.</p>
+                <p>There must be an accessible path from inside the restaurant to the outdoor area.</p>
+                <p>Accessible tables must be available outside too, not just inside.</p>
+                <p>The ground surface must be firm and level enough for a wheelchair.</p>
+              </>
+            }
           >
             <p>
               If a restaurant provides outdoor dining (patio, sidewalk café,

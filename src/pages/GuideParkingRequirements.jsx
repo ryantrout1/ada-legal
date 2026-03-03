@@ -24,6 +24,17 @@ export default function GuideParkingRequirements() {
           <GuideSection
             id="scoping-table"
             title="How Many Accessible Spaces Are Required?"
+            simpleContent={
+              <>
+                <p>The number of accessible parking spaces depends on the total number of spaces:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>1 to 25 total spaces: 1 accessible space.</li>
+                  <li style={{ marginBottom: '6px' }}>26 to 50: 2 accessible spaces.</li>
+                  <li style={{ marginBottom: '6px' }}>51 to 75: 3 accessible spaces.</li>
+                  <li style={{ marginBottom: '6px' }}>Larger lots: about 1 for every 25 spaces.</li>
+                </ul>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -92,6 +103,13 @@ export default function GuideParkingRequirements() {
           <GuideSection
             id="van-accessible"
             title="Van-Accessible Spaces"
+            simpleContent={
+              <>
+                <p>At least 1 out of every 6 accessible spaces must be van-accessible.</p>
+                <p>Van spaces are wider because wheelchair vans need room for a ramp or lift on the side.</p>
+                <p>They are marked with a "Van Accessible" sign.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -153,6 +171,16 @@ export default function GuideParkingRequirements() {
           <GuideSection
             id="dimensions"
             title="Space Dimensions"
+            simpleContent={
+              <>
+                <p>Accessible parking spaces must be big enough for a wheelchair:</p>
+                <ul style={{ paddingLeft: '1.25rem', margin: '8px 0' }}>
+                  <li style={{ marginBottom: '6px' }}>Standard accessible space: 8 feet wide with a 5-foot access aisle.</li>
+                  <li style={{ marginBottom: '6px' }}>Van-accessible space: 8 feet wide with an 8-foot access aisle (or 11 feet wide with a 5-foot aisle).</li>
+                </ul>
+                <p>The access aisle is the striped area next to the space. It must stay clear.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -208,6 +236,13 @@ export default function GuideParkingRequirements() {
           <GuideSection
             id="location"
             title="Location Requirements"
+            simpleContent={
+              <>
+                <p>Accessible spaces must be close to the entrance. They should be the closest spaces in the lot.</p>
+                <p>There must be a safe, smooth path from the space to the front door with no steps.</p>
+                <p>If a lot serves more than one building, accessible spaces should be spread out near each entrance.</p>
+              </>
+            }
           >
             <p>
               Accessible parking spaces must be located on the <strong>shortest
@@ -243,6 +278,13 @@ export default function GuideParkingRequirements() {
           <GuideSection
             id="signage"
             title="Signage Requirements"
+            simpleContent={
+              <>
+                <p>Every accessible space must have a sign with the wheelchair symbol.</p>
+                <p>The sign must be high enough that a parked car does not block it.</p>
+                <p>Van spaces need an extra sign that says "Van Accessible."</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -287,6 +329,13 @@ export default function GuideParkingRequirements() {
           <GuideSection
             id="slope-surface"
             title="Slope and Surface Requirements"
+            simpleContent={
+              <>
+                <p>Accessible parking spaces and aisles must be flat and smooth.</p>
+                <p>The maximum slope is 1:48 in any direction. That is almost flat.</p>
+                <p>The surface must be firm, stable, and not slippery. Gravel lots usually do not meet this rule.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>

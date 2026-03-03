@@ -24,6 +24,13 @@ export default function GuideRestrooms() {
           <GuideSection
             id="scoping"
             title="How Many Accessible Restrooms Are Required?"
+            simpleContent={
+              <>
+                <p>If a building has restrooms for the public, at least one of each type must be accessible.</p>
+                <p>This means one accessible men's room and one accessible women's room (or one accessible all-gender room).</p>
+                <p>Each floor that has restrooms must have an accessible one.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -74,6 +81,13 @@ export default function GuideRestrooms() {
           <GuideSection
             id="stall-dimensions"
             title="Wheelchair-Accessible Stall Dimensions"
+            simpleContent={
+              <>
+                <p>The accessible stall must be big enough for a wheelchair to enter and turn around.</p>
+                <p>Minimum size: 60 inches wide by 59 inches deep (for a wall-mounted toilet).</p>
+                <p>The door must swing out or be a sliding door. It cannot swing into the stall.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -134,6 +148,14 @@ export default function GuideRestrooms() {
           <GuideSection
             id="grab-bars"
             title="Grab Bar Requirements"
+            simpleContent={
+              <>
+                <p>Grab bars help people transfer from a wheelchair to the toilet.</p>
+                <p>There must be grab bars on the side wall and the back wall.</p>
+                <p>Side bar: at least 42 inches long. Back bar: at least 36 inches long.</p>
+                <p>They must hold at least 250 pounds and be between 33 and 36 inches high.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -188,6 +210,13 @@ export default function GuideRestrooms() {
           <GuideSection
             id="toilet-specs"
             title="Toilet Height and Position"
+            simpleContent={
+              <>
+                <p>The toilet seat must be between 17 and 19 inches high. This makes it easier to transfer from a wheelchair.</p>
+                <p>The toilet must be centered 16 to 18 inches from the side wall.</p>
+                <p>The flush handle must be on the open side, not against the wall.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -237,6 +266,14 @@ export default function GuideRestrooms() {
           <GuideSection
             id="lavatory"
             title="Lavatory (Sink) Requirements"
+            simpleContent={
+              <>
+                <p>The sink must be low enough for someone in a wheelchair to reach.</p>
+                <p>The top of the sink can be no higher than 34 inches. There must be knee space underneath.</p>
+                <p>Faucets must work with one hand. Lever or sensor faucets are best.</p>
+                <p>Hot water pipes under the sink must be covered so they do not burn someone's legs.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -288,6 +325,13 @@ export default function GuideRestrooms() {
           <GuideSection
             id="door"
             title="Restroom Door Requirements"
+            simpleContent={
+              <>
+                <p>The restroom door must be at least 32 inches wide.</p>
+                <p>It must have a lever handle or push plate, not a round knob.</p>
+                <p>There must be enough space for a wheelchair to approach and open the door.</p>
+              </>
+            }
           >
             <p>
               The restroom door is often where violations occur. Key requirements:
@@ -327,6 +371,13 @@ export default function GuideRestrooms() {
           <GuideSection
             id="signage"
             title="Restroom Signage"
+            simpleContent={
+              <>
+                <p>Restroom signs must include raised letters and Braille so blind people can read them.</p>
+                <p>Signs go on the wall next to the door handle, not on the door itself.</p>
+                <p>If not all restrooms are accessible, signs must point to the nearest accessible one.</p>
+              </>
+            }
           >
             <p>
               Accessible restrooms require specific signage:

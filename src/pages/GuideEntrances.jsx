@@ -24,6 +24,13 @@ export default function GuideEntrances() {
           <GuideSection
             id="how-many"
             title="How Many Entrances Must Be Accessible?"
+            simpleContent={
+              <>
+                <p>At least 60% of all public entrances must be accessible.</p>
+                <p>If a building has only one public entrance, it must be accessible.</p>
+                <p>The accessible entrance must be on a path that connects to parking and sidewalks.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -79,6 +86,13 @@ export default function GuideEntrances() {
           <GuideSection
             id="door-width"
             title="Door Clear Width"
+            simpleContent={
+              <>
+                <p>Doors must be at least 32 inches wide when open. This lets wheelchairs pass through.</p>
+                <p>Double doors: at least one of the two doors must be 32 inches wide.</p>
+                <p>This is measured with the door open at 90 degrees.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -125,6 +139,13 @@ export default function GuideEntrances() {
           <GuideSection
             id="maneuvering"
             title="Maneuvering Clearances"
+            simpleContent={
+              <>
+                <p>There must be enough flat space in front of a door for a wheelchair to approach and open it.</p>
+                <p>The space needed depends on which way the door swings and which side the handle is on.</p>
+                <p>This space must be level and free of objects like planters or signs.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -181,6 +202,13 @@ export default function GuideEntrances() {
           <GuideSection
             id="hardware"
             title="Door Hardware"
+            simpleContent={
+              <>
+                <p>Door handles must be easy to use with one hand and without gripping or twisting.</p>
+                <p>Lever handles and push bars are good. Round knobs are not allowed because they are hard to turn.</p>
+                <p>Handles must be between 34 and 48 inches from the floor.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -223,6 +251,13 @@ export default function GuideEntrances() {
           <GuideSection
             id="thresholds"
             title="Thresholds"
+            simpleContent={
+              <>
+                <p>The bump at the bottom of a door is called a threshold. It must be low enough for a wheelchair.</p>
+                <p>Maximum height: 1/2 inch for most doors, 3/4 inch for sliding doors.</p>
+                <p>Raised thresholds must have sloped edges so wheels can roll over them.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -266,6 +301,13 @@ export default function GuideEntrances() {
           <GuideSection
             id="closing-speed"
             title="Door Closing Speed"
+            simpleContent={
+              <>
+                <p>Doors with closers must close slowly enough for someone in a wheelchair to get through.</p>
+                <p>The door must take at least 5 seconds to close from fully open to almost closed.</p>
+                <p>If a door slams shut too fast, it is a barrier.</p>
+              </>
+            }
             legalContent={
               <>
                 <p style={{ margin: '0 0 12px' }}>
@@ -296,6 +338,13 @@ export default function GuideEntrances() {
           <GuideSection
             id="automatic-doors"
             title="Automatic Doors"
+            simpleContent={
+              <>
+                <p>Automatic doors are great for accessibility but they are not always required.</p>
+                <p>When they are installed, they must stay open long enough for someone to pass through safely.</p>
+                <p>Power-assisted doors must not open too fast or too forcefully.</p>
+              </>
+            }
           >
             <p>
               While the ADA does <strong>not require</strong> automatic doors in
@@ -328,6 +377,13 @@ export default function GuideEntrances() {
           <GuideSection
             id="directional-signage"
             title="Directional Signage to Accessible Entrances"
+            simpleContent={
+              <>
+                <p>If the main entrance is not accessible, signs must point to the one that is.</p>
+                <p>Signs should use the wheelchair symbol and an arrow.</p>
+                <p>People should not have to guess which entrance to use.</p>
+              </>
+            }
           >
             <p>
               When not all entrances are accessible, you must post <strong>
