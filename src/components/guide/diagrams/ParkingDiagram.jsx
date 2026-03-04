@@ -1,438 +1,302 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
-const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#502-parking-spaces';
-const SCOPING_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#208-parking-spaces';
+const PARK_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#502-parking-spaces';
 
-const SCOPING_TABLE = [
-  ['1–25', '1'], ['26–50', '2'], ['51–75', '3'], ['76–100', '4'],
-  ['101–150', '5'], ['151–200', '6'], ['201–300', '7'], ['301–400', '8'],
-  ['401–500', '9'], ['501–1,000', '2% of total'], ['1,001+', '20 + 1 per 100 over 1,000']
-];
-
-const CALLOUTS = [
+const SPACE_CALLOUTS = [
   {
-    id: 1, label: 'Van-Accessible Space', section: '§502.2', color: 'var(--section-label)', textColor: '#8B2E08',
-    x: 115, y: 190,
-    plain: 'A van-accessible parking space must be at least 132 inches (11 feet) wide to allow room for a wheelchair ramp or lift to deploy from the side of a van. An alternative layout is allowed: a standard 96-inch (8-foot) space paired with an extra-wide 96-inch access aisle. For every 6 accessible spaces (or fraction of 6), at least 1 must be van-accessible.',
-    legal: '"Car parking spaces shall be 96 inches (2440 mm) wide minimum. Van parking spaces shall be 132 inches (3350 mm) wide minimum." Alternative: van space of 96 inches with 96-inch access aisle. Per §208.2.4: "For every six or fraction of six accessible parking spaces, at least one shall be a van parking space."',
-    citation: '§502.2, §208.2.4',
-    linkOverride: null
+    id: 1, label: 'Space Widths & Access Aisle', section: '\u00a7502.2',
+    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    plain: 'Standard accessible car spaces must be at least 96 inches (8 feet) wide. Van-accessible spaces must be at least 132 inches (11 feet) wide \u2014 or a standard 96-inch space with an extra-wide 96-inch access aisle. The access aisle (the striped area next to the space) must be at least 60 inches (5 feet) wide. Two spaces can share one aisle between them. The aisle must be clearly marked with diagonal hatching.',
+    legal: '\u201CCar parking spaces shall be 96 inches wide minimum.\u201D Van spaces: \u201C132 inches wide minimum.\u201D Access aisles: \u201C60 inches wide minimum.\u201D \u201CTwo parking spaces shall be permitted to share a common access aisle.\u201D',
+    citation: '\u00a7502.2, \u00a7502.3'
   },
   {
-    id: 2, label: 'Standard Accessible Space', section: '§502.2', color: '#15803D', textColor: '#14532D',
-    x: 370, y: 190,
-    plain: 'A standard accessible car space must be at least 96 inches (8 feet) wide. It must have an access aisle next to it, and must be located on the shortest accessible route to the building entrance. The space is measured from the center of the boundary markings, so the painted lines are shared between the space and the aisle.',
-    legal: '"Car parking spaces shall be 96 inches (2440 mm) wide minimum." Per §502.3: access aisles "shall adjoin an accessible route." Per §208.3.1: spaces "shall be located on the shortest accessible route from parking to an entrance."',
-    citation: '§502.2, §502.3, §208.3.1',
-    linkOverride: null
-  },
-  {
-    id: 3, label: 'Access Aisle', section: '§502.3', color: '#2563EB', textColor: '#1E3A8A',
-    x: 255, y: 260,
-    plain: 'The access aisle is the striped area next to accessible parking spaces. It must be at least 60 inches (5 feet) wide and run the full length of the space. Two adjacent accessible spaces can share a single aisle between them. The aisle must be clearly marked — usually with diagonal hatching. For angled van spaces, the aisle must be on the passenger side where the ramp deploys.',
-    legal: '"Access aisles serving parking spaces shall comply with 502.3. Access aisles shall adjoin an accessible route." Width: "60 inches (1525 mm) wide minimum." "Two parking spaces shall be permitted to share a common access aisle." "Van parking spaces shall have access aisles located on the passenger side."',
-    citation: '§502.3, §502.3.1, §502.3.3, §502.3.4',
-    linkOverride: null
-  },
-  {
-    id: 4, label: 'Signage', section: '§502.6', color: '#7C3AED', textColor: '#5B21B6',
-    x: 575, y: 105,
-    plain: 'Every accessible parking space must have a sign showing the International Symbol of Accessibility (the blue wheelchair symbol). The bottom of the sign must be at least 60 inches (5 feet) above the ground so it is visible even when a vehicle is parked in the space. Van-accessible spaces need an additional sign or text reading "Van Accessible." Exception: parking lots with only 4 or fewer total spaces do not need signage if they serve a single residential unit.',
-    legal: '"Accessible parking spaces shall be identified by signs showing the International Symbol of Accessibility complying with 703.7.2.1. Signs identifying van parking spaces shall contain the designation \'van accessible.\' Signs shall be 60 inches (1525 mm) minimum above the finish floor or ground surface measured to the bottom of the sign."',
-    citation: '§502.6',
-    linkOverride: null
-  },
-  {
-    id: 5, label: 'Van Vertical Clearance', section: '§502.5', color: '#92400E', textColor: '#78350F',
-    x: 575, y: 225,
-    plain: 'Van-accessible spaces must have at least 98 inches (8 feet 2 inches) of vertical clearance. This is not just over the parking space — it applies to the entire vehicle route from the parking facility entrance, through the space and access aisle, all the way to the facility exit. This ensures tall vans with roof-mounted wheelchair lifts can navigate the entire route safely.',
-    legal: '"Van parking spaces, access aisles serving them, and a vehicular route from an entrance of the parking facility to the van parking spaces and from the van parking spaces to an exit from the parking facility shall provide a vertical clearance of 98 inches (2490 mm) minimum."',
-    citation: '§502.5',
-    linkOverride: null
-  },
-  {
-    id: 6, label: 'Surface & Slope', section: '§502.4', color: '#BE185D', textColor: '#9D174D',
-    x: 255, y: 340,
-    plain: 'Accessible spaces and their access aisles must be firm, stable, and slip-resistant. The access aisle must be at the same level as the parking space — no curbs, steps, or level changes between them. The maximum slope in any direction is 1:48 (about 2%), which is essentially flat. Curb ramps must not project into access aisles because they create an uneven surface where wheelchairs could tip.',
-    legal: '"Parking spaces and access aisles serving them shall have surface slopes not steeper than 1:48." "Access aisles shall be at the same level as the parking spaces they serve. Changes in level are not permitted."',
-    citation: '§502.4',
-    linkOverride: null
-  },
-  {
-    id: 7, label: 'Scoping (How Many?)', section: '§208.2', color: '#0E7490', textColor: '#0C4A6E',
-    x: 115, y: 340,
-    plain: 'The number of accessible spaces required depends on the total number of parking spaces in your lot or garage. See the table below. Medical facilities specializing in treating people with mobility impairments must provide 20% accessible spaces for outpatient areas. Of all accessible spaces, at least 1 in every 6 must be van-accessible.',
-    legal: '"Parking facilities shall provide accessible parking spaces in accordance with Table 208.2." Per §208.2.4: "For every six or fraction of six accessible parking spaces required, at least one shall be a van parking space complying with 502."',
-    citation: '§208.2, §208.2.4',
-    linkOverride: SCOPING_URL,
-    hasTable: true
+    id: 2, label: 'Surface, Slope & Level Changes', section: '\u00a7502.4',
+    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    plain: 'Accessible spaces and their access aisles must be firm, stable, and slip-resistant. The aisle must be at the same level as the parking space \u2014 no curbs, steps, or level changes between them. Maximum slope in any direction is 1:48 (about 2%), essentially flat. Van spaces need 98 inches (8\u20192\u2033) of vertical clearance along the entire vehicle route from entrance to exit.',
+    legal: '\u201CParking spaces and access aisles shall have surface slopes not steeper than 1:48.\u201D \u201CAccess aisles shall be at the same level as the parking spaces they serve. Changes in level are not permitted.\u201D Vertical clearance: \u201C98 inches minimum.\u201D',
+    citation: '\u00a7502.4, \u00a7502.5'
   }
 ];
 
-function makeLink(text, url) {
+const SIGN_CALLOUTS = [
+  {
+    id: 1, label: 'Required Signs', section: '\u00a7502.6',
+    color: '#7C3AED', textColor: '#5B21B6', x: 170, y: 52,
+    plain: 'Every accessible parking space must have a sign showing the International Symbol of Accessibility (the blue wheelchair symbol). The bottom of the sign must be at least 60 inches (5 feet) above the ground so it\u2019s visible even when a vehicle is parked. Van spaces need an additional \u201CVan Accessible\u201D label. Exception: lots with 4 or fewer total spaces serving a single residential unit don\u2019t need signs.',
+    legal: '\u201CAccessible parking spaces shall be identified by signs showing the International Symbol of Accessibility.\u201D \u201CSigns shall be 60 inches minimum above the finish ground surface measured to the bottom of the sign.\u201D Van spaces: \u201Cshall contain the designation \u2018van accessible.\u2019\u201D',
+    citation: '\u00a7502.6'
+  },
+  {
+    id: 2, label: 'How Many Spaces?', section: '\u00a7208.2',
+    color: '#2563EB', textColor: '#1E3A8A', x: 540, y: 52,
+    plain: 'The number of accessible spaces depends on total lot size: 1\u201325 total spaces = 1 accessible; 26\u201350 = 2; 51\u201375 = 3; 76\u2013100 = 4; and so on. For every 6 accessible spaces (or fraction), at least 1 must be van-accessible. Medical facilities treating mobility impairments need 20% accessible outpatient spaces. Spaces must be on the shortest accessible route to the entrance.',
+    legal: '\u201CParking facilities shall provide accessible parking spaces in accordance with Table 208.2.\u201D \u201CFor every six or fraction of six accessible parking spaces, at least one shall be a van parking space.\u201D \u201CSpaces shall be located on the shortest accessible route from parking to an entrance.\u201D',
+    citation: '\u00a7208.2, \u00a7208.3.1'
+  }
+];
+
+function makeLink(t) { return (<a href={PARK_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${t} on ADA.gov`}>{t}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>{'\u2197'}</span></a>); }
+function parseCite(t) { return t.split(/(\u00a7\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^\u00a7\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
+
+function CalloutPanel({ callout, onClose, panelRef }) {
+  if (!callout) return null;
   return (
-    <a href={url || STD_URL} target="_blank" rel="noopener noreferrer"
-      style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
-      aria-label={`${text} on ADA.gov (opens in new tab)`}>
-      {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
-    </a>
+    <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'parkFade 0.25s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+        </div>
+        <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
+      </div>
+      <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
+        <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
+        <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard {'\u2014'} {parseCite(callout.citation)}</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(callout.legal)}</p>
+        </div></aside>
+      </div>
+    </div>
   );
 }
 
-function parseCitations(text, linkOverride) {
-  const parts = text.split(/(§\d{3,4}(?:\.\d+)*)/g);
-  return parts.map((part, i) => {
-    if (/^§\d{3,4}/.test(part)) {
-      const url = /^§208/.test(part) ? SCOPING_URL : (linkOverride || STD_URL);
-      return <React.Fragment key={i}>{makeLink(part, url)}</React.Fragment>;
-    }
-    return part;
-  });
-}
-
-function HatchPattern() {
+function KeyFact({ color, number, children }) {
   return (
-    <defs>
-      <pattern id="hatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
-        <line x1="0" y1="0" x2="0" y2="8" stroke="#2563EB" strokeWidth="1.5" opacity="0.35" />
-      </pattern>
-    </defs>
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
+      <span style={{ background: color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
+    </div>
   );
 }
+
+function Dots({ callouts, active, toggle }) {
+  return callouts.map(c => (
+    <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
+      {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
+      <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
+      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
+      <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="park-focus-ring" />
+    </g>
+  ));
+}
+
 
 export default function ParkingDiagram() {
-  const [active, setActive] = useState(null);
+  const [spaceActive, setSpaceActive] = useState(null);
+  const [signActive, setSignActive] = useState(null);
   const [metric, setMetric] = useState(false);
-  const panelRef = useRef(null);
+  const spaceRef = useRef(null);
+  const signRef = useRef(null);
 
-  const toggle = useCallback((id) => {
-    setActive(prev => prev === id ? null : id);
-  }, []);
+  const toggleSpace = useCallback((id) => { setSpaceActive(prev => prev === id ? null : id); setSignActive(null); }, []);
+  const toggleSign = useCallback((id) => { setSignActive(prev => prev === id ? null : id); setSpaceActive(null); }, []);
 
-  useEffect(() => {
-    if (active && panelRef.current) {
-      panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  }, [active]);
+  useEffect(() => { if (spaceActive && spaceRef.current) spaceRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [spaceActive]);
+  useEffect(() => { if (signActive && signRef.current) signRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [signActive]);
+  useEffect(() => { const h = (e) => { if (e.key === 'Escape') { setSpaceActive(null); setSignActive(null); } }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
 
-  useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') setActive(null); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, []);
+  const d = (inches, mm) => metric ? `${mm} mm` : `${inches}\u2033`;
+  const ft = (feet, m) => metric ? `${m} m` : `${feet} ft`;
+  const spaceCallout = SPACE_CALLOUTS.find(c => c.id === spaceActive);
+  const signCallout = SIGN_CALLOUTS.find(c => c.id === signActive);
 
-  const imp = (inches, mm) => metric ? `${mm} mm` : `${inches}"`;
-  const impFt = (ft, mm) => metric ? `${mm} mm` : `${ft}'`;
-
-  const activeCallout = CALLOUTS.find(c => c.id === active);
+  const unitToggle = (
+    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
+      {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}
+    </div>
+  );
 
   return (
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
-      {/* Unit toggle */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px', gap: '8px', alignItems: 'center' }}>
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
-        {['Imperial', 'Metric'].map(u => {
-          const isActive = u === 'Metric' ? metric : !metric;
-          return (
-            <button key={u} onClick={() => setMetric(u === 'Metric')}
-              style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isActive ? 700 : 500,
-                padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)',
-                background: isActive ? 'var(--heading)' : 'var(--card-bg)', color: isActive ? 'var(--page-bg)' : 'var(--body)',
-                cursor: 'pointer', minHeight: '44px'
-              }} aria-pressed={isActive}>{u}</button>
-          );
-        })}
+
+      {/* DIAGRAM 1: Space Layout */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Space Sizes & Layout</h3>
+        {unitToggle}
       </div>
 
-      {/* SVG */}
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 900 440" role="img" aria-labelledby="park-title park-desc"
-          style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="park-title">ADA §502 Accessible Parking Spaces Diagram</title>
-          <desc id="park-desc">
-            Split-view diagram. Left: top-down plan of a van-accessible space (132 inches wide), a shared access aisle
-            (60 inches wide with diagonal hatching), and a standard accessible car space (96 inches wide), plus a sidewalk
-            above. Right: signage elevation detail showing ISA sign at 60 inches minimum height and 98-inch van vertical clearance.
-          </desc>
+        <svg viewBox="0 0 720 380" role="img" aria-labelledby="space-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+          <title id="space-title">Accessible Parking Space Layout {'\u2014'} Van and Car Spaces</title>
+          <rect width="720" height="380" fill="var(--page-bg-subtle)" />
 
-          <rect x="0" y="0" width="900" height="440" fill="var(--page-bg-subtle)" />
-          <HatchPattern />
+          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Van-accessible space</text>
+          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Standard car space</text>
 
-          {/* ===== LEFT: PLAN VIEW ===== */}
-          {/* Divider label */}
-          <text x="230" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">PLAN VIEW (TOP-DOWN)</text>
+          {/* LEFT: Van space */}
+          {/* Van space rect */}
+          <rect x="40" y="80" width="170" height="200" rx="4" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="2" />
+          <text x="125" y="175" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#C2410C" fontWeight="600">VAN</text>
 
-          {/* Sidewalk strip */}
-          <rect x="30" y="42" width="430" height="36" rx="3" fill="#D6D3D1" stroke="#A8A29E" strokeWidth="1" />
-          <text x="245" y="64" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="600" fill="var(--body)">SIDEWALK / ACCESSIBLE ROUTE TO ENTRANCE →</text>
+          {/* Access aisle (shared) */}
+          <rect x="210" y="80" width="80" height="200" rx="2" fill="#2563EB" opacity="0.06" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="8 4" />
+          {/* Diagonal hatching lines */}
+          <line x1="215" y1="120" x2="240" y2="80" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <line x1="215" y1="160" x2="270" y2="80" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <line x1="215" y1="200" x2="285" y2="120" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <line x1="215" y1="240" x2="285" y2="160" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <line x1="215" y1="280" x2="285" y2="200" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <line x1="240" y1="280" x2="285" y2="240" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <text x="250" y="170" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">access</text>
+          <text x="250" y="184" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">aisle</text>
 
-          {/* Van space */}
-          <rect x="30" y="82" width="140" height="260" rx="2" fill="#FEF2F2" stroke="#C2410C" strokeWidth="1.5" />
-          {/* Van silhouette */}
-          <rect x="50" y="110" width="100" height="180" rx="8" fill="#C2410C" opacity="0.07" />
-          <rect x="55" y="115" width="90" height="40" rx="4" fill="#C2410C" opacity="0.05" />
-          <rect x="55" y="255" width="90" height="30" rx="4" fill="#C2410C" opacity="0.05" />
-          <text x="100" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#8B2E08" opacity="0.6">VAN</text>
-          {/* ISA on ground */}
-          <circle cx="100" cy="316" r="10" fill="none" stroke="#2563EB" strokeWidth="1.5" opacity="0.4" />
-          <text x="100" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#1E3A8A" opacity="0.5">♿</text>
-          <text x="100" y="96" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#8B2E08">VAN ACCESSIBLE</text>
-
-          {/* Access aisle */}
-          <rect x="170" y="82" width="70" height="260" fill="url(#hatch)" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="6 3" />
-          <text x="205" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#1E3A8A" transform="rotate(-90, 205, 215)">ACCESS AISLE</text>
-
-          {/* Car space */}
-          <rect x="240" y="82" width="110" height="260" rx="2" fill="#F0FDF4" stroke="#15803D" strokeWidth="1.5" />
-          {/* Car silhouette */}
-          <rect x="258" y="120" width="74" height="160" rx="10" fill="#15803D" opacity="0.06" />
-          <rect x="262" y="125" width="66" height="35" rx="6" fill="#15803D" opacity="0.04" />
-          <rect x="262" y="250" width="66" height="25" rx="6" fill="#15803D" opacity="0.04" />
-          <text x="295" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" opacity="0.6">CAR</text>
-          {/* ISA on ground */}
-          <circle cx="295" cy="316" r="10" fill="none" stroke="#2563EB" strokeWidth="1.5" opacity="0.4" />
-          <text x="295" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="#1E3A8A" opacity="0.5">♿</text>
-
-          {/* Non-accessible space (dashed) */}
-          <rect x="350" y="82" width="110" height="260" rx="2" fill="none" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="5 4" />
-          <text x="405" y="207" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">STANDARD</text>
-          <text x="405" y="218" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">SPACE</text>
-
-          {/* --- LEFT DIMENSIONS --- */}
-          {/* Van width */}
-          <line x1="30" y1="362" x2="170" y2="362" stroke="#C2410C" strokeWidth="1.2" />
-          <line x1="30" y1="354" x2="30" y2="370" stroke="#C2410C" strokeWidth="1.2" />
-          <line x1="170" y1="354" x2="170" y2="370" stroke="#C2410C" strokeWidth="1.2" />
-          <polygon points="35,362 45,358 45,366" fill="#C2410C" />
-          <polygon points="165,362 155,358 155,366" fill="#C2410C" />
-          <rect x="62" y="369" width="76" height="15" rx="3" fill="#C2410C" />
-          <text x="100" y="379" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="white">
-            {imp('132', '3350')} / {impFt("11'", '3350')}
-          </text>
+          {/* Van width dimension */}
+          <line x1="40" y1="300" x2="210" y2="300" stroke="#C2410C" strokeWidth="1.5" />
+          <line x1="40" y1="294" x2="40" y2="306" stroke="#C2410C" strokeWidth="1.5" />
+          <line x1="210" y1="294" x2="210" y2="306" stroke="#C2410C" strokeWidth="1.5" />
+          <rect x="80" y="306" width="90" height="20" rx="6" fill="#C2410C" />
+          <text x="125" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('132', '3350')} min</text>
+          <text x="125" y="340" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="500">(11 feet)</text>
 
           {/* Aisle width */}
-          <line x1="170" y1="362" x2="240" y2="362" stroke="#2563EB" strokeWidth="1.2" />
-          <line x1="240" y1="354" x2="240" y2="370" stroke="#2563EB" strokeWidth="1.2" />
-          <polygon points="175,362 185,358 185,366" fill="#2563EB" />
-          <polygon points="235,362 225,358 225,366" fill="#2563EB" />
-          <rect x="172" y="369" width="66" height="15" rx="3" fill="#2563EB" />
-          <text x="205" y="379" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="white">
-            {imp('60', '1525')} / {impFt("5'", '1525')}
-          </text>
-
-          {/* Car width */}
-          <line x1="240" y1="362" x2="350" y2="362" stroke="#15803D" strokeWidth="1.2" />
-          <line x1="350" y1="354" x2="350" y2="370" stroke="#15803D" strokeWidth="1.2" />
-          <polygon points="245,362 255,358 255,366" fill="#15803D" />
-          <polygon points="345,362 335,358 335,366" fill="#15803D" />
-          <rect x="262" y="369" width="66" height="15" rx="3" fill="#15803D" />
-          <text x="295" y="379" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="white">
-            {imp('96', '2440')} / {impFt("8'", '2440')}
-          </text>
-
-          {/* Surface/slope label */}
-          <line x1="50" y1="400" x2="340" y2="400" stroke="#DB2777" strokeWidth="1" strokeDasharray="3 2" />
-          <rect x="130" y="405" width="110" height="14" rx="3" fill="#DB2777" />
-          <text x="185" y="414" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">
-            1:48 max slope all areas
-          </text>
+          <line x1="210" y1="300" x2="290" y2="300" stroke="#2563EB" strokeWidth="1.5" />
+          <line x1="290" y1="294" x2="290" y2="306" stroke="#2563EB" strokeWidth="1.5" />
+          <rect x="218" y="306" width="64" height="20" rx="6" fill="#2563EB" />
+          <text x="250" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('60', '1525')}</text>
+          <text x="250" y="340" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#2563EB" fontWeight="500">(5 feet)</text>
 
 
-          {/* ===== DIVIDER ===== */}
-          <line x1="485" y1="30" x2="485" y2="430" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
+          {/* DIVIDER */}
+          <line x1="360" y1="40" x2="360" y2="360" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
 
 
-          {/* ===== RIGHT: SIGNAGE ELEVATION ===== */}
-          <text x="690" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">SIGNAGE DETAIL (ELEVATION)</text>
+          {/* RIGHT: Standard car space */}
+          <rect x="400" y="80" width="130" height="200" rx="4" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="2" />
+          <text x="465" y="175" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#15803D" fontWeight="600">CAR</text>
 
-          {/* Ground line */}
-          <rect x="510" y="380" width="360" height="20" rx="2" fill="#E7E5E4" stroke="#D6D3D1" strokeWidth="1" />
-          <text x="690" y="394" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body)">GROUND LEVEL</text>
+          {/* Shared aisle */}
+          <rect x="530" y="80" width="80" height="200" rx="2" fill="#2563EB" opacity="0.06" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="8 4" />
+          <line x1="535" y1="120" x2="560" y2="80" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <line x1="535" y1="160" x2="590" y2="80" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <line x1="535" y1="200" x2="605" y2="120" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <line x1="535" y1="240" x2="605" y2="160" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <line x1="535" y1="280" x2="605" y2="200" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <line x1="560" y1="280" x2="605" y2="240" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
+          <text x="570" y="170" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">access</text>
+          <text x="570" y="184" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">aisle</text>
 
-          {/* Sign post */}
-          <rect x="618" y="105" width="6" height="275" fill="#78716C" rx="1" />
+          {/* Car width dimension */}
+          <line x1="400" y1="300" x2="530" y2="300" stroke="#15803D" strokeWidth="1.5" />
+          <line x1="400" y1="294" x2="400" y2="306" stroke="#15803D" strokeWidth="1.5" />
+          <line x1="530" y1="294" x2="530" y2="306" stroke="#15803D" strokeWidth="1.5" />
+          <rect x="428" y="306" width="74" height="20" rx="6" fill="#15803D" />
+          <text x="465" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('96', '2440')} min</text>
+          <text x="465" y="340" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="500">(8 feet)</text>
 
-          {/* Sign face — ISA */}
-          <rect x="630" y="105" width="70" height="70" rx="4" fill="#1D4ED8" stroke="#1E40AF" strokeWidth="1.5" />
-          <text x="665" y="148" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="28" fill="white">♿</text>
+          {/* Aisle width */}
+          <line x1="530" y1="300" x2="610" y2="300" stroke="#2563EB" strokeWidth="1.5" />
+          <line x1="610" y1="294" x2="610" y2="306" stroke="#2563EB" strokeWidth="1.5" />
+          <rect x="538" y="306" width="64" height="20" rx="6" fill="#2563EB" />
+          <text x="570" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('60', '1525')}</text>
 
-          {/* VAN ACCESSIBLE sub-sign */}
-          <rect x="634" y="180" width="62" height="22" rx="3" fill="white" stroke="#1E40AF" strokeWidth="1" />
-          <text x="665" y="194" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="#1E40AF">VAN ACCESSIBLE</text>
+          {/* Slope note */}
+          <text x="465" y="98" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B">slope {'\u2264'} 1:48 everywhere</text>
 
-          {/* Van silhouette for scale */}
-          <rect x="720" y="220" width="100" height="160" rx="10" fill="#B45309" opacity="0.08" stroke="#B45309" strokeWidth="1" opacity="0.2" />
-          <rect x="725" y="225" width="90" height="40" rx="6" fill="#B45309" opacity="0.06" />
-          <rect x="725" y="345" width="90" height="30" rx="6" fill="#B45309" opacity="0.06" />
-          <text x="770" y="305" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#78350F" opacity="0.4">VAN</text>
-
-          {/* --- RIGHT DIMENSIONS --- */}
-
-          {/* Sign height: 60" min */}
-          <line x1="590" y1="175" x2="590" y2="380" stroke="#7C3AED" strokeWidth="1.5" />
-          <line x1="583" y1="175" x2="597" y2="175" stroke="#7C3AED" strokeWidth="1.5" />
-          <line x1="583" y1="380" x2="597" y2="380" stroke="#7C3AED" strokeWidth="1.5" />
-          <polygon points="590,180 586,190 594,190" fill="#7C3AED" />
-          <polygon points="590,375 586,365 594,365" fill="#7C3AED" />
-          <rect x="548" y="270" width="70" height="16" rx="3" fill="#7C3AED" />
-          <text x="583" y="281" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="white">
-            {imp('60', '1525')} min
-          </text>
-
-          {/* Van clearance: 98" min */}
-          <line x1="840" y1="218" x2="840" y2="380" stroke="#B45309" strokeWidth="1.5" />
-          <line x1="833" y1="218" x2="847" y2="218" stroke="#B45309" strokeWidth="1.5" />
-          <line x1="833" y1="380" x2="847" y2="380" stroke="#B45309" strokeWidth="1.5" />
-          <polygon points="840,223 836,233 844,233" fill="#B45309" />
-          <polygon points="840,375 836,365 844,365" fill="#B45309" />
-          {/* Overhead clearance line */}
-          <line x1="700" y1="218" x2="860" y2="218" stroke="#B45309" strokeWidth="1" strokeDasharray="5 3" />
-          <rect x="800" y="240" width="76" height="16" rx="3" fill="#B45309" />
-          <text x="838" y="251" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="700" fill="white">
-            {imp('98', '2490')} min
-          </text>
-
-
-          {/* ===== CALLOUT DOTS ===== */}
-          {CALLOUTS.map(c => (
-            <g key={c.id}
-              tabIndex="0" role="button"
-              aria-label={`Callout ${c.id}: ${c.label} — ${c.section}. Press Enter for details.`}
-              aria-expanded={active === c.id}
-              onClick={() => toggle(c.id)}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }}
-              style={{ cursor: 'pointer', outline: 'none' }}>
-              {active === c.id && (
-                <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3">
-                  <animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" />
-                </circle>
-              )}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'}
-                stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
-                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
-              <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2"
-                className="park-focus-ring" />
-            </g>
-          ))}
-
-          <text x="50" y="432" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">
-            Click or tap numbered callouts for details
-          </text>
+          <Dots callouts={SPACE_CALLOUTS} active={spaceActive} toggle={toggleSpace} />
+          <text x="20" y="370" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 
-      {/* Live region */}
-      <div aria-live="polite" className="sr-only">
-        {activeCallout ? `Now showing details for callout ${activeCallout.id}: ${activeCallout.label}, ${activeCallout.section}` : ''}
+      <div aria-live="polite" className="sr-only">{spaceCallout ? `Showing: ${spaceCallout.label}` : ''}</div>
+      <CalloutPanel callout={spaceCallout} onClose={() => setSpaceActive(null)} panelRef={spaceRef} />
+
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
+        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Space Layout</p>
+        <KeyFact color="#C2410C" number={ft('11', '3.4')}>Van space width (132{'\u2033'})</KeyFact>
+        <KeyFact color="#15803D" number={ft('8', '2.4')}>Standard car space width (96{'\u2033'})</KeyFact>
+        <KeyFact color="#2563EB" number={ft('5', '1.5')}>Access aisle width minimum (60{'\u2033'})</KeyFact>
+        <KeyFact color="#64748B" number="1:48">Maximum slope in any direction (essentially flat)</KeyFact>
       </div>
 
-      {/* Info panel */}
-      {activeCallout && (
-        <div ref={panelRef} style={{
-          marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)',
-          borderRadius: '12px', overflow: 'hidden', animation: 'parkFadeIn 0.25s ease-out'
-        }}>
-          {/* Header */}
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)',
-            flexWrap: 'wrap', gap: '8px'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                width: '26px', height: '26px', borderRadius: '50%',
-                background: activeCallout.color, color: 'var(--page-bg)',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700
-              }}>{activeCallout.id}</span>
-              <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>
-                {activeCallout.label}
-              </span>
-              <span style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-                color: activeCallout.color, background: `${activeCallout.color}15`,
-                padding: '2px 8px', borderRadius: '4px'
-              }}>{activeCallout.section}</span>
-            </div>
-            <button onClick={() => setActive(null)} aria-label="Close panel"
-              style={{
-                background: 'none', border: '1px solid var(--border)', borderRadius: '8px',
-                padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px'
-              }}>Close <span aria-hidden="true">✕</span></button>
-          </div>
 
-          {/* Content */}
-          <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
-            <div style={{ flex: '1 1 55%', minWidth: 0 }}>
-              <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                color: 'var(--body)', lineHeight: 1.75, margin: 0
-              }}>{activeCallout.plain}</p>
+      {/* DIAGRAM 2: Signs & How Many */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '40px', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Signs & How Many Spaces</h3>
+      </div>
 
-              {/* Scoping table for callout 7 */}
-              {activeCallout.hasTable && (
-                <table style={{
-                  width: '100%', borderCollapse: 'collapse', marginTop: '16px',
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem'
-                }} role="table" aria-label="Accessible parking scoping table">
-                  <thead>
-                    <tr>
-                      <th style={{ textAlign: 'left', padding: '8px 10px', borderBottom: '2px solid var(--border)', fontWeight: 700, color: 'var(--heading)', fontSize: '0.8rem' }}>Total Spaces</th>
-                      <th style={{ textAlign: 'left', padding: '8px 10px', borderBottom: '2px solid var(--border)', fontWeight: 700, color: 'var(--heading)', fontSize: '0.8rem' }}>Accessible Required</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {SCOPING_TABLE.map(([total, req], i) => (
-                      <tr key={i}>
-                        <td style={{ padding: '6px 10px', borderBottom: '1px solid var(--border-lighter)', color: 'var(--body)' }}>{total}</td>
-                        <td style={{ padding: '6px 10px', borderBottom: '1px solid var(--border-lighter)', color: 'var(--body)', fontWeight: 600 }}>{req}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-            <aside style={{ flex: '1 1 40%', minWidth: 0 }}>
-              <div style={{
-                background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)',
-                borderRadius: '0 10px 10px 0', padding: '16px 18px'
-              }}>
-                <p style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-                  letterSpacing: '0.1em', textTransform: 'uppercase',
-                  color: 'var(--body-secondary)', margin: '0 0 8px'
-                }}>Official Standard — {parseCitations(activeCallout.citation, activeCallout.linkOverride)}</p>
-                <p style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                  color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic'
-                }}>{parseCitations(activeCallout.legal, activeCallout.linkOverride)}</p>
-              </div>
-            </aside>
-          </div>
-        </div>
-      )}
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
+        <svg viewBox="0 0 720 320" role="img" aria-labelledby="sign-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+          <title id="sign-title">Parking Sign Requirements and Space Count</title>
+          <rect width="720" height="320" fill="var(--page-bg-subtle)" />
+
+          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">What the sign looks like</text>
+          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">How many spaces you need</text>
+
+          {/* LEFT: Sign detail */}
+          {/* Post */}
+          <rect x="165" y="75" width="6" height="190" fill="#94A3B8" rx="1" />
+
+          {/* Sign face */}
+          <rect x="130" y="70" width="76" height="60" rx="6" fill="#2563EB" stroke="#1E3A8A" strokeWidth="1.5" />
+          {/* Wheelchair icon (simplified) */}
+          <circle cx="168" cy="92" r="8" fill="white" opacity="0.9" />
+          <rect x="162" y="100" width="12" height="10" rx="2" fill="white" opacity="0.7" />
+          <text x="168" y="122" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="white" fontWeight="700">VAN</text>
+
+          {/* 60" min height */}
+          <line x1="230" y1="130" x2="230" y2="265" stroke="#7C3AED" strokeWidth="1.5" />
+          <line x1="224" y1="130" x2="236" y2="130" stroke="#7C3AED" strokeWidth="1.5" />
+          <line x1="224" y1="265" x2="236" y2="265" stroke="#7C3AED" strokeWidth="1.5" />
+          <rect x="240" y="186" width="70" height="22" rx="6" fill="#7C3AED" />
+          <text x="275" y="201" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('60', '1525')} min</text>
+          <text x="275" y="220" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6" fontWeight="500">to bottom of sign</text>
+
+          {/* Ground line */}
+          <line x1="100" y1="265" x2="320" y2="265" stroke="#94A3B8" strokeWidth="2" />
+          <text x="210" y="282" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B">ground level</text>
+
+          {/* Van note */}
+          <text x="168" y="152" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">{'\u201c'}Van Accessible{'\u201d'}</text>
+          <text x="168" y="166" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12">required on van spaces</text>
+
+
+          {/* DIVIDER */}
+          <line x1="360" y1="20" x2="360" y2="300" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+
+
+          {/* RIGHT: Scoping table (simplified) */}
+          <rect x="400" y="55" width="280" height="42" rx="8" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5" />
+          <text x="540" y="73" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#1E3A8A" fontWeight="600">1{'\u201325'} total spaces {'\u2192'} 1 accessible</text>
+          <text x="540" y="88" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A">minimum required</text>
+
+          <rect x="400" y="107" width="280" height="32" rx="8" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5" />
+          <text x="540" y="128" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#1E3A8A" fontWeight="600">26{'\u201350'} spaces {'\u2192'} 2 accessible</text>
+
+          <rect x="400" y="149" width="280" height="32" rx="8" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5" />
+          <text x="540" y="170" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#1E3A8A" fontWeight="600">51{'\u201375'} spaces {'\u2192'} 3 accessible</text>
+
+          <rect x="400" y="191" width="280" height="32" rx="8" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5" />
+          <text x="540" y="212" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#1E3A8A" fontWeight="600">76{'\u2013100'} spaces {'\u2192'} 4 accessible</text>
+
+          {/* Van ratio */}
+          <rect x="400" y="240" width="280" height="42" rx="8" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" />
+          <text x="540" y="258" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#7C2D12" fontWeight="600">1 in every 6 must be van-accessible</text>
+          <text x="540" y="274" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12">or fraction of 6</text>
+
+          <Dots callouts={SIGN_CALLOUTS} active={signActive} toggle={toggleSign} />
+          <text x="20" y="310" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+        </svg>
+      </div>
+
+      <div aria-live="polite" className="sr-only">{signCallout ? `Showing: ${signCallout.label}` : ''}</div>
+      <CalloutPanel callout={signCallout} onClose={() => setSignActive(null)} panelRef={signRef} />
+
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
+        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Signs & Scoping</p>
+        <KeyFact color="#7C3AED" number={d('60', '1525')}>Minimum sign height (bottom of sign to ground)</KeyFact>
+        <KeyFact color="#2563EB" number="1 in 6">At least 1 van-accessible space for every 6 accessible spaces</KeyFact>
+        <KeyFact color="#C2410C" number="98{'\u2033'}">Minimum vertical clearance for van routes (8{'\u2019'}2{'\u2033'})</KeyFact>
+      </div>
+
 
       <style>{`
-        @keyframes parkFadeIn {
-          from { opacity: 0; transform: translateY(-8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        g[role="button"]:focus .park-focus-ring {
-          stroke: var(--accent); stroke-width: 2.5;
-        }
-        @media (max-width: 768px) {
-          .guide-two-col { flex-direction: column !important; gap: 16px !important; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .ada-diagram-wrap * {
-            animation: none !important;
-            transition: none !important;
-          }
-        }
+        @keyframes parkFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        g[role="button"]:focus .park-focus-ring { stroke: var(--accent); stroke-width: 2.5; }
+        @media (max-width:768px) { .guide-two-col { flex-direction:column !important; gap:16px !important; } }
+        @media (prefers-reduced-motion: reduce) { .ada-diagram-wrap * { animation: none !important; transition: none !important; } }
       `}</style>
     </div>
   );

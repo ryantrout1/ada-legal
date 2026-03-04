@@ -1,134 +1,157 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const LZ_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#503-passenger-loading-zones';
+
 const CALLOUTS = [
-  { id: 1, label: 'Pull-Up Space', section: '§503.2', color: 'var(--section-label)', textColor: '#8B2E08', x: 100, y: 42, plain: 'The vehicle pull-up space must be 96 inches (8 feet) wide minimum and 20 feet long minimum. This width accommodates full-size vehicles including vans with side-mounted wheelchair lifts. The space must be level and firm with no grade changes that would impede lift deployment.', legal: '"Passenger loading zones shall provide a vehicular pull-up space 96 inches wide minimum and 20 feet long minimum."', citation: '§503.2' },
-  { id: 2, label: 'Access Aisle', section: '§503.3', color: '#15803D', textColor: '#14532D', x: 300, y: 42, plain: 'An access aisle 60 inches (5 feet) wide minimum and 20 feet long minimum must run alongside the pull-up space. The aisle must be at the same level as the vehicle floor — no curb between the aisle and the pull-up space. The aisle must connect directly to an accessible route leading to the building entrance.', legal: '"Access aisles serving passenger loading zones shall be 60 inches wide minimum and 20 feet long minimum, at the same level as the vehicle pull-up space."', citation: '§503.3' },
-  { id: 3, label: 'Vertical Clearance', section: '§503.4', color: '#2563EB', textColor: '#1E3A8A', x: 500, y: 42, plain: 'A minimum vertical clearance of 114 inches (9 feet 6 inches) must be maintained at the pull-up space and along the entire vehicle route to and from the loading zone. This height accommodates raised-roof vans and vehicles with roof-mounted wheelchair lifts. Covered entrances, porte-cochères, and parking garage entries must all meet this clearance.', legal: '"Vehicle pull-up spaces, access aisles, and vehicular routes serving them shall provide a vertical clearance of 114 inches minimum."', citation: '§503.4' },
-  { id: 4, label: 'Floor Surface', section: '§503.4', color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 260, plain: 'The access aisle and pull-up space must have firm, stable, slip-resistant surfaces. Maximum slope is 1:48 in any direction. No level changes are permitted between the aisle and pull-up space — the surface must be flush. This is critical for wheelchair ramp deployment from the vehicle.', legal: 'Surface per §302: "firm, stable, and slip-resistant." Slope: "not steeper than 1:48." No level changes between aisle and pull-up space.', citation: '§302' },
-  { id: 5, label: 'Marking', section: 'Advisory §503', color: '#92400E', textColor: '#78350F', x: 300, y: 260, plain: 'While not a strict requirement, the advisory recommends the access aisle be clearly marked with paint, signage, or both to prevent other vehicles from parking in it. Diagonal striping (typically blue or white) is the most common method. "No Parking" or "Access Aisle" signage is also recommended.', legal: 'Advisory §503: Access aisle should be marked to discourage parking. No specific marking method required, but diagonal striping and signage recommended.', citation: '§503' },
-  { id: 6, label: 'Scoping', section: '§209', color: '#BE185D', textColor: '#9D174D', x: 500, y: 260, plain: 'At least one accessible passenger loading zone must be provided wherever passenger loading zones exist. Medical care facilities must have accessible loading at entrances that serve patients. Valet parking services must have an accessible loading zone. Mechanical access parking garages must have accessible loading.', legal: '§209.2 "At least one passenger loading zone complying with §503 shall be provided." Medical: §209.3. Valet: §209.4.', citation: '§209' },
-  { id: 7, label: 'Mechanical Access', section: '§503.5', color: '#0E7490', textColor: '#0C4A6E', x: 700, y: 150, plain: 'When a wheelchair lift or ramp deploys from the vehicle, it must not reduce the access aisle clear width below 60 inches. The deployed lift platform or ramp must land entirely within the pull-up space and aisle without encroaching on adjacent traffic lanes or walkways.', legal: '"Vehicle ramps or lifts shall not reduce the clear width of the access aisle below 60 inches when deployed."', citation: '§503.5' }
+  {
+    id: 1, label: 'Dimensions & Layout', section: '\u00a7503.2',
+    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    plain: 'The vehicle pull-up space must be 96 inches (8 feet) wide minimum and 20 feet long minimum. Next to it, an access aisle must be 60 inches (5 feet) wide minimum and 20 feet long minimum at the same level as the vehicle space \u2014 no curbs between them. The aisle must connect directly to an accessible route into the building. Vertical clearance of 114 inches (9\u20196\u2033) is required for the pull-up space and the entire vehicle route.',
+    legal: '\u201CVehicular pull-up space 96 inches wide minimum and 20 feet long minimum.\u201D Access aisle: \u201C60 inches wide minimum, 20 feet long minimum, at the same level as the vehicle pull-up space.\u201D Clearance: \u201C114 inches minimum.\u201D',
+    citation: '\u00a7503.2, \u00a7503.3, \u00a7503.4'
+  },
+  {
+    id: 2, label: 'Surface & Common Problems', section: '\u00a7503',
+    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    plain: 'The access aisle and pull-up space must be firm, stable, and slip-resistant with a maximum slope of 1:48. The surface must be flush between the aisle and pull-up space. When a wheelchair ramp deploys from a van, it must not reduce the aisle width below 60 inches. At least one loading zone is required wherever they exist, plus at medical facilities and valet operations. The aisle should be marked to prevent others from blocking it.',
+    legal: 'Surface per \u00a7302: \u201Cfirm, stable, and slip-resistant.\u201D Slope: \u201Cnot steeper than 1:48.\u201D \u00a7209.2: \u201CAt least one passenger loading zone complying with \u00a7503 shall be provided.\u201D',
+    citation: '\u00a7503, \u00a7209'
+  }
 ];
 
-function makeLink(t) { return (<a href={LZ_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
-function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
+function makeLink(t) { return (<a href={LZ_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${t} on ADA.gov`}>{t}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>{'\u2197'}</span></a>); }
+function parseCite(t) { return t.split(/(\u00a7\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^\u00a7\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
+
+function CalloutPanel({ callout, onClose, panelRef }) {
+  if (!callout) return null;
+  return (
+    <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'lzFade 0.25s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+        </div>
+        <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
+      </div>
+      <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
+        <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
+        <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard {'\u2014'} {parseCite(callout.citation)}</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(callout.legal)}</p>
+        </div></aside>
+      </div>
+    </div>
+  );
+}
+
+function KeyFact({ color, number, children }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
+      <span style={{ background: color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
+    </div>
+  );
+}
+
+function Dots({ callouts, active, toggle }) {
+  return callouts.map(c => (
+    <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
+      {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
+      <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
+      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
+      <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="lz-focus-ring" />
+    </g>
+  ));
+}
 
 export default function LoadingZoneDiagram() {
   const [active, setActive] = useState(null);
   const [metric, setMetric] = useState(false);
   const panelRef = useRef(null);
-  const toggle = useCallback(id => setActive(p => p === id ? null : id), []);
+  const toggle = useCallback((id) => setActive(prev => prev === id ? null : id), []);
   useEffect(() => { if (active && panelRef.current) panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [active]);
-  useEffect(() => { const h = e => { if (e.key === 'Escape') setActive(null); }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
-  const d = (imp, met) => metric ? `${met} mm` : `${imp}"`;
+  useEffect(() => { const h = (e) => { if (e.key === 'Escape') setActive(null); }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
+  const d = (inches, mm) => metric ? `${mm} mm` : `${inches}\u2033`;
+  const ft = (feet, m) => metric ? `${m} m` : `${feet} ft`;
   const ac = CALLOUTS.find(c => c.id === active);
 
   return (
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>§503 Passenger Loading Zones</h3>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>The Drop-Off Area</h3>
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
           <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
-          {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: 6, border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: 44 }}>{u}</button>); })}
+          {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}
         </div>
       </div>
-      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
-        <svg viewBox="0 0 900 420" role="img" aria-labelledby="lz-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="lz-title">ADA §503 Passenger Loading Zone — Plan View</title>
-          <rect width="900" height="420" fill="var(--page-bg-subtle)" />
-          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">PLAN VIEW — PASSENGER LOADING ZONE</text>
 
-          {/* Sidewalk/building */}
-          <rect x="60" y="50" width="100" height="330" rx="4" fill="#E7E5E4" opacity="0.15" stroke="#94A3B8" strokeWidth="1" />
-          <text x="110" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)" fontWeight="500" transform="rotate(-90 110 220)">SIDEWALK → BUILDING</text>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
+        <svg viewBox="0 0 720 360" role="img" aria-labelledby="lz-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+          <title id="lz-title">Passenger Loading Zone Layout</title>
+          <rect width="720" height="360" fill="var(--page-bg-subtle)" />
+
+          <text x="360" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Top-down view of a hotel or hospital drop-off</text>
+
+          {/* Building edge */}
+          <rect x="40" y="55" width="640" height="30" rx="2" fill="#94A3B8" opacity="0.1" stroke="#94A3B8" strokeWidth="1.5" />
+          <text x="360" y="74" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#64748B" fontWeight="600">building entrance</text>
 
           {/* Access aisle */}
-          <rect x="170" y="50" width="120" height="330" rx="2" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="2" />
-          {/* Diagonal striping */}
-          {[0,1,2,3,4,5,6,7,8,9,10,11].map(i => (
-            <line key={`s${i}`} x1="170" y1={50 + i * 30} x2="290" y2={80 + i * 30} stroke="#15803D" strokeWidth="1" opacity="0.15" />
-          ))}
-          <text x="230" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" fontWeight="700" transform="rotate(-90 230 200)">ACCESS AISLE</text>
+          <rect x="40" y="90" width="540" height="70" rx="2" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="1.5" strokeDasharray="6 3" />
+          <text x="310" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#15803D" fontWeight="600">access aisle</text>
+          <text x="310" y="136" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D">level, connects to entrance</text>
 
-          {/* Pull-up space */}
-          <rect x="300" y="50" width="200" height="330" rx="2" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="2" />
-          <text x="400" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#8B2E08" fontWeight="700" transform="rotate(-90 400 200)">VEHICLE PULL-UP SPACE</text>
+          {/* Access aisle width dimension */}
+          <line x1="600" y1="90" x2="600" y2="160" stroke="#15803D" strokeWidth="1.2" />
+          <line x1="594" y1="90" x2="606" y2="90" stroke="#15803D" strokeWidth="1.2" />
+          <line x1="594" y1="160" x2="606" y2="160" stroke="#15803D" strokeWidth="1.2" />
+          <rect x="610" y="113" width="66" height="20" rx="6" fill="#15803D" />
+          <text x="643" y="127" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('60', '1525')} min</text>
 
-          {/* Vehicle silhouette */}
-          <rect x="320" y="100" width="160" height="220" rx="20" fill="#94A3B8" opacity="0.08" stroke="#94A3B8" strokeWidth="1.5" />
-          <rect x="335" y="115" width="130" height="60" rx="8" fill="#94A3B8" opacity="0.05" />
-          <rect x="335" y="240" width="130" height="50" rx="8" fill="#94A3B8" opacity="0.05" />
-          <text x="400" y="200" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">VEHICLE</text>
+          {/* Vehicle pull-up space */}
+          <rect x="40" y="165" width="540" height="100" rx="2" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="2" />
+          <text x="310" y="210" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fill="#C2410C" fontWeight="600">vehicle pull-up space</text>
+          <text x="310" y="228" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C">where the van or car stops</text>
 
-          {/* Road */}
-          <rect x="510" y="50" width="350" height="330" rx="2" fill="#94A3B8" opacity="0.04" />
-          <text x="685" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="500">ROADWAY</text>
+          {/* Vehicle pull-up width */}
+          <line x1="600" y1="165" x2="600" y2="265" stroke="#C2410C" strokeWidth="1.2" />
+          <line x1="594" y1="165" x2="606" y2="165" stroke="#C2410C" strokeWidth="1.2" />
+          <line x1="594" y1="265" x2="606" y2="265" stroke="#C2410C" strokeWidth="1.2" />
+          <rect x="610" y="203" width="66" height="20" rx="6" fill="#C2410C" />
+          <text x="643" y="217" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('96', '2440')} min</text>
 
-          {/* Dims: access aisle 60" */}
-          <line x1="170" y1="395" x2="290" y2="395" stroke="#15803D" strokeWidth="1" />
-          <line x1="170" y1="389" x2="170" y2="401" stroke="#15803D" strokeWidth="1" />
-          <line x1="290" y1="389" x2="290" y2="401" stroke="#15803D" strokeWidth="1" />
-          <rect x="198" y="398" width="52" height="12" rx="3" fill="#15803D" />
-          <text x="224" y="407" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('60', '1525')}</text>
-
-          {/* Pull-up 96" */}
-          <line x1="300" y1="395" x2="500" y2="395" stroke="#C2410C" strokeWidth="1" />
-          <line x1="300" y1="389" x2="300" y2="401" stroke="#C2410C" strokeWidth="1" />
-          <line x1="500" y1="389" x2="500" y2="401" stroke="#C2410C" strokeWidth="1" />
-          <rect x="372" y="398" width="52" height="12" rx="3" fill="#C2410C" />
-          <text x="398" y="407" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('96', '2440')}</text>
-
-          {/* 20' length */}
-          <line x1="510" y1="50" x2="510" y2="380" stroke="#94A3B8" strokeWidth="1" />
-          <line x1="504" y1="50" x2="516" y2="50" stroke="#94A3B8" strokeWidth="1" />
-          <line x1="504" y1="380" x2="516" y2="380" stroke="#94A3B8" strokeWidth="1" />
-          <rect x="515" y="208" width="44" height="12" rx="3" fill="#94A3B8" />
-          <text x="537" y="217" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">20 ft min</text>
+          {/* 20 ft length */}
+          <line x1="40" y1="285" x2="580" y2="285" stroke="#7C3AED" strokeWidth="1.5" />
+          <line x1="40" y1="279" x2="40" y2="291" stroke="#7C3AED" strokeWidth="1.5" />
+          <line x1="580" y1="279" x2="580" y2="291" stroke="#7C3AED" strokeWidth="1.5" />
+          <rect x="270" y="290" width="80" height="20" rx="6" fill="#7C3AED" />
+          <text x="310" y="304" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{ft('20', '6.1')} min long</text>
 
           {/* Vertical clearance note */}
-          <rect x="580" y="55" width="130" height="40" rx="6" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1" />
-          <text x="645" y="72" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600">Vertical: {d('114', '2895')} min</text>
-          <text x="645" y="86" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#1E3A8A">(9 ft 6 in overhead)</text>
+          <rect x="40" y="320" width="260" height="24" rx="8" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1.5" />
+          <text x="170" y="336" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#78350F" fontWeight="600">{d('114', '2895')} vertical clearance (9{'\u2019'}6{'\u2033'})</text>
 
-          {/* Accessible route arrow */}
-          <line x1="120" y1="140" x2="165" y2="140" stroke="#B45309" strokeWidth="1.5" markerEnd="url(#lzArr)" />
-          <text x="142" y="132" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F" fontWeight="600">→ Route</text>
-          <defs><marker id="lzArr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#B45309" /></marker></defs>
-
-          {CALLOUTS.map(c => (
-            <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
-              {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
-            </g>
-          ))}
-          <text x="30" y="412" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <Dots callouts={CALLOUTS} active={active} toggle={toggle} />
+          <text x="400" y="348" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
-      <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>
-      {ac && (
-        <div ref={panelRef} style={{ marginTop: 12, background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', animation: 'lzFade .25s ease-out' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: '50%', background: ac.color, color: 'var(--page-bg)', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{ac.id}</span>
-              <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{ac.label}</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: ac.color, background: `${ac.color}15`, padding: '2px 8px', borderRadius: 4 }}>{ac.section}</span>
-            </div>
-            <button onClick={() => setActive(null)} aria-label="Close" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: 44 }}>Close <span aria-hidden="true">✕</span></button>
-          </div>
-          <div className="guide-two-col" style={{ padding: 20, gap: 24, margin: 0 }}>
-            <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{ac.plain}</p></div>
-            <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard — {parseCite(ac.citation)}</p>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(ac.legal)}</p>
-            </div></aside>
-          </div>
-        </div>
-      )}
-      <style>{`@keyframes lzFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}        @media (prefers-reduced-motion: reduce) {
-          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
-        }
+
+      <div aria-live="polite" className="sr-only">{ac ? `Showing: ${ac.label}` : ''}</div>
+      <CalloutPanel callout={ac} onClose={() => setActive(null)} panelRef={panelRef} />
+
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
+        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Loading Zones</p>
+        <KeyFact color="#C2410C" number={`${d('96', '2440')}\u00d7${ft('20', '6.1')}`}>Pull-up space minimum (8 ft wide, 20 ft long)</KeyFact>
+        <KeyFact color="#15803D" number={d('60', '1525')}>Access aisle width (must be level with pull-up space)</KeyFact>
+        <KeyFact color="#B45309" number={d('114', '2895')}>Vertical clearance for wheelchair vans (9{'\u2019'}6{'\u2033'})</KeyFact>
+      </div>
+
+      <style>{`
+        @keyframes lzFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        g[role="button"]:focus .lz-focus-ring { stroke: var(--accent); stroke-width: 2.5; }
+        @media (max-width:768px) { .guide-two-col { flex-direction:column !important; gap:16px !important; } }
+        @media (prefers-reduced-motion: reduce) { .ada-diagram-wrap * { animation: none !important; transition: none !important; } }
       `}</style>
     </div>
   );

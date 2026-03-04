@@ -1,187 +1,196 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const STAIR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#504-stairways';
-const CALLOUTS = [
-  { id: 1, label: 'Treads', section: '§504.2', color: 'var(--section-label)', textColor: '#8B2E08', x: 80, y: 42,
-    plain: 'All treads within a single flight of stairs must be uniform depth — no variation is permitted. The standard minimum tread depth is 11 inches, measured from the leading edge of the nosing to the riser behind. Uniform tread depth is critical because people develop a rhythm when ascending or descending stairs; a sudden change in depth causes trips and falls.',
-    legal: '"All steps on a flight of stairs shall have uniform riser heights and uniform tread depths." Treads: "11 inches deep minimum."',
-    citation: '§504.2' },
-  { id: 2, label: 'Risers', section: '§504.3', color: '#15803D', textColor: '#14532D', x: 280, y: 42,
-    plain: 'All risers in a flight must be uniform in height, between 4 and 7 inches. Open risers (where you can see through the stair) are NOT permitted on accessible routes. Open risers catch cane tips and allow feet to slip through, creating fall hazards for people with mobility or vision impairments.',
-    legal: '"Risers shall be 4 inches high minimum and 7 inches high maximum." §504.4 "Open risers are not permitted."',
-    citation: '§504.3' },
-  { id: 3, label: 'Nosings', section: '§504.5', color: '#2563EB', textColor: '#1E3A8A', x: 480, y: 42,
-    plain: 'The leading edge of each tread (the nosing) must be curved or beveled — never square or abruptly projecting. The nosing can project a maximum of 1.5 inches beyond the riser face below. The underside of the nosing must form an angle of at least 60 degrees from horizontal. The radius of curvature at the leading edge must be ½ inch maximum. These profiles prevent tripping and snagging.',
-    legal: '"The radius of curvature at the leading edge of the tread shall be 1/2 inch maximum." Nosing projection: "1 1/2 inches maximum." Underside angle: "60 degrees minimum from horizontal."',
-    citation: '§504.5' },
-  { id: 4, label: 'Handrails', section: '§504.6', color: '#7C3AED', textColor: '#5B21B6', x: 680, y: 42,
-    plain: 'Handrails complying with §505 are required on both sides of all stairs. The top of the gripping surface must be 34 to 38 inches above stair nosings, measured vertically from the line connecting the nosing edges. Handrails must be continuous for the full length of each stair flight. Breaks are only permitted at landing turns.',
-    legal: '"Stairs shall have handrails complying with §505." Height: "34 inches minimum and 38 inches maximum above stair nosings."',
-    citation: '§504.6, §505' },
-  { id: 5, label: 'Top Extension', section: '§505.10.2', color: '#92400E', textColor: '#78350F', x: 280, y: 280,
-    plain: 'At the top of the stairs, the handrail must extend horizontally at least 12 inches beyond the top riser nosing. This extension provides a stable grip point as a person transitions from the level landing onto the descending stairs. The extension must return to the wall, guard, or post — it cannot simply end in open space where someone could catch clothing on it.',
-    legal: '"At the top of a stair flight, handrails shall extend horizontally above the landing for 12 inches minimum beginning directly above the first riser nosing."',
-    citation: '§505.10.2' },
-  { id: 6, label: 'Bottom Extension', section: '§505.10.3', color: '#BE185D', textColor: '#9D174D', x: 480, y: 280,
-    plain: 'At the bottom, the handrail extends at the slope of the stair flight for a horizontal distance equal to one tread depth beyond the last riser nosing, then continues horizontally for 12 inches. This provides support as the person completes the last step and transitions to level ground. The total extension ensures a smooth grip from stair to landing.',
-    legal: '"At the bottom of a stair flight, handrails shall extend at the slope of the stair flight for a horizontal distance at least equal to one tread depth beyond the last riser nosing."',
-    citation: '§505.10.3' },
-  { id: 7, label: 'Wet Conditions', section: '§504.7', color: '#0E7490', textColor: '#0C4A6E', x: 680, y: 280,
-    plain: 'Outdoor stairs and any stairs that may be subject to wet conditions (near pools, in parking garages, at building entries) must have a visual contrast strip at the leading edge of each tread. The strip must extend the full width of the tread. It provides a visual warning of each step edge for people with low vision, especially when water makes surfaces reflective.',
-    legal: '"Stairways that are not in an enclosed stairwell shall have visual contrast on tread nosings." §504.7 Contrast "shall be a stripe 1 inch wide minimum and 2 inches wide maximum, placed on the nosing tread at the leading edge."',
-    citation: '§504.7' }
+
+const STEP_CALLOUTS = [
+  {
+    id: 1, label: 'Treads, Risers & Nosings', section: '\u00a7504.2',
+    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    plain: 'All treads must be at least 11 inches deep, and all risers between 4 and 7 inches high. Every step in a flight must be uniform \u2014 no variation in height or depth. Open risers are NOT permitted because feet and cane tips can slip through. The leading edge (nosing) must be curved or beveled, never sharp. Nosings can project a maximum of 1.5 inches and must have an underside angle of at least 60\u00b0.',
+    legal: '\u201CTreads shall be 11 inches deep minimum.\u201D \u201CRisers shall be 4 inches high minimum and 7 inches high maximum.\u201D \u201COpen risers are not permitted.\u201D \u201CThe radius of curvature at the leading edge shall be \u00bd inch maximum.\u201D',
+    citation: '\u00a7504.2, \u00a7504.3, \u00a7504.4, \u00a7504.5'
+  },
+  {
+    id: 2, label: 'Handrails & Wet Conditions', section: '\u00a7504.6',
+    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    plain: 'Handrails must be on both sides, 34\u201338 inches above stair nosings, continuous for the full flight length. At the top, rails extend 12 inches horizontally beyond the top riser. At the bottom, rails extend at the stair slope for one tread depth, then 12 inches horizontally. Outdoor stairs or any stairs that may get wet must have contrast strips on each tread edge for people with low vision.',
+    legal: '\u201CStairs shall have handrails complying with \u00a7505.\u201D Height: \u201C34 inches minimum and 38 inches maximum above stair nosings.\u201D Top extension: \u201C12 inches horizontally.\u201D \u00a7504.7: Wet conditions require visual contrast at leading edges.',
+    citation: '\u00a7504.6, \u00a7505, \u00a7504.7'
+  }
 ];
 
-function makeLink(t) { return (<a href={STAIR_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
-function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
+function makeLink(t) { return (<a href={STAIR_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${t} on ADA.gov`}>{t}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>{'\u2197'}</span></a>); }
+function parseCite(t) { return t.split(/(\u00a7\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^\u00a7\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
+
+function CalloutPanel({ callout, onClose, panelRef }) {
+  if (!callout) return null;
+  return (
+    <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'stairFade 0.25s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+        </div>
+        <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
+      </div>
+      <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
+        <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
+        <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard {'\u2014'} {parseCite(callout.citation)}</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(callout.legal)}</p>
+        </div></aside>
+      </div>
+    </div>
+  );
+}
+
+function KeyFact({ color, number, children }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
+      <span style={{ background: color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
+    </div>
+  );
+}
+
+function Dots({ callouts, active, toggle }) {
+  return callouts.map(c => (
+    <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
+      {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
+      <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
+      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
+      <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="stair-focus-ring" />
+    </g>
+  ));
+}
 
 export default function StairwayDiagram() {
   const [active, setActive] = useState(null);
   const [metric, setMetric] = useState(false);
   const panelRef = useRef(null);
-  const toggle = useCallback(id => setActive(p => p === id ? null : id), []);
+  const toggle = useCallback((id) => setActive(prev => prev === id ? null : id), []);
   useEffect(() => { if (active && panelRef.current) panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [active]);
-  useEffect(() => { const h = e => { if (e.key === 'Escape') setActive(null); }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
-  const d = (imp, met) => metric ? `${met} mm` : `${imp}"`;
+  useEffect(() => { const h = (e) => { if (e.key === 'Escape') setActive(null); }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
+  const d = (inches, mm) => metric ? `${mm} mm` : `${inches}\u2033`;
   const ac = CALLOUTS.find(c => c.id === active);
-
-  const tW = 110, rH = 60;
-  const steps = [0,1,2,3,4];
-  const baseX = 120, baseY = 400;
 
   return (
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>§504 Stairways</h3>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Steps & Safety</h3>
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
           <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
-          {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: 6, border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: 44 }}>{u}</button>); })}
+          {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}
         </div>
       </div>
-      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
-        <svg viewBox="0 0 900 480" role="img" aria-labelledby="stair-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="stair-title">ADA §504 Stairways — Side Elevation with Nosing Detail</title>
-          <rect width="900" height="480" fill="var(--page-bg-subtle)" />
-          <text x="350" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">SIDE ELEVATION</text>
 
-          {/* Stair steps */}
-          {steps.map(i => {
-            const sx = baseX + i * tW, sy = baseY - i * rH;
-            return (
-              <React.Fragment key={i}>
-                {/* Tread */}
-                <rect x={sx} y={sy - rH} width={tW} height={rH} fill="white" stroke="#94A3B8" strokeWidth="2" />
-                {/* Nosing highlight */}
-                <line x1={sx} y1={sy - rH} x2={sx + tW} y2={sy - rH} stroke="#C2410C" strokeWidth="3" />
-                {/* Riser */}
-                <line x1={sx} y1={sy} x2={sx} y2={sy - rH} stroke="#94A3B8" strokeWidth="2" />
-              </React.Fragment>
-            );
-          })}
-          {/* Top landing */}
-          <rect x={baseX + 5 * tW} y={baseY - 5 * rH} width={160} height={rH} fill="#E7E5E4" opacity="0.2" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x={baseX + 5 * tW + 80} y={baseY - 5 * rH + 35} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">TOP LANDING</text>
-          {/* Bottom landing */}
-          <rect x={40} y={baseY} width={80} height={rH} fill="#E7E5E4" opacity="0.2" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x={80} y={baseY + 35} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">BOTTOM</text>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
+        <svg viewBox="0 0 720 380" role="img" aria-labelledby="stair-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+          <title id="stair-title">Stairway Requirements {'\u2014'} Treads, Risers, Nosings, Handrails</title>
+          <rect width="720" height="380" fill="var(--page-bg-subtle)" />
 
-          {/* Handrail */}
-          {/* Top extension (12" horizontal) */}
-          <line x1={baseX + 5 * tW + 80} y1={baseY - 5 * rH - 50} x2={baseX + 5 * tW} y2={baseY - 5 * rH - 50} stroke="#7C3AED" strokeWidth="4" strokeLinecap="round" />
-          {/* Sloped handrail along stairs */}
-          <line x1={baseX + 5 * tW} y1={baseY - 5 * rH - 50} x2={baseX} y2={baseY - 50} stroke="#7C3AED" strokeWidth="4" strokeLinecap="round" />
-          {/* Bottom extension (one tread depth sloped + 12" horizontal) */}
-          <line x1={baseX} y1={baseY - 50} x2={baseX - tW} y2={baseY + rH - 50} stroke="#7C3AED" strokeWidth="4" strokeLinecap="round" opacity="0.6" />
-          <line x1={baseX - tW} y1={baseY + rH - 50} x2={baseX - tW - 60} y2={baseY + rH - 50} stroke="#7C3AED" strokeWidth="4" strokeLinecap="round" opacity="0.6" />
+          <text x="190" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">What each step looks like</text>
+          <text x="560" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Handrail extensions</text>
 
-          {/* 34-38" height label */}
-          <line x1={baseX + 2 * tW + 55} y1={baseY - 2 * rH} x2={baseX + 2 * tW + 55} y2={baseY - 2 * rH - 50} stroke="#7C3AED" strokeWidth="1" />
-          <rect x={baseX + 2 * tW + 60} y={baseY - 2 * rH - 38} width="65" height="13" rx="3" fill="#7C3AED" />
-          <text x={baseX + 2 * tW + 92} y={baseY - 2 * rH - 29} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('34–38', '865–965')}</text>
+          {/* LEFT: Step cross-section */}
+          {/* Stairs (3 steps) */}
+          <line x1="60" y1="310" x2="140" y2="310" stroke="#475569" strokeWidth="2.5" />
+          <line x1="140" y1="310" x2="140" y2="250" stroke="#475569" strokeWidth="2.5" />
+          <line x1="140" y1="250" x2="220" y2="250" stroke="#475569" strokeWidth="2.5" />
+          <line x1="220" y1="250" x2="220" y2="190" stroke="#475569" strokeWidth="2.5" />
+          <line x1="220" y1="190" x2="300" y2="190" stroke="#475569" strokeWidth="2.5" />
+          <line x1="300" y1="190" x2="300" y2="130" stroke="#475569" strokeWidth="2.5" />
+          <line x1="300" y1="130" x2="360" y2="130" stroke="#475569" strokeWidth="2.5" />
 
-          {/* Tread depth dim */}
-          <line x1={baseX + tW} y1={baseY - rH + 12} x2={baseX + 2 * tW} y2={baseY - rH + 12} stroke="#C2410C" strokeWidth="1" />
-          <line x1={baseX + tW} y1={baseY - rH + 6} x2={baseX + tW} y2={baseY - rH + 18} stroke="#C2410C" strokeWidth="1" />
-          <line x1={baseX + 2 * tW} y1={baseY - rH + 6} x2={baseX + 2 * tW} y2={baseY - rH + 18} stroke="#C2410C" strokeWidth="1" />
-          <rect x={baseX + tW + 20} y={baseY - rH + 15} width="58" height="12" rx="3" fill="#C2410C" />
-          <text x={baseX + tW + 49} y={baseY - rH + 24} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('11', '280')} min</text>
+          {/* Tread depth dimension (bottom step) */}
+          <line x1="60" y1="320" x2="140" y2="320" stroke="#C2410C" strokeWidth="1.2" />
+          <line x1="60" y1="315" x2="60" y2="325" stroke="#C2410C" strokeWidth="1.2" />
+          <line x1="140" y1="315" x2="140" y2="325" stroke="#C2410C" strokeWidth="1.2" />
+          <rect x="65" y="328" width="66" height="18" rx="5" fill="#C2410C" />
+          <text x="98" y="341" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('11', '280')} min</text>
+          <text x="98" y="360" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="500">tread depth</text>
 
-          {/* Riser height dim */}
-          <line x1={baseX + 3 * tW - 10} y1={baseY - 2 * rH} x2={baseX + 3 * tW - 10} y2={baseY - 3 * rH} stroke="#15803D" strokeWidth="1" />
-          <line x1={baseX + 3 * tW - 16} y1={baseY - 2 * rH} x2={baseX + 3 * tW - 4} y2={baseY - 2 * rH} stroke="#15803D" strokeWidth="1" />
-          <line x1={baseX + 3 * tW - 16} y1={baseY - 3 * rH} x2={baseX + 3 * tW - 4} y2={baseY - 3 * rH} stroke="#15803D" strokeWidth="1" />
-          <rect x={baseX + 3 * tW - 60} y={baseY - 3 * rH + 22} width="44" height="12" rx="3" fill="#15803D" />
-          <text x={baseX + 3 * tW - 38} y={baseY - 3 * rH + 31} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('4–7', '100–180')}</text>
+          {/* Riser height dimension */}
+          <line x1="150" y1="250" x2="150" y2="310" stroke="#15803D" strokeWidth="1.2" />
+          <line x1="145" y1="250" x2="155" y2="250" stroke="#15803D" strokeWidth="1.2" />
+          <line x1="145" y1="310" x2="155" y2="310" stroke="#15803D" strokeWidth="1.2" />
+          <rect x="158" y="268" width="58" height="18" rx="5" fill="#15803D" />
+          <text x="187" y="281" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('4', '100')}{'\u2013'}{d('7', '178')}</text>
+          <text x="187" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="500">riser height</text>
 
-          {/* Top ext 12" label */}
-          <line x1={baseX + 5 * tW} y1={baseY - 5 * rH - 40} x2={baseX + 5 * tW + 80} y2={baseY - 5 * rH - 40} stroke="#B45309" strokeWidth="1" />
-          <rect x={baseX + 5 * tW + 10} y={baseY - 5 * rH - 38} width="56" height="12" rx="3" fill="#B45309" />
-          <text x={baseX + 5 * tW + 38} y={baseY - 5 * rH - 29} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('12', '305')} min</text>
+          {/* Nosing detail callout */}
+          <circle cx="140" cy="250" r="12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="3 2" />
+          <line x1="152" y1="242" x2="200" y2="200" stroke="#2563EB" strokeWidth="1" />
+          <text x="205" y="196" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">rounded nosing</text>
+          <text x="205" y="210" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A">{'\u2264'} 1{'\u00bd'}{'\u2033'} projection</text>
 
-          {/* Bottom ext label */}
-          <rect x={baseX - tW - 40} y={baseY + rH - 40} width="70" height="12" rx="3" fill="#DB2777" />
-          <text x={baseX - tW - 5} y={baseY + rH - 31} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fontWeight="700" fill="white">slope + {d('12', '305')}</text>
+          {/* NO open risers */}
+          <rect x="60" y="80" width="160" height="40" rx="8" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="1.5" />
+          <text x="140" y="98" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#7C2D12" fontWeight="600">{'\u2718'} No open risers</text>
+          <text x="140" y="114" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12">canes and feet get caught</text>
 
-          {/* Nosing inset */}
-          <text x="760" y="50" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="var(--body-secondary)">NOSING PROFILES</text>
-          {/* (A) Angled */}
-          <rect x="700" y="60" width="120" height="70" rx="4" fill="white" stroke="#2563EB" strokeWidth="1" />
-          <text x="760" y="76" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600">(A) Angled</text>
-          <line x1="720" y1="90" x2="800" y2="90" stroke="#94A3B8" strokeWidth="2" />
-          <line x1="720" y1="90" x2="720" y2="120" stroke="#94A3B8" strokeWidth="2" />
-          <line x1="720" y1="90" x2="710" y2="118" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="3 2" />
-          <text x="760" y="118" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A">60° min</text>
 
-          {/* (B) Curved */}
-          <rect x="700" y="140" width="120" height="60" rx="4" fill="white" stroke="#2563EB" strokeWidth="1" />
-          <text x="760" y="156" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600">(B) Rounded</text>
-          <path d="M 720 170 Q 720 185 735 185 L 800 185" fill="none" stroke="#94A3B8" strokeWidth="2" />
-          <text x="760" y="196" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A">½" max radius</text>
+          {/* DIVIDER */}
+          <line x1="380" y1="40" x2="380" y2="360" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
 
-          {/* (C) Flush */}
-          <rect x="700" y="210" width="120" height="50" rx="4" fill="white" stroke="#2563EB" strokeWidth="1" />
-          <text x="760" y="226" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600">(C) Flush / No Nosing</text>
-          <line x1="720" y1="240" x2="800" y2="240" stroke="#94A3B8" strokeWidth="2" />
-          <line x1="720" y1="240" x2="720" y2="255" stroke="#94A3B8" strokeWidth="2" />
 
-          {/* No open risers */}
-          <rect x="700" y="275" width="120" height="35" rx="4" fill="#EF4444" opacity="0.06" stroke="#EF4444" strokeWidth="1.5" />
-          <text x="760" y="296" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#EF4444" fontWeight="700">✕ NO OPEN RISERS</text>
+          {/* RIGHT: Handrail with extensions */}
+          {/* Stair profile (simplified) */}
+          <line x1="460" y1="300" x2="500" y2="300" stroke="#475569" strokeWidth="2" />
+          <line x1="500" y1="300" x2="500" y2="260" stroke="#475569" strokeWidth="2" />
+          <line x1="500" y1="260" x2="540" y2="260" stroke="#475569" strokeWidth="2" />
+          <line x1="540" y1="260" x2="540" y2="220" stroke="#475569" strokeWidth="2" />
+          <line x1="540" y1="220" x2="580" y2="220" stroke="#475569" strokeWidth="2" />
+          <line x1="580" y1="220" x2="580" y2="180" stroke="#475569" strokeWidth="2" />
+          <line x1="580" y1="180" x2="640" y2="180" stroke="#475569" strokeWidth="2" />
 
-          {/* Callouts */}
-          {CALLOUTS.map(c => (
-            <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
-              {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
-            </g>
-          ))}
-          <text x="30" y="470" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          {/* Handrail line */}
+          <line x1="488" y1="260" x2="568" y2="140" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
+
+          {/* Top 12" extension */}
+          <line x1="568" y1="140" x2="650" y2="140" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
+          <line x1="568" y1="150" x2="650" y2="150" stroke="#7C3AED" strokeWidth="1" />
+          <rect x="580" y="118" width="60" height="18" rx="5" fill="#7C3AED" />
+          <text x="610" y="131" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('12', '305')} ext.</text>
+          <text x="610" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6" fontWeight="500">top extension</text>
+
+          {/* Bottom extension (follows slope then horizontal) */}
+          <line x1="488" y1="260" x2="460" y2="290" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
+          <line x1="460" y1="290" x2="410" y2="290" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
+          <rect x="408" y="296" width="60" height="18" rx="5" fill="#7C3AED" />
+          <text x="438" y="309" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('12', '305')} ext.</text>
+          <text x="438" y="326" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6" fontWeight="500">bottom extension</text>
+
+          {/* Height dimension */}
+          <line x1="545" y1="175" x2="545" y2="220" stroke="#7C3AED" strokeWidth="1" strokeDasharray="3 2" />
+          <rect x="395" y="80" width="170" height="22" rx="6" fill="#7C3AED" opacity="0.08" stroke="#7C3AED" strokeWidth="1" />
+          <text x="480" y="95" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6" fontWeight="600">{d('34', '865')}{'\u2013'}{d('38', '965')} above nosings</text>
+
+          {/* Both sides note */}
+          <text x="540" y="348" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6" fontWeight="600">required on both sides, continuous</text>
+
+          <Dots callouts={STEP_CALLOUTS} active={active} toggle={toggle} />
+          <text x="20" y="370" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
-      <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>
-      {ac && (
-        <div ref={panelRef} style={{ marginTop: 12, background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', animation: 'stairFade .25s ease-out' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: '50%', background: ac.color, color: 'var(--page-bg)', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{ac.id}</span>
-              <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{ac.label}</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: ac.color, background: `${ac.color}15`, padding: '2px 8px', borderRadius: 4 }}>{ac.section}</span>
-            </div>
-            <button onClick={() => setActive(null)} aria-label="Close" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: 44 }}>Close <span aria-hidden="true">✕</span></button>
-          </div>
-          <div className="guide-two-col" style={{ padding: 20, gap: 24, margin: 0 }}>
-            <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{ac.plain}</p></div>
-            <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard — {parseCite(ac.citation)}</p>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(ac.legal)}</p>
-            </div></aside>
-          </div>
-        </div>
-      )}
-      <style>{`@keyframes stairFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}        @media (prefers-reduced-motion: reduce) {
-          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
-        }
+
+      <div aria-live="polite" className="sr-only">{ac ? `Showing: ${ac.label}` : ''}</div>
+      <CalloutPanel callout={ac} onClose={() => setActive(null)} panelRef={panelRef} />
+
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
+        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Stairways</p>
+        <KeyFact color="#C2410C" number={d('11', '280')}>Minimum tread depth</KeyFact>
+        <KeyFact color="#15803D" number={`${d('4', '100')}\u2013${d('7', '178')}`}>Riser height range (must be uniform within a flight)</KeyFact>
+        <KeyFact color="#7C3AED" number={d('12', '305')}>Handrail extension beyond top and bottom</KeyFact>
+        <KeyFact color="#C2410C" number="No open">Open risers are not permitted on accessible routes</KeyFact>
+      </div>
+
+      <style>{`
+        @keyframes stairFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        g[role="button"]:focus .stair-focus-ring { stroke: var(--accent); stroke-width: 2.5; }
+        @media (max-width:768px) { .guide-two-col { flex-direction:column !important; gap:16px !important; } }
+        @media (prefers-reduced-motion: reduce) { .ada-diagram-wrap * { animation: none !important; transition: none !important; } }
       `}</style>
     </div>
   );
