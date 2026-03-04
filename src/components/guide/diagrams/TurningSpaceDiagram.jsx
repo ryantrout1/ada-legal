@@ -90,7 +90,7 @@ export default function TurningSpaceDiagram() {
           <circle cx="170" cy="185" r="110" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="2" />
 
           {/* Wheelchair silhouette */}
-          <g transform="translate(145,155) scale(0.8)" opacity="0.3">
+          <g transform="translate(145,155) scale(0.8)" opacity="0.7">
             <circle cx="22" cy="10" r="9" fill="#E2E8F0" stroke="#475569" strokeWidth="1.8" />
             <rect x="10" y="22" width="24" height="18" rx="4" fill="none" stroke="#475569" strokeWidth="1.5" />
             <circle cx="10" cy="52" r="12" fill="none" stroke="#475569" strokeWidth="1.5" />
@@ -130,7 +130,7 @@ export default function TurningSpaceDiagram() {
           <text x="530" y="240" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" fontWeight="600">enter / back up</text>
 
           {/* Wheelchair at T intersection */}
-          <g transform="translate(510,120) scale(0.55)" opacity="0.25">
+          <g transform="translate(510,120) scale(0.55)" opacity="0.7">
             <circle cx="22" cy="10" r="9" fill="#E2E8F0" stroke="#475569" strokeWidth="2" />
             <rect x="10" y="22" width="24" height="18" rx="4" fill="none" stroke="#475569" strokeWidth="2" />
             <circle cx="10" cy="52" r="12" fill="none" stroke="#475569" strokeWidth="2" />

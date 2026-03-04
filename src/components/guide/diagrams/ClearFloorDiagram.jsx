@@ -5,7 +5,7 @@ const CLEAR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#
 const CALLOUTS = [
   {
     id: 1, label: 'Forward Approach', section: '\u00a7305.5',
-    color: '#15803D', textColor: '#14532D', x: 170, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 280, y: 52,
     plain: 'In a forward approach, the 48-inch dimension extends toward the element being accessed. The wheelchair faces the element head-on. This is the standard approach for lavatories, drinking fountains, counters, and any element that requires knee and toe clearance underneath.',
     legal: '\u201COne full unobstructed side of the clear floor or ground space shall adjoin an accessible route or adjoin another clear floor or ground space.\u201D Forward approach: 48 inches toward element.',
     citation: '\u00a7305.5'
@@ -131,7 +131,9 @@ export default function ClearFloorDiagram() {
 
           {/* Element (switch on wall) */}
           <rect x="385" y="120" width="12" height="110" rx="2" fill="#94A3B8" stroke="#64748B" strokeWidth="1.5" />
-          <text x="380" y="178" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600" transform="rotate(-90 380 178)">switch, control, etc.</text>
+          <text x="404" y="120" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">switch,</text>
+          <text x="404" y="134" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">control,</text>
+          <text x="404" y="148" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">etc.</text>
 
           {/* Clear floor rect */}
           <rect x="400" y="86" width="260" height="190" rx="4" fill="#2563EB" opacity="0.05" stroke="#2563EB" strokeWidth="2" />
