@@ -373,13 +373,15 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                   const willOpen = openIndex !== i;
                   setOpenIndex(willOpen ? i : null);
                   if (willOpen) {
-                    // Scroll to the opened section (no animation delay needed)
+                    // Scroll to section if header is above the viewport
                     requestAnimationFrame(() => {
                       const header = document.getElementById(`section-header-${i}`);
-                      if (header && header.parentElement) {
-                        const rect = header.parentElement.getBoundingClientRect();
-                        const offset = window.scrollY + rect.top - 20;
-                        window.scrollTo({ top: offset, behavior: 'smooth' });
+                      if (header) {
+                        const rect = header.getBoundingClientRect();
+                        // Only scroll if the header is above the viewport or too far below
+                        if (rect.top < 0 || rect.top > window.innerHeight * 0.5) {
+                          window.scrollTo({ top: window.scrollY + rect.top - 20, behavior: 'auto' });
+                        }
                       }
                     });
                     trackEvent('guide_section_opened', {
