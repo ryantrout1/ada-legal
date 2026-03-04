@@ -194,10 +194,10 @@ export default function DoorDiagram() {
           <text x="530" y="100" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#78350F" fontWeight="600">Bottom {d('10', '255')} must be smooth</text>
           <text x="530" y="118" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#78350F">on push side {'\u2014'} wheelchair footrests push here</text>
 
-          {/* Wheelchair footrest approaching */}
-          <line x1="440" y1="220" x2="510" y2="218" stroke="#475569" strokeWidth="2" strokeLinecap="round" opacity="0.4" />
-          <circle cx="438" cy="218" r="8" fill="none" stroke="#475569" strokeWidth="1.5" opacity="0.3" />
-          <text x="435" y="242" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B">footrest</text>
+          {/* Arrow showing wheelchair approaches from left */}
+          <line x1="400" y1="218" x2="500" y2="218" stroke="#475569" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.3" />
+          <polygon points="500,218 492,214 492,222" fill="#475569" opacity="0.3" />
+          <text x="450" y="240" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B">wheelchair approaches</text>
 
           <Dots callouts={HARD_CALLOUTS} active={hardActive} toggle={toggleHard} />
           <text x="20" y="328" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
