@@ -5,14 +5,14 @@ const PROT_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#3
 const WALL_CALLOUTS = [
   {
     id: 1, label: 'Above 27 Inches \u2014 4-Inch Limit', section: '\u00a7307.2',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'Objects mounted on walls with their leading edges between 27 and 80 inches above the floor may protrude no more than 4 inches into the circulation path. This is the most commonly violated provision \u2014 fire extinguisher cabinets, AED boxes, display cases, and wall-mounted shelves frequently exceed the 4-inch limit. People who are blind cannot detect objects above 27 inches with a cane, so the 4-inch limit prevents them from walking into hazards.',
     legal: '\u201CObjects with leading edges more than 27 inches (685 mm) and not more than 80 inches (2030 mm) above the finish floor or ground shall protrude 4 inches (100 mm) maximum horizontally into the circulation path.\u201D',
     citation: '\u00a7307.2'
   },
   {
     id: 2, label: 'Below 27 Inches \u2014 No Limit', section: '\u00a7307.2',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'Objects with leading edges at or below 27 inches above the floor have no protrusion limit. A person using a long cane sweeps the cane at floor level in an arc \u2014 any object at or below 27 inches will be detected by the cane before the person walks into it. Common examples include drinking fountains with the rim at 27 inches or lower, benches, planters, and guard rails.',
     legal: '\u201CObjects with leading edges at or below 27 inches above the finish floor may protrude any amount.\u201D These objects are within cane-detectable range.',
     citation: '\u00a7307.2'
@@ -29,7 +29,7 @@ const HEAD_CALLOUTS = [
   },
   {
     id: 2, label: 'Under Stairs \u2014 Barrier Required', section: '\u00a7307.4',
-    color: '#2563EB', textColor: '#1E3A8A', x: 540, y: 52,
+    color: '#2563EB', textColor: '#1E3A8A', x: 470, y: 52,
     plain: 'Where overhead clearance drops below 80 inches \u2014 such as under stairs, escalators, or sloped ceilings \u2014 a guardrail or barrier must be placed where clearance is 27 inches or lower so a cane can detect it and warn the person to stop. Without this barrier, a person who is blind could walk into a dangerously low overhead area.',
     legal: '\u201CWhere vertical clearance is less than 80 inches high, a barrier shall be provided where the vertical clearance is less than 80 inches high. The leading edge of such barrier shall be located 27 inches maximum above the finish floor.\u201D',
     citation: '\u00a7307.4'

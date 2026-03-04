@@ -4,12 +4,12 @@ const DOOR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 
 const OPEN_CALLOUTS = [
   { id: 1, label: 'Clear Width & Maneuvering Space', section: '\u00a7404.2.3',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'When a door is open 90\u00b0, there must be at least 32 inches of clear width. Maneuvering clearance on both sides of the door depends on approach direction and door type \u2014 for example, a wheelchair user pulling a door toward them needs 60 inches of depth on the pull side and 18 inches of space on the latch side.',
     legal: '\u201CDoor openings shall provide a clear width of 32 inches minimum.\u201D Maneuvering clearances per Table 404.2.4.1. Pull-side forward approach: 60 inches depth, 18 inches latch-side clearance.',
     citation: '\u00a7404.2.3, \u00a7404.2.4' },
   { id: 2, label: 'Opening Force & Closing Speed', section: '\u00a7404.2.9',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'Interior doors require no more than 5 pounds of force to open. Fire doors may have higher requirements per local code but must still be as light as the fire code allows. Door closers must take at least 5 seconds to move from 90\u00b0 to 12\u00b0 from the latch \u2014 this gives a wheelchair user time to get through before the door swings shut.',
     legal: '\u201COpening force for interior doors shall be 5 pounds maximum.\u201D \u201CDoor closers and gate closers shall be adjusted so that from an open position of 90 degrees, the time required to move the door to a position of 12 degrees from the latch is 5 seconds minimum.\u201D',
     citation: '\u00a7404.2.9, \u00a7404.2.8' }
@@ -17,12 +17,12 @@ const OPEN_CALLOUTS = [
 
 const HARD_CALLOUTS = [
   { id: 1, label: 'Hardware & Handles', section: '\u00a7404.2.7',
-    color: '#7C3AED', textColor: '#5B21B6', x: 170, y: 52,
+    color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 52,
     plain: 'Door handles must be operable with one hand, without tight grasping, pinching, or twisting. Lever handles and push/pull bars pass. Round doorknobs fail. Hardware must be between 34 and 48 inches above the floor. Locks must also be operable with one hand.',
     legal: '\u201CHandles, pulls, latches, locks, and other operable parts on doors and gates shall comply with \u00a7309.4. Operable parts shall be 34 inches minimum and 48 inches maximum above the finish floor.\u201D',
     citation: '\u00a7404.2.7' },
   { id: 2, label: 'Threshold & Bottom Surface', section: '\u00a7404.2.5',
-    color: '#2563EB', textColor: '#1E3A8A', x: 540, y: 52,
+    color: '#2563EB', textColor: '#1E3A8A', x: 470, y: 52,
     plain: 'Door thresholds can be no more than \u00bd inch high (\u00be inch for sliding doors). They must be beveled if higher than \u00bc inch. The bottom 10 inches of the push side must have a smooth, kickplate-style surface \u2014 wheelchair footrests push against this area to open the door.',
     legal: '\u201CThresholds at doorways shall be \u00bd inch high maximum. Thresholds at existing or altered sliding doors shall be \u00be inch high maximum.\u201D \u201CSwinging door and gate surfaces within 10 inches of the finish floor shall have a smooth surface on the push side.\u201D',
     citation: '\u00a7404.2.5, \u00a7404.2.10' }

@@ -5,14 +5,14 @@ const WALK_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 const SLOPE_CALLOUTS = [
   {
     id: 1, label: 'Width & Passing', section: '\u00a7403.5',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'Walking surfaces must be at least 36 inches wide. They can narrow to 32 inches at a single point for up to 24 inches. On corridors less than 60 inches wide, a 60\u00d760-inch passing space must be provided every 200 feet so two wheelchair users can pass each other.',
     legal: '\u201CThe clear width of walking surfaces shall be 36 inches minimum.\u201D Exception: \u201CMay reduce to 32 inches minimum for 24 inches maximum.\u201D Passing spaces every 200 feet per \u00a7403.5.3.',
     citation: '\u00a7403.5'
   },
   {
     id: 2, label: 'Running Slope & Cross Slope', section: '\u00a7403.3',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'Running slope (direction of travel) cannot exceed 1:20 (5%). Anything steeper becomes a ramp and must comply with \u00a7405 \u2014 handrails, landings, and edge protection required. Cross slope (perpendicular to travel) cannot exceed 1:48 (about 2%). Excessive cross slope causes wheelchairs to drift sideways.',
     legal: '\u201CThe running slope of walking surfaces shall not be steeper than 1:20.\u201D \u201CThe cross slope shall not be steeper than 1:48.\u201D Advisory: \u201CA slope steeper than 1:20 is a ramp and must comply with \u00a7405.\u201D',
     citation: '\u00a7403.3'
@@ -22,14 +22,14 @@ const SLOPE_CALLOUTS = [
 const SURFACE_CALLOUTS = [
   {
     id: 1, label: 'Surface Requirements', section: '\u00a7302',
-    color: '#7C3AED', textColor: '#5B21B6', x: 170, y: 52,
+    color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 52,
     plain: 'All walking surfaces must be firm, stable, and slip-resistant. Carpet must be securely attached with maximum \u00bd-inch pile height. Openings in floor surfaces (like grates) must not allow a \u00bd-inch sphere to pass through, and elongated openings must run perpendicular to the direction of travel so casters and cane tips don\u2019t get caught.',
     legal: '\u201CFloor or ground surfaces shall be stable, firm, and slip-resistant.\u201D Carpet: \u201CLevel loop, textured loop, level cut pile, or level cut/uncut pile. Pile height \u00bd inch maximum.\u201D Gratings: \u201COpenings shall not allow passage of a sphere more than \u00bd inch in diameter.\u201D',
     citation: '\u00a7302, \u00a7302.3'
   },
   {
     id: 2, label: 'Changes in Level', section: '\u00a7303',
-    color: '#2563EB', textColor: '#1E3A8A', x: 540, y: 52,
+    color: '#2563EB', textColor: '#1E3A8A', x: 470, y: 52,
     plain: 'Small bumps in the walking surface matter. Up to \u00bc inch can be vertical (a sharp step). Between \u00bc and \u00bd inch must be beveled at no steeper than 1:2. Anything over \u00bd inch must be treated as a ramp. Look for: uneven pavement joints, raised thresholds, carpet edges, and cracked sidewalk lips.',
     legal: '\u201CChanges in level of \u00bc inch high maximum shall be permitted to be vertical.\u201D \u201CChanges between \u00bc inch and \u00bd inch shall be beveled with a slope not steeper than 1:2.\u201D \u201CChanges greater than \u00bd inch shall comply with \u00a7405 or \u00a7406.\u201D',
     citation: '\u00a7303'

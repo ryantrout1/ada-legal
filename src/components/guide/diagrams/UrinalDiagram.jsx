@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const UR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#605-urinals';
 const CALLOUTS = [
-  { id: 1, label: 'Height & Clear Space', section: '\u00a7605.2', color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+  { id: 1, label: 'Height & Clear Space', section: '\u00a7605.2', color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'The rim of an accessible urinal must be no higher than 17 inches above the floor. Wall-hung stall-type urinals that extend to the floor are preferred. A clear floor space of at least 30\u00d748 inches must be provided for a forward approach, centered on the urinal. The floor must be level (max 1:48) and slip-resistant.', legal: '\u201CUrinals shall be the stall-type or wall-hung type with the rim 17 inches maximum above the finish floor.\u201D Clear floor space: \u201C30\u00d748 inches for forward approach.\u201D', citation: '\u00a7605.2, \u00a7605.3' },
-  { id: 2, label: 'Flush Controls & Shields', section: '\u00a7605.4', color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+  { id: 2, label: 'Flush Controls & Shields', section: '\u00a7605.4', color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'Flush controls must be operable with one hand, no tight grasping or twisting, 5 pounds max force. Manual controls must be no higher than 44 inches. Automatic sensor flush valves comply. Privacy shields between urinals must not extend beyond the rim or reduce the 30-inch clear floor space. The accessible urinal should be at the end of a row for easier side approach.', legal: '\u201CFlush controls shall be hand operated or automatic and shall comply with \u00a7309. Flush controls shall be 44 inches maximum above the floor.\u201D', citation: '\u00a7605.4' }
 ];
 function makeLink(t) { return (<a href={UR_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${t} on ADA.gov`}>{t}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>{'\u2197'}</span></a>); }

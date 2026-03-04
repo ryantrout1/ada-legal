@@ -4,12 +4,12 @@ const ELEV_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 
 const CAB_CALLOUTS = [
   { id: 1, label: 'Cab Size & Door Width', section: '\u00a7407.4.1',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'Standard elevator cabs must be at least 51 inches deep and 68 inches wide (for center-opening doors) or 51 inches deep and 54 inches wide (for side-opening doors). The door width must be at least 36 inches for center-opening and 32 inches for side-opening. These dimensions ensure a wheelchair user can enter, turn around, and reach the controls.',
     legal: '\u201CInside dimensions of elevator cars shall comply with Table 407.4.1.\u201D Minimum cab: 51\u00d768 inches (center door) or 51\u00d754 inches (side door). Door width: 36 inches (center) or 32 inches (side).',
     citation: '\u00a7407.4.1, \u00a7407.4.3' },
   { id: 2, label: 'Controls & Floor Markings', section: '\u00a7407.4.7',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'Car controls must be between 15 and 48 inches above the floor and located on a side wall. Every button must have raised characters and Braille. Floor designations must appear on both door jambs in raised characters and Braille. An emergency two-way communication system is required \u2014 usable without voice (for deaf users) and without vision (for blind users).',
     legal: '\u201CFloor designations shall be provided in the car on both jambs of the elevator car door opening. Characters shall be both raised and Braille.\u201D Controls: \u201CWithin reach ranges per \u00a7308.\u201D Emergency: \u201CTwo-way communication system complying with \u00a7407.4.9.\u201D',
     citation: '\u00a7407.4.7, \u00a7407.4.9' }
@@ -17,12 +17,12 @@ const CAB_CALLOUTS = [
 
 const SIGNAL_CALLOUTS = [
   { id: 1, label: 'Hall Calls & Signals', section: '\u00a7407.2',
-    color: '#7C3AED', textColor: '#5B21B6', x: 170, y: 52,
+    color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 52,
     plain: 'Call buttons outside the elevator must be no higher than 42 inches above the floor and must have a visible indicator showing the call has been registered. Hall signals must provide both audible and visible cues indicating which car is arriving and which direction it\u2019s going. One chime for up, two for down (or a verbal announcement).',
     legal: '\u201CCall buttons shall be located 42 inches maximum above the finish floor.\u201D \u201CHall signals shall comply with \u00a7407.2.2.\u201D Audible: \u201COne stroke for up, two strokes for down, or annunciators.\u201D',
     citation: '\u00a7407.2.1, \u00a7407.2.2' },
   { id: 2, label: 'Door Timing & Reopening', section: '\u00a7407.3',
-    color: '#2563EB', textColor: '#1E3A8A', x: 540, y: 52,
+    color: '#2563EB', textColor: '#1E3A8A', x: 470, y: 52,
     plain: 'Elevator doors must remain open long enough for a wheelchair user to enter. The minimum is calculated based on a 1.5 feet per second travel speed from the call button to the car. Doors must have reopening devices that prevent closing if they detect an obstruction \u2014 they cannot nudge or force a person through.',
     legal: '\u201CDoor dwell time shall be calculated based on a speed of 1.5 feet per second starting from the hall call button.\u201D \u201CReopening devices shall remain effective for 20 seconds minimum.\u201D',
     citation: '\u00a7407.3.4, \u00a7407.3.3' }

@@ -4,12 +4,12 @@ const CURB_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 
 const RAMP_CALLOUTS = [
   { id: 1, label: 'Slope & Width', section: '\u00a7406.1',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'Curb ramps must have a running slope no steeper than 1:12, just like building ramps. The width must be 36 inches minimum, not counting flared sides. The counter slope at the base (where the ramp meets the street) cannot be steeper than 1:20. The top of the curb ramp must connect to a level landing or the sidewalk.',
     legal: '\u201CThe running slope of curb ramp runs shall not be steeper than 1:12.\u201D Width: 36 inches minimum excluding flares. Counter slope: 1:20 maximum. Top landing per \u00a7406.4.',
     citation: '\u00a7406.1, \u00a7406.2, \u00a7406.4' },
   { id: 2, label: 'Flared Sides', section: '\u00a7406.3',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'When the curb ramp is next to a walking path, the sides must be flared at no steeper than 1:10. Without flares, a pedestrian could step off the side of the curb ramp and trip on the vertical edge. If the curb ramp is inside a planter or has a returned curb (vertical side), flares aren\u2019t needed because pedestrians can\u2019t walk across it.',
     legal: '\u201CWhere a pedestrian circulation path crosses the curb ramp, flared sides shall have a slope of 1:10 maximum, measured at the curb face.\u201D',
     citation: '\u00a7406.3' }
@@ -17,12 +17,12 @@ const RAMP_CALLOUTS = [
 
 const WARN_CALLOUTS = [
   { id: 1, label: 'Detectable Warning Surface', section: '\u00a7406.13',
-    color: '#7C3AED', textColor: '#5B21B6', x: 170, y: 52,
+    color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 52,
     plain: 'Raised truncated domes (the bumpy texture you feel underfoot) are required at the bottom of curb ramps where they meet the street. These warn people who are blind or have low vision that they are leaving the sidewalk and entering a roadway. The dome surface must extend 24 inches minimum in the direction of travel and the full width of the curb ramp.',
     legal: '\u201CDetectable warning surfaces complying with \u00a7705 shall be provided where curb ramps or blended transitions connect to street crossings.\u201D Depth: 24 inches minimum in the direction of travel. Width: full width of the curb ramp or blended transition.',
     citation: '\u00a7406.13, \u00a7705' },
   { id: 2, label: 'Placement at Crossings', section: '\u00a7406.5',
-    color: '#2563EB', textColor: '#1E3A8A', x: 540, y: 52,
+    color: '#2563EB', textColor: '#1E3A8A', x: 470, y: 52,
     plain: 'Each crosswalk must have its own curb ramp \u2014 two crosswalks at a corner means two separate ramps. A single ramp at the apex of a corner does not meet this requirement because it doesn\u2019t align the wheelchair user with the crosswalk, directing them into the intersection instead. Parallel curb ramps (running along the curb with a landing at the bottom) are an acceptable alternative.',
     legal: '\u201CCurb ramps at marked crossings shall be wholly contained within the markings.\u201D Advisory \u00a7406.5: Separate curb ramps for each crosswalk rather than a single diagonal ramp.',
     citation: '\u00a7406.5' }

@@ -5,14 +5,14 @@ const PARK_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#5
 const SPACE_CALLOUTS = [
   {
     id: 1, label: 'Space Widths & Access Aisle', section: '\u00a7502.2',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'Standard accessible car spaces must be at least 96 inches (8 feet) wide. Van-accessible spaces must be at least 132 inches (11 feet) wide \u2014 or a standard 96-inch space with an extra-wide 96-inch access aisle. The access aisle (the striped area next to the space) must be at least 60 inches (5 feet) wide. Two spaces can share one aisle between them. The aisle must be clearly marked with diagonal hatching.',
     legal: '\u201CCar parking spaces shall be 96 inches wide minimum.\u201D Van spaces: \u201C132 inches wide minimum.\u201D Access aisles: \u201C60 inches wide minimum.\u201D \u201CTwo parking spaces shall be permitted to share a common access aisle.\u201D',
     citation: '\u00a7502.2, \u00a7502.3'
   },
   {
     id: 2, label: 'Surface, Slope & Level Changes', section: '\u00a7502.4',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'Accessible spaces and their access aisles must be firm, stable, and slip-resistant. The aisle must be at the same level as the parking space \u2014 no curbs, steps, or level changes between them. Maximum slope in any direction is 1:48 (about 2%), essentially flat. Van spaces need 98 inches (8\u20192\u2033) of vertical clearance along the entire vehicle route from entrance to exit.',
     legal: '\u201CParking spaces and access aisles shall have surface slopes not steeper than 1:48.\u201D \u201CAccess aisles shall be at the same level as the parking spaces they serve. Changes in level are not permitted.\u201D Vertical clearance: \u201C98 inches minimum.\u201D',
     citation: '\u00a7502.4, \u00a7502.5'
@@ -22,7 +22,7 @@ const SPACE_CALLOUTS = [
 const SIGN_CALLOUTS = [
   {
     id: 1, label: 'Required Signs', section: '\u00a7502.6',
-    color: '#7C3AED', textColor: '#5B21B6', x: 170, y: 52,
+    color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 52,
     plain: 'Every accessible parking space must have a sign showing the International Symbol of Accessibility (the blue wheelchair symbol). The bottom of the sign must be at least 60 inches (5 feet) above the ground so it\u2019s visible even when a vehicle is parked. Van spaces need an additional \u201CVan Accessible\u201D label. Exception: lots with 4 or fewer total spaces serving a single residential unit don\u2019t need signs.',
     legal: '\u201CAccessible parking spaces shall be identified by signs showing the International Symbol of Accessibility.\u201D \u201CSigns shall be 60 inches minimum above the finish ground surface measured to the bottom of the sign.\u201D Van spaces: \u201Cshall contain the designation \u2018van accessible.\u2019\u201D',
     citation: '\u00a7502.6'

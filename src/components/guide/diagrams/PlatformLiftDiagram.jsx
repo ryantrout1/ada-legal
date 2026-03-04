@@ -5,14 +5,14 @@ const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#41
 const LIFT_CALLOUTS = [
   {
     id: 1, label: 'Platform Size & Controls', section: '\u00a7410.2',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'The platform must provide a clear floor space at least 36 inches wide by 48 inches deep. If entered from the narrow end, it must be 36 \u00d7 60 inches to allow a wheelchair user to turn and exit forward. Controls must be operable with one hand, no grasping or twisting, 5 pounds max force, and located between 15 and 48 inches above the floor. The lift must NOT require an attendant \u2014 the user must be able to call and operate it independently.',
     legal: '\u201CPlatform lifts shall provide a clear floor space complying with \u00a7305.\u201D Controls: \u201COperable parts shall comply with \u00a7309.\u201D \u201CPlatform lifts shall not be attendant-operated.\u201D',
     citation: '\u00a7410.2, \u00a7410.1'
   },
   {
     id: 2, label: 'Doors, Surface & Safety', section: '\u00a7410.3',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'Doors and gates must provide at least 32 inches clear width and not require tight grasping to operate. The platform floor must be firm, stable, and slip-resistant. The gap between the platform edge and the landing must not exceed \u00be inch. All lifts must comply with ASME A18.1 safety standards, including enclosure walls, grab bars, emergency stop controls, non-skid surfaces, and a maximum speed of 12 inches per second.',
     legal: '\u201CPlatform lifts shall comply with ASME A18.1.\u201D Floor surfaces: \u201Cshall comply with \u00a7302.\u201D Gap: per ASME A18.1, maximum \u00be inch between platform and landing.',
     citation: '\u00a7410.1, \u00a7410.3'
@@ -22,14 +22,14 @@ const LIFT_CALLOUTS = [
 const USE_CALLOUTS = [
   {
     id: 1, label: 'Where Lifts Are Allowed', section: '\u00a7206.7',
-    color: '#7C3AED', textColor: '#5B21B6', x: 170, y: 52,
+    color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 52,
     plain: 'Platform lifts can replace ramps or elevators only in specific situations: performance stages and speaker platforms, wheelchair spaces in assembly areas, small rooms with 5 or fewer occupants, courtrooms, existing buildings where a ramp or elevator is impractical, and certain recreation facilities. They are NOT a substitute for elevators in new multi-story construction unless one of these exceptions applies.',
     legal: '\u00a7206.7: \u201CPlatform lifts shall be permitted as a component of an accessible route\u201D in performance areas (\u00a7206.7.1), assembly wheelchair spaces (\u00a7206.7.2), incidental spaces (\u00a7206.7.3), judicial spaces (\u00a7206.7.4), existing buildings (\u00a7206.7.5), and recreation (\u00a7206.7.8-10).',
     citation: '\u00a7206.7'
   },
   {
     id: 2, label: 'Common Problems', section: '\u00a7410',
-    color: '#C2410C', textColor: '#7C2D12', x: 540, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 470, y: 52,
     plain: 'The most frequent violations include: lifts that require a key or attendant to operate, controls mounted too high or requiring tight grasping, platforms too small for a wheelchair to turn, gaps between platform and landing exceeding \u00be inch, broken or out-of-service lifts with no alternative accessible route, and lifts used in new construction where an elevator is required.',
     legal: 'Advisory \u00a7410: Platform lifts must be maintained in operable working condition per \u00a7105.2.2. A broken lift with no alternative route is a denial of access.',
     citation: '\u00a7410'

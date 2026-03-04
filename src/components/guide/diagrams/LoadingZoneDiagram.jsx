@@ -5,14 +5,14 @@ const LZ_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#503
 const CALLOUTS = [
   {
     id: 1, label: 'Dimensions & Layout', section: '\u00a7503.2',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'The vehicle pull-up space must be 96 inches (8 feet) wide minimum and 20 feet long minimum. Next to it, an access aisle must be 60 inches (5 feet) wide minimum and 20 feet long minimum at the same level as the vehicle space \u2014 no curbs between them. The aisle must connect directly to an accessible route into the building. Vertical clearance of 114 inches (9\u20196\u2033) is required for the pull-up space and the entire vehicle route.',
     legal: '\u201CVehicular pull-up space 96 inches wide minimum and 20 feet long minimum.\u201D Access aisle: \u201C60 inches wide minimum, 20 feet long minimum, at the same level as the vehicle pull-up space.\u201D Clearance: \u201C114 inches minimum.\u201D',
     citation: '\u00a7503.2, \u00a7503.3, \u00a7503.4'
   },
   {
     id: 2, label: 'Surface & Common Problems', section: '\u00a7503',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'The access aisle and pull-up space must be firm, stable, and slip-resistant with a maximum slope of 1:48. The surface must be flush between the aisle and pull-up space. When a wheelchair ramp deploys from a van, it must not reduce the aisle width below 60 inches. At least one loading zone is required wherever they exist, plus at medical facilities and valet operations. The aisle should be marked to prevent others from blocking it.',
     legal: 'Surface per \u00a7302: \u201Cfirm, stable, and slip-resistant.\u201D Slope: \u201Cnot steeper than 1:48.\u201D \u00a7209.2: \u201CAt least one passenger loading zone complying with \u00a7503 shall be provided.\u201D',
     citation: '\u00a7503, \u00a7209'

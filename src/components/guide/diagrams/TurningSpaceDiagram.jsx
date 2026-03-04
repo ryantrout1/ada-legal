@@ -5,7 +5,7 @@ const TURN_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#3
 const CALLOUTS = [
   {
     id: 1, label: 'Circular Turning Space', section: '\u00a7304.3.1',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'The most common option is a clear circular area with a 60-inch (5-foot) diameter. This allows a wheelchair user to make a full 360-degree turn. The entire circle must be free of obstructions \u2014 no columns, trash cans, or furniture legs. The floor must be level (max 1:48 slope) and the surface firm, stable, and slip-resistant.',
     legal: '\u201CThe floor or ground surface of a circular turning space shall be a circular space with a 60 inch (1525 mm) diameter minimum. The floor or ground surface shall comply with 302.\u201D',
     citation: '\u00a7304.3.1'

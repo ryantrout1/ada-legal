@@ -5,14 +5,14 @@ const STAIR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#
 const STEP_CALLOUTS = [
   {
     id: 1, label: 'Treads, Risers & Nosings', section: '\u00a7504.2',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'All treads must be at least 11 inches deep, and all risers between 4 and 7 inches high. Every step in a flight must be uniform \u2014 no variation in height or depth. Open risers are NOT permitted because feet and cane tips can slip through. The leading edge (nosing) must be curved or beveled, never sharp. Nosings can project a maximum of 1.5 inches and must have an underside angle of at least 60\u00b0.',
     legal: '\u201CTreads shall be 11 inches deep minimum.\u201D \u201CRisers shall be 4 inches high minimum and 7 inches high maximum.\u201D \u201COpen risers are not permitted.\u201D \u201CThe radius of curvature at the leading edge shall be \u00bd inch maximum.\u201D',
     citation: '\u00a7504.2, \u00a7504.3, \u00a7504.4, \u00a7504.5'
   },
   {
     id: 2, label: 'Handrails & Wet Conditions', section: '\u00a7504.6',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'Handrails must be on both sides, 34\u201338 inches above stair nosings, continuous for the full flight length. At the top, rails extend 12 inches horizontally beyond the top riser. At the bottom, rails extend at the stair slope for one tread depth, then 12 inches horizontally. Outdoor stairs or any stairs that may get wet must have contrast strips on each tread edge for people with low vision.',
     legal: '\u201CStairs shall have handrails complying with \u00a7505.\u201D Height: \u201C34 inches minimum and 38 inches maximum above stair nosings.\u201D Top extension: \u201C12 inches horizontally.\u201D \u00a7504.7: Wet conditions require visual contrast at leading edges.',
     citation: '\u00a7504.6, \u00a7505, \u00a7504.7'

@@ -5,14 +5,14 @@ const OP_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#309
 const RULE_CALLOUTS = [
   {
     id: 1, label: 'Height Range', section: '\u00a7309.3',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'All operable parts must be located between 15 and 48 inches above the floor. This matches the reach ranges in \u00a7308. Controls mounted above 48 inches are unreachable for most wheelchair users. Controls below 15 inches require excessive bending. This applies to light switches, thermostats, fire alarm pull stations, electrical outlets, elevator buttons, faucet handles, dispensers, and all other manually operated elements.',
     legal: '\u201COperable parts shall be placed within one or more of the reach ranges specified in \u00a7308.\u201D Forward/side unobstructed: 15 to 48 inches.',
     citation: '\u00a7309.3'
   },
   {
     id: 2, label: 'One Hand, No Twisting, 5 lbs Max', section: '\u00a7309.4',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'Every control must work with one hand, without tight grasping, pinching, or twisting of the wrist. The maximum operating force is 5 pounds. This accommodates people with limited hand function, arthritis, amputation, or prosthetics. Lever handles, push buttons, rocker switches, and touch-activated controls all comply. Round doorknobs and tight twist-locks do not.',
     legal: '\u201COperable parts shall be operable with one hand and shall not require tight grasping, pinching, or twisting of the wrist. The force required to activate operable parts shall be 5 pounds (22.2 N) maximum.\u201D',
     citation: '\u00a7309.4'
@@ -22,14 +22,14 @@ const RULE_CALLOUTS = [
 const TYPE_CALLOUTS = [
   {
     id: 1, label: 'Compliant Controls', section: '\u00a7309.4',
-    color: '#15803D', textColor: '#14532D', x: 170, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 100, y: 52,
     plain: 'Controls that comply include: lever door handles, push/pull door handles, push buttons (elevator, crosswalk), rocker light switches, paddle-style faucets, sensor-activated faucets and doors, toggle switches with wide paddles, and touch screens within reach range. These all operate without grasping or twisting.',
     legal: 'Advisory \u00a7309: \u201CLever-operated, push-type, and electronically controlled mechanisms are examples of acceptable designs.\u201D',
     citation: '\u00a7309'
   },
   {
     id: 2, label: 'Non-Compliant Controls', section: '\u00a7309.4',
-    color: '#C2410C', textColor: '#7C2D12', x: 540, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 470, y: 52,
     plain: 'Controls that fail include: round doorknobs (require full wrist rotation), tight thumb-turn deadbolts, small twist-type faucet handles, narrow toggle switches requiring fingertip pinch, keypads with raised tiny buttons, and any mechanism requiring two hands simultaneously. These all violate the no-grasping and no-twisting requirements.',
     legal: 'Advisory \u00a7309: Round doorknobs, tight-grasping mechanisms, and controls requiring wrist twisting are non-compliant.',
     citation: '\u00a7309'

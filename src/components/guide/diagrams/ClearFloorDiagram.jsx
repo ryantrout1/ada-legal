@@ -12,7 +12,7 @@ const CALLOUTS = [
   },
   {
     id: 2, label: 'Parallel Approach', section: '\u00a7305.5',
-    color: '#2563EB', textColor: '#1E3A8A', x: 540, y: 52,
+    color: '#2563EB', textColor: '#1E3A8A', x: 470, y: 52,
     plain: 'In a parallel approach, the 48-inch dimension runs alongside the element. The wheelchair parks parallel to whatever is being accessed. This is common for wall-mounted controls (light switches, thermostats), some ATMs, vending machines, and fire alarm pull stations.',
     legal: '\u201CWhere a clear floor or ground space is positioned for a parallel approach, the 48-inch dimension shall be parallel to the element.\u201D Side reach per \u00a7308.3 applies.',
     citation: '\u00a7305.5'

@@ -5,14 +5,14 @@ const RAIL_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#5
 const CALLOUTS = [
   {
     id: 1, label: 'Grip Size & Shape', section: '\u00a7505.7',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'A circular handrail must have an outside diameter of 1\u00bc to 2 inches. This range lets most people \u2014 including those with limited grip strength \u2014 wrap their fingers comfortably around the rail. Non-circular handrails (oval, rounded rectangle) must have a perimeter between 4 and 6\u00bc inches and a cross-section no larger than 2\u00bc inches. The surface must be smooth with no sharp edges.',
     legal: '\u201CCircular cross sections shall have an outside diameter of 1\u00bc inches minimum and 2 inches maximum.\u201D Non-circular: \u201Ccross-section dimension of 2\u00bc inches maximum\u201D and \u201Cperimeter dimension of 4 inches minimum and 6\u00bc inches maximum.\u201D',
     citation: '\u00a7505.7.1, \u00a7505.7.2'
   },
   {
     id: 2, label: 'Wall Clearance & Mounting', section: '\u00a7505.5',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'There must be at least 1\u00bd inches of clear space between the handrail and the wall. This prevents fingers from being pinched or scraped. No exposed bolt heads, rough surfaces, or protruding brackets within the clearance zone. The rail must be continuous for the full length of stair flights and ramp runs \u2014 breaks are only permitted at landing turns where newel posts are used.',
     legal: '\u201CThe clearance between handrail gripping surfaces and adjacent surfaces shall be 1\u00bd inches minimum.\u201D \u00a7505.6: \u201CHandrail gripping surfaces shall be continuous along their full length and shall not be obstructed along their tops or sides.\u201D',
     citation: '\u00a7505.5, \u00a7505.6'

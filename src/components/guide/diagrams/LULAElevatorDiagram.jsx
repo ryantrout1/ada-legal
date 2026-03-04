@@ -4,12 +4,12 @@ const LULA_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 
 const CALLOUTS = [
   { id: 1, label: 'Size & Doors', section: '\u00a7408.4.1',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'LULA cabs must be at least 54 inches deep by 36 inches wide for end-opening doors, or 51 by 51 inches for side-opening doors. Door width is 32 inches minimum. These are smaller than standard passenger elevators but large enough for one wheelchair user. Doors must be automatic or power-operated with reopening devices.',
     legal: '\u201CInside dimensions: 54 inches deep by 36 inches wide with end/center opening doors, or 51 inches wide by 51 inches deep with side opening doors.\u201D Door width: \u201C32 inches minimum.\u201D',
     citation: '\u00a7408.4.1, \u00a7408.4.2' },
   { id: 2, label: 'Where Allowed & Limits', section: '\u00a7206.6',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'LULA elevators are only allowed in buildings where a standard passenger elevator is not required (typically 2 stories or fewer). They are limited to 25 feet of travel at 30 feet per minute. Controls must be within reach range (15\u201348 inches) with raised characters and Braille. They cannot substitute for standard elevators in buildings that require them.',
     legal: '\u00a7206.6: \u201CIn buildings not required to have a full passenger elevator, LULA elevators shall be permitted.\u201D Per ASME A17.1: maximum travel 25 feet, maximum speed 30 feet per minute.',
     citation: '\u00a7206.6, \u00a7408.4' }

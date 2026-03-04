@@ -4,12 +4,12 @@ const RAMP_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#4
 
 const SLOPE_CALLOUTS = [
   { id: 1, label: 'Slope & Rise', section: '\u00a7405.2',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'The running slope cannot be steeper than 1:12 \u2014 for every 1 inch of rise, you need 12 inches of ramp. A 30-inch rise requires a 30-foot ramp. The maximum rise per ramp run is 30 inches, then a landing is required. Cross slope must not exceed 1:48. The clear width between handrails must be 36 inches minimum.',
     legal: '\u201CRamp runs shall have a running slope not steeper than 1:12.\u201D \u201CThe rise for any ramp run shall be 30 inches maximum.\u201D \u201CCross slope of ramp runs shall not be steeper than 1:48.\u201D Width: \u201C36 inches minimum.\u201D',
     citation: '\u00a7405.2, \u00a7405.5, \u00a7405.6' },
   { id: 2, label: 'Landings', section: '\u00a7405.7',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'A level landing is required at the top and bottom of every ramp run, and wherever the ramp changes direction. Landings must be at least 60 inches long and at least as wide as the ramp. Where a ramp turns, the landing must be 60\u00d760 inches minimum. Landings must have a slope no steeper than 1:48 in any direction.',
     legal: '\u201CLandings shall be at least as wide as the widest ramp run leading to the landing.\u201D \u201CLanding length shall be 60 inches long minimum.\u201D \u201CRamps that change direction between runs at landings shall have a clear landing 60 inches minimum by 60 inches minimum.\u201D',
     citation: '\u00a7405.7' }
@@ -17,12 +17,12 @@ const SLOPE_CALLOUTS = [
 
 const RAIL_CALLOUTS = [
   { id: 1, label: 'Handrails', section: '\u00a7405.8',
-    color: '#7C3AED', textColor: '#5B21B6', x: 170, y: 52,
+    color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 52,
     plain: 'Handrails are required on both sides of any ramp with more than 6 inches of rise. They must be 34 to 38 inches above the ramp surface, continuous along the full length, and graspable (1\u00bc to 2-inch round cross section or equivalent). Extensions: handrails must extend 12 inches beyond the top and bottom of the ramp, parallel to the floor.',
     legal: '\u201CHandrails complying with \u00a7505 shall be provided on both sides of ramp runs.\u201D Height: \u201C34 inches minimum and 38 inches maximum.\u201D Extensions: \u201C12 inches minimum beyond the top and bottom of ramp runs.\u201D',
     citation: '\u00a7405.8, \u00a7505' },
   { id: 2, label: 'Edge Protection', section: '\u00a7405.9',
-    color: '#2563EB', textColor: '#1E3A8A', x: 540, y: 52,
+    color: '#2563EB', textColor: '#1E3A8A', x: 470, y: 52,
     plain: 'Edge protection prevents wheelchairs from rolling off the side of the ramp. Options include: a curb at least 4 inches high, a wall or railing, or a barrier that extends to within 4 inches of the ramp surface. Without edge protection, a wheelchair that drifts to the side can drop off the edge \u2014 a serious fall hazard.',
     legal: '\u201CEdge protection complying with \u00a7405.9.1 or \u00a7405.9.2 shall be provided on each side of ramp runs and at each side of ramp landings.\u201D Options: extended floor surface, curb or barrier.',
     citation: '\u00a7405.9' }

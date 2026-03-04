@@ -5,14 +5,14 @@ const DF_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#602
 const CALLOUTS = [
   {
     id: 1, label: 'Heights & Approach', section: '\u00a7602.4',
-    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
     plain: 'Two heights are required: a wheelchair-accessible fountain with spout no higher than 36 inches, and a standing-height fountain with spout between 38 and 43 inches. The wheelchair fountain needs knee and toe clearance underneath for a forward approach (30\u00d748 inches). The standing fountain needs a parallel approach (30\u00d748 inches alongside). A single hi-lo unit satisfies both. Water flow must be at least 4 inches high for cup/bottle filling.',
     legal: '\u201CSpout outlets for wheelchair users shall be 36 inches maximum above the floor.\u201D Standing: \u201C38 inches minimum and 43 inches maximum.\u201D Flow: \u201C4 inches high minimum.\u201D',
     citation: '\u00a7602.4, \u00a7602.5, \u00a7602.6'
   },
   {
     id: 2, label: 'Controls & Scoping', section: '\u00a7602.6',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
     plain: 'Controls must be front-mounted or on the front half of the unit, operable with one hand, no more than 5 pounds of force. Push-button and lever controls comply; twist knobs do not. Where fountains are provided on a floor, at least one wheelchair-height and one standing-height must be offered. A single hi-lo unit satisfies both requirements. Bottle fillers alone do not substitute for fountains.',
     legal: 'Controls: \u201COperable with one hand, no tight grasping, pinching, or twisting.\u201D Scoping: \u201CWhere drinking fountains are provided on an exterior site, on a floor, or within a secured area, two levels shall be provided.\u201D',
     citation: '\u00a7602.6, \u00a7211'
