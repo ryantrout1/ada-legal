@@ -7,7 +7,7 @@ const FWD_CALLOUTS = [
   {
     id: 1, label: 'Unobstructed Forward Reach', section: '§308.2.1',
     color: '#C2410C', textColor: '#7C2D12',
-    x: 145, y: 40,
+    x: 170, y: 52,
     plain: 'When a wheelchair user approaches an element head-on with nothing in the way, the reach range is 15 inches minimum to 48 inches maximum above the floor. This covers controls like elevator buttons, light switches, and thermostats mounted on a wall. A clear floor space of 30 × 48 inches must be provided in front of the element so the wheelchair can pull straight up to it.',
     legal: '"Where a forward reach is unobstructed, the high forward reach shall be 48 inches (1220 mm) maximum and the low forward reach shall be 15 inches (380 mm) minimum above the finish floor or ground."',
     citation: '§308.2.1'
@@ -15,7 +15,7 @@ const FWD_CALLOUTS = [
   {
     id: 2, label: 'Obstructed Forward Reach', section: '§308.2.2',
     color: '#15803D', textColor: '#14532D',
-    x: 545, y: 40,
+    x: 540, y: 52,
     plain: 'When reaching forward over a counter, shelf, or other obstruction, the maximum reach height decreases as the obstruction gets deeper. If the obstruction is up to 20 inches deep, the maximum high reach is 48 inches. If it\u0027s 20 to 25 inches deep, the maximum drops to 44 inches. Obstructions deeper than 25 inches are not permitted — you\u0027d need a side approach instead.',
     legal: '"Where the high forward reach is over an obstruction, the clear floor space shall extend beneath the element for a distance not less than the required reach depth over the obstruction." Obstruction \u226420 inches: high reach 48 inches max. Obstruction 20\u201325 inches: high reach 44 inches max.',
     citation: '§308.2.2'
@@ -27,7 +27,7 @@ const SIDE_CALLOUTS = [
   {
     id: 1, label: 'Unobstructed Side Reach', section: '§308.3.1',
     color: '#2563EB', textColor: '#1E3A8A',
-    x: 145, y: 40,
+    x: 170, y: 52,
     plain: 'When approaching from the side (parallel to the element), with the wheelchair alongside it, the reach range is 15 inches minimum to 48 inches maximum above the floor — same as unobstructed forward reach. This is common for wall-mounted fire extinguishers, paper towel dispensers, and coat hooks.',
     legal: '"Where a clear floor or ground space allows a parallel approach to an element and the side reach is unobstructed, the high side reach shall be 48 inches (1220 mm) maximum and the low side reach shall be 15 inches (380 mm) minimum above the finish floor or ground."',
     citation: '§308.3.1'
@@ -35,7 +35,7 @@ const SIDE_CALLOUTS = [
   {
     id: 2, label: 'Obstructed Side Reach', section: '§308.3.2',
     color: '#7C3AED', textColor: '#5B21B6',
-    x: 545, y: 40,
+    x: 540, y: 52,
     plain: 'When reaching sideways over an obstruction (like a counter or shelf), the rules depend on depth. Up to 10 inches deep: maximum reach is 48 inches (same as unobstructed). Between 10 and 24 inches deep: maximum drops to 46 inches. Obstructions deeper than 24 inches are not permitted for side reach. The obstruction cannot be taller than 34 inches.',
     legal: '"Where a clear floor or ground space allows a parallel approach to an element and the high side reach is over an obstruction, the height of the obstruction shall be 34 inches (865 mm) maximum and the depth shall be 24 inches (610 mm) maximum." 10\u201324 inches deep: high reach 46 inches max.',
     citation: '§308.3.2'
@@ -294,8 +294,6 @@ export default function ReachRangeDiagram() {
 
           {/* Reachable zone */}
           <rect x="70" y="96" width="188" height="200" fill="#C2410C" opacity="0.05" rx="6" stroke="#C2410C" strokeWidth="1.5" />
-          <text x="164" y="196" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#C2410C" fontWeight="600" opacity="0.5">reachable</text>
-          <text x="164" y="210" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#C2410C" fontWeight="600" opacity="0.5">zone</text>
 
           {/* 48" max line */}
           <line x1="60" y1="96" x2="270" y2="96" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="4 3" />
