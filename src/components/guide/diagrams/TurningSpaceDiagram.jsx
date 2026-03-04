@@ -98,8 +98,12 @@ export default function TurningSpaceDiagram() {
           <text x="200" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">CIRCULAR TURNING SPACE</text>
 
           <circle cx="200" cy="170" r="110" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="6 4" />
-          {/* Wheelchair icon */}
-          <text x="200" y="175" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="32" fill="#8B2E08" opacity="0.25">♿</text>
+          {/* Wheelchair silhouette */}
+          <circle cx="200" cy="155" r="10" fill="#8B2E08" opacity="0.06" />
+          <rect x="192" y="142" width="16" height="10" rx="2" fill="none" stroke="#8B2E08" strokeWidth="1" opacity="0.3" />
+          <circle cx="191" cy="165" r="6" fill="none" stroke="#8B2E08" strokeWidth="0.8" opacity="0.25" />
+          <circle cx="209" cy="165" r="6" fill="none" stroke="#8B2E08" strokeWidth="0.8" opacity="0.25" />
+          <text x="200" y="140" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#8B2E08" opacity="0.5">360° turn</text>
           {/* Rotation arrow */}
           <path d="M 250 100 A 70 70 0 1 1 150 100" fill="none" stroke="#C2410C" strokeWidth="1.2" opacity="0.3" />
           <polygon points="150,100 155,110 145,108" fill="#C2410C" opacity="0.4" />
@@ -131,8 +135,25 @@ export default function TurningSpaceDiagram() {
           <rect x="543" y="139" width="74" height="146" rx="2" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" />
 
           {/* Arm labels */}
-          <text x="580" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">ARM</text>
-          <text x="580" y="225" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">STEM</text>
+          <text x="510" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600">← turn left</text>
+          <text x="655" y="105" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600">turn right →</text>
+          <text x="580" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D" fontWeight="600">enter / back up</text>
+
+          {/* Wheelchair in center of T intersection */}
+          <circle cx="580" cy="145" r="10" fill="#15803D" opacity="0.08" />
+          <rect x="572" y="132" width="16" height="10" rx="2" fill="none" stroke="#15803D" strokeWidth="0.8" opacity="0.4" />
+          <circle cx="571" cy="152" r="5" fill="none" stroke="#15803D" strokeWidth="0.6" opacity="0.3" />
+          <circle cx="589" cy="152" r="5" fill="none" stroke="#15803D" strokeWidth="0.6" opacity="0.3" />
+
+          {/* Three-point turn arrows */}
+          <line x1="560" y1="108" x2="520" y2="108" stroke="#15803D" strokeWidth="1" opacity="0.35" markerEnd="url(#arrowG)" />
+          <line x1="600" y1="108" x2="640" y2="108" stroke="#15803D" strokeWidth="1" opacity="0.35" markerEnd="url(#arrowG)" />
+          <line x1="580" y1="160" x2="580" y2="240" stroke="#15803D" strokeWidth="1" opacity="0.35" markerEnd="url(#arrowG)" />
+          <defs>
+            <marker id="arrowG" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+              <polygon points="0,0 6,2 0,4" fill="#15803D" opacity="0.5" />
+            </marker>
+          </defs>
 
           {/* T-arm width dimension (36") */}
           <line x1="470" y1="148" x2="543" y2="148" stroke="#15803D" strokeWidth="1" />
