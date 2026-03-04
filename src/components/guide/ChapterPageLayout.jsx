@@ -40,7 +40,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
       background: isOpen ? 'var(--page-bg-alt)' : 'var(--page-bg)',
       border: '1px solid var(--border)',
       borderRadius: '12px', marginBottom: '12px', overflow: 'hidden',
-      transition: 'background 0.2s ease'
+      transition: 'none'
     }}>
       <button
         id={headerId}
@@ -73,9 +73,9 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
         role="region"
         aria-labelledby={headerId}
         style={{
-          maxHeight: isOpen ? '5000px' : '0px',
+          maxHeight: isOpen ? '50000px' : '0px',
           overflow: 'hidden',
-          transition: isOpen ? 'max-height 0.5s ease-in' : 'max-height 0.3s ease-out'
+          transition: 'none'
         }}
       >
         <div style={{ borderTop: '1px solid var(--border)' }}>
@@ -373,15 +373,15 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                   const willOpen = openIndex !== i;
                   setOpenIndex(willOpen ? i : null);
                   if (willOpen) {
-                    // Scroll after both collapse (300ms) and expand (500ms) animations finish
-                    setTimeout(() => {
+                    // Scroll to the opened section (no animation delay needed)
+                    requestAnimationFrame(() => {
                       const header = document.getElementById(`section-header-${i}`);
                       if (header && header.parentElement) {
                         const rect = header.parentElement.getBoundingClientRect();
                         const offset = window.scrollY + rect.top - 20;
                         window.scrollTo({ top: offset, behavior: 'smooth' });
                       }
-                    }, 550);
+                    });
                     trackEvent('guide_section_opened', {
                       chapter: chapterNum,
                       chapter_title: title,
