@@ -58,9 +58,9 @@ export default function LULAElevatorDiagram() {
         {unitToggle}
       </div>
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 720 340" role="img" aria-labelledby="lula-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+        <svg viewBox="0 0 720 365" role="img" aria-labelledby="lula-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="lula-title">LULA Elevator Size and Usage Limitations</title>
-          <rect width="720" height="340" fill="var(--page-bg-subtle)" />
+          <rect width="720" height="365" fill="var(--page-bg-subtle)" />
           <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Smaller cab, tighter fit</text>
           <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Where and when allowed</text>
 
@@ -115,7 +115,7 @@ export default function LULAElevatorDiagram() {
           <text x="540" y="256" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6">reach range, Braille, raised characters</text>
 
           <Dots callouts={CALLOUTS} active={active} toggle={toggle} />
-          <text x="20" y="328" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <text x="20" y="355" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing: ${ac.label}` : ''}</div>

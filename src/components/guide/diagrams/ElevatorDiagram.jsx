@@ -75,9 +75,9 @@ export default function ElevatorDiagram() {
         {unitToggle}
       </div>
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 720 360" role="img" aria-labelledby="elev-cab-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+        <svg viewBox="0 0 720 380" role="img" aria-labelledby="elev-cab-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="elev-cab-title">Elevator Cab Dimensions and Control Requirements</title>
-          <rect width="720" height="360" fill="var(--page-bg-subtle)" />
+          <rect width="720" height="380" fill="var(--page-bg-subtle)" />
           <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">How big the cab must be</text>
           <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">What must be inside</text>
 
@@ -137,7 +137,7 @@ export default function ElevatorDiagram() {
           <text x="550" y="271" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A">works without voice AND without vision</text>
 
           <Dots callouts={CAB_CALLOUTS} active={cabActive} toggle={toggleCab} />
-          <text x="20" y="348" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <text x="20" y="372" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{cabC ? `Showing: ${cabC.label}` : ''}</div>
