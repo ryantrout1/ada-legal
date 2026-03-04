@@ -29,7 +29,7 @@ const SIGN_CALLOUTS = [
   },
   {
     id: 2, label: 'How Many Spaces?', section: '\u00a7208.2',
-    color: '#2563EB', textColor: '#1E3A8A', x: 540, y: 52,
+    color: '#2563EB', textColor: '#1E3A8A', x: 680, y: 70,
     plain: 'The number of accessible spaces depends on total lot size: 1\u201325 total spaces = 1 accessible; 26\u201350 = 2; 51\u201375 = 3; 76\u2013100 = 4; and so on. For every 6 accessible spaces (or fraction), at least 1 must be van-accessible. Medical facilities treating mobility impairments need 20% accessible outpatient spaces. Spaces must be on the shortest accessible route to the entrance.',
     legal: '\u201CParking facilities shall provide accessible parking spaces in accordance with Table 208.2.\u201D \u201CFor every six or fraction of six accessible parking spaces, at least one shall be a van parking space.\u201D \u201CSpaces shall be located on the shortest accessible route from parking to an entrance.\u201D',
     citation: '\u00a7208.2, \u00a7208.3.1'
