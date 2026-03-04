@@ -485,9 +485,11 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('AdminCases')} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#FBB040' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? 'rgba(251,176,64,0.08)' : 'transparent' }} aria-current={currentPageName === 'AdminCases' ? 'page' : undefined}>
                       Case Manager
                     </Link>
+                    <Link to={createPageUrl('StandardsGuide')} style={{ color: currentPageName === 'StandardsGuide' ? '#FBB040' : 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', padding: '10px 12px', borderRadius: '6px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', background: currentPageName === 'StandardsGuide' ? 'rgba(251,176,64,0.08)' : 'transparent' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                      Standards Guide
+                    </Link>
                     <UserAvatarMenu user={user} onLogout={handleLogout} extraMenuItems={[
                       { to: createPageUrl('AdminLawyers'), icon: <User size={15} />, label: 'Lawyers' },
-                      { to: createPageUrl('StandardsGuide'), icon: <Eye size={15} />, label: 'ADA Standards Guide' },
                       { to: createPageUrl('AdminEmails'), icon: <Mail size={15} />, label: 'Email Templates' },
                     ]} />
                   </>
@@ -757,14 +759,14 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('AdminCases')} onClick={() => setMobileMenuOpen(false)} style={{ color: (currentPageName === 'AdminCases' || currentPageName === 'Admin') ? '#FBB040' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }}>
                       Case Manager
                     </Link>
+                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#FBB040' : 'white', padding: '14px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600 }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
+                      Standards Guide
+                    </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '4px 16px 0', padding: '8px 0 0' }}>
                       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: 'var(--dark-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0', padding: '0 0 4px' }}>More</p>
                     </div>
                     <Link to={createPageUrl('AdminLawyers')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminLawyers' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
                       Lawyers
-                    </Link>
-                    <Link to={createPageUrl('StandardsGuide')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'StandardsGuide' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }} aria-current={currentPageName === 'StandardsGuide' ? 'page' : undefined}>
-                      ADA Standards Guide
                     </Link>
                     <Link to={createPageUrl('AdminEmails')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminEmails' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
                       Email Templates
