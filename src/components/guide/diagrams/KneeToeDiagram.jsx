@@ -4,61 +4,65 @@ const KNEE_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#3
 
 const CALLOUTS = [
   {
-    id: 1, label: 'Maximum Depth', section: '§306.2', color: 'var(--section-label)', textColor: '#8B2E08',
-    x: 80, y: 42,
-    plain: 'Both toe clearance and knee clearance share the same horizontal space under an element. The maximum depth for both is 25 inches from the front edge. Toe clearance extends from the floor up to 9 inches; knee clearance occupies the zone from 9 inches up to 27 inches. The entire clearance envelope is 25 inches deep maximum, measured horizontally from the leading edge of the element toward the wall.',
-    legal: '"Toe clearance shall be permitted to extend 25 inches maximum under an element." §306.3.3 Knee clearance "25 inches deep maximum at 9 inches above the finish floor." Both zones share the same 25-inch horizontal envelope.',
-    citation: '§306.2'
+    id: 1, label: 'Knee Clearance', section: '\u00a7306.3',
+    color: '#7C3AED', textColor: '#5B21B6', x: 260, y: 52,
+    plain: 'At the front edge where the wheelchair approaches, knee clearance must be at least 27 inches above the floor. This height allows standard wheelchair armrests (typically 25\u201327 inches) to slide under. At 27 inches high, the space must be at least 8 inches deep from the front edge. At 9 inches above the floor (where it transitions to toe clearance), it must be at least 11 inches deep. The space tapers between these points, following the natural shape of seated legs.',
+    legal: '\u201CKnee clearance shall be 27 inches (685 mm) high minimum, 30 inches (760 mm) wide minimum, and 8 inches (205 mm) deep minimum.\u201D At 9 inches above the floor: 11 inches deep minimum, 25 inches deep maximum.',
+    citation: '\u00a7306.3'
   },
   {
-    id: 2, label: 'Toe Space Height', section: '§306.2.1', color: '#15803D', textColor: '#14532D',
-    x: 280, y: 42,
-    plain: 'The toe clearance zone is defined as the space from the finish floor up to 9 inches above the floor. This is the area where a wheelchair\'s footrests and the user\'s feet extend under an element. Anything in this zone — pipes, structural supports, trash cans — reduces toe clearance and can block wheelchair access. The full 9-inch height must be maintained across the minimum required depth.',
-    legal: '"Space under an element between the finish floor or ground and 9 inches (230 mm) above the finish floor or ground shall be considered toe clearance."',
-    citation: '§306.2.1'
+    id: 2, label: 'Toe Clearance', section: '\u00a7306.2',
+    color: '#15803D', textColor: '#14532D', x: 420, y: 52,
+    plain: 'The toe clearance zone is from the floor up to 9 inches above the floor \u2014 where a wheelchair\u0027s footrests and the user\u0027s feet extend under an element. Toe clearance must extend at least 17 inches under the element and can go up to 25 inches maximum. Anything in this zone (pipes, supports, trash cans) reduces clearance and can block access. The full 9-inch height and 30-inch width must be maintained.',
+    legal: '\u201CSpace under an element between the finish floor and 9 inches above the finish floor shall be considered toe clearance.\u201D Depth: 17 inches minimum, 25 inches maximum. Width: 30 inches minimum.',
+    citation: '\u00a7306.2'
   },
   {
-    id: 3, label: 'Toe Space Depth', section: '§306.2.2', color: '#2563EB', textColor: '#1E3A8A',
-    x: 480, y: 42,
-    plain: 'Toe clearance must extend at least 17 inches under the element (measured from the front edge toward the back) and may extend up to 25 inches maximum. The 17-inch minimum ensures footrests can fit underneath. Toe clearance is required to be 30 inches wide minimum. The toe space may extend the full depth of the knee clearance — they are not separate zones but stacked vertically.',
-    legal: '"Toe clearance shall extend 17 inches (430 mm) minimum under an element." Maximum: 25 inches. Width: 30 inches minimum per §306.2.3.',
-    citation: '§306.2.2'
-  },
-  {
-    id: 4, label: 'Knee Height', section: '§306.3.1', color: '#7C3AED', textColor: '#5B21B6',
-    x: 80, y: 250,
-    plain: 'At the front edge of the element (the leading edge where the wheelchair approaches), knee clearance must be at least 27 inches above the finish floor. This is the point where the wheelchair user\'s thighs pass under the counter or desk surface. The 27-inch height is measured at a point 8 inches back from the front edge. This height allows standard wheelchair armrests (typically 25–27 inches) to slide under.',
-    legal: '"Knee clearance shall be 27 inches (685 mm) high minimum, 30 inches (760 mm) wide minimum, and 8 inches (205 mm) deep minimum."',
-    citation: '§306.3.1'
-  },
-  {
-    id: 5, label: 'Knee Depth', section: '§306.3.3', color: '#92400E', textColor: '#78350F',
-    x: 280, y: 250,
-    plain: 'The knee clearance envelope tapers from front to back. At 27 inches above the floor, the clearance must be at least 8 inches deep (from the front edge back). At 9 inches above the floor (where it transitions to toe clearance), the depth must be at least 11 inches. Between these two heights, the clearance tapers linearly — creating a sloped profile that follows the natural shape of seated legs.',
-    legal: '"At 27 inches above the finish floor: 8 inches deep minimum." "At 9 inches above the finish floor: 11 inches deep minimum, 25 inches deep maximum." The space between tapers linearly.',
-    citation: '§306.3.3'
-  },
-  {
-    id: 6, label: 'Width', section: '§306.3.2', color: '#BE185D', textColor: '#9D174D',
-    x: 480, y: 250,
-    plain: 'Both knee clearance and toe clearance must be at least 30 inches wide. This width accommodates a standard wheelchair (typically 25–27 inches wide including wheels). The 30-inch measurement is taken perpendicular to the approach direction, between any vertical obstructions on either side. Pipe covers, structural elements, or equipment must not encroach into this 30-inch width.',
-    legal: '"Knee clearance shall be 30 inches (760 mm) wide minimum." Toe clearance: "30 inches wide minimum." Both measured clear of any obstructions.',
-    citation: '§306.3.2'
-  },
-  {
-    id: 7, label: 'Common Applications', section: 'Advisory §306', color: '#0E7490', textColor: '#0C4A6E',
-    x: 650, y: 140,
-    plain: 'Knee and toe clearance is required under lavatories (§606), dining and work surfaces (§902), sales and service counters (§904), and check-writing surfaces. Elements like pipes, valves, and enclosures underneath must not reduce the required clearance. When insulation or protection covers are added to pipes (as required at lavatories), they must fit within the clearance envelope without reducing it.',
-    legal: 'Advisory §306: "Clearances are required under lavatories (§606), dining surfaces, work surfaces (§902), and sales and service counters (§904)." Elements cannot reduce required knee/toe clearance.',
-    citation: '§306'
+    id: 3, label: 'Overall Dimensions', section: '\u00a7306',
+    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
+    plain: 'The entire clearance envelope is 25 inches deep maximum and 30 inches wide minimum, measured from the front edge toward the wall. This applies to lavatories, desks, counters, dining surfaces, and check-writing areas. When insulation or pipe covers are added under lavatories, they must fit within this envelope without reducing the required clearance.',
+    legal: '\u201CToe clearance shall be permitted to extend 25 inches maximum under an element.\u201D Both toe and knee clearance: 30 inches wide minimum. Clearance required at lavatories (\u00a7606), dining/work surfaces (\u00a7902), and service counters (\u00a7904).',
+    citation: '\u00a7306'
   }
 ];
 
 function makeLink(text) {
-  return (<a href={KNEE_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
+  return (<a href={KNEE_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>{'\u2197'}</span></a>);
 }
 function parseCitations(text) {
-  return text.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p);
+  return text.split(/(\u00a7\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^\u00a7\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p);
+}
+
+function CalloutPanel({ callout, onClose, panelRef }) {
+  if (!callout) return null;
+  return (
+    <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'kneeFade 0.25s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+        </div>
+        <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
+      </div>
+      <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
+        <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
+        <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard \u2014 {parseCitations(callout.citation)}</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCitations(callout.legal)}</p>
+        </div></aside>
+      </div>
+    </div>
+  );
+}
+
+function KeyFact({ color, number, children }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
+      <span style={{ background: color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
+    </div>
+  );
 }
 
 export default function KneeToeDiagram() {
@@ -68,17 +72,13 @@ export default function KneeToeDiagram() {
   const toggle = useCallback((id) => setActive(prev => prev === id ? null : id), []);
   useEffect(() => { if (active && panelRef.current) panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [active]);
   useEffect(() => { const h = (e) => { if (e.key === 'Escape') setActive(null); }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
-
-  const d = (inches, mm) => metric ? `${mm} mm` : `${inches}"`;
+  const d = (inches, mm) => metric ? `${mm} mm` : `${inches}\u2033`;
   const ac = CALLOUTS.find(c => c.id === active);
-
-  /* Layout: floor at y=440, counter surface at ~y=160 (27" zone top) */
-  /* Scale: ~10.4 px per inch from floor to 27" mark */
 
   return (
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>§306 Knee & Toe Clearance</h3>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>{'\u00a7'}306 Knee & Toe Clearance</h3>
         <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
           <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
           {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}
@@ -86,170 +86,132 @@ export default function KneeToeDiagram() {
       </div>
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 900 480" role="img" aria-labelledby="knee-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="knee-title">ADA §306 Knee and Toe Clearance — Side Cross-Section</title>
-          <rect x="0" y="0" width="900" height="480" fill="var(--page-bg-subtle)" />
+        <svg viewBox="0 0 720 420" role="img" aria-labelledby="knee-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+          <title id="knee-title">Knee and Toe Clearance \u2014 Side Cross-Section</title>
+          <rect width="720" height="420" fill="var(--page-bg-subtle)" />
 
-          <text x="450" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.08em">SIDE CROSS-SECTION — CLEARANCE ENVELOPE</text>
+          <text x="300" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">What fits under a counter or desk</text>
 
           {/* Wall */}
-          <rect x="140" y="60" width="12" height="390" fill="#94A3B8" rx="1" />
-          <text x="146" y="55" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">WALL</text>
-
-          {/* Floor */}
-          <line x1="100" y1="440" x2="850" y2="440" stroke="#94A3B8" strokeWidth="2.5" />
-          <text x="130" y="460" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)">FLOOR</text>
+          <rect x="100" y="68" width="12" height="312" fill="#CBD5E1" rx="2" />
+          <text x="96" y="62" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
 
           {/* Counter/desk surface */}
-          <rect x="152" y="155" width="240" height="12" rx="3" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="272" y="148" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)" fontWeight="600">COUNTER / DESK SURFACE</text>
+          <rect x="112" y="138" width="230" height="12" rx="3" fill="#94A3B8" stroke="#64748B" strokeWidth="1.5" />
+          <text x="227" y="132" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">counter / desk surface</text>
 
-          {/* ===== CLEARANCE ENVELOPE ===== */}
-          {/* Toe zone: floor(440) to 9"(347), 25" deep max from front edge(392) back to wall(152) */}
-          {/* Knee zone: 9"(347) to 27"(160), tapers from 11" deep at 9" to 8" deep at 27" */}
-          {/* Front edge at x=392 (25" from wall at x=152, scale: ~9.6px/inch) */}
-
-          {/* Toe clearance zone (full rectangle) */}
-          <rect x="152" y="347" width="240" height="93" rx="0" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" strokeDasharray="6 3" />
-          <text x="272" y="400" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" fontWeight="600">TOE CLEARANCE</text>
-          <text x="272" y="415" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D">below {d('9', '230')}</text>
-
-          {/* Knee clearance zone (tapered trapezoid) */}
-          {/* At 27" (y=160): 8" deep = ~77px from front edge(392) → x=315 */}
-          {/* At 9" (y=347): 11" deep min = ~106px → x=286, but can go to 25" = x=152 */}
-          <path d="M 392 160 L 315 160 L 286 347 L 392 347 Z" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="1.5" strokeDasharray="6 3" />
-          <text x="360" y="260" fontFamily="Manrope, sans-serif" fontSize="9" fill="#5B21B6" fontWeight="600">KNEE</text>
-          <text x="360" y="275" fontFamily="Manrope, sans-serif" fontSize="8" fill="#5B21B6">{d('9', '230')}–{d('27', '685')}</text>
-
-          {/* Taper line (sloped back edge of knee zone) */}
-          <line x1="315" y1="160" x2="286" y2="347" stroke="#B45309" strokeWidth="2" strokeDasharray="4 3" />
-          <text x="280" y="256" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600" transform="rotate(-76 280 256)">TAPER</text>
-
-          {/* ===== DIMENSION LINES ===== */}
-
-          {/* 27" height (floor to knee top) */}
-          <line x1="115" y1="160" x2="115" y2="440" stroke="#7C3AED" strokeWidth="1" />
-          <line x1="108" y1="160" x2="122" y2="160" stroke="#7C3AED" strokeWidth="1" />
-          <line x1="108" y1="440" x2="122" y2="440" stroke="#7C3AED" strokeWidth="1" />
-          <rect x="90" y="293" width="46" height="14" rx="3" fill="#7C3AED" />
-          <text x="113" y="303" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">{d('27', '685')}</text>
-
-          {/* 9" height (floor to toe/knee boundary) */}
-          <line x1="128" y1="347" x2="128" y2="440" stroke="#15803D" strokeWidth="1" />
-          <line x1="122" y1="347" x2="134" y2="347" stroke="#15803D" strokeWidth="1" />
-          <rect x="90" y="385" width="40" height="14" rx="3" fill="#15803D" />
-          <text x="110" y="395" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">{d('9', '230')}</text>
-
-          {/* 8" deep at 27" high */}
-          <line x1="315" y1="167" x2="392" y2="167" stroke="#B45309" strokeWidth="1" />
-          <line x1="315" y1="160" x2="315" y2="174" stroke="#B45309" strokeWidth="1" />
-          <line x1="392" y1="160" x2="392" y2="174" stroke="#B45309" strokeWidth="1" />
-          <rect x="326" y="170" width="58" height="13" rx="3" fill="#B45309" />
-          <text x="355" y="179" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('8', '205')} min</text>
-
-          {/* 11" deep at 9" high */}
-          <line x1="286" y1="340" x2="392" y2="340" stroke="#B45309" strokeWidth="1" />
-          <line x1="286" y1="333" x2="286" y2="347" stroke="#B45309" strokeWidth="1" />
-          <line x1="392" y1="333" x2="392" y2="347" stroke="#B45309" strokeWidth="1" />
-          <rect x="306" y="324" width="62" height="13" rx="3" fill="#B45309" />
-          <text x="337" y="333" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('11', '280')} min</text>
-
-          {/* 25" max total depth */}
-          <line x1="152" y1="452" x2="392" y2="452" stroke="#C2410C" strokeWidth="1" />
-          <line x1="152" y1="446" x2="152" y2="458" stroke="#C2410C" strokeWidth="1" />
-          <line x1="392" y1="446" x2="392" y2="458" stroke="#C2410C" strokeWidth="1" />
-          <rect x="238" y="455" width="68" height="14" rx="3" fill="#C2410C" />
-          <text x="272" y="465" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">{d('25', '635')} max</text>
-
-          {/* 17" min toe depth */}
-          <line x1="232" y1="430" x2="392" y2="430" stroke="#2563EB" strokeWidth="1" />
-          <line x1="232" y1="424" x2="232" y2="436" stroke="#2563EB" strokeWidth="1" />
-          <rect x="280" y="418" width="62" height="13" rx="3" fill="#2563EB" />
-          <text x="311" y="427" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('17', '430')} min</text>
+          {/* Floor */}
+          <line x1="60" y1="380" x2="700" y2="380" stroke="#94A3B8" strokeWidth="2.5" />
 
           {/* Front edge line */}
-          <line x1="392" y1="140" x2="392" y2="455" stroke="#94A3B8" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
-          <text x="396" y="138" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">FRONT EDGE</text>
+          <line x1="342" y1="120" x2="342" y2="395" stroke="#94A3B8" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+          <text x="346" y="118" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">front edge</text>
+
+          {/* KNEE ZONE */}
+          <path d="M 342 150 L 268 150 L 232 305 L 342 305 Z" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="1.5" />
+          <text x="310" y="230" fontFamily="Manrope, sans-serif" fontSize="11" fill="#7C3AED" fontWeight="600" opacity="0.6">knee</text>
+          <text x="310" y="245" fontFamily="Manrope, sans-serif" fontSize="11" fill="#7C3AED" fontWeight="600" opacity="0.6">zone</text>
+
+          {/* TOE ZONE */}
+          <rect x="112" y="305" width="230" height="75" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" />
+          <text x="227" y="348" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#15803D" fontWeight="600" opacity="0.6">toe zone</text>
+
+          {/* Taper line */}
+          <line x1="268" y1="150" x2="232" y2="305" stroke="#B45309" strokeWidth="2" strokeDasharray="5 3" />
+
+          {/* === DIMENSIONS === */}
+
+          {/* 27" height */}
+          <line x1="78" y1="150" x2="78" y2="380" stroke="#7C3AED" strokeWidth="1.5" />
+          <line x1="70" y1="150" x2="86" y2="150" stroke="#7C3AED" strokeWidth="1.5" />
+          <line x1="70" y1="380" x2="86" y2="380" stroke="#7C3AED" strokeWidth="1.5" />
+          <rect x="42" y="256" width="68" height="22" rx="6" fill="#7C3AED" />
+          <text x="76" y="271" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="white">{d('27', '685')}</text>
+          <text x="76" y="295" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C3AED" fontWeight="600">min high</text>
+
+          {/* 9" toe height */}
+          <rect x="42" y="332" width="52" height="20" rx="6" fill="#15803D" />
+          <text x="68" y="346" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('9', '230')}</text>
+
+          {/* 8" deep at 27" */}
+          <line x1="268" y1="156" x2="342" y2="156" stroke="#B45309" strokeWidth="1.2" />
+          <line x1="268" y1="150" x2="268" y2="162" stroke="#B45309" strokeWidth="1.2" />
+          <rect x="272" y="160" width="66" height="20" rx="6" fill="#B45309" />
+          <text x="305" y="174" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('8', '205')} min</text>
+
+          {/* 11" deep at 9" */}
+          <line x1="232" y1="298" x2="342" y2="298" stroke="#B45309" strokeWidth="1.2" />
+          <line x1="232" y1="292" x2="232" y2="304" stroke="#B45309" strokeWidth="1.2" />
+          <rect x="250" y="278" width="66" height="20" rx="6" fill="#B45309" />
+          <text x="283" y="292" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('11', '280')} min</text>
+
+          {/* 25" max total depth */}
+          <line x1="112" y1="396" x2="342" y2="396" stroke="#C2410C" strokeWidth="1.5" />
+          <line x1="112" y1="389" x2="112" y2="403" stroke="#C2410C" strokeWidth="1.5" />
+          <line x1="342" y1="389" x2="342" y2="403" stroke="#C2410C" strokeWidth="1.5" />
+          <rect x="189" y="400" width="68" height="20" rx="6" fill="#C2410C" />
+          <text x="223" y="414" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('25', '635')} max</text>
+
+          {/* 17" min toe depth */}
+          <line x1="185" y1="372" x2="342" y2="372" stroke="#2563EB" strokeWidth="1.2" />
+          <line x1="185" y1="365" x2="185" y2="379" stroke="#2563EB" strokeWidth="1.2" />
+          <rect x="222" y="356" width="66" height="20" rx="6" fill="#2563EB" />
+          <text x="255" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('17', '430')} min</text>
 
 
-          {/* ===== WHEELCHAIR USER ===== */}
-          {/* Rear wheel */}
-          <circle cx="610" cy="406" r="34" fill="none" stroke="#64748B" strokeWidth="1.8" />
-          {/* Front caster */}
-          <circle cx="690" cy="428" r="10" fill="none" stroke="#64748B" strokeWidth="1.2" />
-          {/* Frame */}
-          <line x1="604" y1="372" x2="690" y2="372" stroke="#64748B" strokeWidth="2" />
-          <line x1="604" y1="372" x2="594" y2="402" stroke="#64748B" strokeWidth="1.5" />
-          <line x1="690" y1="372" x2="690" y2="418" stroke="#64748B" strokeWidth="1.5" />
-          {/* Backrest */}
-          <line x1="604" y1="372" x2="600" y2="330" stroke="#64748B" strokeWidth="2" />
-          {/* Person torso */}
-          <line x1="620" y1="370" x2="610" y2="310" stroke="#475569" strokeWidth="3" strokeLinecap="round" />
-          {/* Head */}
-          <circle cx="608" cy="296" r="12" fill="#E2E8F0" stroke="#475569" strokeWidth="1.8" />
-          {/* Arms reaching forward to counter */}
-          <line x1="614" y1="340" x2="420" y2="168" stroke="#475569" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
-          {/* Thighs (knees going under counter) */}
-          <line x1="620" y1="370" x2="450" y2="300" stroke="#475569" strokeWidth="3" strokeLinecap="round" opacity="0.4" />
-          {/* Lower legs */}
-          <line x1="450" y1="300" x2="430" y2="400" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" opacity="0.3" />
-          {/* Footrest */}
-          <line x1="680" y1="430" x2="700" y2="430" stroke="#64748B" strokeWidth="2" />
+          {/* WHEELCHAIR USER (right side) */}
+          <g transform="translate(420,175) scale(1.4)">
+            <circle cx="22" cy="10" r="9" fill="#E2E8F0" stroke="#475569" strokeWidth="1.8" />
+            <line x1="25" y1="50" x2="22" y2="22" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" />
+            <line x1="15" y1="55" x2="55" y2="55" stroke="#475569" strokeWidth="2" />
+            <line x1="15" y1="55" x2="10" y2="73" stroke="#475569" strokeWidth="1.8" />
+            <line x1="55" y1="55" x2="55" y2="75" stroke="#475569" strokeWidth="1.8" />
+            <line x1="15" y1="55" x2="12" y2="28" stroke="#475569" strokeWidth="2" />
+            <circle cx="20" cy="73" r="20" fill="none" stroke="#475569" strokeWidth="2.2" />
+            <circle cx="58" cy="80" r="7" fill="none" stroke="#475569" strokeWidth="1.5" />
+            <line x1="40" y1="80" x2="55" y2="80" stroke="#475569" strokeWidth="1.5" />
+            {/* Arms forward toward counter */}
+            <line x1="24" y1="30" x2="-15" y2="-5" stroke="#475569" strokeWidth="2" strokeLinecap="round" opacity="0.4" />
+            {/* Thighs going under counter */}
+            <line x1="25" y1="50" x2="-10" y2="20" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" opacity="0.35" />
+            <line x1="-10" y1="20" x2="-20" y2="60" stroke="#475569" strokeWidth="2" strokeLinecap="round" opacity="0.3" />
+          </g>
 
-          {/* Arrow showing approach */}
-          <path d="M 680 380 L 420 380" fill="none" stroke="#7C3AED" strokeWidth="1" strokeDasharray="5 3" opacity="0.3" markerEnd="url(#kneeArr)" />
-          <defs>
-            <marker id="kneeArr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
-              <polygon points="0 0, 7 2.5, 0 5" fill="#7C3AED" opacity="0.4" />
-            </marker>
-          </defs>
-
-          {/* Width note (30") */}
-          <rect x="620" y="152" width="150" height="30" rx="6" fill="#DB2777" opacity="0.06" stroke="#DB2777" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="695" y="170" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#9D174D" fontWeight="600">Width: {d('30', '760')} min (into screen)</text>
-
-          {/* Applications note */}
-          <rect x="560" y="200" width="260" height="60" rx="8" fill="#0EA5E9" opacity="0.04" stroke="#0891B2" strokeWidth="1" />
-          <text x="690" y="222" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#0C4A6E" fontWeight="600">Common Applications:</text>
-          <text x="690" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#0C4A6E">Lavatories · Desks · Counters</text>
-          <text x="690" y="250" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#0C4A6E">Dining surfaces · Check-writing areas</text>
-
+          {/* Uses label */}
+          <text x="580" y="172" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">Required at:</text>
+          <text x="580" y="190" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B">sinks, desks, counters,</text>
+          <text x="580" y="206" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B">dining surfaces</text>
 
           {/* CALLOUT DOTS */}
           {CALLOUTS.map(c => (
-            <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label} — ${c.section}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
+            <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
               {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
               <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
               <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
+              <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="knee-focus-ring" />
             </g>
           ))}
-          <text x="30" y="475" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <text x="20" y="415" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 
       <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>
-      {ac && (
-        <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'kneeFade 0.25s ease-out' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: ac.color, color: 'var(--page-bg)', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{ac.id}</span>
-              <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{ac.label}</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: ac.color, background: `${ac.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{ac.section}</span>
-            </div>
-            <button onClick={() => setActive(null)} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">✕</span></button>
-          </div>
-          <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
-            <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{ac.plain}</p></div>
-            <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard — {parseCitations(ac.citation)}</p>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCitations(ac.legal)}</p>
-            </div></aside>
-          </div>
-        </div>
-      )}
-      <style>{`@keyframes kneeFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }        @media (prefers-reduced-motion: reduce) {
-          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
-        }
+      <CalloutPanel callout={ac} onClose={() => setActive(null)} panelRef={panelRef} />
+
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
+        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Knee & Toe Clearance</p>
+        <KeyFact color="#7C3AED" number={d('27', '685')}>Minimum height for knee clearance at the front edge</KeyFact>
+        <KeyFact color="#15803D" number={d('9', '230')}>Minimum height for toe clearance (below 9{'\u2033'} is the toe zone)</KeyFact>
+        <KeyFact color="#C2410C" number={d('25', '635')}>Maximum total depth under the element (wall to front edge)</KeyFact>
+        <KeyFact color="#2563EB" number={d('17', '430')}>Minimum depth for toe clearance</KeyFact>
+        <KeyFact color="#B45309" number={d('30', '760')}>Minimum width for both knee and toe clearance</KeyFact>
+      </div>
+
+      <style>{`
+        @keyframes kneeFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        g[role="button"]:focus .knee-focus-ring { stroke: var(--accent); stroke-width: 2.5; }
+        @media (max-width:768px) { .guide-two-col { flex-direction:column !important; gap:16px !important; } }
+        @media (prefers-reduced-motion: reduce) { .ada-diagram-wrap * { animation: none !important; transition: none !important; } }
       `}</style>
     </div>
   );
