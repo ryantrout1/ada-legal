@@ -73,7 +73,7 @@ export default function StairwayDiagram() {
   useEffect(() => { if (active && panelRef.current) panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [active]);
   useEffect(() => { const h = (e) => { if (e.key === 'Escape') setActive(null); }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
   const d = (inches, mm) => metric ? `${mm} mm` : `${inches}\u2033`;
-  const ac = CALLOUTS.find(c => c.id === active);
+  const ac = STEP_CALLOUTS.find(c => c.id === active);
 
   return (
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
