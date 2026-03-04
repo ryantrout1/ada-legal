@@ -12,7 +12,7 @@ const CALLOUTS = [
   },
   {
     id: 2, label: 'T-Shaped Turning Space', section: '\u00a7304.3.2',
-    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    color: '#15803D', textColor: '#14532D', x: 640, y: 70,
     plain: 'The T-shaped turning space is an alternative for tighter layouts like corridors or alcoves. It fits within a 60-inch square. The person executes a three-point turn \u2014 rolling forward into one arm, backing into the stem, then rolling forward in the new direction. Each arm and the stem must be at least 36 inches wide and clear of obstructions.',
     legal: '\u201CThe floor or ground surface of a T-shaped turning space shall be a T-shaped space within a 60 inch (1525 mm) square minimum with arms and base 36 inches (915 mm) wide minimum.\u201D',
     citation: '\u00a7304.3.2'

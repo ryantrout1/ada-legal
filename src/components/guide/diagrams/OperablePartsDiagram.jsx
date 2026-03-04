@@ -264,38 +264,38 @@ export default function OperablePartsDiagram() {
 
 
           {/* RIGHT: FAIL */}
-          <text x="530" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="#C2410C">These fail {'\u2718'}</text>
+          <text x="560" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="#C2410C">These fail {'\u2718'}</text>
 
           {/* Round doorknob */}
-          <circle cx="430" cy="93" r="22" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
-          <circle cx="430" cy="93" r="10" fill="none" stroke="#C2410C" strokeWidth="1.5" opacity="0.3" />
-          <text x="430" y="135" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Round doorknob</text>
-          <text x="430" y="150" fontFamily="Manrope, sans-serif" fontSize="9" fill="#7C2D12" textAnchor="middle">requires full wrist twist</text>
+          <circle cx="420" cy="93" r="22" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
+          <circle cx="420" cy="93" r="10" fill="none" stroke="#C2410C" strokeWidth="1.5" opacity="0.3" />
+          <text x="420" y="130" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Round knob</text>
+          <text x="420" y="144" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C2D12" textAnchor="middle">wrist twist</text>
 
           {/* Twist faucet */}
-          <rect x="495" y="72" width="50" height="42" rx="6" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
-          <text x="520" y="98" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fill="#C2410C" opacity="0.4">{'\u21bb'}</text>
-          <text x="520" y="135" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Twist faucet</text>
-          <text x="520" y="150" fontFamily="Manrope, sans-serif" fontSize="9" fill="#7C2D12" textAnchor="middle">requires grip + rotation</text>
+          <rect x="505" y="72" width="50" height="42" rx="6" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
+          <text x="530" y="98" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fill="#C2410C" opacity="0.4">{'\u21bb'}</text>
+          <text x="530" y="130" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Twist faucet</text>
+          <text x="530" y="144" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C2D12" textAnchor="middle">grip + rotate</text>
 
           {/* Tight thumb-turn */}
-          <rect x="590" y="72" width="40" height="42" rx="6" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
-          <rect x="604" y="86" width="12" height="14" rx="2" fill="#C2410C" opacity="0.2" />
-          <text x="610" y="135" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Thumb-turn</text>
-          <text x="610" y="150" fontFamily="Manrope, sans-serif" fontSize="9" fill="#7C2D12" textAnchor="middle">requires pinch + twist</text>
+          <rect x="620" y="72" width="40" height="42" rx="6" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
+          <rect x="634" y="86" width="12" height="14" rx="2" fill="#C2410C" opacity="0.2" />
+          <text x="640" y="130" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Thumb-turn</text>
+          <text x="640" y="144" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C2D12" textAnchor="middle">pinch + twist</text>
 
           {/* Tiny toggle */}
-          <rect x="410" y="185" width="30" height="40" rx="4" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
-          <rect x="418" y="190" width="14" height="6" rx="1" fill="#C2410C" opacity="0.2" />
-          <text x="425" y="243" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Tiny toggle</text>
-          <text x="425" y="258" fontFamily="Manrope, sans-serif" fontSize="9" fill="#7C2D12" textAnchor="middle">requires fingertip pinch</text>
+          <rect x="415" y="175" width="30" height="40" rx="4" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
+          <rect x="423" y="180" width="14" height="6" rx="1" fill="#C2410C" opacity="0.2" />
+          <text x="430" y="233" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Tiny toggle</text>
+          <text x="430" y="247" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C2D12" textAnchor="middle">fingertip pinch</text>
 
           {/* Stiff crank */}
-          <rect x="485" y="185" width="50" height="40" rx="6" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
-          <circle cx="510" cy="205" r="8" fill="none" stroke="#C2410C" strokeWidth="1.5" opacity="0.3" />
-          <line x1="510" y1="197" x2="510" y2="205" stroke="#C2410C" strokeWidth="2" />
-          <text x="510" y="243" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Stiff valve</text>
-          <text x="510" y="258" fontFamily="Manrope, sans-serif" fontSize="9" fill="#7C2D12" textAnchor="middle">{"> 5 lbs force"}</text>
+          <rect x="515" y="175" width="50" height="40" rx="6" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
+          <circle cx="540" cy="195" r="8" fill="none" stroke="#C2410C" strokeWidth="1.5" opacity="0.3" />
+          <line x1="540" y1="187" x2="540" y2="195" stroke="#C2410C" strokeWidth="2" />
+          <text x="540" y="233" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Stiff valve</text>
+          <text x="540" y="247" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C2D12" textAnchor="middle">{"> 5 lbs force"}</text>
 
           <CalloutDots callouts={TYPE_CALLOUTS} active={typeActive} toggle={toggleType} />
           <text x="20" y="328" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>

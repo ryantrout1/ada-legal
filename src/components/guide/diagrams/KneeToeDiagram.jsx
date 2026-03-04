@@ -19,7 +19,7 @@ const CALLOUTS = [
   },
   {
     id: 3, label: 'Overall Dimensions', section: '\u00a7306',
-    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
+    color: '#C2410C', textColor: '#7C2D12', x: 580, y: 52,
     plain: 'The entire clearance envelope is 25 inches deep maximum and 30 inches wide minimum, measured from the front edge toward the wall. This applies to lavatories, desks, counters, dining surfaces, and check-writing areas. When insulation or pipe covers are added under lavatories, they must fit within this envelope without reducing the required clearance.',
     legal: '\u201CToe clearance shall be permitted to extend 25 inches maximum under an element.\u201D Both toe and knee clearance: 30 inches wide minimum. Clearance required at lavatories (\u00a7606), dining/work surfaces (\u00a7902), and service counters (\u00a7904).',
     citation: '\u00a7306'
@@ -86,9 +86,9 @@ export default function KneeToeDiagram() {
       </div>
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 720 420" role="img" aria-labelledby="knee-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+        <svg viewBox="0 0 720 450" role="img" aria-labelledby="knee-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="knee-title">Knee and Toe Clearance \u2014 Side Cross-Section</title>
-          <rect width="720" height="420" fill="var(--page-bg-subtle)" />
+          <rect width="720" height="450" fill="var(--page-bg-subtle)" />
 
           <text x="300" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">What fits under a counter or desk</text>
 
@@ -191,7 +191,7 @@ export default function KneeToeDiagram() {
               <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="knee-focus-ring" />
             </g>
           ))}
-          <text x="20" y="415" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <text x="20" y="438" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 

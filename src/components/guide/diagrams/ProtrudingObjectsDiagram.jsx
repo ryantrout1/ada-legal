@@ -22,7 +22,7 @@ const WALL_CALLOUTS = [
 const HEAD_CALLOUTS = [
   {
     id: 1, label: 'Overhead Clearance', section: '\u00a7307.4',
-    color: '#7C3AED', textColor: '#5B21B6', x: 170, y: 52,
+    color: '#7C3AED', textColor: '#5B21B6', x: 260, y: 52,
     plain: 'Vertical clearance of 80 inches (6 feet 8 inches) minimum must be maintained in all circulation areas. This protects against head injuries for people who are tall or have low vision. Common areas include hallways, lobbies, under mezzanines, and near stairways.',
     legal: '\u201CVertical clearance shall be 80 inches (2030 mm) high minimum.\u201D',
     citation: '\u00a7307.4'
@@ -188,9 +188,8 @@ export default function ProtrudingObjectsDiagram() {
           <rect x="420" y="50" width="12" height="310" fill="#CBD5E1" rx="2" />
 
           {/* Drinking fountain (OK, below 27") */}
-          <rect x="432" y="260" width="55" height="40" rx="4" fill="#15803D" opacity="0.08" stroke="#15803D" strokeWidth="2" />
-          <text x="460" y="276" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#15803D" fontWeight="600">fountain</text>
-          <text x="460" y="288" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#15803D" fontWeight="600">(OK)</text>
+          <rect x="432" y="265" width="55" height="35" rx="4" fill="#15803D" opacity="0.08" stroke="#15803D" strokeWidth="2" />
+          <text x="460" y="314" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#15803D" fontWeight="600">fountain (OK)</text>
 
           {/* 27" line */}
           <line x1="400" y1="275" x2="700" y2="275" stroke="#B45309" strokeWidth="2.5" strokeDasharray="8 4" />

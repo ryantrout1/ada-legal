@@ -422,9 +422,10 @@ export default function ReachRangeDiagram() {
           <rect x="68" y="60" width="10" height="268" fill="#CBD5E1" rx="2" />
 
           {/* Light switch */}
-          <rect x="78" y="168" width="14" height="22" rx="3" fill="white" stroke="#94A3B8" strokeWidth="1.5" />
-          <rect x="83" y="174" width="4" height="10" rx="1" fill="#94A3B8" />
-          <text x="104" y="184" fontFamily="Manrope, sans-serif" fontSize="9" fill="#64748B" fontWeight="500">light switch</text>
+          <rect x="78" y="178" width="14" height="22" rx="3" fill="white" stroke="#94A3B8" strokeWidth="1.5" />
+          <rect x="83" y="184" width="4" height="10" rx="1" fill="#94A3B8" />
+          <text x="85" y="172" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#64748B" fontWeight="500">light</text>
+          <text x="85" y="160" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#64748B" fontWeight="500">switch</text>
 
           {/* Reach zone */}
           <rect x="78" y="96" width="70" height="200" fill="#2563EB" opacity="0.05" rx="6" stroke="#2563EB" strokeWidth="1.5" />
