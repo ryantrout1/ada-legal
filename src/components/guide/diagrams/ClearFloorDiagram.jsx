@@ -92,7 +92,7 @@ export default function ClearFloorDiagram() {
 
           {/* Element (wall-mounted, at top) */}
           <rect x="130" y="56" width="140" height="12" rx="2" fill="#94A3B8" opacity="0.3" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="200" y="52" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)" fontWeight="600">ELEMENT</text>
+          <text x="200" y="52" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)" fontWeight="600">counter, sink, desk, etc.</text>
 
           {/* Clear floor rectangle — 30 wide × 48 deep (toward element) */}
           <rect x="110" y="70" width="180" height="210" rx="4" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="2" />
@@ -141,7 +141,7 @@ export default function ClearFloorDiagram() {
 
           {/* Element (on side) */}
           <rect x="420" y="110" width="12" height="140" rx="2" fill="#94A3B8" opacity="0.3" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="418" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)" fontWeight="600" transform="rotate(-90 418 180)">ELEMENT</text>
+          <text x="418" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)" fontWeight="600" transform="rotate(-90 418 180)">switch, control, etc.</text>
 
           {/* Clear floor rectangle — 48 long (parallel) × 30 wide */}
           <rect x="440" y="82" width="330" height="200" rx="4" fill="#2563EB" opacity="0.05" stroke="#2563EB" strokeWidth="2" />
