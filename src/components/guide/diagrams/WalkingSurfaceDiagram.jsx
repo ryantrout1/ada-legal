@@ -1,243 +1,238 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
-const STD_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#403-walking-surfaces';
-const CALLOUTS = [
-  { id: 1, label: 'Clear Width', section: '§403.5.1', color: 'var(--section-label)', textColor: '#8B2E08', x: 100, y: 80, plain: 'The clear width of a walking surface must be 36 inches (915 mm) minimum. At a point where someone in a wheelchair must turn around, a 60-inch (1525 mm) turning space or T-shaped space is required. The 36-inch clear width is measured between walls, railings, or other obstructions — not including the flare at the base of handrails.', legal: '"The clear width of walking surfaces shall be 36 inches minimum." §403.5.1: "The clear width of walking surfaces shall be 36 inches (915 mm) minimum." EXCEPTION: "The clear width shall be permitted to be reduced to 32 inches (815 mm) minimum for a length of 24 inches (610 mm) maximum provided that reduced-width segments are separated by segments that are 48 inches (1220 mm) long minimum and 36 inches (915 mm) wide minimum."', citation: '§403.5.1' },
-  { id: 2, label: 'Running Slope', section: '§403.3', color: '#15803D', textColor: '#14532D', x: 330, y: 80, plain: 'The running slope (the slope in the direction of travel) must not be steeper than 1:20 (5%). If the slope exceeds 1:20, it becomes a ramp and must comply with §405 — including handrails, landings, and edge protection. Walking surfaces at door landings must not exceed 1:48 (about 2%) slope.', legal: '"The running slope of walking surfaces shall not be steeper than 1:20." Advisory 403.3: "A slope steeper than 1:20 is a ramp and must comply with §405."', citation: '§403.3' },
-  { id: 3, label: 'Cross Slope', section: '§403.3', color: '#2563EB', textColor: '#1E3A8A', x: 510, y: 80, plain: 'The cross slope (perpendicular to the direction of travel) must not exceed 1:48 (about 2%). Excessive cross slope causes wheelchairs to drift sideways and makes it extremely difficult for users to maintain a straight path. This applies to all walking surfaces, including sidewalks, corridors, and floor surfaces along accessible routes.', legal: '"The cross slope of walking surfaces shall not be steeper than 1:48."', citation: '§403.3' },
-  { id: 4, label: 'Surface Requirements', section: '§403.2', color: '#7C3AED', textColor: '#5B21B6', x: 700, y: 80, plain: 'All walking surfaces must be firm, stable, and slip-resistant. This applies to both indoor and outdoor surfaces. Carpet must be securely attached with a firm cushion or backing and have a maximum pile height of ½ inch. Openings in floor surfaces (like grates) must not allow passage of a ½-inch sphere and must be oriented so the long dimension is perpendicular to the dominant direction of travel.', legal: '"Floor or ground surfaces shall be stable, firm, and slip-resistant." §302.2: "Carpet or carpet tile shall be securely attached and shall have a firm cushion, pad, or backing or no cushion or pad. Carpet or carpet tile shall have a level loop, textured loop, level cut pile, or level cut/uncut pile texture. Pile height shall be ½ inch maximum."', citation: '§403.2, §302' },
-  { id: 5, label: 'Changes in Level', section: '§403.4', color: '#92400E', textColor: '#78350F', x: 100, y: 300, plain: 'Changes in level along the walking surface up to ¼ inch may be vertical (a sharp step). Changes between ¼ inch and ½ inch must be beveled with a slope no steeper than 1:2. Changes greater than ½ inch must be treated as a ramp (§405) or curb ramp (§406). This means even small uneven pavement joints, raised thresholds, or carpet edges matter.', legal: '"Changes in level of ¼ inch high maximum shall be permitted to be vertical. Changes in level between ¼ inch high minimum and ½ inch high maximum shall be beveled with a slope not steeper than 1:2." §303.4: "Changes in level greater than ½ inch high shall comply with 405 (Ramps) or 406 (Curb Ramps)."', citation: '§303.2, §303.3, §303.4' },
-  { id: 6, label: 'Passing Spaces', section: '§403.5.3', color: '#BE185D', textColor: '#9D174D', x: 300, y: 300, plain: 'On corridors less than 60 inches wide, passing spaces must be provided every 200 feet. A passing space is either a 60×60 inch area or a T-shaped intersection of two corridors. This allows two wheelchair users traveling in opposite directions to pass each other.', legal: '"An accessible route with a clear width less than 60 inches shall provide passing spaces at intervals of 200 feet maximum. Passing spaces shall be either a space 60 inches minimum by 60 inches minimum, or an intersection of two walking surfaces providing a T-shaped space."', citation: '§403.5.3' },
-  { id: 7, label: 'Gratings & Openings', section: '§302.3', color: '#0E7490', textColor: '#0C4A6E', x: 500, y: 300, plain: 'Any gratings, grates, or openings in walking surfaces on accessible routes must have gaps no wider than ½ inch in one direction. Elongated openings (like the slits in a floor grate) must be oriented so the long dimension runs perpendicular to the dominant direction of travel. This prevents wheelchair caster wheels and cane tips from getting caught.', legal: '"Openings in floor or ground surfaces shall not allow passage of a sphere more than ½ inch in diameter. Elongated openings shall be placed so that the long dimension is perpendicular to the dominant direction of travel."', citation: '§302.3' }
+const WALK_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#403-walking-surfaces';
+
+const SLOPE_CALLOUTS = [
+  {
+    id: 1, label: 'Width & Passing', section: '\u00a7403.5',
+    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    plain: 'Walking surfaces must be at least 36 inches wide. They can narrow to 32 inches at a single point for up to 24 inches. On corridors less than 60 inches wide, a 60\u00d760-inch passing space must be provided every 200 feet so two wheelchair users can pass each other.',
+    legal: '\u201CThe clear width of walking surfaces shall be 36 inches minimum.\u201D Exception: \u201CMay reduce to 32 inches minimum for 24 inches maximum.\u201D Passing spaces every 200 feet per \u00a7403.5.3.',
+    citation: '\u00a7403.5'
+  },
+  {
+    id: 2, label: 'Running Slope & Cross Slope', section: '\u00a7403.3',
+    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    plain: 'Running slope (direction of travel) cannot exceed 1:20 (5%). Anything steeper becomes a ramp and must comply with \u00a7405 \u2014 handrails, landings, and edge protection required. Cross slope (perpendicular to travel) cannot exceed 1:48 (about 2%). Excessive cross slope causes wheelchairs to drift sideways.',
+    legal: '\u201CThe running slope of walking surfaces shall not be steeper than 1:20.\u201D \u201CThe cross slope shall not be steeper than 1:48.\u201D Advisory: \u201CA slope steeper than 1:20 is a ramp and must comply with \u00a7405.\u201D',
+    citation: '\u00a7403.3'
+  }
 ];
 
-function makeLink(t) { return (<a href={STD_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
-function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
+const SURFACE_CALLOUTS = [
+  {
+    id: 1, label: 'Surface Requirements', section: '\u00a7302',
+    color: '#7C3AED', textColor: '#5B21B6', x: 170, y: 52,
+    plain: 'All walking surfaces must be firm, stable, and slip-resistant. Carpet must be securely attached with maximum \u00bd-inch pile height. Openings in floor surfaces (like grates) must not allow a \u00bd-inch sphere to pass through, and elongated openings must run perpendicular to the direction of travel so casters and cane tips don\u2019t get caught.',
+    legal: '\u201CFloor or ground surfaces shall be stable, firm, and slip-resistant.\u201D Carpet: \u201CLevel loop, textured loop, level cut pile, or level cut/uncut pile. Pile height \u00bd inch maximum.\u201D Gratings: \u201COpenings shall not allow passage of a sphere more than \u00bd inch in diameter.\u201D',
+    citation: '\u00a7302, \u00a7302.3'
+  },
+  {
+    id: 2, label: 'Changes in Level', section: '\u00a7303',
+    color: '#2563EB', textColor: '#1E3A8A', x: 540, y: 52,
+    plain: 'Small bumps in the walking surface matter. Up to \u00bc inch can be vertical (a sharp step). Between \u00bc and \u00bd inch must be beveled at no steeper than 1:2. Anything over \u00bd inch must be treated as a ramp. Look for: uneven pavement joints, raised thresholds, carpet edges, and cracked sidewalk lips.',
+    legal: '\u201CChanges in level of \u00bc inch high maximum shall be permitted to be vertical.\u201D \u201CChanges between \u00bc inch and \u00bd inch shall be beveled with a slope not steeper than 1:2.\u201D \u201CChanges greater than \u00bd inch shall comply with \u00a7405 or \u00a7406.\u201D',
+    citation: '\u00a7303'
+  }
+];
+
+function makeLink(t) { return (<a href={WALK_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${t} on ADA.gov`}>{t}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>{'\u2197'}</span></a>); }
+function parseCite(t) { return t.split(/(\u00a7\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^\u00a7\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
+
+function CalloutPanel({ callout, onClose, panelRef }) {
+  if (!callout) return null;
+  return (
+    <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'walkFade 0.25s ease-out' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+        </div>
+        <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close {'\u2715'}</button>
+      </div>
+      <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
+        <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
+        <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard {'\u2014'} {parseCite(callout.citation)}</p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(callout.legal)}</p>
+        </div></aside>
+      </div>
+    </div>
+  );
+}
+function KeyFact({ color, number, children }) {
+  return (<div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
+    <span style={{ background: color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
+  </div>);
+}
+function Dots({ callouts, active, toggle }) {
+  return callouts.map(c => (
+    <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
+      {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
+      <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
+      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
+    </g>
+  ));
+}
 
 export default function WalkingSurfaceDiagram() {
-  const [active, setActive] = useState(null);
+  const [slopeActive, setSlopeActive] = useState(null);
+  const [surfActive, setSurfActive] = useState(null);
   const [metric, setMetric] = useState(false);
-  const panelRef = useRef(null);
-  const toggle = useCallback(id => setActive(p => p === id ? null : id), []);
-  useEffect(() => { if (active && panelRef.current) panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [active]);
-  useEffect(() => { const h = e => { if (e.key === 'Escape') setActive(null); }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
-  const d = (imp, met) => metric ? `${met} mm` : `${imp}"`;
-  const ac = CALLOUTS.find(c => c.id === active);
+  const slopeRef = useRef(null); const surfRef = useRef(null);
+  const toggleSlope = useCallback(id => { setSlopeActive(p => p === id ? null : id); setSurfActive(null); }, []);
+  const toggleSurf = useCallback(id => { setSurfActive(p => p === id ? null : id); setSlopeActive(null); }, []);
+  useEffect(() => { if (slopeActive && slopeRef.current) slopeRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [slopeActive]);
+  useEffect(() => { if (surfActive && surfRef.current) surfRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [surfActive]);
+  useEffect(() => { const h = e => { if (e.key === 'Escape') { setSlopeActive(null); setSurfActive(null); } }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
+  const d = (i, m) => metric ? `${m} mm` : `${i}\u2033`;
+  const slopeC = SLOPE_CALLOUTS.find(c => c.id === slopeActive);
+  const surfC = SURFACE_CALLOUTS.find(c => c.id === surfActive);
+  const unitToggle = (<div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>{['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}</div>);
 
   return (
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>§403 Walking Surfaces</h3>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
-          {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: 6, border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: 44 }}>{u}</button>); })}
-        </div>
+      {/* DIAGRAM 1: Width & Slope */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Width & Slope</h3>
+        {unitToggle}
       </div>
-      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
-        <svg viewBox="0 0 900 520" role="img" aria-labelledby="ws-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="ws-title">ADA §403 Walking Surfaces — Section & Plan View</title>
-          <rect width="900" height="520" fill="var(--page-bg-subtle)" />
-          <text x="280" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">PLAN VIEW — CORRIDOR WITH PASSING SPACE</text>
-          <text x="720" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">CROSS SECTION</text>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
+        <svg viewBox="0 0 720 360" role="img" aria-labelledby="ws-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+          <title id="ws-title">Walking Surface Width and Slope Requirements</title>
+          <rect width="720" height="360" fill="var(--page-bg-subtle)" />
 
-          {/* ===== LEFT: Plan view corridor ===== */}
-          {/* Walls */}
-          <rect x="60" y="40" width="8" height="440" fill="#94A3B8" opacity="0.3" rx="2" />
-          <rect x="200" y="40" width="8" height="180" fill="#94A3B8" opacity="0.3" rx="2" />
-          {/* Narrowing point */}
-          <rect x="190" y="220" width="18" height="50" fill="#94A3B8" opacity="0.2" rx="2" />
-          <rect x="200" y="270" width="8" height="80" fill="#94A3B8" opacity="0.3" rx="2" />
+          {/* LEFT: Width */}
+          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">How wide the path must be</text>
 
-          {/* Passing space box */}
-          <rect x="60" y="350" width="210" height="130" rx="4" fill="#DB2777" opacity="0.04" stroke="#DB2777" strokeWidth="1.5" strokeDasharray="6 3" />
-          <text x="165" y="420" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#9D174D" fontWeight="600">PASSING SPACE</text>
-          <rect x="268" y="350" width="8" height="130" fill="#94A3B8" opacity="0.3" rx="2" />
+          {/* Corridor walls */}
+          <rect x="60" y="80" width="220" height="14" rx="2" fill="#CBD5E1" />
+          <rect x="60" y="280" width="220" height="14" rx="2" fill="#CBD5E1" />
+          <text x="170" y="78" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
+          <text x="170" y="308" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
 
-          {/* Corridor floor fill */}
-          <rect x="68" y="40" width="132" height="310" fill="#C2410C" opacity="0.03" />
-          <text x="134" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="var(--body-secondary)" transform="rotate(-90 134 110)">CORRIDOR</text>
+          {/* Walking path */}
+          <rect x="60" y="94" width="220" height="186" rx="0" fill="#C2410C" opacity="0.03" />
 
-          {/* Wheelchair silhouette */}
-          <circle cx="130" cy="160" r="10" fill="#475569" opacity="0.15" />
-          <rect x="120" y="170" width="20" height="25" rx="3" fill="#475569" opacity="0.1" />
-          <circle cx="118" cy="195" r="8" fill="none" stroke="#475569" strokeWidth="1.5" opacity="0.2" />
-          <circle cx="142" cy="195" r="8" fill="none" stroke="#475569" strokeWidth="1.5" opacity="0.2" />
+          {/* Wheelchair top-down */}
+          <g transform="translate(135,145) scale(0.9)" opacity="0.5">
+            <rect x="0" y="0" width="50" height="40" rx="4" fill="none" stroke="#475569" strokeWidth="1.8" />
+            <circle cx="25" cy="20" r="8" fill="#E2E8F0" stroke="#475569" strokeWidth="1.5" />
+            <circle cx="5" cy="48" r="13" fill="none" stroke="#475569" strokeWidth="1.5" />
+            <circle cx="45" cy="48" r="13" fill="none" stroke="#475569" strokeWidth="1.5" />
+          </g>
 
-          {/* Direction arrow */}
-          <line x1="134" y1="55" x2="134" y2="200" stroke="#475569" strokeWidth="1" opacity="0.2" markerEnd="url(#wsArr)" />
-          <defs><marker id="wsArr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#475569" opacity="0.3" /></marker></defs>
+          {/* 36" dimension */}
+          <line x1="60" y1="320" x2="280" y2="320" stroke="#C2410C" strokeWidth="1.5" />
+          <line x1="60" y1="314" x2="60" y2="326" stroke="#C2410C" strokeWidth="1.5" />
+          <line x1="280" y1="314" x2="280" y2="326" stroke="#C2410C" strokeWidth="1.5" />
+          <rect x="130" y="326" width="80" height="22" rx="6" fill="#C2410C" />
+          <text x="170" y="341" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="white">{d('36', '915')} min</text>
 
-          {/* Dim: 36" clear width */}
-          <line x1="68" y1="500" x2="200" y2="500" stroke="#C2410C" strokeWidth="1" />
-          <line x1="68" y1="494" x2="68" y2="506" stroke="#C2410C" strokeWidth="1" />
-          <line x1="200" y1="494" x2="200" y2="506" stroke="#C2410C" strokeWidth="1" />
-          <rect x="106" y="490" width="52" height="14" rx="3" fill="#C2410C" />
-          <text x="132" y="500" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('36', '915')} min</text>
+          {/* DIVIDER */}
+          <line x1="345" y1="20" x2="345" y2="340" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
 
-          {/* Dim: 32" narrowing */}
-          <line x1="68" y1="245" x2="190" y2="245" stroke="#B45309" strokeWidth="1" />
-          <line x1="68" y1="239" x2="68" y2="251" stroke="#B45309" strokeWidth="1" />
-          <line x1="190" y1="239" x2="190" y2="251" stroke="#B45309" strokeWidth="1" />
-          <rect x="101" y="248" width="52" height="12" rx="3" fill="#B45309" />
-          <text x="127" y="257" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('32', '815')} min</text>
-          <text x="129" y="275" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#78350F">(24" max length)</text>
+          {/* RIGHT: Slope */}
+          <text x="530" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">How steep it can be</text>
 
-          {/* Dim: 60x60 passing */}
-          <line x1="60" y1="487" x2="270" y2="487" stroke="#DB2777" strokeWidth="1" />
-          <line x1="60" y1="481" x2="60" y2="493" stroke="#DB2777" strokeWidth="1" />
-          <line x1="270" y1="481" x2="270" y2="493" stroke="#DB2777" strokeWidth="1" />
-          <rect x="134" y="476" width="62" height="12" rx="3" fill="#DB2777" />
-          <text x="165" y="485" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('60', '1525')} × {d('60', '1525')}</text>
+          {/* Running slope surface */}
+          <line x1="380" y1="230" x2="680" y2="190" stroke="#475569" strokeWidth="3" />
+          <text x="530" y="178" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">direction of travel {'\u2192'}</text>
 
-          {/* Grating detail box */}
-          <rect x="320" y="370" width="120" height="90" rx="6" fill="#0EA5E9" opacity="0.04" stroke="#0891B2" strokeWidth="1" />
-          <text x="380" y="390" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">GRATE DETAIL</text>
-          {/* Grate lines */}
-          {[0,1,2,3,4,5].map(i => (
-            <line key={`g${i}`} x1={340 + i * 16} y1="400" x2={340 + i * 16} y2="445" stroke="#0891B2" strokeWidth="1.5" opacity="0.3" />
-          ))}
-          <text x="380" y="458" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#0C4A6E">½" max opening</text>
-          {/* Travel direction arrow */}
-          <line x1="340" y1="432" x2="420" y2="432" stroke="#0891B2" strokeWidth="1" opacity="0.5" markerEnd="url(#wsArr2)" />
-          <text x="380" y="428" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#0C4A6E">↑ travel</text>
-          <defs><marker id="wsArr2" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0 0,6 2,0 4" fill="#0EA5E9" opacity="0.5" /></marker></defs>
+          {/* Running slope label */}
+          <rect x="460" y="235" width="140" height="22" rx="6" fill="#15803D" />
+          <text x="530" y="250" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">running slope: 1:20 max</text>
 
-          {/* ===== CALLOUT 2: Running Slope illustration ===== */}
-          <rect x="250" y="100" width="160" height="170" rx="6" fill="#15803D" opacity="0.03" stroke="#15803D" strokeWidth="1" />
-          <text x="330" y="118" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#14532D" fontWeight="600">RUNNING SLOPE</text>
-          {/* Ground line with gentle slope */}
-          <line x1="270" y1="230" x2="390" y2="215" stroke="#15803D" strokeWidth="2" />
-          <line x1="270" y1="230" x2="390" y2="230" stroke="#94A3B8" strokeWidth="1" strokeDasharray="4 2" />
+          {/* Cross slope illustration */}
+          <line x1="410" y1="300" x2="650" y2="295" stroke="#475569" strokeWidth="2" strokeDasharray="4 3" />
+          <rect x="460" y="305" width="140" height="22" rx="6" fill="#2563EB" />
+          <text x="530" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">cross slope: 1:48 max</text>
+
           {/* Slope angle indicator */}
-          <path d="M 270 230 L 310 230 L 310 226.7" fill="none" stroke="#15803D" strokeWidth="1" />
-          {/* Arrows showing travel direction */}
-          <line x1="280" y1="200" x2="370" y2="200" stroke="#15803D" strokeWidth="1" opacity="0.5" markerEnd="url(#wsArr)" />
-          <text x="325" y="195" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#14532D">direction of travel</text>
-          {/* Labels */}
-          <text x="330" y="248" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#14532D" fontWeight="600">Max slope 1:20 (5%)</text>
-          <text x="330" y="260" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#14532D">Steeper = ramp (§405)</text>
+          <line x1="380" y1="230" x2="680" y2="230" stroke="#15803D" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
+          <text x="690" y="212" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">5%</text>
 
-          {/* ===== CALLOUT 3: Cross Slope illustration ===== */}
-          <rect x="430" y="100" width="160" height="170" rx="6" fill="#2563EB" opacity="0.03" stroke="#2563EB" strokeWidth="1" />
-          <text x="510" y="118" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#1E3A8A" fontWeight="600">CROSS SLOPE</text>
-          {/* Front view of walkway with slight cross slope */}
-          <line x1="450" y1="220" x2="570" y2="217" stroke="#2563EB" strokeWidth="2.5" />
-          {/* Flat reference line */}
-          <line x1="450" y1="220" x2="570" y2="220" stroke="#94A3B8" strokeWidth="1" strokeDasharray="4 2" />
-          {/* Side curb walls */}
-          <rect x="445" y="195" width="8" height="25" fill="#94A3B8" opacity="0.2" rx="1" />
-          <rect x="568" y="192" width="8" height="25" fill="#94A3B8" opacity="0.2" rx="1" />
-          {/* Arrow showing perpendicular direction */}
-          <line x1="510" y1="170" x2="510" y2="145" stroke="#2563EB" strokeWidth="1" opacity="0.4" markerEnd="url(#wsArr)" />
-          <line x1="510" y1="170" x2="510" y2="195" stroke="#2563EB" strokeWidth="1" opacity="0.4" />
-          <text x="510" y="140" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A">perpendicular</text>
-          <text x="510" y="148" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#1E3A8A">to travel</text>
-          {/* Labels */}
-          <text x="510" y="242" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#1E3A8A" fontWeight="600">Max slope 1:48 (≈2%)</text>
-          <text x="510" y="254" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#1E3A8A">Prevents wheelchair drift</text>
+          {/* Warning note */}
+          <rect x="395" y="90" width="270" height="44" rx="8" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="1" />
+          <text x="530" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600">Steeper than 1:20?</text>
+          <text x="530" y="126" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C">It{'\u2019'}s a ramp {'\u2014'} needs handrails + landings</text>
 
-          {/* ===== CALLOUT 4: Surface Requirements illustration ===== */}
-          <rect x="610" y="100" width="180" height="170" rx="6" fill="#7C3AED" opacity="0.03" stroke="#7C3AED" strokeWidth="1" />
-          <text x="700" y="118" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fill="#5B21B6" fontWeight="600">SURFACE REQUIREMENTS</text>
-          {/* Three surface type boxes */}
-          <rect x="625" y="135" width="65" height="55" rx="4" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="0.5" />
-          <text x="657" y="153" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="600">Firm</text>
-          {/* Solid surface pattern */}
-          <line x1="635" y1="163" x2="680" y2="163" stroke="#7C3AED" strokeWidth="2" opacity="0.3" />
-          <line x1="635" y1="170" x2="680" y2="170" stroke="#7C3AED" strokeWidth="2" opacity="0.3" />
-          <line x1="635" y1="177" x2="680" y2="177" stroke="#7C3AED" strokeWidth="2" opacity="0.3" />
-
-          <rect x="700" y="135" width="65" height="55" rx="4" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="0.5" />
-          <text x="732" y="153" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="600">Stable</text>
-          {/* Grid pattern */}
-          <line x1="710" y1="163" x2="755" y2="163" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
-          <line x1="710" y1="170" x2="755" y2="170" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
-          <line x1="710" y1="177" x2="755" y2="177" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
-          <line x1="720" y1="158" x2="720" y2="183" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
-          <line x1="732" y1="158" x2="732" y2="183" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
-          <line x1="744" y1="158" x2="744" y2="183" stroke="#7C3AED" strokeWidth="1" opacity="0.2" />
-
-          {/* Carpet with pile height callout */}
-          <rect x="625" y="200" width="140" height="50" rx="4" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="0.5" />
-          <text x="695" y="216" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="600">Carpet Pile</text>
-          {/* Carpet fibers */}
-          {[0,1,2,3,4,5,6,7,8,9].map(i => (
-            <line key={`cp${i}`} x1={640 + i * 12} y1="235" x2={640 + i * 12} y2={226 + (i % 3)} stroke="#7C3AED" strokeWidth="1.5" opacity="0.25" />
-          ))}
-          <text x="695" y="245" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#5B21B6">½" max pile height</text>
-
-          {/* Summary label */}
-          <text x="700" y="265" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="600">Slip-resistant required</text>
-          {/* Floor line */}
-          <line x1="540" y1="350" x2="860" y2="350" stroke="#94A3B8" strokeWidth="2" />
-          <rect x="540" y="350" width="320" height="20" fill="#94A3B8" opacity="0.06" />
-
-          {/* Running slope arrow */}
-          <line x1="560" y1="340" x2="740" y2="325" stroke="#15803D" strokeWidth="2" />
-          <polygon points="740,321 748,325 740,329" fill="#15803D" />
-          <text x="650" y="318" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" fontWeight="600">Running slope ≤ 1:20</text>
-          <text x="650" y="330" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#14532D">(direction of travel)</text>
-
-          {/* Cross slope indicators */}
-          <line x1="780" y1="350" x2="780" y2="280" stroke="#2563EB" strokeWidth="1" strokeDasharray="4 2" />
-          <line x1="850" y1="350" x2="850" y2="280" stroke="#2563EB" strokeWidth="1" strokeDasharray="4 2" />
-          <line x1="780" y1="295" x2="850" y2="290" stroke="#2563EB" strokeWidth="2" />
-          <text x="815" y="280" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#1E3A8A" fontWeight="600">Cross slope ≤ 1:48</text>
-          <text x="815" y="270" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#1E3A8A">(perpendicular)</text>
-
-          {/* Changes in level detail */}
-          <text x="700" y="395" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fontWeight="600" fill="#78350F">CHANGES IN LEVEL</text>
-          {/* ¼" vertical */}
-          <line x1="580" y1="420" x2="640" y2="420" stroke="#94A3B8" strokeWidth="1.5" />
-          <line x1="640" y1="420" x2="640" y2="414" stroke="#B45309" strokeWidth="2" />
-          <line x1="640" y1="414" x2="700" y2="414" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="640" y="440" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F">¼" vertical OK</text>
-
-          {/* ½" beveled */}
-          <line x1="720" y1="420" x2="770" y2="420" stroke="#94A3B8" strokeWidth="1.5" />
-          <line x1="770" y1="420" x2="778" y2="412" stroke="#B45309" strokeWidth="2" />
-          <line x1="778" y1="412" x2="840" y2="412" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="780" y="440" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F">¼"–½" beveled 1:2</text>
-
-          {/* Surface note */}
-          <rect x="560" y="460" width="280" height="36" rx="8" fill="#7C3AED" opacity="0.05" stroke="#7C3AED" strokeWidth="1" />
-          <text x="700" y="478" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#5B21B6" fontWeight="600">Surface: firm, stable, slip-resistant</text>
-          <text x="700" y="490" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#5B21B6">Carpet pile ½" max · Grate openings ½" max</text>
-
-          {/* Callout markers */}
-          {CALLOUTS.map(c => (
-            <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
-              {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
-            </g>
-          ))}
-          <text x="30" y="510" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <Dots callouts={SLOPE_CALLOUTS} active={slopeActive} toggle={toggleSlope} />
+          <text x="20" y="350" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
-      <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>
-      {ac && (
-        <div ref={panelRef} style={{ marginTop: 12, background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', animation: 'wsFade .25s ease-out' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: '50%', background: ac.color, color: 'var(--page-bg)', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{ac.id}</span>
-              <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{ac.label}</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: ac.color, background: `${ac.color}15`, padding: '2px 8px', borderRadius: 4 }}>{ac.section}</span>
-            </div>
-            <button onClick={() => setActive(null)} aria-label="Close" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: 44 }}>Close <span aria-hidden="true">✕</span></button>
-          </div>
-          <div className="guide-two-col" style={{ padding: 20, gap: 24, margin: 0 }}>
-            <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{ac.plain}</p></div>
-            <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard — {parseCite(ac.citation)}</p>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(ac.legal)}</p>
-            </div></aside>
-          </div>
-        </div>
-      )}
-      <style>{`@keyframes wsFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}        @media (prefers-reduced-motion: reduce) {
-          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
-        }
+      <div aria-live="polite" className="sr-only">{slopeC ? `Showing: ${slopeC.label}` : ''}</div>
+      <CalloutPanel callout={slopeC} onClose={() => setSlopeActive(null)} panelRef={slopeRef} />
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
+        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Width & Slope</p>
+        <KeyFact color="#C2410C" number={d('36', '915')}>Minimum clear width of any walking surface</KeyFact>
+        <KeyFact color="#15803D" number="1:20">Maximum running slope (5%) before it becomes a ramp</KeyFact>
+        <KeyFact color="#2563EB" number="1:48">Maximum cross slope (about 2%) to prevent wheelchair drift</KeyFact>
+      </div>
+
+      {/* DIAGRAM 2: Surface & Level Changes */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '40px', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Surface & Level Changes</h3>
+      </div>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
+        <svg viewBox="0 0 720 320" role="img" aria-labelledby="surf-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+          <title id="surf-title">Surface Requirements and Changes in Level</title>
+          <rect width="720" height="320" fill="var(--page-bg-subtle)" />
+
+          {/* LEFT: Surface */}
+          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">The surface itself</text>
+
+          <rect x="40" y="70" width="280" height="50" rx="8" fill="#7C3AED" opacity="0.04" stroke="#7C3AED" strokeWidth="1.5" />
+          <text x="180" y="92" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#5B21B6" fontWeight="600">Firm + Stable + Slip-resistant</text>
+          <text x="180" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6">no loose gravel, deep carpet, or slick tile</text>
+
+          <rect x="40" y="135" width="280" height="50" rx="8" fill="#7C3AED" opacity="0.04" stroke="#7C3AED" strokeWidth="1.5" />
+          <text x="180" y="157" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#5B21B6" fontWeight="600">Carpet: {d('\u00bd', '13')} max pile height</text>
+          <text x="180" y="173" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6">must be securely attached, firm backing</text>
+
+          <rect x="40" y="200" width="280" height="50" rx="8" fill="#7C3AED" opacity="0.04" stroke="#7C3AED" strokeWidth="1.5" />
+          <text x="180" y="222" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#5B21B6" fontWeight="600">Grate openings: {d('\u00bd', '13')} max gap</text>
+          <text x="180" y="238" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6">long slots run perpendicular to travel</text>
+
+          {/* DIVIDER */}
+          <line x1="360" y1="20" x2="360" y2="300" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+
+          {/* RIGHT: Level changes */}
+          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Bumps and edges</text>
+
+          {/* Three tiers of level changes */}
+          <rect x="400" y="70" width="280" height="55" rx="8" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="1.5" />
+          <text x="540" y="90" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">{'\u2264'} {d('\u00bc', '6')} {'\u2014'} OK as-is</text>
+          <text x="540" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D">vertical edge is fine</text>
+
+          <rect x="400" y="140" width="280" height="55" rx="8" fill="#B45309" opacity="0.04" stroke="#B45309" strokeWidth="1.5" />
+          <text x="540" y="160" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#78350F" fontWeight="600">{d('\u00bc', '6')} to {d('\u00bd', '13')} {'\u2014'} must bevel</text>
+          <text x="540" y="178" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#78350F">slope the edge at 1:2 max</text>
+
+          <rect x="400" y="210" width="280" height="55" rx="8" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" />
+          <text x="540" y="230" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#7C2D12" fontWeight="600">{'\u003e'} {d('\u00bd', '13')} {'\u2014'} needs a ramp</text>
+          <text x="540" y="248" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12">full ramp requirements apply ({'\u00a7'}405)</text>
+
+          <Dots callouts={SURFACE_CALLOUTS} active={surfActive} toggle={toggleSurf} />
+          <text x="20" y="308" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+        </svg>
+      </div>
+      <div aria-live="polite" className="sr-only">{surfC ? `Showing: ${surfC.label}` : ''}</div>
+      <CalloutPanel callout={surfC} onClose={() => setSurfActive(null)} panelRef={surfRef} />
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
+        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Surface & Level Changes</p>
+        <KeyFact color="#7C3AED" number="3 rules">Firm, stable, and slip-resistant {'\u2014'} every walking surface</KeyFact>
+        <KeyFact color="#15803D" number={`\u2264 ${d('\u00bc', '6')}`}>Small level changes OK as vertical edges</KeyFact>
+        <KeyFact color="#B45309" number={`${d('\u00bc', '6')}\u2013${d('\u00bd', '13')}`}>Must be beveled (angled at 1:2 max slope)</KeyFact>
+        <KeyFact color="#C2410C" number={`> ${d('\u00bd', '13')}`}>Needs a full ramp with handrails and landings</KeyFact>
+      </div>
+
+      <style>{`
+        @keyframes walkFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        @media (max-width:768px) { .guide-two-col { flex-direction:column !important; gap:16px !important; } }
+        @media (prefers-reduced-motion: reduce) { .ada-diagram-wrap * { animation: none !important; transition: none !important; } }
       `}</style>
     </div>
   );

@@ -2,198 +2,229 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const CURB_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#406-curb-ramps';
 
-const CALLOUTS = [
-  {
-    id: 1, label: 'Running Slope', section: '§406.1', color: 'var(--section-label)', textColor: '#8B2E08',
-    x: 220, y: 42,
-    plain: 'The running slope of a curb ramp (measured in the direction of travel) must not be steeper than 1:12. This means for every 1 inch of height change, the ramp must extend at least 12 inches horizontally. A typical 6-inch curb requires a minimum 72-inch (6-foot) ramp. Steeper slopes make wheelchair descent dangerous and ascent exhausting. Cross slope must not exceed 1:48 (2%).',
-    legal: '"Curb ramp runs shall have a running slope not steeper than 1:12." Per §405.2 as referenced. Cross slope per §405.3: "not steeper than 1:48."',
-    citation: '§406.1'
-  },
-  {
-    id: 2, label: 'Width', section: '§406.1', color: '#15803D', textColor: '#14532D',
-    x: 420, y: 42,
-    plain: 'The clear width of a curb ramp must be at least 36 inches, measured between the flared sides (not including them). This provides enough room for a standard wheelchair to travel up or down without the wheels catching on the ramp edges. The width is measured perpendicular to the direction of travel at the narrowest point of the ramp run.',
-    legal: '"Curb ramps shall be 36 inches wide minimum, exclusive of flared sides." Clear width per §405.5.',
-    citation: '§406.1, §405.5'
-  },
-  {
-    id: 3, label: 'Flared Sides', section: '§406.3', color: '#2563EB', textColor: '#1E3A8A',
-    x: 120, y: 175,
-    plain: 'When a curb ramp is located where pedestrians walk across the ramp (perpendicular to the ramp direction), the sides must be flared at a maximum slope of 1:10. Flared sides create a gradual transition rather than an abrupt edge that could trip pedestrians. If the ramp is located where no one would walk across it (such as in a planter or against a building), flared sides are not required — vertical returns are acceptable.',
-    legal: '"Where a pedestrian circulation path crosses the curb ramp, flared sides shall have a slope of 1:10 maximum, measured parallel to the curb."',
-    citation: '§406.3'
-  },
-  {
-    id: 4, label: 'Detectable Warnings', section: '§406.8', color: '#7C3AED', textColor: '#5B21B6',
-    x: 420, y: 260,
-    plain: 'At the bottom of the curb ramp where it meets the street, a detectable warning surface of truncated domes must be installed. These raised bumps alert blind or visually impaired pedestrians that they are transitioning from sidewalk to roadway. The warning surface must be 36 inches deep (in the direction of travel), extend the full width of the curb ramp, and contrast visually with the surrounding surface (typically bright yellow or red on gray concrete).',
-    legal: '"A curb ramp shall have a detectable warning complying with §705." §705.1: "Truncated domes 36 inches minimum in the direction of travel, extending the full width of the curb ramp." Visual contrast with adjacent surfaces required.',
-    citation: '§406.8'
-  },
-  {
-    id: 5, label: 'Top Landing', section: '§406.4', color: '#92400E', textColor: '#78350F',
-    x: 620, y: 90,
-    plain: 'At the top of the curb ramp where it meets the sidewalk, a landing at least 36 inches long (in the direction of travel) and at least as wide as the ramp must be provided. The landing provides a level area for a wheelchair user to stop, change direction, or transition onto the sidewalk. Maximum slope of the landing is 1:48 (about 2%) for drainage. The landing must connect directly to an accessible route.',
-    legal: '"A landing 36 inches minimum by 48 inches minimum shall be provided at the top of curb ramps." Per §406.4. Slope: 1:48 maximum in any direction. Must adjoin accessible route.',
-    citation: '§406.4'
-  },
-  {
-    id: 6, label: 'Counter Slope', section: '§406.2', color: '#BE185D', textColor: '#9D174D',
-    x: 220, y: 260,
-    plain: 'Where the gutter or road surface meets the bottom of the curb ramp, the counter slope (the slope of the gutter pan or street going away from the ramp) must not exceed 1:20 (5%). If the counter slope is too steep, a wheelchair user descending the ramp could tip forward when the front casters hit the abrupt change in slope. The transition between ramp and street must be flush (no lip or gap).',
-    legal: '"The counter slope of the gutter or street at the foot of a curb ramp shall not be steeper than 1:20."',
-    citation: '§406.2'
-  },
-  {
-    id: 7, label: 'Parallel Curb Ramps', section: '§406.5', color: '#0E7490', textColor: '#0C4A6E',
-    x: 700, y: 220,
-    plain: 'When the sidewalk is too narrow for a standard perpendicular curb ramp, a parallel curb ramp runs parallel to the curb with the ramp descending in the sidewalk direction. At the bottom of the parallel ramp, a 48-inch minimum turning space must be provided so the wheelchair user can turn 90 degrees to face the street before crossing. The ramp must still meet the 1:12 slope and 36-inch width requirements.',
-    legal: '"Where a parallel curb ramp is provided, a turning space 48 inches minimum shall be provided at the bottom of the curb ramp." Running slope: 1:12 max. Width: 36 inches minimum.',
-    citation: '§406.5'
-  }
+const RAMP_CALLOUTS = [
+  { id: 1, label: 'Slope & Width', section: '\u00a7406.1',
+    color: '#C2410C', textColor: '#7C2D12', x: 170, y: 52,
+    plain: 'Curb ramps must have a running slope no steeper than 1:12, just like building ramps. The width must be 36 inches minimum, not counting flared sides. The counter slope at the base (where the ramp meets the street) cannot be steeper than 1:20. The top of the curb ramp must connect to a level landing or the sidewalk.',
+    legal: '\u201CThe running slope of curb ramp runs shall not be steeper than 1:12.\u201D Width: 36 inches minimum excluding flares. Counter slope: 1:20 maximum. Top landing per \u00a7406.4.',
+    citation: '\u00a7406.1, \u00a7406.2, \u00a7406.4' },
+  { id: 2, label: 'Flared Sides', section: '\u00a7406.3',
+    color: '#15803D', textColor: '#14532D', x: 540, y: 52,
+    plain: 'When the curb ramp is next to a walking path, the sides must be flared at no steeper than 1:10. Without flares, a pedestrian could step off the side of the curb ramp and trip on the vertical edge. If the curb ramp is inside a planter or has a returned curb (vertical side), flares aren\u2019t needed because pedestrians can\u2019t walk across it.',
+    legal: '\u201CWhere a pedestrian circulation path crosses the curb ramp, flared sides shall have a slope of 1:10 maximum, measured at the curb face.\u201D',
+    citation: '\u00a7406.3' }
 ];
 
-function makeLink(text) {
-  return (<a href={CURB_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }} aria-label={`${text} on ADA.gov`}>{text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span></a>);
+const WARN_CALLOUTS = [
+  { id: 1, label: 'Detectable Warning Surface', section: '\u00a7406.13',
+    color: '#7C3AED', textColor: '#5B21B6', x: 170, y: 52,
+    plain: 'Raised truncated domes (the bumpy texture you feel underfoot) are required at the bottom of curb ramps where they meet the street. These warn people who are blind or have low vision that they are leaving the sidewalk and entering a roadway. The dome surface must extend 24 inches minimum in the direction of travel and the full width of the curb ramp.',
+    legal: '\u201CDetectable warning surfaces complying with \u00a7705 shall be provided where curb ramps or blended transitions connect to street crossings.\u201D Depth: 24 inches minimum in the direction of travel. Width: full width of the curb ramp or blended transition.',
+    citation: '\u00a7406.13, \u00a7705' },
+  { id: 2, label: 'Placement at Crossings', section: '\u00a7406.5',
+    color: '#2563EB', textColor: '#1E3A8A', x: 540, y: 52,
+    plain: 'Each crosswalk must have its own curb ramp \u2014 two crosswalks at a corner means two separate ramps. A single ramp at the apex of a corner does not meet this requirement because it doesn\u2019t align the wheelchair user with the crosswalk, directing them into the intersection instead. Parallel curb ramps (running along the curb with a landing at the bottom) are an acceptable alternative.',
+    legal: '\u201CCurb ramps at marked crossings shall be wholly contained within the markings.\u201D Advisory \u00a7406.5: Separate curb ramps for each crosswalk rather than a single diagonal ramp.',
+    citation: '\u00a7406.5' }
+];
+
+function makeLink(t) { return (<a href={CURB_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>{'\u2197'}</span></a>); }
+function parseCite(t) { return t.split(/(\u00a7\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^\u00a7\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
+function CalloutPanel({ callout, onClose, panelRef }) {
+  if (!callout) return null;
+  return (<div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'curbFade 0.25s ease-out' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+        <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+      </div>
+      <button onClick={onClose} aria-label="Close" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close {'\u2715'}</button>
+    </div>
+    <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
+      <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
+      <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard {'\u2014'} {parseCite(callout.citation)}</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(callout.legal)}</p>
+      </div></aside>
+    </div>
+  </div>);
 }
-function parseCitations(text) {
-  return text.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p);
-}
+function KeyFact({ color, number, children }) { return (<div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}><span style={{ background: color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span><span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span></div>); }
+function Dots({ callouts, active, toggle }) { return callouts.map(c => (<g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>{active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}<circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" /><text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text></g>)); }
 
 export default function CurbRampDiagram() {
-  const [active, setActive] = useState(null);
+  const [rampActive, setRampActive] = useState(null);
+  const [warnActive, setWarnActive] = useState(null);
   const [metric, setMetric] = useState(false);
-  const panelRef = useRef(null);
-  const toggle = useCallback((id) => setActive(prev => prev === id ? null : id), []);
-  useEffect(() => { if (active && panelRef.current) panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [active]);
-  useEffect(() => { const h = (e) => { if (e.key === 'Escape') setActive(null); }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
-
-  const d = (inches, mm) => metric ? `${mm} mm` : `${inches}"`;
-  const ac = CALLOUTS.find(c => c.id === active);
+  const rampRef = useRef(null); const warnRef = useRef(null);
+  const toggleRamp = useCallback(id => { setRampActive(p => p === id ? null : id); setWarnActive(null); }, []);
+  const toggleWarn = useCallback(id => { setWarnActive(p => p === id ? null : id); setRampActive(null); }, []);
+  useEffect(() => { if (rampActive && rampRef.current) rampRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [rampActive]);
+  useEffect(() => { if (warnActive && warnRef.current) warnRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [warnActive]);
+  useEffect(() => { const h = e => { if (e.key === 'Escape') { setRampActive(null); setWarnActive(null); } }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
+  const d = (i, m) => metric ? `${m} mm` : `${i}\u2033`;
+  const rampC = RAMP_CALLOUTS.find(c => c.id === rampActive);
+  const warnC = WARN_CALLOUTS.find(c => c.id === warnActive);
+  const unitToggle = (<div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>{['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}</div>);
 
   return (
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>§406 Curb Ramps</h3>
-        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
-          {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}
-        </div>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>The Ramp Itself</h3>
+        {unitToggle}
       </div>
-
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 900 320" role="img" aria-labelledby="curb-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="curb-title">ADA §406 Curb Ramp — Isometric View</title>
-          <rect x="0" y="0" width="900" height="320" fill="var(--page-bg-subtle)" />
+        <svg viewBox="0 0 720 360" role="img" aria-labelledby="curb-ramp-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+          <title id="curb-ramp-title">Curb Ramp Slope, Width, and Flared Sides</title>
+          <rect width="720" height="360" fill="var(--page-bg-subtle)" />
+          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Side view</text>
+          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Plan view (from above)</text>
 
-          {/* ===== ISOMETRIC CURB RAMP ===== */}
-          {/* Street level surface */}
-          <polygon points="50,260 450,280 850,260 450,240" fill="#94A3B8" opacity="0.08" stroke="#94A3B8" strokeWidth="1" />
-          <text x="450" y="275" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="500">STREET</text>
+          {/* LEFT: Side view */}
+          {/* Sidewalk level */}
+          <rect x="30" y="140" width="120" height="8" rx="1" fill="#94A3B8" />
+          <text x="90" y="132" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">sidewalk</text>
 
-          {/* Curb line */}
-          <line x1="100" y1="230" x2="800" y2="230" stroke="#94A3B8" strokeWidth="2.5" />
-          {/* Curb face (vertical) */}
-          <rect x="100" y="220" width="700" height="10" fill="#94A3B8" opacity="0.2" />
+          {/* Curb ramp slope */}
+          <line x1="150" y1="148" x2="300" y2="260" stroke="#475569" strokeWidth="3" />
 
-          {/* Sidewalk (elevated) */}
-          <rect x="100" y="60" width="700" height="160" rx="2" fill="#E7E5E4" opacity="0.15" stroke="#94A3B8" strokeWidth="1" />
-          <text x="200" y="85" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="500">SIDEWALK</text>
-          <text x="680" y="85" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)" fontWeight="500">SIDEWALK</text>
+          {/* Street level */}
+          <rect x="300" y="260" width="120" height="8" rx="1" fill="#94A3B8" />
+          <text x="360" y="284" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">street</text>
 
-          {/* Ramp run (center, going from sidewalk down to street) */}
-          <polygon points="350,100 550,100 580,230 320,230" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
+          {/* 1:12 slope */}
+          <line x1="150" y1="148" x2="300" y2="148" stroke="#C2410C" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
+          <rect x="170" y="195" width="100" height="22" rx="6" fill="#C2410C" />
+          <text x="220" y="210" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">1:12 max slope</text>
 
-          {/* Slope arrows on ramp */}
-          <line x1="450" y1="110" x2="450" y2="220" stroke="#C2410C" strokeWidth="1.5" markerEnd="url(#curbSlope)" />
-          <text x="460" y="170" fontFamily="Manrope, sans-serif" fontSize="8" fill="#8B2E08" fontWeight="700">1:12 max</text>
+          {/* Counter slope at bottom */}
+          <rect x="260" y="290" width="90" height="18" rx="5" fill="#B45309" />
+          <text x="305" y="303" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">1:20 counter max</text>
 
-          <defs>
-            <marker id="curbSlope" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-              <polygon points="0 0, 8 3, 0 6" fill="#C2410C" />
-            </marker>
-          </defs>
+          {/* DIVIDER */}
+          <line x1="430" y1="40" x2="430" y2="340" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
 
-          {/* Flared side — left */}
-          <polygon points="280,100 350,100 320,230 250,230" fill="#2563EB" opacity="0.06" stroke="#2563EB" strokeWidth="1.2" />
-          <text x="290" y="175" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600" transform="rotate(-60 290 175)">FLARE 1:10</text>
+          {/* RIGHT: Plan view showing flares */}
+          {/* Main ramp area */}
+          <rect x="510" y="100" width="80" height="160" rx="2" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="2" />
+          <text x="550" y="185" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600">ramp</text>
 
-          {/* Flared side — right */}
-          <polygon points="550,100 620,100 650,230 580,230" fill="#2563EB" opacity="0.06" stroke="#2563EB" strokeWidth="1.2" />
-          <text x="610" y="175" fontFamily="Manrope, sans-serif" fontSize="7" fill="#1E3A8A" fontWeight="600" transform="rotate(60 610 175)">FLARE 1:10</text>
+          {/* 36" width */}
+          <line x1="510" y1="275" x2="590" y2="275" stroke="#C2410C" strokeWidth="1.5" />
+          <line x1="510" y1="270" x2="510" y2="280" stroke="#C2410C" strokeWidth="1.5" />
+          <line x1="590" y1="270" x2="590" y2="280" stroke="#C2410C" strokeWidth="1.5" />
+          <rect x="516" y="282" width="66" height="18" rx="5" fill="#C2410C" />
+          <text x="549" y="295" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('36', '915')} min</text>
 
-          {/* Detectable warnings at bottom */}
-          <rect x="325" y="196" width="250" height="32" rx="2" fill="#7C3AED" opacity="0.12" stroke="#7C3AED" strokeWidth="1.5" />
-          {/* Truncated dome pattern */}
-          {[0,1,2,3,4,5,6,7,8,9,10].map(i => (
-            <React.Fragment key={`row${i}`}>
-              {[0,1,2].map(j => (
-                <circle key={`d${i}${j}`} cx={335 + i * 22} cy={204 + j * 10} r="2.5" fill="#7C3AED" opacity="0.3" />
-              ))}
-            </React.Fragment>
-          ))}
-          <text x="450" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="700">DETECTABLE WARNINGS ({d('36', '915')} deep)</text>
+          {/* Left flare */}
+          <path d="M 510 100 L 470 100 L 510 260 Z" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="1.5" />
+          <text x="476" y="190" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">flare</text>
 
-          {/* Top landing */}
-          <rect x="340" y="68" width="220" height="32" rx="2" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1.2" strokeDasharray="5 3" />
-          <text x="450" y="88" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">LANDING ({d('36', '915')} min)</text>
+          {/* Right flare */}
+          <path d="M 590 100 L 630 100 L 590 260 Z" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="1.5" />
+          <text x="616" y="190" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">flare</text>
 
-          {/* Width dimension */}
-          <line x1="350" y1="100" x2="550" y2="100" stroke="#15803D" strokeWidth="1.2" />
-          <line x1="350" y1="94" x2="350" y2="106" stroke="#15803D" strokeWidth="1" />
-          <line x1="550" y1="94" x2="550" y2="106" stroke="#15803D" strokeWidth="1" />
-          <rect x="418" y="103" width="64" height="13" rx="3" fill="#15803D" />
-          <text x="450" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">{d('36', '915')} min</text>
+          {/* Flare slope label */}
+          <rect x="628" y="165" width="70" height="18" rx="5" fill="#15803D" />
+          <text x="663" y="178" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">1:10 max</text>
 
-          {/* Counter slope note */}
-          <rect x="320" y="232" width="260" height="16" rx="3" fill="#DB2777" opacity="0.06" stroke="#DB2777" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="450" y="243" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#9D174D" fontWeight="600">Counter slope ≤ 1:20 at gutter</text>
+          {/* Sidewalk at top */}
+          <text x="550" y="88" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">sidewalk</text>
+          {/* Street at bottom */}
+          <text x="550" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">street</text>
 
-          {/* Parallel ramp sketch (small, far right) */}
-          <rect x="720" y="120" width="120" height="90" rx="4" fill="#0EA5E9" opacity="0.04" stroke="#0891B2" strokeWidth="1" />
-          <text x="780" y="140" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#0C4A6E" fontWeight="600">PARALLEL</text>
-          <text x="780" y="152" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#0C4A6E">ALTERNATIVE</text>
-          <line x1="740" y1="160" x2="800" y2="160" stroke="#0891B2" strokeWidth="1" />
-          <rect x="740" y="162" width="60" height="30" rx="2" fill="#0EA5E9" opacity="0.08" stroke="#0891B2" strokeWidth="0.8" />
-          <text x="770" y="180" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#0C4A6E">{d('48', '1220')} turn</text>
-
-
-          {/* CALLOUT DOTS */}
-          {CALLOUTS.map(c => (
-            <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label} — ${c.section}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
-              {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
-            </g>
-          ))}
-          <text x="30" y="310" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <Dots callouts={RAMP_CALLOUTS} active={rampActive} toggle={toggleRamp} />
+          <text x="20" y="348" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
+      <div aria-live="polite" className="sr-only">{rampC ? `Showing: ${rampC.label}` : ''}</div>
+      <CalloutPanel callout={rampC} onClose={() => setRampActive(null)} panelRef={rampRef} />
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
+        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} The Ramp</p>
+        <KeyFact color="#C2410C" number="1:12">Maximum running slope</KeyFact>
+        <KeyFact color="#C2410C" number={d('36', '915')}>Minimum width of the ramp itself</KeyFact>
+        <KeyFact color="#15803D" number="1:10">Maximum slope of flared sides</KeyFact>
+        <KeyFact color="#B45309" number="1:20">Maximum counter slope where ramp meets street</KeyFact>
+      </div>
 
-      <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>
-      {ac && (
-        <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'curbFade 0.25s ease-out' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: ac.color, color: 'var(--page-bg)', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{ac.id}</span>
-              <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{ac.label}</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: ac.color, background: `${ac.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{ac.section}</span>
-            </div>
-            <button onClick={() => setActive(null)} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">✕</span></button>
-          </div>
-          <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
-            <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{ac.plain}</p></div>
-            <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard — {parseCitations(ac.citation)}</p>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCitations(ac.legal)}</p>
-            </div></aside>
-          </div>
-        </div>
-      )}
-      <style>{`@keyframes curbFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }        @media (prefers-reduced-motion: reduce) {
-          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
-        }
+      {/* DIAGRAM 2: Warning Bumps */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '40px', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Warning Bumps & Crosswalk Alignment</h3>
+      </div>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
+        <svg viewBox="0 0 720 320" role="img" aria-labelledby="curb-warn-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+          <title id="curb-warn-title">Detectable Warning Surfaces and Crosswalk Alignment</title>
+          <rect width="720" height="320" fill="var(--page-bg-subtle)" />
+          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">The bumpy surface at the bottom</text>
+          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">One ramp per crosswalk</text>
+
+          {/* LEFT: Detectable warnings */}
+          {/* Ramp surface */}
+          <rect x="80" y="80" width="180" height="120" rx="2" fill="#94A3B8" opacity="0.05" stroke="#94A3B8" strokeWidth="1" />
+
+          {/* Truncated dome area */}
+          <rect x="80" y="160" width="180" height="40" rx="2" fill="#7C3AED" opacity="0.1" stroke="#7C3AED" strokeWidth="2" />
+          {/* Dome dots pattern */}
+          {[0,1,2,3,4,5].map(r => [0,1,2,3,4,5,6,7].map(c => (
+            <circle key={`${r}-${c}`} cx={92 + c * 23} cy={166 + r * 6} r="2" fill="#7C3AED" opacity="0.3" />
+          )))}
+          <text x="170" y="218" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6" fontWeight="600">truncated domes</text>
+          <text x="170" y="234" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6">(raised bumps you can feel)</text>
+
+          {/* 24" depth dimension */}
+          <line x1="275" y1="160" x2="275" y2="200" stroke="#7C3AED" strokeWidth="1.2" />
+          <line x1="270" y1="160" x2="280" y2="160" stroke="#7C3AED" strokeWidth="1.2" />
+          <line x1="270" y1="200" x2="280" y2="200" stroke="#7C3AED" strokeWidth="1.2" />
+          <rect x="282" y="170" width="56" height="18" rx="5" fill="#7C3AED" />
+          <text x="310" y="183" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('24', '610')} min</text>
+
+          <text x="170" y="260" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6">warns: you{'\u2019'}re entering the road</text>
+
+          {/* Street label */}
+          <text x="170" y="290" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B">{'\u2193'} street below</text>
+
+          {/* DIVIDER */}
+          <line x1="380" y1="40" x2="380" y2="300" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+
+          {/* RIGHT: Crosswalk alignment — two ramps per corner */}
+          {/* Corner shape */}
+          <rect x="450" y="60" width="120" height="180" rx="4" fill="#94A3B8" opacity="0.05" stroke="#94A3B8" strokeWidth="1" />
+          <text x="510" y="155" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">sidewalk</text>
+          <text x="510" y="170" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B">corner</text>
+
+          {/* Ramp 1 pointing down */}
+          <rect x="480" y="240" width="60" height="40" rx="2" fill="#2563EB" opacity="0.1" stroke="#2563EB" strokeWidth="2" />
+          <text x="510" y="263" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">ramp 1</text>
+          <text x="510" y="296" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A">{'\u2193'} crosswalk A</text>
+
+          {/* Ramp 2 pointing right */}
+          <rect x="570" y="120" width="40" height="60" rx="2" fill="#2563EB" opacity="0.1" stroke="#2563EB" strokeWidth="2" />
+          <text x="590" y="155" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">ramp 2</text>
+          <text x="640" y="155" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A">crosswalk B {'\u2192'}</text>
+
+          {/* X on diagonal */}
+          <rect x="430" y="75" width="90" height="34" rx="6" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
+          <text x="475" y="90" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600">{'\u2718'} single diagonal</text>
+          <text x="475" y="103" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C">ramp is not OK</text>
+
+          <Dots callouts={WARN_CALLOUTS} active={warnActive} toggle={toggleWarn} />
+          <text x="20" y="308" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+        </svg>
+      </div>
+      <div aria-live="polite" className="sr-only">{warnC ? `Showing: ${warnC.label}` : ''}</div>
+      <CalloutPanel callout={warnC} onClose={() => setWarnActive(null)} panelRef={warnRef} />
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
+        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Warnings & Crosswalks</p>
+        <KeyFact color="#7C3AED" number={d('24', '610')}>Minimum depth of truncated dome surface in direction of travel</KeyFact>
+        <KeyFact color="#7C3AED" number="Full width">Domes must extend the full width of the curb ramp</KeyFact>
+        <KeyFact color="#2563EB" number="1 per">Each crosswalk gets its own curb ramp {'\u2014'} no shared diagonal ramps</KeyFact>
+      </div>
+
+      <style>{`
+        @keyframes curbFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        @media (max-width:768px) { .guide-two-col { flex-direction:column !important; gap:16px !important; } }
+        @media (prefers-reduced-motion: reduce) { .ada-diagram-wrap * { animation: none !important; transition: none !important; } }
       `}</style>
     </div>
   );
