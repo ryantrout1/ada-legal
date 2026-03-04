@@ -121,9 +121,9 @@ export default function StairwayDiagram() {
 
           {/* Nosing detail callout */}
           <circle cx="140" cy="250" r="12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="3 2" />
-          <line x1="152" y1="242" x2="200" y2="200" stroke="#2563EB" strokeWidth="1" />
-          <text x="205" y="196" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">rounded nosing</text>
-          <text x="205" y="210" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A">{'\u2264'} 1{'\u00bd'}{'\u2033'} projection</text>
+          <line x1="148" y1="240" x2="240" y2="160" stroke="#2563EB" strokeWidth="1" />
+          <text x="245" y="156" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">rounded nosing</text>
+          <text x="245" y="170" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A">{'\u2264'} 1{'\u00bd'}{'\u2033'} projection</text>
 
           {/* NO open risers */}
           <rect x="60" y="80" width="160" height="40" rx="8" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="1.5" />

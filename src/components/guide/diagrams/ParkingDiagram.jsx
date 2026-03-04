@@ -288,7 +288,7 @@ export default function ParkingDiagram() {
         <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Signs & Scoping</p>
         <KeyFact color="#7C3AED" number={d('60', '1525')}>Minimum sign height (bottom of sign to ground)</KeyFact>
         <KeyFact color="#2563EB" number="1 in 6">At least 1 van-accessible space for every 6 accessible spaces</KeyFact>
-        <KeyFact color="#C2410C" number="98{'\u2033'}">Minimum vertical clearance for van routes (8{'\u2019'}2{'\u2033'})</KeyFact>
+        <KeyFact color="#C2410C" number={`98\u2033`}>Minimum vertical clearance for van routes (8{'\u2019'}2{'\u2033'})</KeyFact>
       </div>
 
 
