@@ -373,6 +373,14 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                   const willOpen = openIndex !== i;
                   setOpenIndex(willOpen ? i : null);
                   if (willOpen) {
+                    // Scroll the opened section header into view after a short delay
+                    // to let the accordion animation start
+                    setTimeout(() => {
+                      const header = document.getElementById(`section-header-${i}`);
+                      if (header) {
+                        header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 100);
                     trackEvent('guide_section_opened', {
                       chapter: chapterNum,
                       chapter_title: title,
