@@ -90,6 +90,15 @@ export default function RampDiagram() {
           {/* Ramp surface */}
           <line x1="120" y1="280" x2="320" y2="180" stroke="#475569" strokeWidth="3" />
 
+          {/* Wheelchair going up the ramp */}
+          <g transform="translate(190,215) rotate(-27)" opacity="0.6">
+            <circle cx="15" cy="-8" r="7" fill="#E2E8F0" stroke="#475569" strokeWidth="1.5" />
+            <line x1="15" y1="0" x2="15" y2="22" stroke="#475569" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="6" cy="30" r="6" fill="none" stroke="#475569" strokeWidth="1.2" />
+            <circle cx="24" cy="30" r="6" fill="none" stroke="#475569" strokeWidth="1.2" />
+            <line x1="15" y1="8" x2="5" y2="16" stroke="#475569" strokeWidth="1.2" strokeLinecap="round" />
+          </g>
+
           {/* Top landing */}
           <rect x="320" y="174" width="80" height="6" rx="1" fill="#15803D" opacity="0.15" stroke="#15803D" strokeWidth="1.5" />
           <text x="360" y="168" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">top landing</text>
@@ -202,9 +211,9 @@ export default function RampDiagram() {
           <rect x="654" y="170" width="16" height="38" rx="2" fill="#2563EB" opacity="0.15" stroke="#2563EB" strokeWidth="1.5" />
 
           {/* 4" min curb height */}
-          <line x1="680" y1="170" x2="680" y2="208" stroke="#2563EB" strokeWidth="1" />
-          <rect x="686" y="178" width="50" height="22" rx="6" fill="#2563EB" />
-          <text x="711" y="193" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('4', '100')} min</text>
+          <line x1="674" y1="170" x2="674" y2="208" stroke="#2563EB" strokeWidth="1" />
+          <rect x="618" y="148" width="56" height="22" rx="6" fill="#2563EB" />
+          <text x="646" y="163" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('4', '100')} min</text>
 
           <text x="545" y="194" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">ramp surface</text>
 
@@ -212,12 +221,14 @@ export default function RampDiagram() {
           <text x="428" y="160" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#2563EB" fontWeight="600">curb</text>
           <text x="662" y="160" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#2563EB" fontWeight="600">curb</text>
 
-          {/* Wheelchair on ramp */}
-          <g transform="translate(505,130) scale(0.5)" opacity="0.4">
-            <rect x="0" y="0" width="50" height="40" rx="4" fill="none" stroke="#475569" strokeWidth="2.5" />
-            <circle cx="25" cy="20" r="8" fill="#E2E8F0" stroke="#475569" strokeWidth="2" />
-            <circle cx="5" cy="48" r="13" fill="none" stroke="#475569" strokeWidth="2" />
-            <circle cx="45" cy="48" r="13" fill="none" stroke="#475569" strokeWidth="2" />
+          {/* Wheelchair on ramp (front view) */}
+          <g transform="translate(520,110)" opacity="0.6">
+            <circle cx="20" cy="0" r="9" fill="#E2E8F0" stroke="#475569" strokeWidth="1.5" />
+            <line x1="20" y1="10" x2="20" y2="35" stroke="#475569" strokeWidth="2" strokeLinecap="round" />
+            <line x1="20" y1="18" x2="8" y2="28" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="20" y1="18" x2="32" y2="28" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="8" cy="48" r="10" fill="none" stroke="#475569" strokeWidth="1.5" />
+            <circle cx="32" cy="48" r="10" fill="none" stroke="#475569" strokeWidth="1.5" />
           </g>
 
           {/* Options list */}
