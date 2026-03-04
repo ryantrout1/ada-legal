@@ -58,9 +58,9 @@ export default function LULAElevatorDiagram() {
         {unitToggle}
       </div>
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 720 365" role="img" aria-labelledby="lula-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+        <svg viewBox="0 0 720 370" role="img" aria-labelledby="lula-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="lula-title">LULA Elevator Size and Usage Limitations</title>
-          <rect width="720" height="365" fill="var(--page-bg-subtle)" />
+          <rect width="720" height="370" fill="var(--page-bg-subtle)" />
           <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Smaller cab, tighter fit</text>
           <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Where and when allowed</text>
 
@@ -76,11 +76,11 @@ export default function LULAElevatorDiagram() {
           <text x="159" y="283" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('32', '815')} door</text>
 
           {/* Width */}
-          <line x1="80" y1="305" x2="240" y2="305" stroke="#475569" strokeWidth="1.2" />
-          <line x1="80" y1="300" x2="80" y2="310" stroke="#475569" strokeWidth="1.2" />
-          <line x1="240" y1="300" x2="240" y2="310" stroke="#475569" strokeWidth="1.2" />
-          <rect x="122" y="308" width="76" height="18" rx="5" fill="#475569" />
-          <text x="160" y="321" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('36', '915')} wide</text>
+          <line x1="80" y1="295" x2="240" y2="295" stroke="#475569" strokeWidth="1.2" />
+          <line x1="80" y1="290" x2="80" y2="300" stroke="#475569" strokeWidth="1.2" />
+          <line x1="240" y1="290" x2="240" y2="300" stroke="#475569" strokeWidth="1.2" />
+          <rect x="122" y="298" width="76" height="18" rx="5" fill="#475569" />
+          <text x="160" y="311" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('36', '915')} wide</text>
 
           {/* Depth */}
           <line x1="258" y1="80" x2="258" y2="260" stroke="#475569" strokeWidth="1.2" />
@@ -115,7 +115,7 @@ export default function LULAElevatorDiagram() {
           <text x="540" y="256" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6">reach range, Braille, raised characters</text>
 
           <Dots callouts={CALLOUTS} active={active} toggle={toggle} />
-          <text x="20" y="355" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <text x="20" y="358" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{ac ? `Showing: ${ac.label}` : ''}</div>
