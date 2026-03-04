@@ -1,462 +1,536 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const REACH_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#308-reach-ranges';
-const CLEAR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#305-clear-floor-or-ground-space';
-const OP_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#309-operable-parts';
 
-const CALLOUTS = [
+/* ── FORWARD REACH callouts (diagram 1) ── */
+const FWD_CALLOUTS = [
   {
-    id: 1, label: 'Unobstructed Forward Reach', section: '§308.2.1', color: 'var(--section-label)', textColor: '#8B2E08',
-    x: 115, y: 60,
+    id: 1, label: 'Unobstructed Forward Reach', section: '§308.2.1',
+    color: '#C2410C', textColor: '#7C2D12',
+    x: 145, y: 40,
     plain: 'When a wheelchair user approaches an element head-on with nothing in the way, the reach range is 15 inches minimum to 48 inches maximum above the floor. This covers controls like elevator buttons, light switches, and thermostats mounted on a wall. A clear floor space of 30 × 48 inches must be provided in front of the element so the wheelchair can pull straight up to it.',
     legal: '"Where a forward reach is unobstructed, the high forward reach shall be 48 inches (1220 mm) maximum and the low forward reach shall be 15 inches (380 mm) minimum above the finish floor or ground."',
     citation: '§308.2.1'
   },
   {
-    id: 2, label: 'Obstructed Forward Reach', section: '§308.2.2', color: '#15803D', textColor: '#14532D',
-    x: 365, y: 60,
-    plain: 'When reaching forward over a counter, shelf, or other obstruction, the maximum reach height decreases as the obstruction gets deeper. If the obstruction is up to 20 inches deep, the maximum high reach is 48 inches. If it is between 20 and 25 inches deep, the maximum drops to 44 inches. Obstructions deeper than 25 inches are not permitted for forward reach — you would need a side approach instead. The low reach remains 15 inches in all cases.',
-    legal: '"Where the high forward reach is over an obstruction, the clear floor space shall extend beneath the element for a distance not less than the required reach depth over the obstruction." Obstruction ≤ 20 inches: high reach 48 inches max. Obstruction 20–25 inches: high reach 44 inches max.',
+    id: 2, label: 'Obstructed Forward Reach', section: '§308.2.2',
+    color: '#15803D', textColor: '#14532D',
+    x: 545, y: 40,
+    plain: 'When reaching forward over a counter, shelf, or other obstruction, the maximum reach height decreases as the obstruction gets deeper. If the obstruction is up to 20 inches deep, the maximum high reach is 48 inches. If it\u0027s 20 to 25 inches deep, the maximum drops to 44 inches. Obstructions deeper than 25 inches are not permitted — you\u0027d need a side approach instead.',
+    legal: '"Where the high forward reach is over an obstruction, the clear floor space shall extend beneath the element for a distance not less than the required reach depth over the obstruction." Obstruction \u226420 inches: high reach 48 inches max. Obstruction 20\u201325 inches: high reach 44 inches max.',
     citation: '§308.2.2'
-  },
+  }
+];
+
+/* ── SIDE REACH callouts (diagram 2) ── */
+const SIDE_CALLOUTS = [
   {
-    id: 3, label: 'Unobstructed Side Reach', section: '§308.3.1', color: '#2563EB', textColor: '#1E3A8A',
-    x: 595, y: 60,
-    plain: 'When approaching from the side (parallel to the element), with the wheelchair alongside it, the reach range is 15 inches minimum to 48 inches maximum above the floor — the same as unobstructed forward reach. The clear floor space is positioned parallel to the element rather than facing it. This is common for wall-mounted fire extinguishers, paper towel dispensers, and coat hooks.',
+    id: 1, label: 'Unobstructed Side Reach', section: '§308.3.1',
+    color: '#2563EB', textColor: '#1E3A8A',
+    x: 145, y: 40,
+    plain: 'When approaching from the side (parallel to the element), with the wheelchair alongside it, the reach range is 15 inches minimum to 48 inches maximum above the floor — same as unobstructed forward reach. This is common for wall-mounted fire extinguishers, paper towel dispensers, and coat hooks.',
     legal: '"Where a clear floor or ground space allows a parallel approach to an element and the side reach is unobstructed, the high side reach shall be 48 inches (1220 mm) maximum and the low side reach shall be 15 inches (380 mm) minimum above the finish floor or ground."',
     citation: '§308.3.1'
   },
   {
-    id: 4, label: 'Obstructed Side Reach', section: '§308.3.2', color: '#7C3AED', textColor: '#5B21B6',
-    x: 820, y: 60,
-    plain: 'When reaching sideways over an obstruction (like a counter or shelf), the rules depend on depth. If the obstruction is up to 10 inches deep, the maximum reach is 48 inches (same as unobstructed). If the obstruction is between 10 and 24 inches deep, the maximum high reach drops to 46 inches. Obstructions deeper than 24 inches are not permitted for side reach. The low reach remains 15 inches.',
-    legal: '"Where a clear floor or ground space allows a parallel approach to an element and the high side reach is over an obstruction, the height of the obstruction shall be 34 inches (865 mm) maximum and the depth shall be 24 inches (610 mm) maximum." 10–24 inches deep: high reach 46 inches max.',
+    id: 2, label: 'Obstructed Side Reach', section: '§308.3.2',
+    color: '#7C3AED', textColor: '#5B21B6',
+    x: 545, y: 40,
+    plain: 'When reaching sideways over an obstruction (like a counter or shelf), the rules depend on depth. Up to 10 inches deep: maximum reach is 48 inches (same as unobstructed). Between 10 and 24 inches deep: maximum drops to 46 inches. Obstructions deeper than 24 inches are not permitted for side reach. The obstruction cannot be taller than 34 inches.',
+    legal: '"Where a clear floor or ground space allows a parallel approach to an element and the high side reach is over an obstruction, the height of the obstruction shall be 34 inches (865 mm) maximum and the depth shall be 24 inches (610 mm) maximum." 10\u201324 inches deep: high reach 46 inches max.',
     citation: '§308.3.2'
-  },
-  {
-    id: 5, label: 'Clear Floor Space', section: '§305', color: '#92400E', textColor: '#78350F',
-    x: 115, y: 390,
-    plain: 'A clear floor space of at least 30 inches wide × 48 inches deep is required at every element that a person needs to reach. The space can be oriented for either a forward approach (facing the element) or a parallel approach (alongside it). At least one full side of the clear floor space must adjoin an accessible route or another clear space. The floor must be level (max 1:48 slope) and the surface firm, stable, and slip-resistant.',
-    legal: '"Clear floor or ground space shall comply with 305. The clear floor space shall be 30 inches (760 mm) minimum by 48 inches (1220 mm) minimum." Positioned for forward or parallel approach.',
-    citation: '§305.3',
-    altUrl: CLEAR_URL
-  },
-  {
-    id: 6, label: 'Operable Parts', section: '§309.4', color: '#BE185D', textColor: '#9D174D',
-    x: 365, y: 390,
-    plain: 'All controls, switches, outlets, and other operable parts within reach range must be usable with one hand and must not require tight grasping, pinching, or twisting of the wrist. The maximum operating force is 5 pounds. This applies to light switches, thermostats, electrical outlets, fire alarm pull stations, hand dryers, and any other controls or mechanisms a person needs to operate.',
-    legal: '"Operable parts shall be operable with one hand and shall not require tight grasping, pinching, or twisting of the wrist. The force required to activate operable parts shall be 5 pounds (22.2 N) maximum."',
-    citation: '§309.4',
-    altUrl: OP_URL
-  },
-  {
-    id: 7, label: "Children's Reach", section: 'Advisory §308.1', color: '#0E7490', textColor: '#0C4A6E',
-    x: 595, y: 390,
-    plain: "The Standards do not mandate separate children's reach ranges except at specific elements designed for children's use. However, the Advisory notes in §308.1 recommend reduced maximums based on age: ages 3–4 should have a forward reach maximum of 36 inches; ages 5–8 a maximum of 40 inches; and ages 9–12 a maximum of 44 inches. Facilities specifically designed for children (schools, daycare) should follow these advisories.",
-    legal: '"Advisory 308.1: Where building elements are designed specifically for use by children ages 12 and younger, the following specifications may be used." Forward reach: ages 3–4: 36 inches max; ages 5–8: 40 inches max; ages 9–12: 44 inches max.',
-    citation: '§308.1 Advisory'
   }
 ];
 
-function makeLink(text, url) {
+
+function makeLink(text) {
   return (
-    <a href={url} target="_blank" rel="noopener noreferrer"
-      style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
+    <a href={REACH_URL} target="_blank" rel="noopener noreferrer"
+      style={{ color: 'var(--section-label)', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}
       aria-label={`${text} on ADA.gov (opens in new tab)`}>
-      {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>↗</span>
+      {text}<span aria-hidden="true" style={{ fontSize: '0.65em', marginLeft: '1px', verticalAlign: 'super' }}>{'\u2197'}</span>
     </a>
   );
 }
 
-function parseCitations(text, callout) {
-  const parts = text.split(/(§\d{3,4}(?:\.\d+)*)/g);
-  return parts.map((part, i) => {
-    if (/^§\d{3,4}/.test(part)) {
-      let url = REACH_URL;
-      if (/^§305/.test(part)) url = CLEAR_URL;
-      if (/^§309/.test(part)) url = OP_URL;
-      if (callout?.altUrl) url = callout.altUrl;
-      return <React.Fragment key={i}>{makeLink(part, url)}</React.Fragment>;
-    }
-    return part;
-  });
+function parseCitations(text) {
+  return text.split(/(§\d{3,4}(?:\.\d+)*)/g).map((part, i) =>
+    /^§\d{3,4}/.test(part)
+      ? <React.Fragment key={i}>{makeLink(part)}</React.Fragment>
+      : part
+  );
 }
 
-// Wheelchair silhouette (simplified, side view) — accepts x offset and optional flip
-function WheelchairPerson({ x, y, scale = 1, opacity = 1 }) {
+
+/* ── Reusable callout panel ── */
+function CalloutPanel({ callout, onClose, panelRef }) {
+  if (!callout) return null;
   return (
-    <g transform={`translate(${x},${y}) scale(${scale})`} opacity={opacity}>
-      {/* Rear wheel */}
-      <circle cx="20" cy="70" r="18" fill="none" stroke="#64748B" strokeWidth="1.5" />
-      {/* Front caster */}
-      <circle cx="55" cy="78" r="6" fill="none" stroke="#64748B" strokeWidth="1.2" />
-      {/* Seat / frame */}
-      <line x1="15" y1="52" x2="55" y2="52" stroke="#64748B" strokeWidth="2" />
-      <line x1="15" y1="52" x2="10" y2="70" stroke="#64748B" strokeWidth="1.5" />
-      <line x1="55" y1="52" x2="55" y2="72" stroke="#64748B" strokeWidth="1.5" />
-      {/* Back rest */}
-      <line x1="15" y1="52" x2="12" y2="25" stroke="#64748B" strokeWidth="2" />
-      {/* Person torso */}
-      <line x1="25" y1="50" x2="22" y2="18" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Head */}
-      <circle cx="22" cy="10" r="7" fill="#E2E8F0" stroke="#475569" strokeWidth="1.5" />
-      {/* Arm reaching forward */}
-      <line x1="24" y1="28" x2="50" y2="20" stroke="#475569" strokeWidth="2" strokeLinecap="round" />
-      {/* Footrest */}
-      <line x1="40" y1="78" x2="55" y2="78" stroke="#64748B" strokeWidth="1.5" />
+    <div ref={panelRef} style={{
+      marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)',
+      borderRadius: '12px', overflow: 'hidden', animation: 'reachFadeIn 0.25s ease-out'
+    }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)',
+        flexWrap: 'wrap', gap: '8px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            width: '26px', height: '26px', borderRadius: '50%',
+            background: callout.color, color: 'white',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700
+          }}>{callout.id}</span>
+          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>
+            {callout.label}
+          </span>
+          <span style={{
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
+            color: callout.color, background: `${callout.color}15`,
+            padding: '2px 8px', borderRadius: '4px'
+          }}>{callout.section}</span>
+        </div>
+        <button onClick={onClose} aria-label="Close panel"
+          style={{
+            background: 'none', border: '1px solid var(--border)', borderRadius: '8px',
+            padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
+            fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px'
+          }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
+      </div>
+      <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
+        <div style={{ flex: '1 1 55%', minWidth: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>
+            {callout.plain}
+          </p>
+        </div>
+        <aside style={{ flex: '1 1 40%', minWidth: 0 }}>
+          <div style={{
+            background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)',
+            borderRadius: '0 10px 10px 0', padding: '16px 18px'
+          }}>
+            <p style={{
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+              letterSpacing: '0.1em', textTransform: 'uppercase',
+              color: 'var(--body-secondary)', margin: '0 0 8px'
+            }}>Official Standard — {parseCitations(callout.citation)}</p>
+            <p style={{
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+              color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic'
+            }}>{parseCitations(callout.legal)}</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+
+/* ── Key fact row ── */
+function KeyFact({ color, number, children }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
+      <span style={{
+        background: color, color: 'white', fontFamily: 'Manrope, sans-serif',
+        fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center',
+        padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
+      }}>{number}</span>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>
+        {children}
+      </span>
+    </div>
+  );
+}
+
+
+/* ── Callout dots shared renderer ── */
+function CalloutDots({ callouts, active, toggle }) {
+  return callouts.map(c => (
+    <g key={c.id}
+      tabIndex="0" role="button"
+      aria-label={`Callout ${c.id}: ${c.label} \u2014 ${c.section}. Press Enter for details.`}
+      aria-expanded={active === c.id}
+      onClick={() => toggle(c.id)}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }}
+      style={{ cursor: 'pointer', outline: 'none' }}>
+      {active === c.id && (
+        <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3">
+          <animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" />
+          <animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" />
+        </circle>
+      )}
+      <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'}
+        stroke={c.color} strokeWidth="2" />
+      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
+        fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
+      <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2"
+        className="reach-focus-ring" />
+    </g>
+  ));
+}
+
+
+/* ── Wheelchair side view (used in forward reach) ── */
+function WheelchairSide({ x, y, armToX, armToY }) {
+  return (
+    <g transform={`translate(${x},${y}) scale(1.3)`}>
+      <circle cx="22" cy="10" r="9" fill="#E2E8F0" stroke="#475569" strokeWidth="1.8" />
+      <line x1="25" y1="50" x2="22" y2="22" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="15" y1="55" x2="55" y2="55" stroke="#475569" strokeWidth="2" />
+      <line x1="15" y1="55" x2="10" y2="73" stroke="#475569" strokeWidth="1.8" />
+      <line x1="55" y1="55" x2="55" y2="75" stroke="#475569" strokeWidth="1.8" />
+      <line x1="15" y1="55" x2="12" y2="28" stroke="#475569" strokeWidth="2" />
+      <circle cx="20" cy="73" r="20" fill="none" stroke="#475569" strokeWidth="2.2" />
+      <circle cx="58" cy="80" r="7" fill="none" stroke="#475569" strokeWidth="1.5" />
+      <line x1="40" y1="80" x2="55" y2="80" stroke="#475569" strokeWidth="1.5" />
+      <line x1="24" y1="30" x2={armToX} y2={armToY} stroke="#475569" strokeWidth="2.2" strokeLinecap="round" />
     </g>
   );
 }
 
+/* ── Wheelchair front view (used in side reach) ── */
+function WheelchairFront({ x, y, armToX, armToY, dotColor }) {
+  return (
+    <g transform={`translate(${x},${y}) scale(1.3)`}>
+      <circle cx="40" cy="10" r="10" fill="#E2E8F0" stroke="#475569" strokeWidth="1.8" />
+      <rect x="26" y="24" width="28" height="40" rx="5" fill="none" stroke="#475569" strokeWidth="2" />
+      <circle cx="25" cy="100" r="22" fill="none" stroke="#475569" strokeWidth="2.2" />
+      <circle cx="55" cy="100" r="22" fill="none" stroke="#475569" strokeWidth="2.2" />
+      <line x1="26" y1="36" x2={armToX} y2={armToY} stroke="#475569" strokeWidth="2.2" strokeLinecap="round" />
+      <circle cx={armToX - 1} cy={armToY - 1} r="4" fill={dotColor} opacity="0.35" />
+    </g>
+  );
+}
+
+
 export default function ReachRangeDiagram() {
-  const [active, setActive] = useState(null);
+  const [fwdActive, setFwdActive] = useState(null);
+  const [sideActive, setSideActive] = useState(null);
   const [metric, setMetric] = useState(false);
-  const panelRef = useRef(null);
+  const fwdPanelRef = useRef(null);
+  const sidePanelRef = useRef(null);
 
-  const toggle = useCallback((id) => {
-    setActive(prev => prev === id ? null : id);
+  const toggleFwd = useCallback((id) => {
+    setFwdActive(prev => prev === id ? null : id);
+    setSideActive(null);
+  }, []);
+  const toggleSide = useCallback((id) => {
+    setSideActive(prev => prev === id ? null : id);
+    setFwdActive(null);
   }, []);
 
   useEffect(() => {
-    if (active && panelRef.current) {
-      panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  }, [active]);
+    if (fwdActive && fwdPanelRef.current) fwdPanelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [fwdActive]);
+  useEffect(() => {
+    if (sideActive && sidePanelRef.current) sidePanelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [sideActive]);
 
   useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') setActive(null); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    const h = (e) => { if (e.key === 'Escape') { setFwdActive(null); setSideActive(null); } };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
   }, []);
 
-  const imp = (inches, mm) => metric ? `${mm} mm` : `${inches}"`;
+  const d = (inches, mm) => metric ? `${mm} mm` : `${inches}\u2033`;
 
-  const activeCallout = CALLOUTS.find(c => c.id === active);
+  const fwdCallout = FWD_CALLOUTS.find(c => c.id === fwdActive);
+  const sideCallout = SIDE_CALLOUTS.find(c => c.id === sideActive);
 
-  // Common layout: ground at y=340, each panel ~210px wide
-  const GY = 340; // ground Y
+  const unitToggle = (
+    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
+      {['Imperial', 'Metric'].map(u => {
+        const isA = u === 'Metric' ? metric : !metric;
+        return (
+          <button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA}
+            style={{
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500,
+              padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)',
+              background: isA ? 'var(--heading)' : 'var(--card-bg)',
+              color: isA ? 'var(--page-bg)' : 'var(--body)',
+              cursor: 'pointer', minHeight: '44px'
+            }}>{u}</button>
+        );
+      })}
+    </div>
+  );
 
   return (
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
-      {/* Unit toggle */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px', gap: '8px', alignItems: 'center' }}>
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
-        {['Imperial', 'Metric'].map(u => {
-          const isActive = u === 'Metric' ? metric : !metric;
-          return (
-            <button key={u} onClick={() => setMetric(u === 'Metric')}
-              style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isActive ? 700 : 500,
-                padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)',
-                background: isActive ? 'var(--heading)' : 'var(--card-bg)', color: isActive ? 'var(--page-bg)' : 'var(--body)',
-                cursor: 'pointer', minHeight: '44px'
-              }} aria-pressed={isActive}>{u}</button>
-          );
-        })}
+
+      {/* ════════════════════════════════════════════ */}
+      {/*  DIAGRAM 1: FORWARD REACH                   */}
+      {/* ════════════════════════════════════════════ */}
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        marginBottom: '8px', flexWrap: 'wrap', gap: '8px'
+      }}>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
+          Forward Reach
+        </h3>
+        {unitToggle}
       </div>
 
-      {/* SVG */}
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 920 440" role="img" aria-labelledby="reach-title reach-desc"
+        <svg viewBox="0 0 720 380" role="img" aria-labelledby="fwd-title fwd-desc"
           style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="reach-title">ADA §308 Reach Ranges Diagram</title>
-          <desc id="reach-desc">
-            Four side-view scenarios showing a person in a wheelchair demonstrating forward and side reach envelopes.
-            Left to right: unobstructed forward reach (15–48 inches), obstructed forward reach over a counter,
-            unobstructed side reach (15–48 inches), and obstructed side reach over a shelf.
+          <title id="fwd-title">Forward Reach Range</title>
+          <desc id="fwd-desc">
+            Two side views of a person in a wheelchair reaching forward. Left: nothing in the way,
+            reachable zone is 15 to 48 inches above floor. Right: reaching over a counter no deeper
+            than 25 inches, maximum reach drops to 44 inches.
           </desc>
+          <rect width="720" height="380" fill="var(--page-bg-subtle)" />
 
-          <rect x="0" y="0" width="920" height="440" fill="var(--page-bg-subtle)" />
-
-          {/* Ground line */}
-          <rect x="10" y={GY} width="900" height="12" rx="2" fill="#E7E5E4" stroke="#D6D3D1" strokeWidth="0.8" />
-
-
-          {/* ===== PANEL 1: UNOBSTRUCTED FORWARD REACH ===== */}
-          <text x="115" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.06em">
-            UNOBSTRUCTED FORWARD
+          {/* ─── LEFT: Nothing in the way ─── */}
+          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
+            Nothing in the way
           </text>
 
           {/* Wall */}
-          <rect x="158" y="100" width="6" height="240" fill="#94A3B8" rx="1" />
+          <rect x="258" y="60" width="10" height="268" fill="#CBD5E1" rx="2" />
+          <text x="250" y="55" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
 
-          {/* Reach envelope zone */}
-          <rect x="150" y="116" width="18" height="186" rx="2" fill="#C2410C" opacity="0.08" stroke="#C2410C" strokeWidth="1" strokeDasharray="4 3" />
+          {/* Reachable zone */}
+          <rect x="70" y="96" width="188" height="200" fill="#C2410C" opacity="0.05" rx="6" stroke="#C2410C" strokeWidth="1.5" />
+          <text x="164" y="196" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#C2410C" fontWeight="600" opacity="0.5">reachable</text>
+          <text x="164" y="210" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#C2410C" fontWeight="600" opacity="0.5">zone</text>
 
-          {/* Person in wheelchair */}
-          <WheelchairPerson x={60} y={248} scale={1} />
+          {/* 48" max line */}
+          <line x1="60" y1="96" x2="270" y2="96" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="8" y="86" width="50" height="22" rx="6" fill="#C2410C" />
+          <text x="33" y="101" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="white">{d('48', '1220')}</text>
+          <text x="33" y="122" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600">max high</text>
 
-          {/* High reach line: 48" → y=116 (GY - 48*4.67 ≈ 224px up from ground) */}
-          <line x1="40" y1="116" x2="170" y2="116" stroke="#C2410C" strokeWidth="1" strokeDasharray="3 2" />
-          {/* Low reach line: 15" → y=302 */}
-          <line x1="40" y1="302" x2="170" y2="302" stroke="#C2410C" strokeWidth="1" strokeDasharray="3 2" />
+          {/* 15" min line */}
+          <line x1="60" y1="296" x2="270" y2="296" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="8" y="286" width="50" height="22" rx="6" fill="#C2410C" />
+          <text x="33" y="301" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="white">{d('15', '380')}</text>
+          <text x="33" y="322" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600">min low</text>
 
-          {/* Dimension: 48" max */}
-          <line x1="30" y1="116" x2="30" y2={GY} stroke="#C2410C" strokeWidth="1.2" />
-          <line x1="22" y1="116" x2="38" y2="116" stroke="#C2410C" strokeWidth="1.2" />
-          <line x1="22" y1={GY} x2="38" y2={GY} stroke="#C2410C" strokeWidth="1.2" />
-          <polygon points="30,121 26,131 34,131" fill="#C2410C" />
-          <polygon points={`30,${GY - 5} 26,${GY - 15} 34,${GY - 15}`} fill="#C2410C" />
-          <rect x="4" y="205" width="48" height="14" rx="3" fill="#C2410C" />
-          <text x="28" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">
-            {imp('48', '1220')}
-          </text>
+          {/* Wheelchair */}
+          <WheelchairSide x={110} y={180} armToX={65} armToY={-20} />
 
-          {/* Dimension: 15" min */}
-          <rect x="170" y="296" width="48" height="14" rx="3" fill="#C2410C" opacity="0.8" />
-          <text x="194" y="306" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">
-            {imp('15', '380')}
-          </text>
+          {/* Floor */}
+          <line x1="30" y1="328" x2="340" y2="328" stroke="#94A3B8" strokeWidth="2" />
 
 
-          {/* ===== DIVIDER ===== */}
-          <line x1="230" y1="40" x2="230" y2="360" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
+          {/* ─── DIVIDER ─── */}
+          <line x1="360" y1="20" x2="360" y2="360" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
 
 
-          {/* ===== PANEL 2: OBSTRUCTED FORWARD REACH ===== */}
-          <text x="365" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.06em">
-            OBSTRUCTED FORWARD
+          {/* ─── RIGHT: Reaching over a counter ─── */}
+          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
+            Reaching over a counter
           </text>
 
           {/* Wall */}
-          <rect x="408" y="100" width="6" height="240" fill="#94A3B8" rx="1" />
+          <rect x="638" y="60" width="10" height="268" fill="#CBD5E1" rx="2" />
 
-          {/* Counter / obstruction */}
-          <rect x="340" y="212" width="70" height="8" rx="1" fill="#15803D" opacity="0.2" stroke="#15803D" strokeWidth="1.2" />
-          {/* Counter legs */}
-          <line x1="345" y1="220" x2="345" y2={GY} stroke="#15803D" strokeWidth="1" opacity="0.4" />
-          <line x1="405" y1="220" x2="405" y2={GY} stroke="#15803D" strokeWidth="1" opacity="0.4" />
+          {/* Counter */}
+          <rect x="540" y="195" width="100" height="10" rx="2" fill="#94A3B8" stroke="#64748B" strokeWidth="1.5" />
+          <text x="590" y="190" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">counter surface</text>
 
-          {/* Knee space under counter */}
-          <rect x="348" y="240" width="54" height="96" rx="2" fill="#15803D" opacity="0.03" stroke="#15803D" strokeWidth="0.8" strokeDasharray="3 3" />
+          {/* Counter depth */}
+          <line x1="540" y1="218" x2="640" y2="218" stroke="#15803D" strokeWidth="1.5" />
+          <line x1="540" y1="211" x2="540" y2="225" stroke="#15803D" strokeWidth="1.5" />
+          <line x1="640" y1="211" x2="640" y2="225" stroke="#15803D" strokeWidth="1.5" />
+          <rect x="557" y="224" width="66" height="20" rx="6" fill="#15803D" />
+          <text x="590" y="238" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('25', '635')} deep</text>
 
-          {/* Person in wheelchair */}
-          <WheelchairPerson x={272} y={248} scale={1} />
+          {/* Reach zone */}
+          <rect x="460" y="96" width="178" height="98" fill="#15803D" opacity="0.04" rx="6" stroke="#15803D" strokeWidth="1.5" />
 
-          {/* Reach envelope — two zones */}
-          {/* ≤20" deep = 48" max (y=116) */}
-          <line x1="250" y1="116" x2="420" y2="116" stroke="#15803D" strokeWidth="1" strokeDasharray="3 2" />
-          {/* 20–25" deep = 44" max (y=135) */}
-          <line x1="250" y1="135" x2="420" y2="135" stroke="#15803D" strokeWidth="1" strokeDasharray="3 2" opacity="0.6" />
+          {/* 44-48" max */}
+          <line x1="450" y1="96" x2="650" y2="96" stroke="#15803D" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="654" y="82" width="62" height="28" rx="6" fill="#15803D" />
+          <text x="685" y="100" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('44\u201348', '1120')}</text>
+          <text x="685" y="124" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#15803D" fontWeight="600">max high</text>
+          <text x="685" y="138" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">(depends on</text>
+          <text x="685" y="150" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">counter depth)</text>
 
-          {/* Dimension: 48" (≤20" obstruction) */}
-          <rect x="416" y="110" width="60" height="14" rx="3" fill="#15803D" />
-          <text x="446" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">
-            {imp('48', '1220')} (≤20")
-          </text>
+          {/* Wheelchair */}
+          <WheelchairSide x={440} y={180} armToX={80} armToY={-15} />
 
-          {/* Dimension: 44" (20–25" obstruction) */}
-          <rect x="416" y="129" width="64" height="14" rx="3" fill="#15803D" opacity="0.8" />
-          <text x="448" y="139" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">
-            {imp('44', '1120')} (20–25")
-          </text>
+          {/* Floor */}
+          <line x1="390" y1="328" x2="710" y2="328" stroke="#94A3B8" strokeWidth="2" />
 
-          {/* Obstruction depth dimension */}
-          <line x1="340" y1="228" x2="408" y2="228" stroke="#15803D" strokeWidth="1" />
-          <line x1="340" y1="222" x2="340" y2="234" stroke="#15803D" strokeWidth="1" />
-          <line x1="408" y1="222" x2="408" y2="234" stroke="#15803D" strokeWidth="1" />
-          <rect x="348" y="230" width="50" height="12" rx="3" fill="#15803D" opacity="0.85" />
-          <text x="373" y="239" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">
-            ≤ {imp('25', '635')} deep
-          </text>
+          {/* Callout dots */}
+          <CalloutDots callouts={FWD_CALLOUTS} active={fwdActive} toggle={toggleFwd} />
 
-
-          {/* ===== DIVIDER ===== */}
-          <line x1="490" y1="40" x2="490" y2="360" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
-
-
-          {/* ===== PANEL 3: UNOBSTRUCTED SIDE REACH ===== */}
-          <text x="595" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.06em">
-            UNOBSTRUCTED SIDE
-          </text>
-
-          {/* Wall (behind person) */}
-          <rect x="640" y="100" width="6" height="240" fill="#94A3B8" rx="1" />
-
-          {/* Reach envelope zone (on wall) */}
-          <rect x="632" y="116" width="18" height="186" rx="2" fill="#2563EB" opacity="0.08" stroke="#2563EB" strokeWidth="1" strokeDasharray="4 3" />
-
-          {/* Person — side view facing right, reaching toward wall */}
-          <WheelchairPerson x={540} y={248} scale={1} />
-
-          {/* Reach lines */}
-          <line x1="520" y1="116" x2="650" y2="116" stroke="#2563EB" strokeWidth="1" strokeDasharray="3 2" />
-          <line x1="520" y1="302" x2="650" y2="302" stroke="#2563EB" strokeWidth="1" strokeDasharray="3 2" />
-
-          {/* Dimension: 48" max */}
-          <line x1="512" y1="116" x2="512" y2={GY} stroke="#2563EB" strokeWidth="1.2" />
-          <line x1="504" y1="116" x2="520" y2="116" stroke="#2563EB" strokeWidth="1.2" />
-          <line x1="504" y1={GY} x2="520" y2={GY} stroke="#2563EB" strokeWidth="1.2" />
-          <polygon points="512,121 508,131 516,131" fill="#2563EB" />
-          <polygon points={`512,${GY - 5} 508,${GY - 15} 516,${GY - 15}`} fill="#2563EB" />
-          <rect x="486" y="205" width="48" height="14" rx="3" fill="#2563EB" />
-          <text x="510" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">
-            {imp('48', '1220')}
-          </text>
-
-          {/* Dimension: 15" min */}
-          <rect x="652" y="296" width="48" height="14" rx="3" fill="#2563EB" opacity="0.8" />
-          <text x="676" y="306" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7.5" fontWeight="700" fill="white">
-            {imp('15', '380')}
-          </text>
-
-
-          {/* ===== DIVIDER ===== */}
-          <line x1="715" y1="40" x2="715" y2="360" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
-
-
-          {/* ===== PANEL 4: OBSTRUCTED SIDE REACH ===== */}
-          <text x="820" y="28" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="var(--body-secondary)" letterSpacing="0.06em">
-            OBSTRUCTED SIDE
-          </text>
-
-          {/* Wall */}
-          <rect x="865" y="100" width="6" height="240" fill="#94A3B8" rx="1" />
-
-          {/* Shelf / obstruction */}
-          <rect x="815" y="212" width="52" height="7" rx="1" fill="#7C3AED" opacity="0.2" stroke="#7C3AED" strokeWidth="1.2" />
-          {/* Support */}
-          <line x1="865" y1="219" x2="865" y2={GY} stroke="#7C3AED" strokeWidth="1" opacity="0.4" />
-
-          {/* Person */}
-          <WheelchairPerson x={740} y={248} scale={1} />
-
-          {/* Reach lines */}
-          {/* ≤10" deep = 48" max */}
-          <line x1="730" y1="116" x2="875" y2="116" stroke="#7C3AED" strokeWidth="1" strokeDasharray="3 2" />
-          {/* 10–24" deep = 46" max (y=126) */}
-          <line x1="730" y1="126" x2="875" y2="126" stroke="#7C3AED" strokeWidth="1" strokeDasharray="3 2" opacity="0.6" />
-
-          {/* Dimension labels */}
-          <rect x="873" y="110" width="42" height="14" rx="3" fill="#7C3AED" />
-          <text x="894" y="120" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">
-            {imp('48', '1220')}
-          </text>
-          <rect x="873" y="130" width="42" height="14" rx="3" fill="#7C3AED" opacity="0.8" />
-          <text x="894" y="140" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fontWeight="700" fill="white">
-            {imp('46', '1170')}
-          </text>
-
-          {/* Obstruction depth */}
-          <line x1="815" y1="226" x2="865" y2="226" stroke="#7C3AED" strokeWidth="1" />
-          <line x1="815" y1="220" x2="815" y2="232" stroke="#7C3AED" strokeWidth="1" />
-          <line x1="865" y1="220" x2="865" y2="232" stroke="#7C3AED" strokeWidth="1" />
-          <rect x="817" y="233" width="46" height="12" rx="3" fill="#7C3AED" opacity="0.85" />
-          <text x="840" y="242" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">
-            ≤ {imp('24', '610')}
-          </text>
-
-
-          {/* ===== CLEAR FLOOR SPACE note (spans panels 1 & 2) ===== */}
-          <rect x="55" y="355" width="130" height="28" rx="4" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="120" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">
-            CLEAR FLOOR: {imp('30', '760')} × {imp('48', '1220')}
-          </text>
-          <text x="120" y="380" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">(forward approach)</text>
-
-          <rect x="535" y="355" width="130" height="28" rx="4" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="600" y="370" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="600">
-            CLEAR FLOOR: {imp('30', '760')} × {imp('48', '1220')}
-          </text>
-          <text x="600" y="380" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fill="#78350F">(parallel approach)</text>
-
-
-          {/* ===== CALLOUT DOTS ===== */}
-          {CALLOUTS.map(c => (
-            <g key={c.id}
-              tabIndex="0" role="button"
-              aria-label={`Callout ${c.id}: ${c.label} — ${c.section}. Press Enter for details.`}
-              aria-expanded={active === c.id}
-              onClick={() => toggle(c.id)}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }}
-              style={{ cursor: 'pointer', outline: 'none' }}>
-              {active === c.id && (
-                <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3">
-                  <animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" />
-                </circle>
-              )}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'}
-                stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
-                fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
-              <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2"
-                className="reach-focus-ring" />
-            </g>
-          ))}
-
-          <text x="30" y="425" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">
+          <text x="20" y="365" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">
             Click or tap numbered callouts for details
           </text>
         </svg>
       </div>
 
-      {/* Live region */}
+      {/* Forward callout panel */}
       <div aria-live="polite" className="sr-only">
-        {activeCallout ? `Now showing details for callout ${activeCallout.id}: ${activeCallout.label}, ${activeCallout.section}` : ''}
+        {fwdCallout ? `Showing callout ${fwdCallout.id}: ${fwdCallout.label}` : ''}
+      </div>
+      <CalloutPanel callout={fwdCallout} onClose={() => setFwdActive(null)} panelRef={fwdPanelRef} />
+
+      {/* Forward key facts */}
+      <div style={{
+        background: 'var(--card-bg)', border: '1px solid var(--border)',
+        borderRadius: '12px', padding: '20px 24px', marginTop: '12px'
+      }}>
+        <p style={{
+          fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700,
+          color: 'var(--heading)', margin: '0 0 12px'
+        }}>Key numbers {'\u2014'} Forward Reach</p>
+        <KeyFact color="#C2410C" number={`${d('15', '380')} \u2013 ${d('48', '1220')}`}>
+          Reachable zone when nothing is in the way (15 to 48 inches above the floor)
+        </KeyFact>
+        <KeyFact color="#15803D" number={`\u2264 ${d('25', '635')}`}>
+          Maximum counter depth you can reach over {'\u2014'} deeper than 25 inches means the control is too far
+        </KeyFact>
+        <KeyFact color="#15803D" number={`${d('44', '1120')} \u2013 ${d('48', '1220')}`}>
+          Maximum height drops to 44 inches when reaching over a counter 20{'\u2013'}25 inches deep
+        </KeyFact>
       </div>
 
-      {/* Info panel */}
-      {activeCallout && (
-        <div ref={panelRef} style={{
-          marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)',
-          borderRadius: '12px', overflow: 'hidden', animation: 'reachFadeIn 0.25s ease-out'
-        }}>
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)',
-            flexWrap: 'wrap', gap: '8px'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                width: '26px', height: '26px', borderRadius: '50%',
-                background: activeCallout.color, color: 'var(--page-bg)',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700
-              }}>{activeCallout.id}</span>
-              <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>
-                {activeCallout.label}
-              </span>
-              <span style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-                color: activeCallout.color, background: `${activeCallout.color}15`,
-                padding: '2px 8px', borderRadius: '4px'
-              }}>{activeCallout.section}</span>
-            </div>
-            <button onClick={() => setActive(null)} aria-label="Close panel"
-              style={{
-                background: 'none', border: '1px solid var(--border)', borderRadius: '8px',
-                padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px'
-              }}>Close <span aria-hidden="true">✕</span></button>
-          </div>
 
-          <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
-            <div style={{ flex: '1 1 55%', minWidth: 0 }}>
-              <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                color: 'var(--body)', lineHeight: 1.75, margin: 0
-              }}>{activeCallout.plain}</p>
-            </div>
-            <aside style={{ flex: '1 1 40%', minWidth: 0 }}>
-              <div style={{
-                background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)',
-                borderRadius: '0 10px 10px 0', padding: '16px 18px'
-              }}>
-                <p style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-                  letterSpacing: '0.1em', textTransform: 'uppercase',
-                  color: 'var(--body-secondary)', margin: '0 0 8px'
-                }}>Official Standard — {parseCitations(activeCallout.citation, activeCallout)}</p>
-                <p style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                  color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic'
-                }}>{parseCitations(activeCallout.legal, activeCallout)}</p>
-              </div>
-            </aside>
-          </div>
-        </div>
-      )}
+      {/* ════════════════════════════════════════════ */}
+      {/*  DIAGRAM 2: SIDE REACH                      */}
+      {/* ════════════════════════════════════════════ */}
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        marginTop: '40px', marginBottom: '8px', flexWrap: 'wrap', gap: '8px'
+      }}>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
+          Side Reach
+        </h3>
+      </div>
+
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
+        <svg viewBox="0 0 720 380" role="img" aria-labelledby="side-title side-desc"
+          style={{ width: '100%', height: 'auto', display: 'block' }}>
+          <title id="side-title">Side Reach Range</title>
+          <desc id="side-desc">
+            Two views of a person in a wheelchair reaching sideways. Left: nothing in the way,
+            reachable zone 15 to 48 inches. Right: reaching over a cabinet no deeper than 24 inches
+            and no taller than 34 inches, max reach 46 inches.
+          </desc>
+          <rect width="720" height="380" fill="var(--page-bg-subtle)" />
+
+          {/* ─── LEFT: Nothing in the way ─── */}
+          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
+            Nothing in the way
+          </text>
+
+          {/* Wall */}
+          <rect x="68" y="60" width="10" height="268" fill="#CBD5E1" rx="2" />
+
+          {/* Light switch */}
+          <rect x="78" y="168" width="14" height="22" rx="3" fill="white" stroke="#94A3B8" strokeWidth="1.5" />
+          <rect x="83" y="174" width="4" height="10" rx="1" fill="#94A3B8" />
+          <text x="104" y="184" fontFamily="Manrope, sans-serif" fontSize="9" fill="#64748B" fontWeight="500">light switch</text>
+
+          {/* Reach zone */}
+          <rect x="78" y="96" width="70" height="200" fill="#2563EB" opacity="0.05" rx="6" stroke="#2563EB" strokeWidth="1.5" />
+
+          {/* 48" max */}
+          <line x1="70" y1="96" x2="270" y2="96" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="272" y="86" width="50" height="22" rx="6" fill="#2563EB" />
+          <text x="297" y="101" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="white">{d('48', '1220')}</text>
+          <text x="297" y="122" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#2563EB" fontWeight="600">max high</text>
+
+          {/* 15" min */}
+          <line x1="70" y1="296" x2="270" y2="296" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="272" y="286" width="50" height="22" rx="6" fill="#2563EB" />
+          <text x="297" y="301" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="white">{d('15', '380')}</text>
+          <text x="297" y="322" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#2563EB" fontWeight="600">min low</text>
+
+          {/* Person front view */}
+          <WheelchairFront x={140} y={140} armToX={-30} armToY={20} dotColor="#2563EB" />
+
+          {/* Floor */}
+          <line x1="30" y1="328" x2="340" y2="328" stroke="#94A3B8" strokeWidth="2" />
+
+
+          {/* ─── DIVIDER ─── */}
+          <line x1="360" y1="20" x2="360" y2="360" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+
+
+          {/* ─── RIGHT: Reaching over something ─── */}
+          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
+            Reaching over something
+          </text>
+
+          {/* Wall */}
+          <rect x="448" y="60" width="10" height="268" fill="#CBD5E1" rx="2" />
+
+          {/* Cabinet */}
+          <rect x="458" y="210" width="60" height="118" rx="3" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
+          <text x="488" y="275" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#64748B" fontWeight="500">cabinet</text>
+
+          {/* Obstruction height */}
+          <rect x="390" y="200" width="54" height="22" rx="6" fill="#7C3AED" />
+          <text x="417" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('34', '865')}</text>
+          <text x="417" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#7C3AED" fontWeight="600">max height</text>
+
+          {/* Obstruction depth */}
+          <line x1="458" y1="340" x2="518" y2="340" stroke="#15803D" strokeWidth="1.5" />
+          <line x1="458" y1="333" x2="458" y2="347" stroke="#15803D" strokeWidth="1.5" />
+          <line x1="518" y1="333" x2="518" y2="347" stroke="#15803D" strokeWidth="1.5" />
+          <rect x="460" y="348" width="56" height="18" rx="5" fill="#15803D" />
+          <text x="488" y="361" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="white">{'\u2264'} {d('24', '610')} deep</text>
+
+          {/* Reach zone */}
+          <rect x="458" y="104" width="60" height="106" fill="#7C3AED" opacity="0.04" rx="6" stroke="#7C3AED" strokeWidth="1.5" />
+
+          {/* 46-48" max */}
+          <line x1="440" y1="104" x2="650" y2="104" stroke="#7C3AED" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="654" y="90" width="62" height="28" rx="6" fill="#7C3AED" />
+          <text x="685" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('46\u201348', '1170')}</text>
+          <text x="685" y="132" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#7C3AED" fontWeight="600">max high</text>
+
+          {/* Person front view */}
+          <WheelchairFront x={530} y={140} armToX={-30} armToY={8} dotColor="#7C3AED" />
+
+          {/* Floor */}
+          <line x1="390" y1="328" x2="710" y2="328" stroke="#94A3B8" strokeWidth="2" />
+
+          {/* Callout dots */}
+          <CalloutDots callouts={SIDE_CALLOUTS} active={sideActive} toggle={toggleSide} />
+
+          <text x="20" y="365" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">
+            Click or tap numbered callouts for details
+          </text>
+        </svg>
+      </div>
+
+      {/* Side callout panel */}
+      <div aria-live="polite" className="sr-only">
+        {sideCallout ? `Showing callout ${sideCallout.id}: ${sideCallout.label}` : ''}
+      </div>
+      <CalloutPanel callout={sideCallout} onClose={() => setSideActive(null)} panelRef={sidePanelRef} />
+
+      {/* Side key facts */}
+      <div style={{
+        background: 'var(--card-bg)', border: '1px solid var(--border)',
+        borderRadius: '12px', padding: '20px 24px', marginTop: '12px'
+      }}>
+        <p style={{
+          fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700,
+          color: 'var(--heading)', margin: '0 0 12px'
+        }}>Key numbers {'\u2014'} Side Reach</p>
+        <KeyFact color="#2563EB" number={`${d('15', '380')} \u2013 ${d('48', '1220')}`}>
+          Reachable zone when nothing is in the way {'\u2014'} same range as forward reach
+        </KeyFact>
+        <KeyFact color="#15803D" number={`\u2264 ${d('24', '610')}`}>
+          Maximum depth of any obstruction you have to reach over sideways
+        </KeyFact>
+        <KeyFact color="#7C3AED" number={`\u2264 ${d('34', '865')}`}>
+          The obstruction can{'\u0027'}t be taller than 34 inches or it blocks the reach
+        </KeyFact>
+        <KeyFact color="#7C3AED" number={`${d('46', '1170')} \u2013 ${d('48', '1220')}`}>
+          Maximum reach is 46 inches when the obstruction is 10{'\u2013'}24 inches deep
+        </KeyFact>
+      </div>
+
 
       <style>{`
         @keyframes reachFadeIn {
@@ -469,7 +543,7 @@ export default function ReachRangeDiagram() {
         @media (max-width: 768px) {
           .guide-two-col { flex-direction: column !important; gap: 16px !important; }
         }
-              @media (prefers-reduced-motion: reduce) {
+        @media (prefers-reduced-motion: reduce) {
           .ada-diagram-wrap * { animation: none !important; transition: none !important; }
         }
       `}</style>
