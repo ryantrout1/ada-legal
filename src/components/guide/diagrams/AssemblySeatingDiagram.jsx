@@ -1,159 +1,76 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-
-const SEAT_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#802-wheelchair-spaces-companion-seats-and-designated-aisle-seats';
+const U = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#802-wheelchair-spaces-companion-seats-and-designated-aisle-seats';
 const CALLOUTS = [
-  { id: 1, label: 'Wheelchair Space Size', section: '§802.1', color: 'var(--section-label)', textColor: '#8B2E08', x: 100, y: 42,
-    plain: 'Each wheelchair space must be 36 inches wide minimum. Depth depends on entry direction: 48 inches minimum for front or rear entry, 60 inches minimum for side entry. The space must be level (max 1:48 slope) with a firm, stable surface. Multiple wheelchair spaces can be adjacent or separated; when adjacent, they must be separated by an armrest or fixed companion seat.',
-    legal: '"Wheelchair spaces shall be 36 inches wide minimum." Depth: "48 inches minimum where entered from the front or rear; 60 inches minimum where entered from the side."', citation: '§802.1' },
-  { id: 2, label: 'Companion Seat', section: '§802.3', color: '#15803D', textColor: '#14532D', x: 300, y: 42,
-    plain: 'At least one companion seat must be provided directly adjacent to each wheelchair space, at the same elevation and in the same row. The companion and wheelchair user should be shoulder-to-shoulder. The companion seat must be equivalent in comfort and amenities to surrounding seats. It cannot be a folding chair placed in the aisle.',
-    legal: '"At least one companion seat complying with §802.3 shall be provided for each wheelchair space." Adjacent, same row, shoulder alignment.', citation: '§802.3' },
-  { id: 3, label: 'Sightlines — Seated', section: '§802.2.1.1', color: '#2563EB', textColor: '#1E3A8A', x: 500, y: 42,
-    plain: 'Wheelchair users must have lines of sight to the performance area or playing field comparable to those of seated spectators in surrounding seats. This means wheelchair spaces cannot be placed behind tall barriers, columns, or in obstructed locations. The line of sight must be over the heads of seated spectators in front.',
-    legal: '"Where spectators are expected to remain seated… lines of sight to the screen, performance area, or playing field for spectators in wheelchair spaces shall be comparable to those provided for spectators in surrounding seats."', citation: '§802.2.1.1' },
-  { id: 4, label: 'Sightlines — Standing', section: '§802.2.1.2', color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 260,
-    plain: 'At venues where spectators regularly stand (concerts, sporting events), wheelchair spaces must be elevated enough that the wheelchair user can see over standing spectators in the row immediately ahead. This typically requires raising the wheelchair platform to a height where the seated user\'s eye level (approximately 43-51 inches) clears the standing spectator\'s head.',
-    legal: '"Where spectators are expected to stand… lines of sight over standing spectators in the row immediately in front… shall be provided."', citation: '§802.2.1.2' },
-  { id: 5, label: 'Dispersion', section: '§221.2.3', color: '#92400E', textColor: '#78350F', x: 300, y: 260,
-    plain: 'Wheelchair spaces must be dispersed throughout the venue — different sections, different viewing angles, and different price points. They cannot all be clustered in one area (e.g., all in the back row or all on one side). This ensures wheelchair users have the same range of experience and ticket options as other patrons.',
-    legal: '"Wheelchair spaces shall be dispersed." Multiple locations, viewing angles, and price categories required.', citation: '§221.2.3' },
-  { id: 6, label: 'Integration', section: '§802.1', color: '#BE185D', textColor: '#9D174D', x: 500, y: 260,
-    plain: 'Wheelchair spaces must be an integral part of the seating layout — not isolated platforms, not behind barriers, not in separate "accessible sections." They must be adjacent to companion seats at the same level, integrated into the flow of the seating bowl, and connected by an accessible route.',
-    legal: '"Wheelchair spaces shall adjoin accessible routes." Integration: spaces must be part of the general seating plan, not segregated.', citation: '§802.1' },
-  { id: 7, label: 'Scoping', section: '§221.2', color: '#0E7490', textColor: '#0C4A6E', x: 700, y: 150,
-    plain: 'The number of wheelchair spaces required depends on total seating: 4–25 seats = 1 space; 26–50 = 2; 51–150 = 4; 151–300 = 5; 301–500 = 6; 501–5,000 = 6 plus 1 for each 150 over 500; 5,001+ = 36 plus 1 for each 200 over 5,000. Each wheelchair space must have a companion seat.',
-    legal: '§221.2.1 Table: "4 to 25 = 1; 26 to 50 = 2; 51 to 150 = 4; 151 to 300 = 5; 301 to 500 = 6; 501 to 5000 = 6 + 1/150; 5001+ = 36 + 1/200."', citation: '§221.2' }
+  { id: 1, label: 'Wheelchair Spaces & Companions', section: '\u00a7802.1', color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52, plain: 'Wheelchair spaces must be 36 inches wide minimum. Depth: 48 inches for front/rear entry, 60 inches for side entry. A companion seat must be directly adjacent \u2014 shoulder-to-shoulder, not in front or behind. The companion seat must be equivalent in comfort and price to surrounding seats. Spaces must be dispersed throughout the venue, not clustered in one location.', legal: '\u201CWheelchair spaces shall be 36 inches wide minimum.\u201D Depth: \u201C48 inches (front/rear entry) or 60 inches (side entry).\u201D Companion: \u201CAt least one companion seat shall be provided for each wheelchair space.\u201D \u201CCompanion seats shall be located to provide shoulder alignment.\u201D', citation: '\u00a7802.1, \u00a7802.3' },
+  { id: 2, label: 'Sightlines & Dispersion', section: '\u00a7802.2', color: '#15803D', textColor: '#14532D', x: 470, y: 52, plain: 'Wheelchair users must see over standing spectators when the audience stands. This means wheelchair positions must be elevated or on a platform \u2014 front-row-only placement fails in venues where people stand. Spaces must be dispersed among different seating sections, price levels, and viewing angles. Clustering all wheelchair seats in one area is a violation, even if the sightlines are good.', legal: '\u201CWhere spectators are expected to stand, wheelchair spaces shall provide a line of sight over standing spectators.\u201D \u00a7221.2.3: \u201CWheelchair spaces shall be dispersed.\u201D \u201CWheelchair spaces shall provide a choice of admission prices and lines of sight comparable to those for the general public.\u201D', citation: '\u00a7802.2, \u00a7221.2.3' }
 ];
+function makeLink(t){return(<a href={U} target="_blank" rel="noopener noreferrer" style={{color:'var(--section-label)',textDecoration:'none',borderBottom:'1px dotted var(--accent)'}} aria-label={`${t} on ADA.gov`}>{t}<span aria-hidden="true" style={{fontSize:'0.65em',marginLeft:'1px',verticalAlign:'super'}}>{'\u2197'}</span></a>)}
+function pc(t){return t.split(/(\u00a7\d{3,4}(?:\.\d+)*)/g).map((p,i)=>/^\u00a7\d{3,4}/.test(p)?<React.Fragment key={i}>{makeLink(p)}</React.Fragment>:p)}
+function CP({callout:c,onClose,panelRef}){if(!c)return null;return(<div ref={panelRef} style={{marginTop:'12px',background:'var(--card-bg)',border:'1px solid var(--border)',borderRadius:'12px',overflow:'hidden',animation:'asFade 0.25s ease-out'}}><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 20px',borderBottom:'1px solid var(--border)',background:'var(--page-bg-subtle)',flexWrap:'wrap',gap:'8px'}}><div style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}><span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:'26px',height:'26px',borderRadius:'50%',background:c.color,color:'white',fontFamily:'Manrope, sans-serif',fontSize:'0.8rem',fontWeight:700}}>{c.id}</span><span style={{fontFamily:'Fraunces, serif',fontSize:'1.1rem',fontWeight:700,color:'var(--heading)'}}>{c.label}</span><span style={{fontFamily:'Manrope, sans-serif',fontSize:'0.75rem',fontWeight:600,color:c.color,background:`${c.color}15`,padding:'2px 8px',borderRadius:'4px'}}>{c.section}</span></div><button onClick={onClose} aria-label="Close panel" style={{background:'none',border:'1px solid var(--border)',borderRadius:'8px',padding:'8px 16px',cursor:'pointer',fontFamily:'Manrope, sans-serif',fontSize:'0.875rem',fontWeight:600,color:'var(--body)',minHeight:'44px'}}>Close <span aria-hidden="true">{'\u2715'}</span></button></div><div className="guide-two-col" style={{padding:'20px',gap:'24px',margin:0}}><div style={{flex:'1 1 55%',minWidth:0}}><p style={{fontFamily:'Manrope, sans-serif',fontSize:'0.9375rem',color:'var(--body)',lineHeight:1.75,margin:0}}>{c.plain}</p></div><aside style={{flex:'1 1 40%',minWidth:0}}><div style={{background:'var(--card-bg-tinted)',borderLeft:'3px solid var(--accent)',borderRadius:'0 10px 10px 0',padding:'16px 18px'}}><p style={{fontFamily:'Manrope, sans-serif',fontSize:'0.7rem',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--body-secondary)',margin:'0 0 8px'}}>Official Standard {'\u2014'} {pc(c.citation)}</p><p style={{fontFamily:'Manrope, sans-serif',fontSize:'0.875rem',color:'var(--body)',lineHeight:1.7,margin:0,fontStyle:'italic'}}>{pc(c.legal)}</p></div></aside></div></div>)}
+function KF({color:cl,number:n,children:ch}){return(<div style={{display:'flex',alignItems:'baseline',gap:'10px',padding:'6px 0'}}><span style={{background:cl,color:'white',fontFamily:'Manrope, sans-serif',fontSize:'0.95rem',fontWeight:700,minWidth:'60px',textAlign:'center',padding:'3px 10px',borderRadius:'6px',flexShrink:0,whiteSpace:'nowrap'}}>{n}</span><span style={{fontFamily:'Manrope, sans-serif',fontSize:'0.9rem',color:'var(--body)',lineHeight:1.6}}>{ch}</span></div>)}
+function Dots({callouts:cs,active:a,toggle:tg}){return cs.map(c=>(<g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={a===c.id} onClick={()=>tg(c.id)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tg(c.id)}}} style={{cursor:'pointer',outline:'none'}}>{a===c.id&&(<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite"/></circle>)}<circle cx={c.x} cy={c.y} r="13" fill={a===c.id?c.textColor:'white'} stroke={c.color} strokeWidth="2"/><text x={c.x} y={c.y+4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={a===c.id?'white':c.textColor}>{c.id}</text><circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2" className="as-fr"/></g>))}
+export default function AssemblySeatingDiagram(){
+  const[a,sa]=useState(null);const pr=useRef(null);const tg=useCallback(id=>sa(p=>p===id?null:id),[]);
+  useEffect(()=>{if(a&&pr.current)pr.current.scrollIntoView({behavior:'smooth',block:'nearest'})},[a]);
+  useEffect(()=>{const h=e=>{if(e.key==='Escape')sa(null)};window.addEventListener('keydown',h);return()=>window.removeEventListener('keydown',h)},[]);
+  const ac=CALLOUTS.find(c=>c.id===a);
+  return(<div className="ada-diagram-wrap" style={{margin:'32px 0'}}>
+    <div style={{marginBottom:'8px'}}><h3 style={{fontFamily:'Fraunces, serif',fontSize:'1.15rem',fontWeight:700,color:'var(--heading)',margin:0}}>Wheelchair Seating in Assembly Areas</h3></div>
+    <div style={{background:'var(--card-bg)',border:'1px solid var(--border)',borderRadius:'12px',overflow:'hidden'}}>
+      <svg viewBox="0 0 720 340" role="img" aria-labelledby="as-t" style={{width:'100%',height:'auto',display:'block'}}>
+        <title id="as-t">Wheelchair Spaces in Assembly Areas</title>
+        <rect width="720" height="340" fill="var(--page-bg-subtle)"/>
+        <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Space requirements</text>
+        <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Sightlines & placement</text>
 
-function makeLink(t) { return (<a href={SEAT_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--section-label)', textColor: '#8B2E08', textDecoration: 'none', borderBottom: '1px dotted var(--accent)' }}>{t}<span aria-hidden="true" style={{ fontSize: '.65em', marginLeft: 1, verticalAlign: 'super' }}>↗</span></a>); }
-function parseCite(t) { return t.split(/(§\d{3,4}(?:\.\d+)*)/g).map((p, i) => /^§\d{3,4}/.test(p) ? <React.Fragment key={i}>{makeLink(p)}</React.Fragment> : p); }
+        {/* LEFT: Space size */}
+        <rect x="40" y="70" width="280" height="50" rx="10" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5"/>
+        <text x="180" y="92" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#7C2D12" fontWeight="600">36{'\u2033'} wide {'\u00d7'} 48{'\u2033'} deep (front entry)</text>
+        <text x="180" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12">or 60{'\u2033'} deep for side entry</text>
 
-export default function AssemblySeatingDiagram() {
-  const [active, setActive] = useState(null);
-  const [metric, setMetric] = useState(false);
-  const panelRef = useRef(null);
-  const toggle = useCallback(id => setActive(p => p === id ? null : id), []);
-  useEffect(() => { if (active && panelRef.current) panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [active]);
-  useEffect(() => { const h = e => { if (e.key === 'Escape') setActive(null); }; window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h); }, []);
-  const d = (imp, met) => metric ? `${met} mm` : `${imp}"`;
-  const ac = CALLOUTS.find(c => c.id === active);
+        <rect x="40" y="135" width="280" height="50" rx="10" fill="#7C3AED" opacity="0.04" stroke="#7C3AED" strokeWidth="1.5"/>
+        <text x="180" y="157" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#5B21B6" fontWeight="600">Companion seat: shoulder-to-shoulder</text>
+        <text x="180" y="173" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6">directly adjacent, same comfort and price</text>
 
-  return (
-    <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>§802 Assembly Seating — Wheelchair Spaces</h3>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
-          {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: 6, border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: 44 }}>{u}</button>); })}
-        </div>
-      </div>
-      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
-        <svg viewBox="0 0 900 420" role="img" aria-labelledby="asm-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="asm-title">ADA §802 Assembly Seating — Plan View and Sightline Elevation</title>
-          <rect width="900" height="420" fill="var(--page-bg-subtle)" />
+        <rect x="40" y="200" width="280" height="50" rx="10" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5"/>
+        <text x="180" y="222" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#1E3A8A" fontWeight="600">Dispersed throughout venue</text>
+        <text x="180" y="238" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A">different sections, price levels, angles</text>
 
-          {/* LEFT: Plan View */}
-          <text x="190" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">PLAN VIEW</text>
-          {/* Row of seats */}
-          {[0,1,2].map(i => <rect key={`s${i}`} x={60 + i * 50} y="60" width="40" height="40" rx="6" fill="#E7E5E4" opacity="0.3" stroke="#94A3B8" strokeWidth="1" />)}
-          {/* Wheelchair space */}
-          <rect x="210" y="55" width="80" height="100" rx="4" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="2" />
-          <text x="250" y="78" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#8B2E08" fontWeight="700">WHEELCHAIR</text>
-          <text x="250" y="90" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#8B2E08" fontWeight="700">SPACE</text>
-          {/* Wheelchair icon */}
-          <circle cx="250" cy="120" r="10" fill="#E2E8F0" stroke="#475569" strokeWidth="1" />
-          <circle cx="240" cy="135" r="5" fill="none" stroke="#64748B" strokeWidth="0.8" />
-          <circle cx="260" cy="135" r="5" fill="none" stroke="#64748B" strokeWidth="0.8" />
-          {/* Companion seat */}
-          <rect x="300" y="60" width="40" height="40" rx="6" fill="#15803D" opacity="0.1" stroke="#15803D" strokeWidth="2" />
-          <text x="320" y="83" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#14532D" fontWeight="600">COMP.</text>
-          {/* More seats */}
-          {[0,1].map(i => <rect key={`s2${i}`} x={350 + i * 50} y="60" width="40" height="40" rx="6" fill="#E7E5E4" opacity="0.3" stroke="#94A3B8" strokeWidth="1" />)}
+        {/* DIVIDER */}
+        <line x1="370" y1="20" x2="370" y2="320" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4"/>
 
-          {/* Dims */}
-          <line x1="210" y1="165" x2="290" y2="165" stroke="#C2410C" strokeWidth="1" />
-          <rect x="218" y="168" width="54" height="12" rx="3" fill="#C2410C" />
-          <text x="245" y="177" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('36', '915')} wide</text>
-          <line x1="295" y1="55" x2="295" y2="155" stroke="#C2410C" strokeWidth="1" />
-          <rect x="296" y="95" width="52" height="12" rx="3" fill="#C2410C" />
-          <text x="322" y="104" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6.5" fontWeight="700" fill="white">{d('48–60', '1220')}</text>
+        {/* RIGHT: Sightlines */}
+        <rect x="400" y="70" width="280" height="60" rx="10" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="1.5"/>
+        <text x="540" y="92" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">Must see over standing spectators</text>
+        <text x="540" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D">elevated or platform seating when audience stands</text>
+        <text x="540" y="124" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D">front row only is NOT enough</text>
 
-          {/* Accessible aisle */}
-          <rect x="60" y="110" width="380" height="35" rx="2" fill="#B45309" opacity="0.04" stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="250" y="132" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="7" fill="#78350F" fontWeight="500">ACCESSIBLE AISLE ({d('36', '915')} min)</text>
+        <rect x="400" y="148" width="280" height="50" rx="10" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5"/>
+        <text x="540" y="170" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#7C2D12" fontWeight="600">{'\u2718'} All seats in one spot = violation</text>
+        <text x="540" y="186" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12">even if sightlines are good from there</text>
 
-          {/* DIVIDER */}
-          <line x1="450" y1="20" x2="450" y2="410" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 4" />
+        <rect x="400" y="215" width="280" height="50" rx="10" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5"/>
+        <text x="540" y="237" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#1E3A8A" fontWeight="600">{'\u2714'} Comparable choice of experience</text>
+        <text x="540" y="253" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A">same viewing quality as general public</text>
 
-          {/* RIGHT: Sightline Elevation */}
-          <text x="670" y="24" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="var(--body-secondary)" letterSpacing=".08em">SIGHTLINE ELEVATION</text>
-          {/* Tiered platforms */}
-          <rect x="470" y="310" width="380" height="90" fill="#E7E5E4" opacity="0.1" stroke="#94A3B8" strokeWidth="1" />
-          <rect x="470" y="240" width="380" height="70" fill="#E7E5E4" opacity="0.15" stroke="#94A3B8" strokeWidth="1" />
-          <rect x="470" y="180" width="380" height="60" fill="#E7E5E4" opacity="0.2" stroke="#94A3B8" strokeWidth="1" />
-
-          {/* Standing spectator in row ahead */}
-          <circle cx="560" cy="235" r="9" fill="#E2E8F0" stroke="#475569" strokeWidth="1.2" />
-          <line x1="560" y1="244" x2="560" y2="300" stroke="#475569" strokeWidth="2" strokeLinecap="round" />
-          <line x1="560" y1="300" x2="550" y2="340" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" />
-          <line x1="560" y1="300" x2="570" y2="340" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" />
-          <text x="560" y="355" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="var(--body-secondary)">Standing</text>
-          <text x="560" y="365" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="var(--body-secondary)">spectator</text>
-
-          {/* Wheelchair user on elevated platform behind */}
-          <circle cx="700" cy="210" r="8" fill="#E2E8F0" stroke="#475569" strokeWidth="1.2" />
-          <line x1="700" y1="218" x2="700" y2="252" stroke="#475569" strokeWidth="2" strokeLinecap="round" />
-          <circle cx="690" cy="268" r="12" fill="none" stroke="#64748B" strokeWidth="1" />
-          <circle cx="710" cy="268" r="12" fill="none" stroke="#64748B" strokeWidth="1" />
-          <rect x="688" y="240" width="24" height="16" rx="3" fill="none" stroke="#64748B" strokeWidth="1" />
-          <text x="700" y="295" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="6" fill="#8B2E08" fontWeight="600">Wheelchair user</text>
-
-          {/* Sightline over standing spectator */}
-          <line x1="708" y1="210" x2="480" y2="170" stroke="#7C3AED" strokeWidth="1.5" strokeDasharray="6 3" />
-          <text x="530" y="165" fontFamily="Manrope, sans-serif" fontSize="7" fill="#5B21B6" fontWeight="600">Sightline clears standing head</text>
-          {/* Performance area arrow */}
-          <text x="485" y="180" fontFamily="Manrope, sans-serif" fontSize="7" fill="var(--body-secondary)">← Stage / Field</text>
-
-          {/* Companion next to wheelchair user */}
-          <circle cx="760" cy="215" r="7" fill="#15803D" opacity="0.2" stroke="#15803D" strokeWidth="1" />
-          <line x1="760" y1="222" x2="760" y2="260" stroke="#15803D" strokeWidth="1.5" />
-          <text x="760" y="278" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="5.5" fill="#14532D" fontWeight="600">Comp.</text>
-
-          {/* Callouts */}
-          {CALLOUTS.map(c => (
-            <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
-              {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity=".3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
-              <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
-              <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
-            </g>
-          ))}
-          <text x="30" y="410" fontFamily="Manrope, sans-serif" fontSize="9" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
-        </svg>
-      </div>
-      <div aria-live="polite" className="sr-only">{ac ? `Showing callout ${ac.id}: ${ac.label}` : ''}</div>
-      {ac && (
-        <div ref={panelRef} style={{ marginTop: 12, background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', animation: 'asmFade .25s ease-out' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: '50%', background: ac.color, color: 'var(--page-bg)', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{ac.id}</span>
-              <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{ac.label}</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: ac.color, background: `${ac.color}15`, padding: '2px 8px', borderRadius: 4 }}>{ac.section}</span>
-            </div>
-            <button onClick={() => setActive(null)} aria-label="Close" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: 44 }}>Close <span aria-hidden="true">✕</span></button>
-          </div>
-          <div className="guide-two-col" style={{ padding: 20, gap: 24, margin: 0 }}>
-            <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{ac.plain}</p></div>
-            <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard — {parseCite(ac.citation)}</p>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(ac.legal)}</p>
-            </div></aside>
-          </div>
-        </div>
-      )}
-      <style>{`@keyframes asmFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}        @media (prefers-reduced-motion: reduce) {
-          .ada-diagram-wrap * { animation: none !important; transition: none !important; }
-        }
-      `}</style>
+        <Dots callouts={CALLOUTS} active={a} toggle={tg}/>
+        <text x="20" y="330" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+      </svg>
     </div>
-  );
+    <div aria-live="polite" className="sr-only">{ac?`Showing: ${ac.label}`:''}</div>
+    <CP callout={ac} onClose={()=>sa(null)} panelRef={pr}/>
+    <div style={{background:'var(--card-bg)',border:'1px solid var(--border)',borderRadius:'12px',padding:'20px 24px',marginTop:'12px'}}>
+      <p style={{fontFamily:'Fraunces, serif',fontSize:'1rem',fontWeight:700,color:'var(--heading)',margin:'0 0 12px'}}>Key numbers {'\u2014'} Assembly Seating</p>
+      <KF color="#C2410C" number={`36\u2033`}>Minimum wheelchair space width</KF>
+      <KF color="#7C3AED" number="Adjacent">Companion must be shoulder-to-shoulder</KF>
+      <KF color="#15803D" number="Dispersed">Spaces spread across sections and price levels</KF>
+      <KF color="#2563EB" number="Standing">Must see over spectators who stand up</KF>
+    </div>
+    <style>{`
+      @keyframes asFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+      g[role="button"]:focus .as-fr{stroke:var(--accent);stroke-width:2.5}
+      @media(max-width:768px){.guide-two-col{flex-direction:column!important;gap:16px!important}}
+      @media(prefers-reduced-motion:reduce){.ada-diagram-wrap *{animation:none!important;transition:none!important}}
+    `}</style>
+  </div>)
 }
