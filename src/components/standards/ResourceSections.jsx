@@ -89,6 +89,20 @@ const SECTIONS = [
         tags: ['Title I', 'EEOC', 'Accommodation']
       },
       {
+        title: 'Title I: Employment Rights Overview',
+        type: 'Overview', dotColor: '#D4570A',
+        href: '/GuideTitleI',
+        description: 'Complete Title I overview — who it covers, reasonable accommodation, hiring rules, and how to file an EEOC complaint.',
+        tags: ['Title I', 'EEOC', 'Overview']
+      },
+      {
+        title: 'Title III: Businesses & Public Places',
+        type: 'Overview', dotColor: '#D4570A',
+        href: '/GuideTitleIII',
+        description: 'Complete Title III overview — barrier removal, design standards, website accessibility, and how to enforce your rights.',
+        tags: ['Title III', 'Barrier Removal', 'Overview']
+      },
+      {
         title: 'Housing, Apartments & the ADA',
         type: 'Guide', dotColor: '#D4570A',
         href: '/GuideHousing',
@@ -352,10 +366,25 @@ const SECTIONS = [
   }
 ];
 
-export default function ResourceSections() {
+const FILTER_TO_SECTION_ID = {
+  rights: 'rights',
+  business: 'business',
+  website: 'web-access',
+  design: 'design-standards',
+  government: 'government'
+};
+
+export default function ResourceSections({ activeFilters = [] }) {
+  // When filters are active, only show matching sections
+  const visibleSections = activeFilters.length === 0
+    ? SECTIONS
+    : SECTIONS.filter(section =>
+        activeFilters.some(key => FILTER_TO_SECTION_ID[key] === section.id)
+      );
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
-      {SECTIONS.map(section => (
+      {visibleSections.map(section => (
         <React.Fragment key={section.id}>
           {section.hasChapterNav ? (
             <section id={section.id} aria-labelledby={`${section.id}-heading`} style={{ scrollMarginTop: '96px' }}>

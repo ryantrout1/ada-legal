@@ -90,7 +90,9 @@ import GuideSmallBusiness from './pages/GuideSmallBusiness';
 import GuideSocialMedia from './pages/GuideSocialMedia';
 import GuideSwimmingPools from './pages/GuideSwimmingPools';
 import GuideTaxIncentives from './pages/GuideTaxIncentives';
+import GuideTitleI from './pages/GuideTitleI';
 import GuideTitleII from './pages/GuideTitleII';
+import GuideTitleIII from './pages/GuideTitleIII';
 import GuideTurningHandrails from './pages/GuideTurningHandrails';
 import GuideVoting from './pages/GuideVoting';
 import GuideWcagExplained from './pages/GuideWcagExplained';
@@ -169,7 +171,9 @@ export const PAGES = {
     "GuideSocialMedia": GuideSocialMedia,
     "GuideSwimmingPools": GuideSwimmingPools,
     "GuideTaxIncentives": GuideTaxIncentives,
+    "GuideTitleI": GuideTitleI,
     "GuideTitleII": GuideTitleII,
+    "GuideTitleIII": GuideTitleIII,
     "GuideTurningHandrails": GuideTurningHandrails,
     "GuideVoting": GuideVoting,
     "GuideWcagExplained": GuideWcagExplained,

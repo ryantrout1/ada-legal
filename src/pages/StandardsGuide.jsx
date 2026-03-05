@@ -57,7 +57,7 @@ export default function StandardsGuide() {
       <div style={{ background: 'var(--page-bg-subtle)' }}>
         <div className="sg-body-grid">
           <StandardsSidebar activeId={activeSidebarId} />
-          <ResourceSections />
+          <ResourceSections activeFilters={activeFilters} />
         </div>
       </div>
       <GuideReportCTA />
