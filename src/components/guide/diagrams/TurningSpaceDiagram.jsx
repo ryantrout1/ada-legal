@@ -142,21 +142,21 @@ export default function TurningSpaceDiagram() {
           <line x1="420" y1="144" x2="420" y2="156" stroke="#15803D" strokeWidth="1.2" />
           <line x1="493" y1="144" x2="493" y2="156" stroke="#15803D" strokeWidth="1.2" />
           <rect x="425" y="156" width="60" height="18" rx="5" fill="#15803D" />
-          <text x="455" y="169" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="white">{d('36', '915')} min</text>
+          <text x="455" y="169" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('36', '915')} min</text>
 
           {/* Stem width dimension (36") */}
           <line x1="493" y1="318" x2="567" y2="318" stroke="#15803D" strokeWidth="1.2" />
           <line x1="493" y1="312" x2="493" y2="324" stroke="#15803D" strokeWidth="1.2" />
           <line x1="567" y1="312" x2="567" y2="324" stroke="#15803D" strokeWidth="1.2" />
           <rect x="498" y="324" width="60" height="18" rx="5" fill="#15803D" />
-          <text x="528" y="337" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="white">{d('36', '915')} min</text>
+          <text x="528" y="337" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('36', '915')} min</text>
 
           {/* Overall 60" dimension */}
           <line x1="420" y1="48" x2="640" y2="48" stroke="#64748B" strokeWidth="1.2" />
           <line x1="420" y1="42" x2="420" y2="54" stroke="#64748B" strokeWidth="1.2" />
           <line x1="640" y1="42" x2="640" y2="54" stroke="#64748B" strokeWidth="1.2" />
           <rect x="497" y="36" width="66" height="18" rx="5" fill="#64748B" />
-          <text x="530" y="49" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="white">{d('60', '1525')} sq.</text>
+          <text x="530" y="49" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('60', '1525')} sq.</text>
 
 
           {/* CALLOUT DOTS */}

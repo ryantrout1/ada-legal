@@ -105,7 +105,7 @@ export default function KneeToeDiagram() {
 
           {/* Front edge line */}
           <line x1="342" y1="120" x2="342" y2="395" stroke="#94A3B8" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
-          <text x="346" y="118" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">front edge</text>
+          <text x="346" y="118" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8">front edge</text>
 
           {/* KNEE ZONE */}
           <path d="M 342 150 L 268 150 L 232 305 L 342 305 Z" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="1.5" />

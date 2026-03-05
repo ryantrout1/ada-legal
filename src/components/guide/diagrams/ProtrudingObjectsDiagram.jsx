@@ -135,8 +135,8 @@ export default function ProtrudingObjectsDiagram() {
 
           {/* Fire extinguisher cabinet (VIOLATION example) */}
           <rect x="62" y="130" width="50" height="60" rx="4" fill="#C2410C" opacity="0.08" stroke="#C2410C" strokeWidth="2" />
-          <text x="87" y="155" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#C2410C" fontWeight="600">fire</text>
-          <text x="87" y="167" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#C2410C" fontWeight="600">ext.</text>
+          <text x="87" y="155" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600">fire</text>
+          <text x="87" y="167" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600">ext.</text>
 
           {/* 4" max protrusion dimension */}
           <line x1="62" y1="200" x2="112" y2="200" stroke="#C2410C" strokeWidth="1.5" />
@@ -157,8 +157,8 @@ export default function ProtrudingObjectsDiagram() {
 
           {/* Danger zone highlight (27-80") */}
           <rect x="62" y="60" width="60" height="215" fill="#C2410C" opacity="0.03" stroke="#C2410C" strokeWidth="1" strokeDasharray="4 3" rx="4" />
-          <text x="92" y="100" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#C2410C" fontWeight="600" opacity="0.5">danger</text>
-          <text x="92" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#C2410C" fontWeight="600" opacity="0.5">zone</text>
+          <text x="92" y="100" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600" opacity="0.5">danger</text>
+          <text x="92" y="112" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600" opacity="0.5">zone</text>
 
           {/* Person with cane */}
           <g transform="translate(195,140)">
@@ -170,7 +170,7 @@ export default function ProtrudingObjectsDiagram() {
             <line x1="30" y1="40" x2="48" y2="65" stroke="#475569" strokeWidth="1.8" strokeLinecap="round" />
             {/* Cane */}
             <line x1="14" y1="65" x2="-35" y2="150" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" />
-            <text x="-20" y="168" fontFamily="Manrope, sans-serif" fontSize="9" fill="#B45309" fontWeight="600">cane</text>
+            <text x="-20" y="168" fontFamily="Manrope, sans-serif" fontSize="10" fill="#B45309" fontWeight="600">cane</text>
           </g>
 
           {/* Floor */}
@@ -189,14 +189,14 @@ export default function ProtrudingObjectsDiagram() {
 
           {/* Drinking fountain (OK, below 27") */}
           <rect x="432" y="265" width="55" height="35" rx="4" fill="#15803D" opacity="0.08" stroke="#15803D" strokeWidth="2" />
-          <text x="460" y="314" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#15803D" fontWeight="600">fountain (OK)</text>
+          <text x="460" y="314" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">fountain (OK)</text>
 
           {/* 27" line */}
           <line x1="400" y1="275" x2="700" y2="275" stroke="#B45309" strokeWidth="2.5" strokeDasharray="8 4" />
 
           {/* Safe zone highlight (below 27") */}
           <rect x="432" y="275" width="65" height="85" fill="#15803D" opacity="0.03" stroke="#15803D" strokeWidth="1" strokeDasharray="4 3" rx="4" />
-          <text x="464" y="340" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#15803D" fontWeight="600" opacity="0.5">safe zone</text>
+          <text x="464" y="340" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600" opacity="0.5">safe zone</text>
 
           {/* Person with cane detecting the fountain */}
           <g transform="translate(555,140)">
@@ -209,7 +209,7 @@ export default function ProtrudingObjectsDiagram() {
             {/* Cane hitting the fountain */}
             <line x1="14" y1="65" x2="-60" y2="148" stroke="#15803D" strokeWidth="2.5" strokeLinecap="round" />
             <circle cx="-60" cy="150" r="4" fill="#15803D" opacity="0.4" />
-            <text x="-48" y="168" fontFamily="Manrope, sans-serif" fontSize="9" fill="#15803D" fontWeight="600">detected!</text>
+            <text x="-48" y="168" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">detected!</text>
           </g>
 
           {/* Floor */}
@@ -284,18 +284,18 @@ export default function ProtrudingObjectsDiagram() {
           {/* 80" point on diagonal */}
           <line x1="480" y1="200" x2="480" y2="340" stroke="#7C3AED" strokeWidth="1.2" strokeDasharray="4 3" />
           <rect x="455" y="192" width="50" height="18" rx="5" fill="#7C3AED" opacity="0.8" />
-          <text x="480" y="205" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="white">{d('80', '2030')}</text>
+          <text x="480" y="205" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('80', '2030')}</text>
 
           {/* Barrier/guardrail at cane detection line */}
           <rect x="476" y="285" width="10" height="55" rx="2" fill="#2563EB" stroke="#2563EB" strokeWidth="1.5" />
           <text x="500" y="300" fontFamily="Manrope, sans-serif" fontSize="10" fill="#2563EB" fontWeight="600">barrier</text>
-          <text x="500" y="314" fontFamily="Manrope, sans-serif" fontSize="9" fill="#2563EB">(at {d('27', '685')}</text>
-          <text x="500" y="326" fontFamily="Manrope, sans-serif" fontSize="9" fill="#2563EB">or lower)</text>
+          <text x="500" y="314" fontFamily="Manrope, sans-serif" fontSize="10" fill="#2563EB">(at {d('27', '685')}</text>
+          <text x="500" y="326" fontFamily="Manrope, sans-serif" fontSize="10" fill="#2563EB">or lower)</text>
 
           {/* Danger zone (low headroom area) */}
           <path d="M 380 270 L 380 340 L 480 340 L 480 200 Z" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1" strokeDasharray="4 3" />
-          <text x="430" y="310" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#C2410C" fontWeight="600" opacity="0.6">low</text>
-          <text x="430" y="322" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#C2410C" fontWeight="600" opacity="0.6">headroom</text>
+          <text x="430" y="310" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600" opacity="0.6">low</text>
+          <text x="430" y="322" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600" opacity="0.6">headroom</text>
 
           {/* Person approaching barrier (cane detects it) */}
           <g transform="translate(555,100)">

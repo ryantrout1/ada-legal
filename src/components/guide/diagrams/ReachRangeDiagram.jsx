@@ -344,9 +344,9 @@ export default function ReachRangeDiagram() {
           <line x1="450" y1="96" x2="650" y2="96" stroke="#15803D" strokeWidth="1.5" strokeDasharray="4 3" />
           <rect x="654" y="82" width="62" height="28" rx="6" fill="#15803D" />
           <text x="685" y="100" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('44\u201348', '1120')}</text>
-          <text x="685" y="124" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#15803D" fontWeight="600">max high</text>
-          <text x="685" y="138" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">(depends on</text>
-          <text x="685" y="150" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#94A3B8">counter depth)</text>
+          <text x="685" y="124" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">max high</text>
+          <text x="685" y="138" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8">(depends on</text>
+          <text x="685" y="150" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8">counter depth)</text>
 
           {/* Wheelchair */}
           <WheelchairSide x={440} y={180} armToX={80} armToY={-15} />
@@ -424,8 +424,8 @@ export default function ReachRangeDiagram() {
           {/* Light switch */}
           <rect x="78" y="178" width="14" height="22" rx="3" fill="white" stroke="#94A3B8" strokeWidth="1.5" />
           <rect x="83" y="184" width="4" height="10" rx="1" fill="#94A3B8" />
-          <text x="85" y="172" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#64748B" fontWeight="500">light</text>
-          <text x="85" y="160" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#64748B" fontWeight="500">switch</text>
+          <text x="85" y="172" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="500">light</text>
+          <text x="85" y="160" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="500">switch</text>
 
           {/* Reach zone */}
           <rect x="78" y="96" width="70" height="200" fill="#2563EB" opacity="0.05" rx="6" stroke="#2563EB" strokeWidth="1.5" />
@@ -463,19 +463,19 @@ export default function ReachRangeDiagram() {
 
           {/* Cabinet */}
           <rect x="458" y="210" width="60" height="118" rx="3" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="488" y="275" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#64748B" fontWeight="500">cabinet</text>
+          <text x="488" y="275" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="500">cabinet</text>
 
           {/* Obstruction height */}
           <rect x="390" y="200" width="54" height="22" rx="6" fill="#7C3AED" />
           <text x="417" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('34', '865')}</text>
-          <text x="417" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#7C3AED" fontWeight="600">max height</text>
+          <text x="417" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C3AED" fontWeight="600">max height</text>
 
           {/* Obstruction depth */}
           <line x1="458" y1="340" x2="518" y2="340" stroke="#15803D" strokeWidth="1.5" />
           <line x1="458" y1="333" x2="458" y2="347" stroke="#15803D" strokeWidth="1.5" />
           <line x1="518" y1="333" x2="518" y2="347" stroke="#15803D" strokeWidth="1.5" />
           <rect x="460" y="348" width="56" height="18" rx="5" fill="#15803D" />
-          <text x="488" y="361" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fontWeight="700" fill="white">{'\u2264'} {d('24', '610')} deep</text>
+          <text x="488" y="361" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('24', '610')} deep</text>
 
           {/* Reach zone */}
           <rect x="458" y="104" width="60" height="106" fill="#7C3AED" opacity="0.04" rx="6" stroke="#7C3AED" strokeWidth="1.5" />
@@ -484,7 +484,7 @@ export default function ReachRangeDiagram() {
           <line x1="440" y1="104" x2="650" y2="104" stroke="#7C3AED" strokeWidth="1.5" strokeDasharray="4 3" />
           <rect x="654" y="90" width="62" height="28" rx="6" fill="#7C3AED" />
           <text x="685" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('46\u201348', '1170')}</text>
-          <text x="685" y="132" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="9" fill="#7C3AED" fontWeight="600">max high</text>
+          <text x="685" y="132" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C3AED" fontWeight="600">max high</text>
 
           {/* Person front view */}
           <WheelchairFront x={530} y={140} armToX={-30} armToY={8} dotColor="#7C3AED" />

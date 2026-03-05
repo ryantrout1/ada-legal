@@ -153,16 +153,16 @@ export default function OperablePartsDiagram() {
           {/* Switch */}
           <rect x="110" y="175" width="20" height="32" rx="3" fill="white" stroke="#15803D" strokeWidth="1.5" />
           <rect x="115" y="178" width="10" height="14" rx="1.5" fill="#15803D" opacity="0.3" />
-          <text x="120" y="222" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#15803D" fontWeight="600">switch</text>
+          <text x="120" y="222" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">switch</text>
 
           {/* Thermostat */}
           <rect x="155" y="165" width="30" height="30" rx="6" fill="white" stroke="#15803D" strokeWidth="1.5" />
-          <text x="170" y="184" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#15803D" fontWeight="600">72{'\u00b0'}</text>
-          <text x="170" y="212" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#15803D" fontWeight="600">thermostat</text>
+          <text x="170" y="184" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">72{'\u00b0'}</text>
+          <text x="170" y="212" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">thermostat</text>
 
           {/* Outlet */}
           <rect x="210" y="255" width="22" height="30" rx="3" fill="white" stroke="#15803D" strokeWidth="1.5" />
-          <text x="221" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="8" fill="#15803D" fontWeight="600">outlet</text>
+          <text x="221" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">outlet</text>
 
           {/* Thermostat too high (violation) */}
           <rect x="210" y="62" width="24" height="24" rx="4" fill="white" stroke="#C2410C" strokeWidth="1.5" />
@@ -231,32 +231,32 @@ export default function OperablePartsDiagram() {
           <line x1="65" y1="93" x2="105" y2="93" stroke="#15803D" strokeWidth="4" strokeLinecap="round" />
           <circle cx="65" cy="93" r="4" fill="#15803D" />
           <text x="85" y="135" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" fontWeight="600">Lever handle</text>
-          <text x="85" y="150" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" textAnchor="middle">push down to open</text>
+          <text x="85" y="150" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" textAnchor="middle">push down to open</text>
 
           {/* Rocker switch */}
           <rect x="155" y="68" width="40" height="60" rx="6" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" />
           <rect x="161" y="72" width="28" height="26" rx="3" fill="#15803D" opacity="0.15" />
           <text x="175" y="135" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" fontWeight="600">Rocker switch</text>
-          <text x="175" y="150" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" textAnchor="middle">press up or down</text>
+          <text x="175" y="150" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" textAnchor="middle">press up or down</text>
 
           {/* Push button */}
           <circle cx="260" cy="93" r="22" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" />
           <circle cx="260" cy="93" r="12" fill="#15803D" opacity="0.12" />
           <text x="260" y="135" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" fontWeight="600">Push button</text>
-          <text x="260" y="150" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" textAnchor="middle">press with palm or fist</text>
+          <text x="260" y="150" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" textAnchor="middle">press with palm or fist</text>
 
           {/* Paddle faucet */}
           <rect x="60" y="185" width="60" height="40" rx="6" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" />
           <line x1="75" y1="205" x2="105" y2="205" stroke="#15803D" strokeWidth="3" strokeLinecap="round" />
           <line x1="90" y1="195" x2="90" y2="215" stroke="#15803D" strokeWidth="1.5" />
           <text x="90" y="243" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" fontWeight="600">Paddle faucet</text>
-          <text x="90" y="258" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" textAnchor="middle">push with wrist</text>
+          <text x="90" y="258" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" textAnchor="middle">push with wrist</text>
 
           {/* Touch/sensor */}
           <rect x="160" y="185" width="55" height="40" rx="6" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" />
           <text x="188" y="210" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="14" fill="#15803D" opacity="0.4">{'\u2728'}</text>
           <text x="188" y="243" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" fontWeight="600">Sensor</text>
-          <text x="188" y="258" fontFamily="Manrope, sans-serif" fontSize="9" fill="#14532D" textAnchor="middle">no touch needed</text>
+          <text x="188" y="258" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D" textAnchor="middle">no touch needed</text>
 
 
           {/* DIVIDER */}
@@ -270,32 +270,32 @@ export default function OperablePartsDiagram() {
           <circle cx="420" cy="93" r="22" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
           <circle cx="420" cy="93" r="10" fill="none" stroke="#C2410C" strokeWidth="1.5" opacity="0.3" />
           <text x="420" y="130" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Round knob</text>
-          <text x="420" y="144" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C2D12" textAnchor="middle">wrist twist</text>
+          <text x="420" y="144" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" textAnchor="middle">wrist twist</text>
 
           {/* Twist faucet */}
           <rect x="505" y="72" width="50" height="42" rx="6" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
           <text x="530" y="98" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fill="#C2410C" opacity="0.4">{'\u21bb'}</text>
           <text x="530" y="130" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Twist faucet</text>
-          <text x="530" y="144" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C2D12" textAnchor="middle">grip + rotate</text>
+          <text x="530" y="144" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" textAnchor="middle">grip + rotate</text>
 
           {/* Tight thumb-turn */}
           <rect x="620" y="72" width="40" height="42" rx="6" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
           <rect x="634" y="86" width="12" height="14" rx="2" fill="#C2410C" opacity="0.2" />
           <text x="640" y="130" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Thumb-turn</text>
-          <text x="640" y="144" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C2D12" textAnchor="middle">pinch + twist</text>
+          <text x="640" y="144" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" textAnchor="middle">pinch + twist</text>
 
           {/* Tiny toggle */}
           <rect x="415" y="175" width="30" height="40" rx="4" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
           <rect x="423" y="180" width="14" height="6" rx="1" fill="#C2410C" opacity="0.2" />
           <text x="430" y="233" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Tiny toggle</text>
-          <text x="430" y="247" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C2D12" textAnchor="middle">fingertip pinch</text>
+          <text x="430" y="247" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" textAnchor="middle">fingertip pinch</text>
 
           {/* Stiff crank */}
           <rect x="515" y="175" width="50" height="40" rx="6" fill="#C2410C" opacity="0.06" stroke="#C2410C" strokeWidth="1.5" />
           <circle cx="540" cy="195" r="8" fill="none" stroke="#C2410C" strokeWidth="1.5" opacity="0.3" />
           <line x1="540" y1="187" x2="540" y2="195" stroke="#C2410C" strokeWidth="2" />
           <text x="540" y="233" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" fontWeight="600">Stiff valve</text>
-          <text x="540" y="247" fontFamily="Manrope, sans-serif" fontSize="8" fill="#7C2D12" textAnchor="middle">{"> 5 lbs force"}</text>
+          <text x="540" y="247" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12" textAnchor="middle">{"> 5 lbs force"}</text>
 
           <CalloutDots callouts={TYPE_CALLOUTS} active={typeActive} toggle={toggleType} />
           <text x="20" y="328" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
