@@ -542,7 +542,7 @@ export default function ReachRangeDiagram() {
         @media (max-width: 768px) {
           .guide-two-col { flex-direction: column !important; gap: 16px !important; }
         }
-        @media (prefers-reduced-motion: reduce) {
+        g[role="button"]:focus .reac-fr{stroke:var(--accent);stroke-width:2.5} @media (prefers-reduced-motion: reduce) {
           .ada-diagram-wrap * { animation: none !important; transition: none !important; }
         }
       `}</style>

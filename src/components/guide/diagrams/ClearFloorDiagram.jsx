@@ -194,7 +194,7 @@ export default function ClearFloorDiagram() {
         @keyframes clearFade { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
         g[role="button"]:focus .clear-focus-ring { stroke: var(--accent); stroke-width: 2.5; }
         @media (max-width:768px) { .guide-two-col { flex-direction:column !important; gap:16px !important; } }
-        @media (prefers-reduced-motion: reduce) { .ada-diagram-wrap * { animation: none !important; transition: none !important; } }
+        g[role="button"]:focus .clea-fr{stroke:var(--accent);stroke-width:2.5} @media (prefers-reduced-motion: reduce) { .ada-diagram-wrap * { animation: none !important; transition: none !important; } }
       `}</style>
     </div>
   );
