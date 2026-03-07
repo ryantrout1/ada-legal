@@ -1,5 +1,6 @@
 import React from 'react';
 import FormField from './FormField';
+import { inputStyle, focusHandler, blurHandler, SELECTED_BG } from './formStyles';
 
 const ASSISTIVE_TECH_OPTIONS = [
   { value: 'Screen Reader', label: 'Screen Reader (JAWS, NVDA, VoiceOver)' },
@@ -8,31 +9,6 @@ const ASSISTIVE_TECH_OPTIONS = [
   { value: 'Keyboard-Only', label: 'Keyboard-Only Navigation' },
   { value: 'Other', label: 'Other' }
 ];
-
-const inputStyle = {
-  width: '100%',
-  minHeight: '44px',
-  padding: '0.625rem 0.75rem',
-  fontFamily: 'Manrope, sans-serif',
-  fontSize: '1rem',
-  color: 'var(--heading)',
-  backgroundColor: 'var(--surface)',
-  border: '2px solid var(--border)',
-  borderRadius: 'var(--radius-md)',
-  outline: 'none',
-  transition: 'border-color 0.15s, box-shadow 0.15s',
-  boxSizing: 'border-box'
-};
-
-const focusHandler = (e) => {
-  e.target.style.borderColor = '#1D4ED8';
-  e.target.style.boxShadow = '0 0 0 3px rgba(29,78,216,0.15)';
-};
-
-const blurHandler = (e) => {
-  e.target.style.borderColor = 'var(--border)';
-  e.target.style.boxShadow = 'none';
-};
 
 export default function DigitalWebsiteStep({ data, onChange, errors }) {
   const selectedTech = data.assistive_tech || [];
@@ -114,7 +90,7 @@ export default function DigitalWebsiteStep({ data, onChange, errors }) {
                     alignItems: 'center',
                     gap: '0.75rem',
                     padding: '0.625rem 0.75rem',
-                    backgroundColor: isChecked ? '#FFF8F5' : 'var(--surface)',
+                    backgroundColor: isChecked ? SELECTED_BG : 'var(--surface)',
                     border: `2px solid ${isChecked ? '#C2410C' : 'var(--border)'}`,
                     borderRadius: 'var(--radius-md)',
                     cursor: 'pointer',

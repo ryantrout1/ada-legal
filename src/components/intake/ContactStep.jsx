@@ -1,36 +1,12 @@
 import React from 'react';
 import FormField from './FormField';
+import { inputStyle, focusHandler, blurHandler, SELECTED_BG } from './formStyles';
 
 const CONTACT_PREF_OPTIONS = [
   { value: 'phone', label: 'Phone' },
   { value: 'email', label: 'Email' },
   { value: 'no_preference', label: 'No Preference' }
 ];
-
-const inputStyle = {
-  width: '100%',
-  minHeight: '44px',
-  padding: '0.625rem 0.75rem',
-  fontFamily: 'Manrope, sans-serif',
-  fontSize: '1rem',
-  color: 'var(--heading)',
-  backgroundColor: 'var(--surface)',
-  border: '2px solid var(--border)',
-  borderRadius: 'var(--radius-md)',
-  outline: 'none',
-  transition: 'border-color 0.15s, box-shadow 0.15s',
-  boxSizing: 'border-box'
-};
-
-const focusHandler = (e) => {
-  e.target.style.borderColor = '#1D4ED8';
-  e.target.style.boxShadow = '0 0 0 3px rgba(29,78,216,0.15)';
-};
-
-const blurHandler = (e) => {
-  e.target.style.borderColor = 'var(--border)';
-  e.target.style.boxShadow = 'none';
-};
 
 export default function ContactStep({ data, onChange, errors }) {
   return (
@@ -119,10 +95,12 @@ export default function ContactStep({ data, onChange, errors }) {
         helperText="Select one option."
       >
         <fieldset
+          role="radiogroup"
           style={{ border: 'none', margin: 0, padding: 0 }}
           aria-required="true"
           aria-invalid={!!errors.contact_preference}
           aria-describedby={errors.contact_preference ? 'contact_preference-error' : 'contact_preference-helper'}
+          aria-label="Preferred contact method"
         >
           <legend style={{
             position: 'absolute', width: '1px', height: '1px',
@@ -144,7 +122,7 @@ export default function ContactStep({ data, onChange, errors }) {
                     alignItems: 'center',
                     gap: '0.5rem',
                     padding: '0.625rem 1rem',
-                    backgroundColor: isSelected ? '#FFF8F5' : 'var(--surface)',
+                    backgroundColor: isSelected ? SELECTED_BG : 'var(--surface)',
                     border: `2px solid ${isSelected ? '#C2410C' : 'var(--border)'}`,
                     borderRadius: 'var(--radius-md)',
                     cursor: 'pointer',

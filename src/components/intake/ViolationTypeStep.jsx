@@ -72,7 +72,7 @@ export default function ViolationTypeStep({ value, onChange }) {
                 }
               }}
               style={{
-                backgroundColor: isSelected ? '#FFF8F5' : 'var(--surface)',
+                backgroundColor: isSelected ? 'var(--card-bg-tinted)' : 'var(--surface)',
                 border: isSelected ? '2px solid #C2410C' : '1px solid var(--border)',
                 borderRadius: '16px',
                 padding: 'var(--space-xl)',

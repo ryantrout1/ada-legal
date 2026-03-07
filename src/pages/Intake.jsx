@@ -461,8 +461,8 @@ export default function Intake() {
             role="status"
             aria-live="polite"
             style={{
-              backgroundColor: '#EFF6FF',
-              border: '1px solid #93C5FD',
+              backgroundColor: 'var(--banner-info-bg)',
+              border: '1px solid var(--banner-info-border)',
               borderRadius: 'var(--radius-md)',
               padding: 'var(--space-md) var(--space-lg)',
               marginBottom: 'var(--space-lg)',
@@ -477,7 +477,7 @@ export default function Intake() {
               fontFamily: 'Manrope, sans-serif',
               fontSize: '0.9375rem',
               fontWeight: 600,
-              color: '#1E40AF',
+              color: 'var(--banner-info-text)',
               margin: 0
             }}>
               ✓ Your previous progress has been restored.
@@ -499,9 +499,9 @@ export default function Intake() {
                 fontFamily: 'Manrope, sans-serif',
                 fontSize: '0.8125rem',
                 fontWeight: 600,
-                color: '#1E40AF',
+                color: 'var(--banner-info-text)',
                 background: 'transparent',
-                border: '1px solid #93C5FD',
+                border: '1px solid var(--banner-info-border)',
                 borderRadius: 'var(--radius-sm)',
                 padding: '0.375rem 0.75rem',
                 cursor: 'pointer',
@@ -586,10 +586,10 @@ export default function Intake() {
 
           {errors.submit && (
             <div role="alert" style={{
-              background: '#FEE2E2', border: '1px solid #FCA5A5',
+              background: 'var(--banner-error-bg)', border: '1px solid var(--banner-error-border)',
               borderRadius: 'var(--radius-md)', padding: '16px',
               marginBottom: 'var(--space-xl)', fontFamily: 'Manrope, sans-serif',
-              fontSize: '0.9375rem', color: '#991B1B', lineHeight: 1.6
+              fontSize: '0.9375rem', color: 'var(--banner-error-text)', lineHeight: 1.6
             }}>
               <strong>Submission Error:</strong> {errors.submit}
             </div>
@@ -621,8 +621,8 @@ export default function Intake() {
                 role="alert"
                 tabIndex={-1}
                 style={{
-                  background: '#FEF2F2',
-                  border: '2px solid #FCA5A5',
+                  background: 'var(--banner-error-bg)',
+                  border: '2px solid var(--banner-error-border)',
                   borderRadius: 'var(--radius-md)',
                   padding: '16px 20px',
                   marginBottom: 'var(--space-xl)',
@@ -633,7 +633,7 @@ export default function Intake() {
                 <p style={{
                   fontSize: '0.9375rem',
                   fontWeight: 700,
-                  color: '#991B1B',
+                  color: 'var(--banner-error-text)',
                   margin: '0 0 8px 0'
                 }}>
                   {fieldErrors.length === 1
@@ -662,7 +662,7 @@ export default function Intake() {
                           padding: 0,
                           fontFamily: 'Manrope, sans-serif',
                           fontSize: '0.8125rem',
-                          color: '#991B1B',
+                          color: 'var(--banner-error-text)',
                           textDecoration: 'underline',
                           cursor: 'pointer',
                           textAlign: 'left',

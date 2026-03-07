@@ -100,7 +100,7 @@ export default function PhotoUpload({ photos = [], onChange }) {
             textAlign: 'center',
             cursor: 'pointer',
             transition: 'all 0.15s',
-            backgroundColor: dragOver ? '#FFF8F5' : 'var(--surface)',
+            backgroundColor: dragOver ? 'var(--card-bg-tinted)' : 'var(--surface)',
             outline: 'none',
             minHeight: '44px'
           }}

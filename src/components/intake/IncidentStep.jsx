@@ -1,37 +1,13 @@
 import React, { useState } from 'react';
 import FormField from './FormField';
 import PhotoUpload from './PhotoUpload';
+import { inputStyle, focusHandler, blurHandler, SELECTED_BG } from './formStyles';
 
 const VISITED_OPTIONS = [
   { value: 'yes', label: 'Yes' },
   { value: 'no', label: 'No' },
   { value: 'first_time', label: 'First Time' }
 ];
-
-const inputStyle = {
-  width: '100%',
-  minHeight: '44px',
-  padding: '0.625rem 0.75rem',
-  fontFamily: 'Manrope, sans-serif',
-  fontSize: '1rem',
-  color: 'var(--heading)',
-  backgroundColor: 'var(--surface)',
-  border: '2px solid var(--border)',
-  borderRadius: 'var(--radius-md)',
-  outline: 'none',
-  transition: 'border-color 0.15s, box-shadow 0.15s',
-  boxSizing: 'border-box'
-};
-
-const focusHandler = (e) => {
-  e.target.style.borderColor = '#1D4ED8';
-  e.target.style.boxShadow = '0 0 0 3px rgba(29,78,216,0.15)';
-};
-
-const blurHandler = (e) => {
-  e.target.style.borderColor = 'var(--border)';
-  e.target.style.boxShadow = 'none';
-};
 
 // P1 FIX: Sample narrative so users know what "good" looks like
 const EXAMPLE_NARRATIVE = `I visited Riverside Pharmacy on January 8th to pick up a prescription. The only entrance had three steps and no ramp. I use a wheelchair, so I couldn't get inside at all. A staff member came out and told me they don't have an accessible entrance. I had to leave without my medication.`;
@@ -95,10 +71,12 @@ export default function IncidentStep({ data, onChange, errors }) {
         helperText="Select one option."
       >
         <fieldset
+          role="radiogroup"
           style={{ border: 'none', margin: 0, padding: 0 }}
           aria-required="true"
           aria-invalid={!!errors.visited_before}
           aria-describedby={errors.visited_before ? 'visited_before-error' : 'visited_before-helper'}
+          aria-label="Have you visited/used this location or website before?"
         >
           <legend style={{
             position: 'absolute', width: '1px', height: '1px',
@@ -120,7 +98,7 @@ export default function IncidentStep({ data, onChange, errors }) {
                     alignItems: 'center',
                     gap: '0.5rem',
                     padding: '0.625rem 1rem',
-                    backgroundColor: isSelected ? '#FFF8F5' : 'var(--surface)',
+                    backgroundColor: isSelected ? SELECTED_BG : 'var(--surface)',
                     border: `2px solid ${isSelected ? '#C2410C' : 'var(--border)'}`,
                     borderRadius: 'var(--radius-md)',
                     cursor: 'pointer',

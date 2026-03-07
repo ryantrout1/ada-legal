@@ -93,6 +93,13 @@ export const applyPreferences = (prefs) => {
       --accent-lighter:   #FDBA74;
       --accent-success:   #7DCEA0;
       --btn-text:         #FFFFFF;
+      /* Banner tokens */
+      --banner-info-bg:       #EFF6FF;
+      --banner-info-text:     #1E40AF;
+      --banner-info-border:   #93C5FD;
+      --banner-error-bg:      #FEF2F2;
+      --banner-error-text:    #991B1B;
+      --banner-error-border:  #FCA5A5;
     }
   `;
 
@@ -135,6 +142,13 @@ export const applyPreferences = (prefs) => {
         --accent-lighter:   #FDBA74 !important;
         --accent-success:   #7DCEA0 !important;
         --btn-text:         #FFFFFF !important;
+        /* Banner tokens */
+        --banner-info-bg:       #1E293B !important;
+        --banner-info-text:     #93C5FD !important;
+        --banner-info-border:   #1E3A5F !important;
+        --banner-error-bg:      #2D1B1B !important;
+        --banner-error-text:    #FCA5A5 !important;
+        --banner-error-border:  #5F1E1E !important;
       }
     `;
   } else if (prefs.displayMode === 'high-contrast') {
@@ -171,6 +185,13 @@ export const applyPreferences = (prefs) => {
         --accent-lighter:   #FDE68A !important;
         --accent-success:   #4ADE80 !important;
         --btn-text:         #000000 !important;
+        /* Banner tokens */
+        --banner-info-bg:       #000000 !important;
+        --banner-info-text:     #FFFFFF !important;
+        --banner-info-border:   #FFFFFF !important;
+        --banner-error-bg:      #000000 !important;
+        --banner-error-text:    #FF6B6B !important;
+        --banner-error-border:  #FF6B6B !important;
       }
     `;
   }
@@ -267,6 +288,13 @@ export const applyPreferences = (prefs) => {
         --accent-lighter:   #FDBA74 !important;
         --accent-success:   #7DCEA0 !important;
         --btn-text:         #FFFFFF !important;
+        /* Banner tokens */
+        --banner-info-bg:       #FFF3E0 !important;
+        --banner-info-text:     #5B3A1A !important;
+        --banner-info-border:   #D4A574 !important;
+        --banner-error-bg:      #FFF0F0 !important;
+        --banner-error-text:    #8B1A1A !important;
+        --banner-error-border:  #D4A0A0 !important;
       }
       img:not([src*="logo"]) { filter: sepia(0.08) !important; }
     `;
@@ -307,6 +335,13 @@ export const applyPreferences = (prefs) => {
         --accent-lighter:   #FFF3A3 !important;
         --accent-success:   #00FF88 !important;
         --btn-text:         #000000 !important;
+        /* Banner tokens */
+        --banner-info-bg:       #000000 !important;
+        --banner-info-text:     #FFD700 !important;
+        --banner-info-border:   #FFD700 !important;
+        --banner-error-bg:      #000000 !important;
+        --banner-error-text:    #FF6B6B !important;
+        --banner-error-border:  #FF6B6B !important;
       }
       /* Override hardcoded inline backgrounds that bypass the token system */
       .low-vision-mode .cv-dark-section,

@@ -1,5 +1,6 @@
 import React from 'react';
 import FormField from './FormField';
+import { inputStyle, focusHandler, blurHandler } from './formStyles';
 
 const BUSINESS_TYPES = [
   'Restaurant',
@@ -40,31 +41,6 @@ const STATE_NAMES = {
   OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',
   SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',
   WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming'
-};
-
-const inputStyle = {
-  width: '100%',
-  minHeight: '44px',
-  padding: '0.625rem 0.75rem',
-  fontFamily: 'Manrope, sans-serif',
-  fontSize: '1rem',
-  color: 'var(--heading)',
-  backgroundColor: 'var(--surface)',
-  border: '2px solid var(--border)',
-  borderRadius: 'var(--radius-md)',
-  outline: 'none',
-  transition: 'border-color 0.15s, box-shadow 0.15s',
-  boxSizing: 'border-box'
-};
-
-const focusHandler = (e) => {
-  e.target.style.borderColor = '#1D4ED8';
-  e.target.style.boxShadow = '0 0 0 3px rgba(29,78,216,0.15)';
-};
-
-const blurHandler = (e) => {
-  e.target.style.borderColor = 'var(--border)';
-  e.target.style.boxShadow = 'none';
 };
 
 export default function PhysicalSpaceStep({ data, onChange, errors }) {
