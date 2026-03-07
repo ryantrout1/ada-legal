@@ -30,7 +30,9 @@ export default function ContactStep({ data, onChange, errors }) {
         Provide your contact information so a matched attorney can reach you.
       </p>
 
-      <FormField label="Full Name" id="contact_name" required error={errors.contact_name}>
+      <FormField label="Full Name" id="contact_name" required error={errors.contact_name}
+        helperText="Your first and last name — this is how an attorney will address you."
+      >
         <input
           id="contact_name"
           type="text"
@@ -42,7 +44,7 @@ export default function ContactStep({ data, onChange, errors }) {
           onBlur={blurHandler}
           aria-required="true"
           aria-invalid={!!errors.contact_name}
-          aria-describedby={errors.contact_name ? 'contact_name-error' : undefined}
+          aria-describedby={errors.contact_name ? 'contact_name-error' : 'contact_name-helper'}
           style={inputStyle}
         />
       </FormField>
@@ -70,7 +72,9 @@ export default function ContactStep({ data, onChange, errors }) {
         />
       </FormField>
 
-      <FormField label="Phone Number" id="contact_phone" required error={errors.contact_phone}>
+      <FormField label="Phone Number" id="contact_phone" required error={errors.contact_phone}
+        helperText="A 10-digit US number — attorneys may call to discuss your case."
+      >
         <input
           id="contact_phone"
           type="tel"
@@ -82,7 +86,7 @@ export default function ContactStep({ data, onChange, errors }) {
           onBlur={blurHandler}
           aria-required="true"
           aria-invalid={!!errors.contact_phone}
-          aria-describedby={errors.contact_phone ? 'contact_phone-error' : undefined}
+          aria-describedby={errors.contact_phone ? 'contact_phone-error' : 'contact_phone-helper'}
           style={inputStyle}
         />
       </FormField>

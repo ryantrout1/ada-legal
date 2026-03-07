@@ -67,7 +67,9 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
         Tell us about the location where the physical ADA violation occurred.
       </p>
 
-      <FormField label="Business Name" id="business_name" required error={errors.business_name}>
+      <FormField label="Business Name" id="business_name" required error={errors.business_name}
+        helperText="The name on the building or sign — even a partial name helps."
+      >
         <input
           id="business_name"
           type="text"
@@ -78,12 +80,14 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
           onBlur={blurHandler}
           aria-required="true"
           aria-invalid={!!errors.business_name}
-          aria-describedby={errors.business_name ? 'business_name-error' : undefined}
+          aria-describedby={errors.business_name ? 'business_name-error' : 'business_name-helper'}
           style={inputStyle}
         />
       </FormField>
 
-      <FormField label="Business Type" id="business_type" required error={errors.business_type}>
+      <FormField label="Business Type" id="business_type" required error={errors.business_type}
+        helperText="Pick the closest match — you can add details in your description."
+      >
         <select
           id="business_type"
           value={data.business_type || ''}
@@ -92,7 +96,7 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
           onBlur={blurHandler}
           aria-required="true"
           aria-invalid={!!errors.business_type}
-          aria-describedby={errors.business_type ? 'business_type-error' : undefined}
+          aria-describedby={errors.business_type ? 'business_type-error' : 'business_type-helper'}
           style={{ ...inputStyle, appearance: 'auto' }}
         >
           <option value="">Select a business type</option>
@@ -103,7 +107,9 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
       </FormField>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)' }}>
-        <FormField label="City" id="city" required error={errors.city}>
+        <FormField label="City" id="city" required error={errors.city}
+          helperText="The city where the business is located."
+        >
           <input
             id="city"
             type="text"
@@ -114,12 +120,14 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
             onBlur={blurHandler}
             aria-required="true"
             aria-invalid={!!errors.city}
-            aria-describedby={errors.city ? 'city-error' : undefined}
+            aria-describedby={errors.city ? 'city-error' : 'city-helper'}
             style={inputStyle}
           />
         </FormField>
 
-        <FormField label="State" id="state" required error={errors.state}>
+        <FormField label="State" id="state" required error={errors.state}
+          helperText="ADA enforcement can vary by state."
+        >
           <select
             id="state"
             value={data.state || ''}
@@ -128,7 +136,7 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
             onBlur={blurHandler}
             aria-required="true"
             aria-invalid={!!errors.state}
-            aria-describedby={errors.state ? 'state-error' : undefined}
+            aria-describedby={errors.state ? 'state-error' : 'state-helper'}
             style={{ ...inputStyle, appearance: 'auto' }}
           >
             <option value="">Select state</option>
@@ -144,6 +152,7 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
         id="street_address"
         required
         error={errors.street_address}
+        helperText="Helps attorneys verify the location — an approximate address is fine."
       >
         <input
           id="street_address"
@@ -155,12 +164,14 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
           onBlur={blurHandler}
           aria-required="true"
           aria-invalid={!!errors.street_address}
-          aria-describedby={errors.street_address ? 'street_address-error' : undefined}
+          aria-describedby={errors.street_address ? 'street_address-error' : 'street_address-helper'}
           style={inputStyle}
         />
       </FormField>
 
-      <FormField label="What kind of barrier was it?" id="violation_subtype" required error={errors.violation_subtype}>
+      <FormField label="What kind of barrier was it?" id="violation_subtype" required error={errors.violation_subtype}
+        helperText="Select the type that best describes what you encountered."
+      >
         <select
           id="violation_subtype"
           value={data.violation_subtype || ''}
@@ -169,7 +180,7 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
           onBlur={blurHandler}
           aria-required="true"
           aria-invalid={!!errors.violation_subtype}
-          aria-describedby={errors.violation_subtype ? 'violation_subtype-error' : undefined}
+          aria-describedby={errors.violation_subtype ? 'violation_subtype-error' : 'violation_subtype-helper'}
           style={{ ...inputStyle, appearance: 'auto' }}
         >
           <option value="">Select the type of barrier</option>

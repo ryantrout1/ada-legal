@@ -41,7 +41,9 @@ export default function DigitalWebsiteStep({ data, onChange, errors }) {
         Tell us about the website or app where you experienced an accessibility barrier.
       </p>
 
-      <FormField label="Website URL or App Name" id="url_domain" required error={errors.url_domain}>
+      <FormField label="Website URL or App Name" id="url_domain" required error={errors.url_domain}
+        helperText="Paste the web address (e.g., www.example.com) or type the app name."
+      >
         <input
           id="url_domain"
           type="text"
@@ -52,7 +54,7 @@ export default function DigitalWebsiteStep({ data, onChange, errors }) {
           onBlur={blurHandler}
           aria-required="true"
           aria-invalid={!!errors.url_domain}
-          aria-describedby={errors.url_domain ? 'url_domain-error' : undefined}
+          aria-describedby={errors.url_domain ? 'url_domain-error' : 'url_domain-helper'}
           style={inputStyle}
         />
       </FormField>
@@ -124,7 +126,9 @@ export default function DigitalWebsiteStep({ data, onChange, errors }) {
         </fieldset>
       </FormField>
 
-      <FormField label="Business/Organization Name" id="business_name" required error={errors.business_name}>
+      <FormField label="Business/Organization Name" id="business_name" required error={errors.business_name}
+        helperText="The company or organization that runs the website or app."
+      >
         <input
           id="business_name"
           type="text"
@@ -135,7 +139,7 @@ export default function DigitalWebsiteStep({ data, onChange, errors }) {
           onBlur={blurHandler}
           aria-required="true"
           aria-invalid={!!errors.business_name}
-          aria-describedby={errors.business_name ? 'business_name-error' : undefined}
+          aria-describedby={errors.business_name ? 'business_name-error' : 'business_name-helper'}
           style={inputStyle}
         />
       </FormField>
