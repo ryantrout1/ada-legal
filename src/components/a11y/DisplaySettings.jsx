@@ -505,6 +505,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
             { key: 'low-vision', label: 'Low Vision' },
           ].map((m, i) => {
             const active = prefs.displayMode === m.key;
+            const activeColor = m.key === 'low-vision' ? '#FFD700' : accentLight;
             return (
               <button
                 key={m.key}
@@ -518,7 +519,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                   gap: '5px', padding: '10px 2px',
                   minHeight: '58px',
                   borderRadius: '10px',
-                  border: active ? `2px solid ${accentLight}` : `1px solid ${borderColor}`,
+                  border: active ? `2px solid ${activeColor}` : `1px solid ${borderColor}`,
                   background: active ? accentBg : 'transparent',
                   cursor: 'pointer', transition: 'all 0.15s',
                 }}
@@ -572,7 +573,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                 </span>
                 <span style={{
                   fontSize: '0.7rem', fontWeight: active ? 700 : 600,
-                  color: active ? accentLight : textPrimary,
+                  color: active ? activeColor : textPrimary,
                   fontFamily: 'Manrope, sans-serif', lineHeight: 1.2,
                 }}>
                   {m.label}
