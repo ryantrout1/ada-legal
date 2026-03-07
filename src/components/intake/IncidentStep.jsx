@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FormField from './FormField';
 import PhotoUpload from './PhotoUpload';
 
@@ -33,9 +33,15 @@ const blurHandler = (e) => {
   e.target.style.boxShadow = 'none';
 };
 
+// P1 FIX: Sample narrative so users know what "good" looks like
+const EXAMPLE_NARRATIVE = `I visited Riverside Pharmacy on January 8th to pick up a prescription. The only entrance had three steps and no ramp. I use a wheelchair, so I couldn't get inside at all. A staff member came out and told me they don't have an accessible entrance. I had to leave without my medication.`;
+
 export default function IncidentStep({ data, onChange, errors }) {
   const today = new Date().toISOString().split('T')[0];
   const charCount = (data.narrative || '').length;
+
+  // P1 FIX: Toggle state for example narrative
+  const [showExample, setShowExample] = useState(false);
 
   return (
     <div>
@@ -49,7 +55,14 @@ export default function IncidentStep({ data, onChange, errors }) {
         Provide details about the incident so an attorney can evaluate your case.
       </p>
 
-      <FormField label="When did this happen?" id="incident_date" required error={errors.incident_date}>
+      {/* P1 FIX: Date field with "approximate is fine" helper text */}
+      <FormField
+        label="When did this happen?"
+        id="incident_date"
+        required
+        error={errors.incident_date}
+        helperText="An approximate date is fine — even just the month and year helps."
+      >
         <input
           id="incident_date"
           type="date"
@@ -60,7 +73,7 @@ export default function IncidentStep({ data, onChange, errors }) {
           onBlur={blurHandler}
           aria-required="true"
           aria-invalid={!!errors.incident_date}
-          aria-describedby={errors.incident_date ? 'incident_date-error' : undefined}
+          aria-describedby={errors.incident_date ? 'incident_date-error' : 'incident_date-helper'}
           style={inputStyle}
         />
       </FormField>
@@ -125,10 +138,118 @@ export default function IncidentStep({ data, onChange, errors }) {
         </fieldset>
       </FormField>
 
-      <FormField label="Describe What Happened" id="narrative" required error={errors.narrative}>
+      {/* P1 FIX: Numbered writing guide + expandable example above narrative */}
+      <div style={{ marginBottom: 'var(--space-lg)' }}>
+        <label
+          htmlFor="narrative"
+          style={{
+            display: 'block',
+            fontFamily: 'Manrope, sans-serif',
+            fontSize: '0.9375rem',
+            fontWeight: 600,
+            color: 'var(--heading)',
+            marginBottom: 'var(--space-xs)'
+          }}
+        >
+          Describe What Happened
+          <span aria-label="required" style={{ color: '#991B1B', marginLeft: '4px' }}>*</span>
+        </label>
+
+        {/* Numbered writing prompts */}
+        <div style={{
+          backgroundColor: 'var(--card-bg-tinted)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-md)',
+          padding: '12px 16px',
+          marginBottom: 'var(--space-sm)'
+        }}>
+          <p style={{
+            fontFamily: 'Manrope, sans-serif',
+            fontSize: '0.875rem',
+            fontWeight: 600,
+            color: 'var(--heading)',
+            margin: '0 0 8px 0'
+          }}>
+            Answer these three questions in your own words:
+          </p>
+          <ol style={{
+            margin: 0,
+            padding: '0 0 0 20px',
+            fontFamily: 'Manrope, sans-serif',
+            fontSize: '0.9375rem',
+            color: 'var(--body)',
+            lineHeight: 1.7
+          }}>
+            <li>What was the barrier — what couldn't you access or do?</li>
+            <li>How did it affect you?</li>
+            <li>What happened when you tried to get help or use the space?</li>
+          </ol>
+
+          {/* Expandable example */}
+          <button
+            type="button"
+            onClick={() => setShowExample(prev => !prev)}
+            aria-expanded={showExample}
+            aria-controls="narrative-example"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: 'none',
+              border: 'none',
+              padding: '8px 0 0 0',
+              fontFamily: 'Manrope, sans-serif',
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              color: 'var(--accent-light)',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              minHeight: '44px'
+            }}
+          >
+            <span aria-hidden="true">{showExample ? '▲' : '▼'}</span>
+            {showExample ? 'Hide example' : 'Show me an example'}
+          </button>
+
+          {showExample && (
+            <div
+              id="narrative-example"
+              style={{
+                marginTop: '10px',
+                backgroundColor: 'var(--surface)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-sm)',
+                padding: '12px 14px'
+              }}
+            >
+              <p style={{
+                fontFamily: 'Manrope, sans-serif',
+                fontSize: '0.8125rem',
+                fontWeight: 700,
+                color: 'var(--body-secondary)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                margin: '0 0 6px 0'
+              }}>
+                Example response:
+              </p>
+              <p style={{
+                fontFamily: 'Manrope, sans-serif',
+                fontSize: '0.9375rem',
+                color: 'var(--body)',
+                lineHeight: 1.65,
+                margin: 0,
+                fontStyle: 'italic'
+              }}>
+                "{EXAMPLE_NARRATIVE}"
+              </p>
+            </div>
+          )}
+        </div>
+
         <textarea
           id="narrative"
-          placeholder="Please describe the ADA violation you experienced in detail. Include what you observed, when it happened, and how it affected you."
+          placeholder="Write in your own words — there are no wrong answers."
           value={data.narrative || ''}
           onChange={e => onChange('narrative', e.target.value)}
           onFocus={focusHandler}
@@ -144,19 +265,42 @@ export default function IncidentStep({ data, onChange, errors }) {
             lineHeight: 1.6
           }}
         />
-        <p
-          id="narrative-count"
-          style={{
-            fontFamily: 'Manrope, sans-serif',
-            fontSize: '0.8125rem',
-            color: charCount >= 50 ? 'var(--success-600)' : 'var(--body-secondary)',
-            margin: 'var(--space-xs) 0 0 0',
-            lineHeight: 1.4
-          }}
-        >
-          {charCount} characters (minimum 50)
-        </p>
-      </FormField>
+
+        {errors.narrative ? (
+          <p
+            id="narrative-error"
+            role="alert"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontFamily: 'Manrope, sans-serif',
+              fontSize: '0.875rem',
+              color: '#B91C1C',
+              margin: 'var(--space-xs) 0 0 0',
+              lineHeight: 1.5
+            }}
+          >
+            {errors.narrative}
+          </p>
+        ) : (
+          <p
+            id="narrative-count"
+            style={{
+              fontFamily: 'Manrope, sans-serif',
+              fontSize: '0.875rem',
+              color: charCount >= 50 ? 'var(--success-600, #15803D)' : 'var(--body-secondary)',
+              margin: 'var(--space-xs) 0 0 0',
+              lineHeight: 1.4
+            }}
+          >
+            {charCount < 50
+              ? `${charCount} characters — aim for at least 50`
+              : `✓ ${charCount} characters`
+            }
+          </p>
+        )}
+      </div>
 
       {/* Photo Upload — Optional */}
       <FormField

@@ -28,7 +28,7 @@ export default function FormField({ label, id, required, error, helperText, chil
           id={helperId}
           style={{
             fontFamily: 'Manrope, sans-serif',
-            fontSize: '0.8125rem',
+            fontSize: '0.875rem',
             color: 'var(--body-secondary)',
             margin: '0 0 var(--space-xs) 0',
             lineHeight: 1.5
@@ -47,7 +47,7 @@ export default function FormField({ label, id, required, error, helperText, chil
             alignItems: 'center',
             gap: '6px',
             fontFamily: 'Manrope, sans-serif',
-            fontSize: '0.8125rem',
+            fontSize: '0.875rem',
             color: '#B91C1C',
             margin: 'var(--space-xs) 0 0 0',
             lineHeight: 1.5

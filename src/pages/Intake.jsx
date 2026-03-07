@@ -532,6 +532,7 @@ export default function Intake() {
             marginBottom: 'var(--space-2xl)'
           }}>
             No account required. Your information is kept confidential.
+            {' '}Take as long as you need — your progress is automatically saved.
             {' '}We share qualifying reports with ADA attorneys in our network. While not every report results in attorney representation, every submission is reviewed — and we provide resources to help you take action regardless.
           </p>
         )}
