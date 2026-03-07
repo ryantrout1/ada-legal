@@ -13,7 +13,13 @@ export const loadPreferences = () => {
   try {
     const saved = localStorage.getItem('ada-display-prefs');
     if (saved) {
-      return { ...DEFAULTS, ...JSON.parse(saved) };
+      const parsed = { ...DEFAULTS, ...JSON.parse(saved) };
+      // Migration: rename 'lexie' key to 'lexend' (font was misnamed internally)
+      if (parsed.fontFamily === 'lexie') {
+        parsed.fontFamily = 'lexend';
+        localStorage.setItem('ada-display-prefs', JSON.stringify(parsed));
+      }
+      return parsed;
     }
     // COGA: Auto-detect OS preferences for first-time visitors
     const prefersHC = window.matchMedia?.('(prefers-contrast: more)')?.matches;
@@ -371,43 +377,69 @@ export const applyPreferences = (prefs) => {
 
   // --- FONT FAMILY ---
   if (prefs.fontFamily === 'atkinson') {
-    if (!document.getElementById('atkinson-font-link')) {
-      const link = document.createElement('link');
+    const fullHref = 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap';
+    let link = document.getElementById('atkinson-font-link');
+    if (!link) {
+      link = document.createElement('link');
       link.id = 'atkinson-font-link';
       link.rel = 'stylesheet';
-      link.href = 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap';
       document.head.appendChild(link);
+    }
+    // Upgrade from preview-only (400+700) to full (includes italics) if needed
+    if (link.href !== fullHref) {
+      link.href = fullHref;
+      link.media = 'all';
     }
     css += `
       * {
         font-family: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
       }
+      svg[role="img"] text, svg[role="img"] tspan { font-family: 'Manrope', sans-serif !important; }
     `;
   } else if (prefs.fontFamily === 'opendyslexic') {
-    if (!document.getElementById('opendyslexic-font-link')) {
-      const link = document.createElement('link');
+    let link = document.getElementById('opendyslexic-font-link');
+    if (!link) {
+      link = document.createElement('link');
       link.id = 'opendyslexic-font-link';
       link.rel = 'stylesheet';
       link.href = 'https://fonts.cdnfonts.com/css/opendyslexic';
       document.head.appendChild(link);
     }
+    // Ensure the stylesheet is active (preload may have set media='print')
+    link.media = 'all';
+    // cdnfonts.com may not include font-display: swap — force it
+    // to prevent invisible text during font load (FOIT)
+    if (!document.getElementById('opendyslexic-swap-fix')) {
+      const swapFix = document.createElement('style');
+      swapFix.id = 'opendyslexic-swap-fix';
+      swapFix.textContent = `@font-face { font-family: 'OpenDyslexic'; font-display: swap; }`;
+      document.head.appendChild(swapFix);
+    }
     css += `
       * {
         font-family: 'OpenDyslexic', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
       }
+      svg[role="img"] text, svg[role="img"] tspan { font-family: 'Manrope', sans-serif !important; }
     `;
-  } else if (prefs.fontFamily === 'lexie') {
-    if (!document.getElementById('lexie-font-link')) {
-      const link = document.createElement('link');
-      link.id = 'lexie-font-link';
+  } else if (prefs.fontFamily === 'lexend' || prefs.fontFamily === 'lexie') {
+    const fullHref = 'https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap';
+    let link = document.getElementById('lexend-font-link');
+    if (!link) {
+      link = document.createElement('link');
+      link.id = 'lexend-font-link';
       link.rel = 'stylesheet';
-      link.href = 'https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap';
       document.head.appendChild(link);
+    }
+    // Upgrade from preview-only (700) to full weight range if needed
+    if (link.href !== fullHref) {
+      link.href = fullHref;
+      link.media = 'all';
     }
     css += `
       * {
         font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
       }
+      svg[role="img"] text, svg[role="img"] tspan { font-family: 'Manrope', sans-serif !important; }
     `;
   }
 
@@ -452,7 +484,7 @@ const FONT_OPTIONS = [
   { key: 'default', label: 'Default', desc: 'Standard site fonts', family: 'Georgia, serif' },
   { key: 'atkinson', label: 'Atkinson', desc: 'Designed for low vision', family: "'Atkinson Hyperlegible', sans-serif" },
   { key: 'opendyslexic', label: 'OpenDyslexic', desc: 'Designed for dyslexia', family: "'OpenDyslexic', sans-serif" },
-  { key: 'lexie', label: 'Lexend', desc: 'Reduces reading fatigue', family: "'Lexend', sans-serif" },
+  { key: 'lexend', label: 'Lexend', desc: 'Reduces reading fatigue', family: "'Lexend', sans-serif" },
 ];
 
 export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose }) {
@@ -460,6 +492,28 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
   const [announcement, setAnnouncement] = useState('');
   const panelRef = useRef(null);
   const firstFocusRef = useRef(null);
+
+  // Preload font CSS (not the full font files) so Aa previews render in the actual font.
+  // The browser only downloads the font binary when a matching font-family is used in the DOM.
+  // These CSS files are ~1-2KB each and define the @font-face declarations.
+  useEffect(() => {
+    const preloads = [
+      { id: 'atkinson-font-link', href: 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap' },
+      { id: 'opendyslexic-font-link', href: 'https://fonts.cdnfonts.com/css/opendyslexic' },
+      { id: 'lexend-font-link', href: 'https://fonts.googleapis.com/css2?family=Lexend:wght@700&display=swap' },
+    ];
+    preloads.forEach(({ id, href }) => {
+      if (!document.getElementById(id)) {
+        const link = document.createElement('link');
+        link.id = id;
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.media = 'print'; // load without blocking render — swaps to 'all' on load
+        link.onload = () => { link.media = 'all'; };
+        document.head.appendChild(link);
+      }
+    });
+  }, []);
 
   const updatePref = useCallback((key, value, announceText) => {
     setPrefs(prev => {
