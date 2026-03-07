@@ -229,7 +229,6 @@ export const applyPreferences = (prefs) => {
 
 
   // --- WARM/SEPIA MODE ---
-  // Design philosophy: Premium "reading room" aesthetic.
   // - Hero + dark CTAs → deep espresso brown (keeps drama, not flat)
   // - Light sections alternate cream (#FBF6EF) / linen (#F5EDE0)
   // - Rich amber accent replaces cool terracotta
@@ -270,6 +269,45 @@ export const applyPreferences = (prefs) => {
         --btn-text:         #FFFFFF !important;
       }
       img:not([src*="logo"]) { filter: sepia(0.08) !important; }
+    `;
+  }
+
+
+  // --- LOW VISION MODE ---
+  // Design philosophy: Maximum legibility for macular degeneration, glaucoma, cataracts.
+  // RNIB / UK accessibility standard: #FFD700 (gold) on #000000 (pure black) = 19.6:1 contrast.
+  if (prefs.displayMode === 'low-vision') {
+    css += `
+      html { color-scheme: dark; }
+      body { background-color: #000000 !important; }
+      :root {
+        --page-bg:          #000000 !important;
+        --page-bg-alt:      #0A0A00 !important;
+        --page-bg-subtle:   #000000 !important;
+        --heading:          #FFD700 !important;
+        --body:             #FFFFFF !important;
+        --body-secondary:   #FFE566 !important;
+        --section-label:    #FFD700 !important;
+        --link:             #FFD700 !important;
+        --card-bg:          #111100 !important;
+        --card-border:      #FFD700 !important;
+        --card-bg-tinted:   #111100 !important;
+        --card-bg-warm:     #111100 !important;
+        --border:           #FFD700 !important;
+        --border-lighter:   #8B7400 !important;
+        --dark-bg:          #000000 !important;
+        --dark-bg-alt:      #000000 !important;
+        --dark-bg-deep:     #000000 !important;
+        --dark-bg-footer:   #000000 !important;
+        --dark-card-bg:     #111100 !important;
+        --dark-card-border: #FFD700 !important;
+        --dark-border:      #FFD700 !important;
+        --accent:           #FFD700 !important;
+        --accent-light:     #FFE566 !important;
+        --accent-lighter:   #FFF3A3 !important;
+        --accent-success:   #00FF88 !important;
+        --btn-text:         #000000 !important;
+      }
     `;
   }
 
@@ -323,15 +361,18 @@ export const applyPreferences = (prefs) => {
   document.documentElement.setAttribute('data-reading-level', prefs.readingLevel || 'standard');
   if (prefs.displayMode === 'high-contrast') {
     document.body.classList.add('hc-mode');
-    document.body.classList.remove('dark-mode', 'warm-mode');
+    document.body.classList.remove('dark-mode', 'warm-mode', 'low-vision-mode');
   } else if (prefs.displayMode === 'dark') {
     document.body.classList.add('dark-mode');
-    document.body.classList.remove('hc-mode', 'warm-mode');
+    document.body.classList.remove('hc-mode', 'warm-mode', 'low-vision-mode');
   } else if (prefs.displayMode === 'warm') {
     document.body.classList.add('warm-mode');
-    document.body.classList.remove('hc-mode', 'dark-mode');
-  } else {
+    document.body.classList.remove('hc-mode', 'dark-mode', 'low-vision-mode');
+  } else if (prefs.displayMode === 'low-vision') {
+    document.body.classList.add('low-vision-mode');
     document.body.classList.remove('hc-mode', 'dark-mode', 'warm-mode');
+  } else {
+    document.body.classList.remove('hc-mode', 'dark-mode', 'warm-mode', 'low-vision-mode');
   }
 };
 
@@ -455,12 +496,13 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
       {/* ═══════ DISPLAY MODE ═══════ */}
       <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '18px' }}>
         <legend style={labelStyle}>Display</legend>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', marginTop: '8px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', marginTop: '8px' }}>
           {[
             { key: 'default', label: 'Default' },
             { key: 'dark', label: 'Dark' },
             { key: 'warm', label: 'Warm' },
             { key: 'high-contrast', label: 'Contrast' },
+            { key: 'low-vision', label: 'Low Vision' },
           ].map((m, i) => {
             const active = prefs.displayMode === m.key;
             return (
@@ -514,6 +556,17 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                       <circle cx="12" cy="12" r="9.5" stroke={active ? accentLight : '#CBD5E1'} strokeWidth="2" fill="none" />
                       <path d="M12 2.5a9.5 9.5 0 0 1 0 19z" fill={active ? accentLight : '#CBD5E1'} />
+                    </svg>
+                  )}
+                  {m.key === 'low-vision' && (
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <ellipse cx="12" cy="12" rx="9" ry="5.5" stroke={active ? '#FFD700' : '#CBD5E1'} strokeWidth="2" />
+                      <circle cx="12" cy="12" r="3" fill={active ? '#FFD700' : '#CBD5E1'} />
+                      <circle cx="12" cy="12" r="1.2" fill={active ? '#000000' : '#F1F5F9'} />
+                      <line x1="12" y1="2" x2="12" y2="4" stroke={active ? '#FFD700' : '#CBD5E1'} strokeWidth="2" strokeLinecap="round" />
+                      <line x1="12" y1="20" x2="12" y2="22" stroke={active ? '#FFD700' : '#CBD5E1'} strokeWidth="2" strokeLinecap="round" />
+                      <line x1="2" y1="12" x2="4" y2="12" stroke={active ? '#FFD700' : '#CBD5E1'} strokeWidth="2" strokeLinecap="round" />
+                      <line x1="20" y1="12" x2="22" y2="12" stroke={active ? '#FFD700' : '#CBD5E1'} strokeWidth="2" strokeLinecap="round" />
                     </svg>
                   )}
                 </span>
