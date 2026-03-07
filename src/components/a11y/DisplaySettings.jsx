@@ -239,6 +239,11 @@ export const applyPreferences = (prefs) => {
     `;
   }
 
+  // --- LINE SPACING ---
+  // Relaxed = line-height: 2 (double-spaced). Loose = line-height: 2.5.
+  // Both exceed WCAG 1.4.12's minimum of 1.5x font size.
+  // Scoped to text elements in #main-content + footer. Headings excluded
+  // intentionally — doubled heading line-height looks broken.
   if (prefs.lineSpacing === 'relaxed') {
     css += `
       #main-content p, #main-content li, #main-content td, #main-content dd { line-height: 2 !important; }
@@ -461,13 +466,15 @@ export const applyPreferences = (prefs) => {
 };
 
 function SpacingIcon({ level, active, isMobile }) {
-  const gap = level === 'default' ? 3 : level === 'relaxed' ? 5 : 7;
+  // Gaps sized to fit 3 lines (height 2 each) within 18×18 viewBox starting at y=1
+  // default: gap=2 (tight), relaxed: gap=4 (medium), loose: gap=5 (wide, bottom at y=17)
+  const gap = level === 'default' ? 2 : level === 'relaxed' ? 4 : 5;
   const color = active ? '#FFFFFF' : isMobile ? '#CBD5E1' : '#64748B';
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style={{ flexShrink: 0 }} className="ds-spacing-icon">
-      <rect x="2" y={3} width="14" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
-      <rect x="2" y={3 + 2 + gap} width="14" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
-      <rect x="2" y={3 + 4 + gap * 2} width="10" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
+      <rect x="2" y={1} width="14" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
+      <rect x="2" y={1 + 2 + gap} width="14" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
+      <rect x="2" y={1 + 4 + gap * 2} width="10" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
     </svg>
   );
 }
