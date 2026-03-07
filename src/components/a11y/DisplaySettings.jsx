@@ -143,12 +143,12 @@ export const applyPreferences = (prefs) => {
         --accent-success:   #7DCEA0 !important;
         --btn-text:         #FFFFFF !important;
         /* Banner tokens */
-        --banner-info-bg:       #1E293B !important;
+        --banner-info-bg:       #0C1A3D !important;
         --banner-info-text:     #93C5FD !important;
-        --banner-info-border:   #1E3A5F !important;
-        --banner-error-bg:      #2D1B1B !important;
+        --banner-info-border:   #3B82F6 !important;
+        --banner-error-bg:      #3B0808 !important;
         --banner-error-text:    #FCA5A5 !important;
-        --banner-error-border:  #5F1E1E !important;
+        --banner-error-border:  #EF4444 !important;
       }
     `;
   } else if (prefs.displayMode === 'high-contrast') {
@@ -289,12 +289,12 @@ export const applyPreferences = (prefs) => {
         --accent-success:   #7DCEA0 !important;
         --btn-text:         #FFFFFF !important;
         /* Banner tokens */
-        --banner-info-bg:       #FFF3E0 !important;
+        --banner-info-bg:       #F5E6C8 !important;
         --banner-info-text:     #5B3A1A !important;
-        --banner-info-border:   #D4A574 !important;
-        --banner-error-bg:      #FFF0F0 !important;
+        --banner-info-border:   #A0722A !important;
+        --banner-error-bg:      #F5D5D5 !important;
         --banner-error-text:    #8B1A1A !important;
-        --banner-error-border:  #D4A0A0 !important;
+        --banner-error-border:  #B91C1C !important;
       }
       img:not([src*="logo"]) { filter: sepia(0.08) !important; }
     `;
