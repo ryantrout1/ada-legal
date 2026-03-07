@@ -158,12 +158,17 @@ const STARTERS = [
 export default function ADAAssistant() {
   const [query, setQuery] = useState('');
   const [focused, setFocused] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef(null);
   const containerRef = useRef(null);
+  const resultsRef = useRef(null);
 
   const results = useMemo(() => searchContent(query), [query]);
   const showResults = (focused || query.length >= 2) && results.length > 0;
   const showStarters = !query && !showResults;
+
+  // Reset keyboard selection when results change
+  useEffect(() => { setActiveIndex(-1); }, [query]);
 
   useEffect(() => {
     const handleClick = (e) => {
@@ -179,7 +184,18 @@ export default function ADAAssistant() {
     if (e.key === 'Escape') {
       setQuery('');
       setFocused(false);
+      setActiveIndex(-1);
       inputRef.current?.blur();
+    } else if (e.key === 'ArrowDown' && showResults) {
+      e.preventDefault();
+      setActiveIndex(prev => prev < results.length - 1 ? prev + 1 : 0);
+    } else if (e.key === 'ArrowUp' && showResults) {
+      e.preventDefault();
+      setActiveIndex(prev => prev > 0 ? prev - 1 : results.length - 1);
+    } else if (e.key === 'Enter' && activeIndex >= 0 && showResults) {
+      e.preventDefault();
+      const links = resultsRef.current?.querySelectorAll('[role="option"]');
+      if (links && links[activeIndex]) links[activeIndex].click();
     }
   };
 
@@ -216,6 +232,7 @@ export default function ADAAssistant() {
             aria-label="Search ADA standards and guides"
             aria-expanded={showResults}
             aria-controls="ada-search-results"
+            aria-activedescendant={activeIndex >= 0 && showResults ? `ada-search-result-${activeIndex}` : undefined}
             role="combobox"
             autoComplete="off"
             style={{
@@ -275,6 +292,7 @@ export default function ADAAssistant() {
       {showResults && (
         <div
           id="ada-search-results"
+          ref={resultsRef}
           role="listbox"
           aria-label="Search results"
           style={{
@@ -296,18 +314,22 @@ export default function ADAAssistant() {
             {results.length} result{results.length !== 1 ? 's' : ''}
           </div>
 
-          {results.map((item) => {
+          {results.map((item, idx) => {
             const cat = CAT_COLORS[item.category] || CAT_COLORS["Design Standards"];
+            const isActive = idx === activeIndex;
             return (
               <Link
                 key={item.id}
                 to={createPageUrl(item.page)}
                 role="option"
+                id={`ada-search-result-${idx}`}
+                aria-selected={isActive}
                 style={{
                   display: 'flex', alignItems: 'center', gap: '12px',
                   padding: '12px 16px', textDecoration: 'none',
                   borderTop: '1px solid var(--border-lighter)',
-                  transition: 'background 0.15s', cursor: 'pointer'
+                  transition: 'background 0.15s', cursor: 'pointer',
+                  background: isActive ? 'var(--page-bg-subtle)' : 'transparent',
                 }}
                 onMouseEnter={e => e.currentTarget.style.background = 'var(--page-bg-subtle)'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}

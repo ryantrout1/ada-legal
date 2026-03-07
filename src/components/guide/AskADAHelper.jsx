@@ -74,14 +74,13 @@ function Message({ role, content, isLoading }) {
       }}
     >
       <div
-        role={role === 'assistant' ? 'status' : undefined}
         className={`ada-ai-bubble ada-ai-bubble-${role}`}
         style={{
           maxWidth: '85%',
           padding: '12px 16px',
           borderRadius: role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
           background: role === 'user' ? 'var(--accent)' : 'var(--page-bg-subtle)',
-          color: role === 'user' ? 'var(--page-bg)' : 'var(--heading)',
+          color: role === 'user' ? 'var(--btn-text)' : 'var(--heading)',
           border: role === 'user' ? 'none' : '1px solid var(--border)',
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.9rem',
@@ -111,7 +110,7 @@ function formatResponse(text) {
       return (
         <span key={i} style={{
           fontWeight: 600, color: 'var(--section-label)',
-          background: 'rgba(194,65,12,0.08)', padding: '1px 4px',
+          background: 'var(--card-bg-tinted)', padding: '1px 4px',
           borderRadius: '3px', fontSize: '0.85rem',
         }}>{part}</span>
       );
@@ -178,11 +177,6 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
     return ctx;
   }, [pageTitle, pageSections]);
 
-  // Debug: verify content extraction (remove after confirming)
-  React.useEffect(() => {
-    if (pageContext) console.log('[AskADAHelper] pageContext length:', pageContext.length, 'preview:', pageContext.substring(0, 200));
-  }, [pageContext]);
-
   const suggestedQuestions = SUGGESTED_QUESTIONS[pageType] || SUGGESTED_QUESTIONS.default;
 
   // Scroll to bottom on new messages — within the chat panel only
@@ -224,13 +218,19 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
 
     try {
       // Build conversation history for context (last 6 messages max)
+      // Sanitize user input to mitigate prompt injection attempts
+      const sanitize = (text) => text
+        .replace(/(?:ignore|forget|disregard|override|bypass)\s+(?:all\s+)?(?:previous|above|prior|system)\s+(?:instructions?|rules?|prompts?|constraints?)/gi, '[filtered]')
+        .replace(/you\s+are\s+now\s+/gi, '[filtered] ')
+        .replace(/\bsystem\s*prompt\b/gi, '[filtered]')
+        .replace(/\bact\s+as\b/gi, '[filtered]')
+        .substring(0, 500); // Hard character limit
+
       const recentHistory = newMessages.slice(-6).map(m =>
-        `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
+        `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.role === 'user' ? sanitize(m.content) : m.content}`
       ).join('\n');
 
       const sysPrompt = buildSystemPrompt(pageContext, readingLevel || 'standard');
-      console.log('[AskADAHelper] system_prompt length:', sysPrompt.length);
-      console.log('[AskADAHelper] pageContext length:', pageContext.length);
 
       // Base44 InvokeLLM ignores system_prompt param — must embed in prompt itself
       const fullPrompt = `${sysPrompt}\n\n--- CONVERSATION ---\n${recentHistory}\n\n--- INSTRUCTIONS ---\nRespond to the user's latest message using ONLY the ADA STANDARDS CONTENT above. Keep it short (3-4 sentences max), cite section numbers, plain language, one clear next step. If this topic is not on the current page, tell the user which chapter to check.`;
@@ -262,7 +262,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
         properties: { page: pageTitle, query: text.trim().substring(0, 100) },
       });
     } catch {}
-  }, [messages, isLoading, pageContext, pageTitle]);
+  }, [messages, isLoading, pageContext, pageTitle, readingLevel]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -292,16 +292,16 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           style={{
             display: 'flex', alignItems: 'center', gap: '12px',
             width: '100%', padding: '16px 20px',
-            background: 'var(--dark-bg)', border: '2px solid rgba(194,65,12,0.25)',
+            background: 'var(--card-bg)', border: '2px solid var(--border)',
             borderRadius: '12px', cursor: 'pointer',
             transition: 'all 0.15s', minHeight: '56px',
           }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--dark-card-bg)'; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(194,65,12,0.25)'; e.currentTarget.style.background = 'var(--dark-bg)'; }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--page-bg-subtle)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--card-bg)'; }}
         >
           <div style={{
             width: '36px', height: '36px', borderRadius: '10px',
-            background: 'rgba(194,65,12,0.15)', border: '1px solid rgba(194,65,12,0.3)',
+            background: 'var(--card-bg-tinted)', border: '1px solid var(--border)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
           }}>
@@ -310,18 +310,18 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           <div style={{ textAlign: 'left', flex: 1 }}>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700,
-              color: 'var(--dark-heading)', margin: '0 0 2px',
+              color: 'var(--heading)', margin: '0 0 2px',
             }}>
               Have a question about this standard?
             </p>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-              color: 'var(--dark-muted)', margin: 0,
+              color: 'var(--body-secondary)', margin: 0,
             }}>
               Ask in plain language — we'll help you understand what the law says.
             </p>
           </div>
-          <ChevronRight size={18} style={{ color: 'var(--dark-muted)', flexShrink: 0 }} aria-hidden="true" />
+          <ChevronRight size={18} style={{ color: 'var(--body-secondary)', flexShrink: 0 }} aria-hidden="true" />
         </button>
       </div>
     );
@@ -348,13 +348,13 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
       <div className="ada-ai-header" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '14px 20px',
-        background: 'var(--dark-bg)', borderBottom: '1px solid var(--dark-border)',
+        background: 'var(--card-bg)', borderBottom: '1px solid var(--border)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <MessageCircle size={18} style={{ color: 'var(--accent-light)' }} aria-hidden="true" />
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-            color: 'var(--dark-heading)',
+            color: 'var(--heading)',
           }}>
             Ask About This Standard
           </span>
@@ -366,9 +366,9 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
               aria-label="Start over"
               title="Start over"
               style={{
-                background: 'transparent', border: '1px solid var(--dark-border)',
+                background: 'transparent', border: '1px solid var(--border)',
                 borderRadius: '8px', padding: '6px', cursor: 'pointer',
-                color: 'var(--dark-muted)', minHeight: '36px', minWidth: '36px',
+                color: 'var(--body-secondary)', minHeight: '36px', minWidth: '36px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
@@ -379,9 +379,9 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
             onClick={() => setIsOpen(false)}
             aria-label="Close helper"
             style={{
-              background: 'transparent', border: '1px solid var(--dark-border)',
+              background: 'transparent', border: '1px solid var(--border)',
               borderRadius: '8px', padding: '6px', cursor: 'pointer',
-              color: 'var(--dark-muted)', minHeight: '36px', minWidth: '36px',
+              color: 'var(--body-secondary)', minHeight: '36px', minWidth: '36px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
           >
