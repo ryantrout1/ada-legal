@@ -414,6 +414,9 @@ export const applyPreferences = (prefs) => {
   // Write all CSS at once — replaces previous content entirely
   styleEl.textContent = css;
 
+  // Mark that JS has taken over display preferences — disables CSS flash prevention
+  document.body.setAttribute('data-display-pref', prefs.displayMode);
+
   // Force high-contrast class on body for JS-based overrides
   document.documentElement.setAttribute('data-reading-level', prefs.readingLevel || 'standard');
   if (prefs.displayMode === 'high-contrast') {
@@ -473,6 +476,46 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
     applyPreferences(DEFAULTS);
     setPrefs({ ...DEFAULTS });
     setAnnouncement('All display preferences reset to defaults');
+  }, []);
+
+  // Listen for OS display preference changes (e.g. user toggles dark mode in system settings)
+  useEffect(() => {
+    const darkMq = window.matchMedia?.('(prefers-color-scheme: dark)');
+    const hcMq = window.matchMedia?.('(prefers-contrast: more)');
+    if (!darkMq && !hcMq) return;
+
+    const handleOsChange = () => {
+      // Only auto-switch if user hasn't explicitly overridden via the panel
+      // (i.e. their saved pref matches what auto-detect would have chosen)
+      try {
+        const saved = localStorage.getItem('ada-display-prefs');
+        if (!saved) return; // first visit handled by loadPreferences
+        const current = JSON.parse(saved);
+        const wasAutoDetected = current.displayMode === 'dark' || current.displayMode === 'high-contrast' || current.displayMode === 'default';
+        if (!wasAutoDetected) return; // user chose warm or LV — don't override
+
+        const nowHC = hcMq?.matches;
+        const nowDark = darkMq?.matches;
+        let newMode = 'default';
+        if (nowHC) newMode = 'high-contrast';
+        else if (nowDark) newMode = 'dark';
+
+        if (newMode !== current.displayMode) {
+          const next = { ...current, displayMode: newMode };
+          savePreferences(next);
+          applyPreferences(next);
+          setPrefs(next);
+          setAnnouncement(`Display changed to ${newMode === 'high-contrast' ? 'High Contrast' : newMode === 'dark' ? 'Dark' : 'Default'} (matched OS setting)`);
+        }
+      } catch {}
+    };
+
+    darkMq?.addEventListener?.('change', handleOsChange);
+    hcMq?.addEventListener?.('change', handleOsChange);
+    return () => {
+      darkMq?.removeEventListener?.('change', handleOsChange);
+      hcMq?.removeEventListener?.('change', handleOsChange);
+    };
   }, []);
 
   // Focus trap + escape for dropdown

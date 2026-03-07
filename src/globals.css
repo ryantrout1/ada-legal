@@ -71,7 +71,7 @@ html {
 @media (prefers-color-scheme: dark) {
   /* Immediate flash-prevention: dark body before JS loads */
   body:not([data-display-pref]) {
-    background-color: #0F1219;
+    background-color: #111827;
     color: #E2E8F0;
   }
 }
@@ -355,6 +355,122 @@ html {
   }
   #main-content svg[role="img"] rect[fill="#475569"] {
     fill: #FFFFFF !important;
+  }
+
+  /* === OVERRIDE RESET ===
+     When JS has loaded and the user explicitly chose a non-HC mode,
+     undo all element-level HC overrides. The runtime CSS tokens from
+     DisplaySettings handle the correct styling for the chosen mode.
+     This prevents HC media query rules from conflicting with
+     dark/warm/LV/default modes on HC-OS devices. */
+  body[data-display-pref="default"],
+  body[data-display-pref="dark"],
+  body[data-display-pref="warm"],
+  body[data-display-pref="low-vision"] {
+    background-color: unset !important;
+    color: unset !important;
+  }
+  body[data-display-pref="default"] #main-content *,
+  body[data-display-pref="dark"] #main-content *,
+  body[data-display-pref="warm"] #main-content *,
+  body[data-display-pref="low-vision"] #main-content * {
+    background-color: unset !important;
+    background-image: unset !important;
+    border-color: unset !important;
+  }
+  body[data-display-pref="default"] h1,
+  body[data-display-pref="default"] h2,
+  body[data-display-pref="default"] h3,
+  body[data-display-pref="default"] h4,
+  body[data-display-pref="default"] h5,
+  body[data-display-pref="default"] h6,
+  body[data-display-pref="default"] p,
+  body[data-display-pref="default"] li,
+  body[data-display-pref="default"] span,
+  body[data-display-pref="default"] small,
+  body[data-display-pref="default"] a,
+  body[data-display-pref="default"] dd,
+  body[data-display-pref="default"] dt,
+  body[data-display-pref="default"] td,
+  body[data-display-pref="default"] th,
+  body[data-display-pref="default"] label,
+  body[data-display-pref="default"] figcaption,
+  body[data-display-pref="default"] blockquote,
+  body[data-display-pref="default"] input,
+  body[data-display-pref="default"] select,
+  body[data-display-pref="default"] textarea,
+  body[data-display-pref="default"] button,
+  body[data-display-pref="dark"] h1,
+  body[data-display-pref="dark"] h2,
+  body[data-display-pref="dark"] h3,
+  body[data-display-pref="dark"] h4,
+  body[data-display-pref="dark"] h5,
+  body[data-display-pref="dark"] h6,
+  body[data-display-pref="dark"] p,
+  body[data-display-pref="dark"] li,
+  body[data-display-pref="dark"] span,
+  body[data-display-pref="dark"] small,
+  body[data-display-pref="dark"] a,
+  body[data-display-pref="dark"] dd,
+  body[data-display-pref="dark"] dt,
+  body[data-display-pref="dark"] td,
+  body[data-display-pref="dark"] th,
+  body[data-display-pref="dark"] label,
+  body[data-display-pref="dark"] input,
+  body[data-display-pref="dark"] select,
+  body[data-display-pref="dark"] textarea,
+  body[data-display-pref="dark"] button,
+  body[data-display-pref="warm"] h1,
+  body[data-display-pref="warm"] h2,
+  body[data-display-pref="warm"] h3,
+  body[data-display-pref="warm"] h4,
+  body[data-display-pref="warm"] h5,
+  body[data-display-pref="warm"] h6,
+  body[data-display-pref="warm"] p,
+  body[data-display-pref="warm"] li,
+  body[data-display-pref="warm"] span,
+  body[data-display-pref="warm"] small,
+  body[data-display-pref="warm"] a,
+  body[data-display-pref="warm"] dd,
+  body[data-display-pref="warm"] dt,
+  body[data-display-pref="warm"] td,
+  body[data-display-pref="warm"] th,
+  body[data-display-pref="warm"] label,
+  body[data-display-pref="warm"] input,
+  body[data-display-pref="warm"] select,
+  body[data-display-pref="warm"] textarea,
+  body[data-display-pref="warm"] button,
+  body[data-display-pref="low-vision"] h1,
+  body[data-display-pref="low-vision"] h2,
+  body[data-display-pref="low-vision"] h3,
+  body[data-display-pref="low-vision"] h4,
+  body[data-display-pref="low-vision"] h5,
+  body[data-display-pref="low-vision"] h6,
+  body[data-display-pref="low-vision"] p,
+  body[data-display-pref="low-vision"] li,
+  body[data-display-pref="low-vision"] span,
+  body[data-display-pref="low-vision"] small,
+  body[data-display-pref="low-vision"] a,
+  body[data-display-pref="low-vision"] dd,
+  body[data-display-pref="low-vision"] dt,
+  body[data-display-pref="low-vision"] td,
+  body[data-display-pref="low-vision"] th,
+  body[data-display-pref="low-vision"] label,
+  body[data-display-pref="low-vision"] input,
+  body[data-display-pref="low-vision"] select,
+  body[data-display-pref="low-vision"] textarea,
+  body[data-display-pref="low-vision"] button {
+    color: unset !important;
+    text-decoration: unset !important;
+    border: unset !important;
+    background-color: unset !important;
+  }
+  body[data-display-pref="default"] *:focus-visible,
+  body[data-display-pref="dark"] *:focus-visible,
+  body[data-display-pref="warm"] *:focus-visible,
+  body[data-display-pref="low-vision"] *:focus-visible {
+    outline: 3px solid #2563EB !important;
+    outline-offset: 2px !important;
   }
 }
 
