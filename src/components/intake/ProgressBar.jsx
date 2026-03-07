@@ -61,7 +61,7 @@ export default function ProgressBar({ currentStep, totalOverride, labelsOverride
         style={{
           width: '100%',
           height: '0.5rem',
-          backgroundColor: 'var(--body-secondary)',
+          backgroundColor: 'var(--card-bg)',
           borderRadius: '0.25rem',
           overflow: 'hidden'
         }}

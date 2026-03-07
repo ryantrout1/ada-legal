@@ -217,7 +217,7 @@ export default function RightsPathway() {
               aria-valuemax={100}
               aria-label={`Step ${currentStepIndex + 1} of ${totalSteps}`}
               style={{
-                height: '6px', borderRadius: '100px', background: 'var(--border)',
+                height: '6px', borderRadius: '100px', background: 'var(--card-bg)',
                 overflow: 'hidden'
               }}
             >
