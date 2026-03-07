@@ -95,6 +95,8 @@ export default function ContactStep({ data, onChange, errors }) {
         helperText="Select one option."
       >
         <fieldset
+          id="contact_preference"
+          tabIndex={-1}
           role="radiogroup"
           style={{ border: 'none', margin: 0, padding: 0 }}
           aria-required="true"

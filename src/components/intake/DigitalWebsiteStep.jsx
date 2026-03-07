@@ -65,6 +65,8 @@ export default function DigitalWebsiteStep({ data, onChange, errors }) {
         helperText="Select all the tools you were using when you hit the barrier. For example: a screen reader like JAWS or VoiceOver, keyboard-only navigation, screen magnification, or voice control like Dragon."
       >
         <fieldset
+          id="assistive_tech"
+          tabIndex={-1}
           style={{ border: 'none', margin: 0, padding: 0 }}
           aria-required="true"
           aria-invalid={!!errors.assistive_tech}
