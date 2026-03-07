@@ -98,6 +98,7 @@ export const applyPreferences = (prefs) => {
       --accent-light:     #FB923C;
       --accent-lighter:   #FDBA74;
       --accent-success:   #7DCEA0;
+      --accent-success-bg: #ECFDF5;
       --btn-text:         #FFFFFF;
       --surface:          #FFFFFF;
       /* Banner tokens */
@@ -148,6 +149,7 @@ export const applyPreferences = (prefs) => {
         --accent-light:     #FB923C !important;
         --accent-lighter:   #FDBA74 !important;
         --accent-success:   #7DCEA0 !important;
+        --accent-success-bg: #052E16 !important;
         --btn-text:         #FFFFFF !important;
         --surface:          #0F1520 !important;
         --glass-bg:         rgba(255,255,255,0.06) !important;
@@ -223,6 +225,7 @@ export const applyPreferences = (prefs) => {
         --accent-light:     #FFB347 !important;
         --accent-lighter:   #FDE68A !important;
         --accent-success:   #4ADE80 !important;
+        --accent-success-bg: #052E16 !important;
         --btn-text:         #000000 !important;
         --surface:          #0A0A0A !important;
         --glass-bg:         transparent !important;
@@ -328,6 +331,7 @@ export const applyPreferences = (prefs) => {
         --accent-light:     #FB923C !important;
         --accent-lighter:   #FDBA74 !important;
         --accent-success:   #7DCEA0 !important;
+        --accent-success-bg: #F0FDF4 !important;
         --btn-text:         #FFFFFF !important;
         --surface:          #FFF8F0 !important;
         --glass-bg:         rgba(139,58,31,0.04) !important;
@@ -385,6 +389,7 @@ export const applyPreferences = (prefs) => {
         --accent-light:     #FFE566 !important;
         --accent-lighter:   #FFF3A3 !important;
         --accent-success:   #00FF88 !important;
+        --accent-success-bg: #002200 !important;
         --btn-text:         #000000 !important;
         --surface:          #111100 !important;
         --glass-bg:         transparent !important;
