@@ -475,14 +475,25 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
   }, [variant, isOpen, onClose]);
 
   const isMobile = variant === 'inline';
+  const mode = prefs.displayMode;
+  const isDark = mode === 'dark';
+  const isHC = mode === 'high-contrast';
+  const isLV = mode === 'low-vision';
+  const isDarkPanel = isDark || isHC || isLV;
+
+  // Panel background/border — mode-aware
+  const panelBg = isLV ? '#0A0A00' : isHC ? '#0A0A0A' : isDark ? '#1E293B' : 'white';
+  const panelBorder = isLV ? '#FFD700' : isHC ? '#FFFFFF' : isDark ? '#334155' : 'var(--slate-200, #E2E8F0)';
+
+  // Text/accent colors inside panel — mode-aware
   const accent = '#C2410C';
-  const accentLight = '#FB923C';
+  const accentLight = isLV ? '#FFD700' : '#FB923C';
   const accentFill = isMobile ? '#7C2D12' : '#C2410C';
-  const borderColor = isMobile ? 'rgba(255,255,255,0.25)' : 'var(--slate-200, #E2E8F0)';
-  const textPrimary = isMobile ? '#FFFFFF' : 'var(--slate-700, #334155)';
-  const textSecondary = isMobile ? '#CBD5E1' : '#64748B';
-  const textMuted = isMobile ? '#94A3B8' : '#64748B';
-  const accentBg = isMobile ? 'rgba(251,146,60,0.15)' : '#FFF7ED';
+  const borderColor = isMobile ? 'rgba(255,255,255,0.25)' : isDarkPanel ? panelBorder : 'var(--slate-200, #E2E8F0)';
+  const textPrimary = isMobile ? '#FFFFFF' : isDarkPanel ? (isLV ? '#FFD700' : '#F1F5F9') : 'var(--slate-700, #334155)';
+  const textSecondary = isMobile ? '#CBD5E1' : isDarkPanel ? (isLV ? '#FFE566' : '#94A3B8') : '#64748B';
+  const textMuted = isMobile ? '#94A3B8' : isDarkPanel ? '#64748B' : '#64748B';
+  const accentBg = isMobile ? 'rgba(251,146,60,0.15)' : isLV ? 'rgba(255,215,0,0.12)' : isDarkPanel ? 'rgba(251,146,60,0.15)' : '#FFF7ED';
 
   const labelStyle = {
     fontFamily: 'Manrope, sans-serif',
@@ -818,8 +829,8 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
         right: 0,
         top: 'calc(100% + 8px)',
         width: '320px',
-        backgroundColor: 'var(--surface, white)',
-        border: '1px solid var(--slate-200)',
+        backgroundColor: panelBg,
+        border: `1px solid ${panelBorder}`,
         borderRadius: '16px',
         boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
         padding: '20px',
