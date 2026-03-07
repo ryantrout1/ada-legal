@@ -5,11 +5,24 @@ import AutoCiteLinks from '../guide/AutoCiteLinks';
 import { ArrowRight, ExternalLink, RotateCcw } from 'lucide-react';
 import { useReadingLevel } from '../a11y/ReadingLevelContext';
 
-const urgencyColors = {
-  green: { border: '#16A34A', bg: '#F0FDF4', text: '#14532D', label: 'You have time' },
-  yellow: { border: '#D97706', bg: '#FFFBEB', text: '#7C2D12', label: 'Act soon' },
-  red: { border: '#DC2626', bg: '#FEF2F2', text: '#991B1B', label: 'Urgent' }
-};
+// Detect current display mode for urgency color adaptation
+function getUrgencyColors(urgencyLevel) {
+  const mode = document.body?.getAttribute('data-display-pref') || 'default';
+  const isDark = mode === 'dark' || mode === 'high-contrast' || mode === 'low-vision';
+
+  const colors = {
+    green: isDark
+      ? { border: '#4ADE80', bg: '#052E16', text: '#86EFAC', label: 'You have time' }
+      : { border: '#16A34A', bg: '#F0FDF4', text: '#14532D', label: 'You have time' },
+    yellow: isDark
+      ? { border: '#FBBF24', bg: '#422006', text: '#FDE68A', label: 'Act soon' }
+      : { border: '#D97706', bg: '#FFFBEB', text: '#7C2D12', label: 'Act soon' },
+    red: isDark
+      ? { border: '#F87171', bg: '#450A0A', text: '#FECACA', label: 'Urgent' }
+      : { border: '#DC2626', bg: '#FEF2F2', text: '#991B1B', label: 'Urgent' },
+  };
+  return colors[urgencyLevel] || colors.yellow;
+}
 
 function Card({ title, children }) {
   return (
@@ -28,7 +41,7 @@ function Card({ title, children }) {
 
 export default function PathwayResults({ results, answers, onStartOver }) {
   const { readingLevel } = useReadingLevel();
-  const urgency = urgencyColors[results.deadline.urgency] || urgencyColors.yellow;
+  const urgency = getUrgencyColors(results.deadline.urgency);
   const intakeParams = new URLSearchParams({ source: 'pathway', type: answers.category || '', location: answers.location || '', timing: answers.timing || '', barrier: answers.barrier || '' }).toString();
 
   return (
@@ -106,8 +119,10 @@ export default function PathwayResults({ results, answers, onStartOver }) {
       )}
 
       {/* Deadline */}
-      <div style={{
-        background: urgency.bg, border: `1px solid ${urgency.border}20`,
+      <div className="pw-urgency-box" style={{
+        '--pw-urgency-bg': urgency.bg,
+        '--pw-urgency-text': urgency.text,
+        '--pw-urgency-border': urgency.border,
         borderLeft: `4px solid ${urgency.border}`,
         borderRadius: '0 16px 16px 0', padding: '24px 28px', marginBottom: '16px'
       }}>
@@ -275,6 +290,28 @@ export default function PathwayResults({ results, answers, onStartOver }) {
           <RotateCcw size={16} aria-hidden="true" /> Start Over
         </button>
       </div>
+
+      {/* Protect urgency box colors from globals.css HC blanket overrides.
+          Uses CSS custom properties set via inline style + !important to win specificity. */}
+      <style>{`
+        .pw-urgency-box {
+          background-color: var(--pw-urgency-bg) !important;
+          border: 1px solid color-mix(in srgb, var(--pw-urgency-border) 12%, transparent) !important;
+          border-left: 4px solid var(--pw-urgency-border) !important;
+        }
+        .pw-urgency-box h2 {
+          color: var(--pw-urgency-text) !important;
+        }
+        .pw-urgency-box p {
+          color: var(--pw-urgency-text) !important;
+        }
+        .pw-urgency-box span {
+          color: var(--pw-urgency-border) !important;
+        }
+        .pw-urgency-box div {
+          background-color: transparent !important;
+        }
+      `}</style>
     </div>
   );
 }
