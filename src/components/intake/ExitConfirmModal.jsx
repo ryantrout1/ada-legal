@@ -72,7 +72,7 @@ export default function ExitConfirmModal({ open, onStay }) {
             type="button" onClick={onStay}
             style={{
               padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-              fontSize: '0.9375rem', fontWeight: 700, color: 'white',
+              fontSize: '0.9375rem', fontWeight: 700, color: 'var(--btn-text)',
               backgroundColor: 'var(--section-label)', border: 'none',
               borderRadius: 'var(--radius-md)', cursor: 'pointer', minHeight: '44px'
             }}
