@@ -496,14 +496,21 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
       {/* ═══════ DISPLAY MODE ═══════ */}
       <fieldset style={{ border: 'none', margin: 0, padding: 0, marginBottom: '18px' }}>
         <legend style={labelStyle}>Display</legend>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', marginTop: '8px' }}>
-          {[
+        {/* Row 1: 3 buttons. Row 2: 2 buttons centered under row 1 */}
+        {[
+          [
             { key: 'default', label: 'Default' },
             { key: 'dark', label: 'Dark' },
             { key: 'warm', label: 'Warm' },
+          ],
+          [
             { key: 'high-contrast', label: 'Contrast' },
             { key: 'low-vision', label: 'Low Vision' },
-          ].map((m, i) => {
+          ],
+        ].map((row, rowIndex) => (
+          <div key={rowIndex} style={{ display: 'flex', gap: '6px', marginTop: '6px', justifyContent: 'center' }}>
+          {row.map((m, colIndex) => {
+            const i = rowIndex === 0 ? colIndex : 3 + colIndex;
             const active = prefs.displayMode === m.key;
             const activeColor = m.key === 'low-vision' ? '#FFD700' : accentLight;
             const activeBg = m.key === 'low-vision' ? 'rgba(255,215,0,0.12)' : accentBg;
@@ -519,6 +526,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                   alignItems: 'center', justifyContent: 'center',
                   gap: '5px', padding: '10px 2px',
                   minHeight: '58px',
+                  flex: '0 0 calc(33.333% - 4px)',
                   borderRadius: '10px',
                   border: active ? `2px solid ${activeColor}` : `1px solid ${borderColor}`,
                   background: active ? activeBg : 'transparent',
@@ -582,7 +590,8 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
               </button>
             );
           })}
-        </div>
+          </div>
+        ))}
       </fieldset>
 
       {/* ═══════ FONT FAMILY — 2x2 grid ═══════ */}
