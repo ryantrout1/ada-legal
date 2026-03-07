@@ -38,7 +38,7 @@ const EXAMPLE_NARRATIVE = `I visited Riverside Pharmacy on January 8th to pick u
 
 export default function IncidentStep({ data, onChange, errors }) {
   const today = new Date().toISOString().split('T')[0];
-  const charCount = (data.narrative || '').length;
+  const charCount = (data.narrative || '').trim().length;
 
   // P1 FIX: Toggle state for example narrative
   const [showExample, setShowExample] = useState(false);
@@ -216,7 +216,6 @@ export default function IncidentStep({ data, onChange, errors }) {
 
           {showExample && (
             <div
-              id="narrative-example"
               style={{
                 marginTop: '10px',
                 backgroundColor: 'var(--surface)',
