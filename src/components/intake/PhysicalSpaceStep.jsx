@@ -72,6 +72,15 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
 
   return (
     <div>
+      <h2 style={{
+        fontFamily: 'Fraunces, serif',
+        fontSize: '1.25rem',
+        fontWeight: 600,
+        color: 'var(--heading)',
+        margin: '0 0 var(--space-sm) 0'
+      }}>
+        Location Details
+      </h2>
       <p style={{
         fontFamily: 'Manrope, sans-serif',
         fontSize: '1.0625rem',

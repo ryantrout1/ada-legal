@@ -48,7 +48,7 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
       {/* Incident Details */}
       <ReviewSection title="Incident Details" onEdit={() => onEdit(3)}>
         <ReviewItem label="When did this happen?" value={data.incident_date} />
-        <ReviewItem label="Have you visited/used this location before?" value={VISITED_LABELS[data.visited_before] || data.visited_before} />
+        <ReviewItem label="Have you visited/used this location or website before?" value={VISITED_LABELS[data.visited_before] || data.visited_before} />
         <ReviewItem label="What happened — in your own words" value={data.narrative} />
         {data.photos && data.photos.length > 0 && (
           <>

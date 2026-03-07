@@ -38,14 +38,13 @@ export default function ViolationTypeStep({ value, onChange }) {
         fontFamily: 'Manrope, sans-serif',
         fontSize: '1.0625rem',
         color: 'var(--body)',
-        marginBottom: 'var(--space-xl)',
+        marginBottom: 'var(--space-md)',
         lineHeight: 1.6
       }}>
         Select one to continue.
       </p>
 
       <div
-        role="radiogroup"
         aria-label="Violation type"
         style={{
           display: 'grid',

@@ -46,6 +46,15 @@ export default function DigitalWebsiteStep({ data, onChange, errors }) {
 
   return (
     <div>
+      <h2 style={{
+        fontFamily: 'Fraunces, serif',
+        fontSize: '1.25rem',
+        fontWeight: 600,
+        color: 'var(--heading)',
+        margin: '0 0 var(--space-sm) 0'
+      }}>
+        Website or App Details
+      </h2>
       <p style={{
         fontFamily: 'Manrope, sans-serif',
         fontSize: '1.0625rem',
@@ -83,7 +92,7 @@ export default function DigitalWebsiteStep({ data, onChange, errors }) {
           style={{ border: 'none', margin: 0, padding: 0 }}
           aria-required="true"
           aria-invalid={!!errors.assistive_tech}
-          aria-describedby={errors.assistive_tech ? 'assistive_tech-error' : undefined}
+          aria-describedby={errors.assistive_tech ? 'assistive_tech-error' : 'assistive_tech-helper'}
         >
           <legend className="sr-only" style={{
             position: 'absolute', width: '1px', height: '1px',
