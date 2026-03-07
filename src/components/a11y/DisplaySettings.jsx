@@ -308,6 +308,15 @@ export const applyPreferences = (prefs) => {
         --accent-success:   #00FF88 !important;
         --btn-text:         #000000 !important;
       }
+      /* Override hardcoded inline backgrounds that bypass the token system */
+      .low-vision-mode .cv-dark-section,
+      .low-vision-mode [class*="warm-keep-dark"],
+      .low-vision-mode section[style*="0F172A"],
+      .low-vision-mode section[style*="1E293B"],
+      .low-vision-mode section[style*="1A1F2B"] {
+        background: #000000 !important;
+        background-image: none !important;
+      }
     `;
   }
 
