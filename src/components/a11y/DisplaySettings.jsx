@@ -93,6 +93,7 @@ export const applyPreferences = (prefs) => {
       --accent-lighter:   #FDBA74;
       --accent-success:   #7DCEA0;
       --btn-text:         #FFFFFF;
+      --surface:          #FFFFFF;
       /* Banner tokens */
       --banner-info-bg:       #EFF6FF;
       --banner-info-text:     #1E40AF;
@@ -142,6 +143,9 @@ export const applyPreferences = (prefs) => {
         --accent-lighter:   #FDBA74 !important;
         --accent-success:   #7DCEA0 !important;
         --btn-text:         #FFFFFF !important;
+        --surface:          #0F1520 !important;
+        --glass-bg:         rgba(255,255,255,0.06) !important;
+        --glass-border:     rgba(255,255,255,0.10) !important;
         /* Banner tokens */
         --banner-info-bg:       #0C1A3D !important;
         --banner-info-text:     #93C5FD !important;
@@ -185,6 +189,9 @@ export const applyPreferences = (prefs) => {
         --accent-lighter:   #FDE68A !important;
         --accent-success:   #4ADE80 !important;
         --btn-text:         #000000 !important;
+        --surface:          #0A0A0A !important;
+        --glass-bg:         transparent !important;
+        --glass-border:     #FFFFFF !important;
         /* Banner tokens */
         --banner-info-bg:       #000000 !important;
         --banner-info-text:     #FFFFFF !important;
@@ -265,7 +272,7 @@ export const applyPreferences = (prefs) => {
         --page-bg-subtle:   #F0E8DA !important;
         --heading:          #3D2B1F !important;
         --body:             #5C4033 !important;
-        --body-secondary:   #7A6455 !important;
+        --body-secondary:   #634D3D !important;
         --section-label:    #8B3A1F !important;
         --link:             #7C2D12 !important;
         --card-bg:          #FFF8F0 !important;
@@ -288,6 +295,9 @@ export const applyPreferences = (prefs) => {
         --accent-lighter:   #FDBA74 !important;
         --accent-success:   #7DCEA0 !important;
         --btn-text:         #FFFFFF !important;
+        --surface:          #FFF8F0 !important;
+        --glass-bg:         rgba(139,58,31,0.04) !important;
+        --glass-border:     rgba(139,58,31,0.10) !important;
         /* Banner tokens */
         --banner-info-bg:       #F5E6C8 !important;
         --banner-info-text:     #5B3A1A !important;
@@ -335,6 +345,9 @@ export const applyPreferences = (prefs) => {
         --accent-lighter:   #FFF3A3 !important;
         --accent-success:   #00FF88 !important;
         --btn-text:         #000000 !important;
+        --surface:          #111100 !important;
+        --glass-bg:         transparent !important;
+        --glass-border:     #FFD700 !important;
         /* Banner tokens */
         --banner-info-bg:       #000000 !important;
         --banner-info-text:     #FFD700 !important;
@@ -524,6 +537,11 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
   const accent = '#C2410C';
   const accentLight = isLV ? '#FFD700' : '#FB923C';
   const accentFill = isMobile ? '#7C2D12' : '#C2410C';
+  // Active button TEXT color — must contrast against accentBg (cream/transparent)
+  // #FB923C on #FFF7ED = 2.13:1 (FAIL). #C2410C on #FFF7ED = 5.42:1 (PASS AA+)
+  const accentText = isMobile ? '#FB923C' : isLV ? '#FFD700' : isDarkPanel ? '#FB923C' : '#C2410C';
+  // Active font description — lighter but still accessible
+  const accentDescText = isMobile ? '#FDBA74' : isLV ? '#FFE566' : isDarkPanel ? '#FDBA74' : '#9A3412';
   const borderColor = isMobile ? 'rgba(255,255,255,0.25)' : isDarkPanel ? panelBorder : 'var(--slate-200, #E2E8F0)';
   const textPrimary = isMobile ? '#FFFFFF' : isDarkPanel ? (isLV ? '#FFD700' : '#F1F5F9') : 'var(--slate-700, #334155)';
   const textSecondary = isMobile ? '#CBD5E1' : isDarkPanel ? (isLV ? '#FFE566' : '#94A3B8') : '#64748B';
@@ -568,6 +586,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
             const i = rowIndex === 0 ? colIndex : 3 + colIndex;
             const active = prefs.displayMode === m.key;
             const activeColor = m.key === 'low-vision' ? '#FFD700' : accentLight;
+            const activeTextColor = m.key === 'low-vision' ? '#FFD700' : accentText;
             const activeBg = m.key === 'low-vision' ? 'rgba(255,215,0,0.12)' : accentBg;
             return (
               <button
@@ -637,7 +656,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                 </span>
                 <span style={{
                   fontSize: '0.7rem', fontWeight: active ? 700 : 600,
-                  color: active ? activeColor : textPrimary,
+                  color: active ? activeTextColor : textPrimary,
                   fontFamily: 'Manrope, sans-serif', lineHeight: 1.2,
                 }}>
                   {m.label}
@@ -675,21 +694,21 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                 <span style={{
                   fontFamily: f.family,
                   fontSize: '1.15rem', fontWeight: 700,
-                  color: active ? accentLight : textPrimary,
+                  color: active ? accentText : textPrimary,
                   lineHeight: 1.2,
                 }}>
                   Aa
                 </span>
                 <span style={{
                   fontSize: '0.72rem', fontWeight: active ? 700 : 600,
-                  color: active ? accentLight : textPrimary,
+                  color: active ? accentText : textPrimary,
                   fontFamily: 'Manrope, sans-serif', lineHeight: 1.2,
                 }}>
                   {f.label}
                 </span>
                 <span style={{
                   fontSize: '0.62rem', fontWeight: 500,
-                  color: active ? '#FDBA74' : textSecondary,
+                  color: active ? accentDescText : textSecondary,
                   fontFamily: 'Manrope, sans-serif', lineHeight: 1.3,
                 }}>
                   {f.desc}
