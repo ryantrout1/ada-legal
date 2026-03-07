@@ -48,6 +48,34 @@ const savePreferences = (prefs) => {
   try { window.dispatchEvent(new CustomEvent('ada-prefs-changed')); } catch {}
 };
 
+// Shared SVG diagram overrides for all dark-background modes (dark, HC, LV).
+// Diagram text uses hardcoded fills that are invisible on dark backgrounds.
+// Maps each dark fill to a lighter equivalent in the same color family.
+const SVG_DARK_OVERRIDES = `
+      #main-content svg[role="img"] text[fill="#14532D"],
+      #main-content svg[role="img"] text[fill="#15803D"] { fill: #4ADE80 !important; }
+      #main-content svg[role="img"] text[fill="#78350F"],
+      #main-content svg[role="img"] text[fill="#7C2D12"],
+      #main-content svg[role="img"] text[fill="#B45309"] { fill: #FDBA74 !important; }
+      #main-content svg[role="img"] text[fill="#1E3A8A"] { fill: #93C5FD !important; }
+      #main-content svg[role="img"] text[fill="#5B21B6"],
+      #main-content svg[role="img"] text[fill="#7C3AED"] { fill: #C4B5FD !important; }
+      #main-content svg[role="img"] text[fill="#475569"] { fill: #94A3B8 !important; }
+      #main-content svg[role="img"] text[fill="#64748B"] { fill: #CBD5E1 !important; }
+      #main-content svg[role="img"] text[fill="#78716C"],
+      #main-content svg[role="img"] text[fill="#57534E"] { fill: #A8A29E !important; }
+      #main-content svg[role="img"] line[stroke="#475569"] { stroke: #94A3B8 !important; }
+      #main-content svg[role="img"] line[stroke="#E2E8F0"] { stroke: #334155 !important; }
+      #main-content svg[role="img"] rect[stroke="#E2E8F0"] { stroke: #334155 !important; }
+      #main-content svg[role="img"] rect[fill="#FAFAF9"],
+      #main-content svg[role="img"] rect[fill="#fafaf9"],
+      #main-content svg[role="img"] rect[fill="white"],
+      #main-content svg[role="img"] rect[fill="#FFFFFF"],
+      #main-content svg[role="img"] rect[fill="#ffffff"] { fill: var(--page-bg-subtle) !important; }
+      #main-content svg[role="img"] rect[fill="#F1F5F9"],
+      #main-content svg[role="img"] rect[fill="#F8FAFC"] { fill: var(--page-bg-subtle) !important; }
+`;
+
 export const applyPreferences = (prefs) => {
   // Get or create the runtime style element (lives in <head>, outside React)
   let styleEl = document.getElementById('ada-prefs-runtime-style');
@@ -163,34 +191,12 @@ export const applyPreferences = (prefs) => {
         --banner-error-border:  #EF4444 !important;
       }
 
-      /* --- SVG Diagram Overrides for Dark Mode ---
+      /* --- SVG Diagram Overrides for Dark-Background Modes ---
          Diagram text uses hardcoded fills for color-coded categories.
          These dark fills are invisible on dark backgrounds. Map each
-         to a lighter equivalent in the same color family. */
-      #main-content svg[role="img"] text[fill="#14532D"],
-      #main-content svg[role="img"] text[fill="#15803D"] { fill: #4ADE80 !important; }
-      #main-content svg[role="img"] text[fill="#78350F"],
-      #main-content svg[role="img"] text[fill="#7C2D12"],
-      #main-content svg[role="img"] text[fill="#B45309"] { fill: #FDBA74 !important; }
-      #main-content svg[role="img"] text[fill="#1E3A8A"] { fill: #93C5FD !important; }
-      #main-content svg[role="img"] text[fill="#5B21B6"],
-      #main-content svg[role="img"] text[fill="#7C3AED"] { fill: #C4B5FD !important; }
-      #main-content svg[role="img"] text[fill="#475569"] { fill: #94A3B8 !important; }
-      #main-content svg[role="img"] text[fill="#64748B"] { fill: #CBD5E1 !important; }
-      #main-content svg[role="img"] text[fill="#78716C"],
-      #main-content svg[role="img"] text[fill="#57534E"] { fill: #A8A29E !important; }
-      /* Structural elements: lighten strokes and borders */
-      #main-content svg[role="img"] line[stroke="#475569"] { stroke: #94A3B8 !important; }
-      #main-content svg[role="img"] line[stroke="#E2E8F0"] { stroke: #334155 !important; }
-      #main-content svg[role="img"] rect[stroke="#E2E8F0"] { stroke: #334155 !important; }
-      /* Background rects that may be hardcoded white/light */
-      #main-content svg[role="img"] rect[fill="#FAFAF9"],
-      #main-content svg[role="img"] rect[fill="#fafaf9"],
-      #main-content svg[role="img"] rect[fill="white"],
-      #main-content svg[role="img"] rect[fill="#FFFFFF"],
-      #main-content svg[role="img"] rect[fill="#ffffff"] { fill: var(--page-bg-subtle) !important; }
-      #main-content svg[role="img"] rect[fill="#F1F5F9"],
-      #main-content svg[role="img"] rect[fill="#F8FAFC"] { fill: var(--page-bg-subtle) !important; }
+         to a lighter equivalent in the same color family.
+         Applied to: dark, high-contrast, and low-vision modes. */
+      ${SVG_DARK_OVERRIDES}
     `;
   } else if (prefs.displayMode === 'high-contrast') {
     css += `
@@ -238,6 +244,7 @@ export const applyPreferences = (prefs) => {
         --banner-error-text:    #FF6B6B !important;
         --banner-error-border:  #FF6B6B !important;
       }
+      ${SVG_DARK_OVERRIDES}
     `;
   }
 
@@ -411,6 +418,7 @@ export const applyPreferences = (prefs) => {
         background: #000000 !important;
         background-image: none !important;
       }
+      ${SVG_DARK_OVERRIDES}
     `;
   }
 
