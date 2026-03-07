@@ -294,7 +294,7 @@ export const applyPreferences = (prefs) => {
         --card-bg-tinted:   #111100 !important;
         --card-bg-warm:     #111100 !important;
         --border:           #FFD700 !important;
-        --border-lighter:   #8B7400 !important;
+        --border-lighter:   #B8960C !important;
         --dark-bg:          #000000 !important;
         --dark-bg-alt:      #000000 !important;
         --dark-bg-deep:     #000000 !important;
@@ -506,6 +506,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
           ].map((m, i) => {
             const active = prefs.displayMode === m.key;
             const activeColor = m.key === 'low-vision' ? '#FFD700' : accentLight;
+            const activeBg = m.key === 'low-vision' ? 'rgba(255,215,0,0.12)' : accentBg;
             return (
               <button
                 key={m.key}
@@ -520,7 +521,7 @@ export default function DisplaySettings({ variant = 'dropdown', isOpen, onClose 
                   minHeight: '58px',
                   borderRadius: '10px',
                   border: active ? `2px solid ${activeColor}` : `1px solid ${borderColor}`,
-                  background: active ? accentBg : 'transparent',
+                  background: active ? activeBg : 'transparent',
                   cursor: 'pointer', transition: 'all 0.15s',
                 }}
               >
