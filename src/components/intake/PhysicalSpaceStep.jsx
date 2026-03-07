@@ -175,7 +175,7 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
         />
       </FormField>
 
-      <FormField label="Violation Sub-type" id="violation_subtype" required error={errors.violation_subtype}>
+      <FormField label="What kind of barrier was it?" id="violation_subtype" required error={errors.violation_subtype}>
         <select
           id="violation_subtype"
           value={data.violation_subtype || ''}
@@ -187,7 +187,7 @@ export default function PhysicalSpaceStep({ data, onChange, errors }) {
           aria-describedby={errors.violation_subtype ? 'violation_subtype-error' : undefined}
           style={{ ...inputStyle, appearance: 'auto' }}
         >
-          <option value="">Select violation type</option>
+          <option value="">Select the type of barrier</option>
           {VIOLATION_SUBTYPES.map(v => (
             <option key={v} value={v}>{v}</option>
           ))}

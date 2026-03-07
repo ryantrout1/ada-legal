@@ -32,7 +32,16 @@ export default function ViolationTypeStep({ value, onChange }) {
         marginBottom: 'var(--space-xl)',
         lineHeight: 1.6
       }}>
-        What type of ADA violation did you experience? Select one to continue.
+        Did your barrier happen at a physical location, or on a website or app? Your answer helps us match you with the right attorney.
+      </p>
+      <p style={{
+        fontFamily: 'Manrope, sans-serif',
+        fontSize: '1.0625rem',
+        color: 'var(--body)',
+        marginBottom: 'var(--space-xl)',
+        lineHeight: 1.6
+      }}>
+        Select one to continue.
       </p>
 
       <div

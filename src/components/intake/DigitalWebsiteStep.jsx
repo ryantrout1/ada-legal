@@ -72,7 +72,13 @@ export default function DigitalWebsiteStep({ data, onChange, errors }) {
         />
       </FormField>
 
-      <FormField label="Assistive Technology Used" id="assistive_tech" required error={errors.assistive_tech}>
+      <FormField
+        label="Assistive Technology Used"
+        id="assistive_tech"
+        required
+        error={errors.assistive_tech}
+        helperText="Select all the tools you were using when you hit the barrier. For example: a screen reader like JAWS or VoiceOver, keyboard-only navigation, screen magnification, or voice control like Dragon."
+      >
         <fieldset
           style={{ border: 'none', margin: 0, padding: 0 }}
           aria-required="true"

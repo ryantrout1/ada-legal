@@ -35,6 +35,15 @@ const blurHandler = (e) => {
 export default function ContactStep({ data, onChange, errors }) {
   return (
     <div>
+      <h2 style={{
+        fontFamily: 'Fraunces, serif',
+        fontSize: '1.25rem',
+        fontWeight: 600,
+        color: 'var(--heading)',
+        margin: '0 0 var(--space-sm) 0'
+      }}>
+        Your Contact Information
+      </h2>
       <p style={{
         fontFamily: 'Manrope, sans-serif',
         fontSize: '1.0625rem',
@@ -107,12 +116,13 @@ export default function ContactStep({ data, onChange, errors }) {
         id="contact_preference"
         required
         error={errors.contact_preference}
+        helperText="Select one option."
       >
         <fieldset
           style={{ border: 'none', margin: 0, padding: 0 }}
           aria-required="true"
           aria-invalid={!!errors.contact_preference}
-          aria-describedby={errors.contact_preference ? 'contact_preference-error' : undefined}
+          aria-describedby={errors.contact_preference ? 'contact_preference-error' : 'contact_preference-helper'}
         >
           <legend style={{
             position: 'absolute', width: '1px', height: '1px',

@@ -83,12 +83,13 @@ export default function IncidentStep({ data, onChange, errors }) {
         id="visited_before"
         required
         error={errors.visited_before}
+        helperText="Select one option."
       >
         <fieldset
           style={{ border: 'none', margin: 0, padding: 0 }}
           aria-required="true"
           aria-invalid={!!errors.visited_before}
-          aria-describedby={errors.visited_before ? 'visited_before-error' : undefined}
+          aria-describedby={errors.visited_before ? 'visited_before-error' : 'visited_before-helper'}
         >
           <legend style={{
             position: 'absolute', width: '1px', height: '1px',

@@ -34,7 +34,7 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
             <ReviewItem label="City" value={data.city} />
             <ReviewItem label="State" value={data.state} />
             {data.street_address && <ReviewItem label="Street Address" value={data.street_address} />}
-            <ReviewItem label="Violation Sub-type" value={data.violation_subtype} />
+            <ReviewItem label="Barrier Type" value={data.violation_subtype} />
           </>
         )}
         {!isPhysical && (
@@ -47,9 +47,9 @@ export default function ReviewStep({ data, onEdit, onSubmit, submitting }) {
 
       {/* Incident Details */}
       <ReviewSection title="Incident Details" onEdit={() => onEdit(3)}>
-        <ReviewItem label="Date" value={data.incident_date} />
-        <ReviewItem label="Visited Before" value={VISITED_LABELS[data.visited_before] || data.visited_before} />
-        <ReviewItem label="Description" value={data.narrative} />
+        <ReviewItem label="When did this happen?" value={data.incident_date} />
+        <ReviewItem label="Have you visited/used this location before?" value={VISITED_LABELS[data.visited_before] || data.visited_before} />
+        <ReviewItem label="What happened — in your own words" value={data.narrative} />
         {data.photos && data.photos.length > 0 && (
           <>
             <ReviewItem label="Photos" value={`${data.photos.length} attached`} />
