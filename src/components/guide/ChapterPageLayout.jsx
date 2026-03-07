@@ -31,9 +31,10 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
   const headerId = `section-header-${index}`;
 
   // Reading level display logic
+  const hasLegal = !!legal;
   const showSimple = readingLevel === 'simple';
-  const showLegal = readingLevel === 'professional';
-  const showStandard = readingLevel === 'standard'; // default: plain + legal side-by-side
+  const showLegal = readingLevel === 'professional' && hasLegal;
+  const showStandard = readingLevel === 'standard' || (readingLevel === 'professional' && !hasLegal);
 
   return (
     <div style={{
@@ -337,7 +338,7 @@ export default function ChapterPageLayout({ chapterNum, title, range, overview, 
                       borderRadius: '6px',
                       border: active ? '2px solid var(--accent)' : '1px solid var(--border)',
                       background: active ? 'var(--accent)' : 'var(--page-bg)',
-                      color: active ? 'var(--dark-heading)' : 'var(--body)',
+                      color: active ? 'var(--btn-text)' : 'var(--body)',
                       fontSize: '0.72rem', fontWeight: active ? 700 : 500,
                       fontFamily: 'Manrope, sans-serif',
                       cursor: 'pointer', transition: 'all 0.15s',

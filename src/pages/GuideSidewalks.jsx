@@ -4,6 +4,7 @@ import GuideHeroBanner from '../components/guide/GuideHeroBanner';
 import GuideSection from '../components/guide/GuideSection';
 import GuideLegalCallout from '../components/guide/GuideLegalCallout';
 import GuideReportCTA from '../components/guide/GuideReportCTA';
+import GuideReadingLevelBar from '../components/guide/GuideReadingLevelBar';
 
 export default function GuideSidewalks() {
   return (
@@ -13,6 +14,7 @@ export default function GuideSidewalks() {
 
       <div className="guide-content-wrap">
         <div className="guide-content">
+          <GuideReadingLevelBar />
 
           <GuideSection id="government-responsibility" title="Government Responsibility"
             legalContent={<><p style={{ margin: '0 0 12px' }}><strong>28 CFR §35.151(e) — Curb Ramps</strong></p><p style={{ margin: 0 }}>"Newly constructed or altered streets, roads, and highways must contain curb ramps or other sloped areas at any intersection having curbs or other barriers to entry from a street level pedestrian walkway."</p></>}>

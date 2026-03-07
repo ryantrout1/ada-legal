@@ -4,6 +4,7 @@ import GuideHeroBanner from '../components/guide/GuideHeroBanner';
 import GuideSection from '../components/guide/GuideSection';
 import GuideLegalCallout from '../components/guide/GuideLegalCallout';
 import GuideReportCTA from '../components/guide/GuideReportCTA';
+import GuideReadingLevelBar from '../components/guide/GuideReadingLevelBar';
 
 export default function GuidePlaygrounds() {
   return (
@@ -13,6 +14,7 @@ export default function GuidePlaygrounds() {
 
       <div className="guide-content-wrap">
         <div className="guide-content">
+          <GuideReadingLevelBar />
 
           <GuideSection id="what-required" title="What the ADA Requires"
             legalContent={<><p style={{ margin: '0 0 12px' }}><strong>§240.1 — Scope</strong></p><p style={{ margin: 0 }}>"Play areas for children ages 2 and over shall comply with §240. Where separate play areas are provided within a site for specific age groups, each play area shall comply with §240."</p></>}>

@@ -4,6 +4,7 @@ import GuideHeroBanner from '../components/guide/GuideHeroBanner';
 import GuideSection from '../components/guide/GuideSection';
 import GuideLegalCallout from '../components/guide/GuideLegalCallout';
 import GuideReportCTA from '../components/guide/GuideReportCTA';
+import GuideReadingLevelBar from '../components/guide/GuideReadingLevelBar';
 
 export default function GuideSwimmingPools() {
   return (
@@ -13,6 +14,7 @@ export default function GuideSwimmingPools() {
 
       <div className="guide-content-wrap">
         <div className="guide-content">
+          <GuideReadingLevelBar />
 
           <GuideSection id="which-pools" title="Which Pools Are Covered?"
             legalContent={<><p style={{ margin: '0 0 12px' }}><strong>§242 — Swimming Pools, Wading Pools & Spas</strong></p><p style={{ margin: 0 }}>"Where swimming pools, wading pools, or spas are provided, accessible means of entry shall be provided." Applies to Title II (government) and Title III (public accommodations) facilities.</p></>}>

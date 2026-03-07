@@ -4,6 +4,7 @@ import GuideHeroBanner from '../components/guide/GuideHeroBanner';
 import GuideSection from '../components/guide/GuideSection';
 import GuideLegalCallout from '../components/guide/GuideLegalCallout';
 import GuideReportCTA from '../components/guide/GuideReportCTA';
+import GuideReadingLevelBar from '../components/guide/GuideReadingLevelBar';
 
 const COMPARISON_ROWS = [
   { label: 'File with', titleI: 'EEOC', titleII: 'DOJ', titleIII: 'DOJ or Court', fha: 'HUD or Court' },
@@ -76,6 +77,7 @@ export default function GuideLegalOptions() {
 
       <div className="guide-content-wrap">
         <div className="guide-content">
+          <GuideReadingLevelBar />
 
           <GuideSection
             id="complaint-vs-lawsuit"
