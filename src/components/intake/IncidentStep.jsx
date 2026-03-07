@@ -156,13 +156,16 @@ export default function IncidentStep({ data, onChange, errors }) {
         </label>
 
         {/* Numbered writing prompts */}
-        <div style={{
-          backgroundColor: 'var(--card-bg-tinted)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-md)',
-          padding: '12px 16px',
-          marginBottom: 'var(--space-sm)'
-        }}>
+        <div
+          id="narrative-guide"
+          style={{
+            backgroundColor: 'var(--card-bg-tinted)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            padding: '12px 16px',
+            marginBottom: 'var(--space-sm)'
+          }}
+        >
           <p style={{
             fontFamily: 'Manrope, sans-serif',
             fontSize: '0.875rem',
@@ -190,7 +193,6 @@ export default function IncidentStep({ data, onChange, errors }) {
             type="button"
             onClick={() => setShowExample(prev => !prev)}
             aria-expanded={showExample}
-            aria-controls="narrative-example"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -224,7 +226,7 @@ export default function IncidentStep({ data, onChange, errors }) {
             >
               <p style={{
                 fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.8125rem',
+                fontSize: '0.875rem',
                 fontWeight: 700,
                 color: 'var(--body-secondary)',
                 textTransform: 'uppercase',
@@ -256,7 +258,7 @@ export default function IncidentStep({ data, onChange, errors }) {
           onBlur={blurHandler}
           aria-required="true"
           aria-invalid={!!errors.narrative}
-          aria-describedby={errors.narrative ? 'narrative-error' : 'narrative-count'}
+          aria-describedby={errors.narrative ? 'narrative-error' : 'narrative-guide narrative-count'}
           rows={6}
           style={{
             ...inputStyle,
