@@ -292,7 +292,7 @@ export default function IncidentStep({ data, onChange, errors }) {
             style={{
               fontFamily: 'Manrope, sans-serif',
               fontSize: '0.875rem',
-              color: charCount >= 50 ? 'var(--accent-success)' : 'var(--body-secondary)',
+              color: charCount >= 50 ? 'var(--accent-success, #15803D)' : 'var(--body-secondary)',
               margin: 'var(--space-xs) 0 0 0',
               lineHeight: 1.4
             }}
