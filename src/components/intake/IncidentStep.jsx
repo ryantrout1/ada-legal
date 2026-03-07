@@ -193,6 +193,7 @@ export default function IncidentStep({ data, onChange, errors }) {
             type="button"
             onClick={() => setShowExample(prev => !prev)}
             aria-expanded={showExample}
+            className="narrative-example-toggle"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -291,7 +292,7 @@ export default function IncidentStep({ data, onChange, errors }) {
             style={{
               fontFamily: 'Manrope, sans-serif',
               fontSize: '0.875rem',
-              color: charCount >= 50 ? 'var(--success-600, #15803D)' : 'var(--body-secondary)',
+              color: charCount >= 50 ? 'var(--accent-success)' : 'var(--body-secondary)',
               margin: 'var(--space-xs) 0 0 0',
               lineHeight: 1.4
             }}

@@ -771,7 +771,8 @@ export default function Intake() {
 
       <style>{`
         .intake-triage-card:focus-visible,
-        .intake-nav-btn:focus-visible {
+        .intake-nav-btn:focus-visible,
+        .narrative-example-toggle:focus-visible {
           outline: 3px solid var(--accent-light) !important;
           outline-offset: 2px !important;
         }
