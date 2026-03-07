@@ -510,7 +510,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
             background: input.trim() && !isLoading ? 'var(--accent)' : 'var(--border)',
             border: 'none', cursor: input.trim() && !isLoading ? 'pointer' : 'default',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: input.trim() && !isLoading ? 'var(--page-bg)' : 'var(--body-secondary)',
+            color: input.trim() && !isLoading ? 'var(--btn-text)' : 'var(--body-secondary)',
             flexShrink: 0, transition: 'all 0.15s',
           }}
         >
