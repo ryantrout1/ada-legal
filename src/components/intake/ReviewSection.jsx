@@ -8,6 +8,26 @@ export default function ReviewSection({ title, onEdit, children }) {
       paddingBottom: 'var(--space-xl)',
       borderBottom: '1px solid var(--border)'
     }}>
+      <style>{`
+        .review-dl {
+          display: grid;
+          grid-template-columns: 1fr 2fr;
+          gap: var(--space-sm) var(--space-md);
+          margin: 0;
+        }
+        @media (max-width: 480px) {
+          .review-dl {
+            grid-template-columns: 1fr;
+            gap: var(--space-xs);
+          }
+          .review-dl dt {
+            margin-top: var(--space-sm);
+          }
+          .review-dl dt:first-child {
+            margin-top: 0;
+          }
+        }
+      `}</style>
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -54,12 +74,7 @@ export default function ReviewSection({ title, onEdit, children }) {
           Edit
         </button>
       </div>
-      <dl style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 2fr',
-        gap: 'var(--space-sm) var(--space-md)',
-        margin: 0
-      }}>
+      <dl className="review-dl">
         {children}
       </dl>
     </div>

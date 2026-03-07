@@ -45,6 +45,7 @@ export default function ViolationTypeStep({ value, onChange }) {
       </p>
 
       <div
+        role="radiogroup"
         aria-label="Violation type"
         style={{
           display: 'grid',
