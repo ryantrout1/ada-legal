@@ -163,7 +163,7 @@ function CalloutDots({ callouts, active, toggle }) {
         stroke={c.color} strokeWidth="2" />
       <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
         fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
-      <circle cx={c.x} cy={c.y} r="16" fill="none" stroke="transparent" strokeWidth="2"
+      <circle cx={c.x} cy={c.y} r="22" fill="none" stroke="transparent" strokeWidth="2"
         className="reach-focus-ring" />
     </g>
   ));

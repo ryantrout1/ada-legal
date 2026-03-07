@@ -160,6 +160,35 @@ export const applyPreferences = (prefs) => {
         --banner-error-text:    #FCA5A5 !important;
         --banner-error-border:  #EF4444 !important;
       }
+
+      /* --- SVG Diagram Overrides for Dark Mode ---
+         Diagram text uses hardcoded fills for color-coded categories.
+         These dark fills are invisible on dark backgrounds. Map each
+         to a lighter equivalent in the same color family. */
+      #main-content svg[role="img"] text[fill="#14532D"],
+      #main-content svg[role="img"] text[fill="#15803D"] { fill: #4ADE80 !important; }
+      #main-content svg[role="img"] text[fill="#78350F"],
+      #main-content svg[role="img"] text[fill="#7C2D12"],
+      #main-content svg[role="img"] text[fill="#B45309"] { fill: #FDBA74 !important; }
+      #main-content svg[role="img"] text[fill="#1E3A8A"] { fill: #93C5FD !important; }
+      #main-content svg[role="img"] text[fill="#5B21B6"],
+      #main-content svg[role="img"] text[fill="#7C3AED"] { fill: #C4B5FD !important; }
+      #main-content svg[role="img"] text[fill="#475569"] { fill: #94A3B8 !important; }
+      #main-content svg[role="img"] text[fill="#64748B"] { fill: #CBD5E1 !important; }
+      #main-content svg[role="img"] text[fill="#78716C"],
+      #main-content svg[role="img"] text[fill="#57534E"] { fill: #A8A29E !important; }
+      /* Structural elements: lighten strokes and borders */
+      #main-content svg[role="img"] line[stroke="#475569"] { stroke: #94A3B8 !important; }
+      #main-content svg[role="img"] line[stroke="#E2E8F0"] { stroke: #334155 !important; }
+      #main-content svg[role="img"] rect[stroke="#E2E8F0"] { stroke: #334155 !important; }
+      /* Background rects that may be hardcoded white/light */
+      #main-content svg[role="img"] rect[fill="#FAFAF9"],
+      #main-content svg[role="img"] rect[fill="#fafaf9"],
+      #main-content svg[role="img"] rect[fill="white"],
+      #main-content svg[role="img"] rect[fill="#FFFFFF"],
+      #main-content svg[role="img"] rect[fill="#ffffff"] { fill: var(--page-bg-subtle) !important; }
+      #main-content svg[role="img"] rect[fill="#F1F5F9"],
+      #main-content svg[role="img"] rect[fill="#F8FAFC"] { fill: var(--page-bg-subtle) !important; }
     `;
   } else if (prefs.displayMode === 'high-contrast') {
     css += `
