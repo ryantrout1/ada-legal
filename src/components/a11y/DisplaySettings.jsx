@@ -218,12 +218,11 @@ export const applyPreferences = (prefs) => {
   // - #main-content { font-size: 125% } doesn't affect rem units (rem = root only)
   // - #main-content { zoom: 1.25 } scales EVERYTHING visually, scoped to content
   //
-  // zoom affects layout dimensions, so we compensate width to prevent
-  // horizontal overflow. This fixes WCAG 2.2 SC 3.2.2 (On Input).
+  // Supports WCAG 2.2 SC 1.4.4 (Resize Text) and SC 1.4.10 (Reflow).
+  // CSS zoom is supported in Chrome, Safari, Edge, and Firefox 126+ (June 2024).
   if (prefs.fontSize === 'large' || prefs.fontSize === 'xl') {
     const zoomMain = prefs.fontSize === 'large' ? '1.125' : '1.25';
     const zoomDiag = prefs.fontSize === 'large' ? '1.15' : '1.3';
-    const mozW = prefs.fontSize === 'large' ? '86.96%' : '76.92%';
     css += `
       #main-content {
         zoom: ${zoomMain} !important;
@@ -236,13 +235,6 @@ export const applyPreferences = (prefs) => {
          ============================================ */
       .ada-diagram-wrap {
         zoom: ${zoomDiag} !important;
-        -moz-transform: scale(${zoomDiag}) !important;
-        -moz-transform-origin: top left !important;
-      }
-      @-moz-document url-prefix() {
-        .ada-diagram-wrap {
-          width: ${mozW} !important;
-        }
       }
     `;
   }
