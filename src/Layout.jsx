@@ -129,8 +129,9 @@ export default function Layout({ children, currentPageName }) {
 
   const PAGE_TITLES = {
     Home: 'Home', Intake: 'Report a Violation', RightsPathway: 'Know Your Rights', MyCases: 'My Cases',
-    CaseDetail: 'Case Detail', Marketplace: 'Available Cases', LawyerDashboard: 'My Cases',
+    CaseDetail: 'Case Detail', Marketplace: 'Available Cases', LawyerDashboard: 'Attorney: My Cases',
     LawyerProfile: 'My Profile', LawyerRegister: 'Attorney Registration',
+    LawyerCaseDetail: 'Attorney Case Detail',
     LawyerLanding: 'For Attorneys', StandardsGuide: 'ADA Standards Guide',
     Admin: 'Admin Dashboard', AdminReview: 'Review Queue', AdminCases: 'Case Manager',
     AdminAnalytics: 'Analytics', AdminLawyers: 'Attorney Network', AdminEmails: 'Email Templates', AdminFeedback: 'Feedback',

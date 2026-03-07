@@ -43,6 +43,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
       borderRadius: '12px', marginBottom: '12px', overflow: 'hidden',
       transition: 'none'
     }}>
+      <h2 style={{ margin: 0, fontSize: 'inherit', fontWeight: 'inherit' }}>
       <button
         id={headerId}
         aria-expanded={isOpen}
@@ -68,6 +69,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
           transition: 'transform 0.25s ease'
         }} aria-hidden="true" />
       </button>
+      </h2>
 
       <div
         id={panelId}
