@@ -275,13 +275,15 @@ export const applyPreferences = (prefs) => {
   // intentionally — doubled heading line-height looks broken.
   if (prefs.lineSpacing === 'relaxed') {
     css += `
-      #main-content p, #main-content li, #main-content td, #main-content dd { line-height: 2 !important; }
+      #main-content p, #main-content li, #main-content td, #main-content dd,
+      #main-content .ada-ai-bubble { line-height: 2 !important; }
       footer[role="contentinfo"] p, footer[role="contentinfo"] li,
       footer[role="contentinfo"] a, footer[role="contentinfo"] span { line-height: 2 !important; }
     `;
   } else if (prefs.lineSpacing === 'loose') {
     css += `
-      #main-content p, #main-content li, #main-content td, #main-content dd { line-height: 2.5 !important; }
+      #main-content p, #main-content li, #main-content td, #main-content dd,
+      #main-content .ada-ai-bubble { line-height: 2.5 !important; }
       footer[role="contentinfo"] p, footer[role="contentinfo"] li,
       footer[role="contentinfo"] a, footer[role="contentinfo"] span { line-height: 2.5 !important; }
     `;
@@ -339,6 +341,13 @@ export const applyPreferences = (prefs) => {
         --banner-error-border:  #B91C1C !important;
       }
       img:not([src*="logo"]) { filter: sepia(0.08) !important; }
+
+      /* --- SVG Diagram Overrides for Warm Mode ---
+         Some medium-tone fills don't meet 4.5:1 on the warm
+         beige background (#F0E8DA). Darken them slightly. */
+      #main-content svg[role="img"] text[fill="#64748B"] { fill: #4B5563 !important; }
+      #main-content svg[role="img"] text[fill="#94A3B8"] { fill: #475569 !important; }
+      #main-content svg[role="img"] text[fill="#B45309"] { fill: #92400E !important; }
     `;
   }
 

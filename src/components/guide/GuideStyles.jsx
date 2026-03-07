@@ -90,6 +90,23 @@ export default function GuideStyles() {
           border-width: 2px !important;
         }
       }
+
+      /* Reading-level adaptation for diagram callout panels.
+         In Simple mode: hide the legal aside to reduce cognitive load.
+         In Professional mode: make the legal aside primary (wider). */
+      html[data-reading-level="simple"] .ada-diagram-wrap aside {
+        display: none !important;
+      }
+      html[data-reading-level="simple"] .ada-diagram-wrap .guide-two-col > div:first-child {
+        flex: 1 1 100% !important;
+      }
+      html[data-reading-level="professional"] .ada-diagram-wrap .guide-two-col > aside {
+        flex: 1 1 60% !important;
+        order: -1;
+      }
+      html[data-reading-level="professional"] .ada-diagram-wrap .guide-two-col > div:first-child {
+        flex: 1 1 35% !important;
+      }
     `}</style>
   );
 }
