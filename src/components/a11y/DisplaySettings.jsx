@@ -378,7 +378,7 @@ export const applyPreferences = (prefs) => {
 
 function SpacingIcon({ level, active, isMobile }) {
   const gap = level === 'default' ? 3 : level === 'relaxed' ? 5 : 7;
-  const color = active ? '#1E293B' : isMobile ? '#CBD5E1' : '#64748B';
+  const color = active ? '#FFFFFF' : isMobile ? '#CBD5E1' : '#64748B';
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style={{ flexShrink: 0 }} className="ds-spacing-icon">
       <rect x="2" y={3} width="14" height="2" rx="1" className={active ? 'ds-line-active' : 'ds-line'} style={{ fill: color }} />
