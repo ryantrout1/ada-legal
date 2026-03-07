@@ -140,7 +140,7 @@ export default function IncidentStep({ data, onChange, errors }) {
           }}
         >
           Describe What Happened
-          <span aria-label="required" style={{ color: '#991B1B', marginLeft: '4px' }}>*</span>
+          <span aria-label="required" style={{ color: 'var(--banner-error-text)', marginLeft: '4px' }}>*</span>
         </label>
 
         {/* Numbered writing prompts */}
@@ -266,7 +266,7 @@ export default function IncidentStep({ data, onChange, errors }) {
               gap: '6px',
               fontFamily: 'Manrope, sans-serif',
               fontSize: '0.875rem',
-              color: '#B91C1C',
+              color: 'var(--banner-error-text)',
               margin: 'var(--space-xs) 0 0 0',
               lineHeight: 1.5
             }}

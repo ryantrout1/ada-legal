@@ -146,7 +146,7 @@ export default function PhotoUpload({ photos = [], onChange }) {
       {error && (
         <p role="alert" style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-          color: '#B91C1C', margin: '8px 0 0', lineHeight: 1.4
+          color: 'var(--banner-error-text)', margin: '8px 0 0', lineHeight: 1.4
         }}>
           {error}
         </p>
