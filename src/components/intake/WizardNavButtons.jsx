@@ -50,7 +50,7 @@ export default function WizardNavButtons({ onBack, onContinue, canContinue, back
           fontFamily: 'Manrope, sans-serif',
           fontSize: '1rem',
           fontWeight: 600,
-          color: 'var(--dark-heading)',
+          color: 'var(--btn-text)',
           backgroundColor: canContinue ? 'var(--section-label)' : 'var(--body-secondary)',
           border: 'none',
           borderRadius: 'var(--radius-md)',

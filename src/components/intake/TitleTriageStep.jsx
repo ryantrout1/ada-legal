@@ -16,8 +16,8 @@ const TRIAGE_CARDS = [
   {
     id: 'title_ii',
     icon: '🏛️',
-    iconBg: '#EFF6FF',
-    badge: { text: "We'll guide you to the right place", bg: '#EFF6FF', color: '#1E3A8A', border: '#DBEAFE' },
+    iconBg: 'var(--banner-info-bg)',
+    badge: { text: "We'll guide you to the right place", bg: 'var(--banner-info-bg)', color: 'var(--banner-info-text)', border: 'var(--banner-info-border)' },
     heading: 'A government office, public transit, school, or public service was inaccessible',
     description: 'This covers state and local government services — courthouses, DMVs, public schools, transit systems, parks, and voting locations.',
     examples: 'Examples: courthouse with no elevator, public bus without a working lift, inaccessible polling station, public school without accommodations',

@@ -20,7 +20,7 @@ export default function FormField({ label, id, required, error, helperText, chil
       >
         {label}
         {required && (
-          <span aria-label="required" style={{ color: '#991B1B', marginLeft: '4px' }}>*</span>
+          <span aria-label="required" style={{ color: 'var(--banner-error-text)', marginLeft: '4px' }}>*</span>
         )}
       </label>
       {helperText && (
@@ -48,7 +48,7 @@ export default function FormField({ label, id, required, error, helperText, chil
             gap: '6px',
             fontFamily: 'Manrope, sans-serif',
             fontSize: '0.875rem',
-            color: '#B91C1C',
+            color: 'var(--banner-error-text)',
             margin: 'var(--space-xs) 0 0 0',
             lineHeight: 1.5
           }}

@@ -17,7 +17,7 @@ export const inputStyle = {
 };
 
 export const focusHandler = (e) => {
-  e.target.style.borderColor = '#1D4ED8';
+  e.target.style.borderColor = 'var(--link)';
   e.target.style.boxShadow = '0 0 0 3px rgba(29,78,216,0.15)';
 };
 
