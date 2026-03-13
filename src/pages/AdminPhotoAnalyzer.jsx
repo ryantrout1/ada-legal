@@ -75,7 +75,7 @@ function RiskPill({ risk }) {
 }
 
 function HistoryRow({ record, onSelect, isSelected }) {
-  const result = record.analysis_result || {};
+  const result = (() => { try { return typeof record.analysis_result === 'string' ? JSON.parse(record.analysis_result) : (record.analysis_result || {}); } catch { return {}; } })();
   return (
     <article
       aria-label={'Analysis: ' + (record.location_label || 'Unlabeled')}
@@ -292,7 +292,7 @@ Analyze these photos for ADA compliance concerns. Respond with JSON only — no 
       setTimeout(() => resultsRef.current?.focus(), 100);
 
       try {
-        const saved = await base44.entities.PhotoAnalysis.create({ location_label: locationLabel || 'Unlabeled', photo_count: files.length, analysis_result: parsed, overall_risk: parsed.overallRisk || 'NONE' });
+        const saved = await base44.entities.PhotoAnalysis.create({ location_label: locationLabel || 'Unlabeled', photo_count: files.length, analysis_result: JSON.stringify(parsed), image_url: uploadedUrls[0] || '', overall_risk: parsed.overallRisk || 'NONE' });
         setHistory(prev => [saved, ...prev]);
         setSelectedRecord(saved);
       } catch (dbErr) { console.warn('DB persist failed:', dbErr); }
@@ -301,7 +301,8 @@ Analyze these photos for ADA compliance concerns. Respond with JSON only — no 
   }
 
   function selectRecord(record) {
-    setSelectedRecord(record); setResult(record.analysis_result || null);
+    const parsed = (() => { try { return typeof record.analysis_result === 'string' ? JSON.parse(record.analysis_result) : (record.analysis_result || null); } catch { return null; } })();
+    setSelectedRecord(record); setResult(parsed);
     setFiles([]); previews.forEach(u => URL.revokeObjectURL(u)); setPreviews([]);
     setLocationLabel(record.location_label || ''); setError('');
   }
