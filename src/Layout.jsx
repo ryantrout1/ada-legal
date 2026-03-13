@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
-import { Menu, X, User, Eye, Mail, MessageSquare } from 'lucide-react';
+import { Menu, X, User, Eye, Mail, MessageSquare, Camera } from 'lucide-react';
 import LogoBrand from './components/LogoBrand';
 import LiveAnnouncer from './components/a11y/LiveAnnouncer';
 import AuditButton from './components/a11y/AuditButton';
@@ -134,7 +134,7 @@ export default function Layout({ children, currentPageName }) {
     LawyerCaseDetail: 'Attorney Case Detail',
     LawyerLanding: 'For Attorneys', StandardsGuide: 'ADA Standards Guide',
     Admin: 'Admin Dashboard', AdminReview: 'Review Queue', AdminCases: 'Case Manager',
-    AdminAnalytics: 'Analytics', AdminLawyers: 'Attorney Network', AdminEmails: 'Email Templates', AdminFeedback: 'Feedback',
+    AdminAnalytics: 'Analytics', AdminLawyers: 'Attorney Network', AdminEmails: 'Email Templates', AdminFeedback: 'Feedback', AdminPhotoAnalyzer: 'ADA Photo',
     TitleIIPathway: 'Government Accessibility Complaints',
     TitleIPathway: 'Workplace Disability Discrimination',
     // Standards Chapters
@@ -318,7 +318,7 @@ export default function Layout({ children, currentPageName }) {
       </a>
 
       {/* Early Access Banner — public pages only */}
-      {!loading && !['Admin', 'AdminReview', 'AdminCases', 'AdminAnalytics', 'AdminLawyers', 'AdminEmails', 'LawyerDashboard', 'LawyerProfile', 'LawyerCaseDetail', 'Marketplace'].includes(currentPageName) && (
+      {!loading && !['Admin', 'AdminReview', 'AdminCases', 'AdminAnalytics', 'AdminLawyers', 'AdminEmails', 'AdminPhotoAnalyzer', 'LawyerDashboard', 'LawyerProfile', 'LawyerCaseDetail', 'Marketplace'].includes(currentPageName) && (
         <EarlyAccessBanner />
       )}
 
@@ -494,6 +494,7 @@ export default function Layout({ children, currentPageName }) {
                     <UserAvatarMenu user={user} onLogout={handleLogout} extraMenuItems={[
                       { to: createPageUrl('AdminLawyers'), icon: <User size={15} />, label: 'Lawyers' },
                       { to: createPageUrl('AdminEmails'), icon: <Mail size={15} />, label: 'Email Templates' },
+                      { to: createPageUrl('AdminPhotoAnalyzer'), icon: <Camera size={15} />, label: 'ADA Photo' },
                     ]} />
                   </>
                 )}
@@ -774,6 +775,9 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('AdminEmails')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminEmails' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
                       Email Templates
                     </Link>
+                    <Link to={createPageUrl('AdminPhotoAnalyzer')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminPhotoAnalyzer' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
+                      ADA Photo
+                    </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
                       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--dark-muted)', margin: '0 0 8px' }}>{user.email}</p>
                     </div>
@@ -798,7 +802,7 @@ export default function Layout({ children, currentPageName }) {
       </main>
 
       {/* Floating Feedback Button — public pages only */}
-      {!loading && !['Admin', 'AdminReview', 'AdminCases', 'AdminAnalytics', 'AdminLawyers', 'AdminEmails', 'AdminFeedback', 'LawyerDashboard', 'LawyerProfile', 'LawyerCaseDetail', 'Marketplace'].includes(currentPageName) && (
+      {!loading && !['Admin', 'AdminReview', 'AdminCases', 'AdminAnalytics', 'AdminLawyers', 'AdminEmails', 'AdminFeedback', 'AdminPhotoAnalyzer', 'LawyerDashboard', 'LawyerProfile', 'LawyerCaseDetail', 'Marketplace'].includes(currentPageName) && (
         <FeedbackButton />
       )}
 
