@@ -113,7 +113,7 @@ function HistoryRow({ record, onSelect, isSelected }) {
 }
 
 function ConcernCard({ concern }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const SEV_BORDER = { HIGH: 'var(--err-bd)', MEDIUM: 'var(--wrn-bd)', LOW: 'var(--inf-bd)' };
   const SEV_BG     = { HIGH: 'var(--err-bg)', MEDIUM: 'var(--wrn-bg)', LOW: 'var(--inf-bg)' };
   return (
