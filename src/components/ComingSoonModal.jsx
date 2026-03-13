@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { X, Bell, CheckCircle } from 'lucide-react';
+import trackEvent from './analytics/trackEvent';
 
 export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_violation' }) {
   const [email, setEmail] = useState('');
@@ -41,10 +42,7 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
       signup_type: signupType,
       signed_up_at: new Date().toISOString()
     });
-    base44.analytics.track({
-      eventName: 'waitlist_signup',
-      properties: { signup_type: signupType, email: email.trim() }
-    });
+    trackEvent('waitlist_signup', { signup_type: signupType, email: email.trim() }, 'ComingSoonModal');
     setSubmitting(false);
     setSuccess(true);
   };

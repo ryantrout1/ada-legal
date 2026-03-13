@@ -147,7 +147,6 @@ export default function Intake() {
   const goToStep = (n) => {
     if (n === 1 && !reportStartedRef.current) {
       reportStartedRef.current = true;
-      base44.analytics.track({ eventName: 'report_started', properties: { source: isFromPathway ? 'pathway' : 'direct' } });
       trackEvent('report_started', { source: isFromPathway ? 'pathway' : 'direct' }, 'Intake');
     }
     setStep(n);
@@ -197,7 +196,6 @@ export default function Intake() {
   useEffect(() => {
     if (isFromPathway) {
       reportStartedRef.current = true;
-      base44.analytics.track({ eventName: 'report_started', properties: { source: 'pathway' } });
       trackEvent('report_started', { source: 'pathway' }, 'Intake');
       const updates = {};
       if (pathwayType && PATHWAY_TYPE_MAP[pathwayType]) {
@@ -410,7 +408,6 @@ export default function Intake() {
         created_at: now
       });
 
-      base44.analytics.track({ eventName: 'report_completed', properties: { violation_type: formData.violation_type, source: isFromPathway ? 'pathway' : 'direct' } });
       trackEvent('report_completed', { violation_type: formData.violation_type, source: isFromPathway ? 'pathway' : 'direct' }, 'Intake');
 
       setSubmitting(false);

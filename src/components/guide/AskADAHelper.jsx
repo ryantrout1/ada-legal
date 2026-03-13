@@ -4,6 +4,7 @@ import { createPageUrl } from '../../utils';
 import { base44 } from '@/api/base44Client';
 import { MessageCircle, Send, X, RotateCcw, ChevronRight, Loader2 } from 'lucide-react';
 import { loadPreferences } from '../a11y/DisplaySettings';
+import trackEvent from '../analytics/trackEvent';
 
 /**
  * ADA Standards AI Helper
@@ -257,10 +258,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
 
     // Track usage
     try {
-      base44.analytics.track({
-        eventName: 'ada_ai_helper_query',
-        properties: { page: pageTitle, query: text.trim().substring(0, 100) },
-      });
+      trackEvent('ada_ai_helper_query', { page: pageTitle, query: text.trim().substring(0, 100) }, 'AskADAHelper');
     } catch {}
   }, [messages, isLoading, pageContext, pageTitle, readingLevel]);
 

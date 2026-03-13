@@ -29,7 +29,6 @@ export default function StandardsGuide() {
     if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     if (val.trim()) {
       searchTimerRef.current = setTimeout(() => {
-        base44.analytics.track({ eventName: 'guide_search', properties: { query: val.trim() } });
         trackEvent('guide_search', { query: val.trim() }, 'StandardsGuide');
       }, 1000);
     }

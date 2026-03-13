@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { X, CheckCircle } from 'lucide-react';
+import trackEvent from './analytics/trackEvent';
 
 const TYPES = [
   { value: 'suggestion', label: 'Suggestion' },
@@ -67,7 +68,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
           testimonial_consent: form.testimonial_consent,
         } : {}),
       });
-      base44.analytics.track({ eventName: 'feedback_submitted', properties: { feedback_type: form.feedback_type } });
+      trackEvent('feedback_submitted', { feedback_type: form.feedback_type }, 'FeedbackModal');
     } catch (err) { console.error('Feedback submit error:', err); }
     setSubmitting(false);
     setSuccess(true);

@@ -56,6 +56,14 @@ export default function LawyerRegister() {
     setSubmitError('');
 
     try {
+      // Prevent duplicate registrations with the same email
+      const existing = await base44.entities.LawyerProfile.filter({ email: form.email.trim() });
+      if (existing && existing.length > 0) {
+        setSubmitError('An application with this email address already exists. If you need help accessing your account, contact support@adalegallink.com.');
+        setSubmitting(false);
+        return;
+      }
+
       await base44.entities.LawyerProfile.create({
         full_name: form.full_name.trim(),
         firm_name: form.firm_name.trim(),

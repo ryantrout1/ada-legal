@@ -228,7 +228,7 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
 
         {/* ── Footer ── */}
         <div style={{ padding: '0 24px 20px' }}>
-          <button type="button" onClick={() => { base44.analytics.track({ eventName: 'attorney_connect_clicked', properties: { case_id: c.id, violation_type: c.violation_type } }); trackEvent('attorney_connect_clicked', { case_id: c.id, violation_type: c.violation_type }, 'Marketplace'); onInitiate(c); }} style={{
+          <button type="button" onClick={() => { trackEvent('attorney_connect_clicked', { case_id: c.id, violation_type: c.violation_type }, 'Marketplace'); onInitiate(c); }} style={{
             width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
             gap: '8px', padding: '16px',
             fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,

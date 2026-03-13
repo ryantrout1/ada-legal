@@ -4,7 +4,7 @@ import { X, Zap } from 'lucide-react';
 import TriageCaseDetail from './TriageCaseDetail';
 import TriageRejectModal from './TriageRejectModal';
 import TriageFlagModal from './TriageFlagModal';
-import { caseRejectedEmail } from '../../emails/caseEmails';
+import { renderEmailTemplate } from '../../emails/renderTemplate';
 
 const SEVERITY_ORDER = { high: 0, medium: 1, low: 2 };
 
@@ -103,13 +103,16 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
       actor_role: 'admin', visible_to_user: true, created_at: now,
     });
     const emailReasonText = (REJECT_REASONS_EMAIL.find(r => r.value === reason)?.emailText || '') + (comment ? ' ' + comment : '');
-    const portalUrl = window.location.origin + '/MyCases';
     try {
-      await base44.integrations.Core.SendEmail({
-        to: currentCase.contact_email,
-        subject: 'ADA Legal Link — Submission Update',
-        body: caseRejectedEmail(currentCase, emailReasonText, portalUrl),
+      const rendered = await renderEmailTemplate('case_rejected', {
+        reporter_name: currentCase.contact_name,
+        business_name: currentCase.business_name,
+        rejection_reason: emailReasonText,
+        case_url: window.location.origin + '/MyCases',
+        standards_guide_url: window.location.origin + '/StandardsGuide',
+        intake_url: window.location.origin + '/Intake'
       });
+      if (rendered) await base44.integrations.Core.SendEmail({ to: currentCase.contact_email, subject: rendered.subject, body: rendered.body });
     } catch (e) { console.error('Rejection email failed:', e); }
     setStats(s => ({ ...s, rejected: s.rejected + 1 }));
     setSaving(false);

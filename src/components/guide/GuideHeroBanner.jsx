@@ -8,7 +8,6 @@ import ShareBar from './ShareBar';
 
 export default function GuideHeroBanner({ title, typeBadge, badgeColor }) {
   useEffect(() => {
-    base44.analytics.track({ eventName: 'guide_section_viewed', properties: { section_name: title } });
     trackEvent('guide_section_viewed', { section_name: title }, 'GuideSection');
   }, [title]);
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { base44 } from '@/api/base44Client';
 import { ChevronLeft, ChevronRight, ArrowRight, BookOpen, Scale, Sparkles } from 'lucide-react';
 import GuideStyles from './GuideStyles';
 import GuideHeroBanner from './GuideHeroBanner';
@@ -215,7 +214,7 @@ function SectionBlock({ index, number, title, plain, legal, simple, diagram, isO
               }}>
                 Does this standard describe a barrier you've encountered?
               </p>
-              <Link to={createPageUrl('Intake')} onClick={() => base44.analytics.track({ eventName: 'guide_to_report_conversion', properties: { source: `chapter_${chapterNum}_inline` } })} style={{
+              <Link to={createPageUrl('Intake')} onClick={() => trackEvent('guide_to_report_conversion', { source: `chapter_${chapterNum}_inline` }, 'GuideChapter')} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
                 color: 'var(--section-label)', textDecoration: 'none',
