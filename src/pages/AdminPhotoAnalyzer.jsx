@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import AdminPageHeader from '../components/admin/shared/AdminPageHeader';
-import { Camera, Upload, AlertTriangle, CheckCircle, Info, Clock, ChevronDown, ChevronUp, Plus, X } from 'lucide-react';
+import { Camera, Upload, AlertTriangle, CheckCircle, Info, Clock, ChevronDown, ChevronUp, Plus, X, Trash2 } from 'lucide-react';
 
 const ADA_SYSTEM_PROMPT = `You are an ADA accessibility compliance analyst. Examine photos of physical locations (entrances, parking lots, restrooms, signage, pathways, counters, etc.) and identify potential ADA compliance concerns based on the 2010 ADA Standards for Accessible Design.
 
@@ -74,14 +74,21 @@ function RiskPill({ risk }) {
   );
 }
 
-function HistoryRow({ record, onSelect, isSelected }) {
+function HistoryRow({ record, onSelect, isSelected, onDelete }) {
   const result = (() => { try { return typeof record.analysis_result === 'string' ? JSON.parse(record.analysis_result) : (record.analysis_result || {}); } catch { return {}; } })();
   const thumbUrl = result.uploadedUrls?.[0];
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  function handleDeleteClick(e) {
+    e.stopPropagation();
+    if (confirmDelete) { onDelete(record); } else { setConfirmDelete(true); }
+  }
+
   return (
     <article
       aria-label={'Analysis: ' + (record.location_label || 'Unlabeled')}
       aria-current={isSelected ? 'true' : undefined}
-      onClick={() => onSelect(record)}
+      onClick={() => { setConfirmDelete(false); onSelect(record); }}
       onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onSelect(record)}
       tabIndex={0}
       role="button"
@@ -89,7 +96,7 @@ function HistoryRow({ record, onSelect, isSelected }) {
         padding: '12px 14px', borderRadius: 8, cursor: 'pointer', marginBottom: 6,
         background: isSelected ? 'var(--card-bg-tinted)' : 'var(--card-bg)',
         border: '1px solid ' + (isSelected ? 'var(--accent)' : 'var(--card-border)'),
-        outline: 'none',
+        outline: 'none', position: 'relative',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
@@ -112,6 +119,27 @@ function HistoryRow({ record, onSelect, isSelected }) {
           {result.summary}
         </p>
       )}
+      {/* Delete button */}
+      <button
+        onClick={handleDeleteClick}
+        onBlur={() => setConfirmDelete(false)}
+        aria-label={confirmDelete ? 'Confirm delete' : 'Delete this analysis'}
+        title={confirmDelete ? 'Click again to confirm' : 'Delete'}
+        style={{
+          position: 'absolute', bottom: 10, right: 10,
+          display: 'inline-flex', alignItems: 'center', gap: 4,
+          padding: confirmDelete ? '3px 8px' : '4px 6px',
+          borderRadius: 5, border: '1px solid',
+          background: confirmDelete ? 'var(--err-bg)' : 'transparent',
+          borderColor: confirmDelete ? 'var(--err-bd)' : 'transparent',
+          color: confirmDelete ? 'var(--err-fg)' : 'var(--body-secondary)',
+          cursor: 'pointer', fontSize: 11, fontFamily: 'Manrope, sans-serif', fontWeight: 600,
+          transition: 'all 0.15s',
+        }}
+      >
+        <Trash2 size={12} aria-hidden="true" />
+        {confirmDelete && 'Delete?'}
+      </button>
     </article>
   );
 }
@@ -335,6 +363,14 @@ Analyze these photos for ADA compliance concerns. Respond with JSON only — no 
     setLocationLabel(''); setError('');
   }
 
+  async function deleteRecord(record) {
+    try {
+      await base44.entities.PhotoAnalysis.delete(record.id);
+      setHistory(prev => prev.filter(r => r.id !== record.id));
+      if (selectedRecord?.id === record.id) startNew();
+    } catch (e) { console.error('Delete failed:', e); }
+  }
+
   if (pageLoading) return (
     <div role="status" aria-label="Loading ADA Photo Analyzer" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
       <div className="a11y-spinner" aria-hidden="true" />
@@ -415,7 +451,7 @@ Analyze these photos for ADA compliance concerns. Respond with JSON only — no 
                 </p>
               ) : (
                 <div role="list" aria-label="Past analyses">
-                  {history.map(r => <div key={r.id} role="listitem"><HistoryRow record={r} onSelect={selectRecord} isSelected={selectedRecord?.id === r.id} /></div>)}
+                  {history.map(r => <div key={r.id} role="listitem"><HistoryRow record={r} onSelect={selectRecord} isSelected={selectedRecord?.id === r.id} onDelete={deleteRecord} /></div>)}
                 </div>
               )}
             </div>
@@ -513,20 +549,15 @@ Analyze these photos for ADA compliance concerns. Respond with JSON only — no 
 
             {/* Viewing a saved record */}
             {selectedRecord && (
-              <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 10, padding: '16px 20px', marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-                <div>
-                  <h2 style={{ margin: '0 0 4px', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', fontFamily: 'Fraunces, serif' }}>
-                    {selectedRecord.location_label || 'Unlabeled Analysis'}
-                  </h2>
-                  <p style={{ margin: 0, fontSize: 12, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <Clock size={12} aria-hidden="true" />
-                    <time dateTime={selectedRecord.created_date}>{formatDate(selectedRecord.created_date)}</time>
-                    {' · '}{selectedRecord.photo_count} photo{selectedRecord.photo_count !== 1 ? 's' : ''}
-                  </p>
-                </div>
-                <button onClick={startNew} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 20px', minHeight: 44, borderRadius: 8, background: 'var(--accent)', color: '#FFFFFF', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '0.875rem', fontFamily: 'Manrope, sans-serif' }}>
-                  <Plus size={16} aria-hidden="true" /> New Analysis
-                </button>
+              <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 10, padding: '16px 20px', marginBottom: 20 }}>
+                <h2 style={{ margin: '0 0 4px', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', fontFamily: 'Fraunces, serif' }}>
+                  {selectedRecord.location_label || 'Unlabeled Analysis'}
+                </h2>
+                <p style={{ margin: 0, fontSize: 12, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Clock size={12} aria-hidden="true" />
+                  <time dateTime={selectedRecord.created_date}>{formatDate(selectedRecord.created_date)}</time>
+                  {' · '}{selectedRecord.photo_count} photo{selectedRecord.photo_count !== 1 ? 's' : ''}
+                </p>
               </div>
             )}
 
