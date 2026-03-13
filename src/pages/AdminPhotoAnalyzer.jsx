@@ -31,14 +31,6 @@ Key standards: door clearance min 32" (§404.2.3), ramp slope max 1:12 (§405.2)
 
 This is informational only, not a professional inspection. Be thorough but measured.`;
 
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
 
 function formatDate(iso) {
   if (!iso) return '';
@@ -268,27 +260,43 @@ export default function AdminPhotoAnalyzer() {
     if (!files.length) { setError('Please upload at least one photo before running the analysis.'); return; }
     setLoading(true); setError(''); setResult(null);
     try {
-      const base64Images = await Promise.all(files.map(f => fileToBase64(f)));
-      const content = [
-        ...base64Images.map(b64 => ({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } })),
-        { type: 'text', text: 'Please analyze ' + (base64Images.length > 1 ? 'these ' + base64Images.length + ' photos' : 'this photo') + ' for ADA compliance concerns. Location: ' + (locationLabel || 'Not specified') + '.' }
-      ];
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: ADA_SYSTEM_PROMPT, messages: [{ role: 'user', content }] })
+      // Step 1: Upload each photo to Base44 CDN to get accessible URLs
+      const uploadedUrls = [];
+      for (const file of files) {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        if (file_url) uploadedUrls.push(file_url);
+      }
+      if (!uploadedUrls.length) throw new Error('Photo upload failed — no URLs returned.');
+
+      // Step 2: Build prompt with image URLs embedded
+      const imageList = uploadedUrls.map((url, i) => `Photo ${i + 1}: ${url}`).join('\n');
+      const fullPrompt = `${ADA_SYSTEM_PROMPT}
+
+Location being assessed: ${locationLabel || 'Not specified'}
+Number of photos: ${uploadedUrls.length}
+
+Photos to analyze:
+${imageList}
+
+Analyze these photos for ADA compliance concerns. Respond with JSON only — no markdown, no preamble.`;
+
+      // Step 3: InvokeLLM through Base44 backend (API key managed server-side)
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: fullPrompt,
+        add_context_from_internet: false,
       });
-      const data = await response.json();
-      const rawText = data.content?.find(b => b.type === 'text')?.text || '';
+
+      const rawText = typeof response === 'string' ? response : (response?.result || response?.text || '');
       const parsed = JSON.parse(rawText.replace(/```json|```/g, '').trim());
       setResult(parsed);
       setTimeout(() => resultsRef.current?.focus(), 100);
+
       try {
         const saved = await base44.entities.PhotoAnalysis.create({ location_label: locationLabel || 'Unlabeled', photo_count: files.length, analysis_result: parsed, overall_risk: parsed.overallRisk || 'NONE' });
         setHistory(prev => [saved, ...prev]);
         setSelectedRecord(saved);
       } catch (dbErr) { console.warn('DB persist failed:', dbErr); }
-    } catch (e) { setError('Analysis failed. Please check your connection and try again.'); console.error(e); }
+    } catch (e) { setError('Analysis failed — ' + (e?.message || 'please check your connection and try again.')); console.error(e); }
     setLoading(false);
   }
 
