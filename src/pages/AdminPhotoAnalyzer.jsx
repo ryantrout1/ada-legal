@@ -120,57 +120,69 @@ function ConcernCard({ concern }) {
   const [open, setOpen] = useState(true);
   const SEV_BORDER = { HIGH: 'var(--err-bd)', MEDIUM: 'var(--wrn-bd)', LOW: 'var(--inf-bd)' };
   const SEV_BG     = { HIGH: 'var(--err-bg)', MEDIUM: 'var(--wrn-bg)', LOW: 'var(--inf-bg)' };
+  // Extract ADA section reference if present (e.g. §404.2.5)
+  const sectionMatch = concern.detail?.match(/§[\d.]+/);
+  const adaSection = sectionMatch ? sectionMatch[0] : null;
   return (
-    <div style={{ borderRadius: 8, border: '1px solid ' + (SEV_BORDER[concern.severity] || SEV_BORDER.LOW), background: SEV_BG[concern.severity] || SEV_BG.LOW, marginBottom: 8, overflow: 'hidden' }}>
+    <div style={{ borderRadius: 8, border: '1px solid ' + (SEV_BORDER[concern.severity] || SEV_BORDER.LOW), background: SEV_BG[concern.severity] || SEV_BG.LOW, marginBottom: 10, overflow: 'hidden' }}>
       <button
         onClick={() => setOpen(o => !o)}
         aria-expanded={open}
-        style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', minHeight: 44 }}
+        style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', minHeight: 44 }}
       >
         <SeverityBadge severity={concern.severity} />
-        <span style={{ flex: 1, fontSize: 13, fontWeight: 600, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>{concern.title}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.3 }}>{concern.title}</div>
+          {adaSection && (
+            <div style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 2, fontWeight: 500 }}>{adaSection}</div>
+          )}
+        </div>
         {open ? <ChevronUp size={16} aria-hidden="true" style={{ color: 'var(--body-secondary)', flexShrink: 0 }} />
                : <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--body-secondary)', flexShrink: 0 }} />}
       </button>
       {open && (
-        <div style={{ padding: '0 14px 12px', borderTop: '1px solid ' + (SEV_BORDER[concern.severity] || SEV_BORDER.LOW) }}>
-          <p style={{ fontSize: 13, color: 'var(--body)', lineHeight: 1.6, margin: '10px 0 8px', fontFamily: 'Manrope, sans-serif' }}>{concern.detail}</p>
-          {concern.remediation && (
-            <div style={{ padding: '8px 12px', borderRadius: 6, background: 'var(--accent-success-bg)', border: '1px solid var(--accent-success)' }}>
-              <p style={{ fontSize: 12, color: 'var(--heading)', margin: 0, lineHeight: 1.5, fontFamily: 'Manrope, sans-serif' }}>
-                <strong style={{ color: 'var(--success-600)' }}>Recommended fix: </strong>{concern.remediation}
-              </p>
-            </div>
-          )}
+        <div style={{ padding: '0 14px 14px', borderTop: '1px solid ' + (SEV_BORDER[concern.severity] || SEV_BORDER.LOW) }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--heading)', lineHeight: 1.6, margin: '12px 0 0', fontFamily: 'Manrope, sans-serif' }}>{concern.detail}</p>
         </div>
       )}
     </div>
   );
 }
 
-function AnalysisResults({ result }) {
+function AnalysisResults({ result, photoUrls, onReport }) {
   if (!result) return null;
   const totalConcerns = result.photos?.reduce((s, p) => s + (p.concerns?.length || 0), 0) || 0;
-  const highCount = result.photos?.reduce((s, p) => s + (p.concerns?.filter(c => c.severity === 'HIGH').length || 0), 0) || 0;
+  const likelyCount = result.photos?.reduce((s, p) => s + (p.concerns?.filter(c => c.severity === 'HIGH').length || 0), 0) || 0;
+  const photoCount = result.photos?.length || 0;
   return (
     <section aria-label="Analysis results">
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginBottom: 16, padding: '12px 16px', background: 'var(--card-bg-tinted)', border: '1px solid var(--card-border)', borderRadius: 8 }}>
-        <RiskPill risk={result.overallRisk} />
-        <span style={{ fontSize: 13, color: 'var(--body)', fontFamily: 'Manrope, sans-serif' }}>{totalConcerns} concern{totalConcerns !== 1 ? 's' : ''} identified</span>
-        {highCount > 0 && (
-          <span style={{ fontSize: 13, color: 'var(--err-fg)', fontWeight: 700, fontFamily: 'Manrope, sans-serif', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <AlertTriangle size={14} aria-hidden="true" /> {highCount} high severity
-          </span>
-        )}
+
+      {/* Stat bar — mirrors original prototype */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 20 }}>
+        {[
+          { value: photoCount, label: 'Photos Analyzed', color: 'var(--body)' },
+          { value: totalConcerns, label: 'Concerns Found', color: totalConcerns > 0 ? 'var(--wrn-fg)' : 'var(--body)' },
+          { value: likelyCount, label: 'Likely Violations', color: likelyCount > 0 ? 'var(--err-fg)' : 'var(--body)' },
+        ].map(({ value, label, color }) => (
+          <div key={label} style={{ padding: '14px 12px', borderRadius: 8, background: 'var(--card-bg)', border: '1px solid var(--card-border)', textAlign: 'center' }}>
+            <div style={{ fontSize: 28, fontWeight: 800, color, fontFamily: 'Fraunces, serif', lineHeight: 1 }}>{value}</div>
+            <div style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 4, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</div>
+          </div>
+        ))}
       </div>
+
       {result.summary && (
-        <p style={{ fontSize: 14, color: 'var(--body)', lineHeight: 1.7, marginBottom: 20, padding: '14px 16px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 8, fontFamily: 'Manrope, sans-serif' }}>
-          {result.summary}
-        </p>
+        <div style={{ fontSize: 14, color: 'var(--body)', lineHeight: 1.7, marginBottom: 20, padding: '14px 16px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 8, fontFamily: 'Manrope, sans-serif' }}>
+          <strong style={{ color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>Summary: </strong>{result.summary}
+        </div>
       )}
+
       {result.photos?.map((photo, idx) => (
         <section key={idx} aria-label={'Photo ' + (idx + 1) + ' results'} style={{ marginBottom: 20, borderRadius: 10, border: '1px solid var(--card-border)', background: 'var(--card-bg)', overflow: 'hidden' }}>
-          <div style={{ padding: '10px 16px', background: 'var(--slate-100)', borderBottom: '1px solid var(--card-border)' }}>
+          <div style={{ padding: '10px 16px', background: 'var(--slate-100)', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 12 }}>
+            {photoUrls?.[idx] && (
+              <img src={photoUrls[idx]} alt="" aria-hidden="true" style={{ width: 36, height: 36, objectFit: 'cover', borderRadius: 5, flexShrink: 0, border: '1px solid var(--card-border)' }} />
+            )}
             <h3 style={{ margin: 0, fontSize: 12, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Photo {idx + 1}
             </h3>
@@ -182,21 +194,26 @@ function AnalysisResults({ result }) {
                 {photo.concerns.map((c, ci) => <div key={ci} role="listitem"><ConcernCard concern={c} /></div>)}
               </div>
             )}
-            {photo.positiveFindings?.length > 0 && (
-              <div style={{ padding: '12px 14px', borderRadius: 8, marginTop: 4, background: 'var(--accent-success-bg)', border: '1px solid var(--accent-success)' }}>
-                <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--success-600)', marginBottom: 8, fontFamily: 'Manrope, sans-serif', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <CheckCircle size={14} aria-hidden="true" /> Compliant Features Observed
-                </p>
-                <ul style={{ margin: 0, paddingLeft: 16 }}>
-                  {photo.positiveFindings.map((f, fi) => (
-                    <li key={fi} style={{ fontSize: 12, color: 'var(--body)', lineHeight: 1.6, marginBottom: 2, fontFamily: 'Manrope, sans-serif' }}>{f}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
         </section>
       ))}
+
+      {/* CTA — if concerns found, prompt to file */}
+      {totalConcerns > 0 && onReport && (
+        <div style={{ padding: '16px 20px', borderRadius: 8, background: 'var(--card-bg-tinted)', border: '1px solid var(--accent)', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>Potential violation documented</div>
+            <div style={{ fontSize: 12, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 2 }}>Ready to submit a formal report? Connect with an ADA attorney.</div>
+          </div>
+          <button
+            onClick={onReport}
+            style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44 }}
+          >
+            File a Report
+          </button>
+        </div>
+      )}
+
       <aside aria-label="Legal disclaimer" style={{ padding: '12px 16px', borderRadius: 8, background: 'var(--banner-info-bg)', border: '1px solid var(--banner-info-border)', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
         <Info size={16} aria-hidden="true" style={{ color: 'var(--banner-info-text)', flexShrink: 0, marginTop: 1 }} />
         <p style={{ fontSize: 12, color: 'var(--banner-info-text)', lineHeight: 1.6, margin: 0, fontFamily: 'Manrope, sans-serif' }}>
@@ -516,7 +533,7 @@ Analyze these photos for ADA compliance concerns. Respond with JSON only — no 
             {/* Results */}
             {result && (
               <div ref={resultsRef} tabIndex={-1} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 10, padding: 20, outline: 'none' }}>
-                <AnalysisResults result={result} />
+                <AnalysisResults result={result} photoUrls={result?.uploadedUrls} onReport={() => window.location.href = '/Intake'} />
               </div>
             )}
 
