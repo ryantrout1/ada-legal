@@ -76,6 +76,7 @@ function RiskPill({ risk }) {
 
 function HistoryRow({ record, onSelect, isSelected }) {
   const result = (() => { try { return typeof record.analysis_result === 'string' ? JSON.parse(record.analysis_result) : (record.analysis_result || {}); } catch { return {}; } })();
+  const thumbUrl = result.uploadedUrls?.[0];
   return (
     <article
       aria-label={'Analysis: ' + (record.location_label || 'Unlabeled')}
@@ -92,6 +93,9 @@ function HistoryRow({ record, onSelect, isSelected }) {
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+        {thumbUrl && (
+          <img src={thumbUrl} alt="" aria-hidden="true" style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 6, flexShrink: 0, border: '1px solid var(--card-border)' }} />
+        )}
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {record.location_label || 'Unlabeled'}
@@ -288,11 +292,12 @@ Analyze these photos for ADA compliance concerns. Respond with JSON only — no 
 
       const rawText = typeof response === 'string' ? response : (response?.result || response?.text || '');
       const parsed = JSON.parse(rawText.replace(/```json|```/g, '').trim());
-      setResult(parsed);
+      const parsedWithUrls = { ...parsed, uploadedUrls };
+      setResult(parsedWithUrls);
       setTimeout(() => resultsRef.current?.focus(), 100);
 
       try {
-        const saved = await base44.entities.PhotoAnalysis.create({ location_label: locationLabel || 'Unlabeled', photo_count: files.length, analysis_result: JSON.stringify(parsed), image_url: uploadedUrls[0] || '', overall_risk: parsed.overallRisk || 'NONE' });
+        const saved = await base44.entities.PhotoAnalysis.create({ location_label: locationLabel || 'Unlabeled', photo_count: files.length, analysis_result: JSON.stringify(parsedWithUrls), image_url: uploadedUrls[0] || 'none', overall_risk: parsed.overallRisk || 'NONE' });
         setHistory(prev => [saved, ...prev]);
         setSelectedRecord(saved);
       } catch (dbErr) { console.warn('DB persist failed:', dbErr); }
