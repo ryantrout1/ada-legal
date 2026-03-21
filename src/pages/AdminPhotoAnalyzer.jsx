@@ -572,7 +572,7 @@ function BatchReanalysisModal({ history, onClose, onComplete, runAnalysisForReco
   );
 }
 
-
+export default function AdminPhotoAnalyzer() {
   const [files, setFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [locationLabel, setLocationLabel] = useState('');
