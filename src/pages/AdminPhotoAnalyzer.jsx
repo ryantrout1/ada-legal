@@ -463,7 +463,9 @@ function BatchReanalysisModal({ history, onClose, onComplete, runAnalysisForReco
   const [jobs, setJobs] = useState(() =>
     history.map(r => {
       const parsed = (() => { try { return typeof r.analysis_result === 'string' ? JSON.parse(r.analysis_result) : (r.analysis_result || {}); } catch { return {}; } })();
-      const urls = parsed.uploadedUrls || (parsed.image_url && parsed.image_url !== 'none' ? [parsed.image_url] : []);
+      const urls = parsed.uploadedUrls
+        || (r.image_url && r.image_url !== 'none' ? [r.image_url] : null)
+        || (parsed.image_url && parsed.image_url !== 'none' ? [parsed.image_url] : []);
       return { record: r, urls, status: urls.length ? 'pending' : 'skipped', error: null };
     })
   );
@@ -806,6 +808,12 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
     });
 
     const parsed = typeof response === 'object' ? response : JSON.parse(response);
+
+    // Guard: if vision returned no photos, something went wrong — don't overwrite good data
+    if (!parsed.photos || parsed.photos.length === 0) {
+      throw new Error('Vision model returned empty analysis — photos may be inaccessible. Original data preserved.');
+    }
+
     const parsedWithUrls = { ...parsed, uploadedUrls };
 
     // Update the DB record — only update analysis_result (preserve all other fields)
