@@ -783,10 +783,10 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
     const parsed = typeof response === 'object' ? response : JSON.parse(response);
     const parsedWithUrls = { ...parsed, uploadedUrls };
 
-    // Update the DB record — preserve photo URLs, update analysis only
+    // Update the DB record — only update analysis_result (preserve all other fields)
+    // overall_risk is intentionally omitted — Base44 may reject unknown fields in update
     await base44.entities.PhotoAnalysis.update(record.id, {
       analysis_result: JSON.stringify(parsedWithUrls),
-      overall_risk: parsed.overallRisk || 'NONE',
     });
 
     // Update in-memory history so the sidebar reflects new risk immediately
