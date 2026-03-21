@@ -173,12 +173,26 @@ function RiskPill({ risk }) {
 
 function HistoryRow({ record, onSelect, isSelected, onDelete }) {
   const result = (() => { try { return typeof record.analysis_result === 'string' ? JSON.parse(record.analysis_result) : (record.analysis_result || {}); } catch { return {}; } })();
-  const thumbUrl = result.uploadedUrls?.[0];
+  // Fall back to top-level record.image_url if uploadedUrls not in analysis_result
+  const thumbUrl = result.uploadedUrls?.[0] || (record.image_url && record.image_url !== 'none' ? record.image_url : null);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   function handleDeleteClick(e) {
     e.stopPropagation();
     if (confirmDelete) { onDelete(record); } else { setConfirmDelete(true); }
+  }
+
+  function handleThumbClick(e) {
+    e.stopPropagation();
+    if (!thumbUrl) return;
+    const a = document.createElement('a');
+    a.href = thumbUrl;
+    a.download = (record.location_label || 'photo') + '_1.jpg';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   return (
@@ -198,7 +212,15 @@ function HistoryRow({ record, onSelect, isSelected, onDelete }) {
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
         {thumbUrl && (
-          <img src={thumbUrl} alt="" aria-hidden="true" style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 6, flexShrink: 0, border: '1px solid var(--card-border)' }} />
+          <button
+            onClick={handleThumbClick}
+            aria-label="Download photo"
+            title="Click to download"
+            style={{ padding: 0, background: 'none', border: 'none', cursor: 'pointer', borderRadius: 6, flexShrink: 0, position: 'relative' }}
+          >
+            <img src={thumbUrl} alt="Download photo" style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 6, border: '1px solid var(--card-border)', display: 'block' }} />
+            <span aria-hidden="true" style={{ position: 'absolute', bottom: 2, right: 2, fontSize: 9, background: 'rgba(0,0,0,0.6)', color: '#fff', borderRadius: 3, padding: '1px 3px', lineHeight: 1.2, fontFamily: 'Manrope, sans-serif' }}>↓</span>
+          </button>
         )}
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -407,14 +429,26 @@ function AnalysisResults({ result, photoUrls, onReport }) {
         <section key={idx} aria-label={'Photo ' + (idx + 1) + ' results'} style={{ marginBottom: 20, borderRadius: 10, border: '1px solid var(--card-border)', background: 'var(--card-bg)', overflow: 'hidden' }}>
           <div style={{ padding: '10px 16px', background: 'var(--slate-100)', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 12 }}>
             {photoUrls?.[idx] && (
-              <button
-                onClick={() => setLightboxUrl(photoUrls[idx])}
-                aria-label={'View photo ' + (idx + 1) + ' full size'}
-                title="Click to enlarge"
-                style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 5, flexShrink: 0 }}
-              >
-                <img src={photoUrls[idx]} alt={'Photo ' + (idx + 1)} style={{ width: 36, height: 36, objectFit: 'cover', borderRadius: 5, border: '1px solid var(--card-border)', display: 'block' }} />
-              </button>
+              <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexShrink: 0 }}>
+                <button
+                  onClick={() => setLightboxUrl(photoUrls[idx])}
+                  aria-label={'View photo ' + (idx + 1) + ' full size'}
+                  title="Click to enlarge"
+                  style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 5 }}
+                >
+                  <img src={photoUrls[idx]} alt={'Photo ' + (idx + 1)} style={{ width: 36, height: 36, objectFit: 'cover', borderRadius: 5, border: '1px solid var(--card-border)', display: 'block' }} />
+                </button>
+                <a
+                  href={photoUrls[idx]}
+                  download={'photo_' + (idx + 1) + '.jpg'}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={'Download photo ' + (idx + 1)}
+                  title="Download photo"
+                  onClick={e => e.stopPropagation()}
+                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: 4, background: 'var(--card-bg)', border: '1px solid var(--card-border)', color: 'var(--body-secondary)', textDecoration: 'none', fontSize: 12 }}
+                >↓</a>
+              </div>
             )}
             <h3 style={{ margin: 0, fontSize: 12, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Photo {idx + 1}
