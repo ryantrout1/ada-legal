@@ -628,6 +628,31 @@ export default function AdminPhotoAnalyzer() {
 
   const handleDrop = useCallback(e => { e.preventDefault(); setDragOver(false); handleFiles(e.dataTransfer.files); }, [previews]);
 
+  // Strip verbose fields before DB storage to stay under Base44's field size limit.
+  // The full result (with remediation, long descriptions) lives in React state for display.
+  // On reload, we reconstruct from the lean stored version — display fields are still shown,
+  // just without remediation text (which users see on fresh analyses anyway).
+  function compressForStorage(parsedWithUrls) {
+    return JSON.stringify({
+      summary: parsedWithUrls.summary,
+      overallRisk: parsedWithUrls.overallRisk,
+      crossPhotoFindings: parsedWithUrls.crossPhotoFindings,
+      uploadedUrls: parsedWithUrls.uploadedUrls,
+      photos: (parsedWithUrls.photos || []).map(p => ({
+        photoIndex: p.photoIndex,
+        description: p.description,
+        positiveFindings: p.positiveFindings,
+        concerns: (p.concerns || []).map(c => ({
+          title: c.title,
+          severity: c.severity,
+          confidence: c.confidence,
+          // Truncate detail and drop remediation to save space
+          detail: c.detail ? c.detail.slice(0, 200) : c.detail,
+        })),
+      })),
+    });
+  }
+
   async function runAnalysis() {
     if (!files.length) { setError('Please upload at least one photo before running the analysis.'); return; }
     setLoading(true); setError(''); setResult(null);
@@ -700,7 +725,7 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
       setTimeout(() => resultsRef.current?.focus(), 100);
 
       try {
-        const saved = await base44.entities.PhotoAnalysis.create({ location_label: locationLabel || 'Unlabeled', photo_count: files.length, analysis_result: JSON.stringify(parsedWithUrls), image_url: uploadedUrls[0] || 'none', overall_risk: parsed.overallRisk || 'NONE' });
+        const saved = await base44.entities.PhotoAnalysis.create({ location_label: locationLabel || 'Unlabeled', photo_count: files.length, analysis_result: compressForStorage(parsedWithUrls), image_url: uploadedUrls[0] || 'none', overall_risk: parsed.overallRisk || 'NONE' });
         setHistory(prev => [saved, ...prev]);
         setSelectedRecord(saved);
       } catch (dbErr) { console.warn('DB persist failed:', dbErr); }
@@ -786,12 +811,12 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
     // Update the DB record — only update analysis_result (preserve all other fields)
     // overall_risk is intentionally omitted — Base44 may reject unknown fields in update
     await base44.entities.PhotoAnalysis.update(record.id, {
-      analysis_result: JSON.stringify(parsedWithUrls),
+      analysis_result: compressForStorage(parsedWithUrls),
     });
 
-    // Update in-memory history so the sidebar reflects new risk immediately
+    // Update in-memory history with compressed version (matches what's in DB)
     setHistory(prev => prev.map(r => r.id === record.id
-      ? { ...r, analysis_result: JSON.stringify(parsedWithUrls), overall_risk: parsed.overallRisk || 'NONE' }
+      ? { ...r, analysis_result: compressForStorage(parsedWithUrls), overall_risk: parsed.overallRisk || 'NONE' }
       : r
     ));
 
