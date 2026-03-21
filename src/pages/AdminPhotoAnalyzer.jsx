@@ -275,6 +275,22 @@ function ConcernCard({ concern }) {
               </p>
             </div>
           )}
+          {concern.confidence && (
+            <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 5 }}>
+              <span style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif' }}>
+                Visual confidence:
+              </span>
+              <span style={{
+                fontSize: 10, fontWeight: 700, fontFamily: 'Manrope, sans-serif', letterSpacing: '0.05em',
+                padding: '1px 6px', borderRadius: 4,
+                color: concern.confidence === 'HIGH' ? 'var(--suc-fg)' : concern.confidence === 'LOW' ? 'var(--wrn-fg)' : 'var(--body-secondary)',
+                background: concern.confidence === 'HIGH' ? 'var(--suc-bg)' : concern.confidence === 'LOW' ? 'var(--wrn-bg)' : 'var(--slate-100)',
+                border: '1px solid ' + (concern.confidence === 'HIGH' ? 'var(--suc-bd)' : concern.confidence === 'LOW' ? 'var(--wrn-bd)' : 'var(--card-border)'),
+              }}>
+                {concern.confidence === 'LOW' ? '⚠ Estimated — verify on-site' : concern.confidence === 'HIGH' ? '✓ Clearly visible' : '~ Likely — verify on-site'}
+              </span>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -510,29 +526,61 @@ export default function AdminPhotoAnalyzer() {
       }
       if (!uploadedUrls.length) throw new Error('Photo upload failed — no URLs returned.');
 
-      // Step 2: Build prompt with image URLs embedded
-      const imageList = uploadedUrls.map((url, i) => `Photo ${i + 1}: ${url}`).join('\n');
+      // Step 2: Call Claude vision model via Base44 InvokeLLM
+      // file_urls passes the uploaded CDN images directly to the vision model
+      // response_json_schema ensures structured output without regex parsing
       const multiPhotoNote = uploadedUrls.length > 1
-        ? `\nIMPORTANT: These ${uploadedUrls.length} photos are from the SAME location. Analyze them holistically. Look for cross-photo compliance chains (e.g. a ramp in one photo leading to a door in another). Your crossPhotoFindings field should summarize any patterns you see across photos.\n`
+        ? `\nIMPORTANT: You are receiving ${uploadedUrls.length} photos from the SAME physical location. Analyze them holistically as a set. Look for cross-photo compliance chains (e.g. a ramp in one photo leads to a door in another). Populate crossPhotoFindings when you observe patterns spanning multiple photos.\n`
         : '';
+
       const fullPrompt = `${ADA_SYSTEM_PROMPT}
 
 Location being assessed: ${locationLabel || 'Not specified'}
 Number of photos: ${uploadedUrls.length}
 ${multiPhotoNote}
-Photos to analyze:
-${imageList}
+Carefully examine each attached photo. Use your vision to assess what is actually visible. For each concern, note whether you can see it clearly or are estimating based on context.`;
 
-Analyze these photos for ADA compliance concerns. Respond with JSON only — no markdown, no preamble.`;
-
-      // Step 3: InvokeLLM through Base44 backend (API key managed server-side)
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: fullPrompt,
+        model: 'claude_sonnet_4_6',
+        file_urls: uploadedUrls,
         add_context_from_internet: false,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            summary: { type: 'string' },
+            overallRisk: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW', 'NONE'] },
+            crossPhotoFindings: { type: 'string' },
+            photos: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  photoIndex: { type: 'number' },
+                  description: { type: 'string' },
+                  concerns: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        title: { type: 'string' },
+                        detail: { type: 'string' },
+                        severity: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW'] },
+                        remediation: { type: 'string' },
+                        confidence: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW'] },
+                      }
+                    }
+                  },
+                  positiveFindings: { type: 'array', items: { type: 'string' } },
+                }
+              }
+            }
+          }
+        },
       });
 
-      const rawText = typeof response === 'string' ? response : (response?.result || response?.text || '');
-      const parsed = JSON.parse(rawText.replace(/```json|```/g, '').trim());
+      // response_json_schema returns a parsed object directly
+      const parsed = typeof response === 'object' ? response : JSON.parse(response);
       const parsedWithUrls = { ...parsed, uploadedUrls };
       setResult(parsedWithUrls);
       setTimeout(() => resultsRef.current?.focus(), 100);
