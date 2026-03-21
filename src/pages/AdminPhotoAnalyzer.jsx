@@ -177,12 +177,65 @@ function ConcernCard({ concern }) {
   );
 }
 
+function PhotoLightbox({ url, alt, onClose }) {
+  useEffect(() => {
+    function onKey(e) { if (e.key === 'Escape') onClose(); }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Full size photo"
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 9999,
+        background: 'rgba(0,0,0,0.85)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '20px',
+        cursor: 'zoom-out',
+      }}
+    >
+      <button
+        onClick={onClose}
+        aria-label="Close photo"
+        style={{
+          position: 'absolute', top: 16, right: 16,
+          width: 40, height: 40, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)',
+          color: '#fff', fontSize: 20, cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: 'Manrope, sans-serif', lineHeight: 1,
+        }}
+      >
+        ×
+      </button>
+      <img
+        src={url}
+        alt={alt || 'Full size photo'}
+        onClick={e => e.stopPropagation()}
+        style={{
+          maxWidth: '100%', maxHeight: '90vh',
+          objectFit: 'contain', borderRadius: 8,
+          boxShadow: '0 8px 40px rgba(0,0,0,0.6)',
+          cursor: 'default',
+        }}
+      />
+    </div>
+  );
+}
+
 function AnalysisResults({ result, photoUrls, onReport }) {
   if (!result) return null;
+  const [lightboxUrl, setLightboxUrl] = useState(null);
   const totalConcerns = result.photos?.reduce((s, p) => s + (p.concerns?.length || 0), 0) || 0;
   const likelyCount = result.photos?.reduce((s, p) => s + (p.concerns?.filter(c => c.severity === 'HIGH').length || 0), 0) || 0;
   const photoCount = result.photos?.length || 0;
   return (
+    <>
+    {lightboxUrl && <PhotoLightbox url={lightboxUrl} alt="Analysis photo full size" onClose={() => setLightboxUrl(null)} />}
     <section aria-label="Analysis results">
 
       {/* Stat bar — mirrors original prototype */}
@@ -209,7 +262,14 @@ function AnalysisResults({ result, photoUrls, onReport }) {
         <section key={idx} aria-label={'Photo ' + (idx + 1) + ' results'} style={{ marginBottom: 20, borderRadius: 10, border: '1px solid var(--card-border)', background: 'var(--card-bg)', overflow: 'hidden' }}>
           <div style={{ padding: '10px 16px', background: 'var(--slate-100)', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 12 }}>
             {photoUrls?.[idx] && (
-              <img src={photoUrls[idx]} alt="" aria-hidden="true" style={{ width: 36, height: 36, objectFit: 'cover', borderRadius: 5, flexShrink: 0, border: '1px solid var(--card-border)' }} />
+              <button
+                onClick={() => setLightboxUrl(photoUrls[idx])}
+                aria-label={'View photo ' + (idx + 1) + ' full size'}
+                title="Click to enlarge"
+                style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 5, flexShrink: 0 }}
+              >
+                <img src={photoUrls[idx]} alt={'Photo ' + (idx + 1)} style={{ width: 36, height: 36, objectFit: 'cover', borderRadius: 5, border: '1px solid var(--card-border)', display: 'block' }} />
+              </button>
             )}
             <h3 style={{ margin: 0, fontSize: 12, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Photo {idx + 1}
@@ -249,6 +309,7 @@ function AnalysisResults({ result, photoUrls, onReport }) {
         </p>
       </aside>
     </section>
+    </>
   );
 }
 
