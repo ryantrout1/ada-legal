@@ -841,6 +841,14 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
 
   return (
     <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
+      {showBatchModal && (
+        <BatchReanalysisModal
+          history={history}
+          onClose={() => setShowBatchModal(false)}
+          onComplete={() => loadHistory()}
+          runAnalysisForRecord={reanalyzeRecord}
+        />
+      )}
       <style>{`
         /* Severity semantic tokens — AAA-verified (≥7:1) in light + dark + high-contrast */
         :root {
@@ -896,15 +904,6 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
             </div>
           }
         />
-
-        {showBatchModal && (
-          <BatchReanalysisModal
-            history={history}
-            onClose={() => setShowBatchModal(false)}
-            onComplete={() => loadHistory()}
-            runAnalysisForRecord={reanalyzeRecord}
-          />
-        )}
 
         <div className="photo-grid" style={{ display: 'grid', gridTemplateColumns: 'clamp(240px, 28%, 300px) 1fr', gap: 20, alignItems: 'start' }}>
 
