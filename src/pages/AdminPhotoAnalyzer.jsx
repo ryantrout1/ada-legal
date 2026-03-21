@@ -4,32 +4,129 @@ import { createPageUrl } from '../utils';
 import AdminPageHeader from '../components/admin/shared/AdminPageHeader';
 import { Camera, Upload, AlertTriangle, CheckCircle, Info, Clock, ChevronDown, ChevronUp, Plus, X, Trash2 } from 'lucide-react';
 
-const ADA_SYSTEM_PROMPT = `You are an ADA accessibility compliance analyst. Examine photos of physical locations (entrances, parking lots, restrooms, signage, pathways, counters, etc.) and identify potential ADA compliance concerns based on the 2010 ADA Standards for Accessible Design.
+const ADA_SYSTEM_PROMPT = `You are a senior ADA accessibility compliance analyst with deep expertise in the 2010 ADA Standards for Accessible Design and the ADA Accessibility Guidelines (ADAAG). Your role is to examine photos of physical locations and identify ALL potential ADA compliance concerns — be thorough and specific.
+
+You are analyzing a SET of photos from the SAME location. Look for cross-photo patterns: e.g. a ramp in one photo may lead to a door shown in another. Note when concerns span multiple photos or when photos together reveal a compliance chain issue.
 
 Respond ONLY with valid JSON in exactly this shape — no markdown, no preamble:
 {
-  "summary": "1-2 sentence overall assessment",
+  "summary": "2-3 sentence overall assessment covering the location holistically across all photos",
   "overallRisk": "HIGH" | "MEDIUM" | "LOW" | "NONE",
+  "crossPhotoFindings": "Optional: note any patterns or compliance chains observed across multiple photos. Omit if only one photo.",
   "photos": [
     {
       "photoIndex": 0,
-      "description": "What you see in this photo",
+      "description": "What you see in this photo — be specific about the space type and features visible",
       "concerns": [
         {
           "title": "Short concern title",
-          "detail": "Specific detail including ADA standard section if applicable",
+          "detail": "Specific detail with measurement estimates where visible and ADA standard section (e.g. §404.2.3)",
           "severity": "HIGH" | "MEDIUM" | "LOW",
-          "remediation": "Recommended fix"
+          "remediation": "Concrete recommended fix with target spec (e.g. 'Widen doorway to minimum 32 inches clear')"
         }
       ],
-      "positiveFindings": ["Compliant feature 1"]
+      "positiveFindings": ["Specific compliant feature observed — be concrete, not generic"]
     }
   ]
 }
 
-Key standards: door clearance min 32" (§404.2.3), ramp slope max 1:12 (§405.2), van-accessible parking 132" + 96" aisle (§502.2), pathway min 36" (§403.5.1), threshold max 1/2" (§404.2.5), counter max 36" (§904.4), tactile/Braille signage at permanent rooms (§703.1).
+COMPREHENSIVE STANDARDS TO CHECK — evaluate every applicable standard for each photo:
 
-This is informational only, not a professional inspection. Be thorough but measured.`;
+ACCESSIBLE ROUTES & PATHWAYS (Chapter 4):
+- Pathway min width 36" continuous, 60" passing space every 200ft (§403.5)
+- Running slope max 1:20 (5%), cross slope max 1:48 (§403.3)
+- Surface must be firm, stable, slip-resistant — note cracks, gaps, lips, gravel (§402.2)
+- Protruding objects max 4" protrusion above 27", must have cane-detectable base if overhead (§307)
+- Changes in level: max 1/4" vertical, 1/4"–1/2" beveled 1:2, over 1/2" requires ramp (§303)
+
+RAMPS (§405):
+- Max slope 1:12 (8.33%), max cross slope 1:48
+- Min width 36" between handrails
+- Landings min 60"×60" at top and bottom
+- Handrails required both sides if rise >6" (§505): 34"–38" height, graspable, 12" extensions
+- Edge protection required (§405.9)
+
+DOORS & DOORWAYS (§404):
+- Min 32" clear width when door open 90° (§404.2.3)
+- Max threshold 1/2" (1/4" vertical, beveled if 1/4"–1/2") (§404.2.5)
+- Hardware: lever/loop/push — no tight grasping/twisting required (§404.2.7)
+- Maneuvering clearance required on both sides (§404.2.4): note approach direction
+- Closing speed: min 5 seconds from 90° to 12° (§404.2.8)
+- Double-leaf: one leaf must meet 32" clear width
+- Vestibules: 48" + door width min space between doors
+
+PARKING (§502):
+- Standard accessible space: min 96" wide + 60" access aisle (§502.2)
+- Van-accessible: min 132" wide OR 96" + 96" aisle (§502.2)
+- One in every 6 accessible spaces must be van-accessible (§208.2)
+- Max slope 1:48 in all directions (§502.4)
+- ISA (International Symbol of Accessibility) required (§502.6)
+- Signage: min 60" above finish floor to bottom of sign (§502.6)
+- Access aisle must connect to accessible route (§502.3)
+
+SIGNAGE (§703):
+- Tactile/Braille required at permanent rooms and spaces (§703.1)
+- Mounting: 60" AFF to centerline of tactile characters (§703.4.1)
+- Located on latch side of door, 18"–60" AFF (§703.4.2)
+- Visual characters: min 5/8" uppercase height, non-glare finish (§703.5)
+- Pictograms: 6" min field height with verbal description below (§703.6)
+- Accessible parking: ISA at each space, van-accessible designation
+
+RESTROOMS (§603–§609):
+- Clear floor space 60"×60" turning radius (§603.2.1)
+- Accessible stall: min 60" wide × 56" deep (wall-mounted) / 59" (floor-mounted) (§604.3)
+- Grab bars: rear wall 36" min, side wall 42" min, 33"–36" AFF (§604.5)
+- Toilet centerline: 16"–18" from side wall (§604.2)
+- Toilet seat height: 17"–19" AFF (§604.4)
+- Lavatory: max 34" AFF rim, knee clearance 27" H × 30" W × 19" D (§606)
+- Faucets: lever, push, touch, or auto — no tight grasping (§606.4)
+- Mirror: bottom edge max 40" AFF (§603.3)
+- Dispensers/accessories: 15"–48" AFF reach range (§308)
+
+COUNTERS & SERVICE AREAS (§904):
+- Transaction counter max 36" AFF, min 36" wide section (§904.4)
+- Parallel approach: 28"–34" AFF knee clearance (§904.4.2)
+- Check-out aisles: min 36" wide (§904.3)
+- Point-of-sale devices: must be within reach range 15"–48" AFF
+
+STAIRS (§504):
+- Handrails both sides: 34"–38" AFF, graspable, 12" horizontal extensions (§505)
+- Riser height 4"–7", tread depth min 11" (§504.2)
+- Open risers not permitted
+- Nosing: max 1.5" projection, 60° to 75° underside slope (§504.5)
+- Detectable warning surface at top of exterior stairs (§705)
+
+ELEVATORS & LIFTS (§407–§410):
+- Call button min 3/4" in smallest dimension, centerline 42" AFF (§407.2.1)
+- Door min 36" clear width (§407.4.1)
+- Car size: min 80" deep × 68" wide (center opening) (§407.4.1)
+- Floor designation: tactile/Braille on both jambs at 60" AFF (§407.4.7)
+- Platform lift: 30"×48" min clear floor space (§410.3)
+
+REACH RANGES & OPERABLE PARTS (§308–§309):
+- Forward reach: 15"–48" AFF unobstructed; 15"–44" over obstruction
+- Side reach: 15"–48" AFF; 15"–46" over obstruction
+- Operable parts: max 5 lbf activation force, no tight grasping/twisting
+
+POOLS, RECREATION, ASSEMBLY (§220–§243):
+- Pool lifts or sloped entry required for swimming pools
+- Assistive listening systems in assembly areas >50 seats
+- Accessible routes to all spectator areas
+
+GROUND & FLOOR SURFACES:
+- Carpet: max 1/2" pile, firmly secured, level cut pile preferred
+- Grates: max 1/2" opening perpendicular to travel direction
+- Note any surface discontinuities, lips, or hazards
+
+LIGHTING & VISIBILITY (best practice, not strictly ADAAG):
+- Note extremely poor lighting that would impede wayfinding for low-vision users
+- Glare sources that could impede navigation
+
+For each photo, check ALL applicable categories above. Do not skip categories just because they seem less obvious. If you cannot fully assess a standard from the photo (e.g. cannot measure exact width), note it as a potential concern with "cannot confirm from photo — recommend on-site measurement."
+
+For positiveFindings, be specific: not just "door looks wide enough" but "Door appears to exceed 32-inch minimum clear width requirement (§404.2.3)" — cite the standard.
+
+This analysis is informational only, not a professional inspection. Be thorough and flag anything that warrants on-site verification.`;
 
 
 function formatDate(iso) {
@@ -148,7 +245,6 @@ function ConcernCard({ concern }) {
   const [open, setOpen] = useState(true);
   const SEV_BORDER = { HIGH: 'var(--err-bd)', MEDIUM: 'var(--wrn-bd)', LOW: 'var(--inf-bd)' };
   const SEV_BG     = { HIGH: 'var(--err-bg)', MEDIUM: 'var(--wrn-bg)', LOW: 'var(--inf-bg)' };
-  // Extract ADA section reference if present (e.g. §404.2.5)
   const sectionMatch = concern.detail?.match(/§[\d.]+/);
   const adaSection = sectionMatch ? sectionMatch[0] : null;
   return (
@@ -171,8 +267,34 @@ function ConcernCard({ concern }) {
       {open && (
         <div style={{ padding: '0 14px 14px', borderTop: '1px solid ' + (SEV_BORDER[concern.severity] || SEV_BORDER.LOW) }}>
           <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--heading)', lineHeight: 1.6, margin: '12px 0 0', fontFamily: 'Manrope, sans-serif' }}>{concern.detail}</p>
+          {concern.remediation && (
+            <div style={{ marginTop: 10, padding: '8px 12px', borderRadius: 6, background: 'rgba(255,255,255,0.55)', border: '1px solid rgba(0,0,0,0.07)', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+              <span aria-hidden="true" style={{ fontSize: 13, flexShrink: 0, marginTop: 1 }}>🔧</span>
+              <p style={{ fontSize: 12, color: 'var(--heading)', margin: 0, lineHeight: 1.6, fontFamily: 'Manrope, sans-serif' }}>
+                <strong style={{ fontWeight: 700 }}>Fix: </strong>{concern.remediation}
+              </p>
+            </div>
+          )}
         </div>
       )}
+    </div>
+  );
+}
+
+function PositiveFindingsList({ findings }) {
+  if (!findings?.length) return null;
+  return (
+    <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 8, background: 'var(--suc-bg)', border: '1px solid var(--suc-bd)' }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+        ✓ Compliant Features
+      </div>
+      <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {findings.map((f, i) => (
+          <li key={i} style={{ fontSize: 12, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.5, display: 'flex', gap: 6, alignItems: 'flex-start' }}>
+            <span aria-hidden="true" style={{ flexShrink: 0 }}>✓</span>{f}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -258,6 +380,13 @@ function AnalysisResults({ result, photoUrls, onReport }) {
         </div>
       )}
 
+      {result.crossPhotoFindings && (
+        <div style={{ fontSize: 13, color: 'var(--inf-fg)', lineHeight: 1.6, marginBottom: 20, padding: '12px 14px', background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', borderRadius: 8, fontFamily: 'Manrope, sans-serif', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+          <Info size={15} aria-hidden="true" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div><strong style={{ fontWeight: 700 }}>Cross-photo findings: </strong>{result.crossPhotoFindings}</div>
+        </div>
+      )}
+
       {result.photos?.map((photo, idx) => (
         <section key={idx} aria-label={'Photo ' + (idx + 1) + ' results'} style={{ marginBottom: 20, borderRadius: 10, border: '1px solid var(--card-border)', background: 'var(--card-bg)', overflow: 'hidden' }}>
           <div style={{ padding: '10px 16px', background: 'var(--slate-100)', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -282,6 +411,7 @@ function AnalysisResults({ result, photoUrls, onReport }) {
                 {photo.concerns.map((c, ci) => <div key={ci} role="listitem"><ConcernCard concern={c} /></div>)}
               </div>
             )}
+            <PositiveFindingsList findings={photo.positiveFindings} />
           </div>
         </section>
       ))}
@@ -325,6 +455,8 @@ export default function AdminPhotoAnalyzer() {
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [error, setError] = useState('');
   const [dragOver, setDragOver] = useState(false);
+  const [historySearch, setHistorySearch] = useState('');
+  const [historyRiskFilter, setHistoryRiskFilter] = useState('ALL');
   const fileInputRef = useRef();
   const resultsRef = useRef();
   const errorRef = useRef();
@@ -380,11 +512,14 @@ export default function AdminPhotoAnalyzer() {
 
       // Step 2: Build prompt with image URLs embedded
       const imageList = uploadedUrls.map((url, i) => `Photo ${i + 1}: ${url}`).join('\n');
+      const multiPhotoNote = uploadedUrls.length > 1
+        ? `\nIMPORTANT: These ${uploadedUrls.length} photos are from the SAME location. Analyze them holistically. Look for cross-photo compliance chains (e.g. a ramp in one photo leading to a door in another). Your crossPhotoFindings field should summarize any patterns you see across photos.\n`
+        : '';
       const fullPrompt = `${ADA_SYSTEM_PROMPT}
 
 Location being assessed: ${locationLabel || 'Not specified'}
 Number of photos: ${uploadedUrls.length}
-
+${multiPhotoNote}
 Photos to analyze:
 ${imageList}
 
@@ -493,7 +628,7 @@ Analyze these photos for ADA compliance concerns. Respond with JSON only — no 
           {/* ── Sidebar: History ── */}
           <aside aria-label="Analysis history">
             <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 10, padding: 16 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                 <h2 style={{ margin: 0, fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                   Past Analyses
                 </h2>
@@ -501,20 +636,65 @@ Analyze these photos for ADA compliance concerns. Respond with JSON only — no 
                   {history.length} record{history.length !== 1 ? 's' : ''}
                 </span>
               </div>
+
+              {/* Search */}
+              <input
+                type="search"
+                aria-label="Search analyses by location"
+                placeholder="Search location…"
+                value={historySearch}
+                onChange={e => setHistorySearch(e.target.value)}
+                style={{ width: '100%', boxSizing: 'border-box', padding: '7px 10px', marginBottom: 8, borderRadius: 6, fontFamily: 'Manrope, sans-serif', fontSize: 12, background: 'var(--surface)', border: '1.5px solid var(--border)', color: 'var(--body)', outline: 'none' }}
+              />
+
+              {/* Risk filter pills */}
+              <div role="group" aria-label="Filter by risk level" style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 12 }}>
+                {['ALL','HIGH','MEDIUM','LOW','NONE'].map(r => {
+                  const active = historyRiskFilter === r;
+                  const colors = { HIGH: 'var(--err-fg)', MEDIUM: 'var(--wrn-fg)', LOW: 'var(--inf-fg)', NONE: 'var(--suc-fg)', ALL: 'var(--heading)' };
+                  const bgs    = { HIGH: 'var(--err-bg)', MEDIUM: 'var(--wrn-bg)', LOW: 'var(--inf-bg)', NONE: 'var(--suc-bg)', ALL: 'var(--card-bg-tinted)' };
+                  const bds    = { HIGH: 'var(--err-bd)', MEDIUM: 'var(--wrn-bd)', LOW: 'var(--inf-bd)', NONE: 'var(--suc-bd)', ALL: 'var(--card-border)' };
+                  return (
+                    <button
+                      key={r}
+                      onClick={() => setHistoryRiskFilter(r)}
+                      aria-pressed={active}
+                      style={{
+                        padding: '2px 8px', borderRadius: 5, border: '1px solid',
+                        fontSize: 10, fontWeight: 700, fontFamily: 'Manrope, sans-serif',
+                        cursor: 'pointer', letterSpacing: '0.04em',
+                        color: active ? colors[r] : 'var(--body-secondary)',
+                        background: active ? bgs[r] : 'transparent',
+                        borderColor: active ? bds[r] : 'var(--card-border)',
+                      }}
+                    >{r}</button>
+                  );
+                })}
+              </div>
+
               {historyLoading ? (
                 <div role="status" style={{ textAlign: 'center', padding: '24px 0' }}>
                   <div className="a11y-spinner" aria-hidden="true" style={{ width: '1.5rem', height: '1.5rem' }} />
                   <p style={{ fontSize: 13, color: 'var(--body-secondary)', marginTop: 8, fontFamily: 'Manrope, sans-serif' }}>Loading…</p>
                 </div>
-              ) : history.length === 0 ? (
-                <p style={{ fontSize: 13, color: 'var(--body-secondary)', textAlign: 'center', padding: '24px 0', fontFamily: 'Manrope, sans-serif' }}>
-                  No analyses yet. Upload photos to get started.
-                </p>
-              ) : (
-                <div role="list" aria-label="Past analyses">
-                  {history.map(r => <div key={r.id} role="listitem"><HistoryRow record={r} onSelect={selectRecord} isSelected={selectedRecord?.id === r.id} onDelete={deleteRecord} /></div>)}
-                </div>
-              )}
+              ) : (() => {
+                const filtered = history.filter(r => {
+                  const parsed = (() => { try { return typeof r.analysis_result === 'string' ? JSON.parse(r.analysis_result) : (r.analysis_result || {}); } catch { return {}; } })();
+                  const matchesRisk = historyRiskFilter === 'ALL' || parsed.overallRisk === historyRiskFilter;
+                  const matchesSearch = !historySearch.trim() || (r.location_label || '').toLowerCase().includes(historySearch.trim().toLowerCase());
+                  return matchesRisk && matchesSearch;
+                });
+                if (filtered.length === 0) return (
+                  <p style={{ fontSize: 12, color: 'var(--body-secondary)', textAlign: 'center', padding: '20px 0', fontFamily: 'Manrope, sans-serif' }}>
+                    {history.length === 0 ? 'No analyses yet. Upload photos to get started.' : 'No results match your filter.'}
+                  </p>
+                );
+                return (
+                  <div role="list" aria-label="Past analyses">
+                    {filtered.map(r => <div key={r.id} role="listitem"><HistoryRow record={r} onSelect={selectRecord} isSelected={selectedRecord?.id === r.id} onDelete={deleteRecord} /></div>)}
+                  </div>
+                );
+              })()}
             </div>
           </aside>
 
