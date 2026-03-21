@@ -459,7 +459,120 @@ function AnalysisResults({ result, photoUrls, onReport }) {
   );
 }
 
-export default function AdminPhotoAnalyzer() {
+function BatchReanalysisModal({ history, onClose, onComplete, runAnalysisForRecord }) {
+  const [jobs, setJobs] = useState(() =>
+    history.map(r => {
+      const parsed = (() => { try { return typeof r.analysis_result === 'string' ? JSON.parse(r.analysis_result) : (r.analysis_result || {}); } catch { return {}; } })();
+      const urls = parsed.uploadedUrls || (parsed.image_url && parsed.image_url !== 'none' ? [parsed.image_url] : []);
+      return { record: r, urls, status: urls.length ? 'pending' : 'skipped', error: null };
+    })
+  );
+  const [running, setRunning] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const totalEligible = jobs.filter(j => j.status !== 'skipped').length;
+  const completed = jobs.filter(j => j.status === 'done').length;
+  const failed = jobs.filter(j => j.status === 'error').length;
+
+  async function runAll() {
+    setRunning(true);
+    for (let i = 0; i < jobs.length; i++) {
+      const job = jobs[i];
+      if (job.status === 'skipped') continue;
+      setJobs(prev => prev.map((j, idx) => idx === i ? { ...j, status: 'running' } : j));
+      try {
+        await runAnalysisForRecord(job.record, job.urls);
+        setJobs(prev => prev.map((j, idx) => idx === i ? { ...j, status: 'done' } : j));
+      } catch (e) {
+        setJobs(prev => prev.map((j, idx) => idx === i ? { ...j, status: 'error', error: e?.message || 'Failed' } : j));
+      }
+    }
+    setRunning(false);
+    setDone(true);
+    onComplete();
+  }
+
+  const STATUS_ICON = { pending: '○', running: '⟳', done: '✓', error: '✗', skipped: '—' };
+  const STATUS_COLOR = { pending: 'var(--body-secondary)', running: 'var(--accent)', done: 'var(--suc-fg)', error: 'var(--err-fg)', skipped: 'var(--body-secondary)' };
+
+  return (
+    <div role="dialog" aria-modal="true" aria-label="Reanalyze all records" onClick={e => e.stopPropagation()}
+      style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
+    >
+      <div style={{ background: 'var(--card-bg)', borderRadius: 12, padding: 28, maxWidth: 540, width: '100%', maxHeight: '85vh', display: 'flex', flexDirection: 'column', boxShadow: '0 12px 48px rgba(0,0,0,0.3)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+          <div>
+            <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)', fontFamily: 'Fraunces, serif' }}>Reanalyze All Records</h2>
+            <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif' }}>
+              Your photos are safe — only the analysis text will be updated using the new vision model.
+            </p>
+          </div>
+          {!running && (
+            <button onClick={onClose} aria-label="Close" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--body-secondary)', fontSize: 20, lineHeight: 1, padding: 4 }}>×</button>
+          )}
+        </div>
+
+        {/* Progress bar */}
+        {running || done ? (
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ height: 6, borderRadius: 3, background: 'var(--slate-200)', overflow: 'hidden', marginBottom: 6 }}>
+              <div style={{ height: '100%', borderRadius: 3, background: done && failed === 0 ? 'var(--suc-fg)' : 'var(--accent)', transition: 'width 0.4s', width: `${totalEligible ? Math.round((completed + failed) / totalEligible * 100) : 0}%` }} />
+            </div>
+            <p style={{ fontSize: 12, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', margin: 0 }}>
+              {done ? `Complete — ${completed} updated, ${failed} failed, ${jobs.filter(j=>j.status==='skipped').length} skipped`
+                     : `${completed + failed} of ${totalEligible} processed…`}
+            </p>
+          </div>
+        ) : (
+          <div style={{ marginBottom: 14, padding: '10px 14px', borderRadius: 8, background: 'var(--wrn-bg)', border: '1px solid var(--wrn-bd)' }}>
+            <p style={{ fontSize: 13, color: 'var(--wrn-fg)', fontFamily: 'Manrope, sans-serif', margin: 0, fontWeight: 600 }}>
+              ⚠ This will rerun analysis on {totalEligible} record{totalEligible !== 1 ? 's' : ''} using Claude vision. This may take a minute. Do not close the page.
+            </p>
+          </div>
+        )}
+
+        {/* Job list */}
+        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {jobs.map((job, i) => {
+            const label = job.record.location_label || 'Unlabeled';
+            const date = formatDate(job.record.created_date);
+            return (
+              <div key={job.record.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 7, background: 'var(--page-bg-subtle)', border: '1px solid var(--card-border)' }}>
+                <span aria-hidden="true" style={{ fontSize: 14, fontWeight: 700, color: STATUS_COLOR[job.status], flexShrink: 0, width: 16, textAlign: 'center', animation: job.status === 'running' ? 'spin 1s linear infinite' : 'none' }}>{STATUS_ICON[job.status]}</span>
+                {job.urls[0] && <img src={job.urls[0]} alt="" aria-hidden="true" style={{ width: 32, height: 32, objectFit: 'cover', borderRadius: 5, flexShrink: 0, border: '1px solid var(--card-border)' }} />}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</div>
+                  <div style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif' }}>
+                    {date} · {job.urls.length} photo{job.urls.length !== 1 ? 's' : ''}
+                    {job.status === 'skipped' && ' · no photos found'}
+                    {job.status === 'error' && <span style={{ color: 'var(--err-fg)' }}> · {job.error}</span>}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{ marginTop: 18, display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+          {!running && !done && (
+            <>
+              <button onClick={onClose} style={{ padding: '10px 18px', borderRadius: 8, border: '1px solid var(--card-border)', background: 'transparent', color: 'var(--body)', fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Cancel</button>
+              <button onClick={runAll} disabled={totalEligible === 0} style={{ padding: '10px 20px', borderRadius: 8, border: 'none', background: 'var(--accent)', color: '#fff', fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 700, cursor: totalEligible === 0 ? 'not-allowed' : 'pointer', minHeight: 44 }}>
+                Run Vision Analysis on {totalEligible} Record{totalEligible !== 1 ? 's' : ''}
+              </button>
+            </>
+          )}
+          {done && (
+            <button onClick={onClose} style={{ padding: '10px 20px', borderRadius: 8, border: 'none', background: 'var(--accent)', color: '#fff', fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 700, cursor: 'pointer', minHeight: 44 }}>Done</button>
+          )}
+        </div>
+      </div>
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+}
+
+
   const [files, setFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [locationLabel, setLocationLabel] = useState('');
@@ -473,6 +586,7 @@ export default function AdminPhotoAnalyzer() {
   const [dragOver, setDragOver] = useState(false);
   const [historySearch, setHistorySearch] = useState('');
   const [historyRiskFilter, setHistoryRiskFilter] = useState('ALL');
+  const [showBatchModal, setShowBatchModal] = useState(false);
   const fileInputRef = useRef();
   const resultsRef = useRef();
   const errorRef = useRef();
@@ -615,6 +729,76 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
     } catch (e) { console.error('Delete failed:', e); }
   }
 
+  async function reanalyzeRecord(record, uploadedUrls) {
+    const multiPhotoNote = uploadedUrls.length > 1
+      ? `\nIMPORTANT: You are receiving ${uploadedUrls.length} photos from the SAME physical location. Analyze them holistically as a set. Look for cross-photo compliance chains. Populate crossPhotoFindings when you observe patterns spanning multiple photos.\n`
+      : '';
+    const locationLabel = record.location_label || 'Not specified';
+    const fullPrompt = `${ADA_SYSTEM_PROMPT}
+
+Location being assessed: ${locationLabel}
+Number of photos: ${uploadedUrls.length}
+${multiPhotoNote}
+Carefully examine each attached photo. Use your vision to assess what is actually visible. For each concern, note whether you can see it clearly or are estimating based on context.`;
+
+    const response = await base44.integrations.Core.InvokeLLM({
+      prompt: fullPrompt,
+      model: 'claude_sonnet_4_6',
+      file_urls: uploadedUrls,
+      add_context_from_internet: false,
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          summary: { type: 'string' },
+          overallRisk: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW', 'NONE'] },
+          crossPhotoFindings: { type: 'string' },
+          photos: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                photoIndex: { type: 'number' },
+                description: { type: 'string' },
+                concerns: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      title: { type: 'string' },
+                      detail: { type: 'string' },
+                      severity: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW'] },
+                      remediation: { type: 'string' },
+                      confidence: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW'] },
+                    }
+                  }
+                },
+                positiveFindings: { type: 'array', items: { type: 'string' } },
+              }
+            }
+          }
+        }
+      },
+    });
+
+    const parsed = typeof response === 'object' ? response : JSON.parse(response);
+    const parsedWithUrls = { ...parsed, uploadedUrls };
+
+    // Update the DB record — preserve photo URLs, update analysis only
+    await base44.entities.PhotoAnalysis.update(record.id, {
+      analysis_result: JSON.stringify(parsedWithUrls),
+      overall_risk: parsed.overallRisk || 'NONE',
+    });
+
+    // Update in-memory history so the sidebar reflects new risk immediately
+    setHistory(prev => prev.map(r => r.id === record.id
+      ? { ...r, analysis_result: JSON.stringify(parsedWithUrls), overall_risk: parsed.overallRisk || 'NONE' }
+      : r
+    ));
+
+    // If this record is currently selected, refresh the displayed result
+    if (selectedRecord?.id === record.id) setResult(parsedWithUrls);
+  }
+
   if (pageLoading) return (
     <div role="status" aria-label="Loading ADA Photo Analyzer" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
       <div className="a11y-spinner" aria-hidden="true" />
@@ -664,12 +848,30 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
 
         <AdminPageHeader
           title="ADA Photo Analyzer"
-          actionButton={selectedRecord ? (
-            <button onClick={startNew} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 20px', minHeight: 44, borderRadius: 8, background: 'var(--accent)', color: '#FFFFFF', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '0.875rem', fontFamily: 'Manrope, sans-serif' }}>
-              <Plus size={16} aria-hidden="true" /> New Analysis
-            </button>
-          ) : null}
+          actionButton={
+            <div style={{ display: 'flex', gap: 8 }}>
+              {history.length > 0 && !historyLoading && (
+                <button onClick={() => setShowBatchModal(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 16px', minHeight: 44, borderRadius: 8, background: 'transparent', color: 'var(--accent)', border: '1.5px solid var(--accent)', cursor: 'pointer', fontWeight: 700, fontSize: '0.875rem', fontFamily: 'Manrope, sans-serif' }}>
+                  ⟳ Reanalyze All
+                </button>
+              )}
+              {selectedRecord && (
+                <button onClick={startNew} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 20px', minHeight: 44, borderRadius: 8, background: 'var(--accent)', color: '#FFFFFF', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '0.875rem', fontFamily: 'Manrope, sans-serif' }}>
+                  <Plus size={16} aria-hidden="true" /> New Analysis
+                </button>
+              )}
+            </div>
+          }
         />
+
+        {showBatchModal && (
+          <BatchReanalysisModal
+            history={history}
+            onClose={() => setShowBatchModal(false)}
+            onComplete={() => loadHistory()}
+            runAnalysisForRecord={reanalyzeRecord}
+          />
+        )}
 
         <div className="photo-grid" style={{ display: 'grid', gridTemplateColumns: 'clamp(240px, 28%, 300px) 1fr', gap: 20, alignItems: 'start' }}>
 
