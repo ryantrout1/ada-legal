@@ -720,42 +720,11 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
         model: 'claude_sonnet_4_6',
         file_urls: uploadedUrls,
         add_context_from_internet: false,
-        response_json_schema: {
-          type: 'object',
-          properties: {
-            summary: { type: 'string' },
-            overallRisk: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW', 'NONE'] },
-            crossPhotoFindings: { type: 'string' },
-            photos: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  photoIndex: { type: 'number' },
-                  description: { type: 'string' },
-                  concerns: {
-                    type: 'array',
-                    items: {
-                      type: 'object',
-                      properties: {
-                        title: { type: 'string' },
-                        detail: { type: 'string' },
-                        severity: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW'] },
-                        remediation: { type: 'string' },
-                        confidence: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW'] },
-                      }
-                    }
-                  },
-                  positiveFindings: { type: 'array', items: { type: 'string' } },
-                }
-              }
-            }
-          }
-        },
       });
 
-      // response_json_schema returns a parsed object directly
-      const parsed = typeof response === 'object' ? response : JSON.parse(response);
+      // Parse JSON from text response — response_json_schema conflicts with file_urls in Base44
+      const rawText = typeof response === 'string' ? response : (response?.result || response?.text || JSON.stringify(response));
+      const parsed = JSON.parse(rawText.replace(/```json|```/g, '').trim());
       const parsedWithUrls = { ...parsed, uploadedUrls };
       setResult(parsedWithUrls);
       setTimeout(() => resultsRef.current?.focus(), 100);
@@ -807,41 +776,10 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
       model: 'claude_sonnet_4_6',
       file_urls: uploadedUrls,
       add_context_from_internet: false,
-      response_json_schema: {
-        type: 'object',
-        properties: {
-          summary: { type: 'string' },
-          overallRisk: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW', 'NONE'] },
-          crossPhotoFindings: { type: 'string' },
-          photos: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                photoIndex: { type: 'number' },
-                description: { type: 'string' },
-                concerns: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      title: { type: 'string' },
-                      detail: { type: 'string' },
-                      severity: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW'] },
-                      remediation: { type: 'string' },
-                      confidence: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW'] },
-                    }
-                  }
-                },
-                positiveFindings: { type: 'array', items: { type: 'string' } },
-              }
-            }
-          }
-        }
-      },
     });
 
-    const parsed = typeof response === 'object' ? response : JSON.parse(response);
+    const rawText = typeof response === 'string' ? response : (response?.result || response?.text || JSON.stringify(response));
+    const parsed = JSON.parse(rawText.replace(/```json|```/g, '').trim());
 
     // Guard: if vision returned no photos, something went wrong — don't overwrite good data
     if (!parsed.photos || parsed.photos.length === 0) {
