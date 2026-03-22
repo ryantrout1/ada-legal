@@ -112,12 +112,12 @@ export default function AdminFeedback() {
 }
 
 function FilterSelect({ label, value, onChange, options }) {
-  const id = React.useId();
+  const selectId = React.useId();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <label htmlFor={id} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</label>
+      <label htmlFor={selectId} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</label>
       <select
-        id={id}
+        id={selectId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         style={{
