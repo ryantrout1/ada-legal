@@ -727,11 +727,6 @@ function AnalysisResults({ result, photoUrls, onReport }) {
                           <div style={{ fontSize: 12, color: 'var(--body)', fontFamily: 'Manrope, sans-serif', marginTop: 6, lineHeight: 1.5 }}>{c.detail}</div>
                         )}
                       </div>
-                      {c.photoUrl && (
-                        <button onClick={() => setLightboxUrl(c.photoUrl)} title="See photo" style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', flexShrink: 0, borderRadius: 6 }}>
-                          <img src={c.photoUrl} alt="" aria-hidden="true" style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 6, border: '1px solid rgba(0,0,0,0.1)', display: 'block' }} />
-                        </button>
-                      )}
                     </div>
                   );
                 })}
