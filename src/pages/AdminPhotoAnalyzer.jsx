@@ -452,28 +452,21 @@ function AnalysisResults({ result, photoUrls, onReport }) {
       {/* ── TRIAGE MODE ── */}
       {mode === 'triage' && (
         <div>
-          {/* Photo strip — prominent, clickable to enlarge */}
+          {/* Photo strip — compact, mobile-friendly */}
           {photoUrls?.length > 0 && (
-            <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 8, marginBottom: 14, overflowX: 'auto', paddingBottom: 4 }}>
               {photoUrls.map((url, i) => (
-                <div key={i} style={{ position: 'relative', flex: photoUrls.length === 1 ? '1' : '0 0 auto' }}>
+                <div key={i} style={{ position: 'relative', flexShrink: 0 }}>
                   <button
                     onClick={() => setLightboxUrl(url)}
                     aria-label={'View photo ' + (i + 1) + ' full size'}
-                    title="Click to enlarge"
-                    style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 8, display: 'block', width: '100%' }}
+                    title="Tap to enlarge"
+                    style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 8, display: 'block' }}
                   >
                     <img
                       src={url}
                       alt={'Photo ' + (i + 1)}
-                      style={{
-                        width: photoUrls.length === 1 ? '100%' : 140,
-                        height: photoUrls.length === 1 ? 220 : 140,
-                        objectFit: 'cover',
-                        borderRadius: 8,
-                        border: '1px solid var(--card-border)',
-                        display: 'block',
-                      }}
+                      style={{ width: 90, height: 90, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--card-border)', display: 'block' }}
                     />
                   </button>
                   <a
@@ -481,11 +474,11 @@ function AnalysisResults({ result, photoUrls, onReport }) {
                     download={'photo_' + (i + 1) + '.jpg'}
                     target="_blank"
                     rel="noopener"
-                    title="Download photo"
-                    style={{ position: 'absolute', bottom: 6, right: 6, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: 5, background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', textDecoration: 'none', fontSize: 13, fontWeight: 700 }}
+                    title="Download"
+                    style={{ position: 'absolute', bottom: 4, right: 4, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: 6, background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}
                   >↓</a>
                   {photoUrls.length > 1 && (
-                    <div style={{ position: 'absolute', top: 6, left: 6, fontSize: 10, fontWeight: 700, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 4, padding: '2px 6px', fontFamily: 'Manrope, sans-serif' }}>#{i + 1}</div>
+                    <div style={{ position: 'absolute', top: 4, left: 4, fontSize: 10, fontWeight: 700, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 4, padding: '2px 5px', fontFamily: 'Manrope, sans-serif' }}>#{i + 1}</div>
                   )}
                 </div>
               ))}
@@ -779,6 +772,7 @@ export default function AdminPhotoAnalyzer() {
   const [historySearch, setHistorySearch] = useState('');
   const [historyRiskFilter, setHistoryRiskFilter] = useState('ALL');
   const [showBatchModal, setShowBatchModal] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const fileInputRef = useRef();
   const resultsRef = useRef();
   const errorRef = useRef();
@@ -899,6 +893,7 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
     setSelectedRecord(record); setResult(parsed);
     setFiles([]); previews.forEach(u => URL.revokeObjectURL(u)); setPreviews([]);
     setLocationLabel(record.location_label || ''); setError('');
+    setShowHistory(false); // close mobile drawer on selection
   }
 
   function startNew() {
@@ -1009,8 +1004,15 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
         .drop-zone:focus-visible { outline: 3px solid var(--accent) !important; outline-offset: 3px !important; }
         /* Reduced motion */
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
-        /* Responsive grid */
-        @media (max-width: 700px) { .photo-grid { grid-template-columns: 1fr !important; } }
+        /* Mobile-first responsive layout */
+        @media (max-width: 700px) {
+          .photo-grid { grid-template-columns: 1fr !important; }
+          .history-panel { display: none; }
+          .history-panel.open { display: block !important; position: fixed; inset: 0; z-index: 9990; background: var(--card-bg); overflow-y: auto; padding: 16px; }
+        }
+        @media (min-width: 701px) {
+          .history-toggle { display: none !important; }
+        }
       `}</style>
 
       <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -1018,7 +1020,10 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
         <AdminPageHeader
           title="ADA Photo Analyzer"
           actionButton={
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <button className="history-toggle" onClick={() => setShowHistory(p => !p)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 14px', minHeight: 44, borderRadius: 8, background: 'transparent', color: 'var(--accent)', border: '1.5px solid var(--accent)', cursor: 'pointer', fontWeight: 700, fontSize: '0.875rem', fontFamily: 'Manrope, sans-serif' }}>
+                📋 History ({history.length})
+              </button>
               {history.length > 0 && !historyLoading && (
                 <button onClick={() => setShowBatchModal(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 16px', minHeight: 44, borderRadius: 8, background: 'transparent', color: 'var(--accent)', border: '1.5px solid var(--accent)', cursor: 'pointer', fontWeight: 700, fontSize: '0.875rem', fontFamily: 'Manrope, sans-serif' }}>
                   ⟳ Reanalyze All
@@ -1036,15 +1041,18 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
         <div className="photo-grid" style={{ display: 'grid', gridTemplateColumns: 'clamp(240px, 28%, 300px) 1fr', gap: 20, alignItems: 'start' }}>
 
           {/* ── Sidebar: History ── */}
-          <aside aria-label="Analysis history">
+          <aside aria-label="Analysis history" className={`history-panel${showHistory ? ' open' : ''}`}>
             <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 10, padding: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                 <h2 style={{ margin: 0, fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                   Past Analyses
                 </h2>
-                <span style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif' }}>
-                  {history.length} record{history.length !== 1 ? 's' : ''}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif' }}>
+                    {history.length} record{history.length !== 1 ? 's' : ''}
+                  </span>
+                  <button className="history-toggle" onClick={() => setShowHistory(false)} aria-label="Close history" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--body-secondary)', fontSize: 20, lineHeight: 1, padding: 4, minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
+                </div>
               </div>
 
               {/* Search */}
