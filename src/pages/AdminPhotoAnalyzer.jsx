@@ -569,11 +569,6 @@ function AnalysisResults({ result, photoUrls, onReport }) {
                       <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.3 }}>{c.title}</div>
                       {sectionMatch && <div style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 1 }}>{sectionMatch[0]}</div>}
                     </div>
-                    {c.photoUrl && (
-                      <button onClick={e => { e.stopPropagation(); setLightboxUrl(c.photoUrl); }} title="View photo" style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', flexShrink: 0 }}>
-                        <img src={c.photoUrl} alt="" aria-hidden="true" style={{ width: 28, height: 28, objectFit: 'cover', borderRadius: 4, border: '1px solid var(--card-border)', display: 'block' }} />
-                      </button>
-                    )}
                     <span aria-hidden="true" style={{ fontSize: 12, color: 'var(--body-secondary)', flexShrink: 0 }}>{isOpen ? '▲' : '▼'}</span>
                   </button>
                   {isOpen && (
