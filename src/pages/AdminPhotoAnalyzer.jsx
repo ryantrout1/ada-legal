@@ -23,13 +23,16 @@ Respond ONLY with valid JSON in exactly this shape — no markdown, no preamble:
           "title": "Short concern title",
           "detail": "Specific detail with measurement estimates where visible and ADA standard section (e.g. §404.2.3)",
           "severity": "HIGH" | "MEDIUM" | "LOW",
-          "remediation": "Concrete recommended fix with target spec (e.g. 'Widen doorway to minimum 32 inches clear')"
+          "remediation": "Concrete recommended fix with target spec (e.g. 'Widen doorway to minimum 32 inches clear')",
+          "bbox": { "x": 0.0, "y": 0.0, "w": 1.0, "h": 1.0 }
         }
       ],
       "positiveFindings": ["Specific compliant feature observed — be concrete, not generic"]
     }
   ]
 }
+
+For the "bbox" field on each concern: provide the approximate bounding box of where the issue is visible in the photo, as fractions of the image dimensions (0.0 to 1.0). x and y are the top-left corner, w and h are width and height. For example, a door threshold in the lower-center of the frame might be { "x": 0.3, "y": 0.7, "w": 0.4, "h": 0.2 }. If you cannot locate the concern visually, use { "x": 0.0, "y": 0.0, "w": 1.0, "h": 1.0 } to indicate the full frame.
 
 COMPREHENSIVE STANDARDS TO CHECK — evaluate every applicable standard for each photo:
 
@@ -338,6 +341,78 @@ function PositiveFindingsList({ findings }) {
   );
 }
 
+function AnnotatedPhoto({ url, concerns, activeConcernIndex, onConcernClick, onLightbox }) {
+  const SEV_COLOR = { HIGH: '#DC2626', MEDIUM: '#D97706', LOW: '#2563EB' };
+  const validConcerns = (concerns || []).filter(c => {
+    const b = c.bbox;
+    if (!b) return false;
+    // Skip full-frame bbox — model couldn't locate it
+    if (b.x === 0 && b.y === 0 && b.w >= 0.95 && b.h >= 0.95) return false;
+    return true;
+  });
+
+  return (
+    <div style={{ position: 'relative', display: 'inline-block', width: '100%', borderRadius: 8, overflow: 'hidden', cursor: 'zoom-in' }} onClick={onLightbox}>
+      <img src={url} alt="Location photo with issue markers" style={{ width: '100%', display: 'block', borderRadius: 8, border: '1px solid var(--card-border)' }} />
+      {validConcerns.map((c, i) => {
+        const b = c.bbox;
+        const color = SEV_COLOR[c.severity] || SEV_COLOR.LOW;
+        const isActive = activeConcernIndex === i;
+        const origIndex = (concerns || []).indexOf(c);
+        return (
+          <React.Fragment key={i}>
+            {/* Bounding box */}
+            <div
+              onClick={e => { e.stopPropagation(); onConcernClick(origIndex); }}
+              title={c.title}
+              style={{
+                position: 'absolute',
+                left: (b.x * 100) + '%',
+                top: (b.y * 100) + '%',
+                width: (b.w * 100) + '%',
+                height: (b.h * 100) + '%',
+                border: `2px solid ${color}`,
+                borderRadius: 4,
+                background: isActive ? color + '22' : 'transparent',
+                boxShadow: isActive ? `0 0 0 2px ${color}` : 'none',
+                cursor: 'pointer',
+                transition: 'background 0.15s',
+                zIndex: 2,
+              }}
+            />
+            {/* Number badge at top-left of box */}
+            <div
+              onClick={e => { e.stopPropagation(); onConcernClick(origIndex); }}
+              style={{
+                position: 'absolute',
+                left: 'calc(' + (b.x * 100) + '% + 4px)',
+                top: 'calc(' + (b.y * 100) + '% - 12px)',
+                background: color,
+                color: '#fff',
+                fontSize: 10,
+                fontWeight: 800,
+                fontFamily: 'Manrope, sans-serif',
+                borderRadius: 10,
+                padding: '1px 5px',
+                lineHeight: 1.4,
+                cursor: 'pointer',
+                zIndex: 3,
+                whiteSpace: 'nowrap',
+                maxWidth: 120,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {i + 1}
+            </div>
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
+}
+
+
 function PhotoLightbox({ url, alt, onClose }) {
   useEffect(() => {
     function onKey(e) { if (e.key === 'Escape') onClose(); }
@@ -533,16 +608,26 @@ function AnalysisResults({ result, photoUrls, onReport }) {
       {mode === 'triage' && (
         <div>
           {photoUrls?.length > 0 && (
-            <div style={{ display: 'flex', gap: 8, marginBottom: 14, overflowX: 'auto', paddingBottom: 4 }}>
-              {photoUrls.map((url, i) => (
-                <div key={i} style={{ position: 'relative', flexShrink: 0 }}>
-                  <button onClick={() => setLightboxUrl(url)} aria-label={'View photo ' + (i + 1) + ' full size'} title="Tap to enlarge" style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 8, display: 'block' }}>
-                    <img src={url} alt={'Photo ' + (i + 1)} style={{ width: 90, height: 90, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--card-border)', display: 'block' }} />
-                  </button>
-                  <a href={url} download={'photo_' + (i + 1) + '.jpg'} target="_blank" rel="noopener" title="Download" style={{ position: 'absolute', bottom: 4, right: 4, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: 6, background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}>↓</a>
-                  {photoUrls.length > 1 && <div style={{ position: 'absolute', top: 4, left: 4, fontSize: 10, fontWeight: 700, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 4, padding: '2px 5px', fontFamily: 'Manrope, sans-serif' }}>#{i + 1}</div>}
-                </div>
-              ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
+              {photoUrls.map((url, pi) => {
+                const photoConcerns = allConcerns.filter(c => c.photoIndex === pi);
+                const activeIdx = photoConcerns.findIndex((c) => {
+                  const origIdx = allConcerns.indexOf(c);
+                  return expandedConcerns[origIdx];
+                });
+                return (
+                  <div key={pi} style={{ position: 'relative' }}>
+                    <AnnotatedPhoto
+                      url={url}
+                      concerns={photoConcerns}
+                      activeConcernIndex={activeIdx >= 0 ? activeIdx : null}
+                      onConcernClick={(origIdx) => toggleConcern(origIdx)}
+                      onLightbox={() => setLightboxUrl(url)}
+                    />
+                    <a href={url} download={'photo_' + (pi + 1) + '.jpg'} target="_blank" rel="noopener" title="Download" onClick={e => e.stopPropagation()} style={{ position: 'absolute', bottom: 8, right: 8, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 6, background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff', textDecoration: 'none', fontSize: 16, fontWeight: 700, zIndex: 4 }}>↓</a>
+                  </div>
+                );
+              })}
             </div>
           )}
 
