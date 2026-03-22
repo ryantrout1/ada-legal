@@ -352,7 +352,7 @@ function PhotoCard({ url, onLightbox }) {
         <img
           src={url}
           alt="Location photo"
-          style={{ width: '100%', maxHeight: 280, objectFit: 'cover', display: 'block', opacity: 0.95 }}
+          style={{ width: '100%', height: 'auto', maxHeight: 340, objectFit: 'contain', display: 'block', background: '#111' }}
         />
       </button>
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '24px 12px 10px', background: 'linear-gradient(transparent, rgba(0,0,0,0.5))', display: 'flex', justifyContent: 'flex-end' }}>
