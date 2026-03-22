@@ -4,6 +4,7 @@ import { createPageUrl } from '../utils';
 import AdminPageHeader from '../components/admin/shared/AdminPageHeader';
 import { Camera, Upload, AlertTriangle, CheckCircle, Info, Clock, ChevronDown, ChevronUp, Plus, X, Trash2 } from 'lucide-react';
 import { useReadingLevel } from '../components/a11y/ReadingLevelContext';
+import { useAnnounce } from '../components/a11y/LiveAnnouncer';
 
 const ADA_SYSTEM_PROMPT = `You are a senior ADA accessibility compliance analyst with deep expertise in the 2010 ADA Standards for Accessible Design and the ADA Accessibility Guidelines (ADAAG). Your role is to examine photos of physical locations and identify ALL potential ADA compliance concerns — be thorough and specific.
 
@@ -249,14 +250,15 @@ function HistoryRow({ record, onSelect, isSelected, onDelete }) {
         aria-label={confirmDelete ? 'Confirm delete' : 'Delete this analysis'}
         title={confirmDelete ? 'Click again to confirm' : 'Delete'}
         style={{
-          position: 'absolute', bottom: 10, right: 10,
+          position: 'absolute', bottom: 8, right: 8,
           display: 'inline-flex', alignItems: 'center', gap: 4,
-          padding: confirmDelete ? '3px 8px' : '4px 6px',
-          borderRadius: 5, border: '1px solid',
+          padding: confirmDelete ? '6px 10px' : '6px 8px',
+          minHeight: 36, minWidth: 36,
+          borderRadius: 6, border: '1px solid',
           background: confirmDelete ? 'var(--err-bg)' : 'transparent',
           borderColor: confirmDelete ? 'var(--err-bd)' : 'transparent',
           color: confirmDelete ? 'var(--err-fg)' : 'var(--body-secondary)',
-          cursor: 'pointer', fontSize: 11, fontFamily: 'Manrope, sans-serif', fontWeight: 600,
+          cursor: 'pointer', fontSize: 12, fontFamily: 'Manrope, sans-serif', fontWeight: 600,
           transition: 'all 0.15s',
         }}
       >
@@ -971,6 +973,7 @@ export default function AdminPhotoAnalyzer() {
   const [historyRiskFilter, setHistoryRiskFilter] = useState('ALL');
   const [showBatchModal, setShowBatchModal] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const announce = useAnnounce();
   const fileInputRef = useRef();
   const resultsRef = useRef();
   const errorRef = useRef();
@@ -1075,6 +1078,9 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
       const parsed = JSON.parse(rawText.replace(/```json|```/g, '').trim());
       const parsedWithUrls = { ...parsed, uploadedUrls };
       setResult(parsedWithUrls);
+      const totalConcerns = (parsed.photos || []).reduce((s, p) => s + (p.concerns?.length || 0), 0);
+      const highCount = (parsed.photos || []).reduce((s, p) => s + (p.concerns?.filter(c => c.severity === 'HIGH').length || 0), 0);
+      announce(`Analysis complete. ${parsed.overallRisk || 'No'} risk. ${totalConcerns} concern${totalConcerns !== 1 ? 's' : ''} found, ${highCount} high severity.`, 'assertive');
       setTimeout(() => resultsRef.current?.focus(), 100);
 
       try {
@@ -1161,7 +1167,7 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
   );
 
   return (
-    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
+    <div id="main-content" role="main" aria-busy={loading} style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
       {showBatchModal && (
         <BatchReanalysisModal
           history={history}
@@ -1373,7 +1379,7 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
                     {previews.map((url, i) => (
                       <div key={i} role="listitem" style={{ position: 'relative' }}>
                         <img src={url} alt={'Selected photo ' + (i + 1) + ': ' + (files[i]?.name || '')} style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8, border: '1.5px solid var(--card-border)', display: 'block' }} />
-                        <button onClick={() => removeFile(i)} aria-label={'Remove photo ' + (i + 1)} style={{ position: 'absolute', top: -8, right: -8, width: 24, height: 24, minWidth: 24, minHeight: 24, borderRadius: '50%', background: '#DC2626', border: '2px solid var(--surface)', color: '#FFFFFF', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
+                        <button onClick={() => removeFile(i)} aria-label={'Remove photo ' + (i + 1)} style={{ position: 'absolute', top: -10, right: -10, width: 32, height: 32, minWidth: 32, minHeight: 32, borderRadius: '50%', background: '#DC2626', border: '2px solid var(--surface)', color: '#FFFFFF', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
                           <X size={12} aria-hidden="true" />
                         </button>
                       </div>
@@ -1420,7 +1426,7 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
 
             {/* Results */}
             {result && (
-              <div ref={resultsRef} tabIndex={-1} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 10, padding: 20, outline: 'none' }}>
+              <div ref={resultsRef} tabIndex={-1} aria-label="Analysis results" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 10, padding: 20, outline: 'none' }}>
                 <AnalysisResults result={result} photoUrls={result?.uploadedUrls} onReport={() => window.location.href = '/Intake'} />
               </div>
             )}

@@ -240,14 +240,6 @@ export default function AdminCases() {
   if (loading) {
     return (
       <div role="status" aria-label="Loading Case Manager" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
-      <style>{`
-        button:focus-visible, a:focus-visible, select:focus-visible,
-        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
-          outline: 3px solid var(--accent-light); outline-offset: 2px;
-        }
-        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
-        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
-      `}</style>
         <h1 className="sr-only">Case Manager</h1>
         <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading cases…</p>
@@ -256,7 +248,7 @@ export default function AdminCases() {
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)', paddingBottom: '60px' }}>
+    <div id='main-content' role='main' style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)', paddingBottom: '60px' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <AdminPageHeader
           title="Case Manager"

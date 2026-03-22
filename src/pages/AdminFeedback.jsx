@@ -60,28 +60,23 @@ export default function AdminFeedback() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '80px 24px' }}>
-      <style>{`
-        button:focus-visible, a:focus-visible, select:focus-visible,
-        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
-          outline: 3px solid var(--accent-light); outline-offset: 2px;
-        }
-        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
-        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
-      `}</style>
-        <div className="a11y-spinner" />
+      <div id="main-content" role="main" style={{ display: 'flex', justifyContent: 'center', padding: '80px 24px' }}>
+        <div role="status" aria-label="Loading feedback" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+          <div className="a11y-spinner" aria-hidden="true" />
+          <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading feedback…</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: '32px 24px' }}>
+    <div id="main-content" role="main" style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: '32px 24px' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <AdminPageHeader title="Feedback" subtitle="User feedback and suggestions" />
+        <AdminPageHeader title="Feedback" />
         <FeedbackStatCards stats={stats} />
 
         {/* Filters */}
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', margin: '24px 0 16px' }}>
+        <div role="group" aria-label="Filter feedback" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', margin: '24px 0 16px' }}>
           <FilterSelect label="Type" value={filterType} onChange={setFilterType} options={[
             { value: 'all', label: 'All Types' },
             { value: 'suggestion', label: 'Suggestion' },
@@ -101,6 +96,10 @@ export default function AdminFeedback() {
           ]} />
         </div>
 
+        <div aria-live="polite" aria-atomic="true" className="sr-only">
+          {filtered.length} feedback item{filtered.length !== 1 ? 's' : ''} shown
+        </div>
+
         <FeedbackTable
           feedback={filtered}
           expandedId={expandedId}
@@ -113,19 +112,23 @@ export default function AdminFeedback() {
 }
 
 function FilterSelect({ label, value, onChange, options }) {
+  const id = React.useId();
   return (
-    <select
-      aria-label={`Filter by ${label}`}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-        padding: '8px 12px', borderRadius: '8px',
-        border: '1px solid #E2E8F0', background: 'white',
-        color: 'var(--body)', minHeight: '38px', cursor: 'pointer',
-      }}
-    >
-      {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-    </select>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <label htmlFor={id} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</label>
+      <select
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+          padding: '8px 12px', borderRadius: '8px',
+          border: '1px solid var(--card-border)', background: 'var(--card-bg)',
+          color: 'var(--body)', minHeight: '44px', cursor: 'pointer',
+        }}
+      >
+        {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+      </select>
+    </div>
   );
 }
