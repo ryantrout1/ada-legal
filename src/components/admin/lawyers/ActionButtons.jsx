@@ -6,7 +6,7 @@ import { useFocusTrap } from '../../a11y/FocusTrap';
 const btnBase = {
   display: 'inline-flex', alignItems: 'center', gap: '6px',
   padding: '10px 20px', fontFamily: 'Manrope, sans-serif',
-  fontSize: '0.9375rem', fontWeight: 700, color: 'white',
+  fontSize: '0.9375rem', fontWeight: 700, color: 'var(--card-bg)',
   border: 'none', borderRadius: '8px',
   cursor: 'pointer', minHeight: '44px', transition: 'opacity 0.15s'
 };
@@ -25,33 +25,33 @@ function ActionModal({ open, title, headerColor, message, confirmLabel, confirmC
       onClick={e => { if (e.target === e.currentTarget && !saving) onCancel(); }}
     >
       <div ref={trapRef} style={{
-        backgroundColor: 'white', borderRadius: '16px', width: '100%', maxWidth: '480px',
+        backgroundColor: 'var(--card-bg)', borderRadius: '16px', width: '100%', maxWidth: '480px',
         maxHeight: '90vh', overflow: 'auto'
       }}>
         {/* Colored header bar */}
-        <div style={{ height: '6px', backgroundColor: headerColor || '#475569', borderRadius: '16px 16px 0 0' }} />
+        <div style={{ height: '6px', backgroundColor: headerColor || 'var(--body-secondary)', borderRadius: '16px 16px 0 0' }} />
         <div style={{ padding: '24px' }}>
           <h2 id="action-modal-heading" style={{
             fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700,
-            color: 'var(--slate-900)', margin: '0 0 8px'
+            color: 'var(--heading)', margin: '0 0 8px'
           }}>
             {title}
           </h2>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', lineHeight: 1.6, margin: '0 0 16px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', lineHeight: 1.6, margin: '0 0 16px' }}>
             {message}
           </p>
           {children}
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
             <button type="button" onClick={onCancel} disabled={saving} style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-              color: '#475569', backgroundColor: 'transparent', border: 'none',
+              color: 'var(--body-secondary)', backgroundColor: 'transparent', border: 'none',
               cursor: 'pointer', padding: '8px 16px', minHeight: '44px'
             }}>
               Cancel
             </button>
             <button type="button" onClick={onConfirm} disabled={confirmDisabled || saving} style={{
               ...btnBase,
-              backgroundColor: (confirmDisabled || saving) ? '#94A3B8' : confirmColor,
+              backgroundColor: (confirmDisabled || saving) ? 'var(--body-secondary)' : confirmColor,
               cursor: (confirmDisabled || saving) ? 'not-allowed' : 'pointer'
             }}>
               {saving ? 'Processing…' : confirmLabel}
@@ -164,8 +164,8 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
   const inputStyle = {
     width: '100%', padding: '10px 12px', marginTop: '8px',
     fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-    border: '2px solid var(--slate-200)', borderRadius: '8px',
-    color: '#334155', outline: 'none', boxSizing: 'border-box'
+    border: '2px solid var(--card-border)', borderRadius: '8px',
+    color: 'var(--body)', outline: 'none', boxSizing: 'border-box'
   };
 
   return (
@@ -173,37 +173,37 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', ...disabledStyle }}>
         {status === 'pending_approval' && (
           <>
-            <button type="button" onClick={handleApprove} style={{ ...btnBase, backgroundColor: '#15803D' }}>
+            <button type="button" onClick={handleApprove} style={{ ...btnBase, backgroundColor: 'var(--suc-fg)' }}>
               <CheckCircle size={16} /> Approve
             </button>
-            <button type="button" onClick={() => { setReason(''); setModal('reject'); }} style={{ ...btnBase, backgroundColor: '#B91C1C' }}>
+            <button type="button" onClick={() => { setReason(''); setModal('reject'); }} style={{ ...btnBase, backgroundColor: 'var(--err-fg)' }}>
               <XCircle size={16} /> Reject
             </button>
           </>
         )}
         {status === 'approved' && (
           <>
-            <button type="button" onClick={() => { setReason(''); setModal('suspend'); }} style={{ ...btnBase, backgroundColor: '#92400E' }}>
+            <button type="button" onClick={() => { setReason(''); setModal('suspend'); }} style={{ ...btnBase, backgroundColor: 'var(--wrn-fg)' }}>
               <AlertTriangle size={16} /> Suspend
             </button>
-            <button type="button" onClick={() => { setConfirmText(''); setModal('remove'); }} style={{ ...btnBase, backgroundColor: '#B91C1C' }}>
+            <button type="button" onClick={() => { setConfirmText(''); setModal('remove'); }} style={{ ...btnBase, backgroundColor: 'var(--err-fg)' }}>
               <Trash2 size={16} /> Remove
             </button>
           </>
         )}
         {status === 'suspended' && (
           <>
-            <button type="button" onClick={() => { setReason(''); setModal('reinstate'); }} style={{ ...btnBase, backgroundColor: '#15803D' }}>
+            <button type="button" onClick={() => { setReason(''); setModal('reinstate'); }} style={{ ...btnBase, backgroundColor: 'var(--suc-fg)' }}>
               <RotateCcw size={16} /> Reinstate
             </button>
-            <button type="button" onClick={() => { setConfirmText(''); setModal('remove'); }} style={{ ...btnBase, backgroundColor: '#B91C1C' }}>
+            <button type="button" onClick={() => { setConfirmText(''); setModal('remove'); }} style={{ ...btnBase, backgroundColor: 'var(--err-fg)' }}>
               <Trash2 size={16} /> Remove
             </button>
           </>
         )}
         {showReassign && (
           <button type="button" onClick={() => setModal('reassign')} style={{
-            ...btnBase, color: '#92400E', backgroundColor: 'transparent',
+            ...btnBase, color: 'var(--wrn-fg)', backgroundColor: 'transparent',
             border: '2px solid #92400E'
           }}>
             <RefreshCw size={16} /> Reassign {activeCases.length} Case{activeCases.length !== 1 ? 's' : ''}
@@ -238,8 +238,8 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
             display: 'flex', alignItems: 'flex-start', gap: '8px', padding: '10px',
             backgroundColor: '#FEF9C3', borderRadius: '8px', marginTop: '12px'
           }}>
-            <AlertTriangle size={16} style={{ color: '#92400E', flexShrink: 0, marginTop: '2px' }} />
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#92400E', margin: 0, lineHeight: 1.5 }}>
+            <AlertTriangle size={16} style={{ color: 'var(--wrn-fg)', flexShrink: 0, marginTop: '2px' }} />
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--wrn-fg)', margin: 0, lineHeight: 1.5 }}>
               This lawyer has {activeCases.length} active case(s). You can reassign them after suspending.
             </p>
           </div>
@@ -267,7 +267,7 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
         onCancel={() => setModal(null)} saving={processing}
       >
         <div>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569', margin: '0 0 4px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', margin: '0 0 4px' }}>
             Type <strong>REMOVE</strong> to confirm:
           </p>
           <input type="text" value={confirmText} onChange={e => setConfirmText(e.target.value)}

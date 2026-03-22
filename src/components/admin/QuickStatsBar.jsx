@@ -33,12 +33,12 @@ export default function QuickStatsBar({ cases }) {
   return (
     <div style={{
       display: 'flex', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'center',
-      padding: '8px 14px', backgroundColor: 'var(--slate-100)',
-      borderRadius: 'var(--radius-md)', border: '1px solid var(--slate-200)'
+      padding: '8px 14px', backgroundColor: 'var(--card-bg-tinted)',
+      borderRadius: 'var(--radius-md)', border: '1px solid var(--card-border)'
     }}>
       {items.map((item, i) => (
         <span key={i} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)' }}>
-          <strong style={{ color: 'var(--slate-800)' }}>{item.label}:</strong> {item.value}
+          <strong style={{ color: 'var(--body)' }}>{item.label}:</strong> {item.value}
         </span>
       ))}
     </div>

@@ -9,21 +9,21 @@ function formatDateTime(d) {
 }
 
 const ACTOR_BADGE = {
-  system: { bg: '#F1F5F9', text: '#475569', label: 'System' },
+  system: { bg: 'var(--card-bg-tinted)', text: 'var(--body-secondary)', label: 'System' },
   admin:  { bg: '#DBEAFE', text: '#1E3A5F', label: 'Admin' },
   lawyer: { bg: '#FEF1EC', text: '#7C2D12', label: 'Lawyer' }
 };
 
 const EVENT_DOT = {
-  submitted: '#64748B',
+  submitted: 'var(--body-secondary)',
   reviewed: '#1D4ED8',
-  approved: '#15803D',
-  rejected: '#B91C1C',
-  available: '#15803D',
-  assigned: '#C2410C',
+  approved: 'var(--suc-fg)',
+  rejected: 'var(--err-fg)',
+  available: 'var(--suc-fg)',
+  assigned: 'var(--accent)',
   contact_logged: '#2563EB',
-  reclaimed: '#92400E',
-  closed: '#475569'
+  reclaimed: 'var(--wrn-fg)',
+  closed: 'var(--body-secondary)'
 };
 
 export default function AdminCaseTimeline({ caseId }) {
@@ -43,14 +43,14 @@ export default function AdminCaseTimeline({ caseId }) {
   if (loading) {
     return (
       <div style={{ padding: '12px 0' }}>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569' }}>Loading timeline…</p>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>Loading timeline…</p>
       </div>
     );
   }
 
   if (events.length === 0) {
     return (
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569', padding: '8px 0' }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', padding: '8px 0' }}>
         No timeline events recorded.
       </p>
     );
@@ -63,7 +63,7 @@ export default function AdminCaseTimeline({ caseId }) {
     <div>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-        color: '#475569', margin: '0 0 12px', textTransform: 'uppercase'
+        color: 'var(--body-secondary)', margin: '0 0 12px', textTransform: 'uppercase'
       }}>
         Timeline
       </p>
@@ -71,11 +71,11 @@ export default function AdminCaseTimeline({ caseId }) {
         {/* Vertical line */}
         <div style={{
           position: 'absolute', left: '5px', top: '6px', bottom: '6px',
-          width: '2px', backgroundColor: '#E2E8F0'
+          width: '2px', backgroundColor: 'var(--card-border)'
         }} />
 
         {visible.map((evt, i) => {
-          const dotColor = EVENT_DOT[evt.event_type] || '#94A3B8';
+          const dotColor = EVENT_DOT[evt.event_type] || 'var(--body-secondary)';
           const actor = ACTOR_BADGE[evt.actor_role] || ACTOR_BADGE.system;
           return (
             <div key={evt.id || i} style={{
@@ -90,7 +90,7 @@ export default function AdminCaseTimeline({ caseId }) {
               {/* Content */}
               <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
                 <span style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569', whiteSpace: 'nowrap'
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)', whiteSpace: 'nowrap'
                 }}>
                   {formatDateTime(evt.created_at || evt.created_date)}
                 </span>
@@ -103,7 +103,7 @@ export default function AdminCaseTimeline({ caseId }) {
                 </span>
               </div>
               <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#334155',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)',
                 margin: '2px 0 0', lineHeight: 1.5
               }}>
                 {evt.event_description}
@@ -120,7 +120,7 @@ export default function AdminCaseTimeline({ caseId }) {
           style={{
             background: 'none', border: 'none', cursor: 'pointer',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
-            color: '#C2410C', padding: '8px 0 0 20px', minHeight: '36px'
+            color: 'var(--accent)', padding: '8px 0 0 20px', minHeight: '36px'
           }}
         >
           Show {remaining} more event{remaining !== 1 ? 's' : ''}
@@ -133,7 +133,7 @@ export default function AdminCaseTimeline({ caseId }) {
           style={{
             background: 'none', border: 'none', cursor: 'pointer',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
-            color: '#C2410C', padding: '8px 0 0 20px', minHeight: '36px'
+            color: 'var(--accent)', padding: '8px 0 0 20px', minHeight: '36px'
           }}
         >
           Show less

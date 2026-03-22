@@ -23,7 +23,7 @@ export default function CompactUnclaimedSection({ cases }) {
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
       borderRadius: 'var(--radius-md)', overflow: 'hidden'
     }}>
       {cases.map((c, i) => {
@@ -32,7 +32,7 @@ export default function CompactUnclaimedSection({ cases }) {
           <div key={c.id} style={{
             display: 'flex', alignItems: 'center', gap: '0.5rem',
             padding: '8px 12px',
-            borderBottom: i < cases.length - 1 ? '1px solid var(--slate-100)' : 'none',
+            borderBottom: i < cases.length - 1 ? '1px solid var(--card-bg-tinted)' : 'none',
             backgroundColor: 'transparent'
           }}>
             <span style={{
@@ -47,7 +47,7 @@ export default function CompactUnclaimedSection({ cases }) {
             </span>
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
-              color: 'var(--slate-800)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
+              color: 'var(--body)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
             }}>{c.business_name}</span>
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)',
@@ -63,7 +63,7 @@ export default function CompactUnclaimedSection({ cases }) {
             </span>
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-              color: '#92400E', whiteSpace: 'nowrap', flexShrink: 0
+              color: 'var(--wrn-fg)', whiteSpace: 'nowrap', flexShrink: 0
             }}>{formatDuration(c.approved_at)}</span>
             <Link
               to={createPageUrl('AdminCases') + `?search=${encodeURIComponent(c.business_name)}`}

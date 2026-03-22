@@ -31,23 +31,23 @@ export default function ForceCloseModal({ open, caseData, onSubmit, onCancel, sa
         backgroundColor: 'rgba(0,0,0,0.5)', padding: '1rem'
       }} onClick={e => { if (e.target === e.currentTarget && !saving) handleClose(); }}>
       <div ref={trapRef} style={{
-        backgroundColor: 'white', borderRadius: '16px', width: '100%', maxWidth: '480px',
+        backgroundColor: 'var(--card-bg)', borderRadius: '16px', width: '100%', maxWidth: '480px',
         maxHeight: '90vh', overflow: 'auto', padding: 'var(--space-xl)'
       }}>
         <h2 id="force-close-heading" style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700,
-          color: 'var(--slate-900)', margin: '0 0 var(--space-lg) 0'
+          color: 'var(--heading)', margin: '0 0 var(--space-lg) 0'
         }}>
           Force Close — {caseData.business_name}
         </h2>
 
         <div style={{ marginBottom: '1rem' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 0.375rem' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 0.375rem' }}>
             Resolution Type
           </p>
           <div style={{
-            padding: '0.5rem 0.75rem', backgroundColor: 'var(--slate-50)',
-            borderRadius: 'var(--radius-sm)', border: '1px solid var(--slate-200)'
+            padding: '0.5rem 0.75rem', backgroundColor: 'var(--page-bg-subtle)',
+            borderRadius: 'var(--radius-sm)', border: '1px solid var(--card-border)'
           }}>
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, color: 'var(--slate-600)' }}>
               Admin Closed
@@ -55,7 +55,7 @@ export default function ForceCloseModal({ open, caseData, onSubmit, onCancel, sa
           </div>
         </div>
 
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--slate-700)', margin: '0 0 0.375rem' }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, color: 'var(--body)', margin: '0 0 0.375rem' }}>
           Resolution Notes *
         </p>
         <textarea
@@ -66,19 +66,19 @@ export default function ForceCloseModal({ open, caseData, onSubmit, onCancel, sa
           style={{
             width: '100%', padding: '0.5rem 0.75rem',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-            border: '2px solid var(--slate-200)', borderRadius: 'var(--radius-md)',
-            color: 'var(--slate-800)', outline: 'none', resize: 'vertical',
+            border: '2px solid var(--card-border)', borderRadius: 'var(--radius-md)',
+            color: 'var(--body)', outline: 'none', resize: 'vertical',
             minHeight: '100px', boxSizing: 'border-box'
           }}
         />
 
         <div style={{
           display: 'flex', alignItems: 'flex-start', gap: '0.5rem',
-          padding: '0.75rem', backgroundColor: '#FEE2E2', borderRadius: 'var(--radius-md)',
+          padding: '0.75rem', backgroundColor: 'var(--err-bg)', borderRadius: 'var(--radius-md)',
           border: '1px solid #FECACA', margin: '1rem 0'
         }}>
-          <AlertTriangle size={16} style={{ color: '#B91C1C', flexShrink: 0, marginTop: '2px' }} />
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#B91C1C', margin: 0, lineHeight: 1.5 }}>
+          <AlertTriangle size={16} style={{ color: 'var(--err-fg)', flexShrink: 0, marginTop: '2px' }} />
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--err-fg)', margin: 0, lineHeight: 1.5 }}>
             This will close the case and notify the claimant. If a lawyer is assigned, they will lose access to this case.
           </p>
         </div>
@@ -87,7 +87,7 @@ export default function ForceCloseModal({ open, caseData, onSubmit, onCancel, sa
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           width: '100%', padding: '0.625rem 1.5rem',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700,
-          color: 'white', backgroundColor: (!canSubmit || saving) ? 'var(--slate-500)' : '#B91C1C',
+          color: 'var(--card-bg)', backgroundColor: (!canSubmit || saving) ? 'var(--body-secondary)' : 'var(--err-fg)',
           border: 'none', borderRadius: 'var(--radius-md)',
           cursor: (!canSubmit || saving) ? 'not-allowed' : 'pointer', minHeight: '44px',
           marginBottom: '0.75rem'
@@ -98,7 +98,7 @@ export default function ForceCloseModal({ open, caseData, onSubmit, onCancel, sa
           <button type="button" onClick={handleClose} disabled={saving} style={{
             background: 'none', border: 'none', cursor: 'pointer',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
-            color: 'var(--slate-500)', padding: '0.5rem 1rem', minHeight: '44px'
+            color: 'var(--body-secondary)', padding: '0.5rem 1rem', minHeight: '44px'
           }}>
             Cancel
           </button>

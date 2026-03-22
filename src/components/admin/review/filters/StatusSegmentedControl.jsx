@@ -35,7 +35,7 @@ export default function StatusSegmentedControl({ value, onChange }) {
               fontSize: '0.875rem',
               fontWeight: active ? 700 : 500,
               color: active ? 'white' : 'var(--slate-600)',
-              backgroundColor: active ? 'var(--slate-800)' : 'transparent',
+              backgroundColor: active ? 'var(--body)' : 'transparent',
               border: 'none',
               borderRadius: '10px',
               cursor: 'pointer',

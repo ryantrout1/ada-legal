@@ -15,17 +15,17 @@ function hoursSince(dateStr) {
 
 /* Escalation tiers for unclaimed (days available) */
 function getUnclaimedEscalation(days) {
-  if (days >= 31) return { color: '#991B1B', bg: '#FEE2E2', border: '#FECACA', fontWeight: 700, prefix: '🔴 CRITICAL · ' };
-  if (days >= 15) return { color: '#B91C1C', bg: '#FEF2F2', border: '#FDE68A', fontWeight: 700, prefix: '' };
-  return { color: '#B45309', bg: 'white', border: '#FDE68A', fontWeight: 700, prefix: '' };
+  if (days >= 31) return { color: '#991B1B', bg: 'var(--err-bg)', border: '#FECACA', fontWeight: 700, prefix: '🔴 CRITICAL · ' };
+  if (days >= 15) return { color: 'var(--err-fg)', bg: 'var(--err-bg)', border: 'var(--wrn-bd)', fontWeight: 700, prefix: '' };
+  return { color: 'var(--wrn-fg)', bg: 'var(--card-bg)', border: 'var(--wrn-bd)', fontWeight: 700, prefix: '' };
 }
 
 /* Escalation tiers for awaiting contact (hours since assigned) */
 function getContactEscalation(hrs) {
   const days = hrs / 24;
-  if (days >= 7) return { color: '#991B1B', bg: '#FEE2E2', border: '#FECACA', fontWeight: 700, prefix: '🔴 CRITICAL · ' };
-  if (hrs >= 48) return { color: '#B91C1C', bg: '#FEF2F2', border: '#FDE68A', fontWeight: 700, prefix: '' };
-  return { color: '#B45309', bg: 'white', border: '#FDE68A', fontWeight: 400, prefix: '' };
+  if (days >= 7) return { color: '#991B1B', bg: 'var(--err-bg)', border: '#FECACA', fontWeight: 700, prefix: '🔴 CRITICAL · ' };
+  if (hrs >= 48) return { color: 'var(--err-fg)', bg: 'var(--err-bg)', border: 'var(--wrn-bd)', fontWeight: 700, prefix: '' };
+  return { color: 'var(--wrn-fg)', bg: 'var(--card-bg)', border: 'var(--wrn-bd)', fontWeight: 400, prefix: '' };
 }
 
 const actionBtnBase = {
@@ -52,12 +52,12 @@ export default function NeedsAttentionSection({
 
   return (
     <>
-      <div role="region" aria-label="Cases needing attention" style={{ backgroundColor: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: '12px', overflow: 'hidden' }}>
+      <div role="region" aria-label="Cases needing attention" style={{ backgroundColor: 'var(--wrn-bg)', border: '1px solid #FDE68A', borderRadius: '12px', overflow: 'hidden' }}>
           <div style={{ padding: '12px 16px 16px' }}>
             {/* Unclaimed too long */}
             {unclaimed.length > 0 && (
               <div style={{ marginBottom: awaitingContact.length > 0 ? '16px' : 0 }}>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#92400E', textTransform: 'uppercase', margin: '0 0 8px' }}>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--wrn-fg)', textTransform: 'uppercase', margin: '0 0 8px' }}>
                   Unclaimed too long ({unclaimed.length})
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -70,13 +70,13 @@ export default function NeedsAttentionSection({
                         padding: '8px 12px', backgroundColor: esc.bg, borderRadius: '8px', border: `1px solid ${esc.border}`,
                         minHeight: '44px',
                       }}>
-                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-800)', flex: '1 1 140px', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body)', flex: '1 1 140px', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {c.business_name}
                         </span>
-                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
+                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>
                           {c.violation_type === 'physical_space' ? '🏢' : '🌐'} {c.business_type}
                         </span>
-                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
+                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>
                           {[c.city, c.state].filter(Boolean).join(', ')}
                         </span>
                         <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: esc.fontWeight, color: esc.color }}>
@@ -93,7 +93,7 @@ export default function NeedsAttentionSection({
                           <button
                             onClick={(e) => { e.stopPropagation(); onForceClose(c); }}
                             aria-label={`Close case for ${c.business_name}`}
-                            style={{ ...actionBtnBase, color: '#B91C1C', border: '1.5px solid #B91C1C' }}
+                            style={{ ...actionBtnBase, color: 'var(--err-fg)', border: '1.5px solid #B91C1C' }}
                           >
                             Close
                           </button>
@@ -108,7 +108,7 @@ export default function NeedsAttentionSection({
             {/* Awaiting lawyer contact */}
             {awaitingContact.length > 0 && (
               <div>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#B91C1C', textTransform: 'uppercase', margin: '0 0 8px' }}>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--err-fg)', textTransform: 'uppercase', margin: '0 0 8px' }}>
                   Awaiting lawyer contact ({awaitingContact.length})
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -122,10 +122,10 @@ export default function NeedsAttentionSection({
                         padding: '8px 12px', backgroundColor: esc.bg, borderRadius: '8px', border: `1px solid ${esc.border}`,
                         minHeight: '44px',
                       }}>
-                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-800)', flex: '1 1 140px', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body)', flex: '1 1 140px', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {c.business_name}
                         </span>
-                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
+                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>
                           {c.violation_type === 'physical_space' ? '🏢' : '🌐'} {c.business_type}
                         </span>
                         <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-600)' }}>
@@ -139,14 +139,14 @@ export default function NeedsAttentionSection({
                           <button
                             onClick={(e) => { e.stopPropagation(); showToast('Reminder functionality coming soon'); }}
                             aria-label={`Send reminder for ${c.business_name}`}
-                            style={{ ...actionBtnBase, color: '#B45309', border: '1.5px solid #B45309' }}
+                            style={{ ...actionBtnBase, color: 'var(--wrn-fg)', border: '1.5px solid #B45309' }}
                           >
                             Remind
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); setReclaimCase(c); }}
                             aria-label={`Reclaim ${c.business_name} from ${lawyer?.full_name || 'lawyer'}`}
-                            style={{ ...actionBtnBase, color: '#B91C1C', border: '1.5px solid #B91C1C' }}
+                            style={{ ...actionBtnBase, color: 'var(--err-fg)', border: '1.5px solid #B91C1C' }}
                           >
                             Reclaim
                           </button>
@@ -176,7 +176,7 @@ export default function NeedsAttentionSection({
           position: 'fixed', bottom: '5rem', left: '50%', transform: 'translateX(-50%)',
           zIndex: 1100, padding: '10px 20px', borderRadius: '10px',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
-          boxShadow: '0 4px 16px rgba(0,0,0,0.15)', backgroundColor: '#D97706', color: 'white',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.15)', backgroundColor: '#D97706', color: 'var(--card-bg)',
         }}>
           {toast}
         </div>

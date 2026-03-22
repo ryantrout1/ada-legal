@@ -31,8 +31,8 @@ export default function RecentPopover({ submissions, onClose }) {
         width: '340px',
         maxHeight: '320px',
         overflowY: 'auto',
-        backgroundColor: 'white',
-        border: '1px solid var(--slate-200)',
+        backgroundColor: 'var(--card-bg)',
+        border: '1px solid var(--card-border)',
         borderRadius: '10px',
         boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
         zIndex: 100,
@@ -40,9 +40,9 @@ export default function RecentPopover({ submissions, onClose }) {
     >
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '8px 12px', borderBottom: '1px solid var(--slate-100)',
+        padding: '8px 12px', borderBottom: '1px solid var(--card-bg-tinted)',
       }}>
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-800)' }}>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--body)' }}>
           Recent Submissions
         </span>
         <button
@@ -50,7 +50,7 @@ export default function RecentPopover({ submissions, onClose }) {
           aria-label="Close"
           style={{
             background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
-            color: 'var(--slate-500)', display: 'flex', minHeight: '44px', minWidth: '44px',
+            color: 'var(--body-secondary)', display: 'flex', minHeight: '44px', minWidth: '44px',
             alignItems: 'center', justifyContent: 'center',
           }}
         >
@@ -60,7 +60,7 @@ export default function RecentPopover({ submissions, onClose }) {
 
       {submissions.length === 0 ? (
         <div style={{ padding: '16px 12px', textAlign: 'center' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569', margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', margin: 0 }}>
             No pending submissions
           </p>
         </div>
@@ -72,19 +72,19 @@ export default function RecentPopover({ submissions, onClose }) {
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 padding: '8px 12px', gap: '8px',
-                borderBottom: i < submissions.length - 1 ? '1px solid var(--slate-100)' : 'none',
+                borderBottom: i < submissions.length - 1 ? '1px solid var(--card-bg-tinted)' : 'none',
               }}
             >
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
-                  color: 'var(--slate-800)', margin: 0,
+                  color: 'var(--body)', margin: 0,
                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                 }}>
                   {c.business_name || '—'}
                 </p>
                 <p style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)',
+                  fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)',
                   margin: '1px 0 0',
                 }}>
                   {[c.city, c.state].filter(Boolean).join(', ')} · {formatDate(c.submitted_at || c.created_date)}

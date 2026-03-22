@@ -30,8 +30,8 @@ export default function AttorneyAlertBar({ lawyers, cases, contactLogs, onQuickA
         style={{
           display: 'flex', width: '100%', alignItems: 'center', gap: '8px',
           padding: '10px 16px', minHeight: '44px',
-          backgroundColor: '#FEF3C7', border: 'none', cursor: 'pointer',
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: '#92400E',
+          backgroundColor: 'var(--wrn-bg)', border: 'none', cursor: 'pointer',
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--wrn-fg)',
           textAlign: 'left',
         }}
       >
@@ -45,24 +45,24 @@ export default function AttorneyAlertBar({ lawyers, cases, contactLogs, onQuickA
       </button>
 
       {expanded && (
-        <div style={{ backgroundColor: '#FFFBEB', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ backgroundColor: 'var(--wrn-bg)', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {pending.length > 0 && (
             <div>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#92400E', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--wrn-fg)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>
                 Pending Approvals
               </p>
               {pending.map(l => (
                 <div key={l.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 0', flexWrap: 'wrap' }}>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-900)' }}>{l.full_name}</span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>{l.firm_name}</span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--heading)' }}>{l.full_name}</span>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>{l.firm_name}</span>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>
                     Applied {new Date(l.created_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   </span>
                   <button
                     onClick={(e) => { e.stopPropagation(); onQuickApprove(l); }}
                     style={{
                       marginLeft: 'auto', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-                      color: '#15803D', backgroundColor: '#DCFCE7', border: 'none', borderRadius: '6px',
+                      color: 'var(--suc-fg)', backgroundColor: 'var(--suc-bg)', border: 'none', borderRadius: '6px',
                       padding: '4px 12px', minHeight: '36px', cursor: 'pointer',
                     }}
                   >
@@ -75,14 +75,14 @@ export default function AttorneyAlertBar({ lawyers, cases, contactLogs, onQuickA
 
           {overdue.length > 0 && (
             <div>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#92400E', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--wrn-fg)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>
                 Overdue Contact
               </p>
               {overdue.map(o => (
                 <div key={o.caseData.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 0', flexWrap: 'wrap' }}>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-900)' }}>{o.lawyer?.full_name || 'Unknown'}</span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>→ {o.caseData.business_name}</span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#B91C1C' }}>{o.hoursOverdue}h overdue</span>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--heading)' }}>{o.lawyer?.full_name || 'Unknown'}</span>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>→ {o.caseData.business_name}</span>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--err-fg)' }}>{o.hoursOverdue}h overdue</span>
                   <Link
                     to={createPageUrl('AdminCases') + `?search=${o.caseData.id?.slice(0, 8)}`}
                     style={{

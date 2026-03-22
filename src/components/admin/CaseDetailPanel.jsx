@@ -17,7 +17,7 @@ function DetailItem({ label, value }) {
       }}>{label}</p>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-        color: 'var(--slate-800)', margin: 0, lineHeight: 1.5,
+        color: 'var(--body)', margin: 0, lineHeight: 1.5,
         whiteSpace: 'pre-wrap', wordBreak: 'break-word'
       }}>{value || '—'}</p>
     </div>
@@ -37,8 +37,8 @@ export default function CaseDetailPanel({ caseData }) {
         <div>
           <h3 style={{
             fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
-            color: 'var(--slate-900)', marginBottom: 'var(--space-md)',
-            paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--slate-200)'
+            color: 'var(--heading)', marginBottom: 'var(--space-md)',
+            paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--card-border)'
           }}>Violation Details</h3>
           <DetailItem label="Type" value={isPhysical ? 'Physical Space' : 'Digital / Website'} />
           <DetailItem label="Business Name" value={c.business_name} />
@@ -62,8 +62,8 @@ export default function CaseDetailPanel({ caseData }) {
         <div>
           <h3 style={{
             fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
-            color: 'var(--slate-900)', marginBottom: 'var(--space-md)',
-            paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--slate-200)'
+            color: 'var(--heading)', marginBottom: 'var(--space-md)',
+            paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--card-border)'
           }}>Incident</h3>
           <DetailItem label="Incident Date" value={formatDate(c.incident_date)} />
           <DetailItem label="Visited Before" value={
@@ -72,8 +72,8 @@ export default function CaseDetailPanel({ caseData }) {
 
           <h3 style={{
             fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
-            color: 'var(--slate-900)', marginBottom: 'var(--space-md)', marginTop: 'var(--space-lg)',
-            paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--slate-200)'
+            color: 'var(--heading)', marginBottom: 'var(--space-md)', marginTop: 'var(--space-lg)',
+            paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--card-border)'
           }}>Contact Information</h3>
           <DetailItem label="Name" value={c.contact_name} />
           <DetailItem label="Email" value={c.contact_email} />
@@ -88,14 +88,14 @@ export default function CaseDetailPanel({ caseData }) {
       <div style={{ marginTop: 'var(--space-lg)' }}>
         <h3 style={{
           fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
-          color: 'var(--slate-900)', marginBottom: 'var(--space-sm)',
-          paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--slate-200)'
+          color: 'var(--heading)', marginBottom: 'var(--space-sm)',
+          paddingBottom: 'var(--space-xs)', borderBottom: '1px solid var(--card-border)'
         }}>Narrative</h3>
         <div style={{
-          backgroundColor: 'var(--slate-50)', border: '1px solid var(--slate-200)',
+          backgroundColor: 'var(--page-bg-subtle)', border: '1px solid var(--card-border)',
           borderRadius: 'var(--radius-md)', padding: 'var(--space-md)',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-          color: 'var(--slate-800)', lineHeight: 1.7, whiteSpace: 'pre-wrap'
+          color: 'var(--body)', lineHeight: 1.7, whiteSpace: 'pre-wrap'
         }}>
           {c.narrative || '—'}
         </div>

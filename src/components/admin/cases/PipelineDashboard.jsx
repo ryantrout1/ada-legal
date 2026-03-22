@@ -16,21 +16,21 @@ const STAGES = [
 
 /* Active-stage base colors (used when count > 0) */
 const ACTIVE_COLORS = {
-  submitted:    { bg: '#FFF7ED', numColor: '#9A3412', labelColor: '#9A3412', border: '2px solid #FB923C' },
+  submitted:    { bg: 'var(--card-bg-tinted)', numColor: '#9A3412', labelColor: '#9A3412', border: '2px solid #FB923C' },
   under_review: { bg: '#DBEAFE', numColor: '#1D4ED8', labelColor: '#1D4ED8', border: 'none' },
   available:    { bg: '#FEF1EC', numColor: '#9A3412', labelColor: '#9A3412', border: 'none' },
-  assigned:     { bg: '#FEF3C7', numColor: '#92400E', labelColor: '#92400E', border: 'none' },
-  in_progress:  { bg: '#DCFCE7', numColor: '#15803D', labelColor: '#15803D', border: 'none' },
+  assigned:     { bg: 'var(--wrn-bg)', numColor: 'var(--wrn-fg)', labelColor: 'var(--wrn-fg)', border: 'none' },
+  in_progress:  { bg: 'var(--suc-bg)', numColor: 'var(--suc-fg)', labelColor: 'var(--suc-fg)', border: 'none' },
 };
 
 /* Resolved-stage colors (muted regardless of count) */
 const RESOLVED_COLORS = {
-  closed:   { bg: '#F1F5F9', numColor: '#434E5E', labelColor: '#3D4A5C' },
-  rejected: { bg: '#F1F5F9', numColor: '#DC2626', labelColor: '#DC2626' },
+  closed:   { bg: 'var(--card-bg-tinted)', numColor: '#434E5E', labelColor: '#3D4A5C' },
+  rejected: { bg: 'var(--card-bg-tinted)', numColor: 'var(--err-fg)', labelColor: 'var(--err-fg)' },
 };
 
 /* Zero-case styling — nearly invisible */
-const ZERO_STYLE = { bg: '#FAFAF9', numColor: '#64748B', labelColor: '#434E5E', border: 'none' };
+const ZERO_STYLE = { bg: '#FAFAF9', numColor: 'var(--body-secondary)', labelColor: '#434E5E', border: 'none' };
 
 function getCardStyle(key, count) {
   if (count === 0) return ZERO_STYLE;
@@ -75,7 +75,7 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
                   size={16}
                   className="pipeline-arrow"
                   style={{
-                    color: arrowHighlighted ? '#C2410C' : '#64748B',
+                    color: arrowHighlighted ? 'var(--accent)' : 'var(--body-secondary)',
                     flexShrink: 0,
                     margin: '0 2px',
                     transition: 'color 0.3s',
@@ -103,7 +103,7 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
                   borderBottom: isBottleneck
                     ? '3px solid #EA580C'
                     : active
-                      ? '3px solid var(--slate-700)'
+                      ? '3px solid var(--body)'
                       : '3px solid transparent',
                   position: 'relative',
                 }}
@@ -125,10 +125,10 @@ export default function PipelineDashboard({ cases, activeStatus, onStatusClick, 
         })}
       </div>
 
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '10px 0 0', lineHeight: 1.5 }}>
-        <strong style={{ color: 'var(--slate-700)' }}>{cases.length}</strong> total cases
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', margin: '10px 0 0', lineHeight: 1.5 }}>
+        <strong style={{ color: 'var(--body)' }}>{cases.length}</strong> total cases
         {' · '}
-        <strong style={{ color: needAttentionCount > 0 ? '#92400E' : 'var(--slate-700)' }}>{needAttentionCount}</strong> need attention
+        <strong style={{ color: needAttentionCount > 0 ? 'var(--wrn-fg)' : 'var(--body)' }}>{needAttentionCount}</strong> need attention
       </p>
 
       <style>{`

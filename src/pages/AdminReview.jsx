@@ -85,7 +85,7 @@ export default function AdminReview() {
     const clusterIds = new Set();
     submitted.forEach(c => { if (c.ai_duplicate_cluster_id && (c.ai_duplicate_cluster_size ?? 0) >= 2) clusterIds.add(c.ai_duplicate_cluster_id); });
     return [
-      { key: 'total', label: 'Queue Total', value: total, color: 'var(--slate-800)', active: !dashboardFilter, onClick: () => setDashboardFilter(null) },
+      { key: 'total', label: 'Queue Total', value: total, color: 'var(--body)', active: !dashboardFilter, onClick: () => setDashboardFilter(null) },
       { key: 'ready', label: 'Ready', value: ready, bg: 'rgba(220,252,231,0.5)', color: '#15803D', active: dashboardFilter === 'ready', onClick: () => setDashboardFilter(dashboardFilter === 'ready' ? null : 'ready') },
       { key: 'needs', label: 'Needs Info', value: needs, bg: 'rgba(254,243,199,0.5)', color: '#B45309', warn: needs > 0, active: dashboardFilter === 'needs', onClick: () => setDashboardFilter(dashboardFilter === 'needs' ? null : 'needs') },
       { key: 'high', label: 'High Sev', value: high, bg: 'rgba(254,226,226,0.5)', color: '#B91C1C', active: dashboardFilter === 'high', onClick: () => setDashboardFilter(dashboardFilter === 'high' ? null : 'high') },
@@ -260,7 +260,7 @@ export default function AdminReview() {
             />
           }
           listHeader={
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-500)' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--body-secondary)' }}>
               {dashboardFilter ? <><span style={{ textTransform: 'capitalize' }}>{dashboardFilter}</span> ({displayCases.length})</> : `All (${displayCases.length})`}
               {dashboardFilter && (
                 <> · <button onClick={() => setDashboardFilter(null)} style={{ background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', textDecoration: 'underline', padding: 0 }}>Clear filter</button></>
@@ -279,9 +279,9 @@ export default function AdminReview() {
         )}
 
         {cases.length === 0 ? (
-          <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '48px 24px', textAlign: 'center' }}>
+          <div style={{ backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '48px 24px', textAlign: 'center' }}>
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}><CheckCircle size={28} style={{ color: '#15803D' }} /></div>
-            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 8px' }}>All caught up — no cases pending review</h2>
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 8px' }}>All caught up — no cases pending review</h2>
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: 0 }}>New submissions will appear here automatically.</p>
           </div>
         ) : viewMode === 'list' ? (
@@ -294,7 +294,7 @@ export default function AdminReview() {
             {expandedClusterCase && <div style={{ marginTop: '-6px' }}><QCCaseCard key={expandedClusterCase.id} caseData={expandedClusterCase} defaultExpanded={true} onApprove={() => openModal('approve', expandedClusterCase)} onReject={() => openModal('reject', expandedClusterCase)} onFlag={() => openModal('flag', expandedClusterCase)} /></div>}
             {individualCases.length > 0 && (
               <>
-                <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: '20px 0 4px' }}>Individual Reports ({individualCases.length})</h2>
+                <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: '20px 0 4px' }}>Individual Reports ({individualCases.length})</h2>
                 {individualCases.map(c => <QCCaseCard key={c.id} caseData={c} onApprove={() => openModal('approve', c)} onReject={() => openModal('reject', c)} onFlag={() => openModal('flag', c)} />)}
               </>
             )}

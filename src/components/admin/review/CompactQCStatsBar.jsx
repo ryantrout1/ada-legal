@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 
 const CELLS = [
-  { key: 'total',    label: 'QUEUE TOTAL',    bgActive: 'rgba(241,245,249,0.6)', color: 'var(--slate-900)' },
-  { key: 'ready',    label: 'READY',           bgActive: 'rgba(220,252,231,0.5)', color: '#15803D' },
-  { key: 'needs',    label: 'NEEDS INFO',      bgActive: 'rgba(254,243,199,0.5)', color: '#B45309' },
-  { key: 'high',     label: 'HIGH SEV',        bgActive: 'rgba(254,226,226,0.5)', color: '#B91C1C' },
+  { key: 'total',    label: 'QUEUE TOTAL',    bgActive: 'rgba(241,245,249,0.6)', color: 'var(--heading)' },
+  { key: 'ready',    label: 'READY',           bgActive: 'rgba(220,252,231,0.5)', color: 'var(--suc-fg)' },
+  { key: 'needs',    label: 'NEEDS INFO',      bgActive: 'rgba(254,243,199,0.5)', color: 'var(--wrn-fg)' },
+  { key: 'high',     label: 'HIGH SEV',        bgActive: 'rgba(254,226,226,0.5)', color: 'var(--err-fg)' },
   { key: 'clusters', label: 'CLUSTERS',        bgActive: 'rgba(219,234,254,0.5)', color: '#1E3A8A' },
 ];
 
@@ -59,8 +59,8 @@ export default function CompactQCStatsBar({ cases, activeFilter, onFilterChange 
       {/* Unified bar */}
       <div style={{
         display: 'flex', flex: '1 1 auto', minWidth: 0,
-        border: '1px solid var(--slate-200)', borderRadius: '8px', overflow: 'hidden',
-        backgroundColor: 'white',
+        border: '1px solid var(--card-border)', borderRadius: '8px', overflow: 'hidden',
+        backgroundColor: 'var(--card-bg)',
       }}>
         {CELLS.map((cell, i) => {
           const count = counts[cell.key];
@@ -83,21 +83,21 @@ export default function CompactQCStatsBar({ cases, activeFilter, onFilterChange 
                 justifyContent: 'center', padding: '10px 6px', minHeight: '60px',
                 border: 'none', cursor: 'pointer', position: 'relative',
                 backgroundColor: isActive ? cell.bgActive : 'transparent',
-                borderRight: i < CELLS.length - 1 ? '1px solid var(--slate-200)' : 'none',
+                borderRight: i < CELLS.length - 1 ? '1px solid var(--card-border)' : 'none',
                 transition: 'background-color 0.15s',
                 borderBottom: isActive ? `2px solid ${cell.color}` : '2px solid transparent',
               }}
             >
               <span style={{
                 fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700, lineHeight: 1.2,
-                color: isZero ? 'var(--slate-500)' : cell.color,
+                color: isZero ? 'var(--body-secondary)' : cell.color,
               }}>
                 {count}
               </span>
               <span style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
                 textTransform: 'uppercase', letterSpacing: '0.03em', lineHeight: 1.3,
-                color: isZero ? 'var(--slate-500)' : 'var(--slate-500)',
+                color: isZero ? 'var(--body-secondary)' : 'var(--body-secondary)',
               }}>
                 {cell.label}
               </span>
@@ -108,7 +108,7 @@ export default function CompactQCStatsBar({ cases, activeFilter, onFilterChange 
 
       {/* Quick Insights — inline text */}
       <div className="qc-quick-insights" style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--slate-500)',
+        fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)',
         lineHeight: 1.4, whiteSpace: 'nowrap', flexShrink: 0,
       }}>
         <span>{stats.newToday} new today</span>
@@ -129,7 +129,7 @@ export default function CompactQCStatsBar({ cases, activeFilter, onFilterChange 
           z-index: 1;
         }
         .qc-bar-cell:hover {
-          background-color: var(--slate-50) !important;
+          background-color: var(--page-bg-subtle) !important;
         }
         @media (max-width: 480px) {
           .qc-stats-row {

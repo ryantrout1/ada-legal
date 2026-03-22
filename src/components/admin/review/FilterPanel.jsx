@@ -92,7 +92,7 @@ export default function FilterPanel({ filters, onChange, open }) {
           style={{
             padding: '20px',
             backgroundColor: 'var(--slate-50, #FAF7F2)',
-            border: '1px solid var(--slate-200)',
+            border: '1px solid var(--card-border)',
             borderRadius: '12px',
             display: 'flex',
             flexDirection: 'column',
@@ -130,7 +130,7 @@ export default function FilterPanel({ filters, onChange, open }) {
           </div>
 
           {/* Divider */}
-          <div style={{ height: '1px', backgroundColor: 'var(--slate-200)' }} />
+          <div style={{ height: '1px', backgroundColor: 'var(--card-border)' }} />
 
           {/* Row 2 — Secondary filters */}
           <div className="filter-row-2" style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
@@ -160,12 +160,12 @@ export default function FilterPanel({ filters, onChange, open }) {
 
             {/* Date range */}
             <div style={{ flex: '1 1 220px', minWidth: '180px' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>
                 Date Range
               </p>
               <div className="filter-date-row" style={{ display: 'flex', gap: '8px' }}>
                 <div style={{ flex: 1, position: 'relative' }}>
-                  <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-500)', pointerEvents: 'none' }} />
+                  <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--body-secondary)', pointerEvents: 'none' }} />
                   <input
                     type="date"
                     id="filter-date-after"
@@ -176,13 +176,13 @@ export default function FilterPanel({ filters, onChange, open }) {
                     style={{
                       width: '100%', padding: '8px 10px 8px 30px', minHeight: '44px',
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                      border: '1px solid var(--slate-300)', borderRadius: '10px',
-                      backgroundColor: 'white', boxSizing: 'border-box',
+                      border: '1px solid var(--card-border)', borderRadius: '10px',
+                      backgroundColor: 'var(--card-bg)', boxSizing: 'border-box',
                     }}
                   />
                 </div>
                 <div style={{ flex: 1, position: 'relative' }}>
-                  <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-500)', pointerEvents: 'none' }} />
+                  <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--body-secondary)', pointerEvents: 'none' }} />
                   <input
                     type="date"
                     id="filter-date-before"
@@ -193,8 +193,8 @@ export default function FilterPanel({ filters, onChange, open }) {
                     style={{
                       width: '100%', padding: '8px 10px 8px 30px', minHeight: '44px',
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                      border: '1px solid var(--slate-300)', borderRadius: '10px',
-                      backgroundColor: 'white', boxSizing: 'border-box',
+                      border: '1px solid var(--card-border)', borderRadius: '10px',
+                      backgroundColor: 'var(--card-bg)', boxSizing: 'border-box',
                     }}
                   />
                 </div>
@@ -203,7 +203,7 @@ export default function FilterPanel({ filters, onChange, open }) {
 
             {/* Toggles */}
             <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: '4px', justifyContent: 'flex-start' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>
                 Show Only
               </p>
               <ToggleSwitch
@@ -236,7 +236,7 @@ export default function FilterPanel({ filters, onChange, open }) {
                 {count} filter{count !== 1 ? 's' : ''} active · Clear All Filters
               </button>
             ) : (
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', minHeight: '44px', display: 'inline-flex', alignItems: 'center' }}>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', minHeight: '44px', display: 'inline-flex', alignItems: 'center' }}>
                 No filters active
               </span>
             )}

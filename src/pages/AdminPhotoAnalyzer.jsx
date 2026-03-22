@@ -296,7 +296,7 @@ function ConcernCard({ concern }) {
         <div style={{ padding: '0 14px 14px', borderTop: '1px solid ' + (SEV_BORDER[concern.severity] || SEV_BORDER.LOW) }}>
           <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--heading)', lineHeight: 1.6, margin: '12px 0 0', fontFamily: 'Manrope, sans-serif' }}>{concern.detail}</p>
           {concern.remediation && (
-            <div style={{ marginTop: 10, padding: '8px 12px', borderRadius: 6, background: 'rgba(255,255,255,0.55)', border: '1px solid rgba(0,0,0,0.07)', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+            <div style={{ marginTop: 10, padding: '8px 12px', borderRadius: 6, background: 'var(--page-bg-subtle)', border: '1px solid var(--card-border)', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
               <span aria-hidden="true" style={{ fontSize: 13, flexShrink: 0, marginTop: 1 }}>🔧</span>
               <p style={{ fontSize: 12, color: 'var(--heading)', margin: 0, lineHeight: 1.6, fontFamily: 'Manrope, sans-serif' }}>
                 <strong style={{ fontWeight: 700 }}>Fix: </strong>{concern.remediation}
@@ -312,7 +312,7 @@ function ConcernCard({ concern }) {
                 fontSize: 10, fontWeight: 700, fontFamily: 'Manrope, sans-serif', letterSpacing: '0.05em',
                 padding: '1px 6px', borderRadius: 4,
                 color: concern.confidence === 'HIGH' ? 'var(--suc-fg)' : concern.confidence === 'LOW' ? 'var(--wrn-fg)' : 'var(--body-secondary)',
-                background: concern.confidence === 'HIGH' ? 'var(--suc-bg)' : concern.confidence === 'LOW' ? 'var(--wrn-bg)' : 'var(--slate-100)',
+                background: concern.confidence === 'HIGH' ? 'var(--suc-bg)' : concern.confidence === 'LOW' ? 'var(--wrn-bg)' : 'var(--card-bg-tinted)',
                 border: '1px solid ' + (concern.confidence === 'HIGH' ? 'var(--suc-bd)' : concern.confidence === 'LOW' ? 'var(--wrn-bd)' : 'var(--card-border)'),
               }}>
                 {concern.confidence === 'LOW' ? '⚠ Estimated — verify on-site' : concern.confidence === 'HIGH' ? '✓ Clearly visible' : '~ Likely — verify on-site'}
@@ -620,7 +620,7 @@ function AnalysisResults({ result, photoUrls, onReport }) {
                     <div style={{ padding: '0 16px 16px', borderTop: '1px solid ' + (SEV_BORDER[c.severity] || SEV_BORDER.LOW) }}>
                       <p style={{ fontSize: 14, color: 'var(--heading)', lineHeight: 1.7, margin: '12px 0 0', fontFamily: 'Manrope, sans-serif' }}>{c.detail}</p>
                       {c.remediation && (
-                        <div style={{ marginTop: 12, padding: '12px 14px', borderRadius: 8, background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)' }}>
+                        <div style={{ marginTop: 12, padding: '12px 14px', borderRadius: 8, background: 'var(--page-bg-subtle)', border: '1px solid var(--card-border)' }}>
                           <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>🔧 Recommended Fix</div>
                           <p style={{ fontSize: 13, color: 'var(--heading)', margin: 0, lineHeight: 1.6, fontFamily: 'Manrope, sans-serif' }}>{c.remediation}</p>
                         </div>
@@ -673,7 +673,7 @@ function AnalysisResults({ result, photoUrls, onReport }) {
 
           {result.photos?.map((photo, idx) => (
             <div key={idx} style={{ marginBottom: 20, borderRadius: 10, border: '1px solid var(--card-border)', background: 'var(--card-bg)', overflow: 'hidden' }}>
-              <div style={{ padding: '12px 16px', background: 'var(--slate-100)', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ padding: '12px 16px', background: 'var(--card-bg-tinted)', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 12 }}>
                 {photoUrls?.[idx] && (
                   <PhotoCard url={photoUrls[idx]} onLightbox={() => setLightboxUrl(photoUrls[idx])} />
                 )}
@@ -900,7 +900,7 @@ function BatchReanalysisModal({ history, onClose, onComplete, runAnalysisForReco
         {/* Progress bar */}
         {running || done ? (
           <div style={{ marginBottom: 14 }}>
-            <div style={{ height: 6, borderRadius: 3, background: 'var(--slate-200)', overflow: 'hidden', marginBottom: 6 }}>
+            <div style={{ height: 6, borderRadius: 3, background: 'var(--card-border)', overflow: 'hidden', marginBottom: 6 }}>
               <div style={{ height: '100%', borderRadius: 3, background: done && failed === 0 ? 'var(--suc-fg)' : 'var(--accent)', transition: 'width 0.4s', width: `${totalEligible ? Math.round((completed + failed) / totalEligible * 100) : 0}%` }} />
             </div>
             <p style={{ fontSize: 12, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', margin: 0 }}>
@@ -1266,7 +1266,7 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
                 placeholder="Search location…"
                 value={historySearch}
                 onChange={e => setHistorySearch(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box', padding: '7px 10px', marginBottom: 8, borderRadius: 6, fontFamily: 'Manrope, sans-serif', fontSize: 12, background: 'var(--surface)', border: '1.5px solid var(--border)', color: 'var(--body)', outline: 'none' }}
+                style={{ width: '100%', boxSizing: 'border-box', padding: '7px 10px', marginBottom: 8, borderRadius: 6, fontFamily: 'Manrope, sans-serif', fontSize: 12, background: 'var(--card-bg)', border: '1.5px solid var(--border)', color: 'var(--body)', outline: 'none' }}
               />
 
               {/* Risk filter pills */}
@@ -1342,7 +1342,7 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
                     onChange={e => setLocationLabel(e.target.value)}
                     placeholder="e.g. Desert Valley Medical — Main Entrance"
                     aria-describedby="location-hint"
-                    style={{ width: '100%', boxSizing: 'border-box', padding: '10px 14px', minHeight: 44, borderRadius: 8, fontFamily: 'Manrope, sans-serif', fontSize: 14, background: 'var(--surface)', border: '1.5px solid var(--border)', color: 'var(--body)', outline: 'none' }}
+                    style={{ width: '100%', boxSizing: 'border-box', padding: '10px 14px', minHeight: 44, borderRadius: 8, fontFamily: 'Manrope, sans-serif', fontSize: 14, background: 'var(--card-bg)', border: '1.5px solid var(--border)', color: 'var(--body)', outline: 'none' }}
                   />
                   <p id="location-hint" style={{ fontSize: 12, color: 'var(--body-secondary)', margin: '4px 0 0', fontFamily: 'Manrope, sans-serif' }}>
                     Optional — helps identify this analysis in your history.
@@ -1361,7 +1361,7 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
                   onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && fileInputRef.current?.click()}
-                  style={{ border: '2px dashed ' + (dragOver ? 'var(--accent)' : 'var(--slate-200)'), borderRadius: 10, padding: '32px 20px', textAlign: 'center', cursor: 'pointer', background: dragOver ? 'var(--card-bg-tinted)' : 'var(--page-bg-subtle)' }}
+                  style={{ border: '2px dashed ' + (dragOver ? 'var(--accent)' : 'var(--card-border)'), borderRadius: 10, padding: '32px 20px', textAlign: 'center', cursor: 'pointer', background: dragOver ? 'var(--card-bg-tinted)' : 'var(--page-bg-subtle)' }}
                 >
                   <Camera size={32} aria-hidden="true" style={{ color: 'var(--terra-400)', marginBottom: 10 }} />
                   <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', margin: '0 0 4px', fontFamily: 'Manrope, sans-serif' }}>
@@ -1379,7 +1379,7 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
                     {previews.map((url, i) => (
                       <div key={i} role="listitem" style={{ position: 'relative' }}>
                         <img src={url} alt={'Selected photo ' + (i + 1) + ': ' + (files[i]?.name || '')} style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8, border: '1.5px solid var(--card-border)', display: 'block' }} />
-                        <button onClick={() => removeFile(i)} aria-label={'Remove photo ' + (i + 1)} style={{ position: 'absolute', top: -10, right: -10, width: 32, height: 32, minWidth: 32, minHeight: 32, borderRadius: '50%', background: '#DC2626', border: '2px solid var(--surface)', color: '#FFFFFF', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
+                        <button onClick={() => removeFile(i)} aria-label={'Remove photo ' + (i + 1)} style={{ position: 'absolute', top: -10, right: -10, width: 32, height: 32, minWidth: 32, minHeight: 32, borderRadius: '50%', background: '#DC2626', border: '2px solid var(--card-bg)', color: '#FFFFFF', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
                           <X size={12} aria-hidden="true" />
                         </button>
                       </div>
@@ -1401,7 +1401,7 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
                   disabled={loading || !files.length}
                   aria-busy={loading}
                   aria-disabled={!files.length}
-                  style={{ marginTop: 18, width: '100%', minHeight: 48, borderRadius: 8, fontWeight: 700, fontSize: '0.9375rem', fontFamily: 'Manrope, sans-serif', cursor: loading || !files.length ? 'not-allowed' : 'pointer', background: loading || !files.length ? 'var(--slate-300)' : 'var(--accent)', color: loading || !files.length ? 'var(--slate-700)' : '#FFFFFF', border: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                  style={{ marginTop: 18, width: '100%', minHeight: 48, borderRadius: 8, fontWeight: 700, fontSize: '0.9375rem', fontFamily: 'Manrope, sans-serif', cursor: loading || !files.length ? 'not-allowed' : 'pointer', background: loading || !files.length ? 'var(--card-border)' : 'var(--accent)', color: loading || !files.length ? 'var(--body-secondary)' : '#FFFFFF', border: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
                 >
                   {loading
                     ? <><div className="a11y-spinner" aria-hidden="true" style={{ width: '1rem', height: '1rem', borderWidth: 2 }} /> Analyzing…</>

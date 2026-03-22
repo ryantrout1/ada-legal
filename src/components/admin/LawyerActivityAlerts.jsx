@@ -49,10 +49,10 @@ export default function LawyerActivityAlerts({ lawyers, cases, contactLogs, onDa
     return (
       <div style={{
         display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '10px 14px',
-        backgroundColor: '#DCFCE7', borderRadius: 'var(--radius-md)', border: '1px solid #BBF7D0'
+        backgroundColor: 'var(--suc-bg)', borderRadius: 'var(--radius-md)', border: '1px solid #BBF7D0'
       }}>
-        <CheckCircle size={16} style={{ color: '#15803D' }} />
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#15803D', fontWeight: 600 }}>
+        <CheckCircle size={16} style={{ color: 'var(--suc-fg)' }} />
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--suc-fg)', fontWeight: 600 }}>
           No alerts — all lawyers are in good standing
         </span>
       </div>
@@ -64,12 +64,12 @@ export default function LawyerActivityAlerts({ lawyers, cases, contactLogs, onDa
       {/* Overdue contacts */}
       {overdueContacts.length > 0 && (
         <div style={{
-          backgroundColor: '#FEE2E2', border: '1px solid #FECACA',
+          backgroundColor: 'var(--err-bg)', border: '1px solid #FECACA',
           borderRadius: 'var(--radius-md)', overflow: 'hidden'
         }}>
           <div style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '0.375rem', borderBottom: '1px solid #FECACA' }}>
-            <AlertTriangle size={14} style={{ color: '#B91C1C' }} />
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: '#B91C1C' }}>
+            <AlertTriangle size={14} style={{ color: 'var(--err-fg)' }} />
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--err-fg)' }}>
               Overdue Contact ({overdueContacts.length})
             </span>
           </div>
@@ -79,9 +79,9 @@ export default function LawyerActivityAlerts({ lawyers, cases, contactLogs, onDa
               padding: '6px 12px', borderBottom: i < overdueContacts.length - 1 ? '1px solid #FECACA' : 'none',
               backgroundColor: '#FFF5F5'
             }}>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-800)' }}>{item.lawyerName}</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body)' }}>{item.lawyerName}</span>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>→ {item.caseName}</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#B91C1C', marginLeft: 'auto', flexShrink: 0 }}>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--err-fg)', marginLeft: 'auto', flexShrink: 0 }}>
                 {item.hoursOverdue}h overdue
               </span>
               <Link to={createPageUrl('AdminCases') + `?search=${encodeURIComponent(item.caseName)}`} style={{
@@ -110,7 +110,7 @@ export default function LawyerActivityAlerts({ lawyers, cases, contactLogs, onDa
               padding: '6px 12px', borderBottom: i < pendingLawyers.length - 1 ? '1px solid #E9D5FF' : 'none',
               backgroundColor: '#F3E8FF20'
             }}>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-800)' }}>{l.full_name}</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body)' }}>{l.full_name}</span>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>{l.firm_name}</span>
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#7C3AED', marginLeft: 'auto', flexShrink: 0 }}>
                 Applied {formatDate(l.created_date)}
@@ -121,7 +121,7 @@ export default function LawyerActivityAlerts({ lawyers, cases, contactLogs, onDa
                 onClick={() => handleApprove(l)}
                 style={{
                   padding: '2px 10px', borderRadius: 'var(--radius-sm)',
-                  border: '1px solid #15803D', backgroundColor: '#15803D', color: 'white',
+                  border: '1px solid #15803D', backgroundColor: 'var(--suc-fg)', color: 'var(--card-bg)',
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
                   cursor: processing ? 'not-allowed' : 'pointer', flexShrink: 0
                 }}
@@ -134,7 +134,7 @@ export default function LawyerActivityAlerts({ lawyers, cases, contactLogs, onDa
                 onClick={() => handleReject(l)}
                 style={{
                   padding: '2px 10px', borderRadius: 'var(--radius-sm)',
-                  border: '1px solid #B91C1C', backgroundColor: 'transparent', color: '#B91C1C',
+                  border: '1px solid #B91C1C', backgroundColor: 'transparent', color: 'var(--err-fg)',
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
                   cursor: processing ? 'not-allowed' : 'pointer', flexShrink: 0
                 }}

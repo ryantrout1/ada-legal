@@ -19,8 +19,8 @@ export default function RecentSubmissionsTable({ cases }) {
   if (!cases || cases.length === 0) {
     return (
       <div style={{
-        backgroundColor: 'var(--surface)',
-        border: '1px solid var(--slate-200)',
+        backgroundColor: 'var(--card-bg)',
+        border: '1px solid var(--card-border)',
         borderRadius: 'var(--radius-lg)',
         padding: 'var(--space-2xl)',
         textAlign: 'center'
@@ -46,29 +46,29 @@ export default function RecentSubmissionsTable({ cases }) {
     letterSpacing: '0.05em',
     padding: '0.75rem 1rem',
     textAlign: 'left',
-    borderBottom: '2px solid var(--slate-200)'
+    borderBottom: '2px solid var(--card-border)'
   };
 
   const cellStyle = {
     fontFamily: 'Manrope, sans-serif',
     fontSize: '0.875rem',
-    color: 'var(--slate-800)',
+    color: 'var(--body)',
     padding: '0.875rem 1rem',
-    borderBottom: '1px solid var(--slate-100)',
+    borderBottom: '1px solid var(--card-bg-tinted)',
     verticalAlign: 'middle'
   };
 
   return (
     <div style={{
-      backgroundColor: 'var(--surface)',
-      border: '1px solid var(--slate-200)',
+      backgroundColor: 'var(--card-bg)',
+      border: '1px solid var(--card-border)',
       borderRadius: 'var(--radius-lg)',
       overflow: 'hidden'
     }}>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ backgroundColor: 'var(--slate-50)' }}>
+            <tr style={{ backgroundColor: 'var(--page-bg-subtle)' }}>
               <th style={headerStyle}>Case ID</th>
               <th style={headerStyle}>Violation Type</th>
               <th style={headerStyle}>Business Name</th>
@@ -83,7 +83,7 @@ export default function RecentSubmissionsTable({ cases }) {
                 key={c.id}
                 onClick={() => window.location.href = createPageUrl('AdminReview') + `?id=${c.id}`}
                 style={{ cursor: 'pointer', transition: 'background-color 0.1s' }}
-                onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
+                onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'; }}
                 onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
               >
                 <td style={{ ...cellStyle, fontWeight: 600, fontFamily: 'monospace', fontSize: '0.8125rem' }}>
@@ -102,8 +102,8 @@ export default function RecentSubmissionsTable({ cases }) {
                     fontFamily: 'Manrope, sans-serif',
                     fontSize: '0.75rem',
                     fontWeight: 700,
-                    color: '#92400E',
-                    backgroundColor: '#FEF3C7',
+                    color: 'var(--wrn-fg)',
+                    backgroundColor: 'var(--wrn-bg)',
                     borderRadius: '9999px',
                     textTransform: 'capitalize'
                   }}>

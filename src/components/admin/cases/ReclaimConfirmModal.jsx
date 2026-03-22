@@ -27,16 +27,16 @@ export default function ReclaimConfirmModal({ open, caseData, lawyerName, onConf
       onClick={e => { if (e.target === e.currentTarget && !saving) onCancel(); }}
     >
       <div style={{
-        backgroundColor: 'white', borderRadius: '16px', width: '100%', maxWidth: '420px',
+        backgroundColor: 'var(--card-bg)', borderRadius: '16px', width: '100%', maxWidth: '420px',
         padding: '24px', boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
       }}>
         <h2 id="reclaim-heading" style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 700,
-          color: 'var(--slate-900)', margin: '0 0 12px'
+          color: 'var(--heading)', margin: '0 0 12px'
         }}>
           Reclaim Case
         </h2>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--slate-700)', margin: '0 0 20px', lineHeight: 1.5 }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', margin: '0 0 20px', lineHeight: 1.5 }}>
           Reclaim <strong>{caseData.business_name}</strong> from <strong>{lawyerName || 'Unknown'}</strong>? It will return to the available case pool.
         </p>
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
@@ -47,7 +47,7 @@ export default function ReclaimConfirmModal({ open, caseData, lawyerName, onConf
               padding: '8px 20px', minHeight: '44px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600,
               color: 'var(--slate-600)', backgroundColor: 'transparent',
-              border: '1.5px solid var(--slate-300)', borderRadius: '8px',
+              border: '1.5px solid var(--card-border)', borderRadius: '8px',
               cursor: saving ? 'not-allowed' : 'pointer',
             }}
           >
@@ -61,7 +61,7 @@ export default function ReclaimConfirmModal({ open, caseData, lawyerName, onConf
             style={{
               padding: '8px 20px', minHeight: '44px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
-              color: 'white', backgroundColor: saving ? 'var(--slate-500)' : '#B91C1C',
+              color: 'var(--card-bg)', backgroundColor: saving ? 'var(--body-secondary)' : 'var(--err-fg)',
               border: 'none', borderRadius: '8px',
               cursor: saving ? 'not-allowed' : 'pointer',
             }}

@@ -40,13 +40,13 @@ export default function TodaySummaryBar({ cases, avgAssignDays }) {
       aria-label="Today's summary"
       style={{
         display: 'flex', gap: '1.25rem', flexWrap: 'wrap', alignItems: 'center',
-        padding: '8px 14px', backgroundColor: 'var(--slate-100)',
-        borderRadius: '8px', border: '1px solid var(--slate-200)',
+        padding: '8px 14px', backgroundColor: 'var(--card-bg-tinted)',
+        borderRadius: '8px', border: '1px solid var(--card-border)',
       }}
     >
       {items.map((item, i) => (
         <span key={i} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-600)' }}>
-          <strong style={{ color: 'var(--slate-800)' }}>{item.label}:</strong> {item.value}
+          <strong style={{ color: 'var(--body)' }}>{item.label}:</strong> {item.value}
         </span>
       ))}
     </div>

@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 
 const CARDS = [
-  { key: 'total',   label: 'Queue Total',         bg: 'var(--slate-100)',   color: 'var(--slate-900)' },
-  { key: 'ready',   label: 'Ready for Review',     bg: 'var(--success-100)', color: '#15803D' },
-  { key: 'needs',   label: 'Needs More Info',       bg: 'var(--warning-100)', color: '#B45309' },
-  { key: 'high',    label: 'High Severity',         bg: 'var(--error-100)',   color: '#B91C1C' },
+  { key: 'total',   label: 'Queue Total',         bg: 'var(--card-bg-tinted)',   color: 'var(--heading)' },
+  { key: 'ready',   label: 'Ready for Review',     bg: 'var(--success-100)', color: 'var(--suc-fg)' },
+  { key: 'needs',   label: 'Needs More Info',       bg: 'var(--warning-100)', color: 'var(--wrn-fg)' },
+  { key: 'high',    label: 'High Severity',         bg: 'var(--error-100)',   color: 'var(--err-fg)' },
   { key: 'clusters', label: 'Clusters (2+ reports)', bg: 'var(--info-100)',   color: '#1E3A8A' },
 ];
 
@@ -114,7 +114,7 @@ export default function QCVolumeDashboard({ cases, activeFilter, onFilterChange 
                 fontFamily: 'Manrope, sans-serif',
                 fontSize: '0.8rem',
                 fontWeight: 500,
-                color: 'var(--slate-500)',
+                color: 'var(--body-secondary)',
                 textAlign: 'center',
                 lineHeight: 1.3,
               }}>

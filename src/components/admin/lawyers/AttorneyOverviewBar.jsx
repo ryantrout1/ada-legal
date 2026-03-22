@@ -38,11 +38,11 @@ export default function AttorneyOverviewBar({ lawyers, cases, contactLogs }) {
 
     return {
       cells: [
-        { label: 'Total Attorneys', value: total, bg: 'white', color: 'var(--slate-900)' },
-        { label: 'Active', value: active, bg: '#F0FDF4', color: '#15803D' },
-        { label: 'Pending Approval', value: pending, bg: pending > 0 ? '#FEF3C7' : 'white', color: pending > 0 ? '#92400E' : 'var(--slate-500)', pulse: pending > 0 },
-        { label: 'Inactive', value: inactive, bg: '#F8FAFC', color: '#64748B' },
-        { label: 'Suspended', value: suspended, bg: suspended > 0 ? '#FEF2F2' : 'white', color: suspended > 0 ? '#B91C1C' : 'var(--slate-500)' },
+        { label: 'Total Attorneys', value: total, bg: 'var(--card-bg)', color: 'var(--heading)' },
+        { label: 'Active', value: active, bg: '#F0FDF4', color: 'var(--suc-fg)' },
+        { label: 'Pending Approval', value: pending, bg: pending > 0 ? 'var(--wrn-bg)' : 'var(--card-bg)', color: pending > 0 ? 'var(--wrn-fg)' : 'var(--body-secondary)', pulse: pending > 0 },
+        { label: 'Inactive', value: inactive, bg: 'var(--page-bg-subtle)', color: 'var(--body-secondary)' },
+        { label: 'Suspended', value: suspended, bg: suspended > 0 ? 'var(--err-bg)' : 'var(--card-bg)', color: suspended > 0 ? 'var(--err-fg)' : 'var(--body-secondary)' },
       ],
       summaryText: `Avg cases/attorney: ${avgCases} · Avg response: ${avgHrs} · Compliance: ${compliance}`,
     };
@@ -50,13 +50,13 @@ export default function AttorneyOverviewBar({ lawyers, cases, contactLogs }) {
 
   return (
     <div className="attorney-overview-bar" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-      <div style={{ display: 'flex', flex: '1 1 auto', border: '1px solid var(--slate-200)', borderRadius: '10px', overflow: 'hidden', backgroundColor: 'white', minWidth: 0 }}>
+      <div style={{ display: 'flex', flex: '1 1 auto', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden', backgroundColor: 'var(--card-bg)', minWidth: 0 }}>
         {cells.map((c, i) => (
           <div
             key={c.label}
             style={{
               flex: '1 1 0', padding: '10px 8px', textAlign: 'center',
-              borderRight: i < cells.length - 1 ? '1px solid var(--slate-200)' : 'none',
+              borderRight: i < cells.length - 1 ? '1px solid var(--card-border)' : 'none',
               backgroundColor: c.bg, minWidth: 0,
               animation: c.pulse ? (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'attPulse 2s ease-in-out infinite') : 'none',
             }}
@@ -64,13 +64,13 @@ export default function AttorneyOverviewBar({ lawyers, cases, contactLogs }) {
             <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: 'clamp(1rem, 2vw, 1.25rem)', fontWeight: 700, color: c.color, lineHeight: 1.2 }}>
               {c.value}
             </div>
-            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {c.label}
             </div>
           </div>
         ))}
       </div>
-      <div className="attorney-summary-text" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+      <div className="attorney-summary-text" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)', whiteSpace: 'nowrap', flexShrink: 0 }}>
         {summaryText}
       </div>
       <style>{`

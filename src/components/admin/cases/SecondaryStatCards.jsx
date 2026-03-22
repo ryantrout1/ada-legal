@@ -45,12 +45,12 @@ export default function SecondaryStatCards({ cases, lawyers }) {
               borderRadius: '8px',
             }}
           >
-            <Icon size={14} style={{ color: '#64748B', flexShrink: 0 }} aria-hidden="true" />
+            <Icon size={14} style={{ color: 'var(--body-secondary)', flexShrink: 0 }} aria-hidden="true" />
             <div>
-              <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: '#475569', margin: 0, lineHeight: 1 }}>
+              <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--body-secondary)', margin: 0, lineHeight: 1 }}>
                 {card.value}
               </p>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 600, color: '#64748B', margin: '1px 0 0', textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 600, color: 'var(--body-secondary)', margin: '1px 0 0', textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap' }}>
                 {card.label}
               </p>
             </div>

@@ -35,10 +35,10 @@ export default function ViewModeToggle({ value, onChange }) {
               fontSize: '0.85rem',
               fontWeight: active ? 700 : 500,
               cursor: 'pointer',
-              border: active ? 'none' : '1px solid var(--slate-200)',
+              border: active ? 'none' : '1px solid var(--card-border)',
               borderRadius: '20px',
-              backgroundColor: active ? '#C2410C' : 'white',
-              color: active ? 'white' : 'var(--slate-800)',
+              backgroundColor: active ? 'var(--accent)' : 'var(--card-bg)',
+              color: active ? 'white' : 'var(--body)',
               transition: 'all 0.15s',
               whiteSpace: 'nowrap',
             }}

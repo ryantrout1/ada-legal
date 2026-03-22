@@ -51,7 +51,7 @@ export default function EmailPreviewModal({ subject, bodyHtml, sampleData, onClo
         role="dialog"
         aria-label="Email preview"
         style={{
-          backgroundColor: 'white', borderRadius: '12px',
+          backgroundColor: 'var(--card-bg)', borderRadius: '12px',
           width: '100%', maxWidth: '720px', maxHeight: '90vh',
           display: 'flex', flexDirection: 'column',
           boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
@@ -62,12 +62,12 @@ export default function EmailPreviewModal({ subject, bodyHtml, sampleData, onClo
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '16px 20px', borderBottom: '1px solid #E2E8F0',
-          backgroundColor: '#F8FAFC',
+          backgroundColor: 'var(--page-bg-subtle)',
         }}>
           <div>
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-              color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em',
+              color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em',
             }}>
               Email Preview
             </span>
@@ -91,10 +91,10 @@ export default function EmailPreviewModal({ subject, bodyHtml, sampleData, onClo
           backgroundColor: '#FAFAFA',
         }}>
           <span style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#64748B',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)',
           }}>Subject: </span>
           <span style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-900)',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--heading)',
           }}>
             {replaceVars(subject)}
           </span>

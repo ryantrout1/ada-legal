@@ -12,19 +12,19 @@ const US_STATES = [
 const inputStyle = {
   width: '100%', padding: '0.5rem 0.75rem',
   fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-  border: '1px solid var(--slate-300)', borderRadius: '6px',
-  color: '#334155', backgroundColor: 'white', outline: 'none',
+  border: '1px solid var(--card-border)', borderRadius: '6px',
+  color: 'var(--body)', backgroundColor: 'var(--card-bg)', outline: 'none',
   boxSizing: 'border-box'
 };
 
 const LABEL = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
-  color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em',
+  color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em',
   margin: '0 0 2px'
 };
 
 const VAL = {
-  margin: 0, fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#334155'
+  margin: 0, fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)'
 };
 
 function formatDate(d) {
@@ -40,7 +40,7 @@ function StarRating({ value, onChange, readOnly }) {
           key={n}
           size={18}
           fill={n <= (value || 0) ? '#F59E0B' : 'none'}
-          stroke={n <= (value || 0) ? '#F59E0B' : '#475569'}
+          stroke={n <= (value || 0) ? '#F59E0B' : 'var(--body-secondary)'}
           style={{ cursor: readOnly ? 'default' : 'pointer' }}
           onClick={() => { if (!readOnly) onChange(n === value ? null : n); }}
         />
@@ -76,8 +76,8 @@ function StatesMultiSelect({ value, onChange }) {
       {open && (
         <div style={{
           position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 20,
-          maxHeight: '200px', overflow: 'auto', backgroundColor: 'white',
-          border: '1px solid var(--slate-200)', borderRadius: '6px',
+          maxHeight: '200px', overflow: 'auto', backgroundColor: 'var(--card-bg)',
+          border: '1px solid var(--card-border)', borderRadius: '6px',
           boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
         }}>
           {US_STATES.map(st => (
@@ -85,7 +85,7 @@ function StatesMultiSelect({ value, onChange }) {
               display: 'flex', alignItems: 'center', gap: '0.5rem',
               padding: '0.375rem 0.75rem', cursor: 'pointer', fontSize: '0.8125rem',
               fontFamily: 'Manrope, sans-serif',
-              backgroundColor: selected.includes(st) ? '#FFF7ED' : 'white'
+              backgroundColor: selected.includes(st) ? 'var(--card-bg-tinted)' : 'var(--card-bg)'
             }}>
               <input type="checkbox" checked={selected.includes(st)} onChange={() => toggle(st)} />
               {st}
@@ -131,19 +131,19 @@ export default function ProfileSection({ lawyer, onSave }) {
   // -- READ-ONLY VIEW --
   if (!editing) {
     return (
-      <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '12px', overflow: 'hidden' }}>
+      <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '12px', overflow: 'hidden' }}>
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          padding: '12px 16px', borderBottom: '1px solid var(--slate-200)'
+          padding: '12px 16px', borderBottom: '1px solid var(--card-border)'
         }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
             Profile Details
           </p>
           <button type="button" onClick={startEdit} style={{
             display: 'inline-flex', alignItems: 'center', gap: '4px',
             padding: '6px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            fontWeight: 600, color: '#334155', backgroundColor: 'white',
-            border: '1px solid var(--slate-200)', borderRadius: '6px', cursor: 'pointer',
+            fontWeight: 600, color: 'var(--body)', backgroundColor: 'var(--card-bg)',
+            border: '1px solid var(--card-border)', borderRadius: '6px', cursor: 'pointer',
             minHeight: '36px'
           }}>
             <Pencil size={14} /> Edit
@@ -152,7 +152,7 @@ export default function ProfileSection({ lawyer, onSave }) {
         <div style={{ padding: '16px' }}>
           {/* Row 1: 4 cols */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '12px' }}>
-            <div><p style={LABEL}>Full Name</p><p style={{ ...VAL, fontWeight: 700, color: 'var(--slate-900)' }}>{lawyer.full_name}</p></div>
+            <div><p style={LABEL}>Full Name</p><p style={{ ...VAL, fontWeight: 700, color: 'var(--heading)' }}>{lawyer.full_name}</p></div>
             <div><p style={LABEL}>Firm Name</p><p style={VAL}>{lawyer.firm_name}</p></div>
             <div><p style={LABEL}>Email</p><p style={VAL}>{lawyer.email}</p></div>
             <div><p style={LABEL}>Phone</p><p style={VAL}>{lawyer.phone || '—'}</p></div>
@@ -194,8 +194,8 @@ export default function ProfileSection({ lawyer, onSave }) {
               <p style={LABEL}>Flagged</p>
               {lawyer.flagged ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Flag size={14} style={{ color: '#B91C1C' }} />
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#B91C1C', fontWeight: 600 }}>
+                  <Flag size={14} style={{ color: 'var(--err-fg)' }} />
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--err-fg)', fontWeight: 600 }}>
                     Yes — {lawyer.flag_reason || 'No reason given'}
                   </span>
                 </div>
@@ -205,7 +205,7 @@ export default function ProfileSection({ lawyer, onSave }) {
             </div>
             <div>
               <p style={LABEL}>Marketplace Rules</p>
-              <p style={{ ...VAL, color: lawyer.marketplace_rules_accepted ? '#15803D' : '#B91C1C', fontWeight: 600 }}>
+              <p style={{ ...VAL, color: lawyer.marketplace_rules_accepted ? 'var(--suc-fg)' : 'var(--err-fg)', fontWeight: 600 }}>
                 {lawyer.marketplace_rules_accepted ? '✓ Accepted' : '✗ Not Accepted'}
               </p>
             </div>
@@ -216,7 +216,7 @@ export default function ProfileSection({ lawyer, onSave }) {
             <p style={LABEL}>Admin Notes</p>
             <p style={{
               ...VAL, fontSize: '0.875rem',
-              color: lawyer.admin_notes ? '#334155' : '#475569',
+              color: lawyer.admin_notes ? 'var(--body)' : 'var(--body-secondary)',
               fontStyle: lawyer.admin_notes ? 'normal' : 'italic'
             }}>
               {lawyer.admin_notes || 'No notes'}
@@ -229,27 +229,27 @@ export default function ProfileSection({ lawyer, onSave }) {
 
   // -- EDITING VIEW --
   return (
-    <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '12px', overflow: 'hidden' }}>
+    <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '12px', overflow: 'hidden' }}>
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        padding: '12px 16px', borderBottom: '1px solid var(--slate-200)'
+        padding: '12px 16px', borderBottom: '1px solid var(--card-border)'
       }}>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
         Profile Details — Editing
         </p>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button type="button" onClick={() => setEditing(false)} style={{
             display: 'inline-flex', alignItems: 'center', gap: '4px',
             padding: '6px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            fontWeight: 600, color: '#475569', backgroundColor: 'white',
-            border: '1px solid var(--slate-200)', borderRadius: '6px', cursor: 'pointer', minHeight: '36px'
+            fontWeight: 600, color: 'var(--body-secondary)', backgroundColor: 'var(--card-bg)',
+            border: '1px solid var(--card-border)', borderRadius: '6px', cursor: 'pointer', minHeight: '36px'
           }}>
             <X size={14} /> Cancel
           </button>
           <button type="button" onClick={handleSave} style={{
             display: 'inline-flex', alignItems: 'center', gap: '4px',
             padding: '6px 12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            fontWeight: 700, color: 'white', backgroundColor: '#15803D',
+            fontWeight: 700, color: 'var(--card-bg)', backgroundColor: 'var(--suc-fg)',
             border: 'none', borderRadius: '6px', cursor: 'pointer', minHeight: '36px'
           }}>
             <Save size={14} /> Save
@@ -278,7 +278,7 @@ export default function ProfileSection({ lawyer, onSave }) {
         <div>
           <p style={LABEL}>Subscription</p>
           <LawyerBadge label={lawyer.subscription_status} colorMap={subColors} />
-          <p style={{ margin: '4px 0 0', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: '#475569' }}>
+          <p style={{ margin: '4px 0 0', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)' }}>
             Controlled by Stripe (read-only)
           </p>
         </div>
@@ -297,16 +297,16 @@ export default function ProfileSection({ lawyer, onSave }) {
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); updateForm('flagged', !form.flagged); } }}
               style={{
                 width: '36px', height: '20px', borderRadius: '10px',
-                backgroundColor: form.flagged ? '#B91C1C' : '#94A3B8',
+                backgroundColor: form.flagged ? 'var(--err-fg)' : 'var(--body-secondary)',
                 position: 'relative', cursor: 'pointer', transition: 'background 0.15s'
               }}
             >
               <div style={{
-                width: '16px', height: '16px', borderRadius: '50%', backgroundColor: 'white',
+                width: '16px', height: '16px', borderRadius: '50%', backgroundColor: 'var(--card-bg)',
                 position: 'absolute', top: '2px', left: form.flagged ? '18px' : '2px', transition: 'left 0.15s'
               }} />
             </div>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#334155' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)' }}>
               {form.flagged ? 'Flagged' : 'Not Flagged'}
             </span>
           </label>

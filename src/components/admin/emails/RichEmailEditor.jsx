@@ -12,11 +12,11 @@ function ToolbarButton({ icon: Icon, label, onClick, active }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         width: '32px', height: '32px', borderRadius: '6px',
         border: 'none', cursor: 'pointer',
-        backgroundColor: active ? '#E2E8F0' : 'transparent',
-        color: active ? 'var(--slate-900)' : '#64748B',
+        backgroundColor: active ? 'var(--card-border)' : 'transparent',
+        color: active ? 'var(--heading)' : 'var(--body-secondary)',
         transition: 'all 0.1s',
       }}
-      onMouseEnter={e => { if (!active) e.currentTarget.style.backgroundColor = '#F1F5F9'; }}
+      onMouseEnter={e => { if (!active) e.currentTarget.style.backgroundColor = 'var(--card-bg-tinted)'; }}
       onMouseLeave={e => { if (!active) e.currentTarget.style.backgroundColor = 'transparent'; }}
     >
       <Icon size={16} />
@@ -43,10 +43,10 @@ function InsertVariableDropdown({ variables, onInsert }) {
         style={{
           display: 'flex', alignItems: 'center', gap: '4px',
           padding: '4px 10px', borderRadius: '6px', height: '32px',
-          border: '1px solid var(--slate-200)', cursor: 'pointer',
-          backgroundColor: open ? '#F1F5F9' : 'white',
+          border: '1px solid var(--card-border)', cursor: 'pointer',
+          backgroundColor: open ? 'var(--card-bg-tinted)' : 'var(--card-bg)',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600,
-          color: '#C2410C',
+          color: 'var(--accent)',
         }}
       >
         {'{{ }}'} Insert Variable <ChevronDown size={12} />
@@ -54,7 +54,7 @@ function InsertVariableDropdown({ variables, onInsert }) {
       {open && variables.length > 0 && (
         <div style={{
           position: 'absolute', top: '36px', left: 0, zIndex: 20,
-          backgroundColor: 'white', border: '1px solid var(--slate-200)',
+          backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
           borderRadius: '8px', boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
           minWidth: '200px', maxHeight: '240px', overflowY: 'auto',
           padding: '4px',
@@ -72,7 +72,7 @@ function InsertVariableDropdown({ variables, onInsert }) {
                 display: 'block', width: '100%', textAlign: 'left',
                 padding: '8px 12px', border: 'none', borderRadius: '6px',
                 cursor: 'pointer', backgroundColor: 'transparent',
-                fontFamily: 'monospace', fontSize: '0.75rem', color: '#C2410C',
+                fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--accent)',
               }}
               onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#FEF1EC'; }}
               onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
@@ -144,24 +144,24 @@ export default function RichEmailEditor({ value, onChange, variables }) {
 
   return (
     <div style={{
-      border: '2px solid var(--slate-200)', borderRadius: '8px',
-      overflow: 'hidden', backgroundColor: 'white',
+      border: '2px solid var(--card-border)', borderRadius: '8px',
+      overflow: 'hidden', backgroundColor: 'var(--card-bg)',
     }}>
       {/* Toolbar */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: '2px', flexWrap: 'wrap',
-        padding: '6px 8px', borderBottom: '1px solid var(--slate-200)',
+        padding: '6px 8px', borderBottom: '1px solid var(--card-border)',
         backgroundColor: '#FAFAFA',
       }}>
         <ToolbarButton icon={Bold} label="Bold" onClick={() => exec('bold')} />
         <ToolbarButton icon={Italic} label="Italic" onClick={() => exec('italic')} />
         <ToolbarButton icon={Underline} label="Underline" onClick={() => exec('underline')} />
-        <div style={{ width: '1px', height: '20px', backgroundColor: '#E2E8F0', margin: '0 4px' }} />
+        <div style={{ width: '1px', height: '20px', backgroundColor: 'var(--card-border)', margin: '0 4px' }} />
         <ToolbarButton icon={Link} label="Insert Link" onClick={handleInsertLink} />
         <ToolbarButton icon={Heading1} label="Heading" onClick={() => exec('formatBlock', 'h2')} />
         <ToolbarButton icon={AlignLeft} label="Paragraph" onClick={() => exec('formatBlock', 'p')} />
         <ToolbarButton icon={List} label="Bullet List" onClick={() => exec('insertUnorderedList')} />
-        <div style={{ width: '1px', height: '20px', backgroundColor: '#E2E8F0', margin: '0 4px' }} />
+        <div style={{ width: '1px', height: '20px', backgroundColor: 'var(--card-border)', margin: '0 4px' }} />
         <InsertVariableDropdown variables={variables} onInsert={handleInsertVariable} />
       </div>
 
@@ -174,7 +174,7 @@ export default function RichEmailEditor({ value, onChange, variables }) {
         style={{
           minHeight: '400px', padding: '16px',
           fontFamily: 'Manrope, Arial, sans-serif', fontSize: '0.9375rem',
-          lineHeight: 1.7, color: 'var(--slate-800)',
+          lineHeight: 1.7, color: 'var(--body)',
           outline: 'none', overflowY: 'auto', maxHeight: '600px',
         }}
         role="textbox"

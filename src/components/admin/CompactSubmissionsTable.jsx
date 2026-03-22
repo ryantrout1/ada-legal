@@ -21,23 +21,23 @@ export default function CompactSubmissionsTable({ cases }) {
   const th = {
     fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
     color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em',
-    padding: '6px 10px', textAlign: 'left', borderBottom: '2px solid var(--slate-200)'
+    padding: '6px 10px', textAlign: 'left', borderBottom: '2px solid var(--card-border)'
   };
   const td = {
-    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-800)',
-    padding: '6px 10px', borderBottom: '1px solid var(--slate-100)', verticalAlign: 'middle'
+    fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)',
+    padding: '6px 10px', borderBottom: '1px solid var(--card-bg-tinted)', verticalAlign: 'middle'
   };
 
   return (
     <div>
       <div style={{
-        backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
+        backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
         borderRadius: 'var(--radius-md)', overflow: 'hidden'
       }}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ backgroundColor: 'var(--slate-50)' }}>
+              <tr style={{ backgroundColor: 'var(--page-bg-subtle)' }}>
                 <th style={th}>ID</th>
                 <th style={th}>Business</th>
                 <th style={th}>City / State</th>
@@ -61,7 +61,7 @@ export default function CompactSubmissionsTable({ cases }) {
                     <span style={{
                       display: 'inline-block', padding: '2px 8px', borderRadius: '9999px',
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-                      color: '#92400E', backgroundColor: '#FEF3C7', textTransform: 'capitalize'
+                      color: 'var(--wrn-fg)', backgroundColor: 'var(--wrn-bg)', textTransform: 'capitalize'
                     }}>
                       {(c.status || 'submitted').replace(/_/g, ' ')}
                     </span>
@@ -72,12 +72,12 @@ export default function CompactSubmissionsTable({ cases }) {
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '4px',
                         padding: '3px 10px', borderRadius: 'var(--radius-sm)',
-                        border: '1px solid var(--slate-300)', backgroundColor: 'transparent',
+                        border: '1px solid var(--card-border)', backgroundColor: 'transparent',
                         fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-                        color: 'var(--slate-700)', textDecoration: 'none',
+                        color: 'var(--body)', textDecoration: 'none',
                         transition: 'background-color 0.1s'
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
+                      onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'; }}
                       onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                     >
                       Review
