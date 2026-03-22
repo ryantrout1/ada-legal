@@ -673,12 +673,7 @@ function AnalysisResults({ result, photoUrls, onReport }) {
             <div key={idx} style={{ marginBottom: 20, borderRadius: 10, border: '1px solid var(--card-border)', background: 'var(--card-bg)', overflow: 'hidden' }}>
               <div style={{ padding: '12px 16px', background: 'var(--slate-100)', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 12 }}>
                 {photoUrls?.[idx] && (
-                  <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexShrink: 0 }}>
-                    <button onClick={() => setLightboxUrl(photoUrls[idx])} title="Enlarge" style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 5 }}>
-                      <img src={photoUrls[idx]} alt={'Photo ' + (idx + 1)} style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 5, border: '1px solid var(--card-border)', display: 'block' }} />
-                    </button>
-                    <a href={photoUrls[idx]} download={'photo_' + (idx + 1) + '.jpg'} target="_blank" rel="noopener" title="Download" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: 4, background: 'var(--card-bg)', border: '1px solid var(--card-border)', color: 'var(--body-secondary)', textDecoration: 'none', fontSize: 12 }}>↓</a>
-                  </div>
+                  <PhotoCard url={photoUrls[idx]} onLightbox={() => setLightboxUrl(photoUrls[idx])} />
                 )}
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Photo {idx + 1}</div>
@@ -724,13 +719,11 @@ function AnalysisResults({ result, photoUrls, onReport }) {
             <strong>🛡 Your rights matter. </strong>{lang.rightsBanner}
           </div>
 
-          {/* Photo — prominent */}
+          {/* Photo */}
           {photoUrls?.length > 0 && (
-            <div style={{ display: 'flex', gap: 8, marginBottom: 16, overflowX: 'auto', paddingBottom: 4 }}>
+            <div>
               {photoUrls.map((url, i) => (
-                <button key={i} onClick={() => setLightboxUrl(url)} aria-label={'View photo ' + (i + 1)} style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 10, flexShrink: 0, display: 'block' }}>
-                  <img src={url} alt={'Location photo ' + (i + 1)} style={{ width: photoUrls.length === 1 ? '100%' : 120, height: 120, objectFit: 'cover', borderRadius: 10, border: '2px solid var(--card-border)', display: 'block', maxWidth: photoUrls.length === 1 ? '100%' : 120 }} />
-                </button>
+                <PhotoCard key={i} url={url} onLightbox={() => setLightboxUrl(url)} />
               ))}
             </div>
           )}
