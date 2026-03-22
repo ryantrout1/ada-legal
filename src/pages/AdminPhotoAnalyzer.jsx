@@ -452,6 +452,45 @@ function AnalysisResults({ result, photoUrls, onReport }) {
       {/* ── TRIAGE MODE ── */}
       {mode === 'triage' && (
         <div>
+          {/* Photo strip — prominent, clickable to enlarge */}
+          {photoUrls?.length > 0 && (
+            <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
+              {photoUrls.map((url, i) => (
+                <div key={i} style={{ position: 'relative', flex: photoUrls.length === 1 ? '1' : '0 0 auto' }}>
+                  <button
+                    onClick={() => setLightboxUrl(url)}
+                    aria-label={'View photo ' + (i + 1) + ' full size'}
+                    title="Click to enlarge"
+                    style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 8, display: 'block', width: '100%' }}
+                  >
+                    <img
+                      src={url}
+                      alt={'Photo ' + (i + 1)}
+                      style={{
+                        width: photoUrls.length === 1 ? '100%' : 140,
+                        height: photoUrls.length === 1 ? 220 : 140,
+                        objectFit: 'cover',
+                        borderRadius: 8,
+                        border: '1px solid var(--card-border)',
+                        display: 'block',
+                      }}
+                    />
+                  </button>
+                  <a
+                    href={url}
+                    download={'photo_' + (i + 1) + '.jpg'}
+                    target="_blank"
+                    rel="noopener"
+                    title="Download photo"
+                    style={{ position: 'absolute', bottom: 6, right: 6, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: 5, background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', textDecoration: 'none', fontSize: 13, fontWeight: 700 }}
+                  >↓</a>
+                  {photoUrls.length > 1 && (
+                    <div style={{ position: 'absolute', top: 6, left: 6, fontSize: 10, fontWeight: 700, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 4, padding: '2px 6px', fontFamily: 'Manrope, sans-serif' }}>#{i + 1}</div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
           {result.crossPhotoFindings && (
             <div style={{ fontSize: 12, color: 'var(--inf-fg)', lineHeight: 1.5, marginBottom: 12, padding: '10px 12px', background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', borderRadius: 7, fontFamily: 'Manrope, sans-serif', display: 'flex', gap: 8 }}>
               <Info size={14} aria-hidden="true" style={{ flexShrink: 0, marginTop: 1 }} />
