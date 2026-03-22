@@ -341,73 +341,34 @@ function PositiveFindingsList({ findings }) {
   );
 }
 
-function AnnotatedPhoto({ url, concerns, activeConcernIndex, onConcernClick, onLightbox }) {
-  const SEV_COLOR = { HIGH: '#DC2626', MEDIUM: '#D97706', LOW: '#2563EB' };
-  const validConcerns = (concerns || []).filter(c => {
-    const b = c.bbox;
-    if (!b) return false;
-    // Skip full-frame bbox — model couldn't locate it
-    if (b.x === 0 && b.y === 0 && b.w >= 0.95 && b.h >= 0.95) return false;
-    return true;
-  });
-
+function PhotoCard({ url, onLightbox }) {
   return (
-    <div style={{ position: 'relative', display: 'inline-block', width: '100%', borderRadius: 8, overflow: 'hidden', cursor: 'zoom-in' }} onClick={onLightbox}>
-      <img src={url} alt="Location photo with issue markers" style={{ width: '100%', display: 'block', borderRadius: 8, border: '1px solid var(--card-border)' }} />
-      {validConcerns.map((c, i) => {
-        const b = c.bbox;
-        const color = SEV_COLOR[c.severity] || SEV_COLOR.LOW;
-        const isActive = activeConcernIndex === i;
-        const origIndex = (concerns || []).indexOf(c);
-        return (
-          <React.Fragment key={i}>
-            {/* Bounding box */}
-            <div
-              onClick={e => { e.stopPropagation(); onConcernClick(origIndex); }}
-              title={c.title}
-              style={{
-                position: 'absolute',
-                left: (b.x * 100) + '%',
-                top: (b.y * 100) + '%',
-                width: (b.w * 100) + '%',
-                height: (b.h * 100) + '%',
-                border: `2px solid ${color}`,
-                borderRadius: 4,
-                background: isActive ? color + '22' : 'transparent',
-                boxShadow: isActive ? `0 0 0 2px ${color}` : 'none',
-                cursor: 'pointer',
-                transition: 'background 0.15s',
-                zIndex: 2,
-              }}
-            />
-            {/* Number badge at top-left of box */}
-            <div
-              onClick={e => { e.stopPropagation(); onConcernClick(origIndex); }}
-              style={{
-                position: 'absolute',
-                left: 'calc(' + (b.x * 100) + '% + 4px)',
-                top: 'calc(' + (b.y * 100) + '% - 12px)',
-                background: color,
-                color: '#fff',
-                fontSize: 10,
-                fontWeight: 800,
-                fontFamily: 'Manrope, sans-serif',
-                borderRadius: 10,
-                padding: '1px 5px',
-                lineHeight: 1.4,
-                cursor: 'pointer',
-                zIndex: 3,
-                whiteSpace: 'nowrap',
-                maxWidth: 120,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-            >
-              {i + 1}
-            </div>
-          </React.Fragment>
-        );
-      })}
+    <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', background: '#000' }}>
+      <button
+        onClick={onLightbox}
+        aria-label="View full size"
+        style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', display: 'block', width: '100%' }}
+      >
+        <img
+          src={url}
+          alt="Location photo"
+          style={{ width: '100%', maxHeight: 280, objectFit: 'cover', display: 'block', opacity: 0.95 }}
+        />
+      </button>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '24px 12px 10px', background: 'linear-gradient(transparent, rgba(0,0,0,0.5))', display: 'flex', justifyContent: 'flex-end' }}>
+        <a
+          href={url}
+          download="photo.jpg"
+          target="_blank"
+          rel="noopener"
+          onClick={e => e.stopPropagation()}
+          aria-label="Download photo"
+          title="Download"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '6px 12px', borderRadius: 20, background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.4)', color: '#fff', textDecoration: 'none', fontSize: 12, fontWeight: 700, fontFamily: 'Manrope, sans-serif', backdropFilter: 'blur(4px)' }}
+        >
+          ↓ Save Photo
+        </a>
+      </div>
     </div>
   );
 }
@@ -607,67 +568,68 @@ function AnalysisResults({ result, photoUrls, onReport }) {
       {/* ── TRIAGE MODE ── */}
       {mode === 'triage' && (
         <div>
+          {/* Photos — full width, stacked */}
           {photoUrls?.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
-              {photoUrls.map((url, pi) => {
-                const photoConcerns = allConcerns.filter(c => c.photoIndex === pi);
-                const activeIdx = photoConcerns.findIndex((c) => {
-                  const origIdx = allConcerns.indexOf(c);
-                  return expandedConcerns[origIdx];
-                });
-                return (
-                  <div key={pi} style={{ position: 'relative' }}>
-                    <AnnotatedPhoto
-                      url={url}
-                      concerns={photoConcerns}
-                      activeConcernIndex={activeIdx >= 0 ? activeIdx : null}
-                      onConcernClick={(origIdx) => toggleConcern(origIdx)}
-                      onLightbox={() => setLightboxUrl(url)}
-                    />
-                    <a href={url} download={'photo_' + (pi + 1) + '.jpg'} target="_blank" rel="noopener" title="Download" onClick={e => e.stopPropagation()} style={{ position: 'absolute', bottom: 8, right: 8, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 6, background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff', textDecoration: 'none', fontSize: 16, fontWeight: 700, zIndex: 4 }}>↓</a>
-                  </div>
-                );
-              })}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
+              {photoUrls.map((url, pi) => (
+                <PhotoCard key={pi} url={url} onLightbox={() => setLightboxUrl(url)} />
+              ))}
             </div>
           )}
 
           {result.crossPhotoFindings && (
-            <div style={{ fontSize: 12, color: 'var(--inf-fg)', lineHeight: 1.5, marginBottom: 12, padding: '10px 12px', background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', borderRadius: 7, fontFamily: 'Manrope, sans-serif', display: 'flex', gap: 8 }}>
+            <div style={{ fontSize: 12, color: 'var(--inf-fg)', lineHeight: 1.5, marginBottom: 12, padding: '10px 12px', background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', borderRadius: 8, fontFamily: 'Manrope, sans-serif', display: 'flex', gap: 8 }}>
               <Info size={14} aria-hidden="true" style={{ flexShrink: 0, marginTop: 1 }} />
               <span><strong>Cross-location: </strong>{result.crossPhotoFindings}</span>
             </div>
           )}
 
-          <div role="list" aria-label="All concerns by severity">
+          {/* Concern cards — large, thumb-friendly */}
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>
+            {totalConcerns} Issue{totalConcerns !== 1 ? 's' : ''} Found
+          </div>
+          <div role="list" aria-label="All concerns by severity" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {allConcerns.map((c, i) => {
-              const key = i;
-              const isOpen = expandedConcerns[key];
+              const isOpen = expandedConcerns[i];
               const SEV_BORDER = { HIGH: 'var(--err-bd)', MEDIUM: 'var(--wrn-bd)', LOW: 'var(--inf-bd)' };
               const SEV_BG = { HIGH: 'var(--err-bg)', MEDIUM: 'var(--wrn-bg)', LOW: 'var(--inf-bg)' };
               const SEV_FG = { HIGH: 'var(--err-fg)', MEDIUM: 'var(--wrn-fg)', LOW: 'var(--inf-fg)' };
+              const SEV_ICON = { HIGH: '⚠', MEDIUM: '▲', LOW: '●' };
               const sectionMatch = c.detail?.match(/§[\d.]+/);
               return (
-                <div key={i} role="listitem" style={{ marginBottom: 6, borderRadius: 8, border: '1px solid ' + (SEV_BORDER[c.severity] || SEV_BORDER.LOW), background: isOpen ? (SEV_BG[c.severity] || SEV_BG.LOW) : 'var(--card-bg)', overflow: 'hidden' }}>
-                  <button onClick={() => toggleConcern(key)} aria-expanded={isOpen} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', minHeight: 44 }}>
-                    <SeverityBadge severity={c.severity} />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.3 }}>{c.title}</div>
-                      {sectionMatch && <div style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 1 }}>{sectionMatch[0]}</div>}
+                <div key={i} role="listitem" style={{ borderRadius: 10, border: '1.5px solid ' + (SEV_BORDER[c.severity] || SEV_BORDER.LOW), background: isOpen ? (SEV_BG[c.severity] || SEV_BG.LOW) : 'var(--card-bg)', overflow: 'hidden', transition: 'background 0.15s' }}>
+                  <button
+                    onClick={() => toggleConcern(i)}
+                    aria-expanded={isOpen}
+                    style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', minHeight: 56 }}
+                  >
+                    {/* Severity icon — large enough for Gina */}
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: SEV_BG[c.severity] || SEV_BG.LOW, border: '1.5px solid ' + (SEV_BORDER[c.severity] || SEV_BORDER.LOW), display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 16, color: SEV_FG[c.severity] || SEV_FG.LOW }}>
+                      {SEV_ICON[c.severity] || '●'}
                     </div>
-                    <span aria-hidden="true" style={{ fontSize: 12, color: 'var(--body-secondary)', flexShrink: 0 }}>{isOpen ? '▲' : '▼'}</span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.35 }}>{c.title}</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 3, flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: SEV_FG[c.severity] || 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{c.severity}</span>
+                        {sectionMatch && <span style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif' }}>{sectionMatch[0]}</span>}
+                      </div>
+                    </div>
+                    <div style={{ width: 28, height: 28, borderRadius: 6, background: isOpen ? (SEV_BG[c.severity] || SEV_BG.LOW) : 'var(--page-bg-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 11, color: 'var(--body-secondary)', border: '1px solid var(--card-border)' }}>
+                      {isOpen ? '▲' : '▼'}
+                    </div>
                   </button>
                   {isOpen && (
-                    <div style={{ padding: '0 12px 12px', borderTop: '1px solid ' + (SEV_BORDER[c.severity] || SEV_BORDER.LOW) }}>
-                      <p style={{ fontSize: 13, color: 'var(--heading)', lineHeight: 1.6, margin: '10px 0 0', fontFamily: 'Manrope, sans-serif' }}>{c.detail}</p>
+                    <div style={{ padding: '0 16px 16px', borderTop: '1px solid ' + (SEV_BORDER[c.severity] || SEV_BORDER.LOW) }}>
+                      <p style={{ fontSize: 14, color: 'var(--heading)', lineHeight: 1.7, margin: '12px 0 0', fontFamily: 'Manrope, sans-serif' }}>{c.detail}</p>
                       {c.remediation && (
-                        <div style={{ marginTop: 8, padding: '8px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 6 }}>
-                          <span aria-hidden="true" style={{ flexShrink: 0 }}>🔧</span>
-                          <p style={{ fontSize: 12, color: 'var(--heading)', margin: 0, lineHeight: 1.5, fontFamily: 'Manrope, sans-serif' }}><strong>Fix: </strong>{c.remediation}</p>
+                        <div style={{ marginTop: 12, padding: '12px 14px', borderRadius: 8, background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)' }}>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>🔧 Recommended Fix</div>
+                          <p style={{ fontSize: 13, color: 'var(--heading)', margin: 0, lineHeight: 1.6, fontFamily: 'Manrope, sans-serif' }}>{c.remediation}</p>
                         </div>
                       )}
                       {c.confidence && (
-                        <div style={{ marginTop: 6, fontSize: 11, color: SEV_FG[c.severity] || 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', opacity: 0.8 }}>
-                          {c.confidence === 'HIGH' ? '✓ Clearly visible' : c.confidence === 'LOW' ? '⚠ Estimated — verify on-site' : '~ Likely — verify on-site'}
+                        <div style={{ marginTop: 8, fontSize: 12, color: SEV_FG[c.severity] || 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', opacity: 0.8 }}>
+                          {c.confidence === 'HIGH' ? '✓ Clearly visible in photo' : c.confidence === 'LOW' ? '⚠ Estimated — on-site verification needed' : '~ Likely — on-site verification recommended'}
                         </div>
                       )}
                     </div>
@@ -679,15 +641,16 @@ function AnalysisResults({ result, photoUrls, onReport }) {
 
           {allPositive.length > 0 && (
             <div style={{ marginTop: 10 }}>
-              <button onClick={() => setShowCompliant(p => !p)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 12px', borderRadius: 7, border: '1px solid var(--suc-bd)', background: 'var(--suc-bg)', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 12, fontWeight: 700, color: 'var(--suc-fg)', width: '100%', textAlign: 'left', minHeight: 44 }}>
-                <span>✓ {allPositive.length} Compliant Feature{allPositive.length !== 1 ? 's' : ''}</span>
-                <span aria-hidden="true" style={{ marginLeft: 'auto' }}>{showCompliant ? '▲' : '▼'}</span>
+              <button onClick={() => setShowCompliant(p => !p)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '12px 16px', borderRadius: 10, border: '1.5px solid var(--suc-bd)', background: 'var(--suc-bg)', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 700, color: 'var(--suc-fg)', width: '100%', textAlign: 'left', minHeight: 52 }}>
+                <span style={{ fontSize: 16 }}>✓</span>
+                <span>{allPositive.length} Compliant Feature{allPositive.length !== 1 ? 's' : ''}</span>
+                <span aria-hidden="true" style={{ marginLeft: 'auto', fontSize: 11 }}>{showCompliant ? '▲' : '▼'}</span>
               </button>
               {showCompliant && (
                 <ul style={{ margin: '6px 0 0', padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
                   {allPositive.map((f, i) => (
-                    <li key={i} style={{ fontSize: 12, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.5, padding: '6px 12px', background: 'var(--suc-bg)', borderRadius: 6, border: '1px solid var(--suc-bd)', display: 'flex', gap: 6 }}>
-                      <span aria-hidden="true">✓</span>{f}
+                    <li key={i} style={{ fontSize: 13, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.6, padding: '10px 14px', background: 'var(--suc-bg)', borderRadius: 8, border: '1px solid var(--suc-bd)', display: 'flex', gap: 8 }}>
+                      <span aria-hidden="true" style={{ flexShrink: 0 }}>✓</span>{f}
                     </li>
                   ))}
                 </ul>
