@@ -343,32 +343,28 @@ function PositiveFindingsList({ findings }) {
 
 function PhotoCard({ url, onLightbox }) {
   return (
-    <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', background: '#000' }}>
+    <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 16 }}>
       <button
         onClick={onLightbox}
         aria-label="View full size"
-        style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', display: 'block', width: '100%' }}
+        style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 8, flexShrink: 0 }}
       >
         <img
           src={url}
           alt="Location photo"
-          style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }}
+          style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--card-border)', display: 'block' }}
         />
       </button>
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '24px 12px 10px', background: 'linear-gradient(transparent, rgba(0,0,0,0.5))', display: 'flex', justifyContent: 'flex-end' }}>
-        <a
-          href={url}
-          download="photo.jpg"
-          target="_blank"
-          rel="noopener"
-          onClick={e => e.stopPropagation()}
-          aria-label="Download photo"
-          title="Download"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '6px 12px', borderRadius: 20, background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.4)', color: '#fff', textDecoration: 'none', fontSize: 12, fontWeight: 700, fontFamily: 'Manrope, sans-serif', backdropFilter: 'blur(4px)' }}
-        >
-          ↓ Save Photo
-        </a>
-      </div>
+      <a
+        href={url}
+        download="photo.jpg"
+        target="_blank"
+        rel="noopener"
+        aria-label="Download photo"
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '6px 10px', borderRadius: 6, background: 'var(--page-bg-subtle)', border: '1px solid var(--card-border)', color: 'var(--body-secondary)', textDecoration: 'none', fontSize: 12, fontWeight: 600, fontFamily: 'Manrope, sans-serif', alignSelf: 'flex-end' }}
+      >
+        ↓ Save
+      </a>
     </div>
   );
 }
@@ -570,7 +566,7 @@ function AnalysisResults({ result, photoUrls, onReport }) {
         <div>
           {/* Photos — full width, stacked */}
           {photoUrls?.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
+            <div>
               {photoUrls.map((url, pi) => (
                 <PhotoCard key={pi} url={url} onLightbox={() => setLightboxUrl(url)} />
               ))}
