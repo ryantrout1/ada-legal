@@ -60,7 +60,7 @@ export default function AdminFeedback() {
 
   if (loading) {
     return (
-      <div id="main-content" role="main" style={{ display: 'flex', justifyContent: 'center', padding: '80px 24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '80px 24px' }}>
         <div role="status" aria-label="Loading feedback" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
           <div className="a11y-spinner" aria-hidden="true" />
           <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading feedback…</p>
@@ -70,7 +70,7 @@ export default function AdminFeedback() {
   }
 
   return (
-    <div id="main-content" role="main" style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: '32px 24px' }}>
+    <div style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: '32px 24px' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <AdminPageHeader title="Feedback" />
         <FeedbackStatCards stats={stats} />

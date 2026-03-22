@@ -1167,7 +1167,7 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
   );
 
   return (
-    <div id="main-content" role="main" aria-busy={loading} style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
+    <div aria-busy={loading} style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
       {showBatchModal && (
         <BatchReanalysisModal
           history={history}
