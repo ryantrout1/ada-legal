@@ -390,101 +390,218 @@ function PhotoLightbox({ url, alt, onClose }) {
 function AnalysisResults({ result, photoUrls, onReport }) {
   if (!result) return null;
   const [lightboxUrl, setLightboxUrl] = useState(null);
-  const totalConcerns = result.photos?.reduce((s, p) => s + (p.concerns?.length || 0), 0) || 0;
-  const likelyCount = result.photos?.reduce((s, p) => s + (p.concerns?.filter(c => c.severity === 'HIGH').length || 0), 0) || 0;
+  const [mode, setMode] = useState('triage'); // 'triage' | 'report'
+  const [expandedConcerns, setExpandedConcerns] = useState({});
+  const [showCompliant, setShowCompliant] = useState(false);
+
+  // Flatten all concerns across photos, sorted by severity
+  const SEV_ORDER = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+  const allConcerns = (result.photos || []).flatMap((p, pi) =>
+    (p.concerns || []).map(c => ({ ...c, photoIndex: pi, photoUrl: photoUrls?.[pi] }))
+  ).sort((a, b) => (SEV_ORDER[a.severity] ?? 2) - (SEV_ORDER[b.severity] ?? 2));
+
+  const allPositive = (result.photos || []).flatMap(p => p.positiveFindings || []);
+  const totalConcerns = allConcerns.length;
+  const highCount = allConcerns.filter(c => c.severity === 'HIGH').length;
+  const medCount = allConcerns.filter(c => c.severity === 'MEDIUM').length;
   const photoCount = result.photos?.length || 0;
+
+  const RISK_CONFIG = {
+    HIGH:   { label: 'High Risk',   bg: 'var(--err-bg)',  color: 'var(--err-fg)',  border: 'var(--err-bd)',  icon: '⚠' },
+    MEDIUM: { label: 'Medium Risk', bg: 'var(--wrn-bg)',  color: 'var(--wrn-fg)',  border: 'var(--wrn-bd)',  icon: '▲' },
+    LOW:    { label: 'Low Risk',    bg: 'var(--inf-bg)',  color: 'var(--inf-fg)',  border: 'var(--inf-bd)',  icon: '●' },
+    NONE:   { label: 'No Issues',   bg: 'var(--suc-bg)',  color: 'var(--suc-fg)',  border: 'var(--suc-bd)',  icon: '✓' },
+  };
+  const risk = RISK_CONFIG[result.overallRisk] || RISK_CONFIG.NONE;
+
+  function toggleConcern(key) { setExpandedConcerns(p => ({ ...p, [key]: !p[key] })); }
+
   return (
     <>
     {lightboxUrl && <PhotoLightbox url={lightboxUrl} alt="Analysis photo full size" onClose={() => setLightboxUrl(null)} />}
     <section aria-label="Analysis results">
 
-      {/* Stat bar — mirrors original prototype */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 20 }}>
-        {[
-          { value: photoCount, label: 'Photos Analyzed', color: 'var(--body)' },
-          { value: totalConcerns, label: 'Concerns Found', color: totalConcerns > 0 ? 'var(--wrn-fg)' : 'var(--body)' },
-          { value: likelyCount, label: 'Likely Violations', color: likelyCount > 0 ? 'var(--err-fg)' : 'var(--body)' },
-        ].map(({ value, label, color }) => (
-          <div key={label} style={{ padding: '14px 12px', borderRadius: 8, background: 'var(--card-bg)', border: '1px solid var(--card-border)', textAlign: 'center' }}>
-            <div style={{ fontSize: 28, fontWeight: 800, color, fontFamily: 'Fraunces, serif', lineHeight: 1 }}>{value}</div>
-            <div style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 4, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</div>
-          </div>
+      {/* ── Hero verdict bar ── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px', borderRadius: 10, background: risk.bg, border: '1px solid ' + risk.border, marginBottom: 16 }}>
+        <div style={{ fontSize: 28, lineHeight: 1 }}>{risk.icon}</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 18, fontWeight: 800, color: risk.color, fontFamily: 'Fraunces, serif', lineHeight: 1.2 }}>{risk.label}</div>
+          {result.summary && <div style={{ fontSize: 13, color: risk.color, opacity: 0.85, marginTop: 4, fontFamily: 'Manrope, sans-serif', lineHeight: 1.5 }}>{result.summary}</div>}
+        </div>
+        <div style={{ display: 'flex', gap: 12, flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          {[
+            { v: photoCount, l: 'Photos' },
+            { v: totalConcerns, l: 'Concerns' },
+            { v: highCount, l: 'HIGH' },
+          ].map(({ v, l }) => (
+            <div key={l} style={{ textAlign: 'center', minWidth: 40 }}>
+              <div style={{ fontSize: 22, fontWeight: 800, color: risk.color, fontFamily: 'Fraunces, serif', lineHeight: 1 }}>{v}</div>
+              <div style={{ fontSize: 10, color: risk.color, opacity: 0.75, fontFamily: 'Manrope, sans-serif', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Mode toggle ── */}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
+        {[['triage', '⚡ Triage View'], ['report', '📋 Compliance Report']].map(([m, label]) => (
+          <button key={m} onClick={() => setMode(m)} aria-pressed={mode === m} style={{ padding: '7px 14px', borderRadius: 6, border: '1.5px solid', fontFamily: 'Manrope, sans-serif', fontSize: 12, fontWeight: 700, cursor: 'pointer', transition: 'all 0.15s', borderColor: mode === m ? 'var(--accent)' : 'var(--card-border)', background: mode === m ? 'var(--card-bg-tinted)' : 'transparent', color: mode === m ? 'var(--accent)' : 'var(--body-secondary)' }}>{label}</button>
         ))}
       </div>
 
-      {result.summary && (
-        <div style={{ fontSize: 14, color: 'var(--body)', lineHeight: 1.7, marginBottom: 20, padding: '14px 16px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 8, fontFamily: 'Manrope, sans-serif' }}>
-          <strong style={{ color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>Summary: </strong>{result.summary}
+      {/* ── TRIAGE MODE ── */}
+      {mode === 'triage' && (
+        <div>
+          {result.crossPhotoFindings && (
+            <div style={{ fontSize: 12, color: 'var(--inf-fg)', lineHeight: 1.5, marginBottom: 12, padding: '10px 12px', background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', borderRadius: 7, fontFamily: 'Manrope, sans-serif', display: 'flex', gap: 8 }}>
+              <Info size={14} aria-hidden="true" style={{ flexShrink: 0, marginTop: 1 }} />
+              <span><strong>Cross-location: </strong>{result.crossPhotoFindings}</span>
+            </div>
+          )}
+
+          {/* Flat severity-sorted concern list */}
+          <div role="list" aria-label="All concerns by severity">
+            {allConcerns.map((c, i) => {
+              const key = i;
+              const isOpen = expandedConcerns[key];
+              const SEV_BORDER = { HIGH: 'var(--err-bd)', MEDIUM: 'var(--wrn-bd)', LOW: 'var(--inf-bd)' };
+              const SEV_BG = { HIGH: 'var(--err-bg)', MEDIUM: 'var(--wrn-bg)', LOW: 'var(--inf-bg)' };
+              const SEV_FG = { HIGH: 'var(--err-fg)', MEDIUM: 'var(--wrn-fg)', LOW: 'var(--inf-fg)' };
+              const sectionMatch = c.detail?.match(/§[\d.]+/);
+              return (
+                <div key={i} role="listitem" style={{ marginBottom: 6, borderRadius: 8, border: '1px solid ' + (SEV_BORDER[c.severity] || SEV_BORDER.LOW), background: isOpen ? (SEV_BG[c.severity] || SEV_BG.LOW) : 'var(--card-bg)', overflow: 'hidden' }}>
+                  <button onClick={() => toggleConcern(key)} aria-expanded={isOpen} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', minHeight: 44 }}>
+                    <SeverityBadge severity={c.severity} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.3 }}>{c.title}</div>
+                      {sectionMatch && <div style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 1 }}>{sectionMatch[0]}</div>}
+                    </div>
+                    {c.photoUrl && (
+                      <button onClick={e => { e.stopPropagation(); setLightboxUrl(c.photoUrl); }} title="View photo" style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', flexShrink: 0 }}>
+                        <img src={c.photoUrl} alt="" aria-hidden="true" style={{ width: 28, height: 28, objectFit: 'cover', borderRadius: 4, border: '1px solid var(--card-border)', display: 'block' }} />
+                      </button>
+                    )}
+                    <span aria-hidden="true" style={{ fontSize: 12, color: 'var(--body-secondary)', flexShrink: 0 }}>{isOpen ? '▲' : '▼'}</span>
+                  </button>
+                  {isOpen && (
+                    <div style={{ padding: '0 12px 12px', borderTop: '1px solid ' + (SEV_BORDER[c.severity] || SEV_BORDER.LOW) }}>
+                      <p style={{ fontSize: 13, color: 'var(--heading)', lineHeight: 1.6, margin: '10px 0 0', fontFamily: 'Manrope, sans-serif' }}>{c.detail}</p>
+                      {c.remediation && (
+                        <div style={{ marginTop: 8, padding: '8px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 6 }}>
+                          <span aria-hidden="true" style={{ flexShrink: 0 }}>🔧</span>
+                          <p style={{ fontSize: 12, color: 'var(--heading)', margin: 0, lineHeight: 1.5, fontFamily: 'Manrope, sans-serif' }}><strong>Fix: </strong>{c.remediation}</p>
+                        </div>
+                      )}
+                      {c.confidence && (
+                        <div style={{ marginTop: 6, fontSize: 11, color: SEV_FG[c.severity] || 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', opacity: 0.8 }}>
+                          {c.confidence === 'HIGH' ? '✓ Clearly visible' : c.confidence === 'LOW' ? '⚠ Estimated — verify on-site' : '~ Likely — verify on-site'}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Compliant features collapsed */}
+          {allPositive.length > 0 && (
+            <div style={{ marginTop: 10 }}>
+              <button onClick={() => setShowCompliant(p => !p)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 12px', borderRadius: 7, border: '1px solid var(--suc-bd)', background: 'var(--suc-bg)', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 12, fontWeight: 700, color: 'var(--suc-fg)', width: '100%', textAlign: 'left' }}>
+                <span>✓ {allPositive.length} Compliant Feature{allPositive.length !== 1 ? 's' : ''}</span>
+                <span aria-hidden="true" style={{ marginLeft: 'auto' }}>{showCompliant ? '▲' : '▼'}</span>
+              </button>
+              {showCompliant && (
+                <ul style={{ margin: '6px 0 0', padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  {allPositive.map((f, i) => (
+                    <li key={i} style={{ fontSize: 12, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.5, padding: '6px 12px', background: 'var(--suc-bg)', borderRadius: 6, border: '1px solid var(--suc-bd)', display: 'flex', gap: 6 }}>
+                      <span aria-hidden="true">✓</span>{f}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
       )}
 
-      {result.crossPhotoFindings && (
-        <div style={{ fontSize: 13, color: 'var(--inf-fg)', lineHeight: 1.6, marginBottom: 20, padding: '12px 14px', background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', borderRadius: 8, fontFamily: 'Manrope, sans-serif', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-          <Info size={15} aria-hidden="true" style={{ flexShrink: 0, marginTop: 1 }} />
-          <div><strong style={{ fontWeight: 700 }}>Cross-photo findings: </strong>{result.crossPhotoFindings}</div>
+      {/* ── COMPLIANCE REPORT MODE ── */}
+      {mode === 'report' && (
+        <div>
+          <div style={{ padding: '14px 16px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 8, marginBottom: 16, fontFamily: 'Manrope, sans-serif' }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>Notice of ADA Noncompliance</div>
+            <div style={{ fontSize: 13, color: 'var(--body)', lineHeight: 1.7 }}>
+              This assessment identifies <strong>{totalConcerns} potential ADA compliance concern{totalConcerns !== 1 ? 's' : ''}</strong> across {photoCount} photo{photoCount !== 1 ? 's' : ''}, including <strong>{highCount} HIGH</strong> and <strong>{medCount} MEDIUM</strong> severity findings. All items below require attention to meet the 2010 ADA Standards for Accessible Design.
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--body-secondary)', marginTop: 8 }}>
+              Assessment date: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} · For informational purposes only — not a professional ADA inspection.
+            </div>
+          </div>
+
+          {/* Photo-by-photo report layout */}
+          {result.photos?.map((photo, idx) => (
+            <div key={idx} style={{ marginBottom: 20, borderRadius: 10, border: '1px solid var(--card-border)', background: 'var(--card-bg)', overflow: 'hidden' }}>
+              <div style={{ padding: '12px 16px', background: 'var(--slate-100)', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 12 }}>
+                {photoUrls?.[idx] && (
+                  <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexShrink: 0 }}>
+                    <button onClick={() => setLightboxUrl(photoUrls[idx])} title="Enlarge" style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 5 }}>
+                      <img src={photoUrls[idx]} alt={'Photo ' + (idx + 1)} style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 5, border: '1px solid var(--card-border)', display: 'block' }} />
+                    </button>
+                    <a href={photoUrls[idx]} download={'photo_' + (idx + 1) + '.jpg'} target="_blank" rel="noopener" title="Download" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: 4, background: 'var(--card-bg)', border: '1px solid var(--card-border)', color: 'var(--body-secondary)', textDecoration: 'none', fontSize: 12 }}>↓</a>
+                  </div>
+                )}
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Photo {idx + 1}</div>
+                  <div style={{ fontSize: 12, color: 'var(--body)', fontFamily: 'Manrope, sans-serif', marginTop: 2, lineHeight: 1.4 }}>{photo.description}</div>
+                </div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--err-fg)', fontFamily: 'Manrope, sans-serif', flexShrink: 0 }}>{photo.concerns?.length || 0} issue{photo.concerns?.length !== 1 ? 's' : ''}</div>
+              </div>
+              <div style={{ padding: '14px 16px' }}>
+                {(photo.concerns || []).map((c, ci) => (
+                  <div key={ci} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: ci < photo.concerns.length - 1 ? '1px solid var(--card-border)' : 'none' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 6 }}>
+                      <SeverityBadge severity={c.severity} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>{c.title}</div>
+                        <div style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 1 }}>{c.detail?.match(/§[\d.]+/)?.[0]}</div>
+                      </div>
+                    </div>
+                    <p style={{ fontSize: 12, color: 'var(--body)', lineHeight: 1.6, margin: '0 0 6px', fontFamily: 'Manrope, sans-serif' }}>{c.detail}</p>
+                    {c.remediation && (
+                      <div style={{ padding: '6px 10px', borderRadius: 5, background: 'var(--page-bg-subtle)', border: '1px solid var(--card-border)', fontSize: 12, color: 'var(--body)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.5 }}>
+                        <strong>Required action: </strong>{c.remediation}
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {(photo.positiveFindings?.length > 0) && (
+                  <div style={{ marginTop: 8, padding: '8px 10px', borderRadius: 6, background: 'var(--suc-bg)', border: '1px solid var(--suc-bd)' }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif', marginBottom: 4 }}>✓ Compliant features observed</div>
+                    {photo.positiveFindings.map((f, i) => <div key={i} style={{ fontSize: 12, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.5 }}>• {f}</div>)}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
-      {result.photos?.map((photo, idx) => (
-        <section key={idx} aria-label={'Photo ' + (idx + 1) + ' results'} style={{ marginBottom: 20, borderRadius: 10, border: '1px solid var(--card-border)', background: 'var(--card-bg)', overflow: 'hidden' }}>
-          <div style={{ padding: '10px 16px', background: 'var(--slate-100)', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 12 }}>
-            {photoUrls?.[idx] && (
-              <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexShrink: 0 }}>
-                <button
-                  onClick={() => setLightboxUrl(photoUrls[idx])}
-                  aria-label={'View photo ' + (idx + 1) + ' full size'}
-                  title="Click to enlarge"
-                  style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 5 }}
-                >
-                  <img src={photoUrls[idx]} alt={'Photo ' + (idx + 1)} style={{ width: 36, height: 36, objectFit: 'cover', borderRadius: 5, border: '1px solid var(--card-border)', display: 'block' }} />
-                </button>
-                <a
-                  href={photoUrls[idx]}
-                  download={'photo_' + (idx + 1) + '.jpg'}
-                  target="_blank"
-                  rel="noopener"
-                  aria-label={'Download photo ' + (idx + 1)}
-                  title="Download photo"
-                  onClick={e => e.stopPropagation()}
-                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: 4, background: 'var(--card-bg)', border: '1px solid var(--card-border)', color: 'var(--body-secondary)', textDecoration: 'none', fontSize: 12 }}
-                >↓</a>
-              </div>
-            )}
-            <h3 style={{ margin: 0, fontSize: 12, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Photo {idx + 1}
-            </h3>
-          </div>
-          <div style={{ padding: '14px 16px' }}>
-            <p style={{ fontSize: 13, color: 'var(--body)', lineHeight: 1.6, marginBottom: 14, fontFamily: 'Manrope, sans-serif' }}>{photo.description}</p>
-            {photo.concerns?.length > 0 && (
-              <div role="list" aria-label={'Concerns for photo ' + (idx + 1)}>
-                {photo.concerns.map((c, ci) => <div key={ci} role="listitem"><ConcernCard concern={c} /></div>)}
-              </div>
-            )}
-            <PositiveFindingsList findings={photo.positiveFindings} />
-          </div>
-        </section>
-      ))}
-
-      {/* CTA — if concerns found, prompt to file */}
+      {/* ── CTA ── */}
       {totalConcerns > 0 && onReport && (
-        <div style={{ padding: '16px 20px', borderRadius: 8, background: 'var(--card-bg-tinted)', border: '1px solid var(--accent)', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ padding: '14px 18px', borderRadius: 8, background: 'var(--card-bg-tinted)', border: '1px solid var(--accent)', marginTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>Potential violation documented</div>
             <div style={{ fontSize: 12, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 2 }}>Ready to submit a formal report? Connect with an ADA attorney.</div>
           </div>
-          <button
-            onClick={onReport}
-            style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44 }}
-          >
+          <button onClick={onReport} style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44 }}>
             File a Report
           </button>
         </div>
       )}
 
-      <aside aria-label="Legal disclaimer" style={{ padding: '12px 16px', borderRadius: 8, background: 'var(--banner-info-bg)', border: '1px solid var(--banner-info-border)', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-        <Info size={16} aria-hidden="true" style={{ color: 'var(--banner-info-text)', flexShrink: 0, marginTop: 1 }} />
-        <p style={{ fontSize: 12, color: 'var(--banner-info-text)', lineHeight: 1.6, margin: 0, fontFamily: 'Manrope, sans-serif' }}>
+      <aside aria-label="Legal disclaimer" style={{ padding: '10px 14px', borderRadius: 8, background: 'var(--banner-info-bg)', border: '1px solid var(--banner-info-border)', display: 'flex', gap: 10, alignItems: 'flex-start', marginTop: 12 }}>
+        <Info size={14} aria-hidden="true" style={{ color: 'var(--banner-info-text)', flexShrink: 0, marginTop: 1 }} />
+        <p style={{ fontSize: 11, color: 'var(--banner-info-text)', lineHeight: 1.6, margin: 0, fontFamily: 'Manrope, sans-serif' }}>
           <strong>Disclaimer:</strong> This AI-powered analysis is informational only and does not constitute a professional ADA inspection or legal advice. Actual compliance determinations require on-site assessment by a qualified ADA consultant. For legal guidance, connect with an attorney through ADA Legal Link.
         </p>
       </aside>
