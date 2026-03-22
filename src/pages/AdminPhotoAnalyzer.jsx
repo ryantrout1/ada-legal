@@ -424,7 +424,7 @@ function AnalysisResults({ result, photoUrls, onReport }) {
   if (!result) return null;
   const { readingLevel } = useReadingLevel();
   const [lightboxUrl, setLightboxUrl] = useState(null);
-  const [mode, setMode] = useState('triage');
+  const [mode, setMode] = useState('report');
   const [expandedConcerns, setExpandedConcerns] = useState({});
   const [showCompliant, setShowCompliant] = useState(false);
 
@@ -556,7 +556,7 @@ function AnalysisResults({ result, photoUrls, onReport }) {
 
       {/* ── Mode toggle ── */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
-        {[['triage', '⚡ Triage'], ['report', '📋 Compliance'], ['pathways', '🧭 Pathways']].map(([m, label]) => (
+        {[['report', '📋 Compliance'], ['pathways', '🧭 Pathways']].map(([m, label]) => (
           <button key={m} onClick={() => setMode(m)} aria-pressed={mode === m} style={{ padding: '8px 14px', borderRadius: 6, border: '1.5px solid', fontFamily: 'Manrope, sans-serif', fontSize: 12, fontWeight: 700, cursor: 'pointer', minHeight: 44, transition: 'all 0.15s', borderColor: mode === m ? 'var(--accent)' : 'var(--card-border)', background: mode === m ? 'var(--card-bg-tinted)' : 'transparent', color: mode === m ? 'var(--accent)' : 'var(--body-secondary)' }}>{label}</button>
         ))}
       </div>
@@ -817,7 +817,7 @@ function AnalysisResults({ result, photoUrls, onReport }) {
       )}
 
       {/* ── CTA (Triage + Report modes only) ── */}
-      {mode !== 'pathways' && totalConcerns > 0 && onReport && (
+      {mode === 'report' && totalConcerns > 0 && onReport && (
         <div style={{ padding: '14px 18px', borderRadius: 8, background: 'var(--card-bg-tinted)', border: '1px solid var(--accent)', marginTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>Potential violation documented</div>
