@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import AdminPageHeader from '../components/admin/shared/AdminPageHeader';
 import { Camera, Upload, AlertTriangle, CheckCircle, Info, Clock, ChevronDown, ChevronUp, Plus, X, Trash2 } from 'lucide-react';
+import { useReadingLevel } from '../components/a11y/ReadingLevelContext';
 
 const ADA_SYSTEM_PROMPT = `You are a senior ADA accessibility compliance analyst with deep expertise in the 2010 ADA Standards for Accessible Design and the ADA Accessibility Guidelines (ADAAG). Your role is to examine photos of physical locations and identify ALL potential ADA compliance concerns — be thorough and specific.
 
@@ -389,12 +390,12 @@ function PhotoLightbox({ url, alt, onClose }) {
 
 function AnalysisResults({ result, photoUrls, onReport }) {
   if (!result) return null;
+  const { readingLevel } = useReadingLevel();
   const [lightboxUrl, setLightboxUrl] = useState(null);
-  const [mode, setMode] = useState('triage'); // 'triage' | 'report'
+  const [mode, setMode] = useState('triage');
   const [expandedConcerns, setExpandedConcerns] = useState({});
   const [showCompliant, setShowCompliant] = useState(false);
 
-  // Flatten all concerns across photos, sorted by severity
   const SEV_ORDER = { HIGH: 0, MEDIUM: 1, LOW: 2 };
   const allConcerns = (result.photos || []).flatMap((p, pi) =>
     (p.concerns || []).map(c => ({ ...c, photoIndex: pi, photoUrl: photoUrls?.[pi] }))
@@ -405,6 +406,7 @@ function AnalysisResults({ result, photoUrls, onReport }) {
   const highCount = allConcerns.filter(c => c.severity === 'HIGH').length;
   const medCount = allConcerns.filter(c => c.severity === 'MEDIUM').length;
   const photoCount = result.photos?.length || 0;
+  const topConcerns = allConcerns.slice(0, 3); // top 3 for Pathways
 
   const RISK_CONFIG = {
     HIGH:   { label: 'High Risk',   bg: 'var(--err-bg)',  color: 'var(--err-fg)',  border: 'var(--err-bd)',  icon: '⚠' },
@@ -413,6 +415,84 @@ function AnalysisResults({ result, photoUrls, onReport }) {
     NONE:   { label: 'No Issues',   bg: 'var(--suc-bg)',  color: 'var(--suc-fg)',  border: 'var(--suc-bd)',  icon: '✓' },
   };
   const risk = RISK_CONFIG[result.overallRisk] || RISK_CONFIG.NONE;
+  const hasViolations = result.overallRisk && result.overallRisk !== 'NONE';
+
+  // Reading-level aware plain language translations
+  const PLAIN = {
+    simple: {
+      verdict: hasViolations ? 'We found problems here.' : 'This place looks okay.',
+      verdictSub: hasViolations
+        ? 'This location may be breaking the law. People with disabilities might have trouble here.'
+        : 'We didn\'t see any obvious problems for people with disabilities.',
+      foundIssues: 'Problems we found:',
+      noIssues: 'No problems found.',
+      whatNext: 'What can you do?',
+      ctaLabel: 'Report This Violation',
+      ctaDesc: 'Tell us what happened. We\'ll connect you with a free lawyer.',
+      highMeans: 'Serious problem',
+      medMeans: 'Problem',
+      lowMeans: 'Minor issue',
+      rightsBanner: 'You have rights. The ADA says public places must be accessible to everyone.',
+    },
+    standard: {
+      verdict: hasViolations ? 'Potential ADA violation found.' : 'No violations detected.',
+      verdictSub: hasViolations
+        ? 'Our analysis identified accessibility barriers that may violate the Americans with Disabilities Act.'
+        : 'Our analysis did not identify apparent ADA violations in this location.',
+      foundIssues: 'Issues identified:',
+      noIssues: 'No accessibility concerns were identified.',
+      whatNext: 'Your next steps',
+      ctaLabel: 'File a Violation Report',
+      ctaDesc: 'Submit this documentation to connect with an ADA attorney at no cost to you.',
+      highMeans: 'Likely violation',
+      medMeans: 'Possible violation',
+      lowMeans: 'Minor concern',
+      rightsBanner: 'Under the ADA, you have the right to access public accommodations. Filing a report is free.',
+    },
+    professional: {
+      verdict: hasViolations ? 'ADA noncompliance indicators identified.' : 'No noncompliance indicators detected.',
+      verdictSub: hasViolations
+        ? `Photo analysis indicates ${highCount} HIGH and ${medCount} MEDIUM severity findings under the 2010 ADA Standards for Accessible Design.`
+        : 'Photo analysis did not identify apparent violations of the 2010 ADA Standards for Accessible Design.',
+      foundIssues: 'Findings:',
+      noIssues: 'No findings.',
+      whatNext: 'Recommended action',
+      ctaLabel: 'Initiate Violation Report',
+      ctaDesc: 'Submit documented findings to initiate attorney referral under Title II/III of the ADA.',
+      highMeans: 'Probable violation',
+      medMeans: 'Potential violation',
+      lowMeans: 'Technical deficiency',
+      rightsBanner: 'Title II and Title III of the ADA mandate accessible design in public accommodations and government facilities.',
+    },
+  };
+
+  const lang = PLAIN[readingLevel] || PLAIN.standard;
+
+  // Plain language translations for individual concern titles
+  function plainTitle(concern) {
+    if (readingLevel === 'professional') return concern.title;
+    const t = concern.title?.toLowerCase() || '';
+    if (t.includes('door clear width') || t.includes('door clearance')) return readingLevel === 'simple' ? 'Door too narrow for wheelchairs' : 'Door width too narrow for wheelchair access';
+    if (t.includes('threshold')) return readingLevel === 'simple' ? 'Raised bump at door that could trip you' : 'Door threshold creates a trip/roll hazard';
+    if (t.includes('ramp slope') || t.includes('running slope')) return readingLevel === 'simple' ? 'Ramp is too steep' : 'Ramp slope exceeds accessible design limits';
+    if (t.includes('drop-off') || t.includes('level change') || t.includes('abrupt')) return readingLevel === 'simple' ? 'Dangerous drop at the entrance' : 'Abrupt level change creates fall/tipping hazard';
+    if (t.includes('parking')) return readingLevel === 'simple' ? 'Accessible parking space problems' : 'Accessible parking does not meet requirements';
+    if (t.includes('signage') || t.includes('braille') || t.includes('tactile')) return readingLevel === 'simple' ? 'Missing signs for blind or low-vision people' : 'Signage lacks tactile/Braille identification';
+    if (t.includes('hardware')) return readingLevel === 'simple' ? 'Door handle is hard to use' : 'Door hardware requires tight grip or twisting';
+    if (t.includes('maneuvering') || t.includes('clearance')) return readingLevel === 'simple' ? 'Not enough space to open the door' : 'Insufficient space to approach and open door';
+    if (t.includes('pathway') || t.includes('route') || t.includes('accessible route')) return readingLevel === 'simple' ? 'Path may block wheelchair users' : 'Accessible route may be obstructed or non-compliant';
+    if (t.includes('grab bar')) return readingLevel === 'simple' ? 'Missing grab bar in restroom' : 'Required grab bar absent or incorrectly positioned';
+    if (t.includes('slip') || t.includes('surface')) return readingLevel === 'simple' ? 'Slippery or uneven ground' : 'Surface condition creates slip/trip hazard';
+    if (t.includes('detectable warning')) return readingLevel === 'simple' ? 'Missing warning bumps for blind pedestrians' : 'Detectable warning surface absent at hazard boundary';
+    return concern.title;
+  }
+
+  function handleFileReport() {
+    // Pre-fill intake with top violation
+    const topViolation = topConcerns[0];
+    const description = topConcerns.map(c => plainTitle(c)).join('; ');
+    window.location.href = createPageUrl('Intake') + '?prefill=' + encodeURIComponent(description);
+  }
 
   function toggleConcern(key) { setExpandedConcerns(p => ({ ...p, [key]: !p[key] })); }
 
@@ -443,47 +523,29 @@ function AnalysisResults({ result, photoUrls, onReport }) {
       </div>
 
       {/* ── Mode toggle ── */}
-      <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-        {[['triage', '⚡ Triage View'], ['report', '📋 Compliance Report']].map(([m, label]) => (
-          <button key={m} onClick={() => setMode(m)} aria-pressed={mode === m} style={{ padding: '7px 14px', borderRadius: 6, border: '1.5px solid', fontFamily: 'Manrope, sans-serif', fontSize: 12, fontWeight: 700, cursor: 'pointer', transition: 'all 0.15s', borderColor: mode === m ? 'var(--accent)' : 'var(--card-border)', background: mode === m ? 'var(--card-bg-tinted)' : 'transparent', color: mode === m ? 'var(--accent)' : 'var(--body-secondary)' }}>{label}</button>
+      <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
+        {[['triage', '⚡ Triage'], ['report', '📋 Compliance'], ['pathways', '🧭 Pathways']].map(([m, label]) => (
+          <button key={m} onClick={() => setMode(m)} aria-pressed={mode === m} style={{ padding: '8px 14px', borderRadius: 6, border: '1.5px solid', fontFamily: 'Manrope, sans-serif', fontSize: 12, fontWeight: 700, cursor: 'pointer', minHeight: 44, transition: 'all 0.15s', borderColor: mode === m ? 'var(--accent)' : 'var(--card-border)', background: mode === m ? 'var(--card-bg-tinted)' : 'transparent', color: mode === m ? 'var(--accent)' : 'var(--body-secondary)' }}>{label}</button>
         ))}
       </div>
 
       {/* ── TRIAGE MODE ── */}
       {mode === 'triage' && (
         <div>
-          {/* Photo strip — compact, mobile-friendly */}
           {photoUrls?.length > 0 && (
             <div style={{ display: 'flex', gap: 8, marginBottom: 14, overflowX: 'auto', paddingBottom: 4 }}>
               {photoUrls.map((url, i) => (
                 <div key={i} style={{ position: 'relative', flexShrink: 0 }}>
-                  <button
-                    onClick={() => setLightboxUrl(url)}
-                    aria-label={'View photo ' + (i + 1) + ' full size'}
-                    title="Tap to enlarge"
-                    style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 8, display: 'block' }}
-                  >
-                    <img
-                      src={url}
-                      alt={'Photo ' + (i + 1)}
-                      style={{ width: 90, height: 90, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--card-border)', display: 'block' }}
-                    />
+                  <button onClick={() => setLightboxUrl(url)} aria-label={'View photo ' + (i + 1) + ' full size'} title="Tap to enlarge" style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 8, display: 'block' }}>
+                    <img src={url} alt={'Photo ' + (i + 1)} style={{ width: 90, height: 90, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--card-border)', display: 'block' }} />
                   </button>
-                  <a
-                    href={url}
-                    download={'photo_' + (i + 1) + '.jpg'}
-                    target="_blank"
-                    rel="noopener"
-                    title="Download"
-                    style={{ position: 'absolute', bottom: 4, right: 4, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: 6, background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}
-                  >↓</a>
-                  {photoUrls.length > 1 && (
-                    <div style={{ position: 'absolute', top: 4, left: 4, fontSize: 10, fontWeight: 700, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 4, padding: '2px 5px', fontFamily: 'Manrope, sans-serif' }}>#{i + 1}</div>
-                  )}
+                  <a href={url} download={'photo_' + (i + 1) + '.jpg'} target="_blank" rel="noopener" title="Download" style={{ position: 'absolute', bottom: 4, right: 4, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: 6, background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}>↓</a>
+                  {photoUrls.length > 1 && <div style={{ position: 'absolute', top: 4, left: 4, fontSize: 10, fontWeight: 700, background: 'rgba(0,0,0,0.55)', color: '#fff', borderRadius: 4, padding: '2px 5px', fontFamily: 'Manrope, sans-serif' }}>#{i + 1}</div>}
                 </div>
               ))}
             </div>
           )}
+
           {result.crossPhotoFindings && (
             <div style={{ fontSize: 12, color: 'var(--inf-fg)', lineHeight: 1.5, marginBottom: 12, padding: '10px 12px', background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', borderRadius: 7, fontFamily: 'Manrope, sans-serif', display: 'flex', gap: 8 }}>
               <Info size={14} aria-hidden="true" style={{ flexShrink: 0, marginTop: 1 }} />
@@ -491,7 +553,6 @@ function AnalysisResults({ result, photoUrls, onReport }) {
             </div>
           )}
 
-          {/* Flat severity-sorted concern list */}
           <div role="list" aria-label="All concerns by severity">
             {allConcerns.map((c, i) => {
               const key = i;
@@ -508,7 +569,7 @@ function AnalysisResults({ result, photoUrls, onReport }) {
                       <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.3 }}>{c.title}</div>
                       {sectionMatch && <div style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 1 }}>{sectionMatch[0]}</div>}
                     </div>
-                    {c.photoUrl && photoCount > 1 && (
+                    {c.photoUrl && (
                       <button onClick={e => { e.stopPropagation(); setLightboxUrl(c.photoUrl); }} title="View photo" style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', flexShrink: 0 }}>
                         <img src={c.photoUrl} alt="" aria-hidden="true" style={{ width: 28, height: 28, objectFit: 'cover', borderRadius: 4, border: '1px solid var(--card-border)', display: 'block' }} />
                       </button>
@@ -536,10 +597,9 @@ function AnalysisResults({ result, photoUrls, onReport }) {
             })}
           </div>
 
-          {/* Compliant features collapsed */}
           {allPositive.length > 0 && (
             <div style={{ marginTop: 10 }}>
-              <button onClick={() => setShowCompliant(p => !p)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 12px', borderRadius: 7, border: '1px solid var(--suc-bd)', background: 'var(--suc-bg)', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 12, fontWeight: 700, color: 'var(--suc-fg)', width: '100%', textAlign: 'left' }}>
+              <button onClick={() => setShowCompliant(p => !p)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 12px', borderRadius: 7, border: '1px solid var(--suc-bd)', background: 'var(--suc-bg)', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: 12, fontWeight: 700, color: 'var(--suc-fg)', width: '100%', textAlign: 'left', minHeight: 44 }}>
                 <span>✓ {allPositive.length} Compliant Feature{allPositive.length !== 1 ? 's' : ''}</span>
                 <span aria-hidden="true" style={{ marginLeft: 'auto' }}>{showCompliant ? '▲' : '▼'}</span>
               </button>
@@ -570,7 +630,6 @@ function AnalysisResults({ result, photoUrls, onReport }) {
             </div>
           </div>
 
-          {/* Photo-by-photo report layout */}
           {result.photos?.map((photo, idx) => (
             <div key={idx} style={{ marginBottom: 20, borderRadius: 10, border: '1px solid var(--card-border)', background: 'var(--card-bg)', overflow: 'hidden' }}>
               <div style={{ padding: '12px 16px', background: 'var(--slate-100)', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -618,8 +677,120 @@ function AnalysisResults({ result, photoUrls, onReport }) {
         </div>
       )}
 
-      {/* ── CTA ── */}
-      {totalConcerns > 0 && onReport && (
+      {/* ── PATHWAYS MODE ── */}
+      {mode === 'pathways' && (
+        <div>
+          {/* Rights banner */}
+          <div style={{ padding: '12px 16px', borderRadius: 8, background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', marginBottom: 16, fontFamily: 'Manrope, sans-serif', fontSize: 13, color: 'var(--inf-fg)', lineHeight: 1.6 }}>
+            <strong>🛡 Your rights matter. </strong>{lang.rightsBanner}
+          </div>
+
+          {/* Photo — prominent */}
+          {photoUrls?.length > 0 && (
+            <div style={{ display: 'flex', gap: 8, marginBottom: 16, overflowX: 'auto', paddingBottom: 4 }}>
+              {photoUrls.map((url, i) => (
+                <button key={i} onClick={() => setLightboxUrl(url)} aria-label={'View photo ' + (i + 1)} style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', borderRadius: 10, flexShrink: 0, display: 'block' }}>
+                  <img src={url} alt={'Location photo ' + (i + 1)} style={{ width: photoUrls.length === 1 ? '100%' : 120, height: 120, objectFit: 'cover', borderRadius: 10, border: '2px solid var(--card-border)', display: 'block', maxWidth: photoUrls.length === 1 ? '100%' : 120 }} />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Plain-language verdict */}
+          <div style={{ padding: '20px', borderRadius: 10, background: risk.bg, border: '2px solid ' + risk.border, marginBottom: 16, textAlign: 'center' }}>
+            <div style={{ fontSize: readingLevel === 'simple' ? 24 : 20, fontWeight: 800, color: risk.color, fontFamily: 'Fraunces, serif', lineHeight: 1.2, marginBottom: 8 }}>
+              {lang.verdict}
+            </div>
+            <div style={{ fontSize: readingLevel === 'simple' ? 15 : 13, color: risk.color, opacity: 0.9, fontFamily: 'Manrope, sans-serif', lineHeight: 1.6 }}>
+              {lang.verdictSub}
+            </div>
+          </div>
+
+          {/* Top concerns in plain language */}
+          {hasViolations && topConcerns.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif', marginBottom: 10 }}>{lang.foundIssues}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {topConcerns.map((c, i) => {
+                  const SEV_BG = { HIGH: 'var(--err-bg)', MEDIUM: 'var(--wrn-bg)', LOW: 'var(--inf-bg)' };
+                  const SEV_FG = { HIGH: 'var(--err-fg)', MEDIUM: 'var(--wrn-fg)', LOW: 'var(--inf-fg)' };
+                  const SEV_BD = { HIGH: 'var(--err-bd)', MEDIUM: 'var(--wrn-bd)', LOW: 'var(--inf-bd)' };
+                  const severityLabel = { HIGH: lang.highMeans, MEDIUM: lang.medMeans, LOW: lang.lowMeans };
+                  return (
+                    <div key={i} style={{ padding: '14px 16px', borderRadius: 8, background: SEV_BG[c.severity] || SEV_BG.LOW, border: '1px solid ' + (SEV_BD[c.severity] || SEV_BD.LOW), display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                      <div style={{ fontSize: 22, flexShrink: 0, lineHeight: 1 }}>
+                        {c.severity === 'HIGH' ? '⚠️' : c.severity === 'MEDIUM' ? '⚠' : 'ℹ️'}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: readingLevel === 'simple' ? 16 : 14, fontWeight: 700, color: SEV_FG[c.severity] || SEV_FG.LOW, fontFamily: 'Manrope, sans-serif', lineHeight: 1.3, marginBottom: 4 }}>
+                          {plainTitle(c)}
+                        </div>
+                        <div style={{ fontSize: 11, color: SEV_FG[c.severity], opacity: 0.75, fontFamily: 'Manrope, sans-serif', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          {severityLabel[c.severity]}
+                        </div>
+                        {readingLevel === 'professional' && c.detail && (
+                          <div style={{ fontSize: 12, color: 'var(--body)', fontFamily: 'Manrope, sans-serif', marginTop: 6, lineHeight: 1.5 }}>{c.detail}</div>
+                        )}
+                      </div>
+                      {c.photoUrl && (
+                        <button onClick={() => setLightboxUrl(c.photoUrl)} title="See photo" style={{ padding: 0, background: 'none', border: 'none', cursor: 'zoom-in', flexShrink: 0, borderRadius: 6 }}>
+                          <img src={c.photoUrl} alt="" aria-hidden="true" style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 6, border: '1px solid rgba(0,0,0,0.1)', display: 'block' }} />
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              {allConcerns.length > 3 && (
+                <div style={{ fontSize: 12, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 8, textAlign: 'center' }}>
+                  + {allConcerns.length - 3} more concern{allConcerns.length - 3 !== 1 ? 's' : ''} — switch to Triage View for full details
+                </div>
+              )}
+            </div>
+          )}
+
+          {!hasViolations && (
+            <div style={{ padding: '20px', borderRadius: 10, background: 'var(--suc-bg)', border: '1px solid var(--suc-bd)', marginBottom: 16, textAlign: 'center' }}>
+              <div style={{ fontSize: 32, marginBottom: 8 }}>✓</div>
+              <div style={{ fontSize: 14, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif', fontWeight: 600 }}>{lang.noIssues}</div>
+            </div>
+          )}
+
+          {/* What next */}
+          <div style={{ padding: '16px', borderRadius: 10, background: 'var(--card-bg)', border: '1px solid var(--card-border)', marginBottom: 16 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Fraunces, serif', marginBottom: 12 }}>{lang.whatNext}</div>
+
+            {hasViolations && onReport && (
+              <button
+                onClick={handleFileReport}
+                style={{ width: '100%', minHeight: 56, padding: '14px 20px', borderRadius: 10, background: 'var(--accent)', color: '#fff', fontFamily: 'Manrope, sans-serif', fontSize: readingLevel === 'simple' ? 17 : 15, fontWeight: 800, border: 'none', cursor: 'pointer', marginBottom: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}
+              >
+                <span>{lang.ctaLabel}</span>
+                <span style={{ fontSize: 12, opacity: 0.85, fontWeight: 400 }}>{lang.ctaDesc}</span>
+              </button>
+            )}
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {[
+                readingLevel === 'simple'
+                  ? '📸 Take more photos if you can — closer shots of the problems help.'
+                  : '📸 Additional photos of specific barriers will strengthen any legal filing.',
+                readingLevel === 'simple'
+                  ? '📍 Write down the address and date you visited.'
+                  : '📍 Document the location address, date of visit, and any witnesses.',
+                readingLevel === 'simple'
+                  ? '💬 You don\'t have to pay anything to report a violation.'
+                  : '💬 ADA violations can be reported at no cost — attorney fees are typically covered by the defendant.',
+              ].map((tip, i) => (
+                <div key={i} style={{ fontSize: 13, color: 'var(--body)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.5, padding: '10px 12px', background: 'var(--page-bg-subtle)', borderRadius: 7, border: '1px solid var(--card-border)' }}>{tip}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── CTA (Triage + Report modes only) ── */}
+      {mode !== 'pathways' && totalConcerns > 0 && onReport && (
         <div style={{ padding: '14px 18px', borderRadius: 8, background: 'var(--card-bg-tinted)', border: '1px solid var(--accent)', marginTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>Potential violation documented</div>
