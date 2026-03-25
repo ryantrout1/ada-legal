@@ -3,9 +3,35 @@ import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
 import { Send, Upload, X, CheckCircle, AlertTriangle, ChevronRight, Camera } from 'lucide-react';
 import AdminPageHeader from '../components/admin/shared/AdminPageHeader';
+import { useReadingLevel } from '../components/a11y/ReadingLevelContext';
 
-// ─── System prompt ────────────────────────────────────────────────────────────
-const SYSTEM_PROMPT = `You are an ADA intake specialist for ADA Legal Link. Your job is to help someone report an ADA violation by having a warm, conversational exchange — NOT a form.
+// ─── System prompt — adapts to reading level ──────────────────────────────────
+function buildSystemPrompt(readingLevel) {
+  const TONE = {
+    simple: `COMMUNICATION STYLE — SIMPLE (5th grade):
+- Use very short sentences. One idea per sentence.
+- Never use legal terms. Say "business" not "establishment". Say "couldn't get in" not "denied access".
+- Be warm and reassuring. "That sounds really frustrating." "You did the right thing by reporting this."
+- Ask only ONE thing at a time. Keep your messages to 2-3 sentences max.
+- Avoid any jargon. If you must use a term, explain it immediately in plain words.`,
+
+    standard: `COMMUNICATION STYLE — STANDARD (8th grade):
+- Plain, direct language. Conversational but professional.
+- Briefly validate their experience before moving on.
+- Ask one or two things at a time. Keep responses to 2-4 sentences.
+- You can use common terms like "ADA violation" or "accessible entrance" without over-explaining.`,
+
+    professional: `COMMUNICATION STYLE — PROFESSIONAL (legal/technical):
+- Precise, efficient language. Assume legal literacy.
+- Use correct ADA terminology: "Title III", "barrier to access", "place of public accommodation", "2010 ADA Standards".
+- You may reference specific ADA sections if relevant (e.g., §4.3, §502).
+- Still ask questions one topic at a time, but you can be more direct and dense.
+- Minimal emotional validation — focus on facts and legal elements.`,
+  };
+
+  return `You are an ADA intake specialist for ADA Legal Link. Your job is to help someone report an ADA violation by having a warm, conversational exchange — NOT a form.
+
+${TONE[readingLevel] || TONE.standard}
 
 Your goals in order:
 1. Understand what happened (Title II vs Title III vs Title I)
@@ -27,13 +53,6 @@ FOR TITLE III INTAKES, collect in natural conversation (don't ask all at once):
 - Whether they've been there before
 - Their name, email, phone, preferred contact method
 - Photo (ask once: "Do you have a photo of the barrier? It strengthens your case significantly.")
-
-CONVERSATION STYLE:
-- Warm, direct, plain language (8th grade reading level default)
-- Ask one or two things at a time — never a list of questions
-- Reflect back what you hear: "So you couldn't get in because there was no ramp — is that right?"
-- Validate their experience without making legal promises
-- Keep responses SHORT — 2-4 sentences max unless explaining a process
 
 WHEN YOU HAVE ENOUGH INFO FOR TITLE III, end your message with a JSON block like this (and ONLY when ready to submit):
 <EXTRACT>
@@ -65,6 +84,7 @@ visited_before options: "yes", "no", "first_time"
 contact_preference options: "phone", "email", "no_preference"
 
 IMPORTANT: Do not include the <EXTRACT> block until you have: business_name, city, state, narrative (50+ words), contact_name, contact_email, contact_phone. The narrative minimum is important — keep asking questions until you have a full picture.`;
+}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function parseExtract(text) {
@@ -212,9 +232,17 @@ function CaseSummaryCard({ data, onEdit, onSubmit, submitting, submitted }) {
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function AdminIntakeAI() {
+  const { readingLevel } = useReadingLevel();
+
+  const OPENING = {
+    simple: "Hi — I'm here to help you report an ADA problem. Tell me what happened. Where were you, and what made it hard for you?",
+    standard: "Hi — I'm here to help you document an ADA accessibility violation. Tell me what happened. Where were you, and what made it hard for you to access the place or service?",
+    professional: "Welcome. I'll help you document an ADA violation for potential case review. Please describe the incident — the location, the nature of the barrier, and when it occurred.",
+  };
+
   const [messages, setMessages] = useState([{
     role: 'assistant',
-    content: "Hi — I'm here to help you document an ADA accessibility violation. Tell me what happened. Where were you, and what made it hard for you to access the place or service?",
+    content: OPENING[readingLevel] || OPENING.standard,
     time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
   }]);
   const [input, setInput] = useState('');
@@ -329,8 +357,8 @@ Respond ONLY with valid JSON:
 
     // Inject photo analysis context if available
     const systemWithContext = photoAnalysis
-      ? SYSTEM_PROMPT + `\n\nPHOTO ANALYSIS ALREADY DONE: The user uploaded a photo. Analysis found: ${JSON.stringify(photoAnalysis)}. Use this to inform your questions — you already know the violation type and subtype from the photo.`
-      : SYSTEM_PROMPT;
+      ? buildSystemPrompt(readingLevel) + `\n\nPHOTO ANALYSIS ALREADY DONE: The user uploaded a photo. Analysis found: ${JSON.stringify(photoAnalysis)}. Use this to inform your questions — you already know the violation type and subtype from the photo.`
+      : buildSystemPrompt(readingLevel);
 
     try {
       const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -454,11 +482,16 @@ Respond ONLY with valid JSON:
                   {loading ? '⟳ Thinking…' : analyzingPhoto ? '⟳ Analyzing photo…' : '● Ready'}
                 </div>
               </div>
-              {photoPreview && (
-                <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif' }}>
-                  <Camera size={14} /> Photo attached
+              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+                {photoPreview && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif' }}>
+                    <Camera size={14} /> Photo attached
+                  </div>
+                )}
+                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', padding: '3px 8px', borderRadius: 20, border: '1px solid var(--card-border)', background: 'var(--page-bg-subtle)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  {readingLevel === 'simple' ? 'Simple' : readingLevel === 'professional' ? 'Professional' : 'Standard'}
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Messages */}
