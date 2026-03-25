@@ -64,9 +64,16 @@ export default function AdminLawyers() {
 
   useEffect(() => {
     async function init() {
-      const user = await base44.auth.me();
-      if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
-      await loadData(); setLoading(false);
+      try {
+        const user = await base44.auth.me();
+        if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
+        await loadData();
+      } catch (e) {
+        console.error('Failed to initialize Attorney Network:', e);
+        window.location.href = createPageUrl('Home');
+      } finally {
+        setLoading(false);
+      }
     }
     init();
   }, []);

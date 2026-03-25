@@ -311,6 +311,13 @@ export default function AdminIntakeAI() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, extractedData]);
 
+  // Revoke object URL on unmount or when preview changes to prevent memory leak
+  useEffect(() => {
+    return () => {
+      if (photoPreview) URL.revokeObjectURL(photoPreview);
+    };
+  }, [photoPreview]);
+
   async function handlePhotoUpload(file) {
     if (!file) return;
     setPhotoFile(file);
@@ -547,7 +554,7 @@ Respond ONLY with valid JSON:
               style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column' }}
             >
               <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
-                {messages.map((msg, i) => <MessageBubble key={i} msg={msg} index={i} />)}
+                {messages.map((msg, i) => <MessageBubble key={msg.isoTime + '-' + i} msg={msg} index={i} />)}
               </ol>
 
               {/* Typing indicator */}

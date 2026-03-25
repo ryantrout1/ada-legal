@@ -54,8 +54,12 @@ export default function AdminFeedback() {
   }, [feedback, filterType, filterStatus, filterPage]);
 
   const handleStatusChange = async (id, newStatus) => {
-    await base44.entities.Feedback.update(id, { status: newStatus });
-    setFeedback(prev => prev.map(f => f.id === id ? { ...f, status: newStatus } : f));
+    try {
+      await base44.entities.Feedback.update(id, { status: newStatus });
+      setFeedback(prev => prev.map(f => f.id === id ? { ...f, status: newStatus } : f));
+    } catch (e) {
+      console.error('Failed to update feedback status:', e);
+    }
   };
 
   if (loading) {

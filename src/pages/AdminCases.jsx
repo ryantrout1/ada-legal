@@ -106,12 +106,19 @@ export default function AdminCases() {
 
   useEffect(() => {
     async function init() {
-      const user = await base44.auth.me();
-      if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
-      const urlParams = new URLSearchParams(window.location.search);
-      const searchParam = urlParams.get('search');
-      if (searchParam) setSearch(searchParam);
-      await loadData(); setLoading(false);
+      try {
+        const user = await base44.auth.me();
+        if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchParam = urlParams.get('search');
+        if (searchParam) setSearch(searchParam);
+        await loadData();
+      } catch (e) {
+        console.error('Failed to initialize Case Manager:', e);
+        window.location.href = createPageUrl('Home');
+      } finally {
+        setLoading(false);
+      }
     }
     init();
   }, []);

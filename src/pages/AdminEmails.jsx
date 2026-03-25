@@ -18,10 +18,16 @@ export default function AdminEmails() {
 
   useEffect(() => {
     async function init() {
-      const user = await base44.auth.me();
-      if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
-      await loadTemplates();
-      setLoading(false);
+      try {
+        const user = await base44.auth.me();
+        if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
+        await loadTemplates();
+      } catch (e) {
+        console.error('Failed to initialize Email Templates:', e);
+        window.location.href = createPageUrl('Home');
+      } finally {
+        setLoading(false);
+      }
     }
     init();
   }, []);
