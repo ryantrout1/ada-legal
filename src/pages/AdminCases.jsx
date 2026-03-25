@@ -228,26 +228,42 @@ export default function AdminCases() {
     if (!forceCloseCase) return;
     setCloseSaving(true);
     const now = new Date().toISOString();
-    await base44.entities.Case.update(forceCloseCase.id, { status: 'closed', closed_at: now, resolution_type: 'admin_closed', resolution_notes: formData.resolution_notes, resolved_by: 'admin' });
-    await base44.entities.TimelineEvent.create({ case_id: forceCloseCase.id, event_type: 'closed', event_description: 'This case has been closed by the platform administrator.', actor_role: 'admin', visible_to_user: true, created_at: now });
-    setCloseSaving(false); setForceCloseCase(null); setExpandedId(null); loadData();
+    try {
+      await base44.entities.Case.update(forceCloseCase.id, { status: 'closed', closed_at: now, resolution_type: 'admin_closed', resolution_notes: formData.resolution_notes, resolved_by: 'admin' });
+      await base44.entities.TimelineEvent.create({ case_id: forceCloseCase.id, event_type: 'closed', event_description: 'This case has been closed by the platform administrator.', actor_role: 'admin', visible_to_user: true, created_at: now });
+      setForceCloseCase(null); setExpandedId(null); loadData();
+    } catch (e) {
+      console.error('Force close failed:', e);
+    } finally {
+      setCloseSaving(false);
+    }
   };
 
   const handleForceAssign = async (caseData, lawyer) => {
     setActionSaving(true);
     const now = new Date().toISOString();
-    await base44.entities.Case.update(caseData.id, { status: 'assigned', assigned_lawyer_id: lawyer.id, assigned_at: now });
-    await base44.entities.TimelineEvent.create({ case_id: caseData.id, event_type: 'assigned', event_description: 'An attorney has been assigned to review your case.', actor_role: 'admin', visible_to_user: true, created_at: now });
-    setActionSaving(false); loadData();
+    try {
+      await base44.entities.Case.update(caseData.id, { status: 'assigned', assigned_lawyer_id: lawyer.id, assigned_at: now });
+      await base44.entities.TimelineEvent.create({ case_id: caseData.id, event_type: 'assigned', event_description: 'An attorney has been assigned to review your case.', actor_role: 'admin', visible_to_user: true, created_at: now });
+      loadData();
+    } catch (e) {
+      console.error('Force assign failed:', e);
+    } finally {
+      setActionSaving(false);
+    }
   };
 
   const handleReassign = async (caseData) => {
     const now = new Date().toISOString();
-    const lp = caseData.assigned_lawyer_id ? lawyerMap[caseData.assigned_lawyer_id] : null;
-    await base44.entities.Case.update(caseData.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '' });
-    if (lp) await base44.entities.LawyerProfile.update(lp.id, { cases_reclaimed: (lp.cases_reclaimed || 0) + 1 });
-    await base44.entities.TimelineEvent.create({ case_id: caseData.id, event_type: 'reclaimed', event_description: 'This case has been returned to the available case pool by an administrator.', actor_role: 'admin', visible_to_user: false, created_at: now });
-    setExpandedId(null); loadData();
+    try {
+      const lp = caseData.assigned_lawyer_id ? lawyerMap[caseData.assigned_lawyer_id] : null;
+      await base44.entities.Case.update(caseData.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '' });
+      if (lp) await base44.entities.LawyerProfile.update(lp.id, { cases_reclaimed: (lp.cases_reclaimed || 0) + 1 });
+      await base44.entities.TimelineEvent.create({ case_id: caseData.id, event_type: 'reclaimed', event_description: 'This case has been returned to the available case pool by an administrator.', actor_role: 'admin', visible_to_user: false, created_at: now });
+      setExpandedId(null); loadData();
+    } catch (e) {
+      console.error('Reassign failed:', e);
+    }
   };
 
   if (loading) {

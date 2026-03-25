@@ -161,7 +161,8 @@ export default function Marketplace() {
 
   const handleViewDetails = (caseData) => {
     setDetailCase(caseData);
-    base44.entities.Case.update(caseData.id, { marketplace_views: (caseData.marketplace_views || 0) + 1 });
+    // Fire-and-forget view count — non-critical, intentionally not awaited
+    base44.entities.Case.update(caseData.id, { marketplace_views: (caseData.marketplace_views || 0) + 1 }).catch(() => {});
   };
 
   const handleInitiateFromModal = (caseData) => { setDetailCase(null); setSelectedCase(caseData); };
@@ -172,57 +173,62 @@ export default function Marketplace() {
     setRaceError('');
     const now = new Date().toISOString();
     const c = selectedCase;
+    try {
+      const freshCases = await base44.entities.Case.filter({ id: c.id });
+      const freshCase = freshCases[0];
+      if (!freshCase || freshCase.status !== 'available') {
+        setCases(prev => prev.filter(x => x.id !== c.id));
+        setRaceError('This case has already been assigned to another attorney. It is no longer available.');
+        setProcessing(false);
+        return;
+      }
 
-    const freshCases = await base44.entities.Case.filter({ id: c.id });
-    const freshCase = freshCases[0];
-    if (!freshCase || freshCase.status !== 'available') {
+      await base44.entities.Case.update(c.id, { status: 'assigned', assigned_lawyer_id: lawyerProfile.id, assigned_at: now });
+      trackEvent('attorney_case_accepted', { case_id: c.id, violation_type: c.violation_type }, 'Marketplace');
+      trackEvent('case_status_changed', { case_id: c.id, old_status: 'available', new_status: 'assigned' }, 'Marketplace');
       setCases(prev => prev.filter(x => x.id !== c.id));
-      setRaceError('This case has already been assigned to another attorney. It is no longer available.');
+
+      await base44.entities.TimelineEvent.create({
+        case_id: c.id, event_type: 'assigned',
+        event_description: 'An attorney has been assigned to your case.',
+        actor_role: 'lawyer', visible_to_user: true, created_at: now
+      });
+
+      const portalUrl = window.location.origin + '/MyCases';
+      const prefLabel = c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference';
+      const violLabel = c.violation_type === 'physical_space' ? 'Physical Space' : 'Digital / Website';
+      const loc = [c.city, c.state].filter(Boolean).join(', ');
+
+      // Reporter email
+      try {
+        const reporterEmail = await renderEmailTemplate('attorney_assigned_reporter', {
+          reporter_name: c.contact_name, business_name: c.business_name,
+          attorney_name: lawyerProfile.full_name, attorney_firm: lawyerProfile.firm_name,
+          contact_preference: prefLabel, case_url: portalUrl
+        });
+        if (reporterEmail) await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: reporterEmail.subject, body: reporterEmail.body });
+      } catch (emailErr) { console.error('Reporter email failed:', emailErr); }
+
+      // Attorney confirmation email
+      try {
+        const attorneyEmail = await renderEmailTemplate('attorney_assigned_confirmation', {
+          attorney_name: lawyerProfile.full_name, business_name: c.business_name,
+          case_location: loc, violation_type: violLabel,
+          reporter_name: c.contact_name, reporter_email: c.contact_email,
+          reporter_phone: c.contact_phone, contact_preference: prefLabel,
+          dashboard_url: window.location.origin + '/LawyerDashboard'
+        });
+        if (attorneyEmail) await base44.integrations.Core.SendEmail({ to: lawyerProfile.email, subject: attorneyEmail.subject, body: attorneyEmail.body });
+      } catch (emailErr) { console.error('Attorney email failed:', emailErr); }
+
+      setSelectedCase(null);
+      window.location.href = createPageUrl('LawyerDashboard') + `?highlight=${c.id}`;
+    } catch (e) {
+      console.error('Case initiation failed:', e);
+      setRaceError('Something went wrong. Please try again.');
+    } finally {
       setProcessing(false);
-      return;
     }
-
-    await base44.entities.Case.update(c.id, { status: 'assigned', assigned_lawyer_id: lawyerProfile.id, assigned_at: now });
-    trackEvent('attorney_case_accepted', { case_id: c.id, violation_type: c.violation_type }, 'Marketplace');
-    trackEvent('case_status_changed', { case_id: c.id, old_status: 'available', new_status: 'assigned' }, 'Marketplace');
-    setCases(prev => prev.filter(x => x.id !== c.id));
-
-    await base44.entities.TimelineEvent.create({
-      case_id: c.id, event_type: 'assigned',
-      event_description: 'An attorney has been assigned to your case.',
-      actor_role: 'lawyer', visible_to_user: true, created_at: now
-    });
-
-    const portalUrl = window.location.origin + '/MyCases';
-    const prefLabel = c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference';
-    const violLabel = c.violation_type === 'physical_space' ? 'Physical Space' : 'Digital / Website';
-    const loc = [c.city, c.state].filter(Boolean).join(', ');
-
-    // Reporter email
-    const reporterEmail = await renderEmailTemplate('attorney_assigned_reporter', {
-      reporter_name: c.contact_name, business_name: c.business_name,
-      attorney_name: lawyerProfile.full_name, attorney_firm: lawyerProfile.firm_name,
-      contact_preference: prefLabel, case_url: portalUrl
-    });
-    if (reporterEmail) {
-      await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: reporterEmail.subject, body: reporterEmail.body });
-    }
-
-    // Attorney confirmation email
-    const attorneyEmail = await renderEmailTemplate('attorney_assigned_confirmation', {
-      attorney_name: lawyerProfile.full_name, business_name: c.business_name,
-      case_location: loc, violation_type: violLabel,
-      reporter_name: c.contact_name, reporter_email: c.contact_email,
-      reporter_phone: c.contact_phone, contact_preference: prefLabel,
-      dashboard_url: window.location.origin + '/LawyerDashboard'
-    });
-    if (attorneyEmail) {
-      await base44.integrations.Core.SendEmail({ to: lawyerProfile.email, subject: attorneyEmail.subject, body: attorneyEmail.body });
-    }
-
-    setProcessing(false);
-    setSelectedCase(null);
-    window.location.href = createPageUrl('LawyerDashboard') + `?highlight=${c.id}`;
   };
 
   const resetFilters = () => setFilters({ state: 'my_states', violationType: 'all', businessType: 'all', sort: 'newest', posted: 'any', documentation: 'all' });

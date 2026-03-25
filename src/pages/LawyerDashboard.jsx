@@ -83,39 +83,45 @@ export default function LawyerDashboard() {
 
   const handleSaveNote = async (caseId, text) => {
     const now = new Date().toISOString();
-    await base44.entities.LawyerNote.create({
-      case_id: caseId,
-      lawyer_id: profile.id,
-      note_text: text,
-      created_at: now
-    });
-    await loadData();
-    setSuccessMessage('Note saved');
+    try {
+      await base44.entities.LawyerNote.create({ case_id: caseId, lawyer_id: profile.id, note_text: text, created_at: now });
+      await loadData();
+      setSuccessMessage('Note saved');
+    } catch (e) {
+      console.error('Save note failed:', e);
+      setSuccessMessage('Failed to save note — please try again');
+    }
   };
 
   const handleLogContact = async (formData) => {
     if (!logModalCase || !profile) return;
     setSaving(true);
     const now = new Date().toISOString();
-    await base44.entities.ContactLog.create({
-      case_id: logModalCase.id, lawyer_id: profile.id,
-      contact_type: formData.contact_type, contact_method: formData.contact_method,
-      notes: formData.notes || '', logged_at: now
-    });
-    const caseUpdate = { contact_logged_at: now };
-    if (formData.contact_type === 'initial_contact') caseUpdate.status = 'in_progress';
-    await base44.entities.Case.update(logModalCase.id, caseUpdate);
-    await base44.entities.TimelineEvent.create({
-      case_id: logModalCase.id, event_type: 'contact_logged',
-      event_description: 'Attorney logged contact with reporter.',
-      actor_role: 'lawyer', visible_to_user: false, created_at: now
-    });
-    setHighlightedCaseId(logModalCase.id);
-    await loadData();
-    setSaving(false);
-    setLogModalCase(null);
-    setSuccessMessage('Contact logged successfully.');
-    setTimeout(() => setHighlightedCaseId(null), 3000);
+    try {
+      await base44.entities.ContactLog.create({
+        case_id: logModalCase.id, lawyer_id: profile.id,
+        contact_type: formData.contact_type, contact_method: formData.contact_method,
+        notes: formData.notes || '', logged_at: now
+      });
+      const caseUpdate = { contact_logged_at: now };
+      if (formData.contact_type === 'initial_contact') caseUpdate.status = 'in_progress';
+      await base44.entities.Case.update(logModalCase.id, caseUpdate);
+      await base44.entities.TimelineEvent.create({
+        case_id: logModalCase.id, event_type: 'contact_logged',
+        event_description: 'Attorney logged contact with reporter.',
+        actor_role: 'lawyer', visible_to_user: false, created_at: now
+      });
+      setHighlightedCaseId(logModalCase.id);
+      await loadData();
+      setLogModalCase(null);
+      setSuccessMessage('Contact logged successfully.');
+      setTimeout(() => setHighlightedCaseId(null), 3000);
+    } catch (e) {
+      console.error('Log contact failed:', e);
+      setSuccessMessage('Failed to log contact — please try again');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const RESOLUTION_DESCRIPTIONS = {
@@ -138,16 +144,22 @@ export default function LawyerDashboard() {
       caseUpdate.estimated_case_value = formData.estimated_case_value;
       caseUpdate.expected_timeline = formData.expected_timeline;
     }
-    await base44.entities.Case.update(resolveModalCase.id, caseUpdate);
-    await base44.entities.TimelineEvent.create({
-      case_id: resolveModalCase.id, event_type: 'closed',
-      event_description: RESOLUTION_DESCRIPTIONS[formData.resolution_type] || 'This case has been closed.',
-      actor_role: 'lawyer', visible_to_user: true, created_at: now
-    });
-    await loadData();
-    setSaving(false);
-    setResolveModalCase(null);
-    setSuccessMessage('Case resolved and closed.');
+    try {
+      await base44.entities.Case.update(resolveModalCase.id, caseUpdate);
+      await base44.entities.TimelineEvent.create({
+        case_id: resolveModalCase.id, event_type: 'closed',
+        event_description: RESOLUTION_DESCRIPTIONS[formData.resolution_type] || 'This case has been closed.',
+        actor_role: 'lawyer', visible_to_user: true, created_at: now
+      });
+      await loadData();
+      setResolveModalCase(null);
+      setSuccessMessage('Case resolved and closed.');
+    } catch (e) {
+      console.error('Resolve failed:', e);
+      setSuccessMessage('Failed to resolve case — please try again');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const scrollTo = (id) => {

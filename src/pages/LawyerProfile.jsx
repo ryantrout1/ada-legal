@@ -44,9 +44,14 @@ export default function LawyerProfile() {
   }, []);
 
   const handleSave = async (updates) => {
-    await base44.entities.LawyerProfile.update(profile.id, updates);
-    setProfile(prev => ({ ...prev, ...updates }));
-    setToast('Profile updated');
+    try {
+      await base44.entities.LawyerProfile.update(profile.id, updates);
+      setProfile(prev => ({ ...prev, ...updates }));
+      setToast('Profile updated');
+    } catch (e) {
+      console.error('Profile save failed:', e);
+      setToast('Failed to save — please try again');
+    }
   };
 
   if (loading) {

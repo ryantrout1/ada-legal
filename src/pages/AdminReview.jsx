@@ -165,59 +165,81 @@ export default function AdminReview() {
   const handleBulkApprove = (clusterId, cs) => setBulkModal({ open: true, action: 'approve', clusterId, cases: cs });
   const handleBulkReject = (clusterId, cs) => setBulkModal({ open: true, action: 'reject', clusterId, cases: cs });
   const handleBulkConfirm = async ({ reason, comment }) => {
-    setSaving(true); const now = new Date().toISOString();
-    if (bulkModal.action === 'approve') {
-      for (const c of bulkModal.cases) { await base44.entities.Case.update(c.id, { status: 'available', approved_at: now, qc_reviewer_notes: comment || null }); await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'approved', event_description: 'Your case has been approved and is now visible to attorneys.', actor_role: 'admin', visible_to_user: true, created_at: now }); try { const prefLabel = c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'; const rendered = await renderEmailTemplate('case_approved', { reporter_name: c.contact_name, business_name: c.business_name, contact_preference: prefLabel, case_url: window.location.origin + '/MyCases' }); if (rendered) await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: rendered.subject, body: rendered.body }); } catch {} }
-      setToast({ type: 'success', message: `${bulkModal.cases.length} cases approved` });
+    setSaving(true);
+    const now = new Date().toISOString();
+    try {
+      if (bulkModal.action === 'approve') {
+        for (const c of bulkModal.cases) {
+          await base44.entities.Case.update(c.id, { status: 'available', approved_at: now, qc_reviewer_notes: comment || null });
+          await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'approved', event_description: 'Your case has been approved and is now visible to attorneys.', actor_role: 'admin', visible_to_user: true, created_at: now });
+          try { const prefLabel = c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'; const rendered = await renderEmailTemplate('case_approved', { reporter_name: c.contact_name, business_name: c.business_name, contact_preference: prefLabel, case_url: window.location.origin + '/MyCases' }); if (rendered) await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: rendered.subject, body: rendered.body }); } catch {}
+        }
+        setToast({ type: 'success', message: `${bulkModal.cases.length} cases approved` });
+      }
+      if (bulkModal.action === 'reject') {
+        const R = [{ value: 'insufficient_detail', emailText: 'We were unable to fully evaluate your report.' }, { value: 'not_ada_violation', emailText: 'The issue does not appear to fall under ADA.' }, { value: 'duplicate', emailText: 'This report is a duplicate.' }, { value: 'incomplete_contact', emailText: 'Contact information was incomplete.' }, { value: 'other', emailText: '' }];
+        const txt = (R.find(r => r.value === reason)?.emailText || '') + (comment ? ' ' + comment : '');
+        const url = window.location.origin + '/MyCases';
+        for (const c of bulkModal.cases) {
+          await base44.entities.Case.update(c.id, { status: 'rejected', qc_rejection_reason: reason, qc_reviewer_notes: comment || null });
+          await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'rejected', event_description: 'After review, this report did not meet criteria.', actor_role: 'admin', visible_to_user: true, created_at: now });
+          try { const rendered = await renderEmailTemplate('case_rejected', { reporter_name: c.contact_name, business_name: c.business_name, rejection_reason: txt, case_url: url, standards_guide_url: window.location.origin + '/StandardsGuide', intake_url: window.location.origin + '/Intake' }); if (rendered) await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: rendered.subject, body: rendered.body }); } catch {}
+        }
+        setToast({ type: 'success', message: `${bulkModal.cases.length} cases rejected` });
+      }
+      await loadCases();
+      setBulkModal({ open: false, action: null, clusterId: null, cases: [] });
+    } catch (e) {
+      console.error('Bulk action failed:', e);
+      setToast({ type: 'error', message: 'Action failed — please try again' });
+    } finally {
+      setSaving(false);
     }
-    if (bulkModal.action === 'reject') {
-      const R = [{ value: 'insufficient_detail', emailText: 'We were unable to fully evaluate your report.' }, { value: 'not_ada_violation', emailText: 'The issue does not appear to fall under ADA.' }, { value: 'duplicate', emailText: 'This report is a duplicate.' }, { value: 'incomplete_contact', emailText: 'Contact information was incomplete.' }, { value: 'other', emailText: '' }];
-      const txt = (R.find(r => r.value === reason)?.emailText || '') + (comment ? ' ' + comment : '');
-      const url = window.location.origin + '/MyCases';
-      for (const c of bulkModal.cases) { await base44.entities.Case.update(c.id, { status: 'rejected', qc_rejection_reason: reason, qc_reviewer_notes: comment || null }); await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'rejected', event_description: 'After review, this report did not meet criteria.', actor_role: 'admin', visible_to_user: true, created_at: now }); try { const rendered = await renderEmailTemplate('case_rejected', { reporter_name: c.contact_name, business_name: c.business_name, rejection_reason: txt, case_url: url, standards_guide_url: window.location.origin + '/StandardsGuide', intake_url: window.location.origin + '/Intake' }); if (rendered) await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: rendered.subject, body: rendered.body }); } catch {} }
-      setToast({ type: 'success', message: `${bulkModal.cases.length} cases rejected` });
-    }
-    await loadCases(); setSaving(false); setBulkModal({ open: false, action: null, clusterId: null, cases: [] });
   };
 
   const openModal = (action, caseData) => setModalState({ open: true, action, caseData });
   const closeModal = () => { if (!saving) setModalState({ open: false, action: null, caseData: null }); };
 
   const handleConfirm = async ({ reason, comment, internalNotes }) => {
-    if (!modalState.caseData) return; setSaving(true);
-    const c = modalState.caseData; const now = new Date().toISOString();
-    if (modalState.action === 'approve') {
-      trackEvent('admin_case_reviewed', { action: 'approve', case_id: c.id }, 'AdminReview');
-      trackEvent('case_status_changed', { case_id: c.id, old_status: c.status, new_status: 'available' }, 'AdminReview');
-      await base44.entities.Case.update(c.id, { status: 'available', approved_at: now, qc_reviewer_notes: comment || null });
-      await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'approved', event_description: 'Your case has been approved and is now visible to attorneys.', actor_role: 'admin', visible_to_user: true, created_at: now });
-      if (comment) await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `QC Note: ${comment}`, actor_role: 'admin', visible_to_user: false, created_at: now });
-      // Send case_approved email to reporter
-      try {
-        const prefLabel = c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference';
-        const rendered = await renderEmailTemplate('case_approved', { reporter_name: c.contact_name, business_name: c.business_name, contact_preference: prefLabel, case_url: window.location.origin + '/MyCases' });
-        if (rendered) await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: rendered.subject, body: rendered.body });
-      } catch {}
-      setToast({ type: 'success', message: 'Case approved' });
+    if (!modalState.caseData) return;
+    setSaving(true);
+    const c = modalState.caseData;
+    const now = new Date().toISOString();
+    try {
+      if (modalState.action === 'approve') {
+        trackEvent('admin_case_reviewed', { action: 'approve', case_id: c.id }, 'AdminReview');
+        trackEvent('case_status_changed', { case_id: c.id, old_status: c.status, new_status: 'available' }, 'AdminReview');
+        await base44.entities.Case.update(c.id, { status: 'available', approved_at: now, qc_reviewer_notes: comment || null });
+        await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'approved', event_description: 'Your case has been approved and is now visible to attorneys.', actor_role: 'admin', visible_to_user: true, created_at: now });
+        if (comment) await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `QC Note: ${comment}`, actor_role: 'admin', visible_to_user: false, created_at: now });
+        try { const prefLabel = c.contact_preference === 'phone' ? 'Phone' : c.contact_preference === 'email' ? 'Email' : 'No Preference'; const rendered = await renderEmailTemplate('case_approved', { reporter_name: c.contact_name, business_name: c.business_name, contact_preference: prefLabel, case_url: window.location.origin + '/MyCases' }); if (rendered) await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: rendered.subject, body: rendered.body }); } catch {}
+        setToast({ type: 'success', message: 'Case approved' });
+      }
+      if (modalState.action === 'reject') {
+        trackEvent('admin_case_reviewed', { action: 'reject', case_id: c.id }, 'AdminReview');
+        trackEvent('case_status_changed', { case_id: c.id, old_status: c.status, new_status: 'rejected' }, 'AdminReview');
+        await base44.entities.Case.update(c.id, { status: 'rejected', qc_rejection_reason: reason, qc_reviewer_notes: internalNotes || null });
+        await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'rejected', event_description: 'After review, this report did not meet the criteria.', actor_role: 'admin', visible_to_user: true, created_at: now });
+        await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `Rejection: ${reason}${internalNotes ? `. Note: ${internalNotes}` : ''}`, actor_role: 'admin', visible_to_user: false, created_at: now });
+        const R = [{ value: 'appears_compliant', t: 'Appears to meet ADA standards.' }, { value: 'not_ada_violation', t: 'Does not fall under ADA.' }, { value: 'insufficient_documentation', t: 'Insufficient documentation.' }, { value: 'exempt_entity', t: 'Entity may be exempt.' }, { value: 'statute_of_limitations', t: 'Timeline limitations.' }, { value: 'already_remediated', t: 'Barrier may have been remediated.' }, { value: 'duplicate', t: 'Duplicate submission.' }, { value: 'other', t: '' }];
+        const emailTxt = (R.find(r => r.value === reason)?.t || '') + (comment ? ' ' + comment : '');
+        try { const rendered = await renderEmailTemplate('case_rejected', { reporter_name: c.contact_name, business_name: c.business_name, rejection_reason: emailTxt, case_url: window.location.origin + '/MyCases', standards_guide_url: window.location.origin + '/StandardsGuide', intake_url: window.location.origin + '/Intake' }); if (rendered) await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: rendered.subject, body: rendered.body }); } catch {}
+        setToast({ type: 'success', message: 'Case rejected & email sent' });
+      }
+      if (modalState.action === 'flag') {
+        trackEvent('admin_case_reviewed', { action: 'flag', case_id: c.id }, 'AdminReview');
+        await base44.entities.Case.update(c.id, { qc_flagged: true, qc_flag_reason: reason, qc_reviewer_notes: comment || c.qc_reviewer_notes || null });
+        await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `Flagged: ${reason}${comment ? `. Note: ${comment}` : ''}`, actor_role: 'admin', visible_to_user: false, created_at: now });
+        setToast({ type: 'warning', message: 'Case flagged' });
+      }
+      await loadCases();
+      closeModal();
+    } catch (e) {
+      console.error('Review action failed:', e);
+      setToast({ type: 'error', message: 'Action failed — please try again' });
+    } finally {
+      setSaving(false);
     }
-    if (modalState.action === 'reject') {
-      trackEvent('admin_case_reviewed', { action: 'reject', case_id: c.id }, 'AdminReview');
-      trackEvent('case_status_changed', { case_id: c.id, old_status: c.status, new_status: 'rejected' }, 'AdminReview');
-      await base44.entities.Case.update(c.id, { status: 'rejected', qc_rejection_reason: reason, qc_reviewer_notes: internalNotes || null });
-      await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'rejected', event_description: 'After review, this report did not meet the criteria.', actor_role: 'admin', visible_to_user: true, created_at: now });
-      await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `Rejection: ${reason}${internalNotes ? `. Note: ${internalNotes}` : ''}`, actor_role: 'admin', visible_to_user: false, created_at: now });
-      const R = [{ value: 'appears_compliant', t: 'Appears to meet ADA standards.' }, { value: 'not_ada_violation', t: 'Does not fall under ADA.' }, { value: 'insufficient_documentation', t: 'Insufficient documentation.' }, { value: 'exempt_entity', t: 'Entity may be exempt.' }, { value: 'statute_of_limitations', t: 'Timeline limitations.' }, { value: 'already_remediated', t: 'Barrier may have been remediated.' }, { value: 'duplicate', t: 'Duplicate submission.' }, { value: 'other', t: '' }];
-      const emailTxt = (R.find(r => r.value === reason)?.t || '') + (comment ? ' ' + comment : '');
-      try { const rendered = await renderEmailTemplate('case_rejected', { reporter_name: c.contact_name, business_name: c.business_name, rejection_reason: emailTxt, case_url: window.location.origin + '/MyCases', standards_guide_url: window.location.origin + '/StandardsGuide', intake_url: window.location.origin + '/Intake' }); if (rendered) await base44.integrations.Core.SendEmail({ to: c.contact_email, subject: rendered.subject, body: rendered.body }); } catch {}
-      setToast({ type: 'success', message: 'Case rejected & email sent' });
-    }
-    if (modalState.action === 'flag') {
-      trackEvent('admin_case_reviewed', { action: 'flag', case_id: c.id }, 'AdminReview');
-      await base44.entities.Case.update(c.id, { qc_flagged: true, qc_flag_reason: reason, qc_reviewer_notes: comment || c.qc_reviewer_notes || null });
-      await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'reviewed', event_description: `Flagged: ${reason}${comment ? `. Note: ${comment}` : ''}`, actor_role: 'admin', visible_to_user: false, created_at: now });
-      setToast({ type: 'warning', message: 'Case flagged' });
-    }
-    await loadCases(); setSaving(false); closeModal();
   };
 
   if (loading) {

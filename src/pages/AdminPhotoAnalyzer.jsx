@@ -1145,9 +1145,14 @@ Carefully examine each attached photo. Use your vision to assess what is actuall
 
     // Update the DB record — only update analysis_result (preserve all other fields)
     // overall_risk is intentionally omitted — Base44 may reject unknown fields in update
-    await base44.entities.PhotoAnalysis.update(record.id, {
-      analysis_result: compressForStorage(parsedWithUrls),
-    });
+    try {
+      await base44.entities.PhotoAnalysis.update(record.id, {
+        analysis_result: compressForStorage(parsedWithUrls),
+      });
+    } catch (e) {
+      console.error('DB update failed for record', record.id, e);
+      throw e; // re-throw so BatchReanalysisModal can mark job as error
+    }
 
     // Update in-memory history with compressed version (matches what's in DB)
     setHistory(prev => prev.map(r => r.id === record.id

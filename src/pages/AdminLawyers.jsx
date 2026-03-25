@@ -84,8 +84,14 @@ export default function AdminLawyers() {
     const now = new Date().toISOString();
     const updates = { account_status: 'approved', approved_at: now };
     if (!lawyer.date_joined) updates.date_joined = now;
-    await base44.entities.LawyerProfile.update(lawyer.id, updates);
-    setToast(`${lawyer.full_name} approved.`); await loadData();
+    try {
+      await base44.entities.LawyerProfile.update(lawyer.id, updates);
+      setToast(`${lawyer.full_name} approved.`);
+      await loadData();
+    } catch (e) {
+      console.error('Quick approve failed:', e);
+      setToast('Action failed — please try again.');
+    }
   };
 
   // Status bar cells
