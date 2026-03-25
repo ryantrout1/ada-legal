@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '../utils';
-import { Send, Upload, X, CheckCircle, AlertTriangle, ChevronRight, Camera } from 'lucide-react';
+import { Send, CheckCircle, ChevronRight, Camera } from 'lucide-react';
 import AdminPageHeader from '../components/admin/shared/AdminPageHeader';
 import { useReadingLevel } from '../components/a11y/ReadingLevelContext';
+import { useAnnounce } from '../components/a11y/LiveAnnouncer';
 
 // ─── System prompt — adapts to reading level ──────────────────────────────────
 function buildSystemPrompt(readingLevel) {
@@ -14,13 +15,11 @@ function buildSystemPrompt(readingLevel) {
 - Be warm and reassuring. "That sounds really frustrating." "You did the right thing by reporting this."
 - Ask only ONE thing at a time. Keep your messages to 2-3 sentences max.
 - Avoid any jargon. If you must use a term, explain it immediately in plain words.`,
-
     standard: `COMMUNICATION STYLE — STANDARD (8th grade):
 - Plain, direct language. Conversational but professional.
 - Briefly validate their experience before moving on.
 - Ask one or two things at a time. Keep responses to 2-4 sentences.
 - You can use common terms like "ADA violation" or "accessible entrance" without over-explaining.`,
-
     professional: `COMMUNICATION STYLE — PROFESSIONAL (legal/technical):
 - Precise, efficient language. Assume legal literacy.
 - Use correct ADA terminology: "Title III", "barrier to access", "place of public accommodation", "2010 ADA Standards".
@@ -83,7 +82,7 @@ business_type options: "Restaurant", "Retail Store", "Hotel/Lodging", "Medical O
 visited_before options: "yes", "no", "first_time"
 contact_preference options: "phone", "email", "no_preference"
 
-IMPORTANT: Do not include the <EXTRACT> block until you have: business_name, city, state, narrative (50+ words), contact_name, contact_email, contact_phone. The narrative minimum is important — keep asking questions until you have a full picture.`;
+IMPORTANT: Do not include the <EXTRACT> block until you have: business_name, city, state, narrative (50+ words), contact_name, contact_email, contact_phone.`;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -108,25 +107,40 @@ const STRENGTH_CONFIG = {
   UNCLEAR:  { color: 'var(--body-secondary)', bg: 'var(--card-bg-tinted)', border: 'var(--card-border)', icon: '?', label: 'Needs Review' },
 };
 
-// ─── Message bubble ───────────────────────────────────────────────────────────
-function MessageBubble({ msg }) {
+// ─── Message bubble — WCAG AAA ────────────────────────────────────────────────
+function MessageBubble({ msg, index }) {
   const isUser = msg.role === 'user';
   const text = msg.role === 'assistant' ? stripExtract(msg.content) : msg.content;
   if (!text && !msg.photoPreview) return null;
+
+  const senderLabel = isUser ? 'You' : 'ADA Intake Assistant';
+
   return (
-    <div style={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start', marginBottom: 12 }}>
+    <div
+      role="listitem"
+      aria-label={`${senderLabel}: ${text ? text.slice(0, 80) + (text.length > 80 ? '…' : '') : 'uploaded a photo'}`}
+      style={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start', marginBottom: 12 }}
+    >
       {!isUser && (
-        <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800, flexShrink: 0, marginRight: 8, marginTop: 2, fontFamily: 'Fraunces, serif' }}>A</div>
+        <div
+          aria-hidden="true"
+          style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800, flexShrink: 0, marginRight: 8, marginTop: 2, fontFamily: 'Fraunces, serif' }}
+        >A</div>
       )}
       <div style={{ maxWidth: '78%' }}>
+        {/* Sender label — visible for orientation, sr-only handled by aria-label above */}
+        <div aria-hidden="true" style={{ fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginBottom: 3, textAlign: isUser ? 'right' : 'left' }}>
+          {senderLabel}
+        </div>
         {msg.photoPreview && (
           <div style={{ marginBottom: 6, borderRadius: 10, overflow: 'hidden', border: '1px solid var(--card-border)' }}>
-            <img src={msg.photoPreview} alt="Uploaded barrier photo" style={{ width: '100%', maxHeight: 180, objectFit: 'cover', display: 'block' }} />
+            <img src={msg.photoPreview} alt="Photo of the accessibility barrier you uploaded" style={{ width: '100%', maxHeight: 180, objectFit: 'cover', display: 'block' }} />
           </div>
         )}
         {text && (
           <div style={{
-            padding: '10px 14px', borderRadius: isUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+            padding: '10px 14px',
+            borderRadius: isUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
             background: isUser ? 'var(--accent)' : 'var(--card-bg)',
             border: isUser ? 'none' : '1px solid var(--card-border)',
             color: isUser ? '#fff' : 'var(--body)',
@@ -137,25 +151,25 @@ function MessageBubble({ msg }) {
           </div>
         )}
         <div style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', marginTop: 3, textAlign: isUser ? 'right' : 'left', paddingLeft: isUser ? 0 : 4 }}>
-          {msg.time}
+          <time dateTime={msg.isoTime}>{msg.time}</time>
         </div>
       </div>
       {isUser && (
-        <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--card-bg-tinted)', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0, marginLeft: 8, marginTop: 2 }}>👤</div>
+        <div aria-hidden="true" style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--card-bg-tinted)', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0, marginLeft: 8, marginTop: 2 }}>👤</div>
       )}
     </div>
   );
 }
 
-// ─── Extracted case summary card ──────────────────────────────────────────────
+// ─── Case summary card — WCAG AAA ─────────────────────────────────────────────
 function CaseSummaryCard({ data, onEdit, onSubmit, submitting, submitted }) {
   const strength = STRENGTH_CONFIG[data.case_strength] || STRENGTH_CONFIG.UNCLEAR;
-  const isPhysical = data.violation_type === 'physical_space';
+  const headingId = React.useId();
 
   if (submitted) {
     return (
-      <div style={{ padding: '24px', borderRadius: 12, background: 'var(--suc-bg)', border: '1px solid var(--suc-bd)', textAlign: 'center' }}>
-        <CheckCircle size={40} style={{ color: 'var(--suc-fg)', marginBottom: 12 }} />
+      <div role="status" aria-live="polite" style={{ padding: '24px', borderRadius: 12, background: 'var(--suc-bg)', border: '1px solid var(--suc-bd)', textAlign: 'center' }}>
+        <CheckCircle size={40} aria-hidden="true" style={{ color: 'var(--suc-fg)', marginBottom: 12 }} />
         <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--suc-fg)', fontFamily: 'Fraunces, serif', marginBottom: 6 }}>Case Submitted</div>
         <div style={{ fontSize: 13, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif', opacity: 0.85 }}>This case is now in the review queue.</div>
       </div>
@@ -163,76 +177,87 @@ function CaseSummaryCard({ data, onEdit, onSubmit, submitting, submitted }) {
   }
 
   return (
-    <div style={{ borderRadius: 12, border: '1px solid var(--card-border)', background: 'var(--card-bg)', overflow: 'hidden' }}>
-      {/* Header */}
+    <section aria-labelledby={headingId} style={{ borderRadius: 12, border: '1px solid var(--card-border)', background: 'var(--card-bg)', overflow: 'hidden' }}>
       <div style={{ padding: '14px 18px', background: 'var(--card-bg-tinted)', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>Extracted Case Details</div>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 20, background: strength.bg, border: '1px solid ' + strength.border, fontSize: 11, fontWeight: 700, color: strength.color, fontFamily: 'Manrope, sans-serif' }}>
-          {strength.icon} {strength.label}
+        <h2 id={headingId} style={{ margin: 0, fontSize: 13, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>Extracted Case Details</h2>
+        <div
+          role="status"
+          aria-label={`Case strength: ${strength.label}`}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 20, background: strength.bg, border: '1px solid ' + strength.border, fontSize: 11, fontWeight: 700, color: strength.color, fontFamily: 'Manrope, sans-serif' }}
+        >
+          <span aria-hidden="true">{strength.icon}</span> {strength.label}
         </div>
       </div>
 
-      {/* Fields */}
-      <div style={{ padding: '14px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <dl style={{ padding: '14px 18px', margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
         {[
           { label: 'Business', value: data.business_name },
           { label: 'Type', value: data.business_type },
           { label: 'Location', value: [data.street_address, data.city, data.state].filter(Boolean).join(', ') },
           { label: 'Barrier', value: data.violation_subtype },
           { label: 'Date', value: formatDate(data.incident_date) },
-          { label: 'Visited before', value: data.visited_before === 'yes' ? 'Yes' : data.visited_before === 'no' ? 'No' : data.visited_before === 'first_time' ? 'First time' : '—' },
-        ].map(({ label, value }) => value && value !== '—' && (
-          <div key={label} style={{ display: 'flex', gap: 8, fontSize: 13, fontFamily: 'Manrope, sans-serif' }}>
-            <span style={{ color: 'var(--body-secondary)', fontWeight: 600, minWidth: 90, flexShrink: 0 }}>{label}</span>
-            <span style={{ color: 'var(--heading)' }}>{value}</span>
+          { label: 'Visited before', value: data.visited_before === 'yes' ? 'Yes' : data.visited_before === 'no' ? 'No' : data.visited_before === 'first_time' ? 'First time' : null },
+        ].filter(f => f.value).map(({ label, value }) => (
+          <div key={label} style={{ display: 'flex', gap: 8 }}>
+            <dt style={{ fontSize: 13, fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)', fontWeight: 600, minWidth: 90, flexShrink: 0 }}>{label}</dt>
+            <dd style={{ fontSize: 13, fontFamily: 'Manrope, sans-serif', color: 'var(--heading)', margin: 0 }}>{value}</dd>
           </div>
         ))}
 
         {data.narrative && (
-          <div style={{ fontSize: 13, fontFamily: 'Manrope, sans-serif' }}>
-            <div style={{ color: 'var(--body-secondary)', fontWeight: 600, marginBottom: 4 }}>Description</div>
-            <div style={{ color: 'var(--heading)', lineHeight: 1.6, padding: '8px 10px', background: 'var(--page-bg-subtle)', borderRadius: 6, border: '1px solid var(--card-border)' }}>{data.narrative}</div>
+          <div>
+            <dt style={{ fontSize: 13, fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)', fontWeight: 600, marginBottom: 4 }}>Description</dt>
+            <dd style={{ fontSize: 13, fontFamily: 'Manrope, sans-serif', color: 'var(--heading)', lineHeight: 1.6, margin: 0, padding: '8px 10px', background: 'var(--page-bg-subtle)', borderRadius: 6, border: '1px solid var(--card-border)' }}>{data.narrative}</dd>
           </div>
         )}
 
         {data.case_strength_reason && (
-          <div style={{ padding: '8px 10px', borderRadius: 6, background: strength.bg, border: '1px solid ' + strength.border, fontSize: 12, color: strength.color, fontFamily: 'Manrope, sans-serif', lineHeight: 1.5 }}>
+          <div role="note" aria-label="Case assessment" style={{ padding: '8px 10px', borderRadius: 6, background: strength.bg, border: '1px solid ' + strength.border, fontSize: 12, color: strength.color, fontFamily: 'Manrope, sans-serif', lineHeight: 1.5 }}>
             <strong>Case assessment: </strong>{data.case_strength_reason}
           </div>
         )}
 
         <div style={{ borderTop: '1px solid var(--card-border)', paddingTop: 10, marginTop: 2 }}>
-          <div style={{ color: 'var(--body-secondary)', fontWeight: 600, marginBottom: 6, fontSize: 12, fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contact</div>
+          <dt style={{ fontSize: 12, fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Contact</dt>
           {[
             { label: 'Name', value: data.contact_name },
             { label: 'Email', value: data.contact_email },
             { label: 'Phone', value: data.contact_phone },
             { label: 'Prefers', value: data.contact_preference },
-          ].map(({ label, value }) => value && (
-            <div key={label} style={{ display: 'flex', gap: 8, fontSize: 13, fontFamily: 'Manrope, sans-serif', marginBottom: 4 }}>
-              <span style={{ color: 'var(--body-secondary)', fontWeight: 600, minWidth: 50, flexShrink: 0 }}>{label}</span>
-              <span style={{ color: 'var(--heading)' }}>{value}</span>
+          ].filter(f => f.value).map(({ label, value }) => (
+            <div key={label} style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
+              <dt style={{ fontSize: 13, fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)', fontWeight: 600, minWidth: 50, flexShrink: 0 }}>{label}</dt>
+              <dd style={{ fontSize: 13, fontFamily: 'Manrope, sans-serif', color: 'var(--heading)', margin: 0 }}>{value}</dd>
             </div>
           ))}
         </div>
-      </div>
+      </dl>
 
-      {/* Actions */}
       <div style={{ padding: '12px 18px', borderTop: '1px solid var(--card-border)', display: 'flex', gap: 8, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-        <button onClick={onEdit} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid var(--card-border)', background: 'transparent', color: 'var(--body)', fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 600, cursor: 'pointer', minHeight: 44 }}>
+        <button
+          onClick={onEdit}
+          style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid var(--card-border)', background: 'transparent', color: 'var(--body)', fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 600, cursor: 'pointer', minHeight: 44 }}
+        >
           Edit in Form
         </button>
-        <button onClick={onSubmit} disabled={submitting} aria-busy={submitting} style={{ padding: '8px 20px', borderRadius: 8, border: 'none', background: submitting ? 'var(--card-border)' : 'var(--accent)', color: '#fff', fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', minHeight: 44, display: 'flex', alignItems: 'center', gap: 6 }}>
-          {submitting ? 'Submitting…' : <><CheckCircle size={15} /> Submit Case</>}
+        <button
+          onClick={onSubmit}
+          disabled={submitting}
+          aria-disabled={submitting}
+          aria-busy={submitting}
+          style={{ padding: '8px 20px', borderRadius: 8, border: 'none', background: submitting ? 'var(--card-border)' : 'var(--accent)', color: '#fff', fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', minHeight: 44, display: 'flex', alignItems: 'center', gap: 6 }}
+        >
+          {submitting ? 'Submitting…' : <><CheckCircle size={15} aria-hidden="true" /> Submit Case</>}
         </button>
       </div>
-    </div>
+    </section>
   );
 }
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function AdminIntakeAI() {
   const { readingLevel } = useReadingLevel();
+  const announce = useAnnounce();
 
   const OPENING = {
     simple: "Hi — I'm here to help you report an ADA problem. Tell me what happened. Where were you, and what made it hard for you?",
@@ -240,10 +265,17 @@ export default function AdminIntakeAI() {
     professional: "Welcome. I'll help you document an ADA violation for potential case review. Please describe the incident — the location, the nature of the barrier, and when it occurred.",
   };
 
+  function makeTime() {
+    return {
+      time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+      isoTime: new Date().toISOString(),
+    };
+  }
+
   const [messages, setMessages] = useState([{
     role: 'assistant',
     content: OPENING[readingLevel] || OPENING.standard,
-    time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+    ...makeTime(),
   }]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -256,10 +288,13 @@ export default function AdminIntakeAI() {
   const [photoAnalysis, setPhotoAnalysis] = useState(null);
   const [analyzingPhoto, setAnalyzingPhoto] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
+  const [statusMsg, setStatusMsg] = useState('');
 
   const bottomRef = useRef(null);
   const fileInputRef = useRef(null);
   const inputRef = useRef(null);
+  const messageListRef = useRef(null);
+  const sendHintId = React.useId();
 
   useEffect(() => {
     async function check() {
@@ -276,30 +311,27 @@ export default function AdminIntakeAI() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, extractedData]);
 
-  function now() { return new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); }
-
   async function handlePhotoUpload(file) {
     if (!file) return;
     setPhotoFile(file);
     const preview = URL.createObjectURL(file);
     setPhotoPreview(preview);
+    announce('Photo uploaded. Analyzing image for ADA violations.', 'polite');
+    setStatusMsg('Analyzing your photo…');
 
-    // Add photo message
     setMessages(prev => [...prev, {
       role: 'user',
       content: '',
       photoPreview: preview,
-      time: now(),
+      ...makeTime(),
     }]);
 
-    // Upload to CDN
     setAnalyzingPhoto(true);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       setPhotoUrl(file_url);
 
-      // Run vision analysis
-      const ADA_PHOTO_PROMPT = `You are an ADA accessibility analyst. Analyze this photo of a location and identify potential ADA violations. 
+      const ADA_PHOTO_PROMPT = `You are an ADA accessibility analyst. Analyze this photo of a location and identify potential ADA violations.
 Respond ONLY with valid JSON:
 {
   "summary": "2-3 sentence assessment",
@@ -319,23 +351,20 @@ Respond ONLY with valid JSON:
       const analysis = JSON.parse(rawText.replace(/```json|```/g, '').trim());
       setPhotoAnalysis(analysis);
 
-      // Inject AI message about the photo
       const violationList = analysis.violations?.length > 0
         ? `I can see ${analysis.violations.length} potential issue${analysis.violations.length !== 1 ? 's' : ''} in your photo:\n• ${analysis.violations.join('\n• ')}\n\nThis looks like a ${analysis.overallRisk?.toLowerCase()} risk situation.`
         : "I analyzed your photo but couldn't identify specific violations from the image. Your description will be the main evidence.";
 
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: violationList + "\n\nCan you tell me the name of this business and where it's located?",
-        time: now(),
-      }]);
+      const aiMsg = violationList + "\n\nCan you tell me the name of this business and where it's located?";
+      setMessages(prev => [...prev, { role: 'assistant', content: aiMsg, ...makeTime() }]);
+      announce('Photo analysis complete. ' + violationList.replace(/\n/g, ' '), 'assertive');
+      setStatusMsg('');
     } catch (e) {
       console.error('Photo analysis failed:', e);
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: "I received your photo — thanks. I had trouble analyzing it automatically, but it will still be attached to your case. Can you tell me the name of this business and where it's located?",
-        time: now(),
-      }]);
+      const fallback = "I received your photo — thanks. I had trouble analyzing it automatically, but it will still be attached to your case. Can you tell me the name of this business and where it's located?";
+      setMessages(prev => [...prev, { role: 'assistant', content: fallback, ...makeTime() }]);
+      announce('Photo received. Could not auto-analyze.', 'polite');
+      setStatusMsg('');
     }
     setAnalyzingPhoto(false);
   }
@@ -344,20 +373,20 @@ Respond ONLY with valid JSON:
     const text = input.trim();
     if (!text || loading) return;
     setInput('');
+    setStatusMsg('AI is thinking…');
 
-    const userMsg = { role: 'user', content: text, time: now() };
+    const userMsg = { role: 'user', content: text, ...makeTime() };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setLoading(true);
+    announce('Message sent.', 'polite');
 
-    // Build conversation history for API (exclude photo previews)
     const history = newMessages
       .filter(m => m.content)
       .map(m => ({ role: m.role, content: m.content }));
 
-    // Inject photo analysis context if available
     const systemWithContext = photoAnalysis
-      ? buildSystemPrompt(readingLevel) + `\n\nPHOTO ANALYSIS ALREADY DONE: The user uploaded a photo. Analysis found: ${JSON.stringify(photoAnalysis)}. Use this to inform your questions — you already know the violation type and subtype from the photo.`
+      ? buildSystemPrompt(readingLevel) + `\n\nPHOTO ANALYSIS ALREADY DONE: The user uploaded a photo. Analysis found: ${JSON.stringify(photoAnalysis)}. Use this to inform your questions.`
       : buildSystemPrompt(readingLevel);
 
     try {
@@ -377,18 +406,22 @@ Respond ONLY with valid JSON:
       const extracted = parseExtract(aiText);
       const displayText = stripExtract(aiText);
 
-      setMessages(prev => [...prev, { role: 'assistant', content: displayText, time: now() }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: displayText, ...makeTime() }]);
+      announce('ADA Intake Assistant: ' + displayText.slice(0, 120), 'polite');
 
       if (extracted?.ready) {
-        // Attach photo URL if we have one
         if (photoUrl) extracted.photo_url = photoUrl;
         if (photoAnalysis) extracted.photo_analysis = photoAnalysis;
         setExtractedData(extracted);
+        announce('Case details extracted. Please review and submit when ready.', 'assertive');
       }
     } catch (e) {
       console.error(e);
-      setMessages(prev => [...prev, { role: 'assistant', content: "Something went wrong connecting to the AI. Please try again.", time: now() }]);
+      const errMsg = "Something went wrong connecting to the AI. Please try again.";
+      setMessages(prev => [...prev, { role: 'assistant', content: errMsg, ...makeTime() }]);
+      announce(errMsg, 'assertive');
     }
+    setStatusMsg('');
     setLoading(false);
     setTimeout(() => inputRef.current?.focus(), 100);
   }
@@ -396,6 +429,7 @@ Respond ONLY with valid JSON:
   async function handleSubmit() {
     if (!extractedData) return;
     setSubmitting(true);
+    announce('Submitting case. Please wait.', 'polite');
     const now = new Date().toISOString();
     try {
       const casePayload = {
@@ -418,7 +452,6 @@ Respond ONLY with valid JSON:
         status: 'submitted',
         submitted_at: now,
       };
-
       const newCase = await base44.entities.Case.create(casePayload);
       await base44.entities.TimelineEvent.create({
         case_id: newCase.id,
@@ -429,22 +462,24 @@ Respond ONLY with valid JSON:
         created_at: now,
       });
       setSubmitted(true);
+      announce('Case submitted successfully. It is now in the review queue.', 'assertive');
     } catch (e) {
       console.error('Submit failed:', e);
+      announce('Submission failed. Please try again.', 'assertive');
     }
     setSubmitting(false);
   }
 
   function handleEditInForm() {
-    const params = new URLSearchParams({
-      source: 'ai_intake',
-      type: extractedData.violation_type === 'physical_space' ? 'physical_access' : 'digital_access',
-    });
+    const params = new URLSearchParams({ source: 'ai_intake', type: extractedData.violation_type === 'physical_space' ? 'physical_access' : 'digital_access' });
     window.location.href = createPageUrl('Intake') + '?' + params.toString();
   }
 
+  const readingLevelLabel = readingLevel === 'simple' ? 'Simple' : readingLevel === 'professional' ? 'Professional' : 'Standard';
+  const isTyping = loading || analyzingPhoto;
+
   if (pageLoading) return (
-    <div role="status" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
+    <div role="status" aria-label="Loading AI Intake" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
       <div className="a11y-spinner" aria-hidden="true" />
       <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading…</p>
     </div>
@@ -452,59 +487,79 @@ Respond ONLY with valid JSON:
 
   return (
     <div style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
+
+      {/* Live region for status announcements */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">{statusMsg}</div>
+
       <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
 
         <AdminPageHeader
           title="AI Intake"
           actionButton={
             <a href={createPageUrl('Intake')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 16px', minHeight: 44, borderRadius: 8, background: 'transparent', color: 'var(--body-secondary)', border: '1px solid var(--card-border)', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem', fontFamily: 'Manrope, sans-serif', textDecoration: 'none' }}>
-              Switch to Form Intake <ChevronRight size={14} />
+              Switch to Form Intake <ChevronRight size={14} aria-hidden="true" />
             </a>
           }
         />
 
-        {/* Explainer banner */}
-        <div style={{ padding: '12px 16px', borderRadius: 8, background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', fontFamily: 'Manrope, sans-serif', fontSize: 13, color: 'var(--inf-fg)', lineHeight: 1.6 }}>
-          <strong>AI-Powered Intake — Admin Demo.</strong> This conversational intake uses Claude to extract structured case data from natural conversation. Title I and Title II violations are automatically routed to the correct external channels. Title III (private business) violations proceed to case submission.
+        <div role="note" style={{ padding: '12px 16px', borderRadius: 8, background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', fontFamily: 'Manrope, sans-serif', fontSize: 13, color: 'var(--inf-fg)', lineHeight: 1.6 }}>
+          <strong>AI-Powered Intake — Admin Demo.</strong> Conversational intake using Claude. Title I and Title II violations are automatically routed to external channels. Title III (private business) violations proceed to case submission.
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'start' }} className="intake-ai-grid">
 
           {/* ── Chat panel ── */}
-          <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', height: 'calc(100vh - 260px)', minHeight: 500 }}>
+          <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', height: 'calc(100vh - 260px)', minHeight: 500 }}>
 
             {/* Chat header */}
             <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, fontFamily: 'Fraunces, serif', flexShrink: 0 }}>A</div>
+              <div aria-hidden="true" style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, fontFamily: 'Fraunces, serif', flexShrink: 0 }}>A</div>
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>ADA Intake Assistant</div>
-                <div style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif' }}>
-                  {loading ? '⟳ Thinking…' : analyzingPhoto ? '⟳ Analyzing photo…' : '● Ready'}
+                <div aria-hidden="true" style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif' }}>
+                  {isTyping ? 'Thinking…' : 'Ready'}
                 </div>
               </div>
               <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
                 {photoPreview && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif' }}>
-                    <Camera size={14} /> Photo attached
+                  <div aria-label="Photo attached to this case" style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif' }}>
+                    <Camera size={14} aria-hidden="true" /> Photo attached
                   </div>
                 )}
-                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', padding: '3px 8px', borderRadius: 20, border: '1px solid var(--card-border)', background: 'var(--page-bg-subtle)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  {readingLevel === 'simple' ? 'Simple' : readingLevel === 'professional' ? 'Professional' : 'Standard'}
+                <div
+                  aria-label={`Reading level: ${readingLevelLabel}`}
+                  title={`Current reading level: ${readingLevelLabel}. Change via the eye icon in the navigation.`}
+                  style={{ fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', padding: '3px 8px', borderRadius: 20, border: '1px solid var(--card-border)', background: 'var(--page-bg-subtle)', textTransform: 'uppercase', letterSpacing: '0.04em' }}
+                >
+                  {readingLevelLabel}
                 </div>
               </div>
             </div>
 
-            {/* Messages */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column' }}>
-              {messages.map((msg, i) => <MessageBubble key={i} msg={msg} />)}
-              {(loading || analyzingPhoto) && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800, fontFamily: 'Fraunces, serif' }}>A</div>
-                  <div style={{ padding: '10px 14px', borderRadius: '18px 18px 18px 4px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', display: 'flex', gap: 4, alignItems: 'center' }}>
+            {/* Message list */}
+            <div
+              ref={messageListRef}
+              role="log"
+              aria-label="Conversation history"
+              aria-live="polite"
+              aria-relevant="additions"
+              tabIndex={0}
+              style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column' }}
+            >
+              <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
+                {messages.map((msg, i) => <MessageBubble key={i} msg={msg} index={i} />)}
+              </ol>
+
+              {/* Typing indicator */}
+              {isTyping && (
+                <div role="status" aria-label={analyzingPhoto ? 'Analyzing your photo' : 'AI is composing a response'} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                  <div aria-hidden="true" style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800, fontFamily: 'Fraunces, serif' }}>A</div>
+                  <div aria-hidden="true" style={{ padding: '10px 14px', borderRadius: '18px 18px 18px 4px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', display: 'flex', gap: 4, alignItems: 'center' }}>
                     {[0, 1, 2].map(i => (
                       <div key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--body-secondary)', animation: 'bounce 1.2s ease-in-out infinite', animationDelay: `${i * 0.2}s` }} />
                     ))}
                   </div>
+                  <span className="sr-only">{analyzingPhoto ? 'Analyzing your photo, please wait.' : 'AI is thinking, please wait.'}</span>
                 </div>
               )}
               <div ref={bottomRef} />
@@ -512,44 +567,61 @@ Respond ONLY with valid JSON:
 
             {/* Input area */}
             {!submitted && (
-              <div style={{ padding: '12px 16px', borderTop: '1px solid var(--card-border)', display: 'flex', gap: 8, alignItems: 'flex-end' }}>
-                {/* Photo upload */}
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={!!photoFile || analyzingPhoto}
-                  aria-label="Upload a photo"
-                  title={photoFile ? 'Photo already attached' : 'Upload a photo of the barrier'}
-                  style={{ width: 44, height: 44, borderRadius: 10, border: '1px solid var(--card-border)', background: photoFile ? 'var(--suc-bg)' : 'var(--page-bg-subtle)', color: photoFile ? 'var(--suc-fg)' : 'var(--body-secondary)', cursor: photoFile ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
-                >
-                  {photoFile ? <CheckCircle size={18} /> : <Camera size={18} />}
-                </button>
-                <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { if (e.target.files?.[0]) handlePhotoUpload(e.target.files[0]); }} />
+              <div style={{ padding: '12px 16px', borderTop: '1px solid var(--card-border)' }}>
+                {/* Keyboard hint */}
+                <p id={sendHintId} className="sr-only">Press Enter to send your message. Press Shift+Enter for a new line.</p>
 
-                <textarea
-                  ref={inputRef}
-                  value={input}
-                  onChange={e => setInput(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
-                  placeholder="Tell me what happened…"
-                  rows={1}
-                  aria-label="Your message"
-                  style={{ flex: 1, resize: 'none', border: '1px solid var(--card-border)', borderRadius: 10, padding: '10px 14px', fontFamily: 'Manrope, sans-serif', fontSize: 14, background: 'var(--page-bg-subtle)', color: 'var(--body)', outline: 'none', lineHeight: 1.5, minHeight: 44, maxHeight: 120 }}
-                />
-                <button
-                  onClick={sendMessage}
-                  disabled={!input.trim() || loading}
-                  aria-label="Send message"
-                  style={{ width: 44, height: 44, borderRadius: 10, border: 'none', background: !input.trim() || loading ? 'var(--card-border)' : 'var(--accent)', color: '#fff', cursor: !input.trim() || loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
-                >
-                  <Send size={18} />
-                </button>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
+                  {/* Photo upload */}
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={!!photoFile || analyzingPhoto}
+                    aria-label={photoFile ? 'Photo already attached to this case' : 'Attach a photo of the barrier'}
+                    aria-disabled={!!photoFile || analyzingPhoto}
+                    style={{ width: 44, height: 44, borderRadius: 10, border: '1px solid var(--card-border)', background: photoFile ? 'var(--suc-bg)' : 'var(--page-bg-subtle)', color: photoFile ? 'var(--suc-fg)' : 'var(--body-secondary)', cursor: photoFile ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+                  >
+                    {photoFile ? <CheckCircle size={18} aria-hidden="true" /> : <Camera size={18} aria-hidden="true" />}
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    aria-label="Choose a photo file to attach"
+                    style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}
+                    onChange={e => { if (e.target.files?.[0]) handlePhotoUpload(e.target.files[0]); }}
+                  />
+
+                  <textarea
+                    ref={inputRef}
+                    value={input}
+                    onChange={e => setInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
+                    placeholder="Tell me what happened…"
+                    rows={1}
+                    aria-label="Your message to the intake assistant"
+                    aria-describedby={sendHintId}
+                    aria-required="true"
+                    style={{ flex: 1, resize: 'none', border: '1px solid var(--card-border)', borderRadius: 10, padding: '10px 14px', fontFamily: 'Manrope, sans-serif', fontSize: 14, background: 'var(--page-bg-subtle)', color: 'var(--body)', outline: 'none', lineHeight: 1.5, minHeight: 44, maxHeight: 120 }}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={sendMessage}
+                    disabled={!input.trim() || loading}
+                    aria-label={loading ? 'Waiting for AI response' : 'Send message'}
+                    aria-disabled={!input.trim() || loading}
+                    style={{ width: 44, height: 44, borderRadius: 10, border: 'none', background: !input.trim() || loading ? 'var(--card-border)' : 'var(--accent)', color: '#fff', cursor: !input.trim() || loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+                  >
+                    <Send size={18} aria-hidden="true" />
+                  </button>
+                </div>
               </div>
             )}
-          </div>
+          </section>
 
           {/* ── Right panel ── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-
             {extractedData ? (
               <CaseSummaryCard
                 data={extractedData}
@@ -559,38 +631,53 @@ Respond ONLY with valid JSON:
                 submitted={submitted}
               />
             ) : (
-              <div style={{ padding: '20px', borderRadius: 12, background: 'var(--card-bg)', border: '1px solid var(--card-border)', textAlign: 'center' }}>
-                <div style={{ fontSize: 28, marginBottom: 10 }}>💬</div>
+              <div role="status" style={{ padding: '20px', borderRadius: 12, background: 'var(--card-bg)', border: '1px solid var(--card-border)', textAlign: 'center' }}>
+                <div aria-hidden="true" style={{ fontSize: 28, marginBottom: 10 }}>💬</div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif', marginBottom: 6 }}>Case details will appear here</div>
                 <div style={{ fontSize: 12, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.6 }}>As the conversation progresses, the AI will extract structured case data and display it for review before submission.</div>
               </div>
             )}
 
-            {/* Tips */}
+            {/* How it works */}
             <div style={{ padding: '14px 16px', borderRadius: 10, background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>How it works</div>
-              {[
-                { icon: '💬', text: 'Describe what happened in plain language' },
-                { icon: '📸', text: 'Upload a photo to strengthen your case' },
-                { icon: '🔍', text: 'AI extracts structured case details automatically' },
-                { icon: '⚖️', text: 'Title I & II violations route to the right channel' },
-                { icon: '✓', text: 'Review extracted details before submitting' },
-              ].map(({ icon, text }) => (
-                <div key={text} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 8, fontSize: 12, color: 'var(--body)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.5 }}>
-                  <span style={{ flexShrink: 0 }}>{icon}</span>
-                  <span>{text}</span>
-                </div>
-              ))}
+              <h2 style={{ fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10, margin: '0 0 10px' }}>How it works</h2>
+              <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                {[
+                  { icon: '💬', text: 'Describe what happened in plain language' },
+                  { icon: '📸', text: 'Upload a photo to strengthen your case' },
+                  { icon: '🔍', text: 'AI extracts structured case details automatically' },
+                  { icon: '⚖️', text: 'Title I & II violations route to the right channel' },
+                  { icon: '✓', text: 'Review extracted details before submitting' },
+                ].map(({ icon, text }) => (
+                  <li key={text} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 8, fontSize: 12, color: 'var(--body)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.5 }}>
+                    <span aria-hidden="true" style={{ flexShrink: 0 }}>{icon}</span>
+                    <span>{text}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       </div>
 
       <style>{`
+        .sr-only {
+          position: absolute !important; width: 1px !important; height: 1px !important;
+          padding: 0 !important; margin: -1px !important; overflow: hidden !important;
+          clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important;
+        }
         @keyframes bounce {
           0%, 80%, 100% { transform: translateY(0); }
           40% { transform: translateY(-6px); }
         }
+        @media (prefers-reduced-motion: reduce) {
+          * { animation: none !important; transition: none !important; }
+        }
+        @media (prefers-contrast: more) {
+          button, textarea, input { border-width: 2px !important; }
+        }
+        *:focus-visible { outline: 3px solid var(--accent-light) !important; outline-offset: 2px !important; }
+        *:focus:not(:focus-visible) { outline: none !important; }
         @media (max-width: 768px) {
           .intake-ai-grid { grid-template-columns: 1fr !important; }
         }
@@ -598,3 +685,5 @@ Respond ONLY with valid JSON:
     </div>
   );
 }
+
+
