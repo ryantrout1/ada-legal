@@ -77,66 +77,78 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
     if (!currentCase || saving) return;
     setSaving(true);
     const now = new Date().toISOString();
-    await base44.entities.Case.update(currentCase.id, {
-      status: 'available', approved_at: now, qc_reviewer_notes: null,
-    });
-    await base44.entities.TimelineEvent.create({
-      case_id: currentCase.id, event_type: 'approved',
-      event_description: 'Your case has been approved and is now visible to attorneys in your area.',
-      actor_role: 'admin', visible_to_user: true, created_at: now,
-    });
-    setStats(s => ({ ...s, approved: s.approved + 1 }));
-    setSaving(false);
-    advance();
+    try {
+      await base44.entities.Case.update(currentCase.id, {
+        status: 'available', approved_at: now, qc_reviewer_notes: null,
+      });
+      await base44.entities.TimelineEvent.create({
+        case_id: currentCase.id, event_type: 'approved',
+        event_description: 'Your case has been approved and is now visible to attorneys in your area.',
+        actor_role: 'admin', visible_to_user: true, created_at: now,
+      });
+      setStats(s => ({ ...s, approved: s.approved + 1 }));
+      advance();
+    } catch (e) {
+      console.error('Approve failed:', e);
+    } finally {
+      setSaving(false);
+    }
   }, [currentCase, saving, advance]);
 
   const handleRejectConfirm = useCallback(async ({ reason, comment }) => {
     if (!currentCase) return;
     setSaving(true);
     const now = new Date().toISOString();
-    await base44.entities.Case.update(currentCase.id, {
-      status: 'rejected', qc_rejection_reason: reason, qc_reviewer_notes: comment || null,
-    });
-    await base44.entities.TimelineEvent.create({
-      case_id: currentCase.id, event_type: 'rejected',
-      event_description: 'After review, this report did not meet the criteria for our platform.',
-      actor_role: 'admin', visible_to_user: true, created_at: now,
-    });
-    const emailReasonText = (REJECT_REASONS_EMAIL.find(r => r.value === reason)?.emailText || '') + (comment ? ' ' + comment : '');
     try {
-      const rendered = await renderEmailTemplate('case_rejected', {
-        reporter_name: currentCase.contact_name,
-        business_name: currentCase.business_name,
-        rejection_reason: emailReasonText,
-        case_url: window.location.origin + '/MyCases',
-        standards_guide_url: window.location.origin + '/StandardsGuide',
-        intake_url: window.location.origin + '/Intake'
+      await base44.entities.Case.update(currentCase.id, {
+        status: 'rejected', qc_rejection_reason: reason, qc_reviewer_notes: comment || null,
       });
-      if (rendered) await base44.integrations.Core.SendEmail({ to: currentCase.contact_email, subject: rendered.subject, body: rendered.body });
-    } catch (e) { console.error('Rejection email failed:', e); }
-    setStats(s => ({ ...s, rejected: s.rejected + 1 }));
-    setSaving(false);
-    setRejectOpen(false);
-    advance();
+      await base44.entities.TimelineEvent.create({
+        case_id: currentCase.id, event_type: 'rejected',
+        event_description: 'After review, this report did not meet the criteria for our platform.',
+        actor_role: 'admin', visible_to_user: true, created_at: now,
+      });
+      const emailReasonText = (REJECT_REASONS_EMAIL.find(r => r.value === reason)?.emailText || '') + (comment ? ' ' + comment : '');
+      try {
+        const rendered = await renderEmailTemplate('case_rejected', {
+          reporter_name: currentCase.contact_name, business_name: currentCase.business_name,
+          rejection_reason: emailReasonText, case_url: window.location.origin + '/MyCases',
+          standards_guide_url: window.location.origin + '/StandardsGuide', intake_url: window.location.origin + '/Intake'
+        });
+        if (rendered) await base44.integrations.Core.SendEmail({ to: currentCase.contact_email, subject: rendered.subject, body: rendered.body });
+      } catch (e) { console.error('Rejection email failed:', e); }
+      setStats(s => ({ ...s, rejected: s.rejected + 1 }));
+      setRejectOpen(false);
+      advance();
+    } catch (e) {
+      console.error('Reject failed:', e);
+    } finally {
+      setSaving(false);
+    }
   }, [currentCase, advance]);
 
   const handleFlagConfirm = useCallback(async ({ reason, comment }) => {
     if (!currentCase) return;
     setSaving(true);
     const now = new Date().toISOString();
-    await base44.entities.Case.update(currentCase.id, {
-      qc_flagged: true, qc_flag_reason: reason,
-      qc_reviewer_notes: comment || currentCase.qc_reviewer_notes || null,
-    });
-    await base44.entities.TimelineEvent.create({
-      case_id: currentCase.id, event_type: 'reviewed',
-      event_description: `Flagged for review: ${reason}${comment ? '. Note: ' + comment : ''}`,
-      actor_role: 'admin', visible_to_user: false, created_at: now,
-    });
-    setStats(s => ({ ...s, flagged: s.flagged + 1 }));
-    setSaving(false);
-    setFlagOpen(false);
-    advance();
+    try {
+      await base44.entities.Case.update(currentCase.id, {
+        qc_flagged: true, qc_flag_reason: reason,
+        qc_reviewer_notes: comment || currentCase.qc_reviewer_notes || null,
+      });
+      await base44.entities.TimelineEvent.create({
+        case_id: currentCase.id, event_type: 'reviewed',
+        event_description: `Flagged for review: ${reason}${comment ? '. Note: ' + comment : ''}`,
+        actor_role: 'admin', visible_to_user: false, created_at: now,
+      });
+      setStats(s => ({ ...s, flagged: s.flagged + 1 }));
+      setFlagOpen(false);
+      advance();
+    } catch (e) {
+      console.error('Flag failed:', e);
+    } finally {
+      setSaving(false);
+    }
   }, [currentCase, advance]);
 
   const handleSkip = useCallback(() => {

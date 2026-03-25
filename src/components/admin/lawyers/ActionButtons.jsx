@@ -78,85 +78,120 @@ export default function ActionButtons({ lawyer, cases, contactLogs, onRefresh, o
   const handleApprove = async () => {
     setProcessing(true);
     const now = new Date().toISOString();
-    const updates = { account_status: 'approved', approved_at: now };
-    if (!lawyer.date_joined) updates.date_joined = now;
-    await base44.entities.LawyerProfile.update(lawyer.id, updates);
-    onToast('Lawyer approved successfully.');
-    await onRefresh();
-    setProcessing(false);
+    try {
+      const updates = { account_status: 'approved', approved_at: now };
+      if (!lawyer.date_joined) updates.date_joined = now;
+      await base44.entities.LawyerProfile.update(lawyer.id, updates);
+      onToast('Lawyer approved successfully.');
+      await onRefresh();
+    } catch (e) {
+      console.error('Approve failed:', e);
+      onToast('Action failed — please try again.');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleReject = async () => {
     if (!reason.trim()) return;
     setProcessing(true);
-    await base44.entities.LawyerProfile.update(lawyer.id, { account_status: 'removed' });
-    onToast('Lawyer rejected.');
-    setModal(null); setReason('');
-    await onRefresh();
-    setProcessing(false);
+    try {
+      await base44.entities.LawyerProfile.update(lawyer.id, { account_status: 'removed' });
+      onToast('Lawyer rejected.');
+      setModal(null); setReason('');
+      await onRefresh();
+    } catch (e) {
+      console.error('Reject failed:', e);
+      onToast('Action failed — please try again.');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleSuspend = async () => {
     if (!reason.trim()) return;
     setProcessing(true);
-    await base44.entities.LawyerProfile.update(lawyer.id, {
-      account_status: 'suspended', flagged: true, flag_reason: reason.trim()
-    });
-    onToast('Lawyer suspended.');
-    setModal(null); setReason('');
-    await onRefresh();
-    setProcessing(false);
+    try {
+      await base44.entities.LawyerProfile.update(lawyer.id, {
+        account_status: 'suspended', flagged: true, flag_reason: reason.trim()
+      });
+      onToast('Lawyer suspended.');
+      setModal(null); setReason('');
+      await onRefresh();
+    } catch (e) {
+      console.error('Suspend failed:', e);
+      onToast('Action failed — please try again.');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleReinstate = async () => {
     setProcessing(true);
-    await base44.entities.LawyerProfile.update(lawyer.id, {
-      account_status: 'approved', flagged: false, flag_reason: ''
-    });
-    onToast('Lawyer reinstated.');
-    setModal(null); setReason('');
-    await onRefresh();
-    setProcessing(false);
+    try {
+      await base44.entities.LawyerProfile.update(lawyer.id, {
+        account_status: 'approved', flagged: false, flag_reason: ''
+      });
+      onToast('Lawyer reinstated.');
+      setModal(null); setReason('');
+      await onRefresh();
+    } catch (e) {
+      console.error('Reinstate failed:', e);
+      onToast('Action failed — please try again.');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleRemove = async () => {
     if (confirmText !== 'REMOVE') return;
     setProcessing(true);
-    // Return active cases first
     const now = new Date().toISOString();
-    for (const c of activeCases) {
-      await base44.entities.Case.update(c.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '' });
-      await base44.entities.TimelineEvent.create({
-        case_id: c.id, event_type: 'reclaimed',
-        event_description: 'Case returned to available pool by admin.',
-        actor_role: 'admin', visible_to_user: false, created_at: now
-      });
+    try {
+      for (const c of activeCases) {
+        await base44.entities.Case.update(c.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '' });
+        await base44.entities.TimelineEvent.create({
+          case_id: c.id, event_type: 'reclaimed',
+          event_description: 'Case returned to available pool by admin.',
+          actor_role: 'admin', visible_to_user: false, created_at: now
+        });
+      }
+      await base44.entities.LawyerProfile.update(lawyer.id, { account_status: 'removed' });
+      onToast('Lawyer removed.');
+      setModal(null); setConfirmText('');
+      await onRefresh();
+    } catch (e) {
+      console.error('Remove failed:', e);
+      onToast('Action failed — please try again.');
+    } finally {
+      setProcessing(false);
     }
-    await base44.entities.LawyerProfile.update(lawyer.id, { account_status: 'removed' });
-    onToast('Lawyer removed.');
-    setModal(null); setConfirmText('');
-    await onRefresh();
-    setProcessing(false);
   };
 
   const handleReassign = async () => {
     setProcessing(true);
     const now = new Date().toISOString();
-    for (const c of activeCases) {
-      await base44.entities.Case.update(c.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '', contact_logged_at: '' });
-      await base44.entities.TimelineEvent.create({
-        case_id: c.id, event_type: 'reclaimed',
-        event_description: 'Case returned to available pool by admin.',
-        actor_role: 'admin', visible_to_user: false, created_at: now
+    try {
+      for (const c of activeCases) {
+        await base44.entities.Case.update(c.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '', contact_logged_at: '' });
+        await base44.entities.TimelineEvent.create({
+          case_id: c.id, event_type: 'reclaimed',
+          event_description: 'Case returned to available pool by admin.',
+          actor_role: 'admin', visible_to_user: false, created_at: now
+        });
+      }
+      await base44.entities.LawyerProfile.update(lawyer.id, {
+        cases_reclaimed: (lawyer.cases_reclaimed || 0) + activeCases.length
       });
+      onToast(`${activeCases.length} case(s) returned to available pool.`);
+      setModal(null);
+      await onRefresh();
+    } catch (e) {
+      console.error('Reassign failed:', e);
+      onToast('Action failed — please try again.');
+    } finally {
+      setProcessing(false);
     }
-    await base44.entities.LawyerProfile.update(lawyer.id, {
-      cases_reclaimed: (lawyer.cases_reclaimed || 0) + activeCases.length
-    });
-    onToast(`${activeCases.length} case(s) returned to available pool.`);
-    setModal(null);
-    await onRefresh();
-    setProcessing(false);
   };
 
   const disabledStyle = processing ? { opacity: 0.5, pointerEvents: 'none' } : {};

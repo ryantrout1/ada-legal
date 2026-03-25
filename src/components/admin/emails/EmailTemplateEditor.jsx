@@ -66,30 +66,38 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
 
   const handleSave = async () => {
     setSaving(true);
-    const user = await base44.auth.me();
-    await base44.entities.EmailTemplate.update(template.id, {
-      subject_line: subject,
-      body_html: bodyHtml,
-      last_edited_at: new Date().toISOString(),
-      edited_by: user?.email || 'admin'
-    });
-    setSaving(false);
-    setToast({ type: 'success', message: 'Template saved' });
-    onSaved();
+    try {
+      const user = await base44.auth.me();
+      await base44.entities.EmailTemplate.update(template.id, {
+        subject_line: subject, body_html: bodyHtml,
+        last_edited_at: new Date().toISOString(), edited_by: user?.email || 'admin'
+      });
+      setToast({ type: 'success', message: 'Template saved' });
+      onSaved();
+    } catch (e) {
+      console.error('Template save failed:', e);
+      setToast({ type: 'error', message: 'Save failed — please try again' });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleSendTest = async () => {
     setSending(true);
-    const user = await base44.auth.me();
-    const renderedSubject = replaceVars(subject);
-    const renderedBody = replaceVars(bodyHtml);
-    await base44.integrations.Core.SendEmail({
-      to: user.email,
-      subject: `[TEST] ${renderedSubject}`,
-      body: renderedBody
-    });
-    setSending(false);
-    setToast({ type: 'success', message: `Test email sent to ${user.email}` });
+    try {
+      const user = await base44.auth.me();
+      const renderedSubject = replaceVars(subject);
+      const renderedBody = replaceVars(bodyHtml);
+      await base44.integrations.Core.SendEmail({
+        to: user.email, subject: `[TEST] ${renderedSubject}`, body: renderedBody
+      });
+      setToast({ type: 'success', message: `Test email sent to ${user.email}` });
+    } catch (e) {
+      console.error('Test email failed:', e);
+      setToast({ type: 'error', message: 'Failed to send test email' });
+    } finally {
+      setSending(false);
+    }
   };
 
   const copyVariable = (v) => {

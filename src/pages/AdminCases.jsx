@@ -88,20 +88,26 @@ export default function AdminCases() {
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
   const loadData = async () => {
-    const [allCases, allLawyers, allLogs] = await Promise.all([
-      base44.entities.Case.list('-created_date', 500),
-      base44.entities.LawyerProfile.list('-created_date', 500),
-      base44.entities.ContactLog.list('-created_date', 500),
-    ]);
-    const ninetyDaysAgo = new Date(Date.now() - 90 * 86400000).toISOString();
-    const toExpire = allCases.filter(c => c.status === 'available' && (c.created_date || c.submitted_at) < ninetyDaysAgo);
-    const now = new Date().toISOString();
-    for (const c of toExpire) {
-      await base44.entities.Case.update(c.id, { status: 'expired', expired_at: now });
-      await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'expired', event_description: 'This case was not matched with an attorney within 90 days.', actor_role: 'system', visible_to_user: true, created_at: now });
-      c.status = 'expired'; c.expired_at = now;
+    try {
+      const [allCases, allLawyers, allLogs] = await Promise.all([
+        base44.entities.Case.list('-created_date', 500),
+        base44.entities.LawyerProfile.list('-created_date', 500),
+        base44.entities.ContactLog.list('-created_date', 500),
+      ]);
+      const ninetyDaysAgo = new Date(Date.now() - 90 * 86400000).toISOString();
+      const toExpire = allCases.filter(c => c.status === 'available' && (c.created_date || c.submitted_at) < ninetyDaysAgo);
+      const now = new Date().toISOString();
+      for (const c of toExpire) {
+        try {
+          await base44.entities.Case.update(c.id, { status: 'expired', expired_at: now });
+          await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'expired', event_description: 'This case was not matched with an attorney within 90 days.', actor_role: 'system', visible_to_user: true, created_at: now });
+          c.status = 'expired'; c.expired_at = now;
+        } catch (e) { console.error('Auto-expire failed for case', c.id, e); }
+      }
+      setCases(allCases); setLawyers(allLawyers); setContactLogs(allLogs);
+    } catch (e) {
+      console.error('loadData failed:', e);
     }
-    setCases(allCases); setLawyers(allLawyers); setContactLogs(allLogs);
   };
 
   useEffect(() => {

@@ -20,79 +20,66 @@ export default function ReviewActions({ caseData, onActionComplete }) {
   const handleApprove = async () => {
     setProcessing(true);
     const now = new Date().toISOString();
-
-    await base44.entities.Case.update(caseData.id, {
-      status: 'available',
-      approved_at: now
-    });
-
-    await base44.entities.TimelineEvent.create({
-      case_id: caseData.id,
-      event_type: 'approved',
-      event_description: 'Your case has been approved and is now available for attorney review.',
-      actor_role: 'admin',
-      visible_to_user: true,
-      created_at: now
-    });
-
     try {
-      const prefLabel = caseData.contact_preference === 'phone' ? 'Phone' : caseData.contact_preference === 'email' ? 'Email' : 'No Preference';
-      const rendered = await renderEmailTemplate('case_approved', {
-        reporter_name: caseData.contact_name,
-        business_name: caseData.business_name,
-        contact_preference: prefLabel,
-        case_url: window.location.origin + '/MyCases'
+      await base44.entities.Case.update(caseData.id, { status: 'available', approved_at: now });
+      await base44.entities.TimelineEvent.create({
+        case_id: caseData.id, event_type: 'approved',
+        event_description: 'Your case has been approved and is now available for attorney review.',
+        actor_role: 'admin', visible_to_user: true, created_at: now
       });
-      if (rendered) await base44.integrations.Core.SendEmail({ to: caseData.contact_email, subject: rendered.subject, body: rendered.body });
-    } catch {}
-
-    setProcessing(false);
-    onActionComplete();
+      try {
+        const prefLabel = caseData.contact_preference === 'phone' ? 'Phone' : caseData.contact_preference === 'email' ? 'Email' : 'No Preference';
+        const rendered = await renderEmailTemplate('case_approved', {
+          reporter_name: caseData.contact_name, business_name: caseData.business_name,
+          contact_preference: prefLabel, case_url: window.location.origin + '/MyCases'
+        });
+        if (rendered) await base44.integrations.Core.SendEmail({ to: caseData.contact_email, subject: rendered.subject, body: rendered.body });
+      } catch {}
+      onActionComplete();
+    } catch (e) {
+      console.error('Approve failed:', e);
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleReject = async () => {
     if (!rejectionReason.trim()) return;
     setProcessing(true);
     const now = new Date().toISOString();
-
-    await base44.entities.Case.update(caseData.id, {
-      status: 'rejected',
-      rejection_reason: rejectionReason.trim()
-    });
-
-    await base44.entities.TimelineEvent.create({
-      case_id: caseData.id,
-      event_type: 'rejected',
-      event_description: `Your submission could not be approved. Reason: ${rejectionReason.trim()}`,
-      actor_role: 'admin',
-      visible_to_user: true,
-      created_at: now
-    });
-
     try {
-      const rendered = await renderEmailTemplate('case_rejected', {
-        reporter_name: caseData.contact_name,
-        business_name: caseData.business_name,
-        rejection_reason: rejectionReason.trim(),
-        case_url: window.location.origin + '/MyCases',
-        standards_guide_url: window.location.origin + '/StandardsGuide',
-        intake_url: window.location.origin + '/Intake'
+      await base44.entities.Case.update(caseData.id, { status: 'rejected', rejection_reason: rejectionReason.trim() });
+      await base44.entities.TimelineEvent.create({
+        case_id: caseData.id, event_type: 'rejected',
+        event_description: `Your submission could not be approved. Reason: ${rejectionReason.trim()}`,
+        actor_role: 'admin', visible_to_user: true, created_at: now
       });
-      if (rendered) await base44.integrations.Core.SendEmail({ to: caseData.contact_email, subject: rendered.subject, body: rendered.body });
-    } catch {}
-
-    setProcessing(false);
-    onActionComplete();
+      try {
+        const rendered = await renderEmailTemplate('case_rejected', {
+          reporter_name: caseData.contact_name, business_name: caseData.business_name,
+          rejection_reason: rejectionReason.trim(), case_url: window.location.origin + '/MyCases',
+          standards_guide_url: window.location.origin + '/StandardsGuide', intake_url: window.location.origin + '/Intake'
+        });
+        if (rendered) await base44.integrations.Core.SendEmail({ to: caseData.contact_email, subject: rendered.subject, body: rendered.body });
+      } catch {}
+      onActionComplete();
+    } catch (e) {
+      console.error('Reject failed:', e);
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleFlag = async () => {
     setProcessing(true);
-    await base44.entities.Case.update(caseData.id, {
-      status: 'under_review',
-      admin_notes: adminNotes.trim()
-    });
-    setProcessing(false);
-    onActionComplete();
+    try {
+      await base44.entities.Case.update(caseData.id, { status: 'under_review', admin_notes: adminNotes.trim() });
+      onActionComplete();
+    } catch (e) {
+      console.error('Flag failed:', e);
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (

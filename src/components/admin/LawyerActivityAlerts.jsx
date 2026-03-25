@@ -31,16 +31,26 @@ export default function LawyerActivityAlerts({ lawyers, cases, contactLogs, onDa
   const handleApprove = async (lawyer) => {
     setProcessing(lawyer.id + '_approve');
     const now = new Date().toISOString();
-    await base44.entities.LawyerProfile.update(lawyer.id, { account_status: 'approved', approved_at: now, date_joined: now });
-    setProcessing(null);
-    if (onDataRefresh) onDataRefresh();
+    try {
+      await base44.entities.LawyerProfile.update(lawyer.id, { account_status: 'approved', approved_at: now, date_joined: now });
+      if (onDataRefresh) onDataRefresh();
+    } catch (e) {
+      console.error('Lawyer approve failed:', e);
+    } finally {
+      setProcessing(null);
+    }
   };
 
   const handleReject = async (lawyer) => {
     setProcessing(lawyer.id + '_reject');
-    await base44.entities.LawyerProfile.update(lawyer.id, { account_status: 'removed' });
-    setProcessing(null);
-    if (onDataRefresh) onDataRefresh();
+    try {
+      await base44.entities.LawyerProfile.update(lawyer.id, { account_status: 'removed' });
+      if (onDataRefresh) onDataRefresh();
+    } catch (e) {
+      console.error('Lawyer reject failed:', e);
+    } finally {
+      setProcessing(null);
+    }
   };
 
   const noAlerts = overdueContacts.length === 0 && pendingLawyers.length === 0;
