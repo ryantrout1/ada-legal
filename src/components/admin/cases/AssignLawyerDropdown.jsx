@@ -49,7 +49,7 @@ export default function AssignLawyerDropdown({ caseData, approvedLawyers, onAssi
           onClick={(e) => e.stopPropagation()}
           style={{
             position: 'absolute', top: '100%', right: 0, marginTop: '4px', zIndex: 50,
-            backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px',
+            backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '10px',
             boxShadow: '0 8px 24px rgba(0,0,0,0.15)', width: '280px', maxHeight: '300px',
             display: 'flex', flexDirection: 'column', overflow: 'hidden',
           }}
@@ -63,14 +63,14 @@ export default function AssignLawyerDropdown({ caseData, approvedLawyers, onAssi
               autoFocus
               style={{
                 width: '100%', padding: '6px 10px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                border: '1px solid var(--card-border)', borderRadius: '6px', boxSizing: 'border-box',
+                border: '1px solid var(--slate-200)', borderRadius: '6px', boxSizing: 'border-box',
               }}
             />
           </div>
           <div style={{ overflowY: 'auto', maxHeight: '220px' }}>
             {filtered.length > 0 && (
               <>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', padding: '4px 12px', margin: 0 }}>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', padding: '4px 12px', margin: 0 }}>
                   Licensed in {caseData.state || 'state'}
                 </p>
                 {filtered.map(l => (
@@ -83,11 +83,11 @@ export default function AssignLawyerDropdown({ caseData, approvedLawyers, onAssi
                       padding: '8px 12px', border: 'none', backgroundColor: 'transparent',
                       cursor: 'pointer', textAlign: 'left', minHeight: '36px',
                     }}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--slate-50)'}
                     onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
-                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body)' }}>{l.full_name}</span>
-                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)' }}>{l.firm_name}</span>
+                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-800)' }}>{l.full_name}</span>
+                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)' }}>{l.firm_name}</span>
                   </button>
                 ))}
               </>
@@ -95,7 +95,7 @@ export default function AssignLawyerDropdown({ caseData, approvedLawyers, onAssi
             {/* Show other lawyers if different from filtered */}
             {allLawyers.filter(l => !filtered.includes(l)).length > 0 && (
               <>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', padding: '8px 12px 4px', margin: 0, borderTop: '1px solid var(--card-bg-tinted)' }}>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700, color: 'var(--slate-500)', textTransform: 'uppercase', padding: '8px 12px 4px', margin: 0, borderTop: '1px solid var(--slate-100)' }}>
                   Other lawyers
                 </p>
                 {allLawyers.filter(l => !filtered.includes(l)).map(l => (
@@ -108,17 +108,17 @@ export default function AssignLawyerDropdown({ caseData, approvedLawyers, onAssi
                       padding: '8px 12px', border: 'none', backgroundColor: 'transparent',
                       cursor: 'pointer', textAlign: 'left', minHeight: '36px',
                     }}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--slate-50)'}
                     onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
-                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body)' }}>{l.full_name}</span>
-                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)' }}>{l.firm_name}</span>
+                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-800)' }}>{l.full_name}</span>
+                    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)' }}>{l.firm_name}</span>
                   </button>
                 ))}
               </>
             )}
             {filtered.length === 0 && allLawyers.length === 0 && (
-              <p style={{ padding: '12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', textAlign: 'center' }}>
+              <p style={{ padding: '12px', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)', textAlign: 'center' }}>
                 No approved lawyers found
               </p>
             )}

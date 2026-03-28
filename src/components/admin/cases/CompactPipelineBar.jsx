@@ -26,18 +26,18 @@ const NUM_COLOR = {
   submitted:    '#9A3412',
   under_review: '#1D4ED8',
   available:    '#9A3412',
-  assigned:     'var(--wrn-fg)',
-  in_progress:  'var(--suc-fg)',
-  closed:       'var(--body-secondary)',
-  rejected:     'var(--err-fg)',
+  assigned:     '#92400E',
+  in_progress:  '#15803D',
+  closed:       '#64748B',
+  rejected:     '#DC2626',
 };
 
 const BOTTLENECK_BORDER_COLOR = {
   submitted:    '#FB923C',
   under_review: '#3B82F6',
-  available:    'var(--accent)',
+  available:    '#EA580C',
   assigned:     '#D97706',
-  in_progress:  'var(--suc-fg)',
+  in_progress:  '#16A34A',
 };
 
 export default function CompactPipelineBar({ cases, activeStatus, onStatusClick, secondaryStats }) {
@@ -65,10 +65,10 @@ export default function CompactPipelineBar({ cases, activeStatus, onStatusClick,
           display: 'flex',
           flex: '1 1 auto',
           minWidth: 0,
-          border: '1px solid var(--card-border)',
+          border: '1px solid var(--slate-200)',
           borderRadius: '8px',
           overflow: 'hidden',
-          backgroundColor: 'var(--card-bg)',
+          backgroundColor: 'white',
         }}
       >
         {STAGES.map((stage, i) => {
@@ -96,13 +96,13 @@ export default function CompactPipelineBar({ cases, activeStatus, onStatusClick,
                 justifyContent: 'center',
                 cursor: 'pointer',
                 border: 'none',
-                borderLeft: i > 0 ? '1px solid var(--card-border)' : 'none',
+                borderLeft: i > 0 ? '1px solid var(--slate-200)' : 'none',
                 borderBottom: isBottleneck
-                  ? `2px solid ${BOTTLENECK_BORDER_COLOR[stage.key] || 'var(--accent)'}`
+                  ? `2px solid ${BOTTLENECK_BORDER_COLOR[stage.key] || '#EA580C'}`
                   : active
-                    ? '2px solid var(--body)'
+                    ? '2px solid var(--slate-700)'
                     : '2px solid transparent',
-                backgroundColor: active ? 'var(--page-bg-subtle)' : (isEmpty ? 'white' : CELL_BG[stage.key]),
+                backgroundColor: active ? 'var(--slate-50)' : (isEmpty ? 'white' : CELL_BG[stage.key]),
                 transition: 'background-color 0.15s, border-bottom-color 0.15s',
                 outline: 'none',
               }}
@@ -112,7 +112,7 @@ export default function CompactPipelineBar({ cases, activeStatus, onStatusClick,
                 fontSize: '1.25rem',
                 fontWeight: 700,
                 lineHeight: 1,
-                color: isEmpty ? 'var(--body-secondary)' : NUM_COLOR[stage.key],
+                color: isEmpty ? 'var(--slate-500)' : NUM_COLOR[stage.key],
               }}>
                 {count}
               </span>
@@ -123,7 +123,7 @@ export default function CompactPipelineBar({ cases, activeStatus, onStatusClick,
                 textTransform: 'uppercase',
                 letterSpacing: '0.03em',
                 marginTop: '1px',
-                color: isEmpty ? 'var(--body-secondary)' : 'var(--body-secondary)',
+                color: isEmpty ? 'var(--slate-500)' : 'var(--slate-500)',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -144,17 +144,17 @@ export default function CompactPipelineBar({ cases, activeStatus, onStatusClick,
         style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.8rem',
-          color: 'var(--body-secondary)',
+          color: 'var(--slate-500)',
           whiteSpace: 'nowrap',
           flexShrink: 0,
         }}
       >
         <span>⏱ {secondaryStats.pendingReview} pending</span>
-        <span style={{ margin: '0 6px', color: 'var(--body-secondary)' }}>·</span>
+        <span style={{ margin: '0 6px', color: 'var(--slate-500)' }}>·</span>
         <span>👤 {secondaryStats.activeLawyers} lawyer{secondaryStats.activeLawyers !== 1 ? 's' : ''}</span>
-        <span style={{ margin: '0 6px', color: 'var(--body-secondary)' }}>·</span>
+        <span style={{ margin: '0 6px', color: 'var(--slate-500)' }}>·</span>
         <span>📋 {secondaryStats.lawyerApps} app{secondaryStats.lawyerApps !== 1 ? 's' : ''}</span>
-        <span style={{ margin: '0 6px', color: 'var(--body-secondary)' }}>·</span>
+        <span style={{ margin: '0 6px', color: 'var(--slate-500)' }}>·</span>
         <span>✓ {secondaryStats.compliance} contact</span>
       </div>
 

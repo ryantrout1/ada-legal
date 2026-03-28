@@ -88,43 +88,30 @@ export default function AdminCases() {
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
   const loadData = async () => {
-    try {
-      const [allCases, allLawyers, allLogs] = await Promise.all([
-        base44.entities.Case.list('-created_date', 500),
-        base44.entities.LawyerProfile.list('-created_date', 500),
-        base44.entities.ContactLog.list('-created_date', 500),
-      ]);
-      const ninetyDaysAgo = new Date(Date.now() - 90 * 86400000).toISOString();
-      const toExpire = allCases.filter(c => c.status === 'available' && (c.created_date || c.submitted_at) < ninetyDaysAgo);
-      const now = new Date().toISOString();
-      for (const c of toExpire) {
-        try {
-          await base44.entities.Case.update(c.id, { status: 'expired', expired_at: now });
-          await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'expired', event_description: 'This case was not matched with an attorney within 90 days.', actor_role: 'system', visible_to_user: true, created_at: now });
-          c.status = 'expired'; c.expired_at = now;
-        } catch (e) { console.error('Auto-expire failed for case', c.id, e); }
-      }
-      setCases(allCases); setLawyers(allLawyers); setContactLogs(allLogs);
-    } catch (e) {
-      console.error('loadData failed:', e);
+    const [allCases, allLawyers, allLogs] = await Promise.all([
+      base44.entities.Case.list('-created_date', 500),
+      base44.entities.LawyerProfile.list('-created_date', 500),
+      base44.entities.ContactLog.list('-created_date', 500),
+    ]);
+    const ninetyDaysAgo = new Date(Date.now() - 90 * 86400000).toISOString();
+    const toExpire = allCases.filter(c => c.status === 'available' && (c.created_date || c.submitted_at) < ninetyDaysAgo);
+    const now = new Date().toISOString();
+    for (const c of toExpire) {
+      await base44.entities.Case.update(c.id, { status: 'expired', expired_at: now });
+      await base44.entities.TimelineEvent.create({ case_id: c.id, event_type: 'expired', event_description: 'This case was not matched with an attorney within 90 days.', actor_role: 'system', visible_to_user: true, created_at: now });
+      c.status = 'expired'; c.expired_at = now;
     }
+    setCases(allCases); setLawyers(allLawyers); setContactLogs(allLogs);
   };
 
   useEffect(() => {
     async function init() {
-      try {
-        const user = await base44.auth.me();
-        if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchParam = urlParams.get('search');
-        if (searchParam) setSearch(searchParam);
-        await loadData();
-      } catch (e) {
-        console.error('Failed to initialize Case Manager:', e);
-        window.location.href = createPageUrl('Home');
-      } finally {
-        setLoading(false);
-      }
+      const user = await base44.auth.me();
+      if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchParam = urlParams.get('search');
+      if (searchParam) setSearch(searchParam);
+      await loadData(); setLoading(false);
     }
     init();
   }, []);
@@ -228,47 +215,39 @@ export default function AdminCases() {
     if (!forceCloseCase) return;
     setCloseSaving(true);
     const now = new Date().toISOString();
-    try {
-      await base44.entities.Case.update(forceCloseCase.id, { status: 'closed', closed_at: now, resolution_type: 'admin_closed', resolution_notes: formData.resolution_notes, resolved_by: 'admin' });
-      await base44.entities.TimelineEvent.create({ case_id: forceCloseCase.id, event_type: 'closed', event_description: 'This case has been closed by the platform administrator.', actor_role: 'admin', visible_to_user: true, created_at: now });
-      setForceCloseCase(null); setExpandedId(null); loadData();
-    } catch (e) {
-      console.error('Force close failed:', e);
-    } finally {
-      setCloseSaving(false);
-    }
+    await base44.entities.Case.update(forceCloseCase.id, { status: 'closed', closed_at: now, resolution_type: 'admin_closed', resolution_notes: formData.resolution_notes, resolved_by: 'admin' });
+    await base44.entities.TimelineEvent.create({ case_id: forceCloseCase.id, event_type: 'closed', event_description: 'This case has been closed by the platform administrator.', actor_role: 'admin', visible_to_user: true, created_at: now });
+    setCloseSaving(false); setForceCloseCase(null); setExpandedId(null); loadData();
   };
 
   const handleForceAssign = async (caseData, lawyer) => {
     setActionSaving(true);
     const now = new Date().toISOString();
-    try {
-      await base44.entities.Case.update(caseData.id, { status: 'assigned', assigned_lawyer_id: lawyer.id, assigned_at: now });
-      await base44.entities.TimelineEvent.create({ case_id: caseData.id, event_type: 'assigned', event_description: 'An attorney has been assigned to review your case.', actor_role: 'admin', visible_to_user: true, created_at: now });
-      loadData();
-    } catch (e) {
-      console.error('Force assign failed:', e);
-    } finally {
-      setActionSaving(false);
-    }
+    await base44.entities.Case.update(caseData.id, { status: 'assigned', assigned_lawyer_id: lawyer.id, assigned_at: now });
+    await base44.entities.TimelineEvent.create({ case_id: caseData.id, event_type: 'assigned', event_description: 'An attorney has been assigned to review your case.', actor_role: 'admin', visible_to_user: true, created_at: now });
+    setActionSaving(false); loadData();
   };
 
   const handleReassign = async (caseData) => {
     const now = new Date().toISOString();
-    try {
-      const lp = caseData.assigned_lawyer_id ? lawyerMap[caseData.assigned_lawyer_id] : null;
-      await base44.entities.Case.update(caseData.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '' });
-      if (lp) await base44.entities.LawyerProfile.update(lp.id, { cases_reclaimed: (lp.cases_reclaimed || 0) + 1 });
-      await base44.entities.TimelineEvent.create({ case_id: caseData.id, event_type: 'reclaimed', event_description: 'This case has been returned to the available case pool by an administrator.', actor_role: 'admin', visible_to_user: false, created_at: now });
-      setExpandedId(null); loadData();
-    } catch (e) {
-      console.error('Reassign failed:', e);
-    }
+    const lp = caseData.assigned_lawyer_id ? lawyerMap[caseData.assigned_lawyer_id] : null;
+    await base44.entities.Case.update(caseData.id, { status: 'available', assigned_lawyer_id: '', assigned_at: '' });
+    if (lp) await base44.entities.LawyerProfile.update(lp.id, { cases_reclaimed: (lp.cases_reclaimed || 0) + 1 });
+    await base44.entities.TimelineEvent.create({ case_id: caseData.id, event_type: 'reclaimed', event_description: 'This case has been returned to the available case pool by an administrator.', actor_role: 'admin', visible_to_user: false, created_at: now });
+    setExpandedId(null); loadData();
   };
 
   if (loading) {
     return (
       <div role="status" aria-label="Loading Case Manager" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
         <h1 className="sr-only">Case Manager</h1>
         <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading cases…</p>
@@ -304,7 +283,7 @@ export default function AdminCases() {
           }
           sortDropdown={<AdminSortDropdown value={sortBy} onChange={setSortBy} options={SORT_OPTIONS} />}
           listHeader={
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--body-secondary)' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-500)' }}>
               {pipelineStatus ? <>{sorted.length} <span style={{ textTransform: 'capitalize' }}>{pipelineStatus.replace('_', ' ')}</span> · <button onClick={() => setPipelineStatus(null)} style={{ background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', textDecoration: 'underline', padding: 0 }}>Clear filter</button></> : `All (${sorted.length})`}
             </span>
           }

@@ -35,7 +35,7 @@ export default function CaseManagerTabs({ activeTab, onChange, counts }) {
   return (
     <div role="tablist" aria-label="Case list tabs" className="cm-tablist" style={{
       display: 'flex', gap: '0', overflowX: 'auto', WebkitOverflowScrolling: 'touch',
-      borderBottom: '2px solid var(--card-border)',
+      borderBottom: '2px solid var(--slate-200)',
     }}>
       {TABS.map(tab => {
         const active = activeTab === tab.key;
@@ -51,7 +51,7 @@ export default function CaseManagerTabs({ activeTab, onChange, counts }) {
               fontFamily: 'Manrope, sans-serif',
               fontSize: '0.875rem',
               fontWeight: active ? 700 : 500,
-              color: active ? 'var(--terra-700, #9A3412)' : 'var(--body-secondary)',
+              color: active ? 'var(--terra-700, #9A3412)' : 'var(--slate-500)',
               backgroundColor: 'transparent',
               border: 'none',
               borderBottom: active ? '3px solid var(--terra-600, #C2410C)' : '3px solid transparent',

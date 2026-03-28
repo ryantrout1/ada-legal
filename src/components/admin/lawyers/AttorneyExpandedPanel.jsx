@@ -4,8 +4,8 @@ import LawyerBadge, { accountColors, subColors } from './LawyerBadge';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../../utils';
 
-const LABEL = { fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 2px' };
-const VAL = { margin: 0, fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)' };
+const LABEL = { fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 2px' };
+const VAL = { margin: 0, fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#334155' };
 
 function formatDate(d) {
   if (!d) return '—';
@@ -65,8 +65,8 @@ export default function AttorneyExpandedPanel({ lawyer, cases, contactLogs, acti
     <div className="attorney-expanded-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
       {/* LEFT: Profile */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '16px' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Profile & Contact</p>
+        <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '16px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 12px' }}>Profile & Contact</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <div><p style={LABEL}>Full Name</p><p style={{ ...VAL, fontWeight: 700 }}>{lawyer.full_name}</p></div>
             <div><p style={LABEL}>Firm</p><p style={VAL}>{lawyer.firm_name}</p></div>
@@ -92,15 +92,15 @@ export default function AttorneyExpandedPanel({ lawyer, cases, contactLogs, acti
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '12px' }}>
             <div><p style={LABEL}>Bar Numbers</p><p style={VAL}>{lawyer.bar_numbers || '—'}</p></div>
-            <div><p style={LABEL}>Marketplace Rules</p><p style={{ ...VAL, color: lawyer.marketplace_rules_accepted ? 'var(--suc-fg)' : 'var(--err-fg)', fontWeight: 600 }}>{lawyer.marketplace_rules_accepted ? '✓ Accepted' : '✗ Not Accepted'}</p></div>
+            <div><p style={LABEL}>Marketplace Rules</p><p style={{ ...VAL, color: lawyer.marketplace_rules_accepted ? '#15803D' : '#B91C1C', fontWeight: 600 }}>{lawyer.marketplace_rules_accepted ? '✓ Accepted' : '✗ Not Accepted'}</p></div>
             <div><p style={LABEL}>Account Created</p><p style={VAL}>{formatDate(lawyer.created_date)}</p></div>
             <div><p style={LABEL}>Approved</p><p style={VAL}>{formatDate(lawyer.approved_at)}</p></div>
           </div>
 
           {lawyer.flagged && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '12px', padding: '8px 12px', backgroundColor: 'var(--err-bg)', borderRadius: '8px' }}>
-              <Flag size={14} style={{ color: 'var(--err-fg)' }} />
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--err-fg)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '12px', padding: '8px 12px', backgroundColor: '#FEE2E2', borderRadius: '8px' }}>
+              <Flag size={14} style={{ color: '#B91C1C' }} />
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#B91C1C' }}>
                 Flagged: {lawyer.flag_reason || 'No reason given'}
               </span>
             </div>
@@ -108,7 +108,7 @@ export default function AttorneyExpandedPanel({ lawyer, cases, contactLogs, acti
         </div>
 
         {/* Action buttons */}
-        <div style={{ borderTop: '1px solid var(--card-border)', paddingTop: '12px' }}>
+        <div style={{ borderTop: '1px solid var(--slate-200)', paddingTop: '12px' }}>
           {actionButtons}
         </div>
       </div>
@@ -116,49 +116,49 @@ export default function AttorneyExpandedPanel({ lawyer, cases, contactLogs, acti
       {/* RIGHT: Performance */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Cases breakdown bar */}
-        <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '16px' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 8px' }}>Cases Breakdown</p>
-          <div style={{ display: 'flex', height: '24px', borderRadius: '6px', overflow: 'hidden', backgroundColor: 'var(--card-border)' }}>
-            {closed > 0 && <div style={{ width: `${(closed / totalBar) * 100}%`, backgroundColor: 'var(--suc-fg)', transition: 'width 0.3s' }} title={`${closed} closed`} />}
+        <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '16px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px' }}>Cases Breakdown</p>
+          <div style={{ display: 'flex', height: '24px', borderRadius: '6px', overflow: 'hidden', backgroundColor: 'var(--slate-200)' }}>
+            {closed > 0 && <div style={{ width: `${(closed / totalBar) * 100}%`, backgroundColor: '#16A34A', transition: 'width 0.3s' }} title={`${closed} closed`} />}
             {inProgress > 0 && <div style={{ width: `${(inProgress / totalBar) * 100}%`, backgroundColor: '#2563EB', transition: 'width 0.3s' }} title={`${inProgress} in progress`} />}
             {assigned > 0 && <div style={{ width: `${(assigned / totalBar) * 100}%`, backgroundColor: '#D97706', transition: 'width 0.3s' }} title={`${assigned} assigned`} />}
           </div>
           <div style={{ display: 'flex', gap: '16px', marginTop: '6px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem' }}>
-            <span style={{ color: 'var(--suc-fg)', fontWeight: 600 }}>● {closed} closed</span>
+            <span style={{ color: '#15803D', fontWeight: 600 }}>● {closed} closed</span>
             <span style={{ color: '#1E3A8A', fontWeight: 600 }}>● {inProgress} active</span>
-            <span style={{ color: 'var(--wrn-fg)', fontWeight: 600 }}>● {assigned} assigned</span>
+            <span style={{ color: '#92400E', fontWeight: 600 }}>● {assigned} assigned</span>
           </div>
         </div>
 
         {/* Response timeline */}
-        <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '16px' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 8px' }}>Recent Assignments</p>
+        <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '16px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px' }}>Recent Assignments</p>
           {recentTimeline.length === 0 ? (
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>No assignments yet</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>No assignments yet</p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {recentTimeline.map(t => (
                 <div key={t.id} style={{
                   display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 10px',
-                  backgroundColor: t.overdue ? 'var(--err-bg)' : 'var(--card-bg)', borderRadius: '6px',
-                  border: '1px solid var(--card-border)', flexWrap: 'wrap',
+                  backgroundColor: t.overdue ? '#FEF2F2' : 'white', borderRadius: '6px',
+                  border: '1px solid var(--slate-200)', flexWrap: 'wrap',
                 }}>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--heading)', flex: '1 1 120px', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-900)', flex: '1 1 120px', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {t.business}
                   </span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)' }}>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)' }}>
                     {formatDate(t.assignedAt)}
                   </span>
                   {t.hasContact ? (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: t.contactHrs <= 24 ? 'var(--suc-fg)' : 'var(--wrn-fg)' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: t.contactHrs <= 24 ? '#15803D' : '#92400E' }}>
                       <CheckCircle size={12} /> {t.contactHrs}h
                     </span>
                   ) : t.overdue ? (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--err-fg)' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: '#B91C1C' }}>
                       <AlertTriangle size={12} /> Overdue
                     </span>
                   ) : (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--wrn-fg)' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: '#92400E' }}>
                       <Clock size={12} /> Pending
                     </span>
                   )}
@@ -170,25 +170,25 @@ export default function AttorneyExpandedPanel({ lawyer, cases, contactLogs, acti
 
         {/* Compliance trend + subscription */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-          <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '16px' }}>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 8px' }}>Contact Compliance</p>
-            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)' }}>
+          <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '16px' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px' }}>Contact Compliance</p>
+            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)' }}>
               <p style={{ margin: '0 0 4px' }}>Last 30 days: <strong>{compliance30 !== null ? compliance30 + '%' : '—'}</strong></p>
               <p style={{ margin: '0 0 4px' }}>All time: <strong>{complianceAll !== null ? complianceAll + '%' : '—'}</strong></p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '6px' }}>
-                {trend === 'improving' && <><TrendingUp size={14} style={{ color: 'var(--suc-fg)' }} /><span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--suc-fg)' }}>Improving</span></>}
-                {trend === 'declining' && <><TrendingDown size={14} style={{ color: 'var(--err-fg)' }} /><span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--err-fg)' }}>Declining</span></>}
-                {trend === 'stable' && <><Minus size={14} style={{ color: 'var(--body-secondary)' }} /><span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)' }}>Stable</span></>}
+                {trend === 'improving' && <><TrendingUp size={14} style={{ color: '#15803D' }} /><span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#15803D' }}>Improving</span></>}
+                {trend === 'declining' && <><TrendingDown size={14} style={{ color: '#B91C1C' }} /><span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#B91C1C' }}>Declining</span></>}
+                {trend === 'stable' && <><Minus size={14} style={{ color: 'var(--slate-500)' }} /><span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--slate-500)' }}>Stable</span></>}
               </div>
             </div>
           </div>
-          <div style={{ backgroundColor: 'var(--page-bg-subtle)', borderRadius: '10px', padding: '16px' }}>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 8px' }}>Subscription</p>
-            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)' }}>
+          <div style={{ backgroundColor: 'var(--slate-50)', borderRadius: '10px', padding: '16px' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px' }}>Subscription</p>
+            <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)' }}>
               <p style={{ margin: '0 0 4px' }}>Status: <LawyerBadge label={lawyer.subscription_status} colorMap={subColors} /></p>
               <p style={{ margin: '4px 0 0' }}>Member since: {formatDate(lawyer.date_joined)}</p>
               {lawyer.subscription_status === 'past_due' && (
-                <p style={{ margin: '4px 0 0', fontWeight: 700, color: 'var(--err-fg)', fontSize: '0.75rem' }}>
+                <p style={{ margin: '4px 0 0', fontWeight: 700, color: '#B91C1C', fontSize: '0.75rem' }}>
                   ⚠️ Payment overdue
                 </p>
               )}

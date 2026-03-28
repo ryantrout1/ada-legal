@@ -6,8 +6,8 @@ import { renderEmailTemplate } from '../emails/renderTemplate';
 const inputStyle = {
   width: '100%', minHeight: '44px', padding: '0.625rem 0.75rem',
   fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-  color: 'var(--body)', backgroundColor: 'var(--card-bg)',
-  border: '2px solid var(--card-border)', borderRadius: 'var(--radius-md)',
+  color: 'var(--slate-800)', backgroundColor: 'var(--surface)',
+  border: '2px solid var(--slate-200)', borderRadius: 'var(--radius-md)',
   outline: 'none', boxSizing: 'border-box'
 };
 
@@ -20,72 +20,85 @@ export default function ReviewActions({ caseData, onActionComplete }) {
   const handleApprove = async () => {
     setProcessing(true);
     const now = new Date().toISOString();
+
+    await base44.entities.Case.update(caseData.id, {
+      status: 'available',
+      approved_at: now
+    });
+
+    await base44.entities.TimelineEvent.create({
+      case_id: caseData.id,
+      event_type: 'approved',
+      event_description: 'Your case has been approved and is now available for attorney review.',
+      actor_role: 'admin',
+      visible_to_user: true,
+      created_at: now
+    });
+
     try {
-      await base44.entities.Case.update(caseData.id, { status: 'available', approved_at: now });
-      await base44.entities.TimelineEvent.create({
-        case_id: caseData.id, event_type: 'approved',
-        event_description: 'Your case has been approved and is now available for attorney review.',
-        actor_role: 'admin', visible_to_user: true, created_at: now
+      const prefLabel = caseData.contact_preference === 'phone' ? 'Phone' : caseData.contact_preference === 'email' ? 'Email' : 'No Preference';
+      const rendered = await renderEmailTemplate('case_approved', {
+        reporter_name: caseData.contact_name,
+        business_name: caseData.business_name,
+        contact_preference: prefLabel,
+        case_url: window.location.origin + '/MyCases'
       });
-      try {
-        const prefLabel = caseData.contact_preference === 'phone' ? 'Phone' : caseData.contact_preference === 'email' ? 'Email' : 'No Preference';
-        const rendered = await renderEmailTemplate('case_approved', {
-          reporter_name: caseData.contact_name, business_name: caseData.business_name,
-          contact_preference: prefLabel, case_url: window.location.origin + '/MyCases'
-        });
-        if (rendered) await base44.integrations.Core.SendEmail({ to: caseData.contact_email, subject: rendered.subject, body: rendered.body });
-      } catch {}
-      onActionComplete();
-    } catch (e) {
-      console.error('Approve failed:', e);
-    } finally {
-      setProcessing(false);
-    }
+      if (rendered) await base44.integrations.Core.SendEmail({ to: caseData.contact_email, subject: rendered.subject, body: rendered.body });
+    } catch {}
+
+    setProcessing(false);
+    onActionComplete();
   };
 
   const handleReject = async () => {
     if (!rejectionReason.trim()) return;
     setProcessing(true);
     const now = new Date().toISOString();
+
+    await base44.entities.Case.update(caseData.id, {
+      status: 'rejected',
+      rejection_reason: rejectionReason.trim()
+    });
+
+    await base44.entities.TimelineEvent.create({
+      case_id: caseData.id,
+      event_type: 'rejected',
+      event_description: `Your submission could not be approved. Reason: ${rejectionReason.trim()}`,
+      actor_role: 'admin',
+      visible_to_user: true,
+      created_at: now
+    });
+
     try {
-      await base44.entities.Case.update(caseData.id, { status: 'rejected', rejection_reason: rejectionReason.trim() });
-      await base44.entities.TimelineEvent.create({
-        case_id: caseData.id, event_type: 'rejected',
-        event_description: `Your submission could not be approved. Reason: ${rejectionReason.trim()}`,
-        actor_role: 'admin', visible_to_user: true, created_at: now
+      const rendered = await renderEmailTemplate('case_rejected', {
+        reporter_name: caseData.contact_name,
+        business_name: caseData.business_name,
+        rejection_reason: rejectionReason.trim(),
+        case_url: window.location.origin + '/MyCases',
+        standards_guide_url: window.location.origin + '/StandardsGuide',
+        intake_url: window.location.origin + '/Intake'
       });
-      try {
-        const rendered = await renderEmailTemplate('case_rejected', {
-          reporter_name: caseData.contact_name, business_name: caseData.business_name,
-          rejection_reason: rejectionReason.trim(), case_url: window.location.origin + '/MyCases',
-          standards_guide_url: window.location.origin + '/StandardsGuide', intake_url: window.location.origin + '/Intake'
-        });
-        if (rendered) await base44.integrations.Core.SendEmail({ to: caseData.contact_email, subject: rendered.subject, body: rendered.body });
-      } catch {}
-      onActionComplete();
-    } catch (e) {
-      console.error('Reject failed:', e);
-    } finally {
-      setProcessing(false);
-    }
+      if (rendered) await base44.integrations.Core.SendEmail({ to: caseData.contact_email, subject: rendered.subject, body: rendered.body });
+    } catch {}
+
+    setProcessing(false);
+    onActionComplete();
   };
 
   const handleFlag = async () => {
     setProcessing(true);
-    try {
-      await base44.entities.Case.update(caseData.id, { status: 'under_review', admin_notes: adminNotes.trim() });
-      onActionComplete();
-    } catch (e) {
-      console.error('Flag failed:', e);
-    } finally {
-      setProcessing(false);
-    }
+    await base44.entities.Case.update(caseData.id, {
+      status: 'under_review',
+      admin_notes: adminNotes.trim()
+    });
+    setProcessing(false);
+    onActionComplete();
   };
 
   return (
     <div style={{
       padding: '0 var(--space-lg) var(--space-lg)',
-      borderTop: '1px solid var(--card-border)',
+      borderTop: '1px solid var(--slate-200)',
       marginTop: 'var(--space-sm)'
     }}>
       {/* Action buttons */}
@@ -101,8 +114,8 @@ export default function ReviewActions({ caseData, onActionComplete }) {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
               padding: '0.75rem 1.5rem', fontFamily: 'Manrope, sans-serif',
-              fontSize: '0.9375rem', fontWeight: 700, color: 'var(--card-bg)',
-              backgroundColor: processing ? 'var(--body-secondary)' : 'var(--suc-fg)',
+              fontSize: '0.9375rem', fontWeight: 700, color: 'white',
+              backgroundColor: processing ? 'var(--slate-500)' : '#15803D',
               border: 'none', borderRadius: 'var(--radius-md)',
               cursor: processing ? 'not-allowed' : 'pointer', minHeight: '48px'
             }}
@@ -118,8 +131,8 @@ export default function ReviewActions({ caseData, onActionComplete }) {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
               padding: '0.75rem 1.5rem', fontFamily: 'Manrope, sans-serif',
-              fontSize: '0.9375rem', fontWeight: 700, color: 'var(--card-bg)',
-              backgroundColor: 'var(--err-fg)',
+              fontSize: '0.9375rem', fontWeight: 700, color: 'white',
+              backgroundColor: '#B91C1C',
               border: 'none', borderRadius: 'var(--radius-md)',
               cursor: 'pointer', minHeight: '48px'
             }}
@@ -152,7 +165,7 @@ export default function ReviewActions({ caseData, onActionComplete }) {
         <div style={{ paddingTop: 'var(--space-lg)' }}>
           <label style={{
             display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-            fontWeight: 600, color: 'var(--body)', marginBottom: 'var(--space-xs)'
+            fontWeight: 600, color: 'var(--slate-700)', marginBottom: 'var(--space-xs)'
           }}>
             Rejection Reason <span style={{ color: 'var(--error-600)' }}>*</span>
           </label>
@@ -170,8 +183,8 @@ export default function ReviewActions({ caseData, onActionComplete }) {
               disabled={processing || !rejectionReason.trim()}
               style={{
                 padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.875rem', fontWeight: 700, color: 'var(--card-bg)',
-                backgroundColor: (!rejectionReason.trim() || processing) ? 'var(--body-secondary)' : 'var(--err-fg)',
+                fontSize: '0.875rem', fontWeight: 700, color: 'white',
+                backgroundColor: (!rejectionReason.trim() || processing) ? 'var(--slate-500)' : '#B91C1C',
                 border: 'none', borderRadius: 'var(--radius-md)',
                 cursor: (!rejectionReason.trim() || processing) ? 'not-allowed' : 'pointer',
                 minHeight: '44px'
@@ -185,7 +198,7 @@ export default function ReviewActions({ caseData, onActionComplete }) {
               style={{
                 padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
                 fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-600)',
-                backgroundColor: 'transparent', border: '2px solid var(--card-border)',
+                backgroundColor: 'transparent', border: '2px solid var(--slate-300)',
                 borderRadius: 'var(--radius-md)', cursor: 'pointer', minHeight: '44px'
               }}
             >
@@ -200,7 +213,7 @@ export default function ReviewActions({ caseData, onActionComplete }) {
         <div style={{ paddingTop: 'var(--space-lg)' }}>
           <label style={{
             display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-            fontWeight: 600, color: 'var(--body)', marginBottom: 'var(--space-xs)'
+            fontWeight: 600, color: 'var(--slate-700)', marginBottom: 'var(--space-xs)'
           }}>
             Admin Notes
           </label>
@@ -218,8 +231,8 @@ export default function ReviewActions({ caseData, onActionComplete }) {
               disabled={processing}
               style={{
                 padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.875rem', fontWeight: 700, color: 'var(--card-bg)',
-                backgroundColor: processing ? 'var(--body-secondary)' : '#A16207',
+                fontSize: '0.875rem', fontWeight: 700, color: 'white',
+                backgroundColor: processing ? 'var(--slate-500)' : '#A16207',
                 border: 'none', borderRadius: 'var(--radius-md)',
                 cursor: processing ? 'not-allowed' : 'pointer', minHeight: '44px'
               }}
@@ -232,7 +245,7 @@ export default function ReviewActions({ caseData, onActionComplete }) {
               style={{
                 padding: '0.625rem 1.25rem', fontFamily: 'Manrope, sans-serif',
                 fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-600)',
-                backgroundColor: 'transparent', border: '2px solid var(--card-border)',
+                backgroundColor: 'transparent', border: '2px solid var(--slate-300)',
                 borderRadius: 'var(--radius-md)', cursor: 'pointer', minHeight: '44px'
               }}
             >

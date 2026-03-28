@@ -1,23 +1,23 @@
 import React from 'react';
 
 const accountColors = {
-  pending_approval: { bg: '#FEF9C3', text: 'var(--wrn-fg)' },
-  approved: { bg: 'var(--suc-bg)', text: 'var(--suc-fg)' },
-  suspended: { bg: 'var(--err-bg)', text: 'var(--err-fg)' },
-  removed: { bg: 'var(--card-bg-tinted)', text: 'var(--body-secondary)' }
+  pending_approval: { bg: '#FEF9C3', text: '#92400E' },
+  approved: { bg: '#DCFCE7', text: '#15803D' },
+  suspended: { bg: '#FEE2E2', text: '#B91C1C' },
+  removed: { bg: '#F1F5F9', text: '#475569' }
 };
 
 const subColors = {
-  inactive: { bg: '#F1EFEA', text: 'var(--heading)' },
-  active: { bg: 'var(--suc-bg)', text: 'var(--suc-fg)' },
-  canceled: { bg: 'var(--err-bg)', text: 'var(--err-fg)' },
-  past_due: { bg: '#FEF9C3', text: 'var(--wrn-fg)' }
+  inactive: { bg: '#F1EFEA', text: '#1E293B' },
+  active: { bg: '#DCFCE7', text: '#15803D' },
+  canceled: { bg: '#FEE2E2', text: '#B91C1C' },
+  past_due: { bg: '#FEF9C3', text: '#92400E' }
 };
 
 export { accountColors, subColors };
 
 export default function LawyerBadge({ label, colorMap }) {
-  const c = (colorMap || {})[label] || { bg: 'var(--card-bg-tinted)', text: 'var(--body-secondary)' };
+  const c = (colorMap || {})[label] || { bg: '#F1F5F9', text: '#475569' };
   return (
     <span style={{
       display: 'inline-block', padding: '0.2rem 0.625rem',

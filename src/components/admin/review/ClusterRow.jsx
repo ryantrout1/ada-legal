@@ -7,8 +7,8 @@ function formatDate(d) {
 }
 
 const SEVERITY_CFG = {
-  high:   { emoji: '🔴', label: 'High Severity', bg: 'var(--error-100)',   color: 'var(--err-fg)' },
-  medium: { emoji: '🟡', label: 'Medium',        bg: 'var(--warning-100)', color: 'var(--wrn-fg)' },
+  high:   { emoji: '🔴', label: 'High Severity', bg: 'var(--error-100)',   color: '#7F1D1D' },
+  medium: { emoji: '🟡', label: 'Medium',        bg: 'var(--warning-100)', color: '#92400E' },
   low:    { emoji: '🟢', label: 'Low',            bg: 'var(--success-100)', color: '#14532D' },
 };
 
@@ -27,10 +27,10 @@ function avgCompleteness(cases) {
 
 function CompIndicator({ score }) {
   const cfg = score >= 80
-    ? { dot: 'var(--suc-fg)', label: 'Ready',      color: 'var(--suc-fg)' }
+    ? { dot: '#15803D', label: 'Ready',      color: '#15803D' }
     : score >= 50
-      ? { dot: '#D97706', label: 'Partial',    color: 'var(--wrn-fg)' }
-      : { dot: 'var(--err-fg)', label: 'Incomplete', color: '#991B1B' };
+      ? { dot: '#D97706', label: 'Partial',    color: '#B45309' }
+      : { dot: '#DC2626', label: 'Incomplete', color: '#991B1B' };
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: cfg.color }}>
       <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: cfg.dot, flexShrink: 0 }} />
@@ -48,14 +48,14 @@ function SubRow({ c, onExpand }) {
       style={{
         display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 14px',
         padding: '10px 16px 10px 28px', cursor: 'pointer', width: '100%',
-        border: 'none', borderTop: '1px solid var(--card-border)',
+        border: 'none', borderTop: '1px solid var(--slate-200)',
         backgroundColor: 'transparent', textAlign: 'left',
         minHeight: '44px', fontFamily: 'Manrope, sans-serif',
       }}
-      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'}
+      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--slate-50)'}
       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
     >
-      <span style={{ fontSize: '0.75rem', color: 'var(--body-secondary)', flex: '0 0 70px' }}>{c.id?.slice(0, 8)}…</span>
+      <span style={{ fontSize: '0.75rem', color: 'var(--slate-500)', flex: '0 0 70px' }}>{c.id?.slice(0, 8)}…</span>
       <span style={{ fontSize: '0.85rem', color: 'var(--slate-600)', flex: '1 1 200px', lineHeight: 1.4 }}>
         {c.ai_summary || c.narrative?.slice(0, 100) || '—'}
       </span>
@@ -69,7 +69,7 @@ function SubRow({ c, onExpand }) {
         </span>
       )}
       <CompIndicator score={score} />
-      <span style={{ fontSize: '0.75rem', color: 'var(--body-secondary)', flex: '0 0 auto' }}>
+      <span style={{ fontSize: '0.75rem', color: '#475569', flex: '0 0 auto' }}>
         {formatDate(c.submitted_at || c.created_date)}
       </span>
     </button>
@@ -95,7 +95,7 @@ export default function ClusterRow({ clusterId, cases, onBulkApprove, onBulkReje
 
   return (
     <div style={{
-      backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
       borderRadius: '12px', overflow: 'hidden',
     }}>
       <div
@@ -109,16 +109,16 @@ export default function ClusterRow({ clusterId, cases, onBulkApprove, onBulkReje
         style={{
           display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 14px',
           padding: '14px 16px', cursor: 'pointer', minHeight: '48px',
-          backgroundColor: expanded ? 'var(--page-bg-subtle)' : 'transparent',
+          backgroundColor: expanded ? 'var(--slate-50)' : 'transparent',
           transition: 'background-color 0.15s',
         }}
-        onMouseEnter={(e) => { if (!expanded) e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'; }}
+        onMouseEnter={(e) => { if (!expanded) e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
         onMouseLeave={(e) => { if (!expanded) e.currentTarget.style.backgroundColor = 'transparent'; }}
       >
         {/* Business name + count */}
         <div style={{ minWidth: 0, flex: '1 1 200px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {businessName}
             </p>
             <span style={{
@@ -132,7 +132,7 @@ export default function ClusterRow({ clusterId, cases, onBulkApprove, onBulkReje
         </div>
 
         {/* Location */}
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', whiteSpace: 'nowrap', flex: '0 0 auto' }}>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569', whiteSpace: 'nowrap', flex: '0 0 auto' }}>
           {location}
         </span>
 
@@ -165,29 +165,29 @@ export default function ClusterRow({ clusterId, cases, onBulkApprove, onBulkReje
         </div>
 
         {/* Date range */}
-        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)', flex: '0 0 auto', whiteSpace: 'nowrap' }}>
+        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569', flex: '0 0 auto', whiteSpace: 'nowrap' }}>
           {firstDate} — {lastDate}
         </span>
 
-        <span aria-hidden="true" style={{ color: 'var(--body-secondary)', display: 'flex', alignItems: 'center', padding: '4px' }}>
+        <span aria-hidden="true" style={{ color: 'var(--slate-500)', display: 'flex', alignItems: 'center', padding: '4px' }}>
           {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </span>
       </div>
 
       {expanded && (
-        <div style={{ borderTop: '1px solid var(--card-border)' }}>
+        <div style={{ borderTop: '1px solid var(--slate-200)' }}>
           {/* Bulk action bar */}
           {!bulkDismissed && (
             <div style={{
               display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap',
-              padding: '12px 16px', backgroundColor: 'var(--page-bg-subtle)', borderBottom: '1px solid var(--card-border)',
+              padding: '12px 16px', backgroundColor: '#F8FAFC', borderBottom: '1px solid var(--slate-200)',
             }}>
               <button
                 onClick={(e) => { e.stopPropagation(); onBulkApprove(clusterId, cases); }}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: '6px',
                   padding: '8px 18px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                  fontWeight: 700, color: 'var(--card-bg)', backgroundColor: 'var(--suc-fg)',
+                  fontWeight: 700, color: 'white', backgroundColor: '#15803D',
                   border: 'none', borderRadius: '8px', cursor: 'pointer', minHeight: '44px',
                 }}
               >

@@ -18,16 +18,10 @@ export default function AdminEmails() {
 
   useEffect(() => {
     async function init() {
-      try {
-        const user = await base44.auth.me();
-        if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
-        await loadTemplates();
-      } catch (e) {
-        console.error('Failed to initialize Email Templates:', e);
-        window.location.href = createPageUrl('Home');
-      } finally {
-        setLoading(false);
-      }
+      const user = await base44.auth.me();
+      if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
+      await loadTemplates();
+      setLoading(false);
     }
     init();
   }, []);
@@ -45,6 +39,14 @@ export default function AdminEmails() {
   if (loading) {
     return (
       <div role="status" aria-label="Loading email templates" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
         <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading email templates…</p>
       </div>
@@ -52,7 +54,7 @@ export default function AdminEmails() {
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
+    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {selected ? (
           <EmailTemplateEditor

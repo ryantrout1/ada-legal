@@ -62,16 +62,16 @@ export default function AlertSummaryBar({
           gap: '6px 12px',
           padding: '8px 14px',
           minHeight: '40px',
-          backgroundColor: hasAlerts ? 'var(--wrn-bg)' : '#FAF7F2',
-          border: `1px solid ${hasAlerts ? 'var(--wrn-bd)' : 'var(--card-border)'}`,
+          backgroundColor: hasAlerts ? '#FFFBEB' : '#FAF7F2',
+          border: `1px solid ${hasAlerts ? '#FDE68A' : '#E2E8F0'}`,
           borderRadius: '8px',
           fontFamily: 'Manrope, sans-serif',
           fontSize: '0.85rem',
-          color: hasAlerts ? 'var(--wrn-fg)' : 'var(--body-secondary)',
+          color: hasAlerts ? '#92400E' : '#475569',
         }}
       >
         {/* Left: attention count + summary stats */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: '1 1 auto', flexWrap: 'wrap', backgroundColor: hasAlerts ? 'var(--wrn-bg)' : '#FAF7F2' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: '1 1 auto', flexWrap: 'wrap', backgroundColor: hasAlerts ? '#FFFBEB' : '#FAF7F2' }}>
           {hasAlerts && (
             <>
               <button
@@ -81,7 +81,7 @@ export default function AlertSummaryBar({
                   display: 'inline-flex', alignItems: 'center', gap: '4px',
                   background: 'none', border: 'none', cursor: 'pointer',
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                  fontWeight: 700, color: 'var(--wrn-fg)', padding: '2px 4px',
+                  fontWeight: 700, color: '#92400E', padding: '2px 4px',
                   minHeight: '44px', borderRadius: '4px',
                 }}
               >
@@ -89,13 +89,13 @@ export default function AlertSummaryBar({
                 {needsAttentionCount} need attention
                 {attentionExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </button>
-              <span style={{ color: hasAlerts ? 'var(--wrn-fg)' : 'var(--body-secondary)' }}>·</span>
+              <span style={{ color: hasAlerts ? '#92400E' : 'var(--slate-500)' }}>·</span>
             </>
           )}
           <span>Today: <strong>{summaryStats.newToday}</strong> new</span>
-          <span style={{ color: hasAlerts ? 'var(--wrn-fg)' : 'var(--body-secondary)' }}>·</span>
+          <span style={{ color: hasAlerts ? '#92400E' : 'var(--slate-500)' }}>·</span>
           <span>This week: <strong>{summaryStats.approvedWeek}</strong> approved, <strong>{summaryStats.rejectedWeek}</strong> rejected</span>
-          <span style={{ color: hasAlerts ? 'var(--wrn-fg)' : 'var(--body-secondary)' }}>·</span>
+          <span style={{ color: hasAlerts ? '#92400E' : 'var(--slate-500)' }}>·</span>
           <span>Avg review: <strong>{summaryStats.avgReview}</strong></span>
         </div>
 
@@ -134,7 +134,7 @@ export default function AlertSummaryBar({
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
-                color: alertCount > 0 ? 'var(--err-fg)' : 'var(--terra-600)',
+                color: alertCount > 0 ? '#B91C1C' : 'var(--terra-600)',
                 padding: '2px 4px', minHeight: '44px',
                 display: 'inline-flex', alignItems: 'center', borderRadius: '4px',
                 textDecoration: 'underline', textUnderlineOffset: '2px',

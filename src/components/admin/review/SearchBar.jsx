@@ -49,9 +49,9 @@ export default function SearchBar({ value, onChange }) {
         onKeyDown={handleKeyDown}
         style={{
           width: '100%', minHeight: '44px', padding: '10px 42px 10px 42px',
-          fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--body)',
-          border: '1px solid var(--card-border)', borderRadius: '10px',
-          backgroundColor: 'var(--card-bg)', boxSizing: 'border-box',
+          fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--slate-800)',
+          border: '1px solid var(--slate-300)', borderRadius: '10px',
+          backgroundColor: 'white', boxSizing: 'border-box',
         }}
       />
       {local && (

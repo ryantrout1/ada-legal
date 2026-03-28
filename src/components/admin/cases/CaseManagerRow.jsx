@@ -12,14 +12,14 @@ function formatDate(d) {
 }
 
 const STATUS_BADGE = {
-  submitted:    { bg: 'var(--body-secondary)', label: 'SUBMITTED' },
+  submitted:    { bg: '#64748B', label: 'SUBMITTED' },
   under_review: { bg: '#1D4ED8', label: 'UNDER REVIEW' },
-  available:    { bg: 'var(--accent)', label: 'AVAILABLE' },
-  assigned:     { bg: 'var(--wrn-fg)', label: 'ASSIGNED' },
-  in_progress:  { bg: 'var(--suc-fg)', label: 'IN PROGRESS' },
-  closed:       { bg: 'var(--body-secondary)', label: 'CLOSED' },
-  rejected:     { bg: 'var(--err-fg)', label: 'REJECTED' },
-  expired:      { bg: 'var(--wrn-fg)', label: 'EXPIRED' },
+  available:    { bg: '#C2410C', label: 'AVAILABLE' },
+  assigned:     { bg: '#B45309', label: 'ASSIGNED' },
+  in_progress:  { bg: '#15803D', label: 'IN PROGRESS' },
+  closed:       { bg: '#475569', label: 'CLOSED' },
+  rejected:     { bg: '#B91C1C', label: 'REJECTED' },
+  expired:      { bg: '#92400E', label: 'EXPIRED' },
 };
 
 const RESOLUTION_LABELS = {
@@ -33,17 +33,17 @@ function AgingIndicator({ caseData, lawyer }) {
 
   if (s === 'submitted' || s === 'under_review') {
     const days = daysSince(c.submitted_at || c.created_date);
-    return <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>Submitted {days}d ago</span>;
+    return <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>Submitted {days}d ago</span>;
   }
   if (s === 'available') {
     const days = daysSince(c.approved_at || c.created_date);
-    const color = days >= 14 ? 'var(--err-fg)' : days >= 7 ? 'var(--wrn-fg)' : 'var(--body-secondary)';
+    const color = days >= 14 ? '#B91C1C' : days >= 7 ? '#92400E' : 'var(--slate-500)';
     return <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: days >= 7 ? 700 : 400, color }}>Available {days}d{days >= 7 ? ' ⚠️' : ''}</span>;
   }
   if (s === 'assigned') {
     const noContact = !c.contact_logged_at && daysSince(c.assigned_at) >= 1;
     return (
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: noContact ? 'var(--err-fg)' : 'var(--body-secondary)' }}>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: noContact ? '#B91C1C' : 'var(--slate-500)' }}>
         Assigned to {lawyer ? lawyer.full_name : '—'}
         {noContact && <span style={{ fontWeight: 700 }}> · ⚠️ No contact logged</span>}
       </span>
@@ -51,17 +51,17 @@ function AgingIndicator({ caseData, lawyer }) {
   }
   if (s === 'in_progress') {
     return (
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
         With {lawyer ? lawyer.full_name : '—'}
         {c.contact_logged_at && <> · Contact logged {formatDate(c.contact_logged_at)}</>}
       </span>
     );
   }
   if (s === 'closed') {
-    return <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>Closed {formatDate(c.closed_at)} · {RESOLUTION_LABELS[c.resolution_type] || c.resolution_type || '—'}</span>;
+    return <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>Closed {formatDate(c.closed_at)} · {RESOLUTION_LABELS[c.resolution_type] || c.resolution_type || '—'}</span>;
   }
   if (s === 'rejected') {
-    return <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>Rejected {formatDate(c.closed_at || c.updated_date)}</span>;
+    return <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>Rejected {formatDate(c.closed_at || c.updated_date)}</span>;
   }
   return null;
 }
@@ -73,7 +73,7 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
   const clusterSize = c.ai_duplicate_cluster_size ?? 0;
 
   return (
-    <div style={{ borderBottom: '1px solid var(--card-border)' }}>
+    <div style={{ borderBottom: '1px solid var(--slate-200)' }}>
       <div
         role="button"
         tabIndex={0}
@@ -85,10 +85,10 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
         style={{
           display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px',
           cursor: 'pointer', minHeight: '48px',
-          backgroundColor: expanded ? 'var(--page-bg-subtle)' : 'transparent',
+          backgroundColor: expanded ? 'var(--slate-50)' : 'transparent',
           transition: 'background-color 0.15s', flexWrap: 'wrap',
         }}
-        onMouseEnter={(e) => { if (!expanded) e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'; }}
+        onMouseEnter={(e) => { if (!expanded) e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
         onMouseLeave={(e) => { if (!expanded) e.currentTarget.style.backgroundColor = 'transparent'; }}
       >
         {/* Icon */}
@@ -97,15 +97,15 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
           backgroundColor: isPhysical ? '#FEF1EC' : '#DBEAFE',
           display: 'flex', alignItems: 'center', justifyContent: 'center'
         }}>
-          {isPhysical ? <Building2 size={15} style={{ color: 'var(--accent)' }} /> : <Globe size={15} style={{ color: '#1E3A8A' }} />}
+          {isPhysical ? <Building2 size={15} style={{ color: '#C2410C' }} /> : <Globe size={15} style={{ color: '#1E3A8A' }} />}
         </div>
 
         {/* Name + ID */}
         <div style={{ minWidth: 0, flex: '1 1 140px' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {c.business_name}
           </p>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)', margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)', margin: 0 }}>
             {c.id?.slice(0, 8)}…
           </p>
         </div>
@@ -113,7 +113,7 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
         {/* Pills area */}
         <div className="cm-pills" style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', flex: '0 1 auto' }}>
           {c.business_type && (
-            <span className="cm-type-pill" style={{ display: 'inline-block', padding: '2px 7px', borderRadius: '6px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: 'var(--heading)', backgroundColor: '#F1EFEA' }}>
+            <span className="cm-type-pill" style={{ display: 'inline-block', padding: '2px 7px', borderRadius: '6px', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: '#1E293B', backgroundColor: '#F1EFEA' }}>
               {c.business_type}
             </span>
           )}
@@ -122,7 +122,7 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
               {c.violation_subtype || c.url_domain}
             </span>
           )}
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)', whiteSpace: 'nowrap' }}>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)', whiteSpace: 'nowrap' }}>
             {[c.city, c.state].filter(Boolean).join(', ') || '—'}
           </span>
         </div>
@@ -131,7 +131,7 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
         <span className="cm-status-badge" style={{
           display: 'inline-block', padding: '3px 10px', borderRadius: '9999px',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.625rem', fontWeight: 700,
-          color: 'var(--card-bg)', backgroundColor: badge.bg,
+          color: 'white', backgroundColor: badge.bg,
           textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap', flexShrink: 0,
         }}>
           {badge.label}
@@ -154,7 +154,7 @@ export default function CaseManagerRow({ caseData, lawyer, expanded, onToggle })
         )}
 
         {/* Chevron */}
-        <span aria-hidden="true" style={{ color: 'var(--body-secondary)', display: 'flex', alignItems: 'center', flexShrink: 0, padding: '4px' }}>
+        <span aria-hidden="true" style={{ color: 'var(--slate-500)', display: 'flex', alignItems: 'center', flexShrink: 0, padding: '4px' }}>
           {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </span>
       </div>

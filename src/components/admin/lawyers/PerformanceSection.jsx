@@ -41,12 +41,12 @@ export default function PerformanceSection({ lawyer, cases, contactLogs }) {
 
   return (
     <div>
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 8px' }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 8px' }}>
         Performance Metrics
       </p>
       <div style={{
         display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap',
-        backgroundColor: 'var(--heading)', borderRadius: '12px', padding: '14px 20px'
+        backgroundColor: 'var(--slate-900)', borderRadius: '12px', padding: '14px 20px'
       }}>
         <Stat label="Total" value={totalCases} />
         <Sep />

@@ -43,17 +43,17 @@ export default function AttorneyRow({ lawyer, cases, contactLogs, isExpanded, on
   // Row bg and left border
   let rowBg = 'transparent';
   let leftBorder = '4px solid transparent';
-  if (isPending) rowBg = 'var(--wrn-bg)';
-  else if (isSuspended) rowBg = 'var(--err-bg)';
+  if (isPending) rowBg = '#FFFBEB';
+  else if (isSuspended) rowBg = '#FEF2F2';
   if (responseRate !== null && responseRate < 50) leftBorder = '4px solid #DC2626';
   else if (responseRate !== null && responseRate < 70) leftBorder = '4px solid #D97706';
 
   // Response rate pill
   let rrPill = null;
   if (responseRate !== null) {
-    const rrColor = responseRate >= 90 ? { bg: 'var(--suc-bg)', text: 'var(--suc-fg)', icon: '✓' }
-      : responseRate >= 70 ? { bg: 'var(--wrn-bg)', text: 'var(--wrn-fg)', icon: '⚠' }
-      : { bg: 'var(--err-bg)', text: 'var(--err-fg)', icon: '🔴' };
+    const rrColor = responseRate >= 90 ? { bg: '#DCFCE7', text: '#15803D', icon: '✓' }
+      : responseRate >= 70 ? { bg: '#FEF3C7', text: '#92400E', icon: '⚠' }
+      : { bg: '#FEE2E2', text: '#B91C1C', icon: '🔴' };
     rrPill = (
       <span aria-label={`Contact compliance: ${responseRate} percent${responseRate < 70 ? ', below threshold' : ''}`} style={{
         display: 'inline-flex', alignItems: 'center', gap: '3px',
@@ -66,11 +66,11 @@ export default function AttorneyRow({ lawyer, cases, contactLogs, isExpanded, on
   }
 
   // Avg response color
-  let avgColor = 'var(--body-secondary)';
+  let avgColor = 'var(--slate-500)';
   if (avgHrs !== null) {
-    if (avgHrs <= 12) avgColor = 'var(--suc-fg)';
-    else if (avgHrs <= 24) avgColor = 'var(--wrn-fg)';
-    else avgColor = 'var(--err-fg)';
+    if (avgHrs <= 12) avgColor = '#15803D';
+    else if (avgHrs <= 24) avgColor = '#92400E';
+    else avgColor = '#B91C1C';
   }
 
   // States display
@@ -78,7 +78,7 @@ export default function AttorneyRow({ lawyer, cases, contactLogs, isExpanded, on
   const statesDisplay = states.length <= 4 ? states.join(', ') : states.slice(0, 3).join(', ') + ` +${states.length - 3} more`;
 
   return (
-    <div style={{ borderBottom: '1px solid var(--card-border)' }}>
+    <div style={{ borderBottom: '1px solid var(--slate-200)' }}>
       <div
         role="button" tabIndex={0} aria-expanded={isExpanded}
         aria-label={`${lawyer.full_name}, ${lawyer.firm_name}. ${(lawyer.account_status || '').replace(/_/g, ' ')}. ${isExpanded ? 'Collapse' : 'Expand'} details.`}
@@ -86,38 +86,38 @@ export default function AttorneyRow({ lawyer, cases, contactLogs, isExpanded, on
         className="attorney-collapsed-row"
         style={{
           display: 'flex', width: '100%', alignItems: 'center', gap: '12px',
-          padding: '12px 16px', background: isExpanded ? 'var(--page-bg-subtle)' : rowBg,
+          padding: '12px 16px', background: isExpanded ? 'var(--slate-50)' : rowBg,
           borderLeft: leftBorder, cursor: 'pointer', minHeight: '56px',
           transition: 'background-color 0.15s',
         }}
-        onMouseEnter={e => { if (!isExpanded) e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'; }}
-        onMouseLeave={e => { if (!isExpanded) e.currentTarget.style.backgroundColor = isExpanded ? 'var(--page-bg-subtle)' : rowBg; }}
+        onMouseEnter={e => { if (!isExpanded) e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
+        onMouseLeave={e => { if (!isExpanded) e.currentTarget.style.backgroundColor = isExpanded ? 'var(--slate-50)' : rowBg; }}
       >
         {/* Avatar */}
         <div style={{
           width: '40px', height: '40px', borderRadius: '50%', flexShrink: 0,
-          backgroundColor: 'var(--heading)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700, color: 'var(--card-bg)',
+          backgroundColor: 'var(--slate-900)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700, color: 'white',
         }}>
           {initial}
         </div>
 
         {/* Name + Firm */}
         <div style={{ flex: '1 1 160px', minWidth: 0 }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {lawyer.full_name}
           </p>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', margin: 0 }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569', margin: 0 }}>
             {lawyer.firm_name}
           </p>
         </div>
 
         {/* Performance indicators */}
         <div className="attorney-perf-indicators" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', flex: '1 1 auto' }}>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--heading)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Briefcase size={14} style={{ color: 'var(--body-secondary)' }} /> {active} active
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-900)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Briefcase size={14} style={{ color: 'var(--slate-500)' }} /> {active} active
           </span>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>{total} total</span>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)' }}>{total} total</span>
           {rrPill}
           {avgHrs !== null && (
             <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: avgColor }}>
@@ -131,7 +131,7 @@ export default function AttorneyRow({ lawyer, cases, contactLogs, isExpanded, on
           <LawyerBadge label={lawyer.account_status} colorMap={accountColors} />
           <LawyerBadge label={lawyer.subscription_status} colorMap={subColors} />
           {statesDisplay && (
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--body-secondary)', whiteSpace: 'nowrap' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: 'var(--slate-500)', whiteSpace: 'nowrap' }}>
               {statesDisplay}
             </span>
           )}
@@ -143,7 +143,7 @@ export default function AttorneyRow({ lawyer, cases, contactLogs, isExpanded, on
             onClick={e => { e.stopPropagation(); onQuickApprove(lawyer); }}
             style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-              color: 'var(--suc-fg)', backgroundColor: 'var(--suc-bg)', border: 'none', borderRadius: '6px',
+              color: '#15803D', backgroundColor: '#DCFCE7', border: 'none', borderRadius: '6px',
               padding: '6px 12px', minHeight: '36px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap',
             }}
             aria-label={`Quick approve ${lawyer.full_name}`}
@@ -152,14 +152,14 @@ export default function AttorneyRow({ lawyer, cases, contactLogs, isExpanded, on
           </button>
         )}
 
-        <span aria-hidden="true" style={{ color: 'var(--body-secondary)', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+        <span aria-hidden="true" style={{ color: '#475569', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
           {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </span>
       </div>
 
       {/* Expanded panel */}
       {isExpanded && (
-        <div style={{ padding: '20px', borderTop: '1px solid var(--card-border)', backgroundColor: 'var(--card-bg)' }}>
+        <div style={{ padding: '20px', borderTop: '1px solid var(--slate-200)', backgroundColor: 'white' }}>
           {children}
         </div>
       )}

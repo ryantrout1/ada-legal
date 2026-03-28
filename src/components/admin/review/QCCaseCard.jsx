@@ -35,14 +35,14 @@ function DocScoreDots({ caseData }) {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--heading)' }}>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#1E293B' }}>
         Documentation: {score}/7
       </span>
       <div style={{ display: 'flex', gap: '4px' }}>
         {criteria.map((c, i) => (
           <div key={i} title={c.label} style={{
             width: '10px', height: '10px', borderRadius: '50%',
-            backgroundColor: c.met ? 'var(--suc-fg)' : 'var(--card-border)'
+            backgroundColor: c.met ? '#15803D' : '#E2E8F0'
           }} />
         ))}
       </div>
@@ -57,7 +57,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
   const waitTime = getWaitTime(c.submitted_at || c.created_date);
 
   const iconBg = isPhysical ? '#FEF1EC' : '#DBEAFE';
-  const iconColor = isPhysical ? 'var(--accent)' : '#1D4ED8';
+  const iconColor = isPhysical ? '#C2410C' : '#1D4ED8';
 
   // Left border highlight
   const isHighSeverity = c.ai_severity === 'high';
@@ -66,23 +66,23 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
 
   // Severity config
   const severityCfg = {
-    high:   { emoji: '🔴', label: 'High Severity', bg: 'var(--err-bg)',  color: 'var(--err-fg)' },
-    medium: { emoji: '🟡', label: 'Medium',        bg: 'var(--wrn-bg)',  color: 'var(--wrn-fg)' },
-    low:    { emoji: '🟢', label: 'Low',            bg: 'var(--suc-bg)',  color: '#14532D' },
+    high:   { emoji: '🔴', label: 'High Severity', bg: '#FEE2E2',  color: '#7F1D1D' },
+    medium: { emoji: '🟡', label: 'Medium',        bg: '#FEF3C7',  color: '#92400E' },
+    low:    { emoji: '🟢', label: 'Low',            bg: '#DCFCE7',  color: '#14532D' },
   };
   const sev = severityCfg[c.ai_severity] || null;
 
   // Completeness config
   const score = c.ai_completeness_score ?? 0;
   const compCfg = score >= 80
-    ? { dot: 'var(--suc-fg)', label: 'Ready',      color: 'var(--suc-fg)' }
+    ? { dot: '#15803D', label: 'Ready',      color: '#15803D' }
     : score >= 50
-      ? { dot: '#D97706', label: 'Partial',    color: 'var(--wrn-fg)' }
-      : { dot: 'var(--err-fg)', label: 'Incomplete', color: '#991B1B' };
+      ? { dot: '#D97706', label: 'Partial',    color: '#B45309' }
+      : { dot: '#DC2626', label: 'Incomplete', color: '#991B1B' };
 
   return (
     <div style={{
-      backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
       borderRadius: '12px', overflow: 'hidden',
       borderLeft: leftBorder,
     }}>
@@ -102,10 +102,10 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
           padding: '14px 16px',
           cursor: 'pointer',
           minHeight: '48px',
-          backgroundColor: expanded ? 'var(--page-bg-subtle)' : 'transparent',
+          backgroundColor: expanded ? 'var(--slate-50)' : 'transparent',
           transition: 'background-color 0.15s'
         }}
-        onMouseEnter={(e) => { if (!expanded) e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'; }}
+        onMouseEnter={(e) => { if (!expanded) e.currentTarget.style.backgroundColor = 'var(--slate-50)'; }}
         onMouseLeave={(e) => { if (!expanded) e.currentTarget.style.backgroundColor = 'transparent'; }}
       >
         {/* Icon */}
@@ -124,13 +124,13 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700,
-              color: 'var(--heading)', margin: 0, overflow: 'hidden',
+              color: 'var(--slate-900)', margin: 0, overflow: 'hidden',
               textOverflow: 'ellipsis', whiteSpace: 'nowrap'
             }}>
               {c.business_name}
             </p>
             {c.qc_flagged && (
-              <Flag size={14} style={{ color: 'var(--wrn-fg)', flexShrink: 0 }} aria-label="Flagged for review" />
+              <Flag size={14} style={{ color: '#92400E', flexShrink: 0 }} aria-label="Flagged for review" />
             )}
             {(c.ai_duplicate_cluster_size ?? 0) >= 2 && (
               <span style={{
@@ -143,7 +143,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
             )}
           </div>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)', margin: 0
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--slate-500)', margin: 0
           }}>
             {c.id?.slice(0, 8)}...
           </p>
@@ -191,25 +191,25 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: '0 0 auto' }}>
           <div style={{ textAlign: 'right' }}>
             <span style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)',
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569',
               whiteSpace: 'nowrap', display: 'block',
             }}>
               {[c.city, c.state].filter(Boolean).join(', ') || '—'}
             </span>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)', margin: '2px 0 0' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569', margin: '2px 0 0' }}>
               {formatDate(c.submitted_at || c.created_date)}
             </p>
             {waitTime && (
               <p style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
-                color: waitTime.isOverdue ? 'var(--wrn-fg)' : 'var(--body-secondary)', margin: 0,
+                color: waitTime.isOverdue ? '#92400E' : '#475569', margin: 0,
                 display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end'
               }}>
                 <Clock size={11} /> {waitTime.text}
               </p>
             )}
           </div>
-          <span aria-hidden="true" style={{ color: 'var(--body-secondary)', display: 'flex', alignItems: 'center', padding: '4px' }}>
+          <span aria-hidden="true" style={{ color: 'var(--slate-500)', display: 'flex', alignItems: 'center', padding: '4px' }}>
             {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
           </span>
         </div>
@@ -217,11 +217,11 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
 
       {/* Expanded View */}
       {expanded && (
-        <div style={{ borderTop: '1px solid var(--card-border)', padding: '20px' }}>
+        <div style={{ borderTop: '1px solid var(--slate-200)', padding: '20px' }}>
 
           {/* Violation Summary Card */}
           <div style={{
-            backgroundColor: 'var(--page-bg-subtle)', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px'
+            backgroundColor: 'var(--slate-50)', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px'
           }}>
             {/* Header strip */}
             <div style={{
@@ -231,16 +231,16 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
               {/* Row 1: 3-column */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '12px' }}>
                 <div>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', margin: '0 0 2px', textTransform: 'uppercase' }}>Business</p>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>{c.business_name}</p>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 2px', textTransform: 'uppercase' }}>Business</p>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>{c.business_name}</p>
                 </div>
                 <div>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', margin: '0 0 2px', textTransform: 'uppercase' }}>Type</p>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: 0 }}>{c.business_type}</p>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 2px', textTransform: 'uppercase' }}>Type</p>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>{c.business_type}</p>
                 </div>
                 <div>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', margin: '0 0 2px', textTransform: 'uppercase' }}>Location</p>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: 0 }}>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 2px', textTransform: 'uppercase' }}>Location</p>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>
                     {[c.city, c.state].filter(Boolean).join(', ')}
                     {c.street_address && <><br />{c.street_address}</>}
                   </p>
@@ -250,23 +250,23 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
               {/* Row 2: 2-column */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '12px' }}>
                 <div>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', margin: '0 0 2px', textTransform: 'uppercase' }}>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 2px', textTransform: 'uppercase' }}>
                     {isPhysical ? 'Violation Subtype' : 'URL / Domain'}
                   </p>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: 0 }}>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>
                     {isPhysical ? (c.violation_subtype || '—') : (c.url_domain || '—')}
                   </p>
                 </div>
                 <div>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', margin: '0 0 2px', textTransform: 'uppercase' }}>Incident Date</p>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: 0 }}>{formatDate(c.incident_date)}</p>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 2px', textTransform: 'uppercase' }}>Incident Date</p>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>{formatDate(c.incident_date)}</p>
                 </div>
               </div>
 
               {/* Digital only: assistive tech */}
               {!isPhysical && c.assistive_tech?.length > 0 && (
                 <div style={{ marginBottom: '12px' }}>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', margin: '0 0 6px', textTransform: 'uppercase' }}>Assistive Technologies</p>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 6px', textTransform: 'uppercase' }}>Assistive Technologies</p>
                   <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                     {c.assistive_tech.map((t, i) => (
                       <span key={i} style={{
@@ -281,19 +281,19 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
 
               {/* Visited Before */}
               <div>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', margin: '0 0 2px', textTransform: 'uppercase' }}>Visited Before?</p>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: 0 }}>{VISITED_LABELS[c.visited_before] || '—'}</p>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 2px', textTransform: 'uppercase' }}>Visited Before?</p>
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0 }}>{VISITED_LABELS[c.visited_before] || '—'}</p>
               </div>
             </div>
           </div>
 
           {/* Narrative */}
           <div style={{
-            borderLeft: '3px solid #C2410C', backgroundColor: 'var(--card-bg-tinted)',
+            borderLeft: '3px solid #C2410C', backgroundColor: '#FFF7ED',
             padding: '16px', borderRadius: '0 8px 8px 0', marginBottom: '16px'
           }}>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', margin: '0 0 6px', textTransform: 'uppercase' }}>Claimant Narrative</p>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: 0, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 6px', textTransform: 'uppercase' }}>Claimant Narrative</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
               {c.narrative}
             </p>
           </div>
@@ -301,38 +301,38 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
           {/* Evidence Photos */}
           {c.photos?.length > 0 && (
             <div style={{ marginBottom: '16px' }}>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', margin: '0 0 8px', textTransform: 'uppercase' }}>Evidence Photos</p>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 8px', textTransform: 'uppercase' }}>Evidence Photos</p>
               <PhotoGallery photos={c.photos} />
             </div>
           )}
 
           {/* Claimant Contact Card */}
           <div style={{
-            backgroundColor: 'var(--page-bg-subtle)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
+            backgroundColor: 'var(--slate-50)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
           }}>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--body-secondary)', margin: '0 0 12px', textTransform: 'uppercase' }}>Claimant Contact</p>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#475569', margin: '0 0 12px', textTransform: 'uppercase' }}>Claimant Contact</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <User size={14} style={{ color: 'var(--body-secondary)' }} />
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)' }}>{c.contact_name}</span>
+                <User size={14} style={{ color: 'var(--slate-500)' }} />
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_name}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Mail size={14} style={{ color: 'var(--body-secondary)' }} />
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)' }}>{c.contact_email}</span>
+                <Mail size={14} style={{ color: 'var(--slate-500)' }} />
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_email}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Phone size={14} style={{ color: 'var(--body-secondary)' }} />
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)' }}>{c.contact_phone}</span>
+                <Phone size={14} style={{ color: 'var(--slate-500)' }} />
+                <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_phone}</span>
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{
                 display: 'inline-block', padding: '2px 8px', borderRadius: '6px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-                color: 'var(--heading)', backgroundColor: 'var(--card-border)'
+                color: '#1E293B', backgroundColor: 'var(--slate-200)'
               }}>Prefers: {CONTACT_PREF_LABELS[c.contact_preference] || '—'}</span>
             </div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body)', margin: '10px 0 0', fontStyle: 'italic' }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#334155', margin: '10px 0 0', fontStyle: 'italic' }}>
               Contact info is hidden from attorneys until case is assigned.
             </p>
           </div>
@@ -350,7 +350,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                fontWeight: 700, color: 'var(--card-bg)', backgroundColor: 'var(--suc-fg)',
+                fontWeight: 700, color: 'white', backgroundColor: '#15803D',
                 border: 'none', borderRadius: '8px', cursor: 'pointer', minHeight: '44px'
               }}
             >
@@ -362,7 +362,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                fontWeight: 700, color: 'var(--card-bg)', backgroundColor: 'var(--err-fg)',
+                fontWeight: 700, color: 'white', backgroundColor: '#B91C1C',
                 border: 'none', borderRadius: '8px', cursor: 'pointer', minHeight: '44px'
               }}
             >
@@ -374,7 +374,7 @@ export default function QCCaseCard({ caseData, onApprove, onReject, onFlag, defa
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-                fontWeight: 700, color: 'var(--wrn-fg)', backgroundColor: 'transparent',
+                fontWeight: 700, color: '#92400E', backgroundColor: 'transparent',
                 border: '2px solid #92400E', borderRadius: '8px', cursor: 'pointer', minHeight: '44px'
               }}
             >

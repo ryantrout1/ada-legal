@@ -3,7 +3,7 @@ import React from 'react';
 const RECIPIENT_COLORS = {
   reporter: { bg: '#DBEAFE', color: '#1E3A8A' },
   attorney: { bg: '#F3E8FF', color: '#7C3AED' },
-  admin: { bg: 'var(--wrn-bg)', color: 'var(--wrn-fg)' },
+  admin: { bg: '#FEF3C7', color: '#92400E' },
 };
 
 export default function EmailTemplateTable({ templates, onSelect, onToggleActive }) {
@@ -15,17 +15,17 @@ export default function EmailTemplateTable({ templates, onSelect, onToggleActive
   };
 
   return (
-    <div style={{ backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', overflow: 'hidden' }}>
+    <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)', borderRadius: '12px', overflow: 'hidden' }}>
       {/* Header */}
       <div style={{
         display: 'grid', gridTemplateColumns: '2fr 1fr 3fr 80px 120px',
-        padding: '10px 20px', backgroundColor: 'var(--page-bg-subtle)',
-        borderBottom: '2px solid var(--card-border)', gap: '12px'
+        padding: '10px 20px', backgroundColor: '#F8FAFC',
+        borderBottom: '2px solid var(--slate-200)', gap: '12px'
       }} className="email-tpl-header">
         {['Template', 'Recipient', 'Trigger', 'Active', 'Last Edited'].map(h => (
           <span key={h} style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700,
-            color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em'
+            color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em'
           }}>{h}</span>
         ))}
       </div>
@@ -40,7 +40,7 @@ export default function EmailTemplateTable({ templates, onSelect, onToggleActive
             style={{
               display: 'grid', gridTemplateColumns: '2fr 1fr 3fr 80px 120px',
               padding: '14px 20px', gap: '12px',
-              backgroundColor: 'transparent', border: 'none', borderBottom: '1px solid var(--card-border)',
+              backgroundColor: 'transparent', border: 'none', borderBottom: '1px solid var(--slate-200)',
               cursor: 'pointer', width: '100%', textAlign: 'left',
               transition: 'background-color 0.1s', alignItems: 'center'
             }}
@@ -49,7 +49,7 @@ export default function EmailTemplateTable({ templates, onSelect, onToggleActive
             onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
           >
             <div>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--heading)' }}>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-900)' }}>
                 {tpl.template_name}
               </span>
               <span style={{ display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', color: '#4B5563', marginTop: '2px' }}>
@@ -66,7 +66,7 @@ export default function EmailTemplateTable({ templates, onSelect, onToggleActive
                 {tpl.recipient_type}
               </span>
             </div>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', lineHeight: 1.4 }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569', lineHeight: 1.4 }}>
               {tpl.trigger_description}
             </span>
             <div onClick={e => e.stopPropagation()}>
@@ -75,14 +75,14 @@ export default function EmailTemplateTable({ templates, onSelect, onToggleActive
                 aria-label={tpl.is_active ? 'Deactivate template' : 'Activate template'}
                 style={{
                   width: '40px', height: '22px', borderRadius: '11px',
-                  backgroundColor: tpl.is_active ? 'var(--suc-fg)' : 'var(--card-border)',
+                  backgroundColor: tpl.is_active ? '#16A34A' : '#CBD5E1',
                   border: 'none', cursor: 'pointer', position: 'relative',
                   transition: 'background-color 0.2s', padding: 0
                 }}
               >
                 <div style={{
                   width: '18px', height: '18px', borderRadius: '50%',
-                  backgroundColor: 'var(--card-bg)', boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                  backgroundColor: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                   position: 'absolute', top: '2px',
                   left: tpl.is_active ? '20px' : '2px',
                   transition: 'left 0.2s'

@@ -1,15 +1,15 @@
 import React from 'react';
 
 const OPTIONS = [
-  { value: 'ready', label: 'Ready (80+)', activeBg: 'var(--suc-bg)', activeColor: 'var(--suc-fg)' },
-  { value: 'partial', label: 'Partial (50–79)', activeBg: 'var(--wrn-bg)', activeColor: 'var(--wrn-fg)' },
-  { value: 'incomplete', label: 'Incomplete (<50)', activeBg: 'var(--err-bg)', activeColor: 'var(--err-fg)' },
+  { value: 'ready', label: 'Ready (80+)', activeBg: '#DCFCE7', activeColor: '#15803D' },
+  { value: 'partial', label: 'Partial (50–79)', activeBg: '#FEF3C7', activeColor: '#92400E' },
+  { value: 'incomplete', label: 'Incomplete (<50)', activeBg: '#FEE2E2', activeColor: '#B91C1C' },
 ];
 
 export default function CompletenessPills({ selected, onToggle }) {
   return (
     <div>
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 8px' }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 8px' }}>
         Completeness
       </p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }} role="group" aria-label="Completeness filter">
@@ -31,7 +31,7 @@ export default function CompletenessPills({ selected, onToggle }) {
                 fontSize: '0.875rem',
                 fontWeight: 600,
                 cursor: 'pointer',
-                border: active ? '2px solid ' + o.activeColor : '1px solid var(--card-border)',
+                border: active ? '2px solid ' + o.activeColor : '1px solid var(--slate-200)',
                 backgroundColor: active ? o.activeBg : 'var(--slate-100, #F1F5F9)',
                 color: active ? o.activeColor : 'var(--slate-600)',
                 transition: 'all 0.15s',

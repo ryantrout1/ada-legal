@@ -37,12 +37,12 @@ export default function DashboardCollapsible({ id, title, icon: Icon, iconColor,
         {Icon && <Icon size={16} style={{ color: iconColor || 'var(--slate-600)', flexShrink: 0 }} />}
         <h2 style={{
           fontFamily: 'Fraunces, serif', fontSize: '1.0625rem', fontWeight: 600,
-          color: 'var(--heading)', margin: 0, lineHeight: 1.3
+          color: 'var(--slate-900)', margin: 0, lineHeight: 1.3
         }}>{title}</h2>
         {count !== undefined && (
           <span style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-            color: iconColor || 'var(--body-secondary)', backgroundColor: 'var(--card-bg-tinted)',
+            color: iconColor || 'var(--body-secondary)', backgroundColor: 'var(--slate-100)',
             borderRadius: '9999px', padding: '1px 8px', marginLeft: '4px'
           }}>{count}</span>
         )}

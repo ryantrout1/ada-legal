@@ -37,9 +37,9 @@ export default function CompactViewsFilterRow({
                 padding: '3px 10px', borderRadius: '100px', minHeight: '32px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
                 cursor: 'pointer', border: '1px solid', whiteSpace: 'nowrap', flexShrink: 0,
-                backgroundColor: activeViewId === v.id ? 'var(--heading)' : 'var(--card-bg)',
-                color: activeViewId === v.id ? 'white' : 'var(--body)',
-                borderColor: activeViewId === v.id ? 'var(--heading)' : 'var(--body-secondary)',
+                backgroundColor: activeViewId === v.id ? 'var(--slate-900)' : 'white',
+                color: activeViewId === v.id ? 'white' : 'var(--slate-700)',
+                borderColor: activeViewId === v.id ? 'var(--slate-900)' : 'var(--slate-500)',
               }}
             >
               <button
@@ -71,8 +71,8 @@ export default function CompactViewsFilterRow({
               display: 'inline-flex', alignItems: 'center', gap: '3px',
               padding: '3px 10px', borderRadius: '100px', minHeight: '32px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-              cursor: 'pointer', border: '1px dashed var(--card-border)',
-              backgroundColor: 'transparent', color: 'var(--body-secondary)', whiteSpace: 'nowrap', flexShrink: 0,
+              cursor: 'pointer', border: '1px dashed var(--slate-300)',
+              backgroundColor: 'transparent', color: 'var(--slate-500)', whiteSpace: 'nowrap', flexShrink: 0,
             }}
             aria-label="Save current view"
           >
@@ -89,9 +89,9 @@ export default function CompactViewsFilterRow({
             display: 'inline-flex', alignItems: 'center', gap: '5px',
             padding: '8px 20px', minHeight: '44px', fontFamily: 'Manrope, sans-serif',
             fontSize: '0.85rem', fontWeight: filtersOpen ? 700 : 500, cursor: 'pointer',
-            border: filtersOpen ? 'none' : '1px solid var(--card-border)', borderRadius: '20px',
-            backgroundColor: filtersOpen ? 'var(--accent)' : 'var(--card-bg)',
-            color: filtersOpen ? 'white' : 'var(--body)', flexShrink: 0, position: 'relative',
+            border: filtersOpen ? 'none' : '1px solid var(--slate-200)', borderRadius: '20px',
+            backgroundColor: filtersOpen ? '#C2410C' : 'white',
+            color: filtersOpen ? 'white' : 'var(--slate-800)', flexShrink: 0, position: 'relative',
           }}
         >
           <SlidersHorizontal size={14} />
@@ -101,7 +101,7 @@ export default function CompactViewsFilterRow({
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               width: '18px', height: '18px', borderRadius: '50%',
               backgroundColor: filtersOpen ? 'white' : 'var(--terra-600)',
-              color: filtersOpen ? 'var(--accent)' : 'var(--card-bg)',
+              color: filtersOpen ? '#C2410C' : 'white',
               fontSize: '0.65rem', fontWeight: 700,
             }}>
               {filterCount}
@@ -122,13 +122,13 @@ export default function CompactViewsFilterRow({
           role="dialog" aria-modal="true" aria-label="Save current view"
         >
           <div style={{
-            backgroundColor: 'var(--card-bg)', borderRadius: '12px', padding: '24px',
+            backgroundColor: 'white', borderRadius: '12px', padding: '24px',
             maxWidth: '400px', width: '100%', boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
           }}>
-            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 12px' }}>
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 12px' }}>
               Save Current View
             </h2>
-            <label htmlFor="sv-name-compact" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body-secondary)', display: 'block', marginBottom: '4px' }}>
+            <label htmlFor="sv-name-compact" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
               View name
             </label>
             <input
@@ -143,7 +143,7 @@ export default function CompactViewsFilterRow({
               style={{
                 width: '100%', padding: '10px 12px', minHeight: '44px',
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                border: '1px solid var(--card-border)', borderRadius: '8px',
+                border: '1px solid var(--slate-300)', borderRadius: '8px',
                 marginBottom: '16px', boxSizing: 'border-box',
               }}
             />
@@ -152,8 +152,8 @@ export default function CompactViewsFilterRow({
                 onClick={() => setShowModal(false)}
                 style={{
                   padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-                  fontWeight: 600, border: '1px solid var(--card-border)', borderRadius: '8px',
-                  backgroundColor: 'var(--card-bg)', color: 'var(--body)', cursor: 'pointer', minHeight: '44px',
+                  fontWeight: 600, border: '1px solid var(--slate-300)', borderRadius: '8px',
+                  backgroundColor: 'white', color: 'var(--slate-700)', cursor: 'pointer', minHeight: '44px',
                 }}
               >
                 Cancel
@@ -164,7 +164,7 @@ export default function CompactViewsFilterRow({
                 style={{
                   padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
                   fontWeight: 700, border: 'none', borderRadius: '8px', cursor: 'pointer', minHeight: '44px',
-                  backgroundColor: 'var(--heading)', color: 'var(--card-bg)',
+                  backgroundColor: 'var(--slate-900)', color: 'white',
                   opacity: viewName.trim() ? 1 : 0.5,
                 }}
               >

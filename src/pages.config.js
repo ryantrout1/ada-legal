@@ -53,7 +53,6 @@ import AdminCases from './pages/AdminCases';
 import AdminEmails from './pages/AdminEmails';
 import AdminFeedback from './pages/AdminFeedback';
 import AdminPhotoAnalyzer from './pages/AdminPhotoAnalyzer';
-import AdminIntakeAI from './pages/AdminIntakeAI';
 import AdminLawyers from './pages/AdminLawyers';
 import AdminReview from './pages/AdminReview';
 import CaseDetail from './pages/CaseDetail';
@@ -137,7 +136,6 @@ export const PAGES = {
     "AdminFeedback": AdminFeedback,
     "AdminLawyers": AdminLawyers,
     "AdminPhotoAnalyzer": AdminPhotoAnalyzer,
-    "AdminIntakeAI": AdminIntakeAI,
     "AdminReview": AdminReview,
     "CaseDetail": CaseDetail,
     "GuideAccessibleDocuments": GuideAccessibleDocuments,

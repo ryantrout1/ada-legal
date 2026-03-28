@@ -27,7 +27,7 @@ const STAGES = [
   },
   {
     label: 'Attorney Accepts Case',
-    color: 'var(--wrn-fg)', bg: 'var(--wrn-bg)',
+    color: '#92400E', bg: '#FEF3C7',
     emails: [
       { key: 'attorney_assigned_reporter', recipient: 'Reporter' },
       { key: 'attorney_assigned_confirmation', recipient: 'Attorney' },
@@ -35,12 +35,12 @@ const STAGES = [
   },
   {
     label: 'Monitoring',
-    color: 'var(--wrn-fg)', bg: 'var(--wrn-bg)',
+    color: '#92400E', bg: '#FEF3C7',
     emails: [{ key: 'contact_reminder', recipient: 'Attorney', note: 'if no contact within 22 hours' }],
   },
   {
     label: 'Resolution',
-    color: 'var(--body-secondary)', bg: 'var(--card-bg-tinted)',
+    color: '#64748B', bg: '#F1F5F9',
     emails: [{ key: 'case_closed', recipient: 'Reporter' }],
   },
 ];
@@ -48,13 +48,13 @@ const STAGES = [
 const BRANCH = {
   label: 'Case Reclaimed',
   fromStage: 'Attorney Accepts Case',
-  color: '#991B1B', bg: 'var(--err-bg)',
+  color: '#991B1B', bg: '#FEE2E2',
   emails: [{ key: 'case_reclaimed', recipient: 'Attorney' }],
 };
 
 const ONBOARDING = {
   label: 'Attorney Onboarding',
-  color: 'var(--suc-fg)', bg: 'var(--suc-bg)',
+  color: '#15803D', bg: '#DCFCE7',
   emails: [{ key: 'lawyer_approved', recipient: 'Attorney' }],
 };
 
@@ -100,7 +100,7 @@ function StageRow({ stage, isLast, onSelectTemplate }) {
           marginTop: '6px',
         }} />
         {!isLast && (
-          <div style={{ width: '2px', flex: 1, backgroundColor: 'var(--card-border)', minHeight: '20px' }} />
+          <div style={{ width: '2px', flex: 1, backgroundColor: '#E2E8F0', minHeight: '20px' }} />
         )}
       </div>
 
@@ -108,7 +108,7 @@ function StageRow({ stage, isLast, onSelectTemplate }) {
       <div style={{ flex: 1, paddingBottom: isLast ? '0' : '16px', paddingLeft: '12px' }}>
         <div style={{
           display: 'flex', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap',
-          backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
+          backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
           borderRadius: '10px', padding: '12px 16px',
         }}>
           {/* Stage label */}
@@ -146,23 +146,23 @@ function StageRow({ stage, isLast, onSelectTemplate }) {
 export default function EmailFlowDiagram({ onSelectTemplate }) {
   return (
     <div style={{
-      backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
+      backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
       borderRadius: '12px', padding: '24px', marginBottom: '16px',
     }}>
       <h2 style={{
         fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600,
-        color: 'var(--heading)', margin: '0 0 8px',
+        color: 'var(--slate-900)', margin: '0 0 8px',
       }}>
         Email Lifecycle Flow
       </h2>
       <div style={{ display: 'flex', gap: '16px', marginBottom: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <div style={{ width: '10px', height: '10px', borderRadius: '3px', backgroundColor: '#DBEAFE', border: '1px solid #93C5FD' }} />
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: 'var(--body-secondary)' }}>Reporter</span>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: '#64748B' }}>Reporter</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <div style={{ width: '10px', height: '10px', borderRadius: '3px', backgroundColor: '#F3E8FF', border: '1px solid #C4B5FD' }} />
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: 'var(--body-secondary)' }}>Attorney</span>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 600, color: '#64748B' }}>Attorney</span>
         </div>
       </div>
 

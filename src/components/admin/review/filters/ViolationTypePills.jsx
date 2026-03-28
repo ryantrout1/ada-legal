@@ -8,7 +8,7 @@ const OPTIONS = [
 export default function ViolationTypePills({ selected, onToggle }) {
   return (
     <div>
-      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 8px' }}>
+      <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 8px' }}>
         Violation Type
       </p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }} role="group" aria-label="Violation type filter">
@@ -30,7 +30,7 @@ export default function ViolationTypePills({ selected, onToggle }) {
                 fontSize: '0.875rem',
                 fontWeight: 600,
                 cursor: 'pointer',
-                border: active ? '2px solid #9A3412' : '1px solid var(--card-border)',
+                border: active ? '2px solid #9A3412' : '1px solid var(--slate-200)',
                 backgroundColor: active ? '#FEF1EC' : 'var(--slate-100, #F1F5F9)',
                 color: active ? '#9A3412' : 'var(--slate-600)',
                 transition: 'all 0.15s',

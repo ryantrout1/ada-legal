@@ -24,15 +24,15 @@ export default function ActiveCasesSection({ lawyer, cases, contactLogs }) {
           background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginBottom: open ? '8px' : 0
         }}
       >
-        {open ? <ChevronDown size={14} style={{ color: 'var(--body-secondary)' }} /> : <ChevronRight size={14} style={{ color: 'var(--body-secondary)' }} />}
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
+        {open ? <ChevronDown size={14} style={{ color: '#475569' }} /> : <ChevronRight size={14} style={{ color: '#475569' }} />}
+        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--slate-900)', margin: 0 }}>
           Active Cases ({active.length})
         </p>
       </button>
 
       {open && (
         active.length === 0 ? (
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)', margin: '4px 0 0 20px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569', margin: '4px 0 0 20px' }}>
             No active cases.
           </p>
         ) : (
@@ -52,43 +52,43 @@ export default function ActiveCasesSection({ lawyer, cases, contactLogs }) {
                   style={{
                     display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap',
                     padding: '8px 12px', textDecoration: 'none',
-                    backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
+                    backgroundColor: 'white', border: '1px solid var(--slate-200)',
                     borderRadius: '8px', transition: 'background-color 0.15s',
                     minHeight: '44px'
                   }}
-                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--page-bg-subtle)'}
+                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--slate-50)'}
                   onMouseLeave={e => e.currentTarget.style.backgroundColor = 'white'}
                 >
                   {isPhysical
-                    ? <Building2 size={14} style={{ color: 'var(--accent)' }} />
+                    ? <Building2 size={14} style={{ color: '#C2410C' }} />
                     : <Globe size={14} style={{ color: '#1E3A8A' }} />
                   }
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', flex: 1, minWidth: '120px' }}>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: '#334155', flex: 1, minWidth: '120px' }}>
                     {c.business_name}
                   </span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)' }}>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#475569' }}>
                     {[c.city, c.state].filter(Boolean).join(', ')}
                   </span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569' }}>
                     {daysSince}d ago
                   </span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
                     {hasContact ? (
                       <>
-                        <CheckCircle size={14} style={{ color: 'var(--suc-fg)' }} />
-                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--suc-fg)' }}>Contacted</span>
+                        <CheckCircle size={14} style={{ color: '#15803D' }} />
+                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#15803D' }}>Contacted</span>
                       </>
                     ) : overdue ? (
                       <>
-                        <AlertTriangle size={14} style={{ color: 'var(--err-fg)' }} />
-                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--err-fg)' }}>
+                        <AlertTriangle size={14} style={{ color: '#B91C1C' }} />
+                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#B91C1C' }}>
                           {hoursSinceAssign - 24}h overdue
                         </span>
                       </>
                     ) : (
                       <>
-                        <Clock size={14} style={{ color: 'var(--wrn-fg)' }} />
-                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--wrn-fg)' }}>
+                        <Clock size={14} style={{ color: '#92400E' }} />
+                        <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: '#92400E' }}>
                           {remaining}h left
                         </span>
                       </>

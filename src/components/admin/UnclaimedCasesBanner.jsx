@@ -17,14 +17,14 @@ export default function UnclaimedCasesBanner({ cases }) {
 
   return (
     <div style={{
-      backgroundColor: 'var(--wrn-bg)', border: '1px solid #FDE68A', borderRadius: 'var(--radius-lg)',
+      backgroundColor: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: 'var(--radius-lg)',
       padding: 'var(--space-lg)', marginBottom: 'var(--space-xl)'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: 'var(--space-md)' }}>
-        <Timer size={18} style={{ color: 'var(--wrn-fg)' }} />
+        <Timer size={18} style={{ color: '#92400E' }} />
         <h3 style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 700,
-          color: 'var(--wrn-fg)', margin: 0
+          color: '#92400E', margin: 0
         }}>
           Unclaimed 72hrs+ ({cases.length})
         </h3>
@@ -33,7 +33,7 @@ export default function UnclaimedCasesBanner({ cases }) {
         {cases.slice(0, 5).map(c => (
           <div key={c.id} style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            backgroundColor: 'var(--wrn-bg)', borderRadius: 'var(--radius-sm)', padding: '0.5rem 0.75rem'
+            backgroundColor: '#FEF3C7', borderRadius: 'var(--radius-sm)', padding: '0.5rem 0.75rem'
           }}>
             <div>
               <span style={{
@@ -47,7 +47,7 @@ export default function UnclaimedCasesBanner({ cases }) {
             </div>
             <span style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-              color: 'var(--wrn-fg)', whiteSpace: 'nowrap'
+              color: '#92400E', whiteSpace: 'nowrap'
             }}>
               {hoursAgo(c.approved_at)}h unclaimed
             </span>
@@ -56,7 +56,7 @@ export default function UnclaimedCasesBanner({ cases }) {
         {cases.length > 5 && (
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-            color: 'var(--wrn-fg)', margin: '0.25rem 0 0 0', fontStyle: 'italic'
+            color: '#92400E', margin: '0.25rem 0 0 0', fontStyle: 'italic'
           }}>
             …and {cases.length - 5} more
           </p>

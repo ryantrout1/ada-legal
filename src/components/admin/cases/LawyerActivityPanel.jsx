@@ -48,12 +48,12 @@ export default function LawyerActivityPanel({ cases, lawyers, contactLogs }) {
       {/* Overdue Contact */}
       {overdueContacts.length > 0 ? (
         <div style={{
-          backgroundColor: 'var(--err-bg)', border: '1px solid #FECACA',
+          backgroundColor: '#FEE2E2', border: '1px solid #FECACA',
           borderRadius: '8px', overflow: 'hidden',
         }}>
           <div style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '6px', borderBottom: '1px solid #FECACA' }}>
-            <AlertTriangle size={14} style={{ color: 'var(--err-fg)' }} aria-hidden="true" />
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--err-fg)' }}>
+            <AlertTriangle size={14} style={{ color: '#B91C1C' }} aria-hidden="true" />
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: '#B91C1C' }}>
               Overdue Contact ({overdueContacts.length})
             </span>
           </div>
@@ -63,9 +63,9 @@ export default function LawyerActivityPanel({ cases, lawyers, contactLogs }) {
               padding: '6px 12px', borderBottom: i < overdueContacts.length - 1 ? '1px solid #FECACA' : 'none',
               backgroundColor: '#FFF5F5',
             }}>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body)' }}>{item.lawyerName}</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>→ {item.caseName}</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: 'var(--err-fg)', marginLeft: 'auto', flexShrink: 0 }}>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-800)' }}>{item.lawyerName}</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: '#475569' }}>→ {item.caseName}</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700, color: '#B91C1C', marginLeft: 'auto', flexShrink: 0 }}>
                 {item.hoursOverdue}h overdue
               </span>
               <Link
@@ -85,10 +85,10 @@ export default function LawyerActivityPanel({ cases, lawyers, contactLogs }) {
       ) : (
         <div style={{
           display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '8px 12px',
-          backgroundColor: 'var(--suc-bg)', borderRadius: '8px', border: '1px solid #BBF7D0',
+          backgroundColor: '#DCFCE7', borderRadius: '8px', border: '1px solid #BBF7D0',
         }}>
-          <CheckCircle size={14} style={{ color: 'var(--suc-fg)' }} aria-hidden="true" />
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--suc-fg)', fontWeight: 600 }}>
+          <CheckCircle size={14} style={{ color: '#15803D' }} aria-hidden="true" />
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#15803D', fontWeight: 600 }}>
             All lawyers have made timely contact
           </span>
         </div>
@@ -97,29 +97,29 @@ export default function LawyerActivityPanel({ cases, lawyers, contactLogs }) {
       {/* Active Lawyers */}
       {activeLawyers.length > 0 && (
         <div style={{
-          backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
+          backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
           borderRadius: '8px', overflow: 'hidden',
         }}>
-          <div style={{ padding: '6px 12px', borderBottom: '1px solid var(--card-border)' }}>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--body)' }}>
+          <div style={{ padding: '6px 12px', borderBottom: '1px solid var(--slate-200)' }}>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-700)' }}>
               Active Lawyers ({activeLawyers.length})
             </span>
           </div>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ backgroundColor: 'var(--page-bg-subtle)' }}>
-                  <th style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', padding: '6px 12px', textAlign: 'left' }}>Name</th>
-                  <th style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', padding: '6px 12px', textAlign: 'center' }}>Active Cases</th>
-                  <th style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', padding: '6px 12px', textAlign: 'center' }}>Avg Contact Time</th>
+                <tr style={{ backgroundColor: 'var(--slate-50)' }}>
+                  <th style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', padding: '6px 12px', textAlign: 'left' }}>Name</th>
+                  <th style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', padding: '6px 12px', textAlign: 'center' }}>Active Cases</th>
+                  <th style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', padding: '6px 12px', textAlign: 'center' }}>Avg Contact Time</th>
                 </tr>
               </thead>
               <tbody>
                 {activeLawyers.slice(0, 10).map(l => (
                   <tr key={l.id}>
-                    <td style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body)', padding: '6px 12px', borderBottom: '1px solid var(--card-bg-tinted)' }}>{l.name}</td>
-                    <td style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)', padding: '6px 12px', textAlign: 'center', borderBottom: '1px solid var(--card-bg-tinted)' }}>{l.activeCases}</td>
-                    <td style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)', padding: '6px 12px', textAlign: 'center', borderBottom: '1px solid var(--card-bg-tinted)' }}>{l.avgContact}</td>
+                    <td style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-800)', padding: '6px 12px', borderBottom: '1px solid var(--slate-100)' }}>{l.name}</td>
+                    <td style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)', padding: '6px 12px', textAlign: 'center', borderBottom: '1px solid var(--slate-100)' }}>{l.activeCases}</td>
+                    <td style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--slate-700)', padding: '6px 12px', textAlign: 'center', borderBottom: '1px solid var(--slate-100)' }}>{l.avgContact}</td>
                   </tr>
                 ))}
               </tbody>

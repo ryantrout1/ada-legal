@@ -43,13 +43,13 @@ export default function TriageFlagModal({ open, onConfirm, onCancel, saving }) {
       role="dialog" aria-modal="true" aria-label="Flag case"
     >
       <div style={{
-        backgroundColor: 'var(--card-bg)', borderRadius: '12px', padding: '24px',
+        backgroundColor: 'white', borderRadius: '12px', padding: '24px',
         maxWidth: '440px', width: '100%', boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
       }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: 'var(--wrn-fg)', margin: '0 0 16px' }}>
+        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 600, color: '#92400E', margin: '0 0 16px' }}>
           🚩 Flag & Skip
         </h3>
-        <label htmlFor="triage-flag-reason" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body-secondary)', display: 'block', marginBottom: '4px' }}>
+        <label htmlFor="triage-flag-reason" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
           Flag Reason
         </label>
         <select
@@ -60,12 +60,12 @@ export default function TriageFlagModal({ open, onConfirm, onCancel, saving }) {
           style={{
             width: '100%', padding: '10px 12px', minHeight: '44px',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-            border: '1px solid var(--card-border)', borderRadius: '8px', marginBottom: '12px',
+            border: '1px solid var(--slate-300)', borderRadius: '8px', marginBottom: '12px',
           }}
         >
           {FLAG_REASONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
         </select>
-        <label htmlFor="triage-flag-comment" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--body-secondary)', display: 'block', marginBottom: '4px' }}>
+        <label htmlFor="triage-flag-comment" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
           Note (optional)
         </label>
         <textarea
@@ -75,7 +75,7 @@ export default function TriageFlagModal({ open, onConfirm, onCancel, saving }) {
           rows={2}
           style={{
             width: '100%', padding: '10px 12px', fontFamily: 'Manrope, sans-serif',
-            fontSize: '0.875rem', border: '1px solid var(--card-border)', borderRadius: '8px',
+            fontSize: '0.875rem', border: '1px solid var(--slate-300)', borderRadius: '8px',
             resize: 'vertical', marginBottom: '16px', boxSizing: 'border-box',
           }}
         />
@@ -85,8 +85,8 @@ export default function TriageFlagModal({ open, onConfirm, onCancel, saving }) {
             disabled={saving}
             style={{
               padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-              fontWeight: 600, border: '1px solid var(--card-border)', borderRadius: '8px',
-              backgroundColor: 'var(--card-bg)', color: 'var(--body)', cursor: 'pointer', minHeight: '44px',
+              fontWeight: 600, border: '1px solid var(--slate-300)', borderRadius: '8px',
+              backgroundColor: 'white', color: 'var(--slate-700)', cursor: 'pointer', minHeight: '44px',
             }}
           >
             Cancel
@@ -97,7 +97,7 @@ export default function TriageFlagModal({ open, onConfirm, onCancel, saving }) {
             style={{
               padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
               fontWeight: 700, border: 'none', borderRadius: '8px', cursor: 'pointer', minHeight: '44px',
-              backgroundColor: '#D97706', color: 'var(--card-bg)', opacity: saving ? 0.6 : 1,
+              backgroundColor: '#D97706', color: 'white', opacity: saving ? 0.6 : 1,
             }}
           >
             {saving ? 'Flagging…' : 'Confirm Flag & Skip'}

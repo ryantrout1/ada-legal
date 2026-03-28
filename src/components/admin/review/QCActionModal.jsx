@@ -23,9 +23,9 @@ const FLAG_REASONS = [
 const ACTION_CONFIG = {
   approve: {
     title: 'Approve Case',
-    headerBg: 'var(--suc-bg)',
-    headerColor: 'var(--suc-fg)',
-    buttonBg: 'var(--suc-fg)',
+    headerBg: '#DCFCE7',
+    headerColor: '#15803D',
+    buttonBg: '#15803D',
     icon: Check,
     message: 'This case will be moved to the available case pool and become visible to licensed attorneys in the reporter\'s state.',
     commentLabel: 'Review Note (optional — internal only, not visible to reporter)',
@@ -34,9 +34,9 @@ const ACTION_CONFIG = {
   },
   reject: {
     title: 'Reject Case',
-    headerBg: 'var(--err-bg)',
-    headerColor: 'var(--err-fg)',
-    buttonBg: 'var(--err-fg)',
+    headerBg: '#FEE2E2',
+    headerColor: '#B91C1C',
+    buttonBg: '#B91C1C',
     icon: X,
     message: 'This case will be rejected and the reporter will receive an email with your feedback.',
     commentLabel: 'Personal Note to Submitter (optional — included in their email)',
@@ -48,8 +48,8 @@ const ACTION_CONFIG = {
   },
   flag: {
     title: 'Flag for Review',
-    headerBg: 'var(--wrn-bg)',
-    headerColor: 'var(--wrn-fg)',
+    headerBg: '#FEF3C7',
+    headerColor: '#92400E',
     buttonBg: '#D97706',
     icon: Flag,
     message: 'This case will be flagged for further review. It will remain in the queue.',
@@ -113,7 +113,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
         ref={modalRef}
         tabIndex={-1}
         style={{
-          backgroundColor: 'var(--card-bg)', borderRadius: '12px', width: '100%', maxWidth: '520px',
+          backgroundColor: 'white', borderRadius: '12px', width: '100%', maxWidth: '520px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.2)', overflow: 'hidden',
           maxHeight: '90vh', overflowY: 'auto'
         }}
@@ -147,7 +147,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
         {/* Body */}
         <div style={{ padding: '20px' }}>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)',
+            fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569',
             margin: '0 0 16px', lineHeight: 1.5
           }}>
             {config.message}
@@ -157,9 +157,9 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
             <div style={{ marginBottom: '16px' }}>
               <label style={{
                 display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                fontWeight: 600, color: 'var(--body)', marginBottom: '6px'
+                fontWeight: 600, color: 'var(--slate-700)', marginBottom: '6px'
               }}>
-                {action === 'reject' ? 'Rejection Reason' : 'Flag Reason'} <span style={{ color: 'var(--err-fg)' }}>*</span>
+                {action === 'reject' ? 'Rejection Reason' : 'Flag Reason'} <span style={{ color: '#B91C1C' }}>*</span>
               </label>
               <select
                 aria-label={action === 'reject' ? 'Rejection reason' : 'Flag reason'}
@@ -168,8 +168,8 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
                 disabled={saving}
                 style={{
                   width: '100%', padding: '10px 12px', fontFamily: 'Manrope, sans-serif',
-                  fontSize: '0.9375rem', border: '1px solid var(--card-border)', borderRadius: '8px',
-                  backgroundColor: 'var(--card-bg)', color: 'var(--body)'
+                  fontSize: '0.9375rem', border: '1px solid var(--slate-300)', borderRadius: '8px',
+                  backgroundColor: 'white', color: 'var(--slate-800)'
                 }}
               >
                 <option value="">Select a reason...</option>
@@ -183,7 +183,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
           <div style={{ marginBottom: '12px' }}>
             <label style={{
               display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-              fontWeight: 600, color: 'var(--body)', marginBottom: '6px'
+              fontWeight: 600, color: 'var(--slate-700)', marginBottom: '6px'
             }}>
               {config.commentLabel}
             </label>
@@ -195,7 +195,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
               rows={3}
               style={{
                 width: '100%', padding: '10px 12px', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.9375rem', border: '1px solid var(--card-border)', borderRadius: '8px',
+                fontSize: '0.9375rem', border: '1px solid var(--slate-300)', borderRadius: '8px',
                 resize: 'vertical', minHeight: '80px'
               }}
             />
@@ -205,7 +205,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
             <div style={{ marginBottom: '12px' }}>
               <label style={{
                 display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                fontWeight: 600, color: 'var(--body)', marginBottom: '6px'
+                fontWeight: 600, color: 'var(--slate-700)', marginBottom: '6px'
               }}>
                 {config.internalNotesLabel || 'Internal Notes (optional)'}
               </label>
@@ -217,7 +217,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
                 rows={2}
                 style={{
                   width: '100%', padding: '10px 12px', fontFamily: 'Manrope, sans-serif',
-                  fontSize: '0.9375rem', border: '1px solid var(--card-border)', borderRadius: '8px',
+                  fontSize: '0.9375rem', border: '1px solid var(--slate-300)', borderRadius: '8px',
                   resize: 'vertical', minHeight: '60px'
                 }}
               />
@@ -228,28 +228,28 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
             <details style={{ marginTop: '12px' }}>
               <summary style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                fontWeight: 600, color: 'var(--body-secondary)', cursor: 'pointer',
+                fontWeight: 600, color: 'var(--slate-500)', cursor: 'pointer',
                 marginBottom: '8px'
               }}>
                 Preview email to submitter ▾
               </summary>
               <div style={{
-                backgroundColor: 'var(--page-bg-subtle)', border: '1px solid var(--card-border)',
+                backgroundColor: '#F8FAFC', border: '1px solid var(--slate-200)',
                 borderRadius: '8px', padding: '16px', fontSize: '0.8125rem',
                 fontFamily: 'Manrope, sans-serif', color: 'var(--slate-600)',
                 lineHeight: 1.6
               }}>
-                <p style={{ margin: '0 0 8px', fontWeight: 600, color: 'var(--body)' }}>
+                <p style={{ margin: '0 0 8px', fontWeight: 600, color: 'var(--slate-800)' }}>
                   Dear submitter,
                 </p>
                 <p style={{ margin: '0 0 8px' }}>
                   After reviewing your ADA violation report regarding <strong>{businessName}</strong>, we were unable to move it forward to our attorney network at this time.
                 </p>
-                <p style={{ margin: '0 0 8px', fontStyle: 'italic', color: 'var(--body)' }}>
+                <p style={{ margin: '0 0 8px', fontStyle: 'italic', color: 'var(--slate-700)' }}>
                   {REJECTION_REASONS.find(r => r.value === reason)?.emailText || ''}
                   {comment ? ` ${comment}` : ''}
                 </p>
-                <p style={{ margin: '0', fontSize: '0.75rem', color: 'var(--body-secondary)' }}>
+                <p style={{ margin: '0', fontSize: '0.75rem', color: 'var(--slate-500)' }}>
                   + next steps, Standards Guide link, resubmit option, disclaimer
                 </p>
               </div>
@@ -259,11 +259,11 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
           {config.warning && (
             <div style={{
               display: 'flex', alignItems: 'flex-start', gap: '8px', padding: '10px 12px',
-              backgroundColor: 'var(--wrn-bg)', borderRadius: '8px', marginTop: '12px'
+              backgroundColor: '#FEF3C7', borderRadius: '8px', marginTop: '12px'
             }}>
-              <AlertTriangle size={16} style={{ color: 'var(--wrn-fg)', flexShrink: 0, marginTop: '2px' }} />
+              <AlertTriangle size={16} style={{ color: '#92400E', flexShrink: 0, marginTop: '2px' }} />
               <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--wrn-fg)',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#92400E',
                 margin: 0, lineHeight: 1.4
               }}>
                 {config.warning}
@@ -274,7 +274,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
 
         {/* Footer */}
         <div style={{
-          padding: '16px 20px', borderTop: '1px solid var(--card-border)',
+          padding: '16px 20px', borderTop: '1px solid var(--slate-200)',
           display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px'
         }}>
           <button
@@ -296,7 +296,7 @@ export default function QCActionModal({ open, action, businessName, onConfirm, o
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '6px',
               padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-              fontWeight: 700, color: 'var(--card-bg)', backgroundColor: config.buttonBg,
+              fontWeight: 700, color: 'white', backgroundColor: config.buttonBg,
               border: 'none', borderRadius: '8px',
               cursor: (!canConfirm || saving) ? 'not-allowed' : 'pointer',
               opacity: (!canConfirm || saving) ? 0.6 : 1

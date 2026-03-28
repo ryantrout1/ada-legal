@@ -64,16 +64,9 @@ export default function AdminLawyers() {
 
   useEffect(() => {
     async function init() {
-      try {
-        const user = await base44.auth.me();
-        if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
-        await loadData();
-      } catch (e) {
-        console.error('Failed to initialize Attorney Network:', e);
-        window.location.href = createPageUrl('Home');
-      } finally {
-        setLoading(false);
-      }
+      const user = await base44.auth.me();
+      if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
+      await loadData(); setLoading(false);
     }
     init();
   }, []);
@@ -84,14 +77,8 @@ export default function AdminLawyers() {
     const now = new Date().toISOString();
     const updates = { account_status: 'approved', approved_at: now };
     if (!lawyer.date_joined) updates.date_joined = now;
-    try {
-      await base44.entities.LawyerProfile.update(lawyer.id, updates);
-      setToast(`${lawyer.full_name} approved.`);
-      await loadData();
-    } catch (e) {
-      console.error('Quick approve failed:', e);
-      setToast('Action failed — please try again.');
-    }
+    await base44.entities.LawyerProfile.update(lawyer.id, updates);
+    setToast(`${lawyer.full_name} approved.`); await loadData();
   };
 
   // Status bar cells
@@ -102,7 +89,7 @@ export default function AdminLawyers() {
     const inactive = lawyers.filter(l => (l.subscription_status === 'inactive' || l.subscription_status === 'canceled') && l.account_status === 'approved').length;
     const suspended = lawyers.filter(l => l.account_status === 'suspended').length;
     return [
-      { key: 'total', label: 'Total Attorneys', value: total, color: 'var(--body)' },
+      { key: 'total', label: 'Total Attorneys', value: total, color: 'var(--slate-800)' },
       { key: 'active', label: 'Active', value: active, bg: '#F0FDF4', color: '#15803D' },
       { key: 'pending', label: 'Pending Approval', value: pending, bg: pending > 0 ? '#FEF3C7' : undefined, color: '#92400E', pulse: pending > 0 },
       { key: 'inactive', label: 'Inactive', value: inactive, color: 'var(--body-secondary)' },
@@ -149,6 +136,14 @@ export default function AdminLawyers() {
   if (loading) {
     return (
       <div role="status" aria-label="Loading attorneys" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', gap: '1rem' }}>
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
         <h1 className="sr-only">Attorney Network</h1>
         <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)' }}>Loading attorneys…</p>
@@ -157,7 +152,7 @@ export default function AdminLawyers() {
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
+    <div style={{ backgroundColor: 'var(--slate-50)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <AdminPageHeader
           title="Attorney Network"
@@ -167,16 +162,16 @@ export default function AdminLawyers() {
           searchPlaceholder="Search by name, firm, email, or state…"
           filterPills={FILTER_PILLS.map(p => <AdminFilterPill key={p.key} label={p.label} active={statusFilter === p.key} onClick={() => setStatusFilter(p.key)} />)}
           sortDropdown={<AdminSortDropdown value={sortBy} onChange={setSortBy} options={SORT_OPTIONS} />}
-          listHeader={<span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--body-secondary)' }}>{statusFilter === 'all' ? `All (${filtered.length})` : `${FILTER_PILLS.find(p => p.key === statusFilter)?.label || 'All'} (${filtered.length})`}</span>}
+          listHeader={<span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 500, color: 'var(--slate-500)' }}>{statusFilter === 'all' ? `All (${filtered.length})` : `${FILTER_PILLS.find(p => p.key === statusFilter)?.label || 'All'} (${filtered.length})`}</span>}
         />
 
-        <div style={{ backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', overflow: 'hidden' }}>
+        <div style={{ backgroundColor: 'white', border: '1px solid var(--slate-200)', borderRadius: '12px', overflow: 'hidden' }}>
           {filtered.length === 0 ? (
             <div style={{ padding: '48px 24px', textAlign: 'center' }}>
               {lawyers.length === 0 ? (
                 <>
                   <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'var(--page-bg-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: '1.5rem' }}>⚖️</div>
-                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 8px' }}>No attorneys have joined yet</p>
+                  <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 8px' }}>No attorneys have joined yet</p>
                   <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)', margin: 0 }}>When lawyers register on the For Attorneys page, they'll appear here for your review.</p>
                 </>
               ) : (

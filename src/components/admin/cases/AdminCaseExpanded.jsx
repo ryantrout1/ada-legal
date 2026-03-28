@@ -33,14 +33,14 @@ function DocScoreDots({ caseData }) {
   const score = criteria.filter(cr => cr.met).length;
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--heading)' }}>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: '#1E293B' }}>
         Documentation: {score}/7
       </span>
       <div style={{ display: 'flex', gap: '4px' }}>
         {criteria.map((cr, i) => (
           <div key={i} title={cr.label} style={{
             width: '10px', height: '10px', borderRadius: '50%',
-            backgroundColor: cr.met ? 'var(--suc-fg)' : 'var(--card-border)'
+            backgroundColor: cr.met ? '#15803D' : '#E2E8F0'
           }} />
         ))}
       </div>
@@ -50,11 +50,11 @@ function DocScoreDots({ caseData }) {
 
 const LABEL_STYLE = {
   fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-  color: 'var(--body-secondary)', margin: '0 0 2px', textTransform: 'uppercase'
+  color: '#475569', margin: '0 0 2px', textTransform: 'uppercase'
 };
 
 const VALUE_STYLE = {
-  fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body-secondary)', margin: 0
+  fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: '#475569', margin: 0
 };
 
 export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onReassign }) {
@@ -66,10 +66,10 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
   const isAvailable = c.status === 'available';
 
   return (
-    <div style={{ borderTop: '1px solid var(--card-border)', padding: '20px' }}>
+    <div style={{ borderTop: '1px solid var(--slate-200)', padding: '20px' }}>
       {/* Violation Summary Card */}
       <div style={{
-        backgroundColor: 'var(--page-bg-subtle)', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px'
+        backgroundColor: 'var(--slate-50)', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px'
       }}>
         <div style={{ height: '6px', backgroundColor: isPhysical ? '#FEF1EC' : '#DBEAFE' }} />
         <div style={{ padding: '16px' }}>
@@ -77,7 +77,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '12px' }}>
             <div>
               <p style={LABEL_STYLE}>Business</p>
-              <p style={{ ...VALUE_STYLE, fontWeight: 700, color: 'var(--heading)' }}>{c.business_name}</p>
+              <p style={{ ...VALUE_STYLE, fontWeight: 700, color: 'var(--slate-900)' }}>{c.business_name}</p>
             </div>
             <div>
               <p style={LABEL_STYLE}>Type</p>
@@ -130,7 +130,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
 
       {/* Narrative */}
       <div style={{
-        borderLeft: '3px solid #C2410C', backgroundColor: 'var(--card-bg-tinted)',
+        borderLeft: '3px solid #C2410C', backgroundColor: '#FFF7ED',
         padding: '16px', borderRadius: '0 8px 8px 0', marginBottom: '16px'
       }}>
         <p style={{ ...LABEL_STYLE, margin: '0 0 6px' }}>Claimant Narrative</p>
@@ -147,34 +147,34 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
 
       {/* Claimant Contact Card */}
       <div style={{
-        backgroundColor: 'var(--page-bg-subtle)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
+        backgroundColor: 'var(--slate-50)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
       }}>
         <p style={{ ...LABEL_STYLE, margin: '0 0 12px' }}>Claimant Contact</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <User size={14} style={{ color: '#4B5563' }} />
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)' }}>{c.contact_name}</span>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_name}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Mail size={14} style={{ color: '#4B5563' }} />
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)' }}>{c.contact_email}</span>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_email}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Phone size={14} style={{ color: '#4B5563' }} />
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)' }}>{c.contact_phone}</span>
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>{c.contact_phone}</span>
           </div>
         </div>
         <span style={{
           display: 'inline-block', padding: '2px 8px', borderRadius: '6px',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
-          color: 'var(--heading)', backgroundColor: 'var(--card-border)'
+          color: '#1E293B', backgroundColor: 'var(--slate-200)'
         }}>Prefers: {CONTACT_PREF_LABELS[c.contact_preference] || '—'}</span>
       </div>
 
       {/* Case Metadata */}
       <div style={{
         display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '16px',
-        padding: '12px 16px', backgroundColor: 'var(--page-bg-subtle)', borderRadius: '8px'
+        padding: '12px 16px', backgroundColor: 'var(--slate-50)', borderRadius: '8px'
       }}>
         <MetaItem label="Submitted" value={formatDate(c.submitted_at || c.created_date)} />
         {c.approved_at && <MetaItem label="Approved" value={formatDate(c.approved_at)} />}
@@ -194,18 +194,18 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
       {/* Resolution info for closed cases */}
       {c.status === 'closed' && c.resolution_type && (
         <div style={{
-          padding: '12px 16px', backgroundColor: 'var(--card-bg-tinted)', borderRadius: '8px', marginBottom: '16px'
+          padding: '12px 16px', backgroundColor: '#F1F5F9', borderRadius: '8px', marginBottom: '16px'
         }}>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: c.resolution_notes ? '8px' : 0 }}>
             <span style={LABEL_STYLE}>Resolution:</span>
             <span style={{
               display: 'inline-block', padding: '2px 8px', borderRadius: '6px',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-              color: 'var(--heading)', backgroundColor: 'var(--card-border)'
+              color: '#1E293B', backgroundColor: '#E2E8F0'
             }}>{RESOLUTION_LABELS[c.resolution_type] || c.resolution_type}</span>
           </div>
           {c.resolution_notes && (
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)', margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569', margin: 0, lineHeight: 1.5 }}>
               {c.resolution_notes}
             </p>
           )}
@@ -215,7 +215,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
       {/* Rejection reason */}
       {c.status === 'rejected' && c.rejection_reason && (
         <div style={{
-          padding: '12px 16px', backgroundColor: 'var(--err-bg)', borderRadius: '8px', marginBottom: '16px'
+          padding: '12px 16px', backgroundColor: '#FEE2E2', borderRadius: '8px', marginBottom: '16px'
         }}>
           <p style={{ ...LABEL_STYLE, color: '#991B1B', margin: '0 0 4px' }}>Rejection Reason</p>
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#991B1B', margin: 0, lineHeight: 1.5 }}>
@@ -252,7 +252,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
           <button type="button" onClick={() => onForceClose(c)} style={{
             display: 'inline-flex', alignItems: 'center', gap: '6px',
             padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-            fontWeight: 700, color: 'var(--err-fg)', backgroundColor: 'transparent',
+            fontWeight: 700, color: '#B91C1C', backgroundColor: 'transparent',
             border: '2px solid #B91C1C', borderRadius: '8px', cursor: 'pointer',
             minHeight: '44px'
           }}>
@@ -280,7 +280,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
             <button type="button" onClick={() => onReassign(c)} style={{
               display: 'inline-flex', alignItems: 'center', gap: '6px',
               padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-              fontWeight: 700, color: 'var(--wrn-fg)', backgroundColor: 'transparent',
+              fontWeight: 700, color: '#92400E', backgroundColor: 'transparent',
               border: '2px solid #92400E', borderRadius: '8px', cursor: 'pointer',
               minHeight: '44px'
             }}>
@@ -289,7 +289,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
             <button type="button" onClick={() => onForceClose(c)} style={{
               display: 'inline-flex', alignItems: 'center', gap: '6px',
               padding: '10px 20px', fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
-              fontWeight: 700, color: 'var(--err-fg)', backgroundColor: 'transparent',
+              fontWeight: 700, color: '#B91C1C', backgroundColor: 'transparent',
               border: '2px solid #B91C1C', borderRadius: '8px', cursor: 'pointer',
               minHeight: '44px'
             }}>
@@ -307,10 +307,10 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
 function MetaItem({ label, value }) {
   return (
     <div style={{ flex: '0 0 auto' }}>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--body-secondary)', textTransform: 'uppercase' }}>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.6875rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase' }}>
         {label}:{' '}
       </span>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body)' }}>
+      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#334155' }}>
         {value}
       </span>
     </div>

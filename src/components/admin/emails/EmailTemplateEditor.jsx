@@ -66,38 +66,30 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
 
   const handleSave = async () => {
     setSaving(true);
-    try {
-      const user = await base44.auth.me();
-      await base44.entities.EmailTemplate.update(template.id, {
-        subject_line: subject, body_html: bodyHtml,
-        last_edited_at: new Date().toISOString(), edited_by: user?.email || 'admin'
-      });
-      setToast({ type: 'success', message: 'Template saved' });
-      onSaved();
-    } catch (e) {
-      console.error('Template save failed:', e);
-      setToast({ type: 'error', message: 'Save failed — please try again' });
-    } finally {
-      setSaving(false);
-    }
+    const user = await base44.auth.me();
+    await base44.entities.EmailTemplate.update(template.id, {
+      subject_line: subject,
+      body_html: bodyHtml,
+      last_edited_at: new Date().toISOString(),
+      edited_by: user?.email || 'admin'
+    });
+    setSaving(false);
+    setToast({ type: 'success', message: 'Template saved' });
+    onSaved();
   };
 
   const handleSendTest = async () => {
     setSending(true);
-    try {
-      const user = await base44.auth.me();
-      const renderedSubject = replaceVars(subject);
-      const renderedBody = replaceVars(bodyHtml);
-      await base44.integrations.Core.SendEmail({
-        to: user.email, subject: `[TEST] ${renderedSubject}`, body: renderedBody
-      });
-      setToast({ type: 'success', message: `Test email sent to ${user.email}` });
-    } catch (e) {
-      console.error('Test email failed:', e);
-      setToast({ type: 'error', message: 'Failed to send test email' });
-    } finally {
-      setSending(false);
-    }
+    const user = await base44.auth.me();
+    const renderedSubject = replaceVars(subject);
+    const renderedBody = replaceVars(bodyHtml);
+    await base44.integrations.Core.SendEmail({
+      to: user.email,
+      subject: `[TEST] ${renderedSubject}`,
+      body: renderedBody
+    });
+    setSending(false);
+    setToast({ type: 'success', message: `Test email sent to ${user.email}` });
   };
 
   const copyVariable = (v) => {
@@ -137,25 +129,25 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
         <div style={{ flex: '1 1 600px', minWidth: '0', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {/* Template info */}
           <div style={{
-            backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
+            backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
             borderRadius: '12px', padding: '20px'
           }}>
-            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 4px' }}>
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.25rem', fontWeight: 700, color: 'var(--slate-900)', margin: '0 0 4px' }}>
               {template.template_name}
             </h2>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: 'var(--body-secondary)', margin: 0 }}>
+            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', color: '#64748B', margin: 0 }}>
               {template.trigger_description}
             </p>
           </div>
 
           {/* Subject line */}
           <div style={{
-            backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
+            backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
             borderRadius: '12px', padding: '20px'
           }}>
             <label style={{
               display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-              fontWeight: 700, color: 'var(--body-secondary)', marginBottom: '6px',
+              fontWeight: 700, color: '#64748B', marginBottom: '6px',
               textTransform: 'uppercase', letterSpacing: '0.04em'
             }}>
               Subject Line
@@ -166,23 +158,23 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
               onChange={e => setSubject(e.target.value)}
               style={{
                 width: '100%', padding: '10px 12px', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.9375rem', border: '2px solid var(--card-border)',
+                fontSize: '0.9375rem', border: '2px solid var(--slate-200)',
                 borderRadius: '8px', outline: 'none', boxSizing: 'border-box',
-                color: 'var(--heading)', minHeight: '44px'
+                color: 'var(--slate-900)', minHeight: '44px'
               }}
               onFocus={e => { e.target.style.borderColor = '#1D4ED8'; }}
-              onBlur={e => { e.target.style.borderColor = 'var(--card-border)'; }}
+              onBlur={e => { e.target.style.borderColor = 'var(--slate-200)'; }}
             />
           </div>
 
           {/* Visual Rich Text Editor */}
           <div style={{
-            backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
+            backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
             borderRadius: '12px', padding: '20px'
           }}>
             <label style={{
               display: 'block', fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
-              fontWeight: 700, color: 'var(--body-secondary)', marginBottom: '6px',
+              fontWeight: 700, color: '#64748B', marginBottom: '6px',
               textTransform: 'uppercase', letterSpacing: '0.04em'
             }}>
               Email Body
@@ -199,15 +191,15 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
             <button onClick={handleSave} disabled={saving} style={{
               display: 'flex', alignItems: 'center', gap: '6px',
               padding: '10px 24px', backgroundColor: saving ? '#4B5563' : 'var(--terra-600)',
-              color: 'var(--card-bg)', border: 'none', borderRadius: '8px', cursor: saving ? 'not-allowed' : 'pointer',
+              color: 'white', border: 'none', borderRadius: '8px', cursor: saving ? 'not-allowed' : 'pointer',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700, minHeight: '44px'
             }}>
               <Save size={16} /> {saving ? 'Saving…' : 'Save Template'}
             </button>
             <button onClick={handlePreview} style={{
               display: 'flex', alignItems: 'center', gap: '6px',
-              padding: '10px 24px', backgroundColor: 'var(--card-bg)',
-              color: 'var(--body)', border: '1px solid var(--card-border)',
+              padding: '10px 24px', backgroundColor: 'white',
+              color: 'var(--slate-700)', border: '1px solid var(--slate-300)',
               borderRadius: '8px', cursor: 'pointer',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, minHeight: '44px'
             }}>
@@ -215,8 +207,8 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
             </button>
             <button onClick={handleSendTest} disabled={sending} style={{
               display: 'flex', alignItems: 'center', gap: '6px',
-              padding: '10px 24px', backgroundColor: 'var(--card-bg)',
-              color: sending ? '#4B5563' : '#1D4ED8', border: `1px solid ${sending ? 'var(--card-border)' : '#93C5FD'}`,
+              padding: '10px 24px', backgroundColor: 'white',
+              color: sending ? '#4B5563' : '#1D4ED8', border: `1px solid ${sending ? '#CBD5E1' : '#93C5FD'}`,
               borderRadius: '8px', cursor: sending ? 'not-allowed' : 'pointer',
               fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, minHeight: '44px'
             }}>
@@ -229,12 +221,12 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
         <div style={{ flex: '0 0 280px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {/* Variables */}
           <div style={{
-            backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)',
+            backgroundColor: 'var(--surface)', border: '1px solid var(--slate-200)',
             borderRadius: '12px', padding: '16px'
           }}>
             <h3 style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
-              color: 'var(--body-secondary)', margin: '0 0 10px', textTransform: 'uppercase', letterSpacing: '0.04em'
+              color: '#64748B', margin: '0 0 10px', textTransform: 'uppercase', letterSpacing: '0.04em'
             }}>
               Available Variables
             </h3>
@@ -242,10 +234,10 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
               {variables.map(v => (
                 <div key={v} style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '6px 10px', backgroundColor: 'var(--page-bg-subtle)', borderRadius: '6px'
+                  padding: '6px 10px', backgroundColor: '#F8FAFC', borderRadius: '6px'
                 }}>
                   <code style={{
-                    fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--accent)', fontWeight: 600
+                    fontFamily: 'monospace', fontSize: '0.75rem', color: '#C2410C', fontWeight: 600
                   }}>
                     {'{{' + v + '}}'}
                   </code>
@@ -293,7 +285,7 @@ export default function EmailTemplateEditor({ template, onBack, onSaved }) {
           zIndex: 1100, padding: '12px 24px', borderRadius: '10px',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
           boxShadow: '0 4px 16px rgba(0,0,0,0.15)', cursor: 'pointer',
-          backgroundColor: 'var(--suc-fg)', color: 'var(--card-bg)'
+          backgroundColor: '#15803D', color: 'white'
         }} onClick={() => setToast(null)}>
           ✓ {toast.message}
         </div>

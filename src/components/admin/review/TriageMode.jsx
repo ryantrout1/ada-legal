@@ -77,78 +77,66 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
     if (!currentCase || saving) return;
     setSaving(true);
     const now = new Date().toISOString();
-    try {
-      await base44.entities.Case.update(currentCase.id, {
-        status: 'available', approved_at: now, qc_reviewer_notes: null,
-      });
-      await base44.entities.TimelineEvent.create({
-        case_id: currentCase.id, event_type: 'approved',
-        event_description: 'Your case has been approved and is now visible to attorneys in your area.',
-        actor_role: 'admin', visible_to_user: true, created_at: now,
-      });
-      setStats(s => ({ ...s, approved: s.approved + 1 }));
-      advance();
-    } catch (e) {
-      console.error('Approve failed:', e);
-    } finally {
-      setSaving(false);
-    }
+    await base44.entities.Case.update(currentCase.id, {
+      status: 'available', approved_at: now, qc_reviewer_notes: null,
+    });
+    await base44.entities.TimelineEvent.create({
+      case_id: currentCase.id, event_type: 'approved',
+      event_description: 'Your case has been approved and is now visible to attorneys in your area.',
+      actor_role: 'admin', visible_to_user: true, created_at: now,
+    });
+    setStats(s => ({ ...s, approved: s.approved + 1 }));
+    setSaving(false);
+    advance();
   }, [currentCase, saving, advance]);
 
   const handleRejectConfirm = useCallback(async ({ reason, comment }) => {
     if (!currentCase) return;
     setSaving(true);
     const now = new Date().toISOString();
+    await base44.entities.Case.update(currentCase.id, {
+      status: 'rejected', qc_rejection_reason: reason, qc_reviewer_notes: comment || null,
+    });
+    await base44.entities.TimelineEvent.create({
+      case_id: currentCase.id, event_type: 'rejected',
+      event_description: 'After review, this report did not meet the criteria for our platform.',
+      actor_role: 'admin', visible_to_user: true, created_at: now,
+    });
+    const emailReasonText = (REJECT_REASONS_EMAIL.find(r => r.value === reason)?.emailText || '') + (comment ? ' ' + comment : '');
     try {
-      await base44.entities.Case.update(currentCase.id, {
-        status: 'rejected', qc_rejection_reason: reason, qc_reviewer_notes: comment || null,
+      const rendered = await renderEmailTemplate('case_rejected', {
+        reporter_name: currentCase.contact_name,
+        business_name: currentCase.business_name,
+        rejection_reason: emailReasonText,
+        case_url: window.location.origin + '/MyCases',
+        standards_guide_url: window.location.origin + '/StandardsGuide',
+        intake_url: window.location.origin + '/Intake'
       });
-      await base44.entities.TimelineEvent.create({
-        case_id: currentCase.id, event_type: 'rejected',
-        event_description: 'After review, this report did not meet the criteria for our platform.',
-        actor_role: 'admin', visible_to_user: true, created_at: now,
-      });
-      const emailReasonText = (REJECT_REASONS_EMAIL.find(r => r.value === reason)?.emailText || '') + (comment ? ' ' + comment : '');
-      try {
-        const rendered = await renderEmailTemplate('case_rejected', {
-          reporter_name: currentCase.contact_name, business_name: currentCase.business_name,
-          rejection_reason: emailReasonText, case_url: window.location.origin + '/MyCases',
-          standards_guide_url: window.location.origin + '/StandardsGuide', intake_url: window.location.origin + '/Intake'
-        });
-        if (rendered) await base44.integrations.Core.SendEmail({ to: currentCase.contact_email, subject: rendered.subject, body: rendered.body });
-      } catch (e) { console.error('Rejection email failed:', e); }
-      setStats(s => ({ ...s, rejected: s.rejected + 1 }));
-      setRejectOpen(false);
-      advance();
-    } catch (e) {
-      console.error('Reject failed:', e);
-    } finally {
-      setSaving(false);
-    }
+      if (rendered) await base44.integrations.Core.SendEmail({ to: currentCase.contact_email, subject: rendered.subject, body: rendered.body });
+    } catch (e) { console.error('Rejection email failed:', e); }
+    setStats(s => ({ ...s, rejected: s.rejected + 1 }));
+    setSaving(false);
+    setRejectOpen(false);
+    advance();
   }, [currentCase, advance]);
 
   const handleFlagConfirm = useCallback(async ({ reason, comment }) => {
     if (!currentCase) return;
     setSaving(true);
     const now = new Date().toISOString();
-    try {
-      await base44.entities.Case.update(currentCase.id, {
-        qc_flagged: true, qc_flag_reason: reason,
-        qc_reviewer_notes: comment || currentCase.qc_reviewer_notes || null,
-      });
-      await base44.entities.TimelineEvent.create({
-        case_id: currentCase.id, event_type: 'reviewed',
-        event_description: `Flagged for review: ${reason}${comment ? '. Note: ' + comment : ''}`,
-        actor_role: 'admin', visible_to_user: false, created_at: now,
-      });
-      setStats(s => ({ ...s, flagged: s.flagged + 1 }));
-      setFlagOpen(false);
-      advance();
-    } catch (e) {
-      console.error('Flag failed:', e);
-    } finally {
-      setSaving(false);
-    }
+    await base44.entities.Case.update(currentCase.id, {
+      qc_flagged: true, qc_flag_reason: reason,
+      qc_reviewer_notes: comment || currentCase.qc_reviewer_notes || null,
+    });
+    await base44.entities.TimelineEvent.create({
+      case_id: currentCase.id, event_type: 'reviewed',
+      event_description: `Flagged for review: ${reason}${comment ? '. Note: ' + comment : ''}`,
+      actor_role: 'admin', visible_to_user: false, created_at: now,
+    });
+    setStats(s => ({ ...s, flagged: s.flagged + 1 }));
+    setSaving(false);
+    setFlagOpen(false);
+    advance();
   }, [currentCase, advance]);
 
   const handleSkip = useCallback(() => {
@@ -194,26 +182,26 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
     const totalReviewed = stats.approved + stats.rejected + stats.flagged + stats.skipped;
     return (
       <div style={{
-        position: 'fixed', inset: 0, zIndex: 10000, backgroundColor: 'var(--card-bg)',
+        position: 'fixed', inset: 0, zIndex: 10000, backgroundColor: 'white',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         padding: '24px',
       }}>
         <div style={{ textAlign: 'center', maxWidth: '480px' }}>
           <p style={{ fontSize: '3rem', margin: '0 0 16px' }}>🎉</p>
-          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 600, color: 'var(--heading)', margin: '0 0 8px' }}>
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 600, color: 'var(--slate-900)', margin: '0 0 8px' }}>
             All caught up!
           </h1>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--body-secondary)', margin: '0 0 24px' }}>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: '#475569', margin: '0 0 24px' }}>
             {totalReviewed} case{totalReviewed !== 1 ? 's' : ''} reviewed in this session.
           </p>
           <div style={{
             display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '32px',
           }}>
             {[
-              { label: 'Approved', value: stats.approved, color: 'var(--suc-fg)', bg: 'var(--suc-bg)' },
-              { label: 'Rejected', value: stats.rejected, color: 'var(--err-fg)', bg: 'var(--err-bg)' },
-              { label: 'Flagged', value: stats.flagged, color: 'var(--wrn-fg)', bg: 'var(--wrn-bg)' },
-              { label: 'Skipped', value: stats.skipped, color: 'var(--body-secondary)', bg: 'var(--card-bg-tinted)' },
+              { label: 'Approved', value: stats.approved, color: '#15803D', bg: '#DCFCE7' },
+              { label: 'Rejected', value: stats.rejected, color: '#B91C1C', bg: '#FEE2E2' },
+              { label: 'Flagged', value: stats.flagged, color: '#92400E', bg: '#FEF3C7' },
+              { label: 'Skipped', value: stats.skipped, color: '#475569', bg: '#F1F5F9' },
             ].map(s => (
               <div key={s.label} style={{
                 backgroundColor: s.bg, borderRadius: '10px', padding: '16px 12px', textAlign: 'center',
@@ -229,7 +217,7 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
             style={{
               padding: '14px 32px', fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
               fontWeight: 700, border: 'none', borderRadius: '10px', cursor: 'pointer',
-              backgroundColor: 'var(--heading)', color: 'var(--card-bg)', minHeight: '56px',
+              backgroundColor: 'var(--slate-900)', color: 'white', minHeight: '56px',
             }}
           >
             Exit Triage Mode
@@ -241,20 +229,20 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
 
   return (
     <div style={{
-      position: 'fixed', inset: 0, zIndex: 10000, backgroundColor: 'var(--card-bg)',
+      position: 'fixed', inset: 0, zIndex: 10000, backgroundColor: 'white',
       display: 'flex', flexDirection: 'column',
     }}>
       {/* Header */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '12px 20px', borderBottom: '1px solid var(--card-border)',
+        padding: '12px 20px', borderBottom: '1px solid var(--slate-200)',
         flexShrink: 0, gap: '12px', flexWrap: 'wrap',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Zap size={18} style={{ color: 'var(--wrn-fg)' }} /> Triage Mode
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700, color: 'var(--slate-900)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Zap size={18} style={{ color: '#92400E' }} /> Triage Mode
           </span>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)' }}>
+          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: '#475569' }}>
             Case {currentIdx + 1} of {total}
           </span>
         </div>
@@ -268,7 +256,7 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
             aria-valuemax={total}
             aria-label={`Progress: case ${currentIdx + 1} of ${total}`}
             style={{
-              height: '8px', backgroundColor: 'var(--card-border)', borderRadius: '100px', overflow: 'hidden',
+              height: '8px', backgroundColor: '#E2E8F0', borderRadius: '100px', overflow: 'hidden',
             }}
           >
             <div style={{
@@ -284,8 +272,8 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '6px',
             padding: '8px 16px', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-            fontWeight: 600, border: '1px solid var(--card-border)', borderRadius: '8px',
-            backgroundColor: 'var(--card-bg)', color: 'var(--slate-600)', cursor: 'pointer', minHeight: '44px',
+            fontWeight: 600, border: '1px solid var(--slate-300)', borderRadius: '8px',
+            backgroundColor: 'white', color: 'var(--slate-600)', cursor: 'pointer', minHeight: '44px',
           }}
           aria-label="Exit Triage Mode"
         >
@@ -297,7 +285,7 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
       {showTooltip && (
         <div style={{
           position: 'absolute', top: '68px', right: '20px', zIndex: 10001,
-          backgroundColor: 'var(--heading)', color: 'var(--card-bg)', borderRadius: '10px',
+          backgroundColor: 'var(--slate-900)', color: 'white', borderRadius: '10px',
           padding: '12px 16px', boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
           fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', lineHeight: 1.6,
           maxWidth: '220px',
@@ -349,7 +337,7 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
           style={{
             background: 'none', border: 'none', cursor: 'pointer',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
-            color: 'var(--body-secondary)', textDecoration: 'underline', padding: '8px 16px',
+            color: '#475569', textDecoration: 'underline', padding: '8px 16px',
             minHeight: '44px',
           }}
           aria-label="Skip this case"
@@ -361,7 +349,7 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
       {/* Action Bar */}
       <div style={{
         position: 'fixed', bottom: 0, left: 0, right: 0,
-        backgroundColor: 'var(--card-bg)', borderTop: '1px solid var(--card-border)',
+        backgroundColor: 'white', borderTop: '1px solid var(--slate-200)',
         padding: '10px 20px', display: 'flex', gap: '12px',
         justifyContent: 'center', zIndex: 10001,
       }}>
@@ -372,7 +360,7 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
           style={{
             flex: '1 1 0', maxWidth: '260px', minHeight: '56px',
             fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-            color: 'var(--card-bg)', backgroundColor: 'var(--suc-fg)', border: 'none',
+            color: 'white', backgroundColor: '#15803D', border: 'none',
             borderRadius: '10px', cursor: 'pointer', opacity: saving ? 0.6 : 1,
           }}
         >
@@ -385,7 +373,7 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
           style={{
             flex: '1 1 0', maxWidth: '260px', minHeight: '56px',
             fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-            color: 'var(--card-bg)', backgroundColor: 'var(--err-fg)', border: 'none',
+            color: 'white', backgroundColor: '#DC2626', border: 'none',
             borderRadius: '10px', cursor: 'pointer', opacity: saving ? 0.6 : 1,
           }}
         >
@@ -398,7 +386,7 @@ export default function TriageMode({ filteredCases, onExit, onCasesChanged }) {
           style={{
             flex: '1 1 0', maxWidth: '260px', minHeight: '56px',
             fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-            color: 'var(--card-bg)', backgroundColor: '#D97706', border: 'none',
+            color: 'white', backgroundColor: '#D97706', border: 'none',
             borderRadius: '10px', cursor: 'pointer', opacity: saving ? 0.6 : 1,
           }}
         >
