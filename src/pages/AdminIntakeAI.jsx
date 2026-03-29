@@ -371,18 +371,21 @@ Respond ONLY with valid JSON:
       : buildSystemPrompt(readingLevel);
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: systemWithContext,
-          messages: history,
-        }),
+      // Build conversation context as a single prompt for Base44 InvokeLLM
+      const conversationHistory = history
+        .map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
+        .join('\n\n');
+
+      const fullPrompt = `${systemWithContext}\n\n---CONVERSATION SO FAR---\n${conversationHistory}\n\n---\nNow respond as the ADA Intake Assistant. Continue the conversation naturally.`;
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: fullPrompt,
+        model: 'claude_sonnet_4_6',
+        add_context_from_internet: false,
       });
-      const data = await response.json();
-      const aiText = data.content?.[0]?.text || "I'm sorry, something went wrong. Please try again.";
+
+      const aiText = typeof response === 'string' ? response : (response?.result || response?.text || JSON.stringify(response));
+      if (!aiText) throw new Error('Empty response from AI');
 
       const extracted = parseExtract(aiText);
       const displayText = stripExtract(aiText);
