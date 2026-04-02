@@ -51,10 +51,41 @@ export default function MyCases() {
         window.location.href = createPageUrl('LawyerDashboard');
         return;
       }
-      const myCases = await base44.entities.Case.filter(
+
+      // Fetch cases by user ID (already linked)
+      const linkedCases = await base44.entities.Case.filter(
         { submitter_user_id: user.id }, '-created_date', 200
       );
-      setCases(myCases);
+
+      // Also find cases submitted with this email but no user ID (AI intake or logged-out form)
+      // and link them to this account
+      let unlinkedCases = [];
+      if (user.email) {
+        try {
+          const byEmail = await base44.entities.Case.filter(
+            { contact_email: user.email }, '-created_date', 200
+          );
+          unlinkedCases = byEmail.filter(c => !c.submitter_user_id);
+
+          // Link them silently in the background
+          if (unlinkedCases.length > 0) {
+            await Promise.all(
+              unlinkedCases.map(c =>
+                base44.entities.Case.update(c.id, { submitter_user_id: user.id }).catch(() => {})
+              )
+            );
+          }
+        } catch (e) {
+          console.error('Email-based case linking failed:', e);
+        }
+      }
+
+      // Merge — deduplicate by id in case any overlap
+      const allIds = new Set(linkedCases.map(c => c.id));
+      const merged = [...linkedCases, ...unlinkedCases.filter(c => !allIds.has(c.id))];
+      merged.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+
+      setCases(merged);
       setLoading(false);
     }
     load();

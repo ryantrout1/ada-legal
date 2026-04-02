@@ -5,6 +5,7 @@ import { Send, CheckCircle, ChevronRight, Camera } from 'lucide-react';
 import AdminPageHeader from '../components/admin/shared/AdminPageHeader';
 import { useReadingLevel } from '../components/a11y/ReadingLevelContext';
 import { useAnnounce } from '../components/a11y/LiveAnnouncer';
+import SuccessStep from '../components/intake/SuccessStep';
 
 // ─── System prompt — adapts to reading level ──────────────────────────────────
 function buildSystemPrompt(readingLevel) {
@@ -157,16 +158,26 @@ function MessageBubble({ msg }) {
 }
 
 // ─── Case summary card — WCAG AAA ─────────────────────────────────────────────
-function CaseSummaryCard({ data, onEdit, onSubmit, submitting, submitted }) {
+function CaseSummaryCard({ data, onEdit, onSubmit, submitting, submitted, caseId, currentUser }) {
   const strength = STRENGTH_CONFIG[data.case_strength] || STRENGTH_CONFIG.UNCLEAR;
   const headingId = React.useId();
 
+  // Full success screen — same experience as form intake
   if (submitted) {
+    const caseData = {
+      contact_name: data.contact_name,
+      contact_email: data.contact_email,
+      violation_type: data.violation_type,
+      business_name: data.business_name,
+      incident_date: data.incident_date,
+    };
     return (
-      <div role="status" aria-live="polite" style={{ padding: '24px', borderRadius: 12, background: 'var(--suc-bg)', border: '1px solid var(--suc-bd)', textAlign: 'center' }}>
-        <CheckCircle size={40} aria-hidden="true" style={{ color: 'var(--suc-fg)', marginBottom: 12 }} />
-        <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--suc-fg)', fontFamily: 'Fraunces, serif', marginBottom: 6 }}>Case Submitted</div>
-        <div style={{ fontSize: 13, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif', opacity: 0.85 }}>This case is now in the review queue.</div>
+      <div style={{ padding: '24px', borderRadius: 12, background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
+        <SuccessStep
+          caseData={caseData}
+          caseId={caseId}
+          isLoggedIn={!!currentUser}
+        />
       </div>
     );
   }
@@ -271,6 +282,8 @@ export default function AdminIntakeAI() {
   const [analyzingPhoto, setAnalyzingPhoto] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const [statusMsg, setStatusMsg] = useState('');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [caseId, setCaseId] = useState(null);
 
   const bottomRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -283,6 +296,7 @@ export default function AdminIntakeAI() {
       try {
         const user = await base44.auth.me();
         if (!user || user.role !== 'admin') { window.location.href = createPageUrl('Home'); return; }
+        setCurrentUser(user);
       } catch { window.location.href = createPageUrl('Home'); return; }
       setPageLoading(false);
     }
@@ -437,7 +451,11 @@ Respond ONLY with valid JSON:
         status: 'submitted',
         submitted_at: now,
       };
+      // Link to account if user is logged in
+      if (currentUser?.id) casePayload.submitter_user_id = currentUser.id;
+
       const newCase = await base44.entities.Case.create(casePayload);
+      setCaseId(newCase.id);
       await base44.entities.TimelineEvent.create({
         case_id: newCase.id,
         event_type: 'submitted',
@@ -608,6 +626,8 @@ Respond ONLY with valid JSON:
                 onSubmit={handleSubmit}
                 submitting={submitting}
                 submitted={submitted}
+                caseId={caseId}
+                currentUser={currentUser}
               />
             ) : (
               <div role="status" style={{ padding: '20px', borderRadius: 12, background: 'var(--card-bg)', border: '1px solid var(--card-border)', textAlign: 'center' }}>
