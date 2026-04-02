@@ -57,7 +57,6 @@ export default function Home() {
       <KnowYourRightsSection />
       <CommitmentSection />
       <OurStorySection />
-      <ForAttorneysNew />
       <FinalCTANew />
     </div>
   );
