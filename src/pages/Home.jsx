@@ -53,7 +53,6 @@ export default function Home() {
       <LandingStyles />
       <LandingHeroNew />
       <StoriesSection />
-      <CommunityVoices />
       <HowItWorksNew />
       <KnowYourRightsSection />
       <CommitmentSection />
