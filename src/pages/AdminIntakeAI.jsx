@@ -158,7 +158,7 @@ function MessageBubble({ msg }) {
 }
 
 // ─── Case summary card — WCAG AAA ─────────────────────────────────────────────
-function CaseSummaryCard({ data, onEdit, onSubmit, submitting, submitted, caseId, currentUser }) {
+function CaseSummaryCard({ data, photoAnalysis, onEdit, onSubmit, submitting, submitted, caseId, currentUser }) {
   const strength = STRENGTH_CONFIG[data.case_strength] || STRENGTH_CONFIG.UNCLEAR;
   const headingId = React.useId();
 
@@ -218,6 +218,26 @@ function CaseSummaryCard({ data, onEdit, onSubmit, submitting, submitted, caseId
             <strong>Case assessment: </strong>{data.case_strength_reason}
           </div>
         )}
+
+        {/* Photo analysis summary — shown if a photo was analyzed */}
+        {photoAnalysis && (() => {
+          const RISK_COLORS = {
+            HIGH:   { bg: '#FEF2F2', border: '#FECACA', text: '#991B1B' },
+            MEDIUM: { bg: '#FFFBEB', border: '#FDE68A', text: '#92400E' },
+            LOW:    { bg: '#F0FDF4', border: '#BBF7D0', text: '#166534' },
+            NONE:   { bg: '#F8FAFC', border: '#E2E8F0', text: '#64748B' },
+          };
+          const concerns = (photoAnalysis.photos || []).flatMap(p => p.concerns || []);
+          const highC = concerns.filter(c => c.severity === 'HIGH').length;
+          const rc = RISK_COLORS[photoAnalysis.overallRisk] || RISK_COLORS.NONE;
+          return (
+            <div role="note" aria-label="Photo analysis summary" style={{ padding: '8px 10px', borderRadius: 6, background: rc.bg, border: '1px solid ' + rc.border, fontSize: 12, color: rc.text, fontFamily: 'Manrope, sans-serif', lineHeight: 1.5 }}>
+              <strong>📸 Photo analysis: </strong>
+              {photoAnalysis.overallRisk} risk · {concerns.length} concern{concerns.length !== 1 ? 's' : ''}
+              {highC > 0 && ` (${highC} high severity)`}
+            </div>
+          );
+        })()}
 
         <div style={{ borderTop: '1px solid var(--card-border)', paddingTop: 10, marginTop: 2 }}>
           <dt style={{ fontSize: 12, fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Contact</dt>
@@ -501,6 +521,16 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
     announce('Submitting case. Please wait.', 'polite');
     const now = new Date().toISOString();
     try {
+      // photo_analysis: read from photoAnalysis state directly to avoid race condition where
+      // extractedData was set before the upload finished. Falls back to the copy on extractedData.
+      const resolvedPhotoAnalysis = photoAnalysis || extractedData.photo_analysis || null;
+
+      // violation_subtype: prefer what the conversation AI extracted; fall back to what
+      // the photo analysis detected (the photo prompt returns this at the top level).
+      const resolvedViolationSubtype = extractedData.violation_subtype
+        || resolvedPhotoAnalysis?.violation_subtype
+        || '';
+
       const casePayload = {
         violation_type: extractedData.violation_type || 'physical_space',
         business_name: extractedData.business_name || 'Unknown',
@@ -508,7 +538,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
         city: extractedData.city || '',
         state: extractedData.state || '',
         street_address: extractedData.street_address || '',
-        violation_subtype: extractedData.violation_subtype || '',
+        violation_subtype: resolvedViolationSubtype,
         incident_date: extractedData.incident_date || '',
         visited_before: extractedData.visited_before || '',
         narrative: extractedData.narrative || '',
@@ -517,7 +547,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
         contact_phone: extractedData.contact_phone || '',
         contact_preference: extractedData.contact_preference || 'no_preference',
         photos: extractedData.photo_url ? [extractedData.photo_url] : [],
-        photo_analysis: extractedData.photo_analysis ? JSON.stringify(extractedData.photo_analysis) : null,
+        photo_analysis: resolvedPhotoAnalysis ? JSON.stringify(resolvedPhotoAnalysis) : null,
         case_strength: extractedData.case_strength || null,
         intake_source: 'ai_intake',
         status: 'submitted',
@@ -528,10 +558,19 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
 
       const newCase = await base44.entities.Case.create(casePayload);
       setCaseId(newCase.id);
+      const allConcerns = resolvedPhotoAnalysis
+        ? (resolvedPhotoAnalysis.photos || []).flatMap(p => p.concerns || [])
+        : [];
+      const highCount = allConcerns.filter(c => c.severity === 'HIGH').length;
+      const medCount  = allConcerns.filter(c => c.severity === 'MEDIUM').length;
+      const photoSummary = resolvedPhotoAnalysis
+        ? ` Photo analysis: ${resolvedPhotoAnalysis.overallRisk} risk, ${allConcerns.length} concern${allConcerns.length !== 1 ? 's' : ''} (${highCount} high, ${medCount} medium).`
+        : '';
+
       await base44.entities.TimelineEvent.create({
         case_id: newCase.id,
         event_type: 'submitted',
-        event_description: 'Case submitted via AI-powered intake. AI case strength: ' + (extractedData.case_strength || 'N/A'),
+        event_description: `Case submitted via AI-powered intake. AI case strength: ${extractedData.case_strength || 'N/A'}.${photoSummary}`,
         actor_role: 'system',
         visible_to_user: true,
         created_at: now,
@@ -694,6 +733,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
             {extractedData ? (
               <CaseSummaryCard
                 data={extractedData}
+                photoAnalysis={photoAnalysis}
                 onEdit={handleEditInForm}
                 onSubmit={handleSubmit}
                 submitting={submitting}

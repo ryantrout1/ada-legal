@@ -1,5 +1,6 @@
 import React from 'react';
 import { Building2, Globe, User, Mail, Phone, Clock, Flag } from 'lucide-react';
+import AiPhotoAnalysisPanel from '../../shared/AiPhotoAnalysisPanel';
 
 function formatDate(d) {
   if (!d) return '—';
@@ -196,6 +197,9 @@ export default function TriageCaseDetail({ caseData, titleRef }) {
           </p>
         </div>
       </div>
+
+      {/* AI Photo Analysis — visible at QC/triage stage */}
+      <AiPhotoAnalysisPanel caseData={c} />
 
       {/* Documentation Score */}
       <DocScoreDots caseData={c} />
