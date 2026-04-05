@@ -603,12 +603,12 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
   );
 
   return (
-    <div style={{ backgroundColor: 'var(--page-bg)', minHeight: 'calc(100vh - 200px)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
+    <div style={{ backgroundColor: 'var(--page-bg)', height: '100vh', display: 'flex', flexDirection: 'column', padding: 'clamp(0.75rem, 3vw, 1.5rem)', paddingBottom: 0, overflow: 'hidden' }}>
 
       {/* Live status region */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">{statusMsg}</div>
 
-      <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ maxWidth: 1100, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16, flex: 1, minHeight: 0 }}>
 
         <AdminPageHeader
           title="AI Intake"
@@ -620,17 +620,17 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
         />
 
         {/* Info banner — reading level shown here for admin demo context only */}
-        <div role="note" style={{ padding: '12px 16px', borderRadius: 8, background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', fontFamily: 'Manrope, sans-serif', fontSize: 13, color: 'var(--inf-fg)', lineHeight: 1.6, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+        <div role="note" style={{ padding: '12px 16px', borderRadius: 8, background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', fontFamily: 'Manrope, sans-serif', fontSize: 13, color: 'var(--inf-fg)', lineHeight: 1.6, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', flexShrink: 0 }}>
           <span><strong>AI-Powered Intake — Admin Demo.</strong> Conversational intake using Claude. Title I and Title II violations are automatically routed to the correct external channels. Title III (private business) violations proceed to case submission.</span>
           <span title="Change reading level via the eye icon in the navigation" style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid var(--inf-bd)', background: 'var(--card-bg)', color: 'var(--inf-fg)', whiteSpace: 'nowrap', flexShrink: 0 }}>
             Reading: {readingLevelLabel}
           </span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'start' }} className="intake-ai-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'start', flex: 1, minHeight: 0, paddingBottom: 'clamp(0.75rem, 3vw, 1.5rem)' }} className="intake-ai-grid">
 
           {/* ── Chat panel ── */}
-          <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', height: 'calc(100vh - 260px)', minHeight: 500 }}>
+          <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', height: '100%', minHeight: 400 }}>
 
             {/* Header */}
             <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -790,7 +790,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
         *:focus-visible { outline: 3px solid var(--accent-light) !important; outline-offset: 2px !important; }
         *:focus:not(:focus-visible) { outline: none !important; }
         @media (max-width: 768px) {
-          .intake-ai-grid { grid-template-columns: 1fr !important; }
+          .intake-ai-grid { grid-template-columns: 1fr !important; height: auto !important; }
         }
       `}</style>
     </div>
