@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, Microscope } from 'lucide-react';
+import { CheckCircle, ChevronDown, ChevronUp, Microscope } from 'lucide-react';
 
 const SEV_CONFIG = {
   HIGH:   { bg: '#FEF2F2', border: '#FECACA', text: '#991B1B', badge: '#FCA5A5', label: 'High' },
@@ -20,6 +20,17 @@ const CONF_CONFIG = {
   LOW:    { text: '#92400E', bg: '#FEF3C7', label: '⚠ Estimated — verify on-site' },
 };
 
+function formatConcernCount(concerns) {
+  const highCount = concerns.filter(c => c.severity === 'HIGH').length;
+  const medCount  = concerns.filter(c => c.severity === 'MEDIUM').length;
+  const lowCount  = concerns.length - highCount - medCount;
+  const parts = [];
+  if (highCount > 0) parts.push(`${highCount} high`);
+  if (medCount  > 0) parts.push(`${medCount} medium`);
+  if (lowCount  > 0) parts.push(`${lowCount} low`);
+  return `${parts.join(', ')} severity issue${concerns.length !== 1 ? 's' : ''} found`;
+}
+
 function SeverityBadge({ severity }) {
   const c = SEV_CONFIG[severity] || SEV_CONFIG.LOW;
   return (
@@ -33,7 +44,7 @@ function SeverityBadge({ severity }) {
 
 function ConcernCard({ concern }) {
   const [open, setOpen] = useState(false);
-  const sev = SEV_CONFIG[concern.severity] || SEV_CONFIG.LOW;
+  const sev  = SEV_CONFIG[concern.severity] || SEV_CONFIG.LOW;
   const conf = CONF_CONFIG[concern.confidence] || CONF_CONFIG.MEDIUM;
 
   return (
@@ -44,8 +55,7 @@ function ConcernCard({ concern }) {
         aria-expanded={open}
         style={{
           width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          gap: 8, padding: '10px 14px', background: 'none', border: 'none', cursor: 'pointer',
-          textAlign: 'left'
+          gap: 8, padding: '10px 14px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
@@ -54,7 +64,10 @@ function ConcernCard({ concern }) {
             {concern.title}
           </span>
         </div>
-        {open ? <ChevronUp size={14} style={{ color: sev.text, flexShrink: 0 }} /> : <ChevronDown size={14} style={{ color: sev.text, flexShrink: 0 }} />}
+        {open
+          ? <ChevronUp   size={14} style={{ color: sev.text, flexShrink: 0 }} aria-hidden="true" />
+          : <ChevronDown size={14} style={{ color: sev.text, flexShrink: 0 }} aria-hidden="true" />
+        }
       </button>
 
       {open && (
@@ -103,19 +116,21 @@ export default function AiPhotoAnalysisPanel({ caseData }) {
   if (!analysis) return null;
 
   const risk = RISK_CONFIG[analysis.overallRisk] || RISK_CONFIG.NONE;
-  const allConcerns = (analysis.photos || []).flatMap((p, pi) =>
-    (p.concerns || []).map(c => ({ ...c, photoIndex: pi }))
-  ).sort((a, b) => {
-    const order = { HIGH: 0, MEDIUM: 1, LOW: 2 };
-    return (order[a.severity] ?? 2) - (order[b.severity] ?? 2);
-  });
+
+  // Flatten concerns across all photos, sorted HIGH -> MEDIUM -> LOW
+  const allConcerns = (analysis.photos || [])
+    .flatMap((p, pi) => (p.concerns || []).map(c => ({ ...c, photoIndex: pi })))
+    .sort((a, b) => {
+      const order = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+      return (order[a.severity] ?? 2) - (order[b.severity] ?? 2);
+    });
+
   const allPositive = (analysis.photos || []).flatMap(p => p.positiveFindings || []);
-  const highCount = allConcerns.filter(c => c.severity === 'HIGH').length;
-  const medCount = allConcerns.filter(c => c.severity === 'MEDIUM').length;
 
   return (
     <div style={{ marginTop: 16 }}>
-      {/* Section header — clickable to collapse */}
+
+      {/* Collapsible header */}
       <button
         type="button"
         onClick={() => setExpanded(o => !o)}
@@ -131,33 +146,39 @@ export default function AiPhotoAnalysisPanel({ caseData }) {
             AI Photo Analysis
           </span>
         </div>
-        {expanded ? <ChevronUp size={14} style={{ color: 'var(--body-secondary)' }} /> : <ChevronDown size={14} style={{ color: 'var(--body-secondary)' }} />}
+        {expanded
+          ? <ChevronUp   size={14} style={{ color: 'var(--body-secondary)' }} aria-hidden="true" />
+          : <ChevronDown size={14} style={{ color: 'var(--body-secondary)' }} aria-hidden="true" />
+        }
       </button>
 
       {expanded && (
         <div style={{ borderRadius: 10, border: `1px solid ${risk.border}`, background: risk.bg, padding: 14 }}>
 
-          {/* Risk pill + summary */}
+          {/* Risk pill + concern count */}
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
             <span style={{
               flexShrink: 0, padding: '3px 10px', borderRadius: 20,
               fontFamily: 'Manrope, sans-serif', fontSize: 11, fontWeight: 800,
               background: risk.border, color: risk.text, textTransform: 'uppercase', letterSpacing: '0.05em'
-            }}>{risk.label}</span>
+            }}>
+              {risk.label}
+            </span>
             {allConcerns.length > 0 && (
               <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: 12, color: risk.text, lineHeight: 1.4 }}>
-                {highCount > 0 && `${highCount} high`}{highCount > 0 && medCount > 0 && ', '}{medCount > 0 && `${medCount} medium`}{(highCount + medCount) < allConcerns.length && `${highCount + medCount > 0 ? ', ' : ''}${allConcerns.length - highCount - medCount} low`} severity issue{allConcerns.length !== 1 ? 's' : ''} found
+                {formatConcernCount(allConcerns)}
               </span>
             )}
           </div>
 
+          {/* Summary */}
           {analysis.summary && (
             <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: 13, color: risk.text, margin: '0 0 12px', lineHeight: 1.6 }}>
               {analysis.summary}
             </p>
           )}
 
-          {/* Concerns */}
+          {/* Concern cards */}
           {allConcerns.length > 0 && (
             <div>
               {allConcerns.map((concern, i) => (
@@ -166,7 +187,7 @@ export default function AiPhotoAnalysisPanel({ caseData }) {
             </div>
           )}
 
-          {/* Positive findings */}
+          {/* Compliant features */}
           {allPositive.length > 0 && (
             <div style={{ marginTop: 10 }}>
               <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, color: '#166534', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 6px' }}>
@@ -181,9 +202,11 @@ export default function AiPhotoAnalysisPanel({ caseData }) {
             </div>
           )}
 
+          {/* Disclaimer */}
           <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: 11, color: risk.text, margin: '10px 0 0', opacity: 0.7, lineHeight: 1.4 }}>
-            This is an AI-generated analysis for reference only — not a professional inspection. Verify findings on-site.
+            AI-generated analysis for reference only — not a professional inspection. Verify all findings on-site.
           </p>
+
         </div>
       )}
     </div>
