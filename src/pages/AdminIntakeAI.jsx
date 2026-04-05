@@ -328,14 +328,80 @@ export default function AdminIntakeAI() {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       setPhotoUrl(file_url);
 
-      const ADA_PHOTO_PROMPT = `You are an ADA accessibility analyst. Analyze this photo of a location and identify potential ADA violations.
-Respond ONLY with valid JSON:
+      const ADA_PHOTO_PROMPT = `You are a senior ADA accessibility compliance analyst with deep expertise in the 2010 ADA Standards for Accessible Design and the ADA Accessibility Guidelines (ADAAG). Your role is to examine this photo of a physical location and identify ALL potential ADA compliance concerns — be thorough and specific.
+
+Respond ONLY with valid JSON in exactly this shape — no markdown, no preamble:
 {
-  "summary": "2-3 sentence assessment",
-  "overallRisk": "HIGH|MEDIUM|LOW|NONE",
-  "violations": ["plain language description of each violation found"],
-  "violation_subtype": "Path of Travel|Parking|Entrance/Exit|Restroom|Service Animal Denial|Website/App|Other"
-}`;
+  "summary": "2-3 sentence overall assessment",
+  "overallRisk": "HIGH" | "MEDIUM" | "LOW" | "NONE",
+  "violation_subtype": "Path of Travel|Parking|Entrance/Exit|Restroom|Service Animal Denial|Website/App|Other",
+  "photos": [
+    {
+      "photoIndex": 0,
+      "description": "What you see in this photo — be specific about the space type and features visible",
+      "concerns": [
+        {
+          "title": "Short concern title",
+          "detail": "Specific detail with measurement estimates where visible and ADA standard section (e.g. §404.2.3)",
+          "severity": "HIGH" | "MEDIUM" | "LOW",
+          "confidence": "HIGH" | "MEDIUM" | "LOW",
+          "remediation": "Concrete recommended fix with target spec (e.g. 'Widen doorway to minimum 32 inches clear')",
+          "bbox": { "x": 0.0, "y": 0.0, "w": 1.0, "h": 1.0 }
+        }
+      ],
+      "positiveFindings": ["Specific compliant feature observed — cite the standard"]
+    }
+  ]
+}
+
+COMPREHENSIVE STANDARDS TO CHECK:
+
+ACCESSIBLE ROUTES & PATHWAYS (Chapter 4):
+- Pathway min width 36" continuous, 60" passing space every 200ft (§403.5)
+- Running slope max 1:20 (5%), cross slope max 1:48 (§403.3)
+- Surface must be firm, stable, slip-resistant — note cracks, gaps, lips, gravel (§402.2)
+- Protruding objects max 4" protrusion above 27" (§307)
+- Changes in level: max 1/4" vertical, over 1/2" requires ramp (§303)
+
+RAMPS (§405):
+- Max slope 1:12 (8.33%), max cross slope 1:48
+- Min width 36" between handrails, landings min 60"×60"
+- Handrails required both sides if rise >6" (§505): 34"–38" height
+
+DOORS & DOORWAYS (§404):
+- Min 32" clear width when door open 90° (§404.2.3)
+- Max threshold 1/2" (§404.2.5)
+- Hardware: lever/loop/push — no tight grasping/twisting (§404.2.7)
+
+PARKING (§502):
+- Standard accessible space: min 96" wide + 60" access aisle
+- Van-accessible: min 132" wide OR 96" + 96" aisle
+- Max slope 1:48, ISA required, signage min 60" AFF
+
+RESTROOMS (§603–§609):
+- Clear floor space 60"×60" turning radius
+- Grab bars: rear wall 36" min, side wall 42" min, 33"–36" AFF
+- Toilet centerline: 16"–18" from side wall, seat height 17"–19" AFF
+
+COUNTERS & SERVICE AREAS (§904):
+- Transaction counter max 36" AFF, min 36" wide section
+
+STAIRS (§504):
+- Handrails both sides: 34"–38" AFF, 12" horizontal extensions
+- Riser height 4"–7", tread depth min 11"
+
+SIGNAGE (§703):
+- Tactile/Braille required at permanent rooms, 60" AFF centerline
+- Visual characters: min 5/8" uppercase height, non-glare finish
+
+REACH RANGES & OPERABLE PARTS (§308–§309):
+- Forward reach: 15"–48" AFF; max 5 lbf activation force
+
+GROUND & FLOOR SURFACES:
+- Carpet: max 1/2" pile, firmly secured
+- Grates: max 1/2" opening perpendicular to travel direction
+
+Check ALL applicable categories. If you cannot fully assess a standard from the photo, note it as a potential concern with "cannot confirm from photo — recommend on-site measurement." This analysis is informational only, not a professional inspection.`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: ADA_PHOTO_PROMPT,
@@ -348,8 +414,12 @@ Respond ONLY with valid JSON:
       const analysis = JSON.parse(rawText.replace(/```json|```/g, '').trim());
       setPhotoAnalysis(analysis);
 
-      const violationList = analysis.violations?.length > 0
-        ? `I can see ${analysis.violations.length} potential issue${analysis.violations.length !== 1 ? 's' : ''} in your photo:\n• ${analysis.violations.join('\n• ')}\n\nThis looks like a ${analysis.overallRisk?.toLowerCase()} risk situation.`
+      // Build a plain-language summary for the conversation
+      const allConcerns = (analysis.photos || []).flatMap(p => p.concerns || []);
+      const highCount = allConcerns.filter(c => c.severity === 'HIGH').length;
+      const totalCount = allConcerns.length;
+      const violationList = totalCount > 0
+        ? `I can see ${totalCount} potential issue${totalCount !== 1 ? 's' : ''} in your photo${highCount > 0 ? `, including ${highCount} serious concern${highCount !== 1 ? 's' : ''}` : ''}:\n• ${allConcerns.slice(0, 3).map(c => c.title).join('\n• ')}${totalCount > 3 ? `\n• …and ${totalCount - 3} more` : ''}\n\nThis looks like a ${(analysis.overallRisk || 'LOW').toLowerCase()} risk situation.`
         : "I analyzed your photo but couldn't identify specific violations from the image. Your description will be the main evidence.";
 
       const aiMsg = violationList + "\n\nCan you tell me the name of this business and where it's located?";
@@ -381,7 +451,7 @@ Respond ONLY with valid JSON:
     const history = newMessages.filter(m => m.content).map(m => ({ role: m.role, content: m.content }));
 
     const systemWithContext = photoAnalysis
-      ? buildSystemPrompt(readingLevel) + `\n\nPHOTO ANALYSIS ALREADY DONE: The user uploaded a photo. Analysis found: ${JSON.stringify(photoAnalysis)}. Use this to inform your questions.`
+      ? buildSystemPrompt(readingLevel) + `\n\nPHOTO ANALYSIS ALREADY DONE: The user uploaded a photo. Overall risk: ${photoAnalysis.overallRisk}. Summary: ${photoAnalysis.summary}. Top concerns: ${(photoAnalysis.photos || []).flatMap(p => p.concerns || []).slice(0, 5).map(c => c.title + ' (' + c.severity + ')').join(', ')}. Use this to inform your questions.`
       : buildSystemPrompt(readingLevel);
 
     try {
@@ -447,6 +517,8 @@ Respond ONLY with valid JSON:
         contact_phone: extractedData.contact_phone || '',
         contact_preference: extractedData.contact_preference || 'no_preference',
         photos: extractedData.photo_url ? [extractedData.photo_url] : [],
+        photo_analysis: extractedData.photo_analysis ? JSON.stringify(extractedData.photo_analysis) : null,
+        case_strength: extractedData.case_strength || null,
         intake_source: 'ai_intake',
         status: 'submitted',
         submitted_at: now,

@@ -5,6 +5,7 @@ import { User, Mail, Phone, ArrowRight } from 'lucide-react';
 import AdminCaseTimeline from './AdminCaseTimeline';
 import PhotoGallery from '../../shared/PhotoGallery';
 import SourceBadge from '../../shared/SourceBadge';
+import AiPhotoAnalysisPanel from '../../shared/AiPhotoAnalysisPanel';
 
 function formatDate(d) {
   if (!d) return '—';
@@ -145,6 +146,13 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
         </div>
       )}
 
+      {/* AI Photo Analysis */}
+      {c.photo_analysis && (
+        <div style={{ marginBottom: '16px' }}>
+          <AiPhotoAnalysisPanel caseData={c} />
+        </div>
+      )}
+
       {/* Claimant Contact Card */}
       <div style={{
         backgroundColor: 'var(--slate-50)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
@@ -183,7 +191,7 @@ export default function AdminCaseExpanded({ caseData, lawyer, onForceClose, onRe
         <MetaItem label="Assigned to" value={lawyer ? lawyer.full_name : 'Unassigned'} />
         {c.qc_reviewer_notes && <MetaItem label="QC Notes" value={c.qc_reviewer_notes} />}
         {c.admin_notes && <MetaItem label="Admin Notes" value={c.admin_notes} />}
-        {c.intake_source && <MetaItem label="Source" value={c.intake_source === 'pathway' ? 'Rights Pathway' : 'Direct Report'} />}
+        {c.intake_source && <MetaItem label="Source" value={c.intake_source === 'pathway' ? 'Rights Pathway' : c.intake_source === 'ai_intake' ? 'AI Intake' : 'Direct Report'} />}
       </div>
 
       {/* Doc Score */}

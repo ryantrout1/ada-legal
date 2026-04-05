@@ -6,6 +6,7 @@ import { calculateDocScore, getFreshness } from './docScore';
 import PhotoGallery from '../shared/PhotoGallery';
 import SourceBadge from '../shared/SourceBadge';
 import ClusterIndicator from './ClusterIndicator';
+import AiPhotoAnalysisPanel from '../shared/AiPhotoAnalysisPanel';
 
 function formatDate(dateStr) {
   if (!dateStr) return '—';
@@ -180,6 +181,9 @@ export default function CaseDetailModal({ caseData, onClose, onInitiate }) {
               <PhotoGallery photos={c.photos} />
             </div>
           )}
+
+          {/* AI Photo Analysis */}
+          <AiPhotoAnalysisPanel caseData={c} />
 
           {/* Section 3 — Documentation Score (inline) */}
           <div>
