@@ -508,9 +508,12 @@ Respond ONLY with valid JSON:
           }
         />
 
-        {/* Info banner */}
-        <div role="note" style={{ padding: '12px 16px', borderRadius: 8, background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', fontFamily: 'Manrope, sans-serif', fontSize: 13, color: 'var(--inf-fg)', lineHeight: 1.6 }}>
-          <strong>AI-Powered Intake — Admin Demo.</strong> Conversational intake using Claude. Title I and Title II violations are automatically routed to the correct external channels. Title III (private business) violations proceed to case submission.
+        {/* Info banner — reading level shown here for admin demo context only */}
+        <div role="note" style={{ padding: '12px 16px', borderRadius: 8, background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', fontFamily: 'Manrope, sans-serif', fontSize: 13, color: 'var(--inf-fg)', lineHeight: 1.6, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+          <span><strong>AI-Powered Intake — Admin Demo.</strong> Conversational intake using Claude. Title I and Title II violations are automatically routed to the correct external channels. Title III (private business) violations proceed to case submission.</span>
+          <span title="Change reading level via the eye icon in the navigation" style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid var(--inf-bd)', background: 'var(--card-bg)', color: 'var(--inf-fg)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+            Reading: {readingLevelLabel}
+          </span>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'start' }} className="intake-ai-grid">
@@ -533,9 +536,6 @@ Respond ONLY with valid JSON:
                     <Camera size={14} aria-hidden="true" /> Photo attached
                   </div>
                 )}
-                <div aria-label={`Reading level: ${readingLevelLabel}`} title={`Current reading level: ${readingLevelLabel}. Change via the eye icon in the navigation.`} style={{ fontSize: 11, fontWeight: 700, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif', padding: '3px 8px', borderRadius: 20, border: '1px solid var(--card-border)', background: 'var(--page-bg-subtle)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  {readingLevelLabel}
-                </div>
               </div>
             </div>
 
