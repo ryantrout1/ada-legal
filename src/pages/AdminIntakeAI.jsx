@@ -213,6 +213,22 @@ function CaseSummaryCard({ data, photoAnalysis, onEdit, onSubmit, submitting, su
           </div>
         )}
 
+        {/* Evidence photo thumbnail */}
+        {data.photo_url && (
+          <div>
+            <dt style={{ fontSize: 13, fontFamily: 'Manrope, sans-serif', color: 'var(--body-secondary)', fontWeight: 600, marginBottom: 6 }}>Evidence Photo</dt>
+            <dd style={{ margin: 0 }}>
+              <a href={data.photo_url} target="_blank" rel="noopener noreferrer" aria-label="View full size evidence photo">
+                <img
+                  src={data.photo_url}
+                  alt="Evidence photo of the accessibility barrier"
+                  style={{ width: '100%', maxHeight: 180, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--card-border)', display: 'block' }}
+                />
+              </a>
+            </dd>
+          </div>
+        )}
+
         {data.case_strength_reason && (
           <div role="note" aria-label="Case assessment" style={{ padding: '8px 10px', borderRadius: 6, background: strength.bg, border: '1px solid ' + strength.border, fontSize: 12, color: strength.color, fontFamily: 'Manrope, sans-serif', lineHeight: 1.5 }}>
             <strong>Case assessment: </strong>{data.case_strength_reason}
