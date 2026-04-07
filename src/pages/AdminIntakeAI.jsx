@@ -648,7 +648,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'stretch' }} className="intake-ai-grid">
 
           {/* ── Chat panel ── */}
-          <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', height: 'calc(100vh - 400px)', minHeight: 420 }}>
+          <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', height: '520px' }}>
 
             {/* Header */}
             <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -787,7 +787,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
           </section>
 
           {/* ── Right panel ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, height: 'calc(100vh - 400px)', minHeight: 420, overflowY: 'auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, height: '520px', overflowY: 'auto' }}>
             {extractedData ? (
               <CaseSummaryCard
                 data={extractedData}
