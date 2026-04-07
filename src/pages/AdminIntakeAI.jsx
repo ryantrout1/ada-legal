@@ -621,12 +621,12 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
   );
 
   return (
-    <div style={{ backgroundColor: 'var(--page-bg)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
+    <div style={{ backgroundColor: 'var(--page-bg)', padding: 'clamp(0.75rem, 3vw, 1.5rem)', height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
 
       {/* Live status region */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">{statusMsg}</div>
 
-      <div style={{ maxWidth: 1100, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ maxWidth: 1100, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16, flex: 1, minHeight: 0 }}>
 
         <AdminPageHeader
           title="AI Intake"
@@ -645,10 +645,10 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
           </span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'stretch' }} className="intake-ai-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'stretch', flex: 1, minHeight: 0 }} className="intake-ai-grid">
 
           {/* ── Chat panel ── */}
-          <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', height: '520px' }}>
+          <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
 
             {/* Header */}
             <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -698,7 +698,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
 
             {/* Input area */}
             {!submitted && (
-              <div style={{ padding: '12px 16px 16px', borderTop: '3px solid var(--accent)' }}>
+              <div style={{ padding: '12px 16px 16px', borderTop: '3px solid var(--accent)', flexShrink: 0 }}>
                 <p id={sendHintId} className="sr-only">Press Enter to send your message. Press Shift+Enter for a new line.</p>
 
                 {/* Visible label */}
@@ -787,7 +787,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
           </section>
 
           {/* ── Right panel ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, height: '520px', overflowY: 'auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1, minHeight: 0, overflowY: 'auto' }}>
             {extractedData ? (
               <CaseSummaryCard
                 data={extractedData}
