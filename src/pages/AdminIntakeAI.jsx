@@ -696,49 +696,89 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
 
             {/* Input area */}
             {!submitted && (
-              <div style={{ padding: '12px 16px', borderTop: '1px solid var(--card-border)' }}>
+              <div style={{ padding: '12px 16px 16px', borderTop: '3px solid var(--accent)' }}>
                 <p id={sendHintId} className="sr-only">Press Enter to send your message. Press Shift+Enter for a new line.</p>
+
+                {/* Visible label */}
+                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 8px' }}>
+                  Your reply
+                </p>
+
                 <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={!!photoFile || analyzingPhoto}
-                    aria-label={photoFile ? 'Photo already attached to this case' : 'Attach a photo of the barrier'}
-                    aria-disabled={!!photoFile || analyzingPhoto}
-                    style={{ width: 44, height: 44, borderRadius: 10, border: '1px solid var(--card-border)', background: photoFile ? 'var(--suc-bg)' : 'var(--page-bg-subtle)', color: photoFile ? 'var(--suc-fg)' : 'var(--body-secondary)', cursor: photoFile ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
-                  >
-                    {photoFile ? <CheckCircle size={18} aria-hidden="true" /> : <Camera size={18} aria-hidden="true" />}
-                  </button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    aria-label="Choose a photo file to attach"
-                    style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}
-                    onChange={e => { if (e.target.files?.[0]) handlePhotoUpload(e.target.files[0]); }}
-                  />
                   <textarea
                     ref={inputRef}
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
-                    placeholder="Tell me what happened…"
-                    rows={1}
-                    aria-label="Your message to the intake assistant"
+                    placeholder="Type your answer here…"
+                    rows={2}
+                    aria-label="Your reply to the intake assistant"
                     aria-describedby={sendHintId}
                     aria-required="true"
-                    style={{ flex: 1, resize: 'none', border: '1px solid var(--card-border)', borderRadius: 10, padding: '10px 14px', fontFamily: 'Manrope, sans-serif', fontSize: 14, background: 'var(--page-bg-subtle)', color: 'var(--body)', outline: 'none', lineHeight: 1.5, minHeight: 44, maxHeight: 120 }}
+                    style={{ flex: 1, resize: 'none', border: '2px solid var(--card-border)', borderRadius: 10, padding: '10px 14px', fontFamily: 'Manrope, sans-serif', fontSize: 15, background: 'var(--page-bg-subtle)', color: 'var(--body)', outline: 'none', lineHeight: 1.6, minHeight: 56, maxHeight: 120 }}
+                    onFocus={e => { e.target.style.borderColor = 'var(--accent)'; }}
+                    onBlur={e => { e.target.style.borderColor = 'var(--card-border)'; }}
                   />
+                </div>
+
+                {/* Action row — labeled buttons */}
+                <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center', justifyContent: 'space-between' }}>
+
+                  {/* Photo button — left side */}
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={!!photoFile || analyzingPhoto}
+                      aria-label={photoFile ? 'Photo already attached' : 'Attach a photo of the barrier'}
+                      aria-disabled={!!photoFile || analyzingPhoto}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 6,
+                        padding: '0 14px', height: 40, borderRadius: 8,
+                        border: '1px solid var(--card-border)',
+                        background: photoFile ? 'var(--suc-bg)' : 'var(--page-bg-subtle)',
+                        color: photoFile ? 'var(--suc-fg)' : 'var(--body-secondary)',
+                        cursor: photoFile ? 'default' : 'pointer',
+                        fontFamily: 'Manrope, sans-serif', fontSize: 13, fontWeight: 600
+                      }}
+                    >
+                      {photoFile
+                        ? <><CheckCircle size={15} aria-hidden="true" /> Photo attached</>
+                        : <><Camera size={15} aria-hidden="true" /> Add photo</>
+                      }
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      aria-label="Choose a photo file to attach"
+                      style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}
+                      onChange={e => { if (e.target.files?.[0]) handlePhotoUpload(e.target.files[0]); }}
+                    />
+                  </div>
+
+                  {/* Send button — right side, prominent */}
                   <button
                     type="button"
                     onClick={sendMessage}
                     disabled={!input.trim() || loading}
-                    aria-label={loading ? 'Waiting for AI response' : 'Send message'}
+                    aria-label={loading ? 'Waiting for AI response' : 'Send your reply'}
                     aria-disabled={!input.trim() || loading}
-                    style={{ width: 44, height: 44, borderRadius: 10, border: 'none', background: !input.trim() || loading ? 'var(--card-border)' : 'var(--accent)', color: '#fff', cursor: !input.trim() || loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 6,
+                      padding: '0 20px', height: 44, borderRadius: 10,
+                      border: 'none',
+                      background: !input.trim() || loading ? 'var(--card-border)' : 'var(--accent)',
+                      color: '#fff',
+                      cursor: !input.trim() || loading ? 'not-allowed' : 'pointer',
+                      fontFamily: 'Manrope, sans-serif', fontSize: 14, fontWeight: 700,
+                      minWidth: 120
+                    }}
                   >
-                    <Send size={18} aria-hidden="true" />
+                    <Send size={15} aria-hidden="true" />
+                    {loading ? 'Sending…' : 'Send reply'}
                   </button>
+
                 </div>
               </div>
             )}
