@@ -817,21 +817,34 @@ export default function Layout({ children, currentPageName }) {
       {currentPageName !== 'Home' && (
         <footer role="contentinfo" style={{
           backgroundColor: 'var(--dark-bg)',
-          color: 'var(--dark-muted)',
-          padding: '2rem 0',
-          marginTop: 0
+          borderTop: '1px solid rgba(255,255,255,0.08)',
         }}>
           <div style={{
             maxWidth: '1400px',
             margin: '0 auto',
             padding: '0 1.5rem',
-            textAlign: 'center'
+            minHeight: 48,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '8px',
           }}>
-            <LogoBrand size={96} glow variant="dark-bg" className="footer-logo" style={{ display: 'block', margin: '0 auto 12px' }} aria-hidden="true" />
-            <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--dark-muted)' }}>
+            {/* Brand mark — decorative, hidden from screen readers */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }} aria-hidden="true">
+              <LogoBrand size={28} variant="dark-bg" className="footer-logo" />
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem', fontWeight: 700, color: '#E2E8F0', letterSpacing: '0.01em' }}>
+                ADA Legal Link
+              </span>
+            </div>
+
+            {/* Copyright */}
+            <p style={{ margin: 0, fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--dark-muted)', whiteSpace: 'nowrap' }}>
               © 2026 ADA Legal Link. All rights reserved.
             </p>
-            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem', color: 'var(--dark-muted)' }}>
+
+            {/* Tagline */}
+            <p style={{ margin: 0, fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--dark-muted)' }}>
               Connecting people with experienced ADA attorneys.
             </p>
           </div>
@@ -881,10 +894,6 @@ export default function Layout({ children, currentPageName }) {
           main {
             padding-left: 0.75rem !important;
             padding-right: 0.75rem !important;
-          }
-          .footer-logo {
-            width: 64px !important;
-            height: 64px !important;
           }
         }
         @media (max-width: 420px) {
