@@ -698,7 +698,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
 
             {/* Input area */}
             {!submitted && (
-              <div style={{ padding: '12px 16px 16px', borderTop: '3px solid var(--accent)', flexShrink: 0 }}>
+              <div style={{ padding: '12px 16px 16px', borderTop: '1px solid var(--card-border)', flexShrink: 0 }}>
                 <p id={sendHintId} className="sr-only">Press Enter to send your message. Press Shift+Enter for a new line.</p>
 
                 {/* Visible label */}
