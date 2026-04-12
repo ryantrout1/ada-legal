@@ -675,7 +675,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
               aria-live="polite"
               aria-relevant="additions"
               tabIndex={0}
-              style={{ height: 300, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column' }}
+              style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column' }}
             >
               <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
                 {messages.map((msg, i) => <MessageBubble key={msg.isoTime + '-' + i} msg={msg} />)}
@@ -698,7 +698,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
 
             {/* Input area */}
             {!submitted && (
-              <div style={{ padding: '12px 16px 16px', flexShrink: 0 }}>
+              <div style={{ padding: '12px 16px 16px', flexShrink: 0, marginTop: 'auto' }}>
                 <p id={sendHintId} className="sr-only">Press Enter to send your message. Press Shift+Enter for a new line.</p>
 
                 {/* Add photo — above textarea, subtle */}
