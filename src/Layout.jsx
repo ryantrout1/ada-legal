@@ -134,7 +134,7 @@ export default function Layout({ children, currentPageName }) {
     LawyerCaseDetail: 'Attorney Case Detail',
     LawyerLanding: 'For Attorneys', StandardsGuide: 'ADA Standards Guide',
     Admin: 'Admin Dashboard', AdminReview: 'Review Queue', AdminCases: 'Case Manager',
-    AdminAnalytics: 'Analytics', AdminLawyers: 'Attorney Network', AdminEmails: 'Email Templates', AdminFeedback: 'Feedback', AdminPhotoAnalyzer: 'ADA Photo', AdminIntakeAI: 'AI Intake',
+    AdminAnalytics: 'Analytics', AdminLawyers: 'Attorney Network', AdminEmails: 'Email Templates', AdminFeedback: 'Feedback', AdminPhotoAnalyzer: 'ADA Photo', AdminIntakeAI: 'Talk to Ada',
     TitleIIPathway: 'Government Accessibility Complaints',
     TitleIPathway: 'Workplace Disability Discrimination',
     // Standards Chapters
@@ -495,7 +495,7 @@ export default function Layout({ children, currentPageName }) {
                       { to: createPageUrl('AdminLawyers'), icon: <User size={15} />, label: 'Lawyers' },
                       { to: createPageUrl('AdminEmails'), icon: <Mail size={15} />, label: 'Email Templates' },
                       { to: createPageUrl('AdminPhotoAnalyzer'), icon: <Camera size={15} />, label: 'ADA Photo' },
-                      { to: createPageUrl('AdminIntakeAI'), icon: <MessageSquare size={15} />, label: 'AI Intake' },
+                      { to: createPageUrl('AdminIntakeAI'), icon: <MessageSquare size={15} />, label: 'Talk to Ada' },
                     ]} />
                   </>
                 )}
@@ -780,7 +780,7 @@ export default function Layout({ children, currentPageName }) {
                       ADA Photo
                     </Link>
                     <Link to={createPageUrl('AdminIntakeAI')} onClick={() => setMobileMenuOpen(false)} style={{ color: currentPageName === 'AdminIntakeAI' ? '#FBB040' : '#B0BEC5', padding: '10px 16px', display: 'block', textDecoration: 'none', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem' }}>
-                      AI Intake
+                      Talk to Ada
                     </Link>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '8px 16px 0', padding: '12px 0 0' }}>
                       <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', color: 'var(--dark-muted)', margin: '0 0 8px' }}>{user.email}</p>
