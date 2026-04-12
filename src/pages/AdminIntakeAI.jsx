@@ -29,7 +29,7 @@ function buildSystemPrompt(readingLevel) {
 - Minimal emotional validation — focus on facts and legal elements.`,
   };
 
-  return `You are an ADA intake specialist for ADA Legal Link. Your job is to help someone report an ADA violation by having a warm, conversational exchange — NOT a form.
+  return `You are Ada, an ADA intake specialist for ADA Legal Link. Your job is to help someone report an ADA violation by having a warm, conversational exchange — NOT a form. Your name is Ada — use it naturally when introducing yourself but don't repeat it unnecessarily.
 
 ${TONE[readingLevel] || TONE.standard}
 
@@ -113,7 +113,7 @@ function MessageBubble({ msg }) {
   const isUser = msg.role === 'user';
   const text = msg.role === 'assistant' ? stripExtract(msg.content) : msg.content;
   if (!text && !msg.photoPreview) return null;
-  const senderLabel = isUser ? 'You' : 'ADA Intake Assistant';
+  const senderLabel = isUser ? 'You' : 'Ada';
 
   return (
     <div
@@ -289,9 +289,9 @@ export default function AdminIntakeAI() {
   const announce = useAnnounce();
 
   const OPENING = {
-    simple: "Hi — I'm here to help you report an ADA problem. Tell me what happened. Where were you, and what made it hard for you?",
-    standard: "Hi — I'm here to help you document an ADA accessibility violation. Tell me what happened. Where were you, and what made it hard for you to access the place or service?",
-    professional: "Welcome. I'll help you document an ADA violation for potential case review. Please describe the incident — the location, the nature of the barrier, and when it occurred.",
+    simple: "Hi, I'm Ada — I'm here to help you report an ADA problem. Tell me what happened. Where were you, and what made it hard for you?",
+    standard: "Hi, I'm Ada — I'm here to help you document an ADA accessibility violation. Tell me what happened. Where were you, and what made it hard for you to access the place or service?",
+    professional: "Hello, I'm Ada. I'll help you document an ADA violation for potential case review. Please describe the incident — the location, the nature of the barrier, and when it occurred.",
   };
 
   function makeTime() {
@@ -498,7 +498,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
         .map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
         .join('\n\n');
 
-      const fullPrompt = `${systemWithContext}\n\n---CONVERSATION SO FAR---\n${conversationHistory}\n\n---\nNow respond as the ADA Intake Assistant. Continue the conversation naturally.`;
+      const fullPrompt = `${systemWithContext}\n\n---CONVERSATION SO FAR---\n${conversationHistory}\n\n---\nNow respond as Ada. Continue the conversation naturally.`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: fullPrompt,
@@ -513,7 +513,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
       const displayText = stripExtract(aiText);
 
       setMessages(prev => [...prev, { role: 'assistant', content: displayText, ...makeTime() }]);
-      announce('ADA Intake Assistant: ' + displayText.slice(0, 120), 'polite');
+      announce('Ada: ' + displayText.slice(0, 120), 'polite');
 
       if (extracted?.ready) {
         if (photoUrl) extracted.photo_url = photoUrl;
@@ -654,9 +654,9 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
             <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 10 }}>
               <div aria-hidden="true" style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, fontFamily: 'Fraunces, serif', flexShrink: 0 }}>A</div>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>ADA Intake Assistant</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>Ada</div>
                 <div aria-hidden="true" style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif' }}>
-                  {isTyping ? 'Thinking…' : 'Ready'}
+                  {isTyping ? 'Thinking…' : 'Here to help'}
                 </div>
               </div>
               <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
