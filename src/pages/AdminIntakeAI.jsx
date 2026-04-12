@@ -629,7 +629,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
       <div style={{ maxWidth: 1100, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
 
         <AdminPageHeader
-          title="AI Intake"
+          title="Talk to Ada"
           actionButton={
             <a href={createPageUrl('Intake')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0 16px', minHeight: 44, borderRadius: 8, background: 'transparent', color: 'var(--body-secondary)', border: '1px solid var(--card-border)', fontWeight: 600, fontSize: '0.875rem', fontFamily: 'Manrope, sans-serif', textDecoration: 'none' }}>
               Switch to Form Intake <ChevronRight size={14} aria-hidden="true" />
@@ -637,10 +637,13 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
           }
         />
 
-        {/* Info banner — reading level shown here for admin demo context only */}
-        <div role="note" style={{ padding: '12px 16px', borderRadius: 8, background: 'var(--inf-bg)', border: '1px solid var(--inf-bd)', fontFamily: 'Manrope, sans-serif', fontSize: 13, color: 'var(--inf-fg)', lineHeight: 1.6, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-          <span><strong>AI-Powered Intake — Admin Demo.</strong> Conversational intake using Claude. Title I and Title II violations are automatically routed to the correct external channels. Title III (private business) violations proceed to case submission.</span>
-          <span title="Change reading level via the eye icon in the navigation" style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid var(--inf-bd)', background: 'var(--card-bg)', color: 'var(--inf-fg)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+        {/* Ada introduction banner */}
+        <div role="note" style={{ padding: '14px 18px', borderRadius: 10, background: 'var(--card-bg-tinted)', border: '1px solid var(--card-border)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.6, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+          <div>
+            <p style={{ margin: '0 0 2px', fontSize: 14, fontWeight: 700, color: 'var(--heading)' }}>Ada is here to help you report an ADA violation.</p>
+            <p style={{ margin: 0, fontSize: 13, color: 'var(--body-secondary)' }}>Just tell Ada what happened in your own words — she'll guide you through the rest. No forms, no legal jargon.</p>
+          </div>
+          <span title="Change reading level via the eye icon in the navigation" style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid var(--card-border)', background: 'var(--card-bg)', color: 'var(--body-secondary)', whiteSpace: 'nowrap', flexShrink: 0 }}>
             Reading: {readingLevelLabel}
           </span>
         </div>
