@@ -645,10 +645,10 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
           </span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'stretch', flex: 1, minHeight: 0, height: 'calc(100vh - 520px)' }} className="intake-ai-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'stretch', height: 'calc(100vh - 520px)' }} className="intake-ai-grid">
 
           {/* ── Chat panel ── */}
-          <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
+          <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
 
             {/* Header */}
             <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -675,7 +675,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
               aria-live="polite"
               aria-relevant="additions"
               tabIndex={0}
-              style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column' }}
+              style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', minHeight: 300 }}
             >
               <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
                 {messages.map((msg, i) => <MessageBubble key={msg.isoTime + '-' + i} msg={msg} />)}
@@ -787,7 +787,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
           </section>
 
           {/* ── Right panel ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, height: '100%', minHeight: 0, overflowY: 'auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0, overflowY: 'auto' }}>
             {extractedData ? (
               <CaseSummaryCard
                 data={extractedData}
