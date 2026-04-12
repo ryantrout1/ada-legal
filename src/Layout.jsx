@@ -801,7 +801,7 @@ export default function Layout({ children, currentPageName }) {
       )}
 
       {/* Main Content */}
-      <main id="main-content" role="main" style={{ flex: 1, margin: 0, backgroundColor: 'var(--page-bg)', display: 'flex', flexDirection: 'column' }}>
+      <main id="main-content" role="main" style={{ flex: 1, margin: 0, backgroundColor: 'var(--page-bg)' }}>
         {children}
       </main>
 

@@ -621,7 +621,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
   );
 
   return (
-    <div style={{ backgroundColor: 'var(--page-bg)', padding: 'clamp(0.75rem, 3vw, 1.5rem)', height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
+    <div style={{ backgroundColor: 'var(--page-bg)', padding: 'clamp(0.75rem, 3vw, 1.5rem)', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
 
       {/* Live status region */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">{statusMsg}</div>
