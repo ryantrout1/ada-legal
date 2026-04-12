@@ -645,7 +645,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
           </span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'stretch', height: 'calc(100vh - 316px)' }} className="intake-ai-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'start' }} className="intake-ai-grid">
 
           {/* ── Chat panel ── */}
           <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
@@ -675,7 +675,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
               aria-live="polite"
               aria-relevant="additions"
               tabIndex={0}
-              style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', minHeight: 300 }}
+              style={{ height: 300, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column' }}
             >
               <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
                 {messages.map((msg, i) => <MessageBubble key={msg.isoTime + '-' + i} msg={msg} />)}
