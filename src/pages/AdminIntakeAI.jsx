@@ -645,7 +645,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
           </span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'stretch', height: 'calc(100vh - 520px)' }} className="intake-ai-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'stretch', height: 'calc(100vh - 316px)' }} className="intake-ai-grid">
 
           {/* ── Chat panel ── */}
           <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
