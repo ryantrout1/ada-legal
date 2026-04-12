@@ -651,30 +651,12 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'stretch', flex: 1 }} className="intake-ai-grid">
 
           {/* ── Chat panel ── */}
-          <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-
-            {/* Header */}
-            <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div aria-hidden="true" style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, fontFamily: 'Fraunces, serif', flexShrink: 0 }}>A</div>
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--heading)', fontFamily: 'Manrope, sans-serif' }}>Ada</div>
-                <div aria-hidden="true" style={{ fontSize: 11, color: 'var(--body-secondary)', fontFamily: 'Manrope, sans-serif' }}>
-                  {isTyping ? 'Thinking…' : 'Here to help'}
-                </div>
-              </div>
-              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-                {photoPreview && (
-                  <div aria-label="Photo attached" style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--suc-fg)', fontFamily: 'Manrope, sans-serif' }}>
-                    <Camera size={14} aria-hidden="true" /> Photo attached
-                  </div>
-                )}
-              </div>
-            </div>
+          <section aria-label="Intake conversation with Ada" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
 
             {/* Message log */}
             <div
               role="log"
-              aria-label="Conversation history"
+              aria-label="Conversation with Ada"
               aria-live="polite"
               aria-relevant="additions"
               tabIndex={0}
@@ -730,8 +712,6 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
                       : <><Camera size={13} aria-hidden="true" /> Add photo</>
                     }
                   </button>
-                  <input
-                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
                     aria-label="Choose a photo file to attach"
