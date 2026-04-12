@@ -621,12 +621,12 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
   );
 
   return (
-    <div style={{ backgroundColor: 'var(--page-bg)', padding: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
+    <div style={{ backgroundColor: 'var(--page-bg)', padding: 'clamp(0.75rem, 3vw, 1.5rem)', minHeight: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column' }}>
 
       {/* Live status region */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">{statusMsg}</div>
 
-      <div style={{ maxWidth: 1100, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ maxWidth: 1100, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
 
         <AdminPageHeader
           title="AI Intake"
@@ -645,7 +645,7 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
           </span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'start' }} className="intake-ai-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 16, alignItems: 'stretch', flex: 1 }} className="intake-ai-grid">
 
           {/* ── Chat panel ── */}
           <section aria-label="Intake conversation" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 12, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
