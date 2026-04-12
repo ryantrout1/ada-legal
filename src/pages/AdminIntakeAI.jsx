@@ -717,9 +717,9 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
                     aria-label="Your reply to the intake assistant"
                     aria-describedby={sendHintId}
                     aria-required="true"
-                    style={{ flex: 1, resize: 'none', border: '2px solid transparent', borderRadius: 10, padding: '10px 14px', fontFamily: 'Manrope, sans-serif', fontSize: 15, background: 'var(--page-bg-subtle)', color: 'var(--body)', outline: 'none', lineHeight: 1.6, minHeight: 56, maxHeight: 120 }}
-                    onFocus={e => { e.target.style.borderColor = 'var(--accent)'; }}
-                    onBlur={e => { e.target.style.borderColor = 'transparent'; }}
+                    style={{ flex: 1, resize: 'none', border: 'none', borderRadius: 10, padding: '10px 14px', fontFamily: 'Manrope, sans-serif', fontSize: 15, background: 'var(--page-bg-subtle)', color: 'var(--body)', outline: 'none', lineHeight: 1.6, minHeight: 56, maxHeight: 120, boxShadow: 'none' }}
+                    onFocus={e => { e.target.style.boxShadow = '0 0 0 2px var(--accent)'; }}
+                    onBlur={e => { e.target.style.boxShadow = 'none'; }}
                   />
                 </div>
 
