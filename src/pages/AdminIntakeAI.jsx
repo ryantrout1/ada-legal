@@ -712,6 +712,8 @@ Check ALL applicable categories. If you cannot fully assess a standard from the 
                       : <><Camera size={13} aria-hidden="true" /> Add photo</>
                     }
                   </button>
+                  <input
+                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
                     aria-label="Choose a photo file to attach"
