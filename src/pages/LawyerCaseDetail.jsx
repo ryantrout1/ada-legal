@@ -13,14 +13,6 @@ function DetailRow({ icon: Icon, label, value }) {
   if (!value) return null;
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: 'var(--space-md)' }}>
-      <style>{`
-        button:focus-visible, a:focus-visible, select:focus-visible,
-        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
-          outline: 3px solid var(--accent-light); outline-offset: 2px;
-        }
-        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
-        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
-      `}</style>
       <Icon size={18} style={{ color: 'var(--body-secondary)', flexShrink: 0, marginTop: '2px' }} />
       <div>
         <span style={{
@@ -85,6 +77,14 @@ export default function LawyerCaseDetail() {
       backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)',
       padding: 'var(--space-xl) var(--space-lg)'
     }}>
+      <style>{`
+        button:focus-visible, a:focus-visible, select:focus-visible,
+        input:focus-visible, textarea:focus-visible, [role="button"]:focus-visible {
+          outline: 3px solid var(--accent-light); outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        @media (prefers-contrast: more) { button, a, input, select, textarea { border-width: 2px !important; } }
+      `}</style>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <Link to={createPageUrl('LawyerDashboard')} style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',

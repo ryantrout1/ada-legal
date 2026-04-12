@@ -53,6 +53,7 @@ export default function LawyerDashboard() {
       const p = profiles[0];
       if (!p) { window.location.href = createPageUrl('Home'); return; }
       setProfile(p);
+      if (p.account_status !== 'approved') { setLoading(false); return; }
       base44.entities.LawyerProfile.update(p.id, { last_active: new Date().toISOString() });
       await loadData(p);
       setLoading(false);
@@ -164,6 +165,27 @@ export default function LawyerDashboard() {
         <h1 style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', clipPath: 'inset(50%)', whiteSpace: 'nowrap', border: 0 }}>Attorney Dashboard</h1>
         <div className="a11y-spinner" aria-hidden="true" />
         <p style={{ fontFamily: 'Manrope, sans-serif', color: 'var(--body)' }}>Loading your cases…</p>
+      </div>
+    );
+  }
+
+  if (profile && profile.account_status === 'pending_approval') {
+    return (
+      <div style={{ backgroundColor: 'var(--page-bg-subtle)', minHeight: 'calc(100vh - 200px)', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ maxWidth: '520px', width: '100%', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '3rem', textAlign: 'center' }}>
+          <div style={{ width: '72px', height: '72px', borderRadius: '50%', backgroundColor: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.75rem', fontWeight: 700, color: 'var(--heading)', marginBottom: '0.75rem' }}>
+            Application Under Review
+          </h1>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', color: 'var(--body)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+            Thank you for applying, {profile.full_name?.split(' ')[0] || 'Counselor'}. We're reviewing your application and will reach out directly within 2 business days.
+          </p>
+          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body-secondary)', margin: 0 }}>
+            Questions? Contact us at <a href="mailto:support@adalegallink.com" style={{ color: 'var(--section-label)', textDecoration: 'none', fontWeight: 600 }}>support@adalegallink.com</a>
+          </p>
+        </div>
       </div>
     );
   }

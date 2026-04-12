@@ -117,7 +117,7 @@ export default function LawyerRegister() {
               color: 'var(--body)', lineHeight: 1.6, maxWidth: '440px',
               margin: '0 auto'
             }}>
-              Our team will review your application and notify you by email within 48 hours.
+              We'll review your application and reach out directly within 2 business days with next steps.
             </p>
           </div>
         </div>
