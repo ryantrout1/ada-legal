@@ -31,6 +31,7 @@ import { randomUUID, randomBytes } from 'node:crypto';
 import { makeDb } from '@/db/client';
 import { NeonDbClient } from './neonDbClient';
 import { AnthropicAiClient } from './anthropicAiClient';
+import { AnthropicPhotoAnalysisClient } from './anthropicPhotoAnalysisClient';
 import type {
   AdaClients,
   AuditClient,
@@ -41,9 +42,6 @@ import type {
   ClockClient,
   EmailClient,
   EmailSendOptions,
-  PhotoAnalysisClient,
-  PhotoAnalysisRequest,
-  PhotoAnalysisResult,
   RandomClient,
 } from './types';
 
@@ -81,15 +79,9 @@ class NeonAuditClient implements AuditClient {
 // ─── Anthropic ────────────────────────────────────────────────────────────────
 // Real AnthropicAiClient lives in ./anthropicAiClient.ts and is wired below.
 
-// ─── Photo (Step 10) ──────────────────────────────────────────────────────────
-
-class StubPhotoAnalysisClient implements PhotoAnalysisClient {
-  async analyze(_req: PhotoAnalysisRequest): Promise<PhotoAnalysisResult> {
-    throw new Error(
-      'PhotoAnalysisClient.analyze: not yet implemented (Phase A Step 10).',
-    );
-  }
-}
+// ─── Photo ────────────────────────────────────────────────────────────────────
+// Real AnthropicPhotoAnalysisClient lives in ./anthropicPhotoAnalysisClient.ts
+// and is wired below.
 
 // ─── Vercel Blob (Phase B) ────────────────────────────────────────────────────
 
@@ -154,7 +146,7 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
     ai: new AnthropicAiClient(config.anthropicApiKey),
     db: new NeonDbClient(db),
     blob: new StubVercelBlobClient(),
-    photo: new StubPhotoAnalysisClient(),
+    photo: new AnthropicPhotoAnalysisClient(config.anthropicApiKey),
     email: new StubResendEmailClient(),
     clock: new SystemClock(),
     random: new CryptoRandom(),
