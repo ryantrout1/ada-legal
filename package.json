@@ -14,7 +14,9 @@
     "test:watch": "vitest",
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration",
-    "test:personas": "playwright test tests/personas"
+    "test:personas": "playwright test",
+    "test:personas:preview": "PLAYWRIGHT_TARGET=preview playwright test",
+    "test:personas:install": "playwright install chromium"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -24,6 +26,7 @@
     "react-router-dom": "^7.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
