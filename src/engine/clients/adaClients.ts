@@ -30,11 +30,9 @@
 import { randomUUID, randomBytes } from 'node:crypto';
 import { makeDb } from '@/db/client';
 import { NeonDbClient } from './neonDbClient';
+import { AnthropicAiClient } from './anthropicAiClient';
 import type {
   AdaClients,
-  AiClient,
-  AiStreamChunk,
-  AiStreamRequest,
   AuditClient,
   AuditEntry,
   BlobClient,
@@ -80,17 +78,8 @@ class NeonAuditClient implements AuditClient {
   }
 }
 
-// ─── Anthropic (Step 9) ───────────────────────────────────────────────────────
-
-class StubAnthropicAiClient implements AiClient {
-  async *stream(_req: AiStreamRequest): AsyncIterable<AiStreamChunk> {
-    throw new Error(
-      'AnthropicAiClient.stream: not yet implemented (Phase A Step 9).',
-    );
-    // Unreachable yield keeps TypeScript happy about the AsyncIterable contract.
-    yield { type: 'message_stop' };
-  }
-}
+// ─── Anthropic ────────────────────────────────────────────────────────────────
+// Real AnthropicAiClient lives in ./anthropicAiClient.ts and is wired below.
 
 // ─── Photo (Step 10) ──────────────────────────────────────────────────────────
 
@@ -152,11 +141,17 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
         'e.g. makeAdaClients({ databaseUrl: process.env.DATABASE_URL }).',
     );
   }
+  if (!config.anthropicApiKey) {
+    throw new Error(
+      'makeAdaClients: ANTHROPIC_API_KEY is required. ' +
+        'Pass it via config.anthropicApiKey from your API route.',
+    );
+  }
 
   const db = makeDb(config.databaseUrl);
 
   return {
-    ai: new StubAnthropicAiClient(),
+    ai: new AnthropicAiClient(config.anthropicApiKey),
     db: new NeonDbClient(db),
     blob: new StubVercelBlobClient(),
     photo: new StubPhotoAnalysisClient(),
