@@ -1,35 +1,52 @@
 /**
- * ADA Legal Link
+ * App root.
  *
- * Phase A skeleton — this placeholder confirms the build pipeline works end-to-end
- * on Vercel preview. The real routing tree, Ada engine, and UI get built in later
- * phases per docs/ARCHITECTURE.md.
+ * Wires:
+ *   - ClerkProvider (auth context for the whole app)
+ *   - BrowserRouter (client-side routing)
+ *   - Top-level route tree: public / + admin sign-in + protected /admin
+ *
+ * Public routes use no auth context. The admin route tree is wrapped in
+ * a guard that redirects to /admin/sign-in if the user isn't signed in.
+ *
+ * Ref: docs/ARCHITECTURE.md §5 — auth model
  */
+
+import { ClerkProvider } from '@clerk/clerk-react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { requireClerkPublishableKey } from '@/lib/env';
+import PublicPlaceholder from './routes/public/PublicPlaceholder';
+import AdminSignIn from './routes/admin/SignIn';
+import AdminPlaceholder from './routes/admin/AdminPlaceholder';
+import RequireAdmin from './components/RequireAdmin';
+
+const PUBLISHABLE_KEY = requireClerkPublishableKey();
+
 export default function App() {
   return (
-    <main
-      style={{
-        fontFamily: 'system-ui, -apple-system, sans-serif',
-        maxWidth: '640px',
-        margin: '4rem auto',
-        padding: '0 1.5rem',
-        lineHeight: 1.6,
-        color: '#1A1A18',
-      }}
+    <ClerkProvider
+      publishableKey={PUBLISHABLE_KEY}
+      afterSignOutUrl="/"
     >
-      <h1 style={{ fontSize: '2rem', margin: '0 0 1rem' }}>ADA Legal Link</h1>
-      <p style={{ color: '#6B6962', margin: '0 0 1rem' }}>
-        New stack, Phase A. Coming soon.
-      </p>
-      <p style={{ fontSize: '0.875rem', color: '#9C9A92', margin: 0 }}>
-        The public ADA Legal Link experience continues at
-        {' '}
-        <a href="https://adalegallink.com" style={{ color: '#534AB7' }}>
-          adalegallink.com
-        </a>
-        {' '}
-        while this new version is built.
-      </p>
-    </main>
+      <BrowserRouter>
+        <Routes>
+          {/* Public */}
+          <Route path="/" element={<PublicPlaceholder />} />
+
+          {/* Admin auth entry */}
+          <Route path="/admin/sign-in/*" element={<AdminSignIn />} />
+
+          {/* Protected admin tree */}
+          <Route
+            path="/admin"
+            element={
+              <RequireAdmin>
+                <AdminPlaceholder />
+              </RequireAdmin>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </ClerkProvider>
   );
 }

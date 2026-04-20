@@ -19,6 +19,8 @@
     "test:personas:install": "playwright install chromium"
   },
   "dependencies": {
+    "@clerk/backend": "^3.2.13",
+    "@clerk/clerk-react": "^5.61.5",
     "@neondatabase/serverless": "^1.1.0",
     "drizzle-orm": "^0.45.2",
     "react": "^19.0.0",
