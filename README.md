@@ -1,39 +1,41 @@
-**Welcome to your Base44 project** 
+# ADA Legal Link
 
-**About**
+Free, plain-language ADA help for everyone. Public Ada conversations, attorney directory, and enterprise ADA intake infrastructure.
 
-View and Edit  your app on [Base44.com](http://Base44.com) 
+## Status
 
-This project contains everything you need to run your app locally.
+**Phase A — Foundation.** This repo is being rebuilt from the Base44 prototype onto a production stack (Vite + React + Vercel + Neon + Clerk + Anthropic). The current Base44 version continues to serve `adalegallink.com` until cutover.
 
-**Edit the code in your local development environment**
+The Base44 prototype code is preserved on the [`base44-archive`](https://github.com/ryantrout1/ada-legal/tree/base44-archive) branch.
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+## Stack
 
-**Prerequisites:** 
+- **Frontend:** React 19 + Vite + TypeScript
+- **Hosting:** Vercel (serverless functions for the API layer)
+- **Database:** Neon Postgres + pgvector
+- **Auth:** Clerk (Organizations)
+- **AI:** Anthropic Claude API (direct, tool-use)
+- **Files:** Vercel Blob
+- **Email:** Resend
+- **Payments:** Stripe (Ch1+)
+- **Tests:** Vitest + Playwright
 
-1. Clone the repository using the project's Git URL 
-2. Navigate to the project directory
-3. Install dependencies: `npm install`
-4. Create an `.env.local` file and set the right environment variables
+## Getting started
 
+```bash
+npm install
+npm run dev        # local dev server at :5173
+npm run test       # Vitest unit + integration
+npm run typecheck  # TS only, no emit
+npm run build      # production build
 ```
-VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=your_backend_url
 
-e.g.
-VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6
-VITE_BASE44_APP_BASE_URL=https://my-to-do-list-81bfaad7.base44.app
-```
+## Docs
 
-Run the app: `npm run dev`
+- `docs/ARCHITECTURE.md` — full technical design (Ch0 + Ch1)
+- `docs/DO_NOT_TOUCH.md` — invariants the rebuild must preserve
+- `content-migration/` — content and assets carried forward from the Base44 archive
 
-**Publish your changes**
+## License
 
-Open [Base44.com](http://Base44.com) and click on Publish.
-
-**Docs & Support**
-
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
-
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+Proprietary — ADA Legal Link. All rights reserved.
