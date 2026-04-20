@@ -28,30 +28,26 @@
  */
 
 import { randomUUID, randomBytes } from 'node:crypto';
+import { makeDb } from '@/db/client';
+import { NeonDbClient } from './neonDbClient';
 import type {
   AdaClients,
   AiClient,
   AiStreamChunk,
   AiStreamRequest,
-  AttorneyRow,
-  AttorneySearchOptions,
   AuditClient,
   AuditEntry,
   BlobClient,
   BlobUploadOptions,
   BlobUploadResult,
   ClockClient,
-  DbClient,
   EmailClient,
   EmailSendOptions,
   PhotoAnalysisClient,
   PhotoAnalysisRequest,
   PhotoAnalysisResult,
   RandomClient,
-  SessionReadOptions,
-  SessionWriteOptions,
 } from './types';
-import type { AdaSessionState } from '../types';
 
 // ─── Clock + Random (ready now) ───────────────────────────────────────────────
 
@@ -70,30 +66,9 @@ class CryptoRandom implements RandomClient {
   }
 }
 
-// ─── DB (ready now; adapter shape only — Drizzle queries fill in Step 6) ──────
-
-class NeonDbClient implements DbClient {
-  // Placeholder: Drizzle db instance will be injected once session-persistence
-  // is implemented in Step 6. The shape is correct; the body is a stub.
-
-  async readSession(_opts: SessionReadOptions): Promise<AdaSessionState | null> {
-    throw new Error(
-      'NeonDbClient.readSession: not yet implemented (Phase A Step 6 — session persistence).',
-    );
-  }
-
-  async writeSession(_opts: SessionWriteOptions): Promise<void> {
-    throw new Error(
-      'NeonDbClient.writeSession: not yet implemented (Phase A Step 6 — session persistence).',
-    );
-  }
-
-  async searchAttorneys(_opts: AttorneySearchOptions): Promise<AttorneyRow[]> {
-    throw new Error(
-      'NeonDbClient.searchAttorneys: not yet implemented (Phase B Step 12 — attorney directory).',
-    );
-  }
-}
+// ─── DB ───────────────────────────────────────────────────────────────────────
+// Real NeonDbClient lives in ./neonDbClient.ts and is imported into the factory
+// below. No stub here anymore — session persistence is implemented (Step 6).
 
 // ─── Audit (ready now; writes to audit_log via Drizzle in Step 6) ─────────────
 
@@ -169,10 +144,20 @@ export interface AdaClientsConfig {
   resendApiKey?: string;
 }
 
-export function makeAdaClients(_config: AdaClientsConfig = {}): AdaClients {
+export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
+  if (!config.databaseUrl) {
+    throw new Error(
+      'makeAdaClients: DATABASE_URL is required. ' +
+        'Pass it via config.databaseUrl from your API route, ' +
+        'e.g. makeAdaClients({ databaseUrl: process.env.DATABASE_URL }).',
+    );
+  }
+
+  const db = makeDb(config.databaseUrl);
+
   return {
     ai: new StubAnthropicAiClient(),
-    db: new NeonDbClient(),
+    db: new NeonDbClient(db),
     blob: new StubVercelBlobClient(),
     photo: new StubPhotoAnalysisClient(),
     email: new StubResendEmailClient(),
