@@ -20,7 +20,8 @@
     "types": ["node", "vite/client"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@content/*": ["content-migration/*"]
     }
   },
   "include": ["src", "tests", "vite.config.ts", "vitest.config.ts"]
