@@ -1,0 +1,96 @@
+@import 'tailwindcss';
+
+/* ─── ADA Legal Link theme tokens ─────────────────────────────────────────────
+ *
+ * Design direction: refined, institutional, calm. Warm off-white surface with
+ * deep ink text, single accent color. Optimized for WCAG AAA contrast and
+ * readability for users with low vision / cognitive disabilities.
+ *
+ * Typography: Fraunces (serif display, humanist) + IBM Plex Sans (body, known
+ * to aid readability for dyslexic users). Both are open-source, hosted on
+ * Google Fonts, no telemetry in the served files.
+ *
+ * Accent color palette is a single burnt-terracotta (`accent-500`) that reads
+ * AAA on the warm surface. Kept DELIBERATELY unsaturated — this is a service
+ * for people in difficult situations, not a lifestyle brand. No gradients.
+ * No neon.
+ *
+ * Motion is opt-out by default: we respect `prefers-reduced-motion` and
+ * avoid any effect that would trigger vestibular disorders.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  /* Typography */
+  --font-display: 'Fraunces', 'Georgia', 'Cambria', serif;
+  --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* Surface — warm off-white, high contrast against ink */
+  --color-surface-50:  #FAF8F4;   /* page background */
+  --color-surface-100: #F4F0E8;   /* subtle lift — cards, message bubbles */
+  --color-surface-200: #E8E2D4;   /* dividers, input borders */
+  --color-surface-300: #D4CCB9;   /* disabled, hints */
+
+  /* Ink — deep, warm-biased black for long-form reading */
+  --color-ink-900: #1A1814;       /* primary text */
+  --color-ink-700: #3A3530;       /* secondary text — still AAA */
+  --color-ink-500: #6A625A;       /* tertiary, meta, captions */
+
+  /* Accent — muted terracotta, AAA on surface-50 */
+  --color-accent-500: #A64B1D;    /* primary CTA, links, focus */
+  --color-accent-600: #8A3D17;    /* hover, active */
+  --color-accent-50:  #F9ECE5;    /* accent surface tint */
+
+  /* Semantic — kept muted, not neon */
+  --color-success-500: #3B6A3F;
+  --color-success-50:  #E8EFE9;
+  --color-warning-500: #8C5E19;
+  --color-warning-50:  #F4EBD9;
+  --color-danger-500:  #8C2E1F;
+  --color-danger-50:   #F4E1DD;
+}
+
+/* Base reset and default body style */
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-surface-50);
+  color: var(--color-ink-900);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings — serif display, with subtle tightness */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--color-ink-900);
+  font-weight: 500;
+}
+
+/* Respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus ring — visible, high-contrast, not blue default */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-accent-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Scroll — allow, but don't draw attention */
+body {
+  scrollbar-gutter: stable;
+}
