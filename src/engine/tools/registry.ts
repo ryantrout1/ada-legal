@@ -20,6 +20,7 @@ import { setClassificationTool } from './impls/setClassification.js';
 import { extractFieldTool } from './impls/extractField.js';
 import { analyzePhotoTool } from './impls/analyzePhoto.js';
 import { searchAttorneysTool } from './impls/searchAttorneys.js';
+import { searchAdaStandardsTool } from './impls/searchAdaStandards.js';
 import { setReadingLevelTool } from './impls/setReadingLevel.js';
 import { endSessionTool } from './impls/endSession.js';
 
@@ -28,6 +29,7 @@ export const CH0_TOOLS: ReadonlyArray<AnyAdaTool> = [
   extractFieldTool,
   analyzePhotoTool,
   searchAttorneysTool,
+  searchAdaStandardsTool,
   setReadingLevelTool,
   endSessionTool,
 ] as const;

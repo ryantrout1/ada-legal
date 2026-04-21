@@ -15,6 +15,7 @@ import { setClassificationTool } from '@/engine/tools/impls/setClassification';
 import { extractFieldTool } from '@/engine/tools/impls/extractField';
 import { analyzePhotoTool } from '@/engine/tools/impls/analyzePhoto';
 import { searchAttorneysTool } from '@/engine/tools/impls/searchAttorneys';
+import { searchAdaStandardsTool } from '@/engine/tools/impls/searchAdaStandards';
 import { setReadingLevelTool } from '@/engine/tools/impls/setReadingLevel';
 import { endSessionTool } from '@/engine/tools/impls/endSession';
 import type { AdaSessionState } from '@/engine/types';
@@ -334,5 +335,171 @@ describe('end_session', () => {
       input,
     );
     expect(result.ok).toBe(false);
+  });
+});
+
+// ─── search_ada_standards ────────────────────────────────────────────────────
+
+describe('search_ada_standards', () => {
+  const tool = searchAdaStandardsTool;
+
+  it('validateInput happy path', () => {
+    const out = tool.validateInput({ query: 'service animal fees' });
+    expect(out.query).toBe('service animal fees');
+    expect(out.limit).toBe(5); // default
+    expect(out.topic).toBeUndefined();
+  });
+
+  it('validateInput with all fields', () => {
+    const out = tool.validateInput({
+      query: 'effective communication',
+      topic: 'effective_communication',
+      limit: 3,
+    });
+    expect(out.query).toBe('effective communication');
+    expect(out.topic).toBe('effective_communication');
+    expect(out.limit).toBe(3);
+  });
+
+  it('validateInput trims whitespace from query', () => {
+    const out = tool.validateInput({ query: '  §36.302  ' });
+    expect(out.query).toBe('§36.302');
+  });
+
+  it('validateInput rejects missing query', () => {
+    expect(() => tool.validateInput({})).toThrow(/query is required/);
+  });
+
+  it('validateInput rejects empty query', () => {
+    expect(() => tool.validateInput({ query: '' })).toThrow(/at least 3 characters/);
+  });
+
+  it('validateInput rejects invalid topic', () => {
+    expect(() =>
+      tool.validateInput({ query: 'test query', topic: 'not_a_real_topic' }),
+    ).toThrow(/topic must be one of/);
+  });
+
+  it('validateInput rejects non-integer limit', () => {
+    expect(() => tool.validateInput({ query: 'test query', limit: 2.5 })).toThrow(
+      /integer between 1 and 10/,
+    );
+  });
+
+  it('validateInput rejects limit > 10', () => {
+    expect(() => tool.validateInput({ query: 'test query', limit: 50 })).toThrow(
+      /integer between 1 and 10/,
+    );
+  });
+
+  it('execute returns knowledge base hits', async () => {
+    const clients = makeInMemoryClients();
+    clients.db.knowledgeChunks.push({
+      id: 'chunk-1',
+      topic: 'service_animals',
+      title: '§36.302(c)(1) — Service animals — general rule',
+      content: 'Generally, a public accommodation shall modify policies.',
+      standardRefs: ['36.302(c)(1)', '36.302(c)', '36.302'],
+      source: '28 CFR §36',
+      similarity: null,
+      matchType: 'citation',
+    });
+
+    const input = tool.validateInput({ query: 'What does §36.302(c)(1) say?' });
+    const result = await tool.execute(
+      { clients, state: baseState() },
+      input,
+    );
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const content = result.content as {
+        count: number;
+        results: Array<{ title: string; content: string }>;
+      };
+      expect(content.count).toBe(1);
+      expect(content.results[0].title).toContain('§36.302(c)(1)');
+    }
+  });
+
+  it('execute embeds the query when embeddings client is present', async () => {
+    const clients = makeInMemoryClients();
+    const input = tool.validateInput({ query: 'can a restaurant refuse my service dog' });
+    await tool.execute({ clients, state: baseState() }, input);
+
+    expect(clients.embeddings.embedCalls).toHaveLength(1);
+    expect(clients.embeddings.embedCalls[0]).toContain('service dog');
+  });
+
+  it('execute proceeds without embedding when embeddings client throws', async () => {
+    const clients = makeInMemoryClients();
+    clients.embeddings.shouldFail = true;
+    clients.db.knowledgeChunks.push({
+      id: 'chunk-1',
+      topic: 'service_animals',
+      title: '§36.302(c)(1) — title',
+      content: 'body',
+      standardRefs: ['36.302(c)(1)'],
+      source: '28 CFR §36',
+      similarity: null,
+      matchType: 'citation',
+    });
+
+    const input = tool.validateInput({ query: 'What does §36.302(c)(1) say?' });
+    const result = await tool.execute(
+      { clients, state: baseState() },
+      input,
+    );
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const content = result.content as { count: number };
+      expect(content.count).toBe(1); // citation-match still worked
+    }
+  });
+
+  it('execute respects the topic filter', async () => {
+    const clients = makeInMemoryClients();
+    clients.db.knowledgeChunks.push(
+      {
+        id: 'a',
+        topic: 'service_animals',
+        title: '§36.302(c)(1) — service',
+        content: 'body',
+        standardRefs: ['36.302(c)(1)'],
+        source: '28 CFR §36',
+        similarity: null,
+        matchType: 'citation',
+      },
+      {
+        id: 'b',
+        topic: 'mobility_devices',
+        title: '§36.311(a) — mobility',
+        content: 'body',
+        standardRefs: ['36.311(a)'],
+        source: '28 CFR §36',
+        similarity: null,
+        matchType: 'citation',
+      },
+    );
+
+    const input = tool.validateInput({
+      query: 'rules about §36.302(c)(1)',
+      topic: 'service_animals',
+    });
+    const result = await tool.execute(
+      { clients, state: baseState() },
+      input,
+    );
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const content = result.content as {
+        count: number;
+        results: Array<{ topic: string }>;
+      };
+      expect(content.count).toBe(1);
+      expect(content.results[0].topic).toBe('service_animals');
+    }
   });
 });
