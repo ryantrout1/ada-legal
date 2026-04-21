@@ -27,6 +27,9 @@ import {
   organizations,
 } from '../../db/schema-core.js';
 import type {
+  AdminSessionListOptions,
+  AdminSessionListResult,
+  AdminSessionSummary,
   AnonSessionUpsertOptions,
   AttorneyFacets,
   AttorneyRow,
@@ -233,5 +236,65 @@ export class NeonDbClient implements DbClient {
       states: [...states].sort(),
       practiceAreas: [...practiceAreas].sort(),
     };
+  }
+
+  async listSessionsForAdmin(
+    opts: AdminSessionListOptions,
+  ): Promise<AdminSessionListResult> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 25;
+    const offset = (page - 1) * pageSize;
+
+    const conds = [];
+    if (opts.status) conds.push(eq(adaSessions.status, opts.status));
+    if (!opts.includeTest) conds.push(eq(adaSessions.isTest, false));
+
+    const whereClause = conds.length > 0 ? and(...conds) : undefined;
+
+    // Count first (for pagination metadata).
+    const countRows = await this.db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(adaSessions)
+      .where(whereClause);
+    const totalCount = countRows[0]?.n ?? 0;
+
+    // Then the page of rows.
+    const rows = await this.db
+      .select({
+        id: adaSessions.id,
+        status: adaSessions.status,
+        readingLevel: adaSessions.readingLevel,
+        classification: adaSessions.classification,
+        conversationHistory: adaSessions.conversationHistory,
+        extractedFields: adaSessions.extractedFields,
+        createdAt: adaSessions.createdAt,
+        updatedAt: adaSessions.updatedAt,
+        isTest: adaSessions.isTest,
+      })
+      .from(adaSessions)
+      .where(whereClause)
+      .orderBy(sql`${adaSessions.updatedAt} DESC`)
+      .limit(pageSize)
+      .offset(offset);
+
+    const sessions: AdminSessionSummary[] = rows.map((r) => {
+      const classification = r.classification as Classification | null;
+      const history = (r.conversationHistory ?? []) as Message[];
+      const extracted = (r.extractedFields ?? {}) as ExtractedFields;
+      return {
+        sessionId: r.id,
+        status: r.status as 'active' | 'completed' | 'abandoned',
+        readingLevel: r.readingLevel as 'simple' | 'standard' | 'professional',
+        classificationTitle: classification?.title ?? null,
+        messageCount: history.length,
+        extractedFieldCount: Object.keys(extracted).length,
+        createdAt: (r.createdAt as Date).toISOString(),
+        updatedAt: (r.updatedAt as Date).toISOString(),
+        isTest: r.isTest,
+      };
+    });
+
+    return { sessions, totalCount, page, pageSize };
   }
 }

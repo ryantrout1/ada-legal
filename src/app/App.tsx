@@ -18,14 +18,16 @@
  */
 
 import { ClerkProvider } from '@clerk/clerk-react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { requireClerkPublishableKey } from '../lib/env.js';
 import PublicLayout from './layouts/PublicLayout.js';
+import AdminLayout from './layouts/AdminLayout.js';
 import Home from './routes/public/Home.js';
 import Chat from './routes/public/Chat.js';
 import Attorneys from './routes/public/Attorneys.js';
 import AdminSignIn from './routes/admin/SignIn.js';
-import AdminPlaceholder from './routes/admin/AdminPlaceholder.js';
+import AdminSessions from './routes/admin/AdminSessions.js';
+import AdminSessionDetail from './routes/admin/AdminSessionDetail.js';
 import RequireAdmin from './components/RequireAdmin.js';
 
 export default function App() {
@@ -53,14 +55,30 @@ function AdminShell() {
       <Routes>
         <Route path="sign-in/*" element={<AdminSignIn />} />
         <Route
-          path="*"
           element={
             <RequireAdmin>
-              <AdminPlaceholder />
+              <AdminLayout />
             </RequireAdmin>
           }
-        />
+        >
+          <Route index element={<Navigate to="/admin/sessions" replace />} />
+          <Route path="sessions" element={<AdminSessions />} />
+          <Route path="sessions/:id" element={<AdminSessionDetail />} />
+          <Route path="attorneys" element={<AdminTodo label="Attorneys" />} />
+          <Route path="settings" element={<AdminTodo label="Settings" />} />
+          <Route path="analytics" element={<AdminTodo label="Analytics" />} />
+          <Route path="*" element={<Navigate to="/admin/sessions" replace />} />
+        </Route>
       </Routes>
     </ClerkProvider>
+  );
+}
+
+function AdminTodo({ label }: { label: string }) {
+  return (
+    <section>
+      <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-2">{label}</h1>
+      <p className="text-ink-500">Coming in the next admin step.</p>
+    </section>
   );
 }

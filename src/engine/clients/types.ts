@@ -106,6 +106,44 @@ export interface DbClient {
   getOrgByCode(orgCode: string): Promise<OrganizationRow | null>;
   /** Persist an anon_sessions row (creates if not exists). */
   upsertAnonSession(opts: AnonSessionUpsertOptions): Promise<string>;
+  /** Paginated list of ada_sessions for the admin overview. */
+  listSessionsForAdmin(opts: AdminSessionListOptions): Promise<AdminSessionListResult>;
+}
+
+export interface AdminSessionListOptions {
+  /** Filter by status; omit to return all (excludes is_test=true rows by default). */
+  status?: 'active' | 'completed' | 'abandoned';
+  /** Include is_test=true rows. Default false — QA sessions are noise for admin. */
+  includeTest?: boolean;
+  /** 1-based page number. Default 1. */
+  page?: number;
+  /** Rows per page. 1..100. Default 25. */
+  pageSize?: number;
+}
+
+export interface AdminSessionSummary {
+  sessionId: string;
+  status: 'active' | 'completed' | 'abandoned';
+  readingLevel: 'simple' | 'standard' | 'professional';
+  /** Title I / II / III slug if Ada classified the incident, else null. */
+  classificationTitle: string | null;
+  /** Count of messages in the conversation (user + assistant). */
+  messageCount: number;
+  /** How many extracted fields landed on the session. */
+  extractedFieldCount: number;
+  /** Created timestamp from the row (ISO). */
+  createdAt: string;
+  /** Last-updated timestamp (ISO). */
+  updatedAt: string;
+  /** True if this session was marked is_test (QA origin). */
+  isTest: boolean;
+}
+
+export interface AdminSessionListResult {
+  sessions: AdminSessionSummary[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
 }
 
 export interface AttorneyFacets {

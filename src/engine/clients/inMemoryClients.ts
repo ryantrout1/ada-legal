@@ -15,6 +15,9 @@
 import type { AdaSessionState } from '../types.js';
 import type {
   AdaClients,
+  AdminSessionListOptions,
+  AdminSessionListResult,
+  AdminSessionSummary,
   AiClient,
   AiStreamChunk,
   AiStreamRequest,
@@ -133,6 +136,41 @@ export class InMemoryDbClient implements DbClient {
     return {
       states: [...states].sort(),
       practiceAreas: [...practiceAreas].sort(),
+    };
+  }
+
+  async listSessionsForAdmin(
+    opts: AdminSessionListOptions,
+  ): Promise<AdminSessionListResult> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 25;
+
+    const all = [...this.sessions.values()].filter((s) => {
+      if (opts.status && s.status !== opts.status) return false;
+      if (!opts.includeTest && s.isTest) return false;
+      return true;
+    });
+
+    const summaries: AdminSessionSummary[] = all.map((s) => ({
+      sessionId: s.sessionId,
+      status: s.status,
+      readingLevel: s.readingLevel,
+      classificationTitle: s.classification?.title ?? null,
+      messageCount: s.conversationHistory.length,
+      extractedFieldCount: Object.keys(s.extractedFields).length,
+      // Synthetic timestamps for in-memory — tests that care set them directly.
+      createdAt: new Date(0).toISOString(),
+      updatedAt: new Date(0).toISOString(),
+      isTest: s.isTest,
+    }));
+
+    const start = (page - 1) * pageSize;
+    return {
+      sessions: summaries.slice(start, start + pageSize),
+      totalCount: summaries.length,
+      page,
+      pageSize,
     };
   }
 }
