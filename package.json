@@ -16,7 +16,9 @@
     "test:integration": "vitest run tests/integration",
     "test:personas": "playwright test",
     "test:personas:preview": "PLAYWRIGHT_TARGET=preview playwright test",
-    "test:personas:install": "playwright install chromium"
+    "test:personas:install": "playwright install chromium",
+    "test:a11y": "playwright test --config=playwright.a11y.config.ts",
+    "test:a11y:preview": "PLAYWRIGHT_TARGET=preview playwright test --config=playwright.a11y.config.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",
@@ -29,6 +31,7 @@
     "react-router-dom": "^7.1.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.2",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/vite": "^4.2.3",
     "@types/node": "^22.0.0",
