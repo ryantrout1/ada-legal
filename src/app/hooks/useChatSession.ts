@@ -259,6 +259,11 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
           body: JSON.stringify({
             session_id: state.sessionId,
             message: serverMessage,
+            // Sent separately (not just embedded in the message) so the
+            // turn endpoint can persist the URL in session metadata for
+            // later attorney-routing packages. Ada still sees the URL
+            // in the message text so analyze_photo can find it.
+            photo_url: photoUrl ?? undefined,
           }),
         });
         if (!resp.ok) {
@@ -365,11 +370,6 @@ async function uploadPhoto(sessionId: string, file: File): Promise<string> {
     access: 'public',
     handleUploadUrl: '/api/ada/upload-photo',
     contentType: file.type,
-    // Multipart splits the file into chunks, uploads in parallel, and
-    // retries individual chunks on failure instead of the whole file.
-    // Strongly recommended for anything over ~4 MB per Vercel docs, and
-    // benign for smaller files (library degrades to a single chunk).
-    multipart: true,
   });
 
   return result.url;

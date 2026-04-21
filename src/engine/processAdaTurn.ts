@@ -37,7 +37,7 @@ import type {
   AdaTurnResult,
   ToolInvocation,
 } from './types.js';
-import type { Message } from '../types/db.js';
+import type { Message, AttachedPhoto } from '../types/db.js';
 import { assemblePrompt } from './prompt/assemble.js';
 import { CH0_TOOLS, buildToolIndex } from './tools/registry.js';
 import { dispatchTool } from './tools/dispatcher.js';
@@ -73,9 +73,25 @@ export async function processAdaTurn({
     content: input.userMessage,
     timestamp: clients.clock.now().toISOString(),
   };
+
+  // If the user attached photos this turn, persist their URLs in
+  // session metadata. This is how photos survive beyond the session
+  // for attorney-routing packages (Phase C/D). The URLs themselves
+  // live in Vercel Blob storage; we only carry the references.
+  const now = clients.clock.now().toISOString();
+  const newPhotos: AttachedPhoto[] =
+    input.photoBlobKeys?.map((url) => ({ url, uploadedAt: now })) ?? [];
+  const mergedPhotos = newPhotos.length
+    ? [...(state.metadata.photos ?? []), ...newPhotos]
+    : state.metadata.photos;
+
   let workingState: AdaSessionState = {
     ...state,
     conversationHistory: [...state.conversationHistory, userMessage],
+    metadata: {
+      ...state.metadata,
+      photos: mergedPhotos,
+    },
   };
 
   const toolRegistry = buildToolIndex(CH0_TOOLS);

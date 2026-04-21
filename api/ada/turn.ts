@@ -42,6 +42,15 @@ import {
 interface Body {
   session_id?: string;
   message?: string;
+  /**
+   * Optional public blob URL of a photo the user attached this turn.
+   * Uploaded separately via /api/ada/upload-photo (client-direct). We
+   * persist it in session.metadata.photos[] so attorney-routing packages
+   * (Phase C/D) can include the actual image, not just Ada's description.
+   * Ada's analyze_photo tool reads the URL from the message body, not
+   * from this field.
+   */
+  photo_url?: string;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -64,6 +73,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res
         .status(400)
         .json({ error: 'message is too long (max 10,000 chars)' });
+    }
+
+    // Optional photo URL — validate that it's either absent or a
+    // reasonable http(s) URL. We deliberately don't enforce the
+    // blob.vercel-storage.com host because the analyze_photo tool
+    // accepts any http(s) URL and that flexibility is useful for
+    // future cases (eg user-provided existing photos).
+    if (body.photo_url !== undefined) {
+      if (typeof body.photo_url !== 'string') {
+        return res.status(400).json({ error: 'photo_url must be a string' });
+      }
+      if (
+        !body.photo_url.startsWith('https://') &&
+        !body.photo_url.startsWith('http://')
+      ) {
+        return res.status(400).json({ error: 'photo_url must be http(s)' });
+      }
+      if (body.photo_url.length > 1024) {
+        return res.status(400).json({ error: 'photo_url is too long' });
+      }
     }
 
     const ctx = resolveRequestContext(req);
@@ -98,7 +127,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const result = await processAdaTurn({
       clients,
       state,
-      input: { userMessage: body.message },
+      input: {
+        userMessage: body.message,
+        photoBlobKeys: body.photo_url ? [body.photo_url] : undefined,
+      },
       orgDisplayName: org?.displayName ?? 'ADA Legal Link',
       orgAdaIntroPrompt: org?.adaIntroPrompt ?? null,
     });

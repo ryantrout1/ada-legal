@@ -26,6 +26,7 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 
 import { useChatSession, type ReadingLevel } from '../../hooks/useChatSession.js';
 import { useSpeechInput } from '../../hooks/useSpeechInput.js';
 import { useSpeechOutput } from '../../hooks/useSpeechOutput.js';
+import { downscalePhoto } from '../../utils/downscalePhoto.js';
 
 export default function Chat() {
   const { state, sendMessage, startNewSession, acceptResume, discardResume } =
@@ -109,17 +110,27 @@ export default function Chat() {
   }
 
   async function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 8 * 1024 * 1024) {
-      alert('Photo must be smaller than 8 MB.');
+    const rawFile = e.target.files?.[0];
+    if (!rawFile) return;
+    if (rawFile.size > 20 * 1024 * 1024) {
+      // 20 MB hard ceiling on what we'll even try to process. Above
+      // that the downscale itself would use too much memory on low-end
+      // phones. In practice modern phone photos are 3–8 MB so this
+      // ceiling is generous.
+      alert('Photo must be smaller than 20 MB.');
       if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
+
+    // Downscale to 1920px longest side, JPEG 0.75. Typical output is
+    // 200–500 KB — uploads in under a second on any real connection,
+    // Haiku vision gets the same effective input resolution anyway.
+    const file = await downscalePhoto(rawFile);
+
     const dataUrl = await fileToDataUrl(file);
     setPhotoPreview(dataUrl);
     setPhotoFile(file);
-    setPhotoFilename(file.name);
+    setPhotoFilename(rawFile.name);
   }
 
   function clearPhoto() {

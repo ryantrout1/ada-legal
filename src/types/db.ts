@@ -92,6 +92,18 @@ export interface SessionMetadata {
   message_count?: number;
   input_tokens_total?: number;
   output_tokens_total?: number;
+  /**
+   * Photos the user attached during the session. Persisted so the
+   * attorney-routing package (Phase C/D) can include the actual
+   * images, not just Ada's text description of them. URLs are
+   * public blob URLs from Vercel Blob with unguessable random paths.
+   */
+  photos?: AttachedPhoto[];
+}
+
+export interface AttachedPhoto {
+  url: string;
+  uploadedAt: string;
 }
 
 // Matches docs/DO_NOT_TOUCH.md rule 12: reading levels are exactly these three.
