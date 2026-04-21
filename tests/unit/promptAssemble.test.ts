@@ -113,14 +113,15 @@ describe('assemblePrompt — structure', () => {
 });
 
 describe('assemblePrompt — reading levels', () => {
-  it('simple level includes simple-level copy', () => {
+  it('simple level includes plain-language COGA-conformant copy', () => {
     const out = assemblePrompt({
       state: baseState({ readingLevel: 'simple' }),
       orgDisplayName: 'ADA Legal Link',
       orgAdaIntroPrompt: null,
     });
     expect(out).toContain('Reading level: simple');
-    expect(out).toContain('5th grade');
+    expect(out).toContain('COGA');
+    expect(out).toContain('Never use legal terms');
     expect(out).not.toContain('assume legal literacy');
   });
 
@@ -142,7 +143,7 @@ describe('assemblePrompt — reading levels', () => {
     });
     expect(out).toContain('Reading level: professional');
     expect(out).toContain('legal literacy');
-    expect(out).not.toContain('5th grade');
+    expect(out).not.toContain('COGA');
   });
 });
 

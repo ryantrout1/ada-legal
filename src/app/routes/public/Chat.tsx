@@ -515,10 +515,25 @@ function ReadingLevelPicker({
   onChange: (level: ReadingLevel) => void;
   disabled: boolean;
 }) {
-  const levels: { id: ReadingLevel; label: string }[] = [
-    { id: 'simple', label: 'Simple' },
-    { id: 'standard', label: 'Standard' },
-    { id: 'professional', label: 'Professional' },
+  const levels: { id: ReadingLevel; label: string; description: string }[] = [
+    {
+      id: 'simple',
+      label: 'Simple',
+      description:
+        'Plain language. Short sentences. No legal terms. For anyone who wants a clearer, slower conversation.',
+    },
+    {
+      id: 'standard',
+      label: 'Standard',
+      description:
+        'Conversational everyday language. The default.',
+    },
+    {
+      id: 'professional',
+      label: 'Professional',
+      description:
+        'Legal and technical terms. For attorneys, advocates, and people familiar with ADA law.',
+    },
   ];
   return (
     <div role="group" aria-label="Reading level" className="flex items-center gap-1 text-sm">
@@ -535,6 +550,7 @@ function ReadingLevelPicker({
               onClick={() => onChange(l.id)}
               disabled={disabled}
               aria-pressed={active}
+              title={l.description}
               className={
                 (active
                   ? 'bg-accent-500 text-white '
