@@ -85,6 +85,67 @@ export interface AttorneyRow {
   websiteUrl: string | null;
 }
 
+/** Attorney statuses the admin can filter on or set. */
+export type AttorneyStatus = 'pending' | 'approved' | 'rejected' | 'archived';
+
+/** Full attorney record including all admin-only fields. */
+export interface AttorneyAdminRow extends AttorneyRow {
+  bio: string | null;
+  photoUrl: string | null;
+  status: AttorneyStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminAttorneyListOptions {
+  /** Filter by status. Omit for all. */
+  status?: AttorneyStatus;
+  /** Substring search on name or firm_name. */
+  search?: string;
+  /** 1-based page. Default 1. */
+  page?: number;
+  /** Rows per page, 1..100. Default 50. */
+  pageSize?: number;
+}
+
+export interface AdminAttorneyListResult {
+  attorneys: AttorneyAdminRow[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
+/** All fields required to create a new attorney row. */
+export interface CreateAttorneyInput {
+  orgId: string;
+  name: string;
+  firmName?: string | null;
+  locationCity?: string | null;
+  locationState?: string | null;
+  practiceAreas: string[];
+  email?: string | null;
+  phone?: string | null;
+  websiteUrl?: string | null;
+  bio?: string | null;
+  photoUrl?: string | null;
+  status?: AttorneyStatus;
+}
+
+/** Partial update for an existing attorney. */
+export interface UpdateAttorneyInput {
+  name?: string;
+  firmName?: string | null;
+  locationCity?: string | null;
+  locationState?: string | null;
+  practiceAreas?: string[];
+  email?: string | null;
+  phone?: string | null;
+  websiteUrl?: string | null;
+  bio?: string | null;
+  photoUrl?: string | null;
+  status?: AttorneyStatus;
+}
+
 export interface OrganizationRow {
   id: string;
   orgCode: string;
@@ -108,6 +169,18 @@ export interface DbClient {
   upsertAnonSession(opts: AnonSessionUpsertOptions): Promise<string>;
   /** Paginated list of ada_sessions for the admin overview. */
   listSessionsForAdmin(opts: AdminSessionListOptions): Promise<AdminSessionListResult>;
+  /** Admin list of attorneys across all statuses. */
+  listAttorneysForAdmin(opts: AdminAttorneyListOptions): Promise<AdminAttorneyListResult>;
+  /** Read a single attorney by id for admin view. */
+  getAttorneyById(id: string): Promise<AttorneyAdminRow | null>;
+  /** Insert a new attorney row. Returns the created row. */
+  createAttorney(input: CreateAttorneyInput): Promise<AttorneyAdminRow>;
+  /** Partial update of an attorney. Returns the updated row or null. */
+  updateAttorney(id: string, input: UpdateAttorneyInput): Promise<AttorneyAdminRow | null>;
+  /** Read a single system_settings value by key. */
+  getSystemSetting<T = unknown>(key: string): Promise<T | null>;
+  /** Write a system_settings value by key (upsert). */
+  setSystemSetting<T = unknown>(key: string, value: T, updatedBy?: string | null): Promise<void>;
 }
 
 export interface AdminSessionListOptions {

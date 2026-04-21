@@ -15,6 +15,8 @@
 import type { AdaSessionState } from '../types.js';
 import type {
   AdaClients,
+  AdminAttorneyListOptions,
+  AdminAttorneyListResult,
   AdminSessionListOptions,
   AdminSessionListResult,
   AdminSessionSummary,
@@ -22,6 +24,7 @@ import type {
   AiStreamChunk,
   AiStreamRequest,
   AnonSessionUpsertOptions,
+  AttorneyAdminRow,
   AttorneyFacets,
   AttorneyRow,
   AttorneySearchOptions,
@@ -31,6 +34,7 @@ import type {
   BlobUploadOptions,
   BlobUploadResult,
   ClockClient,
+  CreateAttorneyInput,
   DbClient,
   EmailClient,
   EmailSendOptions,
@@ -41,6 +45,7 @@ import type {
   RandomClient,
   SessionReadOptions,
   SessionWriteOptions,
+  UpdateAttorneyInput,
 } from './types.js';
 
 // ─── AI ───────────────────────────────────────────────────────────────────────
@@ -83,7 +88,9 @@ export class InMemoryAiClient implements AiClient {
 export class InMemoryDbClient implements DbClient {
   public readonly sessions = new Map<string, AdaSessionState>();
   public readonly attorneys: AttorneyRow[] = [];
+  public readonly adminAttorneys: AttorneyAdminRow[] = [];
   public readonly orgs: OrganizationRow[] = [];
+  public readonly systemSettings = new Map<string, unknown>();
   public readonly anonSessions: Array<{
     id: string;
     orgId: string;
@@ -173,6 +180,136 @@ export class InMemoryDbClient implements DbClient {
       pageSize,
     };
   }
+
+  // ─── Admin: attorneys ───────────────────────────────────────────────────────
+
+  async listAttorneysForAdmin(
+    opts: AdminAttorneyListOptions,
+  ): Promise<AdminAttorneyListResult> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 50;
+
+    const term = opts.search?.trim().toLowerCase();
+    const all = this.adminAttorneys.filter((a) => {
+      if (opts.status && a.status !== opts.status) return false;
+      if (term) {
+        const hay = `${a.name} ${a.firmName ?? ''}`.toLowerCase();
+        if (!hay.includes(term)) return false;
+      }
+      return true;
+    });
+
+    const sorted = [...all].sort((a, b) =>
+      b.updatedAt.localeCompare(a.updatedAt),
+    );
+
+    const start = (page - 1) * pageSize;
+    return {
+      attorneys: sorted.slice(start, start + pageSize),
+      totalCount: all.length,
+      page,
+      pageSize,
+    };
+  }
+
+  async getAttorneyById(id: string): Promise<AttorneyAdminRow | null> {
+    return this.adminAttorneys.find((a) => a.id === id) ?? null;
+  }
+
+  async createAttorney(input: CreateAttorneyInput): Promise<AttorneyAdminRow> {
+    const now = new Date().toISOString();
+    const id =
+      '10000000-0000-4000-8000-' + (this.adminAttorneys.length + 1).toString(16).padStart(12, '0');
+    const row: AttorneyAdminRow = {
+      id,
+      name: input.name,
+      firmName: input.firmName ?? null,
+      locationCity: input.locationCity ?? null,
+      locationState: input.locationState ?? null,
+      practiceAreas: input.practiceAreas,
+      email: input.email ?? null,
+      phone: input.phone ?? null,
+      websiteUrl: input.websiteUrl ?? null,
+      bio: input.bio ?? null,
+      photoUrl: input.photoUrl ?? null,
+      status: input.status ?? 'pending',
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.adminAttorneys.push(row);
+    // If approved, also expose via searchAttorneys.
+    if (row.status === 'approved') {
+      this.attorneys.push(toPublicAttorney(row));
+    }
+    return row;
+  }
+
+  async updateAttorney(
+    id: string,
+    input: UpdateAttorneyInput,
+  ): Promise<AttorneyAdminRow | null> {
+    const idx = this.adminAttorneys.findIndex((a) => a.id === id);
+    if (idx === -1) return null;
+    const prev = this.adminAttorneys[idx];
+    const next: AttorneyAdminRow = {
+      ...prev,
+      ...(input.name !== undefined ? { name: input.name } : {}),
+      ...(input.firmName !== undefined ? { firmName: input.firmName } : {}),
+      ...(input.locationCity !== undefined ? { locationCity: input.locationCity } : {}),
+      ...(input.locationState !== undefined ? { locationState: input.locationState } : {}),
+      ...(input.practiceAreas !== undefined ? { practiceAreas: input.practiceAreas } : {}),
+      ...(input.email !== undefined ? { email: input.email } : {}),
+      ...(input.phone !== undefined ? { phone: input.phone } : {}),
+      ...(input.websiteUrl !== undefined ? { websiteUrl: input.websiteUrl } : {}),
+      ...(input.bio !== undefined ? { bio: input.bio } : {}),
+      ...(input.photoUrl !== undefined ? { photoUrl: input.photoUrl } : {}),
+      ...(input.status !== undefined ? { status: input.status } : {}),
+      updatedAt: new Date().toISOString(),
+    };
+    this.adminAttorneys[idx] = next;
+
+    // Keep the public mirror in sync.
+    const publicIdx = this.attorneys.findIndex((a) => a.id === id);
+    if (next.status === 'approved') {
+      if (publicIdx === -1) this.attorneys.push(toPublicAttorney(next));
+      else this.attorneys[publicIdx] = toPublicAttorney(next);
+    } else if (publicIdx !== -1) {
+      this.attorneys.splice(publicIdx, 1);
+    }
+
+    return next;
+  }
+
+  // ─── Admin: system settings ─────────────────────────────────────────────────
+
+  async getSystemSetting<T = unknown>(key: string): Promise<T | null> {
+    return (this.systemSettings.get(key) as T) ?? null;
+  }
+
+  async setSystemSetting<T = unknown>(
+    key: string,
+    value: T,
+    _updatedBy?: string | null,
+  ): Promise<void> {
+    this.systemSettings.set(key, value);
+  }
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function toPublicAttorney(a: AttorneyAdminRow): AttorneyRow {
+  return {
+    id: a.id,
+    name: a.name,
+    firmName: a.firmName,
+    locationCity: a.locationCity,
+    locationState: a.locationState,
+    practiceAreas: a.practiceAreas,
+    email: a.email,
+    phone: a.phone,
+    websiteUrl: a.websiteUrl,
+  };
 }
 
 // ─── Blob ─────────────────────────────────────────────────────────────────────

@@ -18,26 +18,33 @@
  * Ref: docs/ARCHITECTURE.md §2, §6, docs/DO_NOT_TOUCH.md rule 1
  */
 
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, ilike, or, sql } from 'drizzle-orm';
 import type { Database } from '../../db/client.js';
 import {
   adaSessions,
   anonSessions,
   attorneys as attorneysTable,
   organizations,
+  systemSettings,
 } from '../../db/schema-core.js';
 import type {
+  AdminAttorneyListOptions,
+  AdminAttorneyListResult,
   AdminSessionListOptions,
   AdminSessionListResult,
   AdminSessionSummary,
   AnonSessionUpsertOptions,
+  AttorneyAdminRow,
   AttorneyFacets,
   AttorneyRow,
   AttorneySearchOptions,
+  AttorneyStatus,
+  CreateAttorneyInput,
   DbClient,
   OrganizationRow,
   SessionReadOptions,
   SessionWriteOptions,
+  UpdateAttorneyInput,
 } from './types.js';
 import type { AdaSessionState } from '../types.js';
 import type {
@@ -297,4 +304,160 @@ export class NeonDbClient implements DbClient {
 
     return { sessions, totalCount, page, pageSize };
   }
+
+  // ─── Admin: attorneys ───────────────────────────────────────────────────────
+
+  async listAttorneysForAdmin(
+    opts: AdminAttorneyListOptions,
+  ): Promise<AdminAttorneyListResult> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 50;
+    const offset = (page - 1) * pageSize;
+
+    const conds = [];
+    if (opts.status) conds.push(eq(attorneysTable.status, opts.status));
+    if (opts.search && opts.search.trim()) {
+      const term = `%${opts.search.trim()}%`;
+      conds.push(
+        or(ilike(attorneysTable.name, term), ilike(attorneysTable.firmName, term))!,
+      );
+    }
+    const whereClause = conds.length > 0 ? and(...conds) : undefined;
+
+    const countRows = await this.db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(attorneysTable)
+      .where(whereClause);
+    const totalCount = countRows[0]?.n ?? 0;
+
+    const rows = await this.db
+      .select()
+      .from(attorneysTable)
+      .where(whereClause)
+      .orderBy(sql`${attorneysTable.updatedAt} DESC`)
+      .limit(pageSize)
+      .offset(offset);
+
+    return {
+      attorneys: rows.map(toAttorneyAdminRow),
+      totalCount,
+      page,
+      pageSize,
+    };
+  }
+
+  async getAttorneyById(id: string): Promise<AttorneyAdminRow | null> {
+    const rows = await this.db
+      .select()
+      .from(attorneysTable)
+      .where(eq(attorneysTable.id, id))
+      .limit(1);
+    return rows[0] ? toAttorneyAdminRow(rows[0]) : null;
+  }
+
+  async createAttorney(input: CreateAttorneyInput): Promise<AttorneyAdminRow> {
+    const inserted = await this.db
+      .insert(attorneysTable)
+      .values({
+        orgId: input.orgId,
+        name: input.name,
+        firmName: input.firmName ?? null,
+        locationCity: input.locationCity ?? null,
+        locationState: input.locationState ?? null,
+        practiceAreas: input.practiceAreas,
+        email: input.email ?? null,
+        phone: input.phone ?? null,
+        websiteUrl: input.websiteUrl ?? null,
+        bio: input.bio ?? null,
+        photoUrl: input.photoUrl ?? null,
+        status: input.status ?? 'pending',
+      })
+      .returning();
+    return toAttorneyAdminRow(inserted[0]);
+  }
+
+  async updateAttorney(
+    id: string,
+    input: UpdateAttorneyInput,
+  ): Promise<AttorneyAdminRow | null> {
+    // Build a patch object excluding undefined keys so we only touch
+    // what the caller asked to change.
+    const patch: Record<string, unknown> = {};
+    if (input.name !== undefined) patch.name = input.name;
+    if (input.firmName !== undefined) patch.firmName = input.firmName;
+    if (input.locationCity !== undefined) patch.locationCity = input.locationCity;
+    if (input.locationState !== undefined) patch.locationState = input.locationState;
+    if (input.practiceAreas !== undefined) patch.practiceAreas = input.practiceAreas;
+    if (input.email !== undefined) patch.email = input.email;
+    if (input.phone !== undefined) patch.phone = input.phone;
+    if (input.websiteUrl !== undefined) patch.websiteUrl = input.websiteUrl;
+    if (input.bio !== undefined) patch.bio = input.bio;
+    if (input.photoUrl !== undefined) patch.photoUrl = input.photoUrl;
+    if (input.status !== undefined) patch.status = input.status;
+
+    if (Object.keys(patch).length === 0) {
+      return this.getAttorneyById(id);
+    }
+
+    const updated = await this.db
+      .update(attorneysTable)
+      .set(patch)
+      .where(eq(attorneysTable.id, id))
+      .returning();
+    return updated[0] ? toAttorneyAdminRow(updated[0]) : null;
+  }
+
+  // ─── Admin: system settings ─────────────────────────────────────────────────
+
+  async getSystemSetting<T = unknown>(key: string): Promise<T | null> {
+    const rows = await this.db
+      .select({ value: systemSettings.value })
+      .from(systemSettings)
+      .where(eq(systemSettings.key, key))
+      .limit(1);
+    return rows[0] ? (rows[0].value as T) : null;
+  }
+
+  async setSystemSetting<T = unknown>(
+    key: string,
+    value: T,
+    updatedBy?: string | null,
+  ): Promise<void> {
+    await this.db
+      .insert(systemSettings)
+      .values({
+        key,
+        value: value as unknown,
+        updatedBy: updatedBy ?? null,
+      })
+      .onConflictDoUpdate({
+        target: systemSettings.key,
+        set: {
+          value: value as unknown,
+          updatedBy: updatedBy ?? null,
+        },
+      });
+  }
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function toAttorneyAdminRow(r: typeof attorneysTable.$inferSelect): AttorneyAdminRow {
+  return {
+    id: r.id,
+    name: r.name,
+    firmName: r.firmName,
+    locationCity: r.locationCity,
+    locationState: r.locationState,
+    practiceAreas: (r.practiceAreas ?? []) as string[],
+    email: r.email,
+    phone: r.phone,
+    websiteUrl: r.websiteUrl,
+    bio: r.bio,
+    photoUrl: r.photoUrl,
+    status: r.status as AttorneyStatus,
+    createdAt: (r.createdAt as Date).toISOString(),
+    updatedAt: (r.updatedAt as Date).toISOString(),
+  };
 }

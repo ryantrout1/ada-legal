@@ -28,6 +28,9 @@ import Attorneys from './routes/public/Attorneys.js';
 import AdminSignIn from './routes/admin/SignIn.js';
 import AdminSessions from './routes/admin/AdminSessions.js';
 import AdminSessionDetail from './routes/admin/AdminSessionDetail.js';
+import AdminAttorneys from './routes/admin/AdminAttorneys.js';
+import AdminAttorneyEdit from './routes/admin/AdminAttorneyEdit.js';
+import AdminSettings from './routes/admin/AdminSettings.js';
 import RequireAdmin from './components/RequireAdmin.js';
 
 export default function App() {
@@ -64,8 +67,10 @@ function AdminShell() {
           <Route index element={<Navigate to="/admin/sessions" replace />} />
           <Route path="sessions" element={<AdminSessions />} />
           <Route path="sessions/:id" element={<AdminSessionDetail />} />
-          <Route path="attorneys" element={<AdminTodo label="Attorneys" />} />
-          <Route path="settings" element={<AdminTodo label="Settings" />} />
+          <Route path="attorneys" element={<AdminAttorneys />} />
+          <Route path="attorneys/new" element={<AdminAttorneyEdit />} />
+          <Route path="attorneys/:id" element={<AdminAttorneyEdit />} />
+          <Route path="settings" element={<AdminSettings />} />
           <Route path="analytics" element={<AdminTodo label="Analytics" />} />
           <Route path="*" element={<Navigate to="/admin/sessions" replace />} />
         </Route>
