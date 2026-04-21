@@ -266,3 +266,152 @@ describe('assemblePrompt — org context', () => {
     expect(out).toContain('AZ-specific reporting rules');
   });
 });
+
+describe('assemblePrompt — knowledge section (Step 10.5)', () => {
+  it('omits the KNOWLEDGE section entirely when no chunks are provided', () => {
+    const out = assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).not.toContain('# KNOWLEDGE');
+  });
+
+  it('omits the KNOWLEDGE section when the chunks array is empty', () => {
+    const out = assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+      knowledgeChunks: [],
+    });
+    expect(out).not.toContain('# KNOWLEDGE');
+  });
+
+  it('renders retrieved chunks with title, source, and content', () => {
+    const out = assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+      knowledgeChunks: [
+        {
+          id: 'chunk-1',
+          topic: 'service_animals',
+          title: '§36.302(c)(1) — Service animals — general rule',
+          content: 'Generally, a public accommodation shall modify policies.',
+          standardRefs: ['36.302(c)(1)', '36.302(c)', '36.302', '36'],
+          source: '28 CFR §36 (ADA Title III regulations)',
+          similarity: 0.89,
+          matchType: 'vector',
+        },
+      ],
+    });
+    expect(out).toContain('# KNOWLEDGE');
+    expect(out).toContain('§36.302(c)(1) — Service animals — general rule');
+    expect(out).toContain('28 CFR §36 (ADA Title III regulations)');
+    expect(out).toContain('Generally, a public accommodation shall modify policies.');
+  });
+
+  it('instructs Ada to cite by section number when using retrieved text', () => {
+    const out = assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+      knowledgeChunks: [
+        {
+          id: 'chunk-1',
+          topic: 'service_animals',
+          title: '§36.302(c)(1) — Service animals — general rule',
+          content: 'body',
+          standardRefs: ['36.302(c)(1)'],
+          source: '28 CFR §36',
+          similarity: 0.89,
+          matchType: 'vector',
+        },
+      ],
+    });
+    expect(out.toLowerCase()).toContain('cite the section number');
+    expect(out).toContain('§36.302(c)(6)'); // example in the instructions
+  });
+
+  it('warns Ada not to invent citations', () => {
+    const out = assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+      knowledgeChunks: [
+        {
+          id: 'chunk-1',
+          topic: 'general',
+          title: '§36.201 — General',
+          content: 'body',
+          standardRefs: ['36.201'],
+          source: '28 CFR §36',
+          similarity: 0.7,
+          matchType: 'vector',
+        },
+      ],
+    });
+    expect(out.toLowerCase()).toContain('never invent citations');
+  });
+
+  it('renders multiple chunks in the order given', () => {
+    const out = assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+      knowledgeChunks: [
+        {
+          id: 'a',
+          topic: 'service_animals',
+          title: '§36.302(c)(1) — first',
+          content: 'first-body',
+          standardRefs: ['36.302(c)(1)'],
+          source: '28 CFR §36',
+          similarity: null,
+          matchType: 'citation',
+        },
+        {
+          id: 'b',
+          topic: 'service_animals',
+          title: '§36.302(c)(6) — second',
+          content: 'second-body',
+          standardRefs: ['36.302(c)(6)'],
+          source: '28 CFR §36',
+          similarity: 0.8,
+          matchType: 'vector',
+        },
+      ],
+    });
+    const firstIdx = out.indexOf('first-body');
+    const secondIdx = out.indexOf('second-body');
+    expect(firstIdx).toBeGreaterThan(-1);
+    expect(secondIdx).toBeGreaterThan(-1);
+    expect(firstIdx).toBeLessThan(secondIdx);
+  });
+
+  it('places KNOWLEDGE between ORG CONTEXT and LISTING CONTEXT', () => {
+    const out = assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+      listingAdaPromptOverride: 'Per-listing overlay.',
+      knowledgeChunks: [
+        {
+          id: 'chunk-1',
+          topic: 'service_animals',
+          title: '§36.302(c)(1) — title',
+          content: 'body',
+          standardRefs: ['36.302(c)(1)'],
+          source: '28 CFR §36',
+          similarity: 0.9,
+          matchType: 'vector',
+        },
+      ],
+    });
+    const orgIdx = out.indexOf('# ORG CONTEXT');
+    const kbIdx = out.indexOf('# KNOWLEDGE');
+    const listingIdx = out.indexOf('# LISTING CONTEXT');
+    expect(orgIdx).toBeLessThan(kbIdx);
+    expect(kbIdx).toBeLessThan(listingIdx);
+  });
+});

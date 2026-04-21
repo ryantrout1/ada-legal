@@ -44,6 +44,8 @@ import type {
   AttorneyStatus,
   CreateAttorneyInput,
   DbClient,
+  KnowledgeChunkHit,
+  KnowledgeSearchOptions,
   OrganizationRow,
   SessionQualityCheckRow,
   SessionQualityCheckWrite,
@@ -660,6 +662,144 @@ export class NeonDbClient implements DbClient {
       .limit(1);
     return rows[0]?.id ?? null;
   }
+
+  // ─── Knowledge base (RAG) ──────────────────────────────────────────────────
+
+  async searchKnowledgeBase(
+    opts: KnowledgeSearchOptions,
+  ): Promise<KnowledgeChunkHit[]> {
+    const k = Math.min(Math.max(opts.k ?? 5, 1), 10);
+    const query = opts.query.trim();
+    if (!query) return [];
+
+    // ── Citation extraction ─────────────────────────────────────────────────
+    // Match patterns like "36", "36.302", "36.302(c)", "36.302(c)(1)", with
+    // or without a leading "§" or "Section". Case-insensitive. We look across
+    // the whole query string; multiple citations in one query are supported.
+    const citations = extractCitations(query);
+
+    // ── Vector path ─────────────────────────────────────────────────────────
+    let vectorHits: KnowledgeChunkHit[] = [];
+    if (opts.queryEmbedding && opts.queryEmbedding.length > 0) {
+      const vectorLiteral = `[${opts.queryEmbedding.join(',')}]`;
+      // pgvector cosine distance: smaller = closer. similarity = 1 - distance.
+      const topicClause = opts.topic ? sql`AND topic = ${opts.topic}` : sql``;
+      const rows = await this.db.execute<{
+        id: string;
+        topic: string;
+        title: string;
+        content: string;
+        standard_refs: string[];
+        source: string | null;
+        distance: number;
+      }>(sql`
+        SELECT id::text, topic, title, content, standard_refs, source,
+               (embedding <=> ${vectorLiteral}::vector) AS distance
+        FROM ada_knowledge_chunks
+        WHERE embedding IS NOT NULL ${topicClause}
+        ORDER BY embedding <=> ${vectorLiteral}::vector
+        LIMIT ${k}
+      `);
+      vectorHits = (rows.rows ?? rows ?? []).map((r: {
+        id: string;
+        topic: string;
+        title: string;
+        content: string;
+        standard_refs: string[];
+        source: string | null;
+        distance: number;
+      }) => ({
+        id: r.id,
+        topic: r.topic,
+        title: r.title,
+        content: r.content,
+        standardRefs: Array.isArray(r.standard_refs) ? r.standard_refs : [],
+        source: r.source,
+        similarity: Math.max(0, 1 - Number(r.distance)),
+        matchType: 'vector' as const,
+      }));
+    }
+
+    // ── Citation-match path ─────────────────────────────────────────────────
+    // For every extracted citation, find chunks whose standard_refs array
+    // contains that exact string. This is the deterministic fallback so
+    // "§36.302" always surfaces the right chunks even if similarity ranks
+    // them below something semantically adjacent.
+    let citationHits: KnowledgeChunkHit[] = [];
+    if (citations.length > 0) {
+      const citationJson = JSON.stringify(citations);
+      const rows = await this.db.execute<{
+        id: string;
+        topic: string;
+        title: string;
+        content: string;
+        standard_refs: string[];
+        source: string | null;
+      }>(sql`
+        SELECT id::text, topic, title, content, standard_refs, source
+        FROM ada_knowledge_chunks
+        WHERE standard_refs ?| ${sql.raw(`ARRAY(SELECT jsonb_array_elements_text('${citationJson}'::jsonb))`)}
+        LIMIT ${k}
+      `);
+      citationHits = (rows.rows ?? rows ?? []).map((r: {
+        id: string;
+        topic: string;
+        title: string;
+        content: string;
+        standard_refs: string[];
+        source: string | null;
+      }) => ({
+        id: r.id,
+        topic: r.topic,
+        title: r.title,
+        content: r.content,
+        standardRefs: Array.isArray(r.standard_refs) ? r.standard_refs : [],
+        source: r.source,
+        similarity: null,
+        matchType: 'citation' as const,
+      }));
+    }
+
+    // ── Merge + dedupe ──────────────────────────────────────────────────────
+    // Citation hits first (they're deterministic and high-confidence),
+    // then vector hits. Dedupe by id so a chunk matched both ways only
+    // appears once. Cap at k.
+    const seen = new Set<string>();
+    const merged: KnowledgeChunkHit[] = [];
+    for (const hit of [...citationHits, ...vectorHits]) {
+      if (seen.has(hit.id)) continue;
+      seen.add(hit.id);
+      merged.push(hit);
+      if (merged.length >= k) break;
+    }
+    return merged;
+  }
+}
+
+// ─── KB helpers ──────────────────────────────────────────────────────────────
+
+/**
+ * Extract CFR-style citations from free text. Matches:
+ *   36            — bare part number (rare; usually too broad)
+ *   36.302        — section
+ *   36.302(c)     — subsection
+ *   36.302(c)(1)  — paragraph
+ * Leading "§" or "Section" optional. Returns unique citations in order.
+ */
+function extractCitations(text: string): string[] {
+  // Require at least one dot — bare "36" matches too much common English.
+  const re = /(?:§|section\s+)?(\d{2,3}\.\d{1,4}(?:\([a-z0-9]+\))*)/gi;
+  const out: string[] = [];
+  const seen = new Set<string>();
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) {
+    const c = m[1];
+    if (!seen.has(c)) {
+      seen.add(c);
+      out.push(c);
+    }
+  }
+  return out;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

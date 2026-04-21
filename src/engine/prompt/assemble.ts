@@ -29,6 +29,7 @@
 import type { AdaSessionState } from '../types.js';
 import type { ReadingLevel } from '../../types/db.js';
 import type { AnyAdaTool } from '../tools/types.js';
+import type { KnowledgeChunkHit } from '../clients/types.js';
 import { CH0_TOOLS } from '../tools/registry.js';
 
 import adaIdentity from '../../../content-migration/prompts/ada-identity.js';
@@ -46,6 +47,13 @@ export interface AssemblePromptContext {
   listingAdaPromptOverride?: string | null;
   /** Tool registry to render into the prompt. Defaults to CH0_TOOLS. */
   tools?: ReadonlyArray<AnyAdaTool>;
+  /**
+   * Retrieved knowledge-base chunks for this turn. Optional — when
+   * empty or omitted, the KNOWLEDGE section is dropped entirely. The
+   * engine passes results from DbClient.searchKnowledgeBase() here.
+   * Order matters: the first chunk is shown first in the prompt.
+   */
+  knowledgeChunks?: ReadonlyArray<KnowledgeChunkHit>;
 }
 
 // ─── Assembler ────────────────────────────────────────────────────────────────
@@ -54,6 +62,7 @@ export function assemblePrompt(ctx: AssemblePromptContext): string {
   const sections = [
     section('IDENTITY', buildIdentitySection(ctx)),
     section('ORG CONTEXT', buildOrgSection(ctx)),
+    section('KNOWLEDGE', buildKnowledgeSection(ctx.knowledgeChunks)),
     section('LISTING CONTEXT', buildListingSection(ctx)),
     section('READING LEVEL', buildReadingLevelSection(ctx.state.readingLevel)),
     section('TOOLS', buildToolsSection(ctx.tools ?? CH0_TOOLS)),
@@ -75,6 +84,48 @@ function buildOrgSection(ctx: AssemblePromptContext): string {
     parts.push(ctx.orgAdaIntroPrompt.trim());
   }
   return parts.join('\n\n');
+}
+
+/**
+ * Render retrieved knowledge-base chunks as a structured reference
+ * block. Designed to be maximally skimmable by Claude: each chunk has
+ * a clear header with its citation, its content, and a footer that
+ * tells Ada how to cite if she uses the content.
+ *
+ * When no chunks are retrieved (or the retrieval system is offline),
+ * this section is dropped entirely rather than showing "no knowledge
+ * available" — empty state wastes tokens and teaches the model
+ * nothing.
+ *
+ * Citation discipline: the prompt instructs Ada to cite by section
+ * number (e.g., "§36.302(c)(6)") when she uses retrieved content,
+ * but NOT to fabricate citations when she isn't using it. The
+ * distinction matters because Ada should never invent a citation —
+ * only reuse one she was handed.
+ */
+function buildKnowledgeSection(
+  chunks: ReadonlyArray<KnowledgeChunkHit> | undefined,
+): string {
+  if (!chunks || chunks.length === 0) return '';
+
+  const parts: string[] = [];
+  parts.push(
+    'The following excerpts from the ADA regulations may be relevant to this turn. They were retrieved by semantic similarity and/or direct citation match against the user\'s message.',
+  );
+  parts.push(
+    'Use them to ground your answer when they apply. When you quote or paraphrase from these excerpts, cite the section number in your response (e.g., "§36.302(c)(6)"). If none of them are actually relevant, ignore them — do not force a citation just because an excerpt was retrieved. Never invent citations; only reuse ones shown here.',
+  );
+
+  for (const c of chunks) {
+    parts.push('');
+    parts.push(`## ${c.title}`);
+    if (c.source) {
+      parts.push(`Source: ${c.source}`);
+    }
+    parts.push('');
+    parts.push(c.content);
+  }
+  return parts.join('\n');
 }
 
 function buildListingSection(ctx: AssemblePromptContext): string {

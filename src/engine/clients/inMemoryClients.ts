@@ -40,6 +40,9 @@ import type {
   DbClient,
   EmailClient,
   EmailSendOptions,
+  EmbeddingClient,
+  KnowledgeChunkHit,
+  KnowledgeSearchOptions,
   OrganizationRow,
   PhotoAnalysisClient,
   PhotoAnalysisRequest,
@@ -417,6 +420,79 @@ export class InMemoryDbClient implements DbClient {
     const hit = this.anonSessions.find((a) => a.tokenHash === tokenHash);
     return hit?.id ?? null;
   }
+
+  /**
+   * Test-controllable knowledge base. Seed via `this.knowledgeChunks`
+   * and the search returns matches by citation-contains only (no vector
+   * math; no embedding needed). Good enough for unit tests that want to
+   * assert "Ada cites §36.302 when KB hit is present."
+   */
+  public readonly knowledgeChunks: KnowledgeChunkHit[] = [];
+
+  async searchKnowledgeBase(
+    opts: KnowledgeSearchOptions,
+  ): Promise<KnowledgeChunkHit[]> {
+    const k = Math.min(Math.max(opts.k ?? 5, 1), 10);
+    const query = opts.query.trim().toLowerCase();
+    if (!query || this.knowledgeChunks.length === 0) return [];
+
+    // Simple test-friendly match: chunk wins if the query mentions one
+    // of its standardRefs OR any word from its title. Topic filter
+    // applied if present.
+    const citeRe = /(?:§|section\s+)?(\d{2,3}\.\d{1,4}(?:\([a-z0-9]+\))*)/gi;
+    const citationsInQuery = new Set<string>();
+    let m: RegExpExecArray | null;
+    while ((m = citeRe.exec(query)) !== null) {
+      citationsInQuery.add(m[1]);
+    }
+
+    const hits: KnowledgeChunkHit[] = [];
+    for (const c of this.knowledgeChunks) {
+      if (opts.topic && c.topic !== opts.topic) continue;
+      const citeMatch = c.standardRefs.some((r) => citationsInQuery.has(r));
+      const titleMatch = c.title.toLowerCase().split(/\W+/).some(
+        (w) => w.length > 3 && query.includes(w),
+      );
+      if (citeMatch || titleMatch) {
+        hits.push({ ...c, matchType: citeMatch ? 'citation' : 'vector' });
+      }
+      if (hits.length >= k) break;
+    }
+    return hits;
+  }
+}
+
+/**
+ * Test-controllable embedding client. By default returns a deterministic
+ * 1536-dim vector derived from a hash of the input text, so tests can
+ * assert stability without calling a real API. The engine tolerates
+ * embedQuery throwing, so tests that want to simulate outage can set
+ * `shouldFail = true`.
+ */
+export class InMemoryEmbeddingClient implements EmbeddingClient {
+  public shouldFail = false;
+  public readonly embedCalls: string[] = [];
+
+  async embedQuery(text: string): Promise<number[]> {
+    this.embedCalls.push(text);
+    if (this.shouldFail) throw new Error('embedding client simulated failure');
+    // Fixed-size deterministic vector. Not a real embedding, but stable
+    // per-input, non-zero, and the correct dimension.
+    const seed = cheapHash(text);
+    const vec = new Array(1536);
+    for (let i = 0; i < 1536; i++) {
+      vec[i] = Math.sin(seed + i) * 0.1;
+    }
+    return vec;
+  }
+}
+
+function cheapHash(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) {
+    h = (h * 31 + s.charCodeAt(i)) | 0;
+  }
+  return h;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -552,6 +628,7 @@ export interface InMemoryAdaClients extends AdaClients {
   clock: InMemoryClock;
   random: InMemoryRandom;
   audit: InMemoryAuditClient;
+  embeddings: InMemoryEmbeddingClient;
 }
 
 /** Convenience factory for tests. Each call returns a fresh set of fakes. */
@@ -565,5 +642,6 @@ export function makeInMemoryClients(): InMemoryAdaClients {
     clock: new InMemoryClock(),
     random: new InMemoryRandom(),
     audit: new InMemoryAuditClient(),
+    embeddings: new InMemoryEmbeddingClient(),
   };
 }

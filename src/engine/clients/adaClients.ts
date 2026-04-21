@@ -32,6 +32,7 @@ import { makeDb } from '../../db/client.js';
 import { NeonDbClient } from './neonDbClient.js';
 import { AnthropicAiClient } from './anthropicAiClient.js';
 import { AnthropicPhotoAnalysisClient } from './anthropicPhotoAnalysisClient.js';
+import { makeOpenAIEmbeddingClient } from '../knowledge/embeddings.js';
 import type {
   AdaClients,
   AuditClient,
@@ -123,6 +124,12 @@ export interface AdaClientsConfig {
   anthropicApiKey?: string;
   blobReadWriteToken?: string;
   resendApiKey?: string;
+  /**
+   * OpenAI API key. Optional: when absent, knowledge-base retrieval
+   * still runs (citation match only) but vector search is skipped.
+   * Enables RAG when set.
+   */
+  openaiApiKey?: string;
 }
 
 export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
@@ -142,6 +149,12 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
 
   const db = makeDb(config.databaseUrl);
 
+  // Embeddings client is optional — if OPENAI_API_KEY isn't configured,
+  // RAG falls back to citation-match-only retrieval. No error here.
+  const embeddings = config.openaiApiKey
+    ? makeOpenAIEmbeddingClient(config.openaiApiKey)
+    : undefined;
+
   return {
     ai: new AnthropicAiClient(config.anthropicApiKey),
     db: new NeonDbClient(db),
@@ -151,5 +164,6 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
     clock: new SystemClock(),
     random: new CryptoRandom(),
     audit: new NeonAuditClient(),
+    embeddings,
   };
 }

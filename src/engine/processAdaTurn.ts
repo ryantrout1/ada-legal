@@ -30,7 +30,7 @@
  * Ref: docs/ARCHITECTURE.md §9
  */
 
-import type { AdaClients, AiStreamChunk, AiToolDefinition } from './clients/types.js';
+import type { AdaClients, AiStreamChunk, AiToolDefinition, KnowledgeChunkHit } from './clients/types.js';
 import type {
   AdaSessionState,
   AdaTurnInput,
@@ -83,6 +83,35 @@ export async function processAdaTurn({
   const toolInvocations: ToolInvocation[] = [];
   const photoFindingsAccum: AdaTurnResult['photoFindings'] = [];
 
+  // ── Knowledge-base retrieval (Step 10.5) ─────────────────────────────────
+  // Retrieve ONCE per turn, before the model-tool loop starts. The user
+  // query doesn't change across loop iterations; only the conversation
+  // history grows as Ada uses tools. We embed the user's message, run a
+  // hybrid vector + citation search, and pass the results into every
+  // assemblePrompt call below.
+  //
+  // All failures here are swallowed. RAG is an enhancement, not a hard
+  // dependency — if embeddings or the DB search fail, we still want to
+  // answer the user's question.
+  let knowledgeChunks: KnowledgeChunkHit[] = [];
+  try {
+    let queryEmbedding: number[] | undefined;
+    if (clients.embeddings) {
+      try {
+        queryEmbedding = await clients.embeddings.embedQuery(input.userMessage);
+      } catch {
+        // Embedding failed; fall through to citation-only search.
+      }
+    }
+    knowledgeChunks = await clients.db.searchKnowledgeBase({
+      query: input.userMessage,
+      queryEmbedding,
+      k: 5,
+    });
+  } catch {
+    knowledgeChunks = [];
+  }
+
   let assistantMessage: Message | null = null;
   let loopCount = 0;
 
@@ -94,6 +123,7 @@ export async function processAdaTurn({
       orgDisplayName,
       orgAdaIntroPrompt,
       listingAdaPromptOverride,
+      knowledgeChunks,
     });
 
     // Stream one model turn. Collect text + any tool_use calls.

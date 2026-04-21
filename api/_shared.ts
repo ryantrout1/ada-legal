@@ -22,13 +22,16 @@ import { parseAnonCookie } from '../src/lib/anonCookie.js';
 export function makeClientsFromEnv(): AdaClients {
   const databaseUrl = process.env.DATABASE_URL;
   const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
+  const openaiApiKey = process.env.OPENAI_API_KEY;
   if (!databaseUrl) {
     throw new Error('DATABASE_URL is not set in environment');
   }
   if (!anthropicApiKey) {
     throw new Error('ANTHROPIC_API_KEY is not set in environment');
   }
-  return makeAdaClients({ databaseUrl, anthropicApiKey });
+  // OPENAI_API_KEY is optional. Without it, RAG falls back to
+  // citation-match-only retrieval (no vector similarity).
+  return makeAdaClients({ databaseUrl, anthropicApiKey, openaiApiKey });
 }
 
 export interface RequestContext {

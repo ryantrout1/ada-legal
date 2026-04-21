@@ -203,6 +203,48 @@ export interface DbClient {
    * anon_sessions rows during a "do I have an existing session?" check.
    */
   findAnonSessionByHash(tokenHash: string): Promise<string | null>;
+  /**
+   * Hybrid search over the ADA knowledge base (ada_knowledge_chunks).
+   * Combines vector cosine similarity against the query embedding with
+   * an exact citation-match fallback (so "§36.302" still hits even if
+   * semantic similarity ranks it lower). Returns the top-k unioned
+   * results, deduplicated by chunk id, ordered best-first.
+   *
+   * Returns an empty array rather than throwing if the KB is empty or
+   * the embedding client is unavailable — retrieval is an enhancement,
+   * not a hard dependency.
+   *
+   * Ref: docs/ARCHITECTURE.md §10.5
+   */
+  searchKnowledgeBase(opts: KnowledgeSearchOptions): Promise<KnowledgeChunkHit[]>;
+}
+
+export interface KnowledgeSearchOptions {
+  /** Raw user text used for both semantic search and citation extraction. */
+  query: string;
+  /** Number of results to return after merging vector + citation hits. Default 5, max 10. */
+  k?: number;
+  /** Optional topic filter (matches the `topic` column). */
+  topic?: string;
+  /**
+   * Precomputed embedding for `query`. If present, we skip the embedding
+   * client call. Lets the engine embed once and reuse across KB searches
+   * within a turn.
+   */
+  queryEmbedding?: number[];
+}
+
+export interface KnowledgeChunkHit {
+  id: string;
+  topic: string;
+  title: string;
+  content: string;
+  standardRefs: string[];
+  source: string | null;
+  /** Cosine similarity (0..1, higher is better). Only set for vector hits. */
+  similarity: number | null;
+  /** Which retrieval path surfaced this chunk. */
+  matchType: 'vector' | 'citation';
 }
 
 export interface SessionQualityCheckWrite {
@@ -376,6 +418,23 @@ export interface AuditClient {
   log(entry: AuditEntry): Promise<void>;
 }
 
+// ─── Embeddings (RAG retrieval support) ───────────────────────────────────────
+
+/**
+ * Minimal embedding client seam. The engine uses this to embed the
+ * user query at turn start so DbClient.searchKnowledgeBase can do
+ * vector similarity. Production implementation lives in
+ * src/engine/knowledge/embeddings.ts (OpenAI text-embedding-3-small).
+ *
+ * The engine tolerates embed failures — knowledge retrieval is an
+ * enhancement, not a hard requirement. If this client throws,
+ * processAdaTurn falls back to citation-only KB search.
+ */
+export interface EmbeddingClient {
+  /** Embed a single query. Returns a 1536-dim vector. */
+  embedQuery(text: string): Promise<number[]>;
+}
+
 // ─── The seam ─────────────────────────────────────────────────────────────────
 
 export interface AdaClients {
@@ -387,4 +446,11 @@ export interface AdaClients {
   clock: ClockClient;
   random: RandomClient;
   audit: AuditClient;
+  /**
+   * Optional: embedding client for knowledge-base retrieval. Absent in
+   * tests that don't care about RAG. When absent, processAdaTurn skips
+   * the vector search and the knowledge-base section is omitted from
+   * the prompt.
+   */
+  embeddings?: EmbeddingClient;
 }

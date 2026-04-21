@@ -258,4 +258,131 @@ describe('processAdaTurn — integration', () => {
     // Safety-net message shown to user.
     expect(result.assistantMessage.content).toMatch(/hit a limit/i);
   });
+
+  describe('knowledge base retrieval (Step 10.5)', () => {
+    it('embeds the user message and searches the KB once per turn', async () => {
+      const clients = makeInMemoryClients();
+      const state = newSession(clients);
+      clients.db.knowledgeChunks.push({
+        id: 'chunk-1',
+        topic: 'service_animals',
+        title: '§36.302(c)(1) — Service animals — general rule',
+        content: 'Generally, a public accommodation shall modify policies.',
+        standardRefs: ['36.302(c)(1)', '36.302(c)', '36.302', '36'],
+        source: '28 CFR §36',
+        similarity: null,
+        matchType: 'citation',
+      });
+      clients.ai.enqueueResponse(textOnlyTurn('Per §36.302(c)(1), yes.'));
+
+      await processAdaTurn({
+        clients,
+        state,
+        input: { userMessage: 'Can a restaurant refuse my service animal under §36.302?' },
+      });
+
+      expect(clients.embeddings.embedCalls).toHaveLength(1);
+      expect(clients.embeddings.embedCalls[0]).toContain('service animal');
+    });
+
+    it('tool-loop iterations reuse the same KB results without re-searching', async () => {
+      const clients = makeInMemoryClients();
+      const state = newSession(clients);
+      clients.db.knowledgeChunks.push({
+        id: 'chunk-1',
+        topic: 'service_animals',
+        title: '§36.302(c)(1) — Service animals — general rule',
+        content: 'body',
+        standardRefs: ['36.302(c)(1)'],
+        source: '28 CFR §36',
+        similarity: null,
+        matchType: 'citation',
+      });
+      // First response calls a tool, second is final text.
+      clients.ai.enqueueResponse(
+        toolUseChunks('t1', 'set_reading_level', { level: 'simple' }),
+      );
+      clients.ai.enqueueResponse(textOnlyTurn('OK.'));
+
+      await processAdaTurn({
+        clients,
+        state,
+        input: { userMessage: 'Tell me about §36.302 in simple words.' },
+      });
+
+      // Only ONE embed call despite two loop iterations.
+      expect(clients.embeddings.embedCalls).toHaveLength(1);
+    });
+
+    it('proceeds without retrieval when embedding client throws', async () => {
+      const clients = makeInMemoryClients();
+      clients.embeddings.shouldFail = true;
+      const state = newSession(clients);
+      // Seed with a chunk that would be found by citation match even
+      // without a vector embedding. Citation path should still run.
+      clients.db.knowledgeChunks.push({
+        id: 'chunk-1',
+        topic: 'service_animals',
+        title: '§36.302(c)(1) — title',
+        content: 'body',
+        standardRefs: ['36.302(c)(1)'],
+        source: '28 CFR §36',
+        similarity: null,
+        matchType: 'citation',
+      });
+      clients.ai.enqueueResponse(textOnlyTurn('Answer.'));
+
+      const result = await processAdaTurn({
+        clients,
+        state,
+        input: { userMessage: 'What does §36.302(c)(1) say?' },
+      });
+
+      // Turn still completes successfully.
+      expect(result.assistantMessage.content).toBe('Answer.');
+    });
+
+    it('omits KNOWLEDGE section when no chunks match', async () => {
+      const clients = makeInMemoryClients();
+      const state = newSession(clients);
+      // KB is empty — no chunks seeded.
+      clients.ai.enqueueResponse(textOnlyTurn('Answer.'));
+
+      await processAdaTurn({
+        clients,
+        state,
+        input: { userMessage: 'What colors should I paint my house?' },
+      });
+
+      // Inspect the system prompt sent to the AI client.
+      const sentRequest = clients.ai.requests[clients.ai.requests.length - 1];
+      expect(sentRequest.systemPrompt).not.toContain('# KNOWLEDGE');
+    });
+
+    it('injects KNOWLEDGE section when chunks are retrieved', async () => {
+      const clients = makeInMemoryClients();
+      const state = newSession(clients);
+      clients.db.knowledgeChunks.push({
+        id: 'chunk-1',
+        topic: 'service_animals',
+        title: '§36.302(c)(1) — Service animals — general rule',
+        content: 'A public accommodation shall modify policies to permit service animals.',
+        standardRefs: ['36.302(c)(1)'],
+        source: '28 CFR §36',
+        similarity: null,
+        matchType: 'citation',
+      });
+      clients.ai.enqueueResponse(textOnlyTurn('Answer.'));
+
+      await processAdaTurn({
+        clients,
+        state,
+        input: { userMessage: 'Tell me about §36.302(c)(1).' },
+      });
+
+      const sentRequest = clients.ai.requests[clients.ai.requests.length - 1];
+      expect(sentRequest.systemPrompt).toContain('# KNOWLEDGE');
+      expect(sentRequest.systemPrompt).toContain('§36.302(c)(1)');
+    });
+  });
 });
