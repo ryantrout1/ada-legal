@@ -100,10 +100,19 @@ export interface DbClient {
   writeSession(opts: SessionWriteOptions): Promise<void>;
   /** Look up matching attorneys for the attorney-directory tool. */
   searchAttorneys(opts: AttorneySearchOptions): Promise<AttorneyRow[]>;
+  /** Distinct facet values for the attorney directory filter UI. */
+  getAttorneyFacets(): Promise<AttorneyFacets>;
   /** Look up an organization by its org_code. Returns null if not found. */
   getOrgByCode(orgCode: string): Promise<OrganizationRow | null>;
   /** Persist an anon_sessions row (creates if not exists). */
   upsertAnonSession(opts: AnonSessionUpsertOptions): Promise<string>;
+}
+
+export interface AttorneyFacets {
+  /** Two-letter state codes that at least one approved attorney covers. */
+  states: string[];
+  /** Distinct practice area slugs across approved attorneys. */
+  practiceAreas: string[];
 }
 
 export interface AnonSessionUpsertOptions {

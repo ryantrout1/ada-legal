@@ -28,6 +28,7 @@ import {
 } from '../../db/schema-core.js';
 import type {
   AnonSessionUpsertOptions,
+  AttorneyFacets,
   AttorneyRow,
   AttorneySearchOptions,
   DbClient,
@@ -207,5 +208,30 @@ export class NeonDbClient implements DbClient {
       })
       .returning({ id: anonSessions.id });
     return inserted[0].id;
+  }
+
+  async getAttorneyFacets(): Promise<AttorneyFacets> {
+    // Small cardinality — 8 rows today, bounded at ~hundreds long-term.
+    // A single SELECT is cheaper than two separate queries or a view.
+    const rows = await this.db
+      .select({
+        locationState: attorneysTable.locationState,
+        practiceAreas: attorneysTable.practiceAreas,
+      })
+      .from(attorneysTable)
+      .where(eq(attorneysTable.status, 'approved'));
+
+    const states = new Set<string>();
+    const practiceAreas = new Set<string>();
+    for (const r of rows) {
+      if (r.locationState) states.add(r.locationState);
+      for (const p of (r.practiceAreas ?? []) as string[]) {
+        practiceAreas.add(p);
+      }
+    }
+    return {
+      states: [...states].sort(),
+      practiceAreas: [...practiceAreas].sort(),
+    };
   }
 }

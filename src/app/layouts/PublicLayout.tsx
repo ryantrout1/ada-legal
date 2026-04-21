@@ -58,6 +58,12 @@ export default function PublicLayout() {
             >
               Talk to Ada
             </Link>
+            <Link
+              to="/attorneys"
+              className="text-ink-700 hover:text-accent-600 transition-colors"
+            >
+              Attorneys
+            </Link>
           </nav>
         </div>
       </header>

@@ -23,6 +23,7 @@ import { requireClerkPublishableKey } from '../lib/env.js';
 import PublicLayout from './layouts/PublicLayout.js';
 import Home from './routes/public/Home.js';
 import Chat from './routes/public/Chat.js';
+import Attorneys from './routes/public/Attorneys.js';
 import AdminSignIn from './routes/admin/SignIn.js';
 import AdminPlaceholder from './routes/admin/AdminPlaceholder.js';
 import RequireAdmin from './components/RequireAdmin.js';
@@ -35,6 +36,7 @@ export default function App() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/attorneys" element={<Attorneys />} />
         </Route>
 
         {/* Admin tree — ClerkProvider only wraps this subtree */}

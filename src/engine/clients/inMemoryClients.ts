@@ -19,6 +19,7 @@ import type {
   AiStreamChunk,
   AiStreamRequest,
   AnonSessionUpsertOptions,
+  AttorneyFacets,
   AttorneyRow,
   AttorneySearchOptions,
   AuditClient,
@@ -120,6 +121,19 @@ export class InMemoryDbClient implements DbClient {
       '00000000-0000-4000-8000-' + (this.anonSessions.length + 1).toString(16).padStart(12, '0');
     this.anonSessions.push({ id, orgId: opts.orgId, tokenHash: opts.tokenHash });
     return id;
+  }
+
+  async getAttorneyFacets(): Promise<AttorneyFacets> {
+    const states = new Set<string>();
+    const practiceAreas = new Set<string>();
+    for (const a of this.attorneys) {
+      if (a.locationState) states.add(a.locationState);
+      for (const p of a.practiceAreas) practiceAreas.add(p);
+    }
+    return {
+      states: [...states].sort(),
+      practiceAreas: [...practiceAreas].sort(),
+    };
   }
 }
 
