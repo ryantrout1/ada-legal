@@ -14,7 +14,7 @@
  */
 
 import type { AdaTool, ToolResult, ToolExecuteContext } from '../types';
-import type { Classification, AdaTitle, ConfidenceTier } from '@/types/db';
+import type { Classification, AdaTitle, ConfidenceTier } from '../../../types/db';
 
 interface SetClassificationInput {
   title: AdaTitle;

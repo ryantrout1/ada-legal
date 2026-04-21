@@ -29,7 +29,7 @@ import type {
   PhotoAnalysisRequest,
   PhotoAnalysisResult,
 } from './types';
-import type { PhotoFinding, PhotoFindingSeverity } from '@/types/db';
+import type { PhotoFinding, PhotoFindingSeverity } from '../../types/db';
 import photoAnalysisSystemPrompt from '@content/prompts/photo-analysis.md?raw';
 
 const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';

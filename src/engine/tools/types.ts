@@ -20,15 +20,15 @@
  * Ref: docs/ARCHITECTURE.md §7
  */
 
-import type { AdaClients } from '@/engine/clients/types';
-import type { AdaSessionState } from '@/engine/types';
+import type { AdaClients } from '../clients/types';
+import type { AdaSessionState } from '../types';
 import type {
   Classification,
   ExtractedFields,
   PhotoFinding,
   ReadingLevel,
-} from '@/types/db';
-import type { SessionTransition } from '@/engine/session/stateMachine';
+} from '../../types/db';
+import type { SessionTransition } from '../session/stateMachine';
 
 // ─── Tool I/O ─────────────────────────────────────────────────────────────────
 

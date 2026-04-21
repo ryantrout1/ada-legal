@@ -22,7 +22,7 @@ import type {
   EligibilityCriterion,
   FieldSpec,
   RoutingJurisdiction,
-} from '@/types/db';
+} from '../types/db';
 
 // ─── law_firms ────────────────────────────────────────────────────────────────
 

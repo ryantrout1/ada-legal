@@ -23,7 +23,7 @@
  */
 
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
-import { useChatSession, type ReadingLevel } from '@/app/hooks/useChatSession';
+import { useChatSession, type ReadingLevel } from '../../hooks/useChatSession';
 
 export default function Chat() {
   const { state, sendMessage, startNewSession } = useChatSession('standard');

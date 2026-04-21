@@ -31,7 +31,7 @@
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { processAdaTurn } from '@/engine/processAdaTurn';
+import { processAdaTurn } from '../../src/engine/processAdaTurn';
 import {
   makeClientsFromEnv,
   readJsonBody,

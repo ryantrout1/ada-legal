@@ -18,7 +18,7 @@
  */
 
 import type { AdaTool, ToolResult, ToolExecuteContext } from '../types';
-import type { ExtractedField } from '@/types/db';
+import type { ExtractedField } from '../../../types/db';
 
 interface ExtractFieldInput {
   field: string;

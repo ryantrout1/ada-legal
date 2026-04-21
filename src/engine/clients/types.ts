@@ -16,7 +16,7 @@
  * Ref: docs/ARCHITECTURE.md §6
  */
 
-import type { Message, PhotoFinding } from '@/types/db';
+import type { Message, PhotoFinding } from '../../types/db';
 import type { AdaSessionState } from '../types';
 
 // ─── AI client ────────────────────────────────────────────────────────────────

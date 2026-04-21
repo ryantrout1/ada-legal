@@ -37,7 +37,7 @@ import type {
   AdaTurnResult,
   ToolInvocation,
 } from './types';
-import type { Message } from '@/types/db';
+import type { Message } from '../types/db';
 import { assemblePrompt } from './prompt/assemble';
 import { CH0_TOOLS, buildToolIndex } from './tools/registry';
 import { dispatchTool } from './tools/dispatcher';

@@ -13,7 +13,7 @@
  */
 
 import type { AdaTool, ToolResult, ToolExecuteContext } from '../types';
-import type { ReadingLevel } from '@/types/db';
+import type { ReadingLevel } from '../../../types/db';
 
 interface SetReadingLevelInput {
   level: ReadingLevel;

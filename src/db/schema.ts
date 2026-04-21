@@ -1,8 +1,8 @@
 /**
  * Single import surface for the schema.
  *
- *   import * as schema from '@/db/schema';
- *   import { adaSessions, organizations } from '@/db/schema';
+ *   import * as schema from './schema';
+ *   import { adaSessions, organizations } from './schema';
  */
 
 export * from './schema-core';

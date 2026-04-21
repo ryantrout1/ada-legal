@@ -27,7 +27,7 @@
  */
 
 import type { AdaSessionState } from '../types';
-import type { ReadingLevel } from '@/types/db';
+import type { ReadingLevel } from '../../types/db';
 import type { AnyAdaTool } from '../tools/types';
 import { CH0_TOOLS } from '../tools/registry';
 

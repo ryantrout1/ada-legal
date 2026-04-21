@@ -14,10 +14,10 @@
  */
 
 import type { VercelRequest } from '@vercel/node';
-import { makeAdaClients } from '@/engine/clients/adaClients';
-import type { AdaClients } from '@/engine/clients/types';
-import { resolveOrg } from '@/lib/orgResolution';
-import { parseAnonCookie } from '@/lib/anonCookie';
+import { makeAdaClients } from '../src/engine/clients/adaClients';
+import type { AdaClients } from '../src/engine/clients/types';
+import { resolveOrg } from '../src/lib/orgResolution';
+import { parseAnonCookie } from '../src/lib/anonCookie';
 
 export function makeClientsFromEnv(): AdaClients {
   const databaseUrl = process.env.DATABASE_URL;

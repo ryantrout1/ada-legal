@@ -15,7 +15,7 @@
  * (status only mutated via this module).
  */
 
-import type { SessionStatus } from '@/engine/types';
+import type { SessionStatus } from '../types';
 
 export type SessionTransition = 'complete' | 'abandon';
 

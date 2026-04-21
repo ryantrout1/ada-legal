@@ -28,7 +28,7 @@
  */
 
 import { randomUUID, randomBytes } from 'node:crypto';
-import { makeDb } from '@/db/client';
+import { makeDb } from '../../db/client';
 import { NeonDbClient } from './neonDbClient';
 import { AnthropicAiClient } from './anthropicAiClient';
 import { AnthropicPhotoAnalysisClient } from './anthropicPhotoAnalysisClient';

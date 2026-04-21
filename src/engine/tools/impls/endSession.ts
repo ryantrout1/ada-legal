@@ -13,7 +13,7 @@
  */
 
 import type { AdaTool, ToolResult, ToolExecuteContext } from '../types';
-import { canTransition } from '@/engine/session/stateMachine';
+import { canTransition } from '../../session/stateMachine';
 
 interface EndSessionInput {
   outcome: string;

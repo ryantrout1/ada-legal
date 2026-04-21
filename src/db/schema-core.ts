@@ -33,7 +33,7 @@ import type {
   QualityCheckFailure,
   QualityCheckWarning,
   AuditMetadata,
-} from '@/types/db';
+} from '../types/db';
 
 // ─── organizations ────────────────────────────────────────────────────────────
 

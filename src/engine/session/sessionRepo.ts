@@ -14,13 +14,13 @@
  * Ref: docs/ARCHITECTURE.md §3, §6
  */
 
-import type { AdaClients } from '@/engine/clients/types';
+import type { AdaClients } from '../clients/types';
 import type {
   AdaSessionState,
   SessionStatus,
   SessionType,
-} from '@/engine/types';
-import type { ReadingLevel } from '@/types/db';
+} from '../types';
+import type { ReadingLevel } from '../../types/db';
 import {
   applyTransition,
   type SessionTransition,

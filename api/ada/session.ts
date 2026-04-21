@@ -34,14 +34,14 @@
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createSession } from '@/engine/session/sessionRepo';
+import { createSession } from '../../src/engine/session/sessionRepo';
 import {
   ANON_COOKIE_TTL_SECONDS,
   buildAnonCookieHeader,
   hashAnonToken,
   mintAnonToken,
-} from '@/lib/anonCookie';
-import type { ReadingLevel } from '@/types/db';
+} from '../../src/lib/anonCookie';
+import type { ReadingLevel } from '../../src/types/db';
 import {
   makeClientsFromEnv,
   readJsonBody,
