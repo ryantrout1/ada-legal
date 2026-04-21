@@ -365,6 +365,11 @@ async function uploadPhoto(sessionId: string, file: File): Promise<string> {
     access: 'public',
     handleUploadUrl: '/api/ada/upload-photo',
     contentType: file.type,
+    // Multipart splits the file into chunks, uploads in parallel, and
+    // retries individual chunks on failure instead of the whole file.
+    // Strongly recommended for anything over ~4 MB per Vercel docs, and
+    // benign for smaller files (library degrades to a single chunk).
+    multipart: true,
   });
 
   return result.url;
