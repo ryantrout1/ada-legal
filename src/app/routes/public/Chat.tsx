@@ -32,6 +32,7 @@ export default function Chat() {
     useChatSession('standard');
   const [draft, setDraft] = useState('');
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoFilename, setPhotoFilename] = useState<string | null>(null);
 
   const speechInput = useSpeechInput();
@@ -88,9 +89,14 @@ export default function Chat() {
     e.preventDefault();
     if (!draft.trim() && !photoPreview) return;
     const messageText = draft.trim() || 'Here is a photo for you to review.';
-    sendMessage(messageText, photoPreview ?? undefined);
+    sendMessage(
+      messageText,
+      photoFile ?? undefined,
+      photoPreview ?? undefined,
+    );
     setDraft('');
     setPhotoPreview(null);
+    setPhotoFile(null);
     setPhotoFilename(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   }
@@ -112,11 +118,13 @@ export default function Chat() {
     }
     const dataUrl = await fileToDataUrl(file);
     setPhotoPreview(dataUrl);
+    setPhotoFile(file);
     setPhotoFilename(file.name);
   }
 
   function clearPhoto() {
     setPhotoPreview(null);
+    setPhotoFile(null);
     setPhotoFilename(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   }

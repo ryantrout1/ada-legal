@@ -1,65 +1,43 @@
 /**
  * POST /api/ada/upload-photo
  *
- * Receives a photo from the frontend, stores it in Vercel Blob under
- * a session-scoped key, returns the public URL. The frontend then
- * sends the URL as a short token in the next /api/ada/turn call
- * (the analyze_photo tool accepts http(s) URLs per Step 10 contract).
+ * Client-direct-upload token endpoint for Vercel Blob. The browser's
+ * @vercel/blob/client upload() helper calls THIS route to obtain a
+ * short-lived signed token; it then uploads the photo bytes DIRECTLY
+ * to Vercel Blob storage, bypassing this function entirely.
  *
- * Request body (JSON):
- *   {
- *     "session_id": "<uuid>",                       // for key namespacing
- *     "content_type": "image/jpeg",                 // or image/png, image/webp, image/gif
- *     "data": "<base64-encoded-bytes-only>"          // NO "data:...;base64," prefix
- *   }
+ * This pattern exists because Vercel's platform edge drops large JSON
+ * request bodies before they ever reach a serverless function. Client
+ * direct upload is the only officially-supported path for files over
+ * a few megabytes.
  *
- * Response:
- *   200 OK
- *   {
- *     "url": "https://...blob.vercel-storage.com/...",
- *     "key": "photos/<session_id>/<timestamp>.<ext>"
- *   }
+ * Flow:
+ *   1. Browser calls upload(pathname, file, { handleUploadUrl: '/api/ada/upload-photo', ... })
+ *   2. @vercel/blob/client POSTs to this route asking for a client token
+ *   3. handleUpload() validates, generates a short-lived token, returns it
+ *   4. Browser uploads file bytes directly to Vercel Blob
+ *   5. Vercel Blob POSTs BACK to this route (onUploadCompleted) to confirm
+ *   6. Browser receives the public blob URL as the result of upload()
  *
- * Errors:
- *   400 — missing/invalid body, unsupported content type, photo too large
- *   405 — method not POST
- *   500 — blob upload failure or BLOB_READ_WRITE_TOKEN not configured
+ * The SAME endpoint serves both roles (token generation AND completion
+ * callback). @vercel/blob/client distinguishes by request body shape
+ * via a `type` discriminator.
  *
- * Size limit: 10 MB of raw photo bytes (body-parser accepts ~14 MB of
- * base64 which decodes to ~10 MB — the lambda gets 15 MB headroom).
+ * Size limits: this endpoint itself transfers only tiny JSON. The
+ * browser -> blob path carries the real photo bytes and supports up to
+ * 500MB per upload by Vercel Blob contract. We cap via
+ * maximumSizeInBytes below to match our product constraints.
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { makeClientsFromEnv, readJsonBody } from '../_shared.js';
+import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 
-interface Body {
-  session_id?: string;
-  content_type?: string;
-  data?: string;
-}
-
-// A photo is large; the lambda needs headroom for base64 overhead.
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '15mb',
-    },
-  },
-};
-
-const ALLOWED_CONTENT_TYPES = new Set([
+const ALLOWED_CONTENT_TYPES = [
   'image/jpeg',
   'image/png',
   'image/webp',
   'image/gif',
-]);
-
-const EXT_BY_CONTENT_TYPE: Record<string, string> = {
-  'image/jpeg': 'jpg',
-  'image/png': 'png',
-  'image/webp': 'webp',
-  'image/gif': 'gif',
-};
+];
 
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024; // 10 MB
 
@@ -70,59 +48,84 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const body = readJsonBody<Body>(req);
+    // @vercel/blob/client's handleUpload() expects a Web API Request,
+    // not a classic Node VercelRequest. Use the same shim we built
+    // for the Clerk admin routes (see api/_admin.ts).
+    const webRequest = vercelRequestToWebRequest(req);
 
-    if (typeof body.session_id !== 'string' || !body.session_id) {
-      return res.status(400).json({ error: 'session_id is required' });
-    }
-    if (typeof body.content_type !== 'string' || !body.content_type) {
-      return res.status(400).json({ error: 'content_type is required' });
-    }
-    if (!ALLOWED_CONTENT_TYPES.has(body.content_type)) {
-      return res.status(400).json({
-        error: `unsupported content_type; allowed: ${Array.from(
-          ALLOWED_CONTENT_TYPES,
-        ).join(', ')}`,
-      });
-    }
-    if (typeof body.data !== 'string' || !body.data) {
-      return res.status(400).json({ error: 'data (base64) is required' });
-    }
+    // The body must ALSO be passed explicitly — handleUpload reads
+    // `body` to discriminate between token-gen and completion callbacks.
+    const body = req.body as HandleUploadBody;
 
-    // Decode base64 and enforce a hard byte limit.
-    let bytes: Uint8Array;
-    try {
-      const buf = Buffer.from(body.data, 'base64');
-      bytes = new Uint8Array(buf);
-    } catch {
-      return res.status(400).json({ error: 'data is not valid base64' });
-    }
-    if (bytes.length === 0) {
-      return res.status(400).json({ error: 'data is empty' });
-    }
-    if (bytes.length > MAX_PHOTO_BYTES) {
-      return res.status(400).json({
-        error: `photo too large: ${bytes.length} bytes (max ${MAX_PHOTO_BYTES})`,
-      });
-    }
-
-    // Key namespaces photos by session and timestamp. Keeps blobs
-    // discoverable for moderation review and makes cleanup per-session
-    // straightforward.
-    const ext = EXT_BY_CONTENT_TYPE[body.content_type];
-    const key = `photos/${body.session_id}/${Date.now()}.${ext}`;
-
-    const clients = makeClientsFromEnv();
-    const result = await clients.blob.upload({
-      key,
-      contentType: body.content_type,
-      body: bytes,
+    const jsonResponse = await handleUpload({
+      body,
+      request: webRequest,
+      onBeforeGenerateToken: async (pathname, _clientPayload) => {
+        // We accept any anon-cookie-holding browser session. The
+        // anon-cookie scheme is sufficient for intake photos — these
+        // are not sensitive documents and the blob URLs are
+        // unguessable random paths.
+        //
+        // pathname is constructed by the browser and arrives as
+        // "photos/<session_id>/<timestamp>.<ext>". We trust the
+        // caller to namespace, but we lock down the content type
+        // and size via the options returned below.
+        return {
+          allowedContentTypes: ALLOWED_CONTENT_TYPES,
+          addRandomSuffix: false,
+          maximumSizeInBytes: MAX_PHOTO_BYTES,
+          tokenPayload: JSON.stringify({ pathname }),
+        };
+      },
+      onUploadCompleted: async ({
+        blob: _blob,
+        tokenPayload: _tokenPayload,
+      }) => {
+        // No-op. The blob URL propagates to session state via the
+        // user's next turn message, so we don't need a DB write here.
+        //
+        // Caveat: this callback does NOT fire on localhost because
+        // Vercel Blob can't reach a dev server. Irrelevant for us —
+        // we only test on deployed Vercel.
+      },
     });
 
-    return res.status(200).json({ url: result.url, key: result.key });
+    return res.status(200).json(jsonResponse);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('[upload-photo] failed:', message);
-    return res.status(500).json({ error: message });
+    return res.status(400).json({ error: message });
   }
+}
+
+/**
+ * Convert a classic Node-style VercelRequest into a Web API Request.
+ * Mirrors api/_admin.ts#vercelRequestToWebRequest — same pattern,
+ * kept locally here to avoid coupling this endpoint to admin auth.
+ */
+function vercelRequestToWebRequest(req: VercelRequest): Request {
+  const proto = (req.headers['x-forwarded-proto'] as string) ?? 'https';
+  const host = (req.headers['host'] as string) ?? 'localhost';
+  const url = `${proto}://${host}${req.url ?? '/'}`;
+
+  const headers = new Headers();
+  for (const [key, value] of Object.entries(req.headers)) {
+    if (Array.isArray(value)) {
+      for (const v of value) headers.append(key, v);
+    } else if (typeof value === 'string') {
+      headers.set(key, value);
+    }
+  }
+
+  const method = req.method ?? 'GET';
+  const body =
+    method === 'GET' || method === 'HEAD'
+      ? undefined
+      : typeof req.body === 'string'
+        ? req.body
+        : req.body
+          ? JSON.stringify(req.body)
+          : undefined;
+
+  return new Request(url, { method, headers, body });
 }

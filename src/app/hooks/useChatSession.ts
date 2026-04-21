@@ -205,20 +205,26 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
   // ─── Send a message ────────────────────────────────────────────────────────
 
   const sendMessage = useCallback(
-    async (userText: string, photoDataUrl?: string) => {
+    async (
+      userText: string,
+      photoFile?: File,
+      photoPreviewDataUrl?: string,
+    ) => {
       if (!state.sessionId) return;
       if (state.busy) return;
       if (state.status !== 'active') return;
       const trimmed = userText.trim();
       if (!trimmed) return;
 
-      // Optimistic: add the user bubble, flip to busy.
+      // Optimistic: add the user bubble, flip to busy. The bubble
+      // preview uses the data URL we captured when the user picked
+      // the file — no network trip needed to render their own image.
       const userMsg: ChatMessage = {
         id: cryptoId(),
         role: 'user',
         content: trimmed,
         timestamp: new Date().toISOString(),
-        photoPreview: photoDataUrl,
+        photoPreview: photoPreviewDataUrl,
       };
       setState((s) => ({
         ...s,
@@ -228,13 +234,15 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
       }));
 
       try {
-        // If the user attached a photo, upload it to blob storage FIRST
-        // so the turn request only carries a short URL. Inlining the
-        // base64 data URL into the turn body would blow past Vercel's
-        // per-request body size limit.
+        // If the user attached a photo, upload it to Vercel Blob via
+        // the client-direct-upload path (see /api/ada/upload-photo).
+        // The function endpoint only issues a short-lived signed token —
+        // the actual bytes travel directly from the browser to Vercel
+        // Blob storage, bypassing our lambdas entirely. This is the
+        // only way to handle multi-MB photos on Vercel's platform.
         let photoUrl: string | null = null;
-        if (photoDataUrl) {
-          photoUrl = await uploadPhoto(state.sessionId, photoDataUrl);
+        if (photoFile) {
+          photoUrl = await uploadPhoto(state.sessionId, photoFile);
         }
 
         // The server-side message carries the photo as a blob URL if
@@ -328,38 +336,54 @@ async function extractError(resp: Response): Promise<string> {
 }
 
 /**
- * Upload a photo data URL to /api/ada/upload-photo. Returns the public
- * blob URL that Ada's analyze_photo tool can fetch server-side.
+ * Upload a photo directly to Vercel Blob using the client-direct
+ * pattern. Returns the public blob URL that Ada's analyze_photo tool
+ * can fetch server-side.
  *
- * Strips the "data:<mime>;base64," prefix before sending so the
- * endpoint receives clean base64 bytes. Keeps the body payload lean —
- * we send ~33% less on the wire than the data-URL form.
+ * How it works:
+ *   1. @vercel/blob/client's upload() calls /api/ada/upload-photo
+ *      to get a short-lived signed token (tiny JSON round-trip)
+ *   2. The browser then streams the file bytes DIRECTLY to Vercel
+ *      Blob storage — our serverless function never sees the bytes
+ *   3. Result is the public blob URL
+ *
+ * The pathname we construct ("photos/<session>/<ts>.<ext>") is
+ * session-namespaced so moderation/cleanup can prefix-match later.
+ * addRandomSuffix is disabled on the server so the pathname we pass
+ * is the pathname we get back. Content type is derived from the
+ * file's MIME type.
  */
-async function uploadPhoto(
-  sessionId: string,
-  photoDataUrl: string,
-): Promise<string> {
-  // Parse data URL: data:<mime>;base64,<payload>
-  const match = photoDataUrl.match(/^data:([^;]+);base64,(.+)$/);
-  if (!match) {
-    throw new Error('Photo is not a valid base64 data URL');
-  }
-  const [, contentType, data] = match;
+async function uploadPhoto(sessionId: string, file: File): Promise<string> {
+  // Dynamic import keeps @vercel/blob/client out of the critical-path
+  // bundle for users who never attach a photo.
+  const { upload } = await import('@vercel/blob/client');
 
-  const resp = await fetch('/api/ada/upload-photo', {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      session_id: sessionId,
-      content_type: contentType,
-      data,
-    }),
+  const ext = extensionForType(file.type);
+  const pathname = `photos/${sessionId}/${Date.now()}.${ext}`;
+
+  const result = await upload(pathname, file, {
+    access: 'public',
+    handleUploadUrl: '/api/ada/upload-photo',
+    contentType: file.type,
   });
-  if (!resp.ok) {
-    const msg = await extractError(resp);
-    throw new Error(msg || `Photo upload failed (${resp.status})`);
+
+  return result.url;
+}
+
+function extensionForType(mimeType: string): string {
+  switch (mimeType) {
+    case 'image/jpeg':
+      return 'jpg';
+    case 'image/png':
+      return 'png';
+    case 'image/webp':
+      return 'webp';
+    case 'image/gif':
+      return 'gif';
+    default:
+      // Fallback — Vercel Blob will still accept it if the server
+      // allowedContentTypes list permits it; otherwise it'll 400
+      // at token generation time with a clear error.
+      return 'bin';
   }
-  const body = (await resp.json()) as { url: string; key: string };
-  return body.url;
 }
