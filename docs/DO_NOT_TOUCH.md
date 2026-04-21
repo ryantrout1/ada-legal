@@ -54,6 +54,14 @@ We use Clerk for authentication. Neon Auth would write users + sessions directly
 
 Three reading levels, named exactly `simple | standard | professional`. Do not rename. Do not add a fourth. This taxonomy carries through the DB enum, the prompt builder, the user-facing selector, and the `ada_sessions.reading_level` column.
 
+## Rule 13 — No `@/` path aliases in `api/**` or `src/**`
+
+Vercel's Node lambda bundler does NOT resolve TypeScript path aliases at runtime. It keeps `@/foo/bar` as a literal import string, and the lambda throws `ERR_MODULE_NOT_FOUND` on first request. This killed `/api/ada/session` in production on 2026-04-20 and cost a round trip of debugging.
+
+- `api/**/*.ts` and anything they transitively import (nearly all of `src/`) MUST use relative imports (`../src/engine/...`, `./types`, etc.).
+- Test files under `tests/` may keep `@/` since vitest reads `vite.config.ts` and resolves aliases via the same plugin the client build uses.
+- If you ever want to restore `@/` for server code, you must first verify that whatever bundler Vercel is using actually reads `tsconfig.json` `paths` at that time — and add a smoke test that curls `/api/ada/session` post-deploy before declaring victory.
+
 ---
 
 *Rules are added as we make decisions we know we'll be tempted to regret. When you add one, date it and cite the decision context.*
