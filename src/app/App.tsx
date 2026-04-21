@@ -17,7 +17,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { requireClerkPublishableKey } from '@/lib/env';
 import PublicLayout from './layouts/PublicLayout';
 import Home from './routes/public/Home';
-import ChatPlaceholder from './routes/public/ChatPlaceholder';
+import Chat from './routes/public/Chat';
 import AdminSignIn from './routes/admin/SignIn';
 import AdminPlaceholder from './routes/admin/AdminPlaceholder';
 import RequireAdmin from './components/RequireAdmin';
@@ -35,7 +35,7 @@ export default function App() {
           {/* Public routes share the same layout shell */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/chat" element={<ChatPlaceholder />} />
+            <Route path="/chat" element={<Chat />} />
           </Route>
 
           {/* Admin auth entry */}

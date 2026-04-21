@@ -43,11 +43,20 @@ test('footer legal links are present', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Accessibility' })).toBeVisible();
 });
 
-test('/chat placeholder page loads from CTA navigation', async ({ page }) => {
+test('/chat loads from CTA navigation and shows the chat UI', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: /Talk to Ada/i }).first().click();
+
   await expect(page).toHaveURL(/\/chat$/);
+
+  // Reading-level picker is visible
+  await expect(page.getByRole('group', { name: /Reading level/i })).toBeVisible();
+
+  // The 'Standard' button is pressed by default
   await expect(
-    page.getByRole('heading', { name: /Ada is almost ready to talk/i }),
-  ).toBeVisible();
+    page.getByRole('button', { name: 'Standard' }),
+  ).toHaveAttribute('aria-pressed', 'true');
+
+  // Input is present (will be enabled once the session is created)
+  await expect(page.getByLabel('Your message')).toBeVisible();
 });
