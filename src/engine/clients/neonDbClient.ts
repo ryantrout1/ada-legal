@@ -18,24 +18,31 @@
  * Ref: docs/ARCHITECTURE.md §2, §6, docs/DO_NOT_TOUCH.md rule 1
  */
 
-import { eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import type { Database } from '@/db/client';
-import { adaSessions } from '@/db/schema-core';
+import {
+  adaSessions,
+  anonSessions,
+  attorneys as attorneysTable,
+  organizations,
+} from '@/db/schema-core';
 import type {
+  AnonSessionUpsertOptions,
+  AttorneyRow,
+  AttorneySearchOptions,
   DbClient,
+  OrganizationRow,
   SessionReadOptions,
   SessionWriteOptions,
-  AttorneySearchOptions,
-  AttorneyRow,
 } from '@/engine/clients/types';
 import type { AdaSessionState } from '@/engine/types';
 import type {
-  Message,
-  ExtractedFields,
-  Classification,
-  SessionMetadata,
   AccessibilitySnapshot,
+  Classification,
+  ExtractedFields,
+  Message,
   ReadingLevel,
+  SessionMetadata,
 } from '@/types/db';
 
 // ─── Row ↔ State mapping ──────────────────────────────────────────────────────
@@ -118,8 +125,87 @@ export class NeonDbClient implements DbClient {
       });
   }
 
-  async searchAttorneys(_opts: AttorneySearchOptions): Promise<AttorneyRow[]> {
-    // Placeholder until Phase B Step 12 loads real attorney data.
-    return [];
+  async searchAttorneys(opts: AttorneySearchOptions): Promise<AttorneyRow[]> {
+    const conds = [eq(attorneysTable.status, 'approved')];
+    if (opts.state) {
+      conds.push(eq(attorneysTable.locationState, opts.state));
+    }
+    if (opts.city) {
+      conds.push(eq(attorneysTable.locationCity, opts.city));
+    }
+
+    const limit = opts.limit && opts.limit > 0 ? Math.min(opts.limit, 10) : 5;
+    const rows = await this.db
+      .select()
+      .from(attorneysTable)
+      .where(and(...conds))
+      .limit(limit);
+
+    return rows
+      .filter((r) => {
+        if (!opts.practiceAreas || opts.practiceAreas.length === 0) return true;
+        const areas = (r.practiceAreas ?? []) as string[];
+        return opts.practiceAreas.some((p) => areas.includes(p));
+      })
+      .map((r) => ({
+        id: r.id,
+        name: r.name,
+        firmName: r.firmName,
+        locationCity: r.locationCity,
+        locationState: r.locationState,
+        practiceAreas: (r.practiceAreas ?? []) as string[],
+        email: r.email,
+        phone: r.phone,
+        websiteUrl: r.websiteUrl,
+      }));
+  }
+
+  async getOrgByCode(orgCode: string): Promise<OrganizationRow | null> {
+    const rows = await this.db
+      .select()
+      .from(organizations)
+      .where(eq(organizations.orgCode, orgCode))
+      .limit(1);
+    const row = rows[0];
+    if (!row) return null;
+    return {
+      id: row.id,
+      orgCode: row.orgCode,
+      displayName: row.displayName,
+      adaIntroPrompt: row.adaIntroPrompt,
+      isDefault: row.isDefault,
+    };
+  }
+
+  async upsertAnonSession(opts: AnonSessionUpsertOptions): Promise<string> {
+    // anon_sessions.token_hash is globally unique; anon session identity is
+    // independent of org (one device = one anon session across orgs).
+    // opts.orgId is accepted for interface symmetry but not used here.
+    void opts.orgId;
+    void opts.ipAddress;
+
+    const existing = await this.db
+      .select()
+      .from(anonSessions)
+      .where(eq(anonSessions.tokenHash, opts.tokenHash))
+      .limit(1);
+    if (existing[0]) {
+      // Refresh lastSeenAt and return existing row.
+      await this.db
+        .update(anonSessions)
+        .set({ lastSeenAt: sql`now()` })
+        .where(eq(anonSessions.id, existing[0].id));
+      return existing[0].id;
+    }
+
+    // Insert new. gen_random_uuid() from pgcrypto assigns id.
+    const inserted = await this.db
+      .insert(anonSessions)
+      .values({
+        tokenHash: opts.tokenHash,
+        userAgent: opts.userAgent ?? null,
+      })
+      .returning({ id: anonSessions.id });
+    return inserted[0].id;
   }
 }

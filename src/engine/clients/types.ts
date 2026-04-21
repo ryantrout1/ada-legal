@@ -85,6 +85,14 @@ export interface AttorneyRow {
   websiteUrl: string | null;
 }
 
+export interface OrganizationRow {
+  id: string;
+  orgCode: string;
+  displayName: string;
+  adaIntroPrompt: string | null;
+  isDefault: boolean;
+}
+
 export interface DbClient {
   /** Read the current state of a session. Returns null if not found. */
   readSession(opts: SessionReadOptions): Promise<AdaSessionState | null>;
@@ -92,6 +100,17 @@ export interface DbClient {
   writeSession(opts: SessionWriteOptions): Promise<void>;
   /** Look up matching attorneys for the attorney-directory tool. */
   searchAttorneys(opts: AttorneySearchOptions): Promise<AttorneyRow[]>;
+  /** Look up an organization by its org_code. Returns null if not found. */
+  getOrgByCode(orgCode: string): Promise<OrganizationRow | null>;
+  /** Persist an anon_sessions row (creates if not exists). */
+  upsertAnonSession(opts: AnonSessionUpsertOptions): Promise<string>;
+}
+
+export interface AnonSessionUpsertOptions {
+  orgId: string;
+  tokenHash: string;
+  userAgent?: string | null;
+  ipAddress?: string | null;
 }
 
 // ─── Blob client ──────────────────────────────────────────────────────────────

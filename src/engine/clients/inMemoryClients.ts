@@ -18,6 +18,7 @@ import type {
   AiClient,
   AiStreamChunk,
   AiStreamRequest,
+  AnonSessionUpsertOptions,
   AttorneyRow,
   AttorneySearchOptions,
   AuditClient,
@@ -29,6 +30,7 @@ import type {
   DbClient,
   EmailClient,
   EmailSendOptions,
+  OrganizationRow,
   PhotoAnalysisClient,
   PhotoAnalysisRequest,
   PhotoAnalysisResult,
@@ -77,6 +79,12 @@ export class InMemoryAiClient implements AiClient {
 export class InMemoryDbClient implements DbClient {
   public readonly sessions = new Map<string, AdaSessionState>();
   public readonly attorneys: AttorneyRow[] = [];
+  public readonly orgs: OrganizationRow[] = [];
+  public readonly anonSessions: Array<{
+    id: string;
+    orgId: string;
+    tokenHash: string;
+  }> = [];
 
   async readSession({ sessionId }: SessionReadOptions): Promise<AdaSessionState | null> {
     return this.sessions.get(sessionId) ?? null;
@@ -97,6 +105,21 @@ export class InMemoryDbClient implements DbClient {
       return true;
     });
     return opts.limit ? results.slice(0, opts.limit) : results;
+  }
+
+  async getOrgByCode(orgCode: string): Promise<OrganizationRow | null> {
+    return this.orgs.find((o) => o.orgCode === orgCode) ?? null;
+  }
+
+  async upsertAnonSession(opts: AnonSessionUpsertOptions): Promise<string> {
+    const existing = this.anonSessions.find(
+      (a) => a.orgId === opts.orgId && a.tokenHash === opts.tokenHash,
+    );
+    if (existing) return existing.id;
+    const id =
+      '00000000-0000-4000-8000-' + (this.anonSessions.length + 1).toString(16).padStart(12, '0');
+    this.anonSessions.push({ id, orgId: opts.orgId, tokenHash: opts.tokenHash });
+    return id;
   }
 }
 
