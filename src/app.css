@@ -90,6 +90,69 @@ h1, h2, h3, h4 {
   border-radius: 4px;
 }
 
+/* ─── Forced-colors (Windows High Contrast, macOS Increase Contrast) ────────
+ *
+ * When the user's OS is in a forced-colors mode, browsers replace most
+ * background-color and color declarations with the system palette. That's
+ * great for legibility but it STRIPS semantic color from our UI —
+ * status pills lose their red/green/amber, active nav items look
+ * identical to inactive ones, the accent focus ring disappears.
+ *
+ * These rules preserve the semantics we depend on by opting specific
+ * elements out of forced-color-adjust OR by using CSS system colors
+ * (Highlight, CanvasText, ButtonText, etc.) that forced-colors maps
+ * into the user's palette cleanly.
+ *
+ * Ref: https://www.w3.org/TR/css-color-adjust-1/#forced
+ * ────────────────────────────────────────────────────────────────────── */
+@media (forced-colors: active) {
+  /* Focus ring — use Highlight so it honors the user's palette. */
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  /* Give every button a visible border in forced-colors mode. Without
+     this, tertiary/ghost buttons are invisible because the background
+     that distinguished them gets stripped. */
+  button {
+    border: 1px solid ButtonText;
+  }
+
+  /* Status pills / semantic badges — we lose the color meaning, so
+     at least ensure they have borders + readable labels. The class
+     pattern here covers the success/warning/danger/accent bgs we use
+     across admin + chat surfaces. */
+  [class*="bg-success-"],
+  [class*="bg-warning-"],
+  [class*="bg-danger-"],
+  [class*="bg-accent-"] {
+    border: 1px solid CanvasText;
+    forced-color-adjust: none;
+  }
+
+  /* Active nav items, toggle chips (attorney directory, TTS toggle,
+     mic button when listening) — mark them with the system Highlight
+     so the active state stays distinct. Targets only elements the app
+     marks with aria-pressed="true" or aria-current (standard ARIA for
+     active state). */
+  [aria-pressed="true"],
+  [aria-current="page"],
+  [aria-current="true"] {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+    border: 1px solid HighlightText;
+  }
+
+  /* Images and SVG icons we draw should use CanvasText so they're
+     visible against the forced background. Ada's message bubbles,
+     the site's icon set, form-field borders. */
+  svg {
+    color: CanvasText;
+  }
+}
+
 /* Scroll — allow, but don't draw attention */
 body {
   scrollbar-gutter: stable;
