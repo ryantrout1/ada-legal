@@ -39,12 +39,31 @@ export interface ChatState {
   error: string | null;
   /** True on mount until first session call resolves. */
   initializing: boolean;
+  /**
+   * A previously-started active conversation found via the anon cookie.
+   * When non-null, the UI shows a "Continue your last conversation?"
+   * card and waits for the user to choose resume or start-fresh.
+   */
+  resumable: {
+    sessionId: string;
+    readingLevel: ReadingLevel;
+    messages: ChatMessage[];
+  } | null;
 }
 
 interface SessionCreateResponse {
   session_id: string;
   greeting: string;
   reading_level: ReadingLevel;
+}
+
+interface ResumeResponse {
+  session: {
+    session_id: string;
+    status: SessionStatus;
+    reading_level: ReadingLevel;
+    messages: Array<{ role: 'user' | 'assistant'; content: string; timestamp: string }>;
+  } | null;
 }
 
 interface TurnResponse {
@@ -66,6 +85,7 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
     busy: false,
     error: null,
     initializing: true,
+    resumable: null,
   });
   const didInitRef = useRef(false);
 
@@ -112,11 +132,75 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
     [],
   );
 
+  // On mount, check if we have a resumable session (anon cookie
+  // points at an active ada_sessions row). If so, offer it — don't
+  // auto-resume. Accessibility principle: the user must always be in
+  // control of state transitions. If no resumable session exists,
+  // create a fresh one.
   useEffect(() => {
     if (didInitRef.current) return;
     didInitRef.current = true;
-    void createSession(initialLevel);
+    void (async () => {
+      try {
+        const resp = await fetch('/api/ada/session/current', {
+          credentials: 'include',
+        });
+        if (resp.ok) {
+          const data = (await resp.json()) as ResumeResponse;
+          if (data.session && data.session.messages.length > 0) {
+            // Offer to resume. Don't create a new session yet.
+            const mapped: ChatMessage[] = data.session.messages.map((m) => ({
+              id: cryptoId(),
+              role: m.role,
+              content: m.content,
+              timestamp: m.timestamp,
+            }));
+            setState((s) => ({
+              ...s,
+              initializing: false,
+              resumable: {
+                sessionId: data.session!.session_id,
+                readingLevel: data.session!.reading_level,
+                messages: mapped,
+              },
+            }));
+            return;
+          }
+        }
+      } catch {
+        // Resume probe failed; fall through to new-session creation.
+        // This is not a user-visible error — the worst case is we
+        // just start fresh, which is the same outcome as a first
+        // visit.
+      }
+      void createSession(initialLevel);
+    })();
   }, [createSession, initialLevel]);
+
+  // User accepted the resume offer — hydrate state from the resumable.
+  const acceptResume = useCallback(() => {
+    setState((s) => {
+      if (!s.resumable) return s;
+      return {
+        ...s,
+        sessionId: s.resumable.sessionId,
+        readingLevel: s.resumable.readingLevel,
+        messages: s.resumable.messages,
+        resumable: null,
+      };
+    });
+  }, []);
+
+  // User declined — start fresh. The old session will be abandoned via
+  // the normal completion-detection path once the new one gets traffic;
+  // we don't eagerly mutate it server-side here.
+  const discardResume = useCallback(
+    (level: ReadingLevel) => {
+      setState((s) => ({ ...s, resumable: null }));
+      void createSession(level);
+    },
+    [createSession],
+  );
 
   // ─── Send a message ────────────────────────────────────────────────────────
 
@@ -210,6 +294,8 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
     state,
     sendMessage,
     startNewSession,
+    acceptResume,
+    discardResume,
   };
 }
 

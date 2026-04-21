@@ -187,6 +187,22 @@ export interface DbClient {
   writeSessionQualityCheck(opts: SessionQualityCheckWrite): Promise<void>;
   /** Read the latest quality check row for a session. */
   readSessionQualityCheck(sessionId: string): Promise<SessionQualityCheckRow | null>;
+  /**
+   * Find the most-recently-updated active session for a given anon
+   * identity. Used for session resume — if a user returns to the site
+   * with their anon cookie intact and has an in-progress conversation,
+   * we offer to continue it rather than starting fresh.
+   *
+   * Returns null if no active session exists for this anon.
+   */
+  findActiveSessionForAnon(anonSessionId: string): Promise<AdaSessionState | null>;
+  /**
+   * Read-only lookup: find an existing anon_sessions row by its token
+   * hash without upserting. Returns null if the hash is unknown.
+   * Used by the session-resume endpoint to avoid creating spurious
+   * anon_sessions rows during a "do I have an existing session?" check.
+   */
+  findAnonSessionByHash(tokenHash: string): Promise<string | null>;
 }
 
 export interface SessionQualityCheckWrite {

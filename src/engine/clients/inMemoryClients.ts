@@ -398,6 +398,25 @@ export class InMemoryDbClient implements DbClient {
   ): Promise<SessionQualityCheckRow | null> {
     return this.qualityChecks.get(sessionId) ?? null;
   }
+
+  async findActiveSessionForAnon(
+    anonSessionId: string,
+  ): Promise<AdaSessionState | null> {
+    // In-memory has no timestamps on the session state itself, so we
+    // just return the first active one found. Tests that care about
+    // ordering can seed deterministically.
+    for (const s of this.sessions.values()) {
+      if (s.anonSessionId === anonSessionId && s.status === 'active') {
+        return structuredClone(s);
+      }
+    }
+    return null;
+  }
+
+  async findAnonSessionByHash(tokenHash: string): Promise<string | null> {
+    const hit = this.anonSessions.find((a) => a.tokenHash === tokenHash);
+    return hit?.id ?? null;
+  }
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

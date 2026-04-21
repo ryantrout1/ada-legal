@@ -28,7 +28,8 @@ import { useSpeechInput } from '../../hooks/useSpeechInput.js';
 import { useSpeechOutput } from '../../hooks/useSpeechOutput.js';
 
 export default function Chat() {
-  const { state, sendMessage, startNewSession } = useChatSession('standard');
+  const { state, sendMessage, startNewSession, acceptResume, discardResume } =
+    useChatSession('standard');
   const [draft, setDraft] = useState('');
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [photoFilename, setPhotoFilename] = useState<string | null>(null);
@@ -127,6 +128,73 @@ export default function Chat() {
       setDraft('');
       clearPhoto();
     }
+  }
+
+  // If we discovered a resumable session, short-circuit the full chat
+  // UI and show a resume-offer screen. Accessibility principle: never
+  // auto-resume — always give the user explicit control over whether
+  // to continue or start fresh. This matters for cognitive, trauma-
+  // related, and shared-device reasons.
+  if (state.resumable) {
+    const { readingLevel: resumeLevel, messages: resumeMessages } = state.resumable;
+    const lastMsg = resumeMessages[resumeMessages.length - 1];
+    const preview =
+      lastMsg.content.length > 200
+        ? lastMsg.content.slice(0, 200).trim() + '…'
+        : lastMsg.content;
+    return (
+      <section className="max-w-2xl mx-auto px-5 sm:px-8 py-10">
+        <header className="mb-6">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-accent-500 mb-3">
+            Welcome back
+          </p>
+          <h1 className="font-display text-3xl sm:text-4xl text-ink-900 mb-2">
+            You have a conversation in progress.
+          </h1>
+          <p className="text-ink-700 leading-relaxed">
+            Continue where you left off, or start a new conversation. Your
+            previous one will stay saved until you tell Ada you're done.
+          </p>
+        </header>
+
+        <article
+          className="rounded-md border border-surface-200 bg-surface-100 p-4 sm:p-5 mb-6"
+          aria-label="Preview of your previous conversation"
+        >
+          <p className="font-mono text-[11px] uppercase tracking-wider text-ink-500 mb-2">
+            Last message from {lastMsg.role === 'assistant' ? 'Ada' : 'you'}
+          </p>
+          <p className="text-ink-900 whitespace-pre-wrap">{preview}</p>
+          <p className="text-xs text-ink-500 mt-3">
+            {resumeMessages.length} message{resumeMessages.length === 1 ? '' : 's'}
+            {' · '}reading level: {resumeLevel}
+          </p>
+        </article>
+
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={acceptResume}
+            className="px-5 py-3 rounded-md bg-accent-500 text-white font-medium hover:bg-accent-600 transition-colors"
+          >
+            Continue this conversation
+          </button>
+          <button
+            type="button"
+            onClick={() => discardResume(resumeLevel)}
+            className="px-5 py-3 rounded-md border border-surface-300 bg-white text-ink-700 hover:bg-surface-100 transition-colors"
+          >
+            Start a new conversation
+          </button>
+        </div>
+
+        <p className="text-sm text-ink-500 mt-6">
+          If this isn't you, click <strong>Start a new conversation</strong>.
+          Shared devices, public computers, or anyone else using this browser
+          will see a fresh start.
+        </p>
+      </section>
+    );
   }
 
   return (

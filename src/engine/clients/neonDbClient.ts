@@ -634,6 +634,32 @@ export class NeonDbClient implements DbClient {
       checkedAt: (r.checkedAt as Date).toISOString(),
     };
   }
+
+  async findActiveSessionForAnon(
+    anonSessionId: string,
+  ): Promise<AdaSessionState | null> {
+    const rows = await this.db
+      .select()
+      .from(adaSessions)
+      .where(
+        and(
+          eq(adaSessions.anonSessionId, anonSessionId),
+          eq(adaSessions.status, 'active'),
+        ),
+      )
+      .orderBy(sql`${adaSessions.updatedAt} DESC`)
+      .limit(1);
+    return rows[0] ? rowToState(rows[0]) : null;
+  }
+
+  async findAnonSessionByHash(tokenHash: string): Promise<string | null> {
+    const rows = await this.db
+      .select({ id: anonSessions.id })
+      .from(anonSessions)
+      .where(eq(anonSessions.tokenHash, tokenHash))
+      .limit(1);
+    return rows[0]?.id ?? null;
+  }
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
