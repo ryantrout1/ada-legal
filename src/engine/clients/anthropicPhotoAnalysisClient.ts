@@ -30,7 +30,7 @@ import type {
   PhotoAnalysisResult,
 } from './types.js';
 import type { PhotoFinding, PhotoFindingSeverity } from '../../types/db.js';
-import photoAnalysisSystemPrompt from '@content/prompts/photo-analysis.md?raw';
+import photoAnalysisSystemPrompt from '../../../content-migration/prompts/photo-analysis.js';
 
 const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
 const DEFAULT_MAX_TOKENS = 2048;

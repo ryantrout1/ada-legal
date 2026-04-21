@@ -54,23 +54,29 @@ We use Clerk for authentication. Neon Auth would write users + sessions directly
 
 Three reading levels, named exactly `simple | standard | professional`. Do not rename. Do not add a fourth. This taxonomy carries through the DB enum, the prompt builder, the user-facing selector, and the `ada_sessions.reading_level` column.
 
-## Rule 13 — Server-side ESM imports: relative paths WITH `.js` extensions
+## Rule 13 — Server-side code must be runtime-agnostic
 
-Our `package.json` has `"type": "module"`, which means Vercel's Node lambda runtime loads our code as ESM. Node's ESM resolver is strict in two ways our client bundlers are not:
+Our engine runs in two environments: Vite (dev, client build, vitest) and raw Node ESM (Vercel lambdas). Code that compiles cleanly in Vite but breaks in Node has killed `/api/ada/session` in production four times on 2026-04-20.
 
-1. **No path aliases.** `@/foo/bar` is a TypeScript/Vite convention — the Vercel Node bundler keeps the literal string in the shipped code, and Node ESM throws `ERR_MODULE_NOT_FOUND`. All `api/**` and `src/**` code must use relative paths.
+Things Vite silently handles that raw Node does NOT:
 
-2. **Explicit `.js` extensions required.** Extensionless relative imports (`from './foo'`) fail at runtime because Node ESM refuses to guess extensions. You MUST write `from './foo.js'` even in TypeScript source. TS resolves the `.js` specifier back to the `.ts` file during compilation (with `moduleResolution: "bundler"` or `"nodenext"`), and at runtime Node finds the compiled `.js` output.
+1. **Path aliases** like `@/foo/bar`. Vite resolves them via `vite.config.ts` `resolve.alias`. Node does not. Lambda throws `ERR_MODULE_NOT_FOUND`.
+2. **Extensionless relative specifiers** like `from './foo'`. Vite resolves them. Node ESM refuses (since `package.json` has `"type": "module"`). Must be `from './foo.js'`.
+3. **Query-string loaders** like `import foo from './bar.md?raw'`. Vite inlines the file content. Node has no idea what `?raw` means; even without the query, it can't import a `.md` file as JS.
+4. **Non-JS file imports** in general (CSS, SVG, images, markdown). Vite handles them via plugins. Node does not.
 
-   For directory imports, spell out `from './foo/index.js'` rather than relying on implicit index resolution.
+Rules for `api/**/*.ts` and anything it transitively imports (nearly all of `src/`):
 
-This caught us twice on 2026-04-20:
-- Attempt 1 (commit `54e2272`) converted `@/` → relative but kept extensionless specifiers → still 500
-- Attempt 2 (commit pending) added `.js` to all 84 relative specifiers → fixed
+- Use relative paths (`../src/engine/...`). No `@/*` or other aliases.
+- Include explicit `.js` extensions even in TS source. TypeScript with `moduleResolution: "bundler"` accepts `.js` specifiers and resolves them to `.ts` at compile time; Node finds the compiled `.js` at runtime.
+- No Vite-specific import features: no `?raw`, no `?url`, no direct `.md`/`.css`/`.svg` imports. If you need raw content at runtime, pre-bake it into a `.ts` module via `scripts/generate-prompt-modules.mjs` (or a similar generator).
+- For directories, spell out `./foo/index.js`.
 
-Tests under `tests/` may keep `@/` and extensionless imports because vitest uses Vite's resolver, not Node ESM.
+Tests under `tests/` may use any Vite conveniences — vitest runs them in the Vite resolver, not Node ESM.
 
-Before restoring either shortcut for server code, curl `/api/ada/session` on the deployed URL and prove the lambda returns 200 first. Don't trust local `npm test` — it runs in Vite, not Node ESM.
+Before declaring an API-layer fix done: the ONLY acceptable test is hitting the deployed lambda endpoint and getting a 200. `npm test` passing is necessary but not sufficient. Production runs in a different module resolver than your tests do.
+
+Debug tip: if you hit an opaque `FUNCTION_INVOCATION_FAILED`, ship a diagnostic endpoint that does dynamic `import()` of each layer in turn and reports which specifier fails. Vercel's truncated runtime logs rarely name the missing module.
 
 ---
 

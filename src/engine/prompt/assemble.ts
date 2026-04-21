@@ -31,8 +31,8 @@ import type { ReadingLevel } from '../../types/db.js';
 import type { AnyAdaTool } from '../tools/types.js';
 import { CH0_TOOLS } from '../tools/registry.js';
 
-import adaIdentity from '@content/prompts/ada-identity.md?raw';
-import readingLevelsDoc from '@content/prompts/reading-levels.md?raw';
+import adaIdentity from '../../../content-migration/prompts/ada-identity.js';
+import readingLevelsDoc from '../../../content-migration/prompts/reading-levels.js';
 
 // ─── Inputs ───────────────────────────────────────────────────────────────────
 
