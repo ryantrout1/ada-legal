@@ -31,12 +31,12 @@
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { processAdaTurn } from '../../src/engine/processAdaTurn';
+import { processAdaTurn } from '../../src/engine/processAdaTurn.js';
 import {
   makeClientsFromEnv,
   readJsonBody,
   resolveRequestContext,
-} from '../_shared';
+} from '../_shared.js';
 
 interface Body {
   session_id?: string;

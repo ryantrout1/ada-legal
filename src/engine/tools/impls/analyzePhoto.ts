@@ -13,7 +13,7 @@
  * Ref: docs/ARCHITECTURE.md §7, §10
  */
 
-import type { AdaTool, ToolResult, ToolExecuteContext } from '../types';
+import type { AdaTool, ToolResult, ToolExecuteContext } from '../types.js';
 
 interface AnalyzePhotoInput {
   blob_key: string;

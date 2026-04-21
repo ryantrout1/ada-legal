@@ -12,7 +12,7 @@
  * Ref: docs/ARCHITECTURE.md §7
  */
 
-import type { AdaTool, ToolResult, ToolExecuteContext } from '../types';
+import type { AdaTool, ToolResult, ToolExecuteContext } from '../types.js';
 
 interface SearchAttorneysInput {
   state?: string;

@@ -13,8 +13,8 @@
  * Ref: docs/ARCHITECTURE.md §7, src/types/db.ts Classification
  */
 
-import type { AdaTool, ToolResult, ToolExecuteContext } from '../types';
-import type { Classification, AdaTitle, ConfidenceTier } from '../../../types/db';
+import type { AdaTool, ToolResult, ToolExecuteContext } from '../types.js';
+import type { Classification, AdaTitle, ConfidenceTier } from '../../../types/db.js';
 
 interface SetClassificationInput {
   title: AdaTitle;

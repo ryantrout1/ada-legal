@@ -12,8 +12,8 @@
  * Ref: docs/ARCHITECTURE.md §7
  */
 
-import type { AdaTool, ToolResult, ToolExecuteContext } from '../types';
-import type { ReadingLevel } from '../../../types/db';
+import type { AdaTool, ToolResult, ToolExecuteContext } from '../types.js';
+import type { ReadingLevel } from '../../../types/db.js';
 
 interface SetReadingLevelInput {
   level: ReadingLevel;

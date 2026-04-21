@@ -12,7 +12,7 @@
  * Ref: docs/ARCHITECTURE.md §7
  */
 
-import type { AnyAdaTool, ToolExecuteContext, ToolInvocationRecord, ToolResult } from './types';
+import type { AnyAdaTool, ToolExecuteContext, ToolInvocationRecord, ToolResult } from './types.js';
 
 export interface DispatchToolInput {
   name: string;

@@ -17,12 +17,12 @@ import {
   index,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { organizations } from './schema-core';
+import { organizations } from './schema-core.js';
 import type {
   EligibilityCriterion,
   FieldSpec,
   RoutingJurisdiction,
-} from '../types/db';
+} from '../types/db.js';
 
 // ─── law_firms ────────────────────────────────────────────────────────────────
 

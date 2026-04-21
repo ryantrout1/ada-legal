@@ -14,17 +14,17 @@
  * Ref: docs/ARCHITECTURE.md §3, §6
  */
 
-import type { AdaClients } from '../clients/types';
+import type { AdaClients } from '../clients/types.js';
 import type {
   AdaSessionState,
   SessionStatus,
   SessionType,
-} from '../types';
-import type { ReadingLevel } from '../../types/db';
+} from '../types.js';
+import type { ReadingLevel } from '../../types/db.js';
 import {
   applyTransition,
   type SessionTransition,
-} from './stateMachine';
+} from './stateMachine.js';
 
 // ─── createSession ────────────────────────────────────────────────────────────
 

@@ -17,8 +17,8 @@
  * Ref: docs/ARCHITECTURE.md §7, src/types/db.ts ExtractedField
  */
 
-import type { AdaTool, ToolResult, ToolExecuteContext } from '../types';
-import type { ExtractedField } from '../../../types/db';
+import type { AdaTool, ToolResult, ToolExecuteContext } from '../types.js';
+import type { ExtractedField } from '../../../types/db.js';
 
 interface ExtractFieldInput {
   field: string;

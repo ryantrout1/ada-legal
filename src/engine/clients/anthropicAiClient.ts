@@ -29,7 +29,7 @@ import type {
   AiClient,
   AiStreamChunk,
   AiStreamRequest,
-} from './types';
+} from './types.js';
 
 const DEFAULT_MODEL = 'claude-sonnet-4-5';
 const DEFAULT_MAX_TOKENS = 4096;

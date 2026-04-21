@@ -19,13 +19,13 @@
  */
 
 import { and, eq, sql } from 'drizzle-orm';
-import type { Database } from '../../db/client';
+import type { Database } from '../../db/client.js';
 import {
   adaSessions,
   anonSessions,
   attorneys as attorneysTable,
   organizations,
-} from '../../db/schema-core';
+} from '../../db/schema-core.js';
 import type {
   AnonSessionUpsertOptions,
   AttorneyRow,
@@ -34,8 +34,8 @@ import type {
   OrganizationRow,
   SessionReadOptions,
   SessionWriteOptions,
-} from './types';
-import type { AdaSessionState } from '../types';
+} from './types.js';
+import type { AdaSessionState } from '../types.js';
 import type {
   AccessibilitySnapshot,
   Classification,
@@ -43,7 +43,7 @@ import type {
   Message,
   ReadingLevel,
   SessionMetadata,
-} from '../../types/db';
+} from '../../types/db.js';
 
 // ─── Row ↔ State mapping ──────────────────────────────────────────────────────
 

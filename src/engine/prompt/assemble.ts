@@ -26,10 +26,10 @@
  * Ref: docs/ARCHITECTURE.md §8
  */
 
-import type { AdaSessionState } from '../types';
-import type { ReadingLevel } from '../../types/db';
-import type { AnyAdaTool } from '../tools/types';
-import { CH0_TOOLS } from '../tools/registry';
+import type { AdaSessionState } from '../types.js';
+import type { ReadingLevel } from '../../types/db.js';
+import type { AnyAdaTool } from '../tools/types.js';
+import { CH0_TOOLS } from '../tools/registry.js';
 
 import adaIdentity from '@content/prompts/ada-identity.md?raw';
 import readingLevelsDoc from '@content/prompts/reading-levels.md?raw';

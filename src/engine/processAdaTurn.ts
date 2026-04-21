@@ -30,19 +30,19 @@
  * Ref: docs/ARCHITECTURE.md §9
  */
 
-import type { AdaClients, AiStreamChunk, AiToolDefinition } from './clients/types';
+import type { AdaClients, AiStreamChunk, AiToolDefinition } from './clients/types.js';
 import type {
   AdaSessionState,
   AdaTurnInput,
   AdaTurnResult,
   ToolInvocation,
-} from './types';
-import type { Message } from '../types/db';
-import { assemblePrompt } from './prompt/assemble';
-import { CH0_TOOLS, buildToolIndex } from './tools/registry';
-import { dispatchTool } from './tools/dispatcher';
-import type { ToolStateChanges } from './tools/types';
-import { applyTransition } from './session/stateMachine';
+} from './types.js';
+import type { Message } from '../types/db.js';
+import { assemblePrompt } from './prompt/assemble.js';
+import { CH0_TOOLS, buildToolIndex } from './tools/registry.js';
+import { dispatchTool } from './tools/dispatcher.js';
+import type { ToolStateChanges } from './tools/types.js';
+import { applyTransition } from './session/stateMachine.js';
 
 /** Maximum tool-use loops per turn. Safety cap against runaway tool chains. */
 const MAX_TOOL_LOOPS = 5;

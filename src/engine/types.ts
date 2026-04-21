@@ -20,7 +20,7 @@ import type {
   AccessibilitySnapshot,
   ReadingLevel,
   PhotoFinding,
-} from '../types/db';
+} from '../types/db.js';
 
 // ─── Session state ────────────────────────────────────────────────────────────
 

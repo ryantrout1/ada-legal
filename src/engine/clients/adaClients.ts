@@ -28,10 +28,10 @@
  */
 
 import { randomUUID, randomBytes } from 'node:crypto';
-import { makeDb } from '../../db/client';
-import { NeonDbClient } from './neonDbClient';
-import { AnthropicAiClient } from './anthropicAiClient';
-import { AnthropicPhotoAnalysisClient } from './anthropicPhotoAnalysisClient';
+import { makeDb } from '../../db/client.js';
+import { NeonDbClient } from './neonDbClient.js';
+import { AnthropicAiClient } from './anthropicAiClient.js';
+import { AnthropicPhotoAnalysisClient } from './anthropicPhotoAnalysisClient.js';
 import type {
   AdaClients,
   AuditClient,
@@ -43,7 +43,7 @@ import type {
   EmailClient,
   EmailSendOptions,
   RandomClient,
-} from './types';
+} from './types.js';
 
 // ─── Clock + Random (ready now) ───────────────────────────────────────────────
 

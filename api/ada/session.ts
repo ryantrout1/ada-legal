@@ -34,19 +34,19 @@
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createSession } from '../../src/engine/session/sessionRepo';
+import { createSession } from '../../src/engine/session/sessionRepo.js';
 import {
   ANON_COOKIE_TTL_SECONDS,
   buildAnonCookieHeader,
   hashAnonToken,
   mintAnonToken,
-} from '../../src/lib/anonCookie';
-import type { ReadingLevel } from '../../src/types/db';
+} from '../../src/lib/anonCookie.js';
+import type { ReadingLevel } from '../../src/types/db.js';
 import {
   makeClientsFromEnv,
   readJsonBody,
   resolveRequestContext,
-} from '../_shared';
+} from '../_shared.js';
 
 interface Body {
   reading_level?: ReadingLevel;

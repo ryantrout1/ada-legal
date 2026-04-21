@@ -12,8 +12,8 @@
  * Ref: docs/ARCHITECTURE.md §7
  */
 
-import type { AdaTool, ToolResult, ToolExecuteContext } from '../types';
-import { canTransition } from '../../session/stateMachine';
+import type { AdaTool, ToolResult, ToolExecuteContext } from '../types.js';
+import { canTransition } from '../../session/stateMachine.js';
 
 interface EndSessionInput {
   outcome: string;

@@ -54,13 +54,23 @@ We use Clerk for authentication. Neon Auth would write users + sessions directly
 
 Three reading levels, named exactly `simple | standard | professional`. Do not rename. Do not add a fourth. This taxonomy carries through the DB enum, the prompt builder, the user-facing selector, and the `ada_sessions.reading_level` column.
 
-## Rule 13 — No `@/` path aliases in `api/**` or `src/**`
+## Rule 13 — Server-side ESM imports: relative paths WITH `.js` extensions
 
-Vercel's Node lambda bundler does NOT resolve TypeScript path aliases at runtime. It keeps `@/foo/bar` as a literal import string, and the lambda throws `ERR_MODULE_NOT_FOUND` on first request. This killed `/api/ada/session` in production on 2026-04-20 and cost a round trip of debugging.
+Our `package.json` has `"type": "module"`, which means Vercel's Node lambda runtime loads our code as ESM. Node's ESM resolver is strict in two ways our client bundlers are not:
 
-- `api/**/*.ts` and anything they transitively import (nearly all of `src/`) MUST use relative imports (`../src/engine/...`, `./types`, etc.).
-- Test files under `tests/` may keep `@/` since vitest reads `vite.config.ts` and resolves aliases via the same plugin the client build uses.
-- If you ever want to restore `@/` for server code, you must first verify that whatever bundler Vercel is using actually reads `tsconfig.json` `paths` at that time — and add a smoke test that curls `/api/ada/session` post-deploy before declaring victory.
+1. **No path aliases.** `@/foo/bar` is a TypeScript/Vite convention — the Vercel Node bundler keeps the literal string in the shipped code, and Node ESM throws `ERR_MODULE_NOT_FOUND`. All `api/**` and `src/**` code must use relative paths.
+
+2. **Explicit `.js` extensions required.** Extensionless relative imports (`from './foo'`) fail at runtime because Node ESM refuses to guess extensions. You MUST write `from './foo.js'` even in TypeScript source. TS resolves the `.js` specifier back to the `.ts` file during compilation (with `moduleResolution: "bundler"` or `"nodenext"`), and at runtime Node finds the compiled `.js` output.
+
+   For directory imports, spell out `from './foo/index.js'` rather than relying on implicit index resolution.
+
+This caught us twice on 2026-04-20:
+- Attempt 1 (commit `54e2272`) converted `@/` → relative but kept extensionless specifiers → still 500
+- Attempt 2 (commit pending) added `.js` to all 84 relative specifiers → fixed
+
+Tests under `tests/` may keep `@/` and extensionless imports because vitest uses Vite's resolver, not Node ESM.
+
+Before restoring either shortcut for server code, curl `/api/ada/session` on the deployed URL and prove the lambda returns 200 first. Don't trust local `npm test` — it runs in Vite, not Node ESM.
 
 ---
 

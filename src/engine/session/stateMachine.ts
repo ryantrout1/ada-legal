@@ -15,7 +15,7 @@
  * (status only mutated via this module).
  */
 
-import type { SessionStatus } from '../types';
+import type { SessionStatus } from '../types.js';
 
 export type SessionTransition = 'complete' | 'abandon';
 

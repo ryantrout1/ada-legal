@@ -19,13 +19,13 @@
 
 import { ClerkProvider } from '@clerk/clerk-react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { requireClerkPublishableKey } from '../lib/env';
-import PublicLayout from './layouts/PublicLayout';
-import Home from './routes/public/Home';
-import Chat from './routes/public/Chat';
-import AdminSignIn from './routes/admin/SignIn';
-import AdminPlaceholder from './routes/admin/AdminPlaceholder';
-import RequireAdmin from './components/RequireAdmin';
+import { requireClerkPublishableKey } from '../lib/env.js';
+import PublicLayout from './layouts/PublicLayout.js';
+import Home from './routes/public/Home.js';
+import Chat from './routes/public/Chat.js';
+import AdminSignIn from './routes/admin/SignIn.js';
+import AdminPlaceholder from './routes/admin/AdminPlaceholder.js';
+import RequireAdmin from './components/RequireAdmin.js';
 
 export default function App() {
   return (

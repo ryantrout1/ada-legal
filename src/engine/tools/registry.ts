@@ -15,13 +15,13 @@
  * Ref: docs/ARCHITECTURE.md §7
  */
 
-import type { AnyAdaTool } from './types';
-import { setClassificationTool } from './impls/setClassification';
-import { extractFieldTool } from './impls/extractField';
-import { analyzePhotoTool } from './impls/analyzePhoto';
-import { searchAttorneysTool } from './impls/searchAttorneys';
-import { setReadingLevelTool } from './impls/setReadingLevel';
-import { endSessionTool } from './impls/endSession';
+import type { AnyAdaTool } from './types.js';
+import { setClassificationTool } from './impls/setClassification.js';
+import { extractFieldTool } from './impls/extractField.js';
+import { analyzePhotoTool } from './impls/analyzePhoto.js';
+import { searchAttorneysTool } from './impls/searchAttorneys.js';
+import { setReadingLevelTool } from './impls/setReadingLevel.js';
+import { endSessionTool } from './impls/endSession.js';
 
 export const CH0_TOOLS: ReadonlyArray<AnyAdaTool> = [
   setClassificationTool,

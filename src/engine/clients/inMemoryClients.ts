@@ -12,7 +12,7 @@
  * Ref: docs/ARCHITECTURE.md §13
  */
 
-import type { AdaSessionState } from '../types';
+import type { AdaSessionState } from '../types.js';
 import type {
   AdaClients,
   AiClient,
@@ -37,7 +37,7 @@ import type {
   RandomClient,
   SessionReadOptions,
   SessionWriteOptions,
-} from './types';
+} from './types.js';
 
 // ─── AI ───────────────────────────────────────────────────────────────────────
 
