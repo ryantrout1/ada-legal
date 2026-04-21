@@ -84,17 +84,62 @@ class NeonAuditClient implements AuditClient {
 // Real AnthropicPhotoAnalysisClient lives in ./anthropicPhotoAnalysisClient.ts
 // and is wired below.
 
-// ─── Vercel Blob (Phase B) ────────────────────────────────────────────────────
+// ─── Vercel Blob ──────────────────────────────────────────────────────────────
+//
+// Real implementation backed by @vercel/blob. Requires
+// BLOB_READ_WRITE_TOKEN in the environment. When the token is absent,
+// we fall back to a stub that throws with a specific error so the
+// failure surface is obvious (no silent data loss).
+
+class VercelBlobClientImpl implements BlobClient {
+  constructor(private readonly token: string) {}
+
+  async upload(opts: BlobUploadOptions): Promise<BlobUploadResult> {
+    // Dynamic import because @vercel/blob pulls in Node-only modules
+    // that don't tree-shake cleanly in the engine's bundled tests.
+    const { put } = await import('@vercel/blob');
+    // @vercel/blob's put() accepts Buffer | Blob | stream but NOT a
+    // bare Uint8Array in its type surface. Wrap bytes in Buffer.from
+    // (zero-copy view) so the contract is satisfied both at runtime
+    // and in TypeScript.
+    const putBody =
+      typeof opts.body === 'string' ? opts.body : Buffer.from(opts.body);
+    const result = await put(opts.key, putBody, {
+      access: 'public',
+      contentType: opts.contentType,
+      token: this.token,
+      // addRandomSuffix=false keeps keys predictable for the short-lived
+      // blob_key contract the frontend uses. We prefix keys with a
+      // per-session UUID upstream so collisions are not a concern.
+      addRandomSuffix: false,
+      allowOverwrite: true,
+    });
+    return { url: result.url, key: opts.key };
+  }
+
+  async getSignedUrl(_key: string): Promise<string> {
+    // Uploaded blobs have access:'public' and so are directly reachable
+    // via the url returned from upload(). Signed URLs aren't needed for
+    // the photo-analysis flow at this phase. When private blobs become
+    // necessary (eg attorney-facing artifacts), implement with
+    // @vercel/blob's head() + signature logic.
+    throw new Error(
+      'VercelBlobClient.getSignedUrl: not yet required. ' +
+        'Public blobs are directly reachable via the URL returned from upload().',
+    );
+  }
+}
 
 class StubVercelBlobClient implements BlobClient {
   async upload(_opts: BlobUploadOptions): Promise<BlobUploadResult> {
     throw new Error(
-      'VercelBlobClient.upload: not yet implemented (Phase B).',
+      'VercelBlobClient.upload: BLOB_READ_WRITE_TOKEN not configured. ' +
+        'Set it in Vercel dashboard → Storage → Blob.',
     );
   }
   async getSignedUrl(_key: string): Promise<string> {
     throw new Error(
-      'VercelBlobClient.getSignedUrl: not yet implemented (Phase B).',
+      'VercelBlobClient.getSignedUrl: BLOB_READ_WRITE_TOKEN not configured.',
     );
   }
 }
@@ -158,7 +203,9 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
   return {
     ai: new AnthropicAiClient(config.anthropicApiKey),
     db: new NeonDbClient(db),
-    blob: new StubVercelBlobClient(),
+    blob: config.blobReadWriteToken
+      ? new VercelBlobClientImpl(config.blobReadWriteToken)
+      : new StubVercelBlobClient(),
     photo: new AnthropicPhotoAnalysisClient(config.anthropicApiKey),
     email: new StubResendEmailClient(),
     clock: new SystemClock(),

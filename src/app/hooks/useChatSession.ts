@@ -227,13 +227,23 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
         error: null,
       }));
 
-      // The server-side message carries the photo as a blob_key if present —
-      // Ada's prompt tells her to call analyze_photo when she sees one.
-      const serverMessage = photoDataUrl
-        ? `${trimmed}\n\n[User attached a photo. blob_key: ${photoDataUrl}]`
-        : trimmed;
-
       try {
+        // If the user attached a photo, upload it to blob storage FIRST
+        // so the turn request only carries a short URL. Inlining the
+        // base64 data URL into the turn body would blow past Vercel's
+        // per-request body size limit.
+        let photoUrl: string | null = null;
+        if (photoDataUrl) {
+          photoUrl = await uploadPhoto(state.sessionId, photoDataUrl);
+        }
+
+        // The server-side message carries the photo as a blob URL if
+        // present — Ada's prompt tells her to call analyze_photo when
+        // she sees one, and analyze_photo accepts http(s) URLs.
+        const serverMessage = photoUrl
+          ? `${trimmed}\n\n[User attached a photo. blob_key: ${photoUrl}]`
+          : trimmed;
+
         const resp = await fetch('/api/ada/turn', {
           method: 'POST',
           credentials: 'include',
@@ -315,4 +325,41 @@ async function extractError(resp: Response): Promise<string> {
   } catch {
     return resp.statusText;
   }
+}
+
+/**
+ * Upload a photo data URL to /api/ada/upload-photo. Returns the public
+ * blob URL that Ada's analyze_photo tool can fetch server-side.
+ *
+ * Strips the "data:<mime>;base64," prefix before sending so the
+ * endpoint receives clean base64 bytes. Keeps the body payload lean —
+ * we send ~33% less on the wire than the data-URL form.
+ */
+async function uploadPhoto(
+  sessionId: string,
+  photoDataUrl: string,
+): Promise<string> {
+  // Parse data URL: data:<mime>;base64,<payload>
+  const match = photoDataUrl.match(/^data:([^;]+);base64,(.+)$/);
+  if (!match) {
+    throw new Error('Photo is not a valid base64 data URL');
+  }
+  const [, contentType, data] = match;
+
+  const resp = await fetch('/api/ada/upload-photo', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      session_id: sessionId,
+      content_type: contentType,
+      data,
+    }),
+  });
+  if (!resp.ok) {
+    const msg = await extractError(resp);
+    throw new Error(msg || `Photo upload failed (${resp.status})`);
+  }
+  const body = (await resp.json()) as { url: string; key: string };
+  return body.url;
 }

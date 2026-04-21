@@ -44,20 +44,6 @@ interface Body {
   message?: string;
 }
 
-// Vercel's default request body size limit is 4.5 MB. A user-attached
-// photo arrives as an inline data URL in the message field and can
-// base64-encode to several megabytes. Raise the cap to 8 MB for this
-// endpoint until Vercel Blob uploads are wired (follow-up), at which
-// point messages will carry only short blob keys and this can drop
-// back to the default.
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '8mb',
-    },
-  },
-};
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -72,19 +58,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (typeof body.message !== 'string' || !body.message.trim()) {
       return res.status(400).json({ error: 'message is required' });
     }
-    // Length cap protects against abuse but must tolerate the photo-attach
-    // case, where the message contains an inline data URL. A 2-3MB photo
-    // base64-encodes to roughly 3-4MB of characters, so 6MB is a comfortable
-    // headroom before we add real Vercel Blob uploads (tracked as follow-up:
-    // wire VercelBlobClient and move uploads to /api/ada/upload-photo). Plain
-    // text messages are still capped at 10k.
-    const hasDataUrl = body.message.includes('data:image/');
-    const maxLen = hasDataUrl ? 6_000_000 : 10_000;
-    if (body.message.length > maxLen) {
-      const limitDesc = hasDataUrl ? '6 MB with photo' : '10,000 chars';
+    // Messages carry plain text + optional short blob URLs (from
+    // /api/ada/upload-photo). 10k chars is ample for both.
+    if (body.message.length > 10_000) {
       return res
         .status(400)
-        .json({ error: `message is too long (max ${limitDesc})` });
+        .json({ error: 'message is too long (max 10,000 chars)' });
     }
 
     const ctx = resolveRequestContext(req);
