@@ -26,6 +26,8 @@ import Home from './routes/public/Home.js';
 import Chat from './routes/public/Chat.js';
 import Attorneys from './routes/public/Attorneys.js';
 import Accessibility from './routes/public/Accessibility.js';
+import Privacy from './routes/public/Privacy.js';
+import Terms from './routes/public/Terms.js';
 import AdminSignIn from './routes/admin/SignIn.js';
 import AdminSessions from './routes/admin/AdminSessions.js';
 import AdminSessionDetail from './routes/admin/AdminSessionDetail.js';
@@ -45,6 +47,8 @@ export default function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/attorneys" element={<Attorneys />} />
           <Route path="/accessibility" element={<Accessibility />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
         </Route>
 
         {/* Admin tree — ClerkProvider only wraps this subtree */}
