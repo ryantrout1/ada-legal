@@ -51,6 +51,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(404).json({ error: 'Session not found' });
     }
 
+    // Also fetch the quality check if one exists. Missing row is fine —
+    // sessions that haven't completed yet don't have one.
+    const qualityCheck = await clients.db.readSessionQualityCheck(sessionId);
+
     // Flatten the state into the admin view shape.
     return res.status(200).json({
       session: {
@@ -69,6 +73,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         user_id: state.userId,
         listing_id: state.listingId,
       },
+      quality_check: qualityCheck
+        ? {
+            passed: qualityCheck.passed,
+            failures: qualityCheck.failures,
+            warnings: qualityCheck.warnings,
+            checked_at: qualityCheck.checkedAt,
+          }
+        : null,
     });
   } catch (err) {
     console.error('GET /api/admin/sessions/[id] failed', err);

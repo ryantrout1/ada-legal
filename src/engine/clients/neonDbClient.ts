@@ -25,6 +25,7 @@ import {
   anonSessions,
   attorneys as attorneysTable,
   organizations,
+  sessionQualityChecks,
   systemSettings,
 } from '../../db/schema-core.js';
 import type {
@@ -44,6 +45,8 @@ import type {
   CreateAttorneyInput,
   DbClient,
   OrganizationRow,
+  SessionQualityCheckRow,
+  SessionQualityCheckWrite,
   SessionReadOptions,
   SessionWriteOptions,
   UpdateAttorneyInput,
@@ -587,6 +590,48 @@ export class NeonDbClient implements DbClient {
       readingLevelDistribution,
       classificationBreakdown,
       toolUseFrequency,
+    };
+  }
+
+  // ─── Admin: quality checks ──────────────────────────────────────────────────
+
+  async writeSessionQualityCheck(opts: SessionQualityCheckWrite): Promise<void> {
+    await this.db
+      .insert(sessionQualityChecks)
+      .values({
+        sessionId: opts.sessionId,
+        passed: opts.passed,
+        failures: opts.failures,
+        warnings: opts.warnings,
+      })
+      .onConflictDoUpdate({
+        target: sessionQualityChecks.sessionId,
+        set: {
+          passed: opts.passed,
+          failures: opts.failures,
+          warnings: opts.warnings,
+          checkedAt: new Date(),
+        },
+      });
+  }
+
+  async readSessionQualityCheck(
+    sessionId: string,
+  ): Promise<SessionQualityCheckRow | null> {
+    const rows = await this.db
+      .select()
+      .from(sessionQualityChecks)
+      .where(eq(sessionQualityChecks.sessionId, sessionId))
+      .limit(1);
+    const r = rows[0];
+    if (!r) return null;
+    return {
+      id: r.id,
+      sessionId: r.sessionId,
+      passed: r.passed,
+      failures: (r.failures ?? []) as SessionQualityCheckRow['failures'],
+      warnings: (r.warnings ?? []) as SessionQualityCheckRow['warnings'],
+      checkedAt: (r.checkedAt as Date).toISOString(),
     };
   }
 }

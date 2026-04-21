@@ -32,6 +32,7 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { processAdaTurn } from '../../src/engine/processAdaTurn.js';
+import { runSessionQualityCheck } from '../../src/engine/observability/qualityCheck.js';
 import {
   makeClientsFromEnv,
   readJsonBody,
@@ -100,6 +101,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Persist the new session state.
     await clients.db.writeSession({ state: result.nextState });
+
+    // On completion, record a quality check row. Run inline so any
+    // persistence error surfaces in logs immediately; the check itself
+    // is pure, fast, and non-blocking for the user. Wrap in a catch
+    // because a quality-check failure must never block the response.
+    if (result.nextState.status === 'completed') {
+      try {
+        const qc = runSessionQualityCheck(result.nextState);
+        await clients.db.writeSessionQualityCheck({
+          sessionId: result.nextState.sessionId,
+          passed: qc.passed,
+          failures: qc.failures,
+          warnings: qc.warnings,
+        });
+      } catch (qcErr) {
+        // Log — do not propagate.
+        console.error('quality check write failed', qcErr);
+      }
+    }
 
     // Pull a flat content string from the assistant message. The content
     // field is string | ContentBlock[]; for final messages (no tool_use)

@@ -45,6 +45,8 @@ import type {
   PhotoAnalysisRequest,
   PhotoAnalysisResult,
   RandomClient,
+  SessionQualityCheckRow,
+  SessionQualityCheckWrite,
   SessionReadOptions,
   SessionWriteOptions,
   UpdateAttorneyInput,
@@ -93,6 +95,7 @@ export class InMemoryDbClient implements DbClient {
   public readonly adminAttorneys: AttorneyAdminRow[] = [];
   public readonly orgs: OrganizationRow[] = [];
   public readonly systemSettings = new Map<string, unknown>();
+  public readonly qualityChecks = new Map<string, SessionQualityCheckRow>();
   public readonly anonSessions: Array<{
     id: string;
     orgId: string;
@@ -372,6 +375,28 @@ export class InMemoryDbClient implements DbClient {
       classificationBreakdown,
       toolUseFrequency,
     };
+  }
+
+  // ─── Admin: quality checks ──────────────────────────────────────────────────
+
+  async writeSessionQualityCheck(opts: SessionQualityCheckWrite): Promise<void> {
+    // Upsert by sessionId.
+    this.qualityChecks.set(opts.sessionId, {
+      id:
+        '20000000-0000-4000-8000-' +
+        (this.qualityChecks.size + 1).toString(16).padStart(12, '0'),
+      sessionId: opts.sessionId,
+      passed: opts.passed,
+      failures: opts.failures,
+      warnings: opts.warnings,
+      checkedAt: new Date().toISOString(),
+    });
+  }
+
+  async readSessionQualityCheck(
+    sessionId: string,
+  ): Promise<SessionQualityCheckRow | null> {
+    return this.qualityChecks.get(sessionId) ?? null;
   }
 }
 

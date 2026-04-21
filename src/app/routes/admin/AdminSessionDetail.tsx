@@ -37,9 +37,23 @@ interface SessionDetail {
   user_id: string | null;
 }
 
+interface QualityIssue {
+  code: string;
+  message: string;
+  details?: Record<string, unknown>;
+}
+
+interface QualityCheck {
+  passed: boolean;
+  failures: QualityIssue[];
+  warnings: QualityIssue[];
+  checked_at: string;
+}
+
 export default function AdminSessionDetail() {
   const { id } = useParams<{ id: string }>();
   const [session, setSession] = useState<SessionDetail | null>(null);
+  const [qualityCheck, setQualityCheck] = useState<QualityCheck | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,8 +70,12 @@ export default function AdminSessionDetail() {
           const msg = resp.status === 404 ? 'Session not found' : `HTTP ${resp.status}`;
           throw new Error(msg);
         }
-        const data = (await resp.json()) as { session: SessionDetail };
+        const data = (await resp.json()) as {
+          session: SessionDetail;
+          quality_check: QualityCheck | null;
+        };
         setSession(data.session);
+        setQualityCheck(data.quality_check);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load session');
       } finally {
@@ -103,6 +121,9 @@ export default function AdminSessionDetail() {
         <MetaField label="Type" value={session.session_type} />
         <MetaField label="Test" value={session.is_test ? 'yes' : 'no'} />
       </dl>
+
+      {/* Quality check (only present for completed sessions) */}
+      {qualityCheck && <QualityCheckCard check={qualityCheck} />}
 
       {/* Classification */}
       {session.classification && (
@@ -186,6 +207,95 @@ export default function AdminSessionDetail() {
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function QualityCheckCard({ check }: { check: QualityCheck }) {
+  const hasFailures = check.failures.length > 0;
+  const hasWarnings = check.warnings.length > 0;
+  return (
+    <section
+      className={
+        'mb-6 rounded-md border p-4 ' +
+        (check.passed
+          ? 'border-success-500 bg-success-50'
+          : 'border-danger-500 bg-danger-50')
+      }
+    >
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="font-display text-lg text-ink-900">Quality check</h2>
+        <span
+          className={
+            'inline-block px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-mono ' +
+            (check.passed
+              ? 'bg-success-500 text-white'
+              : 'bg-danger-500 text-white')
+          }
+        >
+          {check.passed ? 'Passed' : 'Failed'}
+        </span>
+      </div>
+
+      {!hasFailures && !hasWarnings && (
+        <p className="text-sm text-ink-700">No issues detected.</p>
+      )}
+
+      {hasFailures && (
+        <div className="mb-3">
+          <p className="text-xs uppercase tracking-wider font-mono text-danger-500 mb-1">
+            Failures ({check.failures.length})
+          </p>
+          <ul className="space-y-1.5 list-none p-0 m-0">
+            {check.failures.map((f) => (
+              <IssueRow key={f.code} issue={f} severity="failure" />
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {hasWarnings && (
+        <div>
+          <p className="text-xs uppercase tracking-wider font-mono text-warning-500 mb-1">
+            Warnings ({check.warnings.length})
+          </p>
+          <ul className="space-y-1.5 list-none p-0 m-0">
+            {check.warnings.map((w) => (
+              <IssueRow key={w.code} issue={w} severity="warning" />
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <p className="text-[10px] font-mono text-ink-500 mt-3">
+        Checked {new Date(check.checked_at).toLocaleString()}
+      </p>
+    </section>
+  );
+}
+
+function IssueRow({
+  issue,
+  severity,
+}: {
+  issue: QualityIssue;
+  severity: 'failure' | 'warning';
+}) {
+  const dotColor = severity === 'failure' ? 'bg-danger-500' : 'bg-warning-500';
+  return (
+    <li className="flex gap-2 text-sm">
+      <span
+        className={`${dotColor} w-1.5 h-1.5 rounded-full mt-1.5 flex-none`}
+        aria-hidden="true"
+      />
+      <div className="flex-1">
+        <div className="flex items-baseline gap-2">
+          <code className="text-xs font-mono text-ink-500">{issue.code}</code>
+        </div>
+        <p className="text-ink-900">{issue.message}</p>
+      </div>
+    </li>
+  );
+}
 
 function MetaField({ label, value }: { label: string; value: string }) {
   return (

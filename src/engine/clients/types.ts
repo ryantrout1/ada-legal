@@ -183,6 +183,26 @@ export interface DbClient {
   setSystemSetting<T = unknown>(key: string, value: T, updatedBy?: string | null): Promise<void>;
   /** Aggregate session stats for the admin analytics dashboard. */
   getAdminAnalytics(opts?: AdminAnalyticsOptions): Promise<AdminAnalyticsResult>;
+  /** Persist a session_quality_checks row (upserts by session_id). */
+  writeSessionQualityCheck(opts: SessionQualityCheckWrite): Promise<void>;
+  /** Read the latest quality check row for a session. */
+  readSessionQualityCheck(sessionId: string): Promise<SessionQualityCheckRow | null>;
+}
+
+export interface SessionQualityCheckWrite {
+  sessionId: string;
+  passed: boolean;
+  failures: Array<{ code: string; message: string; details?: Record<string, unknown> }>;
+  warnings: Array<{ code: string; message: string; details?: Record<string, unknown> }>;
+}
+
+export interface SessionQualityCheckRow {
+  id: string;
+  sessionId: string;
+  passed: boolean;
+  failures: Array<{ code: string; message: string; details?: Record<string, unknown> }>;
+  warnings: Array<{ code: string; message: string; details?: Record<string, unknown> }>;
+  checkedAt: string;
 }
 
 export interface AdminAnalyticsOptions {
