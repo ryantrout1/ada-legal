@@ -44,6 +44,7 @@ const DEFAULT_LIMIT = 5;
 const MAX_LIMIT = 10;
 
 const VALID_TOPICS = [
+  // Part 36 (Title III policy) topics
   'general',
   'public_accommodations',
   'service_animals',
@@ -60,6 +61,19 @@ const VALID_TOPICS = [
   'web_accessibility',
   'employment',
   'state_local_government',
+  // 2010 Standards (technical) topics
+  'accessible_routes',
+  'building_blocks',
+  'reach_ranges',
+  'operable_parts',
+  'doors',
+  'ramps',
+  'elevators',
+  'stairways',
+  'handrails',
+  'drinking_fountains',
+  'restrooms',
+  'signs',
 ];
 
 export const searchAdaStandardsTool: AdaTool<SearchAdaStandardsInput> = {

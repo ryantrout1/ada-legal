@@ -57,6 +57,21 @@ export const TOPICS = [
   'web_accessibility',
   'employment',
   'state_local_government',
+  // Technical-requirement topics added in Step 10.6 for the 2010
+  // Standards corpus. These are finer-grained than the Part 36 topics
+  // above because the Standards are organized by building element.
+  'accessible_routes',
+  'building_blocks',
+  'reach_ranges',
+  'operable_parts',
+  'doors',
+  'ramps',
+  'elevators',
+  'stairways',
+  'handrails',
+  'drinking_fountains',
+  'restrooms',
+  'signs',
 ] as const;
 export type Topic = (typeof TOPICS)[number];
 
@@ -96,21 +111,31 @@ export function prepareChunk(section: RawSection): PreparedChunk {
 }
 
 /**
- * Given a leaf citation like "36.302(c)(1)", return the progressively
- * broader parent citations: ["36.302(c)", "36.302", "36"]. This lets
- * a user who writes "what does §36.302 say about service animals"
- * hit both the exact subsection and any leaf paragraph under it.
+ * Given a leaf citation, return the progressively broader parent
+ * citations. Supports two formats:
+ *
+ *   CFR with parens:   "36.302(c)(1)" → ["36.302(c)", "36.302", "36"]
+ *   Standards decimal: "404.2.3"      → ["404.2", "404"]
+ *
+ * This lets a user who writes "what does §36.302 say" or "§404.2
+ * requirements" hit the exact subsection plus every leaf under it.
  */
 function parentRefs(leaf: string): string[] {
   const out: string[] = [];
-  // Strip trailing parenthesized groups one at a time.
   let current = leaf;
+
+  // Strip trailing parenthesized groups one at a time (CFR style).
   while (/\([^)]+\)$/.test(current)) {
     current = current.replace(/\([^)]+\)$/, '');
     if (current) out.push(current);
   }
-  // Drop trailing ".NNN" to get the Part root.
-  const partOnly = current.replace(/\.\d+.*$/, '');
-  if (partOnly && partOnly !== current) out.push(partOnly);
+
+  // Strip trailing dotted-decimal segments one at a time (Standards style).
+  // e.g., 404.2.3 → 404.2 → 404
+  while (/\.\d+$/.test(current) && current.includes('.')) {
+    current = current.replace(/\.\d+$/, '');
+    if (current && !out.includes(current)) out.push(current);
+  }
+
   return out;
 }

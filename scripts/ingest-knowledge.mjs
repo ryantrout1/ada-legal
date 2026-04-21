@@ -46,37 +46,61 @@ if (!dbUrl || dbUrl === '...' || !dbUrl.startsWith('postgres')) {
   );
 }
 
-// ─── Load corpus ────────────────────────────────────────────────────────────
-const corpusPath = join(
+// ─── Load corpora ──────────────────────────────────────────────────────────
+//
+// Add a new entry here when expanding the knowledge base. Each file must
+// be an array of RawSection objects (see src/engine/knowledge/chunking.ts).
+// Upsert is keyed on (source, title), so two corpora can safely coexist
+// even if they contain overlapping citations as long as their `source`
+// fields differ.
+
+const CORPUS_FILES = [
+  'cfr-36-seed.json',      // Step 10.5: 28 CFR Part 36 (ADA Title III regs)
+  'std-2010-seed.json',    // Step 10.6: 2010 ADA Standards for Accessible Design
+];
+
+const corpusDir = join(
   __dirname,
   '..',
   'src',
   'engine',
   'knowledge',
   'corpus',
-  'cfr-36-seed.json',
 );
 
-let corpus;
-try {
-  corpus = JSON.parse(readFileSync(corpusPath, 'utf-8'));
-} catch (err) {
-  die(`Could not read ${corpusPath}: ${err.message}`);
+let corpus = [];
+for (const file of CORPUS_FILES) {
+  const path = join(corpusDir, file);
+  let chunk;
+  try {
+    chunk = JSON.parse(readFileSync(path, 'utf-8'));
+  } catch (err) {
+    die(`Could not read ${path}: ${err.message}`);
+  }
+  if (!Array.isArray(chunk)) {
+    die(`Corpus file ${file} is not an array`);
+  }
+  console.log(`[ingest]   ${file}: ${chunk.length} sections`);
+  corpus = corpus.concat(chunk);
 }
-if (!Array.isArray(corpus) || corpus.length === 0) {
-  die(`Corpus is empty or not an array`);
+if (corpus.length === 0) {
+  die(`All corpus files empty`);
 }
 
 // ─── Chunking (inlined from src/engine/knowledge/chunking.ts) ──────────────
 function parentRefs(leaf) {
   const out = [];
   let current = leaf;
+  // Strip trailing parens (CFR style).
   while (/\([^)]+\)$/.test(current)) {
     current = current.replace(/\([^)]+\)$/, '');
     if (current) out.push(current);
   }
-  const partOnly = current.replace(/\.\d+.*$/, '');
-  if (partOnly && partOnly !== current) out.push(partOnly);
+  // Strip trailing dotted segments (2010 Standards style).
+  while (/\.\d+$/.test(current) && current.includes('.')) {
+    current = current.replace(/\.\d+$/, '');
+    if (current && !out.includes(current)) out.push(current);
+  }
   return out;
 }
 

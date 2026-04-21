@@ -779,24 +779,43 @@ export class NeonDbClient implements DbClient {
 // ─── KB helpers ──────────────────────────────────────────────────────────────
 
 /**
- * Extract CFR-style citations from free text. Matches:
- *   36            — bare part number (rare; usually too broad)
- *   36.302        — section
- *   36.302(c)     — subsection
- *   36.302(c)(1)  — paragraph
- * Leading "§" or "Section" optional. Returns unique citations in order.
+ * Extract ADA citations from free text. Matches two formats:
+ *
+ *   Part 36 / Part 35 style (CFR regulations):
+ *     36.302, 36.302(c), 36.302(c)(1)
+ *     leading "§" or "section" optional
+ *
+ *   2010 Standards style (dotted decimal):
+ *     404.2.3, 206.2.1
+ *     leading "§" or "section" optional
+ *
+ * Returns unique citations in the order they appear. Used for the
+ * citation-exact-match path in searchKnowledgeBase, layered on top
+ * of vector similarity as a deterministic fallback.
  */
 function extractCitations(text: string): string[] {
-  // Require at least one dot — bare "36" matches too much common English.
-  const re = /(?:§|section\s+)?(\d{2,3}\.\d{1,4}(?:\([a-z0-9]+\))*)/gi;
+  // Two alternatives:
+  //   Alt 1: \d{2,3}\.\d{1,4}\.\d{1,3}  → 2010 Standards 3-part  (404.2.3)
+  //   Alt 2: \d{2,3}\.\d{1,4}(?:\([a-z0-9]+\))+  → CFR with parens (36.302(c))
+  //   Alt 3: \d{2,3}\.\d{1,4}(?!\.\d|\([a-z0-9])  → bare 2-part   (36.302)
+  // We try them in that order and take the longest match for any
+  // given position.
+  const patterns = [
+    /(?:§|section\s+)?(\d{2,3}\.\d{1,4}\.\d{1,3})/gi,
+    /(?:§|section\s+)?(\d{2,3}\.\d{1,4}(?:\([a-z0-9]+\))+)/gi,
+    /(?:§|section\s+)?(\d{2,3}\.\d{1,4})(?!\.\d|\([a-z0-9])/gi,
+  ];
   const out: string[] = [];
   const seen = new Set<string>();
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(text)) !== null) {
-    const c = m[1];
-    if (!seen.has(c)) {
-      seen.add(c);
-      out.push(c);
+  for (const re of patterns) {
+    let m: RegExpExecArray | null;
+    re.lastIndex = 0;
+    while ((m = re.exec(text)) !== null) {
+      const c = m[1];
+      if (!seen.has(c)) {
+        seen.add(c);
+        out.push(c);
+      }
     }
   }
   return out;

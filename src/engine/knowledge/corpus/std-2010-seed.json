@@ -1,0 +1,434 @@
+[
+  {
+    "citation": "206.2.1",
+    "title": "Accessible routes — site arrival points",
+    "text": "At least one accessible route must be provided within the site to accessible facility entrances from accessible parking spaces and passenger loading zones, public streets and sidewalks, and each public transportation stop. Where a site arrival point is provided, an accessible route to the building entrance is required.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 2 — Scoping Requirements", "§206 Accessible Routes"],
+    "topic": "accessible_routes",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "206.2.2",
+    "title": "Accessible routes within a site",
+    "text": "At least one accessible route must connect accessible buildings, facilities, elements, and spaces that are on the same site. An accessible route is not required between accessible buildings, accessible facilities, accessible elements, and accessible spaces if the only means of access between them is a vehicular way that does not provide pedestrian access.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 2 — Scoping Requirements", "§206 Accessible Routes"],
+    "topic": "accessible_routes",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "206.2.3",
+    "title": "Accessible routes — multi-story buildings",
+    "text": "At least one accessible route shall connect each story and mezzanine in multi-story buildings and facilities. A private facility that is less than three stories or that has less than 3,000 square feet per story is not required to have an elevator, unless it is a shopping center, shopping mall, professional office of a health care provider, or terminal, depot, or other station used for specified public transportation. State and local government facilities must connect each story with an accessible route except those with no more than two stories where the inaccessible story has no public use space and an occupant load of five maximum.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 2 — Scoping Requirements", "§206 Accessible Routes"],
+    "topic": "accessible_routes",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "208.2",
+    "title": "Accessible parking — minimum number of spaces",
+    "text": "Parking spaces complying with §502 shall be provided in accordance with Table 208.2. For each 1-25 total parking spaces: 1 accessible. 26-50: 2. 51-75: 3. 76-100: 4. 101-150: 5. 151-200: 6. 201-300: 7. 301-400: 8. 401-500: 9. 501-1000: 2% of total. 1001 and over: 20 plus 1 for each 100 over 1000. One in every six accessible spaces (minimum one) must be van-accessible.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 2 — Scoping Requirements", "§208 Parking Spaces"],
+    "topic": "parking",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "208.2.1",
+    "title": "Accessible parking — hospital outpatient facilities",
+    "text": "At hospital outpatient facilities, ten percent of patient and visitor parking spaces provided shall comply with §502. This is a higher ratio than standard parking lot scoping because of the likelihood that visitors will have mobility disabilities.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 2 — Scoping Requirements", "§208 Parking Spaces"],
+    "topic": "parking",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "208.2.2",
+    "title": "Accessible parking — rehabilitation facilities and outpatient physical therapy",
+    "text": "At rehabilitation facilities specializing in treatment of conditions that affect mobility, and outpatient physical therapy facilities, twenty percent of patient and visitor parking spaces provided shall comply with §502.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 2 — Scoping Requirements", "§208 Parking Spaces"],
+    "topic": "parking",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "213.2",
+    "title": "Toilet rooms — scoping",
+    "text": "Where toilet rooms are provided, each toilet room shall comply with §603. Where bathing rooms are provided, each bathing room shall comply with §603. A portable toilet room is not required to be accessible where there are multiple portable toilet rooms clustered at a single location and at least five percent of the portable toilet rooms at each cluster, but no fewer than one, are accessible.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 2 — Scoping Requirements", "§213 Plumbing Elements and Facilities"],
+    "topic": "restrooms",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "302.1",
+    "title": "Floor and ground surfaces — general",
+    "text": "Floor and ground surfaces shall be stable, firm, and slip resistant. Carpet or carpet tile shall be securely attached and shall have a firm cushion, pad, or backing or no cushion or pad. Carpet or carpet tile pile height shall be 1/2 inch maximum. Exposed edges of carpet shall be fastened to floor surfaces and shall have trim along the entire length of the exposed edge.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 3 — Building Blocks", "§302 Floor and Ground Surfaces"],
+    "topic": "building_blocks",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "302.3",
+    "title": "Floor surfaces — openings",
+    "text": "Openings in floor or ground surfaces shall not allow passage of a sphere more than 1/2 inch diameter. Elongated openings, such as those in gratings, shall be placed so that the long dimension is perpendicular to the dominant direction of travel.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 3 — Building Blocks", "§302 Floor and Ground Surfaces"],
+    "topic": "building_blocks",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "303.2",
+    "title": "Changes in level — up to 1/4 inch",
+    "text": "Changes in level of 1/4 inch high maximum shall be permitted to be vertical and without edge treatment.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 3 — Building Blocks", "§303 Changes in Level"],
+    "topic": "building_blocks",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "303.3",
+    "title": "Changes in level — 1/4 to 1/2 inch",
+    "text": "Changes in level between 1/4 inch high minimum and 1/2 inch high maximum shall be beveled with a slope not steeper than 1:2.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 3 — Building Blocks", "§303 Changes in Level"],
+    "topic": "building_blocks",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "303.4",
+    "title": "Changes in level — greater than 1/2 inch",
+    "text": "Changes in level greater than 1/2 inch high shall be ramped and shall comply with §405 or §406 (ramps or curb ramps).",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 3 — Building Blocks", "§303 Changes in Level"],
+    "topic": "building_blocks",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "304.3",
+    "title": "Turning space — size",
+    "text": "Turning space shall be either a circular space of 60 inches minimum diameter, or a T-shaped space within a 60 inch by 60 inch square with arms and base 36 inches wide minimum. Doors, doorways, and clear floor or ground space for an element shall be permitted to be part of the turning space.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 3 — Building Blocks", "§304 Turning Space"],
+    "topic": "building_blocks",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "305.3",
+    "title": "Clear floor or ground space — size",
+    "text": "The clear floor or ground space shall be 30 inches minimum by 48 inches minimum. Clear floor or ground space shall be positioned for either forward or parallel approach to an element.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 3 — Building Blocks", "§305 Clear Floor or Ground Space"],
+    "topic": "building_blocks",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "308.2.1",
+    "title": "Reach ranges — forward reach, unobstructed",
+    "text": "Where a forward reach is unobstructed, the high forward reach shall be 48 inches maximum and the low forward reach shall be 15 inches minimum above the finish floor or ground.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 3 — Building Blocks", "§308 Reach Ranges"],
+    "topic": "reach_ranges",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "308.3.1",
+    "title": "Reach ranges — side reach, unobstructed",
+    "text": "Where a clear floor or ground space allows a parallel approach to an element and the side reach is unobstructed, the high side reach shall be 48 inches maximum and the low side reach shall be 15 inches minimum above the finish floor or ground.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 3 — Building Blocks", "§308 Reach Ranges"],
+    "topic": "reach_ranges",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "309.4",
+    "title": "Operable parts — operation",
+    "text": "Operable parts shall be operable with one hand and shall not require tight grasping, pinching, or twisting of the wrist. The force required to activate operable parts shall be 5 pounds maximum.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 3 — Building Blocks", "§309 Operable Parts"],
+    "topic": "operable_parts",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "402.2",
+    "title": "Accessible routes — components",
+    "text": "Accessible routes shall consist of one or more of the following components: walking surfaces with a running slope not steeper than 1:20, doorways, ramps, curb ramps excluding the flared sides, elevators, and platform lifts. All components of an accessible route shall comply with the applicable requirements of Chapter 4.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§402 Accessible Routes"],
+    "topic": "accessible_routes",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "403.5.1",
+    "title": "Walking surfaces — clear width",
+    "text": "Except as provided in §403.5.2 and §403.5.3, the clear width of walking surfaces shall be 36 inches minimum. The clear width can reduce to 32 inches minimum for a length of 24 inches maximum, provided that reduced width segments are separated by segments that are 48 inches long minimum and 36 inches wide minimum.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§403 Walking Surfaces"],
+    "topic": "accessible_routes",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "404.2.3",
+    "title": "Doors — clear width",
+    "text": "Door openings shall provide a clear width of 32 inches minimum. Clear openings of doorways with swinging doors shall be measured between the face of the door and the stop, with the door open 90 degrees. Openings more than 24 inches deep shall provide a clear opening of 36 inches minimum. There shall be no projections into the required clear opening width lower than 34 inches above the finish floor or ground. Projections into the clear opening width between 34 inches and 80 inches above the finish floor or ground shall not exceed 4 inches.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§404 Doors, Doorways, and Gates"],
+    "topic": "doors",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "404.2.7",
+    "title": "Doors — hardware",
+    "text": "Handles, pulls, latches, locks, and other operable parts on doors and gates shall comply with §309.4. Operable parts of such hardware shall be 34 inches minimum and 48 inches maximum above the finish floor or ground. Where sliding doors are in the fully open position, operating hardware shall be exposed and usable from both sides.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§404 Doors, Doorways, and Gates"],
+    "topic": "doors",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "404.2.9",
+    "title": "Doors — opening force",
+    "text": "Fire doors shall have the minimum opening force allowable by the appropriate administrative authority. The force for pushing or pulling open a door or gate other than fire doors shall be as follows: Interior hinged doors and gates: 5 pounds maximum. Sliding or folding doors: 5 pounds maximum. These forces do not apply to the force required to retract latch bolts or disengage other devices that hold the door or gate in a closed position.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§404 Doors, Doorways, and Gates"],
+    "topic": "doors",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "405.2",
+    "title": "Ramps — slope",
+    "text": "Ramp runs shall have a running slope not steeper than 1:12. The combined horizontal run of a ramp shall not exceed 30 feet without a landing. Slopes steeper than 1:16 but not steeper than 1:12 are permitted for new construction; slopes between 1:12 and 1:10 are permitted only where space limitations prohibit use of a 1:12 slope or less in existing facilities.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§405 Ramps"],
+    "topic": "ramps",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "405.3",
+    "title": "Ramps — cross slope",
+    "text": "Cross slope of ramp runs shall not be steeper than 1:48. Changes in level other than the running slope and cross slope are not permitted on ramp runs.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§405 Ramps"],
+    "topic": "ramps",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "405.5",
+    "title": "Ramps — clear width",
+    "text": "The clear width of a ramp run and, where handrails are provided, the clear width between handrails shall be 36 inches minimum.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§405 Ramps"],
+    "topic": "ramps",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "405.6",
+    "title": "Ramps — rise",
+    "text": "The rise for any ramp run shall be 30 inches maximum. A ramp with a 1:12 slope and 30 inch maximum rise therefore has a maximum horizontal run of 30 feet before requiring a landing.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§405 Ramps"],
+    "topic": "ramps",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "405.7",
+    "title": "Ramps — landings",
+    "text": "Ramps shall have landings at the top and bottom of each ramp run. Landings shall be at least as wide as the widest ramp run leading to the landing, and 60 inches long minimum. Where ramps change direction between runs at landings, the clear landing size shall be 60 inches by 60 inches minimum. Landings shall have a slope not steeper than 1:48 in any direction.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§405 Ramps"],
+    "topic": "ramps",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "405.8",
+    "title": "Ramps — handrails",
+    "text": "Ramp runs with a rise greater than 6 inches shall have handrails complying with §505. Handrails shall be provided on both sides of ramps.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§405 Ramps"],
+    "topic": "ramps",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "406.2",
+    "title": "Curb ramps — counter slope",
+    "text": "Counter slopes of adjoining gutters and road surfaces immediately adjacent to the curb ramp shall not be steeper than 1:20. The adjacent surfaces at transitions at curb ramps to walks, gutters, and streets shall be at the same level.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§406 Curb Ramps"],
+    "topic": "ramps",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "406.4",
+    "title": "Curb ramps — landings",
+    "text": "Landings shall be provided at the tops of curb ramps. The landing clear length shall be 36 inches long minimum. The landing clear width shall be at least as wide as the curb ramp, excluding flared sides, leading to the landing.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§406 Curb Ramps"],
+    "topic": "ramps",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "407.2.1",
+    "title": "Elevators — call controls",
+    "text": "Where elevator call buttons or keypads are provided, they shall comply with §309.4 (operable parts). Call buttons shall be raised or flush. Objects beneath elevator hall call buttons shall protrude 1 inch maximum. Call buttons shall have visible signals to indicate when each call is registered and when each call is answered. Call buttons shall be 3/4 inch minimum in the smallest dimension. The centerline of the highest operable part shall be 42 inches maximum above the finish floor.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 4 — Accessible Routes", "§407 Elevators"],
+    "topic": "elevators",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "502.2",
+    "title": "Parking spaces — vehicle spaces",
+    "text": "Car parking spaces shall be 96 inches wide minimum and van parking spaces shall be 132 inches wide minimum, shall be marked to define the width, and shall have an adjacent access aisle complying with §502.3. Van parking spaces shall be permitted to be 96 inches wide minimum where the access aisle is 96 inches wide minimum.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 5 — General Site and Building Elements", "§502 Parking Spaces"],
+    "topic": "parking",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "502.3",
+    "title": "Parking spaces — access aisle",
+    "text": "Access aisles serving parking spaces shall comply with §502.3. Access aisles shall adjoin an accessible route. Two parking spaces shall be permitted to share a common access aisle. Access aisles shall be marked so as to discourage parking in them. Access aisles shall be at the same level as the parking spaces they serve. Access aisles shall extend the full length of the parking spaces they serve. Access aisles shall not overlap the vehicular way.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 5 — General Site and Building Elements", "§502 Parking Spaces"],
+    "topic": "parking",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "502.3.1",
+    "title": "Parking spaces — access aisle width",
+    "text": "Access aisles serving car and van parking spaces shall be 60 inches wide minimum. This is the width for the standard accessible parking space access aisle.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 5 — General Site and Building Elements", "§502 Parking Spaces"],
+    "topic": "parking",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "502.6",
+    "title": "Parking spaces — identification",
+    "text": "Parking space identification signs shall include the International Symbol of Accessibility complying with §703.7.2.1. Signs identifying van parking spaces shall contain the designation 'van accessible.' Signs shall be 60 inches minimum above the finish floor or ground surface measured to the bottom of the sign.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 5 — General Site and Building Elements", "§502 Parking Spaces"],
+    "topic": "parking",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "504.2",
+    "title": "Stairways — treads and risers",
+    "text": "All steps on a flight of stairs shall have uniform riser heights and uniform tread depths. Risers shall be 4 inches high minimum and 7 inches high maximum. Treads shall be 11 inches deep minimum.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 5 — General Site and Building Elements", "§504 Stairways"],
+    "topic": "stairways",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "504.5",
+    "title": "Stairways — handrails",
+    "text": "Stairs shall have handrails complying with §505. Handrails must be provided on both sides of stairs.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 5 — General Site and Building Elements", "§504 Stairways"],
+    "topic": "stairways",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "505.4",
+    "title": "Handrails — height",
+    "text": "Top of gripping surfaces of handrails shall be 34 inches minimum and 38 inches maximum vertically above walking surfaces, stair nosings, and ramp surfaces. Handrails shall be at a consistent height above walking surfaces, stair nosings, and ramp surfaces.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 5 — General Site and Building Elements", "§505 Handrails"],
+    "topic": "handrails",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "505.7.1",
+    "title": "Handrails — gripping surface, circular cross section",
+    "text": "Handrail gripping surfaces with a circular cross section shall have an outside diameter of 1-1/4 inches minimum and 2 inches maximum.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 5 — General Site and Building Elements", "§505 Handrails"],
+    "topic": "handrails",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "602.4",
+    "title": "Drinking fountains — spout height",
+    "text": "Spout outlets of drinking fountains for people who use wheelchairs shall be 36 inches maximum above the finish floor or ground. Spout outlets of drinking fountains for standing people shall be 38 inches minimum and 43 inches maximum above the finish floor or ground.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 6 — Plumbing Elements and Facilities", "§602 Drinking Fountains"],
+    "topic": "drinking_fountains",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "603.2",
+    "title": "Toilet rooms — clearances",
+    "text": "Clearances around and between fixtures shall comply with §603. Clear floor space required at fixtures and turning space shall be permitted to overlap. In toilet rooms, doors other than the door to the accessible water closet compartment shall not swing into the clear floor space or clearance required for any fixture.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 6 — Plumbing Elements and Facilities", "§603 Toilet and Bathing Rooms"],
+    "topic": "restrooms",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "604.2",
+    "title": "Water closets — location",
+    "text": "The water closet shall be positioned with a wall or partition to the rear and to one side. The centerline of the water closet shall be 16 inches minimum to 18 inches maximum from the side wall or partition, except that the water closet shall be 17 inches minimum and 19 inches maximum from the side wall or partition in the ambulatory accessible toilet compartment specified in §604.8.2.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 6 — Plumbing Elements and Facilities", "§604 Water Closets and Toilet Compartments"],
+    "topic": "restrooms",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "604.4",
+    "title": "Water closets — seat height",
+    "text": "The seat height of a water closet above the finish floor shall be 17 inches minimum and 19 inches maximum measured to the top of the seat. Seats shall not be sprung to return to a lifted position.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 6 — Plumbing Elements and Facilities", "§604 Water Closets and Toilet Compartments"],
+    "topic": "restrooms",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "604.5",
+    "title": "Water closets — grab bars",
+    "text": "Grab bars for water closets shall be provided and shall comply with §609. Grab bars shall be provided on the side wall closest to the water closet and on the rear wall. The side wall grab bar shall be 42 inches long minimum, located 12 inches maximum from the rear wall and extending 54 inches minimum from the rear wall. The rear wall grab bar shall be 36 inches long minimum and extend from the centerline of the water closet 12 inches minimum on one side and 24 inches minimum on the other side.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 6 — Plumbing Elements and Facilities", "§604 Water Closets and Toilet Compartments"],
+    "topic": "restrooms",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "604.8.1",
+    "title": "Wheelchair-accessible toilet compartments",
+    "text": "Wheelchair accessible compartments shall be 60 inches wide minimum measured perpendicular to the side wall, and 56 inches deep minimum for wall hung water closets and 59 inches deep minimum for floor mounted water closets measured perpendicular to the rear wall.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 6 — Plumbing Elements and Facilities", "§604 Water Closets and Toilet Compartments"],
+    "topic": "restrooms",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "606.3",
+    "title": "Lavatories and sinks — height",
+    "text": "The front of lavatories and sinks shall be 34 inches maximum above the finish floor or ground, measured to the higher of the rim or counter surface.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 6 — Plumbing Elements and Facilities", "§606 Lavatories and Sinks"],
+    "topic": "restrooms",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "607.2",
+    "title": "Bathtubs — clearance",
+    "text": "Clearance in front of bathtubs extending the length of the bathtub and 30 inches wide minimum shall be provided. Where a permanent seat is provided at the head end of the bathtub, the clearance shall extend 12 inches minimum beyond the wall at the head end of the bathtub.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 6 — Plumbing Elements and Facilities", "§607 Bathtubs"],
+    "topic": "restrooms",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "608.2.1",
+    "title": "Shower compartments — transfer type",
+    "text": "Transfer type shower compartments shall be 36 inches by 36 inches clear inside dimensions measured at the center points of opposing sides and shall have a 36 inch wide minimum entry on the face of the compartment.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 6 — Plumbing Elements and Facilities", "§608 Shower Compartments"],
+    "topic": "restrooms",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "608.2.2",
+    "title": "Shower compartments — standard roll-in type",
+    "text": "Standard roll-in type shower compartments shall be 30 inches wide minimum by 60 inches deep minimum clear inside dimensions measured at center points of opposing sides and shall have a 60 inch wide minimum entry on the face of the compartment.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 6 — Plumbing Elements and Facilities", "§608 Shower Compartments"],
+    "topic": "restrooms",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "703.2",
+    "title": "Signs — raised characters",
+    "text": "Raised characters shall comply with §703.2 and shall be duplicated in Braille complying with §703.3. Raised characters shall be 1/32 inch minimum above their background. Characters shall be uppercase and shall be sans serif. Character height measured vertically from the baseline of the character shall be 5/8 inch minimum and 2 inches maximum based on the height of the uppercase letter I.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 7 — Communication Elements and Features", "§703 Signs"],
+    "topic": "signs",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "703.3",
+    "title": "Signs — Braille",
+    "text": "Braille shall be contracted (Grade 2) and shall comply with §703.3. Dots shall have a domed or rounded shape. The indication of an uppercase letter or letters shall only be used before the first word of sentences, proper nouns and names, individual letters of the alphabet, initials, and acronyms. Braille shall be positioned below the corresponding text. If text is multi-lined, Braille shall be placed below the entire text. Braille shall be separated 3/8 inch minimum and 1/2 inch maximum from any other tactile characters and 3/8 inch minimum from raised borders and decorative elements.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 7 — Communication Elements and Features", "§703 Signs"],
+    "topic": "signs",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "703.4.1",
+    "title": "Signs — installation height",
+    "text": "Tactile characters on signs shall be located 48 inches minimum above the finish floor or ground surface, measured from the baseline of the lowest tactile character and 60 inches maximum above the finish floor or ground surface, measured from the baseline of the highest tactile character.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 7 — Communication Elements and Features", "§703 Signs"],
+    "topic": "signs",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "703.4.2",
+    "title": "Signs — location",
+    "text": "Where a tactile sign is provided at a door, the sign shall be located alongside the door at the latch side. Where a tactile sign is provided at double doors with one active leaf, the sign shall be located on the inactive leaf. Where a tactile sign is provided at double doors with two active leafs, the sign shall be located to the right of the right hand door.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 7 — Communication Elements and Features", "§703 Signs"],
+    "topic": "signs",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  },
+  {
+    "citation": "703.7.2.1",
+    "title": "International Symbol of Accessibility",
+    "text": "The International Symbol of Accessibility shall comply with §703.7.2.1. The symbol shall be displayed in white on a blue background. The blue shall be equal to Color No. 15090 in Federal Standard 595C. The symbol shall be a stylized figure in a wheelchair.",
+    "breadcrumb": ["2010 ADA Standards", "Chapter 7 — Communication Elements and Features", "§703 Signs"],
+    "topic": "signs",
+    "source": "2010 ADA Standards for Accessible Design (36 CFR §1191 Appendices B/D)"
+  }
+]
