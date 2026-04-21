@@ -41,6 +41,8 @@ const PUBLIC_ROUTES = [
   { path: '/chat', name: 'chat' },
   { path: '/attorneys', name: 'attorneys directory' },
   { path: '/accessibility', name: 'accessibility statement' },
+  { path: '/privacy', name: 'privacy policy' },
+  { path: '/terms', name: 'terms of service' },
 ];
 
 const AAA_TAGS = [
