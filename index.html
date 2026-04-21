@@ -18,13 +18,42 @@
     <meta name="twitter:title" content="ADA Legal Link — Know the Law. Know Your Rights." />
     <meta name="twitter:description" content="Free, plain-language ADA help for everyone. Talk to Ada. 43 interactive diagrams. Fully accessible. Forever free." />
 
-    <!-- Fonts — Fraunces (display serif) + IBM Plex Sans (readable body, dyslexia-friendly) -->
+    <!-- Fonts — Fraunces (display serif) + IBM Plex Sans (body, dyslexia-friendly)
+         + Atkinson Hyperlegible (low vision) + Lexend (reading fluency) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=Atkinson+Hyperlegible:wght@400;700&family=Lexend:wght@400;500;600&display=swap"
     />
+    <!-- OpenDyslexic — not on Google Fonts; loaded from jsdelivr CDN. Used
+         only when the user explicitly selects the "OpenDyslexic" font option. -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.1.0/400.css"
+      media="print"
+      onload="this.media='all'"
+    />
+
+    <!-- Accessibility settings — applied pre-render to prevent FOUC (Step 15.5).
+         Reads localStorage.ada-a11y and sets data-* attributes on <html> so the
+         CSS in app.css can style everything from the root before React mounts. -->
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('ada-a11y');
+          if (!raw) return;
+          var s = JSON.parse(raw);
+          var h = document.documentElement;
+          if (s.display) h.setAttribute('data-display', s.display);
+          if (s.font) h.setAttribute('data-font', s.font);
+          if (s.size) h.setAttribute('data-size', s.size);
+          if (s.spacing) h.setAttribute('data-spacing', s.spacing);
+        } catch (e) {
+          /* ignore — panel will re-apply on mount */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

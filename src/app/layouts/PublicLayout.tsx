@@ -17,6 +17,7 @@
  */
 
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { AccessibilityPanel } from '../components/AccessibilityPanel.js';
 
 export default function PublicLayout() {
   const location = useLocation();
@@ -64,6 +65,7 @@ export default function PublicLayout() {
             >
               Attorneys
             </Link>
+            <AccessibilityPanel />
           </nav>
         </div>
       </header>

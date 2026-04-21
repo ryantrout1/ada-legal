@@ -157,3 +157,170 @@ h1, h2, h3, h4 {
 body {
   scrollbar-gutter: stable;
 }
+
+/* ─── Accessibility control panel overrides (Step 15.5) ─────────────────────
+ *
+ * User-selectable display modes, font families, text sizes, and line
+ * spacings. All driven by data-* attributes on <html>, set by the init
+ * script in index.html (pre-render, FOUC-free) and then by the
+ * useAccessibilitySettings hook at runtime.
+ *
+ * Why data-* instead of class names: matches the Tailwind 4 convention,
+ * keeps the API compact, and allows the init script to set four
+ * attributes with four one-liners instead of composing a class string.
+ *
+ * All overrides use CSS custom properties only — no hard-coded colors
+ * or sizes below this point. This keeps the existing Tailwind utility
+ * classes (bg-surface-50, text-ink-900, etc.) in sync with the mode
+ * the user picked.
+ *
+ * Forced-colors mode (Windows High Contrast, macOS Increase Contrast)
+ * continues to win over everything below — the earlier @media
+ * (forced-colors: active) block still applies.
+ *
+ * Ref: docs/ARCHITECTURE.md §15.5
+ * ─────────────────────────────────────────────────────────────────────── */
+
+/* ─── Display modes ──────────────────────────────────────────────────────── */
+
+/* Default: existing warm off-white, no overrides needed. */
+
+/* Dark — deep ink surface, warm cream text. Maintains AAA contrast. */
+:root[data-display="dark"] {
+  --color-surface-50:  #141210;
+  --color-surface-100: #1E1B17;
+  --color-surface-200: #2A2620;
+  --color-surface-300: #3A342C;
+  --color-ink-900: #F4F0E8;
+  --color-ink-700: #D4CCB9;
+  --color-ink-500: #A89E8C;
+  --color-accent-500: #D9824A;   /* brighter terracotta for dark bg, AAA */
+  --color-accent-600: #E89969;
+  --color-accent-50:  #2A1E15;
+  --color-success-500: #6FA176;
+  --color-success-50:  #1A2A1C;
+  --color-warning-500: #D4A04D;
+  --color-warning-50:  #2A2113;
+  --color-danger-500:  #D4695A;
+  --color-danger-50:   #2A1714;
+}
+
+/* Warm — amber-tinted surface, helpful for light sensitivity, migraine,
+   and evening reading. Softer than default, still AAA. */
+:root[data-display="warm"] {
+  --color-surface-50:  #F5EFE2;
+  --color-surface-100: #EDE4D0;
+  --color-surface-200: #E0D3B8;
+  --color-surface-300: #C7B895;
+  --color-ink-900: #2A1F15;
+  --color-ink-700: #4A3826;
+  --color-ink-500: #7A5E3F;
+  --color-accent-500: #8A3D17;
+  --color-accent-600: #6E2F10;
+}
+
+/* Contrast — pure black on pure white, AAA+ everywhere. Maximum
+   legibility for low vision users who prefer sharp edges over warmth. */
+:root[data-display="contrast"] {
+  --color-surface-50:  #FFFFFF;
+  --color-surface-100: #F0F0F0;
+  --color-surface-200: #C0C0C0;
+  --color-surface-300: #808080;
+  --color-ink-900: #000000;
+  --color-ink-700: #1A1A1A;
+  --color-ink-500: #333333;
+  --color-accent-500: #0033A0;
+  --color-accent-600: #001F66;
+  --color-accent-50:  #E6EDF7;
+  --color-success-500: #006600;
+  --color-success-50:  #E6F2E6;
+  --color-warning-500: #996600;
+  --color-warning-50:  #F5EFE0;
+  --color-danger-500:  #990000;
+  --color-danger-50:   #F2E6E6;
+}
+
+/* Low vision — high contrast + enlarged UI affordances. Pairs with larger
+   text size by default but doesn't force it. Stronger focus ring. */
+:root[data-display="low-vision"] {
+  --color-surface-50:  #FFFFFF;
+  --color-surface-100: #F5F5F5;
+  --color-surface-200: #999999;
+  --color-surface-300: #666666;
+  --color-ink-900: #000000;
+  --color-ink-700: #1F1F1F;
+  --color-ink-500: #404040;
+  --color-accent-500: #8A3D17;
+  --color-accent-600: #6E2F10;
+}
+:root[data-display="low-vision"] *:focus-visible {
+  outline: 4px solid var(--color-accent-500) !important;
+  outline-offset: 3px !important;
+}
+:root[data-display="low-vision"] button,
+:root[data-display="low-vision"] [role="button"],
+:root[data-display="low-vision"] a {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* ─── Font family ────────────────────────────────────────────────────────── */
+
+/* Default uses the --font-body defined in @theme (IBM Plex Sans). */
+
+:root[data-font="atkinson"] {
+  --font-body: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Atkinson Hyperlegible', 'Georgia', serif;
+}
+:root[data-font="opendyslexic"] {
+  --font-body: 'OpenDyslexic', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'OpenDyslexic', 'Georgia', serif;
+}
+:root[data-font="lexend"] {
+  --font-body: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Lexend', 'Georgia', serif;
+}
+
+/* ─── Text size ──────────────────────────────────────────────────────────── */
+
+/* Default: 16px base (body rule above). Scale via root font-size so
+   rem-based layouts move in step. px-based layouts don't scale — fine,
+   because most Tailwind utilities are rem-based. */
+:root[data-size="small"]  { font-size: 14px; }
+:root[data-size="medium"] { font-size: 16px; }
+:root[data-size="large"]  { font-size: 20px; }
+
+/* ─── Line + paragraph spacing ──────────────────────────────────────────── */
+
+:root[data-spacing="tight"] {
+  --a11y-line-height: 1.4;
+  --a11y-paragraph-gap: 0.6em;
+  --a11y-letter-spacing: 0;
+}
+:root[data-spacing="default"] {
+  --a11y-line-height: 1.6;
+  --a11y-paragraph-gap: 1em;
+  --a11y-letter-spacing: 0;
+}
+:root[data-spacing="loose"] {
+  --a11y-line-height: 1.9;
+  --a11y-paragraph-gap: 1.5em;
+  --a11y-letter-spacing: 0.02em;
+}
+
+:root[data-spacing] body {
+  line-height: var(--a11y-line-height);
+  letter-spacing: var(--a11y-letter-spacing);
+}
+:root[data-spacing] p,
+:root[data-spacing] li {
+  line-height: var(--a11y-line-height);
+  letter-spacing: var(--a11y-letter-spacing);
+}
+:root[data-spacing] p + p,
+:root[data-spacing] p + ul,
+:root[data-spacing] p + ol,
+:root[data-spacing] ul + p,
+:root[data-spacing] ol + p {
+  margin-top: var(--a11y-paragraph-gap);
+}
