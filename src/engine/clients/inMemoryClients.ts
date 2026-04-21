@@ -15,6 +15,8 @@
 import type { AdaSessionState } from '../types.js';
 import type {
   AdaClients,
+  AdminAnalyticsOptions,
+  AdminAnalyticsResult,
   AdminAttorneyListOptions,
   AdminAttorneyListResult,
   AdminSessionListOptions,
@@ -293,6 +295,83 @@ export class InMemoryDbClient implements DbClient {
     _updatedBy?: string | null,
   ): Promise<void> {
     this.systemSettings.set(key, value);
+  }
+
+  async getAdminAnalytics(
+    opts: AdminAnalyticsOptions = {},
+  ): Promise<AdminAnalyticsResult> {
+    const days = Math.max(1, Math.min(opts.days ?? 14, 90));
+    const includeTest = opts.includeTest ?? false;
+
+    const relevant = [...this.sessions.values()].filter(
+      (s) => includeTest || !s.isTest,
+    );
+
+    // 1. Session volume — in-memory sessions don't carry a stable createdAt
+    // (synthetic timestamps in listSessionsForAdmin), so fall back to a
+    // zero-filled series for the last N days. Tests that care about the
+    // shape will still see a correctly-sized array.
+    const sessionVolume: Array<{ date: string; count: number }> = [];
+    const today = new Date();
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(today);
+      d.setUTCDate(d.getUTCDate() - i);
+      const iso = d.toISOString().slice(0, 10);
+      sessionVolume.push({ date: iso, count: 0 });
+    }
+    // Everything's lumped onto "today" since we don't track per-session dates.
+    if (relevant.length > 0 && sessionVolume.length > 0) {
+      sessionVolume[sessionVolume.length - 1].count = relevant.length;
+    }
+
+    // 2. Status counts.
+    const statusCounts = { active: 0, completed: 0, abandoned: 0, total: relevant.length };
+    for (const s of relevant) {
+      if (s.status === 'active') statusCounts.active++;
+      else if (s.status === 'completed') statusCounts.completed++;
+      else if (s.status === 'abandoned') statusCounts.abandoned++;
+    }
+
+    const finished = statusCounts.completed + statusCounts.abandoned;
+    const completionRate = finished === 0 ? null : statusCounts.completed / finished;
+
+    // 3. Reading-level distribution.
+    const readingLevelDistribution = { simple: 0, standard: 0, professional: 0 };
+    for (const s of relevant) {
+      readingLevelDistribution[s.readingLevel]++;
+    }
+
+    // 4. Classification breakdown.
+    const classMap = new Map<string, number>();
+    for (const s of relevant) {
+      const title = s.classification?.title ?? 'Unclassified';
+      classMap.set(title, (classMap.get(title) ?? 0) + 1);
+    }
+    const classificationBreakdown = [...classMap.entries()]
+      .map(([title, count]) => ({ title, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // 5. Tool-use frequency.
+    const toolMap = new Map<string, number>();
+    for (const s of relevant) {
+      for (const msg of s.conversationHistory) {
+        for (const tc of msg.tool_calls ?? []) {
+          toolMap.set(tc.name, (toolMap.get(tc.name) ?? 0) + 1);
+        }
+      }
+    }
+    const toolUseFrequency = [...toolMap.entries()]
+      .map(([tool, count]) => ({ tool, count }))
+      .sort((a, b) => b.count - a.count);
+
+    return {
+      sessionVolume,
+      statusCounts,
+      completionRate,
+      readingLevelDistribution,
+      classificationBreakdown,
+      toolUseFrequency,
+    };
   }
 }
 

@@ -28,6 +28,8 @@ import {
   systemSettings,
 } from '../../db/schema-core.js';
 import type {
+  AdminAnalyticsOptions,
+  AdminAnalyticsResult,
   AdminAttorneyListOptions,
   AdminAttorneyListResult,
   AdminSessionListOptions,
@@ -438,6 +440,154 @@ export class NeonDbClient implements DbClient {
           updatedBy: updatedBy ?? null,
         },
       });
+  }
+
+  // ─── Admin: analytics ───────────────────────────────────────────────────────
+
+  async getAdminAnalytics(
+    opts: AdminAnalyticsOptions = {},
+  ): Promise<AdminAnalyticsResult> {
+    const days = Math.max(1, Math.min(opts.days ?? 14, 90));
+    const includeTest = opts.includeTest ?? false;
+
+    // Base predicate for every view.
+    const baseWhere = includeTest ? undefined : eq(adaSessions.isTest, false);
+
+    // 1. Session volume by day, zero-filled.
+    // Use generate_series to emit one row per day so "no sessions on day X"
+    // still renders as 0 in the chart rather than a gap.
+    const volumeRows = await this.db.execute<{
+      date: string;
+      count: number;
+    }>(sql`
+      WITH day_series AS (
+        SELECT generate_series(
+          date_trunc('day', now() - interval '1 day' * (${days} - 1)),
+          date_trunc('day', now()),
+          interval '1 day'
+        )::date AS day
+      )
+      SELECT
+        to_char(d.day, 'YYYY-MM-DD') AS date,
+        coalesce(count(s.id), 0)::int AS count
+      FROM day_series d
+      LEFT JOIN ada_sessions s
+        ON date_trunc('day', s.created_at) = d.day
+        ${includeTest ? sql`` : sql`AND s.is_test = false`}
+      GROUP BY d.day
+      ORDER BY d.day ASC
+    `);
+
+    const sessionVolume = (volumeRows.rows ?? volumeRows).map((r) => ({
+      date: r.date,
+      count: Number(r.count),
+    }));
+
+    // 2. Status counts (lifetime).
+    const statusRows = await this.db
+      .select({
+        status: adaSessions.status,
+        n: sql<number>`count(*)::int`,
+      })
+      .from(adaSessions)
+      .where(baseWhere)
+      .groupBy(adaSessions.status);
+
+    const statusCounts = {
+      active: 0,
+      completed: 0,
+      abandoned: 0,
+      total: 0,
+    };
+    for (const r of statusRows) {
+      const c = Number(r.n);
+      statusCounts.total += c;
+      if (r.status === 'active') statusCounts.active = c;
+      else if (r.status === 'completed') statusCounts.completed = c;
+      else if (r.status === 'abandoned') statusCounts.abandoned = c;
+    }
+
+    const finished = statusCounts.completed + statusCounts.abandoned;
+    const completionRate = finished === 0 ? null : statusCounts.completed / finished;
+
+    // 3. Reading-level distribution.
+    const rlRows = await this.db
+      .select({
+        readingLevel: adaSessions.readingLevel,
+        n: sql<number>`count(*)::int`,
+      })
+      .from(adaSessions)
+      .where(baseWhere)
+      .groupBy(adaSessions.readingLevel);
+
+    const readingLevelDistribution = {
+      simple: 0,
+      standard: 0,
+      professional: 0,
+    };
+    for (const r of rlRows) {
+      const c = Number(r.n);
+      if (r.readingLevel === 'simple') readingLevelDistribution.simple = c;
+      else if (r.readingLevel === 'standard') readingLevelDistribution.standard = c;
+      else if (r.readingLevel === 'professional')
+        readingLevelDistribution.professional = c;
+    }
+
+    // 4. Classification breakdown (by classification.title, null bucket for
+    // unclassified rows).
+    const classRows = await this.db.execute<{
+      title: string | null;
+      count: number;
+    }>(sql`
+      SELECT
+        classification->>'title' AS title,
+        count(*)::int AS count
+      FROM ada_sessions
+      ${includeTest ? sql`` : sql`WHERE is_test = false`}
+      GROUP BY classification->>'title'
+      ORDER BY count DESC
+    `);
+
+    const classificationBreakdown = (classRows.rows ?? classRows).map((r) => ({
+      title: r.title ?? 'Unclassified',
+      count: Number(r.count),
+    }));
+
+    // 5. Tool-use frequency. Pulled from conversation_history JSONB.
+    // We unnest the array, project every tool_call name, and group.
+    // Expensive on huge tables; fine for Ch0 scale.
+    const toolRows = await this.db.execute<{
+      tool: string;
+      count: number;
+    }>(sql`
+      SELECT
+        (tc->>'name') AS tool,
+        count(*)::int AS count
+      FROM ada_sessions s,
+        LATERAL jsonb_array_elements(s.conversation_history) msg,
+        LATERAL jsonb_array_elements(
+          coalesce(msg->'tool_calls', '[]'::jsonb)
+        ) tc
+      ${includeTest ? sql`` : sql`WHERE s.is_test = false`}
+      GROUP BY tc->>'name'
+      ORDER BY count DESC
+    `);
+
+    const toolUseFrequency = (toolRows.rows ?? toolRows)
+      .filter((r) => r.tool)
+      .map((r) => ({
+        tool: r.tool,
+        count: Number(r.count),
+      }));
+
+    return {
+      sessionVolume,
+      statusCounts,
+      completionRate,
+      readingLevelDistribution,
+      classificationBreakdown,
+      toolUseFrequency,
+    };
   }
 }
 

@@ -31,6 +31,7 @@ import AdminSessionDetail from './routes/admin/AdminSessionDetail.js';
 import AdminAttorneys from './routes/admin/AdminAttorneys.js';
 import AdminAttorneyEdit from './routes/admin/AdminAttorneyEdit.js';
 import AdminSettings from './routes/admin/AdminSettings.js';
+import AdminAnalytics from './routes/admin/AdminAnalytics.js';
 import RequireAdmin from './components/RequireAdmin.js';
 
 export default function App() {
@@ -71,19 +72,10 @@ function AdminShell() {
           <Route path="attorneys/new" element={<AdminAttorneyEdit />} />
           <Route path="attorneys/:id" element={<AdminAttorneyEdit />} />
           <Route path="settings" element={<AdminSettings />} />
-          <Route path="analytics" element={<AdminTodo label="Analytics" />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="*" element={<Navigate to="/admin/sessions" replace />} />
         </Route>
       </Routes>
     </ClerkProvider>
-  );
-}
-
-function AdminTodo({ label }: { label: string }) {
-  return (
-    <section>
-      <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-2">{label}</h1>
-      <p className="text-ink-500">Coming in the next admin step.</p>
-    </section>
   );
 }

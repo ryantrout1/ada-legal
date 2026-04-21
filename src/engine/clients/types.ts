@@ -181,6 +181,36 @@ export interface DbClient {
   getSystemSetting<T = unknown>(key: string): Promise<T | null>;
   /** Write a system_settings value by key (upsert). */
   setSystemSetting<T = unknown>(key: string, value: T, updatedBy?: string | null): Promise<void>;
+  /** Aggregate session stats for the admin analytics dashboard. */
+  getAdminAnalytics(opts?: AdminAnalyticsOptions): Promise<AdminAnalyticsResult>;
+}
+
+export interface AdminAnalyticsOptions {
+  /** Number of days for the session-volume time series. Default 14, max 90. */
+  days?: number;
+  /** Include is_test rows in every view. Default false. */
+  includeTest?: boolean;
+}
+
+export interface AdminAnalyticsResult {
+  /** One entry per day, oldest-first, zero-filled for days with no sessions. */
+  sessionVolume: Array<{ date: string; count: number }>;
+  /** Counts across the full lifetime (filtered by include_test). */
+  statusCounts: {
+    active: number;
+    completed: number;
+    abandoned: number;
+    total: number;
+  };
+  /** Finished sessions only. completed / (completed + abandoned), 0..1. null if no finished sessions yet. */
+  completionRate: number | null;
+  readingLevelDistribution: {
+    simple: number;
+    standard: number;
+    professional: number;
+  };
+  classificationBreakdown: Array<{ title: string; count: number }>;
+  toolUseFrequency: Array<{ tool: string; count: number }>;
 }
 
 export interface AdminSessionListOptions {
