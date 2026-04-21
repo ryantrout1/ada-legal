@@ -24,6 +24,8 @@
 
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useChatSession, type ReadingLevel } from '../../hooks/useChatSession.js';
+import { useSpeechInput } from '../../hooks/useSpeechInput.js';
+import { useSpeechOutput } from '../../hooks/useSpeechOutput.js';
 
 export default function Chat() {
   const { state, sendMessage, startNewSession } = useChatSession('standard');
@@ -31,9 +33,28 @@ export default function Chat() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [photoFilename, setPhotoFilename] = useState<string | null>(null);
 
+  const speechInput = useSpeechInput();
+  const speechOutput = useSpeechOutput();
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // When dictation lands text, merge it into the draft. This is kept
+  // additive — if the user has typed, dictation appends rather than
+  // overwrites — so the two input methods compose.
+  const lastSpeechCommitRef = useRef<string>('');
+  useEffect(() => {
+    if (!speechInput.listening && speechInput.transcript && !speechInput.error) {
+      // Commit the transcript once it stops changing AND listening is off.
+      const newText = speechInput.transcript.trim();
+      if (newText && newText !== lastSpeechCommitRef.current) {
+        setDraft((prev) => (prev.trim() ? `${prev.trim()} ${newText}` : newText));
+        lastSpeechCommitRef.current = newText;
+        speechInput.reset();
+      }
+    }
+  }, [speechInput.listening, speechInput.transcript, speechInput.error, speechInput]);
 
   // Auto-scroll to the bottom of the message list when new messages arrive.
   useEffect(() => {
@@ -47,6 +68,18 @@ export default function Chat() {
       inputRef.current?.focus();
     }
   }, [state.busy, state.status, state.initializing]);
+
+  // Speak each new assistant message when TTS is enabled. Tracks the
+  // last-spoken message id so we don't re-speak on every render.
+  const lastSpokenIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!speechOutput.enabled) return;
+    const lastMsg = [...state.messages].reverse().find((m) => m.role === 'assistant');
+    if (!lastMsg) return;
+    if (lastSpokenIdRef.current === lastMsg.id) return;
+    lastSpokenIdRef.current = lastMsg.id;
+    speechOutput.speak(lastMsg.content);
+  }, [state.messages, speechOutput]);
 
   const locked = state.status !== 'active';
 
@@ -113,6 +146,69 @@ export default function Chat() {
               Conversation {state.status}
             </span>
           )}
+          {speechOutput.isSupported && (
+            <button
+              type="button"
+              onClick={() => speechOutput.setEnabled(!speechOutput.enabled)}
+              aria-label={
+                speechOutput.enabled
+                  ? 'Turn off Ada reading messages aloud'
+                  : 'Turn on Ada reading messages aloud'
+              }
+              aria-pressed={speechOutput.enabled}
+              className={
+                'inline-flex items-center gap-1 px-2 py-1 rounded border transition-colors ' +
+                (speechOutput.enabled
+                  ? 'border-accent-500 bg-accent-50 text-accent-600'
+                  : 'border-surface-200 text-ink-500 hover:border-surface-300 hover:text-ink-700')
+              }
+            >
+              <svg
+                aria-hidden="true"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                {speechOutput.enabled && (
+                  <>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                  </>
+                )}
+              </svg>
+              <span>{speechOutput.enabled ? 'Speaking' : 'Speak'}</span>
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => downloadConversation(state.messages)}
+            disabled={state.messages.length === 0}
+            aria-label="Download this conversation as a text file"
+            className="inline-flex items-center gap-1 px-2 py-1 rounded border border-surface-200 text-ink-500 hover:border-surface-300 hover:text-ink-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <svg
+              aria-hidden="true"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            <span>Download</span>
+          </button>
           <button
             type="button"
             onClick={() => {
@@ -133,13 +229,55 @@ export default function Chat() {
         </div>
       </header>
 
-      {/* Error banner */}
+      {/* Error banner with recovery actions.
+          On error we show the message, then concrete next steps: try again
+          with the last user message, start a new conversation, or save
+          what we have so far so the user doesn't lose work. */}
       {state.error && (
         <div
           role="alert"
-          className="mb-3 rounded-md border border-danger-500 bg-danger-50 px-4 py-3 text-sm text-danger-500"
+          className="mb-3 rounded-md border border-danger-500 bg-danger-50 px-4 py-3 text-sm"
         >
-          {state.error}
+          <p className="text-danger-500 mb-3">
+            <strong>Something went wrong.</strong> {state.error}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {(() => {
+              const lastUser = [...state.messages]
+                .reverse()
+                .find((m) => m.role === 'user');
+              return lastUser ? (
+                <button
+                  type="button"
+                  onClick={() => void sendMessage(lastUser.content)}
+                  disabled={state.busy || locked}
+                  className="px-3 py-1.5 rounded-md border border-danger-500 bg-danger-50 text-danger-500 hover:bg-danger-100 text-sm font-medium disabled:opacity-50"
+                >
+                  Try again
+                </button>
+              ) : null;
+            })()}
+            <button
+              type="button"
+              onClick={() => {
+                startNewSession(state.readingLevel);
+                setDraft('');
+                clearPhoto();
+              }}
+              className="px-3 py-1.5 rounded-md border border-surface-300 bg-white text-ink-700 hover:bg-surface-100 text-sm"
+            >
+              Start over
+            </button>
+            {state.messages.length > 0 && (
+              <button
+                type="button"
+                onClick={() => downloadConversation(state.messages)}
+                className="px-3 py-1.5 rounded-md border border-surface-300 bg-white text-ink-700 hover:bg-surface-100 text-sm"
+              >
+                Download what we have
+              </button>
+            )}
+          </div>
         </div>
       )}
 
@@ -220,6 +358,48 @@ export default function Chat() {
             onChange={handlePhotoSelect}
             disabled={state.busy || locked}
           />
+
+          {speechInput.isSupported && (
+            <button
+              type="button"
+              onClick={() =>
+                speechInput.listening ? speechInput.stop() : speechInput.start()
+              }
+              disabled={state.busy || locked || state.initializing}
+              aria-label={
+                speechInput.listening
+                  ? 'Stop dictating (press to stop the microphone)'
+                  : 'Dictate your message (press to start the microphone)'
+              }
+              aria-pressed={speechInput.listening}
+              className={
+                'flex-none inline-flex items-center justify-center rounded-md border px-3 py-2.5 transition-colors ' +
+                (speechInput.listening
+                  ? 'border-danger-500 bg-danger-50 text-danger-500 animate-pulse motion-reduce:animate-none'
+                  : 'border-surface-200 bg-surface-50 text-ink-700 hover:bg-surface-100 hover:text-accent-600')
+              }
+            >
+              <svg
+                aria-hidden="true"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="9" y="2" width="6" height="11" rx="3" />
+                <path d="M19 10v1a7 7 0 0 1-14 0v-1" />
+                <line x1="12" y1="19" x2="12" y2="22" />
+                <line x1="8" y1="22" x2="16" y2="22" />
+              </svg>
+              <span className="sr-only">
+                {speechInput.listening ? 'Listening' : 'Microphone'}
+              </span>
+            </button>
+          )}
 
           <textarea
             ref={inputRef}
@@ -349,20 +529,31 @@ function MessageBubble({ message }: { message: import('@/app/hooks/useChatSessio
 
 function TypingIndicator() {
   return (
-    <div className="flex justify-start" aria-label="Ada is thinking">
+    <div
+      className="flex justify-start"
+      role="status"
+      aria-live="polite"
+      aria-label="Ada is thinking"
+    >
       <div className="bg-surface-100 border border-surface-200 rounded-lg px-4 py-3 inline-flex items-center gap-1">
         <span
-          className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse"
+          className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse motion-reduce:animate-none"
           style={{ animationDelay: '0ms' }}
         />
         <span
-          className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse"
+          className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse motion-reduce:animate-none"
           style={{ animationDelay: '200ms' }}
         />
         <span
-          className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse"
+          className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse motion-reduce:animate-none"
           style={{ animationDelay: '400ms' }}
         />
+        {/* When motion is reduced, the dots don't animate — so show text
+            that's always readable so the screen reader + low-vision user
+            both know what's happening. */}
+        <span className="sr-only motion-reduce:not-sr-only motion-reduce:ml-1 text-xs text-ink-500">
+          Ada is thinking…
+        </span>
       </div>
     </div>
   );
@@ -377,4 +568,56 @@ function fileToDataUrl(file: File): Promise<string> {
     reader.onerror = () => reject(new Error('Failed to read file'));
     reader.readAsDataURL(file);
   });
+}
+
+/**
+ * Save the current conversation to the user's device as a plain-text file.
+ *
+ * Real problem this solves: people with memory conditions, ADHD, anxiety,
+ * cognitive fatigue — or anyone seeking an attorney — need to take the
+ * conversation home with them. The browser is a bad place to keep an
+ * important record. This gives them a real artifact.
+ *
+ * Format: plain text, one message per block, timestamps in the user's
+ * local time. No HTML, no markdown, no dependencies. Opens in every
+ * text editor and email client.
+ */
+function downloadConversation(
+  messages: import('@/app/hooks/useChatSession').ChatMessage[],
+): void {
+  if (messages.length === 0) return;
+
+  const now = new Date();
+  const header =
+    'Conversation with Ada — ADA Legal Link\n' +
+    `Downloaded: ${now.toLocaleString()}\n` +
+    'Ada provides information about disability rights. Ada is not a lawyer.\n' +
+    '──────────────────────────────────────────────────────────\n\n';
+
+  const body = messages
+    .map((m) => {
+      const who = m.role === 'assistant' ? 'Ada' : 'You';
+      const when = (() => {
+        try {
+          return new Date(m.timestamp).toLocaleTimeString();
+        } catch {
+          return m.timestamp;
+        }
+      })();
+      return `[${when}] ${who}:\n${m.content}`;
+    })
+    .join('\n\n');
+
+  const text = header + body + '\n';
+
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ada-conversation-${now.toISOString().slice(0, 10)}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  // Give the browser a moment to start the download before revoking.
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
