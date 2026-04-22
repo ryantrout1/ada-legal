@@ -35,6 +35,7 @@ import {
   listingConfigs as listingConfigsTable,
   subscriptions as subscriptionsTable,
   routingRules as routingRulesTable,
+  stripeWebhookEvents as stripeWebhookEventsTable,
 } from '../../db/schema-ch1.js';
 import type {
   AdminAnalyticsOptions,
@@ -70,6 +71,7 @@ import type {
   ActiveListingRow,
   RoutingRuleRow,
   RoutingRuleWithTarget,
+  StripeWebhookEventRow,
 } from './types.js';
 import type { AdaSessionState } from '../types.js';
 import type {
@@ -1031,6 +1033,53 @@ export class NeonDbClient implements DbClient {
     const r = rows[0];
     if (!r) return null;
     return toSubscriptionRow(r);
+  }
+
+  async readSubscriptionByStripeId(
+    stripeSubscriptionId: string,
+  ): Promise<SubscriptionRow | null> {
+    const rows = await this.db
+      .select()
+      .from(subscriptionsTable)
+      .where(eq(subscriptionsTable.stripeSubscriptionId, stripeSubscriptionId))
+      .limit(1);
+    const r = rows[0];
+    if (!r) return null;
+    return toSubscriptionRow(r);
+  }
+
+  // ─── stripe_webhook_events (Step 23) ─────────────────────────────────────
+
+  async recordWebhookEvent(
+    row: StripeWebhookEventRow,
+  ): Promise<{ inserted: boolean }> {
+    // INSERT with onConflictDoNothing on the unique stripe_event_id.
+    // If the row already exists (replay), rowCount will be 0; we
+    // surface that as inserted=false so the handler can skip
+    // processing.
+    const result = await this.db
+      .insert(stripeWebhookEventsTable)
+      .values({
+        stripeEventId: row.stripeEventId,
+        type: row.type,
+        payload: row.payload as Record<string, unknown>,
+      })
+      .onConflictDoNothing({ target: stripeWebhookEventsTable.stripeEventId })
+      .returning({ id: stripeWebhookEventsTable.id });
+    return { inserted: result.length > 0 };
+  }
+
+  async markWebhookEventProcessed(
+    stripeEventId: string,
+    error: string | null,
+  ): Promise<void> {
+    await this.db
+      .update(stripeWebhookEventsTable)
+      .set({
+        processedAt: new Date(),
+        error,
+      })
+      .where(eq(stripeWebhookEventsTable.stripeEventId, stripeEventId));
   }
 
   async listActiveListings(

@@ -63,6 +63,7 @@ import type {
   ActiveListingRow,
   RoutingRuleRow,
   RoutingRuleWithTarget,
+  StripeWebhookEventRow,
 } from './types.js';
 
 // ─── AI ───────────────────────────────────────────────────────────────────────
@@ -569,6 +570,51 @@ export class InMemoryDbClient implements DbClient {
 
   async readSubscriptionById(id: string): Promise<SubscriptionRow | null> {
     return this.subscriptionRows.find((s) => s.id === id) ?? null;
+  }
+
+  async readSubscriptionByStripeId(
+    stripeSubscriptionId: string,
+  ): Promise<SubscriptionRow | null> {
+    return (
+      this.subscriptionRows.find(
+        (s) => s.stripeSubscriptionId === stripeSubscriptionId,
+      ) ?? null
+    );
+  }
+
+  // ─── stripe_webhook_events (Step 23) ─────────────────────────────────────
+
+  public readonly webhookEvents = new Map<
+    string,
+    {
+      row: StripeWebhookEventRow;
+      processedAt: string | null;
+      error: string | null;
+    }
+  >();
+
+  async recordWebhookEvent(
+    row: StripeWebhookEventRow,
+  ): Promise<{ inserted: boolean }> {
+    if (this.webhookEvents.has(row.stripeEventId)) {
+      return { inserted: false };
+    }
+    this.webhookEvents.set(row.stripeEventId, {
+      row: { ...row },
+      processedAt: null,
+      error: null,
+    });
+    return { inserted: true };
+  }
+
+  async markWebhookEventProcessed(
+    stripeEventId: string,
+    error: string | null,
+  ): Promise<void> {
+    const existing = this.webhookEvents.get(stripeEventId);
+    if (!existing) return;
+    existing.processedAt = new Date().toISOString();
+    existing.error = error;
   }
 
   async listActiveListings(

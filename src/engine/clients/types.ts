@@ -275,6 +275,35 @@ export interface DbClient {
   readSubscriptionById(id: string): Promise<SubscriptionRow | null>;
 
   /**
+   * Look up a subscription by Stripe's id (sub_xxx). Used by the
+   * webhook handler in Step 23 to find the local row that corresponds
+   * to an incoming Stripe event.
+   */
+  readSubscriptionByStripeId(stripeSubscriptionId: string): Promise<SubscriptionRow | null>;
+
+  // ─── stripe_webhook_events (Step 23) ──────────────────────────────────────
+  //
+  // Idempotency store for Stripe webhook processing. Every incoming
+  // event is INSERTed into this table keyed on stripe_event_id (UNIQUE).
+  // A replay attempt - Stripe retries on 5xx or timeout - collides on
+  // the unique constraint, at which point we know we've already seen
+  // this event and can respond 200 without re-processing.
+
+  /**
+   * Attempt to record a webhook event. Returns true if the row was
+   * inserted (first time seeing this event), false if the event id
+   * was already present (replay). The caller uses the boolean to
+   * decide whether to process the event's business logic.
+   */
+  recordWebhookEvent(row: StripeWebhookEventRow): Promise<{ inserted: boolean }>;
+
+  /**
+   * Mark a webhook event as processed (or record the processing
+   * error). Called at the end of handling each event.
+   */
+  markWebhookEventProcessed(stripeEventId: string, error: string | null): Promise<void>;
+
+  /**
    * Read from v_active_listings. Returns rows where listing.status =
    * 'published' AND firm.status = 'active' AND subscription is active
    * AND not past current_period_end. See migration 0004.
@@ -363,6 +392,17 @@ export interface SubscriptionRow {
   cancelAtPeriodEnd: boolean;
   createdAt?: string;
   updatedAt?: string;
+}
+
+/**
+ * One Stripe webhook event as persisted to stripe_webhook_events. The
+ * payload is the full event.data.object JSON so we can replay or
+ * audit if needed.
+ */
+export interface StripeWebhookEventRow {
+  stripeEventId: string;
+  type: string;
+  payload: unknown;
 }
 
 export interface ListActiveListingsOptions {
