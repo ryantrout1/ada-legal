@@ -61,6 +61,8 @@ import type {
   SubscriptionRow,
   ListActiveListingsOptions,
   ActiveListingRow,
+  RoutingRuleRow,
+  RoutingRuleWithTarget,
 } from './types.js';
 
 // ─── AI ───────────────────────────────────────────────────────────────────────
@@ -613,6 +615,42 @@ export class InMemoryDbClient implements DbClient {
       }
     }
     return result;
+  }
+
+  // ─── routing_rules (Step 22) ─────────────────────────────────────────────
+
+  public readonly routingRules: RoutingRuleRow[] = [];
+
+  async writeRoutingRule(row: RoutingRuleRow): Promise<void> {
+    const idx = this.routingRules.findIndex((r) => r.id === row.id);
+    if (idx >= 0) this.routingRules[idx] = { ...row };
+    else this.routingRules.push({ ...row });
+  }
+
+  async listActiveRoutingRules(): Promise<RoutingRuleWithTarget[]> {
+    // Join each active rule with its target org. In-memory we scan the
+    // organizations array (which the in-memory client builds up via
+    // other seed calls).
+    const joined: RoutingRuleWithTarget[] = [];
+    for (const rule of this.routingRules) {
+      if (!rule.active) continue;
+      const org = this.orgs.find((o) => o.id === rule.targetOrgId);
+      if (!org) continue; // dangling rule; skip
+      joined.push({
+        ruleId: rule.id,
+        targetOrgId: rule.targetOrgId,
+        targetOrgCode: org.orgCode,
+        targetOrgDisplayName: org.displayName,
+        complaintTypes: rule.complaintTypes,
+        jurisdictions: rule.jurisdictions,
+        priority: rule.priority,
+      });
+    }
+    // Stable order: priority ASC, then ruleId lexical.
+    joined.sort(
+      (a, b) => a.priority - b.priority || a.ruleId.localeCompare(b.ruleId),
+    );
+    return joined;
   }
 }
 

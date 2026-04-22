@@ -284,6 +284,24 @@ export interface DbClient {
    * single row per listing.
    */
   listActiveListings(opts?: ListActiveListingsOptions): Promise<ActiveListingRow[]>;
+
+  // ─── routing_rules (Step 22) ─────────────────────────────────────────────
+  //
+  // routing_rules defines cross-channel redirects. A rule says "for this
+  // complaint type in this jurisdiction, there's another org that can
+  // help." Ch1 ships the rails; Ch2 adds the destination orgs. When no
+  // rules exist (Ch1 state), evaluation returns empty and the routing
+  // block in Ada's prompt is omitted.
+
+  /** Insert or update a routing rule (keyed by id). */
+  writeRoutingRule(row: RoutingRuleRow): Promise<void>;
+  /**
+   * Return every active routing rule with the target org joined in. The
+   * engine's rule evaluator (evaluateRoutingRules) filters in-memory
+   * against session state. Ordered by priority ASC then rule id so
+   * tie-breaking is stable.
+   */
+  listActiveRoutingRules(): Promise<RoutingRuleWithTarget[]>;
 }
 
 // ─── Ch1 row shapes ───────────────────────────────────────────────────────────
@@ -362,6 +380,49 @@ export interface ActiveListingRow {
   subscriptionId: string;
   subscriptionTier: string;
   currentPeriodEnd: string | null;
+}
+
+// ─── Ch1 routing row shapes (Step 22) ─────────────────────────────────────────
+
+export interface RoutingRuleRow {
+  id: string;
+  targetOrgId: string;
+  /**
+   * Complaint types this rule matches. Values align with
+   * Classification.title ('I', 'II', 'III', 'class_action',
+   * 'out_of_scope'). Empty array = matches any complaint type.
+   */
+  complaintTypes: string[];
+  /**
+   * Jurisdictions this rule matches. Empty array = matches any
+   * jurisdiction. State matching is required; city is an optional
+   * narrower filter (city match requires state match too).
+   */
+  jurisdictions: import('../../types/db.js').RoutingJurisdiction[];
+  active: boolean;
+  /**
+   * Lower priority number = higher precedence. Ordering is priority
+   * ASC then id to keep tiebreaking stable. Default 100.
+   */
+  priority: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+/**
+ * A routing rule joined with its target organization's display fields.
+ * Returned by listActiveRoutingRules for use in the engine's rule
+ * evaluator — the evaluator needs the org_code and display_name to
+ * build the RoutingMatch that goes in Ada's prompt and the hop URL.
+ */
+export interface RoutingRuleWithTarget {
+  ruleId: string;
+  targetOrgId: string;
+  targetOrgCode: string;
+  targetOrgDisplayName: string;
+  complaintTypes: string[];
+  jurisdictions: import('../../types/db.js').RoutingJurisdiction[];
+  priority: number;
 }
 
 export interface WriteSessionPackageOptions {
@@ -620,4 +681,12 @@ export interface AdaClients {
    * the prompt.
    */
   embeddings?: EmbeddingClient;
+  /**
+   * Step 22: HMAC secret for minting hop tokens (route tool with
+   * destination=external). Sourced from process.env.ADALL_HOP_SECRET
+   * in production; tests pass a fixed string. When absent, the route
+   * tool refuses external routes and returns a clear error — this
+   * degrades gracefully rather than crashing the turn.
+   */
+  hopSecret?: string;
 }

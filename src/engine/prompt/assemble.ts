@@ -77,6 +77,13 @@ export interface AssemblePromptContext {
    * mode). Ignored if boundListing is set.
    */
   discoveryListings?: ReadonlyArray<ActiveListingRow>;
+  /**
+   * Step 22: routing matches evaluated this turn. When non-empty, a
+   * ROUTING DESTINATIONS section is rendered telling Ada which partner
+   * organizations can handle this kind of complaint. Ada decides
+   * whether to surface the option; the user decides whether to accept.
+   */
+  routingMatches?: ReadonlyArray<import('../routing/evaluate.js').RoutingMatch>;
   /** Tool registry to render into the prompt. Defaults to CH0_TOOLS + CH1_TOOLS. */
   tools?: ReadonlyArray<AnyAdaTool>;
   /**
@@ -96,6 +103,7 @@ export function assemblePrompt(ctx: AssemblePromptContext): string {
     section('ORG CONTEXT', buildOrgSection(ctx)),
     section('KNOWLEDGE', buildKnowledgeSection(ctx.knowledgeChunks)),
     section('LISTING CONTEXT', buildListingSection(ctx)),
+    section('ROUTING DESTINATIONS', buildRoutingSection(ctx.routingMatches)),
     section('READING LEVEL', buildReadingLevelSection(ctx.state.readingLevel)),
     section('TOOLS', buildToolsSection(ctx.tools ?? DEFAULT_TOOLS)),
     section('CURRENT SESSION', buildSessionContextSection(ctx.state)),
@@ -176,6 +184,24 @@ function buildListingSection(ctx: AssemblePromptContext): string {
   const override = ctx.listingAdaPromptOverride;
   if (!override || override.trim().length === 0) return '';
   return override.trim();
+}
+
+function buildRoutingSection(
+  matches: AssemblePromptContext['routingMatches'],
+): string {
+  if (!matches || matches.length === 0) return '';
+
+  const parts: string[] = [];
+  parts.push(
+    `Based on this conversation, the following partner organizations may be able to help the user. You can offer these options — the user decides whether to accept. To route the user to one of them, call the \`route\` tool with destination='external', the matching target_org_id, and user_agreed=true AFTER the user has explicitly said yes.`,
+  );
+  parts.push('');
+  for (const m of matches) {
+    parts.push(
+      `- **${m.targetOrgDisplayName}** (target_org_id: \`${m.targetOrgId}\`, code: \`${m.targetOrgCode}\`)`,
+    );
+  }
+  return parts.join('\n');
 }
 
 function buildReadingLevelSection(level: ReadingLevel): string {

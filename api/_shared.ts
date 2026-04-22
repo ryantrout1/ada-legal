@@ -24,6 +24,7 @@ export function makeClientsFromEnv(): AdaClients {
   const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
   const openaiApiKey = process.env.OPENAI_API_KEY;
   const blobReadWriteToken = process.env.BLOB_READ_WRITE_TOKEN;
+  const hopSecret = process.env.ADALL_HOP_SECRET;
   if (!databaseUrl) {
     throw new Error('DATABASE_URL is not set in environment');
   }
@@ -34,11 +35,15 @@ export function makeClientsFromEnv(): AdaClients {
   // citation-match-only retrieval (no vector similarity).
   // BLOB_READ_WRITE_TOKEN is optional. Without it, photo upload
   // endpoints return a clear error rather than silently failing.
+  // ADALL_HOP_SECRET is optional. Without it, the Step 22 `route` tool
+  // refuses external destinations and returns a clear error; internal
+  // destinations (attorney_directory, end_conversation) still work.
   return makeAdaClients({
     databaseUrl,
     anthropicApiKey,
     openaiApiKey,
     blobReadWriteToken,
+    hopSecret,
   });
 }
 

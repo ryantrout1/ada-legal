@@ -34,6 +34,7 @@ import {
   listings as listingsTable,
   listingConfigs as listingConfigsTable,
   subscriptions as subscriptionsTable,
+  routingRules as routingRulesTable,
 } from '../../db/schema-ch1.js';
 import type {
   AdminAnalyticsOptions,
@@ -67,6 +68,8 @@ import type {
   SubscriptionRow,
   ListActiveListingsOptions,
   ActiveListingRow,
+  RoutingRuleRow,
+  RoutingRuleWithTarget,
 } from './types.js';
 import type { AdaSessionState } from '../types.js';
 import type {
@@ -1076,6 +1079,65 @@ export class NeonDbClient implements DbClient {
         r.current_period_end instanceof Date
           ? r.current_period_end.toISOString()
           : (r.current_period_end as string | null),
+    }));
+  }
+
+  // ─── routing_rules (Step 22) ─────────────────────────────────────────────
+
+  async writeRoutingRule(row: RoutingRuleRow): Promise<void> {
+    await this.db
+      .insert(routingRulesTable)
+      .values({
+        id: row.id,
+        targetOrgId: row.targetOrgId,
+        complaintTypes: row.complaintTypes,
+        jurisdictions: row.jurisdictions,
+        active: row.active,
+        priority: row.priority,
+      })
+      .onConflictDoUpdate({
+        target: routingRulesTable.id,
+        set: {
+          targetOrgId: row.targetOrgId,
+          complaintTypes: row.complaintTypes,
+          jurisdictions: row.jurisdictions,
+          active: row.active,
+          priority: row.priority,
+          updatedAt: new Date(),
+        },
+      });
+  }
+
+  async listActiveRoutingRules(): Promise<RoutingRuleWithTarget[]> {
+    // Single JOIN query — one row per active rule with the target org's
+    // code + display_name inlined. Ordering matches the in-memory impl
+    // (priority ASC, then rule id) so tests and prod behave the same.
+    const rows = await this.db
+      .select({
+        ruleId: routingRulesTable.id,
+        targetOrgId: routingRulesTable.targetOrgId,
+        complaintTypes: routingRulesTable.complaintTypes,
+        jurisdictions: routingRulesTable.jurisdictions,
+        priority: routingRulesTable.priority,
+        targetOrgCode: organizations.orgCode,
+        targetOrgDisplayName: organizations.displayName,
+      })
+      .from(routingRulesTable)
+      .innerJoin(
+        organizations,
+        eq(routingRulesTable.targetOrgId, organizations.id),
+      )
+      .where(eq(routingRulesTable.active, true))
+      .orderBy(sql`${routingRulesTable.priority} ASC, ${routingRulesTable.id} ASC`);
+
+    return rows.map((r) => ({
+      ruleId: r.ruleId,
+      targetOrgId: r.targetOrgId,
+      targetOrgCode: r.targetOrgCode,
+      targetOrgDisplayName: r.targetOrgDisplayName,
+      complaintTypes: (r.complaintTypes ?? []) as string[],
+      jurisdictions: (r.jurisdictions ?? []) as RoutingRuleWithTarget['jurisdictions'],
+      priority: r.priority,
     }));
   }
 }

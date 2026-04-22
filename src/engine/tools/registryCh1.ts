@@ -18,8 +18,10 @@
 import type { AnyAdaTool } from './types.js';
 import { matchListingTool } from './impls/matchListing.js';
 import { finalizeIntakeTool } from './impls/finalizeIntake.js';
+import { routeTool } from './impls/route.js';
 
 export const CH1_TOOLS: ReadonlyArray<AnyAdaTool> = [
   matchListingTool,
   finalizeIntakeTool,
+  routeTool,
 ] as const;

@@ -50,6 +50,15 @@ export interface AdaSessionState {
   metadata: SessionMetadata;
   accessibilitySettings: AccessibilitySnapshot;
   isTest: boolean;
+
+  /**
+   * Step 22: routing destinations available to the `route` tool this
+   * turn. Populated by processAdaTurn from evaluateRoutingRules. Not
+   * persisted to DB — this is an in-turn side channel so the route
+   * tool executor can verify a target_org_id without re-querying
+   * routing_rules. Safe to be undefined on persisted state loads.
+   */
+  routingMatches?: import('./routing/evaluate.js').RoutingMatch[];
 }
 
 // ─── Turn I/O ─────────────────────────────────────────────────────────────────

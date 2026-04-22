@@ -44,6 +44,7 @@ import { CH1_TOOLS } from './tools/registryCh1.js';
 import { dispatchTool } from './tools/dispatcher.js';
 import type { ToolStateChanges } from './tools/types.js';
 import { applyTransition } from './session/stateMachine.js';
+import { evaluateRoutingRules } from './routing/evaluate.js';
 
 /** Maximum tool-use loops per turn. Safety cap against runaway tool chains. */
 const MAX_TOOL_LOOPS = 5;
@@ -169,6 +170,29 @@ export async function processAdaTurn({
     // Listing context is non-critical; proceed without it.
   }
 
+  // ── Routing rule evaluation (Step 22) ────────────────────────────────────
+  // Fetch active routing rules and evaluate against the current session.
+  // Rules that match become RoutingMatch[] entries, which:
+  //   1. Get surfaced to Ada in the ROUTING DESTINATIONS prompt section
+  //   2. Get attached to workingState.routingMatches so the `route` tool
+  //      can validate target_org_id without a second DB round-trip.
+  //
+  // Failures swallowed for the same reason as listing context — routing
+  // is an enhancement, not a precondition for a useful conversation.
+  let routingMatches: import('./routing/evaluate.js').RoutingMatch[] = [];
+  try {
+    const activeRules = await clients.db.listActiveRoutingRules();
+    routingMatches = evaluateRoutingRules({
+      session: workingState,
+      rules: activeRules,
+    });
+    if (routingMatches.length > 0) {
+      workingState = { ...workingState, routingMatches };
+    }
+  } catch {
+    // Routing is non-critical.
+  }
+
   let assistantMessage: Message | null = null;
   let loopCount = 0;
 
@@ -182,6 +206,7 @@ export async function processAdaTurn({
       listingAdaPromptOverride,
       boundListing,
       discoveryListings,
+      routingMatches,
       knowledgeChunks,
     });
 

@@ -175,6 +175,13 @@ export interface AdaClientsConfig {
    * Enables RAG when set.
    */
   openaiApiKey?: string;
+  /**
+   * HMAC secret for minting hop tokens (route tool, external dest).
+   * Step 22. Optional — when absent, external routes are disabled
+   * (Ada's `route` tool returns a clear error). Must be ≥32 bytes when
+   * provided; mintHopToken will throw otherwise.
+   */
+  hopSecret?: string;
 }
 
 export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
@@ -212,5 +219,6 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
     random: new CryptoRandom(),
     audit: new NeonAuditClient(),
     embeddings,
+    hopSecret: config.hopSecret,
   };
 }
