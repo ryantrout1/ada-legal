@@ -37,6 +37,7 @@ export const lawFirms = pgTable('law_firms', {
   phone: text('phone'),
   stripeCustomerId: text('stripe_customer_id'),
   status: text('status').notNull().default('active'),
+  isPilot: boolean('is_pilot').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });

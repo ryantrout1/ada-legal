@@ -71,6 +71,7 @@ async function setupHarness(
     email: opts.noFirmEmail ? null : 'intake@acme-ada.example',
     phone: '+1-555-000-0000',
     stripeCustomerId: null,
+    isPilot: false,
     status: 'active',
   });
   await clients.db.writeListing({

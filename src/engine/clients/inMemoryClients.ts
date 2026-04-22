@@ -575,7 +575,13 @@ export class InMemoryDbClient implements DbClient {
     opts: ListActiveListingsOptions = {},
   ): Promise<ActiveListingRow[]> {
     // Mirrors the v_active_listings view definition. Keep this in sync
-    // with migration 0004.
+    // with migration 0005 (pilot mode).
+    //
+    // A listing surfaces as active if:
+    //   (a) firm.isPilot=true (no subscription needed), OR
+    //   (b) firm has an active/trialing subscription not past period_end
+    // Firms in pilot mode emit ONE row per listing (subscriptionId=null,
+    // subscriptionTier='pilot'). Paid firms emit one row per active sub.
     const now = Date.now();
     const result: ActiveListingRow[] = [];
     for (const listing of this.listings) {
@@ -586,7 +592,29 @@ export class InMemoryDbClient implements DbClient {
       const firm = this.lawFirms.find((f) => f.id === listing.lawFirmId);
       if (!firm || firm.status !== 'active') continue;
 
-      // Match any active/trialing subscription not past period_end.
+      if (firm.isPilot) {
+        // Pilot firms: one row per listing, no subscription
+        result.push({
+          listingId: listing.id,
+          slug: listing.slug,
+          title: listing.title,
+          category: listing.category,
+          tier: listing.tier,
+          shortDescription: listing.shortDescription,
+          fullDescription: listing.fullDescription,
+          eligibilitySummary: listing.eligibilitySummary,
+          lawFirmId: firm.id,
+          lawFirmName: firm.name,
+          subscriptionId: null,
+          subscriptionTier: 'pilot',
+          currentPeriodEnd: null,
+          isPilot: true,
+        });
+        continue;
+      }
+
+      // Non-pilot firms: match any active/trialing subscription not
+      // past period_end. Zero matches means the listing isn't live.
       const activeSubs = this.subscriptionRows.filter((s) => {
         if (s.listingId !== listing.id) return false;
         if (s.status !== 'active' && s.status !== 'trialing') return false;
@@ -611,6 +639,7 @@ export class InMemoryDbClient implements DbClient {
           subscriptionId: sub.id,
           subscriptionTier: sub.tier,
           currentPeriodEnd: sub.currentPeriodEnd,
+          isPilot: false,
         });
       }
     }

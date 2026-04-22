@@ -862,6 +862,7 @@ export class NeonDbClient implements DbClient {
         phone: row.phone,
         stripeCustomerId: row.stripeCustomerId,
         status: row.status,
+        isPilot: row.isPilot,
       })
       .onConflictDoUpdate({
         target: lawFirmsTable.id,
@@ -872,6 +873,7 @@ export class NeonDbClient implements DbClient {
           phone: row.phone,
           stripeCustomerId: row.stripeCustomerId,
           status: row.status,
+          isPilot: row.isPilot,
           updatedAt: new Date(),
         },
       });
@@ -1035,8 +1037,9 @@ export class NeonDbClient implements DbClient {
     opts: ListActiveListingsOptions = {},
   ): Promise<ActiveListingRow[]> {
     // Query v_active_listings directly with raw SQL — the view
-    // definition lives in migration 0004 and is the authoritative
-    // answer to "which listings are live right now".
+    // definition lives in migration 0005 (updated from 0004 for pilot
+    // mode) and is the authoritative answer to "which listings are
+    // live right now".
     const result = await this.db.execute<{
       listing_id: string;
       slug: string;
@@ -1048,9 +1051,10 @@ export class NeonDbClient implements DbClient {
       eligibility_summary: string | null;
       law_firm_id: string;
       law_firm_name: string;
-      subscription_id: string;
+      subscription_id: string | null;
       subscription_tier: string;
       current_period_end: Date | null;
+      is_pilot: boolean;
     }>(sql`
       SELECT *
       FROM v_active_listings
@@ -1073,12 +1077,13 @@ export class NeonDbClient implements DbClient {
       eligibilitySummary: (r.eligibility_summary ?? null) as string | null,
       lawFirmId: r.law_firm_id as string,
       lawFirmName: r.law_firm_name as string,
-      subscriptionId: r.subscription_id as string,
+      subscriptionId: (r.subscription_id ?? null) as string | null,
       subscriptionTier: r.subscription_tier as string,
       currentPeriodEnd:
         r.current_period_end instanceof Date
           ? r.current_period_end.toISOString()
           : (r.current_period_end as string | null),
+      isPilot: Boolean(r.is_pilot),
     }));
   }
 
@@ -1153,6 +1158,7 @@ function toLawFirmRow(r: {
   phone: string | null;
   stripeCustomerId: string | null;
   status: string;
+  isPilot: boolean;
   createdAt: Date;
   updatedAt: Date;
 }): LawFirmRow {
@@ -1165,6 +1171,7 @@ function toLawFirmRow(r: {
     phone: r.phone,
     stripeCustomerId: r.stripeCustomerId,
     status: r.status as LawFirmRow['status'],
+    isPilot: r.isPilot,
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
   };

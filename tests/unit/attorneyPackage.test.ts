@@ -84,6 +84,7 @@ function makeLawFirm(): LawFirmRow {
     email: 'intake@acme-ada.example',
     phone: '+1-555-000-0000',
     stripeCustomerId: null,
+    isPilot: false,
     status: 'active',
   };
 }

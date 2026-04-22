@@ -45,6 +45,7 @@ function makeFirm(overrides: Partial<LawFirmRow> = {}): LawFirmRow {
     email: 'counsel@example.com',
     phone: null,
     stripeCustomerId: null,
+    isPilot: false,
     status: 'active',
     ...overrides,
   };

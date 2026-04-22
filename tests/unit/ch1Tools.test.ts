@@ -54,6 +54,7 @@ async function seedActiveListing(clients: AdaClients): Promise<void> {
     email: 'counsel@example.com',
     phone: null,
     stripeCustomerId: null,
+    isPilot: false,
     status: 'active',
   });
   await clients.db.writeListing({
@@ -224,6 +225,7 @@ describe('match_listing', () => {
         email: 'counsel@example.com',
         phone: null,
         stripeCustomerId: null,
+    isPilot: false,
         status: 'suspended',
       });
       const result = await tool.execute(

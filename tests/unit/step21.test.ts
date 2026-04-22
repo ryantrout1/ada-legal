@@ -245,6 +245,7 @@ describe('renderDiscoveryListingIndex', () => {
       subscriptionId: '00000000-0000-4000-8000-000000000b01',
       subscriptionTier: 'basic',
       currentPeriodEnd: null,
+      isPilot: false,
       ...overrides,
     };
   }

@@ -315,6 +315,12 @@ export interface LawFirmRow {
   phone: string | null;
   stripeCustomerId: string | null;
   status: 'active' | 'suspended' | 'churned';
+  /**
+   * When true, this firm's listings are active without a Stripe
+   * subscription (pilot mode). Flip to false and start a Stripe sub
+   * to transition into paid billing. Step 23.
+   */
+  isPilot: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -377,9 +383,13 @@ export interface ActiveListingRow {
   eligibilitySummary: string | null;
   lawFirmId: string;
   lawFirmName: string;
-  subscriptionId: string;
+  /** Nullable for pilot-firm listings (no Stripe sub). */
+  subscriptionId: string | null;
+  /** 'pilot' for pilot firms, otherwise the subscription's tier. */
   subscriptionTier: string;
   currentPeriodEnd: string | null;
+  /** Step 23: true when this listing is live via pilot mode. */
+  isPilot: boolean;
 }
 
 // ─── Ch1 routing row shapes (Step 22) ─────────────────────────────────────────
