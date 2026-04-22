@@ -50,6 +50,17 @@ import {
 
 interface Body {
   reading_level?: ReadingLevel;
+  /**
+   * Optional deep-link from /class-actions/:slug. When set and the
+   * slug maps to an ACTIVE listing in this org, the new session is
+   * created as a class_action_intake pre-bound to that listing.
+   * Invalid or inactive slugs are ignored (session is created as
+   * public_ada, no error — the directory page is cacheable and a
+   * slug may go archive-state between page load and button click).
+   *
+   * Step 26, Commit 1.
+   */
+  listing_slug?: string;
 }
 
 const ALLOWED_LEVELS: ReadingLevel[] = ['simple', 'standard', 'professional'];
@@ -100,13 +111,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       userAgent: (req.headers['user-agent'] as string) ?? null,
     });
 
-    // Create and persist the session.
+    // If the caller passed a listing_slug, try to resolve it against
+    // v_active_listings. Only active (published + active firm + pilot
+    // or active sub) listings bind the session. Everything else
+    // silently falls back to public_ada, same as if no slug was passed.
+    let listingId: string | null = null;
+    if (typeof body.listing_slug === 'string' && body.listing_slug.trim()) {
+      const active = await clients.db.listActiveListings();
+      const match = active.find((r) => r.slug === body.listing_slug!.trim());
+      if (match) {
+        listingId = match.listingId;
+      }
+    }
+
+    // Create and persist the session. If listingId resolved, this is
+    // a class_action_intake session pre-bound to that listing —
+    // equivalent to what match_listing would have done, minus the
+    // LLM round-trip (the user's intent was expressed by clicking
+    // into the listing's public page, so the consent gate is
+    // structurally satisfied).
     const session = createSession(clients, {
       orgId: org.id,
-      sessionType: 'public_ada',
+      sessionType: listingId ? 'class_action_intake' : 'public_ada',
       anonSessionId,
       userId: null,
       readingLevel,
+      listingId,
     });
     await clients.db.writeSession({ state: session });
 
