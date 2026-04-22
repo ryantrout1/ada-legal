@@ -295,6 +295,13 @@ export interface DbClient {
   /** Read a listing by id. Null for unknown. */
   readListingById(id: string): Promise<ListingRow | null>;
 
+  /**
+   * Admin-side: list every listing owned by a specific firm. Returns
+   * all statuses (draft, published, archived) sorted newest first.
+   * Used by the firm detail page. Step 25.
+   */
+  listListingsForFirm(lawFirmId: string): Promise<ListingRow[]>;
+
   /** Insert or update a listing_config (one-to-one with listing). */
   writeListingConfig(row: ListingConfigRow): Promise<void>;
   /** Read the config attached to a listing, if any. */
@@ -314,6 +321,12 @@ export interface DbClient {
    * to an incoming Stripe event.
    */
   readSubscriptionByStripeId(stripeSubscriptionId: string): Promise<SubscriptionRow | null>;
+
+  /**
+   * Admin-side: list every subscription (real Stripe rows only) for a
+   * firm across all statuses. Ordered newest first. Step 25.
+   */
+  listSubscriptionsForFirm(lawFirmId: string): Promise<SubscriptionRow[]>;
 
   // ─── stripe_webhook_events (Step 23) ──────────────────────────────────────
   //

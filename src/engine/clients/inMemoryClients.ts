@@ -584,6 +584,13 @@ export class InMemoryDbClient implements DbClient {
     return this.listings.find((l) => l.slug === slug) ?? null;
   }
 
+  async listListingsForFirm(lawFirmId: string): Promise<ListingRow[]> {
+    return this.listings
+      .filter((l) => l.lawFirmId === lawFirmId)
+      .map((l) => ({ ...l }))
+      .sort((a, b) => a.title.localeCompare(b.title));
+  }
+
   async readListingById(id: string): Promise<ListingRow | null> {
     return this.listings.find((l) => l.id === id) ?? null;
   }
@@ -618,6 +625,19 @@ export class InMemoryDbClient implements DbClient {
         (s) => s.stripeSubscriptionId === stripeSubscriptionId,
       ) ?? null
     );
+  }
+
+  async listSubscriptionsForFirm(
+    lawFirmId: string,
+  ): Promise<SubscriptionRow[]> {
+    return this.subscriptionRows
+      .filter((s) => s.lawFirmId === lawFirmId)
+      .map((s) => ({ ...s }))
+      .sort((a, b) => {
+        const aAt = a.createdAt ?? '';
+        const bAt = b.createdAt ?? '';
+        return bAt.localeCompare(aAt);
+      });
   }
 
   // ─── stripe_webhook_events (Step 23) ─────────────────────────────────────

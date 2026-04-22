@@ -196,7 +196,7 @@ export default function AdminFirms() {
                     to={`/admin/firms/${f.id}`}
                     className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
                   >
-                    Edit
+                    View
                   </Link>
                 </td>
               </tr>

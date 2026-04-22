@@ -112,7 +112,21 @@ export default function AdminFirmEdit() {
         const body = (await resp.json().catch(() => ({}))) as { error?: string };
         throw new Error(body.error ?? `HTTP ${resp.status}`);
       }
-      navigate('/admin/firms');
+      // After save, go back to where the user started. New firm goes
+      // to the detail page of the newly-created firm; edit goes back
+      // to the detail page of the one just edited.
+      if (isNew) {
+        const created = (await resp.json().catch(() => ({}))) as {
+          firm?: { id?: string };
+        };
+        if (created.firm?.id) {
+          navigate(`/admin/firms/${created.firm.id}`);
+        } else {
+          navigate('/admin/firms');
+        }
+      } else {
+        navigate(`/admin/firms/${id}`);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
     } finally {
@@ -122,13 +136,16 @@ export default function AdminFirmEdit() {
 
   if (loading) return <p className="text-ink-500 italic">Loading…</p>;
 
+  const backTo = isNew ? '/admin/firms' : `/admin/firms/${id}`;
+  const backLabel = isNew ? '← Firms' : '← Back to firm';
+
   return (
     <section>
       <Link
-        to="/admin/firms"
+        to={backTo}
         className="text-xs uppercase tracking-wider font-mono text-ink-500 hover:text-accent-600 underline underline-offset-2"
       >
-        ← Firms
+        {backLabel}
       </Link>
       <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mt-2 mb-6">
         {isNew ? 'Add firm' : 'Edit firm'}
@@ -236,7 +253,7 @@ export default function AdminFirmEdit() {
             {saving ? 'Saving…' : isNew ? 'Create firm' : 'Save changes'}
           </button>
           <Link
-            to="/admin/firms"
+            to={backTo}
             className="px-5 py-2 rounded-md border border-surface-200 text-ink-700 hover:bg-surface-100"
           >
             Cancel

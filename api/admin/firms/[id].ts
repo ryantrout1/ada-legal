@@ -50,7 +50,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'GET') {
-    return res.status(200).json({ firm: existing });
+    // Admin detail view: return firm plus its listings and subscriptions
+    // so the detail page can render in one round-trip. Listings and
+    // subscriptions are small per-firm (tens, not thousands).
+    const [listings, subscriptions] = await Promise.all([
+      clients.db.listListingsForFirm(id),
+      clients.db.listSubscriptionsForFirm(id),
+    ]);
+    return res.status(200).json({
+      firm: existing,
+      listings,
+      subscriptions,
+    });
   }
 
   if (req.method === 'PATCH') {

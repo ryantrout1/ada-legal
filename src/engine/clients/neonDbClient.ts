@@ -994,6 +994,15 @@ export class NeonDbClient implements DbClient {
     return toListingRow(r);
   }
 
+  async listListingsForFirm(lawFirmId: string): Promise<ListingRow[]> {
+    const rows = await this.db
+      .select()
+      .from(listingsTable)
+      .where(eq(listingsTable.lawFirmId, lawFirmId))
+      .orderBy(sql`${listingsTable.createdAt} DESC`);
+    return rows.map(toListingRow);
+  }
+
   async writeListingConfig(row: ListingConfigRow): Promise<void> {
     // listing_configs has a UNIQUE constraint on listing_id, so we
     // upsert on that column — multiple rows per listing aren't allowed.
@@ -1094,6 +1103,17 @@ export class NeonDbClient implements DbClient {
     const r = rows[0];
     if (!r) return null;
     return toSubscriptionRow(r);
+  }
+
+  async listSubscriptionsForFirm(
+    lawFirmId: string,
+  ): Promise<SubscriptionRow[]> {
+    const rows = await this.db
+      .select()
+      .from(subscriptionsTable)
+      .where(eq(subscriptionsTable.lawFirmId, lawFirmId))
+      .orderBy(sql`${subscriptionsTable.createdAt} DESC`);
+    return rows.map(toSubscriptionRow);
   }
 
   // ─── stripe_webhook_events (Step 23) ─────────────────────────────────────
