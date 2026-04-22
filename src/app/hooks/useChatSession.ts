@@ -49,6 +49,12 @@ export interface ChatState {
     readingLevel: ReadingLevel;
     messages: ChatMessage[];
   } | null;
+  /**
+   * The slug of the session package, set when Ada ends the session.
+   * The UI renders a "Your summary is ready" card linking to /s/{slug}
+   * when this is non-null. See Step 18 Commit 4 for package generation.
+   */
+  packageSlug: string | null;
 }
 
 interface SessionCreateResponse {
@@ -72,6 +78,8 @@ interface TurnResponse {
   reading_level: ReadingLevel;
   status: SessionStatus;
   photo_findings?: unknown;
+  /** Slug of the session package generated on session completion. */
+  package_slug?: string | null;
 }
 
 const DEFAULT_LEVEL: ReadingLevel = 'standard';
@@ -86,6 +94,7 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
     error: null,
     initializing: true,
     resumable: null,
+    packageSlug: null,
   });
   const didInitRef = useRef(false);
 
@@ -287,6 +296,10 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
           readingLevel: data.reading_level,
           busy: false,
           error: null,
+          // Surface the package slug when Ada ends a session.
+          // Persists across turns so reloading the completed state
+          // keeps showing the "Your summary is ready" card.
+          packageSlug: data.package_slug ?? s.packageSlug,
         }));
       } catch (err) {
         setState((s) => ({

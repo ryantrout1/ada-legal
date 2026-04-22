@@ -384,6 +384,60 @@ export default function Chat() {
         {state.busy && <TypingIndicator />}
       </div>
 
+      {/* End-of-conversation summary card.
+         Rendered when Ada has completed the session AND a package was
+         generated. The card is the bridge from chat to artifact — the
+         user taps through to /s/{slug} where their summary lives. */}
+      {state.status === 'completed' && state.packageSlug && (
+        <aside
+          className="mt-4 border border-accent-500 bg-accent-50 rounded-lg p-5"
+          aria-labelledby="summary-ready-heading"
+        >
+          <h2
+            id="summary-ready-heading"
+            className="font-display text-lg text-ink-900 mb-2"
+          >
+            Your summary is ready
+          </h2>
+          <p className="text-ink-700 leading-relaxed mb-4">
+            Ada put together a summary of everything you discussed, plus
+            what people usually do next. You can view it, share the link,
+            print it, or save it as a PDF.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href={`/s/${state.packageSlug}`}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded bg-accent-500 text-white hover:bg-accent-600 transition-colors"
+              aria-label="Open your summary page"
+            >
+              Open my summary
+            </a>
+            <button
+              type="button"
+              onClick={async () => {
+                const url = `${window.location.origin}/s/${state.packageSlug}`;
+                try {
+                  if (navigator.share) {
+                    await navigator.share({
+                      url,
+                      title: 'My ADA Legal Link summary',
+                    });
+                  } else if (navigator.clipboard) {
+                    await navigator.clipboard.writeText(url);
+                  }
+                } catch {
+                  // User cancelled share or clipboard unavailable — noop
+                }
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded border border-surface-300 bg-white text-ink-700 hover:border-accent-500 hover:text-accent-600 transition-colors"
+              aria-label="Share or copy the link to your summary"
+            >
+              Share link
+            </button>
+          </div>
+        </aside>
+      )}
+
       {/* Input form */}
       <form
         onSubmit={handleSubmit}
