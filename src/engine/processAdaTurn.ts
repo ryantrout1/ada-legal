@@ -40,6 +40,7 @@ import type {
 import type { Message, AttachedPhoto } from '../types/db.js';
 import { assemblePrompt } from './prompt/assemble.js';
 import { CH0_TOOLS, buildToolIndex } from './tools/registry.js';
+import { CH1_TOOLS } from './tools/registryCh1.js';
 import { dispatchTool } from './tools/dispatcher.js';
 import type { ToolStateChanges } from './tools/types.js';
 import { applyTransition } from './session/stateMachine.js';
@@ -94,8 +95,15 @@ export async function processAdaTurn({
     },
   };
 
-  const toolRegistry = buildToolIndex(CH0_TOOLS);
-  const toolDefs = toolRegistryToDefinitions(CH0_TOOLS);
+  // Ch0 tools are universal; Ch1 tools (match_listing, finalize_intake)
+  // are added globally so Ada can promote any public_ada session that
+  // matches an active listing. A future step may gate based on whether
+  // active listings exist in the DB (no listings → don't surface
+  // match_listing), but for now the tool's own executor rejects calls
+  // on sessions that can't use it.
+  const allTools = [...CH0_TOOLS, ...CH1_TOOLS];
+  const toolRegistry = buildToolIndex(allTools);
+  const toolDefs = toolRegistryToDefinitions(allTools);
   const toolInvocations: ToolInvocation[] = [];
   const photoFindingsAccum: AdaTurnResult['photoFindings'] = [];
 
@@ -369,6 +377,21 @@ function applyStateChanges(
     next = {
       ...next,
       status: applyTransition(next.status, changes.sessionTransition),
+    };
+  }
+  if (changes.listingId) {
+    // match_listing binds the session to a specific listing. This is a
+    // one-way transition; the tool executor is responsible for rejecting
+    // re-binding attempts. At the merge layer we just overwrite.
+    next = { ...next, listingId: changes.listingId };
+  }
+  if (changes.sessionTypeChange) {
+    next = { ...next, sessionType: changes.sessionTypeChange };
+  }
+  if (changes.metadataPatch) {
+    next = {
+      ...next,
+      metadata: { ...next.metadata, ...changes.metadataPatch },
     };
   }
   return next;

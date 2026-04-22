@@ -31,6 +31,10 @@ import type { ReadingLevel } from '../../types/db.js';
 import type { AnyAdaTool } from '../tools/types.js';
 import type { KnowledgeChunkHit } from '../clients/types.js';
 import { CH0_TOOLS } from '../tools/registry.js';
+import { CH1_TOOLS } from '../tools/registryCh1.js';
+
+/** Default tool set when caller doesn't specify. Ch0 + Ch1 combined. */
+const DEFAULT_TOOLS: ReadonlyArray<AnyAdaTool> = [...CH0_TOOLS, ...CH1_TOOLS];
 
 import adaIdentity from '../../../content-migration/prompts/ada-identity.js';
 import readingLevelsDoc from '../../../content-migration/prompts/reading-levels.js';
@@ -65,7 +69,7 @@ export function assemblePrompt(ctx: AssemblePromptContext): string {
     section('KNOWLEDGE', buildKnowledgeSection(ctx.knowledgeChunks)),
     section('LISTING CONTEXT', buildListingSection(ctx)),
     section('READING LEVEL', buildReadingLevelSection(ctx.state.readingLevel)),
-    section('TOOLS', buildToolsSection(ctx.tools ?? CH0_TOOLS)),
+    section('TOOLS', buildToolsSection(ctx.tools ?? DEFAULT_TOOLS)),
     section('CURRENT SESSION', buildSessionContextSection(ctx.state)),
   ];
   return sections.filter((s) => s.trim().length > 0).join('\n\n');

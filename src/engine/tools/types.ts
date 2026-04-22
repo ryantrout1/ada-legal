@@ -46,6 +46,25 @@ export interface ToolStateChanges {
   readingLevel?: ReadingLevel;
   sessionTransition?: SessionTransition;
   photoFindings?: PhotoFinding[];
+  /**
+   * Ch1 match_listing: bind the session to a specific active listing.
+   * Set alongside sessionTypeChange to promote public_ada → class_action_intake.
+   * One-way transition: once set, cannot change (enforced by the executor,
+   * not the merge layer — the merge is dumb).
+   */
+  listingId?: string;
+  /**
+   * Ch1 match_listing: promote a general session to a listing-scoped one.
+   * Only public_ada → class_action_intake is a legitimate transition today;
+   * the tool executor rejects any other value.
+   */
+  sessionTypeChange?: 'class_action_intake';
+  /**
+   * Ch1 finalize_intake: record session outcome metadata. Shallow-merged
+   * into state.metadata. Keys present here overwrite existing metadata
+   * keys; keys absent here are preserved.
+   */
+  metadataPatch?: Partial<import('../../types/db.js').SessionMetadata>;
 }
 
 /** The result a tool returns. `content` is what goes back to Anthropic. */
