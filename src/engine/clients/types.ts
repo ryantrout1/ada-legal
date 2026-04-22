@@ -142,6 +142,33 @@ export interface AdminFirmListResult {
   pageSize: number;
 }
 
+/**
+ * Options for listListingsForAdmin. orgId is required for scoping.
+ * Every other filter is optional and AND'd. Step 25.
+ */
+export interface AdminListingListOptions {
+  orgId: string;
+  /** Filter by firm. Omit to include listings across all firms. */
+  lawFirmId?: string;
+  /** Filter by listing status. */
+  status?: 'draft' | 'published' | 'archived';
+  /** Filter by category (e.g. 'ada_title_iii'). */
+  category?: string;
+  /** Case-insensitive substring match on title or slug. */
+  search?: string;
+  /** 1-based page. Default 1. */
+  page?: number;
+  /** Rows per page, 1..100. Default 50. */
+  pageSize?: number;
+}
+
+export interface AdminListingListResult {
+  listings: ListingRow[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
 /** All fields required to create a new attorney row. */
 export interface CreateAttorneyInput {
   orgId: string;
@@ -301,6 +328,13 @@ export interface DbClient {
    * Used by the firm detail page. Step 25.
    */
   listListingsForFirm(lawFirmId: string): Promise<ListingRow[]>;
+
+  /**
+   * Admin-side: list all listings in the org across every firm, with
+   * optional filters + pagination. Used by the /admin/listings list
+   * page. Step 25.
+   */
+  listListingsForAdmin(opts: AdminListingListOptions): Promise<AdminListingListResult>;
 
   /** Insert or update a listing_config (one-to-one with listing). */
   writeListingConfig(row: ListingConfigRow): Promise<void>;

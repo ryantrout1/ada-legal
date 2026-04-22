@@ -44,6 +44,8 @@ import type {
   AdminAttorneyListResult,
   AdminFirmListOptions,
   AdminFirmListResult,
+  AdminListingListOptions,
+  AdminListingListResult,
   AdminSessionListOptions,
   AdminSessionListResult,
   AdminSessionSummary,
@@ -1001,6 +1003,52 @@ export class NeonDbClient implements DbClient {
       .where(eq(listingsTable.lawFirmId, lawFirmId))
       .orderBy(sql`${listingsTable.createdAt} DESC`);
     return rows.map(toListingRow);
+  }
+
+  async listListingsForAdmin(
+    opts: AdminListingListOptions,
+  ): Promise<AdminListingListResult> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 50;
+    const offset = (page - 1) * pageSize;
+
+    // Org scoping is enforced via an INNER JOIN on law_firms. Listings
+    // don't carry org_id directly; the firm they belong to does.
+    const conds = [eq(lawFirmsTable.orgId, opts.orgId)];
+    if (opts.lawFirmId) conds.push(eq(listingsTable.lawFirmId, opts.lawFirmId));
+    if (opts.status) conds.push(eq(listingsTable.status, opts.status));
+    if (opts.category) conds.push(eq(listingsTable.category, opts.category));
+    if (opts.search && opts.search.trim()) {
+      const term = `%${opts.search.trim()}%`;
+      conds.push(
+        or(ilike(listingsTable.title, term), ilike(listingsTable.slug, term))!,
+      );
+    }
+    const whereClause = and(...conds);
+
+    const countRows = await this.db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(listingsTable)
+      .innerJoin(lawFirmsTable, eq(lawFirmsTable.id, listingsTable.lawFirmId))
+      .where(whereClause);
+    const totalCount = countRows[0]?.n ?? 0;
+
+    const rows = await this.db
+      .select({ listing: listingsTable })
+      .from(listingsTable)
+      .innerJoin(lawFirmsTable, eq(lawFirmsTable.id, listingsTable.lawFirmId))
+      .where(whereClause)
+      .orderBy(sql`${listingsTable.createdAt} DESC`)
+      .limit(pageSize)
+      .offset(offset);
+
+    return {
+      listings: rows.map((r) => toListingRow(r.listing)),
+      totalCount,
+      page,
+      pageSize,
+    };
   }
 
   async writeListingConfig(row: ListingConfigRow): Promise<void> {

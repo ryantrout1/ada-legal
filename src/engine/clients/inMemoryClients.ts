@@ -21,6 +21,8 @@ import type {
   AdminAttorneyListResult,
   AdminFirmListOptions,
   AdminFirmListResult,
+  AdminListingListOptions,
+  AdminListingListResult,
   AdminSessionListOptions,
   AdminSessionListResult,
   AdminSessionSummary,
@@ -589,6 +591,42 @@ export class InMemoryDbClient implements DbClient {
       .filter((l) => l.lawFirmId === lawFirmId)
       .map((l) => ({ ...l }))
       .sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  async listListingsForAdmin(
+    opts: AdminListingListOptions,
+  ): Promise<AdminListingListResult> {
+    const page = Math.max(1, opts.page ?? 1);
+    const pageSize = Math.min(100, Math.max(1, opts.pageSize ?? 50));
+    const searchLower = opts.search?.trim().toLowerCase();
+
+    // Build firm-id → orgId map once so we can filter by org.
+    const firmOrgs = new Map<string, string>();
+    for (const f of this.lawFirms) firmOrgs.set(f.id, f.orgId);
+
+    let rows = this.listings.filter((l) => firmOrgs.get(l.lawFirmId) === opts.orgId);
+    if (opts.lawFirmId) {
+      rows = rows.filter((l) => l.lawFirmId === opts.lawFirmId);
+    }
+    if (opts.status) {
+      rows = rows.filter((l) => l.status === opts.status);
+    }
+    if (opts.category) {
+      rows = rows.filter((l) => l.category === opts.category);
+    }
+    if (searchLower) {
+      rows = rows.filter(
+        (l) =>
+          l.title.toLowerCase().includes(searchLower) ||
+          l.slug.toLowerCase().includes(searchLower),
+      );
+    }
+    rows.sort((a, b) => a.title.localeCompare(b.title));
+
+    const totalCount = rows.length;
+    const start = (page - 1) * pageSize;
+    const paged = rows.slice(start, start + pageSize).map((l) => ({ ...l }));
+    return { listings: paged, totalCount, page, pageSize };
   }
 
   async readListingById(id: string): Promise<ListingRow | null> {
