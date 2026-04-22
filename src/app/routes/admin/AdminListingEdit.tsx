@@ -314,10 +314,20 @@ export default function AdminListingEdit() {
         </Field>
 
         {!isNew && (
-          <div className="rounded-md border border-surface-200 bg-surface-50 p-3 text-sm text-ink-700">
-            <strong>Listing configuration</strong> (case description, eligibility
-            criteria, required fields, disqualifying conditions) is edited in a
-            separate form — coming in the next commit.
+          <div className="rounded-md border border-surface-200 bg-surface-50 p-3 text-sm text-ink-700 flex items-center justify-between gap-3">
+            <div>
+              <strong className="text-ink-900">Listing configuration</strong>
+              <p className="text-xs text-ink-500 mt-1">
+                Edit case description, eligibility criteria, required fields,
+                and disqualifying conditions.
+              </p>
+            </div>
+            <Link
+              to={`/admin/listings/${id}/config`}
+              className="px-4 py-2 rounded-md border border-accent-500 text-accent-500 text-sm font-medium hover:bg-accent-50 whitespace-nowrap"
+            >
+              Edit config →
+            </Link>
           </div>
         )}
 
