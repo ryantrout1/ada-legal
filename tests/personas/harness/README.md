@@ -73,6 +73,56 @@ one persona starts with `listing-`.
 On macOS use `pbcopy` instead of `clip.exe`. On Linux Wayland use
 `wl-copy`. On X11 use `xclip -selection clipboard`.
 
+## Harvester — opt-in AI analysis
+
+The persona trace and transcript are deterministic — they capture
+what happened. The harvester asks **what does what happened mean?**
+It runs an LLM pass over the transcript + trace and writes
+`harvest.md` alongside the other artifacts with structured
+commentary: strengths, concerns (with pointers to the turns that
+motivated them), and a "would debug" section.
+
+Costs tokens. Opt-in per persona. Use it when:
+
+- A persona failed and you want a read on why
+- A persona passed but the transcript feels off
+- You want a conversation-quality signal the assertions can't see
+
+```bash
+# Requires ANTHROPIC_API_KEY in .env.local or env
+npm run personas:harvest -- --latest
+
+# Specific persona (prefix matching works here too)
+npm run personas:harvest -- --persona listing-scoped
+
+# Specific run
+npm run personas:harvest -- --persona listing-scoped --run 2026-04-22-080000
+
+# Write to stdout instead of harvest.md
+npm run personas:harvest -- --persona listing-scoped --stdout
+
+# Use a different model (default: claude-sonnet-4-6)
+npm run personas:harvest -- --persona listing-scoped --model claude-opus-4-6
+
+# List runs, showing which personas have been harvested
+npm run personas:harvest -- --list
+```
+
+The harvester prompt looks for:
+
+- **Conversation quality** — redundant questions, ignored facts,
+  tone mismatch for the reading level, robotic vs human pacing
+- **Tool usage** — missed extract_field calls, out-of-order tool
+  invocations, anomalous repetition
+- **Outcome legitimacy** — was the qualified/disqualified verdict
+  actually supported by what the user said?
+
+The output is tight by design: `Verdict at a glance`, `Strengths`,
+`Concerns`, `Would debug`. Omits sections with nothing to report.
+
+Typical cost: ~500 input tokens + ~400 output tokens = $0.008 per
+harvest on Sonnet 4.6. A full Harness A sweep harvested = ~$0.05.
+
 ## Grouping multiple runs under one timestamp
 
 Set `PERSONA_RUN_ID` to a shared value before running several personas

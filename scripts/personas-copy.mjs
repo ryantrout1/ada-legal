@@ -288,6 +288,17 @@ if (fs.existsSync(transcriptPath)) {
   out.push('');
 }
 
+// Harvest (if present) — the AI's commentary on what happened. Not
+// every persona is harvested; only present when the user has run
+// `npm run personas:harvest` for this slug+run combination.
+const harvestPath = path.join(personaDir, 'harvest.md');
+if (fs.existsSync(harvestPath)) {
+  out.push('## Harvest (AI commentary)');
+  out.push('');
+  out.push(fs.readFileSync(harvestPath, 'utf8').trimEnd());
+  out.push('');
+}
+
 // Trace JSON — included only on --trace to keep the default output
 // skimmable. Trace files are typically 2-5KB and include per-event
 // timestamps, bubble-parsing data, screenshot refs, etc.
