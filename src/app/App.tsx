@@ -29,6 +29,7 @@ import Accessibility from './routes/public/Accessibility.js';
 import Privacy from './routes/public/Privacy.js';
 import Terms from './routes/public/Terms.js';
 import AdminSignIn from './routes/admin/SignIn.js';
+import AdminSignUp from './routes/admin/SignUp.js';
 import AdminSessions from './routes/admin/AdminSessions.js';
 import AdminSessionDetail from './routes/admin/AdminSessionDetail.js';
 import AdminAttorneys from './routes/admin/AdminAttorneys.js';
@@ -64,6 +65,7 @@ function AdminShell() {
     <ClerkProvider publishableKey={publishableKey} afterSignOutUrl="/">
       <Routes>
         <Route path="sign-in/*" element={<AdminSignIn />} />
+        <Route path="sign-up/*" element={<AdminSignUp />} />
         <Route
           element={
             <RequireAdmin>

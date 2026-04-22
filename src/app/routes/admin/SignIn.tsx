@@ -25,7 +25,7 @@ export default function AdminSignIn() {
       <SignIn
         path="/admin/sign-in"
         routing="path"
-        signUpUrl="/admin/sign-in"
+        signUpUrl="/admin/sign-up"
         forceRedirectUrl="/admin"
       />
     </main>
