@@ -18,6 +18,7 @@
     "test:personas:preview": "PLAYWRIGHT_TARGET=preview playwright test",
     "test:personas:prod": "PLAYWRIGHT_TARGET=prod playwright test",
     "test:personas:install": "playwright install chromium",
+    "personas:copy": "node scripts/personas-copy.mjs",
     "test:a11y": "playwright test --config=playwright.a11y.config.ts",
     "test:a11y:preview": "PLAYWRIGHT_TARGET=preview playwright test --config=playwright.a11y.config.ts"
   },

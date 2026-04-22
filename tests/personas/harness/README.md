@@ -44,6 +44,35 @@ per persona with three files:
 - **`assertions.log`** — one line per assertion, pass/fail with detail.
   Scan this first to see what broke.
 
+## Bundling for copy/paste
+
+To grab everything for one persona in a single markdown blob:
+
+```bash
+# Most recent persona, piped to clipboard (WSL)
+npm run personas:copy -- --latest | clip.exe
+
+# Specific persona from most recent run
+npm run personas:copy -- --persona listing-scoped-qualified-standard | clip.exe
+
+# Specific persona, specific run
+npm run personas:copy -- --persona listing-scoped-qualified-standard \
+  --run 2026-04-22-080000 | clip.exe
+
+# Include the full trace.json (default is transcript + assertions only)
+npm run personas:copy -- --persona listing-scoped-qualified-standard \
+  --trace | clip.exe
+
+# List what runs and personas exist
+npm run personas:copy -- --list
+```
+
+Prefix matching works on `--persona` — you can type `listing` if only
+one persona starts with `listing-`.
+
+On macOS use `pbcopy` instead of `clip.exe`. On Linux Wayland use
+`wl-copy`. On X11 use `xclip -selection clipboard`.
+
 ## Grouping multiple runs under one timestamp
 
 Set `PERSONA_RUN_ID` to a shared value before running several personas
