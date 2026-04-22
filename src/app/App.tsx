@@ -24,6 +24,8 @@ import PublicLayout from './layouts/PublicLayout.js';
 import AdminLayout from './layouts/AdminLayout.js';
 import Home from './routes/public/Home.js';
 import Chat from './routes/public/Chat.js';
+import ClassActions from './routes/public/ClassActions.js';
+import ClassActionDetail from './routes/public/ClassActionDetail.js';
 import Attorneys from './routes/public/Attorneys.js';
 import Accessibility from './routes/public/Accessibility.js';
 import Privacy from './routes/public/Privacy.js';
@@ -56,6 +58,11 @@ export default function App() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/class-actions" element={<ClassActions />} />
+          <Route
+            path="/class-actions/:slug"
+            element={<ClassActionDetail />}
+          />
           <Route path="/attorneys" element={<Attorneys />} />
           <Route path="/accessibility" element={<Accessibility />} />
           <Route path="/privacy" element={<Privacy />} />

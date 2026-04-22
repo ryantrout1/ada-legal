@@ -74,7 +74,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // If the resume would show zero visible messages, don't surface
     // it at all — there's nothing for the user to continue from.
-    if (messages.length === 0) {
+    //
+    // EXCEPTION: a class_action_intake session pre-bound via
+    // listing_slug deep-link (Step 26) will have 0 messages at the
+    // moment the user lands on /chat. Surface those so the resume
+    // probe picks up the correct session instead of the UI clobbering
+    // it with a fresh public_ada session.
+    const isPreBoundIntake =
+      state.sessionType === 'class_action_intake' &&
+      state.listingId !== null &&
+      messages.length === 0;
+    if (messages.length === 0 && !isPreBoundIntake) {
       return res.status(200).json({ session: null });
     }
 
@@ -84,6 +94,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         status: state.status,
         reading_level: state.readingLevel,
         messages,
+        is_prebound: isPreBoundIntake,
       },
     });
   } catch (err) {

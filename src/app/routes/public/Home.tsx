@@ -50,6 +50,12 @@ export default function Home() {
             Talk to Ada
             <span aria-hidden="true">→</span>
           </Link>
+          <Link
+            to="/class-actions"
+            className="text-ink-700 hover:text-accent-600 underline underline-offset-4 decoration-1 px-2 py-2 transition-colors"
+          >
+            Browse class actions
+          </Link>
           <a
             href="#how-it-works"
             className="text-ink-700 hover:text-accent-600 underline underline-offset-4 decoration-1 px-2 py-2 transition-colors"

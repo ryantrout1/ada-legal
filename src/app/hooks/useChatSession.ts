@@ -69,6 +69,13 @@ interface ResumeResponse {
     status: SessionStatus;
     reading_level: ReadingLevel;
     messages: Array<{ role: 'user' | 'assistant'; content: string; timestamp: string }>;
+    /**
+     * True when the server returned a pre-bound class_action_intake
+     * session with 0 messages (deep-link from /class-actions/:slug).
+     * The client should silently adopt this session without prompting
+     * the user to "resume previous conversation." See Step 26 Commit 2.
+     */
+    is_prebound?: boolean;
   } | null;
 }
 
@@ -156,6 +163,20 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
         });
         if (resp.ok) {
           const data = (await resp.json()) as ResumeResponse;
+          // Pre-bound intake session (deep-link from /class-actions/:slug).
+          // 0 messages, but the session is already live on the server.
+          // Adopt it silently — the user clicked a button, they expect
+          // to continue, not be prompted with "resume previous."
+          if (data.session && data.session.is_prebound) {
+            setState((s) => ({
+              ...s,
+              sessionId: data.session!.session_id,
+              readingLevel: data.session!.reading_level,
+              initializing: false,
+              messages: [],
+            }));
+            return;
+          }
           if (data.session && data.session.messages.length > 0) {
             // Offer to resume. Don't create a new session yet.
             const mapped: ChatMessage[] = data.session.messages.map((m) => ({
