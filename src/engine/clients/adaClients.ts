@@ -34,6 +34,7 @@ import { AnthropicAiClient } from './anthropicAiClient.js';
 import { AnthropicPhotoAnalysisClient } from './anthropicPhotoAnalysisClient.js';
 import { makeOpenAIEmbeddingClient } from '../knowledge/embeddings.js';
 import { ResendEmailClient, StubResendEmailClient } from './resendEmailClient.js';
+import { StripeClient, StubStripeClient } from './stripeClient.js';
 import type {
   AdaClients,
   AuditClient,
@@ -182,6 +183,13 @@ export interface AdaClientsConfig {
    * dashboard; otherwise the API returns a 4xx on first send.
    */
   resendFromAddress?: string;
+  /**
+   * Stripe secret key (Step 23). Optional — when absent, checkout and
+   * portal endpoints surface a configuration error; webhook handler
+   * refuses to process events. Pilot firms don't touch Stripe at all,
+   * so missing this key is fine during the pilot phase.
+   */
+  stripeSecretKey?: string;
 }
 
 export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
@@ -216,6 +224,12 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
       ? new ResendEmailClient(config.resendApiKey, config.resendFromAddress)
       : new StubResendEmailClient();
 
+  // Stripe client: real impl when STRIPE_SECRET_KEY is set, stub
+  // otherwise. Stub refuses all operations with a clear error.
+  const stripe = config.stripeSecretKey
+    ? new StripeClient(config.stripeSecretKey)
+    : new StubStripeClient();
+
   return {
     ai: new AnthropicAiClient(config.anthropicApiKey),
     db: new NeonDbClient(db),
@@ -229,5 +243,6 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
     audit: new NeonAuditClient(),
     embeddings,
     hopSecret: config.hopSecret,
+    stripe,
   };
 }

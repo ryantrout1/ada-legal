@@ -699,4 +699,11 @@ export interface AdaClients {
    * degrades gracefully rather than crashing the turn.
    */
   hopSecret?: string;
+  /**
+   * Step 23: Stripe billing client. Optional — when absent, checkout
+   * and portal endpoints return a clear "not configured" error, and
+   * webhook verification refuses all events. Pilot firms still work
+   * without it (they don't touch Stripe).
+   */
+  stripe?: import('./stripeClient.js').AdaStripeClient;
 }

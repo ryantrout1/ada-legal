@@ -27,6 +27,7 @@ export function makeClientsFromEnv(): AdaClients {
   const hopSecret = process.env.ADALL_HOP_SECRET;
   const resendApiKey = process.env.RESEND_API_KEY;
   const resendFromAddress = process.env.RESEND_FROM_ADDRESS;
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
   if (!databaseUrl) {
     throw new Error('DATABASE_URL is not set in environment');
   }
@@ -42,6 +43,9 @@ export function makeClientsFromEnv(): AdaClients {
   // destinations (attorney_directory, end_conversation) still work.
   // RESEND_API_KEY + RESEND_FROM_ADDRESS are optional. Without them,
   // email sending throws a clear error (Step 24).
+  // STRIPE_SECRET_KEY is optional. Without it, checkout + portal
+  // endpoints return a clear error; webhook handler refuses events.
+  // Pilot firms work without Stripe. (Step 23.)
   return makeAdaClients({
     databaseUrl,
     anthropicApiKey,
@@ -50,6 +54,7 @@ export function makeClientsFromEnv(): AdaClients {
     hopSecret,
     resendApiKey,
     resendFromAddress,
+    stripeSecretKey,
   });
 }
 
