@@ -373,6 +373,9 @@ export default function Chat() {
         ref={listRef}
         aria-live="polite"
         aria-label="Conversation with Ada"
+        data-session-id={state.sessionId ?? ''}
+        data-session-status={state.status}
+        data-busy={state.busy ? 'true' : 'false'}
         className="flex-1 overflow-y-auto space-y-4 pr-1"
       >
         {state.initializing && (
@@ -646,6 +649,8 @@ function MessageBubble({ message }: { message: import('@/app/hooks/useChatSessio
   const isUser = message.role === 'user';
   return (
     <div
+      data-role={isUser ? 'user' : 'assistant'}
+      data-message-id={message.id}
       className={
         'flex ' + (isUser ? 'justify-end' : 'justify-start')
       }
