@@ -14,8 +14,10 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 
 const NAV_ITEMS = [
   { to: '/admin/sessions', label: 'Sessions' },
+  { to: '/admin/intakes', label: 'Intakes' },
   { to: '/admin/firms', label: 'Firms' },
   { to: '/admin/listings', label: 'Listings' },
+  { to: '/admin/subscriptions', label: 'Subscriptions' },
   { to: '/admin/attorneys', label: 'Attorneys' },
   { to: '/admin/settings', label: 'Settings' },
   { to: '/admin/analytics', label: 'Analytics' },

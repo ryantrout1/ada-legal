@@ -23,6 +23,11 @@ import type {
   AdminFirmListResult,
   AdminListingListOptions,
   AdminListingListResult,
+  AdminSubscriptionListOptions,
+  AdminSubscriptionListResult,
+  AdminIntakeListOptions,
+  AdminIntakeListResult,
+  AdminIntakeListRow,
   AdminSessionListOptions,
   AdminSessionListResult,
   AdminSessionSummary,
@@ -676,6 +681,121 @@ export class InMemoryDbClient implements DbClient {
         const bAt = b.createdAt ?? '';
         return bAt.localeCompare(aAt);
       });
+  }
+
+  async listAllSubscriptionsForAdmin(
+    opts: AdminSubscriptionListOptions,
+  ): Promise<AdminSubscriptionListResult> {
+    const page = Math.max(1, opts.page ?? 1);
+    const pageSize = Math.min(100, Math.max(1, opts.pageSize ?? 50));
+
+    // Build firm id → (orgId, name) map, listing id → title map
+    const firmsById = new Map<string, LawFirmRow>();
+    for (const f of this.lawFirms) firmsById.set(f.id, f);
+    const listingsById = new Map<string, ListingRow>();
+    for (const l of this.listings) listingsById.set(l.id, l);
+
+    let rows = this.subscriptionRows.filter((s) => {
+      const firm = firmsById.get(s.lawFirmId);
+      return firm?.orgId === opts.orgId;
+    });
+    if (opts.lawFirmId) rows = rows.filter((s) => s.lawFirmId === opts.lawFirmId);
+    if (opts.status) rows = rows.filter((s) => s.status === opts.status);
+    if (opts.tier) rows = rows.filter((s) => s.tier === opts.tier);
+
+    rows.sort((a, b) => {
+      const aAt = a.createdAt ?? '';
+      const bAt = b.createdAt ?? '';
+      return bAt.localeCompare(aAt);
+    });
+
+    const totalCount = rows.length;
+    const start = (page - 1) * pageSize;
+    const paged = rows.slice(start, start + pageSize).map((s) => ({
+      subscription: { ...s },
+      lawFirmName: firmsById.get(s.lawFirmId)?.name ?? s.lawFirmId,
+      listingTitle: s.listingId
+        ? (listingsById.get(s.listingId)?.title ?? null)
+        : null,
+    }));
+
+    return {
+      subscriptions: paged,
+      totalCount,
+      page,
+      pageSize,
+    };
+  }
+
+  async listIntakesForAdmin(
+    opts: AdminIntakeListOptions,
+  ): Promise<AdminIntakeListResult> {
+    const page = Math.max(1, opts.page ?? 1);
+    const pageSize = Math.min(100, Math.max(1, opts.pageSize ?? 50));
+
+    const firmsById = new Map<string, LawFirmRow>();
+    for (const f of this.lawFirms) firmsById.set(f.id, f);
+    const listingsById = new Map<string, ListingRow>();
+    for (const l of this.listings) listingsById.set(l.id, l);
+
+    // Filter sessions: class_action_intake, scoped to org (via listing→firm→org)
+    let sessions = Array.from(this.sessions.values()).filter((s) => {
+      if (s.sessionType !== 'class_action_intake') return false;
+      if (s.orgId !== opts.orgId) return false;
+      if (!opts.includeTest && s.isTest) return false;
+      if (!s.listingId) return false;
+      return true;
+    });
+
+    if (opts.listingId) {
+      sessions = sessions.filter((s) => s.listingId === opts.listingId);
+    }
+    if (opts.lawFirmId) {
+      sessions = sessions.filter((s) => {
+        const listing = s.listingId ? listingsById.get(s.listingId) : null;
+        return listing?.lawFirmId === opts.lawFirmId;
+      });
+    }
+    if (opts.status) {
+      sessions = sessions.filter((s) => s.status === opts.status);
+    }
+    if (opts.outcome) {
+      sessions = sessions.filter(
+        (s) => s.metadata?.outcome === opts.outcome,
+      );
+    }
+
+    // Newest first; InMemory sessions don't always carry timestamps so
+    // fall back to sessionId for stable order.
+    sessions.sort((a, b) => b.sessionId.localeCompare(a.sessionId));
+
+    const totalCount = sessions.length;
+    const start = (page - 1) * pageSize;
+    const paged = sessions.slice(start, start + pageSize);
+
+    const intakes: AdminIntakeListRow[] = paged.map((s) => {
+      const listing = listingsById.get(s.listingId!);
+      const firm = listing ? firmsById.get(listing.lawFirmId) : null;
+      const metaOutcome = (s.metadata as Record<string, unknown>)?.outcome;
+      const outcome =
+        metaOutcome === 'qualified' || metaOutcome === 'disqualified'
+          ? metaOutcome
+          : null;
+      return {
+        sessionId: s.sessionId,
+        status: s.status,
+        lawFirmId: firm?.id ?? '',
+        lawFirmName: firm?.name ?? '(unknown firm)',
+        listingId: s.listingId!,
+        listingTitle: listing?.title ?? '(unknown listing)',
+        outcome,
+        isTest: s.isTest,
+        createdAt: '',
+        updatedAt: '',
+      };
+    });
+
+    return { intakes, totalCount, page, pageSize };
   }
 
   // ─── stripe_webhook_events (Step 23) ─────────────────────────────────────

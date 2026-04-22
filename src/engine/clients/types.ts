@@ -169,6 +169,77 @@ export interface AdminListingListResult {
   pageSize: number;
 }
 
+/**
+ * Options for listAllSubscriptionsForAdmin. orgId required for scoping
+ * via the firm join (subscriptions have law_firm_id but not org_id).
+ * Step 25 Commit 6.
+ */
+export interface AdminSubscriptionListOptions {
+  orgId: string;
+  lawFirmId?: string;
+  status?: 'active' | 'trialing' | 'past_due' | 'canceled' | 'unpaid';
+  tier?: 'basic' | 'premium';
+  page?: number;
+  pageSize?: number;
+}
+
+export interface AdminSubscriptionListRow {
+  subscription: SubscriptionRow;
+  /** Firm name resolved at query time for display in the table. */
+  lawFirmName: string;
+  /** Listing title if subscription is listing-scoped. */
+  listingTitle: string | null;
+}
+
+export interface AdminSubscriptionListResult {
+  subscriptions: AdminSubscriptionListRow[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
+/**
+ * Options for listIntakesForAdmin. orgId required. Filters are AND'd.
+ * Step 25 Commit 6.
+ */
+export interface AdminIntakeListOptions {
+  orgId: string;
+  /** Filter by firm (finds sessions where listing.lawFirmId matches). */
+  lawFirmId?: string;
+  /** Filter by listing directly. */
+  listingId?: string;
+  /** Filter by session status. */
+  status?: 'active' | 'completed' | 'abandoned';
+  /** Filter by outcome in metadata ('qualified' | 'disqualified'). */
+  outcome?: 'qualified' | 'disqualified';
+  /** Include is_test sessions (preview sandbox sessions). Default false. */
+  includeTest?: boolean;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface AdminIntakeListRow {
+  sessionId: string;
+  status: 'active' | 'completed' | 'abandoned';
+  lawFirmId: string;
+  lawFirmName: string;
+  listingId: string;
+  listingTitle: string;
+  /** From metadata.outcome; null until finalized. */
+  outcome: 'qualified' | 'disqualified' | null;
+  /** From metadata.handoff.is_test. */
+  isTest: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminIntakeListResult {
+  intakes: AdminIntakeListRow[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
 /** All fields required to create a new attorney row. */
 export interface CreateAttorneyInput {
   orgId: string;
@@ -361,6 +432,22 @@ export interface DbClient {
    * firm across all statuses. Ordered newest first. Step 25.
    */
   listSubscriptionsForFirm(lawFirmId: string): Promise<SubscriptionRow[]>;
+
+  /**
+   * Admin-side: list all subscriptions across every firm in the org,
+   * with optional filters + pagination. Used by /admin/subscriptions.
+   * Step 25 Commit 6.
+   */
+  listAllSubscriptionsForAdmin(
+    opts: AdminSubscriptionListOptions,
+  ): Promise<AdminSubscriptionListResult>;
+
+  /**
+   * Admin-side: list intake sessions (session_type='class_action_intake')
+   * with firm + listing names attached. Used by /admin/intakes.
+   * Step 25 Commit 6.
+   */
+  listIntakesForAdmin(opts: AdminIntakeListOptions): Promise<AdminIntakeListResult>;
 
   // ─── stripe_webhook_events (Step 23) ──────────────────────────────────────
   //

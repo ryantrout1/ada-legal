@@ -46,6 +46,11 @@ import type {
   AdminFirmListResult,
   AdminListingListOptions,
   AdminListingListResult,
+  AdminSubscriptionListOptions,
+  AdminSubscriptionListResult,
+  AdminIntakeListOptions,
+  AdminIntakeListResult,
+  AdminIntakeListRow,
   AdminSessionListOptions,
   AdminSessionListResult,
   AdminSessionSummary,
@@ -1162,6 +1167,147 @@ export class NeonDbClient implements DbClient {
       .where(eq(subscriptionsTable.lawFirmId, lawFirmId))
       .orderBy(sql`${subscriptionsTable.createdAt} DESC`);
     return rows.map(toSubscriptionRow);
+  }
+
+  async listAllSubscriptionsForAdmin(
+    opts: AdminSubscriptionListOptions,
+  ): Promise<AdminSubscriptionListResult> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 50;
+    const offset = (page - 1) * pageSize;
+
+    // Join through law_firms for org scoping; left join listings for title.
+    const conds = [eq(lawFirmsTable.orgId, opts.orgId)];
+    if (opts.lawFirmId)
+      conds.push(eq(subscriptionsTable.lawFirmId, opts.lawFirmId));
+    if (opts.status) conds.push(eq(subscriptionsTable.status, opts.status));
+    if (opts.tier) conds.push(eq(subscriptionsTable.tier, opts.tier));
+    const whereClause = and(...conds);
+
+    const countRows = await this.db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(subscriptionsTable)
+      .innerJoin(
+        lawFirmsTable,
+        eq(lawFirmsTable.id, subscriptionsTable.lawFirmId),
+      )
+      .where(whereClause);
+    const totalCount = countRows[0]?.n ?? 0;
+
+    const rows = await this.db
+      .select({
+        sub: subscriptionsTable,
+        firmName: lawFirmsTable.name,
+        listingTitle: listingsTable.title,
+      })
+      .from(subscriptionsTable)
+      .innerJoin(
+        lawFirmsTable,
+        eq(lawFirmsTable.id, subscriptionsTable.lawFirmId),
+      )
+      .leftJoin(
+        listingsTable,
+        eq(listingsTable.id, subscriptionsTable.listingId),
+      )
+      .where(whereClause)
+      .orderBy(sql`${subscriptionsTable.createdAt} DESC`)
+      .limit(pageSize)
+      .offset(offset);
+
+    return {
+      subscriptions: rows.map((r) => ({
+        subscription: toSubscriptionRow(r.sub),
+        lawFirmName: r.firmName,
+        listingTitle: r.listingTitle,
+      })),
+      totalCount,
+      page,
+      pageSize,
+    };
+  }
+
+  async listIntakesForAdmin(
+    opts: AdminIntakeListOptions,
+  ): Promise<AdminIntakeListResult> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 50;
+    const offset = (page - 1) * pageSize;
+
+    // Filter to class_action_intake + scope via listing->firm->org.
+    // listingId is non-null for class_action_intake so the INNER JOIN
+    // to listings is safe.
+    const conds = [
+      eq(adaSessions.sessionType, 'class_action_intake'),
+      eq(adaSessions.orgId, opts.orgId),
+    ];
+    if (!opts.includeTest) conds.push(eq(adaSessions.isTest, false));
+    if (opts.listingId) conds.push(eq(adaSessions.listingId, opts.listingId));
+    if (opts.lawFirmId) conds.push(eq(listingsTable.lawFirmId, opts.lawFirmId));
+    if (opts.status) conds.push(eq(adaSessions.status, opts.status));
+    if (opts.outcome) {
+      conds.push(sql`${adaSessions.metadata}->>'outcome' = ${opts.outcome}`);
+    }
+    const whereClause = and(...conds);
+
+    const countRows = await this.db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(adaSessions)
+      .innerJoin(listingsTable, eq(listingsTable.id, adaSessions.listingId))
+      .innerJoin(lawFirmsTable, eq(lawFirmsTable.id, listingsTable.lawFirmId))
+      .where(whereClause);
+    const totalCount = countRows[0]?.n ?? 0;
+
+    const rows = await this.db
+      .select({
+        sessionId: adaSessions.id,
+        status: adaSessions.status,
+        isTest: adaSessions.isTest,
+        listingId: adaSessions.listingId,
+        metadata: adaSessions.metadata,
+        createdAt: adaSessions.createdAt,
+        updatedAt: adaSessions.updatedAt,
+        lawFirmId: lawFirmsTable.id,
+        lawFirmName: lawFirmsTable.name,
+        listingTitle: listingsTable.title,
+      })
+      .from(adaSessions)
+      .innerJoin(listingsTable, eq(listingsTable.id, adaSessions.listingId))
+      .innerJoin(lawFirmsTable, eq(lawFirmsTable.id, listingsTable.lawFirmId))
+      .where(whereClause)
+      .orderBy(sql`${adaSessions.updatedAt} DESC`)
+      .limit(pageSize)
+      .offset(offset);
+
+    const intakes: AdminIntakeListRow[] = rows.map((r) => {
+      const metaOutcome = (r.metadata as Record<string, unknown> | null)
+        ?.outcome;
+      const outcome =
+        metaOutcome === 'qualified' || metaOutcome === 'disqualified'
+          ? metaOutcome
+          : null;
+      return {
+        sessionId: r.sessionId,
+        status: r.status as 'active' | 'completed' | 'abandoned',
+        lawFirmId: r.lawFirmId,
+        lawFirmName: r.lawFirmName,
+        listingId: r.listingId!,
+        listingTitle: r.listingTitle,
+        outcome,
+        isTest: r.isTest,
+        createdAt:
+          r.createdAt instanceof Date
+            ? r.createdAt.toISOString()
+            : String(r.createdAt ?? ''),
+        updatedAt:
+          r.updatedAt instanceof Date
+            ? r.updatedAt.toISOString()
+            : String(r.updatedAt ?? ''),
+      };
+    });
+
+    return { intakes, totalCount, page, pageSize };
   }
 
   // ─── stripe_webhook_events (Step 23) ─────────────────────────────────────

@@ -42,6 +42,8 @@ import AdminListings from './routes/admin/AdminListings.js';
 import AdminListingEdit from './routes/admin/AdminListingEdit.js';
 import AdminListingConfigEdit from './routes/admin/AdminListingConfigEdit.js';
 import AdminListingPreview from './routes/admin/AdminListingPreview.js';
+import AdminSubscriptions from './routes/admin/AdminSubscriptions.js';
+import AdminIntakes from './routes/admin/AdminIntakes.js';
 import AdminSettings from './routes/admin/AdminSettings.js';
 import AdminAnalytics from './routes/admin/AdminAnalytics.js';
 import RequireAdmin from './components/RequireAdmin.js';
@@ -103,6 +105,8 @@ function AdminShell() {
             path="listings/:id/preview"
             element={<AdminListingPreview />}
           />
+          <Route path="subscriptions" element={<AdminSubscriptions />} />
+          <Route path="intakes" element={<AdminIntakes />} />
           <Route path="settings" element={<AdminSettings />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="*" element={<Navigate to="/admin/sessions" replace />} />
