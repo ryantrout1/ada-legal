@@ -29,6 +29,12 @@ import {
   sessionQualityChecks,
   systemSettings,
 } from '../../db/schema-core.js';
+import {
+  lawFirms as lawFirmsTable,
+  listings as listingsTable,
+  listingConfigs as listingConfigsTable,
+  subscriptions as subscriptionsTable,
+} from '../../db/schema-ch1.js';
 import type {
   AdminAnalyticsOptions,
   AdminAnalyticsResult,
@@ -55,6 +61,12 @@ import type {
   SessionWriteOptions,
   UpdateAttorneyInput,
   WriteSessionPackageOptions,
+  LawFirmRow,
+  ListingRow,
+  ListingConfigRow,
+  SubscriptionRow,
+  ListActiveListingsOptions,
+  ActiveListingRow,
 } from './types.js';
 import type { AdaSessionState } from '../types.js';
 import type {
@@ -832,6 +844,324 @@ export class NeonDbClient implements DbClient {
       expiresAt: r.expiresAt ? r.expiresAt.toISOString() : null,
     };
   }
+
+  // ─── Ch1 — law firms, listings, subscriptions (Step 19) ──────────────────
+
+  async writeLawFirm(row: LawFirmRow): Promise<void> {
+    await this.db
+      .insert(lawFirmsTable)
+      .values({
+        id: row.id,
+        orgId: row.orgId,
+        name: row.name,
+        primaryContact: row.primaryContact,
+        email: row.email,
+        phone: row.phone,
+        stripeCustomerId: row.stripeCustomerId,
+        status: row.status,
+      })
+      .onConflictDoUpdate({
+        target: lawFirmsTable.id,
+        set: {
+          name: row.name,
+          primaryContact: row.primaryContact,
+          email: row.email,
+          phone: row.phone,
+          stripeCustomerId: row.stripeCustomerId,
+          status: row.status,
+          updatedAt: new Date(),
+        },
+      });
+  }
+
+  async readLawFirmById(id: string): Promise<LawFirmRow | null> {
+    const rows = await this.db
+      .select()
+      .from(lawFirmsTable)
+      .where(eq(lawFirmsTable.id, id))
+      .limit(1);
+    const r = rows[0];
+    if (!r) return null;
+    return toLawFirmRow(r);
+  }
+
+  async writeListing(row: ListingRow): Promise<void> {
+    await this.db
+      .insert(listingsTable)
+      .values({
+        id: row.id,
+        lawFirmId: row.lawFirmId,
+        title: row.title,
+        slug: row.slug,
+        category: row.category,
+        shortDescription: row.shortDescription,
+        fullDescription: row.fullDescription,
+        eligibilitySummary: row.eligibilitySummary,
+        status: row.status,
+        tier: row.tier,
+      })
+      .onConflictDoUpdate({
+        target: listingsTable.id,
+        set: {
+          lawFirmId: row.lawFirmId,
+          title: row.title,
+          slug: row.slug,
+          category: row.category,
+          shortDescription: row.shortDescription,
+          fullDescription: row.fullDescription,
+          eligibilitySummary: row.eligibilitySummary,
+          status: row.status,
+          tier: row.tier,
+          updatedAt: new Date(),
+        },
+      });
+  }
+
+  async readListingBySlug(slug: string): Promise<ListingRow | null> {
+    const rows = await this.db
+      .select()
+      .from(listingsTable)
+      .where(eq(listingsTable.slug, slug))
+      .limit(1);
+    const r = rows[0];
+    if (!r) return null;
+    return toListingRow(r);
+  }
+
+  async readListingById(id: string): Promise<ListingRow | null> {
+    const rows = await this.db
+      .select()
+      .from(listingsTable)
+      .where(eq(listingsTable.id, id))
+      .limit(1);
+    const r = rows[0];
+    if (!r) return null;
+    return toListingRow(r);
+  }
+
+  async writeListingConfig(row: ListingConfigRow): Promise<void> {
+    // listing_configs has a UNIQUE constraint on listing_id, so we
+    // upsert on that column — multiple rows per listing aren't allowed.
+    await this.db
+      .insert(listingConfigsTable)
+      .values({
+        id: row.id,
+        listingId: row.listingId,
+        caseDescription: row.caseDescription,
+        eligibilityCriteria: row.eligibilityCriteria as never,
+        requiredFields: row.requiredFields as never,
+        disqualifyingConditions: row.disqualifyingConditions,
+        adaPromptOverride: row.adaPromptOverride,
+      })
+      .onConflictDoUpdate({
+        target: listingConfigsTable.listingId,
+        set: {
+          caseDescription: row.caseDescription,
+          eligibilityCriteria: row.eligibilityCriteria as never,
+          requiredFields: row.requiredFields as never,
+          disqualifyingConditions: row.disqualifyingConditions,
+          adaPromptOverride: row.adaPromptOverride,
+          updatedAt: new Date(),
+        },
+      });
+  }
+
+  async readListingConfigForListing(
+    listingId: string,
+  ): Promise<ListingConfigRow | null> {
+    const rows = await this.db
+      .select()
+      .from(listingConfigsTable)
+      .where(eq(listingConfigsTable.listingId, listingId))
+      .limit(1);
+    const r = rows[0];
+    if (!r) return null;
+    return {
+      id: r.id,
+      listingId: r.listingId,
+      caseDescription: r.caseDescription,
+      eligibilityCriteria: (r.eligibilityCriteria ?? []) as unknown[],
+      requiredFields: (r.requiredFields ?? []) as unknown[],
+      disqualifyingConditions: (r.disqualifyingConditions ?? []) as string[],
+      adaPromptOverride: r.adaPromptOverride,
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
+    };
+  }
+
+  async writeSubscription(row: SubscriptionRow): Promise<void> {
+    await this.db
+      .insert(subscriptionsTable)
+      .values({
+        id: row.id,
+        lawFirmId: row.lawFirmId,
+        listingId: row.listingId,
+        stripeSubscriptionId: row.stripeSubscriptionId,
+        tier: row.tier,
+        status: row.status,
+        currentPeriodEnd: row.currentPeriodEnd ? new Date(row.currentPeriodEnd) : null,
+        cancelAtPeriodEnd: row.cancelAtPeriodEnd,
+      })
+      .onConflictDoUpdate({
+        target: subscriptionsTable.id,
+        set: {
+          lawFirmId: row.lawFirmId,
+          listingId: row.listingId,
+          stripeSubscriptionId: row.stripeSubscriptionId,
+          tier: row.tier,
+          status: row.status,
+          currentPeriodEnd: row.currentPeriodEnd ? new Date(row.currentPeriodEnd) : null,
+          cancelAtPeriodEnd: row.cancelAtPeriodEnd,
+          updatedAt: new Date(),
+        },
+      });
+  }
+
+  async readSubscriptionById(id: string): Promise<SubscriptionRow | null> {
+    const rows = await this.db
+      .select()
+      .from(subscriptionsTable)
+      .where(eq(subscriptionsTable.id, id))
+      .limit(1);
+    const r = rows[0];
+    if (!r) return null;
+    return toSubscriptionRow(r);
+  }
+
+  async listActiveListings(
+    opts: ListActiveListingsOptions = {},
+  ): Promise<ActiveListingRow[]> {
+    // Query v_active_listings directly with raw SQL — the view
+    // definition lives in migration 0004 and is the authoritative
+    // answer to "which listings are live right now".
+    const result = await this.db.execute<{
+      listing_id: string;
+      slug: string;
+      title: string;
+      category: string;
+      tier: string;
+      short_description: string | null;
+      full_description: string | null;
+      eligibility_summary: string | null;
+      law_firm_id: string;
+      law_firm_name: string;
+      subscription_id: string;
+      subscription_tier: string;
+      current_period_end: Date | null;
+    }>(sql`
+      SELECT *
+      FROM v_active_listings
+      WHERE 1=1
+        ${opts.category ? sql`AND category = ${opts.category}` : sql``}
+        ${opts.lawFirmId ? sql`AND law_firm_id = ${opts.lawFirmId}` : sql``}
+    `);
+
+    // Drizzle's execute returns a driver-shaped result; normalize to
+    // the common array form.
+    const rows = Array.isArray(result) ? result : (result as { rows?: unknown[] }).rows ?? [];
+    return (rows as Array<Record<string, unknown>>).map((r) => ({
+      listingId: r.listing_id as string,
+      slug: r.slug as string,
+      title: r.title as string,
+      category: r.category as string,
+      tier: r.tier as string,
+      shortDescription: (r.short_description ?? null) as string | null,
+      fullDescription: (r.full_description ?? null) as string | null,
+      eligibilitySummary: (r.eligibility_summary ?? null) as string | null,
+      lawFirmId: r.law_firm_id as string,
+      lawFirmName: r.law_firm_name as string,
+      subscriptionId: r.subscription_id as string,
+      subscriptionTier: r.subscription_tier as string,
+      currentPeriodEnd:
+        r.current_period_end instanceof Date
+          ? r.current_period_end.toISOString()
+          : (r.current_period_end as string | null),
+    }));
+  }
+}
+
+// ─── Ch1 row mappers ──────────────────────────────────────────────────────────
+
+function toLawFirmRow(r: {
+  id: string;
+  orgId: string;
+  name: string;
+  primaryContact: string | null;
+  email: string | null;
+  phone: string | null;
+  stripeCustomerId: string | null;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}): LawFirmRow {
+  return {
+    id: r.id,
+    orgId: r.orgId,
+    name: r.name,
+    primaryContact: r.primaryContact,
+    email: r.email,
+    phone: r.phone,
+    stripeCustomerId: r.stripeCustomerId,
+    status: r.status as LawFirmRow['status'],
+    createdAt: r.createdAt.toISOString(),
+    updatedAt: r.updatedAt.toISOString(),
+  };
+}
+
+function toListingRow(r: {
+  id: string;
+  lawFirmId: string;
+  title: string;
+  slug: string;
+  category: string;
+  shortDescription: string | null;
+  fullDescription: string | null;
+  eligibilitySummary: string | null;
+  status: string;
+  tier: string;
+  createdAt: Date;
+  updatedAt: Date;
+}): ListingRow {
+  return {
+    id: r.id,
+    lawFirmId: r.lawFirmId,
+    title: r.title,
+    slug: r.slug,
+    category: r.category,
+    shortDescription: r.shortDescription,
+    fullDescription: r.fullDescription,
+    eligibilitySummary: r.eligibilitySummary,
+    status: r.status as ListingRow['status'],
+    tier: r.tier as ListingRow['tier'],
+    createdAt: r.createdAt.toISOString(),
+    updatedAt: r.updatedAt.toISOString(),
+  };
+}
+
+function toSubscriptionRow(r: {
+  id: string;
+  lawFirmId: string;
+  listingId: string | null;
+  stripeSubscriptionId: string | null;
+  tier: string;
+  status: string;
+  currentPeriodEnd: Date | null;
+  cancelAtPeriodEnd: boolean | null;
+  createdAt: Date;
+  updatedAt: Date;
+}): SubscriptionRow {
+  return {
+    id: r.id,
+    lawFirmId: r.lawFirmId,
+    listingId: r.listingId,
+    stripeSubscriptionId: r.stripeSubscriptionId,
+    tier: r.tier as SubscriptionRow['tier'],
+    status: r.status as SubscriptionRow['status'],
+    currentPeriodEnd: r.currentPeriodEnd ? r.currentPeriodEnd.toISOString() : null,
+    cancelAtPeriodEnd: !!r.cancelAtPeriodEnd,
+    createdAt: r.createdAt.toISOString(),
+    updatedAt: r.updatedAt.toISOString(),
+  };
 }
 
 // ─── KB helpers ──────────────────────────────────────────────────────────────

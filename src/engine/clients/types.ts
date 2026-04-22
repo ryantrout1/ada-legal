@@ -236,6 +236,132 @@ export interface DbClient {
    * session.
    */
   readLatestSessionPackageForSession(sessionId: string): Promise<SessionPackageRow | null>;
+
+  // ─── Ch1 — law firms, listings, subscriptions (Step 19) ──────────────────
+  //
+  // Minimal CRUD surface needed for Steps 20-24 (match_listing tool,
+  // routing engine, Stripe billing, attorney handoff). The full admin
+  // surface ships with Step 25. Writes are idempotent on the natural
+  // key (slug for listings, stripeSubscriptionId for subscriptions) so
+  // seed + test flows don't need delete-first.
+
+  /**
+   * Insert or update a law firm. `id` is required; callers generate it
+   * (via crypto.randomUUID) so they know what to reference as FK in
+   * listings created in the same flow.
+   */
+  writeLawFirm(row: LawFirmRow): Promise<void>;
+  /** Read a law firm by id. Null for unknown. */
+  readLawFirmById(id: string): Promise<LawFirmRow | null>;
+
+  /** Insert or update a listing (keyed by id; slug is separately unique). */
+  writeListing(row: ListingRow): Promise<void>;
+  /** Read a listing by its public slug. Null for unknown. */
+  readListingBySlug(slug: string): Promise<ListingRow | null>;
+  /** Read a listing by id. Null for unknown. */
+  readListingById(id: string): Promise<ListingRow | null>;
+
+  /** Insert or update a listing_config (one-to-one with listing). */
+  writeListingConfig(row: ListingConfigRow): Promise<void>;
+  /** Read the config attached to a listing, if any. */
+  readListingConfigForListing(listingId: string): Promise<ListingConfigRow | null>;
+
+  /**
+   * Insert or update a subscription. stripeSubscriptionId is unique; a
+   * second call with the same id updates the existing row (used when
+   * Stripe webhooks replay).
+   */
+  writeSubscription(row: SubscriptionRow): Promise<void>;
+  readSubscriptionById(id: string): Promise<SubscriptionRow | null>;
+
+  /**
+   * Read from v_active_listings. Returns rows where listing.status =
+   * 'published' AND firm.status = 'active' AND subscription is active
+   * AND not past current_period_end. See migration 0004.
+   *
+   * Multiple subscriptions for the same listing produce multiple rows;
+   * callers are expected to DISTINCT ON listing_id if they want a
+   * single row per listing.
+   */
+  listActiveListings(opts?: ListActiveListingsOptions): Promise<ActiveListingRow[]>;
+}
+
+// ─── Ch1 row shapes ───────────────────────────────────────────────────────────
+
+export interface LawFirmRow {
+  id: string;
+  orgId: string;
+  name: string;
+  primaryContact: string | null;
+  email: string | null;
+  phone: string | null;
+  stripeCustomerId: string | null;
+  status: 'active' | 'suspended' | 'churned';
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ListingRow {
+  id: string;
+  lawFirmId: string;
+  title: string;
+  slug: string;
+  category: string;
+  shortDescription: string | null;
+  fullDescription: string | null;
+  eligibilitySummary: string | null;
+  status: 'draft' | 'published' | 'archived';
+  tier: 'basic' | 'premium';
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ListingConfigRow {
+  id: string;
+  listingId: string;
+  caseDescription: string;
+  eligibilityCriteria: unknown[];
+  requiredFields: unknown[];
+  disqualifyingConditions: string[];
+  adaPromptOverride: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface SubscriptionRow {
+  id: string;
+  lawFirmId: string;
+  listingId: string | null;
+  stripeSubscriptionId: string | null;
+  tier: 'basic' | 'premium';
+  status: 'active' | 'trialing' | 'past_due' | 'canceled' | 'unpaid';
+  currentPeriodEnd: string | null;
+  cancelAtPeriodEnd: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ListActiveListingsOptions {
+  /** Optional category filter (exact match). */
+  category?: string;
+  /** Optional law firm filter. */
+  lawFirmId?: string;
+}
+
+export interface ActiveListingRow {
+  listingId: string;
+  slug: string;
+  title: string;
+  category: string;
+  tier: string;
+  shortDescription: string | null;
+  fullDescription: string | null;
+  eligibilitySummary: string | null;
+  lawFirmId: string;
+  lawFirmName: string;
+  subscriptionId: string;
+  subscriptionTier: string;
+  currentPeriodEnd: string | null;
 }
 
 export interface WriteSessionPackageOptions {

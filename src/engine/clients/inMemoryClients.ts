@@ -55,6 +55,12 @@ import type {
   SessionPackageRow,
   UpdateAttorneyInput,
   WriteSessionPackageOptions,
+  LawFirmRow,
+  ListingRow,
+  ListingConfigRow,
+  SubscriptionRow,
+  ListActiveListingsOptions,
+  ActiveListingRow,
 } from './types.js';
 
 // ─── AI ───────────────────────────────────────────────────────────────────────
@@ -508,6 +514,105 @@ export class InMemoryDbClient implements DbClient {
       (a, b) => new Date(b.generatedAt).getTime() - new Date(a.generatedAt).getTime(),
     );
     return matches[0]!;
+  }
+
+  // ─── Ch1 (Step 19) ───────────────────────────────────────────────────────
+
+  public readonly lawFirms: LawFirmRow[] = [];
+  public readonly listings: ListingRow[] = [];
+  public readonly listingConfigs: ListingConfigRow[] = [];
+  public readonly subscriptionRows: SubscriptionRow[] = [];
+
+  async writeLawFirm(row: LawFirmRow): Promise<void> {
+    const idx = this.lawFirms.findIndex((f) => f.id === row.id);
+    if (idx >= 0) this.lawFirms[idx] = { ...row };
+    else this.lawFirms.push({ ...row });
+  }
+
+  async readLawFirmById(id: string): Promise<LawFirmRow | null> {
+    return this.lawFirms.find((f) => f.id === id) ?? null;
+  }
+
+  async writeListing(row: ListingRow): Promise<void> {
+    const idx = this.listings.findIndex((l) => l.id === row.id);
+    if (idx >= 0) this.listings[idx] = { ...row };
+    else this.listings.push({ ...row });
+  }
+
+  async readListingBySlug(slug: string): Promise<ListingRow | null> {
+    return this.listings.find((l) => l.slug === slug) ?? null;
+  }
+
+  async readListingById(id: string): Promise<ListingRow | null> {
+    return this.listings.find((l) => l.id === id) ?? null;
+  }
+
+  async writeListingConfig(row: ListingConfigRow): Promise<void> {
+    const idx = this.listingConfigs.findIndex((c) => c.id === row.id);
+    if (idx >= 0) this.listingConfigs[idx] = { ...row };
+    else this.listingConfigs.push({ ...row });
+  }
+
+  async readListingConfigForListing(
+    listingId: string,
+  ): Promise<ListingConfigRow | null> {
+    return this.listingConfigs.find((c) => c.listingId === listingId) ?? null;
+  }
+
+  async writeSubscription(row: SubscriptionRow): Promise<void> {
+    const idx = this.subscriptionRows.findIndex((s) => s.id === row.id);
+    if (idx >= 0) this.subscriptionRows[idx] = { ...row };
+    else this.subscriptionRows.push({ ...row });
+  }
+
+  async readSubscriptionById(id: string): Promise<SubscriptionRow | null> {
+    return this.subscriptionRows.find((s) => s.id === id) ?? null;
+  }
+
+  async listActiveListings(
+    opts: ListActiveListingsOptions = {},
+  ): Promise<ActiveListingRow[]> {
+    // Mirrors the v_active_listings view definition. Keep this in sync
+    // with migration 0004.
+    const now = Date.now();
+    const result: ActiveListingRow[] = [];
+    for (const listing of this.listings) {
+      if (listing.status !== 'published') continue;
+      if (opts.category && listing.category !== opts.category) continue;
+      if (opts.lawFirmId && listing.lawFirmId !== opts.lawFirmId) continue;
+
+      const firm = this.lawFirms.find((f) => f.id === listing.lawFirmId);
+      if (!firm || firm.status !== 'active') continue;
+
+      // Match any active/trialing subscription not past period_end.
+      const activeSubs = this.subscriptionRows.filter((s) => {
+        if (s.listingId !== listing.id) return false;
+        if (s.status !== 'active' && s.status !== 'trialing') return false;
+        if (s.currentPeriodEnd && new Date(s.currentPeriodEnd).getTime() <= now) {
+          return false;
+        }
+        return true;
+      });
+
+      for (const sub of activeSubs) {
+        result.push({
+          listingId: listing.id,
+          slug: listing.slug,
+          title: listing.title,
+          category: listing.category,
+          tier: listing.tier,
+          shortDescription: listing.shortDescription,
+          fullDescription: listing.fullDescription,
+          eligibilitySummary: listing.eligibilitySummary,
+          lawFirmId: firm.id,
+          lawFirmName: firm.name,
+          subscriptionId: sub.id,
+          subscriptionTier: sub.tier,
+          currentPeriodEnd: sub.currentPeriodEnd,
+        });
+      }
+    }
+    return result;
   }
 }
 
