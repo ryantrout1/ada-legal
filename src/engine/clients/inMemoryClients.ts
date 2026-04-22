@@ -19,6 +19,8 @@ import type {
   AdminAnalyticsResult,
   AdminAttorneyListOptions,
   AdminAttorneyListResult,
+  AdminFirmListOptions,
+  AdminFirmListResult,
   AdminSessionListOptions,
   AdminSessionListResult,
   AdminSessionSummary,
@@ -534,6 +536,42 @@ export class InMemoryDbClient implements DbClient {
 
   async readLawFirmById(id: string): Promise<LawFirmRow | null> {
     return this.lawFirms.find((f) => f.id === id) ?? null;
+  }
+
+  async listFirmsForAdmin(
+    opts: AdminFirmListOptions,
+  ): Promise<AdminFirmListResult> {
+    const page = Math.max(1, opts.page ?? 1);
+    const pageSize = Math.min(100, Math.max(1, opts.pageSize ?? 50));
+    const searchLower = opts.search?.trim().toLowerCase();
+
+    let rows = this.lawFirms.filter((f) => f.orgId === opts.orgId);
+    if (opts.status !== undefined) {
+      rows = rows.filter((f) => f.status === opts.status);
+    }
+    if (opts.isPilot !== undefined) {
+      rows = rows.filter((f) => f.isPilot === opts.isPilot);
+    }
+    if (searchLower) {
+      rows = rows.filter(
+        (f) =>
+          f.name.toLowerCase().includes(searchLower) ||
+          (f.primaryContact?.toLowerCase().includes(searchLower) ?? false),
+      );
+    }
+    // Deterministic order: newest first when createdAt present,
+    // otherwise name ASC. In-memory rows may not have timestamps.
+    rows.sort((a, b) => {
+      const aAt = a.createdAt ?? '';
+      const bAt = b.createdAt ?? '';
+      if (aAt && bAt) return bAt.localeCompare(aAt);
+      return a.name.localeCompare(b.name);
+    });
+
+    const totalCount = rows.length;
+    const start = (page - 1) * pageSize;
+    const paged = rows.slice(start, start + pageSize).map((f) => ({ ...f }));
+    return { firms: paged, totalCount, page, pageSize };
   }
 
   async writeListing(row: ListingRow): Promise<void> {

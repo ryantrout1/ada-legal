@@ -42,6 +42,8 @@ import type {
   AdminAnalyticsResult,
   AdminAttorneyListOptions,
   AdminAttorneyListResult,
+  AdminFirmListOptions,
+  AdminFirmListResult,
   AdminSessionListOptions,
   AdminSessionListResult,
   AdminSessionSummary,
@@ -890,6 +892,52 @@ export class NeonDbClient implements DbClient {
     const r = rows[0];
     if (!r) return null;
     return toLawFirmRow(r);
+  }
+
+  async listFirmsForAdmin(
+    opts: AdminFirmListOptions,
+  ): Promise<AdminFirmListResult> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 50;
+    const offset = (page - 1) * pageSize;
+
+    const conds = [eq(lawFirmsTable.orgId, opts.orgId)];
+    if (opts.status) conds.push(eq(lawFirmsTable.status, opts.status));
+    if (opts.isPilot !== undefined) {
+      conds.push(eq(lawFirmsTable.isPilot, opts.isPilot));
+    }
+    if (opts.search && opts.search.trim()) {
+      const term = `%${opts.search.trim()}%`;
+      conds.push(
+        or(
+          ilike(lawFirmsTable.name, term),
+          ilike(lawFirmsTable.primaryContact, term),
+        )!,
+      );
+    }
+    const whereClause = and(...conds);
+
+    const countRows = await this.db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(lawFirmsTable)
+      .where(whereClause);
+    const totalCount = countRows[0]?.n ?? 0;
+
+    const rows = await this.db
+      .select()
+      .from(lawFirmsTable)
+      .where(whereClause)
+      .orderBy(sql`${lawFirmsTable.createdAt} DESC`)
+      .limit(pageSize)
+      .offset(offset);
+
+    return {
+      firms: rows.map(toLawFirmRow),
+      totalCount,
+      page,
+      pageSize,
+    };
   }
 
   async writeListing(row: ListingRow): Promise<void> {

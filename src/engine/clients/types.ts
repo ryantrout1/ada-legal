@@ -115,6 +115,33 @@ export interface AdminAttorneyListResult {
   pageSize: number;
 }
 
+/**
+ * Options for listFirmsForAdmin. All filters optional; the empty
+ * options object returns every firm in the org paginated.
+ * Step 25.
+ */
+export interface AdminFirmListOptions {
+  /** Scoping org. Required — admin can only list firms in their org. */
+  orgId: string;
+  /** Filter by firm status (active | suspended | churned). Omit for all. */
+  status?: 'active' | 'suspended' | 'churned';
+  /** Filter by pilot flag. Omit for all. */
+  isPilot?: boolean;
+  /** Substring search on firm name or primary contact. Case-insensitive. */
+  search?: string;
+  /** 1-based page. Default 1. */
+  page?: number;
+  /** Rows per page, 1..100. Default 50. */
+  pageSize?: number;
+}
+
+export interface AdminFirmListResult {
+  firms: LawFirmRow[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
 /** All fields required to create a new attorney row. */
 export interface CreateAttorneyInput {
   orgId: string;
@@ -253,6 +280,13 @@ export interface DbClient {
   writeLawFirm(row: LawFirmRow): Promise<void>;
   /** Read a law firm by id. Null for unknown. */
   readLawFirmById(id: string): Promise<LawFirmRow | null>;
+
+  /**
+   * Admin-side: list law firms with optional filters + pagination.
+   * Filters are AND'd. A firm matches when every provided filter
+   * matches. Empty/missing filters are ignored. Step 25.
+   */
+  listFirmsForAdmin(opts: AdminFirmListOptions): Promise<AdminFirmListResult>;
 
   /** Insert or update a listing (keyed by id; slug is separately unique). */
   writeListing(row: ListingRow): Promise<void>;
