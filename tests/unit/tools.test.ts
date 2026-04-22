@@ -60,6 +60,7 @@ describe('set_classification', () => {
       tier: 'high',
       reasoning: 'restaurant refused to seat service dog',
       standard: '28 CFR §36.302(c)',
+      class_action_candidate: null,
     });
   });
 
@@ -104,8 +105,59 @@ describe('set_classification', () => {
         tier: 'medium',
         reasoning: 'city office denied accommodation',
         standard: '28 CFR §35.130',
+        class_action_candidate: null,
       });
     }
+  });
+
+  // ─── Step 18: expanded classification taxonomy ───────────────────────────
+
+  it('accepts out_of_scope classification', () => {
+    const input = tool.validateInput({
+      title: 'out_of_scope',
+      tier: 'high',
+      reasoning: 'consumer complaint, not a disability issue',
+      standard: 'state consumer protection act',
+    });
+    expect(input.title).toBe('out_of_scope');
+    expect(input.class_action_candidate).toBeNull();
+  });
+
+  it('accepts class_action classification with a candidate slug', () => {
+    const input = tool.validateInput({
+      title: 'class_action',
+      tier: 'medium',
+      reasoning: 'matches the hotel booking fraud pattern',
+      standard: 'n/a',
+      class_action_candidate: 'hotel-booking-fraud-2025',
+    });
+    expect(input.title).toBe('class_action');
+    expect(input.class_action_candidate).toBe('hotel-booking-fraud-2025');
+  });
+
+  it('accepts class_action classification without a candidate slug', () => {
+    // In Step 18 the registry is not live; Ada may flag class_action
+    // without a specific candidate.
+    const input = tool.validateInput({
+      title: 'class_action',
+      tier: 'low',
+      reasoning: 'pattern suggests multi-plaintiff; no registered class yet',
+      standard: 'n/a',
+    });
+    expect(input.title).toBe('class_action');
+    expect(input.class_action_candidate).toBeNull();
+  });
+
+  it('rejects non-string class_action_candidate', () => {
+    expect(() =>
+      tool.validateInput({
+        title: 'class_action',
+        tier: 'high',
+        reasoning: 'x',
+        standard: 'n/a',
+        class_action_candidate: 42,
+      }),
+    ).toThrow(/class_action_candidate/);
   });
 });
 

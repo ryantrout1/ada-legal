@@ -52,7 +52,14 @@ export interface ExtractedField {
 
 export type ExtractedFields = Record<string, ExtractedField>;
 
-export type AdaTitle = 'I' | 'II' | 'III' | 'none';
+export type AdaTitle =
+  | 'I'             // Employment — EEOC jurisdiction
+  | 'II'            // State / local government
+  | 'III'           // Public accommodation (private business)
+  | 'class_action'  // Matches pattern of an active class action (Phase D populates candidate registry)
+  | 'out_of_scope'  // Not ADA-covered, but Ada still documents and refers out
+  | 'none';         // Legacy value: no ADA issue identified (prefer 'out_of_scope' going forward)
+
 export type ConfidenceTier = 'high' | 'medium' | 'low';
 
 export interface Classification {
@@ -60,6 +67,13 @@ export interface Classification {
   tier: ConfidenceTier;
   reasoning: string;
   standard: string; // cited section, e.g. '§404.2.3' or '28 CFR §35.130'
+  /**
+   * When title === 'class_action', the slug of the matched class action
+   * in the class_actions registry (Phase D, Step 26). Always null in
+   * Step 18 — the registry does not yet exist. Reserved now so the
+   * schema is stable when the registry ships.
+   */
+  class_action_candidate?: string | null;
 }
 
 // ─── observability ────────────────────────────────────────────────────────────
