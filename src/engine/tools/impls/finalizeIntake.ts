@@ -7,42 +7,48 @@
  * intake — it validates completeness and transitions the session to
  * 'completed' with an outcome recorded.
  *
- * Step 20 scope (what this commit delivers):
- *   - Hard gates: session must be bound to a listing, all listing
- *     required_fields must be present in extracted_fields
- *   - Outcome metadata written (qualified | disqualified)
- *   - Session transitions to 'completed'
- *   - Package generation for the attorney still runs through the
- *     existing package assembler (Step 18) — no changes there
- *
- * Explicitly NOT in Step 20 scope:
- *   - Email delivery to the firm (Step 24: Attorney package handoff)
- *   - Email delivery to the user (Step 24)
- *   - confirm_summary gate (the confirm_summary tool itself doesn't
- *     ship until a later step; for Step 20 we rely on Ada's prompt
- *     discipline)
+ * Step 24 adds the email handoff on top of the Step 20 base:
+ *   - Assemble an AttorneyPackage from session + listing + firm + config
+ *   - For qualified intakes: render + upload transcript PDF, send firm email
+ *   - For all intakes: send user confirmation email (no transcript link)
+ *   - Emails fail soft — a Resend outage won't block the session from
+ *     completing. The structured_output + metadata.outcome are the
+ *     source-of-truth for "the handoff happened".
  *
  * Two outcomes:
  *
  *   qualified=true
  *     - All required_fields present
  *     - Session completes with metadata.outcome='qualified'
- *     - Step 24 will later trigger a firm email from this state
+ *     - Firm email fires (with transcript link)
+ *     - User confirmation email fires
  *
  *   qualified=false
  *     - Ada explicitly tells us the user doesn't meet the listing's
  *       eligibility (e.g. jurisdiction mismatch, timing, etc.)
  *     - disqualifying_reason is required (Ada supplies it)
  *     - Session completes with metadata.outcome='disqualified'
- *     - No firm email ever, even after Step 24
+ *     - NO firm email
+ *     - User email fires with the disqualified copy + reason
  *     - The user still gets the summary page (Step 18) — it just
  *       won't include a firm handoff card
  *
- * Ref: Step 20, Commit 1.
+ * Idempotency: if the session is already completed when finalize_intake
+ * runs, it's a no-op. The first finalize wins; a second call (from a
+ * retry or a bug) returns a success-shaped result without re-sending
+ * emails or re-generating the PDF.
+ *
+ * Ref: Step 20 (base) + Step 24 (email + PDF handoff).
  */
 
 import type { AdaTool, ToolResult, ToolExecuteContext } from '../types.js';
 import type { FieldSpec } from '../../../types/db.js';
+import { assembleAttorneyPackage } from '../../handoff/attorneyPackage.js';
+import {
+  renderFirmEmail,
+  renderUserEmail,
+} from '../../handoff/emailTemplates.js';
+import { renderAndUploadTranscript } from '../../handoff/transcriptPdf.js';
 
 interface FinalizeIntakeInput {
   qualified: boolean;
@@ -107,6 +113,20 @@ export const finalizeIntakeTool: AdaTool<FinalizeIntakeInput> = {
     };
   },
   async execute(ctx: ToolExecuteContext, input): Promise<ToolResult> {
+    // Idempotency guard: if the session is already completed, don't
+    // re-send emails. Return a success-shaped result so the model's
+    // tool-result handler doesn't trip.
+    if (ctx.state.status === 'completed') {
+      return {
+        ok: true,
+        content: {
+          finalized: true,
+          already_finalized: true,
+          outcome: ctx.state.metadata.outcome ?? 'unknown',
+        },
+      };
+    }
+
     // Gate 1: session must be bound to a listing.
     if (!ctx.state.listingId) {
       return {
@@ -127,16 +147,16 @@ export const finalizeIntakeTool: AdaTool<FinalizeIntakeInput> = {
     // disqualifying, she doesn't need to have finished the intake;
     // in fact asking the user to answer more questions they'd have
     // been disqualified on would be cruel and pointless.
+    const config = await ctx.clients.db.readListingConfigForListing(
+      ctx.state.listingId,
+    );
+    if (!config) {
+      return {
+        ok: false,
+        error: `No ListingConfig found for listing ${ctx.state.listingId}. The firm has not finished setting up this listing.`,
+      };
+    }
     if (input.qualified) {
-      const config = await ctx.clients.db.readListingConfigForListing(
-        ctx.state.listingId,
-      );
-      if (!config) {
-        return {
-          ok: false,
-          error: `No ListingConfig found for listing ${ctx.state.listingId}. The firm has not finished setting up this listing.`,
-        };
-      }
       const requiredFields = (config.requiredFields as FieldSpec[]).filter(
         (f) => f.required,
       );
@@ -160,25 +180,137 @@ export const finalizeIntakeTool: AdaTool<FinalizeIntakeInput> = {
       }
     }
 
-    // Success — transition to completed with outcome recorded.
-    // The session package generator (Step 18, in api/ada/turn.ts) will
-    // pick up the completed state and assemble the package.
+    // Fetch the listing + firm so we have firm name + email addresses
+    // for the handoff. If either is missing, fail hard — this is a
+    // data-setup problem, not a runtime hiccup.
+    const listing = await ctx.clients.db.readListingById(ctx.state.listingId);
+    if (!listing) {
+      return {
+        ok: false,
+        error: `Listing ${ctx.state.listingId} not found. The session is bound to a listing that no longer exists.`,
+      };
+    }
+    const lawFirm = await ctx.clients.db.readLawFirmById(listing.lawFirmId);
+    if (!lawFirm) {
+      return {
+        ok: false,
+        error: `Law firm ${listing.lawFirmId} not found for listing ${listing.id}. Data integrity issue — a listing without a firm should not exist.`,
+      };
+    }
+
+    // Assemble the package. Pure function; no side effects yet.
+    let pkg = assembleAttorneyPackage({
+      state: ctx.state,
+      listing,
+      lawFirm,
+      config,
+      qualified: input.qualified,
+      disqualifyingReason: input.disqualifying_reason,
+      generatedAt: ctx.clients.clock.now().toISOString(),
+    });
+
+    // Step 24: side effects.
+    // 1. For qualified intakes, render + upload the transcript PDF.
+    //    The URL is attached to the package BEFORE the firm email fires.
+    //    A failure here shouldn't block the rest of the handoff — we
+    //    log, mark the url as null, and proceed.
+    let transcriptError: string | null = null;
+    if (input.qualified) {
+      try {
+        const transcriptUrl = await renderAndUploadTranscript(
+          { state: ctx.state, pkg },
+          ctx.clients.blob,
+        );
+        pkg = { ...pkg, conversationTranscriptUrl: transcriptUrl };
+      } catch (err) {
+        transcriptError = err instanceof Error ? err.message : String(err);
+        // Continue without transcript URL; firm email will omit the link.
+      }
+    }
+
+    // 2. Firm email — qualified intakes only. Failures are logged but
+    //    don't block the session from completing. If the firm email
+    //    bounces we'll see it in logs and the user has still been told
+    //    their info was sent (we consider the intent enough).
+    let firmEmailId: string | null = null;
+    let firmEmailError: string | null = null;
+    if (input.qualified) {
+      if (!lawFirm.email) {
+        firmEmailError = 'law firm has no email address on file';
+      } else {
+        try {
+          const rendered = renderFirmEmail(pkg);
+          const result = await ctx.clients.email.send({
+            to: lawFirm.email,
+            subject: rendered.subject,
+            html: rendered.html,
+            text: rendered.text,
+          });
+          firmEmailId = result.id;
+        } catch (err) {
+          firmEmailError = err instanceof Error ? err.message : String(err);
+        }
+      }
+    }
+
+    // 3. User email — both paths. User must have provided an email
+    //    during intake; if not, we skip silently (and log). For
+    //    disqualified paths with no user email, we still complete the
+    //    session — the user will see the summary page.
+    let userEmailId: string | null = null;
+    let userEmailError: string | null = null;
+    if (pkg.claimant.email) {
+      try {
+        const rendered = renderUserEmail({
+          pkg,
+          readingLevel: ctx.state.readingLevel,
+        });
+        const result = await ctx.clients.email.send({
+          to: pkg.claimant.email,
+          subject: rendered.subject,
+          html: rendered.html,
+          text: rendered.text,
+        });
+        userEmailId = result.id;
+      } catch (err) {
+        userEmailError = err instanceof Error ? err.message : String(err);
+      }
+    } else {
+      userEmailError = 'no claimant email on file';
+    }
+
+    // Success — transition to completed with outcome + handoff receipts
+    // in metadata so audits can tell whether emails actually made it.
     const outcome = input.qualified ? 'qualified' : 'disqualified';
+    const handoffMeta: Record<string, unknown> = {
+      outcome,
+      handoff: {
+        firm_email_id: firmEmailId,
+        firm_email_error: firmEmailError,
+        user_email_id: userEmailId,
+        user_email_error: userEmailError,
+        transcript_url: pkg.conversationTranscriptUrl,
+        transcript_error: transcriptError,
+        generated_at: pkg.generatedAt,
+      },
+    };
+    if (input.disqualifying_reason) {
+      handoffMeta.abandoned_at_step = `disqualified: ${input.disqualifying_reason}`;
+    }
+
     return {
       ok: true,
       content: {
         finalized: true,
         outcome,
         disqualifying_reason: input.disqualifying_reason,
+        firm_email_sent: firmEmailId !== null,
+        user_email_sent: userEmailId !== null,
+        transcript_generated: pkg.conversationTranscriptUrl !== null,
       },
       stateChanges: {
         sessionTransition: 'complete',
-        metadataPatch: {
-          outcome,
-          ...(input.disqualifying_reason
-            ? { abandoned_at_step: `disqualified: ${input.disqualifying_reason}` }
-            : {}),
-        },
+        metadataPatch: handoffMeta,
       },
     };
   },
