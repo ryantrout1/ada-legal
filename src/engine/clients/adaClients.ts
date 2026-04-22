@@ -33,6 +33,7 @@ import { NeonDbClient } from './neonDbClient.js';
 import { AnthropicAiClient } from './anthropicAiClient.js';
 import { AnthropicPhotoAnalysisClient } from './anthropicPhotoAnalysisClient.js';
 import { makeOpenAIEmbeddingClient } from '../knowledge/embeddings.js';
+import { ResendEmailClient, StubResendEmailClient } from './resendEmailClient.js';
 import type {
   AdaClients,
   AuditClient,
@@ -42,7 +43,6 @@ import type {
   BlobUploadResult,
   ClockClient,
   EmailClient,
-  EmailSendOptions,
   RandomClient,
 } from './types.js';
 
@@ -144,15 +144,8 @@ class StubVercelBlobClient implements BlobClient {
   }
 }
 
-// ─── Resend (Phase B) ─────────────────────────────────────────────────────────
-
-class StubResendEmailClient implements EmailClient {
-  async send(_opts: EmailSendOptions): Promise<{ id: string }> {
-    throw new Error(
-      'ResendEmailClient.send: not yet implemented (Phase B).',
-    );
-  }
-}
+// ─── Resend ───────────────────────────────────────────────────────────────────
+// Implementation lives in ./resendEmailClient.ts. Imported above.
 
 // ─── Factory ──────────────────────────────────────────────────────────────────
 
@@ -182,6 +175,13 @@ export interface AdaClientsConfig {
    * provided; mintHopToken will throw otherwise.
    */
   hopSecret?: string;
+  /**
+   * From address for Resend-sent emails (Step 24). A verified sender
+   * like "Ada <ada@adalegallink.com>". Required when resendApiKey is
+   * set; ignored otherwise. The domain must be verified in the Resend
+   * dashboard; otherwise the API returns a 4xx on first send.
+   */
+  resendFromAddress?: string;
 }
 
 export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
@@ -207,6 +207,15 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
     ? makeOpenAIEmbeddingClient(config.openaiApiKey)
     : undefined;
 
+  // Email client: real Resend if both apiKey and fromAddress are set,
+  // stub otherwise. The stub throws on send so finalize_intake surfaces
+  // a clear "email not configured" error rather than silently dropping
+  // a handoff.
+  const email: EmailClient =
+    config.resendApiKey && config.resendFromAddress
+      ? new ResendEmailClient(config.resendApiKey, config.resendFromAddress)
+      : new StubResendEmailClient();
+
   return {
     ai: new AnthropicAiClient(config.anthropicApiKey),
     db: new NeonDbClient(db),
@@ -214,7 +223,7 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
       ? new VercelBlobClientImpl(config.blobReadWriteToken)
       : new StubVercelBlobClient(),
     photo: new AnthropicPhotoAnalysisClient(config.anthropicApiKey),
-    email: new StubResendEmailClient(),
+    email,
     clock: new SystemClock(),
     random: new CryptoRandom(),
     audit: new NeonAuditClient(),

@@ -25,6 +25,8 @@ export function makeClientsFromEnv(): AdaClients {
   const openaiApiKey = process.env.OPENAI_API_KEY;
   const blobReadWriteToken = process.env.BLOB_READ_WRITE_TOKEN;
   const hopSecret = process.env.ADALL_HOP_SECRET;
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const resendFromAddress = process.env.RESEND_FROM_ADDRESS;
   if (!databaseUrl) {
     throw new Error('DATABASE_URL is not set in environment');
   }
@@ -38,12 +40,16 @@ export function makeClientsFromEnv(): AdaClients {
   // ADALL_HOP_SECRET is optional. Without it, the Step 22 `route` tool
   // refuses external destinations and returns a clear error; internal
   // destinations (attorney_directory, end_conversation) still work.
+  // RESEND_API_KEY + RESEND_FROM_ADDRESS are optional. Without them,
+  // email sending throws a clear error (Step 24).
   return makeAdaClients({
     databaseUrl,
     anthropicApiKey,
     openaiApiKey,
     blobReadWriteToken,
     hopSecret,
+    resendApiKey,
+    resendFromAddress,
   });
 }
 
