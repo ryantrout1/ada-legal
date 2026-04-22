@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Disallow crawler access to admin surfaces, API endpoints, and
+# session-specific package slugs (those are unguessable per-user
+# artifacts, not meant to be indexed).
+Disallow: /admin/
+Disallow: /api/
+Disallow: /s/
+
+Sitemap: https://ada.adalegallink.com/sitemap.xml

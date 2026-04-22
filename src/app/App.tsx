@@ -48,11 +48,13 @@ import AdminSubscriptions from './routes/admin/AdminSubscriptions.js';
 import AdminIntakes from './routes/admin/AdminIntakes.js';
 import AdminSettings from './routes/admin/AdminSettings.js';
 import AdminAnalytics from './routes/admin/AdminAnalytics.js';
+import { HelmetProvider } from 'react-helmet-async';
 import RequireAdmin from './components/RequireAdmin.js';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
       <Routes>
         {/* Public routes — no Clerk context */}
         <Route element={<PublicLayout />}>
@@ -74,6 +76,7 @@ export default function App() {
         <Route path="/admin/*" element={<AdminShell />} />
       </Routes>
     </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

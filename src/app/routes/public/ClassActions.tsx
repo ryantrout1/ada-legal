@@ -16,6 +16,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 
 type Category = 'ada_title_i' | 'ada_title_ii' | 'ada_title_iii';
@@ -72,6 +73,26 @@ export default function ClassActions() {
 
   return (
     <>
+      <Helmet>
+        <title>Class actions — ADA Legal Link</title>
+        <meta
+          name="description"
+          content="Active ADA class actions where one lawsuit may cover many people hurt the same way. Free, plain-language intake with Ada."
+        />
+        <meta property="og:title" content="Class actions — ADA Legal Link" />
+        <meta
+          property="og:description"
+          content="Active ADA class actions where one lawsuit may cover many people hurt the same way. Free, plain-language intake."
+        />
+        <meta property="og:url" content="https://ada.adalegallink.com/class-actions" />
+        <meta name="twitter:title" content="Class actions — ADA Legal Link" />
+        <meta
+          name="twitter:description"
+          content="Active ADA class actions where one lawsuit may cover many people hurt the same way. Free, plain-language intake."
+        />
+        <link rel="canonical" href="https://ada.adalegallink.com/class-actions" />
+      </Helmet>
+
       <section className="max-w-5xl mx-auto px-5 sm:px-8 pt-12 pb-8 sm:pt-16 sm:pb-12">
         <h1 className="font-display text-4xl sm:text-5xl text-ink-900 mb-4 leading-tight">
           Class actions

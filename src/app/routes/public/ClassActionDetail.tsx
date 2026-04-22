@@ -19,6 +19,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 type CriterionKind = 'required' | 'preferred' | 'disqualifying';
@@ -169,8 +170,66 @@ export default function ClassActionDetail() {
     (c) => c.kind === 'disqualifying',
   );
 
+  // Build the meta description: prefer short_description, then the
+  // eligibility_summary, then a fallback. Truncate to 155 chars (the
+  // ceiling before Google starts snipping snippets).
+  const rawDescription =
+    listing.short_description ??
+    listing.eligibility_summary ??
+    `Class action: ${listing.title}. Free intake with Ada.`;
+  const metaDescription =
+    rawDescription.length > 155
+      ? `${rawDescription.slice(0, 152).trim()}…`
+      : rawDescription;
+
+  const canonicalUrl = `https://ada.adalegallink.com/class-actions/${encodeURIComponent(
+    listing.slug,
+  )}`;
+
+  // JSON-LD LegalService structured data. schema.org LegalService is
+  // the closest fit for 'class action hosted by a law firm.' Google
+  // parses this for legal-services snippets in search results. The
+  // alternate Event type doesn't fit because this isn't time-bounded.
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LegalService',
+    name: listing.title,
+    description: metaDescription,
+    url: canonicalUrl,
+    provider: {
+      '@type': 'LegalService',
+      name: listing.law_firm_name,
+    },
+    areaServed: 'United States',
+    serviceType: 'Class action intake',
+    availableChannel: {
+      '@type': 'ServiceChannel',
+      serviceUrl: canonicalUrl,
+      name: 'Free intake via Ada',
+    },
+  };
+
   return (
     <article>
+      <Helmet>
+        <title>{`${listing.title} — ADA Legal Link`}</title>
+        <meta name="description" content={metaDescription} />
+        <meta
+          property="og:title"
+          content={`${listing.title} — ADA Legal Link`}
+        />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:type" content="article" />
+        <meta
+          name="twitter:title"
+          content={`${listing.title} — ADA Legal Link`}
+        />
+        <meta name="twitter:description" content={metaDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
+
       <section className="max-w-3xl mx-auto px-5 sm:px-8 pt-8 pb-4">
         <Link
           to="/class-actions"
