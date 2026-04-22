@@ -39,7 +39,7 @@ function baseState(overrides: Partial<AdaSessionState> = {}): AdaSessionState {
     classification: null,
     metadata: {},
     accessibilitySettings: {},
-    isTest: true,
+    isTest: false,
     ...overrides,
   };
 }

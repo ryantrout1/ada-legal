@@ -41,6 +41,7 @@ import AdminFirmEdit from './routes/admin/AdminFirmEdit.js';
 import AdminListings from './routes/admin/AdminListings.js';
 import AdminListingEdit from './routes/admin/AdminListingEdit.js';
 import AdminListingConfigEdit from './routes/admin/AdminListingConfigEdit.js';
+import AdminListingPreview from './routes/admin/AdminListingPreview.js';
 import AdminSettings from './routes/admin/AdminSettings.js';
 import AdminAnalytics from './routes/admin/AdminAnalytics.js';
 import RequireAdmin from './components/RequireAdmin.js';
@@ -97,6 +98,10 @@ function AdminShell() {
           <Route
             path="listings/:id/config"
             element={<AdminListingConfigEdit />}
+          />
+          <Route
+            path="listings/:id/preview"
+            element={<AdminListingPreview />}
           />
           <Route path="settings" element={<AdminSettings />} />
           <Route path="analytics" element={<AdminAnalytics />} />

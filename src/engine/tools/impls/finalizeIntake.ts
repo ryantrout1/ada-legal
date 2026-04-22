@@ -127,6 +127,59 @@ export const finalizeIntakeTool: AdaTool<FinalizeIntakeInput> = {
       };
     }
 
+    // is_test short-circuit (Step 25 Commit 5).
+    //
+    // Preview/sandbox sessions must NOT fire real side effects:
+    //   - No transcript PDF (no Blob upload)
+    //   - No firm email (Resend would charge, firms would be confused)
+    //   - No user email (same)
+    //
+    // Instead we write a synthetic handoff receipt marked is_test=true
+    // and transition to completed. The admin previewing gets the exact
+    // same finalized UX — Ada reports finalized=true, the session-end
+    // card renders — without any outbound calls.
+    //
+    // Gates 1 & 2 below (listing bound + required-fields complete) are
+    // intentionally skipped: the whole point of preview is that the
+    // admin can stop the flow at any point and see what would happen.
+    // Validation failures would be noise in an environment where the
+    // admin's goal is to exercise Ada, not to satisfy the gates.
+    if (ctx.state.isTest) {
+      const outcome = input.qualified ? 'qualified' : 'disqualified';
+      // Cast for same reason as the main path below (line ~290): the
+      // handoff receipt shape lives in metadata as free-form JSON and
+      // is not declared in SessionMetadata.
+      const testHandoffMeta: Record<string, unknown> = {
+        outcome,
+        handoff: {
+          is_test: true,
+          firm_email_id: null,
+          firm_email_error: 'skipped: is_test session',
+          user_email_id: null,
+          user_email_error: 'skipped: is_test session',
+          transcript_url: null,
+          transcript_error: 'skipped: is_test session',
+          generated_at: ctx.clients.clock.now().toISOString(),
+        },
+      };
+      return {
+        ok: true,
+        content: {
+          finalized: true,
+          is_test: true,
+          outcome,
+          disqualifying_reason: input.disqualifying_reason,
+          firm_email_sent: false,
+          user_email_sent: false,
+          transcript_generated: false,
+        },
+        stateChanges: {
+          sessionTransition: 'complete',
+          metadataPatch: testHandoffMeta,
+        },
+      };
+    }
+
     // Gate 1: session must be bound to a listing.
     if (!ctx.state.listingId) {
       return {

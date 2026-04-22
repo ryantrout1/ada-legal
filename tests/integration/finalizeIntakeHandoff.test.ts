@@ -134,7 +134,7 @@ function qualifiedState(): AdaSessionState {
     },
     metadata: {},
     accessibilitySettings: {},
-    isTest: true,
+    isTest: false,
   };
 }
 
