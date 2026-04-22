@@ -136,6 +136,39 @@ export async function processAdaTurn({
     knowledgeChunks = [];
   }
 
+  // ── Listing context loading (Step 21) ────────────────────────────────────
+  // If this session is bound to a listing, load the listing row + its
+  // config so the prompt assembler can render the full LISTING CONTEXT
+  // section. If it's a public_ada session, load a condensed index of
+  // active listings so Ada can propose matches.
+  //
+  // Loaded ONCE per turn (like knowledge retrieval). Failures swallowed
+  // — listing context is an enhancement, not a requirement.
+  let boundListing:
+    | { listing: import('./clients/types.js').ListingRow;
+        config: import('./clients/types.js').ListingConfigRow }
+    | null = null;
+  let discoveryListings: import('./clients/types.js').ActiveListingRow[] = [];
+
+  try {
+    if (
+      workingState.listingId &&
+      workingState.sessionType === 'class_action_intake'
+    ) {
+      const listing = await clients.db.readListingById(workingState.listingId);
+      const config = listing
+        ? await clients.db.readListingConfigForListing(listing.id)
+        : null;
+      if (listing && config) {
+        boundListing = { listing, config };
+      }
+    } else if (workingState.sessionType === 'public_ada') {
+      discoveryListings = await clients.db.listActiveListings();
+    }
+  } catch {
+    // Listing context is non-critical; proceed without it.
+  }
+
   let assistantMessage: Message | null = null;
   let loopCount = 0;
 
@@ -147,6 +180,8 @@ export async function processAdaTurn({
       orgDisplayName,
       orgAdaIntroPrompt,
       listingAdaPromptOverride,
+      boundListing,
+      discoveryListings,
       knowledgeChunks,
     });
 

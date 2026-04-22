@@ -38,6 +38,15 @@ const DEFAULT_TOOLS: ReadonlyArray<AnyAdaTool> = [...CH0_TOOLS, ...CH1_TOOLS];
 
 import adaIdentity from '../../../content-migration/prompts/ada-identity.js';
 import readingLevelsDoc from '../../../content-migration/prompts/reading-levels.js';
+import type {
+  ListingRow,
+  ListingConfigRow,
+  ActiveListingRow,
+} from '../clients/types.js';
+import {
+  renderBoundListingContext,
+  renderDiscoveryListingIndex,
+} from './listingContext.js';
 
 // ─── Inputs ───────────────────────────────────────────────────────────────────
 
@@ -47,9 +56,28 @@ export interface AssemblePromptContext {
   orgDisplayName: string;
   /** Org-specific instructions appended after the base identity. Null ⇒ none. */
   orgAdaIntroPrompt: string | null;
-  /** Ch1: per-listing overlay. Null for public Ch0 sessions. */
+  /**
+   * Ch1: per-listing overlay — deprecated in Step 21 in favor of
+   * passing the full listing + config objects (see boundListing below).
+   * Kept for backwards compatibility with callers that haven't been
+   * updated yet; if both are set, boundListing wins.
+   */
   listingAdaPromptOverride?: string | null;
-  /** Tool registry to render into the prompt. Defaults to CH0_TOOLS. */
+  /**
+   * Step 21: when session is bound to an active listing
+   * (session_type='class_action_intake' + listingId set), the engine
+   * loads the listing row + its config and passes them here so the
+   * assembler can render the full LISTING CONTEXT section.
+   */
+  boundListing?: { listing: ListingRow; config: ListingConfigRow } | null;
+  /**
+   * Step 21: for public_ada discovery sessions, a condensed index of
+   * currently-active listings so Ada can recognize matches. When non-
+   * empty, renders as part of the LISTING CONTEXT section (discovery
+   * mode). Ignored if boundListing is set.
+   */
+  discoveryListings?: ReadonlyArray<ActiveListingRow>;
+  /** Tool registry to render into the prompt. Defaults to CH0_TOOLS + CH1_TOOLS. */
   tools?: ReadonlyArray<AnyAdaTool>;
   /**
    * Retrieved knowledge-base chunks for this turn. Optional — when
@@ -133,6 +161,18 @@ function buildKnowledgeSection(
 }
 
 function buildListingSection(ctx: AssemblePromptContext): string {
+  // Bound mode: session is attached to a specific listing. Full context.
+  if (ctx.boundListing) {
+    return renderBoundListingContext(ctx.boundListing);
+  }
+
+  // Discovery mode: public_ada session with active listings available.
+  // Renders a condensed index so Ada can propose matches.
+  if (ctx.discoveryListings && ctx.discoveryListings.length > 0) {
+    return renderDiscoveryListingIndex([...ctx.discoveryListings]);
+  }
+
+  // Backwards-compat fallback: old listingAdaPromptOverride-only path.
   const override = ctx.listingAdaPromptOverride;
   if (!override || override.trim().length === 0) return '';
   return override.trim();
