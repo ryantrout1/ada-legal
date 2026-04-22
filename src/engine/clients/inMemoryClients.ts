@@ -52,7 +52,9 @@ import type {
   SessionQualityCheckWrite,
   SessionReadOptions,
   SessionWriteOptions,
+  SessionPackageRow,
   UpdateAttorneyInput,
+  WriteSessionPackageOptions,
 } from './types.js';
 
 // ─── AI ───────────────────────────────────────────────────────────────────────
@@ -459,6 +461,53 @@ export class InMemoryDbClient implements DbClient {
       if (hits.length >= k) break;
     }
     return hits;
+  }
+
+  // ─── session_packages ────────────────────────────────────────────────────
+
+  public readonly sessionPackages: SessionPackageRow[] = [];
+
+  async writeSessionPackage(opts: WriteSessionPackageOptions): Promise<void> {
+    // Slugs are unique; if the caller tries to reuse one, replace the row
+    // in-memory rather than throwing (Postgres will throw on UNIQUE
+    // violation, which callers should handle — but in tests we're usually
+    // writing once per slug anyway).
+    const idx = this.sessionPackages.findIndex((p) => p.slug === opts.slug);
+    const row: SessionPackageRow = {
+      slug: opts.slug,
+      sessionId: opts.sessionId,
+      payload: opts.payload,
+      classificationTitle: opts.classificationTitle,
+      generatedAt: opts.generatedAt,
+      expiresAt: opts.expiresAt,
+    };
+    if (idx >= 0) {
+      this.sessionPackages[idx] = row;
+    } else {
+      this.sessionPackages.push(row);
+    }
+  }
+
+  async readSessionPackageBySlug(slug: string): Promise<SessionPackageRow | null> {
+    const row = this.sessionPackages.find((p) => p.slug === slug);
+    if (!row) return null;
+    // Expired rows return null.
+    if (row.expiresAt && new Date(row.expiresAt).getTime() < Date.now()) {
+      return null;
+    }
+    return row;
+  }
+
+  async readLatestSessionPackageForSession(
+    sessionId: string,
+  ): Promise<SessionPackageRow | null> {
+    const matches = this.sessionPackages.filter((p) => p.sessionId === sessionId);
+    if (matches.length === 0) return null;
+    // Sort by generatedAt descending; return the newest.
+    matches.sort(
+      (a, b) => new Date(b.generatedAt).getTime() - new Date(a.generatedAt).getTime(),
+    );
+    return matches[0]!;
   }
 }
 

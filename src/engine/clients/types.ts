@@ -217,6 +217,47 @@ export interface DbClient {
    * Ref: docs/ARCHITECTURE.md §10.5
    */
   searchKnowledgeBase(opts: KnowledgeSearchOptions): Promise<KnowledgeChunkHit[]>;
+  /**
+   * Persist a generated SessionPackage. The package is an immutable
+   * artifact — if a session produces more than one (e.g. re-generated
+   * after an admin correction), each gets its own row with a distinct
+   * slug. Step 18 (Triage & Routing).
+   */
+  writeSessionPackage(opts: WriteSessionPackageOptions): Promise<void>;
+  /**
+   * Look up a package by its public slug. Returns null if unknown or
+   * expired. No auth required — the slug IS the access control.
+   */
+  readSessionPackageBySlug(slug: string): Promise<SessionPackageRow | null>;
+  /**
+   * Admin/engine lookup: find the most recent package for a session.
+   * Used by the admin session detail view and by the engine when it
+   * needs to avoid regenerating a package for an already-packaged
+   * session.
+   */
+  readLatestSessionPackageForSession(sessionId: string): Promise<SessionPackageRow | null>;
+}
+
+export interface WriteSessionPackageOptions {
+  slug: string;
+  sessionId: string;
+  /** Serialized SessionPackage payload. */
+  payload: unknown;
+  /** Denormalized for admin filtering — the classification.title value. */
+  classificationTitle: string | null;
+  generatedAt: string;
+  /** ISO timestamp, null for permanent retention. */
+  expiresAt: string | null;
+}
+
+export interface SessionPackageRow {
+  slug: string;
+  sessionId: string;
+  /** Deserialized SessionPackage payload. Caller narrows the type. */
+  payload: unknown;
+  classificationTitle: string | null;
+  generatedAt: string;
+  expiresAt: string | null;
 }
 
 export interface KnowledgeSearchOptions {

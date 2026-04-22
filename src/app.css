@@ -324,3 +324,68 @@ body {
 :root[data-spacing] ol + p {
   margin-top: var(--a11y-paragraph-gap);
 }
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Print styles for /s/{slug} session package pages.
+   ──────────────────────────────────────────────────────────────────────────
+   The package page is designed to double as a printable document. Using
+   the browser's built-in "Save as PDF" (File → Print → Save as PDF)
+   produces a properly-tagged, accessible PDF without any server-side
+   PDF library. This approach costs nothing, degrades gracefully, and
+   produces better accessibility than most PDF generators.
+
+   Rules applied when printing:
+     - Hide navigation chrome, page header, and on-screen buttons
+     - Force light background / dark text regardless of display mode
+     - Preserve link URLs so the printed page still shows destinations
+     - Keep card content from splitting awkwardly across pages
+     - Give the user a reasonable margin (0.75 in)
+ */
+@media print {
+  /* Page setup: standard letter with comfortable margins. */
+  @page {
+    margin: 0.75in;
+  }
+
+  /* Everything with the print:hidden class goes away. This covers the
+     Share / Print buttons and the Copy-to-clipboard button on the
+     demand letter. */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Force a readable palette regardless of display mode. Users in
+     "dark" or "warm" mode who hit Print expect a standard printed
+     document, not a dark one. */
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  /* Links: keep the color subtle for print; make URLs visible when
+     they come from an <a> that isn't already self-describing. */
+  a {
+    color: #111111 !important;
+    text-decoration: underline;
+  }
+
+  /* Avoid splitting a destination card or blockquote across pages. */
+  blockquote,
+  article section {
+    break-inside: avoid;
+  }
+
+  /* Headings: avoid orphan headings at the bottom of a page. */
+  h1, h2, h3 {
+    break-after: avoid;
+  }
+
+  /* The shared PublicLayout header / footer navigation should not
+     print — we're producing a document, not a screenshot of a page. */
+  header[role="banner"],
+  nav,
+  footer {
+    display: none !important;
+  }
+}

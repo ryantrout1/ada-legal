@@ -33,6 +33,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { processAdaTurn } from '../../src/engine/processAdaTurn.js';
 import { runSessionQualityCheck } from '../../src/engine/observability/qualityCheck.js';
+import { assemblePackage } from '../../src/engine/package/assemble.js';
 import {
   makeClientsFromEnv,
   readJsonBody,
@@ -138,6 +139,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Persist the new session state.
     await clients.db.writeSession({ state: result.nextState });
 
+    // Set by the completion block below when a package is generated.
+    // Included in the response so the client can link to /s/{slug}.
+    let packageSlug: string | null = null;
+
     // On completion, record a quality check row. Run inline so any
     // persistence error surfaces in logs immediately; the check itself
     // is pure, fast, and non-blocking for the user. Wrap in a catch
@@ -155,6 +160,48 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Log — do not propagate.
         console.error('quality check write failed', qcErr);
       }
+
+      // Step 18: generate and persist the session package. This is the
+      // artifact the user takes away — the /s/{slug} page, the PDF,
+      // the demand letter, the routing destinations. Ada's final
+      // message will include the slug so the frontend can link to it.
+      //
+      // Guarded by classification presence; if Ada ends a session
+      // without classifying (shouldn't happen per prompt but could on
+      // abnormal termination), skip package generation rather than
+      // throwing. Wrapped in try/catch so a package failure never
+      // blocks the response.
+      if (result.nextState.classification) {
+        try {
+          // Check for an attorney match during the session by scanning
+          // tool invocations. searchAttorneys returning hits is the
+          // signal we use in routing.
+          const toolsInvoked = result.nextState.metadata.tools_invoked ?? [];
+          const attorneyMatched = toolsInvoked.some(
+            (t) => t.name === 'search_attorneys' && t.result_kind === 'ok',
+          );
+          const pkg = assemblePackage({
+            state: result.nextState,
+            attorneyMatched,
+            knowledgeHits: [], // TODO: thread retrieved chunks from the turn when available
+          });
+          // Default 90-day retention.
+          const expiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
+          await clients.db.writeSessionPackage({
+            slug: pkg.slug,
+            sessionId: pkg.sessionId,
+            payload: pkg,
+            classificationTitle: pkg.classification.title,
+            generatedAt: pkg.generatedAt,
+            expiresAt,
+          });
+          packageSlug = pkg.slug;
+        } catch (pkgErr) {
+          // Log — do not propagate. The user still gets a conversational
+          // ending from Ada even if the package isn't persisted.
+          console.error('package generation failed', pkgErr);
+        }
+      }
     }
 
     // Pull a flat content string from the assistant message. The content
@@ -171,6 +218,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       reading_level: result.nextState.readingLevel,
       status: result.nextState.status,
       photo_findings: result.photoFindings ?? null,
+      package_slug: packageSlug,
     });
   } catch (err) {
     console.error('POST /api/ada/turn failed', err);

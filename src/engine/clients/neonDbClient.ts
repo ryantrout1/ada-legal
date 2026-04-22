@@ -25,6 +25,7 @@ import {
   anonSessions,
   attorneys as attorneysTable,
   organizations,
+  sessionPackages,
   sessionQualityChecks,
   systemSettings,
 } from '../../db/schema-core.js';
@@ -47,11 +48,13 @@ import type {
   KnowledgeChunkHit,
   KnowledgeSearchOptions,
   OrganizationRow,
+  SessionPackageRow,
   SessionQualityCheckRow,
   SessionQualityCheckWrite,
   SessionReadOptions,
   SessionWriteOptions,
   UpdateAttorneyInput,
+  WriteSessionPackageOptions,
 } from './types.js';
 import type { AdaSessionState } from '../types.js';
 import type {
@@ -773,6 +776,61 @@ export class NeonDbClient implements DbClient {
       if (merged.length >= k) break;
     }
     return merged;
+  }
+
+  // ─── session_packages (Step 18) ──────────────────────────────────────────
+
+  async writeSessionPackage(opts: WriteSessionPackageOptions): Promise<void> {
+    await this.db.insert(sessionPackages).values({
+      slug: opts.slug,
+      sessionId: opts.sessionId,
+      payload: opts.payload as object,
+      classificationTitle: opts.classificationTitle,
+      generatedAt: new Date(opts.generatedAt),
+      expiresAt: opts.expiresAt ? new Date(opts.expiresAt) : null,
+    });
+  }
+
+  async readSessionPackageBySlug(slug: string): Promise<SessionPackageRow | null> {
+    const rows = await this.db
+      .select()
+      .from(sessionPackages)
+      .where(eq(sessionPackages.slug, slug))
+      .limit(1);
+    const r = rows[0];
+    if (!r) return null;
+    // Expired rows return null — the /s/{slug} page treats this as
+    // "not found" rather than serving stale content.
+    if (r.expiresAt && r.expiresAt.getTime() < Date.now()) return null;
+    return {
+      slug: r.slug,
+      sessionId: r.sessionId,
+      payload: r.payload,
+      classificationTitle: r.classificationTitle,
+      generatedAt: r.generatedAt.toISOString(),
+      expiresAt: r.expiresAt ? r.expiresAt.toISOString() : null,
+    };
+  }
+
+  async readLatestSessionPackageForSession(
+    sessionId: string,
+  ): Promise<SessionPackageRow | null> {
+    const rows = await this.db
+      .select()
+      .from(sessionPackages)
+      .where(eq(sessionPackages.sessionId, sessionId))
+      .orderBy(sql`${sessionPackages.generatedAt} DESC`)
+      .limit(1);
+    const r = rows[0];
+    if (!r) return null;
+    return {
+      slug: r.slug,
+      sessionId: r.sessionId,
+      payload: r.payload,
+      classificationTitle: r.classificationTitle,
+      generatedAt: r.generatedAt.toISOString(),
+      expiresAt: r.expiresAt ? r.expiresAt.toISOString() : null,
+    };
   }
 }
 

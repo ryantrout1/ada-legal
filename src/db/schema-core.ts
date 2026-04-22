@@ -305,3 +305,26 @@ export const systemSettings = pgTable('system_settings', {
   updatedBy: uuid('updated_by').references(() => users.id),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
+
+// ─── session_packages ─────────────────────────────────────────────────────────
+// Immutable, slug-addressable packages generated at session end. Step 18.
+// See migration 0003_session_packages.sql.
+
+export const sessionPackages = pgTable(
+  'session_packages',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    slug: text('slug').notNull().unique(),
+    sessionId: uuid('session_id')
+      .notNull()
+      .references(() => adaSessions.id, { onDelete: 'cascade' }),
+    // Full package JSON — shape defined by src/engine/package/types.ts
+    // (SessionPackage). Stored verbatim so rendering is pure data → view.
+    payload: jsonb('payload').notNull(),
+    classificationTitle: text('classification_title'),
+    generatedAt: timestamp('generated_at', { withTimezone: true }).notNull().defaultNow(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('session_packages_session_id_idx').on(t.sessionId)],
+);
