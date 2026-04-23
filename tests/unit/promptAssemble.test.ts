@@ -415,3 +415,98 @@ describe('assemblePrompt — knowledge section (Step 10.5)', () => {
     expect(kbIdx).toBeLessThan(listingIdx);
   });
 });
+
+describe('assemblePrompt — page context (Commit 29/6)', () => {
+  it('omits PAGE CONTEXT when session metadata has no page_context', () => {
+    const out = assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).not.toContain('# PAGE CONTEXT');
+  });
+
+  it('emits PAGE CONTEXT when session was opened from a chapter', () => {
+    const out = assemblePrompt({
+      state: baseState({
+        metadata: {
+          page_context: {
+            kind: 'chapter',
+            ref: '4',
+            title: 'Accessible Routes',
+          },
+        },
+      }),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).toContain('# PAGE CONTEXT');
+    expect(out).toContain('"Accessible Routes" chapter');
+    expect(out).toContain('/standards-guide/chapter/4');
+  });
+
+  it('emits PAGE CONTEXT when session was opened from a guide', () => {
+    const out = assemblePrompt({
+      state: baseState({
+        metadata: {
+          page_context: {
+            kind: 'guide',
+            ref: 'ramps',
+            title: 'Ramps & Slope Requirements',
+          },
+        },
+      }),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).toContain('# PAGE CONTEXT');
+    expect(out).toContain('"Ramps & Slope Requirements" deep-dive guide');
+    expect(out).toContain('/standards-guide/guide/ramps');
+  });
+
+  it('includes the standards-index cheat-sheet when page_context is set', () => {
+    const out = assemblePrompt({
+      state: baseState({
+        metadata: {
+          page_context: {
+            kind: 'guide',
+            ref: 'ramps',
+            title: 'Ramps & Slope Requirements',
+          },
+        },
+      }),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    // The index table header and a handful of known topics should all
+    // be present once the page_context section fires.
+    expect(out).toContain('| Section(s) | Topic | Guide URL |');
+    expect(out).toContain('/standards-guide/guide/ramps');
+    expect(out).toContain('/standards-guide/guide/restrooms');
+    expect(out).toContain('§405');
+  });
+
+  it('places PAGE CONTEXT after ORG CONTEXT and before LISTING CONTEXT', () => {
+    const out = assemblePrompt({
+      state: baseState({
+        metadata: {
+          page_context: {
+            kind: 'guide',
+            ref: 'ramps',
+            title: 'Ramps & Slope Requirements',
+          },
+        },
+      }),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+      discoveryListings: [],
+    });
+    const orgIdx = out.indexOf('# ORG CONTEXT');
+    const pageIdx = out.indexOf('# PAGE CONTEXT');
+    const readingIdx = out.indexOf('# READING LEVEL');
+    expect(orgIdx).toBeGreaterThan(-1);
+    expect(pageIdx).toBeGreaterThan(-1);
+    expect(orgIdx).toBeLessThan(pageIdx);
+    expect(pageIdx).toBeLessThan(readingIdx);
+  });
+});

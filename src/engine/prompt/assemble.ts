@@ -47,6 +47,8 @@ import {
   renderBoundListingContext,
   renderDiscoveryListingIndex,
 } from './listingContext.js';
+import { renderStandardsIndexForPrompt } from '../../lib/standardsIndex.js';
+import type { PageContext } from '../../types/db.js';
 
 // ─── Inputs ───────────────────────────────────────────────────────────────────
 
@@ -101,6 +103,7 @@ export function assemblePrompt(ctx: AssemblePromptContext): string {
   const sections = [
     section('IDENTITY', buildIdentitySection(ctx)),
     section('ORG CONTEXT', buildOrgSection(ctx)),
+    section('PAGE CONTEXT', buildPageContextSection(ctx.state.metadata.page_context)),
     section('KNOWLEDGE', buildKnowledgeSection(ctx.knowledgeChunks)),
     section('LISTING CONTEXT', buildListingSection(ctx)),
     section('ROUTING DESTINATIONS', buildRoutingSection(ctx.routingMatches)),
@@ -166,6 +169,49 @@ function buildKnowledgeSection(
     parts.push(c.content);
   }
   return parts.join('\n');
+}
+
+/**
+ * Render a PAGE CONTEXT section from session.metadata.page_context.
+ * When the user hit Talk-to-Ada from a Standards Guide chapter or
+ * deep-dive guide page, we set page_context in the session metadata
+ * (see Commit 5). This section surfaces that context to Ada so:
+ *
+ *   1. She knows the user was just reading about a specific topic.
+ *      Her classifier can bias toward the matching ADA title; her
+ *      first question can lean on the topic instead of asking open.
+ *   2. When she quotes a standard in her reply, she can link back
+ *      into the guide — section → URL mapping comes from
+ *      standardsIndex.ts.
+ *
+ * Kept deliberately compact — two paragraphs of context + the index
+ * table. The standards index is static across all sessions; the
+ * page_context line is the only per-session variable.
+ *
+ * When page_context is absent, this section is dropped entirely.
+ */
+function buildPageContextSection(pc: PageContext | undefined): string {
+  if (!pc) return '';
+  const parts: string[] = [];
+
+  const fromWhere =
+    pc.kind === 'chapter'
+      ? `the "${pc.title}" chapter (Chapter ${pc.ref})`
+      : `the "${pc.title}" deep-dive guide`;
+  const url =
+    pc.kind === 'chapter'
+      ? `/standards-guide/chapter/${pc.ref}`
+      : `/standards-guide/guide/${pc.ref}`;
+
+  parts.push(
+    `The user came to this conversation from ${fromWhere} in the Standards Guide (URL: ${url}). They were reading about that topic when they clicked "Talk to Ada." Use this as a signal about what they probably want to talk about — their first message may not mention the topic explicitly, but the context is strong.`,
+  );
+  parts.push(
+    'When you quote or paraphrase an ADA standard in your reply, consult the index below. If the section you are citing has a matching guide URL, include it in your reply so the user can read further. Format the link as a plain URL at the end of the relevant paragraph. Do not force a link where none is appropriate — only link when you are genuinely citing the section.',
+  );
+  parts.push('');
+  parts.push(renderStandardsIndexForPrompt());
+  return parts.join('\n\n');
 }
 
 function buildListingSection(ctx: AssemblePromptContext): string {
