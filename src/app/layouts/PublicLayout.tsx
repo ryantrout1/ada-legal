@@ -98,28 +98,33 @@ export default function PublicLayout() {
         <Outlet />
       </main>
 
-      {/* Footer — compact, functional, auditable */}
-      <footer className="border-t border-surface-200 mt-20">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-8 text-sm text-ink-500">
-          <div className="flex flex-wrap items-baseline justify-between gap-4">
-            <div className="flex items-start gap-3">
+      {/* Footer — compressed to a single row.
+          Left: logo + one-line tagline. Right: legal/meta links.
+          Disclaimer collapsed into the tagline itself so the footer
+          stays compact on every page, especially /chat where
+          vertical space is scarce. Wraps to two rows on mobile via
+          flex-wrap. */}
+      <footer className="border-t border-surface-200 mt-auto">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 text-xs text-ink-500">
+          <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+            <div className="flex items-center gap-2.5 min-w-0">
               <img
                 src="/logo.png"
                 alt=""
-                width="40"
-                height="40"
-                className="w-10 h-10 rounded-md flex-shrink-0 mt-0.5"
+                width="24"
+                height="24"
+                className="w-6 h-6 rounded-sm flex-shrink-0"
               />
-              <div>
-                <p className="font-display text-base text-ink-700">
+              <p className="truncate">
+                <span className="font-display text-sm text-ink-700">
                   ADA Legal Link
-                </p>
-                <p className="mt-1">
-                  Free, plain-language ADA help. Not a law firm.
-                </p>
-              </div>
+                </span>
+                <span className="ml-2 text-ink-500">
+                  Informational only. Not legal advice. Not a law firm.
+                </span>
+              </p>
             </div>
-            <ul className="flex flex-wrap gap-5">
+            <ul className="flex flex-wrap gap-4">
               <li>
                 <a
                   href="/standards-guide"
@@ -154,10 +159,6 @@ export default function PublicLayout() {
               </li>
             </ul>
           </div>
-          <p className="mt-6 text-xs">
-            Informational only. Not legal advice. Ada can help you find an
-            attorney if you need one.
-          </p>
         </div>
       </footer>
     </div>

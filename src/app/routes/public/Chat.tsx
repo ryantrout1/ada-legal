@@ -72,6 +72,19 @@ export default function Chat() {
     }
   }, [state.busy, state.status, state.initializing]);
 
+  // Auto-grow the textarea to fit its content, capped at maxHeight.
+  // Without this the textarea stays one line no matter how much a user
+  // types — rows={1} is a starting value, browsers don't grow the
+  // element automatically. The cap matches the CSS maxHeight so the
+  // scroll region doesn't disappear off-screen on very long drafts.
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    const next = Math.min(el.scrollHeight, 200);
+    el.style.height = `${next}px`;
+  }, [draft]);
+
   // Speak each new assistant message when TTS is enabled. Tracks the
   // last-spoken message id so we don't re-speak on every render.
   const lastSpokenIdRef = useRef<string | null>(null);
@@ -217,22 +230,20 @@ export default function Chat() {
   }
 
   return (
-    <section className="max-w-3xl mx-auto px-5 sm:px-8 py-6 sm:py-10 flex flex-col h-[calc(100vh-140px)] min-h-[560px]">
-      {/* Header row: reading level + status */}
-      <header className="flex flex-wrap items-center justify-between gap-3 mb-4 pb-4 border-b border-surface-200">
+    <section className="max-w-3xl w-full mx-auto px-5 sm:px-8 py-4 sm:py-6 flex flex-col h-[calc(100dvh-var(--chat-chrome,8rem))] min-h-[400px]">
+      {/* Header row: reading level (left), icon-only session controls (right).
+          Reading level stays prominent — visibility is the point, it's the
+          single most important accommodation on this page. Session controls
+          (Speak, Download, New conversation) shrink to icon buttons because
+          they're secondary actions; "Conversation active" text was removed
+          as noise — the user can see they're conversing. */}
+      <header className="flex flex-wrap items-center justify-between gap-3 mb-3 pb-3 border-b border-surface-200">
         <ReadingLevelPicker
           value={state.readingLevel}
           onChange={handleLevelChange}
           disabled={state.busy || state.initializing}
         />
-        <div className="flex items-center gap-3 text-xs text-ink-500">
-          {state.status === 'active' ? (
-            <span aria-live="polite">Conversation active</span>
-          ) : (
-            <span className="text-accent-600" aria-live="polite">
-              Conversation {state.status}
-            </span>
-          )}
+        <div className="flex items-center gap-1.5">
           {speechOutput.isSupported && (
             <button
               type="button"
@@ -243,33 +254,46 @@ export default function Chat() {
                   : 'Turn on Ada reading messages aloud'
               }
               aria-pressed={speechOutput.enabled}
+              title={speechOutput.enabled ? 'Stop reading aloud' : 'Read Ada\u2019s messages aloud'}
               className={
-                'inline-flex items-center gap-1 px-2 py-1 rounded border transition-colors ' +
+                'inline-flex items-center justify-center h-9 w-9 rounded-md border transition-colors ' +
                 (speechOutput.enabled
                   ? 'border-accent-500 bg-accent-50 text-accent-600'
-                  : 'border-surface-200 text-ink-500 hover:border-surface-300 hover:text-ink-700')
+                  : 'border-surface-200 text-ink-500 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100')
               }
             >
-              <svg
-                aria-hidden="true"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                {speechOutput.enabled && (
-                  <>
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                  </>
-                )}
+              {/* Custom "Speak" glyph: a small mouth/ring emitting two
+                  curved sound waves. When active, both waves present.
+                  When inactive, only the ring is drawn, softer. */}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle
+                  cx="8"
+                  cy="12"
+                  r="3"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  fill={speechOutput.enabled ? 'currentColor' : 'none'}
+                />
+                <path
+                  d="M13 9 Q16 12 13 15"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  fill="none"
+                  opacity={speechOutput.enabled ? 1 : 0.4}
+                />
+                <path
+                  d="M16 6 Q21 12 16 18"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  fill="none"
+                  opacity={speechOutput.enabled ? 1 : 0}
+                />
               </svg>
-              <span>{speechOutput.enabled ? 'Speaking' : 'Speak'}</span>
+              <span className="sr-only">
+                {speechOutput.enabled ? 'Speaking' : 'Speak'}
+              </span>
             </button>
           )}
           <button
@@ -277,24 +301,35 @@ export default function Chat() {
             onClick={() => downloadConversation(state.messages)}
             disabled={state.messages.length === 0}
             aria-label="Download this conversation as a text file"
-            className="inline-flex items-center gap-1 px-2 py-1 rounded border border-surface-200 text-ink-500 hover:border-surface-300 hover:text-ink-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            title="Download this conversation"
+            className="inline-flex items-center justify-center h-9 w-9 rounded-md border border-surface-200 text-ink-500 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <svg
-              aria-hidden="true"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
+            {/* Custom "Download" glyph: a page/card with a downward
+                tray beneath. Reads as "a record coming off the stack,"
+                not as a generic arrow. */}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect
+                x="6"
+                y="3"
+                width="12"
+                height="14"
+                rx="1.5"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                fill="none"
+              />
+              <line x1="9" y1="8" x2="15" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="9" y1="11" x2="13" y2="11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path
+                d="M3 19 L21 19 L19 21.5 L5 21.5 Z"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+                fill="currentColor"
+                fillOpacity="0.18"
+              />
             </svg>
-            <span>Download</span>
+            <span className="sr-only">Download</span>
           </button>
           <button
             type="button"
@@ -308,13 +343,38 @@ export default function Chat() {
                 clearPhoto();
               }
             }}
-            className="text-accent-500 hover:text-accent-600 underline underline-offset-2 disabled:opacity-50"
             disabled={state.initializing}
+            aria-label="Start a new conversation"
+            title="Start a new conversation"
+            className="inline-flex items-center justify-center h-9 w-9 rounded-md border border-surface-200 text-ink-500 hover:border-surface-300 hover:text-accent-600 hover:bg-surface-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            New conversation
+            {/* Custom "New conversation" glyph: an empty speech bubble
+                with a small four-point spark at the upper-right,
+                meaning "fresh start, new thread." */}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M3 6 A3 3 0 0 1 6 3 L15 3 A3 3 0 0 1 18 6 L18 13 A3 3 0 0 1 15 16 L10 16 L6 20 L6 16 A3 3 0 0 1 3 13 Z"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinejoin="round"
+                fill="none"
+              />
+              <g stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                <line x1="19.5" y1="4" x2="19.5" y2="8" />
+                <line x1="17.5" y1="6" x2="21.5" y2="6" />
+              </g>
+            </svg>
+            <span className="sr-only">New conversation</span>
           </button>
         </div>
       </header>
+
+      {/* Live region for session status (visually hidden).
+          Removed the visible "Conversation active" text per UX review,
+          but screen readers still benefit from knowing status changes. */}
+      <div className="sr-only" aria-live="polite">
+        {state.status === 'active' ? '' : `Conversation ${state.status}`}
+      </div>
 
       {/* Error banner with recovery actions.
           On error we show what happened, then concrete next steps: try
