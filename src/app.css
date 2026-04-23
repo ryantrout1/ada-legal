@@ -219,34 +219,38 @@ body {
   --color-accent-600: #6E2F10;
 }
 
-/* Contrast — true high-contrast mode. Pure black on pure white,
- * thick borders, no decorative tints, always-underlined links. Built
- * to feel like "High Contrast" at first glance — not a gentle palette
- * swap. The WCAG AAA contrast ratios were always there; what was
- * missing was the visual vocabulary that tells a low-vision user
- * "yes, this is the mode you asked for."
+/* Contrast — high contrast on a DARK canvas, matching the aesthetic
+ * established by the Base44 site and the already-shipped dark-hero
+ * treatment on the Standards Guide. Pure #000 background, pure
+ * #FFFFFF headings, bright amber accent, no decorative tints.
  *
- * The core --color-* tokens shift so every Tailwind utility and every
- * Base44-alias downstream inherits. Beyond that, we add a small set
- * of rules AT THE END of this file (after the alias block) that
- * enforce thick borders, underlines, and remove decorative surfaces. */
+ * Why dark instead of black-on-white: users who turn on High Contrast
+ * on a screen almost always prefer a dark field with bright foreground
+ * — that's the norm across Windows High Contrast, macOS Increase
+ * Contrast, every OS accessibility mode, and what the site's existing
+ * dark-hero pattern already does. A black-on-white treatment reads as
+ * a print page, not a high-contrast UI.
+ *
+ * The accent amber #F4A56B is tuned for AAA contrast against #000
+ * (calculated ratio: 9.8:1 against pure black). Body text at pure
+ * white is 21:1. Both exceed AAA thresholds. */
 :root[data-display="contrast"] {
-  --color-surface-50:  #FFFFFF;
-  --color-surface-100: #FFFFFF;   /* was #F0F0F0 — kill the tint */
-  --color-surface-200: #000000;   /* border color — black, not gray */
-  --color-surface-300: #000000;
-  --color-ink-900: #000000;
-  --color-ink-700: #000000;       /* was #1A1A1A — go pure black */
-  --color-ink-500: #000000;       /* was #333333 — go pure black */
-  --color-accent-500: #0000EE;    /* classic link-blue for max recognition */
-  --color-accent-600: #000080;    /* navy for hover/pressed */
-  --color-accent-50:  #FFFFFF;    /* was pale-blue tint — kill it, cards go white */
-  --color-success-500: #006600;
-  --color-success-50:  #FFFFFF;   /* was #E6F2E6 — kill the tint */
-  --color-warning-500: #8B4500;
-  --color-warning-50:  #FFFFFF;   /* was #F5EFE0 — kill the tint */
-  --color-danger-500:  #990000;
-  --color-danger-50:   #FFFFFF;   /* was #F2E6E6 — kill the tint */
+  --color-surface-50:  #000000;   /* page bg — pure black */
+  --color-surface-100: #000000;   /* was decorative surface — flatten */
+  --color-surface-200: #FFFFFF;   /* border color — pure white */
+  --color-surface-300: #FFFFFF;
+  --color-ink-900: #FFFFFF;        /* headings + strong body */
+  --color-ink-700: #FFFFFF;        /* all body text to pure white */
+  --color-ink-500: #E0E0E0;        /* tertiary text — slightly dim, still AAA */
+  --color-accent-500: #F4A56B;     /* bright amber, AAA against black */
+  --color-accent-600: #FFCA92;     /* hover — even brighter */
+  --color-accent-50:  #000000;     /* kill the pale tint — flatten to bg */
+  --color-success-500: #7FE39E;    /* bright green, AAA on black */
+  --color-success-50:  #000000;
+  --color-warning-500: #FFCE5C;    /* bright amber-yellow */
+  --color-warning-50:  #000000;
+  --color-danger-500:  #FF8A7A;    /* bright coral-red */
+  --color-danger-50:   #000000;
 }
 
 /* Low vision — high contrast + enlarged UI affordances. Pairs with larger
@@ -522,13 +526,14 @@ body {
   border: 2px solid var(--color-ink-900) !important;
 }
 
-/* Card surfaces: kill the subtle bg tints, force a thick black border.
-   Catches tiles on /standards-guide, chapter cards, attorney cards.
+/* Card surfaces: kill the subtle bg tints, force a thick white border
+   on the black canvas. Catches tiles on /standards-guide, chapter
+   cards, attorney cards.
 
    Uses [class~="X"] (whitespace-separated WORD match) not [class*="X"]
    (substring match) — otherwise bg-accent-50 would also match the
    bg-accent-500 class on the primary CTA button and wipe out its
-   intended link-blue fill. */
+   intended amber fill. */
 :root[data-display="contrast"] [class~="bg-surface-100"],
 :root[data-display="contrast"] [class~="bg-surface-200"],
 :root[data-display="contrast"] [class~="bg-accent-50"],
@@ -541,47 +546,53 @@ body {
 }
 
 :root[data-display="contrast"] :focus-visible {
-  outline: 4px solid var(--color-ink-900) !important;
+  outline: 4px solid var(--color-accent-500) !important;
   outline-offset: 2px !important;
 }
 
-/* Headings + body copy: explicit pure black, bump weight slightly so
-   the edges read cleanly against pure white. */
+/* Headings + body copy: explicit pure white on the black canvas,
+   bumped weight so edges read crisply. */
 :root[data-display="contrast"] h1,
 :root[data-display="contrast"] h2,
 :root[data-display="contrast"] h3,
 :root[data-display="contrast"] h4,
 :root[data-display="contrast"] h5,
 :root[data-display="contrast"] h6 {
-  color: #000000;
+  color: #FFFFFF;
   font-weight: 600;
 }
 
 :root[data-display="contrast"] body {
-  color: #000000;
+  color: #FFFFFF;
+  background-color: #000000;
 }
 
 /* OS-level signal: user has "Increase Contrast" turned on in their
    device settings (macOS, iOS, Android) but hasn't opened our panel.
-   Apply the same treatment so the site respects what they already
-   told the platform. Forced-colors is handled earlier in this file
-   and fully overrides both this block and the [data-display="contrast"]
-   block above. */
+   Apply the same dark high-contrast treatment so the site respects
+   what they already told the platform. Forced-colors is handled
+   earlier in this file and fully overrides both this block and the
+   [data-display="contrast"] block above. */
 @media (prefers-contrast: more) {
   :root:not([data-display]) {
-    --color-surface-50:  #FFFFFF;
-    --color-surface-100: #FFFFFF;
-    --color-surface-200: #000000;
-    --color-surface-300: #000000;
-    --color-ink-900: #000000;
-    --color-ink-700: #000000;
-    --color-ink-500: #000000;
-    --color-accent-500: #0000EE;
-    --color-accent-600: #000080;
-    --color-accent-50:  #FFFFFF;
-    --color-success-50:  #FFFFFF;
-    --color-warning-50:  #FFFFFF;
-    --color-danger-50:   #FFFFFF;
+    --color-surface-50:  #000000;
+    --color-surface-100: #000000;
+    --color-surface-200: #FFFFFF;
+    --color-surface-300: #FFFFFF;
+    --color-ink-900: #FFFFFF;
+    --color-ink-700: #FFFFFF;
+    --color-ink-500: #E0E0E0;
+    --color-accent-500: #F4A56B;
+    --color-accent-600: #FFCA92;
+    --color-accent-50:  #000000;
+    --color-success-50:  #000000;
+    --color-warning-50:  #000000;
+    --color-danger-50:   #000000;
+  }
+
+  :root:not([data-display]) body {
+    background-color: #000000;
+    color: #FFFFFF;
   }
 
   :root:not([data-display]) a {
@@ -592,7 +603,7 @@ body {
 
   :root:not([data-display]) button,
   :root:not([data-display]) [role="button"] {
-    border: 2px solid #000000 !important;
+    border: 2px solid #FFFFFF !important;
   }
 
   :root:not([data-display]) [class~="bg-surface-100"],
@@ -600,14 +611,14 @@ body {
   :root:not([data-display]) [class~="bg-accent-50"],
   :root:not([data-display]) [class~="border-surface-200"],
   :root:not([data-display]) [class~="border-surface-300"] {
-    background-color: #FFFFFF !important;
-    border-color: #000000 !important;
+    background-color: #000000 !important;
+    border-color: #FFFFFF !important;
     border-width: 2px !important;
     border-style: solid !important;
   }
 
   :root:not([data-display]) :focus-visible {
-    outline: 4px solid #000000 !important;
+    outline: 4px solid #F4A56B !important;
     outline-offset: 2px !important;
   }
 }
