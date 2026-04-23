@@ -83,10 +83,11 @@ test(
 
     // Reset focus to the start of the page so tab order is
     // deterministic. An actual a11y user would land here via
-    // address-bar navigation or skip-links.
+    // address-bar navigation or skip-links. PublicLayout uses
+    // href="#main" for its skip link.
     await page.evaluate(() => {
       const skip = document.querySelector<HTMLElement>(
-        'a[href="#main-content"], a[href="#content"], a[href="#chat"]',
+        'a[href="#main"], a[href="#main-content"], a[href="#content"]',
       );
       if (skip) skip.focus();
       else document.body.focus();
@@ -112,7 +113,8 @@ test(
       recorder.step(`tab-${i + 1}`, role ?? {});
       if (
         role &&
-        (role.ariaLabel?.toLowerCase().includes('message ada') ||
+        (role.ariaLabel?.toLowerCase().includes('your message') ||
+          role.ariaLabel?.toLowerCase().includes('message ada') ||
           role.id === 'message-input' ||
           role.tag === 'TEXTAREA')
       ) {
@@ -137,25 +139,39 @@ test(
     }
 
     // ── Assertion 2: type + Enter sends ─────────────────────────────
+    // Count assistant bubbles before sending. The cold /chat load
+    // seeds Ada's greeting at nth(0), so the count starts at 1 (or
+    // more if there's also a system/welcome message). After Enter,
+    // a NEW bubble appears — proof the submission worked.
+    const bubblesBefore = page.locator('[data-role="assistant"]');
+    const countBefore = await bubblesBefore.count();
+    recorder.step('bubble-count-before-enter', { count: countBefore });
+
     const msg = "Hi — keyboard-only user here. Testing a message.";
     recorder.userTurn(msg);
     await page.keyboard.type(msg);
     await page.keyboard.press('Enter');
     recorder.step('sent-via-enter-key');
 
+    // Wait for the count to grow. If Enter didn't actually submit, the
+    // count stays the same and the poll times out.
     const bubbles = page.locator('[data-role="assistant"]');
-    await expect(bubbles.nth(0)).toBeVisible({
-      timeout: DEFAULT_TURN_TIMEOUT_MS,
-    });
+    await expect
+      .poll(
+        async () => await bubbles.count(),
+        { timeout: DEFAULT_TURN_TIMEOUT_MS, intervals: [500, 1000, 2000] },
+      )
+      .toBeGreaterThan(countBefore);
     await waitForTurnComplete(conversation);
     recorder.assertion(
       'enter-key-submitted-message',
       true,
-      'assistant bubble appeared after Enter',
+      `new assistant bubble appeared (count ${countBefore} → ${await bubbles.count()})`,
     );
 
-    // Capture Ada's first response so the transcript is complete.
-    const firstText = (await bubbles.nth(0).textContent()) ?? '';
+    // Capture Ada's response (the newest assistant bubble, index
+    // countBefore) so the transcript is complete.
+    const firstText = (await bubbles.nth(countBefore).textContent()) ?? '';
     recorder.assistantTurn(
       firstText.replace(/^(You|Ada)\s*/, '').replace(/\n?tools:\s*[^\n]+\s*$/, '').trim(),
     );

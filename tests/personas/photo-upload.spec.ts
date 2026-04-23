@@ -83,7 +83,7 @@ test(
     await recorder.captureSessionState(page);
 
     // Turn 1: user's opening message (text only, to set context).
-    const input = page.getByRole('textbox', { name: /Message Ada/i });
+    const input = page.getByRole('textbox', { name: /Your message/i });
     const sendButton = page.getByRole('button', { name: /^Send$/i });
 
     const openingText =
@@ -96,12 +96,23 @@ test(
     recorder.step('sent-user-turn-1-text-only');
 
     const bubbles = page.locator('[data-role="assistant"]');
-    await expect(bubbles.nth(0)).toBeVisible({
+
+    // Cold /chat load seeds Ada's greeting at nth(0). Wait for it and
+    // capture it so subsequent turns are indexed correctly.
+    await expect(bubbles.nth(0)).toBeVisible({ timeout: 15_000 });
+    const greetingText = (await bubbles.nth(0).textContent()) ?? '';
+    recorder.assistantTurn(
+      cleanBubbleContent(greetingText),
+      parseToolsFromBubbleText(greetingText),
+    );
+
+    // Turn 1 response lives at nth(1), NOT nth(0).
+    await expect(bubbles.nth(1)).toBeVisible({
       timeout: DEFAULT_TURN_TIMEOUT_MS,
     });
     await waitForTurnComplete(conversation);
 
-    const firstText = (await bubbles.nth(0).textContent()) ?? '';
+    const firstText = (await bubbles.nth(1).textContent()) ?? '';
     recorder.assistantTurn(
       cleanBubbleContent(firstText),
       parseToolsFromBubbleText(firstText),
@@ -128,12 +139,14 @@ test(
     await sendButton.click();
     recorder.step('sent-user-turn-2-with-photo');
 
-    await expect(bubbles.nth(1)).toBeVisible({
+    // Turn 2 response lives at nth(2): greeting(0), turn1-response(1),
+    // turn2-response(2).
+    await expect(bubbles.nth(2)).toBeVisible({
       timeout: DEFAULT_TURN_TIMEOUT_MS,
     });
     await waitForTurnComplete(conversation);
 
-    const secondText = (await bubbles.nth(1).textContent()) ?? '';
+    const secondText = (await bubbles.nth(2).textContent()) ?? '';
     recorder.assistantTurn(
       cleanBubbleContent(secondText),
       parseToolsFromBubbleText(secondText),

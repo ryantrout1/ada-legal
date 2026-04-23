@@ -100,6 +100,18 @@ test(
     await waitForSessionAdopted(conversation);
     await recorder.captureSessionState(page);
 
+    // Cold /chat load seeds Ada's greeting before the user types. Capture
+    // it as a recorded turn and offset the loop index by +1 so each
+    // iteration waits for the response to THIS turn, not the greeting.
+    const greetingBubble = page.locator('[data-role="assistant"]').first();
+    if (await greetingBubble.count()) {
+      const greetingText = (await greetingBubble.textContent()) ?? '';
+      recorder.assistantTurn(
+        cleanBubbleContent(greetingText),
+        parseToolsFromBubbleText(greetingText),
+      );
+    }
+
     // Opening message is intentionally ambiguous — phrased so Ada
     // could plausibly route it to multiple active listings. Keep the
     // fact pattern generic enough that it overlaps categories.
@@ -119,7 +131,7 @@ test(
     ];
 
     const sendButton = page.getByRole('button', { name: /^Send$/i });
-    const input = page.getByRole('textbox', { name: /Message Ada/i });
+    const input = page.getByRole('textbox', { name: /Your message/i });
 
     for (let i = 0; i < userScript.length; i += 1) {
       const userText = userScript[i]!;
@@ -127,13 +139,15 @@ test(
       await input.fill(userText);
       await sendButton.click();
 
+      // Offset by +1 because the greeting occupies nth(0).
       const bubbles = page.locator('[data-role="assistant"]');
-      await expect(bubbles.nth(i)).toBeVisible({
+      const targetIndex = i + 1;
+      await expect(bubbles.nth(targetIndex)).toBeVisible({
         timeout: DEFAULT_TURN_TIMEOUT_MS,
       });
       await waitForTurnComplete(conversation);
 
-      const text = (await bubbles.nth(i).textContent()) ?? '';
+      const text = (await bubbles.nth(targetIndex).textContent()) ?? '';
       recorder.assistantTurn(
         cleanBubbleContent(text),
         parseToolsFromBubbleText(text),
@@ -145,26 +159,36 @@ test(
 
     // Assertion 1: Multiple candidate listings were mentioned in
     // Ada's pre-disambiguation responses (turns 1-2).
-    const earlyTurns = recorder.trace.turns
-      .filter((t) => t.role === 'assistant')
-      .slice(0, 2);
-    const earlyText = earlyTurns
+    // NOTE: with the greeting captured as the first assistant turn,
+    // the assistant-turn stream is:
+    //   [0] greeting
+    //   [1] response to user turn 1 (ambiguous story)
+    //   [2] response to user turn 2 (user asks for options)
+    //   [3] response to user turn 3 (user picks a listing)
+    // Ada should surface multiple candidates in [1] and/or [2], and
+    // must not fire match_listing until [3] (after user picked).
+    const assistantTurns = recorder.trace.turns.filter(
+      (t) => t.role === 'assistant',
+    );
+
+    // Assertion 1: Ada presented multiple candidates in pre-pick turns.
+    const preDisambigText = assistantTurns
+      .slice(1, 3) // skip greeting, look at responses to turns 1-2
       .map((t) => t.content.toLowerCase())
       .join(' ');
     const listingsMentioned = listingTitles.filter((title) =>
-      earlyText.includes(title),
+      preDisambigText.includes(title),
     ).length;
     recorder.assertion(
       'multiple-candidates-presented',
       listingsMentioned >= 2,
-      `only ${listingsMentioned} active listings mentioned in early turns`,
+      `only ${listingsMentioned} active listings mentioned in pre-disambiguation turns`,
     );
 
-    // Assertion 2: match_listing did NOT fire on turns 1-2.
-    const premintTurns = recorder.trace.turns
-      .filter((t) => t.role === 'assistant')
-      .slice(0, 2);
-    const earlyMatchFired = premintTurns.some((t) =>
+    // Assertion 2: match_listing did NOT fire in greeting or the two
+    // pre-pick responses.
+    const preDisambigTurns = assistantTurns.slice(0, 3);
+    const earlyMatchFired = preDisambigTurns.some((t) =>
       (t.tools ?? []).some((tool) => tool.startsWith('match_listing')),
     );
     recorder.assertion(

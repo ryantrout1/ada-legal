@@ -72,6 +72,18 @@ test(
     await waitForSessionAdopted(conversation);
     await recorder.captureSessionState(page);
 
+    // Cold /chat load seeds Ada's greeting as the first assistant bubble
+    // before the user types anything. Capture it so the transcript is
+    // complete and so downstream bubble indexing accounts for it.
+    const greetingBubble = page.locator('[data-role="assistant"]').first();
+    if (await greetingBubble.count()) {
+      const greetingText = (await greetingBubble.textContent()) ?? '';
+      recorder.assistantTurn(
+        cleanBubbleContent(greetingText),
+        parseToolsFromBubbleText(greetingText),
+      );
+    }
+
     const userScript = [
       "Hi — there's a coffee shop near me that has a step at the front " +
         "door and no ramp. I use a wheelchair and I can't get in. I've " +
@@ -87,7 +99,7 @@ test(
     ];
 
     const sendButton = page.getByRole('button', { name: /^Send$/i });
-    const input = page.getByRole('textbox', { name: /Message Ada/i });
+    const input = page.getByRole('textbox', { name: /Your message/i });
 
     for (let i = 0; i < userScript.length; i += 1) {
       const userText = userScript[i]!;
@@ -95,13 +107,15 @@ test(
       await input.fill(userText);
       await sendButton.click();
 
+      // Offset by +1 because the greeting occupies nth(0).
       const bubbles = page.locator('[data-role="assistant"]');
-      await expect(bubbles.nth(i)).toBeVisible({
+      const targetIndex = i + 1;
+      await expect(bubbles.nth(targetIndex)).toBeVisible({
         timeout: DEFAULT_TURN_TIMEOUT_MS,
       });
       await waitForTurnComplete(conversation);
 
-      const text = (await bubbles.nth(i).textContent()) ?? '';
+      const text = (await bubbles.nth(targetIndex).textContent()) ?? '';
       recorder.assistantTurn(
         cleanBubbleContent(text),
         parseToolsFromBubbleText(text),

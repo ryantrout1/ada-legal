@@ -82,6 +82,16 @@ test(
     await waitForSessionAdopted(conversation);
     await recorder.captureSessionState(page);
 
+    // Cold /chat load seeds Ada's greeting. Capture so indexing works.
+    const greetingBubble = page.locator('[data-role="assistant"]').first();
+    if (await greetingBubble.count()) {
+      const greetingText = (await greetingBubble.textContent()) ?? '';
+      recorder.assistantTurn(
+        cleanBubbleContent(greetingText),
+        parseToolsFromBubbleText(greetingText),
+      );
+    }
+
     // Fact pattern: landlord-tenant dispute. User's landlord
     // raised the rent beyond the lease's stated cap and is trying
     // to evict when she protested. No disability involved. NOT an
@@ -98,7 +108,7 @@ test(
     ];
 
     const sendButton = page.getByRole('button', { name: /^Send$/i });
-    const input = page.getByRole('textbox', { name: /Message Ada/i });
+    const input = page.getByRole('textbox', { name: /Your message/i });
 
     for (let i = 0; i < userScript.length; i += 1) {
       const userText = userScript[i]!;
@@ -106,13 +116,15 @@ test(
       await input.fill(userText);
       await sendButton.click();
 
+      // Offset by +1 because the greeting occupies nth(0).
       const bubbles = page.locator('[data-role="assistant"]');
-      await expect(bubbles.nth(i)).toBeVisible({
+      const targetIndex = i + 1;
+      await expect(bubbles.nth(targetIndex)).toBeVisible({
         timeout: DEFAULT_TURN_TIMEOUT_MS,
       });
       await waitForTurnComplete(conversation);
 
-      const text = (await bubbles.nth(i).textContent()) ?? '';
+      const text = (await bubbles.nth(targetIndex).textContent()) ?? '';
       recorder.assistantTurn(
         cleanBubbleContent(text),
         parseToolsFromBubbleText(text),

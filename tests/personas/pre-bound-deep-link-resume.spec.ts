@@ -139,21 +139,25 @@ test(
       `status=${secondStatus}`,
     );
 
-    // No 'resume previous conversation' dialog or prompt should appear.
-    // The fix made resume silent for pre-bound sessions. We look for
-    // any prompt text that would indicate the UI asked the user to
-    // confirm resuming.
-    const resumePrompt = page2.getByText(
-      /resume your previous conversation|continue your previous session|pick up where you left off/i,
+    // The resume card — which we expect NOT to render for a pre-bound
+    // session — uses the heading "You have a conversation in progress."
+    // with buttons "Continue this conversation" and "Start a new
+    // conversation." We assert that heading is NOT visible. Looking for
+    // the heading text rather than the buttons because the buttons
+    // include the word "conversation" which could appear elsewhere in
+    // the chat UI, but the specific heading text only appears on the
+    // resume card.
+    const resumeHeading = page2.getByText(
+      /You have a conversation in progress/i,
     );
-    const resumePromptVisible = await resumePrompt
+    const resumePromptVisible = await resumeHeading
       .isVisible()
       .catch(() => false);
     recorder.assertion(
       'no-resume-prompt-shown',
       !resumePromptVisible,
       resumePromptVisible
-        ? 'resume prompt was shown; regression on 26/2 fix'
+        ? 'resume card was shown; regression on 26/2 fix'
         : 'clean — silent adoption',
     );
 

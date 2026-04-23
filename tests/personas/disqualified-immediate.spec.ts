@@ -114,7 +114,7 @@ test(
     ];
 
     const sendButton = page.getByRole('button', { name: /^Send$/i });
-    const input = page.getByRole('textbox', { name: /Message Ada/i });
+    const input = page.getByRole('textbox', { name: /Your message/i });
 
     for (let i = 0; i < userScript.length; i += 1) {
       const userText = userScript[i]!;

@@ -107,7 +107,7 @@ test(
 
     // Prompt Ada with a minimal opener so she emits her first full
     // turn. The override, if honored, should surface in the framing.
-    const input = page.getByRole('textbox', { name: /Message Ada/i });
+    const input = page.getByRole('textbox', { name: /Your message/i });
     const sendButton = page.getByRole('button', { name: /^Send$/i });
 
     const opener =
