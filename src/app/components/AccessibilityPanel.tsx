@@ -6,7 +6,7 @@
  * public header.
  *
  * Sections:
- *   Display   5 modes  (Default, Dark, Warm, Contrast, Low Vision)
+ *   Display   5 modes  (Default, Dark, Warm, High Contrast, Low Vision)
  *   Font      4 choices (Default, Atkinson, OpenDyslexic, Lexend)
  *   Size      3 steps  (small, medium, large)
  *   Spacing   3 steps  (tight, default, loose)
@@ -224,7 +224,7 @@ const DISPLAY_OPTS: DisplayOption[] = [
   },
   {
     value: 'contrast',
-    label: 'Contrast',
+    label: 'High Contrast',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
         <circle cx="12" cy="12" r="9" />
