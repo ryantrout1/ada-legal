@@ -341,3 +341,89 @@ export const test = baseTest.extend<PersonaFixtures>({
 });
 
 export { expect } from '@playwright/test';
+
+// ─── Shared conversation helpers ─────────────────────────────────────────────
+//
+// Every persona that drives the public chat UI follows the same pattern:
+// send a user message, wait for Ada's response, parse out the tools row,
+// record it. These helpers centralize that pattern so if the rendering
+// shape changes (tools are hidden, or moved, or displayed differently) we
+// fix it once instead of in every persona.
+
+import { type Locator } from '@playwright/test';
+
+/** Default timeout for one Ada turn. Real LLM calls are 8-20s; we budget
+ *  90s to stay green on a slow network or a cold function. */
+export const DEFAULT_TURN_TIMEOUT_MS = 90_000;
+
+/**
+ * Extract the list of tool names Ada called on this turn from a
+ * rendered assistant bubble. The MessageBubble component renders
+ * "tools: match_listing, extract_field" as a small mono-font line at
+ * the end when message.tools is set. Returns an empty array if no
+ * tools line is present (which is common — most turns call no tools).
+ */
+export function parseToolsFromBubbleText(text: string): string[] {
+  const m = text.match(/tools:\s*([^\n]+)\s*$/);
+  if (!m) return [];
+  return m[1]!.split(',').map((s) => s.trim()).filter(Boolean);
+}
+
+/** Strip the "You"/"Ada" leading label and the trailing tools line from
+ *  a raw bubble textContent() so only the actual message body remains. */
+export function cleanBubbleContent(text: string): string {
+  return text
+    .replace(/^(You|Ada)\s*/, '')
+    .replace(/\n?tools:\s*[^\n]+\s*$/, '')
+    .trim();
+}
+
+/**
+ * Wait for Ada's busy state (the data-busy attribute on the
+ * conversation container) to drop to 'false', signaling the server-
+ * side turn completed and the bubble is fully rendered.
+ */
+export async function waitForTurnComplete(
+  conversation: Locator,
+  timeoutMs: number = DEFAULT_TURN_TIMEOUT_MS,
+): Promise<void> {
+  const { expect } = await import('@playwright/test');
+  await expect
+    .poll(
+      async () => (await conversation.getAttribute('data-busy')) ?? 'true',
+      { timeout: timeoutMs, intervals: [500, 1000, 2000] },
+    )
+    .toBe('false');
+}
+
+/**
+ * Wait for the chat hook to have adopted a session (session_id goes
+ * from empty to a uuid). Used at the start of every persona that
+ * drives the public chat UI.
+ */
+export async function waitForSessionAdopted(
+  conversation: Locator,
+  timeoutMs: number = 15_000,
+): Promise<void> {
+  const { expect } = await import('@playwright/test');
+  await expect
+    .poll(
+      async () => (await conversation.getAttribute('data-session-id')) || '',
+      { timeout: timeoutMs, intervals: [500, 1000, 2000] },
+    )
+    .not.toBe('');
+}
+
+/**
+ * Throw a descriptive Error if the recorder has any failed assertions.
+ * Every persona's happy-path end should call this so Playwright marks
+ * the test failed when assertions recorded soft failures.
+ */
+export function throwIfAssertionsFailed(recorder: PersonaRecorder): void {
+  if (recorder.trace.assertions.failed > 0) {
+    throw new Error(
+      `${recorder.trace.assertions.failed} persona assertion(s) failed. ` +
+        `See test-results/personas/<run>/${recorder.trace.slug}/assertions.log`,
+    );
+  }
+}
