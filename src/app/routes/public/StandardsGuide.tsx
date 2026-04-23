@@ -1,0 +1,187 @@
+/**
+ * /standards-guide — index page for the ADA Standards Guide migration.
+ *
+ * This is Commit 1 of the Base44 → Vercel port. The minimum viable
+ * shape: a single page listing the 10 chapters, using PublicLayout's
+ * shell. No hero carousel yet, no search, no sidebar, no
+ * ResourceSections — those arrive in Commit 2 alongside the actual
+ * chapter pages.
+ *
+ * The point of landing this first, smallest slice:
+ *   - Proves the route works inside the App.tsx router
+ *   - Proves the token aliases in app.css resolve correctly (this page
+ *     references --heading, --body, --border — Base44 token names that
+ *     now map to --color-ink-900, --color-ink-700, --color-surface-200)
+ *   - Gives /standards-guide/* links something to navigate back to
+ *   - Keeps the commit small enough to roll back cleanly if anything
+ *     in the token aliasing breaks the rest of the site
+ *
+ * Next commit (Commit 2) will port:
+ *   - ChapterPageLayout, GuideSection, GuideStyles
+ *   - All 10 StandardsCh*.tsx pages
+ *   - GuideReadingLevelBar (with page-local state, not session state)
+ *   - GuideHeroBanner, GuideLegalCallout, ShareBar, CiteLink,
+ *     AutoCiteLinks
+ *   - Route wiring for /standards-guide/chapter/:num
+ *
+ * Commit 3 ports all 43 diagrams.
+ * Commit 4 ports all 52 guide pages + their routes.
+ * Commits 5–8 wire in Ada CTAs, prompt integration, photo-analyzer
+ * cross-refs, and SEO metadata — see the migration plan.
+ */
+
+import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+
+interface ChapterLink {
+  num: number;
+  title: string;
+  range: string;
+}
+
+const CHAPTERS: ChapterLink[] = [
+  { num: 1, title: 'Application & Administration', range: '§101–§106' },
+  { num: 2, title: 'Scoping Requirements', range: '§201–§244' },
+  { num: 3, title: 'Building Blocks', range: '§301–§309' },
+  { num: 4, title: 'Accessible Routes', range: '§401–§410' },
+  { num: 5, title: 'General Site & Building Elements', range: '§501–§505' },
+  { num: 6, title: 'Plumbing Elements & Facilities', range: '§601–§612' },
+  { num: 7, title: 'Communication Elements & Features', range: '§701–§708' },
+  { num: 8, title: 'Special Rooms, Spaces & Elements', range: '§801–§813' },
+  { num: 9, title: 'Built-In Elements', range: '§901–§904' },
+  { num: 10, title: 'Recreation Facilities', range: '§1001–§1011' },
+];
+
+export default function StandardsGuide() {
+  return (
+    <>
+      <Helmet>
+        <title>ADA Standards Guide — ADA Legal Link</title>
+        <meta
+          name="description"
+          content="The complete 2010 ADA Accessibility Standards, reorganized for clarity. 10 chapters, plain-language explanations, interactive diagrams. Free forever."
+        />
+      </Helmet>
+
+      <main id="main" className="max-w-5xl mx-auto px-5 sm:px-8 py-16">
+        <header className="mb-12">
+          <p
+            className="text-xs uppercase tracking-wider font-mono mb-3"
+            style={{ color: 'var(--section-label)' }}
+          >
+            Standards Guide
+          </p>
+          <h1
+            className="text-4xl sm:text-5xl font-serif mb-4"
+            style={{ color: 'var(--heading)', fontFamily: 'var(--font-display)' }}
+          >
+            The ADA Accessibility Standards, in plain English.
+          </h1>
+          <p
+            className="text-lg max-w-3xl"
+            style={{ color: 'var(--body)' }}
+          >
+            The full 2010 ADA Standards, reorganized by what you actually
+            want to find. Every section has a simple explanation, a
+            plain-English walkthrough, and the legal text. Interactive
+            diagrams show the measurements that matter.
+          </p>
+        </header>
+
+        <section
+          aria-labelledby="chapters-heading"
+          className="mb-16"
+        >
+          <h2
+            id="chapters-heading"
+            className="text-xs uppercase tracking-wider font-mono mb-4"
+            style={{ color: 'var(--body-secondary)' }}
+          >
+            10 Chapters
+          </h2>
+
+          <ol
+            className="grid gap-2 sm:grid-cols-2"
+            style={{ listStyle: 'none', margin: 0, padding: 0 }}
+          >
+            {CHAPTERS.map((ch) => (
+              <li key={ch.num}>
+                <Link
+                  to={`/standards-guide/chapter/${ch.num}`}
+                  className="flex items-center gap-4 px-5 py-4 rounded-lg no-underline transition-colors"
+                  style={{
+                    background: 'var(--card-bg)',
+                    border: '1px solid var(--border)',
+                    minHeight: '44px',
+                  }}
+                >
+                  <span
+                    className="shrink-0 flex items-center justify-center font-serif font-bold text-sm"
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      background: 'var(--accent-lighter)',
+                      color: 'var(--accent)',
+                      borderRadius: '8px',
+                      fontFamily: 'var(--font-display)',
+                    }}
+                  >
+                    {ch.num}
+                  </span>
+                  <span className="flex-1 min-w-0">
+                    <span
+                      className="block font-medium text-base"
+                      style={{ color: 'var(--heading)' }}
+                    >
+                      {ch.title}
+                    </span>
+                    <span
+                      className="block text-xs font-mono mt-0.5"
+                      style={{ color: 'var(--body-secondary)' }}
+                    >
+                      {ch.range}
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <aside
+          className="rounded-lg p-6"
+          style={{
+            background: 'var(--card-bg-tinted)',
+            border: '1px solid var(--border)',
+          }}
+        >
+          <h2
+            className="text-sm uppercase tracking-wider font-mono mb-2"
+            style={{ color: 'var(--section-label)' }}
+          >
+            Not sure where to start?
+          </h2>
+          <p
+            className="text-base mb-4"
+            style={{ color: 'var(--body)' }}
+          >
+            If you ran into a specific barrier and you want to know
+            whether it counts as an ADA violation, you can describe what
+            happened to me and I'll tell you what I think.
+          </p>
+          <Link
+            to="/chat"
+            className="inline-flex items-center justify-center px-5 py-3 rounded-md font-medium no-underline"
+            style={{
+              background: 'var(--accent)',
+              color: 'var(--btn-text)',
+              minHeight: '44px',
+            }}
+          >
+            Talk to Ada
+          </Link>
+        </aside>
+      </main>
+    </>
+  );
+}

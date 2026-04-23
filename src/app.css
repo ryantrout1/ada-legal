@@ -389,3 +389,77 @@ body {
     display: none !important;
   }
 }
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * Standards Guide token aliases (Migration §A)
+ * ───────────────────────────────────────────────────────────────────────────
+ *
+ * The Standards Guide content (10 chapters, 52 guide pages, 43 diagrams)
+ * was authored against Base44's token vocabulary: --page-bg, --heading,
+ * --body, --accent, --border, --card-bg, etc. The main palette on
+ * ada.adalegallink.com uses a different vocabulary: --color-surface-*,
+ * --color-ink-*, --color-accent-*.
+ *
+ * Rather than sed-translate 20,000+ lines of guide content (high risk of
+ * subtle bugs for a cosmetic change), we alias the old names to the new
+ * palette here. Every :root[data-display="..."] block below inherits
+ * these aliases automatically because they use the same underlying
+ * --color-* tokens that already shift per display mode.
+ *
+ * When we eventually retire the aliases, it will be one chapter at a
+ * time as the content is touched for other reasons. There is no rush.
+ *
+ * Mapping rationale:
+ *   --page-bg          = primary page background  → surface-50
+ *   --page-bg-alt      = secondary surface (cards themselves sit on this)
+ *                        → surface-100 (the "subtle lift" tier)
+ *   --page-bg-subtle   = sidebar / body background behind cards
+ *                        → surface-100 (matches page-bg-alt; Base44 used
+ *                        them distinctly but the visual difference was
+ *                        minimal and the main palette consolidates them)
+ *   --heading          = primary text  → ink-900
+ *   --body             = body text  → ink-700
+ *   --body-secondary   = tertiary / caption text  → ink-500
+ *   --section-label    = category accents (Chapter 4, Chapter 6 eyebrows)
+ *                        → accent-500 (single accent; Base44 varied these
+ *                        per section but it was decorative)
+ *   --card-bg          = card surface  → surface-50 (cards on page-bg-alt
+ *                        want slightly LIGHTER to create the lift)
+ *   --card-border      = card hairlines  → surface-200
+ *   --card-bg-tinted   = accent-adjacent card (e.g. "Talk to Ada" CTA)
+ *                        → accent-50
+ *   --card-bg-warm     = warning-adjacent card  → warning-50
+ *   --border           = primary border tone  → surface-200
+ *   --border-lighter   = faint separators  → surface-100
+ *   --accent           = primary accent  → accent-500
+ *   --accent-light     = focus ring, hover  → accent-500 (main palette
+ *                        doesn't have a separate light tier; using the
+ *                        same terracotta works because it already
+ *                        differentiates from body text)
+ *   --accent-lighter   = focus tint  → accent-50
+ *   --accent-success   = success green  → success-500
+ *   --accent-success-bg = success surface  → success-50
+ *   --btn-text         = button contrast text  → surface-50 (the lightest
+ *                        surface, high contrast against accent-500 fills) */
+
+:root {
+  --page-bg:          var(--color-surface-50);
+  --page-bg-alt:      var(--color-surface-100);
+  --page-bg-subtle:   var(--color-surface-100);
+  --heading:          var(--color-ink-900);
+  --body:             var(--color-ink-700);
+  --body-secondary:   var(--color-ink-500);
+  --section-label:    var(--color-accent-500);
+  --card-bg:          var(--color-surface-50);
+  --card-border:      var(--color-surface-200);
+  --card-bg-tinted:   var(--color-accent-50);
+  --card-bg-warm:     var(--color-warning-50);
+  --border:           var(--color-surface-200);
+  --border-lighter:   var(--color-surface-100);
+  --accent:           var(--color-accent-500);
+  --accent-light:     var(--color-accent-500);
+  --accent-lighter:   var(--color-accent-50);
+  --accent-success:   var(--color-success-500);
+  --accent-success-bg: var(--color-success-50);
+  --btn-text:         var(--color-surface-50);
+}

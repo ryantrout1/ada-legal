@@ -96,6 +96,14 @@ export default function PublicLayout() {
             <ul className="flex flex-wrap gap-5">
               <li>
                 <a
+                  href="/standards-guide"
+                  className="hover:text-accent-600 transition-colors"
+                >
+                  Standards Guide
+                </a>
+              </li>
+              <li>
+                <a
                   href="/privacy"
                   className="hover:text-accent-600 transition-colors"
                 >

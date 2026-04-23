@@ -31,6 +31,8 @@ import Accessibility from './routes/public/Accessibility.js';
 import Privacy from './routes/public/Privacy.js';
 import Terms from './routes/public/Terms.js';
 import SessionPackagePage from './routes/public/SessionPackagePage.js';
+import StandardsGuide from './routes/public/StandardsGuide.js';
+import StandardsChapter from './routes/public/StandardsChapter.js';
 import AdminSignIn from './routes/admin/SignIn.js';
 import AdminSignUp from './routes/admin/SignUp.js';
 import AdminSessions from './routes/admin/AdminSessions.js';
@@ -70,6 +72,11 @@ export default function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/s/:slug" element={<SessionPackagePage />} />
+          <Route path="/standards-guide" element={<StandardsGuide />} />
+          <Route
+            path="/standards-guide/chapter/:num"
+            element={<StandardsChapter />}
+          />
         </Route>
 
         {/* Admin tree — ClerkProvider only wraps this subtree */}
