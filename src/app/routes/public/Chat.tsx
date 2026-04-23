@@ -77,12 +77,20 @@ export default function Chat() {
   // types — rows={1} is a starting value, browsers don't grow the
   // element automatically. The cap matches the CSS maxHeight so the
   // scroll region doesn't disappear off-screen on very long drafts.
+  //
+  // Also manages overflow-y so the scrollbar only appears when content
+  // actually exceeds the max height. Without this, the textarea
+  // renders a visible scrollbar all the time (the up/down spinner
+  // control on the right edge of the element).
   useEffect(() => {
     const el = inputRef.current;
     if (!el) return;
     el.style.height = 'auto';
-    const next = Math.min(el.scrollHeight, 200);
+    const MAX = 200;
+    const content = el.scrollHeight;
+    const next = Math.min(content, MAX);
     el.style.height = `${next}px`;
+    el.style.overflowY = content > MAX ? 'auto' : 'hidden';
   }, [draft]);
 
   // Speak each new assistant message when TTS is enabled. Tracks the
@@ -256,44 +264,43 @@ export default function Chat() {
               aria-pressed={speechOutput.enabled}
               title={speechOutput.enabled ? 'Stop reading aloud' : 'Read Ada\u2019s messages aloud'}
               className={
-                'inline-flex items-center justify-center h-9 w-9 rounded-md border transition-colors ' +
+                'inline-flex items-center gap-1.5 h-9 px-3 rounded-md border text-xs font-medium transition-colors ' +
                 (speechOutput.enabled
                   ? 'border-accent-500 bg-accent-50 text-accent-600'
-                  : 'border-surface-200 text-ink-500 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100')
+                  : 'border-surface-200 text-ink-700 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100')
               }
             >
-              {/* Custom "Speak" glyph: a small mouth/ring emitting two
-                  curved sound waves. When active, both waves present.
-                  When inactive, only the ring is drawn, softer. */}
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <circle
-                  cx="8"
-                  cy="12"
-                  r="3"
+              {/* Custom "Speak" glyph: a filled speech head (Pac-Man-ish
+                  oval with a wedge mouth) emitting two curved waves.
+                  Waves grow stronger when active. Drawn at 16px with
+                  2px strokes so details survive at small size. */}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M4 12 A6 6 0 1 1 12 17.5 L8 21 L8 16.5 A6 6 0 0 1 4 12 Z"
                   stroke="currentColor"
-                  strokeWidth="1.75"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
                   fill={speechOutput.enabled ? 'currentColor' : 'none'}
+                  fillOpacity={speechOutput.enabled ? 0.15 : 0}
                 />
                 <path
-                  d="M13 9 Q16 12 13 15"
+                  d="M16 8.5 Q19 12 16 15.5"
                   stroke="currentColor"
-                  strokeWidth="1.75"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   fill="none"
-                  opacity={speechOutput.enabled ? 1 : 0.4}
+                  opacity={speechOutput.enabled ? 1 : 0.35}
                 />
                 <path
-                  d="M16 6 Q21 12 16 18"
+                  d="M19 5.5 Q23.5 12 19 18.5"
                   stroke="currentColor"
-                  strokeWidth="1.75"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   fill="none"
                   opacity={speechOutput.enabled ? 1 : 0}
                 />
               </svg>
-              <span className="sr-only">
-                {speechOutput.enabled ? 'Speaking' : 'Speak'}
-              </span>
+              <span>{speechOutput.enabled ? 'Speaking' : 'Speak'}</span>
             </button>
           )}
           <button
@@ -302,34 +309,34 @@ export default function Chat() {
             disabled={state.messages.length === 0}
             aria-label="Download this conversation as a text file"
             title="Download this conversation"
-            className="inline-flex items-center justify-center h-9 w-9 rounded-md border border-surface-200 text-ink-500 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-surface-200 text-xs font-medium text-ink-700 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {/* Custom "Download" glyph: a page/card with a downward
-                tray beneath. Reads as "a record coming off the stack,"
-                not as a generic arrow. */}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            {/* Custom "Save" glyph: a page with two content lines
+                plus a save-tray beneath. Suggests "preserve this
+                record" rather than a generic arrow download. */}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <rect
                 x="6"
-                y="3"
+                y="2.5"
                 width="12"
                 height="14"
                 rx="1.5"
                 stroke="currentColor"
-                strokeWidth="1.75"
+                strokeWidth="2"
                 fill="none"
               />
-              <line x1="9" y1="8" x2="15" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              <line x1="9" y1="11" x2="13" y2="11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="9" y1="7.5" x2="15" y2="7.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+              <line x1="9" y1="11" x2="13" y2="11" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
               <path
-                d="M3 19 L21 19 L19 21.5 L5 21.5 Z"
+                d="M3 19 L21 19 L19 21.75 L5 21.75 Z"
                 stroke="currentColor"
-                strokeWidth="1.5"
+                strokeWidth="1.75"
                 strokeLinejoin="round"
                 fill="currentColor"
-                fillOpacity="0.18"
+                fillOpacity="0.2"
               />
             </svg>
-            <span className="sr-only">Download</span>
+            <span>Save</span>
           </button>
           <button
             type="button"
@@ -346,25 +353,27 @@ export default function Chat() {
             disabled={state.initializing}
             aria-label="Start a new conversation"
             title="Start a new conversation"
-            className="inline-flex items-center justify-center h-9 w-9 rounded-md border border-surface-200 text-ink-500 hover:border-surface-300 hover:text-accent-600 hover:bg-surface-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-transparent text-xs font-medium text-ink-500 hover:border-surface-200 hover:text-ink-900 hover:bg-surface-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {/* Custom "New conversation" glyph: an empty speech bubble
-                with a small four-point spark at the upper-right,
-                meaning "fresh start, new thread." */}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            {/* Custom "New" glyph: an empty speech bubble (chat thread)
+                with a four-point spark at its upper-right, meaning
+                "fresh start." Ghost-style button treatment so the
+                destructive action is visually de-emphasized vs.
+                Speak/Save; only shows a border on hover. */}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
-                d="M3 6 A3 3 0 0 1 6 3 L15 3 A3 3 0 0 1 18 6 L18 13 A3 3 0 0 1 15 16 L10 16 L6 20 L6 16 A3 3 0 0 1 3 13 Z"
+                d="M3 6 A3 3 0 0 1 6 3 L14 3 A3 3 0 0 1 17 6 L17 12 A3 3 0 0 1 14 15 L9 15 L5.5 18.5 L5.5 15 A3 3 0 0 1 3 12 Z"
                 stroke="currentColor"
-                strokeWidth="1.75"
+                strokeWidth="2"
                 strokeLinejoin="round"
                 fill="none"
               />
-              <g stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                <line x1="19.5" y1="4" x2="19.5" y2="8" />
-                <line x1="17.5" y1="6" x2="21.5" y2="6" />
+              <g stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
+                <line x1="20" y1="3.5" x2="20" y2="7.5" />
+                <line x1="18" y1="5.5" x2="22" y2="5.5" />
               </g>
             </svg>
-            <span className="sr-only">New conversation</span>
+            <span>New</span>
           </button>
         </div>
       </header>
@@ -620,7 +629,7 @@ export default function Chat() {
             disabled={state.busy || locked || state.initializing}
             aria-label="Your message"
             className="flex-1 resize-none rounded-md border border-surface-200 bg-white px-3 py-2.5 text-ink-900 placeholder-ink-500 disabled:bg-surface-100 disabled:text-ink-500"
-            style={{ minHeight: '44px', maxHeight: '200px' }}
+            style={{ minHeight: '44px', maxHeight: '200px', overflowY: 'hidden' }}
           />
 
           <button
