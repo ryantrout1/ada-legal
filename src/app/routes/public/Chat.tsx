@@ -142,7 +142,7 @@ export default function Chat() {
 
   function handleLevelChange(level: ReadingLevel) {
     if (state.readingLevel === level) return;
-    if (window.confirm('Changing reading level will start a new conversation. Continue?')) {
+    if (window.confirm('Switching reading level starts a fresh conversation. Okay to do that?')) {
       startNewSession(level);
       setDraft('');
       clearPhoto();
@@ -171,8 +171,8 @@ export default function Chat() {
             You have a conversation in progress.
           </h1>
           <p className="text-ink-700 leading-relaxed">
-            Continue where you left off, or start a new conversation. Your
-            previous one will stay saved until you tell Ada you're done.
+            Pick up where you left off, or start over. What you already told me
+            stays saved until you tell me you're done.
           </p>
         </header>
 
@@ -208,9 +208,9 @@ export default function Chat() {
         </div>
 
         <p className="text-sm text-ink-500 mt-6">
-          If this isn't you, click <strong>Start a new conversation</strong>.
-          Shared devices, public computers, or anyone else using this browser
-          will see a fresh start.
+          If this isn't you — maybe someone else used this browser — hit{' '}
+          <strong>Start a new conversation</strong>. Nothing from the other
+          conversation carries over.
         </p>
       </section>
     );
@@ -301,7 +301,7 @@ export default function Chat() {
             onClick={() => {
               if (
                 state.messages.length === 0 ||
-                window.confirm('Start a new conversation? The current one will end.')
+                window.confirm('Start fresh? What we have now will end.')
               ) {
                 startNewSession(state.readingLevel);
                 setDraft('');
@@ -317,16 +317,17 @@ export default function Chat() {
       </header>
 
       {/* Error banner with recovery actions.
-          On error we show the message, then concrete next steps: try again
-          with the last user message, start a new conversation, or save
-          what we have so far so the user doesn't lose work. */}
+          On error we show what happened, then concrete next steps: try
+          again with the last user message, start over, or save what we
+          have so far so the user doesn't lose work. Voice rule: name
+          what happened, don't apologize. See docs/ADA_VOICE_GUIDE.md. */}
       {state.error && (
         <div
           role="alert"
           className="mb-3 rounded-md border border-danger-500 bg-danger-50 px-4 py-3 text-sm"
         >
           <p className="text-danger-500 mb-3">
-            <strong>Something went wrong.</strong> {state.error}
+            <strong>Something didn't go through.</strong> {state.error}
           </p>
           <div className="flex flex-wrap gap-2">
             {(() => {
@@ -353,7 +354,7 @@ export default function Chat() {
               }}
               className="px-3 py-1.5 rounded-md border border-surface-300 bg-white text-ink-700 hover:bg-surface-100 text-sm"
             >
-              Start over
+              Start fresh
             </button>
             {state.messages.length > 0 && (
               <button
@@ -361,7 +362,7 @@ export default function Chat() {
                 onClick={() => downloadConversation(state.messages)}
                 className="px-3 py-1.5 rounded-md border border-surface-300 bg-white text-ink-700 hover:bg-surface-100 text-sm"
               >
-                Download what we have
+                Save what we have
               </button>
             )}
           </div>
@@ -379,7 +380,7 @@ export default function Chat() {
         className="flex-1 overflow-y-auto space-y-4 pr-1"
       >
         {state.initializing && (
-          <p className="text-ink-500 italic">Starting a new conversation…</p>
+          <p className="text-ink-500 italic">Starting up…</p>
         )}
         {state.messages.map((msg) => (
           <MessageBubble key={msg.id} message={msg} />
@@ -459,7 +460,7 @@ export default function Chat() {
                 {photoFilename ?? 'Photo attached'}
               </p>
               <p className="text-ink-500 text-xs mt-0.5">
-                Ada will analyze this when you send the message.
+                I'll look at this when you send.
               </p>
             </div>
             <button
@@ -553,7 +554,7 @@ export default function Chat() {
             rows={1}
             placeholder={
               locked
-                ? 'This conversation has ended. Start a new one to continue.'
+                ? 'This conversation has wrapped up. Start a fresh one to keep going.'
                 : 'Tell Ada what happened...'
             }
             disabled={state.busy || locked || state.initializing}
@@ -596,19 +597,19 @@ function ReadingLevelPicker({
       id: 'simple',
       label: 'Simple',
       description:
-        'Plain language. Short sentences. No legal terms. For anyone who wants a clearer, slower conversation.',
+        'Plain language, short sentences, no legal terms. For a clearer, slower conversation.',
     },
     {
       id: 'standard',
       label: 'Standard',
       description:
-        'Conversational everyday language. The default.',
+        'Everyday conversation. This is where most people start.',
     },
     {
       id: 'professional',
       label: 'Professional',
       description:
-        'Legal and technical terms. For attorneys, advocates, and people familiar with ADA law.',
+        'Precise legal language. For attorneys, advocates, or anyone already familiar with ADA terminology.',
     },
   ];
   return (
