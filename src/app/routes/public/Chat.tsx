@@ -353,13 +353,14 @@ export default function Chat() {
             disabled={state.initializing}
             aria-label="Start a new conversation"
             title="Start a new conversation"
-            className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-transparent text-xs font-medium text-ink-500 hover:border-surface-200 hover:text-ink-900 hover:bg-surface-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-surface-200 text-xs font-medium text-ink-500 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {/* Custom "New" glyph: an empty speech bubble (chat thread)
                 with a four-point spark at its upper-right, meaning
-                "fresh start." Ghost-style button treatment so the
-                destructive action is visually de-emphasized vs.
-                Speak/Save; only shows a border on hover. */}
+                "fresh start." Visually matched to Speak/Save for
+                consistency; slightly muted text color is the only
+                de-emphasis, enough to hint this is the lesser-used
+                action without looking incomplete. */}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
                 d="M3 6 A3 3 0 0 1 6 3 L14 3 A3 3 0 0 1 17 6 L17 12 A3 3 0 0 1 14 15 L9 15 L5.5 18.5 L5.5 15 A3 3 0 0 1 3 12 Z"
