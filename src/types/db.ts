@@ -113,11 +113,42 @@ export interface SessionMetadata {
    * public blob URLs from Vercel Blob with unguessable random paths.
    */
   photos?: AttachedPhoto[];
+  /**
+   * If the session was opened via a Talk-to-Ada CTA from a Standards
+   * Guide chapter or deep-dive guide page, we record which page the
+   * user came from. This lets Ada open the conversation by
+   * acknowledging the topic they were reading about, and (Commit 6)
+   * reference the same page back in her replies.
+   *
+   * Step 29, Commit 5.
+   */
+  page_context?: PageContext;
 }
 
 export interface AttachedPhoto {
   url: string;
   uploadedAt: string;
+}
+
+/**
+ * Where the user came from when they hit the Talk-to-Ada CTA.
+ *
+ *   - kind 'chapter': Standards Guide chapter page. `ref` is the
+ *     chapter number as a string ('1'..'10'). `title` is the chapter
+ *     title (e.g. "Accessible Routes").
+ *   - kind 'guide':   Deep-dive guide page under /standards-guide/guide/.
+ *     `ref` is the URL slug ('ramps', 'hotels-lodging', etc.).
+ *     `title` is the human-readable title.
+ *
+ * Kept deliberately small and stable: only the three fields Ada needs
+ * to reference the source in her replies. Additional fields (e.g.
+ * section anchor, reading level at click time) can be added later
+ * without a migration since this rides in jsonb.
+ */
+export interface PageContext {
+  kind: 'chapter' | 'guide';
+  ref: string;
+  title: string;
 }
 
 // Matches docs/DO_NOT_TOUCH.md rule 12: reading levels are exactly these three.

@@ -38,12 +38,13 @@
 
 import { BookOpen, ChevronLeft, ChevronRight, Scale, Sparkles } from 'lucide-react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AutoCiteLinks from './AutoCiteLinks.js';
 import GuideHeroBanner from './GuideHeroBanner.js';
 import GuideStyles from './GuideStyles.js';
 import ShareBar from './ShareBar.js';
 import { useReadingLevel, type ReadingLevel } from './ReadingLevelContext.js';
+import { startAdaSessionWithContext } from './startAdaSession.js';
 
 /** One section in a chapter (e.g. §405 Ramps inside Ch. 4). */
 export interface ChapterSection {
@@ -426,7 +427,21 @@ export default function ChapterPageLayout({
   sections,
 }: ChapterPageLayoutProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [startingChat, setStartingChat] = useState(false);
   const { readingLevel, setReadingLevel } = useReadingLevel();
+  const navigate = useNavigate();
+
+  async function handleTalkToAda(): Promise<void> {
+    if (startingChat) return;
+    setStartingChat(true);
+    await startAdaSessionWithContext({
+      kind: 'chapter',
+      ref: String(chapterNum),
+      title,
+      readingLevel,
+    });
+    navigate('/chat');
+  }
 
   const currentIdx = ALL_CHAPTERS.findIndex((c) => c.num === chapterNum);
   const prev = currentIdx > 0 ? ALL_CHAPTERS[currentIdx - 1] : null;
@@ -621,7 +636,8 @@ export default function ChapterPageLayout({
             ))}
           </div>
 
-          {/* Talk to Ada CTA (placeholder — Commit 5 deep-links this with chapter context) */}
+          {/* Talk to Ada CTA — deep-links with page_context so Ada greets
+              the user with an acknowledgment of the chapter. */}
           <section
             aria-label="Talk to Ada"
             style={{
@@ -658,8 +674,12 @@ export default function ChapterPageLayout({
               to know whether it counts as an ADA violation, describe what
               happened and I'll tell you what I think.
             </p>
-            <Link
-              to="/chat"
+            <button
+              type="button"
+              onClick={() => {
+                void handleTalkToAda();
+              }}
+              disabled={startingChat}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -672,11 +692,14 @@ export default function ChapterPageLayout({
                 fontSize: '0.875rem',
                 fontWeight: 600,
                 textDecoration: 'none',
+                border: 'none',
+                cursor: startingChat ? 'wait' : 'pointer',
                 minHeight: '44px',
+                opacity: startingChat ? 0.7 : 1,
               }}
             >
-              Talk to Ada
-            </Link>
+              {startingChat ? 'Opening chat…' : 'Talk to Ada'}
+            </button>
           </section>
 
           {/* Share bar at the bottom */}

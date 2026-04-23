@@ -20,7 +20,7 @@ import type {
   SessionStatus,
   SessionType,
 } from '../types.js';
-import type { ReadingLevel } from '../../types/db.js';
+import type { ReadingLevel, SessionMetadata } from '../../types/db.js';
 import {
   applyTransition,
   type SessionTransition,
@@ -37,6 +37,13 @@ export interface CreateSessionInput {
   listingId?: string | null;
   readingLevel?: ReadingLevel;
   isTest?: boolean;
+  /**
+   * Initial session metadata. Merged over the empty default — use for
+   * deep-link context (e.g. page_context) that the caller already
+   * knows at session creation time. Fields not listed here remain
+   * undefined and are filled in over the session's lifetime.
+   */
+  metadata?: SessionMetadata;
 }
 
 export function createSession(
@@ -64,7 +71,7 @@ export function createSession(
     conversationHistory: [],
     extractedFields: {},
     classification: null,
-    metadata: {},
+    metadata: input.metadata ?? {},
     accessibilitySettings: {},
     isTest: input.isTest ?? false,
   };

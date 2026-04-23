@@ -41,7 +41,7 @@ import {
   hashAnonToken,
   mintAnonToken,
 } from '../../src/lib/anonCookie.js';
-import type { ReadingLevel } from '../../src/types/db.js';
+import type { PageContext, ReadingLevel } from '../../src/types/db.js';
 import {
   makeClientsFromEnv,
   readJsonBody,
@@ -61,6 +61,23 @@ interface Body {
    * Step 26, Commit 1.
    */
   listing_slug?: string;
+  /**
+   * Optional deep-link from a Standards Guide chapter or deep-dive
+   * guide page. When set we record it in metadata.page_context so
+   * Ada can acknowledge the topic in her greeting and reference it
+   * in replies (Commit 6).
+   *
+   * Malformed values are ignored (session is still created, but
+   * without page context) — the CTA shouldn't break the chat if a
+   * client sends something unexpected.
+   *
+   * Step 29, Commit 5.
+   */
+  page_context?: {
+    kind?: string;
+    ref?: string;
+    title?: string;
+  };
 }
 
 const ALLOWED_LEVELS: ReadingLevel[] = ['simple', 'standard', 'professional'];
@@ -124,6 +141,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
+    // Validate page_context. Accept only fully-formed payloads; silently
+    // drop anything malformed so the CTA doesn't fail the chat.
+    const pageContext = parsePageContext(body.page_context);
+
     // Create and persist the session. If listingId resolved, this is
     // a class_action_intake session pre-bound to that listing —
     // equivalent to what match_listing would have done, minus the
@@ -137,13 +158,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       userId: null,
       readingLevel,
       listingId,
+      metadata: pageContext ? { page_context: pageContext } : undefined,
     });
     await clients.db.writeSession({ state: session });
 
     // Greeting text — deliberately brief so the client can render it
     // immediately before the first turn completes. Matches the reading
-    // level; a simple greeting in the chosen voice.
-    const greeting = buildGreeting(org.displayName, readingLevel);
+    // level; a simple greeting in the chosen voice. When the session
+    // was opened from a chapter or guide page, Ada leads with a short
+    // acknowledgment of the topic.
+    const greeting = buildGreeting(org.displayName, readingLevel, pageContext);
 
     if (setCookie) {
       res.setHeader('Set-Cookie', setCookie);
@@ -173,8 +197,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
  *
  * Reading level variations preserve the same voice and the same belief —
  * only sentence length and vocabulary change.
+ *
+ * If pageContext is present the greeting begins with a single short
+ * line acknowledging the topic the user was reading about. It does
+ * NOT summarize the page or presume what the user experienced —
+ * just names the topic, then opens the floor the same way every
+ * other greeting does.
  */
-function buildGreeting(_orgDisplayName: string, level: ReadingLevel): string {
+function buildGreeting(
+  _orgDisplayName: string,
+  level: ReadingLevel,
+  pageContext?: PageContext | null,
+): string {
+  const base = baseGreeting(level);
+  if (!pageContext) return base;
+
+  const lead = topicLead(pageContext, level);
+  return `${lead} ${base}`;
+}
+
+function baseGreeting(level: ReadingLevel): string {
   switch (level) {
     case 'simple':
       return `I'm Ada. If a place didn't let you in or wouldn't help you because of a disability, I can help. Take your time. Tell me what happened.`;
@@ -184,6 +226,46 @@ function buildGreeting(_orgDisplayName: string, level: ReadingLevel): string {
     default:
       return `I'm Ada. If a business, workplace, or public place didn't give you the access you're owed, I'm here to help you figure out what happened and what to do next. Take your time. Tell me what happened.`;
   }
+}
+
+function topicLead(pc: PageContext, level: ReadingLevel): string {
+  // The acknowledgment line is the same register across reading levels
+  // — same brevity, same voice. Title is rendered verbatim; we only
+  // decide what frame to wrap it in based on where the user came from.
+  if (pc.kind === 'chapter') {
+    return level === 'simple'
+      ? `You were reading about ${pc.title}.`
+      : `You came from the ${pc.title} chapter.`;
+  }
+  // kind === 'guide'
+  return level === 'simple'
+    ? `You were reading about ${pc.title}.`
+    : `You came from the ${pc.title} guide.`;
+}
+
+/**
+ * Accept a page_context payload from the client and return a
+ * well-formed PageContext or null. Rules:
+ *   - kind must be 'chapter' or 'guide'
+ *   - ref must be a non-empty string ≤ 128 chars
+ *   - title must be a non-empty string ≤ 200 chars
+ * Anything else returns null (silently dropped — the greeting falls
+ * back to the default, the session is still created normally).
+ */
+function parsePageContext(raw: unknown): PageContext | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const r = raw as Record<string, unknown>;
+
+  const kind = r.kind;
+  if (kind !== 'chapter' && kind !== 'guide') return null;
+
+  const ref = typeof r.ref === 'string' ? r.ref.trim() : '';
+  if (!ref || ref.length > 128) return null;
+
+  const title = typeof r.title === 'string' ? r.title.trim() : '';
+  if (!title || title.length > 200) return null;
+
+  return { kind, ref, title };
 }
 
 function isSecureRequest(req: VercelRequest): boolean {
