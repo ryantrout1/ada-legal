@@ -40,10 +40,19 @@ export default function PublicLayout() {
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 flex items-baseline justify-between gap-6">
           <Link
             to="/"
-            className="font-display text-xl sm:text-2xl text-ink-900 tracking-tight hover:text-accent-600 transition-colors"
+            className="flex items-center gap-2 sm:gap-3 font-display text-xl sm:text-2xl text-ink-900 tracking-tight hover:text-accent-600 transition-colors"
             aria-label="ADA Legal Link home"
           >
-            ADA <span className="text-accent-500">Legal</span> Link
+            <img
+              src="/logo.png"
+              alt=""
+              width="36"
+              height="36"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-md flex-shrink-0"
+            />
+            <span>
+              ADA <span className="text-accent-500">Legal</span> Link
+            </span>
           </Link>
 
           <nav aria-label="Primary" className="flex items-center gap-5 text-sm">
@@ -93,13 +102,22 @@ export default function PublicLayout() {
       <footer className="border-t border-surface-200 mt-20">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-8 text-sm text-ink-500">
           <div className="flex flex-wrap items-baseline justify-between gap-4">
-            <div>
-              <p className="font-display text-base text-ink-700">
-                ADA Legal Link
-              </p>
-              <p className="mt-1">
-                Free, plain-language ADA help. Not a law firm.
-              </p>
+            <div className="flex items-start gap-3">
+              <img
+                src="/logo.png"
+                alt=""
+                width="40"
+                height="40"
+                className="w-10 h-10 rounded-md flex-shrink-0 mt-0.5"
+              />
+              <div>
+                <p className="font-display text-base text-ink-700">
+                  ADA Legal Link
+                </p>
+                <p className="mt-1">
+                  Free, plain-language ADA help. Not a law firm.
+                </p>
+              </div>
             </div>
             <ul className="flex flex-wrap gap-5">
               <li>
