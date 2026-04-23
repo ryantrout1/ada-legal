@@ -121,8 +121,8 @@ export default function PublicLayout() {
             </ul>
           </div>
           <p className="mt-6 text-xs">
-            Informational only. Not legal advice. If you need an attorney, ask
-            Ada and we'll help you find one.
+            Informational only. Not legal advice. Ada can help you find an
+            attorney if you need one.
           </p>
         </div>
       </footer>
