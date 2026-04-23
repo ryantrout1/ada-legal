@@ -64,7 +64,7 @@ export default function SessionPackagePage() {
           if (!cancelled) {
             setState({
               kind: 'error',
-              message: body.error ?? 'Something went wrong loading this summary.',
+              message: body.error ?? "I couldn't load this summary.",
             });
           }
           return;
@@ -78,7 +78,7 @@ export default function SessionPackagePage() {
             message:
               err instanceof Error
                 ? err.message
-                : 'Something went wrong loading this summary.',
+                : "I couldn't load this summary.",
           });
         }
       }
@@ -106,20 +106,20 @@ export default function SessionPackagePage() {
     return (
       <main className="max-w-3xl mx-auto px-5 sm:px-8 py-10">
         <h1 className="font-display text-3xl text-ink-900 mb-3">
-          We couldn't find this summary
+          I can't find this summary
         </h1>
         <p className="text-ink-700 leading-relaxed mb-4">
-          The link you followed may have expired, or may have been typed
-          with an extra letter. If someone shared this link with you,
-          ask them to send a fresh copy.
+          The link may have expired, or there might be an extra letter in
+          the URL. If someone shared this with you, ask them to send a
+          fresh copy.
         </p>
         <p className="text-ink-700 leading-relaxed">
-          If you were in the middle of a conversation with Ada, you can{' '}
+          If you were in the middle of talking to me, you can{' '}
           <a
             href="/chat"
             className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
           >
-            start a new one here
+            start a new conversation
           </a>
           .
         </p>
@@ -131,7 +131,7 @@ export default function SessionPackagePage() {
     return (
       <main className="max-w-3xl mx-auto px-5 sm:px-8 py-10">
         <h1 className="font-display text-3xl text-ink-900 mb-3">
-          Something went wrong
+          Something didn't load right
         </h1>
         <p className="text-ink-700 leading-relaxed">{state.message}</p>
       </main>
@@ -256,13 +256,13 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
             id="pkg-class-action-note"
             className="font-display text-lg mb-2"
           >
-            Class-action matching is coming
+            Class-action matching is on the way
           </h2>
           <p className="text-ink-700 leading-relaxed">
-            Your situation may match a pattern in a class-action lawsuit,
-            which could mean your claim is covered by something already
-            being worked on. We're building that matching system now — we'll
-            let you know when it's available.
+            What you described looks like it could match a pattern in an
+            active class-action lawsuit — which might mean your situation
+            is already being worked on. I'm building that matching
+            system now. I'll flag it here when it's live.
           </p>
         </section>
       )}
@@ -300,11 +300,11 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
             A letter you can send
           </h2>
           <p className="text-ink-700 leading-relaxed mb-4">
-            This is a draft letter you can send to the business. Fill in
-            the bracketed parts with your own information, read it
-            through to make sure it reflects what you experienced, and
-            send it from your own email or by mail. You are the sender —
-            Ada is only providing the draft.
+            Here's a draft you can send to the business. Fill in the
+            bracketed parts with your own information, read it through
+            to make sure it reflects what happened, and send it from
+            your own email or by mail. You are the sender — I'm only
+            providing the draft.
           </p>
           <pre className="bg-surface-50 border border-surface-200 rounded p-4 overflow-x-auto text-sm whitespace-pre-wrap text-ink-900 font-mono">
             {pkg.demandLetter}
