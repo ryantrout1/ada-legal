@@ -62,6 +62,12 @@ export default function PublicLayout() {
               Talk to Ada
             </Link>
             <Link
+              to="/standards-guide"
+              className="text-ink-700 hover:text-accent-600 transition-colors"
+            >
+              Standards Guide
+            </Link>
+            <Link
               to="/class-actions"
               className="text-ink-700 hover:text-accent-600 transition-colors"
             >
