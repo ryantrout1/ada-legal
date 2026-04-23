@@ -18,12 +18,14 @@
 
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { AccessibilityPanel } from '../components/AccessibilityPanel.js';
+import { ReadingLevelProvider } from '../components/standards/ReadingLevelContext.js';
 
 export default function PublicLayout() {
   const location = useLocation();
   const onHome = location.pathname === '/';
 
   return (
+    <ReadingLevelProvider>
     <div className="min-h-screen flex flex-col bg-surface-50 text-ink-900">
       {/* Skip link — first focusable element, hidden until focused */}
       <a
@@ -135,5 +137,6 @@ export default function PublicLayout() {
         </div>
       </footer>
     </div>
+    </ReadingLevelProvider>
   );
 }

@@ -37,12 +37,13 @@
  */
 
 import { BookOpen, ChevronLeft, ChevronRight, Scale, Sparkles } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AutoCiteLinks from './AutoCiteLinks.js';
 import GuideHeroBanner from './GuideHeroBanner.js';
 import GuideStyles from './GuideStyles.js';
 import ShareBar from './ShareBar.js';
+import { useReadingLevel, type ReadingLevel } from './ReadingLevelContext.js';
 
 /** One section in a chapter (e.g. §405 Ramps inside Ch. 4). */
 export interface ChapterSection {
@@ -78,27 +79,6 @@ const ALL_CHAPTERS: ChapterMeta[] = [
   { num: 9, name: 'Built-in Elements', range: '§901–904' },
   { num: 10, name: 'Recreation Facilities', range: '§1001–1010' },
 ];
-
-type ReadingLevel = 'simple' | 'standard' | 'professional';
-const READING_LEVEL_KEY = 'ada-reading-level-guide';
-
-function loadReadingLevel(): ReadingLevel {
-  if (typeof window === 'undefined') return 'standard';
-  const stored = window.localStorage.getItem(READING_LEVEL_KEY);
-  if (stored === 'simple' || stored === 'standard' || stored === 'professional') {
-    return stored;
-  }
-  return 'standard';
-}
-
-function saveReadingLevel(level: ReadingLevel): void {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(READING_LEVEL_KEY, level);
-  } catch {
-    // localStorage can throw in private-mode Safari; ignore.
-  }
-}
 
 interface SectionBlockProps {
   index: number;
@@ -446,28 +426,7 @@ export default function ChapterPageLayout({
   sections,
 }: ChapterPageLayoutProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const [readingLevel, setReadingLevelState] = useState<ReadingLevel>(() =>
-    loadReadingLevel(),
-  );
-
-  // Mirror the reading level onto <html data-reading-level="..."> so
-  // GuideStyles CSS rules can target it (diagram panel layout per
-  // reading level).
-  useEffect(() => {
-    if (typeof document !== 'undefined') {
-      document.documentElement.setAttribute('data-reading-level', readingLevel);
-    }
-    return () => {
-      if (typeof document !== 'undefined') {
-        document.documentElement.removeAttribute('data-reading-level');
-      }
-    };
-  }, [readingLevel]);
-
-  function setReadingLevel(next: ReadingLevel): void {
-    setReadingLevelState(next);
-    saveReadingLevel(next);
-  }
+  const { readingLevel, setReadingLevel } = useReadingLevel();
 
   const currentIdx = ALL_CHAPTERS.findIndex((c) => c.num === chapterNum);
   const prev = currentIdx > 0 ? ALL_CHAPTERS[currentIdx - 1] : null;

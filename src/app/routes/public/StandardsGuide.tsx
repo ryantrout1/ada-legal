@@ -32,6 +32,7 @@
 
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { GUIDE_TOPICS } from './standardsGuideIndex.js';
 
 interface ChapterLink {
   num: number;
@@ -146,6 +147,88 @@ export default function StandardsGuide() {
               </li>
             ))}
           </ol>
+        </section>
+
+        <section
+          aria-labelledby="topics-heading"
+          className="mb-16"
+        >
+          <h2
+            id="topics-heading"
+            className="text-xs uppercase tracking-wider font-mono mb-2"
+            style={{ color: 'var(--body-secondary)' }}
+          >
+            Deep-dive guides
+          </h2>
+          <p
+            className="text-base mb-8 max-w-3xl"
+            style={{ color: 'var(--body)' }}
+          >
+            Topic-focused walkthroughs that go further than the chapter
+            overview. Each guide has simple, standard, and legal reading
+            levels &mdash; pick the one that fits how you need to read
+            right now.
+          </p>
+
+          <div className="flex flex-col gap-10">
+            {GUIDE_TOPICS.map((topic) => (
+              <div key={topic.id}>
+                <h3
+                  className="font-serif text-xl mb-1"
+                  style={{
+                    color: 'var(--heading)',
+                    fontFamily: 'var(--font-display)',
+                  }}
+                >
+                  {topic.heading}
+                </h3>
+                <p
+                  className="text-sm mb-4"
+                  style={{ color: 'var(--body-secondary)' }}
+                >
+                  {topic.blurb}
+                </p>
+                <ul
+                  className="grid gap-2 sm:grid-cols-2"
+                  style={{ listStyle: 'none', margin: 0, padding: 0 }}
+                >
+                  {topic.guides.map((g) => (
+                    <li key={g.slug}>
+                      <Link
+                        to={`/standards-guide/guide/${g.slug}`}
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg no-underline transition-colors"
+                        style={{
+                          background: 'var(--card-bg)',
+                          border: '1px solid var(--border)',
+                          minHeight: '44px',
+                        }}
+                      >
+                        <span
+                          className="flex-1 min-w-0 text-sm"
+                          style={{ color: 'var(--heading)' }}
+                        >
+                          {g.title}
+                        </span>
+                        {g.hasDiagram && (
+                          <span
+                            className="shrink-0 text-xs font-mono px-2 py-0.5 rounded"
+                            style={{
+                              background: 'var(--accent-lighter)',
+                              color: 'var(--accent)',
+                            }}
+                            aria-label="Includes interactive diagram"
+                            title="Includes interactive diagram"
+                          >
+                            diagram
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </section>
 
         <aside

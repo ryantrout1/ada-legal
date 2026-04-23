@@ -33,6 +33,7 @@ import Terms from './routes/public/Terms.js';
 import SessionPackagePage from './routes/public/SessionPackagePage.js';
 import StandardsGuide from './routes/public/StandardsGuide.js';
 import StandardsChapter from './routes/public/StandardsChapter.js';
+import GuidePage from './routes/public/GuidePage.js';
 import AdminSignIn from './routes/admin/SignIn.js';
 import AdminSignUp from './routes/admin/SignUp.js';
 import AdminSessions from './routes/admin/AdminSessions.js';
@@ -76,6 +77,10 @@ export default function App() {
           <Route
             path="/standards-guide/chapter/:num"
             element={<StandardsChapter />}
+          />
+          <Route
+            path="/standards-guide/guide/:slug"
+            element={<GuidePage />}
           />
         </Route>
 
