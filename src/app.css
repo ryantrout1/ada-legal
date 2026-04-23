@@ -526,6 +526,20 @@ body {
   border: 2px solid var(--color-ink-900) !important;
 }
 
+/* Selected-state distinction for toggle buttons (accessibility panel
+   options, reading-level selectors, any aria-pressed toggle).
+   The blanket 2px white border above makes every button look the
+   same; this rule makes the currently-selected option clearly
+   distinct with an amber border + amber-tinted glow, so users can
+   tell WHICH Display mode, font, size, spacing they have active. */
+:root[data-display="contrast"] button[aria-pressed="true"],
+:root[data-display="contrast"] [role="button"][aria-pressed="true"] {
+  border-color: var(--color-accent-500) !important;
+  border-width: 3px !important;
+  color: var(--color-accent-500) !important;
+  box-shadow: inset 0 0 0 1px var(--color-accent-500);
+}
+
 /* Card surfaces: kill the subtle bg tints, force a thick white border
    on the black canvas. Catches tiles on /standards-guide, chapter
    cards, attorney cards.
@@ -604,6 +618,14 @@ body {
   :root:not([data-display]) button,
   :root:not([data-display]) [role="button"] {
     border: 2px solid #FFFFFF !important;
+  }
+
+  :root:not([data-display]) button[aria-pressed="true"],
+  :root:not([data-display]) [role="button"][aria-pressed="true"] {
+    border-color: #F4A56B !important;
+    border-width: 3px !important;
+    color: #F4A56B !important;
+    box-shadow: inset 0 0 0 1px #F4A56B;
   }
 
   :root:not([data-display]) [class~="bg-surface-100"],
