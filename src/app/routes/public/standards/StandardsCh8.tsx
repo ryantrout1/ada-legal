@@ -1,11 +1,11 @@
 import ChapterPageLayout from '../../../components/standards/ChapterPageLayout.js';
-import AssemblySeatingDiagram from '../../../components/standards/diagrams/AssemblySeatingDiagram.js';
-import GuestRoomDiagram from '../../../components/standards/diagrams/GuestRoomDiagram.js';
-import KitchenDiagram from '../../../components/standards/diagrams/KitchenDiagram.js';
-import DressingRoomDiagram from '../../../components/standards/diagrams/DressingRoomDiagram.js';
-import DetentionCellDiagram from '../../../components/standards/diagrams/DetentionCellDiagram.js';
-import TransportationDiagram from '../../../components/standards/diagrams/TransportationDiagram.js';
-import ResidentialUnitDiagram from '../../../components/standards/diagrams/ResidentialUnitDiagram.js';
+import AssemblySeatingDiagram from '../../../components/standards/diagrams/AssemblySeatingDiagram.jsx';
+import GuestRoomDiagram from '../../../components/standards/diagrams/GuestRoomDiagram.jsx';
+import KitchenDiagram from '../../../components/standards/diagrams/KitchenDiagram.jsx';
+import DressingRoomDiagram from '../../../components/standards/diagrams/DressingRoomDiagram.jsx';
+import DetentionCellDiagram from '../../../components/standards/diagrams/DetentionCellDiagram.jsx';
+import TransportationDiagram from '../../../components/standards/diagrams/TransportationDiagram.jsx';
+import ResidentialUnitDiagram from '../../../components/standards/diagrams/ResidentialUnitDiagram.jsx';
 
 const sections = [
   {

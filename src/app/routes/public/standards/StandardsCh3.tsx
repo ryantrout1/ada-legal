@@ -1,10 +1,10 @@
 import ChapterPageLayout from '../../../components/standards/ChapterPageLayout.js';
-import TurningSpaceDiagram from '../../../components/standards/diagrams/TurningSpaceDiagram.js';
-import ReachRangeDiagram from '../../../components/standards/diagrams/ReachRangeDiagram.js';
-import ClearFloorDiagram from '../../../components/standards/diagrams/ClearFloorDiagram.js';
-import KneeToeDiagram from '../../../components/standards/diagrams/KneeToeDiagram.js';
-import ProtrudingObjectsDiagram from '../../../components/standards/diagrams/ProtrudingObjectsDiagram.js';
-import OperablePartsDiagram from '../../../components/standards/diagrams/OperablePartsDiagram.js';
+import TurningSpaceDiagram from '../../../components/standards/diagrams/TurningSpaceDiagram.jsx';
+import ReachRangeDiagram from '../../../components/standards/diagrams/ReachRangeDiagram.jsx';
+import ClearFloorDiagram from '../../../components/standards/diagrams/ClearFloorDiagram.jsx';
+import KneeToeDiagram from '../../../components/standards/diagrams/KneeToeDiagram.jsx';
+import ProtrudingObjectsDiagram from '../../../components/standards/diagrams/ProtrudingObjectsDiagram.jsx';
+import OperablePartsDiagram from '../../../components/standards/diagrams/OperablePartsDiagram.jsx';
 
 const sections = [
   {

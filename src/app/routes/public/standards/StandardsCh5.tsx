@@ -1,8 +1,8 @@
 import ChapterPageLayout from '../../../components/standards/ChapterPageLayout.js';
-import ParkingDiagram from '../../../components/standards/diagrams/ParkingDiagram.js';
-import HandrailDiagram from '../../../components/standards/diagrams/HandrailDiagram.js';
-import StairwayDiagram from '../../../components/standards/diagrams/StairwayDiagram.js';
-import LoadingZoneDiagram from '../../../components/standards/diagrams/LoadingZoneDiagram.js';
+import ParkingDiagram from '../../../components/standards/diagrams/ParkingDiagram.jsx';
+import HandrailDiagram from '../../../components/standards/diagrams/HandrailDiagram.jsx';
+import StairwayDiagram from '../../../components/standards/diagrams/StairwayDiagram.jsx';
+import LoadingZoneDiagram from '../../../components/standards/diagrams/LoadingZoneDiagram.jsx';
 
 const sections = [
   {

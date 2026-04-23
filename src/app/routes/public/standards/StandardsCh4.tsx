@@ -1,11 +1,11 @@
 import ChapterPageLayout from '../../../components/standards/ChapterPageLayout.js';
-import RampDiagram from '../../../components/standards/diagrams/RampDiagram.js';
-import DoorDiagram from '../../../components/standards/diagrams/DoorDiagram.js';
-import CurbRampDiagram from '../../../components/standards/diagrams/CurbRampDiagram.js';
-import ElevatorDiagram from '../../../components/standards/diagrams/ElevatorDiagram.js';
-import WalkingSurfaceDiagram from '../../../components/standards/diagrams/WalkingSurfaceDiagram.js';
-import PlatformLiftDiagram from '../../../components/standards/diagrams/PlatformLiftDiagram.js';
-import LULAElevatorDiagram from '../../../components/standards/diagrams/LULAElevatorDiagram.js';
+import RampDiagram from '../../../components/standards/diagrams/RampDiagram.jsx';
+import DoorDiagram from '../../../components/standards/diagrams/DoorDiagram.jsx';
+import CurbRampDiagram from '../../../components/standards/diagrams/CurbRampDiagram.jsx';
+import ElevatorDiagram from '../../../components/standards/diagrams/ElevatorDiagram.jsx';
+import WalkingSurfaceDiagram from '../../../components/standards/diagrams/WalkingSurfaceDiagram.jsx';
+import PlatformLiftDiagram from '../../../components/standards/diagrams/PlatformLiftDiagram.jsx';
+import LULAElevatorDiagram from '../../../components/standards/diagrams/LULAElevatorDiagram.jsx';
 
 const sections = [
   {

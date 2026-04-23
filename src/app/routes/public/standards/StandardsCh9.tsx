@@ -1,7 +1,7 @@
 import ChapterPageLayout from '../../../components/standards/ChapterPageLayout.js';
-import CounterDiagram from '../../../components/standards/diagrams/CounterDiagram.js';
-import DiningSurfaceDiagram from '../../../components/standards/diagrams/DiningSurfaceDiagram.js';
-import BenchDiagram from '../../../components/standards/diagrams/BenchDiagram.js';
+import CounterDiagram from '../../../components/standards/diagrams/CounterDiagram.jsx';
+import DiningSurfaceDiagram from '../../../components/standards/diagrams/DiningSurfaceDiagram.jsx';
+import BenchDiagram from '../../../components/standards/diagrams/BenchDiagram.jsx';
 
 const sections = [
   {

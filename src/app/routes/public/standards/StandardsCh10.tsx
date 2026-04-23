@@ -1,9 +1,9 @@
 import ChapterPageLayout from '../../../components/standards/ChapterPageLayout.js';
-import PoolDiagram from '../../../components/standards/diagrams/PoolDiagram.js';
-import PlayAreaDiagram from '../../../components/standards/diagrams/PlayAreaDiagram.js';
-import AmusementRideDiagram from '../../../components/standards/diagrams/AmusementRideDiagram.js';
-import BoatingDiagram from '../../../components/standards/diagrams/BoatingDiagram.js';
-import GolfDiagram from '../../../components/standards/diagrams/GolfDiagram.js';
+import PoolDiagram from '../../../components/standards/diagrams/PoolDiagram.jsx';
+import PlayAreaDiagram from '../../../components/standards/diagrams/PlayAreaDiagram.jsx';
+import AmusementRideDiagram from '../../../components/standards/diagrams/AmusementRideDiagram.jsx';
+import BoatingDiagram from '../../../components/standards/diagrams/BoatingDiagram.jsx';
+import GolfDiagram from '../../../components/standards/diagrams/GolfDiagram.jsx';
 
 const sections = [
   {

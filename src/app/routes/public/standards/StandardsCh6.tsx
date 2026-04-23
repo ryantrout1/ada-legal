@@ -1,11 +1,11 @@
 import ChapterPageLayout from '../../../components/standards/ChapterPageLayout.js';
-import ToiletStallDiagram from '../../../components/standards/diagrams/ToiletStallDiagram.js';
-import BathtubDiagram from '../../../components/standards/diagrams/BathtubDiagram.js';
-import ShowerDiagram from '../../../components/standards/diagrams/ShowerDiagram.js';
-import LavatoryDiagram from '../../../components/standards/diagrams/LavatoryDiagram.js';
-import GrabBarDetailDiagram from '../../../components/standards/diagrams/GrabBarDetailDiagram.js';
-import DrinkingFountainDiagram from '../../../components/standards/diagrams/DrinkingFountainDiagram.js';
-import UrinalDiagram from '../../../components/standards/diagrams/UrinalDiagram.js';
+import ToiletStallDiagram from '../../../components/standards/diagrams/ToiletStallDiagram.jsx';
+import BathtubDiagram from '../../../components/standards/diagrams/BathtubDiagram.jsx';
+import ShowerDiagram from '../../../components/standards/diagrams/ShowerDiagram.jsx';
+import LavatoryDiagram from '../../../components/standards/diagrams/LavatoryDiagram.jsx';
+import GrabBarDetailDiagram from '../../../components/standards/diagrams/GrabBarDetailDiagram.jsx';
+import DrinkingFountainDiagram from '../../../components/standards/diagrams/DrinkingFountainDiagram.jsx';
+import UrinalDiagram from '../../../components/standards/diagrams/UrinalDiagram.jsx';
 
 const sections = [
   {

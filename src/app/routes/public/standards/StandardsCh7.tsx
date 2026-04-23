@@ -1,8 +1,8 @@
 import ChapterPageLayout from '../../../components/standards/ChapterPageLayout.js';
-import SignageDiagram from '../../../components/standards/diagrams/SignageDiagram.js';
-import TelephoneDiagram from '../../../components/standards/diagrams/TelephoneDiagram.js';
-import AssistiveListeningDiagram from '../../../components/standards/diagrams/AssistiveListeningDiagram.js';
-import ATMDiagram from '../../../components/standards/diagrams/ATMDiagram.js';
+import SignageDiagram from '../../../components/standards/diagrams/SignageDiagram.jsx';
+import TelephoneDiagram from '../../../components/standards/diagrams/TelephoneDiagram.jsx';
+import AssistiveListeningDiagram from '../../../components/standards/diagrams/AssistiveListeningDiagram.jsx';
+import ATMDiagram from '../../../components/standards/diagrams/ATMDiagram.jsx';
 
 const sections = [
   {
