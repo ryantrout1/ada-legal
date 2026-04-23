@@ -462,4 +462,27 @@ body {
   --accent-success:   var(--color-success-500);
   --accent-success-bg: var(--color-success-50);
   --btn-text:         var(--color-surface-50);
+
+  /* Dark-hero tokens (Migration §A.2)
+   *
+   * The Standards Guide chapter pages render a DARK banner at the top
+   * regardless of the site's active display mode. These tokens render
+   * the banner: dark background, light text, muted dark-mode-native
+   * accent. They are intentionally NOT tied to the site's display-mode
+   * selector — the banner is always dark for visual consistency with
+   * the Base44 design.
+   *
+   * Values picked to give roughly the same contrast against the dark
+   * banner as the original: ink-900 text on surface-300 backdrop
+   * doesn't work (same warm palette), so we reach into explicit hex. */
+  --dark-bg:          #0F172A;
+  --dark-card-bg:     #1A1F2B;
+  --dark-card-border: #2A3344;
+  --dark-border:      #475569;
+  --dark-heading:     #FFFFFF;
+  --dark-body:        #E2E8F0;
+  --dark-body-secondary: #CBD5E1;
+  --dark-muted:       #B0BEC5;
+  --dark-label:       #FDBA74;
+  --dark-highlight:   #FB923C;
 }
