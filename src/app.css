@@ -523,12 +523,17 @@ body {
 }
 
 /* Card surfaces: kill the subtle bg tints, force a thick black border.
-   Catches tiles on /standards-guide, chapter cards, attorney cards. */
-:root[data-display="contrast"] [class*="bg-surface-100"],
-:root[data-display="contrast"] [class*="bg-surface-200"],
-:root[data-display="contrast"] [class*="bg-accent-50"],
-:root[data-display="contrast"] [class*="border-surface-200"],
-:root[data-display="contrast"] [class*="border-surface-300"] {
+   Catches tiles on /standards-guide, chapter cards, attorney cards.
+
+   Uses [class~="X"] (whitespace-separated WORD match) not [class*="X"]
+   (substring match) — otherwise bg-accent-50 would also match the
+   bg-accent-500 class on the primary CTA button and wipe out its
+   intended link-blue fill. */
+:root[data-display="contrast"] [class~="bg-surface-100"],
+:root[data-display="contrast"] [class~="bg-surface-200"],
+:root[data-display="contrast"] [class~="bg-accent-50"],
+:root[data-display="contrast"] [class~="border-surface-200"],
+:root[data-display="contrast"] [class~="border-surface-300"] {
   background-color: var(--color-surface-50) !important;
   border-color: var(--color-ink-900) !important;
   border-width: 2px !important;
@@ -590,11 +595,11 @@ body {
     border: 2px solid #000000 !important;
   }
 
-  :root:not([data-display]) [class*="bg-surface-100"],
-  :root:not([data-display]) [class*="bg-surface-200"],
-  :root:not([data-display]) [class*="bg-accent-50"],
-  :root:not([data-display]) [class*="border-surface-200"],
-  :root:not([data-display]) [class*="border-surface-300"] {
+  :root:not([data-display]) [class~="bg-surface-100"],
+  :root:not([data-display]) [class~="bg-surface-200"],
+  :root:not([data-display]) [class~="bg-accent-50"],
+  :root:not([data-display]) [class~="border-surface-200"],
+  :root:not([data-display]) [class~="border-surface-300"] {
     background-color: #FFFFFF !important;
     border-color: #000000 !important;
     border-width: 2px !important;
