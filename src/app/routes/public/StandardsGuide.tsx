@@ -33,6 +33,7 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { GUIDE_TOPICS } from './standardsGuideIndex.js';
+import { CHAPTER_META } from './chapterMeta.js';
 
 interface ChapterLink {
   num: number;
@@ -40,18 +41,11 @@ interface ChapterLink {
   range: string;
 }
 
-const CHAPTERS: ChapterLink[] = [
-  { num: 1, title: 'Application & Administration', range: '§101–§106' },
-  { num: 2, title: 'Scoping Requirements', range: '§201–§244' },
-  { num: 3, title: 'Building Blocks', range: '§301–§309' },
-  { num: 4, title: 'Accessible Routes', range: '§401–§410' },
-  { num: 5, title: 'General Site & Building Elements', range: '§501–§505' },
-  { num: 6, title: 'Plumbing Elements & Facilities', range: '§601–§612' },
-  { num: 7, title: 'Communication Elements & Features', range: '§701–§708' },
-  { num: 8, title: 'Special Rooms, Spaces & Elements', range: '§801–§813' },
-  { num: 9, title: 'Built-In Elements', range: '§901–§904' },
-  { num: 10, title: 'Recreation Facilities', range: '§1001–§1011' },
-];
+const CHAPTERS: ChapterLink[] = CHAPTER_META.map((c) => ({
+  num: c.num,
+  title: c.title,
+  range: c.range,
+}));
 
 export default function StandardsGuide() {
   return (
@@ -60,8 +54,42 @@ export default function StandardsGuide() {
         <title>ADA Standards Guide — ADA Legal Link</title>
         <meta
           name="description"
-          content="The complete 2010 ADA Accessibility Standards, reorganized for clarity. 10 chapters, plain-language explanations, interactive diagrams. Free forever."
+          content="The complete 2010 ADA Accessibility Standards, reorganized for clarity. 10 chapters, 46 topic guides, plain-language explanations, interactive diagrams. Free forever."
         />
+        <meta property="og:title" content="ADA Standards Guide — ADA Legal Link" />
+        <meta
+          property="og:description"
+          content="The complete 2010 ADA Accessibility Standards, reorganized for clarity. 10 chapters, 46 topic guides, plain-language explanations, interactive diagrams. Free forever."
+        />
+        <meta property="og:url" content="https://ada.adalegallink.com/standards-guide" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:title" content="ADA Standards Guide — ADA Legal Link" />
+        <meta
+          name="twitter:description"
+          content="The complete 2010 ADA Accessibility Standards, reorganized for clarity. Free forever."
+        />
+        <link rel="canonical" href="https://ada.adalegallink.com/standards-guide" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'TechArticle',
+            headline: 'ADA Standards Guide',
+            description:
+              'The complete 2010 ADA Accessibility Standards, reorganized by topic, with plain-language explanations and interactive diagrams.',
+            url: 'https://ada.adalegallink.com/standards-guide',
+            inLanguage: 'en-US',
+            isAccessibleForFree: true,
+            publisher: {
+              '@type': 'Organization',
+              name: 'ADA Legal Link',
+              url: 'https://ada.adalegallink.com',
+            },
+            about: {
+              '@type': 'Thing',
+              name: '2010 ADA Accessibility Standards',
+            },
+          })}
+        </script>
       </Helmet>
 
       <main id="main" className="max-w-5xl mx-auto px-5 sm:px-8 py-16">

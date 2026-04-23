@@ -25,6 +25,7 @@ import { Helmet } from 'react-helmet-async';
 import { Suspense, lazy } from 'react';
 import type { LazyExoticComponent, ComponentType } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { chapterMeta } from './chapterMeta.js';
 
 const StandardsCh1 = lazy(() => import('./standards/StandardsCh1.js'));
 const StandardsCh2 = lazy(() => import('./standards/StandardsCh2.js'));
@@ -96,17 +97,67 @@ function NotFound() {
   );
 }
 
+function ChapterSeo({ num }: { num: string }) {
+  const meta = chapterMeta(num);
+  if (!meta) return null;
+
+  const canonicalUrl = `https://ada.adalegallink.com/standards-guide/chapter/${meta.num}`;
+  const titleText = `Chapter ${meta.num}: ${meta.title} — ADA Standards Guide`;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: `${meta.title} (${meta.range})`,
+    description: meta.description,
+    url: canonicalUrl,
+    inLanguage: 'en-US',
+    isAccessibleForFree: true,
+    isPartOf: {
+      '@type': 'TechArticle',
+      name: 'ADA Standards Guide',
+      url: 'https://ada.adalegallink.com/standards-guide',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'ADA Legal Link',
+      url: 'https://ada.adalegallink.com',
+    },
+    about: {
+      '@type': 'Thing',
+      name: '2010 ADA Accessibility Standards',
+    },
+  };
+
+  return (
+    <Helmet>
+      <title>{titleText}</title>
+      <meta name="description" content={meta.description} />
+      <meta property="og:title" content={titleText} />
+      <meta property="og:description" content={meta.description} />
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:type" content="article" />
+      <meta name="twitter:title" content={titleText} />
+      <meta name="twitter:description" content={meta.description} />
+      <link rel="canonical" href={canonicalUrl} />
+      <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+    </Helmet>
+  );
+}
+
 export default function StandardsChapter() {
   const { num } = useParams<{ num: string }>();
   const Chapter = num ? CHAPTERS[num] : undefined;
 
-  if (!Chapter) {
+  if (!Chapter || !num) {
     return <NotFound />;
   }
 
   return (
-    <Suspense fallback={<Loading />}>
-      <Chapter />
-    </Suspense>
+    <>
+      <ChapterSeo num={num} />
+      <Suspense fallback={<Loading />}>
+        <Chapter />
+      </Suspense>
+    </>
   );
 }

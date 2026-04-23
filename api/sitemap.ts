@@ -58,6 +58,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         changefreq: 'daily',
         priority: '0.9',
       },
+      {
+        loc: `${SITE_URL}/standards-guide`,
+        changefreq: 'weekly',
+        priority: '0.9',
+      },
       { loc: `${SITE_URL}/attorneys`, changefreq: 'weekly', priority: '0.7' },
       {
         loc: `${SITE_URL}/accessibility`,
@@ -67,6 +72,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       { loc: `${SITE_URL}/privacy`, changefreq: 'monthly', priority: '0.4' },
       { loc: `${SITE_URL}/terms`, changefreq: 'monthly', priority: '0.4' },
     ];
+
+    // Standards Guide: 10 chapter URLs.
+    for (let n = 1; n <= 10; n++) {
+      entries.push({
+        loc: `${SITE_URL}/standards-guide/chapter/${n}`,
+        changefreq: 'monthly',
+        priority: '0.8',
+      });
+    }
+
+    // Standards Guide: 46 deep-dive guide URLs. Kept as a static list
+    // rather than imported from standardsGuideIndex.ts because that
+    // module pulls in React.lazy() references to .jsx files, which
+    // aren't server-safe. The list here must stay in sync with
+    // GUIDE_LOADERS — adding a new guide means adding it here too.
+    const GUIDE_SLUGS = [
+      'accessible-documents', 'ada-coordinators', 'ada-protections',
+      'barrier-removal', 'criminal-justice', 'digital-barriers',
+      'education', 'effective-communication', 'emergency-management',
+      'employment', 'entrances', 'filing-complaint', 'hotels-lodging',
+      'housing', 'intro-to-ada', 'legal-options', 'medical-facilities',
+      'mobility-devices', 'new-construction', 'parking',
+      'parking-requirements', 'playgrounds', 'program-access', 'ramps',
+      'reach-ranges', 'reasonable-modifications', 'restaurants-retail',
+      'restrooms', 'service-animals', 'sidewalks', 'signage',
+      'small-business', 'social-media', 'swimming-pools',
+      'tax-incentives', 'title-i', 'title-ii', 'title-iii',
+      'turning-handrails', 'voting', 'wcag-explained', 'web-first-steps',
+      'web-rule', 'web-testing', 'what-to-expect', 'why-attorney',
+    ];
+    for (const slug of GUIDE_SLUGS) {
+      entries.push({
+        loc: `${SITE_URL}/standards-guide/guide/${slug}`,
+        changefreq: 'monthly',
+        priority: '0.7',
+      });
+    }
 
     for (const l of uniqueListings) {
       entries.push({
