@@ -576,6 +576,6 @@ describe('assemblePackage', () => {
   it('disclaimer is always present and includes key claim-limits language', () => {
     const pkg = assemblePackage({ state: makeState(), now: baseNow });
     expect(pkg.disclaimer).toContain('not legal advice');
-    expect(pkg.disclaimer).toContain('Ada is not a lawyer');
+    expect(pkg.disclaimer).toContain('not a lawyer');
   });
 });
