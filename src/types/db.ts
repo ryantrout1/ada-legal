@@ -191,6 +191,19 @@ export interface PhotoFinding {
   standard: string; // cited ADA / ADAAG section
   confidence: number; // 0..1
   bounding_box?: PhotoBoundingBox;
+  /**
+   * URL path into the Standards Guide covering the cited section. Set
+   * by the analyze_photo tool after the LLM returns its findings;
+   * resolved via topicsForSection() in src/lib/standardsIndex.ts.
+   *
+   * When the cited section maps to a topic with a deep-dive guide
+   * (e.g. §405.2 -> /standards-guide/guide/ramps), that URL is used.
+   * When only a chapter exists (e.g. §304 -> Ch. 3), the chapter URL
+   * is used. When no match, the field is omitted.
+   *
+   * Step 29, Commit 7.
+   */
+  guide_url?: string;
 }
 
 // ─── audit log ────────────────────────────────────────────────────────────────

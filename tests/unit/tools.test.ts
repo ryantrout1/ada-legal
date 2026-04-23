@@ -273,6 +273,98 @@ describe('analyze_photo', () => {
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.error).toMatch(/Photo analysis failed/);
   });
+
+  // ── guide_url enrichment (Commit 29/7) ─────────────────────────
+
+  it('enriches findings with guide_url from section number match', async () => {
+    const clients = makeInMemoryClients();
+    clients.photo.enqueueResult({
+      findings: [
+        {
+          finding: 'Ramp slope exceeds 1:12',
+          severity: 'major',
+          standard: '§405.2', // Ramps — has a deep-dive guide
+          confidence: 0.9,
+        },
+      ],
+      modelVersion: 'test-v1',
+    });
+    const input = tool.validateInput({ blob_key: 'photos/ramp.jpg' });
+    const result = await tool.execute({ clients, state: baseState() }, input);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const findings = result.stateChanges?.photoFindings;
+      expect(findings).toBeDefined();
+      expect(findings?.[0].guide_url).toBe('/standards-guide/guide/ramps');
+    }
+  });
+
+  it('uses chapter URL when section matches a chapter-only topic', async () => {
+    const clients = makeInMemoryClients();
+    clients.photo.enqueueResult({
+      findings: [
+        {
+          finding: 'Pool has no accessible means of entry',
+          severity: 'critical',
+          standard: '§1009', // Swimming pools — guide exists
+          confidence: 0.95,
+        },
+      ],
+      modelVersion: 'test-v1',
+    });
+    const input = tool.validateInput({ blob_key: 'photos/pool.jpg' });
+    const result = await tool.execute({ clients, state: baseState() }, input);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const findings = result.stateChanges?.photoFindings;
+      expect(findings?.[0].guide_url).toBe('/standards-guide/guide/swimming-pools');
+    }
+  });
+
+  it('falls back to keyword match when section number is not recognized', async () => {
+    const clients = makeInMemoryClients();
+    clients.photo.enqueueResult({
+      findings: [
+        {
+          finding: 'Service animal was turned away at entrance',
+          severity: 'major',
+          standard: '28 CFR §36.302(c)', // Title III reg, no chapter match
+          confidence: 0.85,
+        },
+      ],
+      modelVersion: 'test-v1',
+    });
+    const input = tool.validateInput({ blob_key: 'photos/entrance.jpg' });
+    const result = await tool.execute({ clients, state: baseState() }, input);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const findings = result.stateChanges?.photoFindings;
+      // 'service animal' keyword should resolve to the service-animals guide.
+      expect(findings?.[0].guide_url).toBe('/standards-guide/guide/service-animals');
+    }
+  });
+
+  it('leaves guide_url undefined when neither section nor keywords match', async () => {
+    const clients = makeInMemoryClients();
+    clients.photo.enqueueResult({
+      findings: [
+        {
+          finding: 'Generic observation',
+          severity: 'advisory',
+          standard: 'Some unrelated reference',
+          confidence: 0.5,
+        },
+      ],
+      modelVersion: 'test-v1',
+    });
+    const input = tool.validateInput({ blob_key: 'photos/misc.jpg' });
+    const result = await tool.execute({ clients, state: baseState() }, input);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const findings = result.stateChanges?.photoFindings;
+      expect(findings?.[0].guide_url).toBeUndefined();
+    }
+  });
 });
 
 // ─── searchAttorneys ──────────────────────────────────────────────────────────

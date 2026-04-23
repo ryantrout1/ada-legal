@@ -14,10 +14,45 @@
  */
 
 import type { AdaTool, ToolResult, ToolExecuteContext } from '../types.js';
+import type { PhotoFinding } from '../../../types/db.js';
+import { guideUrlForTopic, topicsForSection, topicsForText } from '../../../lib/standardsIndex.js';
 
 interface AnalyzePhotoInput {
   blob_key: string;
   context_hint?: string;
+}
+
+/**
+ * Enrich a raw finding from the photo analyzer with a guide_url when
+ * we can resolve one. Resolution order:
+ *
+ *   1. Try topicsForSection(finding.standard). The analyzer returns
+ *      strings like "§405.2", "ADAAG §405", "2010 ADA Standards §604.8"
+ *      — we extract the first §-token and match.
+ *   2. If no section match, try topicsForText(finding.finding). This
+ *      catches cases where the analyzer cites a rule that doesn't have
+ *      a section number we index (e.g. "service animal") but the
+ *      finding text mentions something we recognize.
+ *
+ * When neither matches, guide_url is left undefined. The finding
+ * still ships to Ada and the attorney package — just without the
+ * link-back convenience.
+ */
+function enrichFindingWithGuideUrl(f: PhotoFinding): PhotoFinding {
+  const sectionMatch = /§\s*\d{3,4}(?:\.\d+)*/i.exec(f.standard ?? '');
+  if (sectionMatch) {
+    const hits = topicsForSection(sectionMatch[0].replace(/\s+/g, ''));
+    if (hits.length > 0) {
+      return { ...f, guide_url: guideUrlForTopic(hits[0]) };
+    }
+  }
+
+  const textHits = topicsForText(`${f.finding} ${f.standard}`);
+  if (textHits.length > 0) {
+    return { ...f, guide_url: guideUrlForTopic(textHits[0]) };
+  }
+
+  return f;
 }
 
 export const analyzePhotoTool: AdaTool<AnalyzePhotoInput> = {
@@ -63,13 +98,18 @@ export const analyzePhotoTool: AdaTool<AnalyzePhotoInput> = {
         blobKey: input.blob_key,
         contextHint: input.context_hint,
       });
+      // Enrich each finding with a guide_url when we can resolve the
+      // cited standard against the Standards Guide index. This makes
+      // guide links available to Ada (in her next-turn context) and
+      // to the attorney package / session package downstream.
+      const enriched = result.findings.map(enrichFindingWithGuideUrl);
       return {
         ok: true,
         content: {
-          findings: result.findings,
+          findings: enriched,
           model: result.modelVersion,
         },
-        stateChanges: { photoFindings: result.findings },
+        stateChanges: { photoFindings: enriched },
       };
     } catch (err) {
       return {
