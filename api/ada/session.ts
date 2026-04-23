@@ -17,7 +17,7 @@
  *   Set-Cookie: ada_anon=<token>; HttpOnly; Secure; SameSite=Lax; Path=/
  *   {
  *     "session_id": "<uuid>",
- *     "greeting": "Hi, I'm Ada…",
+ *     "greeting": "I'm Ada. If a business, workplace, or public place…",
  *     "reading_level": "standard"
  *   }
  *
@@ -160,16 +160,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 }
 
-function buildGreeting(orgDisplayName: string, level: ReadingLevel): string {
-  const base = `Hi, I'm Ada. I help with questions about the Americans with Disabilities Act.`;
+/**
+ * The first words Ada says to every user.
+ *
+ * Voice rules (see docs/ADA_VOICE_GUIDE.md):
+ *   - First person, specific, not performative
+ *   - Names what she's for — access under the ADA, not "disability law" generically
+ *   - Gives the user permission to take their time
+ *   - Asks the open question without padding ("Tell me what happened.")
+ *   - No "Please," no "I'm so sorry," no thanking in advance, no exclamation marks
+ *   - No "Powered by" attribution in the greeting — it's ambient, not first-word
+ *
+ * Reading level variations preserve the same voice and the same belief —
+ * only sentence length and vocabulary change.
+ */
+function buildGreeting(_orgDisplayName: string, level: ReadingLevel): string {
   switch (level) {
     case 'simple':
-      return `Hi! I'm Ada. I can help if someone wasn't fair because of a disability. What happened?`;
+      return `I'm Ada. If a place didn't let you in or wouldn't help you because of a disability, I can help. Take your time. Tell me what happened.`;
     case 'professional':
-      return `${base} Tell me about the incident and I'll help route it — Title I, II, or III — and determine next steps.`;
+      return `I'm Ada. If a business, public entity, or employer failed to provide access or accommodations required under the ADA, I can help you figure out the title it falls under and the appropriate next step. Tell me what happened.`;
     case 'standard':
     default:
-      return `${base} Tell me what happened and I'll help figure out what to do next. (Powered by ${orgDisplayName}.)`;
+      return `I'm Ada. If a business, workplace, or public place didn't give you the access you're owed, I'm here to help you figure out what happened and what to do next. Take your time. Tell me what happened.`;
   }
 }
 

@@ -4,7 +4,7 @@
  * Layout:
  *   [reading level picker]  [new conversation]  [status badge]
  *   ─────────────────────────────────────────────────────────
- *   │ assistant bubble: "Hi, I'm Ada..."                  │
+ *   │ assistant bubble: "I'm Ada. If a business..."      │
  *   │ user bubble: "a restaurant refused my service dog"  │
  *   │ assistant bubble: "That sounds like Title III..."   │
  *   │ ...                                                 │
