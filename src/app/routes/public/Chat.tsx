@@ -22,11 +22,21 @@
  * Ref: docs/ARCHITECTURE.md §11
  */
 
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { forwardRef, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useChatSession, type ReadingLevel } from '../../hooks/useChatSession.js';
 import { useSpeechInput } from '../../hooks/useSpeechInput.js';
 import { useSpeechOutput } from '../../hooks/useSpeechOutput.js';
 import { downscalePhoto } from '../../utils/downscalePhoto.js';
+
+/**
+ * Shape of a destructive chat action that's been queued for user
+ * confirmation. Lifted to module scope so the ConfirmBar component
+ * and the Chat component can share a single type rather than
+ * redeclaring. See Chat.pendingAction + <ConfirmBar action={...}> below.
+ */
+type PendingAction =
+  | { kind: 'switch-level'; level: ReadingLevel }
+  | { kind: 'new-chat' };
 
 export default function Chat() {
   const { state, sendMessage, startNewSession, acceptResume, discardResume } =
@@ -36,12 +46,33 @@ export default function Chat() {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoFilename, setPhotoFilename] = useState<string | null>(null);
 
+  // Pending destructive action awaiting user confirmation.
+  // Replaces the native window.confirm() dialogs that were accessibility-
+  // suboptimal (inconsistent screen reader handling, context break for
+  // cognitive-support users). When non-null, the ConfirmBar renders inline
+  // below the chat header instead.
+  //
+  // Two shapes:
+  //   switch-level: user tapped a different reading level mid-conversation.
+  //                 Confirming re-bakes Ada's system prompt and starts a
+  //                 new session; cancelling leaves the picker on the
+  //                 current level untouched.
+  //   new-chat: user tapped the "New" button with messages present.
+  //             Confirming wipes the current thread; cancelling is a no-op.
+  const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+
+  // Element that triggered the pending action, so we can restore focus
+  // when the user cancels. Matches the ARIA practice of always returning
+  // keyboard focus to the originating control on dialog dismiss.
+  const pendingTriggerRef = useRef<HTMLElement | null>(null);
+
   const speechInput = useSpeechInput();
   const speechOutput = useSpeechOutput();
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const confirmBarRef = useRef<HTMLDivElement>(null);
 
   // When dictation lands text, merge it into the draft. This is kept
   // additive — if the user has typed, dictation appends rather than
@@ -161,19 +192,13 @@ export default function Chat() {
     if (fileInputRef.current) fileInputRef.current.value = '';
   }
 
-  function handleLevelChange(level: ReadingLevel) {
+  function handleLevelChange(level: ReadingLevel, triggerEl?: HTMLElement | null) {
     if (state.readingLevel === level) return;
 
     // If the user hasn't typed anything yet, there's nothing to preserve —
     // swap the level silently. Common case: user lands on /chat, reads
     // Ada's opener, and realizes they want a different reading level
     // before they start. No friction needed.
-    //
-    // Mid-conversation, we still want explicit consent because swapping
-    // the reading level re-bakes Ada's system prompt and effectively
-    // starts a new session. For now that's a native window.confirm —
-    // it's an accessibility compromise we should replace with an inline
-    // React-based confirmation bar, tracked as a follow-up.
     const hasUserContent = state.messages.some((m) => m.role === 'user');
     if (!hasUserContent) {
       startNewSession(level);
@@ -182,12 +207,84 @@ export default function Chat() {
       return;
     }
 
-    if (window.confirm('Switching reading level starts a fresh conversation. Okay to do that?')) {
-      startNewSession(level);
+    // Mid-conversation: queue the switch as a pending action and let the
+    // inline ConfirmBar surface the choice. Capture the triggering
+    // button so we can restore focus if the user cancels.
+    pendingTriggerRef.current = triggerEl ?? null;
+    setPendingAction({ kind: 'switch-level', level });
+  }
+
+  function handleNewConversation(triggerEl?: HTMLElement | null) {
+    // No messages at all, or only Ada's opener with no user turn:
+    // restarting doesn't lose anything the user contributed, so just
+    // do it. This matches the reading-level policy above.
+    const hasUserContent = state.messages.some((m) => m.role === 'user');
+    if (!hasUserContent) {
+      startNewSession(state.readingLevel);
       setDraft('');
       clearPhoto();
+      return;
     }
+    pendingTriggerRef.current = triggerEl ?? null;
+    setPendingAction({ kind: 'new-chat' });
   }
+
+  // Apply a pending action once the user confirms, then clear pending
+  // state. Centralised so the ConfirmBar's Confirm handler has a single
+  // call site; keeps the different action kinds from leaking across
+  // component boundaries.
+  function confirmPending() {
+    if (!pendingAction) return;
+    if (pendingAction.kind === 'switch-level') {
+      startNewSession(pendingAction.level);
+    } else if (pendingAction.kind === 'new-chat') {
+      startNewSession(state.readingLevel);
+    }
+    setDraft('');
+    clearPhoto();
+    setPendingAction(null);
+    pendingTriggerRef.current = null;
+  }
+
+  // Cancel the pending action. Focus returns to the button that
+  // originally opened the confirmation (ARIA practice: always put
+  // keyboard focus back on the dismiss-triggering control).
+  function cancelPending() {
+    const trigger = pendingTriggerRef.current;
+    setPendingAction(null);
+    pendingTriggerRef.current = null;
+    // Queue focus restore on the next frame so the ConfirmBar has
+    // unmounted before we try to move focus — otherwise focus can
+    // land inside the now-unmounting bar.
+    queueMicrotask(() => {
+      trigger?.focus();
+    });
+  }
+
+  // Global ESC handler while a confirmation is pending. Using the
+  // window listener (not a form/dialog keydown) means ESC works from
+  // anywhere — the reading-level picker, the textarea, wherever the
+  // user's focus landed after triggering the action.
+  //
+  // The cancel logic is inlined here (not calling cancelPending)
+  // because that function is redeclared on every render — including
+  // it in deps would re-register the listener on every keystroke.
+  // This effect depends only on the pending/not-pending transition.
+  useEffect(() => {
+    if (!pendingAction) return;
+    function onKey(e: globalThis.KeyboardEvent) {
+      if (e.key !== 'Escape') return;
+      e.preventDefault();
+      const trigger = pendingTriggerRef.current;
+      setPendingAction(null);
+      pendingTriggerRef.current = null;
+      queueMicrotask(() => {
+        trigger?.focus();
+      });
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [pendingAction]);
 
   // If we discovered a resumable session, short-circuit the full chat
   // UI and show a resume-offer screen. Accessibility principle: never
@@ -359,16 +456,7 @@ export default function Chat() {
           </button>
           <button
             type="button"
-            onClick={() => {
-              if (
-                state.messages.length === 0 ||
-                window.confirm('Start fresh? What we have now will end.')
-              ) {
-                startNewSession(state.readingLevel);
-                setDraft('');
-                clearPhoto();
-              }
-            }}
+            onClick={(e) => handleNewConversation(e.currentTarget)}
             disabled={state.initializing}
             aria-label="Start a new conversation"
             title="Start a new conversation"
@@ -404,6 +492,29 @@ export default function Chat() {
       <div className="sr-only" aria-live="polite">
         {state.status === 'active' ? '' : `Conversation ${state.status}`}
       </div>
+
+      {/* Inline confirmation bar for destructive actions.
+          Replaces the native window.confirm() dialog that was triggered
+          by mid-conversation reading-level switches and the 'New' button.
+          Native confirm is an accessibility regression for this
+          audience: inconsistent screen reader handling, hard context
+          break for cognitive-support users, OS-chrome styling that
+          doesn't match the page. This bar is inline, keyboard-
+          navigable (Tab to confirm, ESC to cancel), and uses the site
+          palette. See confirmPending/cancelPending above. */}
+      {pendingAction && (
+        <ConfirmBar
+          ref={confirmBarRef}
+          action={pendingAction}
+          pendingLevelLabel={
+            pendingAction.kind === 'switch-level'
+              ? readingLevelLabel(pendingAction.level)
+              : null
+          }
+          onConfirm={confirmPending}
+          onCancel={cancelPending}
+        />
+      )}
 
       {/* Error banner with recovery actions.
           On error we show what happened, then concrete next steps: try
@@ -678,7 +789,7 @@ function ReadingLevelPicker({
   disabled,
 }: {
   value: ReadingLevel;
-  onChange: (level: ReadingLevel) => void;
+  onChange: (level: ReadingLevel, triggerEl: HTMLElement) => void;
   disabled: boolean;
 }) {
   const levels: { id: ReadingLevel; label: string; description: string }[] = [
@@ -713,7 +824,7 @@ function ReadingLevelPicker({
             <button
               key={l.id}
               type="button"
-              onClick={() => onChange(l.id)}
+              onClick={(e) => onChange(l.id, e.currentTarget)}
               disabled={disabled}
               aria-pressed={active}
               title={l.description}
@@ -872,4 +983,124 @@ function downloadConversation(
   document.body.removeChild(a);
   // Give the browser a moment to start the download before revoking.
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// ─── ConfirmBar ───────────────────────────────────────────────────────────
+
+/**
+ * Inline, accessible confirmation surface that replaces window.confirm()
+ * for destructive chat actions.
+ *
+ * Why inline instead of a modal dialog:
+ * - The audience includes people with cognitive and sensory challenges
+ *   for whom a focus-stealing modal is a harder context break than the
+ *   action itself. Inline means "here is a question about the thing
+ *   you just tapped, right where you tapped it."
+ * - Matches the in-page design system (surfaces, radius, accent) so
+ *   the control feels like part of the product, not a browser popup.
+ * - Keyboard: Tab reaches the Confirm button first (autofocus); ESC
+ *   cancels from anywhere on the page (see window keydown listener
+ *   in the Chat component).
+ * - Screen readers: role="alertdialog" + aria-labelledby is the
+ *   ARIA-correct pattern for a modal confirmation. The bar is visually
+ *   inline, but it is semantically modal (it blocks the action until
+ *   the user chooses). aria-modal is intentionally omitted because
+ *   we are NOT trapping focus — users can Tab out to re-read message
+ *   history before deciding.
+ *
+ * Props:
+ *   action              the pending action shape (drives prompt copy)
+ *   pendingLevelLabel   human label for the level we'd switch to
+ *                       ("Simple", "Standard", "Professional"); only
+ *                       present on switch-level actions, null otherwise
+ *   onConfirm           apply the action
+ *   onCancel            dismiss, restore focus to the trigger
+ */
+const ConfirmBar = forwardRef<
+  HTMLDivElement,
+  {
+    action: PendingAction;
+    pendingLevelLabel: string | null;
+    onConfirm: () => void;
+    onCancel: () => void;
+  }
+>(function ConfirmBar({ action, pendingLevelLabel, onConfirm, onCancel }, ref) {
+  const confirmButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Autofocus the confirm action when the bar appears. This is the
+  // WAI-ARIA practice for alertdialog (focus an actionable control in
+  // the dialog on open) and also matches the user's mental model:
+  // they just tapped the trigger meaning "yes, do this" — the fastest
+  // path to completion is Enter.
+  useEffect(() => {
+    confirmButtonRef.current?.focus();
+  }, []);
+
+  const title =
+    action.kind === 'switch-level'
+      ? `Switch to ${pendingLevelLabel} reading level?`
+      : 'Start a fresh conversation?';
+
+  const body =
+    action.kind === 'switch-level'
+      ? 'Switching reading level starts a new conversation. What you have so far will end.'
+      : 'Starting fresh ends this conversation. What you have so far will go away.';
+
+  const confirmLabel =
+    action.kind === 'switch-level' ? 'Switch' : 'Start fresh';
+
+  return (
+    <div
+      ref={ref}
+      role="alertdialog"
+      aria-labelledby="confirm-bar-title"
+      aria-describedby="confirm-bar-body"
+      className="mb-4 rounded-md border-2 border-accent-500 bg-accent-50 px-4 py-3"
+    >
+      <p
+        id="confirm-bar-title"
+        className="font-display text-base text-ink-900"
+      >
+        {title}
+      </p>
+      <p id="confirm-bar-body" className="mt-1 text-sm text-ink-700">
+        {body}
+      </p>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <button
+          ref={confirmButtonRef}
+          type="button"
+          onClick={onConfirm}
+          className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md bg-accent-500 hover:bg-accent-600 text-white text-sm font-medium transition-colors"
+        >
+          {confirmLabel}
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md border border-surface-200 bg-surface-50 hover:bg-surface-100 text-ink-700 text-sm font-medium transition-colors"
+        >
+          Cancel
+        </button>
+        <p className="ml-auto text-xs text-ink-500">
+          Press <kbd className="font-mono">Esc</kbd> to cancel.
+        </p>
+      </div>
+    </div>
+  );
+});
+
+// Display label for a ReadingLevel. Kept here (not in useChatSession)
+// because this is presentation copy, not engine copy — it only lives
+// on the chat screen. If more screens need the label later, promote
+// to a shared module.
+function readingLevelLabel(level: ReadingLevel): string {
+  switch (level) {
+    case 'simple':
+      return 'Simple';
+    case 'standard':
+      return 'Standard';
+    case 'professional':
+      return 'Professional';
+  }
 }
