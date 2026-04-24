@@ -13,8 +13,8 @@ test('homepage renders hero with Ada CTA', async ({ page }) => {
   await page.goto('/');
 
   const h1 = page.getByRole('heading', { level: 1 });
-  await expect(h1).toContainText('Know the law');
-  await expect(h1).toContainText('Know your rights');
+  await expect(h1).toContainText('Access is a right');
+  await expect(h1).toContainText('not a favor');
 
   const cta = page.getByRole('link', { name: /Talk to Ada/i }).first();
   await expect(cta).toBeVisible();
@@ -58,7 +58,7 @@ test('/chat loads from CTA navigation and shows the chat UI', async ({ page }) =
   ).toHaveAttribute('aria-pressed', 'true');
 
   // Input is present (will be enabled once the session is created)
-  await expect(page.getByLabel('Your message')).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Your message' })).toBeVisible();
 });
 
 test('reading-level switch on empty chat: silent swap, no ConfirmBar', async ({ page }) => {
@@ -75,7 +75,7 @@ test('reading-level switch on empty chat: silent swap, no ConfirmBar', async ({ 
 
   // Wait for the input to enable — the session has to initialise before
   // the picker does anything interesting.
-  await expect(page.getByLabel('Your message')).toBeEnabled({ timeout: 15000 });
+  await expect(page.getByRole('textbox', { name: 'Your message' })).toBeEnabled({ timeout: 15000 });
 
   // Tap Simple with no user messages yet. Expected: silent swap.
   await page.getByRole('button', { name: 'Simple' }).click();
@@ -99,11 +99,11 @@ test('reading-level switch mid-conversation: ConfirmBar appears; Cancel leaves p
   });
 
   await page.goto('/chat');
-  await expect(page.getByLabel('Your message')).toBeEnabled({ timeout: 15000 });
+  await expect(page.getByRole('textbox', { name: 'Your message' })).toBeEnabled({ timeout: 15000 });
 
   // Send a message so we have user content — this is the trigger that
   // escalates a level-switch from silent to confirm-required.
-  const input = page.getByLabel('Your message');
+  const input = page.getByRole('textbox', { name: 'Your message' });
   await input.fill('Testing the confirm flow. A restaurant refused my service dog.');
   await page.getByRole('button', { name: 'Send' }).click();
 
@@ -144,9 +144,9 @@ test('reading-level switch mid-conversation: ESC key cancels', async ({ page }) 
   });
 
   await page.goto('/chat');
-  await expect(page.getByLabel('Your message')).toBeEnabled({ timeout: 15000 });
+  await expect(page.getByRole('textbox', { name: 'Your message' })).toBeEnabled({ timeout: 15000 });
 
-  const input = page.getByLabel('Your message');
+  const input = page.getByRole('textbox', { name: 'Your message' });
   await input.fill('ESC key test. A bank refused to help me.');
   await page.getByRole('button', { name: 'Send' }).click();
   await expect(
@@ -175,9 +175,9 @@ test('New conversation button: ConfirmBar appears when there is user content', a
   });
 
   await page.goto('/chat');
-  await expect(page.getByLabel('Your message')).toBeEnabled({ timeout: 15000 });
+  await expect(page.getByRole('textbox', { name: 'Your message' })).toBeEnabled({ timeout: 15000 });
 
-  await page.getByLabel('Your message').fill('New conversation test.');
+  await page.getByRole('textbox', { name: 'Your message' }).fill('New conversation test.');
   await page.getByRole('button', { name: 'Send' }).click();
   await expect(
     page.getByText(/New conversation test/i).first(),
