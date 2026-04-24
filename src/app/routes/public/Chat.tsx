@@ -163,6 +163,25 @@ export default function Chat() {
 
   function handleLevelChange(level: ReadingLevel) {
     if (state.readingLevel === level) return;
+
+    // If the user hasn't typed anything yet, there's nothing to preserve —
+    // swap the level silently. Common case: user lands on /chat, reads
+    // Ada's opener, and realizes they want a different reading level
+    // before they start. No friction needed.
+    //
+    // Mid-conversation, we still want explicit consent because swapping
+    // the reading level re-bakes Ada's system prompt and effectively
+    // starts a new session. For now that's a native window.confirm —
+    // it's an accessibility compromise we should replace with an inline
+    // React-based confirmation bar, tracked as a follow-up.
+    const hasUserContent = state.messages.some((m) => m.role === 'user');
+    if (!hasUserContent) {
+      startNewSession(level);
+      setDraft('');
+      clearPhoto();
+      return;
+    }
+
     if (window.confirm('Switching reading level starts a fresh conversation. Okay to do that?')) {
       startNewSession(level);
       setDraft('');
