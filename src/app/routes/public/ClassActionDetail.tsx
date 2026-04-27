@@ -21,6 +21,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useReadingLevel, type ReadingLevel } from '../../components/standards/ReadingLevelContext.js';
+import { ReadingLevelToggle } from '../../components/standards/ReadingLevelToggle.js';
 
 type CriterionKind = 'required' | 'preferred' | 'disqualifying';
 
@@ -35,10 +37,18 @@ interface PublicListingDetail {
   title: string;
   category: string;
   short_description: string | null;
+  short_description_simple: string | null;
+  short_description_professional: string | null;
   full_description: string | null;
+  full_description_simple: string | null;
+  full_description_professional: string | null;
   eligibility_summary: string | null;
+  eligibility_summary_simple: string | null;
+  eligibility_summary_professional: string | null;
   law_firm_name: string;
   case_description: string | null;
+  case_description_simple: string | null;
+  case_description_professional: string | null;
   eligibility_criteria: EligibilityCriterion[];
   disqualifying_conditions: string[];
 }
@@ -49,9 +59,35 @@ const CATEGORY_LABEL: Record<string, string> = {
   ada_title_iii: 'Title III — Public accommodation',
 };
 
+/**
+ * Pick the right voice variant for a field. Order:
+ *   1. The exact variant the user selected (simple / professional), if
+ *      that variant has content for this field.
+ *   2. Fall back to the 'standard' (canonical) field. This is the
+ *      existing column written when the listing was created — it
+ *      always has content if the listing is published.
+ *   3. Final fallback: empty string. Never crashes if everything is
+ *      somehow null.
+ *
+ * Defining the fallback in one place keeps the JSX below readable.
+ */
+function pickVariant(
+  level: ReadingLevel,
+  variants: {
+    simple: string | null;
+    standard: string | null;
+    professional: string | null;
+  },
+): string {
+  if (level === 'simple' && variants.simple) return variants.simple;
+  if (level === 'professional' && variants.professional) return variants.professional;
+  return variants.standard ?? '';
+}
+
 export default function ClassActionDetail() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { readingLevel } = useReadingLevel();
   const [listing, setListing] = useState<PublicListingDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -95,7 +131,7 @@ export default function ClassActionDetail() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           listing_slug: slug,
-          reading_level: 'standard',
+          reading_level: readingLevel,
         }),
       });
       if (!resp.ok) {
@@ -170,9 +206,36 @@ export default function ClassActionDetail() {
     (c) => c.kind === 'disqualifying',
   );
 
+  // Reading-level variant resolution. The page renders the user-facing
+  // prose at the level the user picked (simple / standard / professional),
+  // falling back to the canonical 'standard' field when a variant is
+  // missing for that case. The detail page renders full_description if
+  // present, otherwise case_description from the config — same fallback
+  // chain as before, just applied to whichever variant set we picked.
+  const fullDescription =
+    pickVariant(readingLevel, {
+      simple: listing.full_description_simple,
+      standard: listing.full_description,
+      professional: listing.full_description_professional,
+    }) ||
+    pickVariant(readingLevel, {
+      simple: listing.case_description_simple,
+      standard: listing.case_description,
+      professional: listing.case_description_professional,
+    });
+
+  const eligibilitySummary = pickVariant(readingLevel, {
+    simple: listing.eligibility_summary_simple,
+    standard: listing.eligibility_summary,
+    professional: listing.eligibility_summary_professional,
+  });
+
   // Build the meta description: prefer short_description, then the
   // eligibility_summary, then a fallback. Truncate to 155 chars (the
-  // ceiling before Google starts snipping snippets).
+  // ceiling before Google starts snipping snippets). Meta tags use the
+  // 'standard' field deliberately — search engines cache this and
+  // changing it per user-visit (which won't happen since SSR isn't in
+  // play) would be incorrect anyway.
   const rawDescription =
     listing.short_description ??
     listing.eligibility_summary ??
@@ -240,7 +303,7 @@ export default function ClassActionDetail() {
       </section>
 
       {/* Header */}
-      <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-8">
+      <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-4">
         <div className="mb-3">
           <span className="inline-block px-2 py-0.5 rounded-full bg-accent-50 text-accent-600 font-medium text-xs">
             {CATEGORY_LABEL[listing.category] ?? listing.category}
@@ -255,14 +318,21 @@ export default function ClassActionDetail() {
         </p>
       </section>
 
+      {/* Reading level toggle. Persists site-wide via ReadingLevelContext.
+          When the user picks a level here, it sticks for the chapter-page
+          standards guide as well — same control, same key. */}
+      <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-6">
+        <ReadingLevelToggle />
+      </section>
+
       {/* Description */}
-      {(listing.full_description ?? listing.case_description) && (
+      {fullDescription && (
         <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-8">
           <h2 className="font-display text-xl text-ink-900 mb-3">
             About this case
           </h2>
           <p className="text-ink-700 whitespace-pre-wrap leading-relaxed">
-            {listing.full_description ?? listing.case_description}
+            {fullDescription}
           </p>
         </section>
       )}
@@ -272,8 +342,8 @@ export default function ClassActionDetail() {
         <h2 className="font-display text-xl text-ink-900 mb-3">
           Who may qualify
         </h2>
-        {listing.eligibility_summary && (
-          <p className="text-ink-700 mb-4">{listing.eligibility_summary}</p>
+        {eligibilitySummary && (
+          <p className="text-ink-700 mb-4">{eligibilitySummary}</p>
         )}
 
         {required.length > 0 && (

@@ -44,6 +44,7 @@ import GuideHeroBanner from './GuideHeroBanner.js';
 import GuideStyles from './GuideStyles.js';
 import ShareBar from './ShareBar.js';
 import { useReadingLevel, type ReadingLevel } from './ReadingLevelContext.js';
+import { ReadingLevelToggle } from './ReadingLevelToggle.js';
 import { startAdaSessionWithContext } from './startAdaSession.js';
 
 /** One section in a chapter (e.g. §405 Ramps inside Ch. 4). */
@@ -428,7 +429,7 @@ export default function ChapterPageLayout({
 }: ChapterPageLayoutProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [startingChat, setStartingChat] = useState(false);
-  const { readingLevel, setReadingLevel } = useReadingLevel();
+  const { readingLevel } = useReadingLevel();
   const navigate = useNavigate();
 
   async function handleTalkToAda(): Promise<void> {
@@ -523,82 +524,10 @@ export default function ChapterPageLayout({
           </div>
 
           {/* Reading level toggle */}
-          <div
-            role="group"
-            aria-label="Reading level"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: '8px 12px',
-              marginBottom: '20px',
-              borderRadius: '8px',
-              background: 'var(--page-bg-subtle)',
-              border: '1px solid var(--border)',
-              fontFamily: 'var(--font-body), Manrope, sans-serif',
-              flexWrap: 'wrap',
-            }}
-          >
-            <span
-              style={{
-                fontSize: '0.72rem',
-                fontWeight: 700,
-                color: 'var(--body)',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              Reading level
-            </span>
-            <div style={{ display: 'flex', gap: '3px' }}>
-              {(
-                [
-                  { key: 'simple', label: 'Simple', desc: 'Plain language' },
-                  { key: 'standard', label: 'Standard', desc: 'Default view' },
-                  { key: 'professional', label: 'Legal', desc: 'Full citations' },
-                ] as const
-              ).map((r) => {
-                const active = readingLevel === r.key;
-                return (
-                  <button
-                    key={r.key}
-                    type="button"
-                    aria-pressed={active}
-                    title={r.desc}
-                    onClick={() => setReadingLevel(r.key)}
-                    style={{
-                      padding: '5px 14px',
-                      minHeight: '44px',
-                      borderRadius: '6px',
-                      border: active
-                        ? '2px solid var(--accent)'
-                        : '1px solid var(--border)',
-                      background: active ? 'var(--accent)' : 'var(--page-bg)',
-                      color: active ? 'var(--btn-text)' : 'var(--body)',
-                      fontSize: '0.72rem',
-                      fontWeight: active ? 700 : 500,
-                      fontFamily: 'var(--font-body), Manrope, sans-serif',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {r.label}
-                  </button>
-                );
-              })}
-            </div>
-            <span
-              style={{
-                fontSize: '0.65rem',
-                color: 'var(--body-secondary)',
-                marginLeft: 'auto',
-              }}
-            >
-              {readingLevel === 'simple' && '📖 Plain-language summaries'}
-              {readingLevel === 'standard' && '📄 Plain language + legal text'}
-              {readingLevel === 'professional' && '⚖️ Includes legal citations'}
-            </span>
-          </div>
+          <ReadingLevelToggle
+            className="reading-level-toggle"
+          />
+          <div style={{ marginBottom: '20px' }} aria-hidden />
 
           {/* Sections */}
           <div role="region" aria-label="Standards sections">
