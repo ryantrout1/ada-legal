@@ -879,7 +879,15 @@ function MessageBubble({ message }: { message: import('@/app/hooks/useChatSessio
             className="mb-2 max-h-48 rounded"
           />
         )}
-        <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+        {message.content.trim().length > 0 ? (
+          <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+        ) : message.role === 'assistant' && message.tools && message.tools.length > 0 ? (
+          <p className="whitespace-pre-wrap leading-relaxed text-ink-500 italic">
+            Working on it…
+          </p>
+        ) : (
+          <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+        )}
         {message.tools && message.tools.length > 0 && (
           <p className="mt-2 text-[10px] text-ink-500 font-mono">
             tools: {message.tools.join(', ')}
