@@ -866,7 +866,7 @@ function MessageBubble({ message }: { message: import('@/app/hooks/useChatSessio
       >
         <p
           className={
-            'font-mono text-[10px] uppercase tracking-wider mb-1 ' +
+            'font-mono text-[11px] font-semibold tracking-wide mb-1 ' +
             (isUser ? 'text-accent-50' : 'text-ink-500')
           }
         >
