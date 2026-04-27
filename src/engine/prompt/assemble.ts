@@ -15,8 +15,9 @@
  *   6. Session ctx  — classification, extracted fields, status
  *
  * Design principles:
- *   - Deterministic: same inputs → same output. No timestamps, no
- *     randomness, no "current date" string.
+ *   - Deterministic for fixed inputs: same inputs → same output. The
+ *     `now` field IS one of those inputs — production passes the wall
+ *     clock; tests pass a fixed Date for snapshot-stable output.
  *   - Ordered: the six sections always appear in the same order, even
  *     when one is empty. Predictable layout lets us diff prompt output
  *     in tests without noise.
@@ -95,6 +96,17 @@ export interface AssemblePromptContext {
    * Order matters: the first chunk is shown first in the prompt.
    */
   knowledgeChunks?: ReadonlyArray<KnowledgeChunkHit>;
+  /**
+   * Current date/time for the conversation. Threaded in by the caller
+   * (api/ada/turn.ts) so Ada can reason about relative time —
+   * 'last month', 'a few months ago', statute-of-limitations checks.
+   *
+   * Optional only because tests can omit it; production always passes
+   * the wall clock. When omitted the TIME section is dropped, which
+   * preserves the deterministic-snapshot behavior the assembler had
+   * before this field was added.
+   */
+  now?: Date;
 }
 
 // ─── Assembler ────────────────────────────────────────────────────────────────
@@ -103,6 +115,7 @@ export function assemblePrompt(ctx: AssemblePromptContext): string {
   const sections = [
     section('IDENTITY', buildIdentitySection(ctx)),
     section('ORG CONTEXT', buildOrgSection(ctx)),
+    section('TIME', buildTimeSection(ctx.now)),
     section('PAGE CONTEXT', buildPageContextSection(ctx.state.metadata.page_context)),
     section('KNOWLEDGE', buildKnowledgeSection(ctx.knowledgeChunks)),
     section('LISTING CONTEXT', buildListingSection(ctx)),
@@ -118,6 +131,22 @@ export function assemblePrompt(ctx: AssemblePromptContext): string {
 
 function buildIdentitySection(_ctx: AssemblePromptContext): string {
   return adaIdentity.trim();
+}
+
+function buildTimeSection(now?: Date): string {
+  if (!now) return '';
+  // Format: "Today is Monday, April 27, 2026."
+  // Long form so Ada can reason about month + year + day-of-week.
+  const formatted = now.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  return [
+    `Today is ${formatted}.`,
+    `Use this when the user mentions relative dates ("last month", "a few weeks ago", "recently") so you can resolve them to a real month and year. Pay special attention to statute-of-limitations windows for ADA Title III claims (typically 2 years from the date of the incident, varying by state).`,
+  ].join(' ');
 }
 
 function buildOrgSection(ctx: AssemblePromptContext): string {

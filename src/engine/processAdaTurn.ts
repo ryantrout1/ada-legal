@@ -208,6 +208,7 @@ export async function processAdaTurn({
       discoveryListings,
       routingMatches,
       knowledgeChunks,
+      now: clients.clock.now(),
     });
 
     // Stream one model turn. Collect text + any tool_use calls.
