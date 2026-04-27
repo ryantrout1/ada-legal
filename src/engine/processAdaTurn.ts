@@ -108,89 +108,92 @@ export async function processAdaTurn({
   const toolInvocations: ToolInvocation[] = [];
   const photoFindingsAccum: AdaTurnResult['photoFindings'] = [];
 
-  // ── Knowledge-base retrieval (Step 10.5) ─────────────────────────────────
-  // Retrieve ONCE per turn, before the model-tool loop starts. The user
-  // query doesn't change across loop iterations; only the conversation
-  // history grows as Ada uses tools. We embed the user's message, run a
-  // hybrid vector + citation search, and pass the results into every
-  // assemblePrompt call below.
+  // ── Pre-flight context (Steps 10.5, 21, 22) ──────────────────────────────
+  // Three independent DB-bound lookups happen before the model is called:
   //
-  // All failures here are swallowed. RAG is an enhancement, not a hard
-  // dependency — if embeddings or the DB search fail, we still want to
-  // answer the user's question.
-  let knowledgeChunks: KnowledgeChunkHit[] = [];
-  try {
-    let queryEmbedding: number[] | undefined;
-    if (clients.embeddings) {
-      try {
-        queryEmbedding = await clients.embeddings.embedQuery(input.userMessage);
-      } catch {
-        // Embedding failed; fall through to citation-only search.
+  //   1. Knowledge-base retrieval (RAG over the user's message)
+  //   2. Listing context loading (bound listing config OR discovery list)
+  //   3. Routing rule evaluation (active rules + match against session)
+  //
+  // None of these depend on each other. Running them in parallel cuts
+  // pre-flight latency from sum(t1, t2, t3) to max(t1, t2, t3) — typically
+  // ~600ms → ~200ms on warm Neon connections.
+  //
+  // Each is wrapped in its own try/catch and returns a default so a
+  // single failing source never blocks the others or the conversation.
+  const fetchKnowledge = async (): Promise<KnowledgeChunkHit[]> => {
+    try {
+      let queryEmbedding: number[] | undefined;
+      if (clients.embeddings) {
+        try {
+          queryEmbedding = await clients.embeddings.embedQuery(input.userMessage);
+        } catch {
+          // Embedding failed; fall through to citation-only search.
+        }
       }
+      return await clients.db.searchKnowledgeBase({
+        query: input.userMessage,
+        queryEmbedding,
+        k: 5,
+      });
+    } catch {
+      return [];
     }
-    knowledgeChunks = await clients.db.searchKnowledgeBase({
-      query: input.userMessage,
-      queryEmbedding,
-      k: 5,
-    });
-  } catch {
-    knowledgeChunks = [];
-  }
+  };
 
-  // ── Listing context loading (Step 21) ────────────────────────────────────
-  // If this session is bound to a listing, load the listing row + its
-  // config so the prompt assembler can render the full LISTING CONTEXT
-  // section. If it's a public_ada session, load a condensed index of
-  // active listings so Ada can propose matches.
-  //
-  // Loaded ONCE per turn (like knowledge retrieval). Failures swallowed
-  // — listing context is an enhancement, not a requirement.
-  let boundListing:
-    | { listing: import('./clients/types.js').ListingRow;
-        config: import('./clients/types.js').ListingConfigRow }
-    | null = null;
-  let discoveryListings: import('./clients/types.js').ActiveListingRow[] = [];
-
-  try {
-    if (
-      workingState.listingId &&
-      workingState.sessionType === 'class_action_intake'
-    ) {
-      const listing = await clients.db.readListingById(workingState.listingId);
-      const config = listing
-        ? await clients.db.readListingConfigForListing(listing.id)
-        : null;
-      if (listing && config) {
-        boundListing = { listing, config };
+  type ListingContext = {
+    boundListing:
+      | { listing: import('./clients/types.js').ListingRow;
+          config: import('./clients/types.js').ListingConfigRow }
+      | null;
+    discoveryListings: import('./clients/types.js').ActiveListingRow[];
+  };
+  const fetchListingContext = async (): Promise<ListingContext> => {
+    try {
+      if (
+        workingState.listingId &&
+        workingState.sessionType === 'class_action_intake'
+      ) {
+        const listing = await clients.db.readListingById(workingState.listingId);
+        const config = listing
+          ? await clients.db.readListingConfigForListing(listing.id)
+          : null;
+        if (listing && config) {
+          return { boundListing: { listing, config }, discoveryListings: [] };
+        }
+      } else if (workingState.sessionType === 'public_ada') {
+        const discoveryListings = await clients.db.listActiveListings();
+        return { boundListing: null, discoveryListings };
       }
-    } else if (workingState.sessionType === 'public_ada') {
-      discoveryListings = await clients.db.listActiveListings();
+    } catch {
+      // Listing context is non-critical; proceed without it.
     }
-  } catch {
-    // Listing context is non-critical; proceed without it.
-  }
+    return { boundListing: null, discoveryListings: [] };
+  };
 
-  // ── Routing rule evaluation (Step 22) ────────────────────────────────────
-  // Fetch active routing rules and evaluate against the current session.
-  // Rules that match become RoutingMatch[] entries, which:
-  //   1. Get surfaced to Ada in the ROUTING DESTINATIONS prompt section
-  //   2. Get attached to workingState.routingMatches so the `route` tool
-  //      can validate target_org_id without a second DB round-trip.
-  //
-  // Failures swallowed for the same reason as listing context — routing
-  // is an enhancement, not a precondition for a useful conversation.
-  let routingMatches: import('./routing/evaluate.js').RoutingMatch[] = [];
-  try {
-    const activeRules = await clients.db.listActiveRoutingRules();
-    routingMatches = evaluateRoutingRules({
-      session: workingState,
-      rules: activeRules,
-    });
-    if (routingMatches.length > 0) {
-      workingState = { ...workingState, routingMatches };
+  const fetchRoutingMatches = async (): Promise<
+    import('./routing/evaluate.js').RoutingMatch[]
+  > => {
+    try {
+      const activeRules = await clients.db.listActiveRoutingRules();
+      return evaluateRoutingRules({
+        session: workingState,
+        rules: activeRules,
+      });
+    } catch {
+      return [];
     }
-  } catch {
-    // Routing is non-critical.
+  };
+
+  const [knowledgeChunks, listingContext, routingMatches] = await Promise.all([
+    fetchKnowledge(),
+    fetchListingContext(),
+    fetchRoutingMatches(),
+  ]);
+
+  const { boundListing, discoveryListings } = listingContext;
+  if (routingMatches.length > 0) {
+    workingState = { ...workingState, routingMatches };
   }
 
   let assistantMessage: Message | null = null;
