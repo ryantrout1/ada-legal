@@ -246,8 +246,106 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
         )}
       </section>
 
-      {/* Class-action placeholder note (Phase D, Step 26 will replace) */}
-      {pkg.classActionPlaceholder && (
+      {/* Matched class-action listing (real match — Ada bound the
+          session to a live case via match_listing). This replaces the
+          generic "matching is coming" copy below when present. */}
+      {pkg.matchedListing && (
+        <section
+          className="mb-10 bg-accent-50 border-2 border-accent-500 rounded-md p-5 sm:p-6"
+          aria-labelledby="pkg-matched-listing"
+        >
+          <p className="text-xs uppercase tracking-wider font-mono text-accent-600 mb-2">
+            You may be part of an active class action
+          </p>
+          <h2
+            id="pkg-matched-listing"
+            className="font-display text-xl sm:text-2xl text-ink-900 mb-3 leading-tight"
+          >
+            {pkg.matchedListing.listingTitle}
+          </h2>
+          <p className="text-ink-700 mb-4">
+            What you described matches the pattern of an active class action
+            currently being pursued by{' '}
+            <span className="font-medium text-ink-900">
+              {pkg.matchedListing.firmName}
+            </span>
+            {pkg.matchedListing.firmPrimaryContact && (
+              <>
+                {' '}
+                ({pkg.matchedListing.firmPrimaryContact})
+              </>
+            )}
+            . They are reviewing intakes from people with situations like yours.
+          </p>
+
+          {/* Firm contact lines. Shown as a stacked list rather than
+              a horizontal row so screen readers announce each
+              contact path clearly. */}
+          <dl className="mb-5 space-y-2 text-sm">
+            {pkg.matchedListing.firmEmail && (
+              <div className="flex flex-wrap gap-x-3">
+                <dt className="text-ink-500 font-medium min-w-[60px]">
+                  Email:
+                </dt>
+                <dd>
+                  <a
+                    href={`mailto:${pkg.matchedListing.firmEmail}`}
+                    className="text-accent-600 underline underline-offset-2 hover:text-accent-700"
+                    aria-label={`Email ${pkg.matchedListing.firmName}`}
+                  >
+                    {pkg.matchedListing.firmEmail}
+                  </a>
+                </dd>
+              </div>
+            )}
+            {pkg.matchedListing.firmPhone && (
+              <div className="flex flex-wrap gap-x-3">
+                <dt className="text-ink-500 font-medium min-w-[60px]">
+                  Phone:
+                </dt>
+                <dd>
+                  <a
+                    href={`tel:${pkg.matchedListing.firmPhone.replace(/[^\d+]/g, '')}`}
+                    className="text-accent-600 underline underline-offset-2 hover:text-accent-700"
+                    aria-label={`Call ${pkg.matchedListing.firmName}`}
+                  >
+                    {pkg.matchedListing.firmPhone}
+                  </a>
+                </dd>
+              </div>
+            )}
+          </dl>
+
+          <div className="flex flex-wrap gap-3">
+            {pkg.matchedListing.firmEmail && (
+              <a
+                href={`mailto:${pkg.matchedListing.firmEmail}?subject=${encodeURIComponent(
+                  `Class action intake — ${pkg.matchedListing.listingTitle}`,
+                )}`}
+                className="inline-block px-5 py-3 rounded-md bg-accent-500 text-white font-medium hover:bg-accent-600"
+              >
+                Contact this firm
+              </a>
+            )}
+            <a
+              href={`/class-actions/${encodeURIComponent(pkg.matchedListing.listingSlug)}`}
+              className="inline-block px-5 py-3 rounded-md border border-accent-500 text-accent-600 font-medium hover:bg-accent-50"
+            >
+              See the full case
+            </a>
+          </div>
+
+          <p className="mt-4 text-xs text-ink-500 leading-relaxed">
+            ADA Legal Link is not a law firm and is not representing you.
+            Contacting the firm above does not create an attorney-client
+            relationship until the firm agrees to take your case.
+          </p>
+        </section>
+      )}
+
+      {/* Generic class-action placeholder — only when classification
+          was class_action AND no specific listing was bound. */}
+      {pkg.classActionPlaceholder && !pkg.matchedListing && (
         <section
           className="mb-10 bg-accent-50 border border-accent-200 rounded px-4 py-3"
           aria-labelledby="pkg-class-action-note"
@@ -267,14 +365,28 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
         </section>
       )}
 
-      {/* SECTION 4: what people usually do next — the routing */}
+      {/* SECTION 4: what people usually do next — the routing.
+          When a class-action match is present above, this section is
+          reframed as supplementary "other ways to take action" rather
+          than the primary path forward. */}
       <section className="mb-10" aria-labelledby="pkg-next-heading">
         <h2
           id="pkg-next-heading"
           className="font-display text-xl sm:text-2xl mb-4"
         >
-          What people usually do next
+          {pkg.matchedListing
+            ? 'Other ways you can also take action'
+            : 'What people usually do next'}
         </h2>
+
+        {pkg.matchedListing && (
+          <p className="text-ink-700 mb-5 text-sm">
+            Joining a class action does not stop you from also filing a
+            complaint or sending a demand letter. Some people do both.
+            The firm above can advise on what makes sense for your
+            situation.
+          </p>
+        )}
 
         <DestinationCard destination={pkg.primaryAction} isPrimary />
 
