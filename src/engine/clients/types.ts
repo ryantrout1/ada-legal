@@ -30,7 +30,26 @@ export interface AiStreamChunk {
 }
 
 export interface AiStreamRequest {
+  /**
+   * The system prompt. When `systemPromptCachePrefix` is also set, this
+   * is treated as the volatile suffix appended after the cached prefix.
+   * When the prefix is not set, this is the entire system prompt.
+   */
   systemPrompt: string;
+  /**
+   * Optional stable prefix that should be cached by the model provider
+   * (Anthropic prompt caching: `cache_control: {type: "ephemeral"}`).
+   * When provided, it is sent as a separate system block before the
+   * volatile `systemPrompt` content. The two are concatenated logically
+   * — anything that depends on per-turn state should stay in
+   * `systemPrompt` (the suffix) so the prefix is reusable across turns.
+   *
+   * Cost / latency win: the cached prefix is billed at ~10% of input
+   * rate after the first hit, and the model skips re-prefilling it,
+   * which drops time-to-first-token meaningfully on every turn after
+   * the first in a conversation.
+   */
+  systemPromptCachePrefix?: string;
   messages: Message[];
   tools: AiToolDefinition[];
   maxTokens?: number;

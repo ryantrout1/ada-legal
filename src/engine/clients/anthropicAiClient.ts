@@ -58,10 +58,39 @@ export class AnthropicAiClient implements AiClient {
         content: m.content as string,
       }));
 
+    // System prompt: when a cache prefix is provided, we send Anthropic
+    // an array of two system blocks — the stable prefix first with
+    // cache_control: ephemeral, the volatile suffix second uncached.
+    // This lets Anthropic skip prefill on the prefix from turn 2 onward
+    // and bills it at ~10% of normal input rate. When no prefix is
+    // provided (or it's empty), fall back to plain string for
+    // backward compatibility.
+    const hasPrefix =
+      typeof req.systemPromptCachePrefix === 'string' &&
+      req.systemPromptCachePrefix.trim().length > 0;
+    const systemBlocks: Array<{
+      type: 'text';
+      text: string;
+      cache_control?: { type: 'ephemeral' };
+    }> = [];
+    if (hasPrefix) {
+      systemBlocks.push({
+        type: 'text',
+        text: req.systemPromptCachePrefix as string,
+        cache_control: { type: 'ephemeral' },
+      });
+    }
+    if (req.systemPrompt.trim().length > 0) {
+      systemBlocks.push({ type: 'text', text: req.systemPrompt });
+    }
+    const systemParam: string | typeof systemBlocks = hasPrefix
+      ? systemBlocks
+      : req.systemPrompt;
+
     const stream = this.client.messages.stream({
       model: req.model ?? DEFAULT_MODEL,
       max_tokens: req.maxTokens ?? DEFAULT_MAX_TOKENS,
-      system: req.systemPrompt,
+      system: systemParam as never, // SDK accepts both shapes; types lag features.
       messages: anthropicMessages,
       tools: req.tools.map((t) => ({
         name: t.name,

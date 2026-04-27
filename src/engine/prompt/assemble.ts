@@ -112,8 +112,38 @@ export interface AssemblePromptContext {
 // ─── Assembler ────────────────────────────────────────────────────────────────
 
 export function assemblePrompt(ctx: AssemblePromptContext): string {
-  const sections = [
-    section('IDENTITY', buildIdentitySection(ctx)),
+  const { cachedPrefix, volatileSuffix } = assemblePromptStructured(ctx);
+  return [cachedPrefix, volatileSuffix].filter((s) => s.trim().length > 0).join('\n\n');
+}
+
+/**
+ * Same content as `assemblePrompt`, but split into a cacheable prefix
+ * and a volatile suffix so the AI client can mark the prefix with
+ * Anthropic prompt-caching headers.
+ *
+ * To preserve the section ordering Ada has been trained against and
+ * to keep snapshot tests stable, we cache ONLY the IDENTITY block —
+ * the largest single static portion (~6k tokens) and the only one
+ * guaranteed fully stable across a session. Everything else stays in
+ * the volatile suffix in its original order, so model behavior and
+ * snapshot output are byte-for-byte identical to the pre-caching
+ * assembler.
+ *
+ * Why not cache TOOLS or READING LEVEL too:
+ *   - They sit AFTER volatile sections (KNOWLEDGE, LISTING) in the
+ *     legacy ordering. Caching a non-prefix range would either require
+ *     reordering (breaks behavior) or multiple cache_control markers
+ *     (more complex; the gain over a single 6k-token cached prefix
+ *     is small).
+ *   - Anthropic's cache breakpoint is positional: everything up to
+ *     the marker is cached. So only contiguous prefixes are eligible.
+ */
+export function assemblePromptStructured(
+  ctx: AssemblePromptContext,
+): { cachedPrefix: string; volatileSuffix: string } {
+  const cachedPrefix = section('IDENTITY', buildIdentitySection(ctx));
+
+  const suffixSections = [
     section('ORG CONTEXT', buildOrgSection(ctx)),
     section('TIME', buildTimeSection(ctx.now)),
     section('PAGE CONTEXT', buildPageContextSection(ctx.state.metadata.page_context)),
@@ -124,7 +154,10 @@ export function assemblePrompt(ctx: AssemblePromptContext): string {
     section('TOOLS', buildToolsSection(ctx.tools ?? DEFAULT_TOOLS)),
     section('CURRENT SESSION', buildSessionContextSection(ctx.state)),
   ];
-  return sections.filter((s) => s.trim().length > 0).join('\n\n');
+  return {
+    cachedPrefix: cachedPrefix.trim(),
+    volatileSuffix: suffixSections.filter((s) => s.trim().length > 0).join('\n\n'),
+  };
 }
 
 // ─── Section builders ─────────────────────────────────────────────────────────

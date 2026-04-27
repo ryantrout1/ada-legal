@@ -38,7 +38,7 @@ import type {
   ToolInvocation,
 } from './types.js';
 import type { Message, AttachedPhoto } from '../types/db.js';
-import { assemblePrompt } from './prompt/assemble.js';
+import { assemblePromptStructured } from './prompt/assemble.js';
 import { CH0_TOOLS, buildToolIndex } from './tools/registry.js';
 import { CH1_TOOLS } from './tools/registryCh1.js';
 import { dispatchTool } from './tools/dispatcher.js';
@@ -209,7 +209,7 @@ export async function processAdaTurn({
   while (loopCount < MAX_TOOL_LOOPS) {
     loopCount += 1;
 
-    const systemPrompt = assemblePrompt({
+    const { cachedPrefix, volatileSuffix } = assemblePromptStructured({
       state: workingState,
       orgDisplayName,
       orgAdaIntroPrompt,
@@ -224,7 +224,8 @@ export async function processAdaTurn({
     // Stream one model turn. Collect text + any tool_use calls.
     const turnOutput = await consumeStream(
       clients.ai.stream({
-        systemPrompt,
+        systemPrompt: volatileSuffix,
+        systemPromptCachePrefix: cachedPrefix,
         messages: workingState.conversationHistory,
         tools: toolDefs,
       }),
