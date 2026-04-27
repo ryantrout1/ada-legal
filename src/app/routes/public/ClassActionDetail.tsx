@@ -23,6 +23,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useReadingLevel, type ReadingLevel } from '../../components/standards/ReadingLevelContext.js';
 import { ReadingLevelToggle } from '../../components/standards/ReadingLevelToggle.js';
+import AutoCiteLinks from '../../components/standards/AutoCiteLinks.js';
 
 type CriterionKind = 'required' | 'preferred' | 'disqualifying';
 
@@ -332,7 +333,7 @@ export default function ClassActionDetail() {
             About this case
           </h2>
           <p className="text-ink-700 whitespace-pre-wrap leading-relaxed">
-            {fullDescription}
+            <AutoCiteLinks>{fullDescription}</AutoCiteLinks>
           </p>
         </section>
       )}
@@ -343,7 +344,9 @@ export default function ClassActionDetail() {
           Who may qualify
         </h2>
         {eligibilitySummary && (
-          <p className="text-ink-700 mb-4">{eligibilitySummary}</p>
+          <p className="text-ink-700 mb-4">
+            <AutoCiteLinks>{eligibilitySummary}</AutoCiteLinks>
+          </p>
         )}
 
         {required.length > 0 && (
