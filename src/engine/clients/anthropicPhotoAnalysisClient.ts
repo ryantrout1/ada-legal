@@ -32,7 +32,7 @@ import type {
 import type { PhotoFinding, PhotoFindingSeverity } from '../../types/db.js';
 import photoAnalysisSystemPrompt from '../../../content-migration/prompts/photo-analysis.js';
 
-const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
+const DEFAULT_MODEL = 'claude-sonnet-4-5';
 const DEFAULT_MAX_TOKENS = 2048;
 
 /** Input schema for the `report_findings` tool. Enforced by Anthropic. */
