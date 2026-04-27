@@ -57,14 +57,41 @@ export function extractNarrative(history: Message[]): string | null {
 }
 
 function messageText(msg: Message): string {
-  if (typeof msg.content === 'string') return msg.content;
-  // ContentBlock[] case — pull out text-ish content.
-  return msg.content
-    .map((block) => {
-      const content = block.content;
-      return typeof content === 'string' ? content : '';
-    })
-    .join(' ');
+  const raw =
+    typeof msg.content === 'string'
+      ? msg.content
+      : msg.content
+          .map((block) => {
+            const content = block.content;
+            return typeof content === 'string' ? content : '';
+          })
+          .join(' ');
+  return stripEngineAnnotations(raw);
+}
+
+/**
+ * Remove engine-internal annotations from user message text before
+ * showing it to a human.
+ *
+ * The chat client appends `[User attached a photo. blob_key: <url>]`
+ * to user messages so the model can see the photo reference. That's
+ * fine for the model, but if it leaks into the summary 'What you
+ * told Ada' block it reads as garbled text with a raw URL. Same
+ * idea would apply to any future bracketed instruction we send
+ * the model — strip them before display.
+ *
+ * Exported for tests.
+ */
+export function stripEngineAnnotations(text: string): string {
+  // Strip any bracketed annotation that starts with "User attached"
+  // or contains "blob_key:" — covers both the current photo wrapper
+  // and minor variants. Strip leading/trailing whitespace + newlines
+  // around the removed block so the result reads cleanly.
+  return text
+    .replace(/\s*\[User attached a photo[^\]]*\]\s*/g, ' ')
+    .replace(/\s*\[[^\]]*blob_key:[^\]]*\]\s*/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 // ─── Summary ──────────────────────────────────────────────────────────────────
