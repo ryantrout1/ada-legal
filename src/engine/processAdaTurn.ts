@@ -195,6 +195,16 @@ export async function processAdaTurn({
 
   let assistantMessage: Message | null = null;
   let loopCount = 0;
+  // Accumulate text emitted in any iteration. Anthropic's tool-use
+  // protocol allows the model to emit text alongside tool_use blocks
+  // ("Looking that up for you. [tool_use]"). When that happens, we
+  // need to preserve the text — it's the conversational reply for
+  // this turn — even though the loop continues to dispatch tools.
+  // If a later iteration emits more text, the latest text wins
+  // (model has more context). If the post-tool iteration is empty,
+  // we fall back to the most recent non-empty text rather than
+  // surfacing a blank bubble to the user.
+  let latestVisibleText = '';
 
   while (loopCount < MAX_TOOL_LOOPS) {
     loopCount += 1;
@@ -222,6 +232,14 @@ export async function processAdaTurn({
 
     // If there are tool calls, execute them and loop again.
     if (turnOutput.toolCalls.length > 0) {
+      // Capture any text emitted alongside the tool calls. This is the
+      // conversational reply the model wanted to show the user before
+      // doing tool work, and it must not be lost when the post-tool
+      // iteration returns empty.
+      if (turnOutput.text.trim().length > 0) {
+        latestVisibleText = turnOutput.text;
+      }
+
       // Append the assistant turn to history (mixed text + tool_use blocks).
       const assistantTurnContent: ContentBlockLite[] = [];
       if (turnOutput.text.length > 0) {
@@ -296,9 +314,17 @@ export async function processAdaTurn({
     }
 
     // No tool calls this iteration → this is Ada's final response.
+    // Prefer the text returned this iteration; fall back to text
+    // emitted in an earlier iteration (alongside tool calls) if the
+    // model returned empty here. Both cases are real Anthropic
+    // behavior — sometimes the model puts the conversational reply
+    // before the tool calls and treats the post-tool turn as a
+    // no-op acknowledgment.
+    const finalText =
+      turnOutput.text.trim().length > 0 ? turnOutput.text : latestVisibleText;
     assistantMessage = {
       role: 'assistant',
-      content: turnOutput.text,
+      content: finalText,
       timestamp: clients.clock.now().toISOString(),
     };
     workingState = {
