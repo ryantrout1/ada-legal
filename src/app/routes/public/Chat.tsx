@@ -888,11 +888,6 @@ function MessageBubble({ message }: { message: import('@/app/hooks/useChatSessio
         ) : (
           <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
         )}
-        {message.tools && message.tools.length > 0 && (
-          <p className="mt-2 text-[10px] text-ink-500 font-mono">
-            tools: {message.tools.join(', ')}
-          </p>
-        )}
       </div>
     </div>
   );
