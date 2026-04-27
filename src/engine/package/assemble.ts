@@ -20,7 +20,7 @@ import { generatePackageSlug } from './slug.js';
 import { labelFor } from './labels.js';
 import { extractNarrative, buildSummary } from './extract.js';
 import { buildDemandLetter } from './demandLetter.js';
-import type { SessionPackage, CitedRegulation } from './types.js';
+import type { SessionPackage, CitedRegulation, MatchedListing } from './types.js';
 
 export interface AssemblePackageContext {
   /** The session being packaged. Assumed to be a completed session. */
@@ -49,6 +49,19 @@ export interface AssemblePackageContext {
    * tests. Defaults to now().
    */
   now?: string;
+  /**
+   * When the session bound to a specific class-action listing during
+   * the conversation, the caller passes the listing + firm here. The
+   * package surfaces this as the primary call to action — connecting
+   * the user directly to the firm hosting the matching case rather
+   * than defaulting to the generic DOJ / state filings.
+   *
+   * The caller is responsible for the lookup (the assembler stays
+   * pure / sync). When omitted, the package treats class_action
+   * classifications as un-matched and falls back to the generic
+   * placeholder copy.
+   */
+  matchedListing?: MatchedListing | null;
 }
 
 /**
@@ -114,6 +127,14 @@ export function assemblePackage(ctx: AssemblePackageContext): SessionPackage {
       })
     : null;
 
+  // The class-action placeholder fires only when Ada classified as
+  // class_action but didn't bind to a specific listing. When a listing
+  // IS bound, the matchedListing block in the rendered page replaces
+  // the generic "matching is coming" note.
+  const matchedListing = ctx.matchedListing ?? null;
+  const classActionPlaceholder =
+    classification.title === 'class_action' && !matchedListing;
+
   return {
     slug,
     sessionId: state.sessionId,
@@ -129,7 +150,8 @@ export function assemblePackage(ctx: AssemblePackageContext): SessionPackage {
     alternateActions: route.alternates,
     infoDestinations: route.info,
     demandLetter,
-    classActionPlaceholder: classification.title === 'class_action',
+    classActionPlaceholder,
+    matchedListing,
     disclaimer: PACKAGE_DISCLAIMER,
   };
 }

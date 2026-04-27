@@ -66,6 +66,34 @@ export interface ClassificationLabel {
 }
 
 /**
+ * When the session was bound to a specific class-action listing
+ * (via match_listing during the conversation), the package surfaces
+ * that match prominently. The user is connected to a real, named firm
+ * — not just told "matching is coming soon."
+ *
+ * Null when the session was classified as class_action but did NOT bind
+ * to a listing (no active listing fit the facts, or the user declined
+ * to pursue a specific case). In that case the rendering layer falls
+ * back to the generic class-action placeholder.
+ */
+export interface MatchedListing {
+  /** The listing's slug for /class-actions/{slug} link-back. */
+  listingSlug: string;
+  /** Listing title, e.g. "Rideshare wheelchair and service animal denials". */
+  listingTitle: string;
+  /** Listing category, e.g. "ada_title_iii". Drives the chip color. */
+  listingCategory: string;
+  /** Hosting law firm display name. */
+  firmName: string;
+  /** Primary contact name at the firm, if set on the firm row. */
+  firmPrimaryContact: string | null;
+  /** Firm email, if set. */
+  firmEmail: string | null;
+  /** Firm phone, if set. */
+  firmPhone: string | null;
+}
+
+/**
  * The package payload. Self-contained — anything the rendering layer
  * needs is in this object.
  */
@@ -135,11 +163,23 @@ export interface SessionPackage {
 
   /**
    * Class-action placeholder flag. True when classification is
-   * class_action. Signals the rendering layer to surface the
-   * "class-action matching coming soon" note. Phase D Step 26 will
-   * populate real class-action details.
+   * class_action AND no specific listing was bound. Signals the
+   * rendering layer to surface the generic "class-action matching
+   * coming soon" note. When matchedListing is set, the rendering layer
+   * shows the matched listing prominently instead.
    */
   classActionPlaceholder: boolean;
+
+  /**
+   * When the session bound to a specific class-action listing during
+   * the conversation, the listing + hosting firm are surfaced here.
+   * The rendering layer treats this as the primary call to action,
+   * demoting DOJ / state-civil-rights filings to "other options."
+   *
+   * Null when no listing was bound — including most Title III sessions
+   * and class_action sessions where Ada flagged but didn't match.
+   */
+  matchedListing: MatchedListing | null;
 
   /**
    * Standing disclaimer. Always present, always the same wording.

@@ -180,9 +180,42 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           const attorneyMatched = toolsInvoked.some(
             (t) => t.name === 'search_attorneys' && t.result_kind === 'ok',
           );
+
+          // When the session bound to a specific class-action listing
+          // during the conversation (via match_listing), surface the
+          // hosting firm + listing on the package as the primary call
+          // to action. Failures here degrade gracefully — if the
+          // listing or firm read fails, we ship the package without a
+          // matched-listing block rather than blocking the user from
+          // ever seeing their summary.
+          let matchedListing = null;
+          const boundListingId = result.nextState.listingId;
+          if (boundListingId) {
+            try {
+              const listing = await clients.db.readListingById(boundListingId);
+              if (listing) {
+                const firm = await clients.db.readLawFirmById(listing.lawFirmId);
+                if (firm) {
+                  matchedListing = {
+                    listingSlug: listing.slug,
+                    listingTitle: listing.title,
+                    listingCategory: listing.category,
+                    firmName: firm.name,
+                    firmPrimaryContact: firm.primaryContact,
+                    firmEmail: firm.email,
+                    firmPhone: firm.phone,
+                  };
+                }
+              }
+            } catch (lookupErr) {
+              console.error('matched listing lookup failed', lookupErr);
+            }
+          }
+
           const pkg = assemblePackage({
             state: result.nextState,
             attorneyMatched,
+            matchedListing,
             knowledgeHits: [], // TODO: thread retrieved chunks from the turn when available
           });
           // Default 90-day retention.
