@@ -53,8 +53,14 @@ export const listings = pgTable('listings', {
   slug: text('slug').notNull().unique(),
   category: text('category').notNull(),
   shortDescription: text('short_description'),
+  shortDescriptionSimple: text('short_description_simple'),
+  shortDescriptionProfessional: text('short_description_professional'),
   fullDescription: text('full_description'),
+  fullDescriptionSimple: text('full_description_simple'),
+  fullDescriptionProfessional: text('full_description_professional'),
   eligibilitySummary: text('eligibility_summary'),
+  eligibilitySummarySimple: text('eligibility_summary_simple'),
+  eligibilitySummaryProfessional: text('eligibility_summary_professional'),
   status: text('status').notNull().default('draft'),
   tier: text('tier').notNull().default('basic'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -70,6 +76,8 @@ export const listingConfigs = pgTable('listing_configs', {
     .unique()
     .references(() => listings.id, { onDelete: 'cascade' }),
   caseDescription: text('case_description').notNull(),
+  caseDescriptionSimple: text('case_description_simple'),
+  caseDescriptionProfessional: text('case_description_professional'),
   eligibilityCriteria: jsonb('eligibility_criteria')
     .$type<EligibilityCriterion[]>()
     .notNull()
