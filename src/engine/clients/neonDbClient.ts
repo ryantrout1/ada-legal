@@ -1097,6 +1097,8 @@ export class NeonDbClient implements DbClient {
       id: r.id,
       listingId: r.listingId,
       caseDescription: r.caseDescription,
+      caseDescriptionSimple: r.caseDescriptionSimple ?? null,
+      caseDescriptionProfessional: r.caseDescriptionProfessional ?? null,
       eligibilityCriteria: (r.eligibilityCriteria ?? []) as unknown[],
       requiredFields: (r.requiredFields ?? []) as unknown[],
       disqualifyingConditions: (r.disqualifyingConditions ?? []) as string[],
@@ -1358,8 +1360,14 @@ export class NeonDbClient implements DbClient {
       category: string;
       tier: string;
       short_description: string | null;
+      short_description_simple: string | null;
+      short_description_professional: string | null;
       full_description: string | null;
+      full_description_simple: string | null;
+      full_description_professional: string | null;
       eligibility_summary: string | null;
+      eligibility_summary_simple: string | null;
+      eligibility_summary_professional: string | null;
       law_firm_id: string;
       law_firm_name: string;
       subscription_id: string | null;
@@ -1384,8 +1392,14 @@ export class NeonDbClient implements DbClient {
       category: r.category as string,
       tier: r.tier as string,
       shortDescription: (r.short_description ?? null) as string | null,
+      shortDescriptionSimple: (r.short_description_simple ?? null) as string | null,
+      shortDescriptionProfessional: (r.short_description_professional ?? null) as string | null,
       fullDescription: (r.full_description ?? null) as string | null,
+      fullDescriptionSimple: (r.full_description_simple ?? null) as string | null,
+      fullDescriptionProfessional: (r.full_description_professional ?? null) as string | null,
       eligibilitySummary: (r.eligibility_summary ?? null) as string | null,
+      eligibilitySummarySimple: (r.eligibility_summary_simple ?? null) as string | null,
+      eligibilitySummaryProfessional: (r.eligibility_summary_professional ?? null) as string | null,
       lawFirmId: r.law_firm_id as string,
       lawFirmName: r.law_firm_name as string,
       subscriptionId: (r.subscription_id ?? null) as string | null,

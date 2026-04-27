@@ -529,8 +529,14 @@ export interface ListingRow {
   slug: string;
   category: string;
   shortDescription: string | null;
+  shortDescriptionSimple?: string | null;
+  shortDescriptionProfessional?: string | null;
   fullDescription: string | null;
+  fullDescriptionSimple?: string | null;
+  fullDescriptionProfessional?: string | null;
   eligibilitySummary: string | null;
+  eligibilitySummarySimple?: string | null;
+  eligibilitySummaryProfessional?: string | null;
   status: 'draft' | 'published' | 'archived';
   tier: 'basic' | 'premium';
   createdAt?: string;
@@ -541,6 +547,8 @@ export interface ListingConfigRow {
   id: string;
   listingId: string;
   caseDescription: string;
+  caseDescriptionSimple?: string | null;
+  caseDescriptionProfessional?: string | null;
   eligibilityCriteria: unknown[];
   requiredFields: unknown[];
   disqualifyingConditions: string[];
@@ -587,8 +595,14 @@ export interface ActiveListingRow {
   category: string;
   tier: string;
   shortDescription: string | null;
+  shortDescriptionSimple?: string | null;
+  shortDescriptionProfessional?: string | null;
   fullDescription: string | null;
+  fullDescriptionSimple?: string | null;
+  fullDescriptionProfessional?: string | null;
   eligibilitySummary: string | null;
+  eligibilitySummarySimple?: string | null;
+  eligibilitySummaryProfessional?: string | null;
   lawFirmId: string;
   lawFirmName: string;
   /** Nullable for pilot-firm listings (no Stripe sub). */

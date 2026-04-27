@@ -64,10 +64,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       title: match.title,
       category: match.category,
       short_description: match.shortDescription,
+      short_description_simple: match.shortDescriptionSimple ?? null,
+      short_description_professional: match.shortDescriptionProfessional ?? null,
       full_description: match.fullDescription,
+      full_description_simple: match.fullDescriptionSimple ?? null,
+      full_description_professional: match.fullDescriptionProfessional ?? null,
       eligibility_summary: match.eligibilitySummary,
+      eligibility_summary_simple: match.eligibilitySummarySimple ?? null,
+      eligibility_summary_professional: match.eligibilitySummaryProfessional ?? null,
       law_firm_name: match.lawFirmName,
       case_description: config?.caseDescription ?? null,
+      case_description_simple: config?.caseDescriptionSimple ?? null,
+      case_description_professional: config?.caseDescriptionProfessional ?? null,
       eligibility_criteria: (config?.eligibilityCriteria as Array<{
         description: string;
         kind: 'required' | 'preferred' | 'disqualifying';
