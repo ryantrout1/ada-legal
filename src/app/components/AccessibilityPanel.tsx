@@ -112,15 +112,21 @@ export function AccessibilityPanel({ readingLevel }: AccessibilityPanelProps) {
   // Required by WAI-ARIA for role="dialog" with aria-modal="true".
   // The previous version of this file claimed a focus trap in its
   // docstring but never implemented one; this is the real one.
+  //
+  // We filter out hidden elements (offsetParent === null catches
+  // display:none — including the sm:hidden close button when the
+  // popover variant is rendered). visibility:hidden is ignored too;
+  // good enough for our use.
   useEffect(() => {
     if (!open) return;
     function onKeyDown(e: KeyboardEvent) {
       if (e.key !== 'Tab') return;
       const panel = panelRef.current;
       if (!panel) return;
-      const focusable = panel.querySelectorAll<HTMLElement>(
+      const all = panel.querySelectorAll<HTMLElement>(
         'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
       );
+      const focusable = Array.from(all).filter((el) => el.offsetParent !== null);
       if (focusable.length === 0) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
