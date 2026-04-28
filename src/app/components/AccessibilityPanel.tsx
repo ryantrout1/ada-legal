@@ -15,12 +15,19 @@
  *                    reading it, because it lives in session state)
  *   Reset — clears every setting to defaults
  *
+ * Layout:
+ *   - <sm  → bottom sheet sliding up from the bottom edge with a
+ *            backdrop and a top-right close button. max-h-[85vh],
+ *            scrollable interior. Body scroll-locked while open.
+ *   - ≥sm  → popover anchored to the right of the eyeball trigger,
+ *            fixed 360px width, no backdrop.
+ *
  * Interaction:
- *   - Eyeball button opens the popover. Keyboard: Enter/Space toggles.
- *   - Escape or click-outside closes.
- *   - Focus is trapped inside while open.
- *   - aria-expanded on the trigger, role="dialog" + aria-modal on the
- *     popover.
+ *   - Eyeball button opens the panel. Keyboard: Enter/Space toggles.
+ *   - Escape, click-outside (desktop), or backdrop tap (mobile) closes.
+ *   - Focus is trapped inside while open (Tab and Shift-Tab loop).
+ *   - aria-expanded on the trigger, role="dialog" + aria-modal="true"
+ *     on the panel.
  *   - Every button is a real <button> with aria-pressed where toggling
  *     a boolean state, so screen readers announce the current choice.
  *
@@ -63,7 +70,8 @@ export function AccessibilityPanel({ readingLevel }: AccessibilityPanelProps) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Close on Escape; click-outside.
+  // Close on Escape; click-outside (desktop popover only — the mobile
+  // sheet uses its own backdrop element for click-outside on touch).
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
@@ -100,6 +108,49 @@ export function AccessibilityPanel({ readingLevel }: AccessibilityPanelProps) {
     }
   }, [open]);
 
+  // Focus trap — Tab and Shift-Tab loop within the panel while open.
+  // Required by WAI-ARIA for role="dialog" with aria-modal="true".
+  // The previous version of this file claimed a focus trap in its
+  // docstring but never implemented one; this is the real one.
+  useEffect(() => {
+    if (!open) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== 'Tab') return;
+      const panel = panelRef.current;
+      if (!panel) return;
+      const focusable = panel.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [open]);
+
+  // Body scroll-lock while the panel is open. Only matters for the
+  // mobile bottom-sheet variant — the desktop popover doesn't cover
+  // the page — but applying it always is harmless and simpler than
+  // detecting the viewport. iOS Safari otherwise scrolls the page
+  // behind the sheet, which feels broken.
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
   return (
     <div className="relative">
       <button
@@ -130,56 +181,123 @@ export function AccessibilityPanel({ readingLevel }: AccessibilityPanelProps) {
       </button>
 
       {open && (
-        <div
-          ref={panelRef}
-          id={panelId}
-          role="dialog"
-          aria-modal="false"
-          aria-label="Accessibility settings"
-          className="absolute right-0 top-full mt-2 z-50 w-[360px] max-w-[calc(100vw-2rem)] bg-surface-100 border border-surface-200 rounded-lg shadow-xl p-4 text-ink-900"
-        >
-          <DisplaySection
-            value={a11y.settings.display}
-            onChange={a11y.setDisplay}
+        <>
+          {/* Mobile-only backdrop. Tap-to-close on touch devices where
+              click-outside on a small popover is unreliable. Hidden at
+              sm+ where the desktop popover uses document-level mousedown
+              for click-outside. */}
+          <div
+            className="sm:hidden fixed inset-0 z-40 bg-ink-900/40"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
           />
-          <FontSection value={a11y.settings.font} onChange={a11y.setFont} />
-          <div className="grid grid-cols-2 gap-3 mt-4">
-            <SizeSection value={a11y.settings.size} onChange={a11y.setSize} />
-            <SpacingSection
-              value={a11y.settings.spacing}
-              onChange={a11y.setSpacing}
-            />
-          </div>
-          {readingLevel && (
-            <ReadingLevelSection
-              value={readingLevel.value}
-              onChange={readingLevel.onChange}
-            />
-          )}
-          <button
-            type="button"
-            onClick={() => {
-              a11y.reset();
-            }}
-            className="mt-4 w-full py-2 px-3 rounded border border-surface-200 text-sm text-ink-700 hover:bg-surface-200 hover:border-surface-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 transition-colors flex items-center justify-center gap-2"
+
+          {/* Single panel element with two responsive layouts:
+                <sm  → bottom sheet (fixed, full-width, slides up from
+                        bottom edge, max-h-[85vh] scrollable interior)
+                ≥sm  → popover (absolute, anchored right of the trigger,
+                        fixed 360px width)
+              The class string toggles every positioning + sizing rule
+              by breakpoint so a single DOM element renders both layouts
+              without a JS branch and without a hydration race. */}
+          <div
+            ref={panelRef}
+            id={panelId}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Accessibility settings"
+            className={
+              // Mobile: bottom sheet
+              'fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-xl ' +
+              // Desktop override: popover anchored to trigger
+              'sm:absolute sm:inset-x-auto sm:bottom-auto sm:right-0 sm:top-full sm:mt-2 sm:max-h-none sm:overflow-visible sm:rounded-lg sm:w-[360px] sm:max-w-[calc(100vw-2rem)] ' +
+              // Shared visuals
+              'bg-surface-100 border border-surface-200 shadow-xl text-ink-900 ' +
+              // Padding — slightly more on mobile to give the sheet
+              // breathing room around the close button
+              'p-4 pt-3 sm:p-4'
+            }
           >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
+            {/* Mobile-only header row: drag-handle + close button.
+                Hidden at sm+ where the popover doesn't need them. */}
+            <div className="sm:hidden flex flex-col items-stretch mb-2">
+              <span
+                aria-hidden="true"
+                className="self-center w-10 h-1 rounded-full bg-surface-300 mb-2"
+              />
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-ink-900">
+                  Accessibility settings
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    triggerRef.current?.focus();
+                  }}
+                  aria-label="Close accessibility settings"
+                  className="inline-flex items-center justify-center w-11 h-11 -mr-2 rounded-md text-ink-700 hover:bg-surface-200 hover:text-accent-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 transition-colors"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                    <line x1="6" y1="18" x2="18" y2="6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <DisplaySection
+              value={a11y.settings.display}
+              onChange={a11y.setDisplay}
+            />
+            <FontSection value={a11y.settings.font} onChange={a11y.setFont} />
+            <div className="grid grid-cols-2 gap-3 mt-4">
+              <SizeSection value={a11y.settings.size} onChange={a11y.setSize} />
+              <SpacingSection
+                value={a11y.settings.spacing}
+                onChange={a11y.setSpacing}
+              />
+            </div>
+            {readingLevel && (
+              <ReadingLevelSection
+                value={readingLevel.value}
+                onChange={readingLevel.onChange}
+              />
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                a11y.reset();
+              }}
+              className="mt-4 w-full py-2 px-3 rounded border border-surface-200 text-sm text-ink-700 hover:bg-surface-200 hover:border-surface-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 transition-colors flex items-center justify-center gap-2"
             >
-              <path d="M3 12a9 9 0 1 0 3-6.7" />
-              <path d="M3 4v5h5" />
-            </svg>
-            Reset to Defaults
-          </button>
-        </div>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M3 12a9 9 0 1 0 3-6.7" />
+                <path d="M3 4v5h5" />
+              </svg>
+              Reset to Defaults
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
