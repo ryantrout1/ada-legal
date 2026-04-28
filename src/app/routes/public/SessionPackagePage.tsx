@@ -284,7 +284,7 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
           <dl className="mb-5 space-y-2 text-sm">
             {pkg.matchedListing.firmEmail && (
               <div className="flex flex-wrap gap-x-3">
-                <dt className="text-ink-500 font-medium min-w-[60px]">
+                <dt className="text-ink-500 font-medium sm:min-w-[60px]">
                   Email:
                 </dt>
                 <dd>
@@ -300,7 +300,7 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
             )}
             {pkg.matchedListing.firmPhone && (
               <div className="flex flex-wrap gap-x-3">
-                <dt className="text-ink-500 font-medium min-w-[60px]">
+                <dt className="text-ink-500 font-medium sm:min-w-[60px]">
                   Phone:
                 </dt>
                 <dd>
