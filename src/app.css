@@ -396,6 +396,25 @@ body {
   min-height: 32px;
 }
 
+/* iOS Safari auto-zooms any focused text input whose computed
+   font-size is below 16px. At data-size="small" the root drops to
+   14px and inputs inherit that. Force 16px specifically on text-class
+   inputs to defeat the zoom while leaving non-text controls (buttons,
+   selects with their native UI) free to scale.
+
+   This applies site-wide — every text input on every public page,
+   not just the chat textarea. Same root-cause bug, same single fix. */
+:root[data-size="small"] input[type="text"],
+:root[data-size="small"] input[type="search"],
+:root[data-size="small"] input[type="email"],
+:root[data-size="small"] input[type="tel"],
+:root[data-size="small"] input[type="url"],
+:root[data-size="small"] input[type="password"],
+:root[data-size="small"] input:not([type]),
+:root[data-size="small"] textarea {
+  font-size: 16px;
+}
+
 /* ─── Line + paragraph spacing ──────────────────────────────────────────── */
 
 :root[data-spacing="tight"] {
