@@ -25,6 +25,7 @@
 import { forwardRef, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useChatSession, type ReadingLevel } from '../../hooks/useChatSession.js';
 import { useReadingLevel } from '../../components/standards/ReadingLevelContext.js';
+import { CurrentReadingLevel } from '../../components/standards/CurrentReadingLevel.js';
 import { useSpeechInput } from '../../hooks/useSpeechInput.js';
 import { useSpeechOutput } from '../../hooks/useSpeechOutput.js';
 import { downscalePhoto } from '../../utils/downscalePhoto.js';
@@ -389,11 +390,14 @@ export default function Chat() {
           they're secondary actions; "Conversation active" text was removed
           as noise — the user can see they're conversing. */}
       <header className="flex flex-wrap items-center justify-between gap-3 mb-3 pb-3 border-b border-surface-200">
-        <ReadingLevelPicker
-          value={state.readingLevel}
-          onChange={handleLevelChange}
-          disabled={state.busy || state.initializing}
-        />
+        <div className="flex flex-wrap items-center gap-3">
+          <ReadingLevelPicker
+            value={state.readingLevel}
+            onChange={handleLevelChange}
+            disabled={state.busy || state.initializing}
+          />
+          <CurrentReadingLevel value={state.readingLevel} />
+        </div>
         <div className="flex items-center gap-1.5">
           {speechOutput.isSupported && (
             <button

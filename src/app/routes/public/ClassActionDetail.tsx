@@ -23,6 +23,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useReadingLevel, type ReadingLevel } from '../../components/standards/ReadingLevelContext.js';
 import { ReadingLevelToggle } from '../../components/standards/ReadingLevelToggle.js';
+import { CurrentReadingLevel } from '../../components/standards/CurrentReadingLevel.js';
 import AutoCiteLinks from '../../components/standards/AutoCiteLinks.js';
 
 type CriterionKind = 'required' | 'preferred' | 'disqualifying';
@@ -323,7 +324,10 @@ export default function ClassActionDetail() {
           When the user picks a level here, it sticks for the chapter-page
           standards guide as well — same control, same key. */}
       <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-6">
-        <ReadingLevelToggle />
+        <div className="flex flex-wrap items-center gap-3">
+          <ReadingLevelToggle />
+          <CurrentReadingLevel />
+        </div>
       </section>
 
       {/* Description */}

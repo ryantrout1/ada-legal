@@ -44,6 +44,7 @@ import GuideHeroBanner from './GuideHeroBanner.js';
 import GuideStyles from './GuideStyles.js';
 import { useReadingLevel, type ReadingLevel } from './ReadingLevelContext.js';
 import { ReadingLevelToggle } from './ReadingLevelToggle.js';
+import { CurrentReadingLevel } from './CurrentReadingLevel.js';
 import { startAdaSessionWithContext } from './startAdaSession.js';
 
 /** One section in a chapter (e.g. §405 Ramps inside Ch. 4). */
@@ -522,10 +523,13 @@ export default function ChapterPageLayout({
             {overview}
           </div>
 
-          {/* Reading level toggle */}
-          <ReadingLevelToggle
-            className="reading-level-toggle"
-          />
+          {/* Reading level toggle + current-level pill */}
+          <div className="flex flex-wrap items-center gap-3">
+            <ReadingLevelToggle
+              className="reading-level-toggle"
+            />
+            <CurrentReadingLevel />
+          </div>
           <div style={{ marginBottom: '20px' }} aria-hidden />
 
           {/* Sections */}
