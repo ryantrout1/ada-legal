@@ -249,7 +249,7 @@ function AttorneyCard({ attorney }: { attorney: AttorneyDisplay }) {
           <a
             href={`mailto:${attorney.email}`}
             aria-label={`Email ${attorney.name}`}
-            className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+            className="inline-flex items-center px-2 py-1 -mx-2 -my-1 rounded text-accent-500 hover:bg-accent-50 hover:text-accent-600 underline underline-offset-2 transition-colors"
           >
             {attorney.email}
           </a>
@@ -258,7 +258,7 @@ function AttorneyCard({ attorney }: { attorney: AttorneyDisplay }) {
           <a
             href={`tel:${attorney.phone}`}
             aria-label={`Call ${attorney.name}`}
-            className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+            className="inline-flex items-center px-2 py-1 -mx-2 -my-1 rounded text-accent-500 hover:bg-accent-50 hover:text-accent-600 underline underline-offset-2 transition-colors"
           >
             {attorney.phone}
           </a>
@@ -269,7 +269,7 @@ function AttorneyCard({ attorney }: { attorney: AttorneyDisplay }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${attorney.name} website`}
-            className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+            className="inline-flex items-center px-2 py-1 -mx-2 -my-1 rounded text-accent-500 hover:bg-accent-50 hover:text-accent-600 underline underline-offset-2 transition-colors"
           >
             Website
           </a>
