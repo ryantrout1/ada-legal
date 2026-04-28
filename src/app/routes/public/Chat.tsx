@@ -46,9 +46,10 @@ export default function Chat() {
   // still owns its own reading-level state once initialized — the
   // server-side session record needs the level to be stable inside the
   // conversation. Mid-conversation level switches go through the
-  // ConfirmBar flow as before. Commit 3 will add write-back so chat-
-  // initiated level changes update context too.
-  const { readingLevel: contextReadingLevel } = useReadingLevel();
+  // ConfirmBar flow as before; on confirm we also write back to context
+  // so a chat-initiated level change syncs to the rest of the site.
+  const { readingLevel: contextReadingLevel, setReadingLevel: setContextReadingLevel } =
+    useReadingLevel();
   const { state, sendMessage, startNewSession, acceptResume, discardResume } =
     useChatSession(contextReadingLevel);
   const [draft, setDraft] = useState('');
@@ -213,9 +214,12 @@ export default function Chat() {
     // If the user hasn't typed anything yet, there's nothing to preserve —
     // swap the level silently. Common case: user lands on /chat, reads
     // Ada's opener, and realizes they want a different reading level
-    // before they start. No friction needed.
+    // before they start. No friction needed. Also write to context so
+    // the rest of the site picks up the same level (Standards Guide,
+    // ClassActionDetail, AccessibilityPanel all read from context).
     const hasUserContent = state.messages.some((m) => m.role === 'user');
     if (!hasUserContent) {
+      setContextReadingLevel(level);
       startNewSession(level);
       setDraft('');
       clearPhoto();
@@ -247,10 +251,12 @@ export default function Chat() {
   // Apply a pending action once the user confirms, then clear pending
   // state. Centralised so the ConfirmBar's Confirm handler has a single
   // call site; keeps the different action kinds from leaking across
-  // component boundaries.
+  // component boundaries. On a switch-level confirmation we also write
+  // to ReadingLevelContext so the rest of the site syncs.
   function confirmPending() {
     if (!pendingAction) return;
     if (pendingAction.kind === 'switch-level') {
+      setContextReadingLevel(pendingAction.level);
       startNewSession(pendingAction.level);
     } else if (pendingAction.kind === 'new-chat') {
       startNewSession(state.readingLevel);
@@ -345,7 +351,13 @@ export default function Chat() {
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
-            onClick={acceptResume}
+            onClick={() => {
+              // Continuing a resumable session means adopting that
+              // session's reading level. Sync to context so the rest
+              // of the site reflects the same level after resume.
+              setContextReadingLevel(resumeLevel);
+              acceptResume();
+            }}
             className="px-5 py-3 rounded-md bg-accent-500 text-white font-medium hover:bg-accent-600 transition-colors"
           >
             Continue this conversation
