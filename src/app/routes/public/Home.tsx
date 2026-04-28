@@ -38,7 +38,7 @@ export default function Home() {
         </p>
         <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl leading-[1.05] tracking-tight text-ink-900 max-w-4xl">
           Access is a right,
-          <br />
+          <br className="hidden min-[380px]:inline" />
           <span className="italic text-accent-600">not a favor.</span>
         </h1>
         <div className="mt-8 space-y-5 max-w-2xl text-lg sm:text-xl text-ink-700 leading-relaxed">
