@@ -155,7 +155,7 @@ export default function Attorneys() {
                     aria-pressed={active}
                     onClick={() => togglePracticeArea(slug)}
                     className={
-                      'px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ' +
+                      'px-4 py-2 rounded-full text-sm font-medium transition-colors border ' +
                       (active
                         ? 'bg-accent-500 text-white border-accent-500 hover:bg-accent-600'
                         : 'bg-white text-ink-700 border-surface-200 hover:border-accent-500 hover:text-accent-600')
