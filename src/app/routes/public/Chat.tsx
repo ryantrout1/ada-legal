@@ -806,7 +806,7 @@ export default function Chat() {
           is informational only.{' '}
           <a
             href="/about-ada"
-            className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+            className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
           >
             Why is she called Ada?
           </a>
