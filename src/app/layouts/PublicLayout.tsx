@@ -37,7 +37,7 @@ export default function PublicLayout() {
 
       {/* Top nav — intentionally minimal, no hamburger on desktop */}
       <header className="border-b border-surface-200">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 flex items-baseline justify-between gap-6">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 flex flex-wrap items-baseline justify-between gap-6">
           <Link
             to="/"
             className="flex items-center gap-2 sm:gap-3 font-display text-xl sm:text-2xl text-ink-900 tracking-tight hover:text-accent-600 transition-colors"
