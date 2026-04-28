@@ -255,6 +255,46 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Why we built this — the only place on the site where Ryan and
+          Gina speak in their own voice, not Ada's. The sentence that
+          drives this block came up in conversation: 'we don't want to
+          leave anybody out, anybody at all.' That's the mission line.
+          Everything else on the site can be measured against it. */}
+      <section className="max-w-5xl mx-auto px-5 sm:px-8 pb-16 sm:pb-20">
+        <div className="border-t border-surface-200 pt-12 sm:pt-16">
+          <p className="font-mono text-xs sm:text-sm uppercase tracking-[0.18em] text-accent-500 mb-5">
+            From the founders
+          </p>
+          <h2 className="font-display text-3xl sm:text-4xl leading-[1.1] tracking-tight text-ink-900 max-w-3xl mb-6">
+            We don't want to leave anybody{' '}
+            <span className="italic text-accent-600">out.</span>
+          </h2>
+          <div className="max-w-3xl text-ink-700 leading-relaxed space-y-4 text-base sm:text-lg">
+            <p>
+              We built ADA Legal Link because the people we love hit
+              barriers every day that shouldn't be there. Doors too
+              narrow. Sites that don't work with a screen reader.
+              Forms that ask for things only a non-disabled life
+              produces. A manager who didn't make eye contact with the
+              person in the wheelchair.
+            </p>
+            <p>
+              We want this to work for everyone. Not just people who
+              look like us, or whose barriers look like ours. Whatever
+              your disability, whatever the barrier — we don't want
+              you left out. Not by the businesses you walk past every
+              day, not by the law, and not by us.
+            </p>
+            <p className="text-ink-500 text-sm sm:text-base mt-6">
+              <span className="font-medium text-ink-700">Ryan Trout</span>{' '}
+              &amp;{' '}
+              <span className="font-medium text-ink-700">Gina</span>,
+              co-founders
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Final CTA */}
       <section className="max-w-5xl mx-auto px-5 sm:px-8 pb-24">
         <div className="border-l-4 border-accent-500 pl-6 py-4 max-w-3xl">
