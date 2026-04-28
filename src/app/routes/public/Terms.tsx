@@ -212,7 +212,7 @@ export default function Terms() {
         our{' '}
         <a
           href="/privacy"
-          className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+          className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
         >
           privacy policy
         </a>
@@ -230,7 +230,7 @@ export default function Terms() {
         dispute, let's try to resolve it directly first — email us at{' '}
         <a
           href="mailto:legal@adalegallink.com"
-          className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+          className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
         >
           legal@adalegallink.com
         </a>
@@ -255,7 +255,7 @@ export default function Terms() {
         Questions about these terms:{' '}
         <a
           href="mailto:legal@adalegallink.com"
-          className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+          className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
         >
           legal@adalegallink.com
         </a>
