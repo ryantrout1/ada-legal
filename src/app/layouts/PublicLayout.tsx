@@ -268,7 +268,7 @@ export default function PublicLayout() {
           lines without truncating — UPL liability, that statement
           cannot ellipsis. */}
       <footer className="border-t border-surface-200 mt-auto">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 text-xs text-ink-500">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 text-xs text-ink-700">
           <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-y-3 sm:gap-y-2 sm:gap-x-6">
             <div className="flex items-start sm:items-center gap-2.5 min-w-0">
               <img
@@ -282,7 +282,7 @@ export default function PublicLayout() {
                 <span className="font-display text-sm text-ink-700">
                   ADA Legal Link
                 </span>
-                <span className="ml-2 text-ink-500">
+                <span className="ml-2">
                   Informational only. Not legal advice. Not a law firm.
                 </span>
               </p>
