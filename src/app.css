@@ -380,6 +380,22 @@ body {
 :root[data-size="medium"] { font-size: 16px; }
 :root[data-size="large"]  { font-size: 20px; }
 
+/* When the user picks size=small, every interactive control still
+   needs to meet WCAG 2.5.8 (Target Size — Minimum, 24×24px). Buttons
+   styled as `h-9` (2.25rem) drop to 31.5px at 14px base, which is
+   above the floor but tight on touch devices. Force a 32px floor on
+   buttons / role=button / anchors / inputs to keep targets visibly
+   tappable at small text size. The medium and large sizes are already
+   well above the 24px floor and don't need this guard. */
+:root[data-size="small"] button,
+:root[data-size="small"] [role="button"],
+:root[data-size="small"] a.inline-flex,
+:root[data-size="small"] input,
+:root[data-size="small"] select,
+:root[data-size="small"] textarea {
+  min-height: 32px;
+}
+
 /* ─── Line + paragraph spacing ──────────────────────────────────────────── */
 
 :root[data-spacing="tight"] {
@@ -589,6 +605,41 @@ body {
   --dark-muted:       #B0BEC5;
   --dark-label:       #FDBA74;
   --dark-highlight:   #FB923C;
+}
+
+/* Standards Guide alias overrides for non-default display modes.
+ *
+ * The default :root aliases above are tuned for the light/warm-cream
+ * page where cards on page-bg-alt (surface-100) want to be slightly
+ * lighter than their container — so card-bg = surface-50.
+ *
+ * In dark mode the surface-50 → surface-100 → bg-white hierarchy
+ * goes DARK → LIFTED → BRIGHTER. card-bg = surface-50 in dark mode
+ * makes cards DARKER than their alt-surface container — visually
+ * sunken instead of lifted, which inverts the design intent.
+ *
+ * The fix is to flip card-bg's referent for non-default modes:
+ *   page-bg     stays surface-50
+ *   page-bg-alt stays surface-100 (cards sit on this)
+ *   card-bg     becomes the new bg-white tier (#2A2620 dark, #FBF6EC
+ *               warm, #FFFFFF low-vision, #000000 contrast) so cards
+ *               read as lifted above page-bg-alt
+ *
+ * Light/default mode is unchanged.
+ */
+:root[data-display="dark"] {
+  --card-bg: #2A2620;
+}
+:root[data-display="warm"] {
+  --card-bg: #FBF6EC;
+}
+:root[data-display="low-vision"] {
+  --card-bg: #FFFFFF;
+}
+:root[data-display="contrast"] {
+  --card-bg: var(--color-surface-50);  /* contrast keeps cards flat
+                                          black; the contrast block
+                                          adds 2px white borders. */
 }
 
 /* ─── High-contrast enforcement (Step 29 post-migration fix) ─────────────

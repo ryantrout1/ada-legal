@@ -418,7 +418,7 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
             your own email or by mail. You are the sender — I'm only
             providing the draft.
           </p>
-          <pre className="bg-surface-50 border border-surface-200 rounded p-4 overflow-x-auto text-sm whitespace-pre-wrap text-ink-900 font-mono">
+          <pre className="bg-surface-100 border border-surface-200 rounded p-4 overflow-x-auto text-sm whitespace-pre-wrap text-ink-900 font-mono">
             {pkg.demandLetter}
           </pre>
           <button
