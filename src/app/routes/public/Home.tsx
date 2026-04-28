@@ -214,6 +214,103 @@ export default function Home() {
         </div>
       </section>
 
+      {/* What Ada handles right now — the scope-honesty section.
+          Answers the question the visitor has after reading what Ada
+          does and how she works: 'does this cover MY situation?'
+
+          Two-column layout: what's in scope on the left, what's not
+          (yet) on the right. Direct, named, no overclaim. The barrier
+          framing is the unifying word — 'physical and digital
+          barriers' is what v1 covers; cognitive, attitudinal, and
+          communication barriers are real and not yet covered. We
+          would rather under-promise and grow than overpromise and
+          let someone down on the day they came here for help. */}
+      <section className="max-w-5xl mx-auto px-5 sm:px-8 pb-16 sm:pb-20">
+        <div className="border-t border-surface-200 pt-12 sm:pt-16">
+          <p className="font-mono text-xs sm:text-sm uppercase tracking-[0.18em] text-accent-500 mb-5">
+            What Ada handles right now
+          </p>
+          <h2 className="font-display text-3xl sm:text-4xl leading-[1.1] tracking-tight text-ink-900 max-w-3xl mb-6">
+            Honest about what we cover{' '}
+            <span className="italic text-accent-600">today.</span>
+          </h2>
+          <p className="text-ink-700 leading-relaxed max-w-3xl mb-10 text-base sm:text-lg">
+            We'd rather tell you straight what Ada is built for than
+            have you waste a hard day finding out she can't help. Right
+            now she handles two kinds of barriers — and we're upfront
+            about the ones she doesn't, yet.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 max-w-4xl">
+            {/* In scope */}
+            <div>
+              <h3 className="font-display text-xl text-ink-900 mb-3 flex items-center gap-2">
+                <span
+                  className="inline-block w-2.5 h-2.5 rounded-full bg-accent-500"
+                  aria-hidden="true"
+                />
+                Ada can help with
+              </h3>
+              <ul className="space-y-3 text-ink-700 list-none p-0">
+                <li>
+                  <span className="font-medium text-ink-900">
+                    Physical barriers.
+                  </span>{' '}
+                  A building, a doorway, a bathroom, a parking lot, a
+                  vehicle, a hotel room that wasn't what was promised.
+                </li>
+                <li>
+                  <span className="font-medium text-ink-900">
+                    Digital barriers.
+                  </span>{' '}
+                  A website, an app, an online form, a digital service
+                  that shut you out or didn't work with the tools you
+                  use.
+                </li>
+              </ul>
+              <p className="mt-4 text-sm text-ink-500">
+                These are the most documentable kinds of barriers, and
+                the law around them is the most settled. That's why we
+                started here.
+              </p>
+            </div>
+
+            {/* Not yet in scope */}
+            <div>
+              <h3 className="font-display text-xl text-ink-900 mb-3 flex items-center gap-2">
+                <span
+                  className="inline-block w-2.5 h-2.5 rounded-full border-2 border-ink-500"
+                  aria-hidden="true"
+                />
+                Not yet
+              </h3>
+              <ul className="space-y-3 text-ink-700 list-none p-0">
+                <li>
+                  <span className="font-medium text-ink-900">
+                    Workplace and employment.
+                  </span>{' '}
+                  ADA Title I issues — accommodations, hiring, firing.
+                  These are different in shape and route through the
+                  EEOC. Coming.
+                </li>
+                <li>
+                  <span className="font-medium text-ink-900">
+                    Cognitive, communication, and attitudinal barriers.
+                  </span>{' '}
+                  Real, often the worst, often the hardest to document.
+                  We're working on the right way to handle these.
+                </li>
+              </ul>
+              <p className="mt-4 text-sm text-ink-500">
+                If your situation is in this column, Ada may still be
+                able to point you to the right resource — she just
+                isn't built to take the intake yet.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* About Ada — origin story teaser. Sits between the trust row
           and the final CTA so the visitor reaches it after they
           understand what the product does, but before the final ask.
