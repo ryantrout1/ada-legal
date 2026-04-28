@@ -218,17 +218,17 @@ body {
  * class-action cards, filter selects. In light mode that's a crisp
  * white pop against `surface-50` cream.
  *
- * In dark mode, literal white cards would be unreadable surface
- * inversions and would cause the form-control auto-darkening pile-up
- * we already saw. The same is true for warm, contrast, and low-vision
- * modes — each wants its own card surface, not pure white.
+ * In every other display mode, literal white is wrong (would invert
+ * surface hierarchy) AND surface-50 is wrong (would merge with page
+ * bg, eliminating the lift). Cards need to read as 'lifted above the
+ * page' — the right token is `surface-100`, the same value `bg-surface-100`
+ * compiles to.
  *
  * Tailwind 4's `bg-white` compiles to `background-color: var(--color-white)`
  * which we cannot redefine via @theme without breaking real white usage
  * elsewhere. So we override the COMPILED bg-white class for all
  * non-default display modes via the `[data-display]` attribute selector.
- * Default mode (no attribute) keeps the literal white. Every other mode
- * routes bg-white to its surface-50 token, which already themes correctly.
+ * Default mode (no attribute) keeps the literal white.
  *
  * Mirrored for placeholder text color, which is a separate Tailwind
  * `placeholder-ink-500` utility — that one already themes via its
@@ -238,7 +238,7 @@ body {
 :root[data-display="warm"] .bg-white,
 :root[data-display="contrast"] .bg-white,
 :root[data-display="low-vision"] .bg-white {
-  background-color: var(--color-surface-50) !important;
+  background-color: var(--color-surface-100) !important;
 }
 
 /* Dark — deep ink surface, warm cream text. Maintains AAA contrast.
@@ -630,6 +630,7 @@ body {
 :root[data-display="contrast"] [class~="bg-surface-100"],
 :root[data-display="contrast"] [class~="bg-surface-200"],
 :root[data-display="contrast"] [class~="bg-accent-50"],
+:root[data-display="contrast"] [class~="bg-white"],
 :root[data-display="contrast"] [class~="border-surface-200"],
 :root[data-display="contrast"] [class~="border-surface-300"] {
   background-color: var(--color-surface-50) !important;
@@ -710,6 +711,7 @@ body {
   :root:not([data-display]) [class~="bg-surface-100"],
   :root:not([data-display]) [class~="bg-surface-200"],
   :root:not([data-display]) [class~="bg-accent-50"],
+  :root:not([data-display]) [class~="bg-white"],
   :root:not([data-display]) [class~="border-surface-200"],
   :root:not([data-display]) [class~="border-surface-300"] {
     background-color: #000000 !important;

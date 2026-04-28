@@ -161,7 +161,7 @@ export function AccessibilityPanel({ readingLevel }: AccessibilityPanelProps) {
             onClick={() => {
               a11y.reset();
             }}
-            className="mt-4 w-full py-2 px-3 rounded border border-surface-200 text-sm text-ink-700 hover:bg-surface-100 hover:border-surface-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 transition-colors flex items-center justify-center gap-2"
+            className="mt-4 w-full py-2 px-3 rounded border border-surface-200 text-sm text-ink-700 hover:bg-surface-200 hover:border-surface-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 transition-colors flex items-center justify-center gap-2"
           >
             <svg
               width="14"
@@ -498,7 +498,7 @@ function OptionButton({
         'rounded border px-2 py-1.5 text-ink-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-1 transition-colors flex items-center justify-center ' +
         (selected
           ? 'border-accent-500 bg-accent-50 text-accent-600 font-semibold'
-          : 'border-surface-200 hover:border-surface-300 hover:bg-surface-100')
+          : 'border-surface-200 hover:border-surface-300 hover:bg-surface-200')
       }
     >
       {children}
