@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
+
+    <!-- color-scheme — declares supported schemes so the browser does NOT
+         apply automatic dark-mode inversion to our site when the OS is
+         set to dark. The user picks their display mode via the
+         accessibility panel; the browser must not override that.
+         Edge and Chrome respect this; Firefox and Safari follow the
+         same spec. The actual dark theme is delivered by our own
+         data-display="dark" CSS, which is opt-in. -->
+    <meta name="color-scheme" content="light" />
     <title>ADA Legal Link — Know the Law. Know Your Rights.</title>
     <meta name="description" content="Free, plain-language ADA help for everyone. Talk to Ada. 43 interactive diagrams. Fully accessible. Forever free." />
 
