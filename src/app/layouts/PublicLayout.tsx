@@ -260,12 +260,13 @@ export default function PublicLayout() {
         <Outlet />
       </main>
 
-      {/* Footer — compressed to a single row.
-          Left: logo + one-line tagline. Right: legal/meta links.
-          Disclaimer collapsed into the tagline itself so the footer
-          stays compact on every page, especially /chat where
-          vertical space is scarce. Wraps to two rows on mobile via
-          flex-wrap. */}
+      {/* Footer — single row at sm+, stacked at mobile.
+          At sm+: logo + tagline on the left, legal/meta links on the
+          right, all on one row with flex-wrap fallback.
+          Below sm: brand block stacks above link list so the legal
+          disclaimer ('Not a law firm') has room to wrap to multiple
+          lines without truncating — UPL liability, that statement
+          cannot ellipsis. */}
       <footer className="border-t border-surface-200 mt-auto">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 text-xs text-ink-500">
           <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-y-3 sm:gap-y-2 sm:gap-x-6">
