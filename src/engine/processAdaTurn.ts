@@ -232,6 +232,7 @@ export async function processAdaTurn({
         messages: workingState.conversationHistory,
         tools: toolDefs,
       }),
+      input.onTextDelta,
     );
 
     // If there are tool calls, execute them and loop again.
@@ -376,6 +377,7 @@ interface StreamConsumeResult {
 
 async function consumeStream(
   stream: AsyncIterable<AiStreamChunk>,
+  onTextDelta?: (delta: string) => void,
 ): Promise<StreamConsumeResult> {
   const textParts: string[] = [];
   const toolCalls: StreamConsumeResult['toolCalls'] = [];
@@ -385,7 +387,18 @@ async function consumeStream(
   for await (const chunk of stream) {
     switch (chunk.type) {
       case 'text_delta':
-        if (chunk.content) textParts.push(chunk.content);
+        if (chunk.content) {
+          textParts.push(chunk.content);
+          if (onTextDelta) {
+            try {
+              onTextDelta(chunk.content);
+            } catch (err) {
+              // Listener errors must never break the engine. Log and
+              // continue — the buffered final text is still correct.
+              console.error('onTextDelta listener threw', err);
+            }
+          }
+        }
         break;
       case 'tool_use_start':
         if (chunk.toolId && chunk.toolName) {

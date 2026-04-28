@@ -66,6 +66,16 @@ export interface AdaSessionState {
 export interface AdaTurnInput {
   userMessage: string;
   photoBlobKeys?: string[];
+  /**
+   * Optional fire-and-forget callback invoked with each text delta as
+   * the model streams. Used by the SSE-mode API handler to forward
+   * tokens to the browser. Errors thrown inside the callback are
+   * swallowed so a buggy listener cannot break the engine.
+   *
+   * Fires for text emitted alongside tool_use blocks too — that's the
+   * conversational preamble the user should see before tool work starts.
+   */
+  onTextDelta?: (delta: string) => void;
 }
 
 export interface AdaTurnResult {
