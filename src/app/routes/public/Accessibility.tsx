@@ -26,7 +26,7 @@ export default function Accessibility() {
         problem to fix. Email{' '}
         <a
           href="mailto:accessibility@adalegallink.com"
-          className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+          className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
         >
           accessibility@adalegallink.com
         </a>{' '}
@@ -191,7 +191,7 @@ export default function Accessibility() {
         Tell us. Email{' '}
         <a
           href="mailto:accessibility@adalegallink.com"
-          className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+          className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
         >
           accessibility@adalegallink.com
         </a>
