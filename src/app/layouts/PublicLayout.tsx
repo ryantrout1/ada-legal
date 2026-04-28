@@ -127,6 +127,14 @@ export default function PublicLayout() {
             <ul className="flex flex-wrap gap-4">
               <li>
                 <a
+                  href="/about-ada"
+                  className="hover:text-accent-600 transition-colors"
+                >
+                  Why she's called Ada
+                </a>
+              </li>
+              <li>
+                <a
                   href="/standards-guide"
                   className="hover:text-accent-600 transition-colors"
                 >

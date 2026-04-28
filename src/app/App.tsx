@@ -28,6 +28,7 @@ import ClassActions from './routes/public/ClassActions.js';
 import ClassActionDetail from './routes/public/ClassActionDetail.js';
 import Attorneys from './routes/public/Attorneys.js';
 import Accessibility from './routes/public/Accessibility.js';
+import AboutAda from './routes/public/AboutAda.js';
 import Privacy from './routes/public/Privacy.js';
 import Terms from './routes/public/Terms.js';
 import SessionPackagePage from './routes/public/SessionPackagePage.js';
@@ -70,6 +71,7 @@ export default function App() {
           />
           <Route path="/attorneys" element={<Attorneys />} />
           <Route path="/accessibility" element={<Accessibility />} />
+          <Route path="/about-ada" element={<AboutAda />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/s/:slug" element={<SessionPackagePage />} />

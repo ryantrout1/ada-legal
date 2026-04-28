@@ -774,7 +774,13 @@ export default function Chat() {
 
         <p className="mt-2 text-xs text-ink-500">
           Enter to send. Shift+Enter for a new line. Ada is not a lawyer; this
-          is informational only.
+          is informational only.{' '}
+          <a
+            href="/about-ada"
+            className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+          >
+            Why is she called Ada?
+          </a>
         </p>
       </form>
     </section>
