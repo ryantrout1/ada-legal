@@ -672,7 +672,7 @@ export default function Chat() {
               type="button"
               onClick={clearPhoto}
               aria-label="Remove attached photo"
-              className="flex-none inline-flex items-center justify-center w-11 h-11 -mr-1 rounded-md text-ink-500 hover:bg-surface-200 hover:text-accent-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100 transition-colors"
+              className="flex-none inline-flex items-center justify-center w-11 h-11 -mr-1 rounded-md text-ink-500 hover:bg-surface-200 hover:text-accent-600 transition-colors"
             >
               <svg
                 width="20"
@@ -709,7 +709,7 @@ export default function Chat() {
           }
           disabled={state.busy || locked || state.initializing}
           aria-label="Your message"
-          className="w-full resize-none rounded-md border border-surface-200 bg-white px-3 py-2.5 text-ink-900 placeholder-ink-500 disabled:bg-surface-100 disabled:text-ink-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50 transition-shadow"
+          className="w-full resize-none rounded-md border border-surface-200 bg-white px-3 py-2.5 text-ink-900 placeholder-ink-500 disabled:bg-surface-100 disabled:text-ink-500"
           style={{ minHeight: '44px', maxHeight: '200px', overflowY: 'hidden' }}
         />
 
@@ -722,7 +722,7 @@ export default function Chat() {
           <div className="flex items-center gap-2">
             <label
               htmlFor="photo-upload"
-              className="flex-none cursor-pointer inline-flex items-center justify-center gap-1.5 rounded-md border border-surface-200 bg-surface-100 px-3 py-2.5 text-sm text-ink-700 hover:bg-surface-200 hover:text-accent-600 transition-colors focus-within:outline-2 focus-within:outline-accent-500"
+              className="flex-none cursor-pointer inline-flex items-center justify-center sm:gap-1.5 rounded-md border border-surface-200 bg-surface-100 px-3 py-2.5 text-sm text-ink-700 hover:bg-surface-200 hover:text-accent-600 transition-colors focus-within:outline-2 focus-within:outline-accent-500"
             >
               <svg
                 aria-hidden="true"
