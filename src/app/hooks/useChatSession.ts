@@ -282,10 +282,35 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
           ? `${trimmed}\n\n[User attached a photo. blob_key: ${photoUrl}]`
           : trimmed;
 
+        // Insert an empty assistant placeholder NOW so the streamer has
+        // a target to append into. The render path in Chat.tsx already
+        // handles empty assistant content + populated tools by showing
+        // "Working on it…", so the placeholder is invisible until either
+        // text deltas land or the done frame populates tools.
+        const assistantId = cryptoId();
+        setState((s) => ({
+          ...s,
+          messages: [
+            ...s.messages,
+            {
+              id: assistantId,
+              role: 'assistant',
+              content: '',
+              timestamp: new Date().toISOString(),
+            },
+          ],
+        }));
+
         const resp = await fetch('/api/ada/turn', {
           method: 'POST',
           credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            // Tells the server to use the SSE branch. Non-SSE callers
+            // (curl, scripts) keep getting JSON because they don't send
+            // this header.
+            Accept: 'text/event-stream',
+          },
           body: JSON.stringify({
             session_id: state.sessionId,
             message: serverMessage,
@@ -300,28 +325,48 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
           const msg = await extractError(resp);
           throw new Error(msg || `Turn failed (${resp.status})`);
         }
-        const data = (await resp.json()) as TurnResponse;
-        setState((s) => ({
-          ...s,
-          messages: [
-            ...s.messages,
-            {
-              id: cryptoId(),
-              role: 'assistant',
-              content: data.assistant_message,
-              timestamp: new Date().toISOString(),
-              tools: data.tools_used,
-            },
-          ],
-          status: data.status,
-          readingLevel: data.reading_level,
-          busy: false,
-          error: null,
-          // Surface the package slug when Ada ends a session.
-          // Persists across turns so reloading the completed state
-          // keeps showing the "Your summary is ready" card.
-          packageSlug: data.package_slug ?? s.packageSlug,
-        }));
+        if (!resp.body) {
+          throw new Error('Stream unavailable');
+        }
+
+        await consumeSseStream(resp.body, {
+          onTextDelta: (delta) => {
+            setState((s) => ({
+              ...s,
+              messages: s.messages.map((m) =>
+                m.id === assistantId
+                  ? { ...m, content: m.content + delta }
+                  : m,
+              ),
+            }));
+          },
+          onDone: (final) => {
+            setState((s) => ({
+              ...s,
+              messages: s.messages.map((m) =>
+                m.id === assistantId
+                  ? {
+                      ...m,
+                      // The accumulated content from text deltas is the
+                      // canonical user-visible string. Fall back to the
+                      // server's assistant_message only if no deltas
+                      // arrived (tool-call-only turn).
+                      content: m.content.length > 0 ? m.content : final.assistant_message,
+                      tools: final.tools_used,
+                    }
+                  : m,
+              ),
+              status: final.status,
+              readingLevel: final.reading_level,
+              busy: false,
+              error: null,
+              packageSlug: final.package_slug ?? s.packageSlug,
+            }));
+          },
+          onError: (msg) => {
+            throw new Error(msg);
+          },
+        });
       } catch (err) {
         setState((s) => ({
           ...s,
@@ -371,6 +416,108 @@ async function extractError(resp: Response): Promise<string> {
     return data.error ?? '';
   } catch {
     return resp.statusText;
+  }
+}
+
+interface SseHandlers {
+  onTextDelta: (delta: string) => void;
+  onDone: (final: TurnResponse) => void;
+  onError: (message: string) => void;
+}
+
+/**
+ * Read a Server-Sent Events stream from /api/ada/turn and dispatch
+ * frames to the provided handlers. Returns when the stream closes.
+ *
+ * Frame format (matches what api/ada/turn.ts emits):
+ *   event: text
+ *   data: {"delta":"..."}
+ *
+ *   event: done
+ *   data: {"assistant_message":"...", ...}
+ *
+ *   event: error
+ *   data: {"error":"..."}
+ *
+ * Frames are separated by a blank line; we buffer partial bytes until
+ * a full frame is available. Multi-line `data:` payloads aren't used
+ * by our server (we JSON-encode and emit one line), so the parser
+ * only needs to handle the single-line case.
+ */
+async function consumeSseStream(
+  body: ReadableStream<Uint8Array>,
+  handlers: SseHandlers,
+): Promise<void> {
+  const reader = body.getReader();
+  const decoder = new TextDecoder('utf-8');
+  let buffer = '';
+
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      // Frames end with a blank line. Process every complete frame in
+      // the buffer; leave the trailing partial frame for the next read.
+      let frameEnd = buffer.indexOf('\n\n');
+      while (frameEnd !== -1) {
+        const frame = buffer.slice(0, frameEnd);
+        buffer = buffer.slice(frameEnd + 2);
+        dispatchFrame(frame, handlers);
+        frameEnd = buffer.indexOf('\n\n');
+      }
+    }
+    // Flush any trailing frame (some servers omit the final blank line).
+    if (buffer.trim().length > 0) {
+      dispatchFrame(buffer, handlers);
+    }
+  } finally {
+    try {
+      reader.releaseLock();
+    } catch {
+      /* already released */
+    }
+  }
+}
+
+function dispatchFrame(frame: string, handlers: SseHandlers): void {
+  let event = 'message';
+  let dataLine = '';
+  for (const line of frame.split('\n')) {
+    if (line.startsWith('event:')) {
+      event = line.slice(6).trim();
+    } else if (line.startsWith('data:')) {
+      dataLine = line.slice(5).trim();
+    }
+  }
+  if (!dataLine) return;
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(dataLine);
+  } catch {
+    // Malformed payload — skip rather than crashing the stream.
+    return;
+  }
+
+  switch (event) {
+    case 'text': {
+      const delta = (parsed as { delta?: unknown }).delta;
+      if (typeof delta === 'string') handlers.onTextDelta(delta);
+      return;
+    }
+    case 'done':
+      handlers.onDone(parsed as TurnResponse);
+      return;
+    case 'error': {
+      const errMsg = (parsed as { error?: unknown }).error;
+      handlers.onError(typeof errMsg === 'string' ? errMsg : 'Stream error');
+      return;
+    }
+    default:
+      // Unknown event — ignore. Forward-compatible with future event types.
+      return;
   }
 }
 
