@@ -6,34 +6,41 @@
  * Anthropic internally, dispatches tools, applies state changes),
  * persists the updated session, returns the final assistant message.
  *
- * Non-streaming HTTP in Ch0. The engine already uses an AsyncIterable
- * under the hood; we just collect the final text + tool record and
- * return it as JSON. Streaming transport can be added later (Edge
- * runtime or a framework with proper SSE support) without touching
- * the engine.
+ * Two response modes, picked by the request's Accept header:
+ *
+ *   1. JSON (default — back-compat for any non-browser caller). Returns
+ *      one shot:
+ *        { assistant_message, tools_used, reading_level, status,
+ *          photo_findings, package_slug }
+ *
+ *   2. SSE (Accept: text/event-stream — what the browser uses). Streams:
+ *        event: text     data: { "delta": "..." }   (repeated)
+ *        event: done     data: { assistant_message, tools_used, ... }
+ *        event: error    data: { "error": "..." }   (on failure only)
+ *      The `done` payload carries the same fields as the JSON response
+ *      so the client can reconcile final state in one place.
  *
  * Request body (JSON):
  *   {
  *     "session_id": "<uuid>",
- *     "message": "<user text>"
+ *     "message": "<user text>",
+ *     "photo_url": "<optional blob URL>"
  *   }
- *
- * Response:
- *   200 OK
- *   { "assistant_message": "...", "tools_used": ["set_classification", ...],
- *     "reading_level": "standard", "status": "active" | "completed" }
  *
  * Errors:
  *   400 — missing/invalid body
  *   404 — session not found
  *   405 — method not POST
- *   500 — any engine / DB / Anthropic failure
+ *   500 — any engine / DB / Anthropic failure (in SSE mode this surfaces
+ *         as an `event: error` frame on an already-200 response)
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { processAdaTurn } from '../../src/engine/processAdaTurn.js';
 import { runSessionQualityCheck } from '../../src/engine/observability/qualityCheck.js';
 import { assemblePackage } from '../../src/engine/package/assemble.js';
+import type { AdaTurnResult } from '../../src/engine/types.js';
+import type { AdaClients } from '../../src/engine/clients/types.js';
 import {
   makeClientsFromEnv,
   readJsonBody,
@@ -54,11 +61,25 @@ interface Body {
   photo_url?: string;
 }
 
+interface FinalPayload {
+  assistant_message: string;
+  tools_used: string[];
+  reading_level: string;
+  status: string;
+  photo_findings: unknown;
+  package_slug: string | null;
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  // Decide response mode up front. SSE clients send Accept: text/event-stream;
+  // everything else gets the legacy JSON shape.
+  const acceptHeader = String(req.headers['accept'] ?? '');
+  const wantsSse = acceptHeader.includes('text/event-stream');
 
   try {
     const body = readJsonBody<Body>(req);
@@ -68,19 +89,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (typeof body.message !== 'string' || !body.message.trim()) {
       return res.status(400).json({ error: 'message is required' });
     }
-    // Messages carry plain text + optional short blob URLs (from
-    // /api/ada/upload-photo). 10k chars is ample for both.
     if (body.message.length > 10_000) {
       return res
         .status(400)
         .json({ error: 'message is too long (max 10,000 chars)' });
     }
 
-    // Optional photo URL — validate that it's either absent or a
-    // reasonable http(s) URL. We deliberately don't enforce the
-    // blob.vercel-storage.com host because the analyze_photo tool
-    // accepts any http(s) URL and that flexibility is useful for
-    // future cases (eg user-provided existing photos).
     if (body.photo_url !== undefined) {
       if (typeof body.photo_url !== 'string') {
         return res.status(400).json({ error: 'photo_url must be a string' });
@@ -103,161 +117,240 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const clients = makeClientsFromEnv();
 
-    // Load the session.
     const state = await clients.db.readSession({ sessionId: body.session_id });
     if (!state) {
       return res.status(404).json({ error: 'Session not found' });
     }
 
-    // Guard against turning a terminal session.
     if (state.status !== 'active') {
       return res
         .status(400)
         .json({ error: `Session is ${state.status}, cannot accept new messages` });
     }
 
-    // Resolve org display name for the prompt.
     const org = await clients.db.getOrgByCode(ctx.orgCode ?? 'adall');
 
-    // Run the turn. processAdaTurn does all the heavy lifting:
-    //   - assemble prompt
-    //   - stream from Anthropic
-    //   - dispatch tools
-    //   - apply state changes
-    //   - loop up to MAX_TOOL_LOOPS
+    if (wantsSse) {
+      await runSseTurn(req, res, clients, state, body, org);
+      return;
+    }
+    return runJsonTurn(res, clients, state, body, org);
+  } catch (err) {
+    console.error('POST /api/ada/turn failed', err);
+    const message = err instanceof Error ? err.message : 'Internal error';
+    // If we already started an SSE response, surface as an error frame;
+    // otherwise return a normal 500 JSON.
+    if (wantsSse && res.headersSent) {
+      writeSseFrame(res, 'error', { error: message });
+      res.end();
+      return;
+    }
+    return res.status(500).json({ error: message });
+  }
+}
+
+// ─── JSON mode (back-compat) ──────────────────────────────────────────────────
+
+type SessionState = NonNullable<Awaited<ReturnType<AdaClients['db']['readSession']>>>;
+type OrgRow = Awaited<ReturnType<AdaClients['db']['getOrgByCode']>>;
+
+async function runJsonTurn(
+  res: VercelResponse,
+  clients: AdaClients,
+  state: SessionState,
+  body: Body,
+  org: OrgRow,
+): Promise<VercelResponse> {
+  const result = await processAdaTurn({
+    clients,
+    state,
+    input: {
+      userMessage: body.message!,
+      photoBlobKeys: body.photo_url ? [body.photo_url] : undefined,
+    },
+    orgDisplayName: org?.displayName ?? 'ADA Legal Link',
+    orgAdaIntroPrompt: org?.adaIntroPrompt ?? null,
+  });
+
+  const final = await finalizeTurn(clients, result);
+  return res.status(200).json(final);
+}
+
+// ─── SSE mode ─────────────────────────────────────────────────────────────────
+
+async function runSseTurn(
+  req: VercelRequest,
+  res: VercelResponse,
+  clients: AdaClients,
+  state: SessionState,
+  body: Body,
+  org: OrgRow,
+): Promise<void> {
+  // SSE headers. X-Accel-Buffering: no defeats reverse-proxy buffering;
+  // Cache-Control: no-transform protects against compression-based
+  // buffering in front of the function.
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  // flushHeaders gets bytes on the wire before processAdaTurn starts,
+  // so the browser knows the stream is alive even if the model takes
+  // a moment to start producing tokens.
+  if (typeof res.flushHeaders === 'function') {
+    res.flushHeaders();
+  }
+
+  // Cancel cleanly if the client disconnects mid-stream.
+  let aborted = false;
+  req.on('close', () => {
+    aborted = true;
+  });
+
+  try {
     const result = await processAdaTurn({
       clients,
       state,
       input: {
-        userMessage: body.message,
+        userMessage: body.message!,
         photoBlobKeys: body.photo_url ? [body.photo_url] : undefined,
+        onTextDelta: (delta: string) => {
+          if (aborted) return;
+          writeSseFrame(res, 'text', { delta });
+        },
       },
       orgDisplayName: org?.displayName ?? 'ADA Legal Link',
       orgAdaIntroPrompt: org?.adaIntroPrompt ?? null,
     });
 
-    // Persist the new session state.
-    await clients.db.writeSession({ state: result.nextState });
-
-    // Set by the completion block below when a package is generated.
-    // Included in the response so the client can link to /s/{slug}.
-    let packageSlug: string | null = null;
-
-    // On completion, record a quality check row. Run inline so any
-    // persistence error surfaces in logs immediately; the check itself
-    // is pure, fast, and non-blocking for the user. Wrap in a catch
-    // because a quality-check failure must never block the response.
-    if (result.nextState.status === 'completed') {
-      try {
-        const qc = runSessionQualityCheck(result.nextState);
-        await clients.db.writeSessionQualityCheck({
-          sessionId: result.nextState.sessionId,
-          passed: qc.passed,
-          failures: qc.failures,
-          warnings: qc.warnings,
-        });
-      } catch (qcErr) {
-        // Log — do not propagate.
-        console.error('quality check write failed', qcErr);
-      }
-
-      // Step 18: generate and persist the session package. This is the
-      // artifact the user takes away — the /s/{slug} page, the PDF,
-      // the demand letter, the routing destinations. Ada's final
-      // message will include the slug so the frontend can link to it.
-      //
-      // Guarded by classification presence; if Ada ends a session
-      // without classifying (shouldn't happen per prompt but could on
-      // abnormal termination), skip package generation rather than
-      // throwing. Wrapped in try/catch so a package failure never
-      // blocks the response.
-      if (result.nextState.classification) {
-        try {
-          // Check for an attorney match during the session by scanning
-          // tool invocations. searchAttorneys returning hits is the
-          // signal we use in routing.
-          const toolsInvoked = result.nextState.metadata.tools_invoked ?? [];
-          const attorneyMatched = toolsInvoked.some(
-            (t) => t.name === 'search_attorneys' && t.result_kind === 'ok',
-          );
-
-          // When the session bound to a specific class-action listing
-          // during the conversation (via match_listing), surface the
-          // hosting firm + listing on the package as the primary call
-          // to action. Failures here degrade gracefully — if the
-          // listing or firm read fails, we ship the package without a
-          // matched-listing block rather than blocking the user from
-          // ever seeing their summary.
-          let matchedListing = null;
-          const boundListingId = result.nextState.listingId;
-          if (boundListingId) {
-            try {
-              const listing = await clients.db.readListingById(boundListingId);
-              if (listing) {
-                const firm = await clients.db.readLawFirmById(listing.lawFirmId);
-                if (firm) {
-                  matchedListing = {
-                    listingSlug: listing.slug,
-                    listingTitle: listing.title,
-                    listingCategory: listing.category,
-                    firmName: firm.name,
-                    firmPrimaryContact: firm.primaryContact,
-                    firmEmail: firm.email,
-                    firmPhone: firm.phone,
-                  };
-                }
-              }
-            } catch (lookupErr) {
-              console.error('matched listing lookup failed', lookupErr);
-            }
-          }
-
-          const pkg = assemblePackage({
-            state: result.nextState,
-            attorneyMatched,
-            matchedListing,
-            knowledgeHits: [], // TODO: thread retrieved chunks from the turn when available
-          });
-          // Default 90-day retention.
-          const expiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
-          await clients.db.writeSessionPackage({
-            slug: pkg.slug,
-            sessionId: pkg.sessionId,
-            payload: pkg,
-            classificationTitle: pkg.classification.title,
-            generatedAt: pkg.generatedAt,
-            expiresAt,
-          });
-          packageSlug = pkg.slug;
-        } catch (pkgErr) {
-          // Log — do not propagate. The user still gets a conversational
-          // ending from Ada even if the package isn't persisted.
-          console.error('package generation failed', pkgErr);
-        }
-      }
+    if (aborted) {
+      // Client gave up. Still finalize server-side so session state
+      // reflects what the model produced; just don't bother emitting
+      // the done frame to nobody.
+      await finalizeTurn(clients, result);
+      res.end();
+      return;
     }
 
-    // Pull a flat content string from the assistant message. The content
-    // field is string | ContentBlock[]; for final messages (no tool_use)
-    // it's always a string.
-    const assistantText =
-      typeof result.assistantMessage.content === 'string'
-        ? result.assistantMessage.content
-        : extractText(result.assistantMessage.content);
-
-    return res.status(200).json({
-      assistant_message: assistantText,
-      tools_used: result.toolInvocations.map((t) => t.name),
-      reading_level: result.nextState.readingLevel,
-      status: result.nextState.status,
-      photo_findings: result.photoFindings ?? null,
-      package_slug: packageSlug,
-    });
+    const final = await finalizeTurn(clients, result);
+    writeSseFrame(res, 'done', final);
+    res.end();
   } catch (err) {
-    console.error('POST /api/ada/turn failed', err);
+    console.error('SSE turn failed', err);
     const message = err instanceof Error ? err.message : 'Internal error';
-    return res.status(500).json({ error: message });
+    if (!aborted) {
+      writeSseFrame(res, 'error', { error: message });
+    }
+    res.end();
   }
+}
+
+function writeSseFrame(res: VercelResponse, event: string, data: unknown): void {
+  // Minimal SSE: event line, single data line (JSON-encoded so embedded
+  // newlines survive), blank line to close the frame. Any write error
+  // means the client closed the socket — swallow and let the close
+  // handler stop further work.
+  try {
+    res.write(`event: ${event}\n`);
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
+  } catch {
+    /* socket already closed */
+  }
+}
+
+// ─── Shared post-turn finalization ────────────────────────────────────────────
+
+async function finalizeTurn(
+  clients: AdaClients,
+  result: AdaTurnResult,
+): Promise<FinalPayload> {
+  // Persist the new session state.
+  await clients.db.writeSession({ state: result.nextState });
+
+  let packageSlug: string | null = null;
+
+  // On completion, record a quality check row + assemble the session
+  // package. Both are wrapped so a failure here cannot block the
+  // user-facing response.
+  if (result.nextState.status === 'completed') {
+    try {
+      const qc = runSessionQualityCheck(result.nextState);
+      await clients.db.writeSessionQualityCheck({
+        sessionId: result.nextState.sessionId,
+        passed: qc.passed,
+        failures: qc.failures,
+        warnings: qc.warnings,
+      });
+    } catch (qcErr) {
+      console.error('quality check write failed', qcErr);
+    }
+
+    if (result.nextState.classification) {
+      try {
+        const toolsInvoked = result.nextState.metadata.tools_invoked ?? [];
+        const attorneyMatched = toolsInvoked.some(
+          (t) => t.name === 'search_attorneys' && t.result_kind === 'ok',
+        );
+
+        let matchedListing = null;
+        const boundListingId = result.nextState.listingId;
+        if (boundListingId) {
+          try {
+            const listing = await clients.db.readListingById(boundListingId);
+            if (listing) {
+              const firm = await clients.db.readLawFirmById(listing.lawFirmId);
+              if (firm) {
+                matchedListing = {
+                  listingSlug: listing.slug,
+                  listingTitle: listing.title,
+                  listingCategory: listing.category,
+                  firmName: firm.name,
+                  firmPrimaryContact: firm.primaryContact,
+                  firmEmail: firm.email,
+                  firmPhone: firm.phone,
+                };
+              }
+            }
+          } catch (lookupErr) {
+            console.error('matched listing lookup failed', lookupErr);
+          }
+        }
+
+        const pkg = assemblePackage({
+          state: result.nextState,
+          attorneyMatched,
+          matchedListing,
+          knowledgeHits: [], // TODO: thread retrieved chunks from the turn when available
+        });
+        const expiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
+        await clients.db.writeSessionPackage({
+          slug: pkg.slug,
+          sessionId: pkg.sessionId,
+          payload: pkg,
+          classificationTitle: pkg.classification.title,
+          generatedAt: pkg.generatedAt,
+          expiresAt,
+        });
+        packageSlug = pkg.slug;
+      } catch (pkgErr) {
+        console.error('package generation failed', pkgErr);
+      }
+    }
+  }
+
+  const assistantText =
+    typeof result.assistantMessage.content === 'string'
+      ? result.assistantMessage.content
+      : extractText(result.assistantMessage.content);
+
+  return {
+    assistant_message: assistantText,
+    tools_used: result.toolInvocations.map((t) => t.name),
+    reading_level: result.nextState.readingLevel,
+    status: result.nextState.status,
+    photo_findings: result.photoFindings ?? null,
+    package_slug: packageSlug,
+  };
 }
 
 function extractText(content: unknown): string {
