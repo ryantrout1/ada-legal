@@ -263,6 +263,10 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
         error: null,
       }));
 
+      // Allocated up front so the error handler can clean up an empty
+      // placeholder on failure (no ghost assistant bubble after errors).
+      let assistantId: string | null = null;
+
       try {
         // If the user attached a photo, upload it to Vercel Blob via
         // the client-direct-upload path (see /api/ada/upload-photo).
@@ -287,13 +291,14 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
         // handles empty assistant content + populated tools by showing
         // "Working on it…", so the placeholder is invisible until either
         // text deltas land or the done frame populates tools.
-        const assistantId = cryptoId();
+        assistantId = cryptoId();
+        const placeholderId = assistantId;
         setState((s) => ({
           ...s,
           messages: [
             ...s.messages,
             {
-              id: assistantId,
+              id: placeholderId,
               role: 'assistant',
               content: '',
               timestamp: new Date().toISOString(),
@@ -334,7 +339,7 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
             setState((s) => ({
               ...s,
               messages: s.messages.map((m) =>
-                m.id === assistantId
+                m.id === placeholderId
                   ? { ...m, content: m.content + delta }
                   : m,
               ),
@@ -344,7 +349,7 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
             setState((s) => ({
               ...s,
               messages: s.messages.map((m) =>
-                m.id === assistantId
+                m.id === placeholderId
                   ? {
                       ...m,
                       // The accumulated content from text deltas is the
@@ -368,8 +373,19 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
           },
         });
       } catch (err) {
+        const ghostId = assistantId;
         setState((s) => ({
           ...s,
+          // If the placeholder never accumulated any content, drop it so
+          // the user doesn't see a ghost empty bubble alongside the
+          // error banner. Bubbles that did receive partial deltas before
+          // the error are kept — the user's already seen them, and
+          // erasing them mid-read would be jarring.
+          messages: ghostId
+            ? s.messages.filter(
+                (m) => !(m.id === ghostId && m.content.length === 0),
+              )
+            : s.messages,
           busy: false,
           error: err instanceof Error ? err.message : 'Failed to send message',
         }));
