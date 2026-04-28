@@ -42,7 +42,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import AutoCiteLinks from './AutoCiteLinks.js';
 import GuideHeroBanner from './GuideHeroBanner.js';
 import GuideStyles from './GuideStyles.js';
-import ShareBar from './ShareBar.js';
 import { useReadingLevel, type ReadingLevel } from './ReadingLevelContext.js';
 import { ReadingLevelToggle } from './ReadingLevelToggle.js';
 import { startAdaSessionWithContext } from './startAdaSession.js';
@@ -630,17 +629,6 @@ export default function ChapterPageLayout({
               {startingChat ? 'Opening chat…' : 'Talk to Ada'}
             </button>
           </section>
-
-          {/* Share bar at the bottom */}
-          <div
-            style={{
-              marginTop: '32px',
-              paddingTop: '20px',
-              borderTop: '1px solid var(--border)',
-            }}
-          >
-            <ShareBar />
-          </div>
 
           {/* Bottom prev/next */}
           <nav
