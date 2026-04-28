@@ -32,13 +32,17 @@
   --color-surface-300: #D4CCB9;   /* disabled, hints */
 
   /* Ink — deep, warm-biased black for long-form reading */
-  --color-ink-900: #1A1814;       /* primary text */
-  --color-ink-700: #3A3530;       /* secondary text — still AAA */
-  --color-ink-500: #6A625A;       /* tertiary, meta, captions */
+  --color-ink-900: #1A1814;       /* primary text, 16.5:1 on surface-50 (AAA) */
+  --color-ink-700: #3A3530;       /* secondary, 10.6:1 (AAA) */
+  --color-ink-500: #5A524A;       /* tertiary / meta, 6.8:1 (AAA body)
+                                     darkened from #6A625A which was 5.2:1
+                                     and only AAA for large text */
 
   /* Accent — muted terracotta, AAA on surface-50 */
-  --color-accent-500: #A64B1D;    /* primary CTA, links, focus */
-  --color-accent-600: #8A3D17;    /* hover, active */
+  --color-accent-500: #8C3F18;    /* primary CTA / links, 7.4:1 (AAA body)
+                                     darkened from #A64B1D which was 5.5:1
+                                     and only AAA for large text */
+  --color-accent-600: #6E2F10;    /* hover, active */
   --color-accent-50:  #F9ECE5;    /* accent surface tint */
 
   /* Semantic — kept muted, not neon */
@@ -236,16 +240,24 @@ body {
   background-color: var(--color-surface-50) !important;
 }
 
-/* Dark — deep ink surface, warm cream text. Maintains AAA contrast. */
+/* Dark — deep ink surface, warm cream text. Maintains AAA contrast.
+   Surface step values are tuned so borders read clearly against the
+   page bg — the original spread (#141210→#1E1B17→#2A2620→#3A342C)
+   was too tight, leaving border-surface-200 nearly invisible against
+   bg-surface-50 in real-world rendering. The new step pushes
+   surface-200 up to ~#3A342C territory for clear divider contrast,
+   and keeps surface-300 even higher for the disabled/hint tier. */
 :root[data-display="dark"] {
-  --color-surface-50:  #141210;
-  --color-surface-100: #1E1B17;
-  --color-surface-200: #2A2620;
-  --color-surface-300: #3A342C;
+  --color-surface-50:  #141210;   /* page bg */
+  --color-surface-100: #1E1B17;   /* card lift, ~7% brighter */
+  --color-surface-200: #3A342C;   /* borders / dividers, ~20% brighter */
+  --color-surface-300: #4D453B;   /* hints / disabled, ~30% brighter */
   --color-ink-900: #F4F0E8;
   --color-ink-700: #D4CCB9;
-  --color-ink-500: #A89E8C;
-  --color-accent-500: #D9824A;   /* brighter terracotta for dark bg, AAA */
+  --color-ink-500: #B8AE9C;       /* lifted slightly (was #A89E8C) so
+                                     meta text + secondary actions hit
+                                     AAA, not just AA, on surface-50 */
+  --color-accent-500: #D9824A;    /* brighter terracotta for dark bg, AAA */
   --color-accent-600: #E89969;
   --color-accent-50:  #2A1E15;
   --color-success-500: #6FA176;
@@ -264,10 +276,10 @@ body {
   --color-surface-200: #E0D3B8;
   --color-surface-300: #C7B895;
   --color-ink-900: #2A1F15;
-  --color-ink-700: #4A3826;
-  --color-ink-500: #7A5E3F;
-  --color-accent-500: #8A3D17;
-  --color-accent-600: #6E2F10;
+  --color-ink-700: #3D2D1E;       /* darkened from #4A3826 → 11.7:1 AAA */
+  --color-ink-500: #5C4528;       /* darkened from #7A5E3F → 7.0:1 AAA */
+  --color-accent-500: #7A3413;    /* darkened from #8A3D17 → 8.1:1 AAA */
+  --color-accent-600: #5C2710;
 }
 
 /* Contrast — high contrast on a DARK canvas, matching the aesthetic

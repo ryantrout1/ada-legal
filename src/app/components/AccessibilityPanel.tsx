@@ -136,7 +136,7 @@ export function AccessibilityPanel({ readingLevel }: AccessibilityPanelProps) {
           role="dialog"
           aria-modal="false"
           aria-label="Accessibility settings"
-          className="absolute right-0 top-full mt-2 z-50 w-[360px] max-w-[calc(100vw-2rem)] bg-surface-50 border border-surface-200 rounded-lg shadow-xl p-4 text-ink-900"
+          className="absolute right-0 top-full mt-2 z-50 w-[360px] max-w-[calc(100vw-2rem)] bg-surface-100 border border-surface-200 rounded-lg shadow-xl p-4 text-ink-900"
         >
           <DisplaySection
             value={a11y.settings.display}
