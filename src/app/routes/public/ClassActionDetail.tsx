@@ -297,7 +297,7 @@ export default function ClassActionDetail() {
       <section className="max-w-3xl mx-auto px-5 sm:px-8 pt-8 pb-4">
         <Link
           to="/class-actions"
-          className="text-xs uppercase tracking-wider font-mono text-ink-500 hover:text-accent-600 underline underline-offset-2"
+          className="inline-block px-2 py-1.5 -mx-2 -my-1.5 rounded text-xs uppercase tracking-wider font-mono text-ink-500 hover:text-accent-600 underline underline-offset-2"
         >
           ← Class actions
         </Link>
