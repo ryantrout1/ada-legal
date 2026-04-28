@@ -131,7 +131,7 @@ export default function Attorneys() {
             <button
               type="button"
               onClick={reset}
-              className="text-sm text-accent-500 hover:text-accent-600 underline underline-offset-2 self-end pb-2"
+              className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-md text-sm text-accent-500 hover:bg-accent-50 transition-colors"
             >
               Reset filters
             </button>
