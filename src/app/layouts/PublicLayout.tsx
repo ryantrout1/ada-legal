@@ -268,16 +268,16 @@ export default function PublicLayout() {
           flex-wrap. */}
       <footer className="border-t border-surface-200 mt-auto">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 text-xs text-ink-500">
-          <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-            <div className="flex items-center gap-2.5 min-w-0">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-y-3 sm:gap-y-2 sm:gap-x-6">
+            <div className="flex items-start sm:items-center gap-2.5 min-w-0">
               <img
                 src="/logo.png"
                 alt=""
                 width="24"
                 height="24"
-                className="w-6 h-6 rounded-sm flex-shrink-0"
+                className="w-6 h-6 rounded-sm flex-shrink-0 mt-0.5 sm:mt-0"
               />
-              <p className="truncate">
+              <p>
                 <span className="font-display text-sm text-ink-700">
                   ADA Legal Link
                 </span>
