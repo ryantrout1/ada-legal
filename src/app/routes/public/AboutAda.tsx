@@ -186,7 +186,7 @@ export default function AboutAda() {
         </div>
 
         {/* CTA + back-to-action */}
-        <div className="flex flex-wrap items-center gap-4 mb-16">
+        <div className="flex flex-wrap items-center gap-3 mb-16">
           <Link
             to="/chat"
             className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium px-6 py-3.5 rounded-md transition-colors"
@@ -196,7 +196,7 @@ export default function AboutAda() {
           </Link>
           <Link
             to="/"
-            className="text-ink-700 hover:text-accent-600 underline underline-offset-4 decoration-1 px-2 py-2 transition-colors"
+            className="inline-flex items-center px-5 py-3 rounded-md border border-surface-300 text-ink-700 font-medium hover:border-accent-500 hover:text-accent-600 transition-colors"
           >
             Back to home
           </Link>
