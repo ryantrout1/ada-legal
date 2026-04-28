@@ -48,14 +48,21 @@ import {
   type Spacing,
   type TextSize,
 } from '../hooks/useAccessibilitySettings.js';
+import { useReadingLevel } from './standards/ReadingLevelContext.js';
 
 export type ReadingLevel = 'simple' | 'standard' | 'professional';
 
 export interface AccessibilityPanelProps {
   /**
-   * Optional reading-level controller. Chat sessions pass this so the
-   * panel can offer reading level in the same place as the other
-   * accessibility settings. Non-chat pages omit it.
+   * Optional reading-level override. When provided, the panel renders
+   * the supplied value/onChange instead of reading from
+   * ReadingLevelContext. This is here for callers that want to disable
+   * or replace the site-wide reading-level state for a specific
+   * surface; in normal operation the panel sources from context so the
+   * setting is consistent across every page that supports it.
+   *
+   * Default behavior (no prop): use ReadingLevelContext, which is
+   * always available within PublicLayout's ReadingLevelProvider.
    */
   readingLevel?: {
     value: ReadingLevel;
@@ -68,6 +75,14 @@ export function AccessibilityPanel({ readingLevel }: AccessibilityPanelProps) {
   const a11y = useAccessibilitySettings();
   const panelId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
+  // Site-wide reading-level state from context. Always available
+  // because PublicLayout wraps everything in <ReadingLevelProvider>.
+  // Caller can still override via the readingLevel prop.
+  const ctx = useReadingLevel();
+  const effectiveReadingLevel = readingLevel ?? {
+    value: ctx.readingLevel,
+    onChange: ctx.setReadingLevel,
+  };
   const panelRef = useRef<HTMLDivElement>(null);
 
   // Close on Escape; click-outside (desktop popover only — the mobile
@@ -273,10 +288,10 @@ export function AccessibilityPanel({ readingLevel }: AccessibilityPanelProps) {
                 onChange={a11y.setSpacing}
               />
             </div>
-            {readingLevel && (
+            {effectiveReadingLevel && (
               <ReadingLevelSection
-                value={readingLevel.value}
-                onChange={readingLevel.onChange}
+                value={effectiveReadingLevel.value}
+                onChange={effectiveReadingLevel.onChange}
               />
             )}
             <button
@@ -572,10 +587,10 @@ function ReadingLevelSection({
   return (
     <section className="mt-4">
       <h3 className="text-[0.65625rem] font-semibold uppercase tracking-wider text-ink-500 mb-1">
-        ADA Guide Reading Level
+        Reading Level
       </h3>
       <p className="text-[0.6875rem] text-ink-500 mb-2 leading-snug">
-        Controls how Ada writes in conversations
+        How content is written across the site and in chat
       </p>
       <div
         className="grid grid-cols-3 gap-1.5"
