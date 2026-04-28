@@ -837,7 +837,7 @@ function ReadingLevelPicker({
               className={
                 (active
                   ? 'bg-accent-500 text-white '
-                  : 'bg-surface-50 text-ink-700 hover:bg-surface-100 ') +
+                  : 'bg-surface-100 text-ink-700 hover:bg-surface-200 ') +
                 'px-3 py-1.5 text-xs transition-colors ' +
                 (i === 0 ? 'border-r border-surface-200' : '') +
                 (i === 1 ? 'border-r border-surface-200' : '')

@@ -215,30 +215,42 @@ body {
  *
  * Public routes use Tailwind's `bg-white` for card surfaces that sit
  * lifted above the warm page background — chat inputs, attorney cards,
- * class-action cards, filter selects. In light mode that's a crisp
- * white pop against `surface-50` cream.
+ * class-action cards, filter selects, search inputs nested inside
+ * surface-100 fieldsets. In light mode that's a crisp white pop
+ * against `surface-50` cream — the highest tier in the surface stack.
  *
- * In every other display mode, literal white is wrong (would invert
- * surface hierarchy) AND surface-50 is wrong (would merge with page
- * bg, eliminating the lift). Cards need to read as 'lifted above the
- * page' — the right token is `surface-100`, the same value `bg-surface-100`
- * compiles to.
+ * Non-default modes: `bg-white` represents the highest-elevation card
+ * tier, which sits ABOVE `bg-surface-100` (the lifted-card surface).
+ * Inputs nested inside a `bg-surface-100` fieldset must read as a
+ * further lift; using `surface-100` here would merge them flat with
+ * the fieldset.
+ *
+ * The values below are explicit per-mode hex tuned to produce a clear
+ * lift above each mode's surface-100:
+ *   dark mode:  surface-100 #1E1B17 → bg-white #2A2620 (clearly lifted,
+ *               ~7% brighter, still well within ink-900 AAA)
+ *   warm mode:  surface-100 #EDE4D0 → bg-white #FBF6EC (almost-white
+ *               with the warm bias preserved)
+ *   low-vision: surface-100 #F5F5F5 → bg-white #FFFFFF (pure white;
+ *               the mode's whole intent is maximum legibility)
+ *   contrast:   handled separately by the high-contrast card-flatten
+ *               rule later in this file (cards become flat black with
+ *               2px white borders) — bg-white inherits that treatment.
  *
  * Tailwind 4's `bg-white` compiles to `background-color: var(--color-white)`
- * which we cannot redefine via @theme without breaking real white usage
- * elsewhere. So we override the COMPILED bg-white class for all
- * non-default display modes via the `[data-display]` attribute selector.
- * Default mode (no attribute) keeps the literal white.
- *
- * Mirrored for placeholder text color, which is a separate Tailwind
- * `placeholder-ink-500` utility — that one already themes via its
- * --color-ink-500 token, no override needed.
+ * which we cannot redefine via @theme without breaking real white
+ * usage elsewhere. So we override the COMPILED bg-white class for
+ * each non-default display mode via the `[data-display]` attribute
+ * selector. Default mode (no attribute) keeps the literal white.
  * ────────────────────────────────────────────────────────────────────── */
-:root[data-display="dark"] .bg-white,
-:root[data-display="warm"] .bg-white,
-:root[data-display="contrast"] .bg-white,
+:root[data-display="dark"] .bg-white {
+  background-color: #2A2620 !important;
+}
+:root[data-display="warm"] .bg-white {
+  background-color: #FBF6EC !important;
+}
 :root[data-display="low-vision"] .bg-white {
-  background-color: var(--color-surface-100) !important;
+  background-color: #FFFFFF !important;
 }
 
 /* Dark — deep ink surface, warm cream text. Maintains AAA contrast.
