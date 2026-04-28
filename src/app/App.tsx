@@ -54,11 +54,13 @@ import AdminSettings from './routes/admin/AdminSettings.js';
 import AdminAnalytics from './routes/admin/AdminAnalytics.js';
 import { HelmetProvider } from 'react-helmet-async';
 import RequireAdmin from './components/RequireAdmin.js';
+import ScrollToTop from './components/ScrollToTop.js';
 
 export default function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* Public routes — no Clerk context */}
         <Route element={<PublicLayout />}>
