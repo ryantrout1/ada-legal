@@ -106,14 +106,14 @@ export default function ClassActions() {
 
       <section className="max-w-5xl mx-auto px-5 sm:px-8 pb-16">
         {/* Filters */}
-        <fieldset className="mb-8 flex flex-wrap items-center gap-4 text-sm">
+        <fieldset className="mb-8 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-4 text-sm">
           <legend className="sr-only">Filter class actions</legend>
-          <label className="flex items-center gap-2">
+          <label className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
             <span className="text-ink-700 font-medium">Category</span>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as Category | '')}
-              className="rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900"
+              className="w-full sm:w-auto rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900"
             >
               <option value="">All</option>
               <option value="ada_title_i">Title I (employment)</option>
@@ -124,14 +124,14 @@ export default function ClassActions() {
             </select>
           </label>
 
-          <label className="flex items-center gap-2 flex-1 min-w-[240px]">
+          <label className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 sm:flex-1 sm:min-w-[240px]">
             <span className="text-ink-700 font-medium">Search</span>
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Hotels, service animals, employment&hellip;"
-              className="flex-1 rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900 placeholder-ink-500"
+              className="w-full sm:flex-1 rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900 placeholder-ink-500"
             />
           </label>
         </fieldset>
