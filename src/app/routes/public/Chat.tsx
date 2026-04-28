@@ -24,6 +24,7 @@
 
 import { forwardRef, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useChatSession, type ReadingLevel } from '../../hooks/useChatSession.js';
+import { useReadingLevel } from '../../components/standards/ReadingLevelContext.js';
 import { useSpeechInput } from '../../hooks/useSpeechInput.js';
 import { useSpeechOutput } from '../../hooks/useSpeechOutput.js';
 import { downscalePhoto } from '../../utils/downscalePhoto.js';
@@ -39,8 +40,17 @@ type PendingAction =
   | { kind: 'new-chat' };
 
 export default function Chat() {
+  // Site-wide reading-level context. Used to seed the new chat session
+  // so a user who picked "Simple" in the Standards Guide or the
+  // accessibility panel doesn't have to reconfigure. The chat session
+  // still owns its own reading-level state once initialized — the
+  // server-side session record needs the level to be stable inside the
+  // conversation. Mid-conversation level switches go through the
+  // ConfirmBar flow as before. Commit 3 will add write-back so chat-
+  // initiated level changes update context too.
+  const { readingLevel: contextReadingLevel } = useReadingLevel();
   const { state, sendMessage, startNewSession, acceptResume, discardResume } =
-    useChatSession('standard');
+    useChatSession(contextReadingLevel);
   const [draft, setDraft] = useState('');
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
