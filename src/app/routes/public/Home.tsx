@@ -53,7 +53,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center gap-4">
+        <div className="mt-10 flex flex-wrap items-center gap-3">
           <Link
             to="/chat"
             className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium px-6 py-3.5 rounded-md transition-colors"
@@ -63,13 +63,13 @@ export default function Home() {
           </Link>
           <Link
             to="/class-actions"
-            className="text-ink-700 hover:text-accent-600 underline underline-offset-4 decoration-1 px-2 py-2 transition-colors"
+            className="inline-flex items-center px-5 py-3 rounded-md border border-surface-300 text-ink-700 font-medium hover:border-accent-500 hover:text-accent-600 transition-colors"
           >
             Browse class actions
           </Link>
           <a
             href="#how-this-works"
-            className="text-ink-700 hover:text-accent-600 underline underline-offset-4 decoration-1 px-2 py-2 transition-colors"
+            className="inline-flex items-center px-5 py-3 rounded-md border border-surface-300 text-ink-700 font-medium hover:border-accent-500 hover:text-accent-600 transition-colors"
           >
             How this works
           </a>
