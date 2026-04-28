@@ -236,7 +236,7 @@ function AttorneyCard({ attorney }: { attorney: AttorneyDisplay }) {
           {attorney.practice_areas.map((slug) => (
             <li
               key={slug}
-              className="text-[11px] uppercase tracking-wider font-mono text-ink-500 bg-surface-100 border border-surface-200 px-2 py-0.5 rounded"
+              className="text-[0.6875rem] uppercase tracking-wider font-mono text-ink-500 bg-surface-100 border border-surface-200 px-2 py-0.5 rounded"
             >
               {humanizeSlug(slug)}
             </li>

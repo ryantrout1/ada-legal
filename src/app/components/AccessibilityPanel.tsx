@@ -253,7 +253,7 @@ function DisplaySection({
 }) {
   return (
     <section>
-      <h3 className="text-[10.5px] font-semibold uppercase tracking-wider text-ink-500 mb-2">
+      <h3 className="text-[0.65625rem] font-semibold uppercase tracking-wider text-ink-500 mb-2">
         Display
       </h3>
       <div className="grid grid-cols-3 gap-2">
@@ -317,7 +317,7 @@ function FontSection({
 }) {
   return (
     <section className="mt-4">
-      <h3 className="text-[10.5px] font-semibold uppercase tracking-wider text-ink-500 mb-2">
+      <h3 className="text-[0.65625rem] font-semibold uppercase tracking-wider text-ink-500 mb-2">
         Font
       </h3>
       <div className="grid grid-cols-2 gap-2">
@@ -334,7 +334,7 @@ function FontSection({
               <span className="text-xs font-semibold" style={opt.style}>
                 {opt.label}
               </span>
-              <span className="text-[11px] text-ink-500 leading-tight">
+              <span className="text-[0.6875rem] text-ink-500 leading-tight">
                 {opt.description}
               </span>
             </span>
@@ -354,7 +354,7 @@ function SizeSection({
 }) {
   return (
     <section>
-      <h3 className="text-[10.5px] font-semibold uppercase tracking-wider text-ink-500 mb-2">
+      <h3 className="text-[0.65625rem] font-semibold uppercase tracking-wider text-ink-500 mb-2">
         Size
       </h3>
       <div className="grid grid-cols-3 gap-1.5" role="group" aria-label="Text size">
@@ -392,7 +392,7 @@ function SpacingSection({
 }) {
   return (
     <section>
-      <h3 className="text-[10.5px] font-semibold uppercase tracking-wider text-ink-500 mb-2">
+      <h3 className="text-[0.65625rem] font-semibold uppercase tracking-wider text-ink-500 mb-2">
         Spacing
       </h3>
       <div className="grid grid-cols-3 gap-1.5" role="group" aria-label="Line spacing">
@@ -447,10 +447,10 @@ function ReadingLevelSection({
   ];
   return (
     <section className="mt-4">
-      <h3 className="text-[10.5px] font-semibold uppercase tracking-wider text-ink-500 mb-1">
+      <h3 className="text-[0.65625rem] font-semibold uppercase tracking-wider text-ink-500 mb-1">
         ADA Guide Reading Level
       </h3>
-      <p className="text-[11px] text-ink-500 mb-2 leading-snug">
+      <p className="text-[0.6875rem] text-ink-500 mb-2 leading-snug">
         Controls how Ada writes in conversations
       </p>
       <div

@@ -317,7 +317,7 @@ export default function Chat() {
           className="rounded-md border border-surface-200 bg-surface-100 p-4 sm:p-5 mb-6"
           aria-label="Preview of your previous conversation"
         >
-          <p className="font-mono text-[11px] uppercase tracking-wider text-ink-500 mb-2">
+          <p className="font-mono text-[0.6875rem] uppercase tracking-wider text-ink-500 mb-2">
             Last message from {lastMsg.role === 'assistant' ? 'Ada' : 'you'}
           </p>
           <p className="text-ink-900 whitespace-pre-wrap">{preview}</p>
@@ -872,7 +872,7 @@ function MessageBubble({ message }: { message: import('@/app/hooks/useChatSessio
       >
         <p
           className={
-            'font-mono text-[11px] font-semibold tracking-wide mb-1 ' +
+            'font-mono text-[0.6875rem] font-semibold tracking-wide mb-1 ' +
             (isUser ? 'text-accent-50' : 'text-ink-500')
           }
         >

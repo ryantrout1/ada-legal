@@ -389,9 +389,23 @@ body {
   letter-spacing: var(--a11y-letter-spacing);
 }
 :root[data-spacing] p,
-:root[data-spacing] li {
+:root[data-spacing] li,
+:root[data-spacing] dt,
+:root[data-spacing] dd {
   line-height: var(--a11y-line-height);
   letter-spacing: var(--a11y-letter-spacing);
+}
+/* Headings: still tighter than body (the original h1-h4 rule sets
+   line-height: 1.15) but bumped a touch when the user picks loose
+   spacing so headings don't feel cramped against airy body text. */
+:root[data-spacing="loose"] h1,
+:root[data-spacing="loose"] h2,
+:root[data-spacing="loose"] h3,
+:root[data-spacing="loose"] h4,
+:root[data-spacing="loose"] h5,
+:root[data-spacing="loose"] h6 {
+  line-height: 1.3;
+  letter-spacing: 0;
 }
 :root[data-spacing] p + p,
 :root[data-spacing] p + ul,
