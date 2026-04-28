@@ -385,7 +385,7 @@ export default function Chat() {
               aria-pressed={speechOutput.enabled}
               title={speechOutput.enabled ? 'Stop reading aloud' : 'Read Ada\u2019s messages aloud'}
               className={
-                'inline-flex items-center gap-1.5 h-9 px-3 rounded-md border text-xs font-medium transition-colors ' +
+                'inline-flex items-center gap-1.5 h-11 px-3.5 rounded-md border text-sm font-medium transition-colors ' +
                 (speechOutput.enabled
                   ? 'border-accent-500 bg-accent-50 text-accent-600'
                   : 'border-surface-200 text-ink-700 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100')
@@ -430,7 +430,7 @@ export default function Chat() {
             disabled={state.messages.length === 0}
             aria-label="Download this conversation as a text file"
             title="Download this conversation"
-            className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-surface-200 text-xs font-medium text-ink-700 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 h-11 px-3.5 rounded-md border border-surface-200 text-sm font-medium text-ink-700 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {/* Custom "Save" glyph: a page with two content lines
                 plus a save-tray beneath. Suggests "preserve this
@@ -465,7 +465,7 @@ export default function Chat() {
             disabled={state.initializing}
             aria-label="Start a new conversation"
             title="Start a new conversation"
-            className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-surface-200 text-xs font-medium text-ink-500 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 h-11 px-3.5 rounded-md border border-surface-200 text-sm font-medium text-ink-500 hover:border-surface-300 hover:text-ink-900 hover:bg-surface-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {/* Custom "New" glyph: an empty speech bubble (chat thread)
                 with a four-point spark at its upper-right, meaning
