@@ -256,7 +256,7 @@ export default function Privacy() {
         .
       </p>
 
-      <div className="text-sm text-ink-500 border-t border-surface-200 pt-6">
+      <div className="text-sm text-ink-700 border-t border-surface-200 pt-6">
         <p>Last updated: April 2026.</p>
         <p className="mt-2">
           This policy applies to <strong>adalegallink.com</strong> and
