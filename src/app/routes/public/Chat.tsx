@@ -125,16 +125,21 @@ export default function Chat() {
   }, [draft]);
 
   // Speak each new assistant message when TTS is enabled. Tracks the
-  // last-spoken message id so we don't re-speak on every render.
+  // last-spoken message id so we don't re-speak on every render. Gated
+  // on busy=false so we wait for the SSE stream to finish before
+  // speaking — speaking partial content as deltas arrive would re-fire
+  // every chunk and produce garbled audio.
   const lastSpokenIdRef = useRef<string | null>(null);
   useEffect(() => {
     if (!speechOutput.enabled) return;
+    if (state.busy) return;
     const lastMsg = [...state.messages].reverse().find((m) => m.role === 'assistant');
     if (!lastMsg) return;
+    if (!lastMsg.content.trim()) return;
     if (lastSpokenIdRef.current === lastMsg.id) return;
     lastSpokenIdRef.current = lastMsg.id;
     speechOutput.speak(lastMsg.content);
-  }, [state.messages, speechOutput]);
+  }, [state.messages, state.busy, speechOutput]);
 
   const locked = state.status !== 'active';
 
