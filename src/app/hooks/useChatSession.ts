@@ -330,6 +330,35 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
           const msg = await extractError(resp);
           throw new Error(msg || `Turn failed (${resp.status})`);
         }
+
+        // Defense-in-depth: if the server returned JSON despite our SSE
+        // Accept header (proxy stripped the header, server fell back, or
+        // similar edge case), parse the one-shot response and apply the
+        // same final-state path as the SSE `done` handler. This keeps
+        // the chat working even if the streaming transport breaks.
+        const responseContentType = resp.headers.get('Content-Type') ?? '';
+        if (!responseContentType.includes('text/event-stream')) {
+          const data = (await resp.json()) as TurnResponse;
+          setState((s) => ({
+            ...s,
+            messages: s.messages.map((m) =>
+              m.id === placeholderId
+                ? {
+                    ...m,
+                    content: data.assistant_message,
+                    tools: data.tools_used,
+                  }
+                : m,
+            ),
+            status: data.status,
+            readingLevel: data.reading_level,
+            busy: false,
+            error: null,
+            packageSlug: data.package_slug ?? s.packageSlug,
+          }));
+          return;
+        }
+
         if (!resp.body) {
           throw new Error('Stream unavailable');
         }
