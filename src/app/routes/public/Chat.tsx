@@ -671,102 +671,126 @@ export default function Chat() {
             <button
               type="button"
               onClick={clearPhoto}
-              className="text-ink-500 hover:text-accent-600 text-sm"
               aria-label="Remove attached photo"
-            >
-              Remove
-            </button>
-          </div>
-        )}
-
-        <div className="flex items-end gap-2">
-          <label
-            htmlFor="photo-upload"
-            className="flex-none cursor-pointer inline-flex items-center gap-1.5 rounded-md border border-surface-200 bg-surface-100 px-3 py-2.5 text-sm text-ink-700 hover:bg-surface-200 hover:text-accent-600 transition-colors focus-within:outline-2 focus-within:outline-accent-500"
-          >
-            <svg
-              aria-hidden="true"
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <rect x="2" y="3" width="12" height="10" rx="1" />
-              <circle cx="6" cy="7" r="1.5" />
-              <path d="M2 11l3-3 4 4" />
-            </svg>
-            Photo
-          </label>
-          <input
-            ref={fileInputRef}
-            id="photo-upload"
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            className="sr-only"
-            onChange={handlePhotoSelect}
-            disabled={state.busy || locked}
-          />
-
-          {speechInput.isSupported && (
-            <button
-              type="button"
-              onClick={() =>
-                speechInput.listening ? speechInput.stop() : speechInput.start()
-              }
-              disabled={state.busy || locked || state.initializing}
-              aria-label={
-                speechInput.listening
-                  ? 'Stop dictating (press to stop the microphone)'
-                  : 'Dictate your message (press to start the microphone)'
-              }
-              aria-pressed={speechInput.listening}
-              className={
-                'flex-none inline-flex items-center justify-center rounded-md border px-3 py-2.5 transition-colors ' +
-                (speechInput.listening
-                  ? 'border-danger-500 bg-danger-50 text-danger-500 animate-pulse motion-reduce:animate-none'
-                  : 'border-surface-200 bg-surface-100 text-ink-700 hover:bg-surface-200 hover:text-accent-600')
-              }
+              className="flex-none inline-flex items-center justify-center w-11 h-11 -mr-1 rounded-md text-ink-500 hover:bg-surface-200 hover:text-accent-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100 transition-colors"
             >
               <svg
-                aria-hidden="true"
-                width="18"
-                height="18"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
-                strokeLinejoin="round"
+                aria-hidden="true"
               >
-                <rect x="9" y="2" width="6" height="11" rx="3" />
-                <path d="M19 10v1a7 7 0 0 1-14 0v-1" />
-                <line x1="12" y1="19" x2="12" y2="22" />
-                <line x1="8" y1="22" x2="16" y2="22" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+                <line x1="6" y1="18" x2="18" y2="6" />
               </svg>
-              <span className="sr-only">
-                {speechInput.listening ? 'Listening' : 'Microphone'}
-              </span>
             </button>
-          )}
+          </div>
+        )}
 
-          <textarea
-            ref={inputRef}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={handleKeyDown}
-            rows={1}
-            placeholder={
-              locked
-                ? 'This conversation has wrapped up. Start a fresh one to keep going.'
-                : 'Tell Ada what happened...'
-            }
-            disabled={state.busy || locked || state.initializing}
-            aria-label="Your message"
-            className="flex-1 resize-none rounded-md border border-surface-200 bg-white px-3 py-2.5 text-ink-900 placeholder-ink-500 disabled:bg-surface-100 disabled:text-ink-500"
-            style={{ minHeight: '44px', maxHeight: '200px', overflowY: 'hidden' }}
-          />
+        {/* Textarea on its own row so it can take the full width on
+            mobile. Action buttons live in a row beneath it. This is
+            the entry point for the most important interaction on the
+            site — describe what happened — and on a phone it needs to
+            be roomy enough to actually type into. */}
+        <textarea
+          ref={inputRef}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={handleKeyDown}
+          rows={1}
+          placeholder={
+            locked
+              ? 'This conversation has wrapped up. Start a fresh one to keep going.'
+              : 'Tell Ada what happened...'
+          }
+          disabled={state.busy || locked || state.initializing}
+          aria-label="Your message"
+          className="w-full resize-none rounded-md border border-surface-200 bg-white px-3 py-2.5 text-ink-900 placeholder-ink-500 disabled:bg-surface-100 disabled:text-ink-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50 transition-shadow"
+          style={{ minHeight: '44px', maxHeight: '200px', overflowY: 'hidden' }}
+        />
+
+        {/* Action row: Photo + Mic on the left, Send on the right.
+            Photo's text label collapses below sm so the icon stands
+            alone on phones — same pattern the mic button already
+            uses. The hidden file input stays inside the label so the
+            htmlFor association keeps working. */}
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="photo-upload"
+              className="flex-none cursor-pointer inline-flex items-center justify-center gap-1.5 rounded-md border border-surface-200 bg-surface-100 px-3 py-2.5 text-sm text-ink-700 hover:bg-surface-200 hover:text-accent-600 transition-colors focus-within:outline-2 focus-within:outline-accent-500"
+            >
+              <svg
+                aria-hidden="true"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <rect x="2" y="3" width="12" height="10" rx="1" />
+                <circle cx="6" cy="7" r="1.5" />
+                <path d="M2 11l3-3 4 4" />
+              </svg>
+              <span className="sr-only sm:not-sr-only">Photo</span>
+            </label>
+            <input
+              ref={fileInputRef}
+              id="photo-upload"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="sr-only"
+              onChange={handlePhotoSelect}
+              disabled={state.busy || locked}
+            />
+
+            {speechInput.isSupported && (
+              <button
+                type="button"
+                onClick={() =>
+                  speechInput.listening ? speechInput.stop() : speechInput.start()
+                }
+                disabled={state.busy || locked || state.initializing}
+                aria-label={
+                  speechInput.listening
+                    ? 'Stop dictating (press to stop the microphone)'
+                    : 'Dictate your message (press to start the microphone)'
+                }
+                aria-pressed={speechInput.listening}
+                className={
+                  'flex-none inline-flex items-center justify-center rounded-md border px-3 py-2.5 transition-colors ' +
+                  (speechInput.listening
+                    ? 'border-danger-500 bg-danger-50 text-danger-500 animate-pulse motion-reduce:animate-none'
+                    : 'border-surface-200 bg-surface-100 text-ink-700 hover:bg-surface-200 hover:text-accent-600')
+                }
+              >
+                <svg
+                  aria-hidden="true"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="9" y="2" width="6" height="11" rx="3" />
+                  <path d="M19 10v1a7 7 0 0 1-14 0v-1" />
+                  <line x1="12" y1="19" x2="12" y2="22" />
+                  <line x1="8" y1="22" x2="16" y2="22" />
+                </svg>
+                <span className="sr-only">
+                  {speechInput.listening ? 'Listening' : 'Microphone'}
+                </span>
+              </button>
+            )}
+          </div>
 
           <button
             type="submit"
