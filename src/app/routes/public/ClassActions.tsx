@@ -160,7 +160,7 @@ export default function ClassActions() {
             </p>
             <Link
               to="/chat"
-              className="inline-block px-5 py-2 rounded-md bg-accent-500 text-white font-medium hover:bg-accent-600"
+              className="inline-flex items-center px-5 py-3 rounded-md bg-accent-500 text-white font-medium hover:bg-accent-600 transition-colors"
             >
               Talk to Ada
             </Link>
