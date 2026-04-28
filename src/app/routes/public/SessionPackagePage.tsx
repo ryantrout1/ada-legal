@@ -290,7 +290,7 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
                 <dd>
                   <a
                     href={`mailto:${pkg.matchedListing.firmEmail}`}
-                    className="text-accent-600 underline underline-offset-2 hover:text-accent-700"
+                    className="text-accent-500 underline underline-offset-2 hover:text-accent-600"
                     aria-label={`Email ${pkg.matchedListing.firmName}`}
                   >
                     {pkg.matchedListing.firmEmail}
@@ -306,7 +306,7 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
                 <dd>
                   <a
                     href={`tel:${pkg.matchedListing.firmPhone.replace(/[^\d+]/g, '')}`}
-                    className="text-accent-600 underline underline-offset-2 hover:text-accent-700"
+                    className="text-accent-500 underline underline-offset-2 hover:text-accent-600"
                     aria-label={`Call ${pkg.matchedListing.firmName}`}
                   >
                     {pkg.matchedListing.firmPhone}
@@ -347,7 +347,7 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
           was class_action AND no specific listing was bound. */}
       {pkg.classActionPlaceholder && !pkg.matchedListing && (
         <section
-          className="mb-10 bg-accent-50 border border-accent-200 rounded px-4 py-3"
+          className="mb-10 bg-accent-50 border border-accent-500 rounded px-4 py-3"
           aria-labelledby="pkg-class-action-note"
         >
           <h2

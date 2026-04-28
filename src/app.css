@@ -51,6 +51,7 @@
   --color-warning-500: #8C5E19;
   --color-warning-50:  #F4EBD9;
   --color-danger-500:  #8C2E1F;
+  --color-danger-100:  #EBC8C2;   /* hover tier — used by retry buttons */
   --color-danger-50:   #F4E1DD;
 }
 
@@ -265,6 +266,7 @@ body {
   --color-warning-500: #D4A04D;
   --color-warning-50:  #2A2113;
   --color-danger-500:  #D4695A;
+  --color-danger-100:  #3D1F1A;
   --color-danger-50:   #2A1714;
 }
 
