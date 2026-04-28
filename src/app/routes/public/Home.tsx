@@ -43,13 +43,13 @@ export default function Home() {
         </h1>
         <div className="mt-8 space-y-5 max-w-2xl text-lg sm:text-xl text-ink-700 leading-relaxed">
           <p>
-            I'm Ada. If a business, workplace, or public place didn't give you
-            the access you're owed, I'm here to help you figure out what
-            happened and what to do next.
+            I'm Ada. If a barrier kept you out, at a business, on a
+            website, anywhere a place was supposed to be open to you,
+            I'm here to help you figure out what to do.
           </p>
           <p>
-            Tell me what happened, in your own words. I'll listen. Then we'll
-            take it from there.
+            Tell me what happened, in your own words. I'll listen.
+            Then we'll take it from there.
           </p>
         </div>
 

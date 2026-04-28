@@ -217,14 +217,28 @@ function buildGreeting(
 }
 
 function baseGreeting(level: ReadingLevel): string {
+  // Voice principle (post-2026-04 copy pass): the SUBJECT is the
+  // barrier, not the disability. Earlier wording leaned 'because of a
+  // disability' / 'access you're owed' which centered the user's
+  // condition. The barrier framing centers the thing that shouldn't
+  // have been there. Same warmth; different stance.
+  //
+  // Simple keeps plain causal language ('something got in your way')
+  // so users in distress reach for the words naturally. Standard and
+  // Professional name 'barrier' explicitly because the bandwidth is
+  // there and the framing lands harder.
+  //
+  // Standard also names DIGITAL barriers explicitly so the scope
+  // honesty section on the home page lines up with what Ada says
+  // when she opens the conversation.
   switch (level) {
     case 'simple':
-      return `I'm Ada. If a place didn't let you in or wouldn't help you because of a disability, I can help. Take your time. Tell me what happened.`;
+      return `I'm Ada. If a place didn't let you in, or wouldn't help, because something got in your way, I can help. Take your time. Tell me what happened.`;
     case 'professional':
-      return `I'm Ada. If a business, public entity, or employer failed to provide access or accommodations required under the ADA, I can help you figure out the title it falls under and the appropriate next step. Tell me what happened.`;
+      return `I'm Ada. If you encountered a barrier, physical or digital, at a place covered by the ADA, I can help you identify the title that applies and the appropriate next step. Tell me what happened.`;
     case 'standard':
     default:
-      return `I'm Ada. If a business, workplace, or public place didn't give you the access you're owed, I'm here to help you figure out what happened and what to do next. Take your time. Tell me what happened.`;
+      return `I'm Ada. If a barrier kept you out, at a business, on a website, anywhere a place was supposed to be open to you, I'm here to help you figure out what to do. Take your time. Tell me what happened.`;
   }
 }
 
