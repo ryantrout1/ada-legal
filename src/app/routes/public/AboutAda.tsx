@@ -213,7 +213,7 @@ export default function AboutAda() {
               href="https://www.bl.uk/people/ada-lovelace"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+              className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
             >
               Ada Lovelace at the British Library
             </a>{' '}
@@ -224,7 +224,7 @@ export default function AboutAda() {
               href="https://www.ada.gov/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+              className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
             >
               ADA.gov
             </a>{' '}
@@ -236,7 +236,7 @@ export default function AboutAda() {
               href="https://www.archives.gov/news/articles/capitol-crawl-30th-anniversary"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+              className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
             >
               The Capitol Crawl, 30th anniversary
             </a>{' '}
