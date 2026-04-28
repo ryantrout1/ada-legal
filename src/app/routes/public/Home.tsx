@@ -119,11 +119,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Belief callout */}
+      {/* Belief callout — frames the barrier as the subject of Ada's
+          work, not the disability. Earlier wording ('Being dismissed
+          is part of the injury') drifted toward the medical model
+          (disability as wound + dismissal as compounding injury).
+          The barrier framing is the one the disability community
+          has been pushing toward for fifty years: the disability
+          isn't the injury; the barrier is. */}
       <section className="max-w-5xl mx-auto px-5 sm:px-8 pb-16 sm:pb-20">
         <blockquote className="border-l-4 border-accent-500 pl-6 py-2 max-w-3xl">
           <p className="font-display text-2xl sm:text-3xl text-ink-900 leading-tight">
-            Being dismissed is part of the injury. I won't add to it.
+            The barrier was real. You don't have to convince me it was.
           </p>
         </blockquote>
       </section>
