@@ -208,6 +208,47 @@ export default function Home() {
         </div>
       </section>
 
+      {/* About Ada — origin story teaser. Sits between the trust row
+          and the final CTA so the visitor reaches it after they
+          understand what the product does, but before the final ask.
+          Quiet pull-quote treatment so it doesn't compete with the
+          hero or the closing CTA. */}
+      <section className="max-w-5xl mx-auto px-5 sm:px-8 pb-16 sm:pb-20">
+        <div className="border-t border-surface-200 pt-12 sm:pt-16">
+          <p className="font-mono text-xs sm:text-sm uppercase tracking-[0.18em] text-accent-500 mb-5">
+            About the name
+          </p>
+          <h2 className="font-display text-3xl sm:text-4xl leading-[1.1] tracking-tight text-ink-900 max-w-3xl mb-6">
+            Why she's called <span className="italic text-accent-600">Ada.</span>
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-5 max-w-4xl text-ink-700 leading-relaxed">
+            <p>
+              The assistant on this site is named in honor of two
+              things. <span className="font-medium text-ink-900">Ada Lovelace</span>,
+              the 19th-century mathematician who described what
+              computers could become a century before anyone built
+              one. And the{' '}
+              <span className="font-medium text-ink-900">
+                Americans with Disabilities Act
+              </span>
+              , the 1990 law that finally said nobody gets shut out.
+            </p>
+            <p>
+              She holds both names because her job is the work both
+              names point to: making sure technology and the law
+              actually deliver on the promise of access.
+            </p>
+          </div>
+          <Link
+            to="/about-ada"
+            className="mt-8 inline-flex items-center gap-2 text-accent-500 hover:text-accent-600 font-medium underline underline-offset-4 decoration-1"
+          >
+            Read the full story
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </section>
+
       {/* Final CTA */}
       <section className="max-w-5xl mx-auto px-5 sm:px-8 pb-24">
         <div className="border-l-4 border-accent-500 pl-6 py-4 max-w-3xl">
