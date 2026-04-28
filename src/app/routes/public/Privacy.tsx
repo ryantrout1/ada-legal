@@ -214,7 +214,7 @@ export default function Privacy() {
         To exercise any of these rights, email{' '}
         <a
           href="mailto:privacy@adalegallink.com"
-          className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+          className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
         >
           privacy@adalegallink.com
         </a>
@@ -249,7 +249,7 @@ export default function Privacy() {
         Questions about privacy:{' '}
         <a
           href="mailto:privacy@adalegallink.com"
-          className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
+          className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
         >
           privacy@adalegallink.com
         </a>
