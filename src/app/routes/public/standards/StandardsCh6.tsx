@@ -77,7 +77,7 @@ export default function StandardsCh6() {
       chapterNum={6}
       title="Plumbing Elements & Facilities"
       range="§601–612"
-      overview={<p>Chapter 6 covers all <strong>plumbing-related elements</strong> — drinking fountains, toilet rooms, water closets, urinals, lavatories, bathtubs, showers, grab bars, seats, and accessories. Restroom accessibility is one of the most commonly cited areas in ADA complaints, making this chapter essential for any facility.</p>}
+      overview={<p>Chapter 6 covers all <strong>plumbing-related elements</strong> — drinking fountains, toilet rooms, water closets, urinals, lavatories, bathtubs, showers, grab bars, seats, and accessories. A restroom that doesn't work is the kind of barrier that ends a workday, cuts a trip short, or keeps someone from going somewhere they wanted to be. It's one of the most commonly cited areas in ADA complaints for that reason.</p>}
       sections={sections}
     />
   );
