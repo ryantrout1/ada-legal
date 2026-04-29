@@ -22,9 +22,18 @@
  * Ref: docs/ARCHITECTURE.md §16 privacy
  */
 
+import { Breadcrumbs } from '../../components/Breadcrumbs.js';
+
 export default function Privacy() {
   return (
     <section className="max-w-2xl mx-auto px-5 sm:px-8 py-10 sm:py-16">
+      <Breadcrumbs
+        items={[
+          { label: 'Home', to: '/' },
+          { label: 'Privacy' },
+        ]}
+        className="mb-8"
+      />
       <p className="font-mono text-xs sm:text-sm uppercase tracking-[0.18em] text-accent-500 mb-5">
         Privacy policy
       </p>

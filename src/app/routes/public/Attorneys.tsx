@@ -26,6 +26,7 @@ import {
   useAttorneys,
   type AttorneyDisplay,
 } from '../../hooks/useAttorneys.js';
+import { Breadcrumbs } from '../../components/Breadcrumbs.js';
 
 export default function Attorneys() {
   const { attorneys, facets, filters, setFilters, loading, error, reset } = useAttorneys();
@@ -60,6 +61,13 @@ export default function Attorneys() {
     <section className="max-w-5xl mx-auto px-5 sm:px-8 py-8 sm:py-12">
       {/* Header */}
       <header className="mb-8">
+        <Breadcrumbs
+          items={[
+            { label: 'Home', to: '/' },
+            { label: 'Attorneys' },
+          ]}
+          className="mb-6"
+        />
         <p className="font-mono text-xs uppercase tracking-[0.18em] text-accent-500 mb-4">
           Attorney directory
         </p>

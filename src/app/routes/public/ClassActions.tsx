@@ -18,6 +18,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { Breadcrumbs } from '../../components/Breadcrumbs.js';
 
 type Category = 'ada_title_i' | 'ada_title_ii' | 'ada_title_iii';
 
@@ -94,6 +95,13 @@ export default function ClassActions() {
       </Helmet>
 
       <section className="max-w-5xl mx-auto px-5 sm:px-8 pt-12 pb-8 sm:pt-16 sm:pb-12">
+        <Breadcrumbs
+          items={[
+            { label: 'Home', to: '/' },
+            { label: 'Class actions' },
+          ]}
+          className="mb-6"
+        />
         <h1 className="font-display text-4xl sm:text-5xl text-ink-900 mb-4 leading-tight">
           Class actions
         </h1>

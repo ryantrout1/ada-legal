@@ -34,6 +34,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { GUIDE_TOPICS } from './standardsGuideIndex.js';
 import { CHAPTER_META } from './chapterMeta.js';
+import { Breadcrumbs } from '../../components/Breadcrumbs.js';
 
 interface ChapterLink {
   num: number;
@@ -94,6 +95,13 @@ export default function StandardsGuide() {
 
       <main id="main" className="max-w-5xl mx-auto px-5 sm:px-8 py-16">
         <header className="mb-12">
+          <Breadcrumbs
+            items={[
+              { label: 'Home', to: '/' },
+              { label: 'Standards Guide' },
+            ]}
+            className="mb-6"
+          />
           <p
             className="text-xs uppercase tracking-wider font-mono mb-3"
             style={{ color: 'var(--section-label)' }}
