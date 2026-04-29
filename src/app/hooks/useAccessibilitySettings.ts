@@ -39,11 +39,30 @@ export type FontFamily = 'default' | 'atkinson' | 'opendyslexic' | 'lexend';
 export type TextSize = 'small' | 'medium' | 'large';
 export type Spacing = 'tight' | 'default' | 'loose';
 
+/**
+ * UndoWindow — how long the chat keeps a "Sent · Undo (Xs)" affordance
+ * after the user sends a message. Off disables the feature entirely
+ * (message goes immediately, no recall). 5 / 8 / 10 are values in
+ * seconds.
+ *
+ * Default is 8s. Picked because (a) 5s is too tight for the audience
+ * (motor difficulties, cognitive load, distress sending — all benefit
+ * from more time to catch a mistake) and (b) 10s+ starts feeling like
+ * dead air to users who aren't using undo. 8s is the sweet spot for
+ * this audience.
+ *
+ * Only affects perceived latency for users who watch the input area
+ * after sending — most users see the typing indicator and look away
+ * to read the response, so the 8s pre-pause is invisible to them.
+ */
+export type UndoWindow = 'off' | '5' | '8' | '10';
+
 export interface AccessibilitySettings {
   display: DisplayMode;
   font: FontFamily;
   size: TextSize;
   spacing: Spacing;
+  undoWindow: UndoWindow;
 }
 
 export const DEFAULT_SETTINGS: AccessibilitySettings = {
@@ -51,6 +70,7 @@ export const DEFAULT_SETTINGS: AccessibilitySettings = {
   font: 'default',
   size: 'medium',
   spacing: 'default',
+  undoWindow: '8',
 };
 
 const STORAGE_KEY = 'ada-a11y';
@@ -101,6 +121,7 @@ export interface UseAccessibilitySettingsResult {
   setFont: (value: FontFamily) => void;
   setSize: (value: TextSize) => void;
   setSpacing: (value: Spacing) => void;
+  setUndoWindow: (value: UndoWindow) => void;
   reset: () => void;
 }
 
@@ -138,9 +159,24 @@ export function useAccessibilitySettings(): UseAccessibilitySettingsResult {
     setFont: (value) => update({ font: value }),
     setSize: (value) => update({ size: value }),
     setSpacing: (value) => update({ spacing: value }),
+    setUndoWindow: (value) => update({ undoWindow: value }),
     reset: () => {
       writeStorage(DEFAULT_SETTINGS);
       setSettings(DEFAULT_SETTINGS);
     },
   };
+}
+
+/**
+ * Convert UndoWindow to a milliseconds duration. 'off' returns 0 which
+ * the chat sendMessage path treats as "skip the undo affordance, send
+ * immediately". Used by useChatSession.
+ */
+export function undoWindowToMs(value: UndoWindow): number {
+  switch (value) {
+    case 'off': return 0;
+    case '5': return 5_000;
+    case '8': return 8_000;
+    case '10': return 10_000;
+  }
 }

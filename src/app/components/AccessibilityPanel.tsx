@@ -47,6 +47,7 @@ import {
   type FontFamily,
   type Spacing,
   type TextSize,
+  type UndoWindow,
 } from '../hooks/useAccessibilitySettings.js';
 import { useReadingLevel } from './standards/ReadingLevelContext.js';
 
@@ -294,6 +295,10 @@ export function AccessibilityPanel({ readingLevel }: AccessibilityPanelProps) {
                 onChange={effectiveReadingLevel.onChange}
               />
             )}
+            <UndoSendSection
+              value={a11y.settings.undoWindow}
+              onChange={a11y.setUndoWindow}
+            />
             <button
               type="button"
               onClick={() => {
@@ -604,6 +609,48 @@ function ReadingLevelSection({
             onClick={() => onChange(l.value)}
           >
             <span className="text-xs font-semibold py-1">{l.label}</span>
+          </OptionButton>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Undo send section ─────────────────────────────────────────────────────
+
+function UndoSendSection({
+  value,
+  onChange,
+}: {
+  value: UndoWindow;
+  onChange: (v: UndoWindow) => void;
+}) {
+  const OPTIONS: Array<{ value: UndoWindow; label: string }> = [
+    { value: 'off', label: 'Off' },
+    { value: '5', label: '5s' },
+    { value: '8', label: '8s' },
+    { value: '10', label: '10s' },
+  ];
+  return (
+    <section className="mt-4">
+      <h3 className="text-[0.65625rem] font-semibold uppercase tracking-wider text-ink-500 mb-1">
+        Undo Send Window
+      </h3>
+      <p className="text-[0.6875rem] text-ink-500 mb-2 leading-snug">
+        How long you have to take back a message after sending it
+      </p>
+      <div
+        className="grid grid-cols-4 gap-1.5"
+        role="group"
+        aria-label="Undo send window length"
+      >
+        {OPTIONS.map((o) => (
+          <OptionButton
+            key={o.value}
+            selected={value === o.value}
+            onClick={() => onChange(o.value)}
+          >
+            <span className="text-xs font-semibold py-1">{o.label}</span>
           </OptionButton>
         ))}
       </div>
