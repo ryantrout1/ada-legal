@@ -735,8 +735,9 @@ function dispatchFrame(frame: string, handlers: SseHandlers): void {
  *
  * The pathname we construct ("photos/<session>/<ts>.<ext>") is
  * session-namespaced so moderation/cleanup can prefix-match later.
- * addRandomSuffix is disabled on the server so the pathname we pass
- * is the pathname we get back. Content type is derived from the
+ * The server appends a random suffix (addRandomSuffix=true) to
+ * prevent same-millisecond collision-overwrites; the canonical URL
+ * comes back via result.url. Content type is derived from the
  * file's MIME type.
  */
 async function uploadPhoto(sessionId: string, file: File): Promise<string> {

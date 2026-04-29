@@ -31,6 +31,8 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
+import { hashAnonToken, parseAnonCookie } from '../../src/lib/anonCookie.js';
+import { makeClientsFromEnv } from '../_shared.js';
 
 const ALLOWED_CONTENT_TYPES = [
   'image/jpeg',
@@ -40,6 +42,12 @@ const ALLOWED_CONTENT_TYPES = [
 ];
 
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024; // 10 MB
+
+// @vercel/blob/client body discriminator. The same endpoint serves
+// both the browser-driven token-gen call AND the Vercel-Blob-driven
+// upload-completed callback; we only auth-gate the former. The latter
+// is HMAC-signed by Vercel Blob and verified inside handleUpload().
+const BLOB_EVENT_GENERATE_TOKEN = 'blob.generate-client-token';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -57,24 +65,57 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // `body` to discriminate between token-gen and completion callbacks.
     const body = req.body as HandleUploadBody;
 
+    // Auth gate (A2). Two distinct paths land on this handler:
+    //
+    //   1. Browser → us: body.type === 'blob.generate-client-token'.
+    //      Carries the user's `ada_anon` cookie via same-origin fetch.
+    //      We require a valid cookie that resolves to an anon_sessions
+    //      row before minting an upload token. Without this gate,
+    //      anyone on the internet can mint a 10MB token.
+    //
+    //   2. Vercel Blob → us: body.type === 'blob.upload-completed'.
+    //      Server-to-server callback. No user cookie. Vercel Blob
+    //      signs the request body with the read-write token; the
+    //      handleUpload() call below verifies that signature and
+    //      throws on mismatch. We skip the cookie check on this
+    //      branch — it's not abusable.
+    let resolvedAnonSessionId: string | null = null;
+    if (body?.type === BLOB_EVENT_GENERATE_TOKEN) {
+      const cookieHeader = req.headers['cookie'] ?? null;
+      const anonToken = parseAnonCookie(cookieHeader);
+      if (!anonToken) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+      const tokenHash = await hashAnonToken(anonToken);
+      const clients = makeClientsFromEnv();
+      const anonSessionId = await clients.db.findAnonSessionByHash(tokenHash);
+      if (!anonSessionId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+      resolvedAnonSessionId = anonSessionId;
+    }
+
     const jsonResponse = await handleUpload({
       body,
       request: webRequest,
       onBeforeGenerateToken: async (pathname, _clientPayload) => {
-        // We accept any anon-cookie-holding browser session. The
-        // anon-cookie scheme is sufficient for intake photos — these
-        // are not sensitive documents and the blob URLs are
-        // unguessable random paths.
-        //
-        // pathname is constructed by the browser and arrives as
-        // "photos/<session_id>/<timestamp>.<ext>". We trust the
-        // caller to namespace, but we lock down the content type
-        // and size via the options returned below.
+        // Auth already enforced above (the request reached this
+        // callback only when the cookie resolved to a real anon
+        // session). pathname is browser-supplied — we keep the
+        // existing 'photos/<sessionId>/...' namespacing for
+        // moderation/cleanup prefix matches, and let Vercel Blob
+        // append a random suffix so two same-millisecond uploads
+        // can't overwrite each other. The browser already uses
+        // result.url from upload(), so the canonical URL is
+        // returned correctly even with the random suffix.
         return {
           allowedContentTypes: ALLOWED_CONTENT_TYPES,
-          addRandomSuffix: false,
+          addRandomSuffix: true,
           maximumSizeInBytes: MAX_PHOTO_BYTES,
-          tokenPayload: JSON.stringify({ pathname }),
+          tokenPayload: JSON.stringify({
+            pathname,
+            anonSessionId: resolvedAnonSessionId,
+          }),
         };
       },
       onUploadCompleted: async ({
