@@ -111,6 +111,7 @@ export default function Attorneys() {
             <select
               value={filters.state ?? ''}
               onChange={handleStateChange}
+              autoComplete="address-level1"
               className="w-full sm:w-auto rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900 sm:min-w-[120px]"
             >
               <option value="">All states</option>
@@ -130,6 +131,7 @@ export default function Attorneys() {
               value={filters.city}
               onChange={handleCityChange}
               placeholder="Exact match"
+              autoComplete="address-level2"
               className="w-full sm:w-auto rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900 sm:min-w-[180px] placeholder-ink-500"
             />
           </label>
