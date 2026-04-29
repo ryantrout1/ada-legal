@@ -31,6 +31,7 @@ import Accessibility from './routes/public/Accessibility.js';
 import AboutAda from './routes/public/AboutAda.js';
 import Privacy from './routes/public/Privacy.js';
 import Terms from './routes/public/Terms.js';
+import Glossary from './routes/public/Glossary.js';
 import SessionPackagePage from './routes/public/SessionPackagePage.js';
 import StandardsGuide from './routes/public/StandardsGuide.js';
 import StandardsChapter from './routes/public/StandardsChapter.js';
@@ -76,6 +77,7 @@ export default function App() {
           <Route path="/about-ada" element={<AboutAda />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/glossary" element={<Glossary />} />
           <Route path="/s/:slug" element={<SessionPackagePage />} />
           <Route path="/standards-guide" element={<StandardsGuide />} />
           <Route
