@@ -76,6 +76,10 @@ export default function StandardsCh8() {
       chapterNum={8}
       title="Special Rooms, Spaces & Elements"
       range="§801–811"
+      tldr={<>
+        <p style={{ margin: 0 }}><strong>What this chapter covers:</strong> Rules for specific spaces — assembly rooms, dressing rooms, medical facilities, courtrooms, and swimming pools.</p>
+        <p style={{ margin: '8px 0 0' }}><strong>The most important thing:</strong> Each space type has its own rules because each one is used differently. A courtroom isn't a dressing room.</p>
+      </>}
       overview={<p>Chapter 8 addresses accessibility for <strong>specific types of rooms and spaces</strong> — assembly areas, dressing rooms, medical facilities, detention cells, courtrooms, transportation facilities, and swimming pools. Each space type has unique requirements based on how people use it.</p>}
       sections={sections}
     />

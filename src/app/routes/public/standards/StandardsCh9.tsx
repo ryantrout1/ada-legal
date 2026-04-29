@@ -45,6 +45,10 @@ export default function StandardsCh9() {
       chapterNum={9}
       title="Built-In Elements"
       range="§901–904"
+      tldr={<>
+        <p style={{ margin: 0 }}><strong>What this chapter covers:</strong> Tables, counters, benches, checkout aisles, and food service lines that people interact with at fixed heights.</p>
+        <p style={{ margin: '8px 0 0' }}><strong>The most important thing:</strong> Counter and table heights show up in almost every retail and dining ADA complaint. They're easy to get wrong.</p>
+      </>}
       overview={<p>Chapter 9 covers <strong>built-in furnishings and fixtures</strong> — the tables, counters, benches, checkout aisles, and food service lines that people interact with inside buildings. These elements are frequently cited in ADA complaints, especially in restaurants, retail stores, and service counters where a wheelchair user must interact at counter height.</p>}
       sections={sections}
     />

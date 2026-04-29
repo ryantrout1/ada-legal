@@ -57,6 +57,10 @@ export default function StandardsCh2() {
       chapterNum={2}
       title="Scoping Requirements"
       range="§201–243"
+      tldr={<>
+        <p style={{ margin: 0 }}><strong>What this chapter covers:</strong> How many accessible items you need (parking spots, restrooms, hotel rooms) and where they're required.</p>
+        <p style={{ margin: '8px 0 0' }}><strong>The most important thing:</strong> This is the chapter that answers "Do I need one? How many?" — the technical specs are in later chapters.</p>
+      </>}
       overview={<p>Chapter 2 is the <strong>most important chapter</strong> in the Standards. It tells you <strong>how many</strong> accessible elements you need and <strong>where</strong> they're required. While later chapters describe the technical requirements (how wide, how high, what slope), this chapter answers: "Do I need one? How many?" It includes the key scoping tables for parking, restrooms, assembly areas, and guest rooms.</p>}
       sections={sections}
     />

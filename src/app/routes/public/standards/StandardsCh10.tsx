@@ -73,6 +73,10 @@ export default function StandardsCh10() {
       chapterNum={10}
       title="Recreation Facilities"
       range="§1001–1010"
+      tldr={<>
+        <p style={{ margin: 0 }}><strong>What this chapter covers:</strong> Amusement rides, boats, exercise equipment, fishing piers, golf, miniature golf, play areas, swimming pools, and shooting ranges.</p>
+        <p style={{ margin: '8px 0 0' }}><strong>The most important thing:</strong> Recreation isn't optional. Same rights to play, exercise, swim, and fish apply.</p>
+      </>}
       overview={<p>Chapter 10 covers accessibility for <strong>recreational facilities</strong> — amusement rides, boating facilities, exercise equipment, fishing piers, golf courses, miniature golf, play areas, swimming pools, and shooting ranges. These standards ensure that people with disabilities can enjoy the same recreational opportunities as everyone else.</p>}
       sections={sections}
     />

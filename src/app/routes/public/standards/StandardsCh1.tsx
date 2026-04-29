@@ -45,6 +45,10 @@ export default function StandardsCh1() {
       chapterNum={1}
       title="Application & Administration"
       range="§101–106"
+      tldr={<>
+        <p style={{ margin: 0 }}><strong>What this chapter covers:</strong> The "instructions for reading" the rest of the Standards — what terms mean, how measurements work, when alternatives are allowed.</p>
+        <p style={{ margin: '8px 0 0' }}><strong>The most important thing:</strong> This chapter alone won't tell you whether something is accessible. It tells you how to use the rest of the Standards.</p>
+      </>}
       overview={<p>Chapter 1 sets the foundation for the entire 2010 ADA Standards for Accessible Design. It establishes the <strong>purpose, scope, and definitions</strong> that apply to every other chapter. Think of it as the "instructions" for reading the rest of the Standards — it defines what terms mean, how measurements work, and when alternative approaches are allowed.</p>}
       sections={sections}
     />

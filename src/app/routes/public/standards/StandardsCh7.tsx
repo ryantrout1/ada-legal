@@ -59,6 +59,10 @@ export default function StandardsCh7() {
       chapterNum={7}
       title="Communication Elements & Features"
       range="§701–708"
+      tldr={<>
+        <p style={{ margin: 0 }}><strong>What this chapter covers:</strong> How information reaches people — signs, fire alarms, telephones, warning textures on the ground, listening systems, and ATMs.</p>
+        <p style={{ margin: '8px 0 0' }}><strong>The most important thing:</strong> Accessibility isn't only physical. It's also whether you can hear the alarm, read the sign, or know which floor the elevator is on.</p>
+      </>}
       overview={<p>Chapter 7 covers elements that help people <strong>receive and exchange information</strong> — signs, fire alarms, telephones, detectable warnings, assistive listening systems, ATMs and fare machines, and two-way communication systems. The barrier here isn't always physical. It's the difference between hearing a fire alarm and not, between reading a sign and not, between knowing your bus is coming and not. These requirements exist so that information actually reaches everyone it's meant for.</p>}
       sections={sections}
     />

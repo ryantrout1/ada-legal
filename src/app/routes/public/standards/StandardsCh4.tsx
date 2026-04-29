@@ -64,6 +64,10 @@ export default function StandardsCh4() {
       chapterNum={4}
       title="Accessible Routes"
       range="§401–410"
+      tldr={<>
+        <p style={{ margin: 0 }}><strong>What this chapter covers:</strong> Getting from one place to another — walking paths, doors, ramps, curb ramps, elevators, lifts, and stairs.</p>
+        <p style={{ margin: '8px 0 0' }}><strong>The most important thing:</strong> If the route isn't accessible, nothing else in the building matters. One of the most-cited problems in ADA reviews.</p>
+      </>}
       overview={<p>Chapter 4 covers everything about <strong>getting from one place to another</strong> within a building or site. Walking surfaces, doors, ramps, curb ramps, elevators, platform lifts, and stairways — these are the elements that make up an accessible route. This is one of the most commonly cited chapters in ADA compliance reviews because if the route isn't accessible, nothing else matters.</p>}
       sections={sections}
     />

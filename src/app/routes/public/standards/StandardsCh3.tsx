@@ -69,6 +69,10 @@ export default function StandardsCh3() {
       chapterNum={3}
       title="Building Blocks"
       range="§301–309"
+      tldr={<>
+        <p style={{ margin: 0 }}><strong>What this chapter covers:</strong> The basic measurements every other chapter relies on — floor surfaces, turning space, how high things can be reached.</p>
+        <p style={{ margin: '8px 0 0' }}><strong>The most important thing:</strong> These numbers show up everywhere. If they're wrong, almost everything else is too.</p>
+      </>}
       overview={<p>Chapter 3 defines the <strong>fundamental building blocks</strong> of accessibility that are referenced throughout all other chapters. Floor surfaces, turning spaces, clear floor space, reach ranges, and operable parts — these are the measurements and requirements that form the basis of every accessible design. Understand these, and the rest of the Standards make much more sense.</p>}
       sections={sections}
     />

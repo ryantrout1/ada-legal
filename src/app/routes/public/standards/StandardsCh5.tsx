@@ -47,6 +47,10 @@ export default function StandardsCh5() {
       chapterNum={5}
       title="General Site & Building Elements"
       range="§501–505"
+      tldr={<>
+        <p style={{ margin: 0 }}><strong>What this chapter covers:</strong> What you encounter before going inside — parking spaces, drop-off zones, outdoor stairs, and handrails.</p>
+        <p style={{ margin: '8px 0 0' }}><strong>The most important thing:</strong> Accessibility starts in the parking lot. If a wheelchair user can't get out of their car, the rest doesn't help.</p>
+      </>}
       overview={<p>Chapter 5 covers the <strong>site-level elements</strong> people encounter before and as they approach a building — parking spaces, passenger loading zones, stairways, and handrails. These requirements work together with Chapter 4 (Accessible Routes) to ensure the full journey from parking lot to building entrance to upper floors is accessible.</p>}
       sections={sections}
     />
