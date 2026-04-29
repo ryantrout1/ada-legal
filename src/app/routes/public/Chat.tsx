@@ -57,6 +57,13 @@ export default function Chat() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoFilename, setPhotoFilename] = useState<string | null>(null);
+  // Error message for photo selection issues (size limit, processing
+  // failure). Rendered inline as an aria-live banner above the textarea
+  // — replaces a native alert() that was inconsistent across screen
+  // readers and broke the conversational tone of the chat surface.
+  // Cleared when the user picks a different photo or dismisses the
+  // banner.
+  const [photoError, setPhotoError] = useState<string | null>(null);
 
   // Pending destructive action awaiting user confirmation.
   // Replaces the native window.confirm() dialogs that were accessibility-
@@ -181,12 +188,14 @@ export default function Chat() {
   async function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const rawFile = e.target.files?.[0];
     if (!rawFile) return;
+    // Clear any previous error when the user picks a new file.
+    setPhotoError(null);
     if (rawFile.size > 20 * 1024 * 1024) {
       // 20 MB hard ceiling on what we'll even try to process. Above
       // that the downscale itself would use too much memory on low-end
       // phones. In practice modern phone photos are 3–8 MB so this
       // ceiling is generous.
-      alert('Photo must be smaller than 20 MB.');
+      setPhotoError('That photo is bigger than 20 MB. Try a smaller one, or take a fresh photo with your camera app.');
       if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
@@ -679,6 +688,54 @@ export default function Chat() {
         className="mt-4 pt-4 border-t border-surface-200"
         aria-label="Message Ada"
       >
+        {photoError && (
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="mb-3 flex items-start gap-3 rounded-md border border-danger-500 bg-danger-50 px-4 py-3"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              className="flex-none mt-0.5 text-danger-500"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <p className="flex-1 text-sm text-ink-700 leading-relaxed">
+              {photoError}
+            </p>
+            <button
+              type="button"
+              onClick={() => setPhotoError(null)}
+              aria-label="Dismiss this message"
+              className="flex-none inline-flex items-center justify-center w-9 h-9 -mr-1 -my-1 rounded-md text-ink-500 hover:bg-surface-200 hover:text-ink-700 transition-colors"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <line x1="6" y1="6" x2="18" y2="18" />
+                <line x1="6" y1="18" x2="18" y2="6" />
+              </svg>
+            </button>
+          </div>
+        )}
+
         {photoPreview && (
           <div className="mb-3 flex items-start gap-3 rounded-md border border-surface-200 bg-surface-100 p-3">
             <img
