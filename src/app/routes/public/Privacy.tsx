@@ -22,6 +22,7 @@
  * Ref: docs/ARCHITECTURE.md §16 privacy
  */
 
+import { Link } from 'react-router-dom';
 import { Breadcrumbs } from '../../components/Breadcrumbs.js';
 
 export default function Privacy() {
@@ -264,6 +265,23 @@ export default function Privacy() {
         </a>
         .
       </p>
+
+      <div className="rounded-lg border border-surface-200 bg-surface-100 px-6 py-6 sm:px-8 sm:py-8 mb-10">
+        <h3 className="font-display text-xl text-ink-900 mb-2">
+          Have a question about your rights?
+        </h3>
+        <p className="text-ink-700 leading-relaxed mb-4">
+          Privacy questions about your conversation, your data, or your
+          rights under the ADA — Ada can talk through any of it.
+        </p>
+        <Link
+          to="/chat"
+          className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium px-5 py-3 rounded-md transition-colors"
+        >
+          Talk to Ada
+          <span aria-hidden="true">→</span>
+        </Link>
+      </div>
 
       <div className="text-sm text-ink-700 border-t border-surface-200 pt-6">
         <p>Last updated: April 2026.</p>

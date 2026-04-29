@@ -20,6 +20,7 @@
  * Ref: docs/ARCHITECTURE.md §16 terms
  */
 
+import { Link } from 'react-router-dom';
 import { Breadcrumbs } from '../../components/Breadcrumbs.js';
 
 export default function Terms() {
@@ -270,6 +271,24 @@ export default function Terms() {
         </a>
         .
       </p>
+
+      <div className="rounded-lg border border-surface-200 bg-surface-100 px-6 py-6 sm:px-8 sm:py-8 mb-10">
+        <h3 className="font-display text-xl text-ink-900 mb-2">
+          Not sure if your situation fits?
+        </h3>
+        <p className="text-ink-700 leading-relaxed mb-4">
+          These terms cover what Ada can and can't do. If you're trying
+          to figure out whether what you experienced is something Ada
+          can help with, just ask her.
+        </p>
+        <Link
+          to="/chat"
+          className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium px-5 py-3 rounded-md transition-colors"
+        >
+          Talk to Ada
+          <span aria-hidden="true">→</span>
+        </Link>
+      </div>
 
       <div className="text-sm text-ink-700 border-t border-surface-200 pt-6">
         <p>Last updated: April 2026.</p>
