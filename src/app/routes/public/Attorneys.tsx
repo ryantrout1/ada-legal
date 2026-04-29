@@ -276,10 +276,10 @@ function AttorneyCard({ attorney }: { attorney: AttorneyDisplay }) {
             href={attorney.website_url}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`${attorney.name} website`}
             className="inline-flex items-center px-2 py-1 -mx-2 -my-1 rounded text-accent-500 hover:bg-accent-50 hover:text-accent-600 underline underline-offset-2 transition-colors"
           >
             Website
+            <span className="sr-only"> for {attorney.name}</span>
           </a>
         )}
       </div>
