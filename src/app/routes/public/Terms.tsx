@@ -22,7 +22,7 @@
 
 export default function Terms() {
   return (
-    <section className="max-w-3xl mx-auto px-5 sm:px-8 py-10 sm:py-16">
+    <section className="max-w-2xl mx-auto px-5 sm:px-8 py-10 sm:py-16">
       <p className="font-mono text-xs sm:text-sm uppercase tracking-[0.18em] text-accent-500 mb-5">
         Terms of service
       </p>

@@ -42,7 +42,7 @@ export default function AboutAda() {
         />
       </Helmet>
 
-      <article className="max-w-3xl mx-auto px-5 sm:px-8 py-10 sm:py-16">
+      <article className="max-w-2xl mx-auto px-5 sm:px-8 py-10 sm:py-16">
         {/* Eyebrow + title */}
         <p className="font-mono text-xs sm:text-sm uppercase tracking-[0.18em] text-accent-500 mb-5">
           About Ada
