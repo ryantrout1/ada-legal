@@ -24,6 +24,7 @@
 
 import { forwardRef, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useChatSession, type ReadingLevel } from '../../hooks/useChatSession.js';
+import { useAccessibilitySettings, undoWindowToMs } from '../../hooks/useAccessibilitySettings.js';
 import { useReadingLevel } from '../../components/standards/ReadingLevelContext.js';
 import { CurrentReadingLevel } from '../../components/standards/CurrentReadingLevel.js';
 import { useSpeechInput } from '../../hooks/useSpeechInput.js';
@@ -51,8 +52,9 @@ export default function Chat() {
   // so a chat-initiated level change syncs to the rest of the site.
   const { readingLevel: contextReadingLevel, setReadingLevel: setContextReadingLevel } =
     useReadingLevel();
-  const { state, sendMessage, startNewSession, acceptResume, discardResume } =
+  const { state, sendMessage, cancelPendingMessage, startNewSession, acceptResume, discardResume } =
     useChatSession(contextReadingLevel);
+  const a11y = useAccessibilitySettings();
   const [draft, setDraft] = useState('');
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -166,16 +168,35 @@ export default function Chat() {
     e.preventDefault();
     if (!draft.trim() && !photoPreview) return;
     const messageText = draft.trim() || 'Here is a photo for you to review.';
+    const undoMs = undoWindowToMs(a11y.settings.undoWindow);
     sendMessage(
       messageText,
       photoFile ?? undefined,
       photoPreview ?? undefined,
+      undoMs,
     );
     setDraft('');
     setPhotoPreview(null);
     setPhotoFile(null);
     setPhotoFilename(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
+  }
+
+  /**
+   * Undo a pending send. Removes the optimistic user bubble (via the
+   * hook), restores the draft + photo preview to the input area, and
+   * refocuses the textarea so the user can edit immediately.
+   */
+  function handleUndoSend() {
+    const restored = cancelPendingMessage();
+    if (!restored) return;
+    setDraft(restored.draft);
+    if (restored.photoPreview) {
+      setPhotoPreview(restored.photoPreview);
+      // photoFile is gone — the user can re-attach if they want.
+      // The preview shows what they had so they can decide.
+    }
+    inputRef.current?.focus();
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
@@ -221,6 +242,14 @@ export default function Chat() {
   function handleLevelChange(level: ReadingLevel, triggerEl?: HTMLElement | null) {
     if (state.readingLevel === level) return;
 
+    // If the user has a pending undo-window send open, switching reading
+    // level cancels it — the level switch will create a new session and
+    // the pending message would be sent into a different context than
+    // what the user intended.
+    if (state.pendingSend) {
+      cancelPendingMessage();
+    }
+
     // If the user hasn't typed anything yet, there's nothing to preserve —
     // swap the level silently. Common case: user lands on /chat, reads
     // Ada's opener, and realizes they want a different reading level
@@ -244,6 +273,12 @@ export default function Chat() {
   }
 
   function handleNewConversation(triggerEl?: HTMLElement | null) {
+    // Cancel any pending undo-window send — the new conversation will
+    // wipe the transcript anyway, so the pending message is moot.
+    if (state.pendingSend) {
+      cancelPendingMessage();
+    }
+
     // No messages at all, or only Ada's opener with no user turn:
     // restarting doesn't lose anything the user contributed, so just
     // do it. This matches the reading-level policy above.
@@ -875,13 +910,11 @@ export default function Chat() {
             )}
           </div>
 
-          <button
-            type="submit"
+          <SendOrUndoButton
+            pendingSendAt={state.pendingSend?.sendAt ?? null}
             disabled={state.busy || locked || state.initializing || (!draft.trim() && !photoPreview)}
-            className="flex-none inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 disabled:bg-surface-300 disabled:cursor-not-allowed text-white font-medium px-5 py-2.5 rounded-md transition-colors"
-          >
-            Send
-          </button>
+            onUndo={handleUndoSend}
+          />
         </div>
 
         <p className="mt-2 text-xs text-ink-500">
@@ -1008,6 +1041,80 @@ function MessageBubble({ message }: { message: import('@/app/hooks/useChatSessio
         )}
       </div>
     </div>
+  );
+}
+
+/**
+ * SendOrUndoButton — the Send button that transforms into "Undo · Ns"
+ * with a live countdown when there's a pending send window.
+ *
+ * In Send mode: standard primary button, type="submit" so Enter in the
+ * textarea triggers it via form submission.
+ *
+ * In Undo mode: type="button" with an onClick that invokes the parent's
+ * onUndo handler. Same physical screen location as Send so the user's
+ * attention/finger doesn't have to move. Countdown derived from
+ * pendingSendAt - now, decremented every 250ms for smooth-ish display.
+ *
+ * Round 3 AAA+COGA Group E item #48 (E2).
+ */
+function SendOrUndoButton({
+  pendingSendAt,
+  disabled,
+  onUndo,
+}: {
+  pendingSendAt: number | null;
+  disabled: boolean;
+  onUndo: () => void;
+}) {
+  const [now, setNow] = useState(() => Date.now());
+
+  // Tick the countdown while a pending send is open. Stops cleanly
+  // when pendingSendAt becomes null (window closed by commit, cancel,
+  // or unmount).
+  useEffect(() => {
+    if (pendingSendAt === null) return;
+    const interval = window.setInterval(() => setNow(Date.now()), 250);
+    return () => window.clearInterval(interval);
+  }, [pendingSendAt]);
+
+  if (pendingSendAt !== null) {
+    const remainingMs = Math.max(0, pendingSendAt - now);
+    const remainingSec = Math.ceil(remainingMs / 1000);
+    return (
+      <button
+        type="button"
+        onClick={onUndo}
+        aria-label={`Undo this message. ${remainingSec} seconds left.`}
+        className="flex-none inline-flex items-center gap-2 bg-ink-700 hover:bg-ink-900 text-white font-medium px-5 py-2.5 rounded-md transition-colors"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M3 7v6h6" />
+          <path d="M21 17a9 9 0 0 0-15-6.7L3 13" />
+        </svg>
+        Undo · {remainingSec}s
+      </button>
+    );
+  }
+
+  return (
+    <button
+      type="submit"
+      disabled={disabled}
+      className="flex-none inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 disabled:bg-surface-300 disabled:cursor-not-allowed text-white font-medium px-5 py-2.5 rounded-md transition-colors"
+    >
+      Send
+    </button>
   );
 }
 
