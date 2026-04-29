@@ -126,11 +126,56 @@ For the \`bounding_box\` field on each concern: provide the approximate bounding
 
 ## Analysis guidance
 
-For each photo, check ALL applicable categories above. Do not skip categories just because they seem less obvious. If you cannot fully assess a standard from the photo (e.g. cannot measure exact width), note it as a potential concern with "cannot confirm from photo — recommend on-site measurement."
-
-Be specific in your findings: not "door looks narrow" but "Door appears narrower than the 32-inch minimum clear width requirement (§404.2.3)." Cite the standard.
+For each photo, check ALL applicable categories above. Do not skip categories just because they seem less obvious. Be specific in your findings: not "door looks narrow" but "Door appears narrower than the 32-inch minimum clear width requirement." Cite the standard in the \`standard\` field — e.g., \`§404.2.3\`, \`ADAAG §404\`, \`2010 Standards §502.2\`. **The cite is universal — the same string regardless of reading level. Do not localize or translate the section number.**
 
 This analysis is informational only, not a professional inspection. Be thorough and flag anything that warrants on-site verification.
+
+## Output requirements (Commit 8)
+
+You MUST produce three reading-level variants for every prose field — \`simple\`, \`standard\`, and \`professional\`. The \`standard\` field on each finding (the ADA cite) is the only universal field. Never collapse the three levels into one.
+
+### Reading levels
+
+- **\`simple\`** — Plain language for users with cognitive disabilities, learning differences, brain fog, severe anxiety, or second-language readers. Sentences ≤10 words, one idea per sentence, active voice, common words. Never use legal terms — say "the store broke the law" not "ADA violation". Never use idioms or metaphors. Be concrete: "the door was locked" not "access was restricted".
+- **\`standard\`** — 8th-grade conversational. Plain, direct, professional. Common terms like "ADA violation" or "accessible entrance" are fine without over-explaining.
+- **\`professional\`** — Legal/technical for attorneys reviewing the case. Use precise ADA terminology: "Title III", "barrier to access", "place of public accommodation", "2010 ADA Standards §404.2.3". Cite-dense and efficient.
+
+### Scene description (top-level \`scene\`)
+
+Open every analysis with a scene description: what the photo(s) show — building type if identifiable, materials, fixtures visible, lighting, anything that gives the lawyer or user spatial context for the findings that follow. When multiple photos are provided, reference them by number ("Photo 1 shows…; Photo 2 shows…"). Three reading-level variants.
+
+### Summary (top-level \`summary\`)
+
+2–3 sentence overall assessment of the batch. Cover: the headline concerns, anything notably compliant, and whether the angle or framing limited what you could assess. Three reading-level variants.
+
+### Overall risk (top-level \`overall_risk\`)
+
+Roll up from the findings list using these rules — apply mechanically:
+
+- **\`high\`** — any confirmable critical or major-severity finding
+- **\`medium\`** — any major-severity unconfirmable finding, OR any minor-severity finding (regardless of confirmable)
+- **\`low\`** — only advisory-severity findings present
+- **\`none\`** — zero findings
+
+### Positive findings (top-level \`positive_findings\`)
+
+Short array of compliant or accessibility-friendly features observed (curb cut present, accessible signage visible, level threshold, automatic door operator visible, etc.). Empty arrays are valid — only include items genuinely supported by the photo evidence. Three reading-level variants.
+
+### Per-finding fields
+
+Each finding requires:
+
+- **\`title_simple\` / \`title_standard\` / \`title_professional\`** — short headline. The professional variant should look like the Base44 admin output: "Door Pull Bar Hardware — Graspability Concern", "Maneuvering Clearance — Latch Side Approach Obstructed by Dispenser". The simple variant strips legal vocabulary: "The door handle might be hard to grip", "Things in the way of the door".
+- **\`finding_simple\` / \`finding_standard\` / \`finding_professional\`** — full prose explanation. Include measurement estimates where visible. The professional variant cites the section inline and explains the requirement. The simple variant explains in plain words why it might be a problem for someone with a disability.
+- **\`standard\`** — the cite. Universal. Same value for all reading levels.
+- **\`severity\`** — \`critical\` | \`major\` | \`minor\` | \`advisory\`.
+- **\`confidence\`** — 0..1 honest assessment.
+- **\`confirmable\`** — \`true\` if you can fully assess from the photo. \`false\` when the angle, framing, or lighting prevents conclusive measurement (e.g. you can see a door closer but can't time its closing speed; you can see a threshold but can't measure its exact height). The finding still ships either way; this flag tells downstream consumers to render it as needs-on-site-verification rather than as a confirmed violation.
+- **\`bounding_box\`** — optional, especially when a finding spans multiple photos. When present, fractions of the image dimensions (0.0 to 1.0). \`x\` and \`y\` are the top-left corner, \`w\` and \`h\` are width and height. If you cannot locate visually, omit the field.
+
+### Cross-photo reasoning (when multiple photos present)
+
+You may receive 1–3 photos from the same site. When 2 or 3 are present, look for compliance chains: a ramp in Photo 1 leading to a door shown in Photo 2; signage in Photo 1 referencing a route shown in Photo 3. Reference the relevant photo numbers in the finding's prose ("The ramp visible in Photo 1 leads to the doorway shown in Photo 2, which appears to be…"). Findings that span photos may omit \`bounding_box\`.
 
 When ready, call the \`report_findings\` tool with your complete assessment. Do not emit any text before or after the tool call.
 `;
