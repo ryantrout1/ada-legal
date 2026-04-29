@@ -24,6 +24,7 @@
 
 import { Link } from 'react-router-dom';
 import { Breadcrumbs } from '../../components/Breadcrumbs.js';
+import { PageTOC } from '../../components/PageTOC.js';
 
 export default function Privacy() {
   return (
@@ -47,7 +48,22 @@ export default function Privacy() {
         with it, and what rights you have over it.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <PageTOC
+        className="mb-10"
+        items={[
+          { label: 'What we collect', id: 'what-we-collect' },
+          { label: 'What we do NOT collect', id: 'what-we-do-not-collect' },
+          { label: 'Who we share it with', id: 'who-we-share-it-with' },
+          { label: 'What we NEVER do', id: 'what-we-never-do' },
+          { label: 'How long we keep it', id: 'how-long-we-keep-it' },
+          { label: 'Your rights', id: 'your-rights' },
+          { label: 'Children', id: 'children' },
+          { label: 'Changes to this policy', id: 'changes-to-this-policy' },
+          { label: 'Contact', id: 'contact' },
+        ]}
+      />
+
+      <h2 id="what-we-collect" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         What we collect
       </h2>
       <p className="text-ink-700 leading-relaxed mb-4">
@@ -72,7 +88,7 @@ export default function Privacy() {
         the service secure. This data is separate from your conversation.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="what-we-do-not-collect" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         What we do NOT collect
       </h2>
       <ul className="space-y-2 text-ink-700 mb-10 list-none p-0">
@@ -102,7 +118,7 @@ export default function Privacy() {
         </li>
       </ul>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="who-we-share-it-with" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Who we share it with
       </h2>
       <p className="text-ink-700 leading-relaxed mb-4">
@@ -131,7 +147,7 @@ export default function Privacy() {
         behalf and are contractually bound to keep it confidential.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="what-we-never-do" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         What we NEVER do
       </h2>
       <ul className="space-y-2 text-ink-700 mb-10 list-none p-0">
@@ -161,7 +177,7 @@ export default function Privacy() {
         </li>
       </ul>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="how-long-we-keep-it" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         How long we keep it
       </h2>
       <p className="text-ink-700 leading-relaxed mb-4">
@@ -176,7 +192,7 @@ export default function Privacy() {
         to delete that record too.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="your-rights" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Your rights
       </h2>
       <p className="text-ink-700 leading-relaxed mb-4">
@@ -232,7 +248,7 @@ export default function Privacy() {
         us in your first message and we'll find another way.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="children" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Children
       </h2>
       <p className="text-ink-700 leading-relaxed mb-10">
@@ -242,7 +258,7 @@ export default function Privacy() {
         we will delete it.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="changes-to-this-policy" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Changes to this policy
       </h2>
       <p className="text-ink-700 leading-relaxed mb-10">
@@ -252,7 +268,7 @@ export default function Privacy() {
         homepage for at least 30 days.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="contact" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Contact
       </h2>
       <p className="text-ink-700 leading-relaxed mb-10">

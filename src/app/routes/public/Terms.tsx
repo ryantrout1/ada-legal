@@ -22,6 +22,7 @@
 
 import { Link } from 'react-router-dom';
 import { Breadcrumbs } from '../../components/Breadcrumbs.js';
+import { PageTOC } from '../../components/PageTOC.js';
 
 export default function Terms() {
   return (
@@ -47,7 +48,25 @@ export default function Terms() {
         through us, that relationship is between you and them, not us.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <PageTOC
+        className="mb-10"
+        items={[
+          { label: 'What ADA Legal Link is', id: 'what-it-is' },
+          { label: 'Ada is not a lawyer', id: 'not-a-lawyer' },
+          { label: 'Ada can make mistakes', id: 'mistakes' },
+          { label: 'What the service costs', id: 'costs' },
+          { label: 'Attorneys in the directory', id: 'attorneys-directory' },
+          { label: 'Who owns what', id: 'ownership' },
+          { label: 'How you can use the service', id: 'how-to-use' },
+          { label: "Things we can't promise", id: 'cannot-promise' },
+          { label: 'Ending your use', id: 'ending-use' },
+          { label: 'Disputes and governing law', id: 'disputes' },
+          { label: 'Changes', id: 'changes' },
+          { label: 'Questions', id: 'questions' },
+        ]}
+      />
+
+      <h2 id="what-it-is" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         What ADA Legal Link is
       </h2>
       <p className="text-ink-700 leading-relaxed mb-10">
@@ -58,7 +77,7 @@ export default function Terms() {
         listed; and related resources.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="not-a-lawyer" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Ada is not a lawyer
       </h2>
       <p className="text-ink-700 leading-relaxed mb-4">
@@ -81,7 +100,7 @@ export default function Terms() {
         not either.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="mistakes" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Ada can make mistakes
       </h2>
       <p className="text-ink-700 leading-relaxed mb-4">
@@ -96,7 +115,7 @@ export default function Terms() {
         itself, the Department of Justice, or a licensed attorney).
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="costs" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         What the service costs
       </h2>
       <p className="text-ink-700 leading-relaxed mb-10">
@@ -106,7 +125,7 @@ export default function Terms() {
         listed because they've agreed to be, not because they paid us.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="attorneys-directory" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Attorneys in the directory
       </h2>
       <p className="text-ink-700 leading-relaxed mb-4">
@@ -135,7 +154,7 @@ export default function Terms() {
         directory.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="ownership" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Who owns what
       </h2>
       <p className="text-ink-700 leading-relaxed mb-4">
@@ -152,7 +171,7 @@ export default function Terms() {
         our name to suggest we endorse something we don't.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="how-to-use" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         How you can use the service
       </h2>
       <p className="text-ink-700 leading-relaxed mb-4">
@@ -195,7 +214,7 @@ export default function Terms() {
         </li>
       </ul>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="cannot-promise" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Things we can't promise
       </h2>
       <p className="text-ink-700 leading-relaxed mb-4">
@@ -213,7 +232,7 @@ export default function Terms() {
         attorney, not just Ada.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="ending-use" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Ending your use
       </h2>
       <p className="text-ink-700 leading-relaxed mb-10">
@@ -231,7 +250,7 @@ export default function Terms() {
         investigation.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="disputes" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Disputes and governing law
       </h2>
       <p className="text-ink-700 leading-relaxed mb-10">
@@ -249,7 +268,7 @@ export default function Terms() {
         located in Maricopa County, Arizona.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="changes" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Changes
       </h2>
       <p className="text-ink-700 leading-relaxed mb-10">
@@ -258,7 +277,7 @@ export default function Terms() {
         the homepage for at least 30 days.
       </p>
 
-      <h2 className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
+      <h2 id="questions" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Questions
       </h2>
       <p className="text-ink-700 leading-relaxed mb-10">
