@@ -426,19 +426,31 @@ body {
 
 /* ─── Line + paragraph spacing ──────────────────────────────────────────── */
 
+/* Paragraph spacing values are calibrated against AAA 1.4.8, which
+   reads strictly as: paragraph spacing ≥ 1.5× line-height. The previous
+   values (0.6em / 1em / 1.5em) all fell short of that ceiling against
+   their own line-heights. New values:
+     tight:   1.4 line-height × 1.5 = 2.1em ✓
+     default: 1.6 line-height × 1.5 = 2.4em ✓
+     loose:   1.9 line-height × 1.5 = 2.85em → 3em ✓
+   This means whichever spacing setting the user picks, AAA strict
+   reading is satisfied — the criterion calls for a mechanism, but
+   making every option meet the bar is the better answer than leaving
+   default and tight at sub-AAA values. */
+
 :root[data-spacing="tight"] {
   --a11y-line-height: 1.4;
-  --a11y-paragraph-gap: 0.6em;
+  --a11y-paragraph-gap: 2.1em;
   --a11y-letter-spacing: 0;
 }
 :root[data-spacing="default"] {
   --a11y-line-height: 1.6;
-  --a11y-paragraph-gap: 1em;
+  --a11y-paragraph-gap: 2.4em;
   --a11y-letter-spacing: 0;
 }
 :root[data-spacing="loose"] {
   --a11y-line-height: 1.9;
-  --a11y-paragraph-gap: 1.5em;
+  --a11y-paragraph-gap: 3em;
   --a11y-letter-spacing: 0.02em;
 }
 
