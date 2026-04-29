@@ -25,6 +25,7 @@ import { useReadingLevel, type ReadingLevel } from '../../components/standards/R
 import { ReadingLevelToggle } from '../../components/standards/ReadingLevelToggle.js';
 import { CurrentReadingLevel } from '../../components/standards/CurrentReadingLevel.js';
 import AutoCiteLinks from '../../components/standards/AutoCiteLinks.js';
+import { Breadcrumbs } from '../../components/Breadcrumbs.js';
 
 type CriterionKind = 'required' | 'preferred' | 'disqualifying';
 
@@ -296,12 +297,13 @@ export default function ClassActionDetail() {
       </Helmet>
 
       <section className="max-w-3xl mx-auto px-5 sm:px-8 pt-8 pb-4">
-        <Link
-          to="/class-actions"
-          className="inline-block px-2 py-1.5 -mx-2 -my-1.5 rounded text-xs uppercase tracking-wider font-mono text-ink-500 hover:text-accent-600 underline underline-offset-2"
-        >
-          ← Class actions
-        </Link>
+        <Breadcrumbs
+          items={[
+            { label: 'Home', to: '/' },
+            { label: 'Class actions', to: '/class-actions' },
+            { label: listing.title },
+          ]}
+        />
       </section>
 
       {/* Header */}
