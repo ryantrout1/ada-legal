@@ -1,24 +1,28 @@
 /**
  * analyze_photo tool.
  *
- * Ada calls this after a user has uploaded a photo (via the public UI's
- * photo upload, which stores to Vercel Blob and returns a blob key).
+ * Ada calls this after a user has uploaded photos (via the public UI's
+ * photo upload, which stores to Vercel Blob and returns blob keys).
  * Delegates to PhotoAnalysisClient, which runs the photo-analysis prompt
  * against an Anthropic model.
  *
- * The turn-loop is responsible for passing blob_key values from the
- * AdaTurnInput.photoBlobKeys array into the tool; Ada only sees slugs
- * or descriptions of available photos, never raw URLs.
+ * Up to 3 photos per call. The turn-loop is responsible for passing
+ * blob_key values from the AdaTurnInput.photoBlobKeys array into the
+ * tool; Ada only sees slugs or descriptions of available photos, never
+ * raw URLs. If the user uploaded more than 3 photos in a session, Ada
+ * should call this tool multiple times with different batches.
  *
  * Ref: docs/ARCHITECTURE.md §7, §10
  */
 
 import type { AdaTool, ToolResult, ToolExecuteContext } from '../types.js';
-import type { PhotoFinding } from '../../../types/db.js';
+import type { PhotoAnalysisOutput, PhotoFinding } from '../../../types/db.js';
 import { guideUrlForTopic, topicsForSection, topicsForText } from '../../../lib/standardsIndex.js';
 
+const MAX_PHOTOS_PER_CALL = 3;
+
 interface AnalyzePhotoInput {
-  blob_key: string;
+  blob_keys: string[];
   context_hint?: string;
 }
 
@@ -58,58 +62,83 @@ function enrichFindingWithGuideUrl(f: PhotoFinding): PhotoFinding {
 export const analyzePhotoTool: AdaTool<AnalyzePhotoInput> = {
   name: 'analyze_photo',
   description:
-    'Request photo analysis for an uploaded image. Use the blob_key the user referenced. ' +
-    'Provide a context_hint describing what you want the analyzer to look for ' +
-    '(e.g. "physical barrier at entrance", "missing handrail on ramp"). ' +
-    'Returns a list of findings with ADA standard citations, severity, and bounding boxes.',
+    'Request photo analysis for one or more uploaded images (1-3 per call). ' +
+    'Pass blob_keys for the photos you want analyzed together — the analyzer ' +
+    'treats them as a batch and can reason about cross-photo compliance chains. ' +
+    'If the user uploaded more than 3 photos, call this tool again with a different batch. ' +
+    'Provide a context_hint describing what to look for (e.g. "physical barrier at entrance", ' +
+    '"missing handrail on ramp"). Returns scene description, summary, overall risk, ' +
+    'positive findings, and per-concern findings — each with three reading-level variants.',
   inputSchema: {
     type: 'object',
     properties: {
-      blob_key: {
-        type: 'string',
-        description: 'The blob key for the uploaded photo. Provided in the conversation context.',
+      blob_keys: {
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 1,
+        maxItems: MAX_PHOTOS_PER_CALL,
+        description:
+          'Blob keys for 1-3 photos. Provided in the conversation context. Group photos from the same site for cross-photo reasoning.',
       },
       context_hint: {
         type: 'string',
         description: "Optional hint about what to look for, e.g. 'doorway width', 'service counter height'.",
       },
     },
-    required: ['blob_key'],
+    required: ['blob_keys'],
   },
   validateInput(raw) {
     if (!raw || typeof raw !== 'object') {
       throw new Error('analyze_photo: input must be an object');
     }
     const r = raw as Record<string, unknown>;
-    if (typeof r.blob_key !== 'string' || r.blob_key.trim() === '') {
-      throw new Error('analyze_photo: blob_key must be a non-empty string');
+    if (!Array.isArray(r.blob_keys) || r.blob_keys.length === 0) {
+      throw new Error('analyze_photo: blob_keys must be a non-empty array');
     }
+    if (r.blob_keys.length > MAX_PHOTOS_PER_CALL) {
+      throw new Error(
+        `analyze_photo: maximum ${MAX_PHOTOS_PER_CALL} photos per call. Group photos into batches of ${MAX_PHOTOS_PER_CALL} if user uploaded more.`,
+      );
+    }
+    const blobKeys = r.blob_keys.map((k) => {
+      if (typeof k !== 'string' || k.trim() === '') {
+        throw new Error('analyze_photo: every blob_keys entry must be a non-empty string');
+      }
+      return k;
+    });
     if (r.context_hint !== undefined && typeof r.context_hint !== 'string') {
       throw new Error('analyze_photo: context_hint, if provided, must be a string');
     }
     return {
-      blob_key: r.blob_key,
+      blob_keys: blobKeys,
       context_hint: typeof r.context_hint === 'string' ? r.context_hint : undefined,
     };
   },
   async execute({ clients }: ToolExecuteContext, input): Promise<ToolResult> {
     try {
       const result = await clients.photo.analyze({
-        blobKey: input.blob_key,
+        blobKeys: input.blob_keys,
         contextHint: input.context_hint,
       });
       // Enrich each finding with a guide_url when we can resolve the
-      // cited standard against the Standards Guide index. This makes
-      // guide links available to Ada (in her next-turn context) and
-      // to the attorney package / session package downstream.
-      const enriched = result.findings.map(enrichFindingWithGuideUrl);
+      // cited standard against the Standards Guide index. Findings ship
+      // to Ada (in her next-turn context) and downstream to the
+      // attorney package / session package via stateChanges.
+      const enrichedFindings = result.output.findings.map(enrichFindingWithGuideUrl);
+      const enrichedOutput: PhotoAnalysisOutput = {
+        ...result.output,
+        findings: enrichedFindings,
+      };
       return {
         ok: true,
         content: {
-          findings: enriched,
+          output: enrichedOutput,
           model: result.modelVersion,
         },
-        stateChanges: { photoFindings: enriched },
+        stateChanges: {
+          photoFindings: enrichedFindings,
+          photoAnalyses: [enrichedOutput],
+        },
       };
     } catch (err) {
       return {

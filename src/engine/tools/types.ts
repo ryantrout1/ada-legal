@@ -25,6 +25,7 @@ import type { AdaSessionState } from '../types.js';
 import type {
   Classification,
   ExtractedFields,
+  PhotoAnalysisOutput,
   PhotoFinding,
   ReadingLevel,
 } from '../../types/db.js';
@@ -46,6 +47,14 @@ export interface ToolStateChanges {
   readingLevel?: ReadingLevel;
   sessionTransition?: SessionTransition;
   photoFindings?: PhotoFinding[];
+  /**
+   * Full structured outputs from analyze_photo calls (one per call,
+   * each covering up to 3 photos). Carries scene/summary/overall_risk/
+   * positive_findings alongside the flat findings list. `photoFindings`
+   * stays as the flat aggregation for legacy consumers; this field
+   * preserves the per-call grouping. Step 30, Commit 8.
+   */
+  photoAnalyses?: PhotoAnalysisOutput[];
   /**
    * Ch1 match_listing: bind the session to a specific active listing.
    * Set alongside sessionTypeChange to promote public_ada → class_action_intake.
