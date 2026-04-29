@@ -185,11 +185,54 @@ export interface PhotoBoundingBox {
   h: number;
 }
 
+export type PhotoOverallRisk = 'high' | 'medium' | 'low' | 'none';
+
+/**
+ * Reading-level-aware string triple. Photo analyzer emits all three at
+ * once; consumers pick the variant for their audience (user's session
+ * reading level for Ada-facing surfaces, always `professional` for the
+ * attorney package). Step 30, Commit 8.
+ */
+export interface ReadingLevelText {
+  simple: string;
+  standard: string;
+  professional: string;
+}
+
+/** Same as ReadingLevelText but each variant is a list of strings. */
+export interface ReadingLevelStringList {
+  simple: string[];
+  standard: string[];
+  professional: string[];
+}
+
 export interface PhotoFinding {
+  /**
+   * @deprecated Commit 8: kept as an alias of `finding_standard` for one
+   * release so existing consumers (attorney package projection, tests)
+   * keep compiling. Removed in Commit 9 once all readers migrate to the
+   * reading-level fields. Always equal to `finding_standard` on writes.
+   */
   finding: string;
+  /** Short headline — "Door Pull Bar Hardware — Graspability Concern". */
+  title_simple: string;
+  title_standard: string;
+  title_professional: string;
+  /** Full prose explanation of the concern. */
+  finding_simple: string;
+  finding_standard: string;
+  finding_professional: string;
   severity: PhotoFindingSeverity;
-  standard: string; // cited ADA / ADAAG section
+  standard: string; // cited ADA / ADAAG section — universal, not localized
   confidence: number; // 0..1
+  /**
+   * False when the model can't fully assess this concern from the photo
+   * (angle, framing, or lighting prevents conclusive measurement). The
+   * finding still ships; the flag tells downstream consumers to render
+   * it as "needs on-site verification" rather than a confirmed
+   * violation. Step 30, Commit 8.
+   */
+  confirmable: boolean;
   bounding_box?: PhotoBoundingBox;
   /**
    * URL path into the Standards Guide covering the cited section. Set
@@ -204,6 +247,32 @@ export interface PhotoFinding {
    * Step 29, Commit 7.
    */
   guide_url?: string;
+}
+
+/**
+ * Full structured output of a single analyze_photo call. A call may
+ * cover up to 3 photos at once (batch); the scene/summary/risk/
+ * positive_findings describe the batch as a whole, while `findings`
+ * lists each individual concern (any of which may reference one or
+ * more photos in its prose). Step 30, Commit 8.
+ */
+export interface PhotoAnalysisOutput {
+  /** What the photo(s) show — building type, fixtures, lighting, etc. */
+  scene: ReadingLevelText;
+  /** 2-3 sentence overall assessment of the batch. */
+  summary: ReadingLevelText;
+  /**
+   * Rolled up from findings:
+   *   high   — any confirmable critical/major-severity finding
+   *   medium — any major-severity unconfirmable, OR any minor finding
+   *   low    — only advisory findings
+   *   none   — zero findings
+   */
+  overall_risk: PhotoOverallRisk;
+  /** Compliant features observed (curb cut present, accessible signage, etc.). */
+  positive_findings: ReadingLevelStringList;
+  /** Per-concern findings list. */
+  findings: PhotoFinding[];
 }
 
 // ─── audit log ────────────────────────────────────────────────────────────────
