@@ -55,6 +55,29 @@ export interface ChatState {
    * when this is non-null. See Step 18 Commit 4 for package generation.
    */
   packageSlug: string | null;
+  /**
+   * Set when the user has hit Send but the network call hasn't fired
+   * yet — the undo window. The optimistic user bubble is already in
+   * messages[]; cancelling rolls it back. When null, no undo window
+   * is open.
+   *
+   * pendingMessageId: the id of the optimistic user bubble in
+   *   messages[]. Used on cancel to remove the right bubble.
+   * sendAt: epoch ms when the network call will fire. UI shows a
+   *   countdown derived from this.
+   * draft: the textarea draft that produced this send, restored to
+   *   the textarea on cancel.
+   * photoPreview: data URL of the attached photo, restored on cancel.
+   *
+   * Photo upload happens during the window (no need to wait — Vercel
+   * Blob uploads are independent and orphans on cancel are cheap).
+   */
+  pendingSend: {
+    pendingMessageId: string;
+    sendAt: number;
+    draft: string;
+    photoPreview?: string;
+  } | null;
 }
 
 interface SessionCreateResponse {
@@ -102,8 +125,13 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
     initializing: true,
     resumable: null,
     packageSlug: null,
+    pendingSend: null,
   });
   const didInitRef = useRef(false);
+
+  // Timer for the deferred-send window. Held in a ref because we need
+  // to clear it from cancelPendingMessage() and from cleanup.
+  const pendingTimerRef = useRef<number | null>(null);
 
   // ─── Session creation ──────────────────────────────────────────────────────
 
@@ -234,11 +262,23 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
 
   // ─── Send a message ────────────────────────────────────────────────────────
 
+  /**
+   * Send a user message to Ada. Optionally takes an undoWindowMs — when
+   * > 0, defers the actual network call by that many milliseconds, during
+   * which time cancelPendingMessage() can roll back the send. The user
+   * bubble is added optimistically right away in either case so the user
+   * sees their message went; on cancel the bubble is removed.
+   *
+   * Photo upload (when present) starts immediately during the window —
+   * orphan blobs on cancel are cheap and waiting until after the window
+   * would add 1-3s of perceived send latency on slow networks.
+   */
   const sendMessage = useCallback(
     async (
       userText: string,
       photoFile?: File,
       photoPreviewDataUrl?: string,
+      undoWindowMs: number = 0,
     ) => {
       if (!state.sessionId) return;
       if (state.busy) return;
@@ -246,11 +286,16 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
       const trimmed = userText.trim();
       if (!trimmed) return;
 
+      // Allocate the user message id up front so we can reference it
+      // both in the optimistic add and in cancelPendingMessage's
+      // rollback path.
+      const userMsgId = cryptoId();
+
       // Optimistic: add the user bubble, flip to busy. The bubble
       // preview uses the data URL we captured when the user picked
       // the file — no network trip needed to render their own image.
       const userMsg: ChatMessage = {
-        id: cryptoId(),
+        id: userMsgId,
         role: 'user',
         content: trimmed,
         timestamp: new Date().toISOString(),
@@ -261,21 +306,84 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
         messages: [...s.messages, userMsg],
         busy: true,
         error: null,
+        // Open the undo window if undoWindowMs > 0. The UI keys off
+        // pendingSend.sendAt to render the countdown affordance.
+        pendingSend: undoWindowMs > 0
+          ? {
+              pendingMessageId: userMsgId,
+              sendAt: Date.now() + undoWindowMs,
+              draft: trimmed,
+              photoPreview: photoPreviewDataUrl,
+            }
+          : null,
       }));
+
+      // If no undo window: fire the network work immediately (the original
+      // behavior). Otherwise: kick off photo upload now (parallelizes the
+      // wait) and schedule the network call after undoWindowMs.
+      if (undoWindowMs <= 0) {
+        await commitSend(userMsgId, trimmed, photoFile);
+        return;
+      }
+
+      // Pre-upload the photo during the undo window so the user doesn't
+      // wait for it after the window closes. Stored in a ref so the
+      // deferred commit can pick it up; if cancelled, the orphan blob
+      // is harmless (Vercel Blob is cheap, and orphan cleanup can run
+      // out-of-band if it ever matters).
+      const photoUrlPromise = photoFile
+        ? uploadPhoto(state.sessionId, photoFile)
+        : Promise.resolve<string | null>(null);
+
+      // Schedule the actual send. Stored in a ref so cancelPendingMessage
+      // can clear it. If the timer fires, we resolve the photoUrl and
+      // call the inner commit.
+      pendingTimerRef.current = window.setTimeout(() => {
+        pendingTimerRef.current = null;
+        // Close the undo window in state, then commit.
+        setState((s) => ({ ...s, pendingSend: null }));
+        void photoUrlPromise.then((photoUrl) => {
+          void commitSend(userMsgId, trimmed, undefined, photoUrl);
+        });
+      }, undoWindowMs);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.sessionId, state.busy, state.status],
+  );
+
+  /**
+   * Commit a previously-prepared user message — actually fires the
+   * /api/ada/turn call and streams the response. Two call sites:
+   *
+   * 1. sendMessage with undoWindowMs <= 0: called immediately.
+   *    photoFile is provided, photoUrl is undefined; commitSend uploads.
+   * 2. The undo-window timer: photoFile is undefined (uploaded
+   *    in advance during the window); photoUrl is provided.
+   *
+   * Either way: same downstream pipeline. The optimistic user bubble
+   * was already added by the caller; commitSend only handles the
+   * assistant placeholder + streaming.
+   */
+  const commitSend = useCallback(
+    async (
+      _userMsgId: string,
+      trimmed: string,
+      photoFile?: File,
+      preUploadedPhotoUrl?: string | null,
+    ) => {
+      if (!state.sessionId) return;
 
       // Allocated up front so the error handler can clean up an empty
       // placeholder on failure (no ghost assistant bubble after errors).
       let assistantId: string | null = null;
 
       try {
-        // If the user attached a photo, upload it to Vercel Blob via
-        // the client-direct-upload path (see /api/ada/upload-photo).
-        // The function endpoint only issues a short-lived signed token —
-        // the actual bytes travel directly from the browser to Vercel
-        // Blob storage, bypassing our lambdas entirely. This is the
-        // only way to handle multi-MB photos on Vercel's platform.
-        let photoUrl: string | null = null;
-        if (photoFile) {
+        let photoUrl: string | null = preUploadedPhotoUrl ?? null;
+        if (!photoUrl && photoFile) {
+          // Path 1: synchronous send (no undo window). Upload the photo
+          // here. Vercel Blob direct-upload — see /api/ada/upload-photo
+          // for the signed-token pattern; bytes travel browser→Blob,
+          // bypassing our lambdas.
           photoUrl = await uploadPhoto(state.sessionId, photoFile);
         }
 
@@ -420,8 +528,54 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
         }));
       }
     },
-    [state.sessionId, state.busy, state.status],
+    [state.sessionId],
   );
+
+  /**
+   * Cancel a pending undo-window send. Removes the optimistic user
+   * bubble and clears busy state. Returns the {draft, photoPreview}
+   * that produced the send so the UI can restore them to the textarea
+   * + photo slot. Returns null when no send is pending.
+   *
+   * Idempotent — safe to call when there's nothing pending.
+   */
+  const cancelPendingMessage = useCallback((): {
+    draft: string;
+    photoPreview?: string;
+  } | null => {
+    if (pendingTimerRef.current !== null) {
+      window.clearTimeout(pendingTimerRef.current);
+      pendingTimerRef.current = null;
+    }
+    let restored: { draft: string; photoPreview?: string } | null = null;
+    setState((s) => {
+      if (!s.pendingSend) return s;
+      restored = {
+        draft: s.pendingSend.draft,
+        photoPreview: s.pendingSend.photoPreview,
+      };
+      return {
+        ...s,
+        messages: s.messages.filter(
+          (m) => m.id !== s.pendingSend!.pendingMessageId,
+        ),
+        busy: false,
+        pendingSend: null,
+      };
+    });
+    return restored;
+  }, []);
+
+  // Cleanup any pending timer on unmount so we don't fire commits
+  // against a stale session after the user navigates away.
+  useEffect(() => {
+    return () => {
+      if (pendingTimerRef.current !== null) {
+        window.clearTimeout(pendingTimerRef.current);
+        pendingTimerRef.current = null;
+      }
+    };
+  }, []);
 
   // ─── Reading level (client-side for this Ch0 slice) ───────────────────────
   // Ada's set_reading_level tool can change it server-side mid-conversation;
@@ -440,6 +594,7 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
   return {
     state,
     sendMessage,
+    cancelPendingMessage,
     startNewSession,
     acceptResume,
     discardResume,
