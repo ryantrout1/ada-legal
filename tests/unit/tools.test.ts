@@ -224,51 +224,71 @@ describe('extract_field', () => {
 describe('analyze_photo', () => {
   const tool = analyzePhotoTool;
 
-  it('accepts blob_key alone', () => {
-    expect(tool.validateInput({ blob_key: 'photos/abc.jpg' }))
-      .toEqual({ blob_key: 'photos/abc.jpg', context_hint: undefined });
+  it('accepts blob_keys with single entry', () => {
+    expect(tool.validateInput({ blob_keys: ['photos/abc.jpg'] }))
+      .toEqual({ blob_keys: ['photos/abc.jpg'], context_hint: undefined });
   });
 
-  it('accepts blob_key + context_hint', () => {
-    expect(tool.validateInput({ blob_key: 'photos/abc.jpg', context_hint: 'doorway width' }))
-      .toEqual({ blob_key: 'photos/abc.jpg', context_hint: 'doorway width' });
+  it('accepts blob_keys + context_hint', () => {
+    expect(tool.validateInput({ blob_keys: ['photos/abc.jpg', 'photos/def.jpg'], context_hint: 'doorway width' }))
+      .toEqual({ blob_keys: ['photos/abc.jpg', 'photos/def.jpg'], context_hint: 'doorway width' });
   });
 
-  it('rejects empty blob_key', () => {
-    expect(() => tool.validateInput({ blob_key: '' })).toThrow(/blob_key/);
+  it('accepts up to 3 photos in a batch', () => {
+    expect(tool.validateInput({ blob_keys: ['a', 'b', 'c'] }))
+      .toEqual({ blob_keys: ['a', 'b', 'c'], context_hint: undefined });
+  });
+
+  it('rejects empty blob_keys array', () => {
+    expect(() => tool.validateInput({ blob_keys: [] })).toThrow(/non-empty/);
+  });
+
+  it('rejects more than 3 photos', () => {
+    expect(() => tool.validateInput({ blob_keys: ['a', 'b', 'c', 'd'] }))
+      .toThrow(/maximum 3/);
+  });
+
+  it('rejects blob_keys with empty string entry', () => {
+    expect(() => tool.validateInput({ blob_keys: ['photos/x.jpg', ''] }))
+      .toThrow(/non-empty/);
   });
 
   it('rejects non-string context_hint', () => {
-    expect(() => tool.validateInput({ blob_key: 'x', context_hint: 42 })).toThrow(/context_hint/);
+    expect(() => tool.validateInput({ blob_keys: ['x'], context_hint: 42 }))
+      .toThrow(/context_hint/);
   });
 
   it('execute delegates to PhotoAnalysisClient and returns findings', async () => {
     const clients = makeInMemoryClients();
     clients.photo.enqueueResult({
-      findings: [
-        {
-          finding: 'Entrance has a 6-inch step with no ramp',
+      output: makeOutput([
+        makePhotoFinding({
+          title: 'Step at entrance',
+          text: 'Entrance has a 6-inch step with no ramp',
           severity: 'major',
           standard: '28 CFR §36.304',
           confidence: 0.9,
+          confirmable: true,
           bounding_box: { x: 10, y: 20, w: 200, h: 150 },
-        },
-      ],
+        }),
+      ]),
       modelVersion: 'test-v1',
     });
-    const input = tool.validateInput({ blob_key: 'photos/entrance.jpg' });
+    const input = tool.validateInput({ blob_keys: ['photos/entrance.jpg'] });
     const result = await tool.execute({ clients, state: baseState() }, input);
     expect(result.ok).toBe(true);
     if (result.ok) {
       expect(result.stateChanges?.photoFindings).toHaveLength(1);
+      expect(result.stateChanges?.photoAnalyses).toHaveLength(1);
       expect(clients.photo.requests).toHaveLength(1);
+      expect(clients.photo.requests[0].blobKeys).toEqual(['photos/entrance.jpg']);
     }
   });
 
   it('execute returns ok:false if client throws', async () => {
     const clients = makeInMemoryClients();
     // No enqueue → InMemoryPhotoAnalysisClient will throw.
-    const input = tool.validateInput({ blob_key: 'photos/entrance.jpg' });
+    const input = tool.validateInput({ blob_keys: ['photos/entrance.jpg'] });
     const result = await tool.execute({ clients, state: baseState() }, input);
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.error).toMatch(/Photo analysis failed/);
@@ -279,17 +299,19 @@ describe('analyze_photo', () => {
   it('enriches findings with guide_url from section number match', async () => {
     const clients = makeInMemoryClients();
     clients.photo.enqueueResult({
-      findings: [
-        {
-          finding: 'Ramp slope exceeds 1:12',
+      output: makeOutput([
+        makePhotoFinding({
+          title: 'Ramp slope',
+          text: 'Ramp slope exceeds 1:12',
           severity: 'major',
-          standard: '§405.2', // Ramps — has a deep-dive guide
+          standard: '§405.2',
           confidence: 0.9,
-        },
-      ],
+          confirmable: true,
+        }),
+      ]),
       modelVersion: 'test-v1',
     });
-    const input = tool.validateInput({ blob_key: 'photos/ramp.jpg' });
+    const input = tool.validateInput({ blob_keys: ['photos/ramp.jpg'] });
     const result = await tool.execute({ clients, state: baseState() }, input);
     expect(result.ok).toBe(true);
     if (result.ok) {
@@ -302,17 +324,19 @@ describe('analyze_photo', () => {
   it('uses chapter URL when section matches a chapter-only topic', async () => {
     const clients = makeInMemoryClients();
     clients.photo.enqueueResult({
-      findings: [
-        {
-          finding: 'Pool has no accessible means of entry',
+      output: makeOutput([
+        makePhotoFinding({
+          title: 'Pool entry',
+          text: 'Pool has no accessible means of entry',
           severity: 'critical',
-          standard: '§1009', // Swimming pools — guide exists
+          standard: '§1009',
           confidence: 0.95,
-        },
-      ],
+          confirmable: true,
+        }),
+      ]),
       modelVersion: 'test-v1',
     });
-    const input = tool.validateInput({ blob_key: 'photos/pool.jpg' });
+    const input = tool.validateInput({ blob_keys: ['photos/pool.jpg'] });
     const result = await tool.execute({ clients, state: baseState() }, input);
     expect(result.ok).toBe(true);
     if (result.ok) {
@@ -324,22 +348,23 @@ describe('analyze_photo', () => {
   it('falls back to keyword match when section number is not recognized', async () => {
     const clients = makeInMemoryClients();
     clients.photo.enqueueResult({
-      findings: [
-        {
-          finding: 'Service animal was turned away at entrance',
+      output: makeOutput([
+        makePhotoFinding({
+          title: 'Service animal denied',
+          text: 'Service animal was turned away at entrance',
           severity: 'major',
-          standard: '28 CFR §36.302(c)', // Title III reg, no chapter match
+          standard: '28 CFR §36.302(c)',
           confidence: 0.85,
-        },
-      ],
+          confirmable: true,
+        }),
+      ]),
       modelVersion: 'test-v1',
     });
-    const input = tool.validateInput({ blob_key: 'photos/entrance.jpg' });
+    const input = tool.validateInput({ blob_keys: ['photos/entrance.jpg'] });
     const result = await tool.execute({ clients, state: baseState() }, input);
     expect(result.ok).toBe(true);
     if (result.ok) {
       const findings = result.stateChanges?.photoFindings;
-      // 'service animal' keyword should resolve to the service-animals guide.
       expect(findings?.[0].guide_url).toBe('/standards-guide/guide/service-animals');
     }
   });
@@ -347,17 +372,19 @@ describe('analyze_photo', () => {
   it('leaves guide_url undefined when neither section nor keywords match', async () => {
     const clients = makeInMemoryClients();
     clients.photo.enqueueResult({
-      findings: [
-        {
-          finding: 'Generic observation',
+      output: makeOutput([
+        makePhotoFinding({
+          title: 'Generic',
+          text: 'Generic observation',
           severity: 'advisory',
           standard: 'Some unrelated reference',
           confidence: 0.5,
-        },
-      ],
+          confirmable: true,
+        }),
+      ]),
       modelVersion: 'test-v1',
     });
-    const input = tool.validateInput({ blob_key: 'photos/misc.jpg' });
+    const input = tool.validateInput({ blob_keys: ['photos/misc.jpg'] });
     const result = await tool.execute({ clients, state: baseState() }, input);
     expect(result.ok).toBe(true);
     if (result.ok) {
@@ -647,3 +674,42 @@ describe('search_ada_standards', () => {
     }
   });
 });
+
+// ─── photo finding helpers ────────────────────────────────────────────────────
+
+interface MakePhotoFindingArgs {
+  title: string;
+  text: string;
+  severity: 'critical' | 'major' | 'minor' | 'advisory';
+  standard: string;
+  confidence: number;
+  confirmable: boolean;
+  bounding_box?: { x: number; y: number; w: number; h: number };
+}
+
+function makePhotoFinding(a: MakePhotoFindingArgs) {
+  return {
+    finding: a.text,
+    title_simple: a.title,
+    title_standard: a.title,
+    title_professional: a.title,
+    finding_simple: a.text,
+    finding_standard: a.text,
+    finding_professional: a.text,
+    severity: a.severity,
+    standard: a.standard,
+    confidence: a.confidence,
+    confirmable: a.confirmable,
+    ...(a.bounding_box ? { bounding_box: a.bounding_box } : {}),
+  };
+}
+
+function makeOutput(findings: ReturnType<typeof makePhotoFinding>[]) {
+  return {
+    scene: { simple: '', standard: '', professional: '' },
+    summary: { simple: '', standard: '', professional: '' },
+    overall_risk: 'medium' as const,
+    positive_findings: { simple: [], standard: [], professional: [] },
+    findings,
+  };
+}

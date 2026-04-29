@@ -158,9 +158,16 @@ describe('renderFirmEmail — html body', () => {
             findings: [
               {
                 finding: 'No roll-in shower',
+                title_simple: 'No accessible shower',
+                title_standard: 'No accessible shower',
+                title_professional: 'No roll-in shower',
+                finding_simple: 'No accessible shower',
+                finding_standard: 'No roll-in shower',
+                finding_professional: 'No roll-in shower',
                 severity: 'major',
                 standard: 'ADAAG 608.2',
                 confidence: 0.8,
+                confirmable: true,
               },
             ],
           },
