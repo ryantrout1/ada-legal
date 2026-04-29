@@ -41,6 +41,7 @@ import { runSessionQualityCheck } from '../../src/engine/observability/qualityCh
 import { assemblePackage } from '../../src/engine/package/assemble.js';
 import type { AdaTurnResult } from '../../src/engine/types.js';
 import type { AdaClients } from '../../src/engine/clients/types.js';
+import { hashAnonToken } from '../../src/lib/anonCookie.js';
 import {
   makeClientsFromEnv,
   readJsonBody,
@@ -126,6 +127,45 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res
         .status(400)
         .json({ error: `Session is ${state.status}, cannot accept new messages` });
+    }
+
+    // Session-ownership gate (A3). Bind the turn to the originating
+    // anon cookie so a leaked session_id (logs, browser history,
+    // accidental support forwards) cannot be driven by a third party.
+    //
+    // Today every session is anon-bound (createSession is only called
+    // with userId: null in api/ada/session.ts and the admin preview
+    // route). The userId branch fails closed: when user-auth ever
+    // lands on this endpoint, that branch must be expanded — defaulting
+    // to "reject" prevents silent grant-of-access.
+    //
+    // The check runs BEFORE the SSE/JSON branch and BEFORE flushHeaders
+    // so failure surfaces as a clean JSON 401, not a half-sent SSE
+    // response. All failure cases use the same generic 401 body to
+    // avoid helping an attacker enumerate which session_ids exist.
+    if (state.userId !== null) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    if (state.anonSessionId === null) {
+      // Schema CHECK guarantees exactly one of anonSessionId/userId
+      // is set, so this is a data-integrity 500, not a 401.
+      console.error(
+        `Session ${state.sessionId} has neither anonSessionId nor userId`,
+      );
+      return res.status(500).json({ error: 'Internal error' });
+    }
+    if (!ctx.anonToken) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const callerTokenHash = await hashAnonToken(ctx.anonToken);
+    const callerAnonSessionId = await clients.db.findAnonSessionByHash(
+      callerTokenHash,
+    );
+    if (
+      callerAnonSessionId === null ||
+      callerAnonSessionId !== state.anonSessionId
+    ) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     const org = await clients.db.getOrgByCode(ctx.orgCode ?? 'adall');
