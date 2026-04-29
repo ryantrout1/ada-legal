@@ -9,10 +9,13 @@
  * blob_key contract:
  *   - If blob_key is a `data:image/...;base64,...` URL, we extract the
  *     media type and send raw base64 to Anthropic (source: { type: "base64" }).
- *   - If blob_key is an `http://` or `https://` URL, we pass it as
- *     source: { type: "url" } and let Anthropic fetch it server-side.
- *   - Anything else is rejected. Real blob-storage URLs land in Phase B
- *     Step 11; until then the tool receives base64 directly from the client.
+ *   - If blob_key is an `https://*.public.blob.vercel-storage.com/...` URL,
+ *     we pass it as source: { type: "url" } and let Anthropic fetch it
+ *     server-side. ALL other URL patterns are rejected — this is a
+ *     deliberate allowlist to close the SSRF surface that lets
+ *     prompt-injected blob_key values exfil to attacker-controlled
+ *     hosts via Anthropic's IP space (B3). http:// is never accepted.
+ *   - Anything else (bare paths, javascript: URLs, etc.) is rejected.
  *
  * Structured output:
  *   We define ONE tool — `report_findings` — with an array-of-findings input
@@ -34,6 +37,15 @@ import photoAnalysisSystemPrompt from '../../../content-migration/prompts/photo-
 
 const DEFAULT_MODEL = 'claude-sonnet-4-5';
 const DEFAULT_MAX_TOKENS = 2048;
+
+// Vercel Blob URL pattern: https://<storeId>.public.blob.vercel-storage.com/<path>.
+// Anything else is rejected — this is the only legitimate source for
+// photo URLs Anthropic fetches server-side. http:// is never accepted.
+// See B3 in the security audit: prompt injection could otherwise drive
+// analyze_photo at arbitrary URLs, turning Anthropic's IP space into
+// a tracking-pixel exfil channel.
+const VERCEL_BLOB_URL_RE =
+  /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\//i;
 
 /** Input schema for the `report_findings` tool. Enforced by Anthropic. */
 const REPORT_FINDINGS_SCHEMA = {
@@ -173,12 +185,12 @@ export function parseBlobKeyToImageBlock(blobKey: string): {
     };
   }
 
-  if (blobKey.startsWith('http://') || blobKey.startsWith('https://')) {
+  if (VERCEL_BLOB_URL_RE.test(blobKey)) {
     return { type: 'image', source: { type: 'url', url: blobKey } };
   }
 
   throw new Error(
-    `AnthropicPhotoAnalysisClient: blob_key must be a data: URL or an http(s) URL. Got: ${blobKey.slice(0, 40)}...`,
+    `AnthropicPhotoAnalysisClient: blob_key must be a data: URL or a Vercel Blob URL (https://<storeId>.public.blob.vercel-storage.com/...). Got: ${blobKey.slice(0, 40)}...`,
   );
 }
 

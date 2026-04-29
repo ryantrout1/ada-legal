@@ -49,17 +49,41 @@ describe('parseBlobKeyToImageBlock', () => {
     }
   });
 
-  it('parses an https URL as a url-source block', () => {
-    const block = parseBlobKeyToImageBlock('https://example.com/photo.jpg');
+  it('parses a valid Vercel Blob URL as a url-source block', () => {
+    const block = parseBlobKeyToImageBlock(
+      'https://abc123.public.blob.vercel-storage.com/photos/test.jpg',
+    );
     expect(block.source.type).toBe('url');
     if (block.source.type === 'url') {
-      expect(block.source.url).toBe('https://example.com/photo.jpg');
+      expect(block.source.url).toBe(
+        'https://abc123.public.blob.vercel-storage.com/photos/test.jpg',
+      );
     }
   });
 
-  it('parses an http URL as a url-source block', () => {
-    const block = parseBlobKeyToImageBlock('http://example.com/photo.jpg');
-    expect(block.source.type).toBe('url');
+  it('rejects an http URL (downgrade)', () => {
+    expect(() =>
+      parseBlobKeyToImageBlock(
+        'http://abc123.public.blob.vercel-storage.com/photos/test.jpg',
+      ),
+    ).toThrow(/Vercel Blob URL/);
+  });
+
+  it('rejects a non-blob https host (SSRF allowlist, B3)', () => {
+    expect(() =>
+      parseBlobKeyToImageBlock('https://example.com/photo.jpg'),
+    ).toThrow(/Vercel Blob URL/);
+  });
+
+  it('rejects a lookalike host that ends with the blob domain', () => {
+    // The regex anchors at start and requires the trailing slash, so
+    // attacker-controlled subdomains like
+    // "https://attacker.com/public.blob.vercel-storage.com/x" fail.
+    expect(() =>
+      parseBlobKeyToImageBlock(
+        'https://attacker.com/public.blob.vercel-storage.com/x',
+      ),
+    ).toThrow(/Vercel Blob URL/);
   });
 
   it('rejects a data URL without base64 encoding', () => {

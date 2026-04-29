@@ -100,11 +100,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (typeof body.photo_url !== 'string') {
         return res.status(400).json({ error: 'photo_url must be a string' });
       }
+      // Allowlist: only accept Vercel Blob URLs. Mirrors the same
+      // check in src/engine/clients/anthropicPhotoAnalysisClient.ts so
+      // a bad URL fails fast at the edge rather than reaching the
+      // engine. http:// and arbitrary https:// are both rejected. (B3)
       if (
-        !body.photo_url.startsWith('https://') &&
-        !body.photo_url.startsWith('http://')
+        !/^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\//i.test(
+          body.photo_url,
+        )
       ) {
-        return res.status(400).json({ error: 'photo_url must be http(s)' });
+        return res
+          .status(400)
+          .json({ error: 'photo_url must be a Vercel Blob URL' });
       }
       if (body.photo_url.length > 1024) {
         return res.status(400).json({ error: 'photo_url is too long' });
