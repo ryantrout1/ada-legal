@@ -306,6 +306,14 @@ export default function PublicLayout() {
               </li>
               <li>
                 <a
+                  href="/glossary"
+                  className="hover:text-accent-600 transition-colors"
+                >
+                  Glossary
+                </a>
+              </li>
+              <li>
+                <a
                   href="/privacy"
                   className="hover:text-accent-600 transition-colors"
                 >
