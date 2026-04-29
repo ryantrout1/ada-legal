@@ -660,7 +660,12 @@ export default function Chat() {
         {state.messages.map((msg) => (
           <MessageBubble key={msg.id} message={msg} />
         ))}
-        {state.busy && <TypingIndicator />}
+        {state.busy && (
+          <TypingIndicator
+            hasPhoto={mostRecentUserMessageHasPhoto(state.messages)}
+            isPendingUndo={state.pendingSend !== null}
+          />
+        )}
       </div>
 
       {/* End-of-conversation summary card.
@@ -1118,36 +1123,105 @@ function SendOrUndoButton({
   );
 }
 
-function TypingIndicator() {
+/**
+ * TypingIndicator — animated dots + visible status text describing
+ * what Ada is doing. State-aware to satisfy COGA principles around
+ * loading-state communication: dots alone don't tell a cognitive-
+ * load-tired user whether the system is working, frozen, or
+ * something else.
+ *
+ * Three text states:
+ *   - Default: "Ada is thinking…"
+ *   - With photo: "Ada is reading your photo…"
+ *   - After 8s elapsed: "Still working — this one's taking a moment…"
+ *
+ * During the undo window (isPendingUndo=true), shows a different
+ * preamble — "Sent · we'll start in a moment" — so the user
+ * understands the message went through and the wait isn't a
+ * generation delay yet.
+ *
+ * Visible text is always present (not just for motion-reduce users)
+ * because that's the whole point — COGA users need text alongside
+ * dots regardless of motion preference. aria-live='polite' announces
+ * the text on initial render and on transitions to the long-wait
+ * state.
+ */
+function TypingIndicator({
+  hasPhoto,
+  isPendingUndo,
+}: {
+  hasPhoto?: boolean;
+  isPendingUndo?: boolean;
+}) {
+  const [elapsedMs, setElapsedMs] = useState(0);
+
+  // Track elapsed time so we can switch to "Still working…" after 8s.
+  // Resets on remount (which happens whenever busy flips false→true).
+  useEffect(() => {
+    const start = Date.now();
+    const interval = window.setInterval(() => {
+      setElapsedMs(Date.now() - start);
+    }, 1000);
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const message = (() => {
+    if (isPendingUndo) {
+      return "Sent — we'll start in a moment…";
+    }
+    if (elapsedMs >= 8000) {
+      return "Still working — this one's taking a moment…";
+    }
+    if (hasPhoto) {
+      return 'Ada is reading your photo…';
+    }
+    return 'Ada is thinking…';
+  })();
+
   return (
     <div
       className="flex justify-start"
       role="status"
       aria-live="polite"
-      aria-label="Ada is thinking"
+      aria-label={message}
     >
-      <div className="bg-surface-100 border border-surface-200 rounded-lg px-4 py-3 inline-flex items-center gap-1">
-        <span
-          className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse motion-reduce:animate-none"
-          style={{ animationDelay: '0ms' }}
-        />
-        <span
-          className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse motion-reduce:animate-none"
-          style={{ animationDelay: '200ms' }}
-        />
-        <span
-          className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse motion-reduce:animate-none"
-          style={{ animationDelay: '400ms' }}
-        />
-        {/* When motion is reduced, the dots don't animate — so show text
-            that's always readable so the screen reader + low-vision user
-            both know what's happening. */}
-        <span className="sr-only motion-reduce:not-sr-only motion-reduce:ml-1 text-xs text-ink-500">
-          Ada is thinking…
+      <div className="bg-surface-100 border border-surface-200 rounded-lg px-4 py-3 inline-flex items-center gap-2">
+        <span className="inline-flex items-center gap-1" aria-hidden="true">
+          <span
+            className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse motion-reduce:animate-none"
+            style={{ animationDelay: '0ms' }}
+          />
+          <span
+            className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse motion-reduce:animate-none"
+            style={{ animationDelay: '200ms' }}
+          />
+          <span
+            className="w-1.5 h-1.5 rounded-full bg-ink-500 animate-pulse motion-reduce:animate-none"
+            style={{ animationDelay: '400ms' }}
+          />
         </span>
+        <span className="text-sm text-ink-700">{message}</span>
       </div>
     </div>
   );
+}
+
+/**
+ * Helper: did the most recent user message include a photo? Used by
+ * TypingIndicator to pick a more-specific status message ("reading
+ * your photo" vs "thinking"). Returns false for an empty list or a
+ * list whose latest user-role message has no photoPreview.
+ */
+function mostRecentUserMessageHasPhoto(
+  messages: import('@/app/hooks/useChatSession').ChatMessage[],
+): boolean {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m.role === 'user') {
+      return Boolean(m.photoPreview);
+    }
+  }
+  return false;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
