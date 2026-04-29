@@ -416,6 +416,23 @@ export interface ChapterPageLayoutProps {
   chapterNum: number;
   title: string;
   range: string;
+  /**
+   * Optional plain-language summary rendered as a callout box above
+   * the main overview prose. The intent is COGA-friendly: cognitive-
+   * load-tired users get the takeaway first and can stop reading
+   * after the callout if that's all they need.
+   *
+   * Authoring guide: 2-3 short sentences. Plain language regardless
+   * of the user's reading-level setting (this is the "for everyone"
+   * version). The standard pattern is two beats:
+   *   - "What this chapter covers: [the topic]"
+   *   - "The most important thing: [the takeaway]"
+   * Pass as ReactNode so chapter authors can use bold/strong, line
+   * breaks, etc.
+   *
+   * Round 3 AAA+COGA Group F item #49 (F1).
+   */
+  tldr?: React.ReactNode;
   overview: React.ReactNode;
   sections: ChapterSection[];
 }
@@ -424,6 +441,7 @@ export default function ChapterPageLayout({
   chapterNum,
   title,
   range,
+  tldr,
   overview,
   sections,
 }: ChapterPageLayoutProps) {
@@ -509,6 +527,28 @@ export default function ChapterPageLayout({
               )}
             </div>
           </nav>
+
+          {/* TL;DR callout — optional, plain-language summary above the
+              dense overview. Cognitive-load-tired readers get the
+              takeaway first; can skip the overview if that's enough. */}
+          {tldr && (
+            <aside
+              aria-label="Chapter summary in plain language"
+              style={{
+                fontFamily: 'var(--font-body), Manrope, sans-serif',
+                fontSize: '0.9375rem',
+                color: 'var(--body)',
+                lineHeight: 1.6,
+                padding: '16px 18px 16px 22px',
+                marginBottom: '24px',
+                borderLeft: '3px solid var(--accent)',
+                background: 'var(--page-bg-subtle)',
+                borderRadius: '0 6px 6px 0',
+              }}
+            >
+              {tldr}
+            </aside>
+          )}
 
           {/* Overview prose */}
           <div
