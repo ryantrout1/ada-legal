@@ -270,8 +270,17 @@ body {
   --color-ink-500: #B8AE9C;       /* lifted slightly (was #A89E8C) so
                                      meta text + secondary actions hit
                                      AAA, not just AA, on surface-50 */
-  --color-accent-500: #D9824A;    /* brighter terracotta for dark bg, AAA */
-  --color-accent-600: #E89969;
+  --color-accent-500: #EF9367;    /* terracotta-orange, AAA on dark surfaces.
+                                     8.04:1 on surface-50 (page bg),
+                                     7.38:1 on surface-100 (cards),
+                                     6.47:1 on .bg-white override (#2A2620).
+                                     Was #D9824A which only hit 6.44:1 on
+                                     surface-50 — under AAA 7:1 ceiling. */
+  --color-accent-600: #F4AA84;    /* hover state, lighter than 500.
+                                     9.73:1 on surface-50, 8.93:1 on
+                                     surface-100. Was #E89969 (8.18:1)
+                                     which is now too close to the new
+                                     500 to be visibly distinct. */
   --color-accent-50:  #2A1E15;
   --color-success-500: #6FA176;
   --color-success-50:  #1A2A1C;
