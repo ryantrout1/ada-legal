@@ -300,14 +300,23 @@ export function parseBlobKeyToImageBlock(blobKey: string): {
 }
 
 const EMPTY_RLT: ReadingLevelText = { simple: '', standard: '', professional: '' };
-const EMPTY_RLSL: ReadingLevelStringList = { simple: [], standard: [], professional: [] };
+
+/**
+ * Factory rather than a frozen constant: callers may mutate the
+ * returned arrays (e.g. push to positive_findings.standard), and a
+ * shared reference would corrupt every other empty output. Always
+ * call this fresh.
+ */
+function emptyRLSL(): ReadingLevelStringList {
+  return { simple: [], standard: [], professional: [] };
+}
 
 function emptyOutput(): PhotoAnalysisOutput {
   return {
     scene: { ...EMPTY_RLT },
     summary: { ...EMPTY_RLT },
     overall_risk: 'none',
-    positive_findings: { ...EMPTY_RLSL },
+    positive_findings: emptyRLSL(),
     findings: [],
   };
 }
@@ -354,7 +363,7 @@ function validateRLT(raw: unknown): ReadingLevelText {
 
 function validateRLSL(raw: unknown): ReadingLevelStringList {
   if (!raw || typeof raw !== 'object') {
-    return { ...EMPTY_RLSL };
+    return emptyRLSL();
   }
   const r = raw as Record<string, unknown>;
   const toStringArray = (v: unknown): string[] =>
