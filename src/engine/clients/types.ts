@@ -16,7 +16,7 @@
  * Ref: docs/ARCHITECTURE.md §6
  */
 
-import type { Message, PhotoFinding } from '../../types/db.js';
+import type { Message, PhotoAnalysisOutput } from '../../types/db.js';
 import type { AdaSessionState } from '../types.js';
 
 // ─── AI client ────────────────────────────────────────────────────────────────
@@ -843,12 +843,18 @@ export interface BlobClient {
 // output shape are distinct. Keeps the main AiClient focused on conversation.
 
 export interface PhotoAnalysisRequest {
-  blobKey: string;
+  /**
+   * Up to 3 blob keys (data: URI or Vercel Blob URL) for photos from
+   * the same site. The analyzer treats them as a batch so it can
+   * reason about cross-photo compliance chains. Throws if length is
+   * 0 or > 3. Step 30, Commit 8.
+   */
+  blobKeys: string[];
   contextHint?: string;
 }
 
 export interface PhotoAnalysisResult {
-  findings: PhotoFinding[];
+  output: PhotoAnalysisOutput;
   modelVersion: string;
 }
 
