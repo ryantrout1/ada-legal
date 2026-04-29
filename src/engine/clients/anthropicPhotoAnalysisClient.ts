@@ -1,27 +1,31 @@
 /**
  * AnthropicPhotoAnalysisClient — real implementation of PhotoAnalysisClient.
  *
- * Uses Claude Haiku 4.5 with vision + tool-use to force structured JSON
+ * Uses Claude Sonnet 4.5 with vision + tool-use to force structured JSON
  * output from the model. The analyst persona + comprehensive ADA standards
- * catalog lives in content-migration/prompts/photo-analysis.md (migrated
- * verbatim from Base44).
+ * catalog lives in content-migration/prompts/photo-analysis.md (extended
+ * for Commit 8 — scene/summary/positive findings, three reading-level
+ * variants, confirmable flag).
  *
- * blob_key contract:
- *   - If blob_key is a `data:image/...;base64,...` URL, we extract the
- *     media type and send raw base64 to Anthropic (source: { type: "base64" }).
- *   - If blob_key is an `https://*.public.blob.vercel-storage.com/...` URL,
- *     we pass it as source: { type: "url" } and let Anthropic fetch it
- *     server-side. ALL other URL patterns are rejected — this is a
- *     deliberate allowlist to close the SSRF surface that lets
- *     prompt-injected blob_key values exfil to attacker-controlled
- *     hosts via Anthropic's IP space (B3). http:// is never accepted.
- *   - Anything else (bare paths, javascript: URLs, etc.) is rejected.
+ * blob_keys contract:
+ *   Each entry must be either:
+ *   - a `data:image/...;base64,...` URL — extracted and sent as raw
+ *     base64 (source: { type: "base64" }), or
+ *   - an `https://*.public.blob.vercel-storage.com/...` URL — passed
+ *     as source: { type: "url" } and fetched server-side by Anthropic.
+ *   ALL other URL patterns are rejected — deliberate allowlist closing
+ *   the SSRF surface from prompt-injected blob_key values (B3).
+ *   http:// is never accepted.
+ *
+ *   Up to 3 photos per call (MAX_PHOTOS_PER_CALL). Throws if length is
+ *   0 or > 3. Batch shape lets the model reason about cross-photo
+ *   compliance chains. Step 30, Commit 8.
  *
  * Structured output:
- *   We define ONE tool — `report_findings` — with an array-of-findings input
- *   schema that matches our PhotoFinding type (finding, severity, standard,
- *   confidence, bounding_box). We force its use via tool_choice. The model
- *   cannot emit free-form JSON; it must call the tool.
+ *   The `report_findings` tool's input schema matches PhotoAnalysisOutput:
+ *   top-level scene/summary/overall_risk/positive_findings (each with
+ *   three reading-level variants) plus a findings[] array. We force its
+ *   use via tool_choice — no free-form JSON.
  *
  * Ref: docs/ARCHITECTURE.md §10
  */
@@ -32,11 +36,23 @@ import type {
   PhotoAnalysisRequest,
   PhotoAnalysisResult,
 } from './types.js';
-import type { PhotoFinding, PhotoFindingSeverity } from '../../types/db.js';
+import type {
+  PhotoAnalysisOutput,
+  PhotoFinding,
+  PhotoFindingSeverity,
+  PhotoOverallRisk,
+  ReadingLevelStringList,
+  ReadingLevelText,
+} from '../../types/db.js';
 import photoAnalysisSystemPrompt from '../../../content-migration/prompts/photo-analysis.js';
 
 const DEFAULT_MODEL = 'claude-sonnet-4-5';
-const DEFAULT_MAX_TOKENS = 2048;
+// Three reading-level variants × scene + summary + positive_findings +
+// (title + finding) per concern can easily exceed 2048 on a 3-photo,
+// 10-finding site. 8192 leaves comfortable headroom; image tokens
+// dominate cost regardless. Step 30, Commit 8.
+const DEFAULT_MAX_TOKENS = 8192;
+const MAX_PHOTOS_PER_CALL = 3;
 
 // Vercel Blob URL pattern: https://<storeId>.public.blob.vercel-storage.com/<path>.
 // Anything else is rejected — this is the only legitimate source for
@@ -47,21 +63,75 @@ const DEFAULT_MAX_TOKENS = 2048;
 const VERCEL_BLOB_URL_RE =
   /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\//i;
 
+const READING_LEVEL_TEXT_SCHEMA = {
+  type: 'object' as const,
+  description:
+    'Reading-level-aware string. Provide all three variants. simple = COGA-conformant plain language. standard = 8th-grade conversational. professional = legal/technical with ADA terminology.',
+  properties: {
+    simple: { type: 'string' },
+    standard: { type: 'string' },
+    professional: { type: 'string' },
+  },
+  required: ['simple', 'standard', 'professional'],
+};
+
+const READING_LEVEL_STRING_LIST_SCHEMA = {
+  type: 'object' as const,
+  description:
+    'Reading-level-aware list of strings. Provide all three variants of the same list at different reading levels.',
+  properties: {
+    simple: { type: 'array', items: { type: 'string' } },
+    standard: { type: 'array', items: { type: 'string' } },
+    professional: { type: 'array', items: { type: 'string' } },
+  },
+  required: ['simple', 'standard', 'professional'],
+};
+
 /** Input schema for the `report_findings` tool. Enforced by Anthropic. */
 const REPORT_FINDINGS_SCHEMA = {
   type: 'object' as const,
   properties: {
+    scene: {
+      ...READING_LEVEL_TEXT_SCHEMA,
+      description:
+        'What the photo(s) show — building type, materials, fixtures visible, lighting context. Reference each photo by number when multiple are provided ("Photo 1 shows...; Photo 2 shows..."). Provide three reading-level variants.',
+    },
+    summary: {
+      ...READING_LEVEL_TEXT_SCHEMA,
+      description:
+        '2-3 sentence overall assessment of the batch. Mention the headline concerns, anything notably compliant, and whether the angle/framing limited assessment. Three reading-level variants.',
+    },
+    overall_risk: {
+      type: 'string',
+      enum: ['high', 'medium', 'low', 'none'],
+      description:
+        'high = any confirmable critical/major finding. medium = any major-severity unconfirmable, OR any minor finding. low = only advisory findings. none = zero findings.',
+    },
+    positive_findings: {
+      ...READING_LEVEL_STRING_LIST_SCHEMA,
+      description:
+        'Compliant features observed (curb cut present, accessible signage visible, etc.). Empty arrays allowed.',
+    },
     findings: {
       type: 'array',
       description:
-        'Every ADA compliance concern you identified in the image. An empty array is valid if the image shows nothing concerning.',
+        'Every ADA compliance concern you identified. An empty array is valid if the photos show nothing concerning.',
       items: {
         type: 'object',
         properties: {
-          finding: {
+          title_simple: { type: 'string' },
+          title_standard: { type: 'string' },
+          title_professional: {
             type: 'string',
             description:
-              'Specific description of the concern. Include measurement estimates where visible.',
+              'Short headline for the concern, e.g. "Door Pull Bar Hardware — Graspability Concern".',
+          },
+          finding_simple: { type: 'string' },
+          finding_standard: { type: 'string' },
+          finding_professional: {
+            type: 'string',
+            description:
+              'Full prose explanation of the concern, including measurement estimates where visible.',
           },
           severity: {
             type: 'string',
@@ -72,7 +142,7 @@ const REPORT_FINDINGS_SCHEMA = {
           standard: {
             type: 'string',
             description:
-              'The ADA standard cited — e.g., "28 CFR §36.304", "ADAAG §404.2.3", "2010 Standards §502.2".',
+              'The ADA standard cited — e.g., "§404.2.3", "ADAAG §404", "2010 Standards §502.2". Universal — do not localize across reading levels.',
           },
           confidence: {
             type: 'number',
@@ -81,10 +151,15 @@ const REPORT_FINDINGS_SCHEMA = {
             description:
               'Your confidence this is a real violation based on the image alone. 0 = pure guess; 1 = obvious.',
           },
+          confirmable: {
+            type: 'boolean',
+            description:
+              'true if you can fully assess this concern from the photo. false when angle, framing, or lighting prevents conclusive measurement (e.g. you can see a door closer but not time its closing speed). The finding still ships either way; this flag tells downstream consumers to render it as needs-on-site-verification.',
+          },
           bounding_box: {
             type: 'object',
             description:
-              'Normalized bounding box on the image. x,y = top-left; w,h = size. All in 0..1 image fractions.',
+              'Normalized bounding box on the image. x,y = top-left; w,h = size. All in 0..1 image fractions. Optional when a finding spans multiple photos.',
             properties: {
               x: { type: 'number', minimum: 0, maximum: 1 },
               y: { type: 'number', minimum: 0, maximum: 1 },
@@ -94,11 +169,22 @@ const REPORT_FINDINGS_SCHEMA = {
             required: ['x', 'y', 'w', 'h'],
           },
         },
-        required: ['finding', 'severity', 'standard', 'confidence'],
+        required: [
+          'title_simple',
+          'title_standard',
+          'title_professional',
+          'finding_simple',
+          'finding_standard',
+          'finding_professional',
+          'severity',
+          'standard',
+          'confidence',
+          'confirmable',
+        ],
       },
     },
   },
-  required: ['findings'],
+  required: ['scene', 'summary', 'overall_risk', 'positive_findings', 'findings'],
 };
 
 export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
@@ -114,12 +200,31 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
   }
 
   async analyze(req: PhotoAnalysisRequest): Promise<PhotoAnalysisResult> {
-    const imageBlock = parseBlobKeyToImageBlock(req.blobKey);
+    if (!Array.isArray(req.blobKeys) || req.blobKeys.length === 0) {
+      throw new Error(
+        'AnthropicPhotoAnalysisClient: blobKeys must be a non-empty array',
+      );
+    }
+    if (req.blobKeys.length > MAX_PHOTOS_PER_CALL) {
+      throw new Error(
+        `AnthropicPhotoAnalysisClient: maximum ${MAX_PHOTOS_PER_CALL} photos per call (got ${req.blobKeys.length})`,
+      );
+    }
 
     const userContent: Array<
       | { type: 'image'; source: ImageSource }
       | { type: 'text'; text: string }
-    > = [imageBlock];
+    > = [];
+
+    // Interleave a labeling text block before each image so the model
+    // can refer to each photo by number in scene/summary/finding text.
+    req.blobKeys.forEach((blobKey, idx) => {
+      userContent.push({
+        type: 'text',
+        text: `Photo ${idx + 1}:`,
+      });
+      userContent.push(parseBlobKeyToImageBlock(blobKey));
+    });
 
     if (req.contextHint && req.contextHint.trim().length > 0) {
       userContent.push({
@@ -136,7 +241,7 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
         {
           name: 'report_findings',
           description:
-            'Report all ADA accessibility concerns identified in the image. Call this exactly once with your complete findings list.',
+            'Report all ADA accessibility concerns identified across the provided photo(s). Call this exactly once with your complete assessment — scene description, summary, overall risk, positive findings, and per-concern findings.',
           input_schema: REPORT_FINDINGS_SCHEMA,
         },
       ],
@@ -144,9 +249,9 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
       messages: [{ role: 'user', content: userContent }],
     });
 
-    const findings = extractFindingsFromResponse(response);
+    const output = extractOutputFromResponse(response);
     return {
-      findings,
+      output,
       modelVersion: this.model,
     };
   }
@@ -194,38 +299,104 @@ export function parseBlobKeyToImageBlock(blobKey: string): {
   );
 }
 
-export function extractFindingsFromResponse(response: Anthropic.Message): PhotoFinding[] {
+const EMPTY_RLT: ReadingLevelText = { simple: '', standard: '', professional: '' };
+const EMPTY_RLSL: ReadingLevelStringList = { simple: [], standard: [], professional: [] };
+
+function emptyOutput(): PhotoAnalysisOutput {
+  return {
+    scene: { ...EMPTY_RLT },
+    summary: { ...EMPTY_RLT },
+    overall_risk: 'none',
+    positive_findings: { ...EMPTY_RLSL },
+    findings: [],
+  };
+}
+
+export function extractOutputFromResponse(
+  response: Anthropic.Message,
+): PhotoAnalysisOutput {
   // We set tool_choice to force report_findings. Find that tool_use block.
   for (const block of response.content) {
     if (block.type === 'tool_use' && block.name === 'report_findings') {
-      const input = block.input as { findings?: unknown };
-      if (!Array.isArray(input.findings)) return [];
-      return input.findings
-        .map(validateFinding)
-        .filter((f): f is PhotoFinding => f !== null);
+      const input = block.input as Record<string, unknown>;
+      return validateOutput(input);
     }
   }
   // No tool block — likely a refusal. Return empty so the turn loop can
   // handle it conversationally rather than throwing.
-  return [];
+  return emptyOutput();
 }
 
-function validateFinding(raw: unknown): PhotoFinding | null {
+function validateOutput(raw: Record<string, unknown>): PhotoAnalysisOutput {
+  const findings = Array.isArray(raw.findings)
+    ? raw.findings
+        .map(validateFinding)
+        .filter((f): f is PhotoFinding => f !== null)
+    : [];
+  return {
+    scene: validateRLT(raw.scene),
+    summary: validateRLT(raw.summary),
+    overall_risk: isValidRisk(raw.overall_risk) ? raw.overall_risk : 'none',
+    positive_findings: validateRLSL(raw.positive_findings),
+    findings,
+  };
+}
+
+function validateRLT(raw: unknown): ReadingLevelText {
+  if (!raw || typeof raw !== 'object') return { ...EMPTY_RLT };
+  const r = raw as Record<string, unknown>;
+  return {
+    simple: typeof r.simple === 'string' ? r.simple : '',
+    standard: typeof r.standard === 'string' ? r.standard : '',
+    professional: typeof r.professional === 'string' ? r.professional : '',
+  };
+}
+
+function validateRLSL(raw: unknown): ReadingLevelStringList {
+  if (!raw || typeof raw !== 'object') {
+    return { ...EMPTY_RLSL };
+  }
+  const r = raw as Record<string, unknown>;
+  const toStringArray = (v: unknown): string[] =>
+    Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string') : [];
+  return {
+    simple: toStringArray(r.simple),
+    standard: toStringArray(r.standard),
+    professional: toStringArray(r.professional),
+  };
+}
+
+export function validateFinding(raw: unknown): PhotoFinding | null {
   if (!raw || typeof raw !== 'object') return null;
   const r = raw as Record<string, unknown>;
   if (
-    typeof r.finding !== 'string' ||
+    typeof r.title_simple !== 'string' ||
+    typeof r.title_standard !== 'string' ||
+    typeof r.title_professional !== 'string' ||
+    typeof r.finding_simple !== 'string' ||
+    typeof r.finding_standard !== 'string' ||
+    typeof r.finding_professional !== 'string' ||
     typeof r.standard !== 'string' ||
     typeof r.confidence !== 'number' ||
+    typeof r.confirmable !== 'boolean' ||
     !isValidSeverity(r.severity)
   ) {
     return null;
   }
   const out: PhotoFinding = {
-    finding: r.finding,
+    // Deprecated alias — equals finding_standard so legacy readers keep
+    // working until Commit 9 removes the field.
+    finding: r.finding_standard,
+    title_simple: r.title_simple,
+    title_standard: r.title_standard,
+    title_professional: r.title_professional,
+    finding_simple: r.finding_simple,
+    finding_standard: r.finding_standard,
+    finding_professional: r.finding_professional,
     severity: r.severity,
     standard: r.standard,
     confidence: Math.max(0, Math.min(1, r.confidence)),
+    confirmable: r.confirmable,
   };
   if (r.bounding_box && typeof r.bounding_box === 'object') {
     const b = r.bounding_box as Record<string, unknown>;
@@ -243,4 +414,8 @@ function validateFinding(raw: unknown): PhotoFinding | null {
 
 function isValidSeverity(s: unknown): s is PhotoFindingSeverity {
   return s === 'critical' || s === 'major' || s === 'minor' || s === 'advisory';
+}
+
+function isValidRisk(s: unknown): s is PhotoOverallRisk {
+  return s === 'high' || s === 'medium' || s === 'low' || s === 'none';
 }
