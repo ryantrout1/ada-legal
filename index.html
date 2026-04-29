@@ -48,7 +48,14 @@
 
     <!-- Accessibility settings — applied pre-render to prevent FOUC (Step 15.5).
          Reads localStorage.ada-a11y and sets data-* attributes on <html> so the
-         CSS in app.css can style everything from the root before React mounts. -->
+         CSS in app.css can style everything from the root before React mounts.
+
+         CSP NOTE: This script's exact byte content is hashed in
+         vercel.json's Content-Security-Policy script-src directive
+         (sha256-epeb2hNw2It7ursPT4TfinH3SYAdvuDEtjhRLa/Kzqc=). If you
+         edit the script body — even whitespace — recompute the hash
+         and update vercel.json in the same commit, or the script
+         will be blocked once CSP enforcement flips on. -->
     <script>
       (function () {
         try {
