@@ -19,6 +19,7 @@ import type {
   SessionMetadata,
   AccessibilitySnapshot,
   ReadingLevel,
+  PhotoAnalysisOutput,
   PhotoFinding,
 } from '../types/db.js';
 
@@ -82,6 +83,14 @@ export interface AdaTurnResult {
   nextState: AdaSessionState;
   assistantMessage: Message;
   photoFindings?: PhotoFinding[];
+  /**
+   * Full structured photo-analysis outputs from any analyze_photo
+   * calls during this turn. Each entry covers up to 3 photos and
+   * carries scene/summary/overall_risk/positive_findings alongside
+   * its findings list. `photoFindings` is the flat aggregation
+   * across all entries, kept for legacy callers. Step 30, Commit 8.
+   */
+  photoAnalyses?: PhotoAnalysisOutput[];
   // Transcript of tool calls made during this turn, for logging.
   toolInvocations: ToolInvocation[];
 }

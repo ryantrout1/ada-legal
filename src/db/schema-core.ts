@@ -30,9 +30,12 @@ import type {
   SessionMetadata,
   AccessibilitySnapshot,
   PhotoFinding,
+  PhotoOverallRisk,
   QualityCheckFailure,
   QualityCheckWarning,
   AuditMetadata,
+  ReadingLevelStringList,
+  ReadingLevelText,
 } from '../types/db.js';
 
 // ─── organizations ────────────────────────────────────────────────────────────
@@ -204,6 +207,20 @@ export const photoAnalyses = pgTable(
     photoUrl: text('photo_url').notNull(),
     photoBlobKey: text('photo_blob_key').notNull(),
     findings: jsonb('findings').$type<PhotoFinding[]>().notNull().default(sql`'[]'::jsonb`),
+    /**
+     * Scene description with three reading-level variants. Nullable
+     * because rows written before Commit 8 don't have it. Step 30.
+     */
+    scene: jsonb('scene').$type<ReadingLevelText | null>(),
+    /** 2-3 sentence batch assessment. Nullable for pre-Commit-8 rows. */
+    summary: jsonb('summary').$type<ReadingLevelText | null>(),
+    /**
+     * Risk rollup across the batch. Nullable for pre-Commit-8 rows.
+     * Values: 'high' | 'medium' | 'low' | 'none'.
+     */
+    overallRisk: text('overall_risk').$type<PhotoOverallRisk | null>(),
+    /** Compliant features observed. Nullable for pre-Commit-8 rows. */
+    positiveFindings: jsonb('positive_findings').$type<ReadingLevelStringList | null>(),
     modelVersion: text('model_version').notNull(),
     analyzedAt: timestamp('analyzed_at', { withTimezone: true }).notNull().defaultNow(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

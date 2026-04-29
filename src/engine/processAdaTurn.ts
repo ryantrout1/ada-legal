@@ -107,6 +107,7 @@ export async function processAdaTurn({
   const toolDefs = toolRegistryToDefinitions(allTools);
   const toolInvocations: ToolInvocation[] = [];
   const photoFindingsAccum: AdaTurnResult['photoFindings'] = [];
+  const photoAnalysesAccum: AdaTurnResult['photoAnalyses'] = [];
 
   // ── Pre-flight context (Steps 10.5, 21, 22) ──────────────────────────────
   // Three independent DB-bound lookups happen before the model is called:
@@ -288,6 +289,10 @@ export async function processAdaTurn({
           if (ph && ph.length > 0) {
             photoFindingsAccum.push(...ph);
           }
+          const pa = record.result.stateChanges.photoAnalyses;
+          if (pa && pa.length > 0) {
+            photoAnalysesAccum.push(...pa);
+          }
         }
 
         toolResultBlocks.push({
@@ -359,6 +364,7 @@ export async function processAdaTurn({
     assistantMessage,
     toolInvocations,
     photoFindings: photoFindingsAccum.length > 0 ? photoFindingsAccum : undefined,
+    photoAnalyses: photoAnalysesAccum.length > 0 ? photoAnalysesAccum : undefined,
   };
 }
 

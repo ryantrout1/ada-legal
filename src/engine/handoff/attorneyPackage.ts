@@ -31,6 +31,7 @@
 import type {
   Classification,
   ExtractedField,
+  PhotoAnalysisOutput,
   PhotoFinding,
 } from '../../types/db.js';
 import type { AdaSessionState } from '../types.js';
@@ -81,6 +82,15 @@ export interface AttorneyPackage {
   photos: Array<{
     url: string;
     findings: PhotoFinding[];
+    /**
+     * Full structured analysis output from the analyze_photo call this
+     * photo participated in (scene, summary, overall_risk, positive
+     * findings). When multiple photos shared one analyze_photo call
+     * (batch up to 3), they each get the same `analysis` reference.
+     * Optional — older sessions may have findings without a stored
+     * analysis. Step 30, Commit 8.
+     */
+    analysis?: PhotoAnalysisOutput;
   }>;
 
   /**
