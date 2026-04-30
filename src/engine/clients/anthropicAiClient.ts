@@ -49,13 +49,13 @@ export class AnthropicAiClient implements AiClient {
       .filter((m) => m.role === 'user' || m.role === 'assistant')
       .map((m) => ({
         role: m.role as 'user' | 'assistant',
-        // Anthropic accepts string OR ContentBlockParam[]. Our Message.content
-        // is `string | ContentBlock[]` — a structural match at runtime but not
-        // through TS's strict type system, so we cast. The turn loop is
-        // responsible for ensuring the blocks it emits actually conform to
-        // Anthropic's shape (tool_use with id/name/input, tool_result with
-        // tool_use_id, etc.).
-        content: m.content as string,
+        // Content can be a string OR an array of content blocks (text,
+        // image, tool_use, tool_result). Anthropic accepts both shapes;
+        // pass through unchanged. Image blocks let Ada see uploaded
+        // photos natively without a separate analyzer call. The turn
+        // loop is responsible for ensuring blocks conform to Anthropic
+        // shapes (tool_use with id/name/input, etc.).
+        content: m.content as never,
       }));
 
     // System prompt: when a cache prefix is provided, we send Anthropic

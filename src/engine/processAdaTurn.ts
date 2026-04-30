@@ -69,12 +69,31 @@ export async function processAdaTurn({
   orgAdaIntroPrompt = null,
   listingAdaPromptOverride = null,
 }: ProcessAdaTurnParams): Promise<AdaTurnResult> {
-  // Build the user message and append to history.
-  const userMessage: Message = {
-    role: 'user',
-    content: input.userMessage,
-    timestamp: clients.clock.now().toISOString(),
-  };
+  // Build the user message and append to history. When the user
+  // attaches photos this turn, the message becomes a multi-part
+  // content array with image blocks ahead of the text — Ada looks
+  // at the photo natively (Sonnet 4.5 is a vision model), no
+  // separate analyzer call required. Without photos, the message
+  // is plain text as before.
+  const newPhotoUrls = input.photoBlobKeys ?? [];
+  const userMessage: Message =
+    newPhotoUrls.length > 0
+      ? {
+          role: 'user',
+          content: [
+            ...newPhotoUrls.map((url) => ({
+              type: 'image' as const,
+              source: { type: 'url' as const, url },
+            })),
+            { type: 'text' as const, text: input.userMessage },
+          ] as never, // ContentBlock[] union — Anthropic accepts at runtime
+          timestamp: clients.clock.now().toISOString(),
+        }
+      : {
+          role: 'user',
+          content: input.userMessage,
+          timestamp: clients.clock.now().toISOString(),
+        };
 
   // If the user attached photos this turn, persist their URLs in
   // session metadata. This is how photos survive beyond the session

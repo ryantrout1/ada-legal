@@ -148,10 +148,9 @@ describe('buildToolIndex', () => {
     expect(() => buildToolIndex([a, b])).toThrow(/Duplicate/);
   });
 
-  it('CH0_TOOLS registry has exactly the seven expected tools', () => {
+  it('CH0_TOOLS registry has exactly the six expected tools', () => {
     const names = CH0_TOOLS.map((t) => t.name).sort();
     expect(names).toEqual([
-      'analyze_photo',
       'end_session',
       'extract_field',
       'search_ada_standards',

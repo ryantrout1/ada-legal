@@ -18,7 +18,11 @@
 import type { AnyAdaTool } from './types.js';
 import { setClassificationTool } from './impls/setClassification.js';
 import { extractFieldTool } from './impls/extractField.js';
-import { analyzePhotoTool } from './impls/analyzePhoto.js';
+// analyzePhotoTool is intentionally NOT registered. Ada sees uploaded
+// photos natively via vision input (see processAdaTurn.ts — image
+// content blocks on the user message). The structured analyzer is
+// kept in the codebase for a future finalization-step lawyer artifact
+// but is no longer on the chat's blocking path.
 import { searchAttorneysTool } from './impls/searchAttorneys.js';
 import { searchAdaStandardsTool } from './impls/searchAdaStandards.js';
 import { setReadingLevelTool } from './impls/setReadingLevel.js';
@@ -27,7 +31,6 @@ import { endSessionTool } from './impls/endSession.js';
 export const CH0_TOOLS: ReadonlyArray<AnyAdaTool> = [
   setClassificationTool,
   extractFieldTool,
-  analyzePhotoTool,
   searchAttorneysTool,
   searchAdaStandardsTool,
   setReadingLevelTool,
