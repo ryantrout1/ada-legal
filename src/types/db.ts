@@ -114,6 +114,15 @@ export interface SessionMetadata {
    */
   photos?: AttachedPhoto[];
   /**
+   * Cache of analyze_photo outputs from this session, one entry per
+   * tool call. Each entry's `blob_keys` field is the cache key — if a
+   * later turn invokes analyze_photo with the same blob_keys, the
+   * cached output is returned instead of a fresh ~10–18s vision call.
+   * Persisted alongside the rest of metadata so the cache survives
+   * across turns within a session. Cleared when the session ends.
+   */
+  photo_analyses?: PhotoAnalysisOutput[];
+  /**
    * If the session was opened via a Talk-to-Ada CTA from a Standards
    * Guide chapter or deep-dive guide page, we record which page the
    * user came from. This lets Ada open the conversation by
@@ -290,6 +299,15 @@ export interface PhotoAnalysisOutput {
     tool_call_present: boolean;
     stop_reason: string;
   };
+  /**
+   * Blob keys this analysis was computed from. Used by the analyze_photo
+   * tool to cache against the in-session metadata.photo_analyses list:
+   * if a later turn invokes analyze_photo with the same blob_keys, the
+   * tool returns the prior output instead of running a fresh vision
+   * call. Optional — pre-cache rows and DB-loaded analyses won't carry
+   * it, in which case the tool simply misses the cache and runs fresh.
+   */
+  blob_keys?: string[];
 }
 
 // ─── audit log ────────────────────────────────────────────────────────────────

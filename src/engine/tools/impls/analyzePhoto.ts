@@ -114,8 +114,28 @@ export const analyzePhotoTool: AdaTool<AnalyzePhotoInput> = {
       context_hint: typeof r.context_hint === 'string' ? r.context_hint : undefined,
     };
   },
-  async execute({ clients }: ToolExecuteContext, input): Promise<ToolResult> {
+  async execute({ clients, state }: ToolExecuteContext, input): Promise<ToolResult> {
     try {
+      // Cache check — if we already analyzed this exact blob_keys batch
+      // earlier in the session, return the prior output instead of
+      // re-running the ~10–18s vision call. Cache keying is order-
+      // independent (same photos in any order = same analysis) and
+      // exact-match (subset of a prior batch is NOT a hit, since
+      // cross-photo reasoning differs).
+      const cached = findCachedAnalysis(state.metadata.photo_analyses, input.blob_keys);
+      if (cached) {
+        // Return the cached output. No state change — the analysis is
+        // already in metadata.photo_analyses, photoFindings/photoAnalyses
+        // for this turn would just re-list what's already there.
+        return {
+          ok: true,
+          content: {
+            output: cached,
+            model: 'cached',
+          },
+        };
+      }
+
       const result = await clients.photo.analyze({
         blobKeys: input.blob_keys,
         contextHint: input.context_hint,
@@ -128,7 +148,19 @@ export const analyzePhotoTool: AdaTool<AnalyzePhotoInput> = {
       const enrichedOutput: PhotoAnalysisOutput = {
         ...result.output,
         findings: enrichedFindings,
+        // Stamp the cache key onto the output so a later turn can
+        // match against it. Stored sorted so order-independent lookup
+        // doesn't have to re-sort on every check.
+        blob_keys: [...input.blob_keys].sort(),
       };
+      // Append to the session metadata cache. Existing entries are
+      // preserved — a session can have multiple distinct analyses
+      // (e.g. two different photo batches at different points in the
+      // conversation).
+      const updatedCache = [
+        ...(state.metadata.photo_analyses ?? []),
+        enrichedOutput,
+      ];
       return {
         ok: true,
         content: {
@@ -138,6 +170,9 @@ export const analyzePhotoTool: AdaTool<AnalyzePhotoInput> = {
         stateChanges: {
           photoFindings: enrichedFindings,
           photoAnalyses: [enrichedOutput],
+          metadataPatch: {
+            photo_analyses: updatedCache,
+          },
         },
       };
     } catch (err) {
@@ -148,3 +183,24 @@ export const analyzePhotoTool: AdaTool<AnalyzePhotoInput> = {
     }
   },
 };
+
+/**
+ * Find a cached analysis whose blob_keys exactly match (order-independent)
+ * the requested batch. Returns undefined on miss. Pre-cache analyses
+ * (no blob_keys field) are skipped — they predate the cache and we
+ * can't safely match them.
+ */
+function findCachedAnalysis(
+  cache: PhotoAnalysisOutput[] | undefined,
+  requestedBlobKeys: string[],
+): PhotoAnalysisOutput | undefined {
+  if (!cache || cache.length === 0) return undefined;
+  const requestedSorted = [...requestedBlobKeys].sort().join('\u0001');
+  for (const entry of cache) {
+    if (!entry.blob_keys || entry.blob_keys.length === 0) continue;
+    if (entry.blob_keys.length !== requestedBlobKeys.length) continue;
+    const entrySorted = [...entry.blob_keys].sort().join('\u0001');
+    if (entrySorted === requestedSorted) return entry;
+  }
+  return undefined;
+}

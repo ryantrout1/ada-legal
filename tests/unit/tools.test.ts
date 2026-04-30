@@ -392,6 +392,113 @@ describe('analyze_photo', () => {
       expect(findings?.[0].guide_url).toBeUndefined();
     }
   });
+
+  // ── cache against state.metadata.photo_analyses ─────────────────────
+
+  it('returns cached output without invoking client when blob_keys match', async () => {
+    const clients = makeInMemoryClients();
+    // Don't enqueue a result — if the client is called, the in-memory
+    // implementation throws, which would surface as ok:false. A cache
+    // hit must skip the client entirely.
+    const cachedOutput = {
+      ...makeOutput([
+        makePhotoFinding({
+          title: 'Cached step',
+          text: 'Cached finding text',
+          severity: 'major' as const,
+          standard: '§404.2.5',
+          confidence: 0.9,
+          confirmable: true,
+        }),
+      ]),
+      blob_keys: ['photos/cached.jpg'],
+    };
+    const stateWithCache = baseState({
+      metadata: { photo_analyses: [cachedOutput] },
+    });
+    const input = tool.validateInput({ blob_keys: ['photos/cached.jpg'] });
+    const result = await tool.execute({ clients, state: stateWithCache }, input);
+    expect(result.ok).toBe(true);
+    expect(clients.photo.requests).toHaveLength(0);
+    if (result.ok) {
+      // Cache hits don't write back to state — the analysis is already there.
+      expect(result.stateChanges).toBeUndefined();
+      expect((result.content as { model: string }).model).toBe('cached');
+    }
+  });
+
+  it('cache lookup is order-independent across blob_keys', async () => {
+    const clients = makeInMemoryClients();
+    const cachedOutput = {
+      ...makeOutput([]),
+      blob_keys: ['photos/a.jpg', 'photos/b.jpg', 'photos/c.jpg'],
+    };
+    const stateWithCache = baseState({
+      metadata: { photo_analyses: [cachedOutput] },
+    });
+    // Request the same three photos in a different order.
+    const input = tool.validateInput({
+      blob_keys: ['photos/c.jpg', 'photos/a.jpg', 'photos/b.jpg'],
+    });
+    const result = await tool.execute({ clients, state: stateWithCache }, input);
+    expect(result.ok).toBe(true);
+    expect(clients.photo.requests).toHaveLength(0);
+  });
+
+  it('cache miss with subset of cached batch — does not match', async () => {
+    const clients = makeInMemoryClients();
+    clients.photo.enqueueResult({
+      output: makeOutput([]),
+      modelVersion: 'test-v1',
+    });
+    const cachedOutput = {
+      ...makeOutput([]),
+      blob_keys: ['photos/a.jpg', 'photos/b.jpg'],
+    };
+    const stateWithCache = baseState({
+      metadata: { photo_analyses: [cachedOutput] },
+    });
+    const input = tool.validateInput({ blob_keys: ['photos/a.jpg'] });
+    const result = await tool.execute({ clients, state: stateWithCache }, input);
+    expect(result.ok).toBe(true);
+    // Subset doesn't match — fresh call is made.
+    expect(clients.photo.requests).toHaveLength(1);
+  });
+
+  it('writes cache key onto the output and appends to metadata.photo_analyses', async () => {
+    const clients = makeInMemoryClients();
+    clients.photo.enqueueResult({
+      output: makeOutput([]),
+      modelVersion: 'test-v1',
+    });
+    const input = tool.validateInput({ blob_keys: ['photos/z.jpg', 'photos/y.jpg'] });
+    const result = await tool.execute({ clients, state: baseState() }, input);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const cache = result.stateChanges?.metadataPatch?.photo_analyses;
+      expect(cache).toHaveLength(1);
+      // Stored sorted regardless of input order.
+      expect(cache?.[0].blob_keys).toEqual(['photos/y.jpg', 'photos/z.jpg']);
+    }
+  });
+
+  it('pre-cache analyses (no blob_keys field) are skipped on lookup', async () => {
+    const clients = makeInMemoryClients();
+    clients.photo.enqueueResult({
+      output: makeOutput([]),
+      modelVersion: 'test-v1',
+    });
+    // Old-shape entry — written before cache support existed.
+    const oldEntry = makeOutput([]);
+    const stateWithCache = baseState({
+      metadata: { photo_analyses: [oldEntry] },
+    });
+    const input = tool.validateInput({ blob_keys: ['photos/x.jpg'] });
+    const result = await tool.execute({ clients, state: stateWithCache }, input);
+    expect(result.ok).toBe(true);
+    // Old entry has no blob_keys — must be ignored by the matcher.
+    expect(clients.photo.requests).toHaveLength(1);
+  });
 });
 
 // ─── searchAttorneys ──────────────────────────────────────────────────────────
