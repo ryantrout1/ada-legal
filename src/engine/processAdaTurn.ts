@@ -143,8 +143,19 @@ export async function processAdaTurn({
   // single failing source never blocks the others or the conversation.
   const fetchKnowledge = async (): Promise<KnowledgeChunkHit[]> => {
     try {
+      // Skip the embedding call on short follow-up messages ("yes",
+      // "ok", "tell me more", "what about parking"). The embedding
+      // is the slowest piece of pre-flight (~150-400ms OpenAI roundtrip)
+      // and these short messages don't carry enough novel content for
+      // vector retrieval to help — Ada has the conversation history
+      // for context. Falls through to the citation-match-only path
+      // in searchKnowledgeBase, which still surfaces relevant chunks
+      // when the user actually cites a section number.
+      const trimmed = input.userMessage.trim();
+      const shouldEmbed = trimmed.length >= 12;
+
       let queryEmbedding: number[] | undefined;
-      if (clients.embeddings) {
+      if (shouldEmbed && clients.embeddings) {
         try {
           queryEmbedding = await clients.embeddings.embedQuery(input.userMessage);
         } catch {
