@@ -13,13 +13,15 @@
 -- have NULL in these columns; the attorney package projection treats
 -- the analysis as undefined in that case and falls back to findings-only.
 -- New writes always populate them.
+--
+-- Idempotent — IF NOT EXISTS makes it safe to re-run.
 -- ============================================================================
 
 ALTER TABLE photo_analyses
-  ADD COLUMN scene             jsonb,
-  ADD COLUMN summary           jsonb,
-  ADD COLUMN overall_risk      text,
-  ADD COLUMN positive_findings jsonb;
+  ADD COLUMN IF NOT EXISTS scene             jsonb,
+  ADD COLUMN IF NOT EXISTS summary           jsonb,
+  ADD COLUMN IF NOT EXISTS overall_risk      text,
+  ADD COLUMN IF NOT EXISTS positive_findings jsonb;
 
 -- No backfill: existing rows keep NULL. Downstream consumers tolerate
 -- null analysis (attorney package treats it as absent, renders findings-only).
