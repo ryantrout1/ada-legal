@@ -389,9 +389,13 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
 
         // The server-side message carries the photo as a blob URL if
         // present — Ada's prompt tells her to call analyze_photo when
-        // she sees one, and analyze_photo accepts http(s) URLs.
+        // she sees one. The annotation uses `blob_keys: [...]` (array
+        // form) to match the analyze_photo tool's input shape, so Ada
+        // passes the URL through verbatim. When a user uploads photos
+        // across multiple turns, Ada receives one annotation per turn
+        // and can batch up to 3 blob_keys in a single tool call.
         const serverMessage = photoUrl
-          ? `${trimmed}\n\n[User attached a photo. blob_key: ${photoUrl}]`
+          ? `${trimmed}\n\n[User attached a photo. blob_keys: ["${photoUrl}"]]`
           : trimmed;
 
         // Insert an empty assistant placeholder NOW so the streamer has

@@ -73,23 +73,29 @@ function messageText(msg: Message): string {
  * Remove engine-internal annotations from user message text before
  * showing it to a human.
  *
- * The chat client appends `[User attached a photo. blob_key: <url>]`
- * to user messages so the model can see the photo reference. That's
- * fine for the model, but if it leaks into the summary 'What you
- * told Ada' block it reads as garbled text with a raw URL. Same
- * idea would apply to any future bracketed instruction we send
- * the model — strip them before display.
+ * The chat client appends `[User attached a photo. blob_keys: [<url>]]`
+ * to user messages so the model can see the photo reference. (Older
+ * session histories may contain the legacy singular form
+ * `[User attached a photo. blob_key: <url>]`.) That's fine for the
+ * model, but if it leaks into the summary 'What you told Ada' block
+ * it reads as garbled text with a raw URL. Same idea would apply to
+ * any future bracketed instruction we send the model — strip them
+ * before display.
  *
  * Exported for tests.
  */
 export function stripEngineAnnotations(text: string): string {
   // Strip any bracketed annotation that starts with "User attached"
-  // or contains "blob_key:" — covers both the current photo wrapper
-  // and minor variants. Strip leading/trailing whitespace + newlines
-  // around the removed block so the result reads cleanly.
+  // or contains "blob_key" (matches both `blob_key:` and `blob_keys:`
+  // since `blob_key` is a prefix of `blob_keys`). The annotation may
+  // contain a nested array literal `[...]` (the new blob_keys form),
+  // so the inner-bracket pattern allows one level of nesting before
+  // matching the outer closing bracket. Strip leading and trailing
+  // whitespace + newlines around the removed block so the result
+  // reads cleanly.
   return text
-    .replace(/\s*\[User attached a photo[^\]]*\]\s*/g, ' ')
-    .replace(/\s*\[[^\]]*blob_key:[^\]]*\]\s*/g, ' ')
+    .replace(/\s*\[User attached a photo(?:[^\[\]]|\[[^\]]*\])*\]\s*/g, ' ')
+    .replace(/\s*\[(?:[^\[\]]|\[[^\]]*\])*blob_key(?:[^\[\]]|\[[^\]]*\])*\]\s*/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }

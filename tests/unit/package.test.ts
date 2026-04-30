@@ -10,7 +10,7 @@
 import { describe, it, expect } from 'vitest';
 import { generatePackageSlug, isValidPackageSlug } from '../../src/engine/package/slug.js';
 import { labelFor } from '../../src/engine/package/labels.js';
-import { extractNarrative, buildSummary } from '../../src/engine/package/extract.js';
+import { extractNarrative, buildSummary, stripEngineAnnotations } from '../../src/engine/package/extract.js';
 import { buildDemandLetter } from '../../src/engine/package/demandLetter.js';
 import { assemblePackage, PACKAGE_DISCLAIMER } from '../../src/engine/package/assemble.js';
 import type { AdaSessionState } from '../../src/engine/types.js';
@@ -99,6 +99,40 @@ describe('classification labels', () => {
 });
 
 // ─── narrative extraction ────────────────────────────────────────────────────
+
+describe('stripEngineAnnotations', () => {
+  it('strips the legacy singular blob_key annotation', () => {
+    const input =
+      'I had trouble entering the store.\n\n' +
+      '[User attached a photo. blob_key: https://blob.example/p1.jpg]';
+    expect(stripEngineAnnotations(input)).toBe('I had trouble entering the store.');
+  });
+
+  it('strips the new blob_keys array annotation', () => {
+    const input =
+      'I had trouble entering the store.\n\n' +
+      '[User attached a photo. blob_keys: ["https://blob.example/p1.jpg"]]';
+    expect(stripEngineAnnotations(input)).toBe('I had trouble entering the store.');
+  });
+
+  it('strips multiple annotations across the message', () => {
+    const input =
+      'First.\n\n[User attached a photo. blob_keys: ["a"]]\n\n' +
+      'Second.\n\n[User attached a photo. blob_keys: ["b"]]';
+    expect(stripEngineAnnotations(input)).toBe('First. Second.');
+  });
+
+  it('returns the message unchanged when no annotation is present', () => {
+    expect(stripEngineAnnotations('Just a normal message.')).toBe(
+      'Just a normal message.',
+    );
+  });
+
+  it('strips a bare blob_keys annotation without the User-attached preamble', () => {
+    const input = 'Some text [blob_keys: ["x"]] more text';
+    expect(stripEngineAnnotations(input)).toBe('Some text more text');
+  });
+});
 
 describe('extractNarrative', () => {
   const ts = '2026-04-22T12:00:00.000Z';
