@@ -87,16 +87,29 @@ export class AnthropicAiClient implements AiClient {
       ? systemBlocks
       : req.systemPrompt;
 
+    // Tool definitions are stable within a session. Mark cache_control
+    // on the LAST tool — Anthropic's cache cascades from the marker
+    // backward, so this caches the entire tools block plus the system
+    // prefix above it. Cuts billed input on cache-hit turns from ~25KB
+    // to ~3-5KB. Pattern mirrors anthropicPhotoAnalysisClient.ts.
+    const toolDefs = req.tools.map((t, i) => {
+      const isLast = i === req.tools.length - 1;
+      const base = {
+        name: t.name,
+        description: t.description,
+        input_schema: t.input_schema,
+      };
+      return isLast
+        ? { ...base, cache_control: { type: 'ephemeral' } }
+        : base;
+    });
+
     const stream = this.client.messages.stream({
       model: req.model ?? DEFAULT_MODEL,
       max_tokens: req.maxTokens ?? DEFAULT_MAX_TOKENS,
       system: systemParam as never, // SDK accepts both shapes; types lag features.
       messages: anthropicMessages,
-      tools: req.tools.map((t) => ({
-        name: t.name,
-        description: t.description,
-        input_schema: t.input_schema,
-      })),
+      tools: toolDefs as never,
     });
 
     // Track which content blocks are tool_use so we emit the right chunk types.

@@ -389,7 +389,7 @@ describe('assemblePrompt — knowledge section (Step 10.5)', () => {
     expect(firstIdx).toBeLessThan(secondIdx);
   });
 
-  it('places KNOWLEDGE between ORG CONTEXT and LISTING CONTEXT', () => {
+  it('places KNOWLEDGE in the volatile suffix after the cached prefix', () => {
     const out = assemblePrompt({
       state: baseState(),
       orgDisplayName: 'ADA Legal Link',
@@ -408,11 +408,18 @@ describe('assemblePrompt — knowledge section (Step 10.5)', () => {
         },
       ],
     });
+    // Cached prefix: IDENTITY, ORG, LISTING, READING LEVEL, TOOLS.
+    // Volatile suffix: TIME, PAGE, KNOWLEDGE, ROUTING, SESSION.
+    // KNOWLEDGE must come after the prefix sections.
     const orgIdx = out.indexOf('# ORG CONTEXT');
-    const kbIdx = out.indexOf('# KNOWLEDGE');
     const listingIdx = out.indexOf('# LISTING CONTEXT');
-    expect(orgIdx).toBeLessThan(kbIdx);
-    expect(kbIdx).toBeLessThan(listingIdx);
+    const readingIdx = out.indexOf('# READING LEVEL');
+    const toolsIdx = out.indexOf('# TOOLS');
+    const kbIdx = out.indexOf('# KNOWLEDGE');
+    expect(orgIdx).toBeLessThan(listingIdx);
+    expect(listingIdx).toBeLessThan(readingIdx);
+    expect(readingIdx).toBeLessThan(toolsIdx);
+    expect(toolsIdx).toBeLessThan(kbIdx);
   });
 });
 
@@ -486,7 +493,7 @@ describe('assemblePrompt — page context (Commit 29/6)', () => {
     expect(out).toContain('§405');
   });
 
-  it('places PAGE CONTEXT after ORG CONTEXT and before LISTING CONTEXT', () => {
+  it('places PAGE CONTEXT in the volatile suffix after the cached prefix', () => {
     const out = assemblePrompt({
       state: baseState({
         metadata: {
@@ -501,12 +508,16 @@ describe('assemblePrompt — page context (Commit 29/6)', () => {
       orgAdaIntroPrompt: null,
       discoveryListings: [],
     });
+    // PAGE CONTEXT moved to volatile suffix; READING LEVEL + TOOLS
+    // are in the cached prefix and precede it.
     const orgIdx = out.indexOf('# ORG CONTEXT');
-    const pageIdx = out.indexOf('# PAGE CONTEXT');
     const readingIdx = out.indexOf('# READING LEVEL');
+    const toolsIdx = out.indexOf('# TOOLS');
+    const pageIdx = out.indexOf('# PAGE CONTEXT');
     expect(orgIdx).toBeGreaterThan(-1);
     expect(pageIdx).toBeGreaterThan(-1);
-    expect(orgIdx).toBeLessThan(pageIdx);
-    expect(pageIdx).toBeLessThan(readingIdx);
+    expect(orgIdx).toBeLessThan(readingIdx);
+    expect(readingIdx).toBeLessThan(toolsIdx);
+    expect(toolsIdx).toBeLessThan(pageIdx);
   });
 });

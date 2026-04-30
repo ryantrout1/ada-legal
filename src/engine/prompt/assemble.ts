@@ -141,21 +141,41 @@ export function assemblePrompt(ctx: AssemblePromptContext): string {
 export function assemblePromptStructured(
   ctx: AssemblePromptContext,
 ): { cachedPrefix: string; volatileSuffix: string } {
-  const cachedPrefix = section('IDENTITY', buildIdentitySection(ctx));
+  // Cached prefix: content stable across most turns within a session.
+  // Anthropic caches up to the cache_control boundary; same-prefix
+  // turns within the ~5min TTL skip prefill on this entire block.
+  // - IDENTITY: Ada's persona, never changes
+  // - ORG CONTEXT: bound at session start, stable thereafter
+  // - LISTING CONTEXT: bound or discovery, both session-stable
+  // - READING LEVEL: changes occasionally; one cache miss per change
+  // - TOOLS: never changes within a session
+  //
+  // Volatile suffix: per-turn or per-state content.
+  // - TIME: changes every turn (date string)
+  // - PAGE CONTEXT: technically stable but has guidance text mixed
+  //   with stable index; kept volatile to avoid coupling
+  // - KNOWLEDGE: RAG hits change with each user message
+  // - ROUTING DESTINATIONS: state-dependent, may change as session
+  //   accumulates extracted fields
+  // - CURRENT SESSION: classification + extracted fields change
+  //   every few turns
+  const prefixSections = [
+    section('IDENTITY', buildIdentitySection(ctx)),
+    section('ORG CONTEXT', buildOrgSection(ctx)),
+    section('LISTING CONTEXT', buildListingSection(ctx)),
+    section('READING LEVEL', buildReadingLevelSection(ctx.state.readingLevel)),
+    section('TOOLS', buildToolsSection(ctx.tools ?? DEFAULT_TOOLS)),
+  ];
 
   const suffixSections = [
-    section('ORG CONTEXT', buildOrgSection(ctx)),
     section('TIME', buildTimeSection(ctx.now)),
     section('PAGE CONTEXT', buildPageContextSection(ctx.state.metadata.page_context)),
     section('KNOWLEDGE', buildKnowledgeSection(ctx.knowledgeChunks)),
-    section('LISTING CONTEXT', buildListingSection(ctx)),
     section('ROUTING DESTINATIONS', buildRoutingSection(ctx.routingMatches)),
-    section('READING LEVEL', buildReadingLevelSection(ctx.state.readingLevel)),
-    section('TOOLS', buildToolsSection(ctx.tools ?? DEFAULT_TOOLS)),
     section('CURRENT SESSION', buildSessionContextSection(ctx.state)),
   ];
   return {
-    cachedPrefix: cachedPrefix.trim(),
+    cachedPrefix: prefixSections.filter((s) => s.trim().length > 0).join('\n\n').trim(),
     volatileSuffix: suffixSections.filter((s) => s.trim().length > 0).join('\n\n'),
   };
 }
