@@ -165,17 +165,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     const callerTokenHash = await hashAnonToken(ctx.anonToken);
-    const callerAnonSessionId = await clients.db.findAnonSessionByHash(
-      callerTokenHash,
-    );
+    // Auth-hash lookup and org lookup are independent reads — neither
+    // depends on the other's result. Run them in parallel to save one
+    // Neon roundtrip (~80-150ms) on the per-turn pre-flight. Both still
+    // complete before flushHeaders, so failures still surface as clean
+    // JSON 401/404 instead of half-sent SSE.
+    const [callerAnonSessionId, org] = await Promise.all([
+      clients.db.findAnonSessionByHash(callerTokenHash),
+      clients.db.getOrgByCode(ctx.orgCode ?? 'adall'),
+    ]);
     if (
       callerAnonSessionId === null ||
       callerAnonSessionId !== state.anonSessionId
     ) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
-
-    const org = await clients.db.getOrgByCode(ctx.orgCode ?? 'adall');
 
     if (wantsSse) {
       await runSseTurn(req, res, clients, state, body, org);
