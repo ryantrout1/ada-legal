@@ -48,10 +48,13 @@ import photoAnalysisSystemPrompt from '../../../content-migration/prompts/photo-
 
 const DEFAULT_MODEL = 'claude-sonnet-4-5';
 // Three reading-level variants × scene + summary + positive_findings +
-// (title + finding) per concern can easily exceed 2048 on a 3-photo,
-// 10-finding site. 8192 leaves comfortable headroom; image tokens
-// dominate cost regardless. Step 30, Commit 8.
-const DEFAULT_MAX_TOKENS = 8192;
+// (title + finding) per concern. Empirically 4096 is enough for 3-photo,
+// 10-finding sites; truncation surfaces as a max_tokens stop_reason
+// which extractOutputFromResponse already handles gracefully (empty
+// findings + meta logged for visibility). Lowered from 8192 in Pass 1
+// of the photo-analysis latency fix — output tokens were the dominant
+// driver of vision-call wall clock.
+const DEFAULT_MAX_TOKENS = 4096;
 const MAX_PHOTOS_PER_CALL = 3;
 
 // Vercel Blob URL pattern: https://<storeId>.public.blob.vercel-storage.com/<path>.
@@ -236,14 +239,29 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
     const response = await this.client.messages.create({
       model: this.model,
       max_tokens: DEFAULT_MAX_TOKENS,
-      system: photoAnalysisSystemPrompt,
+      // System prompt + tool schema are stable across every photo
+      // analysis call. Marking the last block of each with
+      // cache_control: ephemeral lets Anthropic skip prefill on
+      // repeat calls within the cache TTL (~5min) — for the photo
+      // analyzer this is ~10KB system + ~8KB tool schema that would
+      // otherwise be re-tokenized every call. Saves both latency
+      // and ~90% of input-token cost on the cached portion. Mirrors
+      // the pattern in anthropicAiClient.ts.
+      system: [
+        {
+          type: 'text',
+          text: photoAnalysisSystemPrompt,
+          cache_control: { type: 'ephemeral' },
+        },
+      ] as never,
       tools: [
         {
           name: 'report_findings',
           description:
             'Report all ADA accessibility concerns identified across the provided photo(s). Call this exactly once with your complete assessment — scene description, summary, overall risk, positive findings, and per-concern findings.',
           input_schema: REPORT_FINDINGS_SCHEMA,
-        },
+          cache_control: { type: 'ephemeral' },
+        } as never,
       ],
       tool_choice: { type: 'tool', name: 'report_findings' },
       messages: [{ role: 'user', content: userContent }],
