@@ -328,12 +328,40 @@ export function extractOutputFromResponse(
   for (const block of response.content) {
     if (block.type === 'tool_use' && block.name === 'report_findings') {
       const input = block.input as Record<string, unknown>;
-      return validateOutput(input);
+      const out = validateOutput(input);
+      out.meta = {
+        tool_call_present: true,
+        stop_reason: response.stop_reason ?? 'unknown',
+      };
+      return out;
     }
   }
-  // No tool block — likely a refusal. Return empty so the turn loop can
-  // handle it conversationally rather than throwing.
-  return emptyOutput();
+  // No tool_use block — model didn't call report_findings. This means
+  // the schema was rejected by Anthropic, the model refused (vision
+  // safety, content policy), or the response was truncated. Surface it
+  // in logs so production failures are visible in Vercel — without
+  // this, the caller just sees "no findings" and can't tell which.
+  const textExcerpt = response.content
+    .filter((b) => b.type === 'text')
+    .map((b) => (b as { type: 'text'; text: string }).text)
+    .join(' ')
+    .slice(0, 200);
+  // eslint-disable-next-line no-console
+  console.warn(
+    '[photo-analyzer] no report_findings tool_use block in response',
+    {
+      stop_reason: response.stop_reason,
+      content_block_count: response.content.length,
+      content_block_types: response.content.map((b) => b.type),
+      text_excerpt: textExcerpt || undefined,
+    },
+  );
+  const fallback = emptyOutput();
+  fallback.meta = {
+    tool_call_present: false,
+    stop_reason: response.stop_reason ?? 'unknown',
+  };
+  return fallback;
 }
 
 function validateOutput(raw: Record<string, unknown>): PhotoAnalysisOutput {

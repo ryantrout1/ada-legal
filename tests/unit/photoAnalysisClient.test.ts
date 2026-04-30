@@ -9,7 +9,7 @@
  *   - findings validation: malformed/missing/out-of-range shapes
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   parseBlobKeyToImageBlock,
   extractOutputFromResponse,
@@ -159,9 +159,12 @@ describe('extractOutputFromResponse', () => {
     expect(output.findings[0].bounding_box).toEqual({ x: 0.1, y: 0.7, w: 0.8, h: 0.2 });
     expect(output.findings[1].confirmable).toBe(false);
     expect(output.findings[1].bounding_box).toBeUndefined();
+    expect(output.meta?.tool_call_present).toBe(true);
   });
 
   it('returns an empty output when no tool_use block is present', () => {
+    // Suppress the expected console.warn from this code path.
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const response = makeFakeResponse([
       { type: 'text', text: 'I cannot analyze this image.' },
     ]);
@@ -171,9 +174,14 @@ describe('extractOutputFromResponse', () => {
     expect(out.scene.standard).toBe('');
     expect(out.summary.standard).toBe('');
     expect(out.positive_findings.standard).toEqual([]);
+    expect(out.meta?.tool_call_present).toBe(false);
+    expect(out.meta?.stop_reason).toBe('end_turn');
+    expect(warnSpy).toHaveBeenCalledOnce();
+    warnSpy.mockRestore();
   });
 
   it('returns an empty output when tool_use is for the wrong tool', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const response = makeFakeResponse([
       {
         type: 'tool_use',
@@ -183,6 +191,8 @@ describe('extractOutputFromResponse', () => {
       },
     ]);
     expect(extractOutputFromResponse(response).findings).toEqual([]);
+    expect(warnSpy).toHaveBeenCalledOnce();
+    warnSpy.mockRestore();
   });
 
   it('tolerates a missing findings field', () => {

@@ -273,6 +273,23 @@ export interface PhotoAnalysisOutput {
   positive_findings: ReadingLevelStringList;
   /** Per-concern findings list. */
   findings: PhotoFinding[];
+  /**
+   * Diagnostic info from the underlying model call. Populated by
+   * AnthropicPhotoAnalysisClient.extractOutputFromResponse:
+   *   tool_call_present: true  — model called report_findings normally
+   *   tool_call_present: false — model returned text without the tool
+   *     call (refusal, schema rejection, truncation). Empty findings/
+   *     scene/summary in this case; downstream consumers can detect
+   *     the difference between "model said nothing concerning" and
+   *     "model refused" via this flag.
+   *   stop_reason — the Anthropic stop reason ('end_turn', 'tool_use',
+   *     'max_tokens', 'stop_sequence', or other).
+   * Optional — older PhotoAnalysisOutput consumers tolerate its absence.
+   */
+  meta?: {
+    tool_call_present: boolean;
+    stop_reason: string;
+  };
 }
 
 // ─── audit log ────────────────────────────────────────────────────────────────
