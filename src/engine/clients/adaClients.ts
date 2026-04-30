@@ -190,6 +190,14 @@ export interface AdaClientsConfig {
    * so missing this key is fine during the pilot phase.
    */
   stripeSecretKey?: string;
+  /**
+   * Optional override for the Anthropic model used by analyze_photo's
+   * vision call. Defaults to the client's hard-coded default (Sonnet
+   * 4.5). Useful for A/B testing latency vs quality — e.g. setting
+   * `claude-haiku-4-5` for a faster but less detailed analysis.
+   * Wired from PHOTO_ANALYSIS_MODEL in makeClientsFromEnv.
+   */
+  photoAnalysisModel?: string;
 }
 
 export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
@@ -236,7 +244,10 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
     blob: config.blobReadWriteToken
       ? new VercelBlobClientImpl(config.blobReadWriteToken)
       : new StubVercelBlobClient(),
-    photo: new AnthropicPhotoAnalysisClient(config.anthropicApiKey),
+    photo: new AnthropicPhotoAnalysisClient(
+      config.anthropicApiKey,
+      config.photoAnalysisModel,
+    ),
     email,
     clock: new SystemClock(),
     random: new CryptoRandom(),

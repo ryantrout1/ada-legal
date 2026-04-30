@@ -28,6 +28,7 @@ export function makeClientsFromEnv(): AdaClients {
   const resendApiKey = process.env.RESEND_API_KEY;
   const resendFromAddress = process.env.RESEND_FROM_ADDRESS;
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+  const photoAnalysisModel = process.env.PHOTO_ANALYSIS_MODEL;
   if (!databaseUrl) {
     throw new Error('DATABASE_URL is not set in environment');
   }
@@ -46,6 +47,9 @@ export function makeClientsFromEnv(): AdaClients {
   // STRIPE_SECRET_KEY is optional. Without it, checkout + portal
   // endpoints return a clear error; webhook handler refuses events.
   // Pilot firms work without Stripe. (Step 23.)
+  // PHOTO_ANALYSIS_MODEL is optional. Without it, analyze_photo uses
+  // the client's hard-coded default (currently Sonnet 4.5). Set to
+  // `claude-haiku-4-5` for the lighter-weight analyzer.
   return makeAdaClients({
     databaseUrl,
     anthropicApiKey,
@@ -55,6 +59,7 @@ export function makeClientsFromEnv(): AdaClients {
     resendApiKey,
     resendFromAddress,
     stripeSecretKey,
+    photoAnalysisModel,
   });
 }
 
