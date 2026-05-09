@@ -25,7 +25,7 @@ const blurHandler = (e) => {
 export default function LawyerRegister() {
   const [form, setForm] = useState({
     full_name: '', firm_name: '', email: '', phone: '',
-    states_of_practice: [], bar_numbers: '', rules_accepted: false
+    states_of_practice: [], bar_numbers: ''
   });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -43,7 +43,6 @@ export default function LawyerRegister() {
     if (!form.phone.trim()) e.phone = 'Phone number is required';
     if (form.states_of_practice.length === 0) e.states_of_practice = 'Select at least one state';
     if (!form.bar_numbers.trim()) e.bar_numbers = 'Bar number is required';
-    if (!form.rules_accepted) e.rules_accepted = 'You must accept the platform rules';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -154,14 +153,14 @@ export default function LawyerRegister() {
           fontWeight: 700, color: 'var(--heading)',
           marginBottom: 'var(--space-xs)', textAlign: 'center'
         }}>
-          Join ADA Legal Link
+          Tell us about your practice
         </h1>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
           color: 'var(--body-secondary)', textAlign: 'center',
           marginBottom: 'var(--space-2xl)'
         }}>
-          Apply to receive exclusive, pre-screened ADA violation cases.
+          We'll review and reach out as the network grows. The application is free and takes a few minutes.
         </p>
 
         <div style={{
@@ -214,41 +213,7 @@ export default function LawyerRegister() {
               aria-required="true" aria-invalid={!!errors.bar_numbers} style={inputStyle} />
           </FormField>
 
-          {/* Marketplace rules checkbox */}
-          <div style={{ marginTop: 'var(--space-lg)', marginBottom: 'var(--space-xl)' }}>
-            <label
-              htmlFor="rules_accepted"
-              style={{
-                display: 'flex', alignItems: 'flex-start', gap: '0.75rem',
-                cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.5
-              }}
-            >
-              <input
-                id="rules_accepted"
-                type="checkbox"
-                checked={form.rules_accepted}
-                onChange={e => update('rules_accepted', e.target.checked)}
-                style={{
-                  width: '20px', height: '20px', accentColor: 'var(--accent)',
-                  cursor: 'pointer', flexShrink: 0, marginTop: '2px'
-                }}
-              />
-              <span>
-                I have read and agree to the ADA Legal Link Rules, including the requirement to contact reporters within 24 hours of initiating support.
-              </span>
-            </label>
-            {errors.rules_accepted && (
-              <p role="alert" style={{
-                display: 'flex', alignItems: 'center', gap: '6px',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                color: '#B91C1C', margin: '0.375rem 0 0 2.25rem'
-              }}>
-                <AlertCircle size={14} style={{ flexShrink: 0 }} />
-                {errors.rules_accepted}
-              </p>
-            )}
-          </div>
+          <div style={{ marginTop: 'var(--space-lg)', marginBottom: 'var(--space-xl)' }} />
 
           <button
             type="button"
