@@ -75,14 +75,14 @@ export default function Attorneys() {
           Find an attorney who knows the ADA.
         </h1>
         <p className="text-ink-700 leading-relaxed max-w-2xl">
-          Attorneys below practice disability rights law. Ada refers to this
-          directory when your situation warrants a private lawsuit — Title III
-          public-accommodations claims especially. Contact an attorney directly
-          to ask about your case.
+          Every attorney listed here practices disability rights law and was
+          reviewed by us before being added. Ada points you to specific
+          attorneys when your situation calls for one, most often Title III
+          public-accommodations claims. Reach out directly to ask about your case.
         </p>
         <p className="mt-3 text-sm text-ink-500">
-          Not a lawyer referral service. We don't vet outcomes. We aren't paid
-          by the attorneys listed.
+          We don't represent you, and we can't promise outcomes. Listing here
+          doesn't mean an attorney is right for every case.
         </p>
       </header>
 
