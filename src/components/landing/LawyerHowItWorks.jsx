@@ -4,17 +4,17 @@ const steps = [
   {
     num: '1',
     title: 'Apply',
-    desc: 'Submit your credentials and practice details. We verify your bar status and ADA experience.'
+    desc: 'Send us your name, firm, bar number, the states you practice in, and a quick line on the work you actually do. The application is free and takes a few minutes.'
   },
   {
     num: '2',
-    title: 'Subscribe',
-    desc: 'Activate your subscription to gain full platform access and start receiving case notifications.'
+    title: 'We review',
+    desc: "Gina reads each application herself. We're building the network slowly and we want to know what kind of cases you take and where. Replies come in batches as we review."
   },
   {
     num: '3',
-    title: 'Receive Cases',
-    desc: 'Browse pre-screened cases matched to your state. Accept a case and contact the reporter within 24 hours.'
+    title: 'Hear from us',
+    desc: "When a case Ada has worked through fits your geography and practice, we make the introduction. You read the intake and decide whether to take it. We don't pressure either side."
   }
 ];
 
@@ -37,7 +37,7 @@ export default function LawyerHowItWorks() {
           color: 'var(--body)', textAlign: 'center',
           maxWidth: '480px', margin: '0 auto clamp(2rem, 5vw, 3.5rem)'
         }}>
-          From application to your first case in three steps.
+          Three steps from application to introduction.
         </p>
 
         <div style={{
