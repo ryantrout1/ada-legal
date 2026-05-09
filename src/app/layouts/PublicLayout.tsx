@@ -336,6 +336,14 @@ export default function PublicLayout() {
                   Accessibility
                 </a>
               </li>
+              <li>
+                <a
+                  href="/for-attorneys"
+                  className="hover:text-accent-600 transition-colors"
+                >
+                  For attorneys
+                </a>
+              </li>
             </ul>
           </div>
         </div>
