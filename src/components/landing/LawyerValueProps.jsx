@@ -1,21 +1,21 @@
 import React from 'react';
-import { Lock, Clock, ShieldCheck } from 'lucide-react';
+import { FileText, UserCheck, XCircle } from 'lucide-react';
 
 const props = [
   {
-    icon: Lock,
-    title: 'Exclusive Assignment',
-    desc: 'Every case is assigned to one attorney only. No bidding, no competition — just a direct connection between you and the reporter.'
+    icon: FileText,
+    title: 'What we send you',
+    desc: "A documented narrative in the person's own words, with the legal frame we think applies, plus geography and practice-area context. We make the introduction; you decide whether to take the case."
   },
   {
-    icon: Clock,
-    title: '24-Hour Contact Model',
-    desc: 'You commit to contacting the reporter within 24 hours of assignment. Swift action leads to better outcomes for everyone.'
+    icon: UserCheck,
+    title: "Who we're looking for",
+    desc: 'Practicing attorneys with real experience in disability rights or access litigation. Title III is most of what comes through us today, plus adjacent practice areas and the willingness to actually take a case when the fit is right.'
   },
   {
-    icon: ShieldCheck,
-    title: 'Vetted & Reviewed Cases',
-    desc: 'Every submission is reviewed by our team before it becomes available to qualified attorneys. You only see quality, actionable cases.'
+    icon: XCircle,
+    title: "What we're not",
+    desc: 'Not a referral service, not a lead-gen marketplace, not exclusive. No fees change hands between us and you. You can be on other platforms; we ask only that if a case fits, you give it a real look.'
   }
 ];
 
@@ -30,14 +30,14 @@ export default function LawyerValueProps() {
         fontWeight: 700, textAlign: 'center', color: 'var(--heading)',
         marginBottom: '0.75rem', marginTop: 0
       }}>
-        Why Attorneys Choose Us
+        What you can expect
       </h2>
       <p style={{
         fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
         color: 'var(--body)', textAlign: 'center',
         maxWidth: '480px', margin: '0 auto clamp(2rem, 5vw, 3.5rem)'
       }}>
-        A platform built for the way you actually practice.
+        We're early. Here's how the network works.
       </p>
 
       <div style={{
