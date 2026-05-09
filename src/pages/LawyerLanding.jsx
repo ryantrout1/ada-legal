@@ -25,9 +25,9 @@ export default function LawyerLanding() {
       <LawyerValueProps />
       <LawyerHowItWorks />
       <FinalCTA
-        heading="Ready to Grow Your ADA Practice?"
-        subtitle="Apply today and start receiving pre-screened, exclusive cases matched to your jurisdiction."
-        buttonText="Apply Now"
+        heading="Interested?"
+        subtitle="Send us a note about your practice. We're reviewing applications in batches as the network grows."
+        buttonText="Apply to join"
         buttonLink={createPageUrl('LawyerRegister')}
         variant="dark"
       />
