@@ -33,15 +33,14 @@ export default function LawyerHero() {
           fontWeight: 700, lineHeight: 1.1,
           color: 'var(--dark-heading)', marginBottom: '1.5rem', marginTop: 0
         }}>
-          Pre-Screened ADA Cases,<br />Delivered to You
-        </h1>
+          We're building a small,<br />intentional network</h1>
         <p style={{
           fontFamily: 'Manrope, sans-serif',
           fontSize: 'clamp(1rem, 2vw, 1.25rem)',
           color: 'var(--dark-muted)',
           maxWidth: '580px', margin: '0 auto 2.5rem', lineHeight: 1.6
         }}>
-          Stop chasing leads. Receive vetted, exclusive ADA violation cases matched to your state and practice area.
+          ADA Legal Link is a free intake and triage service. When a case warrants legal action, we connect the person with vetted attorneys who handle this work. No subscription, no referral fee.
         </p>
         <Link
           to={createPageUrl('LawyerRegister')} className="landing-cta"
@@ -56,7 +55,7 @@ export default function LawyerHero() {
           onMouseEnter={e => e.currentTarget.style.background = 'var(--section-label)'}
           onMouseLeave={e => e.currentTarget.style.background = 'var(--section-label)'}
         >
-          Apply Now <ArrowRight size={18} />
+          Apply to join <ArrowRight size={18} />
         </Link>
       </div>
     </section>
