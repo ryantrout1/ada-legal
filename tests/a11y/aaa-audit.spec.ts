@@ -45,6 +45,7 @@ const PUBLIC_ROUTES = [
     name: 'class-action detail',
   },
   { path: '/attorneys', name: 'attorneys directory' },
+  { path: '/for-attorneys', name: 'for-attorneys page' },
   { path: '/accessibility', name: 'accessibility statement' },
   { path: '/privacy', name: 'privacy policy' },
   { path: '/terms', name: 'terms of service' },
