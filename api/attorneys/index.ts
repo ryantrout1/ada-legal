@@ -18,8 +18,16 @@
  *       { "id", "name", "firm_name", "location_city", "location_state",
  *         "practice_areas", "email", "phone", "website_url" },
  *       ...
- *     ]
+ *     ],
+ *     "total_approved": <number>
  *   }
+ *
+ * total_approved is the count of approved attorneys ignoring the request's
+ * filter params, capped at the underlying searchAttorneys ceiling. The
+ * public /attorneys page uses this to decide whether to show the filter
+ * UI at all (thin-roster threshold). The cap is fine here because the
+ * threshold is a small number (10) — once the network is at-or-above
+ * cap, the UI shows filters regardless of the exact count.
  *
  * Errors: 405 wrong method, 500 DB failure.
  *
@@ -49,13 +57,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.min(limitRaw, 50) : 50;
 
     const clients = makeClientsFromEnv();
-    const rows = await clients.db.searchAttorneys({
-      orgId: '', // searchAttorneys doesn't actually filter by org yet — Phase C concern
-      state,
-      city,
-      practiceAreas,
-      limit,
-    });
+
+    // Two queries in parallel: the filtered list for display, and an
+    // unfiltered list used only to count for the thin-roster gate. Both
+    // hit the same approved-status filter under the hood.
+    const [rows, allApprovedRows] = await Promise.all([
+      clients.db.searchAttorneys({
+        orgId: '', // searchAttorneys doesn't actually filter by org yet — Phase C concern
+        state,
+        city,
+        practiceAreas,
+        limit,
+      }),
+      clients.db.searchAttorneys({
+        orgId: '',
+        limit: 50,
+      }),
+    ]);
 
     // Map camelCase -> snake_case for the public API contract.
     const attorneys = rows.map((a) => ({
@@ -73,7 +91,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Short CDN cache — data is admin-curated and low-churn. Safe to
     // serve slightly stale; a reload picks up admin edits within 60s.
     res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=60');
-    return res.status(200).json({ attorneys });
+    return res.status(200).json({ attorneys, total_approved: allApprovedRows.length });
   } catch (err) {
     console.error('GET /api/attorneys failed', err);
     const message = err instanceof Error ? err.message : 'Internal error';
