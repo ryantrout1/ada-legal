@@ -3,13 +3,20 @@
  *
  * Layout:
  *   [intro + disclaimer]
- *   [filter bar: state, city, practice-area chips] [reset]
+ *   [filter bar: state, city, practice-area chips] [reset]   ← shown only at/over threshold
  *   [ test-data banner, visible while synthetic rows are in the DB ]
  *   [ attorney cards, one per row ]
  *
  * Data flow:
  *   useAttorneys hook owns facets + filters + list state, debounces
  *   filter changes, surfaces loading + error.
+ *
+ * Thin-roster gate:
+ *   When the approved-attorney network has fewer than THIN_ROSTER_THRESHOLD
+ *   attorneys, the filter UI (and its associated results-count line + the
+ *   filter-only empty state) is hidden — the directory is small enough
+ *   that browsing the cards directly is the right experience. Once the
+ *   network reaches the threshold, filters reappear.
  *
  * Accessibility:
  *   - Filter bar is a <fieldset> with legend "Filter attorneys"
@@ -28,12 +35,23 @@ import {
 } from '../../hooks/useAttorneys.js';
 import { Breadcrumbs } from '../../components/Breadcrumbs.js';
 
+// Threshold below which the filter UI hides itself. The network has
+// to reach this count before browsing-with-filters becomes a better
+// experience than browsing-the-whole-list. One number, not configurable
+// — revisit only if there's a concrete reason.
+const THIN_ROSTER_THRESHOLD = 10;
+
 export default function Attorneys() {
-  const { attorneys, facets, filters, setFilters, loading, error, reset } = useAttorneys();
+  const { attorneys, totalApproved, facets, filters, setFilters, loading, error, reset } = useAttorneys();
 
   const hasAnyTestData = attorneys.some(
     (a) => a.firm_name?.startsWith('[TEST]') || a.email?.includes('example-test.invalid'),
   );
+
+  // Filter UI appears only when the network is large enough to warrant
+  // browsing-by-filter. Below the threshold, the page renders as a
+  // simple roster.
+  const showFilters = totalApproved >= THIN_ROSTER_THRESHOLD;
 
   function handleStateChange(e: ChangeEvent<HTMLSelectElement>) {
     const value = e.target.value;
@@ -98,93 +116,102 @@ export default function Attorneys() {
         </div>
       )}
 
-      {/* Filter bar */}
-      <fieldset className="mb-6 rounded-md border border-surface-200 bg-surface-100 p-4 sm:p-5">
-        <legend className="font-mono text-xs uppercase tracking-[0.18em] text-ink-500 px-2">
-          Filter
-        </legend>
+      {/* Filter bar — hidden in thin-roster mode (small networks
+          browse better as a flat list). Reappears at THIN_ROSTER_THRESHOLD. */}
+      {showFilters && (
+        <fieldset className="mb-6 rounded-md border border-surface-200 bg-surface-100 p-4 sm:p-5">
+          <legend className="font-mono text-xs uppercase tracking-[0.18em] text-ink-500 px-2">
+            Filter
+          </legend>
 
-        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-4">
-          {/* State */}
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-ink-700 font-medium">State</span>
-            <select
-              value={filters.state ?? ''}
-              onChange={handleStateChange}
-              autoComplete="address-level1"
-              className="w-full sm:w-auto rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900 sm:min-w-[120px]"
-            >
-              <option value="">All states</option>
-              {facets.states.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-4">
+            {/* State */}
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="text-ink-700 font-medium">State</span>
+              <select
+                value={filters.state ?? ''}
+                onChange={handleStateChange}
+                autoComplete="address-level1"
+                className="w-full sm:w-auto rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900 sm:min-w-[120px]"
+              >
+                <option value="">All states</option>
+                {facets.states.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-          {/* City */}
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-ink-700 font-medium">City</span>
-            <input
-              type="text"
-              value={filters.city}
-              onChange={handleCityChange}
-              placeholder="Exact match"
-              autoComplete="address-level2"
-              className="w-full sm:w-auto rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900 sm:min-w-[180px] placeholder-ink-500"
-            />
-          </label>
+            {/* City */}
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="text-ink-700 font-medium">City</span>
+              <input
+                type="text"
+                value={filters.city}
+                onChange={handleCityChange}
+                placeholder="Exact match"
+                autoComplete="address-level2"
+                className="w-full sm:w-auto rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900 sm:min-w-[180px] placeholder-ink-500"
+              />
+            </label>
 
-          {/* Reset */}
-          {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={reset}
-              className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-md text-sm text-accent-500 hover:bg-accent-50 transition-colors"
-            >
-              Reset filters
-            </button>
-          )}
-        </div>
-
-        {/* Practice-area chips */}
-        {facets.practiceAreas.length > 0 && (
-          <div className="mt-4">
-            <p className="text-sm text-ink-700 font-medium mb-2">
-              Practice areas
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {facets.practiceAreas.map((slug) => {
-                const active = filters.practiceAreas.includes(slug);
-                return (
-                  <button
-                    key={slug}
-                    type="button"
-                    role="switch"
-                    aria-pressed={active}
-                    onClick={() => togglePracticeArea(slug)}
-                    className={
-                      'px-4 py-2 rounded-full text-sm font-medium transition-colors border ' +
-                      (active
-                        ? 'bg-accent-500 text-white border-accent-500 hover:bg-accent-600'
-                        : 'bg-white text-ink-700 border-surface-200 hover:border-accent-500 hover:text-accent-600')
-                    }
-                  >
-                    {humanizeSlug(slug)}
-                  </button>
-                );
-              })}
-            </div>
+            {/* Reset */}
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={reset}
+                className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-md text-sm text-accent-500 hover:bg-accent-50 transition-colors"
+              >
+                Reset filters
+              </button>
+            )}
           </div>
-        )}
-      </fieldset>
 
-      {/* Results count (announced) */}
+          {/* Practice-area chips */}
+          {facets.practiceAreas.length > 0 && (
+            <div className="mt-4">
+              <p className="text-sm text-ink-700 font-medium mb-2">
+                Practice areas
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {facets.practiceAreas.map((slug) => {
+                  const active = filters.practiceAreas.includes(slug);
+                  return (
+                    <button
+                      key={slug}
+                      type="button"
+                      role="switch"
+                      aria-pressed={active}
+                      onClick={() => togglePracticeArea(slug)}
+                      className={
+                        'px-4 py-2 rounded-full text-sm font-medium transition-colors border ' +
+                        (active
+                          ? 'bg-accent-500 text-white border-accent-500 hover:bg-accent-600'
+                          : 'bg-white text-ink-700 border-surface-200 hover:border-accent-500 hover:text-accent-600')
+                      }
+                    >
+                      {humanizeSlug(slug)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </fieldset>
+      )}
+
+      {/* Results count (announced). In thin-roster mode the filter
+          UI is hidden, so the "matches your filters" framing would
+          be misleading — drop the count entirely and let the cards
+          speak for themselves. Loading and error states are still
+          announced regardless. */}
       <p aria-live="polite" className="text-sm text-ink-500 mb-4">
         {loading
           ? 'Loading attorneys…'
           : error
+          ? ''
+          : !showFilters
           ? ''
           : attorneys.length === 0
           ? 'No attorneys match your filters.'
@@ -201,12 +228,22 @@ export default function Attorneys() {
         </div>
       )}
 
-      {/* List */}
-      {!loading && !error && attorneys.length === 0 && (
+      {/* Empty state. Two variants: filter-driven empty (filters
+          shown, list filtered down to zero) vs roster-empty (thin
+          mode, no approved attorneys yet — rare but real). */}
+      {!loading && !error && attorneys.length === 0 && showFilters && (
         <div className="rounded-md border border-surface-200 bg-surface-100 p-6 text-center">
           <p className="text-ink-700">
             No attorneys match those filters. Try widening your search, or
             reset filters to see everyone.
+          </p>
+        </div>
+      )}
+      {!loading && !error && attorneys.length === 0 && !showFilters && (
+        <div className="rounded-md border border-surface-200 bg-surface-100 p-6 text-center">
+          <p className="text-ink-700">
+            No attorneys are listed yet. Check back soon, or talk to Ada about
+            your situation.
           </p>
         </div>
       )}
