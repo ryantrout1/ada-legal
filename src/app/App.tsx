@@ -27,6 +27,7 @@ import Chat from './routes/public/Chat.js';
 import ClassActions from './routes/public/ClassActions.js';
 import ClassActionDetail from './routes/public/ClassActionDetail.js';
 import Attorneys from './routes/public/Attorneys.js';
+import ForAttorneys from './routes/public/ForAttorneys.js';
 import Accessibility from './routes/public/Accessibility.js';
 import AboutAda from './routes/public/AboutAda.js';
 import Privacy from './routes/public/Privacy.js';
@@ -73,6 +74,7 @@ export default function App() {
             element={<ClassActionDetail />}
           />
           <Route path="/attorneys" element={<Attorneys />} />
+          <Route path="/for-attorneys" element={<ForAttorneys />} />
           <Route path="/accessibility" element={<Accessibility />} />
           <Route path="/about-ada" element={<AboutAda />} />
           <Route path="/privacy" element={<Privacy />} />
