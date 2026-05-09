@@ -137,7 +137,7 @@ export default function LandingHeroNew() {
             fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
             color: 'var(--dark-muted)', marginTop: '1rem'
           }}>
-            Attorney-connected violation reporting — launching soon.
+            Free to use. No referral fees.
           </p>
         </div>
 
