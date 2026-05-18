@@ -43,11 +43,13 @@ import type {
   ListingRow,
   ListingConfigRow,
   ActiveListingRow,
+  LitigationRow,
 } from '../clients/types.js';
 import {
   renderBoundListingContext,
   renderDiscoveryListingIndex,
 } from './listingContext.js';
+import { renderActiveLitigationIndex } from './litigationContext.js';
 import { renderStandardsIndexForPrompt } from '../../lib/standardsIndex.js';
 import type { PageContext } from '../../types/db.js';
 
@@ -80,6 +82,13 @@ export interface AssemblePromptContext {
    * mode). Ignored if boundListing is set.
    */
   discoveryListings?: ReadonlyArray<ActiveListingRow>;
+  /**
+   * Phase 2: for public_ada sessions, currently-active class actions
+   * and mass actions so Ada can recognize when a user's situation
+   * matches an active case. Rendered as a separate LITIGATION CONTEXT
+   * section after LISTING CONTEXT.
+   */
+  activeLitigation?: ReadonlyArray<LitigationRow>;
   /**
    * Step 22: routing matches evaluated this turn. When non-empty, a
    * ROUTING DESTINATIONS section is rendered telling Ada which partner
@@ -163,6 +172,7 @@ export function assemblePromptStructured(
     section('IDENTITY', buildIdentitySection(ctx)),
     section('ORG CONTEXT', buildOrgSection(ctx)),
     section('LISTING CONTEXT', buildListingSection(ctx)),
+    section('LITIGATION CONTEXT', buildLitigationSection(ctx)),
     section('READING LEVEL', buildReadingLevelSection(ctx.state.readingLevel)),
     section('TOOLS', buildToolsSection(ctx.tools ?? DEFAULT_TOOLS)),
   ];
@@ -312,6 +322,14 @@ function buildListingSection(ctx: AssemblePromptContext): string {
   const override = ctx.listingAdaPromptOverride;
   if (!override || override.trim().length === 0) return '';
   return override.trim();
+}
+
+function buildLitigationSection(ctx: AssemblePromptContext): string {
+  // Phase 2: public_ada sessions get a condensed index of active
+  // class actions and mass actions. Empty array → empty section,
+  // which the assembler filters out.
+  if (!ctx.activeLitigation || ctx.activeLitigation.length === 0) return '';
+  return renderActiveLitigationIndex([...ctx.activeLitigation]);
 }
 
 function buildRoutingSection(

@@ -216,10 +216,29 @@ export async function processAdaTurn({
     }
   };
 
-  const [knowledgeChunks, listingContext, routingMatches] = await Promise.all([
+  const fetchActiveLitigation = async (): Promise<
+    import('./clients/types.js').LitigationRow[]
+  > => {
+    // Phase 2: only surface litigation in public_ada discovery mode.
+    // Bound sessions are already focused on a specific listing — no
+    // need to pull users away with adjacent class-action recognition.
+    if (workingState.sessionType !== 'public_ada') return [];
+    try {
+      // No state filter yet — Ada's reasoning over affected_states is
+      // sufficient at current network size. When the table grows we
+      // can pass session-derived state hints (e.g. from extracted
+      // fields) to narrow before the prompt.
+      return await clients.db.listActiveLitigation({ limit: 20 });
+    } catch {
+      return [];
+    }
+  };
+
+  const [knowledgeChunks, listingContext, routingMatches, activeLitigation] = await Promise.all([
     fetchKnowledge(),
     fetchListingContext(),
     fetchRoutingMatches(),
+    fetchActiveLitigation(),
   ]);
 
   const { boundListing, discoveryListings } = listingContext;
@@ -250,6 +269,7 @@ export async function processAdaTurn({
       listingAdaPromptOverride,
       boundListing,
       discoveryListings,
+      activeLitigation,
       routingMatches,
       knowledgeChunks,
       now: clients.clock.now(),
