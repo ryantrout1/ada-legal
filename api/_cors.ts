@@ -42,9 +42,17 @@ const ALLOWED_ORIGINS = new Set([
 export function applyCors(req: VercelRequest, res: VercelResponse): boolean {
   const origin = req.headers.origin;
 
+  // Always set Vary: Origin so the CDN keys cached responses per-origin.
+  // Without this, the first request that lands without an Origin header
+  // caches a response with NO Access-Control-Allow-Origin, and that cached
+  // response then serves browser requests that DO send Origin — those
+  // browsers reject the response for missing CORS headers even though
+  // Vercel would have returned the right headers on a fresh hit.
+  // Cache poisoning by Origin omission.
+  res.setHeader('Vary', 'Origin');
+
   if (typeof origin === 'string' && ALLOWED_ORIGINS.has(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Vary', 'Origin');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
     res.setHeader(
