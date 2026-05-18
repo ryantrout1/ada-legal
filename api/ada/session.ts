@@ -264,11 +264,14 @@ function buildGreeting(
   pageContext?: PageContext | null,
   litigationContext?: LitigationContext | null,
 ): string {
-  const base = baseGreeting(level);
+  // Phase 6a: clicking through from a specific case is a strong intent
+  // signal — Ada should sound like a person who already knows what
+  // brought you here, not someone stitching two greetings together.
+  // Render a single cohesive opener instead of lead + base.
   if (litigationContext) {
-    const lead = litigationLead(litigationContext, level);
-    return `${lead} ${base}`;
+    return litigationGreeting(litigationContext, level);
   }
+  const base = baseGreeting(level);
   if (pageContext) {
     const lead = topicLead(pageContext, level);
     return `${lead} ${base}`;
@@ -276,15 +279,27 @@ function buildGreeting(
   return base;
 }
 
-function litigationLead(lc: LitigationContext, level: ReadingLevel): string {
-  // Acknowledgment line: name the case + invite the user to share their
-  // experience. We do NOT presume eligibility ("you sound like a match")
-  // — that's for Ada to assess in the conversation. Same brevity as
-  // topicLead so the user gets to the open question quickly.
-  if (level === 'simple') {
-    return `You came in about ${lc.case_name}. I can help you figure out if it might apply to you.`;
+/**
+ * Phase 6a: cohesive greeting for users who came in from the Active
+ * Cases public detail page. Reads as one thought, not two:
+ *   - introduces Ada as a person
+ *   - acknowledges what brought them here, by name
+ *   - gives them permission to take their time
+ *   - opens the floor without naming the user's experience for them
+ *
+ * Voice rules apply (see api/ada/session.ts JSDoc above): first
+ * person, no "Please," no "I'm so sorry," no exclamation marks.
+ */
+function litigationGreeting(lc: LitigationContext, level: ReadingLevel): string {
+  switch (level) {
+    case 'simple':
+      return `Hi, I'm Ada. I see you came in about ${lc.case_name}. Tell me what happened, in your own words, and we'll figure out together whether this case might apply to you. Take your time.`;
+    case 'professional':
+      return `I'm Ada. I see you came in about ${lc.case_name}. Walk me through your experience and I'll help you assess whether your situation falls within the eligibility criteria for this case. Take your time.`;
+    case 'standard':
+    default:
+      return `Hi, I'm Ada. I see you came in about ${lc.case_name}. Tell me what happened — I'll help you think through whether your situation matches what the case covers. Take your time.`;
   }
-  return `You came in about ${lc.case_name}. I can help you think through whether your situation matches what the case covers.`;
 }
 
 function baseGreeting(level: ReadingLevel): string {

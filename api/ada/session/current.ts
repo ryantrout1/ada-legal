@@ -153,21 +153,21 @@ function extractText(content: unknown): string {
  * Phase 6a: rebuild the same case-acknowledgment greeting that
  * POST /api/ada/session produces when litigation_id is set, so the
  * resume probe can seed it into the chat panel. Must stay in sync
- * with the litigationLead/baseGreeting copy in api/ada/session.ts.
+ * with litigationGreeting() in api/ada/session.ts. Voice: one
+ * cohesive thought — Ada introduces herself, names what brought the
+ * user here, opens the floor.
  */
 function buildLitigationGreeting(
   level: ReadingLevel,
   lc: LitigationContext,
 ): string {
-  const lead =
-    level === 'simple'
-      ? `You came in about ${lc.case_name}. I can help you figure out if it might apply to you.`
-      : `You came in about ${lc.case_name}. I can help you think through whether your situation matches what the case covers.`;
-  const base =
-    level === 'simple'
-      ? `I'm Ada. If a place didn't let you in, or wouldn't help, because something got in your way, I can help. Take your time. Tell me what happened.`
-      : level === 'professional'
-        ? `I'm Ada. If you encountered a barrier, physical or digital, at a place covered by the ADA, I can help you identify the title that applies and the appropriate next step. Tell me what happened.`
-        : `I'm Ada. If a barrier kept you out, at a business, on a website, anywhere a place was supposed to be open to you, I'm here to help you figure out what to do. Take your time. Tell me what happened.`;
-  return `${lead} ${base}`;
+  switch (level) {
+    case 'simple':
+      return `Hi, I'm Ada. I see you came in about ${lc.case_name}. Tell me what happened, in your own words, and we'll figure out together whether this case might apply to you. Take your time.`;
+    case 'professional':
+      return `I'm Ada. I see you came in about ${lc.case_name}. Walk me through your experience and I'll help you assess whether your situation falls within the eligibility criteria for this case. Take your time.`;
+    case 'standard':
+    default:
+      return `Hi, I'm Ada. I see you came in about ${lc.case_name}. Tell me what happened — I'll help you think through whether your situation matches what the case covers. Take your time.`;
+  }
 }
