@@ -75,16 +75,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // If the resume would show zero visible messages, don't surface
     // it at all — there's nothing for the user to continue from.
     //
-    // EXCEPTION: a class_action_intake session pre-bound via
+    // EXCEPTION 1: a class_action_intake session pre-bound via
     // listing_slug deep-link (Step 26) will have 0 messages at the
     // moment the user lands on /chat. Surface those so the resume
     // probe picks up the correct session instead of the UI clobbering
     // it with a fresh public_ada session.
+    //
+    // EXCEPTION 2 (Phase 6a): a public_ada session opened via a
+    // litigation_id deep-link from the Active Cases detail page also
+    // has 0 messages on first /chat load. Same fix — surface it so
+    // the resume picks up the bound session and the prompt assembler
+    // renders the focused litigation block on Ada's first turn.
+    // Otherwise the freshly-created litigation-context session gets
+    // orphaned and the user lands in an unbound public_ada session.
     const isPreBoundIntake =
       state.sessionType === 'class_action_intake' &&
       state.listingId !== null &&
       messages.length === 0;
-    if (messages.length === 0 && !isPreBoundIntake) {
+    const isPreBoundLitigation =
+      state.sessionType === 'public_ada' &&
+      messages.length === 0 &&
+      !!state.metadata?.litigation_context;
+    const isPreBound = isPreBoundIntake || isPreBoundLitigation;
+    if (messages.length === 0 && !isPreBound) {
       return res.status(200).json({ session: null });
     }
 
@@ -94,7 +107,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         status: state.status,
         reading_level: state.readingLevel,
         messages,
-        is_prebound: isPreBoundIntake,
+        is_prebound: isPreBound,
       },
     });
   } catch (err) {
