@@ -52,6 +52,8 @@ import type {
   AdminIntakeListOptions,
   AdminIntakeListResult,
   AdminIntakeListRow,
+  AdminIntakeReadOptions,
+  AdminIntakeReadResult,
   AdminSessionListOptions,
   AdminSessionListResult,
   AdminSessionSummary,
@@ -1468,12 +1470,28 @@ export class NeonDbClient implements DbClient {
       .offset(offset);
 
     const intakes: AdminIntakeListRow[] = rows.map((r) => {
-      const metaOutcome = (r.metadata as Record<string, unknown> | null)
-        ?.outcome;
+      const metaRecord = r.metadata as Record<string, unknown> | null;
+      const metaOutcome = metaRecord?.outcome;
       const outcome =
         metaOutcome === 'qualified' || metaOutcome === 'disqualified'
           ? metaOutcome
           : null;
+      // Phase 4: project handoff side-effect status from metadata.handoff.
+      // Null when finalize_intake hasn't run (or rows backfilled without
+      // re-running it); boolean based on whether the side effect's id was
+      // populated when finalize_intake did run.
+      const handoff = (metaRecord?.handoff ?? null) as
+        | {
+            firm_email_id: string | null;
+            user_email_id: string | null;
+            transcript_url: string | null;
+          }
+        | null;
+      const firmEmailSent =
+        handoff === null ? null : handoff.firm_email_id !== null;
+      const userEmailSent =
+        handoff === null ? null : handoff.user_email_id !== null;
+      const transcriptUrl = handoff?.transcript_url ?? null;
       return {
         sessionId: r.sessionId,
         status: r.status as 'active' | 'completed' | 'abandoned',
@@ -1483,6 +1501,9 @@ export class NeonDbClient implements DbClient {
         listingTitle: r.listingTitle,
         outcome,
         isTest: r.isTest,
+        firmEmailSent,
+        userEmailSent,
+        transcriptUrl,
         createdAt:
           r.createdAt instanceof Date
             ? r.createdAt.toISOString()
@@ -1495,6 +1516,62 @@ export class NeonDbClient implements DbClient {
     });
 
     return { intakes, totalCount, page, pageSize };
+  }
+
+  async readIntakeForAdmin(
+    opts: AdminIntakeReadOptions,
+  ): Promise<AdminIntakeReadResult | null> {
+    // Single round-trip detail read for the admin intake page (Phase 4).
+    //
+    // Joins: session → listings → law_firms, all required. Filters enforce:
+    //   - sessionType='class_action_intake' (gate non-intake sessions)
+    //   - orgId scoping (cross-org access surfaces as not-found)
+    //
+    // The INNER JOINs are correct for class_action_intake sessions because
+    // finalize_intake Gate 1 guarantees listingId is set, and listings have
+    // an FK to law_firms. If either join misses, the row genuinely does not
+    // belong on this admin page and we return null.
+    const rows = await this.db
+      .select({
+        sessionId: adaSessions.id,
+        firmId: lawFirmsTable.id,
+        firmName: lawFirmsTable.name,
+        firmEmail: lawFirmsTable.email,
+        listingId: listingsTable.id,
+        listingTitle: listingsTable.title,
+        listingSlug: listingsTable.slug,
+      })
+      .from(adaSessions)
+      .innerJoin(listingsTable, eq(listingsTable.id, adaSessions.listingId))
+      .innerJoin(lawFirmsTable, eq(lawFirmsTable.id, listingsTable.lawFirmId))
+      .where(
+        and(
+          eq(adaSessions.id, opts.sessionId),
+          eq(adaSessions.orgId, opts.orgId),
+          eq(adaSessions.sessionType, 'class_action_intake'),
+        ),
+      )
+      .limit(1);
+    if (rows.length === 0) return null;
+    const row = rows[0]!;
+    // Reuse readSession for the full state hydration — keeps the AdaSessionState
+    // shape consistent with the rest of the codebase. The org+type checks above
+    // already ran, so this readSession is for the data, not the gate.
+    const session = await this.readSession({ sessionId: row.sessionId });
+    if (!session) return null;
+    return {
+      session,
+      firm: {
+        id: row.firmId,
+        name: row.firmName,
+        email: row.firmEmail,
+      },
+      listing: {
+        id: row.listingId,
+        title: row.listingTitle,
+        slug: row.listingSlug,
+      },
+    };
   }
 
   // ─── stripe_webhook_events (Step 23) ─────────────────────────────────────

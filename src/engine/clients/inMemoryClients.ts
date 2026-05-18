@@ -28,6 +28,8 @@ import type {
   AdminIntakeListOptions,
   AdminIntakeListResult,
   AdminIntakeListRow,
+  AdminIntakeReadOptions,
+  AdminIntakeReadResult,
   AdminSessionListOptions,
   AdminSessionListResult,
   AdminSessionSummary,
@@ -930,6 +932,14 @@ export class InMemoryDbClient implements DbClient {
         metaOutcome === 'qualified' || metaOutcome === 'disqualified'
           ? metaOutcome
           : null;
+      // Phase 4: project handoff side-effect status. Null when finalize_intake
+      // hasn't run; true/false based on whether the email id is populated.
+      const handoff = s.metadata?.handoff ?? null;
+      const firmEmailSent =
+        handoff === null ? null : handoff.firm_email_id !== null;
+      const userEmailSent =
+        handoff === null ? null : handoff.user_email_id !== null;
+      const transcriptUrl = handoff?.transcript_url ?? null;
       return {
         sessionId: s.sessionId,
         status: s.status,
@@ -939,12 +949,40 @@ export class InMemoryDbClient implements DbClient {
         listingTitle: listing?.title ?? '(unknown listing)',
         outcome,
         isTest: s.isTest,
+        firmEmailSent,
+        userEmailSent,
+        transcriptUrl,
         createdAt: '',
         updatedAt: '',
       };
     });
 
     return { intakes, totalCount, page, pageSize };
+  }
+
+  async readIntakeForAdmin(
+    opts: AdminIntakeReadOptions,
+  ): Promise<AdminIntakeReadResult | null> {
+    const session = this.sessions.get(opts.sessionId);
+    if (!session) return null;
+    // Session-type gate: this endpoint is the intake detail page, non-intake
+    // sessions belong on AdminSessionDetail and should not be reachable here.
+    if (session.sessionType !== 'class_action_intake') return null;
+    // Org scope: surface cross-org access as not-found, not 403.
+    if (session.orgId !== opts.orgId) return null;
+    // class_action_intake sessions are always listing-bound (finalize_intake
+    // Gate 1). If listingId is somehow missing, this is data corruption — fail
+    // closed by returning null.
+    if (!session.listingId) return null;
+    const listing = this.listings.find((l) => l.id === session.listingId);
+    if (!listing) return null;
+    const firm = this.lawFirms.find((f) => f.id === listing.lawFirmId);
+    if (!firm) return null;
+    return {
+      session: structuredClone(session),
+      firm: { id: firm.id, name: firm.name, email: firm.email },
+      listing: { id: listing.id, title: listing.title, slug: listing.slug },
+    };
   }
 
   // ─── stripe_webhook_events (Step 23) ─────────────────────────────────────
