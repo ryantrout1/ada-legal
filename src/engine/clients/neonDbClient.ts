@@ -164,12 +164,27 @@ export class NeonDbClient implements DbClient {
 
     // Upsert: INSERT, or UPDATE if the id already exists.
     // Drizzle's $onUpdate hook on the schema refreshes updated_at automatically.
+    //
+    // ⚠ Maintenance note: every MUTABLE column on ada_sessions MUST appear in
+    // both stateToInsert() AND the .set block below. Forgetting one means
+    // INSERT works but subsequent UPDATEs silently lose that field. This
+    // exact bug shipped on 2026-04-22 (Step 20: sessionType promotion) and
+    // wasn't caught until 2026-05-18 — every match_listing → finalize_intake
+    // flow was broken in between because session_type stayed 'public_ada'
+    // in Neon even though the engine's in-memory state correctly promoted
+    // it to 'class_action_intake'.
+    //
+    // Immutable columns (id, orgId, anonSessionId, userId, isTest) are
+    // intentionally omitted — they're set at creation and should never
+    // change. If you need to change them, that's a different operation
+    // (anonymization, account merge, etc).
     await this.db
       .insert(adaSessions)
       .values(values)
       .onConflictDoUpdate({
         target: adaSessions.id,
         set: {
+          sessionType: values.sessionType,
           status: values.status,
           readingLevel: values.readingLevel,
           conversationHistory: values.conversationHistory,

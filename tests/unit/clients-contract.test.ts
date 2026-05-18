@@ -262,3 +262,112 @@ describe('AdaClients seam — InMemory contract', () => {
     });
   });
 });
+
+/**
+ * Regression guard for the writeSession upsert.
+ *
+ * Background: on 2026-04-22 the matchListing tool shipped with a
+ * sessionTypeChange state-change. processAdaTurn applied it correctly
+ * in-memory, but NeonDbClient.writeSession's onConflictDoUpdate.set
+ * block didn't include sessionType. INSERT worked once; every UPDATE
+ * silently dropped the sessionType promotion. finalize_intake then
+ * gated every intake because Neon kept session_type='public_ada'.
+ * Affected 4 production sessions in 4 weeks. Diagnosed 2026-05-18.
+ *
+ * The in-memory client uses Map.set with a full structuredClone so it
+ * doesn't reproduce this bug — only the Neon partial-update path does.
+ * That means a behavioral round-trip test wouldn't have caught it.
+ *
+ * This guard is structural: it reads neonDbClient.ts source and
+ * asserts the .set block covers every mutable column from
+ * stateToInsert. The next time someone adds a mutable column to
+ * stateToInsert without also adding it to the .set block, this test
+ * fails loudly with the field name.
+ *
+ * Immutable columns (id, orgId, anonSessionId, userId, isTest) live
+ * in stateToInsert but are intentionally absent from .set — they're
+ * set at creation and never change. The IMMUTABLE_COLUMNS list below
+ * encodes that contract.
+ */
+describe('NeonDbClient.writeSession upsert — column coverage', () => {
+  const IMMUTABLE_COLUMNS = new Set([
+    'id',
+    'orgId',
+    'anonSessionId',
+    'userId',
+    'isTest',
+  ]);
+
+  it('every mutable column in stateToInsert is also in onConflictDoUpdate.set', async () => {
+    // Read the source file at test time. We avoid importing the module
+    // because its NeonDbClient class needs a live db connection and
+    // we just want to inspect the upsert shape.
+    const fs = await import('node:fs/promises');
+    const path = await import('node:path');
+    const url = await import('node:url');
+    const here = path.dirname(url.fileURLToPath(import.meta.url));
+    const source = await fs.readFile(
+      path.resolve(here, '../../src/engine/clients/neonDbClient.ts'),
+      'utf8',
+    );
+
+    // Extract the stateToInsert return object body.
+    const insertMatch = source.match(
+      /function stateToInsert\([^)]*\)[^{]*\{\s*return\s*\{([\s\S]*?)\};\s*\}/,
+    );
+    expect(insertMatch, 'stateToInsert function not found').not.toBeNull();
+    const insertBody = insertMatch![1];
+    const insertKeys = new Set(
+      [...insertBody.matchAll(/^\s*([a-zA-Z_]+)\s*:/gm)].map((m) => m[1]),
+    );
+
+    // Extract the onConflictDoUpdate.set block keys. The set object is
+    // the second arg shape inside .onConflictDoUpdate({ target, set: {...} }).
+    const setMatch = source.match(
+      /\.onConflictDoUpdate\(\{[\s\S]*?set:\s*\{([\s\S]*?)\},?\s*\}\s*\)/,
+    );
+    expect(setMatch, 'onConflictDoUpdate.set block not found').not.toBeNull();
+    const setBody = setMatch![1];
+    const setKeys = new Set(
+      [...setBody.matchAll(/^\s*([a-zA-Z_]+)\s*:/gm)].map((m) => m[1]),
+    );
+
+    // Mutable columns = stateToInsert keys minus the immutable ones.
+    const mutableInsertKeys = [...insertKeys].filter(
+      (k) => !IMMUTABLE_COLUMNS.has(k),
+    );
+
+    // Every mutable insert key must be in the .set block. The reverse
+    // (set keys not in insert) is not checked — defensive over-coverage
+    // is fine, the only failure mode this guards is missing keys.
+    const missing = mutableInsertKeys.filter((k) => !setKeys.has(k));
+    expect(
+      missing,
+      `Mutable columns missing from onConflictDoUpdate.set: ${missing.join(', ')}. ` +
+        `Every mutable column in stateToInsert must also be in the .set block, ` +
+        `or UPDATEs will silently drop changes to that column. See the comment ` +
+        `in neonDbClient.ts writeSession.`,
+    ).toEqual([]);
+  });
+
+  it('sessionType specifically is in both stateToInsert and onConflictDoUpdate.set', async () => {
+    // Belt-and-suspenders: the bug this guards against was specifically
+    // sessionType. Even if the structural check above is later refactored
+    // and accidentally weakened, this explicit assertion ensures the
+    // exact column that broke production stays covered.
+    const fs = await import('node:fs/promises');
+    const path = await import('node:path');
+    const url = await import('node:url');
+    const here = path.dirname(url.fileURLToPath(import.meta.url));
+    const source = await fs.readFile(
+      path.resolve(here, '../../src/engine/clients/neonDbClient.ts'),
+      'utf8',
+    );
+
+    const setMatch = source.match(
+      /\.onConflictDoUpdate\(\{[\s\S]*?set:\s*\{([\s\S]*?)\},?\s*\}\s*\)/,
+    );
+    expect(setMatch).not.toBeNull();
+    expect(setMatch![1]).toContain('sessionType');
+  });
+});
