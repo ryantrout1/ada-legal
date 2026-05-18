@@ -946,6 +946,12 @@ export interface AdminAnalyticsResult {
   };
   classificationBreakdown: Array<{ title: string; count: number }>;
   toolUseFrequency: Array<{ tool: string; count: number }>;
+  /**
+   * Lifetime count of class_action_intake sessions (filtered by include_test
+   * the same way every other counter in this result is). Phase 5a addition —
+   * powers the AdminDashboard "Intakes" tile without a separate endpoint.
+   */
+  intakesTotal: number;
 }
 
 export interface AdminSessionListOptions {
