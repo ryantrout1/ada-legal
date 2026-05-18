@@ -26,6 +26,7 @@ import {
 } from '../../../../../src/lib/anonCookie.js';
 import type { ReadingLevel } from '../../../../../src/types/db.js';
 import { requireAdmin } from '../../../../_admin.js';
+import { applyCors } from '../../../../_cors.js';
 import {
   makeClientsFromEnv,
   readJsonBody,
@@ -39,10 +40,13 @@ interface Body {
 const ALLOWED_LEVELS: ReadingLevel[] = ['simple', 'standard', 'professional'];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (applyCors(req, res)) return; // preflight handled
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
 
   const auth = await requireAdmin(req, res);
   if (!auth) return;

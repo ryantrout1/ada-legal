@@ -17,6 +17,7 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAdmin } from '../_admin.js';
+import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv } from '../_shared.js';
 
 interface SettingsShape {
@@ -28,6 +29,8 @@ const DEFAULTS: SettingsShape = {
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (applyCors(req, res)) return; // preflight handled
+
   const auth = await requireAdmin(req, res);
   if (!auth) return;
 
@@ -52,7 +55,7 @@ async function handleGet(res: VercelResponse) {
   }
 }
 
-async function handlePatch(req: VercelRequest, res: VercelResponse, _userId: string) {
+async function handlePatch(req: VercelRequest, res: VercelResponse, _userId: string | null) {
   try {
     const body = req.body as Record<string, unknown> | undefined;
     if (!body) return res.status(400).json({ error: 'Body required' });

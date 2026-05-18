@@ -1,39 +1,49 @@
 /**
- * Admin API auth helper.
+ * Admin API auth helper — dual-mode (Phase 0 transitional).
  *
- * Validates that the incoming request carries a valid Clerk session
- * token. Every /api/admin/* route calls requireAdmin(req, res) at the
- * top and short-circuits if the return value is null (the helper has
- * already written a 401).
+ * Accepts EITHER:
+ *   (a) A valid Clerk session token (existing path; keeps the old
+ *       ada.adalegallink.com/admin alive during transition)
+ *   (b) A valid Authorization: Bearer ${ADALL_BRIDGE_SECRET} header,
+ *       with the admin's email passed via X-Admin-Email (for audit)
  *
- * We use @clerk/backend directly rather than a middleware layer because
- * Vercel's classic Node function signature (req, res) doesn't compose
- * well with middleware patterns. Each admin route is a thin function
- * that does auth-check → query → respond.
+ * Path (b) is used by the Base44 adallProxy server function. The proxy
+ * verifies the caller is a Base44 admin via Base44 native auth, then
+ * forwards to Vercel with the bridge secret. The secret is set in both
+ * Vercel and Base44 env, never exposed client-side.
+ *
+ * Every /api/admin/* route calls requireAdmin(req, res) at the top and
+ * short-circuits if the return value is null (the helper has already
+ * written a 401).
+ *
+ * After Phase 6 cutover (Vercel admin dies, all admin moves to Base44),
+ * the Clerk path can be removed and this file simplifies to bridge-only.
  *
  * Ch0 authorization model:
- *   - Any signed-in Clerk user is an admin.
- *   - In Ch1 we can tighten this to membership in the admin role via
- *     org_memberships, but Ch0 has one org and a trusted handful of users.
- *   - The code is structured so Ch1 can introduce that check without
- *     touching every route.
+ *   - Any Clerk-signed-in user is an admin (path a)
+ *   - Any caller carrying the bridge secret is an admin (path b)
+ *   - In Ch1 we tighten this with org_memberships
  *
- * Ref: docs/ARCHITECTURE.md §5 — auth model
+ * Ref: /plan Phase 0, docs/ARCHITECTURE.md §5
  */
 
 import { createClerkClient } from '@clerk/backend';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 export interface AdminAuthContext {
-  /** Clerk user id (user_xxx). */
-  userId: string;
+  /** Clerk user id (user_xxx) when via Clerk; null when via bridge. */
+  userId: string | null;
   /** Email address of the signed-in admin, if present. */
   email: string | null;
+  /** Which auth path was used — for audit logging. */
+  via: 'clerk' | 'bridge';
 }
 
 /**
- * Verify the request is from a signed-in Clerk user. If so, returns
- * the auth context. If not, writes a 401 response and returns null.
+ * Verify the request is an authorized admin. Tries the bridge secret
+ * first (cheaper — no Clerk roundtrip), falls back to Clerk session.
+ *
+ * Returns context on success. On failure, writes 401 and returns null.
  *
  * Callers MUST check the return value:
  *   const auth = await requireAdmin(req, res);
@@ -43,6 +53,21 @@ export async function requireAdmin(
   req: VercelRequest,
   res: VercelResponse,
 ): Promise<AdminAuthContext | null> {
+  // --- Path (b): bridge secret ---
+  const bridgeSecret = process.env.ADALL_BRIDGE_SECRET;
+  const authHeader = req.headers.authorization;
+  if (
+    bridgeSecret &&
+    typeof authHeader === 'string' &&
+    authHeader.startsWith('Bearer ') &&
+    constantTimeEquals(authHeader.slice(7), bridgeSecret)
+  ) {
+    const emailHeader = req.headers['x-admin-email'];
+    const email = typeof emailHeader === 'string' ? emailHeader : null;
+    return { userId: null, email, via: 'bridge' };
+  }
+
+  // --- Path (a): Clerk session ---
   const secret = process.env.CLERK_SECRET_KEY;
   const publishable = process.env.VITE_CLERK_PUBLISHABLE_KEY;
   if (!secret || !publishable) {
@@ -85,12 +110,25 @@ export async function requireAdmin(
       // Ignore — email is decorative.
     }
 
-    return { userId, email };
+    return { userId, email, via: 'clerk' };
   } catch (err) {
     console.error('requireAdmin failed', err);
     res.status(401).json({ error: 'Unauthorized' });
     return null;
   }
+}
+
+/**
+ * Constant-time string compare to prevent timing attacks on the
+ * bridge secret. Both strings get walked fully regardless of mismatch.
+ */
+function constantTimeEquals(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return diff === 0;
 }
 
 /**

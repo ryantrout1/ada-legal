@@ -11,6 +11,7 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAdmin } from '../../_admin.js';
+import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
 import type { LawFirmRow } from '../../../src/engine/clients/types.js';
 
@@ -26,6 +27,8 @@ function optString(v: unknown): string | null | undefined {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (applyCors(req, res)) return; // preflight handled
+
   const auth = await requireAdmin(req, res);
   if (!auth) return;
 
