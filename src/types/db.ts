@@ -132,6 +132,45 @@ export interface SessionMetadata {
    * Step 29, Commit 5.
    */
   page_context?: PageContext;
+  /**
+   * Finalize-intake handoff receipt. Populated by finalize_intake when it
+   * completes (qualified or disqualified). Records the side-effect results:
+   * which emails went out, which transcript got uploaded, what errored.
+   *
+   * Absent on:
+   *   - sessions that haven't reached finalize_intake yet
+   *   - the 4 backfilled rows from the sessionType bug (only the column was
+   *     stamped; finalize_intake never re-ran)
+   *
+   * Source of truth for "did the handoff actually happen". The admin
+   * intake-detail page (Phase 4) reads this to render the Handoff card.
+   */
+  handoff?: HandoffReceipt;
+}
+
+/**
+ * Side-effect receipt from finalize_intake.
+ *
+ * All id/url/error fields can independently be null because each side
+ * effect (firm email, user email, transcript PDF upload) is best-effort
+ * and fails soft. A null id with a non-null error means "we tried, it
+ * failed"; both null means "we skipped" (no firm email on disqualified;
+ * no user email when the user didn't share one).
+ *
+ * is_test=true marks a synthetic receipt written for is_test sessions —
+ * no real Resend / Blob calls were made.
+ *
+ * Ref: src/engine/tools/impls/finalizeIntake.ts handoffMeta block.
+ */
+export interface HandoffReceipt {
+  firm_email_id: string | null;
+  firm_email_error: string | null;
+  user_email_id: string | null;
+  user_email_error: string | null;
+  transcript_url: string | null;
+  transcript_error: string | null;
+  generated_at: string;
+  is_test?: boolean;
 }
 
 export interface AttachedPhoto {

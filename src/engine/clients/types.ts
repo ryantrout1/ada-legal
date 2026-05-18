@@ -254,6 +254,23 @@ export interface AdminIntakeListRow {
   outcome: 'qualified' | 'disqualified' | null;
   /** From metadata.handoff.is_test. */
   isTest: boolean;
+  /**
+   * Phase 4: quick-look projections from metadata.handoff.
+   *
+   *   - true  → finalize_intake ran and the side effect succeeded
+   *   - false → finalize_intake ran and the side effect errored (id is null
+   *             and a matching *_error field is populated)
+   *   - null  → metadata.handoff is absent (pre-finalize, or the 4 backfilled
+   *             rows that were stamped class_action_intake without re-running
+   *             finalize_intake)
+   *
+   * The detail page reads the full metadata.handoff for the actionable
+   * fields (the actual error string, the email ids, the disqualifying
+   * reason). These three are list-page convenience pills only.
+   */
+  firmEmailSent: boolean | null;
+  userEmailSent: boolean | null;
+  transcriptUrl: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -263,6 +280,37 @@ export interface AdminIntakeListResult {
   totalCount: number;
   page: number;
   pageSize: number;
+}
+
+/**
+ * Single-row read for the admin intake detail page (Phase 4).
+ *
+ * Returns the full session state PLUS the joined firm and listing rows in
+ * one round-trip — saves the B44 admin page from fanning out to
+ * /sessions/[id] + /listings/[id] + /firms/[id] through the bridge proxy.
+ *
+ * Both joined objects are non-null: a class_action_intake session must be
+ * bound to a listing, and that listing must reference an active firm. If
+ * either is missing, the DbClient returns null and the endpoint surfaces
+ * 404 — it's a data-integrity case the admin shouldn't be presented with.
+ */
+export interface AdminIntakeReadOptions {
+  sessionId: string;
+  orgId: string;
+}
+
+export interface AdminIntakeReadResult {
+  session: AdaSessionState;
+  firm: {
+    id: string;
+    name: string;
+    email: string | null;
+  };
+  listing: {
+    id: string;
+    title: string;
+    slug: string;
+  };
 }
 
 /** All fields required to create a new attorney row. */
@@ -586,6 +634,17 @@ export interface DbClient {
    * Step 25 Commit 6.
    */
   listIntakesForAdmin(opts: AdminIntakeListOptions): Promise<AdminIntakeListResult>;
+
+  /**
+   * Admin-side: read a single intake session by id with the joined firm
+   * and listing in one round-trip. Used by /admin/intakes/[id] (Phase 4).
+   * Returns null when the session does not exist, is not a
+   * class_action_intake, or does not belong to the supplied org (cross-org
+   * access surfaces as not-found to avoid leaking existence).
+   */
+  readIntakeForAdmin(
+    opts: AdminIntakeReadOptions,
+  ): Promise<AdminIntakeReadResult | null>;
 
   // ─── stripe_webhook_events (Step 23) ──────────────────────────────────────
   //
