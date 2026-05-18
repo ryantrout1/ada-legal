@@ -2,8 +2,10 @@
  * CORS helper for cross-origin API access.
  *
  * Applied to /api/public/* and /api/admin/* handlers to allow:
- *   - https://adalegallink.com (Base44 production — admin lives here Phase 0+)
+ *   - https://adalegallink.com (Base44 production — admin + public Active Cases)
  *   - https://ada.adalegallink.com (current Vercel SPA — until cutover)
+ *   - https://preview--ada-claim-legal.base44.app (B44 preview environment
+ *     for the production app, used for editor-side testing before Publish)
  *   - http://localhost:5173 (Vite dev server)
  *   - http://localhost:3000 (Vercel dev server)
  *
@@ -16,7 +18,7 @@
  * it already responded to a preflight, and the calling handler should
  * return immediately in that case.
  *
- * Ref: /plan Phase 0, acceptance criterion #7
+ * Ref: /plan Phase 0, acceptance criterion #7; /plan Phase 6b (B44 preview).
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
@@ -24,6 +26,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 const ALLOWED_ORIGINS = new Set([
   'https://adalegallink.com',
   'https://ada.adalegallink.com',
+  'https://preview--ada-claim-legal.base44.app',
   'http://localhost:5173',
   'http://localhost:3000',
 ]);
