@@ -234,11 +234,38 @@ export async function processAdaTurn({
     }
   };
 
-  const [knowledgeChunks, listingContext, routingMatches, activeLitigation] = await Promise.all([
+  const fetchFocusedLitigation = async (): Promise<
+    import('./clients/types.js').LitigationRow | null
+  > => {
+    // Phase 6a: if the session was opened from the public detail page
+    // CTA, metadata.litigation_context carries the slug. Re-load the
+    // row each turn so the prompt sees fresh data (admin can edit the
+    // case mid-conversation). Same scoping as the public endpoint:
+    // active rows only.
+    if (workingState.sessionType !== 'public_ada') return null;
+    const litCtx = workingState.metadata?.litigation_context;
+    if (!litCtx?.slug) return null;
+    try {
+      const row = await clients.db.readActiveLitigationBySlug({
+        orgId: workingState.orgId,
+        slug: litCtx.slug,
+      });
+      if (!row) return null;
+      // readActiveLitigationBySlug returns LitigationDetailRow (extends
+      // LitigationRow with leadAttorneyName). The assembler only needs
+      // the LitigationRow surface — extra field is harmless.
+      return row;
+    } catch {
+      return null;
+    }
+  };
+
+  const [knowledgeChunks, listingContext, routingMatches, activeLitigation, focusedLitigation] = await Promise.all([
     fetchKnowledge(),
     fetchListingContext(),
     fetchRoutingMatches(),
     fetchActiveLitigation(),
+    fetchFocusedLitigation(),
   ]);
 
   const { boundListing, discoveryListings } = listingContext;
@@ -270,6 +297,7 @@ export async function processAdaTurn({
       boundListing,
       discoveryListings,
       activeLitigation,
+      focusedLitigation,
       routingMatches,
       knowledgeChunks,
       now: clients.clock.now(),
