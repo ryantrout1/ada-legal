@@ -175,7 +175,15 @@ export class NeonDbClient implements DbClient {
   async searchAttorneys(opts: AttorneySearchOptions): Promise<AttorneyRow[]> {
     const conds = [eq(attorneysTable.status, 'approved')];
     if (opts.state) {
-      conds.push(eq(attorneysTable.locationState, opts.state));
+      // Match if state is the primary location_state OR appears in
+      // additional_states. The jsonb @> operator with a 1-element array
+      // is fast on the additional_states GIN index.
+      conds.push(
+        or(
+          eq(attorneysTable.locationState, opts.state),
+          sql`${attorneysTable.additionalStates} @> ${JSON.stringify([opts.state])}::jsonb`,
+        )!,
+      );
     }
     if (opts.city) {
       conds.push(eq(attorneysTable.locationCity, opts.city));
@@ -188,11 +196,19 @@ export class NeonDbClient implements DbClient {
       .where(and(...conds))
       .limit(limit);
 
+    // In-memory filter for practice areas (legacy) and specialty tags (new
+    // canonical taxonomy). Both are OR-of-overlap semantics: an attorney
+    // matches if any of their tags overlap any of the requested tags.
     return rows
       .filter((r) => {
         if (!opts.practiceAreas || opts.practiceAreas.length === 0) return true;
         const areas = (r.practiceAreas ?? []) as string[];
         return opts.practiceAreas.some((p) => areas.includes(p));
+      })
+      .filter((r) => {
+        if (!opts.specialtyTags || opts.specialtyTags.length === 0) return true;
+        const tags = (r.specialtyTags ?? []) as string[];
+        return opts.specialtyTags.some((t) => tags.includes(t));
       })
       .map((r) => ({
         id: r.id,
@@ -201,6 +217,8 @@ export class NeonDbClient implements DbClient {
         locationCity: r.locationCity,
         locationState: r.locationState,
         practiceAreas: (r.practiceAreas ?? []) as string[],
+        additionalStates: (r.additionalStates ?? []) as string[],
+        specialtyTags: (r.specialtyTags ?? []) as string[],
         email: r.email,
         phone: r.phone,
         websiteUrl: r.websiteUrl,
@@ -402,6 +420,8 @@ export class NeonDbClient implements DbClient {
         locationCity: input.locationCity ?? null,
         locationState: input.locationState ?? null,
         practiceAreas: input.practiceAreas,
+        additionalStates: input.additionalStates ?? [],
+        specialtyTags: input.specialtyTags ?? [],
         email: input.email ?? null,
         phone: input.phone ?? null,
         websiteUrl: input.websiteUrl ?? null,
@@ -425,6 +445,8 @@ export class NeonDbClient implements DbClient {
     if (input.locationCity !== undefined) patch.locationCity = input.locationCity;
     if (input.locationState !== undefined) patch.locationState = input.locationState;
     if (input.practiceAreas !== undefined) patch.practiceAreas = input.practiceAreas;
+    if (input.additionalStates !== undefined) patch.additionalStates = input.additionalStates;
+    if (input.specialtyTags !== undefined) patch.specialtyTags = input.specialtyTags;
     if (input.email !== undefined) patch.email = input.email;
     if (input.phone !== undefined) patch.phone = input.phone;
     if (input.websiteUrl !== undefined) patch.websiteUrl = input.websiteUrl;
@@ -1613,6 +1635,8 @@ function toAttorneyAdminRow(r: typeof attorneysTable.$inferSelect): AttorneyAdmi
     locationCity: r.locationCity,
     locationState: r.locationState,
     practiceAreas: (r.practiceAreas ?? []) as string[],
+    additionalStates: (r.additionalStates ?? []) as string[],
+    specialtyTags: (r.specialtyTags ?? []) as string[],
     email: r.email,
     phone: r.phone,
     websiteUrl: r.websiteUrl,

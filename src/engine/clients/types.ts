@@ -89,6 +89,8 @@ export interface AttorneySearchOptions {
   state?: string;
   city?: string;
   practiceAreas?: string[];
+  /** Canonical taxonomy match: title_i | title_ii | title_iii | class_action | mass_action. Overlap match. */
+  specialtyTags?: string[];
   limit?: number;
 }
 
@@ -99,6 +101,10 @@ export interface AttorneyRow {
   locationCity: string | null;
   locationState: string | null;
   practiceAreas: string[];
+  /** Secondary practice states (location_state is primary). */
+  additionalStates: string[];
+  /** Canonical taxonomy tags. See AttorneySearchOptions.specialtyTags. */
+  specialtyTags: string[];
   email: string | null;
   phone: string | null;
   websiteUrl: string | null;
@@ -267,6 +273,8 @@ export interface CreateAttorneyInput {
   locationCity?: string | null;
   locationState?: string | null;
   practiceAreas: string[];
+  additionalStates?: string[];
+  specialtyTags?: string[];
   email?: string | null;
   phone?: string | null;
   websiteUrl?: string | null;
@@ -282,6 +290,8 @@ export interface UpdateAttorneyInput {
   locationCity?: string | null;
   locationState?: string | null;
   practiceAreas?: string[];
+  additionalStates?: string[];
+  specialtyTags?: string[];
   email?: string | null;
   phone?: string | null;
   websiteUrl?: string | null;

@@ -534,13 +534,17 @@ describe('search_attorneys', () => {
       {
         id: 'a1', name: 'Jane Doe', firmName: 'Doe & Co',
         locationCity: 'Phoenix', locationState: 'AZ',
-        practiceAreas: ['ada'], email: 'jane@doe.com',
+        practiceAreas: ['ada'],
+        additionalStates: [], specialtyTags: [],
+        email: 'jane@doe.com',
         phone: null, websiteUrl: null,
       },
       {
         id: 'a2', name: 'Mary Smith', firmName: null,
         locationCity: 'LA', locationState: 'CA',
-        practiceAreas: ['employment'], email: null,
+        practiceAreas: ['employment'],
+        additionalStates: [], specialtyTags: [],
+        email: null,
         phone: null, websiteUrl: null,
       },
     );

@@ -242,6 +242,8 @@ export const attorneys = pgTable(
     locationCity: text('location_city'),
     locationState: text('location_state'),
     practiceAreas: jsonb('practice_areas').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    additionalStates: jsonb('additional_states').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    specialtyTags: jsonb('specialty_tags').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
     email: text('email'),
     phone: text('phone'),
     websiteUrl: text('website_url'),

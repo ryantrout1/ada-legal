@@ -136,10 +136,18 @@ export class InMemoryDbClient implements DbClient {
 
   async searchAttorneys(opts: AttorneySearchOptions): Promise<AttorneyRow[]> {
     const results = this.attorneys.filter((a) => {
-      if (opts.state && a.locationState !== opts.state) return false;
+      if (opts.state) {
+        const matchesPrimary = a.locationState === opts.state;
+        const matchesAdditional = (a.additionalStates ?? []).includes(opts.state);
+        if (!matchesPrimary && !matchesAdditional) return false;
+      }
       if (opts.city && a.locationCity !== opts.city) return false;
       if (opts.practiceAreas && opts.practiceAreas.length > 0) {
         if (!opts.practiceAreas.some((p) => a.practiceAreas.includes(p))) return false;
+      }
+      if (opts.specialtyTags && opts.specialtyTags.length > 0) {
+        const tags = a.specialtyTags ?? [];
+        if (!opts.specialtyTags.some((t) => tags.includes(t))) return false;
       }
       return true;
     });
@@ -256,6 +264,8 @@ export class InMemoryDbClient implements DbClient {
       locationCity: input.locationCity ?? null,
       locationState: input.locationState ?? null,
       practiceAreas: input.practiceAreas,
+      additionalStates: input.additionalStates ?? [],
+      specialtyTags: input.specialtyTags ?? [],
       email: input.email ?? null,
       phone: input.phone ?? null,
       websiteUrl: input.websiteUrl ?? null,
@@ -287,6 +297,8 @@ export class InMemoryDbClient implements DbClient {
       ...(input.locationCity !== undefined ? { locationCity: input.locationCity } : {}),
       ...(input.locationState !== undefined ? { locationState: input.locationState } : {}),
       ...(input.practiceAreas !== undefined ? { practiceAreas: input.practiceAreas } : {}),
+      ...(input.additionalStates !== undefined ? { additionalStates: input.additionalStates } : {}),
+      ...(input.specialtyTags !== undefined ? { specialtyTags: input.specialtyTags } : {}),
       ...(input.email !== undefined ? { email: input.email } : {}),
       ...(input.phone !== undefined ? { phone: input.phone } : {}),
       ...(input.websiteUrl !== undefined ? { websiteUrl: input.websiteUrl } : {}),
@@ -988,6 +1000,8 @@ function toPublicAttorney(a: AttorneyAdminRow): AttorneyRow {
     locationCity: a.locationCity,
     locationState: a.locationState,
     practiceAreas: a.practiceAreas,
+    additionalStates: a.additionalStates ?? [],
+    specialtyTags: a.specialtyTags ?? [],
     email: a.email,
     phone: a.phone,
     websiteUrl: a.websiteUrl,
