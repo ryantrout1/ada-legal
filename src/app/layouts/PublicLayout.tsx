@@ -32,13 +32,6 @@ import { ReadingLevelProvider } from '../components/standards/ReadingLevelContex
 export default function PublicLayout() {
   const location = useLocation();
   const onHome = location.pathname === '/';
-  // Embed mode: when an external host (e.g. Base44 at adalegallink.com/Ada)
-  // iframes a public route with ?embed=1, hide the site header and footer
-  // so the iframe content reads as part of the parent site. The
-  // AccessibilityPanel and the route itself (e.g. Chat) still render.
-  // Implemented via URLSearchParams against location.search so SSR / route
-  // changes don't strand state.
-  const embedMode = new URLSearchParams(location.search).get('embed') === '1';
   const [menuOpen, setMenuOpen] = useState(false);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -99,7 +92,7 @@ export default function PublicLayout() {
         Skip to main content
       </a>
 
-      <header className="border-b border-surface-200 relative z-40 bg-surface-50" hidden={embedMode}>
+      <header className="border-b border-surface-200 relative z-40 bg-surface-50">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
           <Link
             to="/"
@@ -274,7 +267,7 @@ export default function PublicLayout() {
           disclaimer ('Not a law firm') has room to wrap to multiple
           lines without truncating — UPL liability, that statement
           cannot ellipsis. */}
-      <footer className="border-t border-surface-200 mt-auto" hidden={embedMode}>
+      <footer className="border-t border-surface-200 mt-auto">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 text-xs text-ink-700">
           <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-y-3 sm:gap-y-2 sm:gap-x-6">
             <div className="flex items-start sm:items-center gap-2.5 min-w-0">
