@@ -42,6 +42,7 @@ import { assemblePackage } from '../../src/engine/package/assemble.js';
 import type { AdaTurnResult } from '../../src/engine/types.js';
 import type { AdaClients } from '../../src/engine/clients/types.js';
 import { hashAnonToken } from '../../src/lib/anonCookie.js';
+import { applyCors } from '../_cors.js';
 import {
   makeClientsFromEnv,
   readJsonBody,
@@ -72,6 +73,11 @@ interface FinalPayload {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // CORS first — must run before any response so SSE headers carry the
+  // Access-Control-Allow-Origin echo. Preflight OPTIONS returns 204 and
+  // we exit immediately. POST falls through.
+  if (applyCors(req, res)) return;
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
