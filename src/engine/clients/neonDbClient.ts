@@ -99,6 +99,7 @@ import type {
   AccessibilitySnapshot,
   Classification,
   ExtractedFields,
+  HandoffReceipt,
   Message,
   ReadingLevel,
   SessionMetadata,
@@ -1480,13 +1481,7 @@ export class NeonDbClient implements DbClient {
       // Null when finalize_intake hasn't run (or rows backfilled without
       // re-running it); boolean based on whether the side effect's id was
       // populated when finalize_intake did run.
-      const handoff = (metaRecord?.handoff ?? null) as
-        | {
-            firm_email_id: string | null;
-            user_email_id: string | null;
-            transcript_url: string | null;
-          }
-        | null;
+      const handoff = (metaRecord?.handoff ?? null) as HandoffReceipt | null;
       const firmEmailSent =
         handoff === null ? null : handoff.firm_email_id !== null;
       const userEmailSent =
