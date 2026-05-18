@@ -262,6 +262,17 @@ export default function PublicLayout() {
         )}
       </header>
 
+      {/* Embed mode: render the AccessibilityPanel as a floating control
+          since the header (which normally holds it) is hidden. Anchored
+          top-right so it doesn't fight with the chat composer at the
+          bottom. The eyeball is the highest-priority control for our
+          audience and must remain reachable. */}
+      {embedMode && (
+        <div className="fixed top-2 right-2 z-50">
+          <AccessibilityPanel />
+        </div>
+      )}
+
       {/* Main content slot */}
       <main id="main" className="flex-1">
         <Outlet />
