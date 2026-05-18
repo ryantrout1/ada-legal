@@ -86,6 +86,14 @@ async function handleCreate(req: VercelRequest, res: VercelResponse) {
       practiceAreas: Array.isArray(body.practice_areas)
         ? body.practice_areas.filter((p): p is string => typeof p === 'string')
         : [],
+      additionalStates: Array.isArray(body.additional_states)
+        ? body.additional_states
+            .filter((s): s is string => typeof s === 'string')
+            .map((s) => s.toUpperCase())
+        : [],
+      specialtyTags: Array.isArray(body.specialty_tags)
+        ? body.specialty_tags.filter((t): t is string => typeof t === 'string')
+        : [],
       email: stringOrNull(body.email),
       phone: stringOrNull(body.phone),
       websiteUrl: stringOrNull(body.website_url),

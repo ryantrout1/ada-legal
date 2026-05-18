@@ -67,6 +67,16 @@ async function handlePatch(id: string, req: VercelRequest, res: VercelResponse) 
         (p): p is string => typeof p === 'string',
       );
     }
+    if (Array.isArray(body.additional_states)) {
+      patch.additionalStates = body.additional_states
+        .filter((s): s is string => typeof s === 'string')
+        .map((s) => s.toUpperCase());
+    }
+    if (Array.isArray(body.specialty_tags)) {
+      patch.specialtyTags = body.specialty_tags.filter(
+        (t): t is string => typeof t === 'string',
+      );
+    }
     if ('email' in body) patch.email = stringOrNull(body.email);
     if ('phone' in body) patch.phone = stringOrNull(body.phone);
     if ('website_url' in body) patch.websiteUrl = stringOrNull(body.website_url);
