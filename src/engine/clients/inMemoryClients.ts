@@ -541,6 +541,13 @@ export class InMemoryDbClient implements DbClient {
       .map(([tool, count]) => ({ tool, count }))
       .sort((a, b) => b.count - a.count);
 
+    // 6. Intakes total (Phase 5a) — lifetime count of class_action_intake
+    // sessions, scoped by the same include_test filter the rest of this
+    // result uses. Powers the AdminDashboard "Intakes" tile.
+    const intakesTotal = relevant.filter(
+      (s) => s.sessionType === 'class_action_intake',
+    ).length;
+
     return {
       sessionVolume,
       statusCounts,
@@ -548,6 +555,7 @@ export class InMemoryDbClient implements DbClient {
       readingLevelDistribution,
       classificationBreakdown,
       toolUseFrequency,
+      intakesTotal,
     };
   }
 

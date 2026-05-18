@@ -54,6 +54,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       reading_level_distribution: result.readingLevelDistribution,
       classification_breakdown: result.classificationBreakdown,
       tool_use_frequency: result.toolUseFrequency,
+      intakes_total: result.intakesTotal,
     });
   } catch (err) {
     console.error('GET /api/admin/analytics failed', err);

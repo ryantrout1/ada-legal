@@ -802,6 +802,22 @@ export class NeonDbClient implements DbClient {
         count: Number(r.count),
       }));
 
+    // 6. Intakes total (Phase 5a) — lifetime count of class_action_intake
+    // sessions, scoped by the same is_test filter as everything else above.
+    // Powers the AdminDashboard "Intakes" tile.
+    const intakesRows = await this.db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(adaSessions)
+      .where(
+        includeTest
+          ? eq(adaSessions.sessionType, 'class_action_intake')
+          : and(
+              eq(adaSessions.sessionType, 'class_action_intake'),
+              eq(adaSessions.isTest, false),
+            ),
+      );
+    const intakesTotal = Number(intakesRows[0]?.n ?? 0);
+
     return {
       sessionVolume,
       statusCounts,
@@ -809,6 +825,7 @@ export class NeonDbClient implements DbClient {
       readingLevelDistribution,
       classificationBreakdown,
       toolUseFrequency,
+      intakesTotal,
     };
   }
 
