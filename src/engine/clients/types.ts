@@ -300,6 +300,96 @@ export interface UpdateAttorneyInput {
   status?: AttorneyStatus;
 }
 
+// ─── Litigation listings (class + mass actions) ─────────────────────────────
+
+export type LitigationKind = 'class' | 'mass';
+export type LitigationStatus =
+  | 'draft'
+  | 'active'
+  | 'settled'
+  | 'closed'
+  | 'archived';
+
+/** Public-facing row Ada gets when looking up active litigation. */
+export interface LitigationRow {
+  id: string;
+  kind: LitigationKind;
+  caseName: string;
+  slug: string;
+  shortDescription: string | null;
+  fullDescription: string | null;
+  eligibility: string | null;
+  defendants: string[];
+  court: string | null;
+  docketNumber: string | null;
+  affectedStates: string[];
+  filingDate: string | null; // ISO date
+  leadAttorneyId: string | null;
+}
+
+/** Admin row, exposes status + timestamps. */
+export interface LitigationAdminRow extends LitigationRow {
+  status: LitigationStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ListLitigationForAdminOptions {
+  kind?: LitigationKind;
+  status?: LitigationStatus;
+  search?: string;
+  leadAttorneyId?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface ListLitigationForAdminResult {
+  litigation: LitigationAdminRow[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CreateLitigationInput {
+  orgId: string;
+  kind: LitigationKind;
+  caseName: string;
+  slug: string;
+  shortDescription?: string | null;
+  fullDescription?: string | null;
+  eligibility?: string | null;
+  defendants?: string[];
+  court?: string | null;
+  docketNumber?: string | null;
+  affectedStates?: string[];
+  filingDate?: string | null;
+  leadAttorneyId?: string | null;
+  status?: LitigationStatus;
+}
+
+export interface UpdateLitigationInput {
+  kind?: LitigationKind;
+  caseName?: string;
+  slug?: string;
+  shortDescription?: string | null;
+  fullDescription?: string | null;
+  eligibility?: string | null;
+  defendants?: string[];
+  court?: string | null;
+  docketNumber?: string | null;
+  affectedStates?: string[];
+  filingDate?: string | null;
+  leadAttorneyId?: string | null;
+  status?: LitigationStatus;
+}
+
+export interface ListActiveLitigationOptions {
+  kind?: LitigationKind;
+  /** If set, only litigation matching this state in affected_states (or empty affected_states = nationwide). */
+  state?: string;
+  limit?: number;
+}
+
 export interface OrganizationRow {
   id: string;
   orgCode: string;
@@ -331,6 +421,25 @@ export interface DbClient {
   createAttorney(input: CreateAttorneyInput): Promise<AttorneyAdminRow>;
   /** Partial update of an attorney. Returns the updated row or null. */
   updateAttorney(id: string, input: UpdateAttorneyInput): Promise<AttorneyAdminRow | null>;
+
+  // ─── Litigation listings (Phase 2) ──────────────────────────────────────
+
+  /** Admin: list litigation rows across kinds/statuses with filter + pagination. */
+  listLitigationForAdmin(opts: ListLitigationForAdminOptions): Promise<ListLitigationForAdminResult>;
+  /** Admin: read a single litigation row by id. */
+  getLitigationById(id: string): Promise<LitigationAdminRow | null>;
+  /** Admin: insert a new litigation row. */
+  createLitigation(input: CreateLitigationInput): Promise<LitigationAdminRow>;
+  /** Admin: partial update. Returns the updated row or null. */
+  updateLitigation(id: string, input: UpdateLitigationInput): Promise<LitigationAdminRow | null>;
+  /**
+   * Engine: list active litigation rows for Ada's system prompt and the
+   * public read endpoint. Filters status='active'. Optional kind + state
+   * narrowing. A row with empty affected_states is treated as nationwide
+   * and matches every state filter.
+   */
+  listActiveLitigation(opts?: ListActiveLitigationOptions): Promise<LitigationRow[]>;
+
   /** Read a single system_settings value by key. */
   getSystemSetting<T = unknown>(key: string): Promise<T | null>;
   /** Write a system_settings value by key (upsert). */

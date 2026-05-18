@@ -16,6 +16,7 @@ import {
   text,
   boolean,
   timestamp,
+  date,
   jsonb,
   uniqueIndex,
   index,
@@ -256,6 +257,41 @@ export const attorneys = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
   },
   (t) => [index('attorneys_status_state').on(t.status, t.locationState)],
+);
+
+// ─── litigation_listings ──────────────────────────────────────────────────────
+// Class actions + mass actions, distinguished by `kind`. Migration 0009.
+// Admin UI presents two filtered views; engine treats them as one table.
+
+export const litigationListings = pgTable(
+  'litigation_listings',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    orgId: uuid('org_id')
+      .notNull()
+      .references(() => organizations.id),
+    kind: text('kind').notNull(), // 'class' | 'mass', CHECK in DB
+    caseName: text('case_name').notNull(),
+    slug: text('slug').notNull(),
+    shortDescription: text('short_description'),
+    fullDescription: text('full_description'),
+    eligibility: text('eligibility'),
+    defendants: jsonb('defendants').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    court: text('court'),
+    docketNumber: text('docket_number'),
+    affectedStates: jsonb('affected_states').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    filingDate: date('filing_date'),
+    leadAttorneyId: uuid('lead_attorney_id').references(() => attorneys.id, {
+      onDelete: 'set null',
+    }),
+    status: text('status').notNull().default('draft'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
+  },
+  (t) => [
+    index('litigation_kind_status').on(t.kind, t.status),
+    index('litigation_lead_attorney').on(t.leadAttorneyId),
+  ],
 );
 
 // ─── ada_knowledge_chunks ─────────────────────────────────────────────────────

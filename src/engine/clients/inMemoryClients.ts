@@ -73,6 +73,13 @@ import type {
   RoutingRuleRow,
   RoutingRuleWithTarget,
   StripeWebhookEventRow,
+  CreateLitigationInput,
+  LitigationAdminRow,
+  LitigationRow,
+  ListActiveLitigationOptions,
+  ListLitigationForAdminOptions,
+  ListLitigationForAdminResult,
+  UpdateLitigationInput,
 } from './types.js';
 
 // ─── AI ───────────────────────────────────────────────────────────────────────
@@ -116,6 +123,7 @@ export class InMemoryDbClient implements DbClient {
   public readonly sessions = new Map<string, AdaSessionState>();
   public readonly attorneys: AttorneyRow[] = [];
   public readonly adminAttorneys: AttorneyAdminRow[] = [];
+  public readonly adminLitigation: LitigationAdminRow[] = [];
   public readonly orgs: OrganizationRow[] = [];
   public readonly systemSettings = new Map<string, unknown>();
   public readonly qualityChecks = new Map<string, SessionQualityCheckRow>();
@@ -319,6 +327,135 @@ export class InMemoryDbClient implements DbClient {
     }
 
     return next;
+  }
+
+  // ─── Admin: litigation (class + mass actions) ───────────────────────────────
+
+  async listLitigationForAdmin(
+    opts: ListLitigationForAdminOptions,
+  ): Promise<ListLitigationForAdminResult> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 50;
+
+    let filtered = this.adminLitigation.slice();
+    if (opts.kind) filtered = filtered.filter((l) => l.kind === opts.kind);
+    if (opts.status) filtered = filtered.filter((l) => l.status === opts.status);
+    if (opts.leadAttorneyId)
+      filtered = filtered.filter((l) => l.leadAttorneyId === opts.leadAttorneyId);
+    if (opts.search && opts.search.trim()) {
+      const term = opts.search.trim().toLowerCase();
+      filtered = filtered.filter(
+        (l) =>
+          l.caseName.toLowerCase().includes(term) ||
+          (l.docketNumber ?? '').toLowerCase().includes(term),
+      );
+    }
+
+    const sorted = filtered.sort((a, b) =>
+      b.updatedAt.localeCompare(a.updatedAt),
+    );
+    const start = (page - 1) * pageSize;
+    return {
+      litigation: sorted.slice(start, start + pageSize),
+      totalCount: filtered.length,
+      page,
+      pageSize,
+    };
+  }
+
+  async getLitigationById(id: string): Promise<LitigationAdminRow | null> {
+    return this.adminLitigation.find((l) => l.id === id) ?? null;
+  }
+
+  async createLitigation(input: CreateLitigationInput): Promise<LitigationAdminRow> {
+    const now = new Date().toISOString();
+    const id =
+      '20000000-0000-4000-8000-' +
+      (this.adminLitigation.length + 1).toString(16).padStart(12, '0');
+    const row: LitigationAdminRow = {
+      id,
+      kind: input.kind,
+      caseName: input.caseName,
+      slug: input.slug,
+      shortDescription: input.shortDescription ?? null,
+      fullDescription: input.fullDescription ?? null,
+      eligibility: input.eligibility ?? null,
+      defendants: input.defendants ?? [],
+      court: input.court ?? null,
+      docketNumber: input.docketNumber ?? null,
+      affectedStates: input.affectedStates ?? [],
+      filingDate: input.filingDate ?? null,
+      leadAttorneyId: input.leadAttorneyId ?? null,
+      status: input.status ?? 'draft',
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.adminLitigation.push(row);
+    return row;
+  }
+
+  async updateLitigation(
+    id: string,
+    input: UpdateLitigationInput,
+  ): Promise<LitigationAdminRow | null> {
+    const idx = this.adminLitigation.findIndex((l) => l.id === id);
+    if (idx === -1) return null;
+    const prev = this.adminLitigation[idx];
+    const next: LitigationAdminRow = {
+      ...prev,
+      ...(input.kind !== undefined ? { kind: input.kind } : {}),
+      ...(input.caseName !== undefined ? { caseName: input.caseName } : {}),
+      ...(input.slug !== undefined ? { slug: input.slug } : {}),
+      ...(input.shortDescription !== undefined ? { shortDescription: input.shortDescription } : {}),
+      ...(input.fullDescription !== undefined ? { fullDescription: input.fullDescription } : {}),
+      ...(input.eligibility !== undefined ? { eligibility: input.eligibility } : {}),
+      ...(input.defendants !== undefined ? { defendants: input.defendants } : {}),
+      ...(input.court !== undefined ? { court: input.court } : {}),
+      ...(input.docketNumber !== undefined ? { docketNumber: input.docketNumber } : {}),
+      ...(input.affectedStates !== undefined ? { affectedStates: input.affectedStates } : {}),
+      ...(input.filingDate !== undefined ? { filingDate: input.filingDate } : {}),
+      ...(input.leadAttorneyId !== undefined ? { leadAttorneyId: input.leadAttorneyId } : {}),
+      ...(input.status !== undefined ? { status: input.status } : {}),
+      updatedAt: new Date().toISOString(),
+    };
+    this.adminLitigation[idx] = next;
+    return next;
+  }
+
+  async listActiveLitigation(
+    opts: ListActiveLitigationOptions = {},
+  ): Promise<LitigationRow[]> {
+    let filtered = this.adminLitigation.filter((l) => l.status === 'active');
+    if (opts.kind) filtered = filtered.filter((l) => l.kind === opts.kind);
+    if (opts.state) {
+      filtered = filtered.filter(
+        (l) =>
+          l.affectedStates.length === 0 ||
+          l.affectedStates.includes(opts.state!),
+      );
+    }
+    const sorted = filtered.sort((a, b) => {
+      const aDate = a.filingDate ?? '';
+      const bDate = b.filingDate ?? '';
+      return bDate.localeCompare(aDate);
+    });
+    const limit = opts.limit && opts.limit > 0 ? opts.limit : 20;
+    return sorted.slice(0, limit).map((l) => ({
+      id: l.id,
+      kind: l.kind,
+      caseName: l.caseName,
+      slug: l.slug,
+      shortDescription: l.shortDescription,
+      fullDescription: l.fullDescription,
+      eligibility: l.eligibility,
+      defendants: l.defendants,
+      court: l.court,
+      docketNumber: l.docketNumber,
+      affectedStates: l.affectedStates,
+      filingDate: l.filingDate,
+      leadAttorneyId: l.leadAttorneyId,
+    }));
   }
 
   // ─── Admin: system settings ─────────────────────────────────────────────────

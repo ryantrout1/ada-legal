@@ -24,6 +24,7 @@ import {
   adaSessions,
   anonSessions,
   attorneys as attorneysTable,
+  litigationListings as litigationTable,
   organizations,
   sessionPackages,
   sessionQualityChecks,
@@ -81,6 +82,15 @@ import type {
   RoutingRuleRow,
   RoutingRuleWithTarget,
   StripeWebhookEventRow,
+  CreateLitigationInput,
+  LitigationAdminRow,
+  LitigationKind,
+  LitigationRow,
+  LitigationStatus,
+  ListActiveLitigationOptions,
+  ListLitigationForAdminOptions,
+  ListLitigationForAdminResult,
+  UpdateLitigationInput,
 } from './types.js';
 import type { AdaSessionState } from '../types.js';
 import type {
@@ -464,6 +474,144 @@ export class NeonDbClient implements DbClient {
       .where(eq(attorneysTable.id, id))
       .returning();
     return updated[0] ? toAttorneyAdminRow(updated[0]) : null;
+  }
+
+  // ─── Admin: litigation (class + mass actions) ───────────────────────────────
+
+  async listLitigationForAdmin(
+    opts: ListLitigationForAdminOptions,
+  ): Promise<ListLitigationForAdminResult> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 50;
+    const offset = (page - 1) * pageSize;
+
+    const conds = [];
+    if (opts.kind) conds.push(eq(litigationTable.kind, opts.kind));
+    if (opts.status) conds.push(eq(litigationTable.status, opts.status));
+    if (opts.leadAttorneyId)
+      conds.push(eq(litigationTable.leadAttorneyId, opts.leadAttorneyId));
+    if (opts.search && opts.search.trim()) {
+      const term = `%${opts.search.trim()}%`;
+      conds.push(
+        or(
+          ilike(litigationTable.caseName, term),
+          ilike(litigationTable.docketNumber, term),
+        )!,
+      );
+    }
+    const whereClause = conds.length > 0 ? and(...conds) : undefined;
+
+    const countRows = await this.db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(litigationTable)
+      .where(whereClause);
+    const totalCount = countRows[0]?.n ?? 0;
+
+    const rows = await this.db
+      .select()
+      .from(litigationTable)
+      .where(whereClause)
+      .orderBy(sql`${litigationTable.updatedAt} DESC`)
+      .limit(pageSize)
+      .offset(offset);
+
+    return {
+      litigation: rows.map(toLitigationAdminRow),
+      totalCount,
+      page,
+      pageSize,
+    };
+  }
+
+  async getLitigationById(id: string): Promise<LitigationAdminRow | null> {
+    const rows = await this.db
+      .select()
+      .from(litigationTable)
+      .where(eq(litigationTable.id, id))
+      .limit(1);
+    return rows[0] ? toLitigationAdminRow(rows[0]) : null;
+  }
+
+  async createLitigation(input: CreateLitigationInput): Promise<LitigationAdminRow> {
+    const inserted = await this.db
+      .insert(litigationTable)
+      .values({
+        orgId: input.orgId,
+        kind: input.kind,
+        caseName: input.caseName,
+        slug: input.slug,
+        shortDescription: input.shortDescription ?? null,
+        fullDescription: input.fullDescription ?? null,
+        eligibility: input.eligibility ?? null,
+        defendants: input.defendants ?? [],
+        court: input.court ?? null,
+        docketNumber: input.docketNumber ?? null,
+        affectedStates: input.affectedStates ?? [],
+        filingDate: input.filingDate ?? null,
+        leadAttorneyId: input.leadAttorneyId ?? null,
+        status: input.status ?? 'draft',
+      })
+      .returning();
+    return toLitigationAdminRow(inserted[0]);
+  }
+
+  async updateLitigation(
+    id: string,
+    input: UpdateLitigationInput,
+  ): Promise<LitigationAdminRow | null> {
+    const patch: Record<string, unknown> = {};
+    if (input.kind !== undefined) patch.kind = input.kind;
+    if (input.caseName !== undefined) patch.caseName = input.caseName;
+    if (input.slug !== undefined) patch.slug = input.slug;
+    if (input.shortDescription !== undefined) patch.shortDescription = input.shortDescription;
+    if (input.fullDescription !== undefined) patch.fullDescription = input.fullDescription;
+    if (input.eligibility !== undefined) patch.eligibility = input.eligibility;
+    if (input.defendants !== undefined) patch.defendants = input.defendants;
+    if (input.court !== undefined) patch.court = input.court;
+    if (input.docketNumber !== undefined) patch.docketNumber = input.docketNumber;
+    if (input.affectedStates !== undefined) patch.affectedStates = input.affectedStates;
+    if (input.filingDate !== undefined) patch.filingDate = input.filingDate;
+    if (input.leadAttorneyId !== undefined) patch.leadAttorneyId = input.leadAttorneyId;
+    if (input.status !== undefined) patch.status = input.status;
+
+    if (Object.keys(patch).length === 0) {
+      return this.getLitigationById(id);
+    }
+
+    const updated = await this.db
+      .update(litigationTable)
+      .set(patch)
+      .where(eq(litigationTable.id, id))
+      .returning();
+    return updated[0] ? toLitigationAdminRow(updated[0]) : null;
+  }
+
+  async listActiveLitigation(
+    opts: ListActiveLitigationOptions = {},
+  ): Promise<LitigationRow[]> {
+    const conds = [eq(litigationTable.status, 'active')];
+    if (opts.kind) conds.push(eq(litigationTable.kind, opts.kind));
+    if (opts.state) {
+      // Match if affected_states contains the requested state OR if
+      // affected_states is empty (treated as nationwide).
+      conds.push(
+        or(
+          sql`${litigationTable.affectedStates} @> ${JSON.stringify([opts.state])}::jsonb`,
+          sql`jsonb_array_length(${litigationTable.affectedStates}) = 0`,
+        )!,
+      );
+    }
+
+    const limit = opts.limit && opts.limit > 0 ? Math.min(opts.limit, 50) : 20;
+    const rows = await this.db
+      .select()
+      .from(litigationTable)
+      .where(and(...conds))
+      .orderBy(sql`${litigationTable.filingDate} DESC NULLS LAST, ${litigationTable.updatedAt} DESC`)
+      .limit(limit);
+
+    return rows.map(toLitigationPublicRow);
   }
 
   // ─── Admin: system settings ─────────────────────────────────────────────────
@@ -1643,6 +1791,38 @@ function toAttorneyAdminRow(r: typeof attorneysTable.$inferSelect): AttorneyAdmi
     bio: r.bio,
     photoUrl: r.photoUrl,
     status: r.status as AttorneyStatus,
+    createdAt: (r.createdAt as Date).toISOString(),
+    updatedAt: (r.updatedAt as Date).toISOString(),
+  };
+}
+
+function toLitigationPublicRow(
+  r: typeof litigationTable.$inferSelect,
+): LitigationRow {
+  return {
+    id: r.id,
+    kind: r.kind as LitigationKind,
+    caseName: r.caseName,
+    slug: r.slug,
+    shortDescription: r.shortDescription,
+    fullDescription: r.fullDescription,
+    eligibility: r.eligibility,
+    defendants: (r.defendants ?? []) as string[],
+    court: r.court,
+    docketNumber: r.docketNumber,
+    affectedStates: (r.affectedStates ?? []) as string[],
+    // filingDate is a Drizzle 'date' which serializes as string already.
+    filingDate: r.filingDate as string | null,
+    leadAttorneyId: r.leadAttorneyId,
+  };
+}
+
+function toLitigationAdminRow(
+  r: typeof litigationTable.$inferSelect,
+): LitigationAdminRow {
+  return {
+    ...toLitigationPublicRow(r),
+    status: r.status as LitigationStatus,
     createdAt: (r.createdAt as Date).toISOString(),
     updatedAt: (r.updatedAt as Date).toISOString(),
   };
