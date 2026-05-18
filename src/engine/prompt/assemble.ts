@@ -49,7 +49,7 @@ import {
   renderBoundListingContext,
   renderDiscoveryListingIndex,
 } from './listingContext.js';
-import { renderActiveLitigationIndex } from './litigationContext.js';
+import { renderActiveLitigationIndex, renderFocusedLitigation } from './litigationContext.js';
 import { renderStandardsIndexForPrompt } from '../../lib/standardsIndex.js';
 import type { PageContext } from '../../types/db.js';
 
@@ -337,11 +337,26 @@ function buildListingSection(ctx: AssemblePromptContext): string {
 }
 
 function buildLitigationSection(ctx: AssemblePromptContext): string {
+  // Phase 6a: if a focused litigation is set (user came in via the
+  // public detail page CTA), render the focused intro block first and
+  // filter that row out of the standard index so it doesn't duplicate.
   // Phase 2: public_ada sessions get a condensed index of active
   // class actions and mass actions. Empty array → empty section,
   // which the assembler filters out.
-  if (!ctx.activeLitigation || ctx.activeLitigation.length === 0) return '';
-  return renderActiveLitigationIndex([...ctx.activeLitigation]);
+  const focused = ctx.focusedLitigation;
+  const indexRows = (ctx.activeLitigation ?? []).filter(
+    (r) => !focused || r.id !== focused.id,
+  );
+
+  const parts: string[] = [];
+  if (focused) {
+    parts.push(renderFocusedLitigation(focused));
+  }
+  if (indexRows.length > 0) {
+    if (parts.length > 0) parts.push('');
+    parts.push(renderActiveLitigationIndex([...indexRows]));
+  }
+  return parts.join('\n');
 }
 
 function buildRoutingSection(

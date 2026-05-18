@@ -88,8 +88,10 @@ import type {
   LitigationAdminRow,
   LitigationKind,
   LitigationRow,
+  LitigationDetailRow,
   LitigationStatus,
   ListActiveLitigationOptions,
+  ReadActiveLitigationBySlugOptions,
   ListLitigationForAdminOptions,
   ListLitigationForAdminResult,
   UpdateLitigationInput,
@@ -620,8 +622,25 @@ export class NeonDbClient implements DbClient {
         )!,
       );
     }
+    if (opts.search && opts.search.trim().length > 0) {
+      // Phase 6a: case-insensitive substring across three columns. ILIKE
+      // handles case folding; %needle% is parameterized via Drizzle's sql
+      // binding to prevent injection. Empty values in nullable columns
+      // are tolerated (ILIKE NULL is NULL → row excluded from THAT clause,
+      // but OR'd across three so a hit on case_name still wins).
+      const needle = `%${opts.search.trim()}%`;
+      conds.push(
+        or(
+          sql`${litigationTable.caseName} ILIKE ${needle}`,
+          sql`${litigationTable.eligibility} ILIKE ${needle}`,
+          sql`${litigationTable.shortDescription} ILIKE ${needle}`,
+        )!,
+      );
+    }
 
-    const limit = opts.limit && opts.limit > 0 ? Math.min(opts.limit, 50) : 20;
+    // Phase 6a: bump cap from 50 to 200 for the public browse page,
+    // which loads the full active set on first paint.
+    const limit = opts.limit && opts.limit > 0 ? Math.min(opts.limit, 200) : 20;
     const rows = await this.db
       .select()
       .from(litigationTable)
@@ -630,6 +649,35 @@ export class NeonDbClient implements DbClient {
       .limit(limit);
 
     return rows.map(toLitigationPublicRow);
+  }
+
+  async readActiveLitigationBySlug(
+    opts: ReadActiveLitigationBySlugOptions,
+  ): Promise<LitigationDetailRow | null> {
+    // LEFT JOIN on attorneys so a missing/null leadAttorneyId still
+    // returns the litigation row; leadAttorneyName projects as null.
+    const rows = await this.db
+      .select({
+        litigation: litigationTable,
+        attorneyName: attorneysTable.name,
+      })
+      .from(litigationTable)
+      .leftJoin(attorneysTable, eq(litigationTable.leadAttorneyId, attorneysTable.id))
+      .where(
+        and(
+          eq(litigationTable.orgId, opts.orgId),
+          eq(litigationTable.slug, opts.slug),
+          eq(litigationTable.status, 'active'),
+        ),
+      )
+      .limit(1);
+
+    const r = rows[0];
+    if (!r) return null;
+    return {
+      ...toLitigationPublicRow(r.litigation),
+      leadAttorneyName: r.attorneyName ?? null,
+    };
   }
 
   // ─── Admin: system settings ─────────────────────────────────────────────────

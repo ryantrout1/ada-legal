@@ -64,3 +64,61 @@ export function renderActiveLitigationIndex(
 
   return parts.join('\n');
 }
+
+/**
+ * Phase 6a: render a focused intro block for a single litigation row
+ * the user clicked into before opening the chat. Used when the
+ * session's metadata.litigation_context is set.
+ *
+ * The block frames the case as the user's starting point ("they came
+ * in already interested in this case") so Ada's first turn can
+ * acknowledge it by name without having to discover it through
+ * conversation. Ada is still expected to confirm the user's situation
+ * actually matches the case eligibility — the deep-link expresses
+ * interest, not enrollment.
+ *
+ * Output is plain markdown, embedded in the LITIGATION CONTEXT section
+ * ahead of the standard active-cases index. The focused row is filtered
+ * out of the index by the assembler so it doesn't appear twice.
+ */
+export function renderFocusedLitigation(row: LitigationRow): string {
+  const kindLabel = row.kind === 'class' ? 'class action' : 'mass action';
+  const parts: string[] = [];
+
+  parts.push(
+    `The user came in about **${row.caseName}** — a ${kindLabel} they were reading about on the public Active Cases page. Treat this as their starting point. Acknowledge the case by name in your first response, then confirm whether their situation actually matches the eligibility criteria below before discussing next steps.`,
+  );
+  parts.push('');
+
+  parts.push(`**Case:** ${row.caseName}`);
+
+  if (row.defendants.length > 0) {
+    parts.push(`**Defendants:** ${row.defendants.join(', ')}`);
+  }
+
+  const jurisdictionParts: string[] = [];
+  if (row.affectedStates.length > 0) {
+    jurisdictionParts.push(row.affectedStates.join(', '));
+  } else {
+    jurisdictionParts.push('nationwide');
+  }
+  if (row.court) jurisdictionParts.push(row.court);
+  if (row.docketNumber) jurisdictionParts.push(`docket ${row.docketNumber}`);
+  parts.push(`**Jurisdiction:** ${jurisdictionParts.join(' / ')}`);
+
+  if (row.filingDate) {
+    parts.push(`**Filed:** ${row.filingDate}`);
+  }
+
+  if (row.eligibility) {
+    parts.push('');
+    parts.push(`**Eligibility:** ${row.eligibility.replace(/\s+/g, ' ').trim()}`);
+  }
+
+  if (row.shortDescription) {
+    parts.push('');
+    parts.push(row.shortDescription.replace(/\s+/g, ' ').trim());
+  }
+
+  return parts.join('\n');
+}

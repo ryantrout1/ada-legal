@@ -78,7 +78,9 @@ import type {
   CreateLitigationInput,
   LitigationAdminRow,
   LitigationRow,
+  LitigationDetailRow,
   ListActiveLitigationOptions,
+  ReadActiveLitigationBySlugOptions,
   ListLitigationForAdminOptions,
   ListLitigationForAdminResult,
   UpdateLitigationInput,
@@ -437,6 +439,19 @@ export class InMemoryDbClient implements DbClient {
           l.affectedStates.includes(opts.state!),
       );
     }
+    if (opts.search && opts.search.trim().length > 0) {
+      const needle = opts.search.trim().toLowerCase();
+      filtered = filtered.filter((l) => {
+        const haystack = [
+          l.caseName,
+          l.eligibility ?? '',
+          l.shortDescription ?? '',
+        ]
+          .join('\n')
+          .toLowerCase();
+        return haystack.includes(needle);
+      });
+    }
     const sorted = filtered.sort((a, b) => {
       const aDate = a.filingDate ?? '';
       const bDate = b.filingDate ?? '';
@@ -458,6 +473,39 @@ export class InMemoryDbClient implements DbClient {
       filingDate: l.filingDate,
       leadAttorneyId: l.leadAttorneyId,
     }));
+  }
+
+  async readActiveLitigationBySlug(
+    opts: ReadActiveLitigationBySlugOptions,
+  ): Promise<LitigationDetailRow | null> {
+    // In-memory storage is single-org; orgId is accepted for parity with
+    // the Neon impl (which scopes via WHERE org_id = ...). Slug + active
+    // status are the discriminators here.
+    const row = this.adminLitigation.find(
+      (l) => l.slug === opts.slug && l.status === 'active',
+    );
+    if (!row) return null;
+    let leadAttorneyName: string | null = null;
+    if (row.leadAttorneyId) {
+      const attorney = this.adminAttorneys.find((a) => a.id === row.leadAttorneyId);
+      leadAttorneyName = attorney ? attorney.name : null;
+    }
+    return {
+      id: row.id,
+      kind: row.kind,
+      caseName: row.caseName,
+      slug: row.slug,
+      shortDescription: row.shortDescription,
+      fullDescription: row.fullDescription,
+      eligibility: row.eligibility,
+      defendants: row.defendants,
+      court: row.court,
+      docketNumber: row.docketNumber,
+      affectedStates: row.affectedStates,
+      filingDate: row.filingDate,
+      leadAttorneyId: row.leadAttorneyId,
+      leadAttorneyName,
+    };
   }
 
   // ─── Admin: system settings ─────────────────────────────────────────────────
