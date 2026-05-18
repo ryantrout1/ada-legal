@@ -41,12 +41,13 @@ import {
   hashAnonToken,
   mintAnonToken,
 } from '../../src/lib/anonCookie.js';
-import type { PageContext, ReadingLevel } from '../../src/types/db.js';
+import type { LitigationContext, PageContext, ReadingLevel } from '../../src/types/db.js';
 import {
   makeClientsFromEnv,
   readJsonBody,
   resolveRequestContext,
 } from '../_shared.js';
+import { applyCors } from '../_cors.js';
 
 interface Body {
   reading_level?: ReadingLevel;
@@ -78,11 +79,30 @@ interface Body {
     ref?: string;
     title?: string;
   };
+  /**
+   * Phase 6a: optional deep-link from /LawsuitDetail. When set and
+   * the id resolves to an ACTIVE litigation row in this org, the new
+   * session records metadata.litigation_context so the prompt
+   * assembler can render a focused intro block and the greeting can
+   * acknowledge the case by name.
+   *
+   * Invalid or non-active ids are ignored (session is created as
+   * normal public_ada, no error — same pattern as listing_slug).
+   * Session type stays public_ada, NOT class_action_intake: litigation
+   * isn't a listings row, has no per-firm ListingConfig, and doesn't
+   * trigger the intake flow.
+   */
+  litigation_id?: string;
 }
 
 const ALLOWED_LEVELS: ReadingLevel[] = ['simple', 'standard', 'professional'];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Phase 6a: applyCors so the B44 Active Cases page (adalegallink.com)
+  // can POST cross-origin to start a session. No-op for same-origin
+  // callers (no Origin header → no headers added).
+  if (applyCors(req, res)) return;
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
@@ -145,6 +165,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // drop anything malformed so the CTA doesn't fail the chat.
     const pageContext = parsePageContext(body.page_context);
 
+    // Phase 6a: if litigation_id is set and resolves to an active row in
+    // this org, record it in metadata.litigation_context. Session type
+    // stays public_ada — litigation is informational/discovery, not an
+    // intake flow. Invalid or non-active ids are silently dropped (same
+    // pattern as listing_slug — the public detail page is cacheable and
+    // a case can transition out of 'active' between page load and click).
+    let litigationContext: LitigationContext | null = null;
+    if (typeof body.litigation_id === 'string' && body.litigation_id.trim()) {
+      const targetId = body.litigation_id.trim();
+      const activeLitigation = await clients.db.listActiveLitigation({ limit: 200 });
+      const match = activeLitigation.find((r) => r.id === targetId);
+      if (match) {
+        litigationContext = {
+          id: match.id,
+          slug: match.slug,
+          kind: match.kind,
+          case_name: match.caseName,
+        };
+      }
+    }
+
+    // Build metadata: combine page_context + litigation_context. Either,
+    // both, or neither can be present.
+    const metadata: { page_context?: PageContext; litigation_context?: LitigationContext } = {};
+    if (pageContext) metadata.page_context = pageContext;
+    if (litigationContext) metadata.litigation_context = litigationContext;
+
     // Create and persist the session. If listingId resolved, this is
     // a class_action_intake session pre-bound to that listing —
     // equivalent to what match_listing would have done, minus the
@@ -158,7 +205,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       userId: null,
       readingLevel,
       listingId,
-      metadata: pageContext ? { page_context: pageContext } : undefined,
+      metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
     });
     await clients.db.writeSession({ state: session });
 
@@ -166,8 +213,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // immediately before the first turn completes. Matches the reading
     // level; a simple greeting in the chosen voice. When the session
     // was opened from a chapter or guide page, Ada leads with a short
-    // acknowledgment of the topic.
-    const greeting = buildGreeting(org.displayName, readingLevel, pageContext);
+    // acknowledgment of the topic. Phase 6a: when opened from a
+    // litigation detail page, Ada leads with the case name.
+    const greeting = buildGreeting(org.displayName, readingLevel, pageContext, litigationContext);
 
     if (setCookie) {
       res.setHeader('Set-Cookie', setCookie);
@@ -203,17 +251,40 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
  * NOT summarize the page or presume what the user experienced —
  * just names the topic, then opens the floor the same way every
  * other greeting does.
+ *
+ * Phase 6a: if litigationContext is present the greeting begins
+ * instead with a case-name acknowledgment line ("You came in about
+ * Smith v. Acme Corp."). If BOTH are set, litigation wins — clicking
+ * into a specific case is a more specific signal of intent than
+ * reading a standards-guide chapter.
  */
 function buildGreeting(
   _orgDisplayName: string,
   level: ReadingLevel,
   pageContext?: PageContext | null,
+  litigationContext?: LitigationContext | null,
 ): string {
   const base = baseGreeting(level);
-  if (!pageContext) return base;
+  if (litigationContext) {
+    const lead = litigationLead(litigationContext, level);
+    return `${lead} ${base}`;
+  }
+  if (pageContext) {
+    const lead = topicLead(pageContext, level);
+    return `${lead} ${base}`;
+  }
+  return base;
+}
 
-  const lead = topicLead(pageContext, level);
-  return `${lead} ${base}`;
+function litigationLead(lc: LitigationContext, level: ReadingLevel): string {
+  // Acknowledgment line: name the case + invite the user to share their
+  // experience. We do NOT presume eligibility ("you sound like a match")
+  // — that's for Ada to assess in the conversation. Same brevity as
+  // topicLead so the user gets to the open question quickly.
+  if (level === 'simple') {
+    return `You came in about ${lc.case_name}. I can help you figure out if it might apply to you.`;
+  }
+  return `You came in about ${lc.case_name}. I can help you think through whether your situation matches what the case covers.`;
 }
 
 function baseGreeting(level: ReadingLevel): string {
