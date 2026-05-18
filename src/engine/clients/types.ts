@@ -435,7 +435,27 @@ export interface ListActiveLitigationOptions {
   kind?: LitigationKind;
   /** If set, only litigation matching this state in affected_states (or empty affected_states = nationwide). */
   state?: string;
+  /**
+   * Phase 6a: case-insensitive substring search across case_name +
+   * eligibility + short_description. Empty/missing → no search filter.
+   * Composes with kind + state filters (AND'd).
+   */
+  search?: string;
   limit?: number;
+}
+
+/**
+ * Phase 6a: single-row read of an active litigation by slug, with the
+ * lead attorney's name joined in. Used by the public detail endpoint.
+ */
+export interface ReadActiveLitigationBySlugOptions {
+  orgId: string;
+  slug: string;
+}
+
+export interface LitigationDetailRow extends LitigationRow {
+  /** null when leadAttorneyId is unset OR the attorney row is missing. */
+  leadAttorneyName: string | null;
 }
 
 export interface OrganizationRow {
@@ -487,6 +507,14 @@ export interface DbClient {
    * and matches every state filter.
    */
   listActiveLitigation(opts?: ListActiveLitigationOptions): Promise<LitigationRow[]>;
+  /**
+   * Phase 6a: read a single active litigation row by slug, scoped to
+   * orgId. Returns the row joined with the lead attorney's name, or null
+   * if no matching active row exists.
+   */
+  readActiveLitigationBySlug(
+    opts: ReadActiveLitigationBySlugOptions,
+  ): Promise<LitigationDetailRow | null>;
 
   /** Read a single system_settings value by key. */
   getSystemSetting<T = unknown>(key: string): Promise<T | null>;

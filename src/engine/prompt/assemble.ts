@@ -90,6 +90,18 @@ export interface AssemblePromptContext {
    */
   activeLitigation?: ReadonlyArray<LitigationRow>;
   /**
+   * Phase 6a: if the user opened this conversation by clicking
+   * "Talk to Ada" from a specific litigation public-detail page, this
+   * is the row they came in about. The LITIGATION CONTEXT section
+   * renders a focused intro block for it AHEAD of the standard index,
+   * and the focused row is filtered out of the index to avoid
+   * duplication.
+   *
+   * Threaded in by processAdaTurn when the session's metadata.litigation_context
+   * is set.
+   */
+  focusedLitigation?: LitigationRow | null;
+  /**
    * Step 22: routing matches evaluated this turn. When non-empty, a
    * ROUTING DESTINATIONS section is rendered telling Ada which partner
    * organizations can handle this kind of complaint. Ada decides

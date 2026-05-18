@@ -133,6 +133,23 @@ export interface SessionMetadata {
    */
   page_context?: PageContext;
   /**
+   * Phase 6a: if the session was opened via a Talk-to-Ada CTA from a
+   * specific litigation listing (class action or mass action public
+   * detail page), we record which case the user came in about. The
+   * prompt assembler reads this and renders a focused LITIGATION
+   * CONTEXT block so Ada's first turn acknowledges the case by name
+   * and uses it as the starting point.
+   *
+   * Kept deliberately small (same approach as page_context). The full
+   * litigation row is re-loaded from DB each turn — this metadata blob
+   * stores only the identifiers needed to do that lookup plus what the
+   * greeting needs to render without a DB hit.
+   *
+   * Set by POST /api/ada/session when the request body includes a
+   * valid `litigation_id` resolving to an active row in this org.
+   */
+  litigation_context?: LitigationContext;
+  /**
    * Finalize-intake handoff receipt. Populated by finalize_intake when it
    * completes (qualified or disqualified). Records the side-effect results:
    * which emails went out, which transcript got uploaded, what errored.
@@ -197,6 +214,25 @@ export interface PageContext {
   kind: 'chapter' | 'guide';
   ref: string;
   title: string;
+}
+
+/**
+ * Phase 6a: which active litigation row the user clicked into before
+ * opening the chat. Used by the prompt assembler to render a focused
+ * "the user came in about THIS case" block ahead of the standard
+ * active-litigation index, and by the greeting to acknowledge the
+ * case by name.
+ *
+ * Kept deliberately small and stable: id is the canonical reference
+ * (the prompt assembler re-loads the row each turn for fresh data);
+ * slug enables the per-turn lookup; case_name and kind are inlined so
+ * the greeting can render without a DB hit at session-creation time.
+ */
+export interface LitigationContext {
+  id: string;
+  slug: string;
+  kind: 'class' | 'mass';
+  case_name: string;
 }
 
 // Matches docs/DO_NOT_TOUCH.md rule 12: reading levels are exactly these three.
