@@ -99,6 +99,15 @@ interface ResumeResponse {
      * the user to "resume previous conversation." See Step 26 Commit 2.
      */
     is_prebound?: boolean;
+    /**
+     * Phase 6a: when the resume picks up a pre-bound litigation session
+     * (0 messages, but metadata.litigation_context set), the server
+     * regenerates the case-acknowledgment greeting and ships it here
+     * so the chat panel can seed a first bubble. null for non-prebound
+     * sessions and for class_action_intake pre-bound (which has its own
+     * greeting flow). Optional for backwards compat.
+     */
+    greeting?: string | null;
   } | null;
 }
 
@@ -195,13 +204,28 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
           // 0 messages, but the session is already live on the server.
           // Adopt it silently — the user clicked a button, they expect
           // to continue, not be prompted with "resume previous."
+          //
+          // Phase 6a: when the resume ships a `greeting` (pre-bound
+          // litigation case), seed it as the first assistant bubble.
+          // Without this the chat panel renders empty until the user
+          // types — defeating the whole point of context-passing.
           if (data.session && data.session.is_prebound) {
+            const seeded: ChatMessage[] = data.session.greeting
+              ? [
+                  {
+                    id: cryptoId(),
+                    role: 'assistant',
+                    content: data.session.greeting,
+                    timestamp: new Date().toISOString(),
+                  },
+                ]
+              : [];
             setState((s) => ({
               ...s,
               sessionId: data.session!.session_id,
               readingLevel: data.session!.reading_level,
               initializing: false,
-              messages: [],
+              messages: seeded,
             }));
             return;
           }

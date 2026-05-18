@@ -29,6 +29,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { makeClientsFromEnv, resolveRequestContext } from '../../_shared.js';
 import { hashAnonToken } from '../../../src/lib/anonCookie.js';
+import type { LitigationContext, ReadingLevel } from '../../../src/types/db.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -101,6 +102,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ session: null });
     }
 
+    // Phase 6a: for pre-bound litigation sessions, the greeting was
+    // generated at POST /api/ada/session creation time and returned in
+    // that POST's response — but the chat page reaches /chat via a
+    // top-level navigation, so it never sees the POST response. Without
+    // a greeting bubble the user lands on an empty chat panel. Rebuild
+    // the same greeting here so the resume can seed it.
+    let greeting: string | null = null;
+    if (isPreBoundLitigation && state.metadata?.litigation_context) {
+      greeting = buildLitigationGreeting(
+        state.readingLevel,
+        state.metadata.litigation_context,
+      );
+    }
+
     return res.status(200).json({
       session: {
         session_id: state.sessionId,
@@ -108,6 +123,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         reading_level: state.readingLevel,
         messages,
         is_prebound: isPreBound,
+        greeting,
       },
     });
   } catch (err) {
@@ -131,4 +147,27 @@ function extractText(content: unknown): string {
     }
   }
   return parts.join('\n');
+}
+
+/**
+ * Phase 6a: rebuild the same case-acknowledgment greeting that
+ * POST /api/ada/session produces when litigation_id is set, so the
+ * resume probe can seed it into the chat panel. Must stay in sync
+ * with the litigationLead/baseGreeting copy in api/ada/session.ts.
+ */
+function buildLitigationGreeting(
+  level: ReadingLevel,
+  lc: LitigationContext,
+): string {
+  const lead =
+    level === 'simple'
+      ? `You came in about ${lc.case_name}. I can help you figure out if it might apply to you.`
+      : `You came in about ${lc.case_name}. I can help you think through whether your situation matches what the case covers.`;
+  const base =
+    level === 'simple'
+      ? `I'm Ada. If a place didn't let you in, or wouldn't help, because something got in your way, I can help. Take your time. Tell me what happened.`
+      : level === 'professional'
+        ? `I'm Ada. If you encountered a barrier, physical or digital, at a place covered by the ADA, I can help you identify the title that applies and the appropriate next step. Tell me what happened.`
+        : `I'm Ada. If a barrier kept you out, at a business, on a website, anywhere a place was supposed to be open to you, I'm here to help you figure out what to do. Take your time. Tell me what happened.`;
+  return `${lead} ${base}`;
 }
