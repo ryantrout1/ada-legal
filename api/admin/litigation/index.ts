@@ -83,7 +83,10 @@ async function handleCreate(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'case_name is required' });
     }
     if (!isKind(body.kind)) {
-      return res.status(400).json({ error: 'kind must be "class" or "mass"' });
+      return res.status(400).json({
+        error:
+          'kind must be one of: class, enforcement_action, consent_decree, pattern_of_practice, regulatory_challenge',
+      });
     }
     if (typeof body.slug !== 'string' || !body.slug.trim()) {
       return res.status(400).json({ error: 'slug is required' });
@@ -132,14 +135,22 @@ async function handleCreate(req: VercelRequest, res: VercelResponse) {
 }
 
 function isKind(v: unknown): v is LitigationKind {
-  return v === 'class' || v === 'mass';
+  return (
+    v === 'class' ||
+    v === 'enforcement_action' ||
+    v === 'consent_decree' ||
+    v === 'pattern_of_practice' ||
+    v === 'regulatory_challenge'
+  );
 }
 
 function isStatus(v: unknown): v is LitigationStatus {
   return (
     v === 'draft' ||
     v === 'active' ||
-    v === 'settled' ||
+    v === 'investigating' ||
+    v === 'compliance' ||
+    v === 'tracking' ||
     v === 'closed' ||
     v === 'archived'
   );

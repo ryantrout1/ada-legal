@@ -108,14 +108,22 @@ async function handleArchive(id: string, res: VercelResponse) {
 }
 
 function isKind(v: unknown): v is LitigationKind {
-  return v === 'class' || v === 'mass';
+  return (
+    v === 'class' ||
+    v === 'enforcement_action' ||
+    v === 'consent_decree' ||
+    v === 'pattern_of_practice' ||
+    v === 'regulatory_challenge'
+  );
 }
 
 function isStatus(v: unknown): v is LitigationStatus {
   return (
     v === 'draft' ||
     v === 'active' ||
-    v === 'settled' ||
+    v === 'investigating' ||
+    v === 'compliance' ||
+    v === 'tracking' ||
     v === 'closed' ||
     v === 'archived'
   );
