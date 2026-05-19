@@ -48,6 +48,10 @@ import {
   resolveRequestContext,
 } from '../_shared.js';
 import { applyCors } from '../_cors.js';
+import {
+  FIELD_CAPTURE_HEADER,
+  resolveFieldCaptureFlag,
+} from '../../src/lib/fieldCaptureFlag.js';
 
 interface Body {
   reading_level?: ReadingLevel;
@@ -93,6 +97,16 @@ interface Body {
    * trigger the intake flow.
    */
   litigation_id?: string;
+  /**
+   * Field-capture opt-in flag. When `true` AND the request includes
+   * header `X-Ada-Field-Capture: 1`, the session is created with
+   * `is_test=true` so it stays out of production analytics. Used by
+   * /photo (the field-test capture page).
+   *
+   * Strict boolean only. The header gate prevents random callers from
+   * tagging their sessions; see src/lib/fieldCaptureFlag.ts.
+   */
+  is_test?: boolean;
 }
 
 const ALLOWED_LEVELS: ReadingLevel[] = ['simple', 'standard', 'professional'];
@@ -192,6 +206,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (pageContext) metadata.page_context = pageContext;
     if (litigationContext) metadata.litigation_context = litigationContext;
 
+    // Field-capture gate. /photo flags its sessions so they stay out
+    // of production analytics. Strict gate: body.is_test=true AND the
+    // X-Ada-Field-Capture: 1 header. See src/lib/fieldCaptureFlag.ts.
+    const isTest = resolveFieldCaptureFlag({
+      body,
+      header: req.headers[FIELD_CAPTURE_HEADER] ?? null,
+    });
+
     // Create and persist the session. If listingId resolved, this is
     // a class_action_intake session pre-bound to that listing —
     // equivalent to what match_listing would have done, minus the
@@ -206,6 +228,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       readingLevel,
       listingId,
       metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
+      isTest,
     });
     await clients.db.writeSession({ state: session });
 
