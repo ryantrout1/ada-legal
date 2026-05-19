@@ -1,0 +1,67 @@
+-- Plan B, Phase B3b: Wave 1b active class actions prose (3 rows).
+--
+-- Applied live against Neon project ancient-star-00703098 main on 2026-05-19
+-- as part of /shipit Phase B3b.
+--
+-- Originally scoped for 4 rows. Dunsmore v. SD County was carried forward
+-- from earlier scoping but doesn't exist in the database, so the actual
+-- B3b set is 3 rows. Research surfaced 2 more data-quality issues to
+-- handle in this phase:
+--
+-- Row identities corrected and prose written:
+--
+--   1. Fust v. First Urology (a6562d36-...) — formerly stored as "DRA v.
+--      First Urology". Actual plaintiff is Elizabeth Fust et al.; DRA was
+--      class counsel. The case was SETTLED via parallel DOJ enforcement
+--      ($60K + policy reforms across ~20 KY/IN locations). Reclassified
+--      to status='compliance'; case_name corrected to Fust v. First
+--      Urology, P.S.C.; docket added (3:20-cv-00562 W.D. Ky.); affected
+--      states expanded to KY+IN. Full prose written for compliance-phase
+--      surface (helps current patients report violations of the
+--      settlement's policy mandate).
+--
+--   2. Disney DAS Litigation (4a1153a1-...) — formerly stored as
+--      placeholder "Williams v. Theme Park Corp." with no real case
+--      backing it. Repurposed slug to point at the actual ongoing Disney
+--      Disability Access Service litigation (Dogali plaintiffs, M.D. Fla.,
+--      ~2014-present, with parallel C.D. Cal. action and active April 2026
+--      Florida Commission on Human Relations investigation). case_name,
+--      defendants, court, affected_states, filing_date, legal_theory all
+--      corrected. Full prose written for active surface.
+--
+--   3. Coen v. GDOC (6d411d21-...) — VOLUNTARILY DISMISSED Sept 18, 2018.
+--      The active class-action case on this issue is Harris v. Georgia
+--      Department of Corrections (class certified 2021, M.D. Ga.), not
+--      Coen. Reclassified to status='closed'; case_name updated to
+--      reflect dismissal; docket/filing_date set; short_description
+--      rewritten to point users to Harris as the actual active case.
+--      No prose written (closed rows don't surface).
+--
+-- Voice approach matches B2 (Niles) and B3a (Bryant/Alcazar): three
+-- reading-level variants (simple/standard/professional) for compliance
+-- and active rows; minimal text-only updates for closed.
+--
+-- Sources:
+--   - Fust/First Urology: DRA press releases (dralegal.org), DOJ press
+--     release (justice.gov/usao-wdky), Center for Accessible Living,
+--     DRA case page (Fust v. First Urology).
+--   - Disney DAS: PBS News, Inside the Magic (April 2026), Florida
+--     Politics court coverage, JD/DOJ press releases on the parallel
+--     SeaWorld matter, AP coverage of the 2024 DAS policy revision.
+--   - Coen v. GDOC: ACLU press release, Civil Rights Clearinghouse
+--     (clearinghouse.net/case/17001), ACLU Georgia, Law.com Daily Report
+--     on Harris v. GDOC class certification (2021).
+--
+-- Ref: /plan Plan B, Phase B3b.
+
+-- See live UPDATE statements applied via Neon:run_sql on 2026-05-19.
+-- This file documents the changes for reproducibility; the actual prose
+-- values are large enough that the in-line content is not duplicated here.
+-- Refer to commit 1e86377 (B3a) for the established prose structure
+-- template that B3b followed for the two surfaced rows.
+--
+-- Row IDs updated:
+--   - Coen v. GDOC: id '6d411d21-a5b6-445d-8680-df57cf65d717' → status=closed
+--   - Fust v. First Urology: id 'a6562d36-ea33-4813-98a3-b13afdf06826' → status=compliance, full prose
+--   - Disney DAS: id '4a1153a1-b777-4fab-a324-04d854fabefd' → active, full prose,
+--     repurposed from placeholder Williams v. Theme Park
