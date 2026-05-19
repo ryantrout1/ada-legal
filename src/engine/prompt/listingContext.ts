@@ -139,6 +139,14 @@ export function renderBoundListingContext(ctx: BoundListingContext): string {
  * blow the prompt budget when there are dozens of active cases, and
  * Ada doesn't need the fine-grained criteria to recognize a potential
  * match.
+ *
+ * @deprecated Phase A4 (May 2026). public_ada sessions no longer load
+ * Ch1 listings as discovery vocabulary — `litigation_listings` (A1/A2)
+ * is the canonical surface. This function is no longer called by
+ * `processAdaTurn`; the assembler still calls it defensively if
+ * `discoveryListings` is non-empty, but the engine never populates
+ * that array now. Safe to remove once the assembler stops accepting
+ * `discoveryListings` (separate cleanup).
  */
 export function renderDiscoveryListingIndex(
   listings: ActiveListingRow[],

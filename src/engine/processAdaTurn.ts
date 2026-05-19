@@ -192,10 +192,13 @@ export async function processAdaTurn({
         if (listing && config) {
           return { boundListing: { listing, config }, discoveryListings: [] };
         }
-      } else if (workingState.sessionType === 'public_ada') {
-        const discoveryListings = await clients.db.listActiveListings();
-        return { boundListing: null, discoveryListings };
       }
+      // Phase A4: public_ada sessions no longer load Ch1 listings as a
+      // discovery vocabulary. Active litigation (A1/A2/A3) is the
+      // canonical discovery surface; see fetchActiveLitigation below.
+      // Bound (class_action_intake) sessions keep their boundListing
+      // path above — that's the listing_slug-bound flow from
+      // /class-actions, which remains valid.
     } catch {
       // Listing context is non-critical; proceed without it.
     }
