@@ -1,78 +1,98 @@
 /**
- * ClassActionDetail — public detail for a single class-action listing.
+ * ClassActionDetail — public detail for a single litigation row.
  *
- * Reads /api/public/listings/:slug. Renders:
+ * Reads /api/public/litigation/:slug. Renders:
  *   - Breadcrumb back to /class-actions
- *   - Title + category
- *   - Full description (case context)
- *   - Eligibility criteria grouped by kind: required / preferred /
- *     disqualifying, each as a bulleted list so users can self-assess
- *   - Disqualifying conditions (hard-stops) called out separately
- *   - 'Talk to Ada about this' CTA that POSTs to /api/ada/session with
- *     listing_slug, then redirects to /chat with the pre-bound session
+ *   - Case name + kind pill + legal theory
+ *   - Case description (full_description with reading-level variant)
+ *   - Documentation-required block (DocumentationRequiredBlock)
+ *   - No-documentation off-ramp (NoDocumentationOfframp)
+ *   - Evidence guidance
+ *   - What this is NOT
+ *   - Eligibility prose
+ *   - Key dates + court + docket
+ *   - 'Talk to Ada about this' CTA — POSTs to /api/ada/session with
+ *     litigation_id (Phase A3a session binding); /chat resumes the
+ *     pre-bound session.
  *
- * What's intentionally NOT shown:
- *   - required_fields (Ada's intake schema, not user-facing)
- *   - ada_prompt_override (internal)
+ * Reading levels honored: simple / standard / professional. Each
+ * variant resolves via pickVariant() with fallback to the canonical
+ * 'standard' field.
  *
- * Ref: Step 26, Commit 2.
+ * Ref: /plan Phase A3b.
  */
 
 import { useCallback, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useReadingLevel, type ReadingLevel } from '../../components/standards/ReadingLevelContext.js';
+import {
+  useReadingLevel,
+  type ReadingLevel,
+} from '../../components/standards/ReadingLevelContext.js';
 import { ReadingLevelToggle } from '../../components/standards/ReadingLevelToggle.js';
 import { CurrentReadingLevel } from '../../components/standards/CurrentReadingLevel.js';
 import AutoCiteLinks from '../../components/standards/AutoCiteLinks.js';
 import { Breadcrumbs } from '../../components/Breadcrumbs.js';
+import { DocumentationRequiredBlock } from './components/DocumentationRequiredBlock.js';
+import { NoDocumentationOfframp } from './components/NoDocumentationOfframp.js';
 
-type CriterionKind = 'required' | 'preferred' | 'disqualifying';
+type LitigationKind =
+  | 'class'
+  | 'enforcement_action'
+  | 'consent_decree'
+  | 'pattern_of_practice'
+  | 'regulatory_challenge';
 
-interface EligibilityCriterion {
-  description: string;
-  kind: CriterionKind;
-}
-
-interface PublicListingDetail {
-  listing_id: string;
+interface PublicLitigationDetail {
+  id: string;
+  kind: LitigationKind;
+  caseName: string;
   slug: string;
-  title: string;
-  category: string;
-  short_description: string | null;
-  short_description_simple: string | null;
-  short_description_professional: string | null;
-  full_description: string | null;
-  full_description_simple: string | null;
-  full_description_professional: string | null;
-  eligibility_summary: string | null;
-  eligibility_summary_simple: string | null;
-  eligibility_summary_professional: string | null;
-  law_firm_name: string;
-  case_description: string | null;
-  case_description_simple: string | null;
-  case_description_professional: string | null;
-  eligibility_criteria: EligibilityCriterion[];
-  disqualifying_conditions: string[];
+  legalTheory: string | null;
+  shortDescription: string | null;
+  shortDescriptionSimple: string | null;
+  shortDescriptionProfessional: string | null;
+  fullDescription: string | null;
+  fullDescriptionSimple: string | null;
+  fullDescriptionProfessional: string | null;
+  eligibility: string | null;
+  eligibilitySimple: string | null;
+  eligibilityProfessional: string | null;
+  documentationRequiredSimple: string | null;
+  documentationRequiredProfessional: string | null;
+  noDocumentationPathSimple: string | null;
+  noDocumentationPathProfessional: string | null;
+  evidenceGuidanceSimple: string | null;
+  evidenceGuidanceProfessional: string | null;
+  whatThisIsNotSimple: string | null;
+  whatThisIsNotProfessional: string | null;
+  defendants: string[];
+  court: string | null;
+  docketNumber: string | null;
+  affectedStates: string[];
+  filingDate: string | null;
+  keyDates: Record<string, string>;
+  leadAttorneyName: string | null;
 }
 
-const CATEGORY_LABEL: Record<string, string> = {
-  ada_title_i: 'Title I — Employment',
-  ada_title_ii: 'Title II — Government',
-  ada_title_iii: 'Title III — Public accommodation',
+const KIND_LABEL: Record<LitigationKind, string> = {
+  class: 'Class action',
+  enforcement_action: 'DOJ enforcement',
+  consent_decree: 'Consent decree',
+  pattern_of_practice: 'Pattern of practice',
+  regulatory_challenge: 'Regulatory challenge',
 };
 
 /**
  * Pick the right voice variant for a field. Order:
- *   1. The exact variant the user selected (simple / professional), if
- *      that variant has content for this field.
- *   2. Fall back to the 'standard' (canonical) field. This is the
- *      existing column written when the listing was created — it
- *      always has content if the listing is published.
+ *   1. The exact variant the user selected (simple / professional),
+ *      if that variant has content for this field.
+ *   2. Fall back to the 'standard' (canonical) field. This always has
+ *      content if the row's prose was filled.
  *   3. Final fallback: empty string. Never crashes if everything is
- *      somehow null.
+ *      null.
  *
- * Defining the fallback in one place keeps the JSX below readable.
+ * Single-place fallback keeps the JSX below readable.
  */
 function pickVariant(
   level: ReadingLevel,
@@ -83,15 +103,33 @@ function pickVariant(
   },
 ): string {
   if (level === 'simple' && variants.simple) return variants.simple;
-  if (level === 'professional' && variants.professional) return variants.professional;
+  if (level === 'professional' && variants.professional)
+    return variants.professional;
   return variants.standard ?? '';
+}
+
+/**
+ * Pick a simple/professional pair. Used for the new A1 fields which
+ * have NO 'standard' column — they go directly simple → professional.
+ * Falls back from one to the other if a variant is missing.
+ */
+function pickSimplePro(
+  level: ReadingLevel,
+  variants: { simple: string | null; professional: string | null },
+): string | null {
+  if (level === 'simple') return variants.simple ?? variants.professional ?? null;
+  if (level === 'professional')
+    return variants.professional ?? variants.simple ?? null;
+  // standard: prefer professional (the more rigorous default), fall back
+  // to simple so the field at least renders if only one variant exists.
+  return variants.professional ?? variants.simple ?? null;
 }
 
 export default function ClassActionDetail() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { readingLevel } = useReadingLevel();
-  const [listing, setListing] = useState<PublicListingDetail | null>(null);
+  const [row, setRow] = useState<PublicLitigationDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -103,15 +141,15 @@ export default function ClassActionDetail() {
     setError(null);
     try {
       const resp = await fetch(
-        `/api/public/listings/${encodeURIComponent(slug)}`,
+        `/api/public/litigation/${encodeURIComponent(slug)}`,
       );
       if (resp.status === 404) {
         setNotFound(true);
         return;
       }
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = (await resp.json()) as { listing: PublicListingDetail };
-      setListing(data.listing);
+      const data = (await resp.json()) as { litigation: PublicLitigationDetail };
+      setRow(data.litigation);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load');
     } finally {
@@ -124,7 +162,7 @@ export default function ClassActionDetail() {
   }, [load]);
 
   async function handleTalkToAda() {
-    if (!slug) return;
+    if (!row) return;
     setStartingChat(true);
     setError(null);
     try {
@@ -133,7 +171,10 @@ export default function ClassActionDetail() {
         credentials: 'include',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          listing_slug: slug,
+          // Phase A3b: deep-link via litigation_id (not listing_slug).
+          // The endpoint binds session.litigation_listing_id via the
+          // A3a path and seeds the case-acknowledgment greeting.
+          litigation_id: row.id,
           reading_level: readingLevel,
         }),
       });
@@ -141,8 +182,6 @@ export default function ClassActionDetail() {
         const body = (await resp.json().catch(() => ({}))) as { error?: string };
         throw new Error(body.error ?? `HTTP ${resp.status}`);
       }
-      // Session cookie set by the endpoint; /chat will pick it up via
-      // the resume-session flow (existing behavior).
       navigate('/chat');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not start chat');
@@ -160,11 +199,11 @@ export default function ClassActionDetail() {
           ← Class actions
         </Link>
         <h1 className="font-display text-3xl text-ink-900 mt-4 mb-4">
-          This case isn&rsquo;t active
+          This case isn&rsquo;t in the directory
         </h1>
         <p className="text-ink-700 mb-6">
           The case you&rsquo;re looking for isn&rsquo;t in our active
-          directory right now. It may have been closed, or the link may be
+          directory right now. It may have closed, or the link may be
           out of date.
         </p>
         <Link
@@ -184,7 +223,7 @@ export default function ClassActionDetail() {
       </section>
     );
 
-  if (error && !listing) {
+  if (error && !row) {
     return (
       <section className="max-w-3xl mx-auto px-5 sm:px-8 py-16">
         <div
@@ -197,75 +236,74 @@ export default function ClassActionDetail() {
     );
   }
 
-  if (!listing) return null;
+  if (!row) return null;
 
-  const required = listing.eligibility_criteria.filter(
-    (c) => c.kind === 'required',
-  );
-  const preferred = listing.eligibility_criteria.filter(
-    (c) => c.kind === 'preferred',
-  );
-  const disqualifying = listing.eligibility_criteria.filter(
-    (c) => c.kind === 'disqualifying',
-  );
-
-  // Reading-level variant resolution. The page renders the user-facing
-  // prose at the level the user picked (simple / standard / professional),
-  // falling back to the canonical 'standard' field when a variant is
-  // missing for that case. The detail page renders full_description if
-  // present, otherwise case_description from the config — same fallback
-  // chain as before, just applied to whichever variant set we picked.
-  const fullDescription =
-    pickVariant(readingLevel, {
-      simple: listing.full_description_simple,
-      standard: listing.full_description,
-      professional: listing.full_description_professional,
-    }) ||
-    pickVariant(readingLevel, {
-      simple: listing.case_description_simple,
-      standard: listing.case_description,
-      professional: listing.case_description_professional,
-    });
-
-  const eligibilitySummary = pickVariant(readingLevel, {
-    simple: listing.eligibility_summary_simple,
-    standard: listing.eligibility_summary,
-    professional: listing.eligibility_summary_professional,
+  // Reading-level variant resolution for the prose fields. The page
+  // renders at the level the user picked (simple / standard /
+  // professional), falling back to the canonical 'standard' field
+  // when a variant is missing.
+  const fullDescription = pickVariant(readingLevel, {
+    simple: row.fullDescriptionSimple,
+    standard: row.fullDescription,
+    professional: row.fullDescriptionProfessional,
   });
 
-  // Build the meta description: prefer short_description, then the
-  // eligibility_summary, then a fallback. Truncate to 155 chars (the
-  // ceiling before Google starts snipping snippets). Meta tags use the
-  // 'standard' field deliberately — search engines cache this and
-  // changing it per user-visit (which won't happen since SSR isn't in
-  // play) would be incorrect anyway.
+  const shortDescription = pickVariant(readingLevel, {
+    simple: row.shortDescriptionSimple,
+    standard: row.shortDescription,
+    professional: row.shortDescriptionProfessional,
+  });
+
+  const eligibility = pickVariant(readingLevel, {
+    simple: row.eligibilitySimple,
+    standard: row.eligibility,
+    professional: row.eligibilityProfessional,
+  });
+
+  // A1-added fields have no canonical 'standard' column — only the
+  // simple/professional pair.
+  const documentationRequired = pickSimplePro(readingLevel, {
+    simple: row.documentationRequiredSimple,
+    professional: row.documentationRequiredProfessional,
+  });
+
+  const noDocumentationPath = pickSimplePro(readingLevel, {
+    simple: row.noDocumentationPathSimple,
+    professional: row.noDocumentationPathProfessional,
+  });
+
+  const evidenceGuidance = pickSimplePro(readingLevel, {
+    simple: row.evidenceGuidanceSimple,
+    professional: row.evidenceGuidanceProfessional,
+  });
+
+  const whatThisIsNot = pickSimplePro(readingLevel, {
+    simple: row.whatThisIsNotSimple,
+    professional: row.whatThisIsNotProfessional,
+  });
+
+  // Meta description: prefer short_description, then a fallback.
+  // Truncate to 155 chars before Google snips it.
   const rawDescription =
-    listing.short_description ??
-    listing.eligibility_summary ??
-    `Class action: ${listing.title}. Free intake with Ada.`;
+    row.shortDescription ??
+    `${KIND_LABEL[row.kind]}: ${row.caseName}. Free intake with Ada.`;
   const metaDescription =
     rawDescription.length > 155
       ? `${rawDescription.slice(0, 152).trim()}…`
       : rawDescription;
 
   const canonicalUrl = `https://ada.adalegallink.com/class-actions/${encodeURIComponent(
-    listing.slug,
+    row.slug,
   )}`;
 
-  // JSON-LD LegalService structured data. schema.org LegalService is
-  // the closest fit for 'class action hosted by a law firm.' Google
-  // parses this for legal-services snippets in search results. The
-  // alternate Event type doesn't fit because this isn't time-bounded.
+  // JSON-LD LegalService structured data — closest schema.org fit for
+  // 'litigation listing hosted by an organization.'
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'LegalService',
-    name: listing.title,
+    name: row.caseName,
     description: metaDescription,
     url: canonicalUrl,
-    provider: {
-      '@type': 'LegalService',
-      name: listing.law_firm_name,
-    },
     areaServed: 'United States',
     serviceType: 'Class action intake',
     availableChannel: {
@@ -275,21 +313,29 @@ export default function ClassActionDetail() {
     },
   };
 
+  // Key dates: deterministic ordering for display. Filing date first
+  // (always rendered separately above), then keyDates entries in the
+  // order the admin entered them (Object.entries preserves insertion
+  // order in modern JS).
+  const keyDateEntries = Object.entries(row.keyDates ?? {}).filter(
+    ([, v]) => typeof v === 'string' && v.trim().length > 0,
+  );
+
   return (
     <article>
       <Helmet>
-        <title>{`${listing.title} — ADA Legal Link`}</title>
+        <title>{`${row.caseName} — ADA Legal Link`}</title>
         <meta name="description" content={metaDescription} />
         <meta
           property="og:title"
-          content={`${listing.title} — ADA Legal Link`}
+          content={`${row.caseName} — ADA Legal Link`}
         />
         <meta property="og:description" content={metaDescription} />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="article" />
         <meta
           name="twitter:title"
-          content={`${listing.title} — ADA Legal Link`}
+          content={`${row.caseName} — ADA Legal Link`}
         />
         <meta name="twitter:description" content={metaDescription} />
         <link rel="canonical" href={canonicalUrl} />
@@ -301,30 +347,32 @@ export default function ClassActionDetail() {
           items={[
             { label: 'Home', to: '/' },
             { label: 'Class actions', to: '/class-actions' },
-            { label: listing.title },
+            { label: row.caseName },
           ]}
         />
       </section>
 
       {/* Header */}
       <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-4">
-        <div className="mb-3">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="inline-block px-2 py-0.5 rounded-full bg-accent-50 text-accent-600 font-medium text-xs">
-            {CATEGORY_LABEL[listing.category] ?? listing.category}
+            {KIND_LABEL[row.kind]}
           </span>
+          {row.legalTheory && (
+            <span className="text-xs text-ink-500">{row.legalTheory}</span>
+          )}
         </div>
         <h1 className="font-display text-3xl sm:text-4xl text-ink-900 mb-3 leading-tight">
-          {listing.title}
+          {row.caseName}
         </h1>
-        <p className="text-sm text-ink-500">
-          Case hosted by{' '}
-          <span className="text-ink-700 font-medium">{listing.law_firm_name}</span>
-        </p>
+        {shortDescription && (
+          <p className="text-base text-ink-700 leading-relaxed">
+            {shortDescription}
+          </p>
+        )}
       </section>
 
-      {/* Reading level toggle. Persists site-wide via ReadingLevelContext.
-          When the user picks a level here, it sticks for the chapter-page
-          standards guide as well — same control, same key. */}
+      {/* Reading level toggle */}
       <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-6">
         <div className="flex flex-wrap items-center gap-3">
           <ReadingLevelToggle />
@@ -332,7 +380,7 @@ export default function ClassActionDetail() {
         </div>
       </section>
 
-      {/* Description */}
+      {/* Full description */}
       {fullDescription && (
         <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-8">
           <h2 className="font-display text-xl text-ink-900 mb-3">
@@ -344,82 +392,115 @@ export default function ClassActionDetail() {
         </section>
       )}
 
-      {/* Eligibility */}
-      <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-8">
-        <h2 className="font-display text-xl text-ink-900 mb-3">
-          Who may qualify
-        </h2>
-        {eligibilitySummary && (
-          <p className="text-ink-700 mb-4">
-            <AutoCiteLinks>{eligibilitySummary}</AutoCiteLinks>
+      {/* Case identity: court, docket, filing date, defendants, states */}
+      {(row.court ||
+        row.docketNumber ||
+        row.filingDate ||
+        row.defendants.length > 0 ||
+        row.affectedStates.length > 0 ||
+        keyDateEntries.length > 0) && (
+        <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-8">
+          <h2 className="font-display text-xl text-ink-900 mb-3">
+            Case identity
+          </h2>
+          <dl className="grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-x-6 gap-y-2 text-sm">
+            {row.court && (
+              <>
+                <dt className="text-ink-500 font-medium">Court</dt>
+                <dd className="text-ink-900">{row.court}</dd>
+              </>
+            )}
+            {row.docketNumber && (
+              <>
+                <dt className="text-ink-500 font-medium">Docket</dt>
+                <dd className="text-ink-900 font-mono text-xs">
+                  {row.docketNumber}
+                </dd>
+              </>
+            )}
+            {row.filingDate && (
+              <>
+                <dt className="text-ink-500 font-medium">Filed</dt>
+                <dd className="text-ink-900">{row.filingDate}</dd>
+              </>
+            )}
+            {row.defendants.length > 0 && (
+              <>
+                <dt className="text-ink-500 font-medium">Defendants</dt>
+                <dd className="text-ink-900">{row.defendants.join(', ')}</dd>
+              </>
+            )}
+            {row.affectedStates.length > 0 && (
+              <>
+                <dt className="text-ink-500 font-medium">States</dt>
+                <dd className="text-ink-900">{row.affectedStates.join(', ')}</dd>
+              </>
+            )}
+            {keyDateEntries.map(([label, value]) => (
+              <div key={label} className="contents">
+                <dt className="text-ink-500 font-medium">{label}</dt>
+                <dd className="text-ink-900">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
+
+      {/* Documentation required */}
+      {documentationRequired && (
+        <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-8">
+          <DocumentationRequiredBlock text={documentationRequired} />
+        </section>
+      )}
+
+      {/* Evidence guidance */}
+      {evidenceGuidance && (
+        <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-8">
+          <h2 className="font-display text-xl text-ink-900 mb-3">
+            How to document what happened
+          </h2>
+          <p className="text-ink-700 whitespace-pre-wrap leading-relaxed">
+            {evidenceGuidance}
           </p>
-        )}
+        </section>
+      )}
 
-        {required.length > 0 && (
-          <div className="mb-5">
-            <h3 className="text-sm font-medium text-ink-900 mb-2">
-              All of these must be true:
-            </h3>
-            <ul className="space-y-1 text-ink-700">
-              {required.map((c, i) => (
-                <li key={i} className="flex gap-2">
-                  <span aria-hidden className="text-accent-500 mt-1">
-                    ✓
-                  </span>
-                  <span>{c.description}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+      {/* Eligibility prose */}
+      {eligibility && (
+        <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-8">
+          <h2 className="font-display text-xl text-ink-900 mb-3">
+            Who may qualify
+          </h2>
+          <p className="text-ink-700 whitespace-pre-wrap leading-relaxed">
+            <AutoCiteLinks>{eligibility}</AutoCiteLinks>
+          </p>
+        </section>
+      )}
 
-        {preferred.length > 0 && (
-          <div className="mb-5">
-            <h3 className="text-sm font-medium text-ink-900 mb-2">
-              These strengthen your case:
-            </h3>
-            <ul className="space-y-1 text-ink-700">
-              {preferred.map((c, i) => (
-                <li key={i} className="flex gap-2">
-                  <span aria-hidden className="text-ink-500 mt-1">
-                    •
-                  </span>
-                  <span>{c.description}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+      {/* What this is NOT */}
+      {whatThisIsNot && (
+        <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-8">
+          <h2 className="font-display text-xl text-ink-900 mb-3">
+            What this case doesn&rsquo;t cover
+          </h2>
+          <p className="text-ink-700 whitespace-pre-wrap leading-relaxed">
+            {whatThisIsNot}
+          </p>
+        </section>
+      )}
 
-        {(disqualifying.length > 0 ||
-          listing.disqualifying_conditions.length > 0) && (
-          <div className="rounded-md border border-warning-500 bg-warning-50 p-4">
-            <h3 className="text-sm font-medium text-warning-500 mb-2">
-              Don&rsquo;t apply if any of these are true:
-            </h3>
-            <ul className="space-y-1 text-ink-700 text-sm">
-              {disqualifying.map((c, i) => (
-                <li key={`dq-crit-${i}`} className="flex gap-2">
-                  <span aria-hidden className="text-warning-500 mt-1">
-                    ×
-                  </span>
-                  <span>{c.description}</span>
-                </li>
-              ))}
-              {listing.disqualifying_conditions.map((d, i) => (
-                <li key={`dq-cond-${i}`} className="flex gap-2">
-                  <span aria-hidden className="text-warning-500 mt-1">
-                    ×
-                  </span>
-                  <span>{d}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </section>
+      {/* No-documentation off-ramp */}
+      {noDocumentationPath && (
+        <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-8">
+          <NoDocumentationOfframp
+            text={noDocumentationPath}
+            onStartChat={handleTalkToAda}
+            disabled={startingChat}
+          />
+        </section>
+      )}
 
-      {/* CTA */}
+      {/* Primary CTA */}
       <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-16">
         {error && (
           <div
@@ -434,9 +515,9 @@ export default function ClassActionDetail() {
             If this sounds like what happened to you
           </h2>
           <p className="text-sm text-ink-700 mb-4">
-            Ada will ask a few questions about your situation. If you
-            qualify, your information goes directly to the firm handling
-            this case. There&rsquo;s no fee to you.
+            Ada will ask a few questions about your situation. She&rsquo;ll
+            help you think through whether your story fits this case and
+            what to do next. There&rsquo;s no fee.
           </p>
           <button
             type="button"
@@ -448,8 +529,7 @@ export default function ClassActionDetail() {
           </button>
           <p className="text-xs text-ink-500 mt-3">
             ADA Legal Link isn&rsquo;t a law firm. Your conversation with
-            Ada is free and confidential. If your situation matches, we
-            send your intake to {listing.law_firm_name} — that&rsquo;s it.
+            Ada is free and confidential.
           </p>
         </div>
       </section>

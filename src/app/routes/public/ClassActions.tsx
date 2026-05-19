@@ -1,47 +1,74 @@
 /**
- * ClassActions — public directory of active class-action listings.
+ * ClassActions — public directory of active litigation.
  *
- * Reads /api/public/listings (cached 5min browser / 15min CDN).
- * Lists one card per listing with title, short description, firm
- * name, and category pill. Category + search filters; no pagination
- * yet (pilot scale = tens of listings, not thousands).
+ * Reads /api/public/litigation (cached 5min browser / 15min CDN).
+ * Lists one card per row across the 4 page-visible statuses (active,
+ * compliance, investigating, tracking) and 5 kinds (class action,
+ * DOJ enforcement, consent decree, pattern-of-practice, regulatory
+ * challenge). Filter chips for kind; no pagination (38 rows current
+ * scale, the endpoint caps at 200).
  *
  * Each card links to /class-actions/:slug for the detail page.
  *
- * Design matches the Home page language: serif headline, plain-
- * language subhead, generous whitespace, no stock imagery. The
- * directory is rigorous, not a marketplace sizzle reel.
+ * Design follows the Home page language: serif headline, plain-
+ * language subhead, generous whitespace. The directory is rigorous,
+ * not a marketplace.
  *
- * Ref: Step 26, Commit 2.
+ * Ref: /plan Phase A3b. (Phase A3a wired the API; this page consumes
+ * the new payload shape and the broader status set.)
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { Breadcrumbs } from '../../components/Breadcrumbs.js';
+import { ClassActionsBanner } from './components/ClassActionsBanner.js';
 
-type Category = 'ada_title_i' | 'ada_title_ii' | 'ada_title_iii';
+type LitigationKind =
+  | 'class'
+  | 'enforcement_action'
+  | 'consent_decree'
+  | 'pattern_of_practice'
+  | 'regulatory_challenge';
 
-interface PublicListing {
-  listing_id: string;
+interface PublicLitigationRow {
+  id: string;
+  kind: LitigationKind;
+  caseName: string;
   slug: string;
-  title: string;
-  category: string;
-  tier: string;
-  short_description: string | null;
-  eligibility_summary: string | null;
-  law_firm_name: string;
+  legalTheory: string | null;
+  shortDescription: string | null;
+  shortDescriptionSimple: string | null;
+  shortDescriptionProfessional: string | null;
+  defendants: string[];
+  affectedStates: string[];
+  filingDate: string | null;
 }
 
-const CATEGORY_LABEL: Record<string, string> = {
-  ada_title_i: 'Title I — Employment',
-  ada_title_ii: 'Title II — Government',
-  ada_title_iii: 'Title III — Public accommodation',
+/**
+ * Filter-chip definitions. Each chip selects exactly one kind. The
+ * 'All' chip clears the filter.
+ */
+const KIND_CHIPS: { value: LitigationKind | 'all'; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'class', label: 'Class action' },
+  { value: 'enforcement_action', label: 'DOJ enforcement' },
+  { value: 'consent_decree', label: 'Consent decree' },
+  { value: 'pattern_of_practice', label: 'Pattern of practice' },
+  { value: 'regulatory_challenge', label: 'Regulatory challenge' },
+];
+
+const KIND_LABEL: Record<LitigationKind, string> = {
+  class: 'Class action',
+  enforcement_action: 'DOJ enforcement',
+  consent_decree: 'Consent decree',
+  pattern_of_practice: 'Pattern of practice',
+  regulatory_challenge: 'Regulatory challenge',
 };
 
 export default function ClassActions() {
-  const [listings, setListings] = useState<PublicListing[]>([]);
-  const [category, setCategory] = useState<Category | ''>('');
+  const [rows, setRows] = useState<PublicLitigationRow[]>([]);
+  const [kind, setKind] = useState<LitigationKind | 'all'>('all');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,26 +78,39 @@ export default function ClassActions() {
     setError(null);
     try {
       const params = new URLSearchParams();
-      if (category) params.set('category', category);
-      if (search.trim()) params.set('q', search.trim());
-      const resp = await fetch(`/api/public/listings?${params.toString()}`);
+      if (kind !== 'all') params.set('kind', kind);
+      if (search.trim()) params.set('search', search.trim());
+      params.set('limit', '200');
+      const resp = await fetch(`/api/public/litigation?${params.toString()}`);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const data = (await resp.json()) as {
-        listings: PublicListing[];
+        litigation: PublicLitigationRow[];
         total_count: number;
       };
-      setListings(data.listings);
+      setRows(data.litigation);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load');
     } finally {
       setLoading(false);
     }
-  }, [category, search]);
+  }, [kind, search]);
 
   useEffect(() => {
     const timer = setTimeout(() => void load(), 200);
     return () => clearTimeout(timer);
   }, [load]);
+
+  // Sort alphabetically by caseName for stable browse-order, per
+  // /plan A3 AC4. The endpoint sorts by filing_date DESC for Ada's
+  // prompt context (recency relevance); the public browse page wants
+  // alphabetical for findability.
+  const sortedRows = useMemo(
+    () =>
+      [...rows].sort((a, b) =>
+        a.caseName.localeCompare(b.caseName, 'en', { sensitivity: 'base' }),
+      ),
+    [rows],
+  );
 
   return (
     <>
@@ -78,18 +118,18 @@ export default function ClassActions() {
         <title>Class actions — ADA Legal Link</title>
         <meta
           name="description"
-          content="Active ADA class actions where one lawsuit may cover many people hurt the same way. Free, plain-language intake with Ada."
+          content="Active ADA class actions, DOJ enforcement, consent decrees, and pattern-of-practice intake. Free, plain-language intake with Ada."
         />
         <meta property="og:title" content="Class actions — ADA Legal Link" />
         <meta
           property="og:description"
-          content="Active ADA class actions where one lawsuit may cover many people hurt the same way. Free, plain-language intake."
+          content="Active ADA class actions, DOJ enforcement, consent decrees, and pattern-of-practice intake."
         />
         <meta property="og:url" content="https://ada.adalegallink.com/class-actions" />
         <meta name="twitter:title" content="Class actions — ADA Legal Link" />
         <meta
           name="twitter:description"
-          content="Active ADA class actions where one lawsuit may cover many people hurt the same way. Free, plain-language intake."
+          content="Active ADA class actions, DOJ enforcement, consent decrees, and pattern-of-practice intake."
         />
         <link rel="canonical" href="https://ada.adalegallink.com/class-actions" />
       </Helmet>
@@ -105,40 +145,50 @@ export default function ClassActions() {
         <h1 className="font-display text-4xl sm:text-5xl text-ink-900 mb-4 leading-tight">
           Class actions
         </h1>
-        <p className="text-lg text-ink-700 max-w-2xl">
-          Active cases where one lawsuit might cover many people hurt the
-          same way. If your story matches, you can join without hiring a
-          lawyer yourself.
+        <p className="text-lg text-ink-700 max-w-2xl mb-6">
+          Active legal actions and ongoing patterns of harm related to
+          disability access. If your story matches, you can tell Ada
+          what happened.
         </p>
+        <ClassActionsBanner />
       </section>
 
       <section className="max-w-5xl mx-auto px-5 sm:px-8 pb-16">
-        {/* Filters */}
-        <fieldset className="mb-8 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-4 text-sm">
-          <legend className="sr-only">Filter class actions</legend>
-          <label className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-            <span className="text-ink-700 font-medium">Category</span>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value as Category | '')}
-              className="w-full sm:w-auto rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900"
-            >
-              <option value="">All</option>
-              <option value="ada_title_i">Title I (employment)</option>
-              <option value="ada_title_ii">Title II (government)</option>
-              <option value="ada_title_iii">
-                Title III (public accommodation)
-              </option>
-            </select>
-          </label>
+        {/* Filter chips */}
+        <fieldset className="mb-6">
+          <legend className="sr-only">Filter by case type</legend>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Case type">
+            {KIND_CHIPS.map((chip) => {
+              const selected = kind === chip.value;
+              return (
+                <button
+                  key={chip.value}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => setKind(chip.value)}
+                  className={
+                    selected
+                      ? 'rounded-full border border-accent-500 bg-accent-500 text-white px-4 py-1.5 text-sm font-medium transition-colors'
+                      : 'rounded-full border border-surface-200 bg-white text-ink-700 px-4 py-1.5 text-sm font-medium hover:border-accent-500 hover:text-accent-600 transition-colors'
+                  }
+                >
+                  {chip.label}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
 
-          <label className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 sm:flex-1 sm:min-w-[240px]">
+        {/* Search */}
+        <fieldset className="mb-8">
+          <legend className="sr-only">Search class actions</legend>
+          <label className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-sm">
             <span className="text-ink-700 font-medium">Search</span>
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Hotels, service animals, employment&hellip;"
+              placeholder="Hotels, service animals, rideshare, voting&hellip;"
               className="w-full sm:flex-1 rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900 placeholder-ink-500"
             />
           </label>
@@ -153,14 +203,14 @@ export default function ClassActions() {
           </div>
         )}
 
-        {loading && listings.length === 0 && (
+        {loading && sortedRows.length === 0 && (
           <p className="text-ink-500 italic">Loading&hellip;</p>
         )}
 
-        {!loading && listings.length === 0 && (
+        {!loading && sortedRows.length === 0 && (
           <div className="rounded-md border border-surface-200 bg-white p-8 text-center">
             <p className="text-ink-900 font-medium mb-2">
-              No active class actions match.
+              No cases match.
             </p>
             <p className="text-sm text-ink-500 mb-4">
               If your situation involves an ADA violation that isn&rsquo;t
@@ -176,27 +226,25 @@ export default function ClassActions() {
         )}
 
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {listings.map((l) => (
-            <li key={l.listing_id}>
+          {sortedRows.map((r) => (
+            <li key={r.id}>
               <Link
-                to={`/class-actions/${encodeURIComponent(l.slug)}`}
+                to={`/class-actions/${encodeURIComponent(r.slug)}`}
                 className="block h-full rounded-md border border-surface-200 bg-white p-5 hover:border-accent-500 hover:shadow-sm transition-all"
               >
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <h2 className="font-display text-xl text-ink-900 leading-snug">
-                    {l.title}
-                  </h2>
-                </div>
-                {l.short_description && (
+                <h2 className="font-display text-xl text-ink-900 leading-snug mb-2">
+                  {r.caseName}
+                </h2>
+                {r.shortDescription && (
                   <p className="text-sm text-ink-700 mb-3">
-                    {l.short_description}
+                    {r.shortDescription}
                   </p>
                 )}
                 <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-surface-200 text-xs">
-                  <CategoryPill category={l.category} />
-                  <span className="text-ink-500 ml-auto">
-                    by {l.law_firm_name}
-                  </span>
+                  <KindPill kind={r.kind} />
+                  {r.legalTheory && (
+                    <span className="text-ink-500">{r.legalTheory}</span>
+                  )}
                 </div>
               </Link>
             </li>
@@ -207,11 +255,10 @@ export default function ClassActions() {
   );
 }
 
-function CategoryPill({ category }: { category: string }) {
-  const label = CATEGORY_LABEL[category] ?? category;
+function KindPill({ kind }: { kind: LitigationKind }) {
   return (
     <span className="inline-block px-2 py-0.5 rounded-full bg-accent-50 text-accent-600 font-medium">
-      {label}
+      {KIND_LABEL[kind]}
     </span>
   );
 }
