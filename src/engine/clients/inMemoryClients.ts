@@ -84,6 +84,8 @@ import type {
   ListLitigationForAdminOptions,
   ListLitigationForAdminResult,
   UpdateLitigationInput,
+  AuditLogEntry,
+  HardDeleteActor,
 } from './types.js';
 
 // ─── AI ───────────────────────────────────────────────────────────────────────
@@ -131,6 +133,16 @@ export class InMemoryDbClient implements DbClient {
   public readonly orgs: OrganizationRow[] = [];
   public readonly systemSettings = new Map<string, unknown>();
   public readonly qualityChecks = new Map<string, SessionQualityCheckRow>();
+  /**
+   * In-memory audit log buffer. Real Neon client writes to the
+   * audit_log table; this exposes the same data shape to tests so they
+   * can assert on audit behavior without standing up a database.
+   * Exposed via the optional `__testAuditLog` getter on DbClient.
+   */
+  public readonly auditLog: AuditLogEntry[] = [];
+  get __testAuditLog(): ReadonlyArray<AuditLogEntry> {
+    return this.auditLog;
+  }
   public readonly anonSessions: Array<{
     id: string;
     orgId: string;
@@ -269,7 +281,12 @@ export class InMemoryDbClient implements DbClient {
     const now = new Date().toISOString();
     const id =
       '10000000-0000-4000-8000-' + (this.adminAttorneys.length + 1).toString(16).padStart(12, '0');
-    const row: AttorneyAdminRow = {
+    // Stash orgId so hardDeleteAttorney can attribute the audit row.
+    // AttorneyAdminRow's public type doesn't expose orgId today, but
+    // the in-memory store carries it as a non-enumerated field for
+    // server-side ops. We cast through `unknown` to put it on the row
+    // without leaking it into AttorneyAdminRow.
+    const row: AttorneyAdminRow & { orgId?: string } = {
       id,
       name: input.name,
       firmName: input.firmName ?? null,
@@ -286,6 +303,7 @@ export class InMemoryDbClient implements DbClient {
       status: input.status ?? 'pending',
       createdAt: now,
       updatedAt: now,
+      orgId: input.orgId,
     };
     this.adminAttorneys.push(row);
     // If approved, also expose via searchAttorneys.
@@ -331,6 +349,52 @@ export class InMemoryDbClient implements DbClient {
     }
 
     return next;
+  }
+
+  async hardDeleteAttorney(
+    id: string,
+    actor: HardDeleteActor,
+  ): Promise<boolean> {
+    // Status gate. Two-stage attorney removal: must already be
+    // archived. See /plan ADALL Admin Archive→Delete.
+    const idx = this.adminAttorneys.findIndex((a) => a.id === id);
+    if (idx === -1) return false;
+    const row = this.adminAttorneys[idx];
+    if (row.status !== 'archived') return false;
+
+    // Audit row captures the full before-state so a deleted attorney
+    // is still reconstructible from the log if we ever need it.
+    const orgId = (row as AttorneyAdminRow & { orgId?: string }).orgId ?? null;
+    this.auditLog.push({
+      orgId,
+      actorType: 'staff',
+      actorId: actor.actorUserId,
+      action: 'attorney.hard_delete',
+      resourceType: 'attorney',
+      resourceId: id,
+      metadata: {
+        actor_email: actor.actorEmail,
+        before: serializeAttorneyForAudit(row, orgId),
+      },
+      createdAt: new Date().toISOString(),
+    });
+
+    // Remove from admin list.
+    this.adminAttorneys.splice(idx, 1);
+    // Remove from the public mirror if present (shouldn't be, since
+    // status was archived, but defensive).
+    const publicIdx = this.attorneys.findIndex((a) => a.id === id);
+    if (publicIdx !== -1) this.attorneys.splice(publicIdx, 1);
+
+    // Mimic the ON DELETE SET NULL behavior of
+    // litigation_listings.lead_attorney_id at the schema level. This
+    // is a real cascade in Neon; we replicate it here so the
+    // in-memory client doesn't leave stale FK references.
+    for (const lit of this.adminLitigation) {
+      if (lit.leadAttorneyId === id) lit.leadAttorneyId = null;
+    }
+
+    return true;
   }
 
   // ─── Admin: litigation (class + mass actions) ───────────────────────────────
@@ -1236,6 +1300,38 @@ function toPublicAttorney(a: AttorneyAdminRow): AttorneyRow {
     email: a.email,
     phone: a.phone,
     websiteUrl: a.websiteUrl,
+  };
+}
+
+/**
+ * Snake_case snapshot of an attorney row for audit_log.metadata.before.
+ * Snake_case matches the DB column naming so a future restore tool can
+ * map it back to columns 1:1 if we ever need to undo a hard-delete.
+ * Lives next to toPublicAttorney so any new fields here are likely to
+ * be noticed there too.
+ */
+function serializeAttorneyForAudit(
+  a: AttorneyAdminRow,
+  orgId: string | null,
+): Record<string, unknown> {
+  return {
+    id: a.id,
+    org_id: orgId,
+    name: a.name,
+    firm_name: a.firmName,
+    location_city: a.locationCity,
+    location_state: a.locationState,
+    practice_areas: a.practiceAreas,
+    additional_states: a.additionalStates ?? [],
+    specialty_tags: a.specialtyTags ?? [],
+    email: a.email,
+    phone: a.phone,
+    website_url: a.websiteUrl,
+    bio: a.bio,
+    photo_url: a.photoUrl,
+    status: a.status,
+    created_at: a.createdAt,
+    updated_at: a.updatedAt,
   };
 }
 

@@ -95,6 +95,7 @@ import type {
   ListLitigationForAdminOptions,
   ListLitigationForAdminResult,
   UpdateLitigationInput,
+  HardDeleteActor,
 } from './types.js';
 import type { AdaSessionState } from '../types.js';
 import type {
@@ -494,6 +495,65 @@ export class NeonDbClient implements DbClient {
       .where(eq(attorneysTable.id, id))
       .returning();
     return updated[0] ? toAttorneyAdminRow(updated[0]) : null;
+  }
+
+  async hardDeleteAttorney(
+    id: string,
+    actor: HardDeleteActor,
+  ): Promise<boolean> {
+    // Atomicity: drizzle-orm/neon-http runs one statement per call and
+    // has no multi-statement transaction API. We use a single CTE
+    // chain so the delete and the audit insert execute in one
+    // implicit transaction — Postgres guarantees that data-modifying
+    // CTEs all see the same snapshot and either all commit or all
+    // roll back.
+    //
+    // The DELETE is gated by status='archived' so a non-archived row
+    // returns zero rows from the CTE; the INSERT INTO audit_log then
+    // selects from an empty CTE and no audit row is written. Status
+    // gate enforced at the SQL level — not just in TS.
+    //
+    // The outer SELECT returns the deleted attorney id (or zero rows
+    // if the gate rejected). We use that to decide the boolean.
+    //
+    // litigation_listings.lead_attorney_id is ON DELETE SET NULL at
+    // the schema level (migration 0009), so the FK cascade happens
+    // automatically; we don't have to null it explicitly here.
+    const result = await this.db.execute(sql`
+      WITH deleted AS (
+        DELETE FROM attorneys
+        WHERE id = ${id} AND status = 'archived'
+        RETURNING *
+      ),
+      audit_insert AS (
+        INSERT INTO audit_log (
+          org_id, actor_type, actor_id, action,
+          resource_type, resource_id, metadata
+        )
+        SELECT
+          d.org_id,
+          'staff',
+          ${actor.actorUserId},
+          'attorney.hard_delete',
+          'attorney',
+          d.id::text,
+          jsonb_build_object(
+            'actor_email', ${actor.actorEmail}::text,
+            'before', to_jsonb(d.*)
+          )
+        FROM deleted d
+        RETURNING 1
+      )
+      SELECT id FROM deleted
+    `);
+
+    // drizzle's execute() return shape varies by driver. neon-http
+    // returns the result rows directly as an array (or wrapped in an
+    // object with `.rows` depending on version). We handle both.
+    const rows = Array.isArray(result)
+      ? result
+      : (result as { rows?: unknown[] }).rows ?? [];
+    return rows.length > 0;
   }
 
   // ─── Admin: litigation (class + mass actions) ───────────────────────────────

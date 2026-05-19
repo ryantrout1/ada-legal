@@ -348,6 +348,36 @@ export interface UpdateAttorneyInput {
   status?: AttorneyStatus;
 }
 
+/**
+ * Who's performing a hard-delete on an attorney. The actor email is
+ * always present (admins can't reach this code path unauthenticated).
+ * actor_user_id is null when the request came in via the ADALL bridge
+ * (B44 admin → Vercel) — bridge auth carries an email but no internal
+ * user id. The Clerk path carries both.
+ */
+export interface HardDeleteActor {
+  actorEmail: string;
+  actorUserId: string | null;
+}
+
+/**
+ * Shape of one entry in the in-memory audit log buffer used by tests.
+ * Matches the columns of the real audit_log table closely enough that
+ * the same assertions work for both clients. NeonDbClient writes
+ * directly to the table; this is here only to give tests a place to
+ * inspect.
+ */
+export interface AuditLogEntry {
+  orgId: string | null;
+  actorType: string;
+  actorId: string | null;
+  action: string;
+  resourceType: string | null;
+  resourceId: string | null;
+  metadata: Record<string, unknown>;
+  createdAt: string;
+}
+
 // ─── Litigation listings (class + mass actions) ─────────────────────────────
 
 export type LitigationKind = 'class' | 'mass';
@@ -489,6 +519,34 @@ export interface DbClient {
   createAttorney(input: CreateAttorneyInput): Promise<AttorneyAdminRow>;
   /** Partial update of an attorney. Returns the updated row or null. */
   updateAttorney(id: string, input: UpdateAttorneyInput): Promise<AttorneyAdminRow | null>;
+  /**
+   * Permanently delete an attorney. Gated server-side: succeeds only
+   * when the target row already has status='archived'. Returns true on
+   * success, false if the row is missing or not archived.
+   *
+   * Writes an `attorney.hard_delete` row to audit_log capturing the
+   * full before-state so the delete is auditable. The audit write and
+   * the row delete happen in one transaction — you don't get one
+   * without the other.
+   *
+   * litigation_listings.lead_attorney_id is ON DELETE SET NULL at the
+   * schema level, so any litigation cases led by this attorney lose
+   * their `lead_attorney_id` rather than being deleted (a case can
+   * outlive its lead).
+   *
+   * Ref: /plan ADALL Admin: Archive → Delete.
+   */
+  hardDeleteAttorney(
+    id: string,
+    actor: HardDeleteActor,
+  ): Promise<boolean>;
+  /**
+   * Test-only: in-memory audit log buffer. NeonDbClient leaves this
+   * undefined — audit rows live in the real audit_log table there.
+   * Tests assert on this buffer to verify the in-memory implementation
+   * writes audit entries correctly.
+   */
+  readonly __testAuditLog?: ReadonlyArray<AuditLogEntry>;
 
   // ─── Litigation listings (Phase 2) ──────────────────────────────────────
 
