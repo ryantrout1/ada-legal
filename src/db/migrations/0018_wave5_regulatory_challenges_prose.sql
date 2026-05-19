@@ -1,0 +1,72 @@
+-- Plan B, Phase B7: Wave 5 regulatory challenges prose (2 rows) +
+-- bonus row to complete prose coverage (1 row).
+--
+-- Applied live against Neon project ancient-star-00703098 main on 2026-05-19
+-- as part of /shipit Phase B7.
+--
+-- Phase B7 scope: 2 rows kind='regulatory_challenge', status='tracking'.
+-- These are challenges by parties hostile to disability rights — voice
+-- approach differs from all previous phases: "this is a court case that
+-- could weaken your protections; existing rights remain in force during
+-- the litigation; here's what to watch." Tracking-only with no individual
+-- complaint pathway through these specific cases.
+--
+-- Plus 1 bonus row surfaced during final coverage audit: an active DOJ
+-- enforcement action that wasn't in the original /plan B inventory but
+-- was the only remaining surface-eligible row without prose.
+--
+-- Rows shipped with full prose (14 fields each + key_dates +
+-- ada_qualifying_questions):
+--
+--   B7 rows:
+--
+--   1. a4a-v-dot-wheelchair-rule (cb5b5851): Airlines for America v.
+--      U.S. DOT, pending 5th Cir., filed Feb 14 2025. APA challenge to
+--      DOT's 2024 strengthened 14 C.F.R. Part 382 wheelchair-handling
+--      rule. Linked to airline-wheelchair-damage as the active
+--      individual-remedy pathway during litigation.
+--
+--   2. texas-v-kennedy-504-integration (e452c160): Texas et al. v.
+--      Kennedy (formerly Texas v. Becerra), pending N.D. Tex. Multi-
+--      state APA + constitutional challenge to HHS's 2024 Section 504
+--      final rule (89 Fed. Reg. 40066, May 9 2024). Targets include
+--      Olmstead integration mandate codification and MDE provisions.
+--      Linked to doj-investigation-idaho-nursing (Olmstead) and
+--      medical-exam-table-access (MDE).
+--
+--   Bonus row (final coverage completion):
+--
+--   3. doj-v-uber-service-animals-wheelchairs (cdf...): United States
+--      v. Uber Technologies, Inc., 3:25-cv-07731-SK (N.D. Cal., filed
+--      Sept 11 2025). Active DOJ enforcement under Title III ADA. New
+--      DOJ enforcement parallel to but distinct from the 2016 NFB-CA
+--      v. Uber settlement. Linked to nfb-ca-v-uber-service-animals and
+--      rideshare-wheelchair-service-animal-denials.
+--
+-- All 3 rows: affected_states set to ['__nationwide__'] sentinel.
+--
+-- Cross-references via related_listing_ids:
+--   - a4a-v-dot-wheelchair-rule → airline-wheelchair-damage
+--   - texas-v-kennedy-504-integration → idaho-nursing, medical-exam-table
+--   - doj-v-uber-service-animals-wheelchairs → nfb-ca-v-uber + rideshare
+--
+-- Plan B is now COMPLETE. Final prose coverage:
+--
+--   - active/class: 4/4 (Bryant, Alcazar, Niles, Disney DAS)
+--   - active/enforcement_action: 1/1 (US v. Uber 2025)
+--   - active/pattern_of_practice: 10/10
+--   - closed/class: 0/2 (correct — closed rows don't surface)
+--   - compliance/class: 10/10
+--   - compliance/consent_decree: 2/2
+--   - compliance/enforcement_action: 3/3
+--   - investigating/enforcement_action: 4/4
+--   - tracking/regulatory_challenge: 2/2
+--
+-- Total: 36/38 surface-eligible rows with full prose (94.7%).
+-- Excluded 2 are status='closed' which is correct per design.
+--
+-- Sources: DOJ filings (US v. Uber 2025-09-11), HHS § 504 final rule
+-- (89 Fed. Reg. 40066), DOT Part 382 amendments (2024), case dockets,
+-- amicus participation patterns from NDRN/AAPD/Bazelon/DREDF/PVA/NCIL.
+--
+-- Ref: /plan Plan B, Phase B7 + coverage audit.
