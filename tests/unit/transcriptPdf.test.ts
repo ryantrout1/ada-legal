@@ -76,6 +76,7 @@ function baseState(overrides: Partial<AdaSessionState> = {}): AdaSessionState {
     anonSessionId: null,
     userId: null,
     listingId: '00000000-0000-4000-8000-000000000a02',
+    litigationListingId: null,
     conversationHistory: [],
     extractedFields: {},
     classification: null,

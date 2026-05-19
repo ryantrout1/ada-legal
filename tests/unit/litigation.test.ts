@@ -25,17 +25,36 @@ function makeRow(overrides: Partial<LitigationRow> = {}): LitigationRow {
     kind: 'class',
     caseName: 'Smith v. Acme Corp',
     slug: 'smith-v-acme-corp',
+    legalTheory: null,
     shortDescription: 'Rideshare denied wheelchair-using passengers across multiple cities.',
+    shortDescriptionSimple: null,
+    shortDescriptionProfessional: null,
     fullDescription:
       'Detailed allegations that Acme rideshare drivers refused to transport wheelchair-using passengers and charged improper cleaning fees.',
+    fullDescriptionSimple: null,
+    fullDescriptionProfessional: null,
     eligibility:
       'Anyone who used Acme rideshare between 2023 and 2025 and was denied service or charged a fee related to a wheelchair.',
+    eligibilitySimple: null,
+    eligibilityProfessional: null,
+    documentationRequiredSimple: null,
+    documentationRequiredProfessional: null,
+    noDocumentationPathSimple: null,
+    noDocumentationPathProfessional: null,
+    evidenceGuidanceSimple: null,
+    evidenceGuidanceProfessional: null,
+    whatThisIsNotSimple: null,
+    whatThisIsNotProfessional: null,
     defendants: ['Acme Corp', 'Acme Rideshare LLC'],
     court: 'N.D. Cal.',
     docketNumber: '3:24-cv-01234',
     affectedStates: ['CA', 'AZ', 'NV'],
     filingDate: '2024-03-15',
+    keyDates: {},
+    relatedListingIds: [],
+    adaQualifyingQuestions: {},
     leadAttorneyId: ATTORNEY_ID,
+    leadFirmId: null,
     ...overrides,
   };
 }
@@ -145,7 +164,7 @@ describe('listActiveLitigation — search filter (Phase 6a)', () => {
     });
     await c.db.createLitigation({
       orgId: 'unused',
-      kind: 'mass',
+      kind: 'enforcement_action',
       caseName: 'Acme Mass Action',
       slug: 'acme-mass',
       eligibility: 'Riders.',
@@ -194,7 +213,7 @@ describe('readActiveLitigationBySlug (Phase 6a)', () => {
     const c = makeInMemoryClients();
     await c.db.createLitigation({
       orgId: 'unused',
-      kind: 'mass',
+      kind: 'enforcement_action',
       caseName: 'Foo v. Bar',
       slug: 'foo-v-bar',
       eligibility: 'Affected parties.',
@@ -257,7 +276,7 @@ describe('renderFocusedLitigation (Phase 6a)', () => {
   it('renders mass-action kind label correctly', () => {
     const row = makeRow({
       caseName: 'Doe v. PharmaCo',
-      kind: 'mass',
+      kind: 'enforcement_action',
       slug: 'doe-v-pharmaco',
     });
     const out = renderFocusedLitigation(row);
@@ -303,6 +322,7 @@ describe('buildLitigationSection with focused row — via assemble (Phase 6a)', 
       anonSessionId: '00000000-0000-4000-8000-00000000abcd',
       userId: null,
       listingId: null,
+      litigationListingId: null,
       conversationHistory: [],
       extractedFields: {},
       classification: null,
@@ -319,7 +339,7 @@ describe('buildLitigationSection with focused row — via assemble (Phase 6a)', 
       id: '20000000-0000-4000-8000-000000000002',
       caseName: 'Doe v. PharmaCo',
       slug: 'doe-v-pharmaco',
-      kind: 'mass',
+      kind: 'enforcement_action',
     });
 
     const promptText = assemblePrompt({

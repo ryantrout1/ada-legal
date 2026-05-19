@@ -112,6 +112,7 @@ function qualifiedState(): AdaSessionState {
     anonSessionId: '00000000-0000-4000-8000-000000000222',
     userId: null,
     listingId: LIST_ID,
+    litigationListingId: null,
     conversationHistory: [
       {
         role: 'user',

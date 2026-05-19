@@ -31,6 +31,7 @@ function session(
     anonSessionId: '00000000-0000-4000-8000-00000000cccc',
     userId: null,
     listingId: null,
+    litigationListingId: null,
     conversationHistory: [],
     extractedFields: {},
     classification: null,

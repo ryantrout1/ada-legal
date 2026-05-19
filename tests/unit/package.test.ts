@@ -425,6 +425,7 @@ describe('assemblePackage', () => {
       anonSessionId: 'anon_xyz',
       userId: null,
       listingId: null,
+      litigationListingId: null,
       conversationHistory: [
         {
           role: 'user',

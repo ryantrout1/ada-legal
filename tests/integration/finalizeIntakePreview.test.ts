@@ -110,6 +110,7 @@ function testState(overrides: Partial<AdaSessionState> = {}): AdaSessionState {
     anonSessionId: '00000000-0000-4000-8000-000000000333',
     userId: null,
     listingId: LIST_ID,
+    litigationListingId: null,
     conversationHistory: [],
     extractedFields: {
       claimant_name: {

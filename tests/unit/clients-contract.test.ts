@@ -36,6 +36,7 @@ function sampleState(sessionId: string): AdaSessionState {
     anonSessionId: '00000000-0000-4000-8000-000000000abc',
     userId: null,
     listingId: null,
+    litigationListingId: null,
     conversationHistory: [],
     extractedFields: {},
     classification: null,
