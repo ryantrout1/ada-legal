@@ -8,6 +8,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { HardDeleteAttorneyModal } from './components/HardDeleteAttorneyModal.js';
 
 type Status = 'pending' | 'approved' | 'rejected' | 'archived';
 
@@ -37,6 +38,10 @@ export default function AdminAttorneys() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [unauth, setUnauth] = useState(false);
+  // When non-null, the HardDeleteAttorneyModal is open for this row.
+  // Null = closed. Kept separate from `rows` so the modal's typed-
+  // confirm state isn't reset by a list re-render.
+  const [hardDeleteTarget, setHardDeleteTarget] = useState<AdminAttorney | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -211,12 +216,38 @@ export default function AdminAttorneys() {
                       Archive
                     </button>
                   )}
+                  {a.status === 'archived' && (
+                    <button
+                      type="button"
+                      onClick={() => setHardDeleteTarget(a)}
+                      className="text-danger-500 hover:text-danger-600 underline underline-offset-2"
+                    >
+                      Delete permanently
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {hardDeleteTarget && (
+        <HardDeleteAttorneyModal
+          attorney={{
+            id: hardDeleteTarget.id,
+            name: hardDeleteTarget.name,
+            firmName: hardDeleteTarget.firmName,
+          }}
+          onCancel={() => setHardDeleteTarget(null)}
+          onConfirmed={() => {
+            // Close the modal and refetch — the deleted row vanishes
+            // from the list without a full page reload.
+            setHardDeleteTarget(null);
+            void load();
+          }}
+        />
+      )}
     </section>
   );
 }
