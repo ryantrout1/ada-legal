@@ -227,11 +227,18 @@ export async function processAdaTurn({
     // need to pull users away with adjacent class-action recognition.
     if (workingState.sessionType !== 'public_ada') return [];
     try {
-      // No state filter yet — Ada's reasoning over affected_states is
-      // sufficient at current network size. When the table grows we
-      // can pass session-derived state hints (e.g. from extracted
-      // fields) to narrow before the prompt.
-      return await clients.db.listActiveLitigation({ limit: 20 });
+      // Phase C3b-i: load all 4 surface-visible statuses (active +
+      // compliance + investigating + tracking). The public detail page
+      // surfaces these same 4; Ada's discovery vocabulary must mirror
+      // the user-visible catalog or she'll fail to recognize matches
+      // for settled-but-monitored cases, DOJ investigations, and
+      // regulatory challenges. Limit cap raised to 200 — at 36 rows
+      // there's no real cap pressure; the cap is a DoS-shape guard,
+      // not a budget gate.
+      return await clients.db.listActiveLitigation({
+        limit: 200,
+        statuses: ['active', 'compliance', 'investigating', 'tracking'],
+      });
     } catch {
       return [];
     }
@@ -240,18 +247,52 @@ export async function processAdaTurn({
   const fetchFocusedLitigation = async (): Promise<
     import('./clients/types.js').LitigationRow | null
   > => {
-    // Phase 6a: if the session was opened from the public detail page
-    // CTA, metadata.litigation_context carries the slug. Re-load the
-    // row each turn so the prompt sees fresh data (admin can edit the
-    // case mid-conversation). Same scoping as the public endpoint:
-    // active rows only.
+    // Phase 6a + Phase C3b-i: load the focused row each turn so the
+    // prompt sees fresh data (admin can edit the case mid-conversation).
+    //
+    // Two resolution paths, both honored (C3b-i): prefer the
+    // litigationListingId FK channel (set at session creation by
+    // api/ada/session.ts and by the future match_litigation tool in
+    // C3b-ii). Fall back to metadata.litigation_context.slug for
+    // legacy sessions created before the FK was wired. Either path
+    // applies the same surface-visibility filter as the public detail
+    // page.
     if (workingState.sessionType !== 'public_ada') return null;
+
+    const allowedStatuses: ReadonlySet<string> = new Set([
+      'active',
+      'compliance',
+      'investigating',
+      'tracking',
+    ]);
+
+    // Resolution path A: litigationListingId (FK). One round-trip via
+    // getLitigationById; manual status filter because getLitigationById
+    // returns admin rows including draft/closed/archived.
+    if (workingState.litigationListingId) {
+      try {
+        const adminRow = await clients.db.getLitigationById(
+          workingState.litigationListingId,
+        );
+        if (adminRow && allowedStatuses.has(adminRow.status)) {
+          // adminRow is LitigationAdminRow (extends LitigationRow with
+          // status + timestamps). The renderer only needs LitigationRow
+          // surface; extra fields are harmless.
+          return adminRow;
+        }
+      } catch {
+        // Fall through to slug path.
+      }
+    }
+
+    // Resolution path B (legacy): metadata.litigation_context.slug.
     const litCtx = workingState.metadata?.litigation_context;
     if (!litCtx?.slug) return null;
     try {
       const row = await clients.db.readActiveLitigationBySlug({
         orgId: workingState.orgId,
         slug: litCtx.slug,
+        statuses: ['active', 'compliance', 'investigating', 'tracking'],
       });
       if (!row) return null;
       // readActiveLitigationBySlug returns LitigationDetailRow (extends
