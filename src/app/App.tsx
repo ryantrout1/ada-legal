@@ -37,6 +37,7 @@ import SessionPackagePage from './routes/public/SessionPackagePage.js';
 import StandardsGuide from './routes/public/StandardsGuide.js';
 import StandardsChapter from './routes/public/StandardsChapter.js';
 import GuidePage from './routes/public/GuidePage.js';
+import PhotoCapture from './routes/public/PhotoCapture.js';
 import AdminSignIn from './routes/admin/SignIn.js';
 import AdminSignUp from './routes/admin/SignUp.js';
 import AdminSessions from './routes/admin/AdminSessions.js';
@@ -91,6 +92,12 @@ export default function App() {
             element={<GuidePage />}
           />
         </Route>
+
+        {/* Standalone — internal field-test capture tool. Deliberately
+            outside PublicLayout so there's no nav, footer, or other
+            chrome competing with the single-task form. Unlisted; not
+            linked from the public site. See /plan: /photo. */}
+        <Route path="/photo" element={<PhotoCapture />} />
 
         {/* Admin tree — ClerkProvider only wraps this subtree */}
         <Route path="/admin/*" element={<AdminShell />} />
