@@ -185,10 +185,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // intake flow. Invalid or non-active ids are silently dropped (same
     // pattern as listing_slug — the public detail page is cacheable and
     // a case can transition out of 'active' between page load and click).
+    //
+    // Phase A3a: also capture the resolved id into litigationListingId
+    // so the session is bound via the new ada_sessions.litigation_listing_id
+    // FK channel — not just metadata. Statuses match the public-page
+    // visible set (active + compliance + investigating + tracking).
     let litigationContext: LitigationContext | null = null;
+    let litigationListingId: string | null = null;
     if (typeof body.litigation_id === 'string' && body.litigation_id.trim()) {
       const targetId = body.litigation_id.trim();
-      const activeLitigation = await clients.db.listActiveLitigation({ limit: 200 });
+      const activeLitigation = await clients.db.listActiveLitigation({
+        limit: 200,
+        statuses: ['active', 'compliance', 'investigating', 'tracking'],
+      });
       const match = activeLitigation.find((r) => r.id === targetId);
       if (match) {
         litigationContext = {
@@ -197,6 +206,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           kind: match.kind,
           case_name: match.caseName,
         };
+        litigationListingId = match.id;
       }
     }
 
@@ -220,6 +230,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // LLM round-trip (the user's intent was expressed by clicking
     // into the listing's public page, so the consent gate is
     // structurally satisfied).
+    //
+    // Phase A3a: litigationListingId binds via the separate
+    // ada_sessions.litigation_listing_id FK channel. Session type
+    // stays public_ada when only litigation is set (litigation is
+    // informational, not an intake flow with required fields).
     const session = createSession(clients, {
       orgId: org.id,
       sessionType: listingId ? 'class_action_intake' : 'public_ada',
@@ -227,6 +242,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       userId: null,
       readingLevel,
       listingId,
+      litigationListingId,
       metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
       isTest,
     });
