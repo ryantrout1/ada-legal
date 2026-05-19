@@ -1,0 +1,74 @@
+-- Plan B, Phase B6: Wave 4 pattern-of-practice prose (10 rows).
+--
+-- Applied live against Neon project ancient-star-00703098 main on 2026-05-19
+-- as part of /shipit Phase B6.
+--
+-- All 10 rows are kind='pattern_of_practice', status='active'. These are
+-- not specific cases — they're categories of common ADA violations Ada
+-- routes users to when their situation matches a known pattern but
+-- doesn't fit a single named case.
+--
+-- Voice approach differs from B5 (DOJ investigations) and B4
+-- (compliance): "this is the type of problem you described; here's the
+-- legal framework and where to report it." Topical, framework-explaining,
+-- with multiple parallel enforcement avenues identified per category.
+--
+-- Rows shipped with full prose (14 fields each + key_dates +
+-- ada_qualifying_questions). All 10 set affected_states to
+-- ['__nationwide__'] sentinel since these are categories of issues that
+-- can occur in any state.
+--
+-- Topical coverage:
+--
+--   1. airline-wheelchair-damage: ACAA + 14 C.F.R. Part 382 framework
+--      for mishandled mobility devices. Routes to DOT (airconsumer.dot.gov)
+--      + airline + PVA.
+--
+--   2. gov-online-services-access: ADA Title II + DOJ April 2024 web rule
+--      (WCAG 2.1 AA, April 2026 large-entity deadline) for state/local
+--      government digital services. Routes to DOJ + state AG + state P&A.
+--
+--   3. higher-ed-online-access: Title II/III + § 504 + DOJ 2023 Dear
+--      Colleague Letter for college digital accessibility. Routes to
+--      ED OCR + DOJ + HHS OCR + state P&A.
+--
+--   4. k12-digital-access: Title II + § 504 + IDEA for school district
+--      digital accessibility. Routes to ED OCR + state DOE + state P&A
+--      + COPAA.
+--
+--   5. kiosk-accessibility: Title III for self-service kiosks
+--      (pharmacy POS, restaurant ordering, airport check-in, etc.).
+--      Routes to DOJ + business corporate + NFB/ACB.
+--
+--   6. medical-exam-table-access: Title III + § 504 + § 1557 + DOJ MDE
+--      Rule (May 2024) for medical-equipment accessibility. Links to
+--      Fust v. First Urology via related_listing_ids.
+--
+--   7. mobile-app-screen-reader: Title III nexus theory + state law for
+--      mobile app accessibility. Notes NY/CA/MA stronger state remedies.
+--
+--   8. polling-place-access: Title II + HAVA + § 504 for non-jurisdiction-
+--      specific voting access. Links to Bryant + DOJ v. LA County +
+--      Alaska investigation via related_listing_ids.
+--
+--   9. restaurant-service-animal-denials: Title III § 36.302(c) for
+--      service-animal refusals (excluding rideshare). Links to NFB-CA
+--      v. Uber via related_listing_ids.
+--
+--   10. rideshare-wheelchair-service-animal-denials: Title III for Uber/
+--       Lyft refusals. Links to NFB-CA v. Uber via related_listing_ids.
+--
+-- Cross-references via related_listing_ids:
+--   - medical-exam-table-access → Fust v. First Urology
+--   - polling-place-access → Bryant, DOJ v. LA County, Alaska investigation
+--   - restaurant-service-animal-denials → NFB-CA v. Uber
+--   - rideshare-wheelchair-service-animal-denials → NFB-CA v. Uber
+--
+-- Sources: DOJ Civil Rights Division materials, DOT/FAA materials, HHS
+-- OCR materials, ED OCR materials, DRA/NFB/ACB/PVA case pages, US Access
+-- Board MDE Standards, applicable federal regulations.
+--
+-- Migration file documents the changes for reproducibility. Full prose
+-- payloads were executed via Neon:run_sql one row at a time.
+--
+-- Ref: /plan Plan B, Phase B6.
