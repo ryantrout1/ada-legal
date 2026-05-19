@@ -35,6 +35,11 @@ export interface CreateSessionInput {
   anonSessionId: string | null;
   userId: string | null;
   listingId?: string | null;
+  /**
+   * Phase A1: FK to litigation_listings for litigation-intake sessions.
+   * Separate channel from `listingId` (legacy Ch1 listings).
+   */
+  litigationListingId?: string | null;
   readingLevel?: ReadingLevel;
   isTest?: boolean;
   /**
@@ -68,6 +73,7 @@ export function createSession(
     anonSessionId: input.anonSessionId,
     userId: input.userId,
     listingId: input.listingId ?? null,
+    litigationListingId: input.litigationListingId ?? null,
     conversationHistory: [],
     extractedFields: {},
     classification: null,

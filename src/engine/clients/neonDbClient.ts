@@ -122,6 +122,7 @@ function rowToState(row: AdaSessionRow): AdaSessionState {
     anonSessionId: row.anonSessionId,
     userId: row.userId,
     listingId: row.listingId,
+    litigationListingId: row.litigationListingId,
     conversationHistory: (row.conversationHistory ?? []) as Message[],
     extractedFields: (row.extractedFields ?? {}) as ExtractedFields,
     classification: (row.classification ?? null) as Classification | null,
@@ -141,6 +142,7 @@ function stateToInsert(state: AdaSessionState): typeof adaSessions.$inferInsert 
     anonSessionId: state.anonSessionId,
     userId: state.userId,
     listingId: state.listingId,
+    litigationListingId: state.litigationListingId,
     conversationHistory: state.conversationHistory,
     extractedFields: state.extractedFields,
     classification: state.classification,
@@ -199,6 +201,7 @@ export class NeonDbClient implements DbClient {
           metadata: values.metadata,
           accessibilitySettings: values.accessibilitySettings,
           listingId: values.listingId,
+          litigationListingId: values.litigationListingId,
         },
       });
   }
@@ -621,15 +624,34 @@ export class NeonDbClient implements DbClient {
         kind: input.kind,
         caseName: input.caseName,
         slug: input.slug,
+        legalTheory: input.legalTheory ?? null,
         shortDescription: input.shortDescription ?? null,
+        shortDescriptionSimple: input.shortDescriptionSimple ?? null,
+        shortDescriptionProfessional: input.shortDescriptionProfessional ?? null,
         fullDescription: input.fullDescription ?? null,
+        fullDescriptionSimple: input.fullDescriptionSimple ?? null,
+        fullDescriptionProfessional: input.fullDescriptionProfessional ?? null,
         eligibility: input.eligibility ?? null,
+        eligibilitySimple: input.eligibilitySimple ?? null,
+        eligibilityProfessional: input.eligibilityProfessional ?? null,
+        documentationRequiredSimple: input.documentationRequiredSimple ?? null,
+        documentationRequiredProfessional: input.documentationRequiredProfessional ?? null,
+        noDocumentationPathSimple: input.noDocumentationPathSimple ?? null,
+        noDocumentationPathProfessional: input.noDocumentationPathProfessional ?? null,
+        evidenceGuidanceSimple: input.evidenceGuidanceSimple ?? null,
+        evidenceGuidanceProfessional: input.evidenceGuidanceProfessional ?? null,
+        whatThisIsNotSimple: input.whatThisIsNotSimple ?? null,
+        whatThisIsNotProfessional: input.whatThisIsNotProfessional ?? null,
         defendants: input.defendants ?? [],
         court: input.court ?? null,
         docketNumber: input.docketNumber ?? null,
         affectedStates: input.affectedStates ?? [],
         filingDate: input.filingDate ?? null,
+        keyDates: input.keyDates ?? {},
+        relatedListingIds: input.relatedListingIds ?? [],
+        adaQualifyingQuestions: input.adaQualifyingQuestions ?? {},
         leadAttorneyId: input.leadAttorneyId ?? null,
+        leadFirmId: input.leadFirmId ?? null,
         status: input.status ?? 'draft',
       })
       .returning();
@@ -644,15 +666,48 @@ export class NeonDbClient implements DbClient {
     if (input.kind !== undefined) patch.kind = input.kind;
     if (input.caseName !== undefined) patch.caseName = input.caseName;
     if (input.slug !== undefined) patch.slug = input.slug;
+    if (input.legalTheory !== undefined) patch.legalTheory = input.legalTheory;
     if (input.shortDescription !== undefined) patch.shortDescription = input.shortDescription;
+    if (input.shortDescriptionSimple !== undefined)
+      patch.shortDescriptionSimple = input.shortDescriptionSimple;
+    if (input.shortDescriptionProfessional !== undefined)
+      patch.shortDescriptionProfessional = input.shortDescriptionProfessional;
     if (input.fullDescription !== undefined) patch.fullDescription = input.fullDescription;
+    if (input.fullDescriptionSimple !== undefined)
+      patch.fullDescriptionSimple = input.fullDescriptionSimple;
+    if (input.fullDescriptionProfessional !== undefined)
+      patch.fullDescriptionProfessional = input.fullDescriptionProfessional;
     if (input.eligibility !== undefined) patch.eligibility = input.eligibility;
+    if (input.eligibilitySimple !== undefined) patch.eligibilitySimple = input.eligibilitySimple;
+    if (input.eligibilityProfessional !== undefined)
+      patch.eligibilityProfessional = input.eligibilityProfessional;
+    if (input.documentationRequiredSimple !== undefined)
+      patch.documentationRequiredSimple = input.documentationRequiredSimple;
+    if (input.documentationRequiredProfessional !== undefined)
+      patch.documentationRequiredProfessional = input.documentationRequiredProfessional;
+    if (input.noDocumentationPathSimple !== undefined)
+      patch.noDocumentationPathSimple = input.noDocumentationPathSimple;
+    if (input.noDocumentationPathProfessional !== undefined)
+      patch.noDocumentationPathProfessional = input.noDocumentationPathProfessional;
+    if (input.evidenceGuidanceSimple !== undefined)
+      patch.evidenceGuidanceSimple = input.evidenceGuidanceSimple;
+    if (input.evidenceGuidanceProfessional !== undefined)
+      patch.evidenceGuidanceProfessional = input.evidenceGuidanceProfessional;
+    if (input.whatThisIsNotSimple !== undefined)
+      patch.whatThisIsNotSimple = input.whatThisIsNotSimple;
+    if (input.whatThisIsNotProfessional !== undefined)
+      patch.whatThisIsNotProfessional = input.whatThisIsNotProfessional;
     if (input.defendants !== undefined) patch.defendants = input.defendants;
     if (input.court !== undefined) patch.court = input.court;
     if (input.docketNumber !== undefined) patch.docketNumber = input.docketNumber;
     if (input.affectedStates !== undefined) patch.affectedStates = input.affectedStates;
     if (input.filingDate !== undefined) patch.filingDate = input.filingDate;
+    if (input.keyDates !== undefined) patch.keyDates = input.keyDates;
+    if (input.relatedListingIds !== undefined) patch.relatedListingIds = input.relatedListingIds;
+    if (input.adaQualifyingQuestions !== undefined)
+      patch.adaQualifyingQuestions = input.adaQualifyingQuestions;
     if (input.leadAttorneyId !== undefined) patch.leadAttorneyId = input.leadAttorneyId;
+    if (input.leadFirmId !== undefined) patch.leadFirmId = input.leadFirmId;
     if (input.status !== undefined) patch.status = input.status;
 
     if (Object.keys(patch).length === 0) {
@@ -2016,16 +2071,35 @@ function toLitigationPublicRow(
     kind: r.kind as LitigationKind,
     caseName: r.caseName,
     slug: r.slug,
+    legalTheory: r.legalTheory,
     shortDescription: r.shortDescription,
+    shortDescriptionSimple: r.shortDescriptionSimple,
+    shortDescriptionProfessional: r.shortDescriptionProfessional,
     fullDescription: r.fullDescription,
+    fullDescriptionSimple: r.fullDescriptionSimple,
+    fullDescriptionProfessional: r.fullDescriptionProfessional,
     eligibility: r.eligibility,
+    eligibilitySimple: r.eligibilitySimple,
+    eligibilityProfessional: r.eligibilityProfessional,
+    documentationRequiredSimple: r.documentationRequiredSimple,
+    documentationRequiredProfessional: r.documentationRequiredProfessional,
+    noDocumentationPathSimple: r.noDocumentationPathSimple,
+    noDocumentationPathProfessional: r.noDocumentationPathProfessional,
+    evidenceGuidanceSimple: r.evidenceGuidanceSimple,
+    evidenceGuidanceProfessional: r.evidenceGuidanceProfessional,
+    whatThisIsNotSimple: r.whatThisIsNotSimple,
+    whatThisIsNotProfessional: r.whatThisIsNotProfessional,
     defendants: (r.defendants ?? []) as string[],
     court: r.court,
     docketNumber: r.docketNumber,
     affectedStates: (r.affectedStates ?? []) as string[],
     // filingDate is a Drizzle 'date' which serializes as string already.
     filingDate: r.filingDate as string | null,
+    keyDates: (r.keyDates ?? {}) as Record<string, string>,
+    relatedListingIds: (r.relatedListingIds ?? []) as string[],
+    adaQualifyingQuestions: (r.adaQualifyingQuestions ?? {}) as Record<string, unknown>,
     leadAttorneyId: r.leadAttorneyId,
+    leadFirmId: r.leadFirmId,
   };
 }
 

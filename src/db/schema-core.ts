@@ -131,6 +131,14 @@ export const adaSessions = pgTable(
 
     // Channel FKs (null in Ch0; listings FK added once listings exists)
     listingId: uuid('listing_id'),
+    /**
+     * Phase A1 (May 2026): binds a session to a `litigation_listings`
+     * row. Separate from `listingId` (which points at the legacy Ch1
+     * `listings` table); historical sessions keep their original
+     * reference, new sessions populate this column. FK constraint
+     * declared in migration 0010 (ON DELETE SET NULL).
+     */
+    litigationListingId: uuid('litigation_listing_id'),
     complaintId: uuid('complaint_id'),
 
     // Conversation
@@ -260,8 +268,16 @@ export const attorneys = pgTable(
 );
 
 // ─── litigation_listings ──────────────────────────────────────────────────────
-// Class actions + mass actions, distinguished by `kind`. Migration 0009.
-// Admin UI presents two filtered views; engine treats them as one table.
+// Phase A1 (May 2026): expanded from class+mass to cover the full landscape
+// of disability-rights litigation: class actions, DOJ enforcement actions,
+// consent decrees in compliance phase, pattern-of-practice (no current
+// named case — we collect intake), and regulatory challenges. CHECK
+// constraints on kind + status live in migrations 0009 / 0010.
+//
+// lead_firm_id is a plain uuid without a Drizzle reference because
+// law_firms lives in schema-ch1.ts (depends on this file). The FK
+// constraint is declared in the SQL migration (0010) instead, same
+// pattern as ada_sessions.listing_id.
 
 export const litigationListings = pgTable(
   'litigation_listings',
@@ -270,20 +286,67 @@ export const litigationListings = pgTable(
     orgId: uuid('org_id')
       .notNull()
       .references(() => organizations.id),
-    kind: text('kind').notNull(), // 'class' | 'mass', CHECK in DB
+    kind: text('kind').notNull(), // see CHECK in migration 0010
     caseName: text('case_name').notNull(),
     slug: text('slug').notNull(),
+
+    // Phase A1: short legal-theory label.
+    legalTheory: text('legal_theory'),
+
+    // Phase A1: prose triplets (standard + simple + professional). The
+    // un-suffixed column is the standard variant kept for back-compat
+    // with the existing public API.
     shortDescription: text('short_description'),
+    shortDescriptionSimple: text('short_description_simple'),
+    shortDescriptionProfessional: text('short_description_professional'),
     fullDescription: text('full_description'),
+    fullDescriptionSimple: text('full_description_simple'),
+    fullDescriptionProfessional: text('full_description_professional'),
     eligibility: text('eligibility'),
+    eligibilitySimple: text('eligibility_simple'),
+    eligibilityProfessional: text('eligibility_professional'),
+
+    // Phase A1: documentation-gating fields. Each has simple + professional
+    // variants. Ada presents these at the "do you qualify" gate.
+    documentationRequiredSimple: text('documentation_required_simple'),
+    documentationRequiredProfessional: text('documentation_required_professional'),
+    noDocumentationPathSimple: text('no_documentation_path_simple'),
+    noDocumentationPathProfessional: text('no_documentation_path_professional'),
+    evidenceGuidanceSimple: text('evidence_guidance_simple'),
+    evidenceGuidanceProfessional: text('evidence_guidance_professional'),
+    whatThisIsNotSimple: text('what_this_is_not_simple'),
+    whatThisIsNotProfessional: text('what_this_is_not_professional'),
+
     defendants: jsonb('defendants').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
     court: text('court'),
     docketNumber: text('docket_number'),
     affectedStates: jsonb('affected_states').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
     filingDate: date('filing_date'),
+
+    // Phase A1: structured key dates. Free-form keyed JSON so admin can
+    // evolve the vocabulary without schema migrations.
+    keyDates: jsonb('key_dates').$type<Record<string, string>>().notNull().default(sql`'{}'::jsonb`),
+
+    // Phase A1: companion case ids (consolidated actions, related filings).
+    relatedListingIds: jsonb('related_listing_ids')
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+
+    // Phase A1: Ada qualifying-question structure. Permissive shape.
+    adaQualifyingQuestions: jsonb('ada_qualifying_questions')
+      .$type<Record<string, unknown>>()
+      .notNull()
+      .default(sql`'{}'::jsonb`),
+
     leadAttorneyId: uuid('lead_attorney_id').references(() => attorneys.id, {
       onDelete: 'set null',
     }),
+
+    // Phase A1: optional lead firm. FK declared in migration 0010
+    // (ON DELETE SET NULL).
+    leadFirmId: uuid('lead_firm_id'),
+
     status: text('status').notNull().default('draft'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),

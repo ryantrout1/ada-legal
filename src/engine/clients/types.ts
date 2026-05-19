@@ -378,15 +378,51 @@ export interface AuditLogEntry {
   createdAt: string;
 }
 
-// ─── Litigation listings (class + mass actions) ─────────────────────────────
+// ─── Litigation listings ────────────────────────────────────────────────────
+//
+// Phase A1 (May 2026): expanded from class+mass to cover the full
+// landscape of disability-rights litigation. `kind` values:
+//
+//   class                — federally-certified class action
+//   enforcement_action   — DOJ / state AG enforcement (replaces 'mass')
+//   consent_decree       — court-ordered relief under monitoring
+//   pattern_of_practice  — no current named case; intake for future filing
+//   regulatory_challenge — challenge to a regulation (notice-and-comment, etc)
+//
+// `status` adds: investigating (DOJ stage), compliance (post-consent-decree
+// monitoring), tracking (pattern_of_practice intake). 'settled' was removed
+// because it conflated terminal status with active settlement-administration.
 
-export type LitigationKind = 'class' | 'mass';
+export type LitigationKind =
+  | 'class'
+  | 'enforcement_action'
+  | 'consent_decree'
+  | 'pattern_of_practice'
+  | 'regulatory_challenge';
+
 export type LitigationStatus =
   | 'draft'
   | 'active'
-  | 'settled'
+  | 'investigating'
+  | 'compliance'
+  | 'tracking'
   | 'closed'
   | 'archived';
+
+/**
+ * Phase A1: structured intake guidance for Ada. The shape is permissive
+ * (Record<string, unknown>-style) so admin can iterate on the question
+ * format without breaking the engine. The engine consumes whatever keys
+ * are present and ignores the rest. Default is `{}`.
+ */
+export type AdaQualifyingQuestions = Record<string, unknown>;
+
+/**
+ * Phase A1: structured key dates (filing deadline, certification
+ * hearing, settlement-fund-claim deadline, etc). Free-form keyed by
+ * the admin so we don't lock in a vocabulary on day one. Default `{}`.
+ */
+export type LitigationKeyDates = Record<string, string>;
 
 /** Public-facing row Ada gets when looking up active litigation. */
 export interface LitigationRow {
@@ -394,15 +430,40 @@ export interface LitigationRow {
   kind: LitigationKind;
   caseName: string;
   slug: string;
+  /** Phase A1: short legal-theory label, surfaced on the public detail page. */
+  legalTheory: string | null;
   shortDescription: string | null;
+  shortDescriptionSimple: string | null;
+  shortDescriptionProfessional: string | null;
   fullDescription: string | null;
+  fullDescriptionSimple: string | null;
+  fullDescriptionProfessional: string | null;
   eligibility: string | null;
+  eligibilitySimple: string | null;
+  eligibilityProfessional: string | null;
+  /** Phase A1: documentation-gating fields. Each has simple+professional variants. */
+  documentationRequiredSimple: string | null;
+  documentationRequiredProfessional: string | null;
+  noDocumentationPathSimple: string | null;
+  noDocumentationPathProfessional: string | null;
+  evidenceGuidanceSimple: string | null;
+  evidenceGuidanceProfessional: string | null;
+  whatThisIsNotSimple: string | null;
+  whatThisIsNotProfessional: string | null;
   defendants: string[];
   court: string | null;
   docketNumber: string | null;
   affectedStates: string[];
   filingDate: string | null; // ISO date
+  /** Phase A1: structured key dates (filing deadlines, hearings, etc). */
+  keyDates: LitigationKeyDates;
+  /** Phase A1: related listing ids — companion cases or consolidated actions. */
+  relatedListingIds: string[];
+  /** Phase A1: Ada qualifying-question structure for this listing. */
+  adaQualifyingQuestions: AdaQualifyingQuestions;
   leadAttorneyId: string | null;
+  /** Phase A1: optional lead firm (separate from lead attorney). */
+  leadFirmId: string | null;
 }
 
 /** Admin row, exposes status + timestamps. */
@@ -433,15 +494,34 @@ export interface CreateLitigationInput {
   kind: LitigationKind;
   caseName: string;
   slug: string;
+  legalTheory?: string | null;
   shortDescription?: string | null;
+  shortDescriptionSimple?: string | null;
+  shortDescriptionProfessional?: string | null;
   fullDescription?: string | null;
+  fullDescriptionSimple?: string | null;
+  fullDescriptionProfessional?: string | null;
   eligibility?: string | null;
+  eligibilitySimple?: string | null;
+  eligibilityProfessional?: string | null;
+  documentationRequiredSimple?: string | null;
+  documentationRequiredProfessional?: string | null;
+  noDocumentationPathSimple?: string | null;
+  noDocumentationPathProfessional?: string | null;
+  evidenceGuidanceSimple?: string | null;
+  evidenceGuidanceProfessional?: string | null;
+  whatThisIsNotSimple?: string | null;
+  whatThisIsNotProfessional?: string | null;
   defendants?: string[];
   court?: string | null;
   docketNumber?: string | null;
   affectedStates?: string[];
   filingDate?: string | null;
+  keyDates?: LitigationKeyDates;
+  relatedListingIds?: string[];
+  adaQualifyingQuestions?: AdaQualifyingQuestions;
   leadAttorneyId?: string | null;
+  leadFirmId?: string | null;
   status?: LitigationStatus;
 }
 
@@ -449,15 +529,34 @@ export interface UpdateLitigationInput {
   kind?: LitigationKind;
   caseName?: string;
   slug?: string;
+  legalTheory?: string | null;
   shortDescription?: string | null;
+  shortDescriptionSimple?: string | null;
+  shortDescriptionProfessional?: string | null;
   fullDescription?: string | null;
+  fullDescriptionSimple?: string | null;
+  fullDescriptionProfessional?: string | null;
   eligibility?: string | null;
+  eligibilitySimple?: string | null;
+  eligibilityProfessional?: string | null;
+  documentationRequiredSimple?: string | null;
+  documentationRequiredProfessional?: string | null;
+  noDocumentationPathSimple?: string | null;
+  noDocumentationPathProfessional?: string | null;
+  evidenceGuidanceSimple?: string | null;
+  evidenceGuidanceProfessional?: string | null;
+  whatThisIsNotSimple?: string | null;
+  whatThisIsNotProfessional?: string | null;
   defendants?: string[];
   court?: string | null;
   docketNumber?: string | null;
   affectedStates?: string[];
   filingDate?: string | null;
+  keyDates?: LitigationKeyDates;
+  relatedListingIds?: string[];
+  adaQualifyingQuestions?: AdaQualifyingQuestions;
   leadAttorneyId?: string | null;
+  leadFirmId?: string | null;
   status?: LitigationStatus;
 }
 

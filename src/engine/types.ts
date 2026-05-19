@@ -41,6 +41,16 @@ export interface AdaSessionState {
 
   // Channel context (Ch1+)
   listingId: string | null;
+  /**
+   * Phase A1 (May 2026): FK to `litigation_listings` for class /
+   * enforcement / consent_decree / pattern_of_practice /
+   * regulatory_challenge intake sessions. Separate from `listingId`
+   * (which points at the legacy Ch1 `listings` table) so historical
+   * sessions retain their original reference; new litigation-intake
+   * sessions populate `litigationListingId` exclusively. Consumers
+   * should prefer this when both are set.
+   */
+  litigationListingId: string | null;
 
   // Conversation state
   conversationHistory: Message[];

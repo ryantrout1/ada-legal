@@ -231,7 +231,12 @@ export interface PageContext {
 export interface LitigationContext {
   id: string;
   slug: string;
-  kind: 'class' | 'mass';
+  kind:
+    | 'class'
+    | 'enforcement_action'
+    | 'consent_decree'
+    | 'pattern_of_practice'
+    | 'regulatory_challenge';
   case_name: string;
 }
 

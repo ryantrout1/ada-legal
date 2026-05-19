@@ -446,15 +446,34 @@ export class InMemoryDbClient implements DbClient {
       kind: input.kind,
       caseName: input.caseName,
       slug: input.slug,
+      legalTheory: input.legalTheory ?? null,
       shortDescription: input.shortDescription ?? null,
+      shortDescriptionSimple: input.shortDescriptionSimple ?? null,
+      shortDescriptionProfessional: input.shortDescriptionProfessional ?? null,
       fullDescription: input.fullDescription ?? null,
+      fullDescriptionSimple: input.fullDescriptionSimple ?? null,
+      fullDescriptionProfessional: input.fullDescriptionProfessional ?? null,
       eligibility: input.eligibility ?? null,
+      eligibilitySimple: input.eligibilitySimple ?? null,
+      eligibilityProfessional: input.eligibilityProfessional ?? null,
+      documentationRequiredSimple: input.documentationRequiredSimple ?? null,
+      documentationRequiredProfessional: input.documentationRequiredProfessional ?? null,
+      noDocumentationPathSimple: input.noDocumentationPathSimple ?? null,
+      noDocumentationPathProfessional: input.noDocumentationPathProfessional ?? null,
+      evidenceGuidanceSimple: input.evidenceGuidanceSimple ?? null,
+      evidenceGuidanceProfessional: input.evidenceGuidanceProfessional ?? null,
+      whatThisIsNotSimple: input.whatThisIsNotSimple ?? null,
+      whatThisIsNotProfessional: input.whatThisIsNotProfessional ?? null,
       defendants: input.defendants ?? [],
       court: input.court ?? null,
       docketNumber: input.docketNumber ?? null,
       affectedStates: input.affectedStates ?? [],
       filingDate: input.filingDate ?? null,
+      keyDates: input.keyDates ?? {},
+      relatedListingIds: input.relatedListingIds ?? [],
+      adaQualifyingQuestions: input.adaQualifyingQuestions ?? {},
       leadAttorneyId: input.leadAttorneyId ?? null,
+      leadFirmId: input.leadFirmId ?? null,
       status: input.status ?? 'draft',
       createdAt: now,
       updatedAt: now,
@@ -475,15 +494,64 @@ export class InMemoryDbClient implements DbClient {
       ...(input.kind !== undefined ? { kind: input.kind } : {}),
       ...(input.caseName !== undefined ? { caseName: input.caseName } : {}),
       ...(input.slug !== undefined ? { slug: input.slug } : {}),
+      ...(input.legalTheory !== undefined ? { legalTheory: input.legalTheory } : {}),
       ...(input.shortDescription !== undefined ? { shortDescription: input.shortDescription } : {}),
+      ...(input.shortDescriptionSimple !== undefined
+        ? { shortDescriptionSimple: input.shortDescriptionSimple }
+        : {}),
+      ...(input.shortDescriptionProfessional !== undefined
+        ? { shortDescriptionProfessional: input.shortDescriptionProfessional }
+        : {}),
       ...(input.fullDescription !== undefined ? { fullDescription: input.fullDescription } : {}),
+      ...(input.fullDescriptionSimple !== undefined
+        ? { fullDescriptionSimple: input.fullDescriptionSimple }
+        : {}),
+      ...(input.fullDescriptionProfessional !== undefined
+        ? { fullDescriptionProfessional: input.fullDescriptionProfessional }
+        : {}),
       ...(input.eligibility !== undefined ? { eligibility: input.eligibility } : {}),
+      ...(input.eligibilitySimple !== undefined
+        ? { eligibilitySimple: input.eligibilitySimple }
+        : {}),
+      ...(input.eligibilityProfessional !== undefined
+        ? { eligibilityProfessional: input.eligibilityProfessional }
+        : {}),
+      ...(input.documentationRequiredSimple !== undefined
+        ? { documentationRequiredSimple: input.documentationRequiredSimple }
+        : {}),
+      ...(input.documentationRequiredProfessional !== undefined
+        ? { documentationRequiredProfessional: input.documentationRequiredProfessional }
+        : {}),
+      ...(input.noDocumentationPathSimple !== undefined
+        ? { noDocumentationPathSimple: input.noDocumentationPathSimple }
+        : {}),
+      ...(input.noDocumentationPathProfessional !== undefined
+        ? { noDocumentationPathProfessional: input.noDocumentationPathProfessional }
+        : {}),
+      ...(input.evidenceGuidanceSimple !== undefined
+        ? { evidenceGuidanceSimple: input.evidenceGuidanceSimple }
+        : {}),
+      ...(input.evidenceGuidanceProfessional !== undefined
+        ? { evidenceGuidanceProfessional: input.evidenceGuidanceProfessional }
+        : {}),
+      ...(input.whatThisIsNotSimple !== undefined
+        ? { whatThisIsNotSimple: input.whatThisIsNotSimple }
+        : {}),
+      ...(input.whatThisIsNotProfessional !== undefined
+        ? { whatThisIsNotProfessional: input.whatThisIsNotProfessional }
+        : {}),
       ...(input.defendants !== undefined ? { defendants: input.defendants } : {}),
       ...(input.court !== undefined ? { court: input.court } : {}),
       ...(input.docketNumber !== undefined ? { docketNumber: input.docketNumber } : {}),
       ...(input.affectedStates !== undefined ? { affectedStates: input.affectedStates } : {}),
       ...(input.filingDate !== undefined ? { filingDate: input.filingDate } : {}),
+      ...(input.keyDates !== undefined ? { keyDates: input.keyDates } : {}),
+      ...(input.relatedListingIds !== undefined ? { relatedListingIds: input.relatedListingIds } : {}),
+      ...(input.adaQualifyingQuestions !== undefined
+        ? { adaQualifyingQuestions: input.adaQualifyingQuestions }
+        : {}),
       ...(input.leadAttorneyId !== undefined ? { leadAttorneyId: input.leadAttorneyId } : {}),
+      ...(input.leadFirmId !== undefined ? { leadFirmId: input.leadFirmId } : {}),
       ...(input.status !== undefined ? { status: input.status } : {}),
       updatedAt: new Date().toISOString(),
     };
@@ -527,15 +595,34 @@ export class InMemoryDbClient implements DbClient {
       kind: l.kind,
       caseName: l.caseName,
       slug: l.slug,
+      legalTheory: l.legalTheory,
       shortDescription: l.shortDescription,
+      shortDescriptionSimple: l.shortDescriptionSimple,
+      shortDescriptionProfessional: l.shortDescriptionProfessional,
       fullDescription: l.fullDescription,
+      fullDescriptionSimple: l.fullDescriptionSimple,
+      fullDescriptionProfessional: l.fullDescriptionProfessional,
       eligibility: l.eligibility,
+      eligibilitySimple: l.eligibilitySimple,
+      eligibilityProfessional: l.eligibilityProfessional,
+      documentationRequiredSimple: l.documentationRequiredSimple,
+      documentationRequiredProfessional: l.documentationRequiredProfessional,
+      noDocumentationPathSimple: l.noDocumentationPathSimple,
+      noDocumentationPathProfessional: l.noDocumentationPathProfessional,
+      evidenceGuidanceSimple: l.evidenceGuidanceSimple,
+      evidenceGuidanceProfessional: l.evidenceGuidanceProfessional,
+      whatThisIsNotSimple: l.whatThisIsNotSimple,
+      whatThisIsNotProfessional: l.whatThisIsNotProfessional,
       defendants: l.defendants,
       court: l.court,
       docketNumber: l.docketNumber,
       affectedStates: l.affectedStates,
       filingDate: l.filingDate,
+      keyDates: l.keyDates,
+      relatedListingIds: l.relatedListingIds,
+      adaQualifyingQuestions: l.adaQualifyingQuestions,
       leadAttorneyId: l.leadAttorneyId,
+      leadFirmId: l.leadFirmId,
     }));
   }
 
@@ -559,15 +646,34 @@ export class InMemoryDbClient implements DbClient {
       kind: row.kind,
       caseName: row.caseName,
       slug: row.slug,
+      legalTheory: row.legalTheory,
       shortDescription: row.shortDescription,
+      shortDescriptionSimple: row.shortDescriptionSimple,
+      shortDescriptionProfessional: row.shortDescriptionProfessional,
       fullDescription: row.fullDescription,
+      fullDescriptionSimple: row.fullDescriptionSimple,
+      fullDescriptionProfessional: row.fullDescriptionProfessional,
       eligibility: row.eligibility,
+      eligibilitySimple: row.eligibilitySimple,
+      eligibilityProfessional: row.eligibilityProfessional,
+      documentationRequiredSimple: row.documentationRequiredSimple,
+      documentationRequiredProfessional: row.documentationRequiredProfessional,
+      noDocumentationPathSimple: row.noDocumentationPathSimple,
+      noDocumentationPathProfessional: row.noDocumentationPathProfessional,
+      evidenceGuidanceSimple: row.evidenceGuidanceSimple,
+      evidenceGuidanceProfessional: row.evidenceGuidanceProfessional,
+      whatThisIsNotSimple: row.whatThisIsNotSimple,
+      whatThisIsNotProfessional: row.whatThisIsNotProfessional,
       defendants: row.defendants,
       court: row.court,
       docketNumber: row.docketNumber,
       affectedStates: row.affectedStates,
       filingDate: row.filingDate,
+      keyDates: row.keyDates,
+      relatedListingIds: row.relatedListingIds,
+      adaQualifyingQuestions: row.adaQualifyingQuestions,
       leadAttorneyId: row.leadAttorneyId,
+      leadFirmId: row.leadFirmId,
       leadAttorneyName,
     };
   }

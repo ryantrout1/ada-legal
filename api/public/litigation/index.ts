@@ -1,12 +1,15 @@
 /**
  * GET /api/public/litigation
  *
- * Public read-only list of active litigation (class + mass actions).
+ * Public read-only list of active litigation listings (class actions,
+ * DOJ enforcement actions, consent decrees, pattern-of-practice intake,
+ * and regulatory challenges).
  * Used by Ada's prompt context and by the public Active Cases browse
  * page on adalegallink.com.
  *
  * Query params (all optional):
- *   kind   — 'class' | 'mass' (default: both)
+ *   kind   — 'class' | 'enforcement_action' | 'consent_decree' |
+ *            'pattern_of_practice' | 'regulatory_challenge' (default: all)
  *   state  — two-letter code, e.g. 'AZ'. Matches rows whose
  *            affected_states contains the state, OR whose affected_states
  *            is empty (treated as nationwide).
@@ -39,8 +42,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const kindRaw = typeof req.query.kind === 'string' ? req.query.kind : undefined;
+    const validKinds: ReadonlySet<LitigationKind> = new Set([
+      'class',
+      'enforcement_action',
+      'consent_decree',
+      'pattern_of_practice',
+      'regulatory_challenge',
+    ]);
     const kind: LitigationKind | undefined =
-      kindRaw === 'class' || kindRaw === 'mass' ? kindRaw : undefined;
+      kindRaw && validKinds.has(kindRaw as LitigationKind)
+        ? (kindRaw as LitigationKind)
+        : undefined;
 
     const stateRaw = typeof req.query.state === 'string' ? req.query.state : undefined;
     const state = stateRaw ? stateRaw.toUpperCase() : undefined;
