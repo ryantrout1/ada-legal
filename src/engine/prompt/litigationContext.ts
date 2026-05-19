@@ -16,21 +16,44 @@
  * Ref: /plan Phase 2, acceptance criterion #5
  */
 
-import type { LitigationRow } from '../clients/types.js';
+import type { LitigationKind, LitigationRow } from '../clients/types.js';
 
 /**
- * Render a condensed index of active class actions and mass actions.
+ * Phase C3b-i: human-readable labels for each litigation kind. The
+ * pre-C3b code used a `'class' ? 'class action' : 'mass action'`
+ * binary that mislabeled every non-class row in the LITIGATION CONTEXT
+ * section of Ada's prompt. The map below covers the full LitigationKind
+ * enum (5 values as of Phase A1).
+ *
+ * Used by both renderActiveLitigationIndex (the catalog) and
+ * renderFocusedLitigation (the focused block).
+ */
+const KIND_LABELS: Record<LitigationKind, string> = {
+  class: 'class action',
+  enforcement_action: 'DOJ enforcement',
+  consent_decree: 'consent decree',
+  pattern_of_practice: 'pattern of practice',
+  regulatory_challenge: 'regulatory challenge',
+};
+
+function labelForKind(kind: LitigationKind): string {
+  return KIND_LABELS[kind] ?? 'litigation';
+}
+
+/**
+ * Render a condensed index of active and other surface-visible
+ * litigation rows (class actions, DOJ enforcement, consent decrees,
+ * patterns of practice, regulatory challenges).
  *
  * Each row gets a one-line entry with:
  *   - case name
- *   - kind (class | mass)
+ *   - kind label (one of the 5 LitigationKind enum values)
  *   - jurisdiction signal (court + affected_states, when present)
  *   - one-line eligibility summary (truncated)
  *
- * Designed to fit in Ada's prompt budget — we cap rows in the caller
- * (LIMIT 20 by default in listActiveLitigation), and each entry is
- * kept short. Ada uses this index to recognize when a user's situation
- * may match an active case and surface it; she never picks for them.
+ * Designed to fit in Ada's prompt budget. Ada uses this index to
+ * recognize when a user's situation may match an active case and
+ * surface it; she never picks for them.
  */
 export function renderActiveLitigationIndex(
   litigation: LitigationRow[],
@@ -39,12 +62,12 @@ export function renderActiveLitigationIndex(
 
   const parts: string[] = [];
   parts.push(
-    `The following class actions and mass actions are currently active. If a user describes an experience that matches one of them, you may surface the case to the user, briefly explain it, and ask if they'd like more information. You do not enroll users in cases — that's the attorney's job. You're recognizing a potential match.`,
+    `The following litigation is currently active, settled-and-being-monitored, under DOJ investigation, or being tracked as a regulatory challenge. If a user describes an experience that matches one of them, you may surface the case to the user, briefly explain it, and ask if they'd like more information. You do not enroll users in cases — that's the attorney's job. You're recognizing a potential match.`,
   );
   parts.push('');
 
   for (const row of litigation) {
-    const kindLabel = row.kind === 'class' ? 'class action' : 'mass action';
+    const kindLabel = labelForKind(row.kind);
     const states =
       row.affectedStates.length > 0 ? row.affectedStates.join(', ') : 'nationwide';
     const jurisdictionParts: string[] = [states];
@@ -82,7 +105,7 @@ export function renderActiveLitigationIndex(
  * out of the index by the assembler so it doesn't appear twice.
  */
 export function renderFocusedLitigation(row: LitigationRow): string {
-  const kindLabel = row.kind === 'class' ? 'class action' : 'mass action';
+  const kindLabel = labelForKind(row.kind);
   const parts: string[] = [];
 
   parts.push(
