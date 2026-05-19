@@ -18,7 +18,7 @@
  * Ref: docs/ARCHITECTURE.md §2, §6, docs/DO_NOT_TOUCH.md rule 1
  */
 
-import { and, eq, ilike, or, sql } from 'drizzle-orm';
+import { and, eq, ilike, inArray, or, sql } from 'drizzle-orm';
 import type { Database } from '../../db/client.js';
 import {
   adaSessions,
@@ -725,7 +725,23 @@ export class NeonDbClient implements DbClient {
   async listActiveLitigation(
     opts: ListActiveLitigationOptions = {},
   ): Promise<LitigationRow[]> {
-    const conds = [eq(litigationTable.status, 'active')];
+    // Phase A3a: statuses option defaults to ['active'] for back-compat
+    // with Ada's prompt context. The public page passes the 4 page-
+    // visible statuses. Admin-only statuses (draft/closed/archived)
+    // are silently excluded by intersecting with the allow-set below.
+    const allowedStatuses: ReadonlySet<LitigationStatus> = new Set([
+      'active',
+      'compliance',
+      'investigating',
+      'tracking',
+    ]);
+    const requested: LitigationStatus[] = opts.statuses ?? ['active'];
+    const statusFilter = requested.filter((s) => allowedStatuses.has(s));
+    // If the caller passed an empty/all-rejected array, return nothing
+    // rather than collapsing to "all statuses".
+    if (statusFilter.length === 0) return [];
+
+    const conds = [inArray(litigationTable.status, statusFilter)];
     if (opts.kind) conds.push(eq(litigationTable.kind, opts.kind));
     if (opts.state) {
       // Match if affected_states contains the requested state OR if
@@ -769,6 +785,19 @@ export class NeonDbClient implements DbClient {
   async readActiveLitigationBySlug(
     opts: ReadActiveLitigationBySlugOptions,
   ): Promise<LitigationDetailRow | null> {
+    // Phase A3a: statuses option defaults to ['active'] for back-compat.
+    // The public detail API passes the 4 page-visible statuses.
+    // Admin-only statuses (draft/closed/archived) always 404 regardless.
+    const allowedStatuses: ReadonlySet<LitigationStatus> = new Set([
+      'active',
+      'compliance',
+      'investigating',
+      'tracking',
+    ]);
+    const requested: LitigationStatus[] = opts.statuses ?? ['active'];
+    const statusFilter = requested.filter((s) => allowedStatuses.has(s));
+    if (statusFilter.length === 0) return null;
+
     // LEFT JOIN on attorneys so a missing/null leadAttorneyId still
     // returns the litigation row; leadAttorneyName projects as null.
     const rows = await this.db
@@ -782,7 +811,7 @@ export class NeonDbClient implements DbClient {
         and(
           eq(litigationTable.orgId, opts.orgId),
           eq(litigationTable.slug, opts.slug),
-          eq(litigationTable.status, 'active'),
+          inArray(litigationTable.status, statusFilter),
         ),
       )
       .limit(1);

@@ -78,6 +78,7 @@ import type {
   CreateLitigationInput,
   LitigationAdminRow,
   LitigationRow,
+  LitigationStatus,
   LitigationDetailRow,
   ListActiveLitigationOptions,
   ReadActiveLitigationBySlugOptions,
@@ -562,7 +563,22 @@ export class InMemoryDbClient implements DbClient {
   async listActiveLitigation(
     opts: ListActiveLitigationOptions = {},
   ): Promise<LitigationRow[]> {
-    let filtered = this.adminLitigation.filter((l) => l.status === 'active');
+    // Phase A3a: statuses option defaults to ['active'] for back-compat
+    // with Ada's prompt context. The public page passes the 4 page-
+    // visible statuses. Admin-only statuses are silently excluded by
+    // intersecting with the allow-set below.
+    const allowedStatuses: ReadonlySet<LitigationStatus> = new Set([
+      'active',
+      'compliance',
+      'investigating',
+      'tracking',
+    ]);
+    const requested: LitigationStatus[] = opts.statuses ?? ['active'];
+    const statusFilter = new Set(requested.filter((s) => allowedStatuses.has(s)));
+
+    let filtered = this.adminLitigation.filter((l) =>
+      statusFilter.has(l.status),
+    );
     if (opts.kind) filtered = filtered.filter((l) => l.kind === opts.kind);
     if (opts.state) {
       filtered = filtered.filter(
@@ -630,10 +646,19 @@ export class InMemoryDbClient implements DbClient {
     opts: ReadActiveLitigationBySlugOptions,
   ): Promise<LitigationDetailRow | null> {
     // In-memory storage is single-org; orgId is accepted for parity with
-    // the Neon impl (which scopes via WHERE org_id = ...). Slug + active
-    // status are the discriminators here.
+    // the Neon impl. Phase A3a: status is governed by `opts.statuses`,
+    // defaulting to ['active'], intersected with the 4 page-visible
+    // statuses (admin-only statuses always 404 regardless of caller).
+    const allowedStatuses: ReadonlySet<LitigationStatus> = new Set([
+      'active',
+      'compliance',
+      'investigating',
+      'tracking',
+    ]);
+    const requested: LitigationStatus[] = opts.statuses ?? ['active'];
+    const statusFilter = new Set(requested.filter((s) => allowedStatuses.has(s)));
     const row = this.adminLitigation.find(
-      (l) => l.slug === opts.slug && l.status === 'active',
+      (l) => l.slug === opts.slug && statusFilter.has(l.status),
     );
     if (!row) return null;
     let leadAttorneyName: string | null = null;

@@ -562,6 +562,17 @@ export interface UpdateLitigationInput {
 
 export interface ListActiveLitigationOptions {
   kind?: LitigationKind;
+  /**
+   * Phase A3a: statuses to include. Defaults to `['active']` for
+   * back-compat with Ada's prompt context (only active rows feed
+   * her vocabulary). The public `/class-actions` page passes
+   * `['active','compliance','investigating','tracking']` to surface
+   * settled-compliance, DOJ-investigation, and regulatory-challenge
+   * rows alongside the active class actions. Admin-only statuses
+   * (`draft`, `closed`, `archived`) are never returned by this
+   * method regardless of what the caller passes.
+   */
+  statuses?: LitigationStatus[];
   /** If set, only litigation matching this state in affected_states (or empty affected_states = nationwide). */
   state?: string;
   /**
@@ -580,6 +591,15 @@ export interface ListActiveLitigationOptions {
 export interface ReadActiveLitigationBySlugOptions {
   orgId: string;
   slug: string;
+  /**
+   * Phase A3a: statuses to consider. Defaults to `['active']`. The
+   * public detail endpoint passes the 4 page-visible statuses
+   * (`active`, `compliance`, `investigating`, `tracking`) so that
+   * settled-compliance, DOJ-investigation, and regulatory-challenge
+   * rows render their detail pages. Admin-only statuses (`draft`,
+   * `closed`, `archived`) always 404 regardless of what's passed.
+   */
+  statuses?: LitigationStatus[];
 }
 
 export interface LitigationDetailRow extends LitigationRow {
