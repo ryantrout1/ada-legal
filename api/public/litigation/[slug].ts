@@ -4,8 +4,9 @@
  * Public detail endpoint for the /Lawsuits Active Cases page. Returns
  * a single active litigation row joined with the lead attorney's name.
  *
- * Drafts, settled, closed, and archived rows return 404 — same as a
- * nonexistent slug. The same cache headers as the list endpoint apply.
+ * Drafts, closed, and archived rows return 404 — same as a nonexistent
+ * slug. Surfaces active, compliance, investigating, and tracking rows.
+ * The same cache headers as the list endpoint apply.
  *
  * Ref: /plan Phase 6a
  */
@@ -37,6 +38,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const row = await clients.db.readActiveLitigationBySlug({
       orgId: org.id,
       slug,
+      // Phase A3a: surface settled-compliance, DOJ-investigation, and
+      // regulatory-challenge rows on the public detail page, in
+      // addition to active ones. Admin-only statuses (draft/closed/
+      // archived) still 404.
+      statuses: ['active', 'compliance', 'investigating', 'tracking'],
     });
     if (!row) {
       return res.status(404).json({ error: 'Case not found' });

@@ -19,8 +19,9 @@
  *            default 20 / max 50 so the public browse page can load the
  *            full active set on first paint without pagination.)
  *
- * Always filters status='active'. Drafts, settled, closed, archived
- * rows never appear here.
+ * Always returns rows whose status is one of: active, compliance,
+ * investigating, tracking. Drafts, closed, and archived rows never
+ * appear here.
  *
  * Cache: public for 5 min, CDN for 15 min, SWR 24h. Same as listings.
  *
@@ -70,7 +71,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.min(limitRaw, 200) : 50;
 
     const clients = makeClientsFromEnv();
-    const rows = await clients.db.listActiveLitigation({ kind, state, search, limit });
+    // Phase A3a: surface the 4 page-visible statuses. Ada's prompt
+    // context uses the default ['active']; this endpoint serves the
+    // public /class-actions directory, which renders settled-
+    // compliance, DOJ-investigation, and regulatory-challenge rows
+    // alongside active ones. Admin-only statuses (draft/closed/
+    // archived) are never returned regardless of what's requested.
+    const rows = await clients.db.listActiveLitigation({
+      kind,
+      state,
+      search,
+      limit,
+      statuses: ['active', 'compliance', 'investigating', 'tracking'],
+    });
 
     res.setHeader(
       'Cache-Control',
