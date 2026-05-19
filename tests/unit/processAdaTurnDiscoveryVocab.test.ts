@@ -84,14 +84,13 @@ function seedCh1Listing(clients: InMemoryAdaClients) {
     tier: 'basic',
   };
   const config: ListingConfigRow = {
+    id: '00000000-0000-4000-8000-00000000aa03',
     listingId: LIST_ID,
-    promptOverride: null,
-    requiredFields: [],
-    eligibilityCriteria: [],
-    disqualifyingConditions: [],
-    fullDescription: null,
-    eligibilitySummary: null,
     caseDescription: 'Case description for the bound listing test fixture.',
+    eligibilityCriteria: [],
+    requiredFields: [],
+    disqualifyingConditions: [],
+    adaPromptOverride: null,
   };
   return Promise.all([
     clients.db.writeLawFirm(firm),
