@@ -49,12 +49,21 @@ export function HardDeleteAttorneyModal(props: HardDeleteAttorneyModalProps) {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
-  // Focus the typed-confirm input on mount so keyboard users can start
-  // typing immediately. Cancel is the safe default, but the input is
-  // the primary action surface — this matches the GitHub pattern.
+  // Capture the element that had focus before the modal opened so we
+  // can restore it on close. WAI-ARIA dialog pattern — keyboard users
+  // shouldn't lose their place in the list.
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+    // Focus the typed-confirm input on mount so keyboard users can
+    // start typing immediately. Cancel is the safe default; the input
+    // is the primary surface — matches the GitHub repo-delete pattern.
     inputRef.current?.focus();
+    return () => {
+      previouslyFocusedRef.current?.focus?.();
+    };
   }, []);
 
   // ESC closes the modal as a courtesy. Doesn't bypass the delete —
@@ -66,6 +75,33 @@ export function HardDeleteAttorneyModal(props: HardDeleteAttorneyModalProps) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [deleting, onCancel]);
+
+  // Focus trap — Tab and Shift-Tab loop within the dialog while open.
+  // Required by WAI-ARIA for role="dialog" with aria-modal="true".
+  // Matches the pattern in AccessibilityPanel.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key !== 'Tab') return;
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusables = dialog.querySelectorAll<HTMLElement>(
+        'input:not([disabled]), button:not([disabled])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   // The expected confirm string. We use firmName if present, else the
   // attorney name. Case-sensitive exact match. Trim trailing whitespace
@@ -119,7 +155,10 @@ export function HardDeleteAttorneyModal(props: HardDeleteAttorneyModalProps) {
         if (e.target === e.currentTarget && !deleting) onCancel();
       }}
     >
-      <div className="w-full max-w-md rounded-md border border-surface-200 bg-white p-6 shadow-lg">
+      <div
+        ref={dialogRef}
+        className="w-full max-w-md rounded-md border border-surface-200 bg-white p-6 shadow-lg"
+      >
         <h2
           id="hard-delete-attorney-title"
           className="font-display text-xl text-ink-900"
