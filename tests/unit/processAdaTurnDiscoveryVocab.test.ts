@@ -243,3 +243,241 @@ describe('Phase A4 — public_ada uses litigation vocabulary, not Ch1 listings',
     expect(sys).toContain('Old Hotel Fraud Listing');
   });
 });
+
+/**
+ * Phase C3b-i — discovery vocabulary expands to all 4 surface-visible
+ * statuses (active, compliance, investigating, tracking) and the
+ * focused-block load remains stable across turns for any of them.
+ *
+ * Before C3b-i:
+ *   - fetchActiveLitigation hardcoded limit: 20 and defaulted to
+ *     statuses: ['active']. With 36 surface-visible rows in production,
+ *     compliance/investigating/tracking rows were invisible to Ada.
+ *   - fetchFocusedLitigation called readActiveLitigationBySlug without
+ *     a statuses option, so on turn 2 of a Hilton-2010-bound session
+ *     (kind=consent_decree, status=compliance) the focused block
+ *     dropped — even though the session was successfully created with
+ *     that binding at the API layer (api/ada/session.ts already passes
+ *     the 4 statuses).
+ *
+ * Acceptance criteria covered: 1 (catalog completeness), 3 (focused
+ * block stability), 8 (back-compat on legacy sessions).
+ *
+ * Ref: /plan Plan C, Phase C3b-i.
+ */
+describe('Phase C3b-i — expanded statuses in discovery + focused block', () => {
+  it('surfaces compliance rows in the discovery index, not just active', async () => {
+    const clients = makeInMemoryClients();
+    await clients.db.createLitigation(
+      litigationInput(
+        'active-row',
+        'Active Case Marker',
+        'Active row that has always surfaced.',
+        { status: 'active' },
+      ),
+    );
+    await clients.db.createLitigation(
+      litigationInput(
+        'compliance-row',
+        'Hilton 2010 Consent Decree Marker',
+        'Compliance row that must now surface.',
+        { kind: 'consent_decree', status: 'compliance' },
+      ),
+    );
+    const state = newPublicAdaSession(clients);
+    clients.ai.enqueueResponse(textOnlyTurn('Hi!'));
+
+    await processAdaTurn({
+      clients,
+      state,
+      input: { userMessage: 'hello' },
+    });
+
+    const sys = `${clients.ai.requests[0].systemPrompt}\n${clients.ai.requests[0].systemPromptCachePrefix ?? ''}`;
+    expect(sys).toContain('Active Case Marker');
+    expect(sys).toContain('Hilton 2010 Consent Decree Marker');
+  });
+
+  it('surfaces investigating rows in the discovery index', async () => {
+    const clients = makeInMemoryClients();
+    await clients.db.createLitigation(
+      litigationInput(
+        'doj-flixbus',
+        'DOJ FlixBus Investigation Marker',
+        'DOJ Title III investigation against intercity bus operator.',
+        { kind: 'enforcement_action', status: 'investigating' },
+      ),
+    );
+    const state = newPublicAdaSession(clients);
+    clients.ai.enqueueResponse(textOnlyTurn('Hi!'));
+
+    await processAdaTurn({
+      clients,
+      state,
+      input: { userMessage: 'hello' },
+    });
+
+    const sys = `${clients.ai.requests[0].systemPrompt}\n${clients.ai.requests[0].systemPromptCachePrefix ?? ''}`;
+    expect(sys).toContain('DOJ FlixBus Investigation Marker');
+  });
+
+  it('surfaces tracking rows in the discovery index', async () => {
+    const clients = makeInMemoryClients();
+    await clients.db.createLitigation(
+      litigationInput(
+        'a4a-v-dot',
+        'A4A v. DOT Regulatory Challenge Marker',
+        'Airline industry APA challenge to 2024 wheelchair rule.',
+        { kind: 'regulatory_challenge', status: 'tracking' },
+      ),
+    );
+    const state = newPublicAdaSession(clients);
+    clients.ai.enqueueResponse(textOnlyTurn('Hi!'));
+
+    await processAdaTurn({
+      clients,
+      state,
+      input: { userMessage: 'hello' },
+    });
+
+    const sys = `${clients.ai.requests[0].systemPrompt}\n${clients.ai.requests[0].systemPromptCachePrefix ?? ''}`;
+    expect(sys).toContain('A4A v. DOT Regulatory Challenge Marker');
+  });
+
+  it('focused block survives turn 2 for a compliance-bound session', async () => {
+    const clients = makeInMemoryClients();
+    // Seed a compliance row representing Hilton 2010.
+    const compliance = await clients.db.createLitigation(
+      litigationInput(
+        'hilton-2010',
+        'United States v. Hilton 2010',
+        'Bed-height accessibility consent decree marker.',
+        { kind: 'consent_decree', status: 'compliance' },
+      ),
+    );
+    // Session opened from the public detail page CTA — metadata
+    // carries the slug, and litigationListingId is set per the new
+    // session.ts behavior (Phase A3a).
+    const state = createSession(clients, {
+      orgId: ORG_ID,
+      sessionType: 'public_ada',
+      anonSessionId: ANON_ID,
+      userId: null,
+    });
+    state.litigationListingId = compliance.id;
+    state.metadata = {
+      ...state.metadata,
+      litigation_context: {
+        id: compliance.id,
+        slug: 'hilton-2010',
+        kind: 'consent_decree',
+        case_name: 'United States v. Hilton 2010',
+      },
+    };
+
+    // Turn 1.
+    clients.ai.enqueueResponse(textOnlyTurn('Hi!'));
+    await processAdaTurn({
+      clients,
+      state,
+      input: { userMessage: 'hello' },
+    });
+    const sysTurn1 = `${clients.ai.requests[0].systemPrompt}\n${clients.ai.requests[0].systemPromptCachePrefix ?? ''}`;
+    expect(
+      sysTurn1,
+      'turn 1 should render the focused block for a compliance-bound session',
+    ).toContain('United States v. Hilton 2010');
+
+    // Turn 2 — without C3b-i, the focused block would drop because
+    // fetchFocusedLitigation re-reads with the default statuses=['active'].
+    clients.ai.enqueueResponse(textOnlyTurn('Hi again!'));
+    await processAdaTurn({
+      clients,
+      state,
+      input: { userMessage: 'tell me more' },
+    });
+    const sysTurn2 = `${clients.ai.requests[1].systemPrompt}\n${clients.ai.requests[1].systemPromptCachePrefix ?? ''}`;
+    expect(
+      sysTurn2,
+      'turn 2 must STILL render the focused block — Phase C3b-i fixes the status filter on the per-turn re-load',
+    ).toContain('United States v. Hilton 2010');
+  });
+
+  it('back-compat: legacy session with metadata-only litigation_context still resolves focused block', async () => {
+    // Acceptance criterion 8: a pre-existing session row that has
+    // metadata.litigation_context.slug set BUT no litigationListingId
+    // (legacy pre-A3a sessions) must continue to work.
+    const clients = makeInMemoryClients();
+    const row = await clients.db.createLitigation(
+      litigationInput(
+        'legacy-niles',
+        'Legacy Niles Marker',
+        'Legacy session resolution path.',
+      ),
+    );
+    const state = createSession(clients, {
+      orgId: ORG_ID,
+      sessionType: 'public_ada',
+      anonSessionId: ANON_ID,
+      userId: null,
+    });
+    // Legacy state: metadata only, no litigationListingId.
+    state.litigationListingId = null;
+    state.metadata = {
+      ...state.metadata,
+      litigation_context: {
+        id: row.id,
+        slug: 'legacy-niles',
+        kind: 'class',
+        case_name: 'Legacy Niles Marker',
+      },
+    };
+
+    clients.ai.enqueueResponse(textOnlyTurn('Hi!'));
+    await processAdaTurn({
+      clients,
+      state,
+      input: { userMessage: 'hello' },
+    });
+    const sys = `${clients.ai.requests[0].systemPrompt}\n${clients.ai.requests[0].systemPromptCachePrefix ?? ''}`;
+    expect(sys).toContain('Legacy Niles Marker');
+  });
+
+  it('forward path: litigationListingId-only (no metadata) also resolves focused block', async () => {
+    // The new match_litigation tool (Phase C3b-ii) will set
+    // litigationListingId without necessarily updating metadata in the
+    // same turn. C3b-i prepares fetchFocusedLitigation to accept either
+    // resolution path so C3b-ii can land cleanly on top.
+    const clients = makeInMemoryClients();
+    const row = await clients.db.createLitigation(
+      litigationInput(
+        'fwd-path-row',
+        'Forward Path Marker',
+        'Tests litigationListingId-only resolution.',
+      ),
+    );
+    const state = createSession(clients, {
+      orgId: ORG_ID,
+      sessionType: 'public_ada',
+      anonSessionId: ANON_ID,
+      userId: null,
+    });
+    state.litigationListingId = row.id;
+    // Explicitly NO metadata.litigation_context — this is the path the
+    // tool-driven binding will take in C3b-ii.
+
+    clients.ai.enqueueResponse(textOnlyTurn('Hi!'));
+    await processAdaTurn({
+      clients,
+      state,
+      input: { userMessage: 'hello' },
+    });
+    const sys = `${clients.ai.requests[0].systemPrompt}\n${clients.ai.requests[0].systemPromptCachePrefix ?? ''}`;
+    // Specifically detect the FOCUSED block, not the index — both
+    // would mention the row by name, but only the focused block uses
+    // the "starting point" / "came in about" framing from
+    // renderFocusedLitigation.
+    expect(sys).toContain('Forward Path Marker');
+    expect(sys.toLowerCase()).toMatch(/starting point|came in about|already interested/);
+  });
+});

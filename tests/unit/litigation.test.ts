@@ -14,7 +14,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { makeInMemoryClients } from '@/engine/clients/inMemoryClients';
-import { renderFocusedLitigation } from '@/engine/prompt/litigationContext';
+import { renderActiveLitigationIndex, renderFocusedLitigation } from '@/engine/prompt/litigationContext';
 import type { LitigationRow } from '@/engine/clients/types';
 
 const ATTORNEY_ID = '10000000-0000-4000-8000-00000000a001';
@@ -273,15 +273,39 @@ describe('renderFocusedLitigation (Phase 6a)', () => {
     expect(out.toLowerCase()).toMatch(/already interested|came in about|starting point/);
   });
 
-  it('renders mass-action kind label correctly', () => {
+  it('renders enforcement_action kind label as "DOJ enforcement"', () => {
     const row = makeRow({
-      caseName: 'Doe v. PharmaCo',
+      caseName: 'United States v. PharmaCo',
       kind: 'enforcement_action',
-      slug: 'doe-v-pharmaco',
+      slug: 'us-v-pharmaco',
     });
     const out = renderFocusedLitigation(row);
-    expect(out).toContain('mass action');
+    expect(out).toContain('DOJ enforcement');
     expect(out).not.toContain('class action');
+    // Phase C3b-i: 'mass action' is the stale binary label — must be gone.
+    expect(out).not.toContain('mass action');
+  });
+
+  // Phase C3b-i: every kind in the LitigationKind enum gets a stable,
+  // human-readable label in the focused block. The pre-C3b renderer used
+  // a 'class' ? 'class action' : 'mass action' ternary that mislabeled
+  // every non-class row.
+  it('renders all 5 kinds with the correct labels', () => {
+    const cases: Array<[LitigationRow['kind'], string]> = [
+      ['class', 'class action'],
+      ['enforcement_action', 'DOJ enforcement'],
+      ['consent_decree', 'consent decree'],
+      ['pattern_of_practice', 'pattern of practice'],
+      ['regulatory_challenge', 'regulatory challenge'],
+    ];
+    for (const [kind, label] of cases) {
+      const row = makeRow({ kind });
+      const out = renderFocusedLitigation(row);
+      expect(
+        out,
+        `kind=${kind} should produce label "${label}"`,
+      ).toContain(label);
+    }
   });
 
   it('includes eligibility and defendants when present', () => {
@@ -304,6 +328,71 @@ describe('renderFocusedLitigation (Phase 6a)', () => {
     // Should still produce a usable block — at minimum the case name lead.
     expect(out).toContain('Smith v. Acme Corp');
     expect(out.length).toBeGreaterThan(50);
+  });
+});
+
+/**
+ * Phase C3b-i — renderActiveLitigationIndex kind-label coverage.
+ *
+ * The pre-C3b implementation used a `kind === 'class' ? 'class action'
+ * : 'mass action'` ternary, which mislabeled every non-class row.
+ * Phase C3b-i replaces it with a 5-way map matching the LitigationKind
+ * enum (class | enforcement_action | consent_decree |
+ * pattern_of_practice | regulatory_challenge).
+ *
+ * Ref: /plan Plan C, Phase C3b-i, acceptance criterion 2.
+ */
+describe('renderActiveLitigationIndex kind labels (Phase C3b-i)', () => {
+  it('emits one row per litigation item with the correct kind label', () => {
+    const rows: LitigationRow[] = [
+      makeRow({
+        id: '20000000-0000-4000-8000-00000000a001',
+        kind: 'class',
+        caseName: 'Class Action Case',
+        slug: 'class-case',
+      }),
+      makeRow({
+        id: '20000000-0000-4000-8000-00000000a002',
+        kind: 'enforcement_action',
+        caseName: 'DOJ Enforcement Case',
+        slug: 'enf-case',
+      }),
+      makeRow({
+        id: '20000000-0000-4000-8000-00000000a003',
+        kind: 'consent_decree',
+        caseName: 'Consent Decree Case',
+        slug: 'cd-case',
+      }),
+      makeRow({
+        id: '20000000-0000-4000-8000-00000000a004',
+        kind: 'pattern_of_practice',
+        caseName: 'Pattern Case',
+        slug: 'pat-case',
+      }),
+      makeRow({
+        id: '20000000-0000-4000-8000-00000000a005',
+        kind: 'regulatory_challenge',
+        caseName: 'Reg Challenge Case',
+        slug: 'reg-case',
+      }),
+    ];
+    const out = renderActiveLitigationIndex(rows);
+    expect(out).toContain('Class Action Case');
+    expect(out).toContain('(class action,');
+    expect(out).toContain('DOJ Enforcement Case');
+    expect(out).toContain('(DOJ enforcement,');
+    expect(out).toContain('Consent Decree Case');
+    expect(out).toContain('(consent decree,');
+    expect(out).toContain('Pattern Case');
+    expect(out).toContain('(pattern of practice,');
+    expect(out).toContain('Reg Challenge Case');
+    expect(out).toContain('(regulatory challenge,');
+    // The stale binary label must be gone entirely.
+    expect(out).not.toContain('mass action');
+  });
+
+  it('returns empty string when given no rows', () => {
+    expect(renderActiveLitigationIndex([])).toBe('');
   });
 });
 
