@@ -32,6 +32,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { hashAnonToken, parseAnonCookie } from '../../src/lib/anonCookie.js';
+import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv } from '../_shared.js';
 
 const ALLOWED_CONTENT_TYPES = [
@@ -50,6 +51,13 @@ const MAX_PHOTO_BYTES = 10 * 1024 * 1024; // 10 MB
 const BLOB_EVENT_GENERATE_TOKEN = 'blob.generate-client-token';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // CORS first — must run before any response so headers reach the
+  // cross-origin browser. Preflight OPTIONS returns 204 and exits.
+  // Vercel Blob's onUploadCompleted callback is server-to-server and
+  // doesn't send an Origin header, so applyCors is a no-op on that
+  // path and the callback flow is unchanged.
+  if (applyCors(req, res)) return;
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
