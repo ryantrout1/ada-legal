@@ -43,7 +43,7 @@
  * Ref: /plan: /photo field-test capture page, Phase 2.
  */
 
-import { useRef, useState, type ChangeEvent } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { downscalePhoto } from '../../utils/downscalePhoto.js';
 import {
@@ -64,6 +64,18 @@ export default function PhotoCapture() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { status, result, error: submitError, submit, reset } = usePhotoCapture();
 
+  // Revoke the last preview object URL on unmount to avoid leaking
+  // browser memory if the user navigates away without resetting.
+  useEffect(() => {
+    return () => {
+      if (photoPreview) URL.revokeObjectURL(photoPreview);
+    };
+    // We only want this cleanup to fire on unmount, not on every
+    // photoPreview change — replace-time cleanup is handled inline
+    // in handlePhotoSelect and handleReset.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function handlePhotoSelect(e: ChangeEvent<HTMLInputElement>) {
     setLocalError(null);
     const raw = e.target.files?.[0];
@@ -72,6 +84,12 @@ export default function PhotoCapture() {
       setLocalError(
         'That photo is bigger than 20 MB. Try a smaller one, or take a fresh photo with your camera app.',
       );
+      // Clear any previously-selected photo too — the user's intent
+      // was to replace it. Leaving the old one would let them submit
+      // a stale photo while seeing the size error.
+      if (photoPreview) URL.revokeObjectURL(photoPreview);
+      setPhotoFile(null);
+      setPhotoPreview(null);
       // Clear the input so the same file can be re-picked after the
       // user takes a different shot.
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -80,6 +98,10 @@ export default function PhotoCapture() {
     try {
       const file = await downscalePhoto(raw);
       const previewUrl = URL.createObjectURL(file);
+      // Revoke the prior preview URL when the user picks a different
+      // photo without resetting. createObjectURL leaks memory until
+      // the page unloads if we don't.
+      if (photoPreview) URL.revokeObjectURL(photoPreview);
       setPhotoFile(file);
       setPhotoPreview(previewUrl);
     } catch {
@@ -211,7 +233,7 @@ function PhotoCaptureForm(props: PhotoCaptureFormProps) {
       <div>
         <label
           htmlFor="photo-input"
-          className="block w-full min-h-[48px] cursor-pointer rounded-md border-2 border-accent-500 bg-accent-50 px-4 py-3 text-center font-display text-lg text-accent-600 transition-colors hover:bg-accent-50/80 focus-within:ring-3 focus-within:ring-accent-500 focus-within:ring-offset-2 focus-within:ring-offset-surface-50"
+          className="block w-full min-h-[48px] cursor-pointer rounded-md border-2 border-accent-500 bg-accent-50 px-4 py-3 text-center font-display text-lg text-accent-600 transition-colors hover:bg-accent-50/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-accent-500 focus-within:ring-offset-2 focus-within:ring-offset-surface-50"
         >
           {photoPreview ? 'Retake photo' : '📷 Take a photo'}
         </label>
@@ -241,7 +263,7 @@ function PhotoCaptureForm(props: PhotoCaptureFormProps) {
           onChange={(e) => onCommentChange(e.target.value)}
           rows={4}
           placeholder="Anything Ada should know about this photo — what's wrong, what's right, what to look for."
-          className="mt-2 block w-full rounded-md border border-surface-200 bg-surface-50 px-3 py-2 text-base text-ink-900 placeholder:text-ink-500 focus:border-accent-500 focus:outline-none focus:ring-3 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-surface-50"
+          className="mt-2 block w-full rounded-md border border-surface-200 bg-surface-50 px-3 py-2 text-base text-ink-900 placeholder:text-ink-500 focus-visible:border-accent-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
         />
       </div>
 
@@ -270,7 +292,7 @@ function PhotoCaptureForm(props: PhotoCaptureFormProps) {
         type="button"
         onClick={onSubmit}
         disabled={busy}
-        className="block w-full min-h-[48px] rounded-md bg-accent-500 px-4 py-3 font-display text-lg text-surface-50 transition-colors hover:bg-accent-600 focus:outline-none focus:ring-3 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-surface-50 disabled:cursor-not-allowed disabled:bg-surface-300"
+        className="block w-full min-h-[48px] rounded-md bg-accent-500 px-4 py-3 font-display text-lg text-surface-50 transition-colors hover:bg-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50 disabled:cursor-not-allowed disabled:bg-surface-300"
       >
         {busy ? 'Working…' : 'Send to Ada'}
       </button>
@@ -313,7 +335,7 @@ function SavedView({ result, onReset }: SavedViewProps) {
       <button
         type="button"
         onClick={onReset}
-        className="block w-full min-h-[48px] rounded-md bg-accent-500 px-4 py-3 font-display text-lg text-surface-50 transition-colors hover:bg-accent-600 focus:outline-none focus:ring-3 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-surface-50"
+        className="block w-full min-h-[48px] rounded-md bg-accent-500 px-4 py-3 font-display text-lg text-surface-50 transition-colors hover:bg-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
       >
         Capture another
       </button>
@@ -339,7 +361,7 @@ function ErrorView({ error, onReset }: ErrorViewProps) {
       <button
         type="button"
         onClick={onReset}
-        className="block w-full min-h-[48px] rounded-md bg-accent-500 px-4 py-3 font-display text-lg text-surface-50 transition-colors hover:bg-accent-600 focus:outline-none focus:ring-3 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-surface-50"
+        className="block w-full min-h-[48px] rounded-md bg-accent-500 px-4 py-3 font-display text-lg text-surface-50 transition-colors hover:bg-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
       >
         Try again
       </button>
