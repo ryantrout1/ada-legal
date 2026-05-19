@@ -1,0 +1,56 @@
+-- Plan B, Phase B4: Wave 2 compliance prose (15 rows).
+--
+-- Applied live against Neon project ancient-star-00703098 main on 2026-05-19
+-- as part of /shipit Phase B4.
+--
+-- Two of these rows started as kind='class', status='active' but research
+-- confirmed they are settled-with-monitoring (the same data-quality pattern
+-- surfaced in B3a/B3b). Both reclassified to status='compliance' inline:
+--
+--   - Adams v. Kentucky (e5ca543c-9ca1-46d0-857d-0d6a140409fd): settled
+--     May 2015; full prose written; affected_states already KY.
+--   - NFB-CA v. Uber (5673e9ab-6e4c-4e92-ac8d-aeab70ca444c): settled Dec
+--     2016 with ongoing court jurisdiction; full prose written;
+--     affected_states set to ["__nationwide__"] sentinel.
+--
+-- The remaining 13 rows were already status='compliance' and received
+-- full prose:
+--
+--   doj-v-anoka-crime-free-housing (2264cceb)
+--   doj-v-hilton-2010-consent-decree (3e206686) — related_listing_ids
+--     bidirectionally linked with Niles v. Hilton (3bb10e4e)
+--   doj-v-la-county-vote-centers (d3b10433)
+--   doj-v-marriott-2024-settlement (c27dd892)
+--   doj-v-sea-mar-dental (f05373e6)
+--   dra-v-first-urology-medical-equipment (a6562d36) — already had prose
+--     from B3b; no changes in this phase
+--   dunsmore-v-sd-county-jail-access (a49e708b)
+--   liberty-resources-v-philadelphia-sidewalks (1df8f805)
+--   reynoldson-v-seattle-curb-ramps (ab8c3069)
+--   trivette-v-tn-doc-deaf-prisoners (7cacf6b6)
+--   united-spinal-v-beth-israel-hospital (b0eab03d)
+--   united-spinal-v-nyc-sidewalks (c9d73693)
+--   willits-v-los-angeles-sidewalks (eb2e9613)
+--
+-- Compliance-row voice approach: "this is settled, here's how to report
+-- current violations." Each row includes paths to: (a) plaintiffs' or
+-- class counsel, (b) DOJ ADA.gov, (c) city/state agency, (d) class
+-- counsel for systemic enforcement. Three reading-level variants
+-- (simple/standard/professional) for each prose field.
+--
+-- Some rows have minimal core data (no court, no filing_date, no docket)
+-- because the source case wasn't extensively documented in the database;
+-- those fields are left as-is. The prose is sufficient to be useful for
+-- ada-front-door routing.
+--
+-- Sources: DOJ press releases, ACLU/NAD case pages, DRA/DRC press
+-- releases, ACLU Georgia, Lainey Feingold (Uber settlement), Reuters,
+-- WSJ, AP, Disability Scoop, Civil Rights Litigation Clearinghouse.
+--
+-- This migration file documents the changes for reproducibility. The
+-- actual UPDATE statements were executed via Neon:run_sql one row at a
+-- time (multi-statement is not supported by the Neon prepared-statement
+-- handler). Full prose payloads are not duplicated inline due to size
+-- (~1500 chars per row, ~22 KB total).
+--
+-- Ref: /plan Plan B, Phase B4.
