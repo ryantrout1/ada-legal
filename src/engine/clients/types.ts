@@ -605,6 +605,33 @@ export interface ReadActiveLitigationBySlugOptions {
 export interface LitigationDetailRow extends LitigationRow {
   /** null when leadAttorneyId is unset OR the attorney row is missing. */
   leadAttorneyName: string | null;
+  /**
+   * Phase C1: inlined surface-visible related cases resolved from
+   * relatedListingIds. Skips ids that resolve to missing/draft/closed/
+   * archived rows. Empty array when relatedListingIds is empty OR none
+   * of the referenced rows are surface-visible.
+   *
+   * Surface-visible = status IN ('active','compliance','investigating',
+   * 'tracking'). Same filter as the public list endpoint.
+   *
+   * Renders the "Related cases" card on LawsuitDetail. Front-ends MUST
+   * NOT use relatedListingIds (raw ids) for rendering — those don't
+   * carry case_name/kind/status. Use this array.
+   */
+  relatedCases: RelatedLitigationCase[];
+}
+
+/**
+ * Phase C1: a single resolved related case for the LawsuitDetail
+ * "Related cases" card. Minimum fields needed to render a labeled,
+ * clickable link without a second fetch.
+ */
+export interface RelatedLitigationCase {
+  id: string;
+  slug: string;
+  caseName: string;
+  kind: LitigationKind;
+  status: LitigationStatus;
 }
 
 export interface OrganizationRow {

@@ -105,3 +105,121 @@ describe('Phase A3a — readActiveLitigationBySlug statuses filter', () => {
     expect(row).toBeNull();
   });
 });
+
+/**
+ * Phase C1 — `relatedCases` inlining.
+ *
+ * The LawsuitDetail "Related cases" card needs caseName + kind + status
+ * for each referenced id. Rather than make the front-end fan out N+1
+ * fetches, the detail endpoint inlines the resolved rows.
+ *
+ * Surface-visibility filter matches the rest of the public detail API:
+ * draft/closed/archived ids resolve to "skip" so users never see admin-
+ * only rows in the related card.
+ *
+ * Ref: /plan Plan C, Phase C1.
+ */
+describe('Phase C1 — relatedCases inlining on readActiveLitigationBySlug', () => {
+  const STATUSES: LitigationStatus[] = [
+    'active',
+    'compliance',
+    'investigating',
+    'tracking',
+  ];
+
+  it('returns empty relatedCases when relatedListingIds is empty', async () => {
+    const c = makeInMemoryClients();
+    await c.db.createLitigation(mkInput('niles', 'active'));
+    const row = await c.db.readActiveLitigationBySlug({
+      orgId: ORG_ID,
+      slug: 'niles',
+      statuses: STATUSES,
+    });
+    expect(row).not.toBeNull();
+    expect(row!.relatedCases).toEqual([]);
+  });
+
+  it('inlines a single surface-visible related case with id+slug+caseName+kind+status', async () => {
+    const c = makeInMemoryClients();
+    const hilton = await c.db.createLitigation(
+      mkInput('hilton-2010', 'compliance', {
+        kind: 'consent_decree',
+        caseName: 'United States v. Hilton (2010 Consent Decree)',
+      }),
+    );
+    await c.db.createLitigation(
+      mkInput('niles', 'active', { relatedListingIds: [hilton.id] }),
+    );
+    const row = await c.db.readActiveLitigationBySlug({
+      orgId: ORG_ID,
+      slug: 'niles',
+      statuses: STATUSES,
+    });
+    expect(row!.relatedCases).toHaveLength(1);
+    expect(row!.relatedCases[0]).toEqual({
+      id: hilton.id,
+      slug: 'hilton-2010',
+      caseName: 'United States v. Hilton (2010 Consent Decree)',
+      kind: 'consent_decree',
+      status: 'compliance',
+    });
+  });
+
+  it('preserves relatedListingIds-authored ordering, not row insertion order', async () => {
+    const c = makeInMemoryClients();
+    const a = await c.db.createLitigation(mkInput('case-a', 'compliance'));
+    const b = await c.db.createLitigation(mkInput('case-b', 'compliance'));
+    const cc = await c.db.createLitigation(mkInput('case-c', 'compliance'));
+    // Author the ids in non-sequential order so the test is meaningful.
+    await c.db.createLitigation(
+      mkInput('parent', 'active', { relatedListingIds: [cc.id, a.id, b.id] }),
+    );
+    const row = await c.db.readActiveLitigationBySlug({
+      orgId: ORG_ID,
+      slug: 'parent',
+      statuses: STATUSES,
+    });
+    expect(row!.relatedCases.map((r) => r.slug)).toEqual([
+      'case-c',
+      'case-a',
+      'case-b',
+    ]);
+  });
+
+  it('skips ids whose status is draft/closed/archived (admin-only)', async () => {
+    const c = makeInMemoryClients();
+    const visible = await c.db.createLitigation(mkInput('visible', 'compliance'));
+    const draft = await c.db.createLitigation(mkInput('draft', 'draft'));
+    const closed = await c.db.createLitigation(mkInput('closed', 'closed'));
+    const archived = await c.db.createLitigation(mkInput('archived', 'archived'));
+    await c.db.createLitigation(
+      mkInput('parent', 'active', {
+        relatedListingIds: [draft.id, visible.id, closed.id, archived.id],
+      }),
+    );
+    const row = await c.db.readActiveLitigationBySlug({
+      orgId: ORG_ID,
+      slug: 'parent',
+      statuses: STATUSES,
+    });
+    expect(row!.relatedCases).toHaveLength(1);
+    expect(row!.relatedCases[0].slug).toBe('visible');
+  });
+
+  it('skips ids that do not resolve to any row at all (deleted/stale)', async () => {
+    const c = makeInMemoryClients();
+    const real = await c.db.createLitigation(mkInput('real', 'compliance'));
+    await c.db.createLitigation(
+      mkInput('parent', 'active', {
+        relatedListingIds: ['00000000-0000-4000-8000-deadbeefdead', real.id],
+      }),
+    );
+    const row = await c.db.readActiveLitigationBySlug({
+      orgId: ORG_ID,
+      slug: 'parent',
+      statuses: STATUSES,
+    });
+    expect(row!.relatedCases).toHaveLength(1);
+    expect(row!.relatedCases[0].slug).toBe('real');
+  });
+});

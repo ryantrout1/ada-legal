@@ -80,6 +80,7 @@ import type {
   LitigationRow,
   LitigationStatus,
   LitigationDetailRow,
+  RelatedLitigationCase,
   ListActiveLitigationOptions,
   ReadActiveLitigationBySlugOptions,
   ListLitigationForAdminOptions,
@@ -666,6 +667,25 @@ export class InMemoryDbClient implements DbClient {
       const attorney = this.adminAttorneys.find((a) => a.id === row.leadAttorneyId);
       leadAttorneyName = attorney ? attorney.name : null;
     }
+
+    // Phase C1: resolve relatedListingIds to surface-visible related
+    // cases. Skip ids that resolve to missing/admin-only-status rows.
+    // Preserve relatedListingIds-authored order.
+    const relatedIds = row.relatedListingIds ?? [];
+    const relatedCases: RelatedLitigationCase[] = relatedIds
+      .map((id) => this.adminLitigation.find((l) => l.id === id))
+      .filter(
+        (l): l is typeof this.adminLitigation[number] =>
+          l !== undefined && allowedStatuses.has(l.status),
+      )
+      .map((l) => ({
+        id: l.id,
+        slug: l.slug,
+        caseName: l.caseName,
+        kind: l.kind,
+        status: l.status,
+      }));
+
     return {
       id: row.id,
       kind: row.kind,
@@ -700,6 +720,7 @@ export class InMemoryDbClient implements DbClient {
       leadAttorneyId: row.leadAttorneyId,
       leadFirmId: row.leadFirmId,
       leadAttorneyName,
+      relatedCases,
     };
   }
 

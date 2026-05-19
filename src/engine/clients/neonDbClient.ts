@@ -90,6 +90,7 @@ import type {
   LitigationRow,
   LitigationDetailRow,
   LitigationStatus,
+  RelatedLitigationCase,
   ListActiveLitigationOptions,
   ReadActiveLitigationBySlugOptions,
   ListLitigationForAdminOptions,
@@ -818,9 +819,53 @@ export class NeonDbClient implements DbClient {
 
     const r = rows[0];
     if (!r) return null;
+
+    // Phase C1: resolve relatedListingIds to surface-visible related
+    // cases in a single follow-up query. We skip rows that are missing,
+    // belong to a different org, or carry an admin-only status
+    // (draft/closed/archived) — the front-end never sees those.
+    //
+    // The lookup is one round-trip regardless of how many ids are
+    // listed; typical counts are 1–3. Order is preserved to match the
+    // ids array as authored (so editors get deterministic display
+    // ordering without needing a sort column).
+    const relatedIds = (r.litigation.relatedListingIds ?? []) as string[];
+    let relatedCases: RelatedLitigationCase[] = [];
+    if (relatedIds.length > 0) {
+      const relatedRows = await this.db
+        .select({
+          id: litigationTable.id,
+          slug: litigationTable.slug,
+          caseName: litigationTable.caseName,
+          kind: litigationTable.kind,
+          status: litigationTable.status,
+        })
+        .from(litigationTable)
+        .where(
+          and(
+            eq(litigationTable.orgId, opts.orgId),
+            inArray(litigationTable.id, relatedIds),
+            inArray(litigationTable.status, [...allowedStatuses]),
+          ),
+        );
+      // Index by id and re-emit in the relatedIds-authored order.
+      const byId = new Map(relatedRows.map((row) => [row.id, row]));
+      relatedCases = relatedIds
+        .map((id) => byId.get(id))
+        .filter((row): row is typeof relatedRows[number] => row !== undefined)
+        .map((row) => ({
+          id: row.id,
+          slug: row.slug,
+          caseName: row.caseName,
+          kind: row.kind as LitigationKind,
+          status: row.status as LitigationStatus,
+        }));
+    }
+
     return {
       ...toLitigationPublicRow(r.litigation),
       leadAttorneyName: r.attorneyName ?? null,
+      relatedCases,
     };
   }
 
