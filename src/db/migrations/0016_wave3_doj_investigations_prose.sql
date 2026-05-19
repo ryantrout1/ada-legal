@@ -1,0 +1,53 @@
+-- Plan B, Phase B5: Wave 3 DOJ investigations prose (4 rows).
+--
+-- Applied live against Neon project ancient-star-00703098 main on 2026-05-19
+-- as part of /shipit Phase B5.
+--
+-- All 4 rows are kind='enforcement_action', status='investigating' —
+-- active DOJ investigations not yet resolved by consent decree or
+-- litigation. Voice approach differs from compliance: "DOJ is gathering
+-- evidence RIGHT NOW — share your story to support the investigation."
+--
+-- Rows shipped with full prose (14 fields each + key_dates +
+-- ada_qualifying_questions):
+--
+--   1. doj-investigation-alaska-elections (0f829efc): Alaska Division of
+--      Elections investigation under Title II + HAVA + § 504. June 2024
+--      findings letter on polling-place and ballot-system inaccessibility.
+--      affected_states corrected to ['AK'].
+--
+--   2. doj-investigation-az-dcs (4a402f3d): Arizona DCS investigation
+--      under Title II + § 504. December 2024 opening over disability
+--      discrimination in child welfare proceedings. Template precedent:
+--      Massachusetts DCF 2015 settlement.
+--
+--   3. doj-investigation-flixbus-greyhound (dfd51630): FlixBus +
+--      Greyhound investigation under Title III + 49 C.F.R. Part 37
+--      (over-the-road bus). Addresses wheelchair-lift operability,
+--      driver-refusal, 48-hour-reservation-system failures.
+--      affected_states set to ['__nationwide__'] sentinel.
+--
+--   4. doj-investigation-idaho-nursing (f3004110): State of Idaho
+--      Olmstead investigation under Title II + § 504. January 2025
+--      findings letter on unnecessary institutionalization in nursing
+--      facilities. Template precedents: GA 2010, MS 2021, NC, VA, CT.
+--
+-- All 4 rows: court set to 'U.S. Department of Justice investigation
+-- (no court filed yet)' to make the procedural posture clear in any
+-- non-prose display.
+--
+-- Voice and structure match B2/B3a/B4 templates: three reading-level
+-- variants (simple/standard/professional) per prose field. Reports
+-- routed to DOJ Civil Rights Division + state P&A + relevant federal
+-- regulators (FMCSA for Flix/Greyhound, CMS for Idaho HCBS).
+--
+-- Sources: DOJ Civil Rights Division press releases and findings letters,
+-- DOJ Voting Section materials, Olmstead settlement precedents (GA/MS/
+-- NC/VA), DRA/NDRN, Disability Law Center of Alaska, Arizona Center for
+-- Disability Law, DisAbility Rights Idaho.
+--
+-- Migration file documents the changes for reproducibility. Full prose
+-- payloads were executed via Neon:run_sql one row at a time
+-- (multi-statement not supported by Neon prepared-statement handler).
+--
+-- Ref: /plan Plan B, Phase B5.
