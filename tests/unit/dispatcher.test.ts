@@ -149,11 +149,12 @@ describe('buildToolIndex', () => {
     expect(() => buildToolIndex([a, b])).toThrow(/Duplicate/);
   });
 
-  it('CH0_TOOLS registry has exactly the six expected tools', () => {
+  it('CH0_TOOLS registry has exactly the seven expected tools', () => {
     const names = CH0_TOOLS.map((t) => t.name).sort();
     expect(names).toEqual([
       'end_session',
       'extract_field',
+      'match_litigation',
       'search_ada_standards',
       'search_attorneys',
       'set_classification',
