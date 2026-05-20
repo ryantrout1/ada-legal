@@ -11,7 +11,7 @@
 > This is a user-directed pause, not a safety halt — the loop status stays `in-progress`.
 
 ## Phase queue
-1. Phase 1: Test infrastructure + fixtures — in-progress (resumed)
+1. Phase 1: Test infrastructure + fixtures — shipped
 2. Phase 2: Schema migration + Drizzle types — pending
 3. Phase 3: Auth helper + portal/admin API endpoints — pending
 4. Phase 4: Portal UI + admin firm-assignment B44 endpoint — pending
@@ -53,3 +53,46 @@
 ## Resume — 2026-05-20T21:29:34Z
 
 Re-running Phase 1 against revised blueprint (commit 6ceec5f).
+
+## Phase 1: Test infrastructure + fixtures (resumed run)
+
+**Status:** shipped
+**Started:** 2026-05-20T21:29:34Z
+**Completed:** 2026-05-20T21:38:00Z
+
+### Commits
+- `970d3ee` — `test(portal): add Phase 1 attorney-portal test infrastructure shells`
+
+### /plan --auto verdict
+- verdict: `ready`, confidence 0.96, blast_radius `local`, eligible_for_shipit `true`, halt_reason `null`.
+
+### Files authored (8, all under tests/)
+- `tests/personas/portal-attorney-login.spec.ts` — criterion 1 (test.fixme)
+- `tests/personas/portal-litigation-match-name-collection.spec.ts` — criterion 5 (test.fixme)
+- `tests/unit/portalQueueSelection.test.ts` — criterion 2 (it.todo data-logic, mirrors adminFirmList.test.ts)
+- `tests/unit/portalCaseDetailSelection.test.ts` — criterion 3 (it.todo data-logic)
+- `tests/integration/portalQueueQuery.test.ts` — criteria 2/4/6 (it.todo)
+- `tests/integration/litigationMatchContactCapture.test.ts` — criterion 5 (it.todo)
+- `tests/a11y/portal-aaa.spec.ts` — axe AAA (test.fixme)
+- `tests/fixtures/portalSeed.ts` — typed signatures only; live body deferred to Phase 2
+
+### Regression (smoke)
+- Result: pass (for Phase 1's contribution)
+- typecheck: **Phase 1 adds 0 errors** — verified by stash-diff (22 errors with the files == 22 errors without; all pre-existing). 25 vitest todos collect clean across the 4 vitest shells (exit 0).
+- Code review: nothing flagged.
+
+### Acceptance criteria
+- Scaffolding for criteria 1-6 authored as pending shells: **met** — 8 files; 25 todos + 5 fixme specs; 0 new typecheck errors.
+- portalSeed typed signatures only (body deferred to Phase 2): **met**.
+
+### Runtime verification deferrals
+- none (Phase 1 ends with red/pending tests by design).
+
+### ⚠️ Pre-existing environment conditions flagged for the human (NOT Phase 1 regressions — they block Phase 2+)
+1. **Broken `node_modules` install in this clone.** `npm run typecheck` reports 22 errors, ALL in untouched `src/`/`api/` files, all `TS2307 Cannot find module` for 4 declared-but-not-installed deps: `react-helmet-async`, `lucide-react`, `@react-pdf/renderer`, `@vercel/blob`. A clean `npm install` (or `npm ci`) is needed before Phase 2/3 can typecheck/build green. Not repaired here to avoid `package-lock.json` (shared-list) churn outside Phase 1 scope.
+2. **`npm run lint` is non-functional repo-wide.** `eslint` is not installed and there is no eslint config; `npm run lint` exits 127 (command not found) on a clean tree, pre-Phase-1. The blueprint's smoke gate names lint, but it cannot run. Either install + configure eslint (a `package.json` change → needs human review, shared-list) or revise the smoke definition. Phase 1 used `typecheck` as the meaningful gate.
+
+### HALT — user-directed pause (not a safety halt)
+- User instructed: stop after Phase 1, report, do not auto-advance to Phase 2.
+- Loop status stays `in-progress`; Phases 2-5 remain `pending`. /verify NOT run (closeout only fires after all phases ship).
+- Resume: re-invoke /implementation to continue from Phase 2 (after the environment conditions above are addressed).
