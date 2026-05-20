@@ -15,7 +15,7 @@
 ## Phase queue
 1. Phase 1: Test infrastructure + fixtures — shipped
 2. Phase 2: Schema migration + Drizzle types — shipped (migration human-applied; code by loop)
-3. Phase 3: Auth helper + portal/admin API endpoints — pending
+3. Phase 3: Auth helper + portal/admin API endpoints — shipped
 4. Phase 4: Portal UI + admin firm-assignment B44 endpoint — pending
 5. Phase 5: Prompt update — name-early / contact-late — pending
 
@@ -185,10 +185,55 @@ Re-running Phase 1 against revised blueprint (commit 6ceec5f).
 - Loop status `in-progress`; Phases 3-5 `pending`. /verify NOT run (closeout only after all phases ship).
 - Resume: re-invoke /implementation to continue from Phase 3 (auth helper + portal/admin API endpoints).
 
-## Closing — Phase 2 pause
+## Phase 2 pause — superseded by Phase 3 resume
 
-**Terminal state:** Phase 2 shipped; user-directed pause before Phase 3.
+**At the time:** Phase 2 shipped; user-directed pause before Phase 3. Resumed 2026-05-20T23:00:00Z.
+
+## Phase 3: Auth helper + portal/admin API endpoints (shipped)
+
+**Status:** shipped
+**Started:** 2026-05-20T23:00:00Z
+**Completed:** 2026-05-20T23:20:00Z
+**Pre-check:** no shared-list hit (api/_attorney.ts, api/portal/*, api/admin/litigation/[id]/firms.ts — none match `**/auth/**`, middleware, or lib/auth). Ran autonomously, no Rail 5 halt.
+
+### Commits
+- `c9cd8a8` — `feat(portal): requireAttorney auth helper + portal/admin API endpoints`
+- `30fcb59` — `test(portal): requireAttorney resolution + portal queue endpoint data-plane`
+
+### Files
+- api/_attorney.ts: Clerk-direct `requireAttorney` (mirrors _admin Clerk path, no bridge) + testable `resolveAttorneyContext` core. Resolves Clerk user → users.clerk_user_id → attorneys.user_id → law_firm. Miss → 403; no session → 401; misconfig → 500.
+- api/portal/queue.ts (GET): firm-scoped queue; snake_case contract; firm id resolved server-side (never client-supplied).
+- api/portal/cases/[id].ts (GET): full case package; 404 on out-of-firm access (no existence leak — 404 not 403).
+- api/portal/cases/[id]/handle.ts (POST): idempotent mark-handled (204), guarded by the same firm boundary.
+- api/admin/litigation/[id]/firms.ts (GET+PUT): bridge-auth firm-assignment fan-out (criterion 4).
+- tests/unit/requireAttorney.test.ts (4) + tests/integration/portalQueueQuery.test.ts (filled, 4).
+
+### Regression (targeted → ran full unit+integration)
+- `npm run test`: **783 passed, 4 skipped, 5 todo, 0 failures.** typecheck clean. Code review: nothing flagged.
+
+### Acceptance criteria (Phase 3 covers 1, 2, 3, 4, 6 — backend layer)
+- requireAttorney auth boundary: **met** — resolveAttorneyContext unit-tested (success shape, firm isolation, miss→null→403).
+- queue endpoint firm-scoping + gray-out + criterion-4 surfacing: **met** — portalQueueQuery integration test (auth→scope→join, negative-path boundary, assign-firm-surfaces).
+- case detail + handle endpoints: **met** — covered by Phase 2 reader/writer tests + the endpoint boundary logic.
+- Note: criteria 1/2/3/6 are fully *closed* only with the Phase 4 UI; Phase 3 ships their backend.
+
+### Runtime verification (deferred — needs deploy)
+- Hit GET /api/portal/queue via `vercel dev`/deploy: 401 unauthenticated, 200 with payload after Clerk sign-in as a paired attorney. Deferred to a deployed env (recipe in design Phase 3).
+
+### ⚠️ DEFERRED — DO1 auto-pair-by-email (scope decision needed)
+- The design resolved DO1 to auto-pair attorneys to Clerk users by verified email on first sign-in. Implementing it needs **net-new user-provisioning DB infrastructure that does not exist anywhere yet**: a users upsert-by-clerk-id, an attorney-by-email lookup, and an atomic users↔attorney linkage write — none in Phase 3's file list (api/* only) or the Phase 2 method set. It's also a security boundary.
+- **What shipped instead:** requireAttorney's explicit design contract (resolve via user_id; miss → 403 "not onboarded"). Paired attorneys (B44 admin sets user_id, or the 0019 firm_name backfill) work fully; unpaired attorneys get a clean 403 — which IS DO1's zero-match path.
+- **Decision for the human:** (a) build auto-pair as a scoped follow-up (Phase 3.5: adds the user-provisioning DB methods + the email-pair flow + tests), or (b) accept manual/admin pairing for v1 and treat auto-pair as a later enhancement. Not a blocker for Phase 4 (UI) or for paired-attorney flows.
+
+### HALT — user-directed pause (not a safety halt)
+- User instructed: stop after Phase 3, report, do not auto-advance to Phase 4.
+- Loop status `in-progress`; Phases 4-5 `pending`. /verify NOT run (closeout only after all phases ship).
+- Resume: re-invoke /implementation for Phase 4 (portal UI + B44 admin firm-assignment page). Phase 4 also depends on a DO1 decision if auto-pair is wanted before launch.
+
+## Closing — Phase 3 pause
+
+**Terminal state:** Phase 3 shipped; user-directed pause before Phase 4. DO1 auto-pair flagged for decision.
 **/verify run:** no (only after all phases ship)
 **/verify verdict:** n/a
 
-### Run ended: 2026-05-20T22:45:00Z
+### Run ended: 2026-05-20T23:20:00Z
