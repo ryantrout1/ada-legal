@@ -5,16 +5,10 @@
  * Clerk-paired test attorneys (one per firm), 1 active litigation row assigned
  * to BOTH firms, and 2 ada_sessions bound to that litigation row.
  *
- * PHASE 1 (test infrastructure) lands the TYPED SIGNATURES ONLY. The live seed
- * bodies insert rows into litigation_firm_assignments and firm_session_handled
- * and set attorneys.user_id / attorneys.law_firm_id — none of which exist until
- * the Phase 2 migration (0019_attorney_portal.sql) applies and the in-memory
- * client mirrors the new reader methods. Every function therefore throws until
- * Phase 2 fills the bodies in as part of its own commit.
- *
- * The signatures are the contract the Phase 1 data-logic and integration
- * shells are written against; they reference only types that exist today
- * (LawFirmRow, AttorneyRow) plus primitives.
+ * Phase 2 fills in the live body (the Phase 1 commit landed typed signatures
+ * only — the new tables/columns didn't exist yet). The seed runs against the
+ * in-memory client (makeInMemoryClients), which mirrors the Neon reader/writer
+ * methods, so the data-logic unit tests need no real database.
  *
  * Ref: .design/attorney-portal.md Phase 1 (test infra) → Phase 2 (data infra,
  *      "tests/fixtures/portalSeed.ts (live seed body)").
@@ -22,11 +16,15 @@
 
 import { makeInMemoryClients } from '@/engine/clients/inMemoryClients';
 import type { LawFirmRow, AttorneyRow } from '@/engine/clients/types';
+import type { AdaSessionState } from '@/engine/types';
 
 type InMemoryClients = ReturnType<typeof makeInMemoryClients>;
 
-const NOT_IMPL =
-  'portalSeed: live seed body lands in Phase 2 (migration 0019 + in-memory mirrors)';
+const ORG_ID = '00000000-0000-4000-8000-0000000000a1';
+const FIRM_A_ID = '11110000-0000-4000-8000-0000000000a1';
+const FIRM_B_ID = '11110000-0000-4000-8000-0000000000b1';
+const SESSION_1_ID = '33330000-0000-4000-8000-000000000001';
+const SESSION_2_ID = '33330000-0000-4000-8000-000000000002';
 
 /** The two test law firms that share the seeded litigation row. */
 export interface SeededFirms {
@@ -37,9 +35,9 @@ export interface SeededFirms {
 /** A test attorney paired to a Clerk user and bound to one firm. */
 export interface SeededAttorney {
   attorney: AttorneyRow;
-  /** Clerk user id paired via attorneys.user_id (linkage set in Phase 2). */
+  /** Clerk user id paired via attorneys.user_id. */
   clerkUserId: string;
-  /** law_firms.id this attorney belongs to (attorneys.law_firm_id in Phase 2). */
+  /** law_firms.id this attorney belongs to (attorneys.law_firm_id). */
   lawFirmId: string;
 }
 
@@ -68,10 +66,28 @@ export interface PortalFixture {
   sessions: SeededSessions;
 }
 
+function lawFirm(id: string, name: string): LawFirmRow {
+  return {
+    id,
+    orgId: ORG_ID,
+    name,
+    primaryContact: null,
+    email: null,
+    phone: null,
+    stripeCustomerId: null,
+    status: 'active',
+    isPilot: false,
+    createdAt: new Date(0).toISOString(),
+  };
+}
+
 /** Seed 2 test law firms (Firm A + Firm B). */
 export async function seedTestFirms(clients: InMemoryClients): Promise<SeededFirms> {
-  void clients;
-  throw new Error(`${NOT_IMPL} — seedTestFirms`);
+  const firmA = lawFirm(FIRM_A_ID, 'Firm A LLP');
+  const firmB = lawFirm(FIRM_B_ID, 'Firm B LLP');
+  await clients.db.writeLawFirm(firmA);
+  await clients.db.writeLawFirm(firmB);
+  return { firmA, firmB };
 }
 
 /** Seed 2 test attorneys, each Clerk-paired and bound to one firm. */
@@ -79,9 +95,42 @@ export async function seedTestAttorneys(
   clients: InMemoryClients,
   firms: SeededFirms,
 ): Promise<SeededAttorneys> {
-  void clients;
-  void firms;
-  throw new Error(`${NOT_IMPL} — seedTestAttorneys`);
+  async function makeAttorney(
+    name: string,
+    lawFirmId: string,
+    clerkUserId: string,
+    userId: string,
+  ): Promise<SeededAttorney> {
+    const created = await clients.db.createAttorney({
+      orgId: ORG_ID,
+      name,
+      practiceAreas: ['title_iii'],
+      status: 'approved',
+    });
+    // Pair to a Clerk-backed user + firm (migration 0019 columns). The admin
+    // attorney store is the source of truth resolveAttorneyByClerkUserId reads.
+    const admin = clients.db.adminAttorneys.find((a) => a.id === created.id);
+    if (admin) {
+      admin.userId = userId;
+      admin.lawFirmId = lawFirmId;
+    }
+    clients.db.linkClerkUser(clerkUserId, created.id);
+    return { attorney: created, clerkUserId, lawFirmId };
+  }
+
+  const attorneyA = await makeAttorney(
+    'Attorney A',
+    firms.firmA.id,
+    'clerk_user_a',
+    '44440000-0000-4000-8000-0000000000a1',
+  );
+  const attorneyB = await makeAttorney(
+    'Attorney B',
+    firms.firmB.id,
+    'clerk_user_b',
+    '44440000-0000-4000-8000-0000000000b1',
+  );
+  return { attorneyA, attorneyB };
 }
 
 /** Seed 1 active litigation row assigned to both firms. */
@@ -89,9 +138,54 @@ export async function seedSharedLitigation(
   clients: InMemoryClients,
   firms: SeededFirms,
 ): Promise<SeededLitigation> {
-  void clients;
-  void firms;
-  throw new Error(`${NOT_IMPL} — seedSharedLitigation`);
+  const created = await clients.db.createLitigation({
+    orgId: ORG_ID,
+    kind: 'class',
+    caseName: 'Shared v. Defendant',
+    slug: 'shared-v-defendant',
+    status: 'active',
+  });
+  await clients.db.replaceFirmAssignmentsForLitigation(created.id, [
+    firms.firmA.id,
+    firms.firmB.id,
+  ]);
+  return {
+    litigationListingId: created.id,
+    assignedFirmIds: [firms.firmA.id, firms.firmB.id],
+  };
+}
+
+function boundSession(
+  sessionId: string,
+  litigationListingId: string,
+  claimantName: string,
+  claimantEmail: string,
+): AdaSessionState {
+  const now = new Date(0).toISOString();
+  return {
+    sessionId,
+    orgId: ORG_ID,
+    sessionType: 'public_ada',
+    status: 'active',
+    readingLevel: 'standard',
+    anonSessionId: '00000000-0000-4000-8000-0000000000aa',
+    userId: null,
+    listingId: null,
+    litigationListingId,
+    conversationHistory: [
+      { role: 'user', content: 'I think I qualify.', timestamp: now },
+      { role: 'assistant', content: 'Tell me what happened.', timestamp: now },
+    ],
+    extractedFields: {
+      claimant_name: { value: claimantName, confidence: 1, extracted_at: now },
+      claimant_email: { value: claimantEmail, confidence: 1, extracted_at: now },
+      booked_accessible_room: { value: 'yes', confidence: 1, extracted_at: now },
+    },
+    classification: null,
+    metadata: {},
+    accessibilitySettings: {},
+    isTest: true,
+  };
 }
 
 /** Seed 2 ada_sessions bound to the shared litigation row. */
@@ -99,9 +193,23 @@ export async function seedBoundSessions(
   clients: InMemoryClients,
   litigation: SeededLitigation,
 ): Promise<SeededSessions> {
-  void clients;
-  void litigation;
-  throw new Error(`${NOT_IMPL} — seedBoundSessions`);
+  await clients.db.writeSession({
+    state: boundSession(
+      SESSION_1_ID,
+      litigation.litigationListingId,
+      'Jane Claimant',
+      'jane@example.com',
+    ),
+  });
+  await clients.db.writeSession({
+    state: boundSession(
+      SESSION_2_ID,
+      litigation.litigationListingId,
+      'John Claimant',
+      'john@example.com',
+    ),
+  });
+  return { sessionIds: [SESSION_1_ID, SESSION_2_ID] };
 }
 
 /**
@@ -109,6 +217,9 @@ export async function seedBoundSessions(
  * 1 shared litigation row assigned to both firms, 2 bound ada_sessions.
  */
 export async function seedPortalFixture(clients: InMemoryClients): Promise<PortalFixture> {
-  void clients;
-  throw new Error(`${NOT_IMPL} — seedPortalFixture`);
+  const firms = await seedTestFirms(clients);
+  const attorneys = await seedTestAttorneys(clients, firms);
+  const litigation = await seedSharedLitigation(clients, firms);
+  const sessions = await seedBoundSessions(clients, litigation);
+  return { firms, attorneys, litigation, sessions };
 }

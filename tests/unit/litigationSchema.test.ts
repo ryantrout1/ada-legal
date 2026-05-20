@@ -285,3 +285,42 @@ describe('Phase A1 — litigation_listings schema v2', () => {
     });
   });
 });
+
+// ─── Attorney portal (migration 0019) — new tables round-trip ─────────────────
+
+describe('Attorney portal schema (migration 0019)', () => {
+  const LIT_ID = '20000000-0000-4000-8000-00000000a001';
+  const FIRM_1 = '10000000-0000-4000-8000-00000000f101';
+  const FIRM_2 = '10000000-0000-4000-8000-00000000f102';
+  const SESSION_ID = '30000000-0000-4000-8000-00000000a001';
+
+  it('litigation_firm_assignments: replace + list round-trips (many firms per litigation)', async () => {
+    const c = makeInMemoryClients();
+    const created = await c.db.replaceFirmAssignmentsForLitigation(LIT_ID, [FIRM_1, FIRM_2]);
+    expect(created).toHaveLength(2);
+
+    const listed = await c.db.listFirmAssignmentsForLitigation(LIT_ID);
+    expect(listed.map((a) => a.lawFirmId).sort()).toEqual([FIRM_1, FIRM_2].sort());
+
+    // Replace semantics: a new set fully replaces the old one.
+    const replaced = await c.db.replaceFirmAssignmentsForLitigation(LIT_ID, [FIRM_1]);
+    expect(replaced).toHaveLength(1);
+    const afterReplace = await c.db.listFirmAssignmentsForLitigation(LIT_ID);
+    expect(afterReplace.map((a) => a.lawFirmId)).toEqual([FIRM_1]);
+  });
+
+  it('firm_session_handled: markFirmSessionHandled is idempotent (one-bit state)', async () => {
+    const c = makeInMemoryClients();
+    await c.db.markFirmSessionHandled(SESSION_ID, FIRM_1, null);
+    await c.db.markFirmSessionHandled(SESSION_ID, FIRM_1, null); // no-op
+    expect(c.db.firmSessionHandled).toHaveLength(1);
+    expect(c.db.firmSessionHandled[0]!.sessionId).toBe(SESSION_ID);
+    expect(c.db.firmSessionHandled[0]!.lawFirmId).toBe(FIRM_1);
+  });
+
+  it('resolveAttorneyByClerkUserId returns null when no attorney is paired', async () => {
+    const c = makeInMemoryClients();
+    const resolved = await c.db.resolveAttorneyByClerkUserId('clerk_unknown');
+    expect(resolved).toBeNull();
+  });
+});
