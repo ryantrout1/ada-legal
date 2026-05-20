@@ -17,7 +17,7 @@
 2. Phase 2: Schema migration + Drizzle types — shipped (migration human-applied; code by loop)
 3. Phase 3: Auth helper + portal/admin API endpoints — shipped
 4. Phase 4: Portal UI + admin firm-assignment B44 endpoint — shipped (repo UI; B44 page flagged)
-5. Phase 5: Prompt update — name-early / contact-late — pending
+5. Phase 5: Prompt update — name-early / contact-late — shipped (code; manual Niles check pending before /verify)
 
 ## Phase 1: Test infrastructure + fixtures
 
@@ -279,10 +279,47 @@ Re-running Phase 1 against revised blueprint (commit 6ceec5f).
 - Loop status `in-progress`; Phase 5 `pending`. /verify NOT run (closeout only after all phases ship).
 - Resume: re-invoke /implementation for Phase 5 (prompt update — name-early/contact-late, litigation_match flow only per DO4). NOTE: Phase 5 touches content-migration/prompts/* — not shared-list, but per approval note 4 the /shipit must include a manual "Niles v. Hilton" recipe check before declaring done.
 
-## Closing — Phase 4 pause
+## Phase 4 pause — superseded by Phase 5 resume
 
-**Terminal state:** Phase 4 shipped (repo UI); user-directed pause before Phase 5. B44 admin page flagged (separate platform); Clerk AAA audit + criterion-6 manual check runtime-deferred.
-**/verify run:** no (only after all phases ship)
-**/verify verdict:** n/a
+**At the time:** Phase 4 shipped (repo UI); pause before Phase 5. B44 admin page **deferred for v1** by user (manual PUT covers the one-firm-one-case scenario; B44 multi-select UI is a separate scoped task post-ship). Resumed 2026-05-21T00:20:00Z.
 
-### Run ended: 2026-05-21T00:05:00Z
+## Phase 5: Prompt update — name-early / contact-late (shipped — code)
+
+**Status:** shipped (code); manual Niles v. Hilton recipe check pending before /verify (approval note 4)
+**Started:** 2026-05-21T00:20:00Z
+**Completed (code):** 2026-05-21T00:40:00Z
+**Pre-check:** no shared-list hit (content-migration/prompts/* + tests). Ran autonomously.
+
+### Commits
+- `d3ca16a` — `feat(prompt): name-early / contact-late collection for litigation_match (DO4)`
+- `cae619e` — `test(prompt): litigation_match contact-capture prompt anchor + persona refresh`
+
+### Files
+- content-migration/prompts/ada-identity.md: added "Identity collection (litigation-match flow only)" sub-block + edited Turn 3 (name before match_litigation) and Turn 5 (email required + phone optional after the last QQ). DO4-scoped; Title III intake unchanged.
+- content-migration/prompts/ada-identity.ts: regenerated via `node scripts/generate-prompt-modules.mjs` (auto-gen artifact; not hand-edited).
+- tests/integration/litigationMatchContactCapture.test.ts: deterministic ATDD anchor (prompt content + scoping + hard-rule preservation). **Verified red pre-edit, green post-edit.**
+- tests/personas/portal-litigation-match-name-collection.spec.ts: bodies refreshed; stays test.fixme (LLM-behavior non-deterministic; manual Niles check is the gate).
+
+### Design-tension handled
+- The recent prompt-hardening commits (forbid prepending intake Qs to the QQ sequence; require verbatim QQ #1) constrained placement. Name collection is placed at **Turn 3, BEFORE `match_litigation` fires** — so the first question after the match is still QQ #1 verbatim. The block states this reconciliation explicitly. The test asserts the hard rule is not regressed.
+
+### Regression (wider) + verification
+- typecheck clean. `npm run test` (vitest): **787 passed, 4 skipped, 0 todo, 0 failures.**
+- Persona suite (`pre-bound-deep-link-resume`, `discovery-qualified`, `multi-match-disambiguation`, `pivot-mid-conversation`): Playwright — NOT run in this loop env (needs served target + browser + LLM). Runtime-deferred to preview.
+- **MANUAL Niles v. Hilton recipe check (approval note 4): PENDING — Ryan runs this before Phase 5 is declared done.** The prompt is regression-sensitive; persona tests catch structural breakage but a human conversation catches "Ada got chatty again."
+
+### Acceptance criterion 5
+- Name-early / email+phone-late collection on litigation_match, stored as claimant_name/email/phone: **code shipped + prompt-content verified**; behavioral confirmation = manual Niles check + runtime recipe (criterion-5 timestamp comparison, design line ~205).
+
+### HALT — per approval note 4 + user instruction
+- Phase 5 CODE is shipped. Loop halts here for the human-run manual Niles v. Hilton check.
+- **Next:** after Ryan runs the manual recipe and it passes, run `/verify` on the full feature (the closing definition-of-done pass across all 5 phases). If the manual check fails, that's a prompt-tuning detour before /verify.
+- All 5 phases now have code shipped. /verify is the only remaining loop step (gated on the manual check).
+
+## Closing — Phase 5 code pause (pre-/verify)
+
+**Terminal state:** Phase 5 code shipped; halted for the manual Niles v. Hilton check before /verify (approval note 4).
+**/verify run:** no — pending the manual behavioral check.
+**/verify verdict:** n/a (not yet run)
+
+### Run ended: 2026-05-21T00:40:00Z
