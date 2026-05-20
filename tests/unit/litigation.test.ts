@@ -396,6 +396,106 @@ describe('renderActiveLitigationIndex kind labels (Phase C3b-i)', () => {
   });
 });
 
+/**
+ * Phase C3b-ii — renderFocusedLitigation must surface QUALIFYING
+ * QUESTIONS and VOICE GUIDANCE sub-blocks when the bound row has
+ * a populated ada_qualifying_questions JSONB.
+ *
+ * The JSONB shape (per migrations 0012/0013) is:
+ *   {
+ *     questions: [{ id, prompt, kind, purpose }, ...],
+ *     voice_guidance: "..."
+ *   }
+ *
+ * Ada walks the user through these questions one at a time once a
+ * session is bound to a litigation row (either at session creation
+ * via litigation_id deep-link, or mid-conversation via the new
+ * match_litigation tool — see matchLitigation.test.ts).
+ *
+ * Ref: /plan Plan C, Phase C3b-ii, acceptance criterion 4.
+ */
+describe('renderFocusedLitigation qualifying questions + voice guidance (Phase C3b-ii)', () => {
+  it('renders a QUALIFYING QUESTIONS sub-block with each question prompt and purpose', () => {
+    const row = makeRow({
+      caseName: 'Niles v. Hilton',
+      adaQualifyingQuestions: {
+        questions: [
+          {
+            id: 'uses_wheelchair',
+            prompt: 'Do you use a wheelchair as your main way to get around?',
+            kind: 'yes_no',
+            purpose: 'Class definition requires standard-wheelchair dependence.',
+          },
+          {
+            id: 'mobility_disability',
+            prompt: 'Is your wheelchair use because of a long-term disability, not a temporary injury?',
+            kind: 'yes_no',
+            purpose: 'ADA qualifying disability inquiry.',
+          },
+        ],
+        voice_guidance: 'Ask questions one at a time. Confirm understanding before moving to the next.',
+      },
+    });
+    const out = renderFocusedLitigation(row);
+    expect(out).toContain('QUALIFYING QUESTIONS');
+    expect(out).toContain('Do you use a wheelchair as your main way to get around?');
+    expect(out).toContain('Is your wheelchair use because of a long-term disability');
+    // Purpose strings should surface too so Ada knows the legal reason
+    // behind each question and can frame her ask appropriately.
+    expect(out).toContain('Class definition requires standard-wheelchair dependence.');
+  });
+
+  it('renders a VOICE GUIDANCE sub-block when voice_guidance is present', () => {
+    const row = makeRow({
+      adaQualifyingQuestions: {
+        questions: [
+          { id: 'q1', prompt: 'Question one?', kind: 'yes_no', purpose: 'Reason.' },
+        ],
+        voice_guidance:
+          'Ask one at a time. Confirm understanding before moving to the next.',
+      },
+    });
+    const out = renderFocusedLitigation(row);
+    expect(out).toContain('VOICE GUIDANCE');
+    expect(out).toContain('Ask one at a time. Confirm understanding before moving to the next.');
+  });
+
+  it('omits both sub-blocks when adaQualifyingQuestions is empty', () => {
+    const row = makeRow({ adaQualifyingQuestions: {} });
+    const out = renderFocusedLitigation(row);
+    expect(out).not.toContain('QUALIFYING QUESTIONS');
+    expect(out).not.toContain('VOICE GUIDANCE');
+    // Case-name lead and basic fields should still be present.
+    expect(out).toContain('Smith v. Acme Corp');
+  });
+
+  it('omits only VOICE GUIDANCE when questions exist but voice_guidance does not', () => {
+    const row = makeRow({
+      adaQualifyingQuestions: {
+        questions: [
+          { id: 'q1', prompt: 'Question one?', kind: 'yes_no', purpose: 'Reason.' },
+        ],
+      },
+    });
+    const out = renderFocusedLitigation(row);
+    expect(out).toContain('QUALIFYING QUESTIONS');
+    expect(out).toContain('Question one?');
+    expect(out).not.toContain('VOICE GUIDANCE');
+  });
+
+  it('survives a malformed JSONB (non-array questions field) without throwing', () => {
+    const row = makeRow({
+      // Defensive: AdaQualifyingQuestions is typed Record<string, unknown>,
+      // so theoretically anything can land here. Render must not throw.
+      adaQualifyingQuestions: { questions: 'not an array', voice_guidance: 12345 } as Record<string, unknown>,
+    });
+    expect(() => renderFocusedLitigation(row)).not.toThrow();
+    const out = renderFocusedLitigation(row);
+    expect(out).toContain('Smith v. Acme Corp');
+    expect(out).not.toContain('QUALIFYING QUESTIONS');
+  });
+});
+
 describe('buildLitigationSection with focused row — via assemble (Phase 6a)', () => {
   // We assert behavior through the public assemble entry point rather than
   // importing the private buildLitigationSection. This guarantees the
