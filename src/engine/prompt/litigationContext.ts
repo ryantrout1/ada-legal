@@ -199,7 +199,9 @@ function renderQualifyingQuestionsBlock(
   if (!Array.isArray(questions) || questions.length === 0) return '';
 
   const lines: string[] = [];
-  lines.push('**QUALIFYING QUESTIONS** — walk the user through these one at a time, in order. Confirm understanding before moving to the next. Do not batch them.');
+  lines.push(
+    '**QUALIFYING QUESTIONS** — these are the questions the case attorneys need answered. Ask them VERBATIM, in order, one at a time. Do not paraphrase, combine, or invent your own questions. After each user answer, briefly acknowledge what they said (one short sentence) before asking the next question on the list. The `_(purpose: ...)_` clause is for your understanding only — it explains the legal reason behind each question — do NOT read the purpose to the user.',
+  );
 
   let rendered = 0;
   for (const q of questions) {
