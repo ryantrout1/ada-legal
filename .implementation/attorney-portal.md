@@ -6,14 +6,14 @@
 **Run started:** 2026-05-20T21:01:41Z
 **Resumed:** 2026-05-20T21:29:34Z (after /design revision 6ceec5f resolved the Phase 1 contract gap, Path A)
 **Resumed:** 2026-05-20T21:50:00Z (Phase 2; user cleared env conditions, typecheck 0 errors)
-**Status:** in-progress
+**Status:** halted-shared-list
 
 > Run mode: user requested Phase 1 only, then HALT for human review before Phase 2.
 > This is a user-directed pause, not a safety halt — the loop status stays `in-progress`.
 
 ## Phase queue
 1. Phase 1: Test infrastructure + fixtures — shipped
-2. Phase 2: Schema migration + Drizzle types — in-progress
+2. Phase 2: Schema migration + Drizzle types — halted (shared-list / Rail 5)
 3. Phase 3: Auth helper + portal/admin API endpoints — pending
 4. Phase 4: Portal UI + admin firm-assignment B44 endpoint — pending
 5. Phase 5: Prompt update — name-early / contact-late — pending
@@ -97,3 +97,37 @@ Re-running Phase 1 against revised blueprint (commit 6ceec5f).
 - User instructed: stop after Phase 1, report, do not auto-advance to Phase 2.
 - Loop status stays `in-progress`; Phases 2-5 remain `pending`. /verify NOT run (closeout only fires after all phases ship).
 - Resume: re-invoke /implementation to continue from Phase 2 (after the environment conditions above are addressed).
+
+## Phase 2: Schema migration + Drizzle types + in-memory seed
+
+**Status:** halted
+**Started:** 2026-05-20T21:50:00Z
+**Completed:** 2026-05-20T21:50:00Z (halted at /plan --auto gate, before /shipit)
+
+### Commits
+- none — no code authored. `/plan --auto` halted on a Rail 5 shared-list hit before `/shipit --auto` was invoked.
+
+### /plan --auto verdict
+- verdict: `halt`
+- confidence: 0.97 (high confidence in the halt assessment)
+- blast_radius: `shared`
+- eligible_for_shipit: `false`
+- halt_reason: `shared_blast`
+
+### Halt
+- **Condition:** Shared-list blast-radius hit (Rail 5). `files_touched` includes `src/db/migrations/0019_attorney_portal.sql`, which matches the `migrations/*.sql` shared-list entry. The rule is "always halt, no exceptions, no overrides."
+- **Why it matters:** Migration 0019 applies DDL to the **production Neon branch** (`ancient-star-00703098`): `ALTER TABLE attorneys ADD COLUMN user_id/law_firm_id REFERENCES users/law_firms`, `CREATE TABLE litigation_firm_assignments`, `CREATE TABLE firm_session_handled`, plus a best-effort backfill of `attorneys.law_firm_id` from `firm_name`. The autonomous loop never authors or applies production migrations — this is the surface a wrong autonomous edit could damage production data.
+- **Secondary:** also cross-cutting (`src/db/` + `src/engine/` + `tests/`). And applying the migration needs `DATABASE_URL`, which the design notes is blank in committed env (held in Vercel encrypted env).
+- **Phase 2 also contains non-shared-list work** that is safe for autonomous build once the migration is applied + reviewed by a human: Drizzle table defs (`src/db/schema-core.ts`), row types (`src/engine/clients/types.ts`), reader methods (`src/engine/clients/neonDbClient.ts`), in-memory mirrors (`src/engine/clients/inMemoryClients.ts`), and the `portalSeed` live body (`tests/fixtures/portalSeed.ts`). These turn the Phase 1 shells green.
+- **Recommended next step:** Human review + application of migration 0019. Options for the user:
+  1. Human authors/reviews + applies 0019 against Neon, then re-invokes /implementation for the **remainder** of Phase 2 (types/mirrors/portalSeed body — non-shared-list); OR
+  2. Explicitly waive Rail 5 for this migration and direct the loop to author it (still cannot apply without DATABASE_URL); OR
+  3. Have the loop author the 0019 SQL file for human review, but NOT apply it.
+
+## Closing — Phase 2 halt
+
+**Terminal state:** halted mid-loop (Phase 2, at /plan --auto — Rail 5 shared-list)
+**/verify run:** no (loop halted before all phases shipped)
+**/verify verdict:** n/a
+
+### Run ended: 2026-05-20T21:50:00Z
