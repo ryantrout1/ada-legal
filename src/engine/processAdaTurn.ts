@@ -617,6 +617,13 @@ function applyStateChanges(
     // re-binding attempts. At the merge layer we just overwrite.
     next = { ...next, listingId: changes.listingId };
   }
+  if (changes.litigationListingId) {
+    // match_litigation (Plan C C3b-ii) binds the session to a specific
+    // surface-visible litigation row. Same one-way discipline as
+    // listingId — the executor rejects re-binding; the merge layer
+    // just overwrites.
+    next = { ...next, litigationListingId: changes.litigationListingId };
+  }
   if (changes.sessionTypeChange) {
     next = { ...next, sessionType: changes.sessionTypeChange };
   }

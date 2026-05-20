@@ -63,6 +63,15 @@ export interface ToolStateChanges {
    */
   listingId?: string;
   /**
+   * Plan C C3b-ii match_litigation: bind the session to a specific
+   * surface-visible litigation row mid-conversation. Unlike listingId
+   * (Ch1) this does NOT change sessionType — litigation sessions stay
+   * 'public_ada' since litigation is informational/discovery, not a
+   * per-firm intake flow. One-way transition; the tool executor
+   * rejects re-binding attempts.
+   */
+  litigationListingId?: string;
+  /**
    * Ch1 match_listing: promote a general session to a listing-scoped one.
    * Only public_ada → class_action_intake is a legitimate transition today;
    * the tool executor rejects any other value.
