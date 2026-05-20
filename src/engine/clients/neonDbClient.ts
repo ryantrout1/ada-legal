@@ -25,10 +25,13 @@ import {
   anonSessions,
   attorneys as attorneysTable,
   litigationListings as litigationTable,
+  litigationFirmAssignments,
+  firmSessionHandled,
   organizations,
   sessionPackages,
   sessionQualityChecks,
   systemSettings,
+  users,
 } from '../../db/schema-core.js';
 import {
   lawFirms as lawFirmsTable,
@@ -97,6 +100,13 @@ import type {
   ListLitigationForAdminResult,
   UpdateLitigationInput,
   HardDeleteActor,
+  PortalQueueOptions,
+  PortalQueueResult,
+  PortalQueueRow,
+  PortalCaseDetail,
+  PortalCaseQqAnswer,
+  LitigationFirmAssignment,
+  PortalAttorneyResolution,
 } from './types.js';
 import type { AdaSessionState } from '../types.js';
 import type {
@@ -1389,6 +1399,235 @@ export class NeonDbClient implements DbClient {
     };
   }
 
+  // ─── Attorney portal (migration 0019) ──────────────────────────────────────
+
+  async listPortalQueueForFirm(
+    lawFirmId: string,
+    opts?: PortalQueueOptions,
+  ): Promise<PortalQueueResult> {
+    const page = opts?.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts?.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 50;
+    const handledFilter = opts?.handled ?? 'false';
+
+    const handledByThisFirm = sql<boolean>`exists (
+      select 1 from ${firmSessionHandled} fsh
+      where fsh.session_id = ${adaSessions.id} and fsh.law_firm_id = ${lawFirmId}
+    )`;
+    const handledByOtherFirm = sql<boolean>`exists (
+      select 1 from ${firmSessionHandled} fsh
+      where fsh.session_id = ${adaSessions.id} and fsh.law_firm_id <> ${lawFirmId}
+    )`;
+
+    // v1 scale: fetch all matched rows, then compute firm-scoped counts and
+    // paginate in JS (mirrors the in-memory client exactly). Volume is low.
+    const rows = await this.db
+      .select({
+        sessionId: adaSessions.id,
+        caseName: litigationTable.caseName,
+        extractedFields: adaSessions.extractedFields,
+        matchedAt: adaSessions.updatedAt,
+        handledByThisFirm,
+        handledByOtherFirm,
+      })
+      .from(litigationFirmAssignments)
+      .innerJoin(
+        adaSessions,
+        eq(adaSessions.litigationListingId, litigationFirmAssignments.litigationListingId),
+      )
+      .innerJoin(litigationTable, eq(litigationTable.id, adaSessions.litigationListingId))
+      .where(eq(litigationFirmAssignments.lawFirmId, lawFirmId))
+      .orderBy(sql`${adaSessions.updatedAt} DESC`);
+
+    const fieldStr = (f: ExtractedFields, k: string): string | null => {
+      const v = f[k]?.value;
+      return v == null ? null : typeof v === 'string' ? v : String(v);
+    };
+
+    const all: PortalQueueRow[] = rows.map((r) => ({
+      sessionId: r.sessionId,
+      caseName: r.caseName,
+      userName: fieldStr(r.extractedFields, 'claimant_name'),
+      userEmail: fieldStr(r.extractedFields, 'claimant_email'),
+      userPhone: fieldStr(r.extractedFields, 'claimant_phone'),
+      matchedAt: r.matchedAt ? r.matchedAt.toISOString() : null,
+      handledByThisFirm: Boolean(r.handledByThisFirm),
+      handledByOtherFirm: Boolean(r.handledByOtherFirm),
+    }));
+
+    // Firm-scoped counts (DO3): openCount excludes other-firm-handled.
+    const openCount = all.filter(
+      (c) => !c.handledByThisFirm && !c.handledByOtherFirm,
+    ).length;
+    const handledCount = all.filter((c) => c.handledByThisFirm).length;
+
+    const filtered = all.filter((c) => {
+      if (handledFilter === 'all') return true;
+      if (handledFilter === 'true') return c.handledByThisFirm;
+      // 'false' (open view): exclude this-firm-handled; keep other-firm-handled
+      // so the queue can show them grayed.
+      return !c.handledByThisFirm;
+    });
+
+    const offset = (page - 1) * pageSize;
+    return {
+      summary: { openCount, handledCount },
+      cases: filtered.slice(offset, offset + pageSize),
+      totalCount: filtered.length,
+      page,
+      pageSize,
+    };
+  }
+
+  async getPortalCaseForFirm(
+    sessionId: string,
+    lawFirmId: string,
+  ): Promise<PortalCaseDetail | null> {
+    // The inner join to litigation_firm_assignments (scoped to this firm) IS
+    // the access boundary: no assignment → no row → null.
+    const rows = await this.db
+      .select({
+        sessionId: adaSessions.id,
+        litigationListingId: adaSessions.litigationListingId,
+        caseName: litigationTable.caseName,
+        extractedFields: adaSessions.extractedFields,
+        transcript: adaSessions.conversationHistory,
+        matchedAt: adaSessions.updatedAt,
+      })
+      .from(adaSessions)
+      .innerJoin(
+        litigationFirmAssignments,
+        and(
+          eq(litigationFirmAssignments.litigationListingId, adaSessions.litigationListingId),
+          eq(litigationFirmAssignments.lawFirmId, lawFirmId),
+        ),
+      )
+      .innerJoin(litigationTable, eq(litigationTable.id, adaSessions.litigationListingId))
+      .where(eq(adaSessions.id, sessionId))
+      .limit(1);
+
+    const r = rows[0];
+    if (!r || !r.litigationListingId) return null;
+
+    const handledRows = await this.db
+      .select({ sessionId: firmSessionHandled.sessionId })
+      .from(firmSessionHandled)
+      .where(
+        and(
+          eq(firmSessionHandled.sessionId, sessionId),
+          eq(firmSessionHandled.lawFirmId, lawFirmId),
+        ),
+      )
+      .limit(1);
+
+    const fieldStr = (f: ExtractedFields, k: string): string | null => {
+      const v = f[k]?.value;
+      return v == null ? null : typeof v === 'string' ? v : String(v);
+    };
+    const identity = new Set([
+      'claimant_name',
+      'claimant_email',
+      'claimant_phone',
+      'contact_preference',
+    ]);
+    const qualifyingAnswers: PortalCaseQqAnswer[] = [];
+    for (const [key, field] of Object.entries(r.extractedFields)) {
+      if (identity.has(key)) continue;
+      const v = field?.value;
+      if (v == null) continue;
+      qualifyingAnswers.push({
+        question: key,
+        answer: typeof v === 'string' ? v : String(v),
+      });
+    }
+
+    return {
+      sessionId: r.sessionId,
+      litigationListingId: r.litigationListingId,
+      caseName: r.caseName,
+      userName: fieldStr(r.extractedFields, 'claimant_name'),
+      userEmail: fieldStr(r.extractedFields, 'claimant_email'),
+      userPhone: fieldStr(r.extractedFields, 'claimant_phone'),
+      qualifyingAnswers,
+      transcript: (r.transcript ?? []) as Message[],
+      matchedAt: r.matchedAt ? r.matchedAt.toISOString() : null,
+      handledByThisFirm: handledRows.length > 0,
+    };
+  }
+
+  async markFirmSessionHandled(
+    sessionId: string,
+    lawFirmId: string,
+    handledByUserId: string | null,
+  ): Promise<void> {
+    await this.db
+      .insert(firmSessionHandled)
+      .values({ sessionId, lawFirmId, handledByUserId })
+      .onConflictDoNothing();
+  }
+
+  async listFirmAssignmentsForLitigation(
+    litigationListingId: string,
+  ): Promise<LitigationFirmAssignment[]> {
+    const rows = await this.db
+      .select()
+      .from(litigationFirmAssignments)
+      .where(eq(litigationFirmAssignments.litigationListingId, litigationListingId));
+    return rows.map(toLitigationFirmAssignment);
+  }
+
+  async replaceFirmAssignmentsForLitigation(
+    litigationListingId: string,
+    lawFirmIds: string[],
+    assignedByUserId?: string | null,
+  ): Promise<LitigationFirmAssignment[]> {
+    // Replace semantics (PUT). v1 admin op, low concurrency: delete-then-insert
+    // sequentially (not wrapped in an interactive transaction).
+    await this.db
+      .delete(litigationFirmAssignments)
+      .where(eq(litigationFirmAssignments.litigationListingId, litigationListingId));
+
+    const unique = [...new Set(lawFirmIds)];
+    if (unique.length === 0) return [];
+
+    const inserted = await this.db
+      .insert(litigationFirmAssignments)
+      .values(
+        unique.map((lawFirmId) => ({
+          litigationListingId,
+          lawFirmId,
+          assignedByUserId: assignedByUserId ?? null,
+        })),
+      )
+      .returning();
+    return inserted.map(toLitigationFirmAssignment);
+  }
+
+  async resolveAttorneyByClerkUserId(
+    clerkUserId: string,
+  ): Promise<PortalAttorneyResolution | null> {
+    const rows = await this.db
+      .select({
+        attorneyId: attorneysTable.id,
+        userId: attorneysTable.userId,
+        lawFirmId: attorneysTable.lawFirmId,
+        email: attorneysTable.email,
+      })
+      .from(attorneysTable)
+      .innerJoin(users, eq(users.id, attorneysTable.userId))
+      .where(eq(users.clerkUserId, clerkUserId))
+      .limit(1);
+
+    const r = rows[0];
+    if (!r || !r.userId || !r.lawFirmId) return null;
+    return {
+      attorneyId: r.attorneyId,
+      userId: r.userId,
+      lawFirmId: r.lawFirmId,
+      email: r.email,
+    };
+  }
+
   async writeListing(row: ListingRow): Promise<void> {
     await this.db
       .insert(listingsTable)
@@ -2010,6 +2249,22 @@ function toLawFirmRow(r: {
     isPilot: r.isPilot,
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
+  };
+}
+
+function toLitigationFirmAssignment(r: {
+  id: string;
+  litigationListingId: string;
+  lawFirmId: string;
+  assignedByUserId: string | null;
+  createdAt: Date;
+}): LitigationFirmAssignment {
+  return {
+    id: r.id,
+    litigationListingId: r.litigationListingId,
+    lawFirmId: r.lawFirmId,
+    assignedByUserId: r.assignedByUserId,
+    createdAt: r.createdAt.toISOString(),
   };
 }
 

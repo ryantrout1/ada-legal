@@ -88,7 +88,21 @@ import type {
   UpdateLitigationInput,
   AuditLogEntry,
   HardDeleteActor,
+  PortalQueueOptions,
+  PortalQueueResult,
+  PortalQueueRow,
+  PortalCaseDetail,
+  PortalCaseQqAnswer,
+  LitigationFirmAssignment,
+  PortalAttorneyResolution,
 } from './types.js';
+import type { ExtractedFields, Message } from '../../types/db.js';
+
+/** Read an extracted-field value as a string|null (portal projection). */
+function portalFieldStr(fields: ExtractedFields, key: string): string | null {
+  const v = fields[key]?.value;
+  return v == null ? null : typeof v === 'string' ? v : String(v);
+}
 
 // ─── AI ───────────────────────────────────────────────────────────────────────
 
@@ -150,6 +164,27 @@ export class InMemoryDbClient implements DbClient {
     orgId: string;
     tokenHash: string;
   }> = [];
+
+  // ─── Attorney portal (migration 0019) ──────────────────────────────────────
+  public readonly litigationFirmAssignments: LitigationFirmAssignment[] = [];
+  public readonly firmSessionHandled: Array<{
+    sessionId: string;
+    lawFirmId: string;
+    handledByUserId: string | null;
+    handledAt: string;
+  }> = [];
+  /**
+   * Test-only clerk-user → attorney pairing. The real Neon client resolves
+   * clerk_user_id → users → attorneys; in-memory has no users table, so
+   * tests/fixtures pair explicitly via linkClerkUser(). Mirrors how the AI
+   * client exposes test-only enqueue helpers.
+   */
+  public readonly clerkUserLinks = new Map<string, string>();
+
+  /** Test-only: pair a Clerk user id to an attorney id (for resolveAttorneyByClerkUserId). */
+  linkClerkUser(clerkUserId: string, attorneyId: string): void {
+    this.clerkUserLinks.set(clerkUserId, attorneyId);
+  }
 
   async readSession({ sessionId }: SessionReadOptions): Promise<AdaSessionState | null> {
     return this.sessions.get(sessionId) ?? null;
@@ -966,6 +1001,184 @@ export class InMemoryDbClient implements DbClient {
 
   async readLawFirmById(id: string): Promise<LawFirmRow | null> {
     return this.lawFirms.find((f) => f.id === id) ?? null;
+  }
+
+  // ─── Attorney portal (migration 0019) ──────────────────────────────────────
+
+  async listPortalQueueForFirm(
+    lawFirmId: string,
+    opts?: PortalQueueOptions,
+  ): Promise<PortalQueueResult> {
+    const page = Math.max(1, opts?.page ?? 1);
+    const pageSize = Math.min(100, Math.max(1, opts?.pageSize ?? 50));
+    const handledFilter = opts?.handled ?? 'false';
+
+    // Litigation rows assigned to this firm.
+    const assignedLitigationIds = new Set(
+      this.litigationFirmAssignments
+        .filter((a) => a.lawFirmId === lawFirmId)
+        .map((a) => a.litigationListingId),
+    );
+
+    const matched = [...this.sessions.values()].filter(
+      (s) => s.litigationListingId && assignedLitigationIds.has(s.litigationListingId),
+    );
+
+    const caseName = (litigationListingId: string): string =>
+      this.adminLitigation.find((l) => l.id === litigationListingId)?.caseName ?? '';
+
+    const all: PortalQueueRow[] = matched.map((s) => {
+      const handledByThisFirm = this.firmSessionHandled.some(
+        (h) => h.sessionId === s.sessionId && h.lawFirmId === lawFirmId,
+      );
+      const handledByOtherFirm = this.firmSessionHandled.some(
+        (h) => h.sessionId === s.sessionId && h.lawFirmId !== lawFirmId,
+      );
+      return {
+        sessionId: s.sessionId,
+        caseName: caseName(s.litigationListingId!),
+        userName: portalFieldStr(s.extractedFields, 'claimant_name'),
+        userEmail: portalFieldStr(s.extractedFields, 'claimant_email'),
+        userPhone: portalFieldStr(s.extractedFields, 'claimant_phone'),
+        matchedAt: null, // in-memory tracks no updated_at
+        handledByThisFirm,
+        handledByOtherFirm,
+      };
+    });
+
+    // Firm-scoped counts (DO3): openCount excludes other-firm-handled.
+    const openCount = all.filter(
+      (c) => !c.handledByThisFirm && !c.handledByOtherFirm,
+    ).length;
+    const handledCount = all.filter((c) => c.handledByThisFirm).length;
+
+    const filtered = all.filter((c) => {
+      if (handledFilter === 'all') return true;
+      if (handledFilter === 'true') return c.handledByThisFirm;
+      return !c.handledByThisFirm; // 'false' (open) — keeps other-firm-handled (grayed)
+    });
+
+    const start = (page - 1) * pageSize;
+    return {
+      summary: { openCount, handledCount },
+      cases: filtered.slice(start, start + pageSize),
+      totalCount: filtered.length,
+      page,
+      pageSize,
+    };
+  }
+
+  async getPortalCaseForFirm(
+    sessionId: string,
+    lawFirmId: string,
+  ): Promise<PortalCaseDetail | null> {
+    const s = this.sessions.get(sessionId);
+    if (!s || !s.litigationListingId) return null;
+
+    // Access boundary: the firm must be assigned to the session's litigation row.
+    const assigned = this.litigationFirmAssignments.some(
+      (a) => a.litigationListingId === s.litigationListingId && a.lawFirmId === lawFirmId,
+    );
+    if (!assigned) return null;
+
+    const litigation = this.adminLitigation.find((l) => l.id === s.litigationListingId);
+
+    const identity = new Set([
+      'claimant_name',
+      'claimant_email',
+      'claimant_phone',
+      'contact_preference',
+    ]);
+    const qualifyingAnswers: PortalCaseQqAnswer[] = [];
+    for (const [key, field] of Object.entries(s.extractedFields)) {
+      if (identity.has(key)) continue;
+      const v = field?.value;
+      if (v == null) continue;
+      qualifyingAnswers.push({
+        question: key,
+        answer: typeof v === 'string' ? v : String(v),
+      });
+    }
+
+    const handledByThisFirm = this.firmSessionHandled.some(
+      (h) => h.sessionId === sessionId && h.lawFirmId === lawFirmId,
+    );
+
+    return {
+      sessionId: s.sessionId,
+      litigationListingId: s.litigationListingId,
+      caseName: litigation?.caseName ?? '',
+      userName: portalFieldStr(s.extractedFields, 'claimant_name'),
+      userEmail: portalFieldStr(s.extractedFields, 'claimant_email'),
+      userPhone: portalFieldStr(s.extractedFields, 'claimant_phone'),
+      qualifyingAnswers,
+      transcript: s.conversationHistory as Message[],
+      matchedAt: null,
+      handledByThisFirm,
+    };
+  }
+
+  async markFirmSessionHandled(
+    sessionId: string,
+    lawFirmId: string,
+    handledByUserId: string | null,
+  ): Promise<void> {
+    const exists = this.firmSessionHandled.some(
+      (h) => h.sessionId === sessionId && h.lawFirmId === lawFirmId,
+    );
+    if (exists) return; // idempotent
+    this.firmSessionHandled.push({
+      sessionId,
+      lawFirmId,
+      handledByUserId,
+      handledAt: new Date(0).toISOString(),
+    });
+  }
+
+  async listFirmAssignmentsForLitigation(
+    litigationListingId: string,
+  ): Promise<LitigationFirmAssignment[]> {
+    return this.litigationFirmAssignments
+      .filter((a) => a.litigationListingId === litigationListingId)
+      .map((a) => ({ ...a }));
+  }
+
+  async replaceFirmAssignmentsForLitigation(
+    litigationListingId: string,
+    lawFirmIds: string[],
+    assignedByUserId?: string | null,
+  ): Promise<LitigationFirmAssignment[]> {
+    // Remove existing assignments for this litigation row.
+    for (let i = this.litigationFirmAssignments.length - 1; i >= 0; i--) {
+      if (this.litigationFirmAssignments[i]!.litigationListingId === litigationListingId) {
+        this.litigationFirmAssignments.splice(i, 1);
+      }
+    }
+    const unique = [...new Set(lawFirmIds)];
+    const created: LitigationFirmAssignment[] = unique.map((lawFirmId, idx) => ({
+      id: `lfa-${litigationListingId}-${idx}`,
+      litigationListingId,
+      lawFirmId,
+      assignedByUserId: assignedByUserId ?? null,
+      createdAt: new Date(0).toISOString(),
+    }));
+    this.litigationFirmAssignments.push(...created.map((c) => ({ ...c })));
+    return created;
+  }
+
+  async resolveAttorneyByClerkUserId(
+    clerkUserId: string,
+  ): Promise<PortalAttorneyResolution | null> {
+    const attorneyId = this.clerkUserLinks.get(clerkUserId);
+    if (!attorneyId) return null;
+    const a = this.adminAttorneys.find((x) => x.id === attorneyId);
+    if (!a || !a.userId || !a.lawFirmId) return null;
+    return {
+      attorneyId: a.id,
+      userId: a.userId,
+      lawFirmId: a.lawFirmId,
+      email: a.email,
+    };
   }
 
   async listFirmsForAdmin(

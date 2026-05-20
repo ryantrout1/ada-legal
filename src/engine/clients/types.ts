@@ -108,6 +108,18 @@ export interface AttorneyRow {
   email: string | null;
   phone: string | null;
   websiteUrl: string | null;
+  /**
+   * Attorney portal (migration 0019): the ada_legal `users.id` this attorney
+   * is paired to (NOT the Clerk user id). Null until paired. Optional so
+   * existing AttorneyRow constructors are unaffected.
+   */
+  userId?: string | null;
+  /**
+   * Attorney portal (migration 0019): the `law_firms.id` this attorney
+   * belongs to. Load-bearing routing data — the portal queue is firm-scoped.
+   * Null until set (B44 admin or the firm_name backfill).
+   */
+  lawFirmId?: string | null;
 }
 
 /** Attorney statuses the admin can filter on or set. */
@@ -642,6 +654,81 @@ export interface OrganizationRow {
   isDefault: boolean;
 }
 
+// ─── Attorney portal (migration 0019) ────────────────────────────────────────
+
+/** A row in litigation_firm_assignments — one firm assigned to one litigation. */
+export interface LitigationFirmAssignment {
+  id: string;
+  litigationListingId: string;
+  lawFirmId: string;
+  assignedByUserId: string | null;
+  createdAt: string;
+}
+
+/** Options for listPortalQueueForFirm. */
+export interface PortalQueueOptions {
+  page?: number;
+  pageSize?: number;
+  /**
+   * Which cases to list. Default 'false' (open view): excludes cases this
+   * firm has handled, but still lists cases handled by ANOTHER firm (grayed).
+   * 'true' lists only cases this firm handled. 'all' lists everything.
+   */
+  handled?: 'true' | 'false' | 'all';
+}
+
+/** One case in the firm's portal queue. camelCase domain shape; the Phase 3 endpoint maps to snake_case JSON. */
+export interface PortalQueueRow {
+  sessionId: string;
+  caseName: string;
+  userName: string | null;
+  userEmail: string | null;
+  userPhone: string | null;
+  /** session.updatedAt when the litigation match landed; null in-memory (no timestamp tracked). */
+  matchedAt: string | null;
+  /** A firm_session_handled row exists for this session by some OTHER assigned firm. */
+  handledByOtherFirm: boolean;
+  /** A firm_session_handled row exists for (session, this firm). */
+  handledByThisFirm: boolean;
+}
+
+export interface PortalQueueResult {
+  /** Counts are firm-scoped (DO3). openCount excludes other-firm-handled; handledCount = this firm. */
+  summary: { openCount: number; handledCount: number };
+  cases: PortalQueueRow[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
+/** One qualifying-question answer surfaced in the case detail. */
+export interface PortalCaseQqAnswer {
+  question: string;
+  answer: string;
+}
+
+/** Full case package for a single portal case. */
+export interface PortalCaseDetail {
+  sessionId: string;
+  litigationListingId: string;
+  caseName: string;
+  userName: string | null;
+  userEmail: string | null;
+  userPhone: string | null;
+  qualifyingAnswers: PortalCaseQqAnswer[];
+  transcript: Message[];
+  matchedAt: string | null;
+  handledByThisFirm: boolean;
+}
+
+/** Result of resolving a signed-in Clerk user to an attorney (used by requireAttorney in Phase 3). */
+export interface PortalAttorneyResolution {
+  attorneyId: string;
+  userId: string;
+  lawFirmId: string;
+  email: string | null;
+}
+
 export interface DbClient {
   /** Read the current state of a session. Returns null if not found. */
   readSession(opts: SessionReadOptions): Promise<AdaSessionState | null>;
@@ -928,6 +1015,63 @@ export interface DbClient {
    * tie-breaking is stable.
    */
   listActiveRoutingRules(): Promise<RoutingRuleWithTarget[]>;
+
+  // ─── Attorney portal (migration 0019) ──────────────────────────────────────
+
+  /**
+   * Portal queue for a firm: sessions whose litigation row is assigned to
+   * `lawFirmId` (via litigation_firm_assignments), with firm-scoped summary
+   * counts and gray-out flags from firm_session_handled. See PortalQueueOptions
+   * for the handled-filter semantics.
+   */
+  listPortalQueueForFirm(
+    lawFirmId: string,
+    opts?: PortalQueueOptions,
+  ): Promise<PortalQueueResult>;
+
+  /**
+   * Full case package for a single session, scoped to a firm. Returns null
+   * when the session doesn't exist OR the firm has no assignment for the
+   * session's litigation row (the access boundary).
+   */
+  getPortalCaseForFirm(
+    sessionId: string,
+    lawFirmId: string,
+  ): Promise<PortalCaseDetail | null>;
+
+  /**
+   * Mark a case handled by a firm. Idempotent — a second call for the same
+   * (session, firm) is a no-op. One-bit state (DO2: permanent in v1).
+   */
+  markFirmSessionHandled(
+    sessionId: string,
+    lawFirmId: string,
+    handledByUserId: string | null,
+  ): Promise<void>;
+
+  /** List the firms currently assigned to a litigation row. */
+  listFirmAssignmentsForLitigation(
+    litigationListingId: string,
+  ): Promise<LitigationFirmAssignment[]>;
+
+  /**
+   * Replace the full set of firms assigned to a litigation row (PUT
+   * semantics). Returns the resulting assignment set.
+   */
+  replaceFirmAssignmentsForLitigation(
+    litigationListingId: string,
+    lawFirmIds: string[],
+    assignedByUserId?: string | null,
+  ): Promise<LitigationFirmAssignment[]>;
+
+  /**
+   * Resolve a signed-in Clerk user id to a paired attorney (Clerk user →
+   * users.clerk_user_id → attorneys.user_id → law_firms). Null when no
+   * paired attorney exists. Consumed by requireAttorney in Phase 3.
+   */
+  resolveAttorneyByClerkUserId(
+    clerkUserId: string,
+  ): Promise<PortalAttorneyResolution | null>;
 }
 
 // ─── Ch1 row shapes ───────────────────────────────────────────────────────────

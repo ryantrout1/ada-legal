@@ -22,6 +22,7 @@ import {
   index,
   check,
   foreignKey,
+  primaryKey,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import type {
@@ -261,10 +262,20 @@ export const attorneys = pgTable(
     status: text('status').notNull().default('pending'),
     approvedBy: uuid('approved_by').references(() => users.id),
     approvedAt: timestamp('approved_at', { withTimezone: true }),
+    // Attorney portal (migration 0019). law_firm_id is a plain uuid (no
+    // Drizzle reference) because law_firms lives in schema-ch1.ts, which
+    // depends on this file — same pattern as litigation_listings.lead_firm_id.
+    // The FK constraint is declared in the SQL migration.
+    userId: uuid('user_id').references(() => users.id),
+    lawFirmId: uuid('law_firm_id'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
   },
-  (t) => [index('attorneys_status_state').on(t.status, t.locationState)],
+  (t) => [
+    index('attorneys_status_state').on(t.status, t.locationState),
+    index('attorneys_user_id').on(t.userId).where(sql`${t.userId} is not null`),
+    index('attorneys_law_firm_id').on(t.lawFirmId).where(sql`${t.lawFirmId} is not null`),
+  ],
 );
 
 // ─── litigation_listings ──────────────────────────────────────────────────────
@@ -354,6 +365,51 @@ export const litigationListings = pgTable(
   (t) => [
     index('litigation_kind_status').on(t.kind, t.status),
     index('litigation_lead_attorney').on(t.leadAttorneyId),
+  ],
+);
+
+// ─── litigation_firm_assignments ──────────────────────────────────────────────
+// Attorney portal (migration 0019): the routing fan-out. Many firms per
+// litigation row. Distinct from litigation_listings.lead_firm_id (the public
+// "lead counsel" surface). law_firm_id is a plain uuid (law_firms in
+// schema-ch1.ts); its FK is declared in the SQL migration.
+
+export const litigationFirmAssignments = pgTable(
+  'litigation_firm_assignments',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    litigationListingId: uuid('litigation_listing_id')
+      .notNull()
+      .references(() => litigationListings.id, { onDelete: 'cascade' }),
+    lawFirmId: uuid('law_firm_id').notNull(),
+    assignedByUserId: uuid('assigned_by_user_id').references(() => users.id),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex('litigation_firm_assignments_unique').on(t.litigationListingId, t.lawFirmId),
+    index('lfa_law_firm').on(t.lawFirmId),
+    index('lfa_litigation').on(t.litigationListingId),
+  ],
+);
+
+// ─── firm_session_handled ─────────────────────────────────────────────────────
+// Attorney portal (migration 0019): sparse one-bit "handled" state. A row
+// exists ONLY when a firm has marked a case handled. Composite PK on
+// (session_id, law_firm_id). law_firm_id FK declared in the SQL migration.
+
+export const firmSessionHandled = pgTable(
+  'firm_session_handled',
+  {
+    sessionId: uuid('session_id')
+      .notNull()
+      .references(() => adaSessions.id, { onDelete: 'cascade' }),
+    lawFirmId: uuid('law_firm_id').notNull(),
+    handledByUserId: uuid('handled_by_user_id').references(() => users.id),
+    handledAt: timestamp('handled_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.sessionId, t.lawFirmId] }),
+    index('fsh_session').on(t.sessionId),
   ],
 );
 
