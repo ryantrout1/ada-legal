@@ -110,8 +110,17 @@ A row exists ONLY when a firm has marked a case handled (one-bit state, criterio
 ### `ada_sessions` — no schema change
 `extracted_fields` already accepts `claimant_name`, `claimant_email`, `claimant_phone` per `src/engine/handoff/attorneyPackage.ts:141-143`. The infrastructure exists; only the prompt needs updating.
 
-### Schema-scan note
-Live `information_schema.columns` scan against the Neon prod branch was not run during /design — `DATABASE_URL` is blank in committed env files (held in Vercel encrypted env, pulled at deploy time). Ground truth used: Drizzle source (`src/db/schema-core.ts`, `schema-ch1.ts`) and applied migration files 0001–0018. Migration 0010 carries an explicit "ALREADY APPLIED to production main branch of Neon project `ancient-star-00703098`" comment, so the production state is authoritatively reflected in those files. /implementation Phase 2 must run the additive migration against Neon and verify via `information_schema` before /shipit moves on.
+### Schema-scan note (post-review update — 2026-05-20)
+Live `information_schema.columns` scan against the Neon prod branch (`ancient-star-00703098`) was run during human review of this design and confirmed:
+
+- `users` table EXISTS with `clerk_user_id text NOT NULL`, plus `email`, `display_name`, `role`. `REFERENCES users(id)` is valid.
+- `attorneys` does NOT currently have `user_id` or `law_firm_id` columns — migration 0019 will add them as authored.
+- `law_firms` exists with the expected shape (id, org_id, name, is_pilot, stripe_customer_id, etc.).
+- `litigation_listings.lead_firm_id` exists — distinct from the new `litigation_firm_assignments.law_firm_id` fan-out. Both stay.
+- `ada_sessions.user_id uuid REFERENCES users(id)` already exists (currently null for anon Ada sessions; remains unused by portal flow).
+- All migrations 0001–0018 applied and reflected in schema; no drift between Drizzle source and live DB.
+
+Ground truth confirmed. No design changes required from schema scan. /implementation Phase 2 still runs `information_schema` checks after the migration applies (defense in depth — re-verifies the migration applied as expected).
 
 ## New contracts
 
@@ -269,11 +278,50 @@ None required. Existing `VITE_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `DATAB
 - **Portal API auth boundary regression** — `requireAttorney` is a NEW security boundary. If an attorney's `law_firm_id` is set wrong, they see another firm's queue. Mitigation: integration test asserts that an attorney at Firm A cannot retrieve a session whose litigation row is assigned only to Firm B (negative-path coverage in `portalQueueQuery.test.ts`).
 - **Migration 0019 replay on preview/local Neon clones** — All ALTERs use `IF NOT EXISTS`; new tables use `CREATE TABLE IF NOT EXISTS`. Safe to replay. Backfill SQL is wrapped in a guard (`UPDATE ... WHERE law_firm_id IS NULL`) so it's idempotent.
 
-## Open technical decisions
+## Resolved technical decisions
 
-> Surfaced for Ryan's review before /implementation kicks off.
+> Resolved during human review (2026-05-20). Each was flagged by /design as needing Ryan's input before /implementation.
 
-- **DO1: Attorney ↔ Clerk user pairing UX.** v1 takes the explicit-admin path — B44 admin sets `attorneys.user_id` after the attorney signs up via Clerk. Alternative: auto-pair on first sign-in by matching the Clerk user's verified email to `attorneys.email`. Auto-pair is lower onboarding friction but introduces a race (two attorneys with the same email, or admin hasn't created the `attorneys` row yet). Confirm: stick with explicit admin pairing for v1, or switch to email auto-pair?
-- **DO2: Reversibility of "handled".** Spec criterion 6 says "one-bit state." Strongly implies one-way. Confirm: handled is permanent (no unmark UI), or should admin be able to unmark via B44?
-- **DO3: Should the portal landing page show a count of cases handled BY THIS FIRM or globally?** Spec says "summary (counts)" — recommend showing `open_count` + `handled_count` both scoped to this firm. Confirm.
-- **DO4: Does criterion 5 ("name early") apply to ALL flows, or only the litigation_match flow?** Spec is ambiguous. The litigation_match flow is the routing path that drops cases into the portal — name there is the load-bearing case. Recommend: scope the new prompt block to the litigation_match flow specifically, leave Title III's existing bundled-collection behavior alone. Confirm.
+### DO1: Attorney ↔ Clerk user pairing UX → **auto-pair by verified email**
+
+On first Clerk sign-in, look up `attorneys` by case-insensitive `email` match against the Clerk session's `primaryEmailAddress.emailAddress` (only `verified: true`). If exactly one match and `attorneys.user_id IS NULL`, atomically set both `users.clerk_user_id` + `attorneys.user_id` linkage. If zero matches → 403 with a "not yet onboarded" page. If multiple matches → 500 and log (race; shouldn't happen at v1 scale, but defend against it). Manual admin override path stays as a fallback for edge cases.
+
+**Rationale:** Lower onboarding friction. v1 attorney onboarding is manual ("Gina sends a Clerk invite link to Kelly out-of-band"), so the email auto-pair just-works without a second admin step. The race condition concern (two attorneys with same verified email) is non-existent at ADALL's v1 scale (one onboarded attorney expected).
+
+**Migration impact:** `users.clerk_user_id` is already `NOT NULL`. Clerk-signed-in user → existing or new `users` row. `attorneys.user_id` set on first match. Idempotent on re-login.
+
+### DO2: Reversibility of "handled" → **permanent in v1; admin-unmark deferred**
+
+Once a `firm_session_handled` row exists, the case stays grayed for that firm forever. No attorney-facing "unmark" UI. No admin-facing unmark UI either in v1 (a `DELETE FROM firm_session_handled` against Neon is the manual escape hatch if Gina ever needs it). When light case management ships, the unmark mechanic gets a real UI.
+
+**Rationale:** Spec criterion 6 says "one-bit state" — one-way is the simplest read. Adding reversibility now would force a state machine UI that the spec explicitly defers. v1 ships the simpler path; if attorneys hit a real "I marked the wrong one" situation, that's a v2 feature.
+
+### DO3: Summary counts on portal landing → **scoped to this firm only**
+
+The two counts on the landing page tiles:
+- **Open cases:** sessions assigned to this firm via `litigation_firm_assignments` where no `firm_session_handled` row exists for `(session_id, this_firm_id)`.
+- **Handled (by this firm):** sessions where this firm has a `firm_session_handled` row.
+
+"Handled by other firm but assigned to this firm" cases show in the open queue with a "handled by another firm" badge (grayed), not in either count.
+
+**Rationale:** Firms only care about their own funnel. Global counts ("how many cases system-wide") are an admin-side concern, not an attorney-portal concern. Keeps the portal cleanly firm-scoped.
+
+### DO4: Name-early prompt scope → **litigation_match flow ONLY**
+
+The new "Identity collection" prompt block in `ada-identity.md` applies *only* to the `litigation_match` flow (when Ada has called `match_litigation` and bound a session to a litigation row). Title III generic intake retains its existing bundled-collection behavior.
+
+**Rationale:** The litigation_match flow is the one feeding the attorney portal — that's where collected identity is load-bearing. Title III flows have their own established collection behavior that's working; changing it would risk regressing personas (`disqualified-immediate`, `out-of-scope-routing`, `dave-barrier-removal`) that aren't blocked on this feature.
+
+**Implementation note for Phase 5:** The prompt block goes inside the litigation_match flow section of `ada-identity.md`. Locate via the section that mentions `match_litigation` tool calls; add the name-early instruction immediately after the tool-call documentation but before the qualifying-questions walkthrough script.
+
+## Approval notes
+
+Reviewed and approved 2026-05-20 with the following changes from the original /design output:
+
+1. **Schema-scan note updated** — live `information_schema` query performed; design's data-model assumptions confirmed against Neon prod. (Was previously caveated "not run; ground truth from source files.")
+2. **Four open technical decisions resolved** — DO1 auto-pair, DO2 permanent handled, DO3 firm-scoped counts, DO4 litigation_match-only prompt scope. All resolutions documented above.
+3. **B44 admin firm-assignment page scope** — the design correctly defines the Vercel-side API endpoint (`/api/admin/litigation/[id]/firms`) but leaves the B44 admin UI undefined. To unblock criterion 4 testability end-to-end, Phase 4 of /implementation should also build a B44 admin page (`AdminLitigationFirmAssignments` or inline section on `AdminLitigationEdit`). The exact placement is a B44-side product decision; /implementation should pick the lowest-friction option (likely inline section on `AdminLitigationEdit` with a multi-select firms picker, reusing existing B44 admin patterns).
+4. **Phase 5 regression watch** — beyond the persona suite named in the design (`pre-bound-deep-link-resume`, `discovery-qualified`, `multi-match-disambiguation`, `pivot-mid-conversation`), Phase 5 /shipit must include a **manual Niles v. Hilton recipe check** before declaring done. Today's Plan C work showed the litigation_match prompt is sensitive; persona tests catch structural breakage but a human conversation catches "Ada got chatty again."
+5. **WCAG 2.2 AAA on Clerk sign-in** — out-of-the-box Clerk components are AA. The `tests/a11y/portal-aaa.spec.ts` audit on `/portal/sign-in` will likely fail without customization. Phase 4 must include Clerk `appearance` prop theming to bring sign-in to AAA contrast and focus indicators.
+
+Ready for /implementation Phase 1.
