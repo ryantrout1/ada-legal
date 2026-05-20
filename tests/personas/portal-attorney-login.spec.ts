@@ -1,38 +1,40 @@
 /**
- * Persona — attorney portal sign-in (criterion 1).
+ * Persona — attorney portal sign-in (criterion 1) + queue→case-detail (2, 3).
  *
- * Drives a vetted attorney through Clerk sign-in and onto the portal queue
- * page at /portal. Mirrors the admin-auth pattern (tests/personas/admin-auth.spec.ts):
- * we assert on the redirect + Clerk-rendered sign-in card, then (once the
- * portal ships) the authenticated landing on the queue.
+ * The unauthenticated redirect + Clerk sign-in card render run on any target
+ * (no real session needed) — mirrors tests/personas/admin-auth.spec.ts.
  *
- * SHELL (Phase 1): authored as `test.fixme` — the portal routes, the
- * Clerk-scoped PortalShell, and the seeded test attorney do not exist yet.
- * Phase 4 (portal UI) flips these to live `test(...)` and fills the bodies.
+ * The authed flow (sign in as a seeded test attorney, see the queue, open a
+ * case) stays `test.fixme`: like admin-auth.spec.ts, the repo's Playwright
+ * harness can't drive Clerk's full email/OAuth sign-in loop. It runs on the
+ * `preview` target against a pre-seeded test attorney + Clerk testing token —
+ * the Phase 4 runtime verification recipe (see .implementation log).
  *
- * Ref: .design/attorney-portal.md Phase 1 (test infra) → Phase 4 (UI).
+ * Ref: .design/attorney-portal.md Phase 4.
  */
 
 import { test, expect } from '@playwright/test';
 
-test.fixme('unauthenticated /portal redirects to /portal/sign-in', async ({ page }) => {
+test('unauthenticated /portal redirects to /portal/sign-in', async ({ page }) => {
   await page.goto('/portal');
   await page.waitForURL(/\/portal\/sign-in/, { timeout: 10_000 });
   expect(page.url()).toContain('/portal/sign-in');
 });
 
-test.fixme('/portal/sign-in renders the Clerk sign-in card', async ({ page }) => {
+test('/portal/sign-in renders the Clerk sign-in card', async ({ page }) => {
   await page.goto('/portal/sign-in');
   await expect(page.locator('.cl-signIn-root, .cl-rootBox')).toBeVisible({
     timeout: 10_000,
   });
 });
 
-test.fixme('seeded attorney signs in and lands on the portal queue', async ({ page }) => {
-  // TODO(Phase 4): sign in as the seeded test attorney (portalSeed) via Clerk,
-  // then assert the queue landing renders for the attorney's firm.
-  await page.goto('/portal/sign-in');
-  // ...Clerk sign-in steps with the seeded test attorney credentials...
-  await page.waitForURL(/\/portal(\/)?$/, { timeout: 15_000 });
-  await expect(page.getByRole('heading', { name: /queue|matched cases/i })).toBeVisible();
+test.fixme('seeded attorney signs in, sees the queue, and opens a case', async ({ page }) => {
+  // Runtime (preview): authenticate as the seeded test attorney via a Clerk
+  // testing token, then assert the queue renders for the attorney's firm and a
+  // queue row navigates to the case detail (render-level criteria 2 + 3).
+  await page.goto('/portal');
+  await expect(page.getByRole('heading', { name: /your queue/i })).toBeVisible();
+  await page.getByRole('link', { name: /v\.|claimant/i }).first().click();
+  await page.waitForURL(/\/portal\/cases\//);
+  await expect(page.getByRole('heading', { level: 2, name: /claimant contact/i })).toBeVisible();
 });
