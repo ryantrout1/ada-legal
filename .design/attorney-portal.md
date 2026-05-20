@@ -18,8 +18,8 @@
 | # | Mechanism named in spec | Achievable? | Notes |
 |---|---|---|---|
 | 1 | Playwright smoke test against staging | **yes** | `playwright.config.ts` already has `local | preview | prod` targets and runs against `https://ada-legal-git-main-rttg123-6107s-projects.vercel.app` for preview. New spec lands under `tests/personas/portal-attorney-login.spec.ts`. Clerk sign-in flow can be exercised by seeding a test attorney + Clerk user in a pre-test step. |
-| 2 | Component test — portal landing page | **yes** | `tests/unit/` uses Vitest with React testing patterns (see `adminFirmList.test.ts`, `adminSubscriptionAndIntakeLists.test.ts`). Portal landing component renders queue from a prop-mocked client. |
-| 3 | Component test — queue item shape | **yes** | Same Vitest pattern. Test asserts that contact info, matched case, QQ answers, transcript link all render from a fixture session. |
+| 2 | Data-logic test — portal queue selection | **yes** | Mirrors the existing repo pattern (`tests/unit/adminFirmList.test.ts`, `adminSubscriptionAndIntakeLists.test.ts`): seed `makeInMemoryClients`, exercise `listPortalQueueForFirm` against the in-memory data, assert summary counts + row shape match expectations. No React rendering; Playwright covers the rendered DOM at criterion 1's persona test. |
+| 3 | Data-logic test — case detail shape | **yes** | Same in-memory-client pattern. Test asserts that `getPortalCaseForFirm` returns contact info, matched case, QQ answers (parsed from `extracted_fields` per the litigation row's `ada_qualifying_questions` shape), and transcript reference. Render-level coverage is handled by criterion 1's Playwright persona, which exercises the page end-to-end. |
 | 4 | Playwright smoke — admin assigns → simulate match → portal shows it | **yes** | Hybrid: a Vitest integration test owns the data-plane part (insert litigation_firm_assignment + ada_session with litigation_listing_id, assert portal queue endpoint returns it). A separate Playwright spec drives the B44 admin assignment UI; since B44 is outside this repo, the test stub will POST directly to the new admin endpoint via the bridge secret. |
 | 5 | Runtime Neon query on a test session | **yes** | Existing pattern: `tests/integration/finalizeIntakeHandoff.test.ts` already opens a DB client and inspects rows. New integration test asserts `claimant_name`, `claimant_email`, optional `claimant_phone` land in `ada_sessions.extracted_fields` after a scripted persona walks the litigation_match flow. |
 | 6 | Manual UI check — handled state grays out across firms | **yes (manual, under cap)** | Spec already declares this as the 1 manual-verification criterion. Test plan: open portal as Firm A attorney, mark handled, open as Firm B attorney sharing the same case, observe gray. Two test attorneys + two test firms + one shared litigation row are required as seed data. |
@@ -45,8 +45,8 @@
 ### Tests (Phase 1, before any code)
 - `tests/personas/portal-attorney-login.spec.ts` — Playwright smoke. Sign in as test attorney; expect `/portal` queue page.
 - `tests/personas/portal-litigation-match-name-collection.spec.ts` — Playwright spec that drives a litigation_match conversation through to the contact-collection step.
-- `tests/unit/portalQueueComponent.test.tsx` — Vitest component test for PortalQueue rendering against a fixture.
-- `tests/unit/portalCaseDetailComponent.test.tsx` — Vitest component test for PortalCaseDetail.
+- `tests/unit/portalQueueSelection.test.ts` — Vitest data-logic test against `makeInMemoryClients`. Asserts `listPortalQueueForFirm` returns expected rows + summary counts under varied seed (assigned firms, handled state, unassigned cases). Pattern matches `tests/unit/adminFirmList.test.ts`.
+- `tests/unit/portalCaseDetailSelection.test.ts` — Vitest data-logic test against `makeInMemoryClients`. Asserts `getPortalCaseForFirm` returns full case package shape (contact info, matched case, QQ answers, transcript ref) and rejects access when firm doesn't have an assignment for the case's litigation row.
 - `tests/integration/portalQueueQuery.test.ts` — assert the queue endpoint joins `litigation_firm_assignments` ⨝ `ada_sessions` correctly and respects `firm_session_handled` for gray-out.
 - `tests/integration/litigationMatchContactCapture.test.ts` — runtime Neon query verifying `claimant_name` / `claimant_email` (+ optional `claimant_phone`) land in `extracted_fields` after a scripted litigation_match flow.
 - `tests/a11y/portal-aaa.spec.ts` — axe-core AAA audit against `/portal/sign-in`, `/portal` (authed via mocked session), `/portal/cases/<id>`.
@@ -184,19 +184,19 @@ None required. Existing `VITE_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `DATAB
 
 ## Test architecture
 
-### Per-component test levels
+### Per-layer test levels
 - **`requireAttorney` helper** — unit (tests/unit). Mock Clerk's `authenticateRequest`; mock DB lookup; assert 401 paths and the success context shape.
-- **`PortalQueue` component** — component (Vitest). Props-driven render against a fixture queue payload.
-- **`PortalCaseDetail` component** — component (Vitest). Props-driven render with all sections (contact / case / QQ answers / transcript / photos).
+- **`listPortalQueueForFirm` / `getPortalCaseForFirm` (db client methods)** — data-logic unit tests (Vitest + `makeInMemoryClients`). Seed firms + litigation rows + sessions + handled rows in memory, exercise the methods, assert shape and filtering. Mirrors existing repo pattern (`adminFirmList.test.ts`, `adminSubscriptionAndIntakeLists.test.ts`).
+- **`PortalQueue` + `PortalCaseDetail` components** — render-level coverage via the Playwright persona spec at criterion 1 (`portal-attorney-login.spec.ts` + an extension that drives queue and case-detail navigation post-login). No `@testing-library/react`, no jsdom — repo doesn't use those and this feature doesn't introduce them.
 - **Portal API endpoints** — integration (Vitest + Neon test branch). Seed two firms, one shared litigation, two sessions; hit endpoints and assert filtering + handled-state semantics.
 - **Litigation-match contact capture** — integration (Vitest + scripted `processAdaTurn`). Drives a conversation through the new prompt; runtime queries Neon for `extracted_fields` keys.
 - **WCAG 2.2 AAA audit** — a11y suite. Three new routes added to the AxeBuilder list.
-- **End-to-end sign-in + queue render** — persona (Playwright). Drives a real browser through Clerk sign-in → queue. Skipped on `local` target; runs on `preview` against a pre-seeded test attorney.
+- **End-to-end sign-in + queue render** — persona (Playwright). Drives a real browser through Clerk sign-in → queue → case detail. Skipped on `local` target; runs on `preview` against a pre-seeded test attorney.
 
 ### Persona impact (ADALL)
 - **Criterion 1 (login)** — new persona spec `portal-attorney-login.spec.ts` (Playwright).
-- **Criterion 2 (queue renders)** — new component test (Vitest).
-- **Criterion 3 (case detail)** — new component test (Vitest).
+- **Criterion 2 (queue renders)** — data-logic test in `tests/unit/portalQueueSelection.test.ts` covers the data shape; Playwright persona at criterion 1 covers the rendered DOM.
+- **Criterion 3 (case detail)** — data-logic test in `tests/unit/portalCaseDetailSelection.test.ts` covers the data shape + cross-firm access denial; Playwright persona at criterion 1 covers the rendered DOM (extended to navigate into a case after login).
 - **Criterion 4 (admin assigns → queue shows)** — new integration test (Vitest, hits the admin endpoint via bridge then the portal endpoint via Clerk-mocked context).
 - **Criterion 5 (name early, contact late)** — new integration test (`litigationMatchContactCapture.test.ts`) plus a persona-shaped Playwright spec for end-to-end verification.
 - **Criterion 6 (handled grays out)** — manual UI check. Test plan documented in `.implementation/` log when the phase ships.
@@ -217,7 +217,7 @@ None required. Existing `VITE_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `DATAB
 - **Phase 1** — smoke (typecheck + new tests pass).
 - **Phase 2** — targeted: rerun `tests/unit/litigationSchema.test.ts`, `tests/unit/sessionRepo.test.ts`, and the new Phase 1 integration tests after migration applies.
 - **Phase 3** — targeted: full `npm run test:unit` and `npm run test:integration` plus the new portal API integration tests.
-- **Phase 4** — wider: full `npm run test`, the new component tests, and the a11y suite (`npm run test:a11y`).
+- **Phase 4** — wider: full `npm run test` (data-logic + integration green from Phase 2/3 forward), `npm run test:a11y`, Playwright persona `portal-attorney-login.spec.ts` (queue + case-detail nav).
 - **Phase 5** — wider: full `npm run test`, plus the litigation_match persona suite (`pre-bound-deep-link-resume.spec.ts`, `discovery-qualified.spec.ts`, `multi-match-disambiguation.spec.ts`, `pivot-mid-conversation.spec.ts`) to confirm the prompt change doesn't regress existing flows.
 
 ## Phase outline
@@ -226,19 +226,20 @@ None required. Existing `VITE_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `DATAB
 
 ### Phase 1: Test infrastructure + fixtures (test infra)
 - Acceptance criteria covered: scaffolding for 1, 2, 3, 4, 5, 6.
-- Files touched: `tests/personas/portal-attorney-login.spec.ts`, `tests/personas/portal-litigation-match-name-collection.spec.ts`, `tests/unit/portalQueueComponent.test.tsx`, `tests/unit/portalCaseDetailComponent.test.tsx`, `tests/integration/portalQueueQuery.test.ts`, `tests/integration/litigationMatchContactCapture.test.ts`, `tests/a11y/portal-aaa.spec.ts`, `tests/fixtures/portalSeed.ts`.
-- Tests authored: all of the above as failing/pending shells with TODO bodies, plus the `portalSeed` helper as a working module.
+- Files touched: `tests/personas/portal-attorney-login.spec.ts`, `tests/personas/portal-litigation-match-name-collection.spec.ts`, `tests/unit/portalQueueSelection.test.ts`, `tests/unit/portalCaseDetailSelection.test.ts`, `tests/integration/portalQueueQuery.test.ts`, `tests/integration/litigationMatchContactCapture.test.ts`, `tests/a11y/portal-aaa.spec.ts`, `tests/fixtures/portalSeed.ts`.
+- Tests authored: all of the above as failing/pending shells with TODO bodies. `portalSeed.ts` lands in Phase 1 as **typed signatures only** (function declarations + parameter types + return types) — the live seed body that inserts rows into `litigation_firm_assignments`, `firm_session_handled`, and `attorneys.user_id/law_firm_id` cannot be authored until Phase 2's migration applies and the columns/tables exist. Phase 2 fills the seed body in as part of its own commit.
 - ATDD: n/a (test infra IS the tests).
 - Regression scope: smoke — `npm run typecheck`, `npm run lint`. No runtime tests pass yet.
 - Runtime verification: n/a — Phase 1 ends with red tests, intentionally.
 - Depends on: none.
+- **No new test infrastructure** — uses already-installed Vitest config, Playwright, axe-core. No jsdom, no `@testing-library/react`, no `package.json` edits. The data-logic test pattern matches existing tests under `tests/unit/`.
 
-### Phase 2: Schema migration + Drizzle types (data infra)
+### Phase 2: Schema migration + Drizzle types + in-memory seed (data infra)
 - Acceptance criteria covered: prerequisite for 1, 2, 3, 4, 5, 6.
-- Files touched: `src/db/migrations/0019_attorney_portal.sql`, `src/db/schema-core.ts`, `src/engine/clients/types.ts`, `src/engine/clients/neonDbClient.ts` (new reader methods only — handlers don't exist yet).
-- Tests authored / modified: `tests/unit/litigationSchema.test.ts` extended to cover new tables; new `tests/integration/portalSchemaApplied.test.ts` runs information_schema scan post-migration.
+- Files touched: `src/db/migrations/0019_attorney_portal.sql`, `src/db/schema-core.ts`, `src/engine/clients/types.ts`, `src/engine/clients/neonDbClient.ts` (new reader methods only — handlers don't exist yet), `src/engine/clients/inMemoryClients.ts` (mirror the new reader methods in-memory for unit tests), `tests/fixtures/portalSeed.ts` (live seed body — fills in the typed stubs Phase 1 committed).
+- Tests authored / modified: `tests/unit/litigationSchema.test.ts` extended to cover new tables; new `tests/integration/portalSchemaApplied.test.ts` runs information_schema scan post-migration. The Phase-1 data-logic tests (`portalQueueSelection.test.ts`, `portalCaseDetailSelection.test.ts`) now turn green for the methods they exercise via the in-memory client.
 - ATDD: test-first.
-- Regression scope: targeted — `npm run test:unit -- litigationSchema sessionRepo ch1Db` + new Phase 1 integration tests now turn green for any data-plane bits they assert.
+- Regression scope: targeted — `npm run test:unit -- litigationSchema sessionRepo ch1Db portalQueueSelection portalCaseDetailSelection` + new Phase 1 integration tests turn green for data-plane bits.
 - Runtime verification: query `information_schema.columns` for the four affected tables; assert new columns/tables exist; assert FK constraints exist.
 - Depends on: Phase 1.
 
@@ -254,8 +255,8 @@ None required. Existing `VITE_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `DATAB
 ### Phase 4: Portal UI + admin firm-assignment B44 endpoint live (frontend)
 - Acceptance criteria covered: 1, 2, 3, 6.
 - Files touched: `src/app/App.tsx`, `src/app/layouts/PortalLayout.tsx`, `src/app/components/RequireAttorney.tsx`, `src/app/routes/portal/SignIn.tsx`, `src/app/routes/portal/SignUp.tsx`, `src/app/routes/portal/PortalQueue.tsx`, `src/app/routes/portal/PortalCaseDetail.tsx`, `src/app/data/portalClient.ts`.
-- Tests authored / modified: `tests/unit/portalQueueComponent.test.tsx`, `tests/unit/portalCaseDetailComponent.test.tsx` bodies filled in; `tests/a11y/portal-aaa.spec.ts` activated; `tests/personas/portal-attorney-login.spec.ts` activated.
-- ATDD: test-after for component layout; test-first for the gray-out behavior on `PortalQueue` (criterion 6 risk hotspot).
+- Tests authored / modified: `tests/a11y/portal-aaa.spec.ts` activated; `tests/personas/portal-attorney-login.spec.ts` activated and extended to navigate from queue → case detail (covers render-level criteria 2 + 3 end-to-end).
+- ATDD: test-after for component layout; test-first for the gray-out behavior on `PortalQueue` (criterion 6 risk hotspot) — gray-out logic lives in `listPortalQueueForFirm` (Phase 2/3 data-plane) and is asserted in `portalQueueSelection.test.ts`; the rendered gray-out treatment in the React component is verified by Playwright + manual check.
 - Regression scope: wider — `npm run test` + `npm run test:a11y`.
 - Runtime verification: spin `npm run dev`, sign in as a seeded test attorney, see the queue render; criterion 6 manual check (open as Firm B, mark handled, open as Firm A, observe gray).
 - Depends on: Phase 3.
@@ -323,5 +324,7 @@ Reviewed and approved 2026-05-20 with the following changes from the original /d
 3. **B44 admin firm-assignment page scope** — the design correctly defines the Vercel-side API endpoint (`/api/admin/litigation/[id]/firms`) but leaves the B44 admin UI undefined. To unblock criterion 4 testability end-to-end, Phase 4 of /implementation should also build a B44 admin page (`AdminLitigationFirmAssignments` or inline section on `AdminLitigationEdit`). The exact placement is a B44-side product decision; /implementation should pick the lowest-friction option (likely inline section on `AdminLitigationEdit` with a multi-select firms picker, reusing existing B44 admin patterns).
 4. **Phase 5 regression watch** — beyond the persona suite named in the design (`pre-bound-deep-link-resume`, `discovery-qualified`, `multi-match-disambiguation`, `pivot-mid-conversation`), Phase 5 /shipit must include a **manual Niles v. Hilton recipe check** before declaring done. Today's Plan C work showed the litigation_match prompt is sensitive; persona tests catch structural breakage but a human conversation catches "Ada got chatty again."
 5. **WCAG 2.2 AAA on Clerk sign-in** — out-of-the-box Clerk components are AA. The `tests/a11y/portal-aaa.spec.ts` audit on `/portal/sign-in` will likely fail without customization. Phase 4 must include Clerk `appearance` prop theming to bring sign-in to AAA contrast and focus indicators.
+
+6. **Component-test pattern revised (Path A, 2026-05-20 after /implementation Phase 1 halt)** — initial design cited `adminFirmList.test.ts` and `adminSubscriptionAndIntakeLists.test.ts` as "React testing patterns." `/implementation /plan --auto` correctly halted at Phase 1 because those files are data-logic tests, not component renders; the repo has zero React-rendering test infrastructure (no jsdom, no `@testing-library/react`, vitest config doesn't even glob `.test.tsx`). Resolution: re-spec criteria 2 + 3 as data-logic tests against `makeInMemoryClients` matching the actual repo pattern. Files renamed `portalQueueComponent.test.tsx` → `portalQueueSelection.test.ts` and `portalCaseDetailComponent.test.tsx` → `portalCaseDetailSelection.test.ts`. Render-level coverage moves to the Playwright persona at criterion 1, extended to navigate queue → case detail. `portalSeed.ts` Phase-1 deliverable narrowed to typed signatures only; live body fills in during Phase 2 after the migration applies. No new dependencies, no `package.json` edits, no shared-list churn.
 
 Ready for /implementation Phase 1.
