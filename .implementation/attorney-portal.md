@@ -6,14 +6,15 @@
 **Run started:** 2026-05-20T21:01:41Z
 **Resumed:** 2026-05-20T21:29:34Z (after /design revision 6ceec5f resolved the Phase 1 contract gap, Path A)
 **Resumed:** 2026-05-20T21:50:00Z (Phase 2; user cleared env conditions, typecheck 0 errors)
-**Status:** halted-shared-list
+**Resumed:** 2026-05-20T22:30:00Z (Phase 2 remainder; migration 0019 applied + verified by human)
+**Status:** in-progress
 
 > Run mode: user requested Phase 1 only, then HALT for human review before Phase 2.
 > This is a user-directed pause, not a safety halt — the loop status stays `in-progress`.
 
 ## Phase queue
 1. Phase 1: Test infrastructure + fixtures — shipped
-2. Phase 2: Schema migration + Drizzle types — halted (shared-list / Rail 5)
+2. Phase 2: Schema migration + Drizzle types — shipped (migration human-applied; code by loop)
 3. Phase 3: Auth helper + portal/admin API endpoints — pending
 4. Phase 4: Portal UI + admin firm-assignment B44 endpoint — pending
 5. Phase 5: Prompt update — name-early / contact-late — pending
@@ -134,10 +135,60 @@ Re-running Phase 1 against revised blueprint (commit 6ceec5f).
 - Loop remains halted on the rail. **Awaiting human application of 0019 against Neon (ancient-star-00703098 main).**
 - **Next:** after Ryan applies 0019 + confirms, re-invoke /implementation to build the REST of Phase 2 (non-shared-list): Drizzle table defs (`src/db/schema-core.ts`), row types (`src/engine/clients/types.ts`), reader methods (`src/engine/clients/neonDbClient.ts`), in-memory mirrors (`src/engine/clients/inMemoryClients.ts`), portalSeed live body, fill the Phase 1 data-logic shells, add `tests/integration/portalSchemaApplied.test.ts` (information_schema verification).
 
-## Closing — Phase 2 halt
+## Phase 2 halt (Rail 5) — superseded; resolved via human-applied migration
 
-**Terminal state:** halted mid-loop (Phase 2, at /plan --auto — Rail 5 shared-list). Migration SQL drafted for review (43f44a5); not applied. Awaiting human application.
-**/verify run:** no (loop halted before all phases shipped)
+**At the time:** halted mid-loop (Phase 2, /plan --auto — Rail 5 shared-list). Migration SQL drafted (43f44a5), not applied.
+**Superseded:** 2026-05-20T22:30:00Z — Ryan applied migration 0019 to Neon `ancient-star-00703098` main and verified via information_schema (4 columns/tables, 5 indexes, 10 FKs, ON DELETE behavior; backfill linked Kelley Brooks Simoneaux → The Spinal Cord Injury Law Firm via the org-scoped match). Loop resumed for the non-shared-list remainder. See the Phase 2 shipped entry below.
+
+## Phase 2: Schema migration + Drizzle types + in-memory seed (shipped)
+
+**Status:** shipped
+**Started (remainder):** 2026-05-20T22:30:00Z
+**Completed:** 2026-05-20T22:45:00Z
+
+### How Phase 2 split (Rail 5)
+- **Migration (shared-list):** drafted by the loop (`43f44a5`, NOT applied), then **applied + verified by Ryan** out-of-loop. The autonomous loop never applied production DDL.
+- **Non-shared-list code:** authored + shipped by the loop (below).
+
+### Commits
+- `43f44a5` — `feat(db): draft migration 0019 attorney portal schema (NOT YET APPLIED)` (drafted earlier; applied by human)
+- `60810ff` — `feat(portal): attorney-portal data layer — Drizzle defs, types, reader methods`
+- `a197d20` — `test(portal): fill Phase 1 data-logic shells green + portalSeed body + schema verification`
+
+### Files
+- schema-core.ts: attorneys.userId/lawFirmId (+ partial indexes); litigationFirmAssignments + firmSessionHandled table defs (law_firm_id plain uuid, FK in SQL)
+- types.ts: optional userId/lawFirmId on AttorneyRow; LitigationFirmAssignment, PortalQueueRow/Result, PortalCaseDetail, PortalAttorneyResolution; 6 DbClient methods
+- neonDbClient.ts + inMemoryClients.ts: both implement the 6 reader methods with identical firm-scoping + gray-out semantics (DO3 firm-scoped counts). No API handlers (Phase 3).
+- tests/fixtures/portalSeed.ts: live body (in-memory)
+- tests/unit/portalQueueSelection.test.ts + portalCaseDetailSelection.test.ts: Phase 1 shells filled GREEN
+- tests/unit/litigationSchema.test.ts: extended for new tables
+- tests/integration/portalSchemaApplied.test.ts: information_schema scan (skipIf no DATABASE_URL)
+
+### Regression (targeted → ran full unit+integration)
+- `npm run test` (vitest run): **775 passed, 4 skipped, 11 todo, 0 failures.** `clients-contract.test.ts` green → both clients satisfy the extended DbClient interface; no existing suite regressed.
+- typecheck: clean (0 errors).
+- Code review: nothing flagged.
+
+### Acceptance criteria
+- Migration applied; new columns/tables/FKs exist: **met** — human-verified via information_schema; automated `portalSchemaApplied.test.ts` covers it (runs when DATABASE_URL is set).
+- Drizzle types + in-memory mirrors added; Phase 1 data-logic shells turn green: **met** — portalQueueSelection (8) + portalCaseDetailSelection (7) pass against the in-memory client.
+
+### Runtime verification
+- information_schema scan: **done by human** (manual) + automated test authored. The automated test SKIPS in this loop env (no DATABASE_URL); it will run in any env where DATABASE_URL is set.
+
+### Notes / flags for the human
+- **package-lock.json:** your `npm install` pruned 523 lines (0 insertions; package.json untouched). Left OUT of the Phase 2 commits (shared-list file, not a Phase 2 change). Review + commit separately if you want the normalization persisted, or `git checkout package-lock.json` to discard.
+- QQ-answer extraction in getPortalCaseForFirm is pragmatic for v1: non-identity extracted_fields rendered as {question, answer}. Phase 3/4 can refine against the litigation row's ada_qualifying_questions shape if needed.
+
+### HALT — user-directed pause (not a safety halt)
+- User instructed: stop after Phase 2, report, do not auto-advance to Phase 3.
+- Loop status `in-progress`; Phases 3-5 `pending`. /verify NOT run (closeout only after all phases ship).
+- Resume: re-invoke /implementation to continue from Phase 3 (auth helper + portal/admin API endpoints).
+
+## Closing — Phase 2 pause
+
+**Terminal state:** Phase 2 shipped; user-directed pause before Phase 3.
+**/verify run:** no (only after all phases ship)
 **/verify verdict:** n/a
 
-### Run ended: 2026-05-20T21:55:00Z
+### Run ended: 2026-05-20T22:45:00Z
