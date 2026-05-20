@@ -5,6 +5,7 @@
 **Blueprint:** `.design/attorney-portal.md`
 **Run started:** 2026-05-20T21:01:41Z
 **Resumed:** 2026-05-20T21:29:34Z (after /design revision 6ceec5f resolved the Phase 1 contract gap, Path A)
+**Resumed:** 2026-05-20T21:50:00Z (Phase 2; user cleared env conditions, typecheck 0 errors)
 **Status:** in-progress
 
 > Run mode: user requested Phase 1 only, then HALT for human review before Phase 2.
@@ -12,7 +13,7 @@
 
 ## Phase queue
 1. Phase 1: Test infrastructure + fixtures — shipped
-2. Phase 2: Schema migration + Drizzle types — pending
+2. Phase 2: Schema migration + Drizzle types — in-progress
 3. Phase 3: Auth helper + portal/admin API endpoints — pending
 4. Phase 4: Portal UI + admin firm-assignment B44 endpoint — pending
 5. Phase 5: Prompt update — name-early / contact-late — pending
