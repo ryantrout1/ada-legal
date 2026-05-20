@@ -27,6 +27,7 @@ import { searchAttorneysTool } from './impls/searchAttorneys.js';
 import { searchAdaStandardsTool } from './impls/searchAdaStandards.js';
 import { setReadingLevelTool } from './impls/setReadingLevel.js';
 import { endSessionTool } from './impls/endSession.js';
+import { matchLitigationTool } from './impls/matchLitigation.js';
 
 export const CH0_TOOLS: ReadonlyArray<AnyAdaTool> = [
   setClassificationTool,
@@ -35,6 +36,7 @@ export const CH0_TOOLS: ReadonlyArray<AnyAdaTool> = [
   searchAdaStandardsTool,
   setReadingLevelTool,
   endSessionTool,
+  matchLitigationTool,
 ] as const;
 
 /** Build a name → tool lookup for the dispatcher. */
