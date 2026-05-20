@@ -124,10 +124,20 @@ Re-running Phase 1 against revised blueprint (commit 6ceec5f).
   2. Explicitly waive Rail 5 for this migration and direct the loop to author it (still cannot apply without DATABASE_URL); OR
   3. Have the loop author the 0019 SQL file for human review, but NOT apply it.
 
+### Human-directed follow-up (2026-05-20T21:55:00Z) — migration drafted, not applied
+- User chose option "I draft the SQL, you apply" at the Rail 5 halt.
+- `src/db/migrations/0019_attorney_portal.sql` authored + committed (`43f44a5`) as a **review-only artifact — NOT applied to Neon.** Header marks it NOT YET APPLIED.
+  - attorneys.user_id + attorneys.law_firm_id (+ partial indexes)
+  - guarded, **org-scoped** firm_name → law_firm_id backfill (org-scoping is a safety tightening over the design's plain name match; flagged in-file for review since law_firm_id gates portal access)
+  - litigation_firm_assignments (routing fan-out)
+  - firm_session_handled (sparse one-bit handled state)
+- Loop remains halted on the rail. **Awaiting human application of 0019 against Neon (ancient-star-00703098 main).**
+- **Next:** after Ryan applies 0019 + confirms, re-invoke /implementation to build the REST of Phase 2 (non-shared-list): Drizzle table defs (`src/db/schema-core.ts`), row types (`src/engine/clients/types.ts`), reader methods (`src/engine/clients/neonDbClient.ts`), in-memory mirrors (`src/engine/clients/inMemoryClients.ts`), portalSeed live body, fill the Phase 1 data-logic shells, add `tests/integration/portalSchemaApplied.test.ts` (information_schema verification).
+
 ## Closing — Phase 2 halt
 
-**Terminal state:** halted mid-loop (Phase 2, at /plan --auto — Rail 5 shared-list)
+**Terminal state:** halted mid-loop (Phase 2, at /plan --auto — Rail 5 shared-list). Migration SQL drafted for review (43f44a5); not applied. Awaiting human application.
 **/verify run:** no (loop halted before all phases shipped)
 **/verify verdict:** n/a
 
-### Run ended: 2026-05-20T21:50:00Z
+### Run ended: 2026-05-20T21:55:00Z
