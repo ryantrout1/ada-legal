@@ -4,13 +4,14 @@
 **Spec:** `.features/attorney-portal.md`
 **Blueprint:** `.design/attorney-portal.md`
 **Run started:** 2026-05-20T21:01:41Z
-**Status:** halted-contract-gap
+**Resumed:** 2026-05-20T21:29:34Z (after /design revision 6ceec5f resolved the Phase 1 contract gap, Path A)
+**Status:** in-progress
 
 > Run mode: user requested Phase 1 only, then HALT for human review before Phase 2.
 > This is a user-directed pause, not a safety halt — the loop status stays `in-progress`.
 
 ## Phase queue
-1. Phase 1: Test infrastructure + fixtures — halted
+1. Phase 1: Test infrastructure + fixtures — in-progress (resumed)
 2. Phase 2: Schema migration + Drizzle types — pending
 3. Phase 3: Auth helper + portal/admin API endpoints — pending
 4. Phase 4: Portal UI + admin firm-assignment B44 endpoint — pending
@@ -44,11 +45,11 @@
   - Re-spec criteria 2 & 3 as data-logic tests against the existing `makeInMemoryClients` pattern (no React rendering, no new deps) — matches how every other "component" test in this repo actually works; AND
   - Reorder `portalSeed`'s working body to land after Phase 2 (or split: typed signatures now, live seed bodies post-migration).
 
-## Closing
+## Halt 1 — superseded by resume
 
-**Terminal state:** halted mid-loop (Phase 1, at /plan --auto)
-**/verify run:** no (skipped — loop halted before all phases shipped)
-**/verify verdict:** n/a
-**/verify report:** n/a
+**Terminal state at the time:** halted mid-loop (Phase 1, at /plan --auto), contract gap.
+**Superseded:** 2026-05-20T21:29:34Z — /design revision 6ceec5f resolved the gap (Path A: criteria 2/3 → data-logic tests, .test.tsx → .test.ts, portalSeed body deferred to Phase 2, no package.json edits). Loop resumed from Phase 1. See the fresh Phase 1 entry below.
 
-### Run ended: 2026-05-20T21:01:41Z
+## Resume — 2026-05-20T21:29:34Z
+
+Re-running Phase 1 against revised blueprint (commit 6ceec5f).
