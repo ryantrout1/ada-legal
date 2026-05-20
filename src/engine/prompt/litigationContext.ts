@@ -103,6 +103,22 @@ export function renderActiveLitigationIndex(
  * Output is plain markdown, embedded in the LITIGATION CONTEXT section
  * ahead of the standard active-cases index. The focused row is filtered
  * out of the index by the assembler so it doesn't appear twice.
+ *
+ * Phase C3b-ii: when the bound row has a populated
+ * `ada_qualifying_questions` JSONB, append two sub-blocks:
+ *
+ *   QUALIFYING QUESTIONS — the questions Ada walks the user through
+ *     one at a time. Each entry surfaces prompt + purpose so Ada can
+ *     frame her ask with the legal reasoning behind it.
+ *
+ *   VOICE GUIDANCE — case-specific conversational direction
+ *     (off-ramp rules, validation cues, redirect criteria) authored
+ *     in the migration that populated the row.
+ *
+ * The JSONB shape is intentionally loose at the type level
+ * (Record<string, unknown>), so renderQualifyingQuestionsBlock /
+ * renderVoiceGuidanceBlock narrow defensively — a malformed payload
+ * surfaces no sub-block rather than throwing.
  */
 export function renderFocusedLitigation(row: LitigationRow): string {
   const kindLabel = labelForKind(row.kind);
@@ -143,5 +159,71 @@ export function renderFocusedLitigation(row: LitigationRow): string {
     parts.push(row.shortDescription.replace(/\s+/g, ' ').trim());
   }
 
+  // Phase C3b-ii — append the qualifying-question + voice-guidance
+  // sub-blocks when the JSONB carries them. Defensive narrowing inside
+  // the helpers; malformed payloads simply produce no sub-block.
+  const qBlock = renderQualifyingQuestionsBlock(row.adaQualifyingQuestions);
+  if (qBlock) {
+    parts.push('');
+    parts.push(qBlock);
+  }
+  const vBlock = renderVoiceGuidanceBlock(row.adaQualifyingQuestions);
+  if (vBlock) {
+    parts.push('');
+    parts.push(vBlock);
+  }
+
   return parts.join('\n');
+}
+
+/**
+ * Phase C3b-ii — render the QUALIFYING QUESTIONS sub-block from the
+ * `ada_qualifying_questions` JSONB. Returns the empty string when
+ * the JSONB is missing, malformed, or carries an empty questions
+ * array. Each question must be an object with a `prompt` string;
+ * `purpose` is appended when present.
+ */
+function renderQualifyingQuestionsBlock(
+  raw: Record<string, unknown> | null | undefined,
+): string {
+  if (!raw || typeof raw !== 'object') return '';
+  const questions = (raw as Record<string, unknown>).questions;
+  if (!Array.isArray(questions) || questions.length === 0) return '';
+
+  const lines: string[] = [];
+  lines.push('**QUALIFYING QUESTIONS** — walk the user through these one at a time, in order. Confirm understanding before moving to the next. Do not batch them.');
+
+  let rendered = 0;
+  for (const q of questions) {
+    if (!q || typeof q !== 'object') continue;
+    const entry = q as Record<string, unknown>;
+    const prompt = typeof entry.prompt === 'string' ? entry.prompt.trim() : '';
+    if (!prompt) continue;
+    rendered += 1;
+    const purpose = typeof entry.purpose === 'string' ? entry.purpose.trim() : '';
+    if (purpose) {
+      lines.push(`${rendered}. ${prompt} _(purpose: ${purpose})_`);
+    } else {
+      lines.push(`${rendered}. ${prompt}`);
+    }
+  }
+
+  if (rendered === 0) return '';
+  return lines.join('\n');
+}
+
+/**
+ * Phase C3b-ii — render the VOICE GUIDANCE sub-block from the
+ * `ada_qualifying_questions.voice_guidance` field. Returns the empty
+ * string when the field is missing or not a non-empty string.
+ */
+function renderVoiceGuidanceBlock(
+  raw: Record<string, unknown> | null | undefined,
+): string {
+  if (!raw || typeof raw !== 'object') return '';
+  const vg = (raw as Record<string, unknown>).voice_guidance;
+  if (typeof vg !== 'string') return '';
+  const trimmed = vg.replace(/\s+/g, ' ').trim();
+  if (!trimmed) return '';
+  return `**VOICE GUIDANCE** — ${trimmed}`;
 }
