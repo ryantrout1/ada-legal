@@ -10,7 +10,7 @@
 > This is a user-directed pause, not a safety halt — the loop status stays `in-progress`.
 
 ## Phase queue
-1. Phase 1: Test infrastructure + fixtures — pending
+1. Phase 1: Test infrastructure + fixtures — in-progress
 2. Phase 2: Schema migration + Drizzle types — pending
 3. Phase 3: Auth helper + portal/admin API endpoints — pending
 4. Phase 4: Portal UI + admin firm-assignment B44 endpoint — pending
