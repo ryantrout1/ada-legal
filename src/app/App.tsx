@@ -55,8 +55,14 @@ import AdminSubscriptions from './routes/admin/AdminSubscriptions.js';
 import AdminIntakes from './routes/admin/AdminIntakes.js';
 import AdminSettings from './routes/admin/AdminSettings.js';
 import AdminAnalytics from './routes/admin/AdminAnalytics.js';
+import PortalLayout from './layouts/PortalLayout.js';
+import PortalSignIn from './routes/portal/SignIn.js';
+import PortalSignUp from './routes/portal/SignUp.js';
+import PortalQueue from './routes/portal/PortalQueue.js';
+import PortalCaseDetail from './routes/portal/PortalCaseDetail.js';
 import { HelmetProvider } from 'react-helmet-async';
 import RequireAdmin from './components/RequireAdmin.js';
+import RequireAttorney from './components/RequireAttorney.js';
 import ScrollToTop from './components/ScrollToTop.js';
 
 export default function App() {
@@ -101,6 +107,10 @@ export default function App() {
 
         {/* Admin tree — ClerkProvider only wraps this subtree */}
         <Route path="/admin/*" element={<AdminShell />} />
+
+        {/* Attorney portal — ClerkProvider only wraps this subtree, same
+            DNS-scoping discipline as AdminShell (see note above). */}
+        <Route path="/portal/*" element={<PortalShell />} />
       </Routes>
     </BrowserRouter>
     </HelmetProvider>
@@ -147,6 +157,36 @@ function AdminShell() {
           <Route path="settings" element={<AdminSettings />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="*" element={<Navigate to="/admin/sessions" replace />} />
+        </Route>
+      </Routes>
+    </ClerkProvider>
+  );
+}
+
+/**
+ * PortalShell — the attorney portal subtree. ClerkProvider wraps ONLY this
+ * branch, mirroring AdminShell. Do NOT lift ClerkProvider to the root: the
+ * Clerk production frontend-API domain (clerk.adalegallink.com) has no DNS
+ * while we stay on Base44 for production, so a root mount would break public
+ * routes too. (See the AdminShell note above.)
+ */
+function PortalShell() {
+  const publishableKey = requireClerkPublishableKey();
+  return (
+    <ClerkProvider publishableKey={publishableKey} afterSignOutUrl="/">
+      <Routes>
+        <Route path="sign-in/*" element={<PortalSignIn />} />
+        <Route path="sign-up/*" element={<PortalSignUp />} />
+        <Route
+          element={
+            <RequireAttorney>
+              <PortalLayout />
+            </RequireAttorney>
+          }
+        >
+          <Route index element={<PortalQueue />} />
+          <Route path="cases/:id" element={<PortalCaseDetail />} />
+          <Route path="*" element={<Navigate to="/portal" replace />} />
         </Route>
       </Routes>
     </ClerkProvider>
