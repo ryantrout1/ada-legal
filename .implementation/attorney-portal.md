@@ -16,7 +16,7 @@
 1. Phase 1: Test infrastructure + fixtures — shipped
 2. Phase 2: Schema migration + Drizzle types — shipped (migration human-applied; code by loop)
 3. Phase 3: Auth helper + portal/admin API endpoints — shipped
-4. Phase 4: Portal UI + admin firm-assignment B44 endpoint — pending
+4. Phase 4: Portal UI + admin firm-assignment B44 endpoint — shipped (repo UI; B44 page flagged)
 5. Phase 5: Prompt update — name-early / contact-late — pending
 
 ## Phase 1: Test infrastructure + fixtures
@@ -230,10 +230,59 @@ Re-running Phase 1 against revised blueprint (commit 6ceec5f).
 - Loop status `in-progress`; Phases 4-5 `pending`. /verify NOT run (closeout only after all phases ship).
 - Resume: re-invoke /implementation for Phase 4 (portal UI + B44 admin firm-assignment page). Phase 4 also depends on a DO1 decision if auto-pair is wanted before launch.
 
-## Closing — Phase 3 pause
+## Phase 3 pause — superseded by Phase 4 resume
 
-**Terminal state:** Phase 3 shipped; user-directed pause before Phase 4. DO1 auto-pair flagged for decision.
+**At the time:** Phase 3 shipped; pause before Phase 4. DO1 resolved by user to **option (b): manual pairing for v1** (Kelly paired via the 0019 backfill; auto-pair deferred as a future scoped enhancement — do NOT build now). Resumed 2026-05-20T23:40:00Z.
+
+## Phase 4: Portal UI + admin firm-assignment (shipped — repo UI)
+
+**Status:** shipped
+**Started:** 2026-05-20T23:40:00Z
+**Completed:** 2026-05-21T00:05:00Z
+**Pre-check:** no shared-list hit (all src/app/* — not middleware/auth/lib/auth). Ran autonomously.
+
+### Commits
+- `3a43093` — `feat(portal): attorney portal UI — routes, layout, guard, data client`
+- `f8cd44f` — `test(portal): activate portal Playwright specs`
+
+### Files (App.tsx + 7 new)
+- App.tsx: /portal/* PortalShell, ClerkProvider scoped to the subtree (mirrors AdminShell — the Clerk-DNS constraint from the risk register; root-mount would break public routes).
+- PortalLayout, RequireAttorney (client guard; server requireAttorney is the real boundary).
+- portal SignIn/SignUp with Clerk AAA `appearance` theming (approval note 5; token-derived colors).
+- PortalQueue (firm-scoped tiles + queue, criterion-6 gray-out treatment, 403→not-onboarded), PortalCaseDetail (contact + QQ + transcript + idempotent mark-handled, 404 out-of-firm).
+- data/portalClient (same-origin fetch wrappers, typed PortalApiError).
+
+### Tests
+- tests/personas/portal-attorney-login.spec.ts: unauth-redirect + sign-in-card assertions LIVE; authed queue→case nav `test.fixme` (preview-only, seeded Clerk session).
+- tests/a11y/portal-aaa.spec.ts: /portal/sign-in AAA audit LIVE; authed routes `test.fixme` (preview).
+
+### Regression (wider) + code-level verification
+- typecheck: clean. `npm run build` (vite): clean. `npm run test` (vitest): **783 passed, 4 skipped, 5 todo, 0 failures** (UI doesn't touch the data suites).
+- `npm run test:a11y` / `npm run test:personas`: NOT run in this loop env (Playwright needs a served target + chromium + Clerk session). Runtime-deferred to preview.
+- Code review: nothing flagged; design tokens throughout (only hex is the justified Clerk appearance).
+
+### Acceptance criteria (Phase 4 closes the UI for 1, 2, 3, 6)
+- Criterion 1 (login → portal): UI built (sign-in + guard + shell). End-to-end Clerk sign-in verified on preview (deferred).
+- Criterion 2 (queue renders): PortalQueue built; Playwright render verification deferred to preview; data-plane already green (portalQueueSelection).
+- Criterion 3 (case package): PortalCaseDetail built; same.
+- Criterion 6 (gray-out): rendered treatment built; data-plane green; **manual cross-firm check pending** (open as Firm B, mark handled, open as Firm A, observe gray) — runtime.
+
+### ⚠️ NOT BUILT — B44 admin firm-assignment page (outside this repo)
+- Approval note 3 asked Phase 4 to "also build a B44 admin page" for firm↔litigation assignment. **B44 (Base44) is a separate platform, not the ada-legal repo** — it can't be built from here as a code change. The Vercel-side API it calls (`GET/PUT /api/admin/litigation/[id]/firms`) shipped + is tested in Phase 3, and the data-plane (criterion 4) is green. Only the Base44 admin UI (a multi-select firms picker calling the PUT endpoint, bridge-authed) remains.
+- **Decision for the human:** build the B44 page in Base44 (via the Base44 app editor / MCP, as a separate task), or assign firms via direct API/PUT for v1. Criterion 4 is functionally complete server-side; this is the admin convenience UI.
+
+### Runtime verification (deferred — needs deploy/preview)
+- `npm run dev` (or preview) → sign in as the seeded paired attorney → queue renders → open a case. Criterion 6 manual cross-firm gray-out check. `npm run test:a11y:preview` for the AAA audit on /portal/sign-in (+ authed routes once a seeded session is wired).
+
+### HALT — user-directed pause (not a safety halt)
+- User instructed: stop after Phase 4, report, do not auto-advance to Phase 5.
+- Loop status `in-progress`; Phase 5 `pending`. /verify NOT run (closeout only after all phases ship).
+- Resume: re-invoke /implementation for Phase 5 (prompt update — name-early/contact-late, litigation_match flow only per DO4). NOTE: Phase 5 touches content-migration/prompts/* — not shared-list, but per approval note 4 the /shipit must include a manual "Niles v. Hilton" recipe check before declaring done.
+
+## Closing — Phase 4 pause
+
+**Terminal state:** Phase 4 shipped (repo UI); user-directed pause before Phase 5. B44 admin page flagged (separate platform); Clerk AAA audit + criterion-6 manual check runtime-deferred.
 **/verify run:** no (only after all phases ship)
 **/verify verdict:** n/a
 
-### Run ended: 2026-05-20T23:20:00Z
+### Run ended: 2026-05-21T00:05:00Z
