@@ -62,7 +62,15 @@ export function renderActiveLitigationIndex(
 
   const parts: string[] = [];
   parts.push(
-    `The following litigation is currently active, settled-and-being-monitored, under DOJ investigation, or being tracked as a regulatory challenge. If a user describes an experience that matches one of them, you may surface the case to the user, briefly explain it, and ask if they'd like more information. You do not enroll users in cases — that's the attorney's job. You're recognizing a potential match.`,
+    `The following litigation is currently active, settled-and-being-monitored, under DOJ investigation, or being tracked as a regulatory challenge. These are real legal actions you can connect users to.`,
+  );
+  parts.push('');
+  parts.push(
+    `**HOW TO USE THIS CATALOG.** When the user describes their situation — even briefly, in one message — scan this catalog and look for matches against the defendant (company/entity name), the kind of barrier (mobility / vision / hearing / cognitive / digital / physical), and the affected jurisdiction. A signal like "I was at a [Defendant]" or "the [room/website/service] wasn't accessible because [barrier]" is often enough to identify a case. **Do not run a generic intake when you can see a likely match.** Surface the case by name, briefly explain what it covers, and ask the user if their situation sounds like a fit. If they confirm, call \`match_litigation\` with user_confirmed=true and that case's id. From that point, the next turn will surface the case's qualifying questions and you walk the user through them one at a time.`,
+  );
+  parts.push('');
+  parts.push(
+    `If the situation is too vague to identify a case after one or two clarifying questions, you may continue a generic conversation — but always prefer naming a candidate case over indefinitely-extending intake questions. You do not enroll users in cases; that's the attorney's job. You're recognizing a potential match and connecting the user to the right resource.`,
   );
   parts.push('');
 
