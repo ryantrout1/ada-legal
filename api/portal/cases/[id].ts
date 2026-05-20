@@ -1,0 +1,65 @@
+/**
+ * GET /api/portal/cases/[id]
+ *
+ * Full case package for a single matched session, scoped to the signed-in
+ * attorney's firm: contact info, matched case, qualifying-question answers,
+ * and the conversation transcript.
+ *
+ * 404 when the session doesn't exist OR the firm has no assignment for the
+ * session's litigation row (the firm-scoped access boundary — a 404, not 403,
+ * so we don't leak the existence of out-of-scope cases).
+ *
+ * Ref: .design/attorney-portal.md (GET /api/portal/cases/[id]).
+ */
+
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { requireAttorney } from '../../_attorney.js';
+import { applyCors } from '../../_cors.js';
+import { makeClientsFromEnv } from '../../_shared.js';
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (applyCors(req, res)) return;
+
+  const auth = await requireAttorney(req, res);
+  if (!auth) return;
+
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', 'GET');
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const id =
+    typeof req.query.id === 'string'
+      ? req.query.id
+      : Array.isArray(req.query.id)
+      ? req.query.id[0]
+      : null;
+  if (!id) return res.status(400).json({ error: 'id is required' });
+
+  try {
+    const clients = makeClientsFromEnv();
+    const detail = await clients.db.getPortalCaseForFirm(id, auth.lawFirmId);
+    if (!detail) return res.status(404).json({ error: 'Case not found' });
+
+    return res.status(200).json({
+      session_id: detail.sessionId,
+      litigation_listing_id: detail.litigationListingId,
+      case_name: detail.caseName,
+      user_name: detail.userName,
+      user_email: detail.userEmail,
+      user_phone: detail.userPhone,
+      qualifying_answers: detail.qualifyingAnswers.map((a) => ({
+        question: a.question,
+        answer: a.answer,
+      })),
+      transcript: detail.transcript,
+      matched_at: detail.matchedAt,
+      handled_by_this_firm: detail.handledByThisFirm,
+    });
+  } catch (err) {
+    console.error('GET /api/portal/cases/[id] failed', err);
+    return res.status(500).json({
+      error: err instanceof Error ? err.message : 'Internal error',
+    });
+  }
+}
