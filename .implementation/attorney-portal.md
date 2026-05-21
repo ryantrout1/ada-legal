@@ -324,3 +324,15 @@ Re-running Phase 1 against revised blueprint (commit 6ceec5f).
 **/verify verdict:** n/a (not yet run)
 
 ### Run ended: 2026-05-21T00:40:00Z
+
+## Phase 6 (post-loop add): B44 admin firm-assignment UI — CROSS-REPO
+
+**Status:** shipped (in a different repo) — closes criterion 4's prior v1 descope.
+**Why post-loop:** the firm-assignment admin UI lives in the **Base44 admin app**, a separate git repo (`github.com/ryantrout1/ada-legal-link-B44`), not ada-legal. The `/design`/`/implementation`/`/verify` skills route only to ClearQuest + ada-legal, so this phase was executed as **guided repo work**, not via the skill machinery. Recorded here for the parent feature's audit trail.
+**Commit:** `2bdfd90` (in `ada-legal-link-B44`, on main) — exactly 2 files:
+- `src/components/admin/LitigationFirmAssignmentPanel.jsx` (new): GET `/api/admin/firms?page_size=100` (options) + GET/PUT `/api/admin/litigation/:id/firms` (assignments, replace-set) via `adminApi`/adallProxy (bridge-authed). Accessible checkbox group mirrors `SpecialtyTagsPicker` (native checkbox in label, orange accent) in a fieldset/legend.
+- `src/pages/AdminLitigationEdit.jsx` (+3): renders the panel after save/cancel, gated on `!isNew`.
+**Gate:** eslint clean on changed files; `vite build` green; **0 new tsc errors** (B44 repo has 619 pre-existing `checkJs` errors in unrelated pages — backlog item, not blocking).
+**Runtime verification (deferred):** in the deployed B44 app, assign a firm → confirm the matched session appears in that firm's `/portal` queue (full GET/PUT round-trip via adallProxy).
+
+### Run ended: 2026-05-21T01:30:00Z
