@@ -7,7 +7,8 @@
 **Resumed:** 2026-05-20T21:29:34Z (after /design revision 6ceec5f resolved the Phase 1 contract gap, Path A)
 **Resumed:** 2026-05-20T21:50:00Z (Phase 2; user cleared env conditions, typecheck 0 errors)
 **Resumed:** 2026-05-20T22:30:00Z (Phase 2 remainder; migration 0019 applied + verified by human)
-**Status:** in-progress
+**Completed:** 2026-05-21T01:00:00Z — all 5 phases shipped; manual Niles v. Hilton check PASSED (session 6e2ea48a-a2a9-436d-9ab7-aff9385bed18; claimant_name="Ryan"; match_litigation fired; QQ#1 verbatim; no intake regression; Hard Rule preserved). /verify run at closeout.
+**Status:** complete
 
 > Run mode: user requested Phase 1 only, then HALT for human review before Phase 2.
 > This is a user-directed pause, not a safety halt — the loop status stays `in-progress`.
