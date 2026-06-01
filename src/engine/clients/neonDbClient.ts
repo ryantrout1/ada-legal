@@ -69,6 +69,7 @@ import type {
   UpsertPhotoReviewInput,
   PhotoReviewEvalRow,
   PhotoReviewState,
+  SavePhotoAnalysisInput,
   AnonSessionUpsertOptions,
   AttorneyAdminRow,
   AttorneyFacets,
@@ -423,6 +424,25 @@ export class NeonDbClient implements DbClient {
   }
 
   // ─── Admin: photo review (expert labeling loop) ─────────────────────────────
+
+  async savePhotoAnalysis(input: SavePhotoAnalysisInput): Promise<string> {
+    const rows = await this.db
+      .insert(photoAnalyses)
+      .values({
+        sessionId: input.sessionId,
+        orgId: input.orgId,
+        photoUrl: input.photoUrl,
+        photoBlobKey: input.photoBlobKey,
+        findings: input.findings,
+        scene: input.scene,
+        summary: input.summary,
+        overallRisk: input.overallRisk,
+        positiveFindings: input.positiveFindings,
+        modelVersion: input.modelVersion,
+      })
+      .returning({ id: photoAnalyses.id });
+    return rows[0]!.id;
+  }
 
   async listPhotoAnalysesForReview(
     opts: PhotoReviewListOptions,

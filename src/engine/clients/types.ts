@@ -755,6 +755,10 @@ export interface DbClient {
   upsertAnonSession(opts: AnonSessionUpsertOptions): Promise<string>;
   /** Paginated list of ada_sessions for the admin overview. */
   listSessionsForAdmin(opts: AdminSessionListOptions): Promise<AdminSessionListResult>;
+  /** Persist a completed photo analysis as a durable, individually-
+   *  addressable row. The review queue, eval rollup, and per-analysis
+   *  deep-links all read these. Returns the new analysis id. */
+  savePhotoAnalysis(input: SavePhotoAnalysisInput): Promise<string>;
   /** Paginated list of field-test (is_test) photo analyses for expert review. */
   listPhotoAnalysesForReview(opts: PhotoReviewListOptions): Promise<PhotoReviewListResult>;
   /** Full analysis plus any existing expert review, for the detail page. */
@@ -1389,6 +1393,19 @@ export interface AdminSessionListResult {
 }
 
 // ─── Admin: photo review (expert labeling loop) ─────────────────────────────
+
+export interface SavePhotoAnalysisInput {
+  sessionId: string;
+  orgId: string;
+  photoUrl: string;
+  photoBlobKey: string;
+  findings: PhotoFinding[];
+  scene: ReadingLevelText | null;
+  summary: ReadingLevelText | null;
+  overallRisk: PhotoOverallRisk | null;
+  positiveFindings: ReadingLevelStringList | null;
+  modelVersion: string;
+}
 
 export type PhotoReviewState = 'unreviewed' | 'reviewed' | 'addressed';
 

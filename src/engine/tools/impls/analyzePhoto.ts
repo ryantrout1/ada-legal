@@ -153,6 +153,32 @@ export const analyzePhotoTool: AdaTool<AnalyzePhotoInput> = {
         // doesn't have to re-sort on every check.
         blob_keys: [...input.blob_keys].sort(),
       };
+      // Persist a durable photo_analyses row so this analysis is
+      // individually addressable downstream — the expert-review queue,
+      // the eval rollup, and per-analysis deep-links all read these. The
+      // metadata cache below is only for in-conversation re-use. Best-
+      // effort: a write hiccup must never fail the user's turn (the
+      // analysis is still returned and cached in the session).
+      try {
+        await clients.db.savePhotoAnalysis({
+          sessionId: state.sessionId,
+          orgId: state.orgId,
+          photoUrl: input.blob_keys[0] ?? '',
+          photoBlobKey: input.blob_keys[0] ?? '',
+          findings: enrichedFindings,
+          scene: enrichedOutput.scene ?? null,
+          summary: enrichedOutput.summary ?? null,
+          overallRisk: enrichedOutput.overall_risk ?? null,
+          positiveFindings: enrichedOutput.positive_findings ?? null,
+          modelVersion: result.modelVersion,
+        });
+      } catch (err) {
+        console.error(
+          'savePhotoAnalysis failed (analysis still returned + cached in session)',
+          err,
+        );
+      }
+
       // Append to the session metadata cache. Existing entries are
       // preserved — a session can have multiple distinct analyses
       // (e.g. two different photo batches at different points in the

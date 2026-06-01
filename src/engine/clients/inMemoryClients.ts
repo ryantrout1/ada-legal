@@ -100,6 +100,7 @@ import type {
   PhotoReviewDetail,
   UpsertPhotoReviewInput,
   PhotoReviewEvalRow,
+  SavePhotoAnalysisInput,
 } from './types.js';
 import type { ExtractedFields, Message } from '../../types/db.js';
 
@@ -284,6 +285,11 @@ export class InMemoryDbClient implements DbClient {
   }
 
   // ─── Admin: attorneys ───────────────────────────────────────────────────────
+
+  async savePhotoAnalysis(_input: SavePhotoAnalysisInput): Promise<string> {
+    // Not modeled in-memory; photo persistence is exercised against Neon.
+    return `mem-analysis-${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
+  }
 
   async listPhotoAnalysesForReview(
     opts: PhotoReviewListOptions,
