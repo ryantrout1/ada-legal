@@ -32,6 +32,8 @@ import {
   sessionQualityChecks,
   systemSettings,
   users,
+  photoAnalyses,
+  photoReviews,
 } from '../../db/schema-core.js';
 import {
   lawFirms as lawFirmsTable,
@@ -60,6 +62,13 @@ import type {
   AdminSessionListOptions,
   AdminSessionListResult,
   AdminSessionSummary,
+  PhotoReviewListOptions,
+  PhotoReviewListResult,
+  PhotoReviewListItem,
+  PhotoReviewDetail,
+  UpsertPhotoReviewInput,
+  PhotoReviewEvalRow,
+  PhotoReviewState,
   AnonSessionUpsertOptions,
   AttorneyAdminRow,
   AttorneyFacets,
@@ -117,6 +126,10 @@ import type {
   Message,
   ReadingLevel,
   SessionMetadata,
+  PhotoFinding,
+  PhotoFindingLabel,
+  MissedFinding,
+  ReviewStatus,
 } from '../../types/db.js';
 
 // ─── Row ↔ State mapping ──────────────────────────────────────────────────────
@@ -402,6 +415,201 @@ export class NeonDbClient implements DbClient {
     });
 
     return { sessions, totalCount, page, pageSize };
+  }
+
+  // ─── Admin: photo review (expert labeling loop) ─────────────────────────────
+
+  async listPhotoAnalysesForReview(
+    opts: PhotoReviewListOptions,
+  ): Promise<PhotoReviewListResult> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const pageSize =
+      opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 25;
+    const offset = (page - 1) * pageSize;
+
+    // Scope to field-test photos only — never surface real claimants'
+    // analyses in the labeling tool.
+    const conds = [eq(adaSessions.isTest, true)];
+    if (opts.risk) conds.push(eq(photoAnalyses.overallRisk, opts.risk));
+    if (opts.modelVersion) conds.push(eq(photoAnalyses.modelVersion, opts.modelVersion));
+    if (opts.reviewState === 'unreviewed') conds.push(sql`${photoReviews.id} IS NULL`);
+    else if (opts.reviewState === 'reviewed') conds.push(eq(photoReviews.status, 'reviewed'));
+    else if (opts.reviewState === 'addressed') conds.push(eq(photoReviews.status, 'addressed'));
+
+    const whereClause = and(...conds);
+
+    const countRows = await this.db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(photoAnalyses)
+      .innerJoin(adaSessions, eq(adaSessions.id, photoAnalyses.sessionId))
+      .leftJoin(photoReviews, eq(photoReviews.photoAnalysisId, photoAnalyses.id))
+      .where(whereClause);
+    const totalCount = countRows[0]?.n ?? 0;
+
+    const rows = await this.db
+      .select({
+        id: photoAnalyses.id,
+        sessionId: photoAnalyses.sessionId,
+        photoUrl: photoAnalyses.photoUrl,
+        overallRisk: photoAnalyses.overallRisk,
+        findings: photoAnalyses.findings,
+        modelVersion: photoAnalyses.modelVersion,
+        analyzedAt: photoAnalyses.analyzedAt,
+        reviewId: photoReviews.id,
+        reviewStatus: photoReviews.status,
+        overallVerdict: photoReviews.overallVerdict,
+      })
+      .from(photoAnalyses)
+      .innerJoin(adaSessions, eq(adaSessions.id, photoAnalyses.sessionId))
+      .leftJoin(photoReviews, eq(photoReviews.photoAnalysisId, photoAnalyses.id))
+      .where(whereClause)
+      // Unreviewed first, then newest — opens as a work queue, not an archive.
+      .orderBy(sql`(${photoReviews.id} IS NULL) DESC, ${photoAnalyses.analyzedAt} DESC`)
+      .limit(pageSize)
+      .offset(offset);
+
+    const items: PhotoReviewListItem[] = rows.map((r) => {
+      const findings = (r.findings ?? []) as PhotoFinding[];
+      const count = (sev: string) => findings.filter((f) => f.severity === sev).length;
+      const reviewState: PhotoReviewState =
+        r.reviewId == null ? 'unreviewed' : (r.reviewStatus as PhotoReviewState);
+      return {
+        photoAnalysisId: r.id,
+        sessionId: r.sessionId,
+        photoUrl: r.photoUrl,
+        overallRisk: r.overallRisk ?? null,
+        findingCount: findings.length,
+        criticalCount: count('critical'),
+        majorCount: count('major'),
+        minorCount: count('minor'),
+        advisoryCount: count('advisory'),
+        modelVersion: r.modelVersion,
+        analyzedAt: (r.analyzedAt as Date).toISOString(),
+        reviewState,
+        overallVerdict: r.overallVerdict ?? null,
+      };
+    });
+
+    return { items, totalCount, page, pageSize };
+  }
+
+  async getPhotoAnalysisForReview(
+    photoAnalysisId: string,
+  ): Promise<PhotoReviewDetail | null> {
+    const rows = await this.db
+      .select({
+        id: photoAnalyses.id,
+        sessionId: photoAnalyses.sessionId,
+        photoUrl: photoAnalyses.photoUrl,
+        scene: photoAnalyses.scene,
+        summary: photoAnalyses.summary,
+        overallRisk: photoAnalyses.overallRisk,
+        positiveFindings: photoAnalyses.positiveFindings,
+        findings: photoAnalyses.findings,
+        modelVersion: photoAnalyses.modelVersion,
+        analyzedAt: photoAnalyses.analyzedAt,
+        rEmail: photoReviews.reviewerEmail,
+        rStatus: photoReviews.status,
+        rVerdict: photoReviews.overallVerdict,
+        rLabels: photoReviews.findingLabels,
+        rMissed: photoReviews.missedFindings,
+        rNotes: photoReviews.reviewerNotes,
+        rModel: photoReviews.modelVersion,
+        rReviewedAt: photoReviews.reviewedAt,
+      })
+      .from(photoAnalyses)
+      .leftJoin(photoReviews, eq(photoReviews.photoAnalysisId, photoAnalyses.id))
+      .where(eq(photoAnalyses.id, photoAnalysisId))
+      .limit(1);
+
+    const r = rows[0];
+    if (!r) return null;
+
+    return {
+      photoAnalysisId: r.id,
+      sessionId: r.sessionId,
+      photoUrl: r.photoUrl,
+      scene: r.scene ?? null,
+      summary: r.summary ?? null,
+      overallRisk: r.overallRisk ?? null,
+      positiveFindings: r.positiveFindings ?? null,
+      findings: (r.findings ?? []) as PhotoFinding[],
+      modelVersion: r.modelVersion,
+      analyzedAt: (r.analyzedAt as Date).toISOString(),
+      review:
+        r.rEmail == null
+          ? null
+          : {
+              reviewerEmail: r.rEmail,
+              status: r.rStatus as ReviewStatus,
+              overallVerdict: r.rVerdict ?? null,
+              findingLabels: (r.rLabels ?? []) as PhotoFindingLabel[],
+              missedFindings: (r.rMissed ?? []) as MissedFinding[],
+              reviewerNotes: r.rNotes ?? null,
+              modelVersion: r.rModel ?? null,
+              reviewedAt: (r.rReviewedAt as Date).toISOString(),
+            },
+    };
+  }
+
+  async upsertPhotoReview(input: UpsertPhotoReviewInput): Promise<void> {
+    const set = {
+      reviewerEmail: input.reviewerEmail,
+      status: input.status ?? ('reviewed' as ReviewStatus),
+      overallVerdict: input.overallVerdict ?? null,
+      findingLabels: input.findingLabels,
+      missedFindings: input.missedFindings,
+      reviewerNotes: input.reviewerNotes ?? null,
+      modelVersion: input.modelVersion ?? null,
+    };
+    await this.db
+      .insert(photoReviews)
+      .values({ photoAnalysisId: input.photoAnalysisId, ...set })
+      .onConflictDoUpdate({
+        target: photoReviews.photoAnalysisId,
+        set: { ...set, updatedAt: sql`now()` },
+      });
+  }
+
+  async getPhotoReviewEvalSummary(): Promise<PhotoReviewEvalRow[]> {
+    const rows = await this.db
+      .select({
+        modelVersion: photoReviews.modelVersion,
+        findingLabels: photoReviews.findingLabels,
+        missedFindings: photoReviews.missedFindings,
+      })
+      .from(photoReviews);
+
+    const byVersion = new Map<string, PhotoReviewEvalRow>();
+    for (const r of rows) {
+      const key = r.modelVersion ?? 'unknown';
+      let row = byVersion.get(key);
+      if (!row) {
+        row = {
+          modelVersion: key,
+          analysesReviewed: 0,
+          findingsLabeled: 0,
+          correct: 0,
+          overFlagged: 0,
+          partial: 0,
+          wrongCite: 0,
+          missedTotal: 0,
+        };
+        byVersion.set(key, row);
+      }
+      row.analysesReviewed += 1;
+      for (const l of (r.findingLabels ?? []) as PhotoFindingLabel[]) {
+        row.findingsLabeled += 1;
+        if (l.verdict === 'correct') row.correct += 1;
+        else if (l.verdict === 'over_flagged') row.overFlagged += 1;
+        else if (l.verdict === 'partial') row.partial += 1;
+        else if (l.verdict === 'wrong_cite') row.wrongCite += 1;
+      }
+      row.missedTotal += ((r.missedFindings ?? []) as MissedFinding[]).length;
+    }
+    return [...byVersion.values()].sort(
+      (a, b) => b.analysesReviewed - a.analysesReviewed,
+    );
   }
 
   // ─── Admin: attorneys ───────────────────────────────────────────────────────

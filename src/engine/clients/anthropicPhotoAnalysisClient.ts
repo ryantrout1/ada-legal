@@ -54,7 +54,13 @@ const DEFAULT_MODEL = 'claude-sonnet-4-5';
 // findings + meta logged for visibility). Lowered from 8192 in Pass 1
 // of the photo-analysis latency fix — output tokens were the dominant
 // driver of vision-call wall clock.
-const DEFAULT_MAX_TOKENS = 4096;
+// Three reading-level variants × scene + summary + positive_findings +
+// (title + finding) per concern. Raised back to 8192 from 4096: the lower
+// cap was clipping concern detail mid-sentence (max_tokens stop_reason),
+// which half-blinds the expert reviewer — they can't judge reasoning they
+// can't read. Full reasoning matters more than a second of latency on the
+// field-test path.
+const DEFAULT_MAX_TOKENS = 8192;
 const MAX_PHOTOS_PER_CALL = 3;
 
 // Vercel Blob URL pattern: https://<storeId>.public.blob.vercel-storage.com/<path>.

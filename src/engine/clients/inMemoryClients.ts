@@ -95,6 +95,11 @@ import type {
   PortalCaseQqAnswer,
   LitigationFirmAssignment,
   PortalAttorneyResolution,
+  PhotoReviewListOptions,
+  PhotoReviewListResult,
+  PhotoReviewDetail,
+  UpsertPhotoReviewInput,
+  PhotoReviewEvalRow,
 } from './types.js';
 import type { ExtractedFields, Message } from '../../types/db.js';
 
@@ -279,6 +284,32 @@ export class InMemoryDbClient implements DbClient {
   }
 
   // ─── Admin: attorneys ───────────────────────────────────────────────────────
+
+  async listPhotoAnalysesForReview(
+    opts: PhotoReviewListOptions,
+  ): Promise<PhotoReviewListResult> {
+    // Not modeled in-memory; photo review is exercised against Neon only.
+    return {
+      items: [],
+      totalCount: 0,
+      page: opts.page && opts.page > 0 ? opts.page : 1,
+      pageSize: opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 25,
+    };
+  }
+
+  async getPhotoAnalysisForReview(
+    _photoAnalysisId: string,
+  ): Promise<PhotoReviewDetail | null> {
+    return null;
+  }
+
+  async upsertPhotoReview(_input: UpsertPhotoReviewInput): Promise<void> {
+    // no-op in memory
+  }
+
+  async getPhotoReviewEvalSummary(): Promise<PhotoReviewEvalRow[]> {
+    return [];
+  }
 
   async listAttorneysForAdmin(
     opts: AdminAttorneyListOptions,

@@ -16,7 +16,18 @@
  * Ref: docs/ARCHITECTURE.md §6
  */
 
-import type { Message, PhotoAnalysisOutput } from '../../types/db.js';
+import type {
+  Message,
+  PhotoAnalysisOutput,
+  PhotoFinding,
+  PhotoFindingLabel,
+  MissedFinding,
+  PhotoOverallRisk,
+  ReviewOverallVerdict,
+  ReviewStatus,
+  ReadingLevelText,
+  ReadingLevelStringList,
+} from '../../types/db.js';
 import type { AdaSessionState } from '../types.js';
 
 // ─── AI client ────────────────────────────────────────────────────────────────
@@ -744,6 +755,14 @@ export interface DbClient {
   upsertAnonSession(opts: AnonSessionUpsertOptions): Promise<string>;
   /** Paginated list of ada_sessions for the admin overview. */
   listSessionsForAdmin(opts: AdminSessionListOptions): Promise<AdminSessionListResult>;
+  /** Paginated list of field-test (is_test) photo analyses for expert review. */
+  listPhotoAnalysesForReview(opts: PhotoReviewListOptions): Promise<PhotoReviewListResult>;
+  /** Full analysis plus any existing expert review, for the detail page. */
+  getPhotoAnalysisForReview(photoAnalysisId: string): Promise<PhotoReviewDetail | null>;
+  /** Create or update the single authoritative expert review for an analysis. */
+  upsertPhotoReview(input: UpsertPhotoReviewInput): Promise<void>;
+  /** Accuracy rollup grouped by engine (model) version. */
+  getPhotoReviewEvalSummary(): Promise<PhotoReviewEvalRow[]>;
   /** Admin list of attorneys across all statuses. */
   listAttorneysForAdmin(opts: AdminAttorneyListOptions): Promise<AdminAttorneyListResult>;
   /** Read a single attorney by id for admin view. */
@@ -1364,6 +1383,94 @@ export interface AdminSessionListResult {
   totalCount: number;
   page: number;
   pageSize: number;
+}
+
+// ─── Admin: photo review (expert labeling loop) ─────────────────────────────
+
+export type PhotoReviewState = 'unreviewed' | 'reviewed' | 'addressed';
+
+export interface PhotoReviewListOptions {
+  /** Filter by review state. 'unreviewed' = analysis has no photo_reviews row. */
+  reviewState?: PhotoReviewState;
+  /** Filter by the analysis overall_risk. */
+  risk?: PhotoOverallRisk;
+  /** Filter by engine (model) version. */
+  modelVersion?: string;
+  /** 1-based page number. Default 1. */
+  page?: number;
+  /** Rows per page, 1..100. Default 25. */
+  pageSize?: number;
+}
+
+export interface PhotoReviewListItem {
+  photoAnalysisId: string;
+  sessionId: string;
+  photoUrl: string;
+  overallRisk: PhotoOverallRisk | null;
+  findingCount: number;
+  criticalCount: number;
+  majorCount: number;
+  minorCount: number;
+  advisoryCount: number;
+  modelVersion: string;
+  analyzedAt: string;
+  reviewState: PhotoReviewState;
+  overallVerdict: ReviewOverallVerdict | null;
+}
+
+export interface PhotoReviewListResult {
+  items: PhotoReviewListItem[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PhotoReviewRecord {
+  reviewerEmail: string;
+  status: ReviewStatus;
+  overallVerdict: ReviewOverallVerdict | null;
+  findingLabels: PhotoFindingLabel[];
+  missedFindings: MissedFinding[];
+  reviewerNotes: string | null;
+  modelVersion: string | null;
+  reviewedAt: string;
+}
+
+export interface PhotoReviewDetail {
+  photoAnalysisId: string;
+  sessionId: string;
+  photoUrl: string;
+  scene: ReadingLevelText | null;
+  summary: ReadingLevelText | null;
+  overallRisk: PhotoOverallRisk | null;
+  positiveFindings: ReadingLevelStringList | null;
+  findings: PhotoFinding[];
+  modelVersion: string;
+  analyzedAt: string;
+  /** Null when not yet reviewed. */
+  review: PhotoReviewRecord | null;
+}
+
+export interface UpsertPhotoReviewInput {
+  photoAnalysisId: string;
+  reviewerEmail: string;
+  status?: ReviewStatus;
+  overallVerdict?: ReviewOverallVerdict | null;
+  findingLabels: PhotoFindingLabel[];
+  missedFindings: MissedFinding[];
+  reviewerNotes?: string | null;
+  modelVersion?: string | null;
+}
+
+export interface PhotoReviewEvalRow {
+  modelVersion: string;
+  analysesReviewed: number;
+  findingsLabeled: number;
+  correct: number;
+  overFlagged: number;
+  partial: number;
+  wrongCite: number;
+  missedTotal: number;
 }
 
 export interface AttorneyFacets {
