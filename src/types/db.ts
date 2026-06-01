@@ -338,6 +338,42 @@ export interface PhotoFinding {
   guide_url?: string;
 }
 
+// ─── expert labeling (photo_reviews) ───────────────────────────────────────
+
+/**
+ * Peter's verdict on a single finding the engine emitted.
+ *   correct      — true positive, the engine got it right
+ *   over_flagged — false positive, not actually a concern
+ *   partial      — partly right (e.g. right barrier, wrong severity/detail)
+ *   wrong_cite   — concern is real but the cited § is wrong (the worst
+ *                  failure for a legal product — tracked separately)
+ * finding_index is positional into PhotoAnalysisOutput.findings until the
+ * engine emits stable finding IDs.
+ */
+export type FindingVerdict = 'correct' | 'over_flagged' | 'partial' | 'wrong_cite';
+
+export interface PhotoFindingLabel {
+  finding_index: number;
+  verdict: FindingVerdict;
+  reason: string;
+}
+
+/** A concern Peter caught that the engine missed (a false negative). */
+export interface MissedFinding {
+  description: string;
+  standard?: string;
+  severity?: PhotoFindingSeverity;
+}
+
+export type ReviewOverallVerdict =
+  | 'accurate'
+  | 'missed'
+  | 'over_flagged'
+  | 'wrong'
+  | 'mixed';
+
+export type ReviewStatus = 'reviewed' | 'addressed';
+
 /**
  * Full structured output of a single analyze_photo call. A call may
  * cover up to 3 photos at once (batch); the scene/summary/risk/

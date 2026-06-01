@@ -38,6 +38,10 @@ import type {
   AuditMetadata,
   ReadingLevelStringList,
   ReadingLevelText,
+  PhotoFindingLabel,
+  MissedFinding,
+  ReviewOverallVerdict,
+  ReviewStatus,
 } from '../types/db.js';
 
 // ─── organizations ────────────────────────────────────────────────────────────
@@ -236,6 +240,47 @@ export const photoAnalyses = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index('photo_analyses_session').on(t.sessionId)],
+);
+
+// ─── photo_reviews (expert labeling loop) ───────────────────────────────────
+//
+// Peter's authoritative verdict on a photo analysis. One row per
+// photo_analyses row (unique FK). Captures both error directions:
+// finding_labels = verdicts on emitted findings (false positives +
+// confirmations); missed_findings = concerns the engine missed (false
+// negatives). model_version is copied from the analysis at review time so
+// the eval rollup can group accuracy by engine version.
+
+export const photoReviews = pgTable(
+  'photo_reviews',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    photoAnalysisId: uuid('photo_analysis_id')
+      .notNull()
+      .unique()
+      .references(() => photoAnalyses.id, { onDelete: 'cascade' }),
+    reviewerEmail: text('reviewer_email').notNull(),
+    /** reviewed = Peter has labeled it; addressed = Ryan has acted on it. */
+    status: text('status').$type<ReviewStatus>().notNull().default('reviewed'),
+    overallVerdict: text('overall_verdict').$type<ReviewOverallVerdict | null>(),
+    findingLabels: jsonb('finding_labels')
+      .$type<PhotoFindingLabel[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    missedFindings: jsonb('missed_findings')
+      .$type<MissedFinding[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    reviewerNotes: text('reviewer_notes'),
+    modelVersion: text('model_version'),
+    reviewedAt: timestamp('reviewed_at', { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index('photo_reviews_model_version').on(t.modelVersion),
+    index('photo_reviews_status').on(t.status),
+  ],
 );
 
 // ─── attorneys ────────────────────────────────────────────────────────────────
