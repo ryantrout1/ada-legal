@@ -42,7 +42,7 @@ export default function AdminSessions() {
           Sessions
         </h1>
         <p className="text-sm text-ink-500">
-          Ada conversations. Most recent first. QA/test sessions hidden by default.
+          Ada conversations. Most recent first. QA/test and empty (0-message) sessions hidden by default.
         </p>
       </header>
 
@@ -80,6 +80,18 @@ export default function AdminSessions() {
               className="accent-accent-500"
             />
             <span className="text-ink-700">Include QA / test sessions</span>
+          </label>
+
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={filters.includeEmpty}
+              onChange={(e) =>
+                setFilters({ ...filters, includeEmpty: e.target.checked, page: 1 })
+              }
+              className="accent-accent-500"
+            />
+            <span className="text-ink-700">Include empty sessions</span>
           </label>
 
           <span className="ml-auto text-xs text-ink-500 font-mono">

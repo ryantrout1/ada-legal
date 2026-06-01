@@ -1354,6 +1354,9 @@ export interface AdminSessionListOptions {
   status?: 'active' | 'completed' | 'abandoned';
   /** Include is_test=true rows. Default false — QA sessions are noise for admin. */
   includeTest?: boolean;
+  /** Include never-touched (0-message) sessions. Default false — these are
+   *  created on chat-page load before anyone types, and are pure noise. */
+  includeEmpty?: boolean;
   /** 1-based page number. Default 1. */
   page?: number;
   /** Rows per page. 1..100. Default 25. */

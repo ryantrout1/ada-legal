@@ -55,6 +55,9 @@ import {
 
 interface Body {
   reading_level?: ReadingLevel;
+  /** When true, return the greeting WITHOUT persisting a session row
+   *  (lazy-create: the row is created on the first real message). */
+  preview?: boolean;
   /**
    * Optional deep-link from /class-actions/:slug. When set and the
    * slug maps to an ACTIVE listing in this org, the new session is
@@ -223,6 +226,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body,
       header: req.headers[FIELD_CAPTURE_HEADER] ?? null,
     });
+
+    // Lazy-create preview: the chat page shows Ada's greeting on page
+    // load WITHOUT persisting a session row. The row is created on the
+    // first actual message (client re-calls this endpoint without
+    // `preview`). This stops the flood of empty 0-message sessions that
+    // page-load bounces were creating.
+    if (body.preview === true) {
+      const greeting = buildGreeting(
+        org.displayName,
+        readingLevel,
+        pageContext,
+        litigationContext,
+      );
+      return res.status(200).json({
+        preview: true,
+        greeting,
+        reading_level: readingLevel,
+      });
+    }
 
     // Create and persist the session. If listingId resolved, this is
     // a class_action_intake session pre-bound to that listing —

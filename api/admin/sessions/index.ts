@@ -45,6 +45,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       typeof req.query.include_test === 'string' &&
       req.query.include_test.toLowerCase() === 'true';
 
+    const includeEmpty =
+      typeof req.query.include_empty === 'string' &&
+      req.query.include_empty.toLowerCase() === 'true';
+
     const pageRaw = typeof req.query.page === 'string' ? parseInt(req.query.page, 10) : NaN;
     const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
 
@@ -57,6 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const result = await clients.db.listSessionsForAdmin({
       status,
       includeTest,
+      includeEmpty,
       page,
       pageSize,
     });

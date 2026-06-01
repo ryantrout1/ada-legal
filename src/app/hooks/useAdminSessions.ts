@@ -26,12 +26,14 @@ export interface AdminSessionSummary {
 export interface SessionsFilters {
   status: SessionStatus | '';
   includeTest: boolean;
+  includeEmpty: boolean;
   page: number;
 }
 
 const DEFAULT_FILTERS: SessionsFilters = {
   status: '',
   includeTest: false,
+  includeEmpty: false,
   page: 1,
 };
 
@@ -52,6 +54,7 @@ export function useAdminSessions() {
       const params = new URLSearchParams();
       if (filters.status) params.set('status', filters.status);
       if (filters.includeTest) params.set('include_test', 'true');
+      if (filters.includeEmpty) params.set('include_empty', 'true');
       params.set('page', String(filters.page));
       params.set('page_size', String(PAGE_SIZE));
 

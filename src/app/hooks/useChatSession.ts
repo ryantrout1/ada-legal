@@ -86,6 +86,12 @@ interface SessionCreateResponse {
   reading_level: ReadingLevel;
 }
 
+interface SessionPreviewResponse {
+  preview: true;
+  greeting: string;
+  reading_level: ReadingLevel;
+}
+
 interface ResumeResponse {
   session: {
     session_id: string;
@@ -185,7 +191,81 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
     [],
   );
 
-  // On mount, check if we have a resumable session (anon cookie
+  // Show Ada's greeting on page load WITHOUT persisting a session row.
+  // The DB row is created lazily on the first real message (ensureSession
+  // below). This is what stops empty 0-message sessions from page-load
+  // bounces. On any failure we fall back to real creation so the user is
+  // never left without a greeting.
+  const previewGreeting = useCallback(
+    async (level: ReadingLevel) => {
+      setState((s) => ({ ...s, initializing: true, error: null }));
+      try {
+        const resp = await fetch('/api/ada/session', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reading_level: level, preview: true }),
+        });
+        if (!resp.ok) throw new Error(`Greeting failed (${resp.status})`);
+        const data = (await resp.json()) as SessionPreviewResponse;
+        setState((s) => ({
+          ...s,
+          sessionId: null,
+          readingLevel: data.reading_level,
+          initializing: false,
+          error: null,
+          messages: [
+            {
+              id: cryptoId(),
+              role: 'assistant',
+              content: data.greeting,
+              timestamp: new Date().toISOString(),
+            },
+          ],
+        }));
+      } catch {
+        // Preview failed — fall back to creating a real session so the
+        // chat still works. Worst case we write one row, same as before.
+        void createSession(level);
+      }
+    },
+    [createSession],
+  );
+
+  // Lazily create+persist the session on the first real message. Returns
+  // the new session id (or null on failure, with error set). Does NOT add
+  // a greeting bubble — previewGreeting already showed one.
+  const ensureSession = useCallback(
+    async (level: ReadingLevel): Promise<string | null> => {
+      try {
+        const resp = await fetch('/api/ada/session', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reading_level: level }),
+        });
+        if (!resp.ok) {
+          const msg = await extractError(resp);
+          throw new Error(msg || `Session creation failed (${resp.status})`);
+        }
+        const data = (await resp.json()) as SessionCreateResponse;
+        setState((s) => ({
+          ...s,
+          sessionId: data.session_id,
+          readingLevel: data.reading_level,
+        }));
+        return data.session_id;
+      } catch (err) {
+        setState((s) => ({
+          ...s,
+          busy: false,
+          error: err instanceof Error ? err.message : 'Failed to start session',
+        }));
+        return null;
+      }
+    },
+    [],
+  );
   // points at an active ada_sessions row). If so, offer it — don't
   // auto-resume. Accessibility principle: the user must always be in
   // control of state transitions. If no resumable session exists,
@@ -255,9 +335,9 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
         // just start fresh, which is the same outcome as a first
         // visit.
       }
-      void createSession(initialLevel);
+      void previewGreeting(initialLevel);
     })();
-  }, [createSession, initialLevel]);
+  }, [previewGreeting, initialLevel]);
 
   // User accepted the resume offer — hydrate state from the resumable.
   const acceptResume = useCallback(() => {
@@ -279,9 +359,9 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
   const discardResume = useCallback(
     (level: ReadingLevel) => {
       setState((s) => ({ ...s, resumable: null }));
-      void createSession(level);
+      void previewGreeting(level);
     },
-    [createSession],
+    [previewGreeting],
   );
 
   // ─── Send a message ────────────────────────────────────────────────────────
@@ -304,11 +384,21 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
       photoPreviewDataUrl?: string,
       undoWindowMs: number = 0,
     ) => {
-      if (!state.sessionId) return;
       if (state.busy) return;
       if (state.status !== 'active') return;
       const trimmed = userText.trim();
       if (!trimmed) return;
+
+      // Lazy session: create the DB row on the first real message, not on
+      // page load. ensureSession sets state.sessionId AND returns the id —
+      // we thread that id through everything below because the state
+      // update isn't readable in this same tick.
+      let sid = state.sessionId;
+      if (!sid) {
+        setState((s) => ({ ...s, busy: true, error: null }));
+        sid = await ensureSession(state.readingLevel);
+        if (!sid) return; // ensureSession already set the error + reset busy
+      }
 
       // Allocate the user message id up front so we can reference it
       // both in the optimistic add and in cancelPendingMessage's
@@ -346,7 +436,7 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
       // behavior). Otherwise: kick off photo upload now (parallelizes the
       // wait) and schedule the network call after undoWindowMs.
       if (undoWindowMs <= 0) {
-        await commitSend(userMsgId, trimmed, photoFile);
+        await commitSend(sid, userMsgId, trimmed, photoFile);
         return;
       }
 
@@ -356,7 +446,7 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
       // is harmless (Vercel Blob is cheap, and orphan cleanup can run
       // out-of-band if it ever matters).
       const photoUrlPromise = photoFile
-        ? uploadPhoto(state.sessionId, photoFile)
+        ? uploadPhoto(sid, photoFile)
         : Promise.resolve<string | null>(null);
 
       // Schedule the actual send. Stored in a ref so cancelPendingMessage
@@ -367,12 +457,12 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
         // Close the undo window in state, then commit.
         setState((s) => ({ ...s, pendingSend: null }));
         void photoUrlPromise.then((photoUrl) => {
-          void commitSend(userMsgId, trimmed, undefined, photoUrl);
+          void commitSend(sid, userMsgId, trimmed, undefined, photoUrl);
         });
       }, undoWindowMs);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state.sessionId, state.busy, state.status],
+    [state.sessionId, state.busy, state.status, state.readingLevel, ensureSession],
   );
 
   /**
@@ -390,13 +480,12 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
    */
   const commitSend = useCallback(
     async (
+      sessionId: string,
       _userMsgId: string,
       trimmed: string,
       photoFile?: File,
       preUploadedPhotoUrl?: string | null,
     ) => {
-      if (!state.sessionId) return;
-
       // Allocated up front so the error handler can clean up an empty
       // placeholder on failure (no ghost assistant bubble after errors).
       let assistantId: string | null = null;
@@ -408,7 +497,7 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
           // here. Vercel Blob direct-upload — see /api/ada/upload-photo
           // for the signed-token pattern; bytes travel browser→Blob,
           // bypassing our lambdas.
-          photoUrl = await uploadPhoto(state.sessionId, photoFile);
+          photoUrl = await uploadPhoto(sessionId, photoFile);
         }
 
         // The server-side message carries the photo as a blob URL if
@@ -453,7 +542,7 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
             Accept: 'text/event-stream',
           },
           body: JSON.stringify({
-            session_id: state.sessionId,
+            session_id: sessionId,
             message: serverMessage,
             // Sent separately (not just embedded in the message) so the
             // turn endpoint can persist the URL in session metadata for
@@ -556,7 +645,7 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
         }));
       }
     },
-    [state.sessionId],
+    [],
   );
 
   /**
@@ -614,9 +703,9 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
   const startNewSession = useCallback(
     (level: ReadingLevel) => {
       didInitRef.current = true;
-      void createSession(level);
+      void previewGreeting(level);
     },
-    [createSession],
+    [previewGreeting],
   );
 
   return {

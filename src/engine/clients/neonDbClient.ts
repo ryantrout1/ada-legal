@@ -368,6 +368,11 @@ export class NeonDbClient implements DbClient {
     const conds = [];
     if (opts.status) conds.push(eq(adaSessions.status, opts.status));
     if (!opts.includeTest) conds.push(eq(adaSessions.isTest, false));
+    if (!opts.includeEmpty) {
+      conds.push(
+        sql`jsonb_array_length(coalesce(${adaSessions.conversationHistory}, '[]'::jsonb)) > 0`,
+      );
+    }
 
     const whereClause = conds.length > 0 ? and(...conds) : undefined;
 
