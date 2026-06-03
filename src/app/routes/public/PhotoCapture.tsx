@@ -62,7 +62,6 @@ export default function PhotoCapture() {
   // which covers network/server errors during submit.
   const [localError, setLocalError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const uploadInputRef = useRef<HTMLInputElement>(null);
   const { status, result, error: submitError, submit, reset } = usePhotoCapture();
 
   // Revoke the last preview object URL on unmount to avoid leaking
@@ -94,7 +93,6 @@ export default function PhotoCapture() {
       // Clear the input so the same file can be re-picked after the
       // user takes a different shot.
       if (fileInputRef.current) fileInputRef.current.value = '';
-      if (uploadInputRef.current) uploadInputRef.current.value = '';
       return;
     }
     try {
@@ -130,7 +128,6 @@ export default function PhotoCapture() {
     setLocalError(null);
     reset();
     if (fileInputRef.current) fileInputRef.current.value = '';
-    if (uploadInputRef.current) uploadInputRef.current.value = '';
   }
 
   const busy = status === 'uploading' || status === 'analyzing';
@@ -171,7 +168,6 @@ export default function PhotoCapture() {
               busy={busy}
               localError={localError}
               fileInputRef={fileInputRef}
-              uploadInputRef={uploadInputRef}
               onPhotoSelect={handlePhotoSelect}
               onCommentChange={setComment}
               onSubmit={handleSubmit}
@@ -198,7 +194,6 @@ interface PhotoCaptureFormProps {
   busy: boolean;
   localError: string | null;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
-  uploadInputRef: React.RefObject<HTMLInputElement | null>;
   onPhotoSelect: (e: ChangeEvent<HTMLInputElement>) => void;
   onCommentChange: (value: string) => void;
   onSubmit: () => void;
@@ -212,7 +207,6 @@ function PhotoCaptureForm(props: PhotoCaptureFormProps) {
     busy,
     localError,
     fileInputRef,
-    uploadInputRef,
     onPhotoSelect,
     onCommentChange,
     onSubmit,
@@ -221,49 +215,26 @@ function PhotoCaptureForm(props: PhotoCaptureFormProps) {
   return (
     <div className="space-y-6">
       {/*
-        The native file input is hidden but accessible — we trigger it
-        via a styled button instead so we can hit the 44x44 minimum
-        without fighting browser-default sizing. `capture="environment"`
-        opens the rear camera directly on phones; desktop falls back
-        to the file picker.
-      */}
-      {/*
-        Two paths to a photo. The camera input keeps capture="environment"
-        so phones open the rear camera straight away. The upload input
-        omits capture, so the same tap on a phone offers Photo Library /
-        Files instead — needed for photos taken elsewhere (e.g. someone
-        emailed a batch to test). On desktop both just open the file
-        picker. Hidden inputs triggered by styled 48px labels.
+        One button, no `capture` attribute. On phones this lets the OS
+        offer the full menu — Photo Library, Take Photo, Choose File —
+        so a tester can either shoot live or pick photos taken elsewhere
+        (e.g. a batch emailed in). On desktop it's the file picker.
+        Hidden input triggered by a styled 48px label for the touch target.
       */}
       <input
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        capture="environment"
         onChange={onPhotoSelect}
         className="sr-only"
         id="photo-input"
       />
-      <input
-        ref={uploadInputRef}
-        type="file"
-        accept="image/*"
-        onChange={onPhotoSelect}
-        className="sr-only"
-        id="photo-upload-input"
-      />
-      <div className="grid grid-cols-2 gap-3">
+      <div>
         <label
           htmlFor="photo-input"
-          className="flex min-h-[48px] cursor-pointer items-center justify-center rounded-md border-2 border-accent-500 bg-accent-50 px-4 py-3 text-center font-display text-base text-accent-600 transition-colors hover:bg-accent-50/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-accent-500 focus-within:ring-offset-2 focus-within:ring-offset-surface-50"
+          className="block w-full min-h-[48px] cursor-pointer rounded-md border-2 border-accent-500 bg-accent-50 px-4 py-3 text-center font-display text-lg text-accent-600 transition-colors hover:bg-accent-50/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-accent-500 focus-within:ring-offset-2 focus-within:ring-offset-surface-50"
         >
-          {photoPreview ? 'Retake photo' : '📷 Take a photo'}
-        </label>
-        <label
-          htmlFor="photo-upload-input"
-          className="flex min-h-[48px] cursor-pointer items-center justify-center rounded-md border-2 border-accent-500 px-4 py-3 text-center font-display text-base text-accent-600 transition-colors hover:bg-accent-50/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-accent-500 focus-within:ring-offset-2 focus-within:ring-offset-surface-50"
-        >
-          🖼️ Upload a photo
+          {photoPreview ? 'Replace photo' : '📷 Take or upload a photo'}
         </label>
       </div>
 
