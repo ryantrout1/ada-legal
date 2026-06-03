@@ -759,6 +759,11 @@ export interface DbClient {
    *  addressable row. The review queue, eval rollup, and per-analysis
    *  deep-links all read these. Returns the new analysis id. */
   savePhotoAnalysis(input: SavePhotoAnalysisInput): Promise<string>;
+  /** Attach the tester's post-analysis comment to the latest field-test
+   *  analysis for a session. Scoped to is_test sessions so a public
+   *  caller can never touch a real claimant's analysis. Returns true if
+   *  a row was updated. */
+  savePhotoTesterComment(sessionId: string, comment: string): Promise<boolean>;
   /** Paginated list of field-test (is_test) photo analyses for expert review. */
   listPhotoAnalysesForReview(opts: PhotoReviewListOptions): Promise<PhotoReviewListResult>;
   /** Full analysis plus any existing expert review, for the detail page. */
@@ -1467,6 +1472,8 @@ export interface PhotoReviewDetail {
   findings: PhotoFinding[];
   modelVersion: string;
   analyzedAt: string;
+  /** Tester's post-analysis note from the /photo page, if any. */
+  testerComment: string | null;
   /** Null when not yet reviewed. */
   review: PhotoReviewRecord | null;
 }

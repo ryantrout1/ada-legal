@@ -88,6 +88,7 @@ export interface PhotoReviewDetail {
   findings: PhotoFinding[];
   modelVersion: string;
   analyzedAt: string;
+  testerComment: string | null;
   review: PhotoReviewRecord | null;
 }
 

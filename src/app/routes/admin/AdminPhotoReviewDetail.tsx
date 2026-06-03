@@ -136,6 +136,15 @@ export default function AdminPhotoReviewDetail() {
         <p className="mb-4 text-sm leading-relaxed text-ink-700">{detail.summary.professional}</p>
       )}
 
+      {detail.testerComment && (
+        <div className="mb-4 rounded-md border border-accent-500 bg-accent-50 px-3 py-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-accent-600">
+            Tester note
+          </p>
+          <p className="mt-1 whitespace-pre-wrap text-sm text-ink-900">{detail.testerComment}</p>
+        </div>
+      )}
+
       <h2 className="mb-2 font-display text-lg text-ink-900">
         Engine findings <span className="text-ink-500">({detail.findings.length})</span>
       </h2>

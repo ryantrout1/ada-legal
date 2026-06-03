@@ -62,7 +62,7 @@ export default function PhotoCapture() {
   // which covers network/server errors during submit.
   const [localError, setLocalError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { status, result, error: submitError, submit, reset } = usePhotoCapture();
+  const { status, result, error: submitError, submit, submitFeedback, reset } = usePhotoCapture();
 
   // Revoke the last preview object URL on unmount to avoid leaking
   // browser memory if the user navigates away without resetting.
@@ -175,7 +175,7 @@ export default function PhotoCapture() {
           )}
 
           {showResult && result && (
-            <SavedView result={result} onReset={handleReset} />
+            <SavedView result={result} onSubmitFeedback={submitFeedback} onReset={handleReset} />
           )}
 
           {showError && submitError && (
@@ -305,20 +305,34 @@ interface SavedViewProps {
     assistantMessage: string;
     photoUrl: string;
   };
+  onSubmitFeedback: (comment: string) => Promise<boolean>;
   onReset: () => void;
 }
 
-function SavedView({ result, onReset }: SavedViewProps) {
+function SavedView({ result, onSubmitFeedback, onReset }: SavedViewProps) {
+  const [comment, setComment] = useState('');
+  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  async function handleSaveComment() {
+    if (!comment.trim() || saveState === 'saving') return;
+    setSaveState('saving');
+    const ok = await onSubmitFeedback(comment);
+    setSaveState(ok ? 'saved' : 'error');
+  }
+
   return (
     <div className="space-y-4">
-      <div
-        // aria-live so the result is announced when it lands. Polite so
-        // it doesn't interrupt a screen reader mid-sentence.
-        aria-live="polite"
-        className="rounded-md border border-success-500 bg-success-50 px-3 py-2 text-sm text-ink-900"
-      >
-        Saved. The session is now reviewable in admin.
-      </div>
+      <section>
+        <h2 className="font-display text-xl text-ink-900">Your photo</h2>
+        <div className="mt-2 rounded-md border border-surface-200 bg-surface-100 p-2">
+          {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
+          <img
+            src={result.photoUrl}
+            alt="The photo you submitted"
+            className="block w-full rounded-sm"
+          />
+        </div>
+      </section>
 
       <section>
         <h2 className="font-display text-xl text-ink-900">Ada said</h2>
@@ -327,14 +341,44 @@ function SavedView({ result, onReset }: SavedViewProps) {
         </div>
       </section>
 
-      <p className="font-mono text-xs text-ink-500 break-all">
-        session: {result.sessionId}
-      </p>
+      <section>
+        <label htmlFor="tester-comment" className="block font-display text-base text-ink-900">
+          Your notes on Ada's read <span className="text-ink-500">(optional)</span>
+        </label>
+        <p className="mt-1 text-sm text-ink-700">
+          Was Ada right? Miss anything? Anything to add? This is saved with the photo for review.
+        </p>
+        <textarea
+          id="tester-comment"
+          value={comment}
+          onChange={(e) => {
+            setComment(e.target.value);
+            if (saveState !== 'idle') setSaveState('idle');
+          }}
+          rows={4}
+          placeholder="e.g. The ramp is steeper than it looks — Ada didn't flag the slope."
+          className="mt-2 block w-full rounded-md border border-surface-200 bg-surface-50 px-3 py-2 text-base text-ink-900 placeholder:text-ink-500 focus-visible:border-accent-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+        />
+        <div aria-live="polite" className="min-h-[20px] text-sm">
+          {saveState === 'saved' && <span className="text-success-500">Saved.</span>}
+          {saveState === 'error' && (
+            <span className="text-accent-600">Could not save that — try again.</span>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={handleSaveComment}
+          disabled={!comment.trim() || saveState === 'saving'}
+          className="block w-full min-h-[48px] rounded-md bg-accent-500 px-4 py-3 font-display text-lg text-surface-50 transition-colors hover:bg-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50 disabled:cursor-not-allowed disabled:bg-surface-300"
+        >
+          {saveState === 'saving' ? 'Saving…' : saveState === 'saved' ? 'Saved' : 'Save my notes'}
+        </button>
+      </section>
 
       <button
         type="button"
         onClick={onReset}
-        className="block w-full min-h-[48px] rounded-md bg-accent-500 px-4 py-3 font-display text-lg text-surface-50 transition-colors hover:bg-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+        className="block w-full min-h-[48px] rounded-md border-2 border-accent-500 px-4 py-3 font-display text-lg text-accent-600 transition-colors hover:bg-accent-50/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
       >
         Capture another
       </button>

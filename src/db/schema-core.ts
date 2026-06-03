@@ -235,6 +235,12 @@ export const photoAnalyses = pgTable(
     overallRisk: text('overall_risk').$type<PhotoOverallRisk | null>(),
     /** Compliant features observed. Nullable for pre-Commit-8 rows. */
     positiveFindings: jsonb('positive_findings').$type<ReadingLevelStringList | null>(),
+    /**
+     * Free-text note the tester adds AFTER seeing Ada's analysis on the
+     * /photo field-capture page — their reaction/feedback on what Ada
+     * said. Nullable; populated by POST /api/ada/photo-feedback.
+     */
+    testerComment: text('tester_comment'),
     modelVersion: text('model_version').notNull(),
     analyzedAt: timestamp('analyzed_at', { withTimezone: true }).notNull().defaultNow(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

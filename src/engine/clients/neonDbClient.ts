@@ -444,6 +444,26 @@ export class NeonDbClient implements DbClient {
     return rows[0]!.id;
   }
 
+  async savePhotoTesterComment(sessionId: string, comment: string): Promise<boolean> {
+    // Find the most recent field-test analysis for this session. The
+    // is_test join is the safety gate: a public caller can never write
+    // onto a real claimant's analysis.
+    const target = await this.db
+      .select({ id: photoAnalyses.id })
+      .from(photoAnalyses)
+      .innerJoin(adaSessions, eq(adaSessions.id, photoAnalyses.sessionId))
+      .where(and(eq(photoAnalyses.sessionId, sessionId), eq(adaSessions.isTest, true)))
+      .orderBy(sql`${photoAnalyses.analyzedAt} DESC`)
+      .limit(1);
+    const row = target[0];
+    if (!row) return false;
+    await this.db
+      .update(photoAnalyses)
+      .set({ testerComment: comment })
+      .where(eq(photoAnalyses.id, row.id));
+    return true;
+  }
+
   async listPhotoAnalysesForReview(
     opts: PhotoReviewListOptions,
   ): Promise<PhotoReviewListResult> {
@@ -533,6 +553,7 @@ export class NeonDbClient implements DbClient {
         findings: photoAnalyses.findings,
         modelVersion: photoAnalyses.modelVersion,
         analyzedAt: photoAnalyses.analyzedAt,
+        testerComment: photoAnalyses.testerComment,
         rEmail: photoReviews.reviewerEmail,
         rStatus: photoReviews.status,
         rVerdict: photoReviews.overallVerdict,
@@ -561,6 +582,7 @@ export class NeonDbClient implements DbClient {
       findings: (r.findings ?? []) as PhotoFinding[],
       modelVersion: r.modelVersion,
       analyzedAt: (r.analyzedAt as Date).toISOString(),
+      testerComment: r.testerComment ?? null,
       review:
         r.rEmail == null
           ? null

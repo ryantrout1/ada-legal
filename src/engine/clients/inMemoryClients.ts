@@ -291,6 +291,10 @@ export class InMemoryDbClient implements DbClient {
     return `mem-analysis-${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
   }
 
+  async savePhotoTesterComment(_sessionId: string, _comment: string): Promise<boolean> {
+    return false;
+  }
+
   async listPhotoAnalysesForReview(
     opts: PhotoReviewListOptions,
   ): Promise<PhotoReviewListResult> {

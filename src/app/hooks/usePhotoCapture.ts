@@ -68,6 +68,8 @@ interface UsePhotoCaptureReturn {
   result: PhotoCaptureResult | null;
   error: string | null;
   submit: (input: PhotoCaptureSubmitInput) => Promise<void>;
+  /** Save the tester's post-analysis comment. Returns true on success. */
+  submitFeedback: (comment: string) => Promise<boolean>;
   reset: () => void;
 }
 
@@ -81,6 +83,9 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
   // button while uploading). A ref instead of state so the check is
   // synchronous and doesn't rely on a re-render.
   const inFlightRef = useRef(false);
+  // Latest captured session id, kept in a ref so submitFeedback can read
+  // it without a stale closure after the result lands.
+  const sessionIdRef = useRef<string | null>(null);
 
   const submit = useCallback(
     async (input: PhotoCaptureSubmitInput) => {
@@ -152,6 +157,7 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
         };
         const assistantMessage = turnJson.assistant_message ?? '';
 
+        sessionIdRef.current = sessionId;
         setResult({ sessionId, assistantMessage, photoUrl });
         setStatus('saved');
       } catch (err) {
@@ -166,13 +172,31 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
     [],
   );
 
+  const submitFeedback = useCallback(async (comment: string): Promise<boolean> => {
+    const sessionId = sessionIdRef.current;
+    const trimmed = comment.trim();
+    if (!sessionId || !trimmed) return false;
+    try {
+      const res = await fetch('/api/ada/photo-feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ session_id: sessionId, comment: trimmed }),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }, []);
+
   const reset = useCallback(() => {
     setStatus('idle');
     setResult(null);
     setError(null);
+    sessionIdRef.current = null;
   }, []);
 
-  return { status, result, error, submit, reset };
+  return { status, result, error, submit, submitFeedback, reset };
 }
 
 function extensionForType(mimeType: string): string {
