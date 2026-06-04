@@ -20,6 +20,7 @@
 
 import { and, eq, ilike, inArray, or, sql } from 'drizzle-orm';
 import type { Database } from '../../db/client.js';
+import { NATIONWIDE_SENTINEL, normalizeAffectedStates } from './litigationStates.js';
 import {
   adaSessions,
   anonSessions,
@@ -1010,12 +1011,16 @@ export class NeonDbClient implements DbClient {
     const conds = [inArray(litigationTable.status, statusFilter)];
     if (opts.kind) conds.push(eq(litigationTable.kind, opts.kind));
     if (opts.state) {
-      // Match if affected_states contains the requested state OR if
-      // affected_states is empty (treated as nationwide).
+      // Match if affected_states contains the requested state, OR if the
+      // row is nationwide — encoded either as an empty array (wave 1) or
+      // as the [__nationwide__] sentinel (waves 2–5). Without the sentinel
+      // clause, nationwide rows from later waves silently drop out of
+      // state-filtered results.
       conds.push(
         or(
           sql`${litigationTable.affectedStates} @> ${JSON.stringify([opts.state])}::jsonb`,
           sql`jsonb_array_length(${litigationTable.affectedStates}) = 0`,
+          sql`${litigationTable.affectedStates} @> ${JSON.stringify([NATIONWIDE_SENTINEL])}::jsonb`,
         )!,
       );
     }
@@ -2676,7 +2681,7 @@ function toLitigationPublicRow(
     defendants: (r.defendants ?? []) as string[],
     court: r.court,
     docketNumber: r.docketNumber,
-    affectedStates: (r.affectedStates ?? []) as string[],
+    affectedStates: normalizeAffectedStates(r.affectedStates as string[] | null),
     // filingDate is a Drizzle 'date' which serializes as string already.
     filingDate: r.filingDate as string | null,
     keyDates: (r.keyDates ?? {}) as Record<string, string>,
@@ -2692,6 +2697,10 @@ function toLitigationAdminRow(
 ): LitigationAdminRow {
   return {
     ...toLitigationPublicRow(r),
+    // Admin/edit surface keeps the raw affected_states (including the
+    // __nationwide__ sentinel) so editors don't lose it on save; only the
+    // public + prompt surfaces get the normalized value.
+    affectedStates: (r.affectedStates ?? []) as string[],
     status: r.status as LitigationStatus,
     createdAt: (r.createdAt as Date).toISOString(),
     updatedAt: (r.updatedAt as Date).toISOString(),
