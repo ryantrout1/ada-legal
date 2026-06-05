@@ -20,6 +20,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAdmin } from '../../_admin.js';
 import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
+import { reviewerNameFromEmail } from '../../_reviewerName.js';
 import type { PhotoAnalysisOutput, PhotoFinding } from '../../../src/types/db.js';
 import type { PhotoReviewDetail } from '../../../src/engine/clients/types.js';
 
@@ -60,6 +61,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const clients = makeClientsFromEnv();
     const detail = await clients.db.getPhotoAnalysisForReview(id);
     if (!detail) return res.status(404).json({ error: 'Analysis not found' });
+
+    // Tell the page which review row belongs to this admin so it seeds the
+    // editable form from their own review, not someone else's.
+    detail.viewerReviewer = reviewerNameFromEmail(auth.email);
 
     if (needsLevel(detail, FILL_LEVEL)) {
       try {
