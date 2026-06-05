@@ -33,9 +33,9 @@ interface AnalyzePhotoInput {
  *   1. Try topicsForSection(finding.standard). The analyzer returns
  *      strings like "§405.2", "ADAAG §405", "2010 ADA Standards §604.8"
  *      — we extract the first §-token and match.
- *   2. If no section match, try topicsForText(finding.finding). This
- *      catches cases where the analyzer cites a rule that doesn't have
- *      a section number we index (e.g. "service animal") but the
+ *   2. If no section match, try topicsForText(finding.finding_standard).
+ *      This catches cases where the analyzer cites a rule that doesn't
+ *      have a section number we index (e.g. "service animal") but the
  *      finding text mentions something we recognize.
  *
  * When neither matches, guide_url is left undefined. The finding
@@ -51,7 +51,7 @@ function enrichFindingWithGuideUrl(f: PhotoFinding): PhotoFinding {
     }
   }
 
-  const textHits = topicsForText(`${f.finding} ${f.standard}`);
+  const textHits = topicsForText(`${f.finding_standard} ${f.standard}`);
   if (textHits.length > 0) {
     return { ...f, guide_url: guideUrlForTopic(textHits[0]) };
   }
@@ -68,7 +68,7 @@ export const analyzePhotoTool: AdaTool<AnalyzePhotoInput> = {
     'If the user uploaded more than 3 photos, call this tool again with a different batch. ' +
     'Provide a context_hint describing what to look for (e.g. "physical barrier at entrance", ' +
     '"missing handrail on ramp"). Returns scene description, summary, overall risk, ' +
-    'positive findings, and per-concern findings — each with three reading-level variants.',
+    'positive findings, and per-concern findings.',
   inputSchema: {
     type: 'object',
     properties: {

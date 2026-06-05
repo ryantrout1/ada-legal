@@ -118,10 +118,10 @@ describe('extractOutputFromResponse', () => {
         id: 't1',
         name: 'report_findings',
         input: {
-          scene: makeRLT('A storefront entrance.'),
-          summary: makeRLT('A 6-inch step blocks the entrance.'),
+          scene: 'A storefront entrance.',
+          summary: 'A 6-inch step blocks the entrance.',
           overall_risk: 'high',
-          positive_findings: makeRLSL(['Curb cut visible at sidewalk.']),
+          positive_findings: ['Curb cut visible at sidewalk.'],
           findings: [
             makeFinding({
               title: 'Step at entrance',
@@ -145,15 +145,18 @@ describe('extractOutputFromResponse', () => {
       },
     ]);
     const output = extractOutputFromResponse(response);
-    expect(output.scene.professional).toBe('A storefront entrance.');
-    expect(output.summary.simple).toBe('A 6-inch step blocks the entrance.');
+    expect(output.scene.standard).toBe('A storefront entrance.');
+    expect(output.summary.standard).toBe('A 6-inch step blocks the entrance.');
+    // Only the standard variant is produced at capture time.
+    expect(output.scene.professional).toBeUndefined();
+    expect(output.summary.simple).toBeUndefined();
     expect(output.overall_risk).toBe('high');
     expect(output.positive_findings.standard).toEqual([
       'Curb cut visible at sidewalk.',
     ]);
     expect(output.findings).toHaveLength(2);
-    expect(output.findings[0].finding_professional).toContain('6-inch step');
-    expect(output.findings[0].finding).toBe(output.findings[0].finding_standard); // deprecated alias
+    expect(output.findings[0].finding_standard).toContain('6-inch step');
+    expect(output.findings[0].finding_professional).toBeUndefined();
     expect(output.findings[0].severity).toBe('critical');
     expect(output.findings[0].confirmable).toBe(true);
     expect(output.findings[0].bounding_box).toEqual({ x: 0.1, y: 0.7, w: 0.8, h: 0.2 });
@@ -231,7 +234,7 @@ describe('extractOutputFromResponse', () => {
       confidence: 0.5,
       confirmable: true,
     });
-    const missingTitle = { ...valid, title_simple: undefined };
+    const missingTitle = { ...valid, title: undefined };
     const missingSeverity = { ...valid, severity: undefined };
     const invalidSeverity = { ...valid, severity: 'high' };
     const missingConfirmable = { ...valid, confirmable: undefined };
@@ -251,7 +254,7 @@ describe('extractOutputFromResponse', () => {
     ]);
     const out = extractOutputFromResponse(response);
     expect(out.findings).toHaveLength(1);
-    expect(out.findings[0].title_professional).toBe('Valid one');
+    expect(out.findings[0].title_standard).toBe('Valid one');
   });
 
   it('clamps confidence values outside 0..1', () => {
@@ -326,12 +329,15 @@ describe('extractOutputFromResponse', () => {
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
-function makeRLT(s: string) {
-  return { simple: s, standard: s, professional: s };
+// The report_findings tool now emits standard-level fields only: scene
+// and summary are plain strings, positive_findings a plain string list.
+// These helpers mirror that flat shape so the fixtures read clearly.
+function makeRLT(s: string): string {
+  return s;
 }
 
-function makeRLSL(arr: string[]) {
-  return { simple: arr, standard: arr, professional: arr };
+function makeRLSL(arr: string[]): string[] {
+  return arr;
 }
 
 interface FindingArgs {
@@ -346,12 +352,8 @@ interface FindingArgs {
 
 function makeFinding(a: FindingArgs): Record<string, unknown> {
   const out: Record<string, unknown> = {
-    title_simple: a.title,
-    title_standard: a.title,
-    title_professional: a.title,
-    finding_simple: a.text,
-    finding_standard: a.text,
-    finding_professional: a.text,
+    title: a.title,
+    finding: a.text,
     severity: a.severity,
     standard: a.standard,
     confidence: a.confidence,

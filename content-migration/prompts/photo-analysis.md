@@ -121,23 +121,21 @@ For each photo, check ALL applicable categories above. Do not skip categories ju
 
 This analysis is informational only, not a professional inspection. Be thorough and flag anything that warrants on-site verification.
 
-## Output requirements (Commit 8)
+## Output requirements
 
-You MUST produce three reading-level variants for every prose field — `simple`, `standard`, and `professional`. The `standard` field on each finding (the ADA cite) is the only universal field. Never collapse the three levels into one.
+Write every prose field at the **standard** reading level only — one variant, not three. Downstream consumers generate the simple and professional variants on demand from your standard text, so producing them here is wasted effort. The `standard` field on each finding (the ADA cite) is universal and unaffected by reading level.
 
-### Reading levels
+### Standard reading level
 
-- **`simple`** — Plain language for users with cognitive disabilities, learning differences, brain fog, severe anxiety, or second-language readers. Sentences ≤10 words, one idea per sentence, active voice, common words. Never use legal terms — say "the store broke the law" not "ADA violation". Never use idioms or metaphors. Be concrete: "the door was locked" not "access was restricted".
-- **`standard`** — 8th-grade conversational. Plain, direct, professional. Common terms like "ADA violation" or "accessible entrance" are fine without over-explaining.
-- **`professional`** — Legal/technical for attorneys reviewing the case. Use precise ADA terminology: "Title III", "barrier to access", "place of public accommodation", "2010 ADA Standards §404.2.3". Cite-dense and efficient.
+8th-grade conversational. Plain, direct, professional. Common terms like "ADA violation" or "accessible entrance" are fine without over-explaining. Be specific and include measurement estimates where visible — a downstream rewrite can only simplify or formalize what you actually wrote, so the standard text must carry the full substance of each concern.
 
 ### Scene description (top-level `scene`)
 
-Open every analysis with a scene description: what the photo(s) show — building type if identifiable, materials, fixtures visible, lighting, anything that gives the lawyer or user spatial context for the findings that follow. When multiple photos are provided, reference them by number ("Photo 1 shows…; Photo 2 shows…"). Three reading-level variants.
+Open every analysis with a scene description: what the photo(s) show — building type if identifiable, materials, fixtures visible, lighting, anything that gives the lawyer or user spatial context for the findings that follow. When multiple photos are provided, reference them by number ("Photo 1 shows…; Photo 2 shows…"). A single standard-level string.
 
 ### Summary (top-level `summary`)
 
-2–3 sentence overall assessment of the batch. Cover: the headline concerns, anything notably compliant, and whether the angle or framing limited what you could assess. Three reading-level variants.
+2–3 sentence overall assessment of the batch. Cover: the headline concerns, anything notably compliant, and whether the angle or framing limited what you could assess. A single standard-level string.
 
 ### Overall risk (top-level `overall_risk`)
 
@@ -150,14 +148,14 @@ Roll up from the findings list using these rules — apply mechanically:
 
 ### Positive findings (top-level `positive_findings`)
 
-Short array of compliant or accessibility-friendly features observed (curb cut present, accessible signage visible, level threshold, automatic door operator visible, etc.). Empty arrays are valid — only include items genuinely supported by the photo evidence. Three reading-level variants.
+Short array of compliant or accessibility-friendly features observed (curb cut present, accessible signage visible, level threshold, automatic door operator visible, etc.). Empty arrays are valid — only include items genuinely supported by the photo evidence. A single standard-level list of strings.
 
 ### Per-finding fields
 
 Each finding requires:
 
-- **`title_simple` / `title_standard` / `title_professional`** — short headline. The professional variant should look like the Base44 admin output: "Door Pull Bar Hardware — Graspability Concern", "Maneuvering Clearance — Latch Side Approach Obstructed by Dispenser". The simple variant strips legal vocabulary: "The door handle might be hard to grip", "Things in the way of the door".
-- **`finding_simple` / `finding_standard` / `finding_professional`** — full prose explanation. Include measurement estimates where visible. The professional variant cites the section inline and explains the requirement. The simple variant explains in plain words why it might be a problem for someone with a disability.
+- **`title`** — short headline at the standard reading level, e.g. "Door Pull Bar Hardware — Graspability Concern", "Maneuvering Clearance — Latch Side Approach Obstructed by Dispenser".
+- **`finding`** — full prose explanation at the standard reading level. Include measurement estimates where visible; cite the section and explain the requirement so the text carries the full substance of the concern.
 - **`standard`** — the cite. Universal. Same value for all reading levels.
 - **`severity`** — `critical` | `major` | `minor` | `advisory`.
 - **`confidence`** — 0..1 honest assessment.

@@ -133,7 +133,9 @@ export default function AdminPhotoReviewDetail() {
       />
 
       {detail.summary && (
-        <p className="mb-4 text-sm leading-relaxed text-ink-700">{detail.summary.professional}</p>
+        <p className="mb-4 text-sm leading-relaxed text-ink-700">
+          {detail.summary.professional ?? detail.summary.standard}
+        </p>
       )}
 
       {detail.testerComment && (
@@ -171,8 +173,12 @@ export default function AdminPhotoReviewDetail() {
                   </a>
                 )}
               </div>
-              <p className="text-sm font-semibold text-ink-900">{f.title_professional}</p>
-              <p className="mt-0.5 text-sm text-ink-700">{f.finding_professional}</p>
+              <p className="text-sm font-semibold text-ink-900">
+                {f.title_professional ?? f.title_standard}
+              </p>
+              <p className="mt-0.5 text-sm text-ink-700">
+                {f.finding_professional ?? f.finding_standard}
+              </p>
 
               {/* Verdict controls */}
               <div className="mt-2 flex flex-wrap gap-1.5">

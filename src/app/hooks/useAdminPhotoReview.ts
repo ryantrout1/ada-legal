@@ -34,19 +34,18 @@ export interface PhotoReviewListItem {
 }
 
 export interface ReadingLevelText {
-  simple: string;
   standard: string;
-  professional: string;
+  simple?: string;
+  professional?: string;
 }
 
 export interface PhotoFinding {
-  finding: string;
-  title_simple: string;
   title_standard: string;
-  title_professional: string;
-  finding_simple: string;
+  title_simple?: string;
+  title_professional?: string;
   finding_standard: string;
-  finding_professional: string;
+  finding_simple?: string;
+  finding_professional?: string;
   severity: FindingSeverity;
   standard: string;
   confidence: number;
@@ -84,7 +83,7 @@ export interface PhotoReviewDetail {
   scene: ReadingLevelText | null;
   summary: ReadingLevelText | null;
   overallRisk: OverallRisk | null;
-  positiveFindings: { simple: string[]; standard: string[]; professional: string[] } | null;
+  positiveFindings: { standard: string[]; simple?: string[]; professional?: string[] } | null;
   findings: PhotoFinding[];
   modelVersion: string;
   analyzedAt: string;

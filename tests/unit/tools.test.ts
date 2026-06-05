@@ -801,13 +801,8 @@ interface MakePhotoFindingArgs {
 
 function makePhotoFinding(a: MakePhotoFindingArgs) {
   return {
-    finding: a.text,
-    title_simple: a.title,
     title_standard: a.title,
-    title_professional: a.title,
-    finding_simple: a.text,
     finding_standard: a.text,
-    finding_professional: a.text,
     severity: a.severity,
     standard: a.standard,
     confidence: a.confidence,
@@ -818,10 +813,10 @@ function makePhotoFinding(a: MakePhotoFindingArgs) {
 
 function makeOutput(findings: ReturnType<typeof makePhotoFinding>[]) {
   return {
-    scene: { simple: '', standard: '', professional: '' },
-    summary: { simple: '', standard: '', professional: '' },
+    scene: { standard: '' },
+    summary: { standard: '' },
     overall_risk: 'medium' as const,
-    positive_findings: { simple: [], standard: [], professional: [] },
+    positive_findings: { standard: [] },
     findings,
   };
 }

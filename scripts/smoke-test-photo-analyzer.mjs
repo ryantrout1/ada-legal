@@ -66,42 +66,18 @@ const systemPrompt = await readFile(promptPath, 'utf-8');
 
 // ─── Build the schema (mirrors anthropicPhotoAnalysisClient.ts) ───────────────
 
-const READING_LEVEL_TEXT_SCHEMA = {
-  type: 'object',
-  description:
-    'Reading-level-aware string. Provide all three variants. simple = COGA-conformant plain language. standard = 8th-grade conversational. professional = legal/technical with ADA terminology.',
-  properties: {
-    simple: { type: 'string' },
-    standard: { type: 'string' },
-    professional: { type: 'string' },
-  },
-  required: ['simple', 'standard', 'professional'],
-};
-
-const READING_LEVEL_STRING_LIST_SCHEMA = {
-  type: 'object',
-  description:
-    'Reading-level-aware list of strings. Provide all three variants of the same list at different reading levels.',
-  properties: {
-    simple: { type: 'array', items: { type: 'string' } },
-    standard: { type: 'array', items: { type: 'string' } },
-    professional: { type: 'array', items: { type: 'string' } },
-  },
-  required: ['simple', 'standard', 'professional'],
-};
-
 const REPORT_FINDINGS_SCHEMA = {
   type: 'object',
   properties: {
     scene: {
-      ...READING_LEVEL_TEXT_SCHEMA,
+      type: 'string',
       description:
-        'What the photo(s) show — building type, materials, fixtures visible, lighting context. Reference each photo by number when multiple are provided ("Photo 1 shows...; Photo 2 shows..."). Provide three reading-level variants.',
+        'What the photo(s) show — building type, materials, fixtures visible, lighting context. Reference each photo by number when multiple are provided ("Photo 1 shows...; Photo 2 shows..."). Standard (8th-grade) reading level.',
     },
     summary: {
-      ...READING_LEVEL_TEXT_SCHEMA,
+      type: 'string',
       description:
-        '2-3 sentence overall assessment of the batch. Mention the headline concerns, anything notably compliant, and whether the angle/framing limited assessment. Three reading-level variants.',
+        '2-3 sentence overall assessment of the batch. Mention the headline concerns, anything notably compliant, and whether the angle/framing limited assessment. Standard reading level.',
     },
     overall_risk: {
       type: 'string',
@@ -110,9 +86,10 @@ const REPORT_FINDINGS_SCHEMA = {
         'high = any confirmable critical/major finding. medium = any major-severity unconfirmable, OR any minor finding. low = only advisory findings. none = zero findings.',
     },
     positive_findings: {
-      ...READING_LEVEL_STRING_LIST_SCHEMA,
+      type: 'array',
+      items: { type: 'string' },
       description:
-        'Compliant features observed (curb cut present, accessible signage visible, etc.). Empty arrays allowed.',
+        'Compliant features observed (curb cut present, accessible signage visible, etc.). Empty array allowed. Standard reading level.',
     },
     findings: {
       type: 'array',
@@ -121,12 +98,8 @@ const REPORT_FINDINGS_SCHEMA = {
       items: {
         type: 'object',
         properties: {
-          title_simple: { type: 'string' },
-          title_standard: { type: 'string' },
-          title_professional: { type: 'string' },
-          finding_simple: { type: 'string' },
-          finding_standard: { type: 'string' },
-          finding_professional: { type: 'string' },
+          title: { type: 'string' },
+          finding: { type: 'string' },
           severity: {
             type: 'string',
             enum: ['critical', 'major', 'minor', 'advisory'],
@@ -145,18 +118,7 @@ const REPORT_FINDINGS_SCHEMA = {
             required: ['x', 'y', 'w', 'h'],
           },
         },
-        required: [
-          'title_simple',
-          'title_standard',
-          'title_professional',
-          'finding_simple',
-          'finding_standard',
-          'finding_professional',
-          'severity',
-          'standard',
-          'confidence',
-          'confirmable',
-        ],
+        required: ['title', 'finding', 'severity', 'standard', 'confidence', 'confirmable'],
       },
     },
   },
@@ -229,29 +191,20 @@ console.log('══════════════════════�
 console.log(`OVERALL RISK: ${out.overall_risk}`);
 console.log('═══════════════════════════════════════════════════════════════');
 console.log('');
-console.log('SCENE (professional):');
-console.log(`  ${out.scene.professional}`);
 console.log('SCENE (standard):');
-console.log(`  ${out.scene.standard}`);
-console.log('SCENE (simple):');
-console.log(`  ${out.scene.simple}`);
+console.log(`  ${out.scene}`);
 console.log('');
-console.log('SUMMARY (professional):');
-console.log(`  ${out.summary.professional}`);
 console.log('SUMMARY (standard):');
-console.log(`  ${out.summary.standard}`);
-console.log('SUMMARY (simple):');
-console.log(`  ${out.summary.simple}`);
+console.log(`  ${out.summary}`);
 console.log('');
-console.log(`POSITIVE FINDINGS (${out.positive_findings.standard.length}):`);
-for (const p of out.positive_findings.standard) console.log(`  - ${p}`);
+console.log(`POSITIVE FINDINGS (${out.positive_findings.length}):`);
+for (const p of out.positive_findings) console.log(`  - ${p}`);
 console.log('');
 console.log(`FINDINGS (${out.findings.length}):`);
 for (const [i, f] of out.findings.entries()) {
-  console.log(`  ${i + 1}. [${f.severity.toUpperCase()}] ${f.title_professional}`);
+  console.log(`  ${i + 1}. [${f.severity.toUpperCase()}] ${f.title}`);
   console.log(`     ${f.standard} — confidence ${f.confidence}, confirmable: ${f.confirmable}`);
-  console.log(`     ${f.finding_professional.slice(0, 200)}${f.finding_professional.length > 200 ? '…' : ''}`);
-  console.log(`     simple: ${f.finding_simple.slice(0, 100)}${f.finding_simple.length > 100 ? '…' : ''}`);
+  console.log(`     ${f.finding.slice(0, 200)}${f.finding.length > 200 ? '…' : ''}`);
   if (f.bounding_box) {
     console.log(`     bbox: ${JSON.stringify(f.bounding_box)}`);
   }
@@ -270,35 +223,19 @@ function check(name, ok, detail = '') {
   console.log(`  ${ok ? '✓' : '✗'} ${name}${detail ? ` — ${detail}` : ''}`);
 }
 
-check('scene populated', out.scene.professional.length > 20);
-check('summary populated', out.summary.professional.length > 20);
+check('scene populated', typeof out.scene === 'string' && out.scene.length > 20);
+check('summary populated', typeof out.summary === 'string' && out.summary.length > 20);
 check(
   'overall_risk valid',
   ['high', 'medium', 'low', 'none'].includes(out.overall_risk),
   out.overall_risk,
 );
-check(
-  'reading levels differ (scene)',
-  out.scene.simple !== out.scene.standard ||
-    out.scene.standard !== out.scene.professional,
-  'simple/standard/professional should not be identical',
-);
-check(
-  'reading levels differ (summary)',
-  out.summary.simple !== out.summary.standard ||
-    out.summary.standard !== out.summary.professional,
-);
+check('positive_findings is array', Array.isArray(out.positive_findings));
 check('findings[] is array', Array.isArray(out.findings));
 if (out.findings.length > 0) {
   const f = out.findings[0];
-  check('first finding has all reading-level title variants',
-    typeof f.title_simple === 'string' &&
-    typeof f.title_standard === 'string' &&
-    typeof f.title_professional === 'string');
-  check('first finding has all reading-level finding variants',
-    typeof f.finding_simple === 'string' &&
-    typeof f.finding_standard === 'string' &&
-    typeof f.finding_professional === 'string');
+  check('first finding has standard title', typeof f.title === 'string' && f.title.length > 0);
+  check('first finding has standard finding text', typeof f.finding === 'string' && f.finding.length > 0);
   check('first finding has confirmable flag', typeof f.confirmable === 'boolean');
   check('first finding has standard cite', typeof f.standard === 'string' && f.standard.length > 0);
 }

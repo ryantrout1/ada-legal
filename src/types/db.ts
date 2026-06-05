@@ -277,40 +277,41 @@ export interface PhotoBoundingBox {
 export type PhotoOverallRisk = 'high' | 'medium' | 'low' | 'none';
 
 /**
- * Reading-level-aware string triple. Photo analyzer emits all three at
- * once; consumers pick the variant for their audience (user's session
- * reading level for Ada-facing surfaces, always `professional` for the
- * attorney package). Step 30, Commit 8.
+ * Reading-level-aware string. The photo analyzer emits only `standard`
+ * at capture time (the latency fix — generating all three levels was
+ * ~60% of the vision-call output and the cause of the 45–90s wait).
+ * `simple` and `professional` are generated on demand and cached back
+ * onto the row the first time a consumer needs them, so they're
+ * optional: a freshly-captured analysis has `standard` only, and every
+ * consumer falls back to `standard` until the requested level is filled.
  */
 export interface ReadingLevelText {
-  simple: string;
   standard: string;
-  professional: string;
+  simple?: string;
+  professional?: string;
 }
 
 /** Same as ReadingLevelText but each variant is a list of strings. */
 export interface ReadingLevelStringList {
-  simple: string[];
   standard: string[];
-  professional: string[];
+  simple?: string[];
+  professional?: string[];
 }
 
 export interface PhotoFinding {
   /**
-   * @deprecated Commit 8: kept as an alias of `finding_standard` for one
-   * release so existing consumers (attorney package projection, tests)
-   * keep compiling. Removed in Commit 9 once all readers migrate to the
-   * reading-level fields. Always equal to `finding_standard` on writes.
+   * Short headline — "Door Pull Bar Hardware — Graspability Concern".
+   * Only `*_standard` is produced at capture; `*_simple` / `*_professional`
+   * are generated on demand and cached. Optional variants are absent
+   * until then — consumers fall back to the standard variant.
    */
-  finding: string;
-  /** Short headline — "Door Pull Bar Hardware — Graspability Concern". */
-  title_simple: string;
   title_standard: string;
-  title_professional: string;
+  title_simple?: string;
+  title_professional?: string;
   /** Full prose explanation of the concern. */
-  finding_simple: string;
   finding_standard: string;
-  finding_professional: string;
+  finding_simple?: string;
+  finding_professional?: string;
   severity: PhotoFindingSeverity;
   standard: string; // cited ADA / ADAAG section — universal, not localized
   confidence: number; // 0..1

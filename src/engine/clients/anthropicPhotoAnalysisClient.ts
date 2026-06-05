@@ -3,9 +3,10 @@
  *
  * Uses Claude Sonnet 4.5 with vision + tool-use to force structured JSON
  * output from the model. The analyst persona + comprehensive ADA standards
- * catalog lives in content-migration/prompts/photo-analysis.md (extended
- * for Commit 8 — scene/summary/positive findings, three reading-level
- * variants, confirmable flag).
+ * catalog lives in content-migration/prompts/photo-analysis.md
+ * (scene/summary/positive findings, confirmable flag). Output is at the
+ * standard reading level only; simple/professional are generated on
+ * demand by rewriteToLevel() and cached back onto the photo_analyses row.
  *
  * blob_keys contract:
  *   Each entry must be either:
@@ -22,10 +23,12 @@
  *   compliance chains. Step 30, Commit 8.
  *
  * Structured output:
- *   The `report_findings` tool's input schema matches PhotoAnalysisOutput:
- *   top-level scene/summary/overall_risk/positive_findings (each with
- *   three reading-level variants) plus a findings[] array. We force its
- *   use via tool_choice — no free-form JSON.
+ *   The `report_findings` tool's input schema is the standard-level
+ *   projection of PhotoAnalysisOutput: top-level scene/summary (strings),
+ *   overall_risk, positive_findings (string list), plus a findings[]
+ *   array (title + finding per concern). We force its use via tool_choice
+ *   — no free-form JSON. validateOutput wraps each string as the
+ *   `standard` variant of its reading-level field.
  *
  * Ref: docs/ARCHITECTURE.md §10
  */
@@ -41,26 +44,19 @@ import type {
   PhotoFinding,
   PhotoFindingSeverity,
   PhotoOverallRisk,
-  ReadingLevelStringList,
-  ReadingLevelText,
 } from '../../types/db.js';
 import photoAnalysisSystemPrompt from '../../../content-migration/prompts/photo-analysis.js';
 
 const DEFAULT_MODEL = 'claude-sonnet-4-5';
-// Three reading-level variants × scene + summary + positive_findings +
-// (title + finding) per concern. Empirically 4096 is enough for 3-photo,
-// 10-finding sites; truncation surfaces as a max_tokens stop_reason
-// which extractOutputFromResponse already handles gracefully (empty
-// findings + meta logged for visibility). Lowered from 8192 in Pass 1
-// of the photo-analysis latency fix — output tokens were the dominant
-// driver of vision-call wall clock.
-// Three reading-level variants × scene + summary + positive_findings +
-// (title + finding) per concern. Raised back to 8192 from 4096: the lower
-// cap was clipping concern detail mid-sentence (max_tokens stop_reason),
-// which half-blinds the expert reviewer — they can't judge reasoning they
-// can't read. Full reasoning matters more than a second of latency on the
-// field-test path.
-const DEFAULT_MAX_TOKENS = 8192;
+// Standard reading level only — one variant of scene + summary +
+// positive_findings + (title + finding) per concern. Generating all
+// three reading levels at capture was ~60% of the output and the cause
+// of the 45–90s wait; simple/professional are now produced on demand via
+// rewriteToLevel() and cached back onto the row. 4096 is ample for a
+// single-level, 3-photo, 10-finding site; truncation still surfaces as a
+// max_tokens stop_reason which extractOutputFromResponse handles
+// gracefully (empty findings + meta logged for visibility).
+const DEFAULT_MAX_TOKENS = 4096;
 const MAX_PHOTOS_PER_CALL = 3;
 
 // Vercel Blob URL pattern: https://<storeId>.public.blob.vercel-storage.com/<path>.
@@ -72,43 +68,27 @@ const MAX_PHOTOS_PER_CALL = 3;
 const VERCEL_BLOB_URL_RE =
   /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\//i;
 
-const READING_LEVEL_TEXT_SCHEMA = {
-  type: 'object' as const,
-  description:
-    'Reading-level-aware string. Provide all three variants. simple = COGA-conformant plain language. standard = 8th-grade conversational. professional = legal/technical with ADA terminology.',
-  properties: {
-    simple: { type: 'string' },
-    standard: { type: 'string' },
-    professional: { type: 'string' },
-  },
-  required: ['simple', 'standard', 'professional'],
-};
-
-const READING_LEVEL_STRING_LIST_SCHEMA = {
-  type: 'object' as const,
-  description:
-    'Reading-level-aware list of strings. Provide all three variants of the same list at different reading levels.',
-  properties: {
-    simple: { type: 'array', items: { type: 'string' } },
-    standard: { type: 'array', items: { type: 'string' } },
-    professional: { type: 'array', items: { type: 'string' } },
-  },
-  required: ['simple', 'standard', 'professional'],
-};
-
-/** Input schema for the `report_findings` tool. Enforced by Anthropic. */
+/**
+ * Input schema for the `report_findings` tool. Enforced by Anthropic.
+ *
+ * Standard reading level only. scene/summary are plain strings,
+ * positive_findings a plain string list, and each finding carries a
+ * single title + finding. The simple/professional variants that used to
+ * be required here are generated on demand by rewriteToLevel() — see the
+ * DEFAULT_MAX_TOKENS note for why.
+ */
 const REPORT_FINDINGS_SCHEMA = {
   type: 'object' as const,
   properties: {
     scene: {
-      ...READING_LEVEL_TEXT_SCHEMA,
+      type: 'string',
       description:
-        'What the photo(s) show — building type, materials, fixtures visible, lighting context. Reference each photo by number when multiple are provided ("Photo 1 shows...; Photo 2 shows..."). Provide three reading-level variants.',
+        'What the photo(s) show — building type, materials, fixtures visible, lighting context. Reference each photo by number when multiple are provided ("Photo 1 shows...; Photo 2 shows..."). Write at a standard (8th-grade, conversational) reading level.',
     },
     summary: {
-      ...READING_LEVEL_TEXT_SCHEMA,
+      type: 'string',
       description:
-        '2-3 sentence overall assessment of the batch. Mention the headline concerns, anything notably compliant, and whether the angle/framing limited assessment. Three reading-level variants.',
+        '2-3 sentence overall assessment of the batch. Mention the headline concerns, anything notably compliant, and whether the angle/framing limited assessment. Standard (8th-grade) reading level.',
     },
     overall_risk: {
       type: 'string',
@@ -117,9 +97,10 @@ const REPORT_FINDINGS_SCHEMA = {
         'high = any confirmable critical/major finding. medium = any major-severity unconfirmable, OR any minor finding. low = only advisory findings. none = zero findings.',
     },
     positive_findings: {
-      ...READING_LEVEL_STRING_LIST_SCHEMA,
+      type: 'array',
+      items: { type: 'string' },
       description:
-        'Compliant features observed (curb cut present, accessible signage visible, etc.). Empty arrays allowed.',
+        'Compliant features observed (curb cut present, accessible signage visible, etc.). Empty array allowed. Standard reading level.',
     },
     findings: {
       type: 'array',
@@ -128,19 +109,15 @@ const REPORT_FINDINGS_SCHEMA = {
       items: {
         type: 'object',
         properties: {
-          title_simple: { type: 'string' },
-          title_standard: { type: 'string' },
-          title_professional: {
+          title: {
             type: 'string',
             description:
-              'Short headline for the concern, e.g. "Door Pull Bar Hardware — Graspability Concern".',
+              'Short headline for the concern, e.g. "Door Pull Bar Hardware — Graspability Concern". Standard reading level.',
           },
-          finding_simple: { type: 'string' },
-          finding_standard: { type: 'string' },
-          finding_professional: {
+          finding: {
             type: 'string',
             description:
-              'Full prose explanation of the concern, including measurement estimates where visible.',
+              'Full prose explanation of the concern, including measurement estimates where visible. Standard reading level.',
           },
           severity: {
             type: 'string',
@@ -179,12 +156,8 @@ const REPORT_FINDINGS_SCHEMA = {
           },
         },
         required: [
-          'title_simple',
-          'title_standard',
-          'title_professional',
-          'finding_simple',
-          'finding_standard',
-          'finding_professional',
+          'title',
+          'finding',
           'severity',
           'standard',
           'confidence',
@@ -323,26 +296,19 @@ export function parseBlobKeyToImageBlock(blobKey: string): {
   );
 }
 
-const EMPTY_RLT: ReadingLevelText = { simple: '', standard: '', professional: '' };
-
-/**
- * Factory rather than a frozen constant: callers may mutate the
- * returned arrays (e.g. push to positive_findings.standard), and a
- * shared reference would corrupt every other empty output. Always
- * call this fresh.
- */
-function emptyRLSL(): ReadingLevelStringList {
-  return { simple: [], standard: [], professional: [] };
-}
-
 function emptyOutput(): PhotoAnalysisOutput {
   return {
-    scene: { ...EMPTY_RLT },
-    summary: { ...EMPTY_RLT },
+    scene: { standard: '' },
+    summary: { standard: '' },
     overall_risk: 'none',
-    positive_findings: emptyRLSL(),
+    positive_findings: { standard: [] },
     findings: [],
   };
+}
+
+/** Coerce an unknown value into a string[] (non-strings dropped). */
+function toStringArray(v: unknown): string[] {
+  return Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string') : [];
 }
 
 export function extractOutputFromResponse(
@@ -395,35 +361,11 @@ function validateOutput(raw: Record<string, unknown>): PhotoAnalysisOutput {
         .filter((f): f is PhotoFinding => f !== null)
     : [];
   return {
-    scene: validateRLT(raw.scene),
-    summary: validateRLT(raw.summary),
+    scene: { standard: typeof raw.scene === 'string' ? raw.scene : '' },
+    summary: { standard: typeof raw.summary === 'string' ? raw.summary : '' },
     overall_risk: isValidRisk(raw.overall_risk) ? raw.overall_risk : 'none',
-    positive_findings: validateRLSL(raw.positive_findings),
+    positive_findings: { standard: toStringArray(raw.positive_findings) },
     findings,
-  };
-}
-
-function validateRLT(raw: unknown): ReadingLevelText {
-  if (!raw || typeof raw !== 'object') return { ...EMPTY_RLT };
-  const r = raw as Record<string, unknown>;
-  return {
-    simple: typeof r.simple === 'string' ? r.simple : '',
-    standard: typeof r.standard === 'string' ? r.standard : '',
-    professional: typeof r.professional === 'string' ? r.professional : '',
-  };
-}
-
-function validateRLSL(raw: unknown): ReadingLevelStringList {
-  if (!raw || typeof raw !== 'object') {
-    return emptyRLSL();
-  }
-  const r = raw as Record<string, unknown>;
-  const toStringArray = (v: unknown): string[] =>
-    Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string') : [];
-  return {
-    simple: toStringArray(r.simple),
-    standard: toStringArray(r.standard),
-    professional: toStringArray(r.professional),
   };
 }
 
@@ -431,12 +373,8 @@ export function validateFinding(raw: unknown): PhotoFinding | null {
   if (!raw || typeof raw !== 'object') return null;
   const r = raw as Record<string, unknown>;
   if (
-    typeof r.title_simple !== 'string' ||
-    typeof r.title_standard !== 'string' ||
-    typeof r.title_professional !== 'string' ||
-    typeof r.finding_simple !== 'string' ||
-    typeof r.finding_standard !== 'string' ||
-    typeof r.finding_professional !== 'string' ||
+    typeof r.title !== 'string' ||
+    typeof r.finding !== 'string' ||
     typeof r.standard !== 'string' ||
     typeof r.confidence !== 'number' ||
     typeof r.confirmable !== 'boolean' ||
@@ -445,15 +383,8 @@ export function validateFinding(raw: unknown): PhotoFinding | null {
     return null;
   }
   const out: PhotoFinding = {
-    // Deprecated alias — equals finding_standard so legacy readers keep
-    // working until Commit 9 removes the field.
-    finding: r.finding_standard,
-    title_simple: r.title_simple,
-    title_standard: r.title_standard,
-    title_professional: r.title_professional,
-    finding_simple: r.finding_simple,
-    finding_standard: r.finding_standard,
-    finding_professional: r.finding_professional,
+    title_standard: r.title,
+    finding_standard: r.finding,
     severity: r.severity,
     standard: r.standard,
     confidence: Math.max(0, Math.min(1, r.confidence)),
