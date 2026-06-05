@@ -30,6 +30,7 @@ export interface PhotoReviewListItem {
   modelVersion: string;
   analyzedAt: string;
   reviewState: ReviewState;
+  reviewerCount: number;
   overallVerdict: ReviewOverallVerdict | null;
 }
 
@@ -66,7 +67,8 @@ export interface MissedFinding {
 }
 
 export interface PhotoReviewRecord {
-  reviewerEmail: string;
+  reviewer: string;
+  reviewerEmail: string | null;
   status: 'reviewed' | 'addressed';
   overallVerdict: ReviewOverallVerdict | null;
   findingLabels: FindingLabel[];
@@ -88,7 +90,8 @@ export interface PhotoReviewDetail {
   modelVersion: string;
   analyzedAt: string;
   testerComment: string | null;
-  review: PhotoReviewRecord | null;
+  reviews: PhotoReviewRecord[];
+  viewerReviewer?: string;
 }
 
 export interface EvalRow {

@@ -48,18 +48,21 @@ export default function AdminPhotoReviewDetail() {
   const [status, setStatus] = useState<'reviewed' | 'addressed'>('reviewed');
   const [savedFlash, setSavedFlash] = useState(false);
 
-  // Seed local state from any existing review when the detail loads.
+  // Seed local state from this admin's own existing review when detail loads.
+  const ownReview =
+    detail?.reviews.find((r) => r.reviewer === detail.viewerReviewer) ?? null;
   useEffect(() => {
     if (!detail) return;
+    const mine = detail.reviews.find((r) => r.reviewer === detail.viewerReviewer) ?? null;
     const seed: LabelState = {};
-    for (const l of detail.review?.findingLabels ?? []) {
+    for (const l of mine?.findingLabels ?? []) {
       seed[l.finding_index] = { verdict: l.verdict, reason: l.reason };
     }
     setLabels(seed);
-    setMissed(detail.review?.missedFindings ?? []);
-    setOverallVerdict(detail.review?.overallVerdict ?? '');
-    setNotes(detail.review?.reviewerNotes ?? '');
-    setStatus(detail.review?.status ?? 'reviewed');
+    setMissed(mine?.missedFindings ?? []);
+    setOverallVerdict(mine?.overallVerdict ?? '');
+    setNotes(mine?.reviewerNotes ?? '');
+    setStatus(mine?.status ?? 'reviewed');
   }, [detail]);
 
   if (unauthenticated) {
@@ -168,6 +171,34 @@ export default function AdminPhotoReviewDetail() {
             Tester note
           </p>
           <p className="mt-1 whitespace-pre-wrap text-sm text-ink-900">{detail.testerComment}</p>
+        </div>
+      )}
+
+      {detail.reviews.length > 0 && (
+        <div className="mb-4 rounded-md border border-surface-200 bg-surface-50 p-3">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">
+            Reviews so far ({detail.reviews.length})
+          </p>
+          <ul className="space-y-2">
+            {detail.reviews.map((rv) => (
+              <li key={rv.reviewer} className="text-sm text-ink-700">
+                <span className="font-semibold text-ink-900">{rv.reviewer}</span>
+                {rv.overallVerdict && (
+                  <span className="ml-2 rounded bg-surface-100 px-1.5 py-0.5 text-xs text-ink-700">
+                    {rv.overallVerdict}
+                  </span>
+                )}
+                {rv.status === 'addressed' && (
+                  <span className="ml-2 rounded bg-emerald-50 px-1.5 py-0.5 text-xs text-emerald-700">
+                    addressed
+                  </span>
+                )}
+                {rv.reviewerNotes && (
+                  <span className="ml-2 text-ink-500">— {rv.reviewerNotes}</span>
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
@@ -323,13 +354,13 @@ export default function AdminPhotoReviewDetail() {
             disabled={saving}
             className="rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-white hover:bg-accent-600 disabled:opacity-50"
           >
-            {saving ? 'Saving…' : detail.review ? 'Update review' : 'Save review'}
+            {saving ? 'Saving…' : ownReview ? 'Update my review' : 'Save my review'}
           </button>
           {savedFlash && <span className="text-sm text-emerald-700">Saved.</span>}
           {error && <span className="text-sm text-danger-500">{error}</span>}
-          {detail.review && (
+          {detail.viewerReviewer && (
             <span className="text-xs text-ink-500">
-              Last reviewed by {detail.review.reviewerEmail}
+              Reviewing as {detail.viewerReviewer}
             </span>
           )}
         </div>

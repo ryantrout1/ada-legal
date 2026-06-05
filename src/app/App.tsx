@@ -38,6 +38,9 @@ import StandardsGuide from './routes/public/StandardsGuide.js';
 import StandardsChapter from './routes/public/StandardsChapter.js';
 import GuidePage from './routes/public/GuidePage.js';
 import PhotoCapture from './routes/public/PhotoCapture.js';
+import ReviewLayout from './routes/review/ReviewLayout.js';
+import PhotoReviewQueue from './routes/review/PhotoReviewQueue.js';
+import PhotoReviewLabel from './routes/review/PhotoReviewLabel.js';
 import AdminSignIn from './routes/admin/SignIn.js';
 import AdminSignUp from './routes/admin/SignUp.js';
 import AdminSessions from './routes/admin/AdminSessions.js';
@@ -106,6 +109,14 @@ export default function App() {
             chrome competing with the single-task form. Unlisted; not
             linked from the public site. See /plan: /photo. */}
         <Route path="/photo" element={<PhotoCapture />} />
+
+        {/* Standalone — public, no-auth reviewer tool for Peter/Gina/Ryan.
+            Self-identifies by name (no login); outside PublicLayout and
+            Clerk, same discipline as /photo. Unlisted. */}
+        <Route element={<ReviewLayout />}>
+          <Route path="/review" element={<PhotoReviewQueue />} />
+          <Route path="/review/:id" element={<PhotoReviewLabel />} />
+        </Route>
 
         {/* Admin tree — ClerkProvider only wraps this subtree */}
         <Route path="/admin/*" element={<AdminShell />} />

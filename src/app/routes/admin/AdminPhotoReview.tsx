@@ -186,6 +186,11 @@ export default function AdminPhotoReview() {
                       <span className={`rounded px-2 py-0.5 text-xs font-medium ${state.bg} ${state.text}`}>
                         {state.label}
                       </span>
+                      {it.reviewerCount > 0 && (
+                        <span className="text-xs text-ink-500">
+                          {it.reviewerCount} review{it.reviewerCount === 1 ? '' : 's'}
+                        </span>
+                      )}
                       <span className="text-xs text-ink-500">{fmtDate(it.analyzedAt)}</span>
                     </div>
                     <p className="mt-1 truncate text-sm text-ink-700">
