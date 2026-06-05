@@ -1457,7 +1457,11 @@ export interface PhotoReviewListItem {
   advisoryCount: number;
   modelVersion: string;
   analyzedAt: string;
+  /** Aggregate across all reviewers: addressed if any reviewer addressed it,
+   *  else reviewed if any review exists, else unreviewed. */
   reviewState: PhotoReviewState;
+  /** How many people have reviewed this analysis. */
+  reviewerCount: number;
   overallVerdict: ReviewOverallVerdict | null;
 }
 
@@ -1469,7 +1473,10 @@ export interface PhotoReviewListResult {
 }
 
 export interface PhotoReviewRecord {
-  reviewerEmail: string;
+  /** Display name of the reviewer: 'Peter' | 'Gina' | 'Ryan'. */
+  reviewer: string;
+  /** Clerk email for admin reviews; null for public self-identified reviews. */
+  reviewerEmail: string | null;
   status: ReviewStatus;
   overallVerdict: ReviewOverallVerdict | null;
   findingLabels: PhotoFindingLabel[];
@@ -1492,13 +1499,17 @@ export interface PhotoReviewDetail {
   analyzedAt: string;
   /** Tester's post-analysis note from the /photo page, if any. */
   testerComment: string | null;
-  /** Null when not yet reviewed. */
-  review: PhotoReviewRecord | null;
+  /** Every reviewer's review of this analysis (Peter, Gina, Ryan). */
+  reviews: PhotoReviewRecord[];
+  /** The current viewer's reviewer name, when known server-side (admin/Clerk). */
+  viewerReviewer?: string;
 }
 
 export interface UpsertPhotoReviewInput {
   photoAnalysisId: string;
-  reviewerEmail: string;
+  /** Display name of the reviewer: 'Peter' | 'Gina' | 'Ryan'. */
+  reviewer: string;
+  reviewerEmail?: string | null;
   status?: ReviewStatus;
   overallVerdict?: ReviewOverallVerdict | null;
   findingLabels: PhotoFindingLabel[];

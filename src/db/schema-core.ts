@@ -250,8 +250,10 @@ export const photoAnalyses = pgTable(
 
 // ─── photo_reviews (expert labeling loop) ───────────────────────────────────
 //
-// Peter's authoritative verdict on a photo analysis. One row per
-// photo_analyses row (unique FK). Captures both error directions:
+// A reviewer's verdict on a photo analysis. One row per (analysis,
+// reviewer) — Peter, Gina, and Ryan each get their own row so their
+// feedback is kept separate, not overwritten. Captures both error
+// directions:
 // finding_labels = verdicts on emitted findings (false positives +
 // confirmations); missed_findings = concerns the engine missed (false
 // negatives). model_version is copied from the analysis at review time so
@@ -263,9 +265,11 @@ export const photoReviews = pgTable(
     id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
     photoAnalysisId: uuid('photo_analysis_id')
       .notNull()
-      .unique()
       .references(() => photoAnalyses.id, { onDelete: 'cascade' }),
-    reviewerEmail: text('reviewer_email').notNull(),
+    /** Display name of the reviewer: 'Peter' | 'Gina' | 'Ryan'. */
+    reviewer: text('reviewer').notNull(),
+    /** Clerk email for admin (Clerk) reviews; null for public self-identified reviews. */
+    reviewerEmail: text('reviewer_email'),
     /** reviewed = Peter has labeled it; addressed = Ryan has acted on it. */
     status: text('status').$type<ReviewStatus>().notNull().default('reviewed'),
     overallVerdict: text('overall_verdict').$type<ReviewOverallVerdict | null>(),
@@ -286,6 +290,8 @@ export const photoReviews = pgTable(
   (t) => [
     index('photo_reviews_model_version').on(t.modelVersion),
     index('photo_reviews_status').on(t.status),
+    // One review per person per analysis — the upsert target.
+    uniqueIndex('photo_reviews_analysis_reviewer_key').on(t.photoAnalysisId, t.reviewer),
   ],
 );
 

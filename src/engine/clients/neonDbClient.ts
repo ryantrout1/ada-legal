@@ -67,6 +67,7 @@ import type {
   PhotoReviewListResult,
   PhotoReviewListItem,
   PhotoReviewDetail,
+  PhotoReviewRecord,
   UpsertPhotoReviewInput,
   PhotoReviewEvalRow,
   PhotoReviewState,
@@ -474,14 +475,24 @@ export class NeonDbClient implements DbClient {
       opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 25;
     const offset = (page - 1) * pageSize;
 
+    // Multiple reviewers can review the same analysis, so we aggregate the
+    // review rows with correlated subqueries rather than a join (a join would
+    // multiply analysis rows by their review count and break pagination).
+    const reviewerCountSql = sql<number>`(SELECT count(*)::int FROM photo_reviews pr WHERE pr.photo_analysis_id = ${photoAnalyses.id})`;
+    const anyAddressedSql = sql<boolean>`EXISTS (SELECT 1 FROM photo_reviews pr WHERE pr.photo_analysis_id = ${photoAnalyses.id} AND pr.status = 'addressed')`;
+
     // Scope to field-test photos only — never surface real claimants'
     // analyses in the labeling tool.
     const conds = [eq(adaSessions.isTest, true)];
     if (opts.risk) conds.push(eq(photoAnalyses.overallRisk, opts.risk));
     if (opts.modelVersion) conds.push(eq(photoAnalyses.modelVersion, opts.modelVersion));
-    if (opts.reviewState === 'unreviewed') conds.push(sql`${photoReviews.id} IS NULL`);
-    else if (opts.reviewState === 'reviewed') conds.push(eq(photoReviews.status, 'reviewed'));
-    else if (opts.reviewState === 'addressed') conds.push(eq(photoReviews.status, 'addressed'));
+    if (opts.reviewState === 'unreviewed') {
+      conds.push(sql`NOT EXISTS (SELECT 1 FROM photo_reviews pr WHERE pr.photo_analysis_id = ${photoAnalyses.id})`);
+    } else if (opts.reviewState === 'reviewed') {
+      conds.push(sql`EXISTS (SELECT 1 FROM photo_reviews pr WHERE pr.photo_analysis_id = ${photoAnalyses.id})`);
+    } else if (opts.reviewState === 'addressed') {
+      conds.push(sql`EXISTS (SELECT 1 FROM photo_reviews pr WHERE pr.photo_analysis_id = ${photoAnalyses.id} AND pr.status = 'addressed')`);
+    }
 
     const whereClause = and(...conds);
 
@@ -489,7 +500,6 @@ export class NeonDbClient implements DbClient {
       .select({ n: sql<number>`count(*)::int` })
       .from(photoAnalyses)
       .innerJoin(adaSessions, eq(adaSessions.id, photoAnalyses.sessionId))
-      .leftJoin(photoReviews, eq(photoReviews.photoAnalysisId, photoAnalyses.id))
       .where(whereClause);
     const totalCount = countRows[0]?.n ?? 0;
 
@@ -502,24 +512,23 @@ export class NeonDbClient implements DbClient {
         findings: photoAnalyses.findings,
         modelVersion: photoAnalyses.modelVersion,
         analyzedAt: photoAnalyses.analyzedAt,
-        reviewId: photoReviews.id,
-        reviewStatus: photoReviews.status,
-        overallVerdict: photoReviews.overallVerdict,
+        reviewerCount: reviewerCountSql,
+        anyAddressed: anyAddressedSql,
       })
       .from(photoAnalyses)
       .innerJoin(adaSessions, eq(adaSessions.id, photoAnalyses.sessionId))
-      .leftJoin(photoReviews, eq(photoReviews.photoAnalysisId, photoAnalyses.id))
       .where(whereClause)
       // Unreviewed first, then newest — opens as a work queue, not an archive.
-      .orderBy(sql`(${photoReviews.id} IS NULL) DESC, ${photoAnalyses.analyzedAt} DESC`)
+      .orderBy(sql`(${reviewerCountSql} = 0) DESC, ${photoAnalyses.analyzedAt} DESC`)
       .limit(pageSize)
       .offset(offset);
 
     const items: PhotoReviewListItem[] = rows.map((r) => {
       const findings = (r.findings ?? []) as PhotoFinding[];
       const count = (sev: string) => findings.filter((f) => f.severity === sev).length;
+      const reviewerCount = Number(r.reviewerCount ?? 0);
       const reviewState: PhotoReviewState =
-        r.reviewId == null ? 'unreviewed' : (r.reviewStatus as PhotoReviewState);
+        reviewerCount === 0 ? 'unreviewed' : r.anyAddressed ? 'addressed' : 'reviewed';
       return {
         photoAnalysisId: r.id,
         sessionId: r.sessionId,
@@ -533,7 +542,10 @@ export class NeonDbClient implements DbClient {
         modelVersion: r.modelVersion,
         analyzedAt: (r.analyzedAt as Date).toISOString(),
         reviewState,
-        overallVerdict: r.overallVerdict ?? null,
+        reviewerCount,
+        // Per-analysis verdict is ambiguous across reviewers; surfaced per
+        // reviewer on the detail page instead.
+        overallVerdict: null,
       };
     });
 
@@ -556,22 +568,42 @@ export class NeonDbClient implements DbClient {
         modelVersion: photoAnalyses.modelVersion,
         analyzedAt: photoAnalyses.analyzedAt,
         testerComment: photoAnalyses.testerComment,
-        rEmail: photoReviews.reviewerEmail,
-        rStatus: photoReviews.status,
-        rVerdict: photoReviews.overallVerdict,
-        rLabels: photoReviews.findingLabels,
-        rMissed: photoReviews.missedFindings,
-        rNotes: photoReviews.reviewerNotes,
-        rModel: photoReviews.modelVersion,
-        rReviewedAt: photoReviews.reviewedAt,
       })
       .from(photoAnalyses)
-      .leftJoin(photoReviews, eq(photoReviews.photoAnalysisId, photoAnalyses.id))
       .where(eq(photoAnalyses.id, photoAnalysisId))
       .limit(1);
 
     const r = rows[0];
     if (!r) return null;
+
+    // All reviewers' reviews of this analysis, kept separate per person.
+    const reviewRows = await this.db
+      .select({
+        reviewer: photoReviews.reviewer,
+        reviewerEmail: photoReviews.reviewerEmail,
+        status: photoReviews.status,
+        overallVerdict: photoReviews.overallVerdict,
+        findingLabels: photoReviews.findingLabels,
+        missedFindings: photoReviews.missedFindings,
+        reviewerNotes: photoReviews.reviewerNotes,
+        modelVersion: photoReviews.modelVersion,
+        reviewedAt: photoReviews.reviewedAt,
+      })
+      .from(photoReviews)
+      .where(eq(photoReviews.photoAnalysisId, photoAnalysisId))
+      .orderBy(photoReviews.reviewer);
+
+    const reviews: PhotoReviewRecord[] = reviewRows.map((rv) => ({
+      reviewer: rv.reviewer,
+      reviewerEmail: rv.reviewerEmail ?? null,
+      status: rv.status as ReviewStatus,
+      overallVerdict: rv.overallVerdict ?? null,
+      findingLabels: (rv.findingLabels ?? []) as PhotoFindingLabel[],
+      missedFindings: (rv.missedFindings ?? []) as MissedFinding[],
+      reviewerNotes: rv.reviewerNotes ?? null,
+      modelVersion: rv.modelVersion ?? null,
+      reviewedAt: (rv.reviewedAt as Date).toISOString(),
+    }));
 
     return {
       photoAnalysisId: r.id,
@@ -585,19 +617,7 @@ export class NeonDbClient implements DbClient {
       modelVersion: r.modelVersion,
       analyzedAt: (r.analyzedAt as Date).toISOString(),
       testerComment: r.testerComment ?? null,
-      review:
-        r.rEmail == null
-          ? null
-          : {
-              reviewerEmail: r.rEmail,
-              status: r.rStatus as ReviewStatus,
-              overallVerdict: r.rVerdict ?? null,
-              findingLabels: (r.rLabels ?? []) as PhotoFindingLabel[],
-              missedFindings: (r.rMissed ?? []) as MissedFinding[],
-              reviewerNotes: r.rNotes ?? null,
-              modelVersion: r.rModel ?? null,
-              reviewedAt: (r.rReviewedAt as Date).toISOString(),
-            },
+      reviews,
     };
   }
 
@@ -625,7 +645,7 @@ export class NeonDbClient implements DbClient {
 
   async upsertPhotoReview(input: UpsertPhotoReviewInput): Promise<void> {
     const set = {
-      reviewerEmail: input.reviewerEmail,
+      reviewerEmail: input.reviewerEmail ?? null,
       status: input.status ?? ('reviewed' as ReviewStatus),
       overallVerdict: input.overallVerdict ?? null,
       findingLabels: input.findingLabels,
@@ -635,9 +655,14 @@ export class NeonDbClient implements DbClient {
     };
     await this.db
       .insert(photoReviews)
-      .values({ photoAnalysisId: input.photoAnalysisId, ...set })
+      .values({
+        photoAnalysisId: input.photoAnalysisId,
+        reviewer: input.reviewer,
+        ...set,
+      })
+      // One row per (analysis, reviewer): a re-save updates that person's row.
       .onConflictDoUpdate({
-        target: photoReviews.photoAnalysisId,
+        target: [photoReviews.photoAnalysisId, photoReviews.reviewer],
         set: { ...set, updatedAt: sql`now()` },
       });
   }
