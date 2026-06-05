@@ -30,6 +30,12 @@ import {
   type AnalyzePhotoBody,
 } from '../../src/lib/analyzePhotoRequest.js';
 
+// The structured analyzer makes a blocking ~10-18s vision call. Without a
+// raised limit, slower runs get killed mid-analysis and the request hangs
+// (fast runs persisted a row; slow ones didn't). The /turn chat route
+// streams, so it never hit this. 60s gives the vision call headroom.
+export const config = { maxDuration: 60 };
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
 
