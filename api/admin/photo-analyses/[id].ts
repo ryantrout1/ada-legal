@@ -1,8 +1,10 @@
 /**
  * /api/admin/photo-analyses/[id]
  *
- *   GET — full analysis (findings, scene, summary, risk, positives) plus
- *         any existing expert review, for the review detail page.
+ *   GET    — full analysis (findings, scene, summary, risk, positives)
+ *            plus any existing expert review, for the review detail page.
+ *   DELETE — remove the analysis. The photo_reviews row cascades via the
+ *            ON DELETE CASCADE FK, so no separate delete is needed.
  *
  * The analyzer captures the standard reading level only (the latency
  * fix). The admin review surface wants the professional variant, so the
@@ -34,13 +36,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const auth = await requireAdmin(req, res);
   if (!auth) return;
 
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', 'GET');
+  if (req.method !== 'GET' && req.method !== 'DELETE') {
+    res.setHeader('Allow', 'GET, DELETE');
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const id = typeof req.query.id === 'string' ? req.query.id : '';
   if (!id) return res.status(400).json({ error: 'Missing analysis id' });
+
+  if (req.method === 'DELETE') {
+    try {
+      const clients = makeClientsFromEnv();
+      const deleted = await clients.db.deletePhotoAnalysis(id);
+      if (!deleted) return res.status(404).json({ error: 'Analysis not found' });
+      return res.status(200).json({ ok: true });
+    } catch (err) {
+      console.error('DELETE /api/admin/photo-analyses/[id] failed', err);
+      return res.status(500).json({ error: 'Failed to delete analysis' });
+    }
+  }
 
   try {
     const clients = makeClientsFromEnv();

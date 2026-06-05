@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   useAdminPhotoReviewDetail,
   type FindingSeverity,
@@ -37,7 +37,9 @@ type LabelState = Record<number, { verdict: FindingVerdict | ''; reason: string 
 
 export default function AdminPhotoReviewDetail() {
   const { id } = useParams<{ id: string }>();
-  const { detail, loading, error, unauthenticated, saving, submit } = useAdminPhotoReviewDetail(id);
+  const navigate = useNavigate();
+  const { detail, loading, error, unauthenticated, saving, deleting, submit, remove } =
+    useAdminPhotoReviewDetail(id);
 
   const [labels, setLabels] = useState<LabelState>({});
   const [missed, setMissed] = useState<MissedFinding[]>([]);
@@ -112,12 +114,34 @@ export default function AdminPhotoReviewDetail() {
     }
   };
 
+  const handleDelete = async () => {
+    if (
+      !window.confirm(
+        'Delete this analysis and its review? This cannot be undone.',
+      )
+    ) {
+      return;
+    }
+    const ok = await remove();
+    if (ok) navigate('/admin/photo-review');
+  };
+
   return (
     <section className="max-w-3xl">
       <div className="mb-4 flex items-center justify-between">
-        <Link to="/admin/photo-review" className="text-sm text-accent-600 hover:underline">
-          ← Back to queue
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link to="/admin/photo-review" className="text-sm text-accent-600 hover:underline">
+            ← Back to queue
+          </Link>
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="text-sm text-danger-500 hover:underline disabled:opacity-50"
+          >
+            {deleting ? 'Deleting…' : 'Delete'}
+          </button>
+        </div>
         <Link
           to={`/admin/sessions/${detail.sessionId}`}
           className="text-sm text-ink-500 hover:underline"

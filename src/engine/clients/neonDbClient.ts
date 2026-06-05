@@ -615,6 +615,14 @@ export class NeonDbClient implements DbClient {
       .where(eq(photoAnalyses.id, input.photoAnalysisId));
   }
 
+  async deletePhotoAnalysis(photoAnalysisId: string): Promise<boolean> {
+    const rows = await this.db
+      .delete(photoAnalyses)
+      .where(eq(photoAnalyses.id, photoAnalysisId))
+      .returning({ id: photoAnalyses.id });
+    return rows.length > 0;
+  }
+
   async upsertPhotoReview(input: UpsertPhotoReviewInput): Promise<void> {
     const set = {
       reviewerEmail: input.reviewerEmail,

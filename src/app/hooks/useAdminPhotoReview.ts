@@ -190,6 +190,7 @@ export function useAdminPhotoReviewDetail(id: string | undefined) {
   const [error, setError] = useState<string | null>(null);
   const [unauthenticated, setUnauthenticated] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -239,7 +240,36 @@ export function useAdminPhotoReviewDetail(id: string | undefined) {
     [id, load],
   );
 
-  return { detail, loading, error, unauthenticated, saving, submit, reload: load };
+  const remove = useCallback(async (): Promise<boolean> => {
+    if (!id) return false;
+    setDeleting(true);
+    setError(null);
+    try {
+      const resp = await fetch(`/api/admin/photo-analyses/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      return true;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete analysis');
+      return false;
+    } finally {
+      setDeleting(false);
+    }
+  }, [id]);
+
+  return {
+    detail,
+    loading,
+    error,
+    unauthenticated,
+    saving,
+    deleting,
+    submit,
+    remove,
+    reload: load,
+  };
 }
 
 export function useAdminPhotoReviewEval() {

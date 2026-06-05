@@ -320,6 +320,11 @@ export class InMemoryDbClient implements DbClient {
     // Not modeled in-memory; photo persistence is exercised against Neon.
   }
 
+  async deletePhotoAnalysis(_photoAnalysisId: string): Promise<boolean> {
+    // Not modeled in-memory; photo persistence is exercised against Neon.
+    return false;
+  }
+
   async upsertPhotoReview(_input: UpsertPhotoReviewInput): Promise<void> {
     // no-op in memory
   }

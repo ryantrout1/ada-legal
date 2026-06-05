@@ -774,6 +774,10 @@ export interface DbClient {
   updatePhotoAnalysisReadingLevels(
     input: UpdatePhotoAnalysisReadingLevelsInput,
   ): Promise<void>;
+  /** Delete a photo_analyses row by id. The photo_reviews row cascades
+   *  via the ON DELETE CASCADE FK. Returns true if a row was deleted,
+   *  false if the id didn't exist. */
+  deletePhotoAnalysis(photoAnalysisId: string): Promise<boolean>;
   /** Create or update the single authoritative expert review for an analysis. */
   upsertPhotoReview(input: UpsertPhotoReviewInput): Promise<void>;
   /** Accuracy rollup grouped by engine (model) version. */
