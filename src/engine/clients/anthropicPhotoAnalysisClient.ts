@@ -46,6 +46,7 @@ import type {
   PhotoOverallRisk,
 } from '../../types/db.js';
 import photoAnalysisSystemPrompt from '../../../content-migration/prompts/photo-analysis.js';
+import readingLevelsPrompt from '../../../content-migration/prompts/reading-levels.js';
 
 const DEFAULT_MODEL = 'claude-sonnet-4-5';
 // Standard reading level only — one variant of scene + summary +
@@ -169,6 +170,34 @@ const REPORT_FINDINGS_SCHEMA = {
   required: ['scene', 'summary', 'overall_risk', 'positive_findings', 'findings'],
 };
 
+/**
+ * Input schema for the `rewrite_reading_level` tool. Mirrors the standard
+ * payload sent in — scene/summary strings, a positive-findings string
+ * list, and a findings array of {title, finding} kept in input order.
+ */
+const REWRITE_LEVEL_SCHEMA = {
+  type: 'object' as const,
+  properties: {
+    scene: { type: 'string' },
+    summary: { type: 'string' },
+    positive_findings: { type: 'array', items: { type: 'string' } },
+    findings: {
+      type: 'array',
+      description:
+        'Same length and order as the input findings. Each entry is the rewritten title + explanation for the finding at that index.',
+      items: {
+        type: 'object',
+        properties: {
+          title: { type: 'string' },
+          finding: { type: 'string' },
+        },
+        required: ['title', 'finding'],
+      },
+    },
+  },
+  required: ['scene', 'summary', 'positive_findings', 'findings'],
+};
+
 export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
   private readonly client: Anthropic;
   private readonly model: string;
@@ -252,6 +281,69 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
       modelVersion: this.model,
     };
   }
+
+  async rewriteToLevel(
+    output: PhotoAnalysisOutput,
+    level: 'simple' | 'professional',
+  ): Promise<PhotoAnalysisOutput> {
+    // Nothing to rewrite (empty/refused analysis) — return as-is so we
+    // don't burn a model call producing empty variants.
+    const hasContent =
+      (output.scene.standard?.length ?? 0) > 0 ||
+      (output.summary.standard?.length ?? 0) > 0 ||
+      output.findings.length > 0;
+    if (!hasContent) return output;
+
+    // Send only the standard text the model needs to rewrite. Findings
+    // are reduced to {title, finding} and re-aligned by index on return.
+    const payload = {
+      scene: output.scene.standard ?? '',
+      summary: output.summary.standard ?? '',
+      positive_findings: output.positive_findings.standard ?? [],
+      findings: output.findings.map((f) => ({
+        title: f.title_standard,
+        finding: f.finding_standard,
+      })),
+    };
+
+    const response = await this.client.messages.create({
+      model: this.model,
+      max_tokens: DEFAULT_MAX_TOKENS,
+      // Two system blocks: the stable style guide is marked for caching
+      // (shared across the simple and professional rewrite of every
+      // analysis within the TTL); the per-level instruction is small and
+      // volatile, so it sits uncached after the marker.
+      system: [
+        {
+          type: 'text',
+          text: readingLevelsPrompt,
+          cache_control: { type: 'ephemeral' },
+        },
+        {
+          type: 'text',
+          text: `You are rewriting an existing ADA photo analysis from the STANDARD reading level into the ${level.toUpperCase()} reading level described above. Rewrite the scene, the summary, every positive finding, and every finding's title and explanation into the ${level} style. Preserve meaning, severity, measurement estimates, and any cited ADA section exactly — do not add, drop, merge, or reorder concerns. Keep the findings array in the same order and the same length as the input. Call rewrite_reading_level exactly once with the rewritten text.`,
+        },
+      ] as never,
+      tools: [
+        {
+          name: 'rewrite_reading_level',
+          description:
+            'Return the analysis rewritten into the requested reading level. Same structure and finding order as the input.',
+          input_schema: REWRITE_LEVEL_SCHEMA,
+          cache_control: { type: 'ephemeral' },
+        } as never,
+      ],
+      tool_choice: { type: 'tool', name: 'rewrite_reading_level' },
+      messages: [
+        {
+          role: 'user',
+          content: JSON.stringify(payload),
+        },
+      ],
+    });
+
+    return mergeRewrittenLevel(output, level, extractRewriteFromResponse(response));
+  }
 }
 
 // ─── Helpers (exported for testing) ───────────────────────────────────────────
@@ -294,6 +386,87 @@ export function parseBlobKeyToImageBlock(blobKey: string): {
   throw new Error(
     `AnthropicPhotoAnalysisClient: blob_key must be a data: URL or a Vercel Blob URL (https://<storeId>.public.blob.vercel-storage.com/...). Got: ${blobKey.slice(0, 40)}...`,
   );
+}
+
+/** The rewritten text returned by the rewrite_reading_level tool. */
+interface RewrittenLevel {
+  scene: string;
+  summary: string;
+  positive_findings: string[];
+  findings: Array<{ title: string; finding: string }>;
+}
+
+/**
+ * Pull the rewrite_reading_level tool_use block out of a response.
+ * Returns null when the model didn't call the tool (refusal, truncation)
+ * — mergeRewrittenLevel then falls back to the standard text per field.
+ */
+export function extractRewriteFromResponse(
+  response: Anthropic.Message,
+): RewrittenLevel | null {
+  for (const block of response.content) {
+    if (block.type === 'tool_use' && block.name === 'rewrite_reading_level') {
+      const input = block.input as Record<string, unknown>;
+      const findings = Array.isArray(input.findings)
+        ? input.findings.map((f) => {
+            const r = (f ?? {}) as Record<string, unknown>;
+            return {
+              title: typeof r.title === 'string' ? r.title : '',
+              finding: typeof r.finding === 'string' ? r.finding : '',
+            };
+          })
+        : [];
+      return {
+        scene: typeof input.scene === 'string' ? input.scene : '',
+        summary: typeof input.summary === 'string' ? input.summary : '',
+        positive_findings: toStringArray(input.positive_findings),
+        findings,
+      };
+    }
+  }
+  return null;
+}
+
+/**
+ * Fold a rewritten level back into the analysis: set scene[level],
+ * summary[level], positive_findings[level], and each finding's
+ * title_<level>/finding_<level>, preserving the standard variant and all
+ * other fields. Findings re-align by index; if the model returned the
+ * wrong count (or no tool call), the missing entries fall back to the
+ * standard text so a consumer never renders blank.
+ */
+export function mergeRewrittenLevel(
+  output: PhotoAnalysisOutput,
+  level: 'simple' | 'professional',
+  rewritten: RewrittenLevel | null,
+): PhotoAnalysisOutput {
+  const titleKey = `title_${level}` as 'title_simple' | 'title_professional';
+  const findingKey = `finding_${level}` as
+    | 'finding_simple'
+    | 'finding_professional';
+  return {
+    ...output,
+    scene: { ...output.scene, [level]: rewritten?.scene || output.scene.standard },
+    summary: {
+      ...output.summary,
+      [level]: rewritten?.summary || output.summary.standard,
+    },
+    positive_findings: {
+      ...output.positive_findings,
+      [level]:
+        rewritten && rewritten.positive_findings.length > 0
+          ? rewritten.positive_findings
+          : output.positive_findings.standard,
+    },
+    findings: output.findings.map((f, i) => {
+      const rf = rewritten?.findings[i];
+      return {
+        ...f,
+        [titleKey]: rf?.title || f.title_standard,
+        [findingKey]: rf?.finding || f.finding_standard,
+      };
+    }),
+  };
 }
 
 function emptyOutput(): PhotoAnalysisOutput {

@@ -101,8 +101,9 @@ import type {
   UpsertPhotoReviewInput,
   PhotoReviewEvalRow,
   SavePhotoAnalysisInput,
+  UpdatePhotoAnalysisReadingLevelsInput,
 } from './types.js';
-import type { ExtractedFields, Message } from '../../types/db.js';
+import type { ExtractedFields, Message, PhotoAnalysisOutput } from '../../types/db.js';
 
 /** Read an extracted-field value as a string|null (portal projection). */
 function portalFieldStr(fields: ExtractedFields, key: string): string | null {
@@ -311,6 +312,12 @@ export class InMemoryDbClient implements DbClient {
     _photoAnalysisId: string,
   ): Promise<PhotoReviewDetail | null> {
     return null;
+  }
+
+  async updatePhotoAnalysisReadingLevels(
+    _input: UpdatePhotoAnalysisReadingLevelsInput,
+  ): Promise<void> {
+    // Not modeled in-memory; photo persistence is exercised against Neon.
   }
 
   async upsertPhotoReview(_input: UpsertPhotoReviewInput): Promise<void> {
@@ -1767,6 +1774,10 @@ export class InMemoryBlobClient implements BlobClient {
 export class InMemoryPhotoAnalysisClient implements PhotoAnalysisClient {
   public readonly responseQueue: PhotoAnalysisResult[] = [];
   public readonly requests: PhotoAnalysisRequest[] = [];
+  public readonly rewriteRequests: Array<{
+    output: PhotoAnalysisOutput;
+    level: 'simple' | 'professional';
+  }> = [];
 
   enqueueResult(result: PhotoAnalysisResult): void {
     this.responseQueue.push(result);
@@ -1781,6 +1792,33 @@ export class InMemoryPhotoAnalysisClient implements PhotoAnalysisClient {
       );
     }
     return result;
+  }
+
+  async rewriteToLevel(
+    output: PhotoAnalysisOutput,
+    level: 'simple' | 'professional',
+  ): Promise<PhotoAnalysisOutput> {
+    this.rewriteRequests.push({ output, level });
+    // Deterministic stand-in: copy the standard text into the requested
+    // level so the returned output is fully populated for that level.
+    const titleKey = `title_${level}` as 'title_simple' | 'title_professional';
+    const findingKey = `finding_${level}` as
+      | 'finding_simple'
+      | 'finding_professional';
+    return {
+      ...output,
+      scene: { ...output.scene, [level]: output.scene.standard },
+      summary: { ...output.summary, [level]: output.summary.standard },
+      positive_findings: {
+        ...output.positive_findings,
+        [level]: output.positive_findings.standard,
+      },
+      findings: output.findings.map((f) => ({
+        ...f,
+        [titleKey]: f.title_standard,
+        [findingKey]: f.finding_standard,
+      })),
+    };
   }
 }
 

@@ -71,6 +71,7 @@ import type {
   PhotoReviewEvalRow,
   PhotoReviewState,
   SavePhotoAnalysisInput,
+  UpdatePhotoAnalysisReadingLevelsInput,
   AnonSessionUpsertOptions,
   AttorneyAdminRow,
   AttorneyFacets,
@@ -598,6 +599,20 @@ export class NeonDbClient implements DbClient {
               reviewedAt: (r.rReviewedAt as Date).toISOString(),
             },
     };
+  }
+
+  async updatePhotoAnalysisReadingLevels(
+    input: UpdatePhotoAnalysisReadingLevelsInput,
+  ): Promise<void> {
+    await this.db
+      .update(photoAnalyses)
+      .set({
+        scene: input.scene,
+        summary: input.summary,
+        positiveFindings: input.positiveFindings,
+        findings: input.findings,
+      })
+      .where(eq(photoAnalyses.id, input.photoAnalysisId));
   }
 
   async upsertPhotoReview(input: UpsertPhotoReviewInput): Promise<void> {

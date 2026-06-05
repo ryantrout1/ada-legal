@@ -768,6 +768,12 @@ export interface DbClient {
   listPhotoAnalysesForReview(opts: PhotoReviewListOptions): Promise<PhotoReviewListResult>;
   /** Full analysis plus any existing expert review, for the detail page. */
   getPhotoAnalysisForReview(photoAnalysisId: string): Promise<PhotoReviewDetail | null>;
+  /** Overwrite the reading-level jsonb columns (scene/summary/
+   *  positive_findings/findings) for one analysis — used to cache a
+   *  lazily-generated simple/professional variant back onto the row. */
+  updatePhotoAnalysisReadingLevels(
+    input: UpdatePhotoAnalysisReadingLevelsInput,
+  ): Promise<void>;
   /** Create or update the single authoritative expert review for an analysis. */
   upsertPhotoReview(input: UpsertPhotoReviewInput): Promise<void>;
   /** Accuracy rollup grouped by engine (model) version. */
@@ -1412,6 +1418,14 @@ export interface SavePhotoAnalysisInput {
   modelVersion: string;
 }
 
+export interface UpdatePhotoAnalysisReadingLevelsInput {
+  photoAnalysisId: string;
+  scene: ReadingLevelText | null;
+  summary: ReadingLevelText | null;
+  positiveFindings: ReadingLevelStringList | null;
+  findings: PhotoFinding[];
+}
+
 export type PhotoReviewState = 'unreviewed' | 'reviewed' | 'addressed';
 
 export interface PhotoReviewListOptions {
@@ -1554,6 +1568,19 @@ export interface PhotoAnalysisResult {
 
 export interface PhotoAnalysisClient {
   analyze(req: PhotoAnalysisRequest): Promise<PhotoAnalysisResult>;
+  /**
+   * Generate the simple or professional variant of an analysis that was
+   * captured at the standard reading level, reusing the standard text as
+   * the source. Returns a NEW output with the requested level filled in
+   * on scene/summary/positive_findings and each finding's title/finding;
+   * the standard variant and all other fields are preserved untouched.
+   * One blocking model call. Consumers cache the result back onto the
+   * photo_analyses row so the rewrite happens at most once per level.
+   */
+  rewriteToLevel(
+    output: PhotoAnalysisOutput,
+    level: 'simple' | 'professional',
+  ): Promise<PhotoAnalysisOutput>;
 }
 
 // ─── Email client ─────────────────────────────────────────────────────────────
