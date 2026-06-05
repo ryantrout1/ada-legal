@@ -4,18 +4,16 @@
  *
  * Sends ONE real photo to Anthropic's /v1/messages endpoint using the
  * exact prompt + tool schema the production AnthropicPhotoAnalysisClient
- * uses, then prints the structured output. Run this once after deploying
- * Commit 8 to verify:
+ * uses, then prints the structured output + the call latency. Run this
+ * after deploying to verify:
  *
- *   1. Anthropic accepts the report_findings tool schema (the new shape
- *      with three reading-level variants per prose field hasn't been
- *      tested against the live API yet — only against vitest mocks).
- *   2. The model produces meaningfully different simple/standard/
- *      professional variants (vs. three near-copies of the same text).
- *   3. scene, summary, and positive_findings are non-empty.
- *   4. findings[] has at least one entry on a clearly non-compliant
- *      photo, with title + description + severity + standard + confirmable.
- *   5. overall_risk is in the enum {high, medium, low, none}.
+ *   1. Anthropic accepts the standard-only report_findings tool schema.
+ *   2. scene, summary, and positive_findings are non-empty (standard).
+ *   3. findings[] has at least one entry on a clearly non-compliant
+ *      photo, with title + finding + severity + standard + confirmable.
+ *   4. overall_risk is in the enum {high, medium, low, none}.
+ *   5. Latency / output tokens — the standard-only output should be
+ *      well under the 45–90s the three-level schema produced.
  *
  * Usage:
  *   export ANTHROPIC_API_KEY="sk-ant-..."
@@ -43,7 +41,8 @@ const DEFAULT_IMAGE_URL =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Lambs_Conduit_Street.jpg/1024px-Lambs_Conduit_Street.jpg';
 
 const MODEL = 'claude-sonnet-4-5';
-const MAX_TOKENS = 8192;
+// Mirror production: the standard-only path lowered the cap to 4096.
+const MAX_TOKENS = 4096;
 
 // ─── Parse args ───────────────────────────────────────────────────────────────
 
