@@ -9,11 +9,13 @@
  *   would bring in a pile of behavior we don't want here and a
  *   conversational UI affordance we'd have to actively suppress.
  *
- *   What we DO share with the chat flow: the exact same backend
- *   pipeline. session-create → upload-photo (signed token) → turn
- *   with blob_keys annotation. /photo's whole purpose is to test the
- *   production analyzer in the wild, so we go through the same code
- *   path real users do — anything else would test something else.
+ *   What we DO share with the chat flow: session-create → upload-photo
+ *   (signed token). From there /photo intentionally diverges. Ada's live
+ *   chat reads photos via native vision and does not run the structured
+ *   analyzer; /photo's purpose is to exercise that structured analyzer —
+ *   the one the admin review/labeling queue is built around — so it calls
+ *   the dedicated /api/ada/analyze-photo endpoint, which persists a
+ *   photo_analyses row for review.
  *
  * Flow:
  *   1. POST /api/ada/session with `is_test: true` + X-Ada-Field-Capture
@@ -23,12 +25,10 @@
  *   2. uploadPhoto(sessionId, file) — dynamic import of
  *      @vercel/blob/client, same as the chat path. Returns a public
  *      blob URL.
- *   3. POST /api/ada/turn with `{ session_id, message, photo_url }`.
- *      Using JSON mode (default Accept) — we don't need streaming
- *      for a one-shot capture; the page just shows the final analysis.
- *      Ada sees the photo annotation in the message and calls
- *      analyze_photo. Result comes back in `assistant_message` +
- *      `photo_findings`.
+ *   3. POST /api/ada/analyze-photo with `{ session_id, photo_url,
+ *      context_hint }`. The endpoint (is_test-gated) runs the structured
+ *      analyzer, persists a photo_analyses row, and returns the
+ *      analyzer's summary in `assistant_message`.
  *
  * Status state machine:
  *   idle → uploading → analyzing → saved
@@ -72,8 +72,6 @@ interface UsePhotoCaptureReturn {
   submitFeedback: (comment: string) => Promise<boolean>;
   reset: () => void;
 }
-
-const DEFAULT_COMMENT = 'Field capture — no comment provided.';
 
 export function usePhotoCapture(): UsePhotoCaptureReturn {
   const [status, setStatus] = useState<PhotoCaptureStatus>('idle');
@@ -134,28 +132,30 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
         });
         const photoUrl = uploadResult.url;
 
-        // Step 3: post the turn. Comment becomes the user message;
-        // photo_url is propagated server-side into the blob_keys
-        // annotation Ada sees as part of the user turn.
+        // Step 3: run the structured analyzer. Unlike the chat turn,
+        // this persists a photo_analyses row that surfaces in the admin
+        // review queue, and returns the analyzer's summary as
+        // assistant_message. A typed comment, if any, is passed as a
+        // context hint to focus the analysis.
         setStatus('analyzing');
-        const comment = input.comment.trim() || DEFAULT_COMMENT;
-        const turnRes = await fetch('/api/ada/turn', {
+        const contextHint = input.comment.trim() || undefined;
+        const analyzeRes = await fetch('/api/ada/analyze-photo', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'same-origin',
           body: JSON.stringify({
             session_id: sessionId,
-            message: comment,
             photo_url: photoUrl,
+            context_hint: contextHint,
           }),
         });
-        if (!turnRes.ok) {
-          throw new Error(`Analyzer failed (HTTP ${turnRes.status})`);
+        if (!analyzeRes.ok) {
+          throw new Error(`Analyzer failed (HTTP ${analyzeRes.status})`);
         }
-        const turnJson = (await turnRes.json()) as {
+        const analyzeJson = (await analyzeRes.json()) as {
           assistant_message?: string;
         };
-        const assistantMessage = turnJson.assistant_message ?? '';
+        const assistantMessage = analyzeJson.assistant_message ?? '';
 
         sessionIdRef.current = sessionId;
         setResult({ sessionId, assistantMessage, photoUrl });
