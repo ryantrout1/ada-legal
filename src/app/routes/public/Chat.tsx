@@ -365,7 +365,7 @@ export default function Chat() {
         ? lastMsg.content.slice(0, 200).trim() + '…'
         : lastMsg.content;
     return (
-      <section className="max-w-2xl mx-auto px-5 sm:px-8 py-10">
+      <section className="ada-accent max-w-2xl mx-auto px-5 sm:px-8 py-10">
         <header className="mb-6">
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-accent-500 mb-3">
             Welcome back
@@ -426,7 +426,7 @@ export default function Chat() {
   }
 
   return (
-    <section className="max-w-3xl w-full mx-auto px-5 sm:px-8 py-4 sm:py-6 flex flex-col h-[calc(100dvh-9rem)] sm:h-[calc(100dvh-8rem)] min-h-[400px]">
+    <section className="ada-accent max-w-3xl w-full mx-auto px-5 sm:px-8 py-4 sm:py-6 flex flex-col h-[calc(100dvh-9rem)] sm:h-[calc(100dvh-8rem)] min-h-[400px]">
       {/* Header row: reading level (left), icon-only session controls (right).
           Reading level stays prominent — visibility is the point, it's the
           single most important accommodation on this page. Session controls
