@@ -48,7 +48,7 @@ export function makeClientsFromEnv(): AdaClients {
   // endpoints return a clear error; webhook handler refuses events.
   // Pilot firms work without Stripe. (Step 23.)
   // PHOTO_ANALYSIS_MODEL is optional. Without it, analyze_photo uses
-  // the client's hard-coded default (currently Sonnet 4.5). Set to
+  // the client's hard-coded default (currently Opus 4.8). Set to
   // `claude-haiku-4-5` for the lighter-weight analyzer.
   return makeAdaClients({
     databaseUrl,

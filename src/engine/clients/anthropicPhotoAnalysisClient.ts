@@ -1,7 +1,7 @@
 /**
  * AnthropicPhotoAnalysisClient — real implementation of PhotoAnalysisClient.
  *
- * Uses Claude Sonnet 4.5 with vision + tool-use to force structured JSON
+ * Uses Claude Opus 4.8 with vision + tool-use to force structured JSON
  * output from the model. The analyst persona + comprehensive ADA standards
  * catalog lives in content-migration/prompts/photo-analysis.md
  * (scene/summary/positive findings, confirmable flag). Output is at the
@@ -48,7 +48,7 @@ import type {
 import photoAnalysisSystemPrompt from '../../../content-migration/prompts/photo-analysis.js';
 import readingLevelsPrompt from '../../../content-migration/prompts/reading-levels.js';
 
-const DEFAULT_MODEL = 'claude-sonnet-4-5';
+const DEFAULT_MODEL = 'claude-opus-4-8';
 // Standard reading level only — one variant of scene + summary +
 // positive_findings + (title + finding) per concern. Generating all
 // three reading levels at capture was ~60% of the output and the cause
