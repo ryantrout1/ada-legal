@@ -14,14 +14,13 @@
  * Design (chapter pages under access-board.gov/ada/chapter/). Rule text is
  * PARAPHRASED for plain-language use, not reproduced verbatim.
  *
- * STATUS: covers the priority photo-assessable gaps from the coverage gap
- * map — the maneuvering-clearance fundamentals (Ch 3), the full plumbing/
- * bathroom domain (Ch 6), the scoping spine (Ch 2), and the major building
- * types and elements (Ch 4/5/7/8/9/10). Rule text is a working draft from
- * the 2010 Standards: Gina signed off on the citations as-is for now, with
- * deeper legal review to follow. The long tail of rarely-photographed and
- * non-photo-assessable sections is still to be added (then a CI assertion,
- * Phase 5, guards completeness).
+ * STATUS: COMPLETE 3-digit-section coverage — every numbered section across
+ * all ten chapters of the 2010 Standards now has a row, with extra
+ * subsection rows where detail matters. Rule text is a working draft: Gina
+ * signed off on the citations as-is for now, with deeper legal review to
+ * follow, and the Phase 5 CI assertion reconciles this list against the
+ * authoritative Access Board table of contents. Not yet wired into the
+ * analyzer (Phase 3).
  *
  * STATIC. No DB lookups. Safe to import from edge handlers and the browser.
  */
@@ -36,8 +35,11 @@
  *             element or space is required to be accessible at all (e.g.
  *             only designated guest rooms need a roll-in shower). Used to
  *             FRAME findings, not as a finding itself.
+ * reference - administrative, definitional, or general-scope provisions
+ *             (Chapter 1, the "General"/"Scope" sections) that are not
+ *             assessable requirements; carried for completeness/citation.
  */
-export type AccessRole = 'gating' | 'component' | 'scoping';
+export type AccessRole = 'gating' | 'component' | 'scoping' | 'reference';
 
 export interface AdaStandardRow {
   /** ADA section or subsection, e.g. "§608.7". */
@@ -60,6 +62,7 @@ export interface AdaStandardRow {
   source_ref: string;
 }
 
+const CH1 = 'https://www.access-board.gov/ada/chapter/ch01';
 const CH2 = 'https://www.access-board.gov/ada/chapter/ch02';
 const CH3 = 'https://www.access-board.gov/ada/chapter/ch03';
 const CH4 = 'https://www.access-board.gov/ada/chapter/ch04';
@@ -649,6 +652,109 @@ export const ADA_CATALOG: AdaStandardRow[] = [
     guide_slug: 'pools-spas',
     source_ref: CH10,
   },
+
+  // ===================================================================
+  // THIRD WAVE — completeness backfill. Every remaining 3-digit section
+  // across Chapters 1-10. Core building blocks carry full rule text; the
+  // long tail (admin, niche scoping, niche recreation) is terse. Draft.
+  // ===================================================================
+
+  // --- Chapter 1: Application and Administration (reference only) ---
+  { section: '§101', chapter: 1, title: 'Purpose', fixture: 'admin', rule: 'States the purpose and scope of the 2010 Standards.', access_role: 'reference', photo_assessable: false, guide_slug: 'about', source_ref: CH1 },
+  { section: '§102', chapter: 1, title: 'Dimensions for Adults and Children', fixture: 'admin', rule: 'Dimensions are for adults unless child dimensions are specifically stated.', access_role: 'reference', photo_assessable: false, guide_slug: 'about', source_ref: CH1 },
+  { section: '§103', chapter: 1, title: 'Equivalent Facilitation', fixture: 'admin', rule: 'Alternative designs are permitted where they provide substantially equivalent or greater accessibility.', access_role: 'reference', photo_assessable: false, guide_slug: 'about', source_ref: CH1 },
+  { section: '§104', chapter: 1, title: 'Conventions', fixture: 'admin', rule: 'Conventions for dimensions, tolerances, figures, and notes used in the Standards.', access_role: 'reference', photo_assessable: false, guide_slug: 'about', source_ref: CH1 },
+  { section: '§105', chapter: 1, title: 'Referenced Standards', fixture: 'admin', rule: 'Lists standards incorporated by reference (e.g. NFPA 72, ASME A17.1 elevators).', access_role: 'reference', photo_assessable: false, guide_slug: 'about', source_ref: CH1 },
+  { section: '§106', chapter: 1, title: 'Definitions', fixture: 'admin', rule: 'Defines terms used throughout the Standards.', access_role: 'reference', photo_assessable: false, guide_slug: 'definitions', source_ref: CH1 },
+
+  // --- Chapter 2: remaining scoping sections ---
+  { section: '§201', chapter: 2, title: 'Application (scoping)', fixture: 'scoping', rule: 'Applies the Standards to all areas of newly designed/constructed and altered buildings and facilities.', access_role: 'scoping', photo_assessable: false, guide_slug: 'scoping', source_ref: CH2 },
+  { section: '§202', chapter: 2, title: 'Existing Buildings and Facilities (scoping)', fixture: 'scoping', rule: 'Scoping for alterations, additions, and barrier removal in existing facilities, including the path of travel to altered areas.', access_role: 'scoping', photo_assessable: false, guide_slug: 'alterations', source_ref: CH2 },
+  { section: '§203', chapter: 2, title: 'General Exceptions (scoping)', fixture: 'scoping', rule: 'Exceptions for construction sites, raised areas, limited-access and machinery spaces, and similar.', access_role: 'scoping', photo_assessable: false, guide_slug: 'scoping', source_ref: CH2 },
+  { section: '§204', chapter: 2, title: 'Protruding Objects (scoping)', fixture: 'scoping', rule: 'Protruding objects on circulation paths must comply with 307.', access_role: 'scoping', photo_assessable: false, guide_slug: 'protruding-objects', source_ref: CH2 },
+  { section: '§205', chapter: 2, title: 'Operable Parts (scoping)', fixture: 'scoping', rule: 'Operable parts intended for use by occupants must comply with 309.', access_role: 'scoping', photo_assessable: false, guide_slug: 'operable-parts', source_ref: CH2 },
+  { section: '§207', chapter: 2, title: 'Accessible Means of Egress (scoping)', fixture: 'scoping', rule: 'Accessible means of egress must be provided per the building code scoping.', access_role: 'scoping', photo_assessable: false, guide_slug: 'egress', source_ref: CH2 },
+  { section: '§209', chapter: 2, title: 'Passenger Loading Zones and Bus Stops (scoping)', fixture: 'scoping', rule: 'Scoping for passenger loading zones and bus boarding and alighting areas.', access_role: 'scoping', photo_assessable: false, guide_slug: 'loading-zones', source_ref: CH2 },
+  { section: '§210', chapter: 2, title: 'Stairways (scoping)', fixture: 'scoping', rule: 'Stairs that are part of a required means of egress must comply with 504.', access_role: 'scoping', photo_assessable: false, guide_slug: 'stairways', source_ref: CH2 },
+  { section: '§211', chapter: 2, title: 'Drinking Fountains (scoping)', fixture: 'scoping', rule: 'Where provided, fountains for wheelchair users and for standing persons must both be provided (the hi-lo requirement).', access_role: 'scoping', photo_assessable: false, guide_slug: 'drinking-fountains', source_ref: CH2 },
+  { section: '§212', chapter: 2, title: 'Kitchens, Kitchenettes, and Sinks (scoping)', fixture: 'scoping', rule: 'Scoping for accessible kitchens, kitchenettes, and sinks.', access_role: 'scoping', photo_assessable: false, guide_slug: 'kitchens', source_ref: CH2 },
+  { section: '§214', chapter: 2, title: 'Washing Machines and Clothes Dryers (scoping)', fixture: 'scoping', rule: 'Where provided, a portion of laundry equipment must be accessible (per 611).', access_role: 'scoping', photo_assessable: false, guide_slug: 'laundry', source_ref: CH2 },
+  { section: '§215', chapter: 2, title: 'Fire Alarm Systems (scoping)', fixture: 'scoping', rule: 'Where fire alarm systems are provided, visible alarms are required per 702.', access_role: 'scoping', photo_assessable: false, guide_slug: 'fire-alarms', source_ref: CH2 },
+  { section: '§216', chapter: 2, title: 'Signs (scoping)', fixture: 'scoping', rule: 'Scoping for required accessible signage (per 703).', access_role: 'scoping', photo_assessable: false, guide_slug: 'signs', source_ref: CH2 },
+  { section: '§217', chapter: 2, title: 'Telephones (scoping)', fixture: 'scoping', rule: 'Where public telephones are provided, a portion must be accessible (per 704).', access_role: 'scoping', photo_assessable: false, guide_slug: 'telephones', source_ref: CH2 },
+  { section: '§218', chapter: 2, title: 'Transportation Facilities (scoping)', fixture: 'scoping', rule: 'Scoping for transportation facilities (per 810).', access_role: 'scoping', photo_assessable: false, guide_slug: 'transportation', source_ref: CH2 },
+  { section: '§219', chapter: 2, title: 'Assistive Listening Systems (scoping)', fixture: 'scoping', rule: 'Scoping for assistive listening systems in assembly areas (per 706).', access_role: 'scoping', photo_assessable: false, guide_slug: 'assistive-listening', source_ref: CH2 },
+  { section: '§220', chapter: 2, title: 'ATMs and Fare Machines (scoping)', fixture: 'scoping', rule: 'Where provided, ATMs and fare machines must comply with 707.', access_role: 'scoping', photo_assessable: false, guide_slug: 'atms', source_ref: CH2 },
+  { section: '§222', chapter: 2, title: 'Dressing, Fitting, and Locker Rooms (scoping)', fixture: 'scoping', rule: 'Where provided, a portion of dressing/fitting/locker rooms must be accessible (per 803).', access_role: 'scoping', photo_assessable: false, guide_slug: 'dressing-rooms', source_ref: CH2 },
+  { section: '§223', chapter: 2, title: 'Medical Care and Long-Term Care Facilities (scoping)', fixture: 'scoping', rule: 'Scoping for accessible patient and resident rooms (per 805).', access_role: 'scoping', photo_assessable: false, guide_slug: 'medical-care', source_ref: CH2 },
+  { section: '§225', chapter: 2, title: 'Storage (scoping)', fixture: 'scoping', rule: 'Where provided, a portion of self-service storage and shelving must be accessible (per 811).', access_role: 'scoping', photo_assessable: false, guide_slug: 'storage', source_ref: CH2 },
+  { section: '§226', chapter: 2, title: 'Dining and Work Surfaces (scoping)', fixture: 'scoping', rule: 'Where provided, at least 5 percent of dining and work surfaces must be accessible (per 902).', access_role: 'scoping', photo_assessable: false, guide_slug: 'dining-surfaces', source_ref: CH2 },
+  { section: '§227', chapter: 2, title: 'Sales and Service (scoping)', fixture: 'scoping', rule: 'Scoping for accessible check-out aisles, sales/service counters, and queues.', access_role: 'scoping', photo_assessable: false, guide_slug: 'service-counters', source_ref: CH2 },
+  { section: '§228', chapter: 2, title: 'Depositories, Vending, Change Machines, Mail Boxes, Fuel Dispensers (scoping)', fixture: 'scoping', rule: 'Where provided, at least one of each type must be accessible.', access_role: 'scoping', photo_assessable: false, guide_slug: 'scoping', source_ref: CH2 },
+  { section: '§229', chapter: 2, title: 'Windows (scoping)', fixture: 'scoping', rule: 'Scoping for operable windows where provided for occupant use.', access_role: 'scoping', photo_assessable: false, guide_slug: 'scoping', source_ref: CH2 },
+  { section: '§230', chapter: 2, title: 'Two-Way Communication Systems (scoping)', fixture: 'scoping', rule: 'Where provided (e.g. at restricted entrances), two-way communication systems must comply with 708.', access_role: 'scoping', photo_assessable: false, guide_slug: 'two-way-communication', source_ref: CH2 },
+  { section: '§231', chapter: 2, title: 'Judicial Facilities (scoping)', fixture: 'scoping', rule: 'Scoping for courtrooms, holding cells, and judicial spaces.', access_role: 'scoping', photo_assessable: false, guide_slug: 'courtrooms', source_ref: CH2 },
+  { section: '§232', chapter: 2, title: 'Detention and Correctional Facilities (scoping)', fixture: 'scoping', rule: 'Scoping for accessible cells and detention/correctional facilities.', access_role: 'scoping', photo_assessable: false, guide_slug: 'cells', source_ref: CH2 },
+  { section: '§234', chapter: 2, title: 'Amusement Rides (scoping)', fixture: 'scoping', rule: 'Scoping for accessible amusement rides (per 1002).', access_role: 'scoping', photo_assessable: false, guide_slug: 'amusement-rides', source_ref: CH2 },
+  { section: '§235', chapter: 2, title: 'Recreational Boating Facilities (scoping)', fixture: 'scoping', rule: 'Scoping for accessible boat slips and boarding piers (per 1003).', access_role: 'scoping', photo_assessable: false, guide_slug: 'boating', source_ref: CH2 },
+  { section: '§236', chapter: 2, title: 'Exercise Machines and Equipment (scoping)', fixture: 'scoping', rule: 'At least one of each type of exercise machine must be accessible (per 1004).', access_role: 'scoping', photo_assessable: false, guide_slug: 'exercise-equipment', source_ref: CH2 },
+  { section: '§237', chapter: 2, title: 'Fishing Piers and Platforms (scoping)', fixture: 'scoping', rule: 'Scoping for accessible fishing piers and platforms (per 1005).', access_role: 'scoping', photo_assessable: false, guide_slug: 'fishing-piers', source_ref: CH2 },
+  { section: '§238', chapter: 2, title: 'Golf Facilities (scoping)', fixture: 'scoping', rule: 'Scoping for accessible golf facilities (per 1006).', access_role: 'scoping', photo_assessable: false, guide_slug: 'golf', source_ref: CH2 },
+  { section: '§239', chapter: 2, title: 'Miniature Golf Facilities (scoping)', fixture: 'scoping', rule: 'Scoping for accessible miniature golf facilities (per 1007).', access_role: 'scoping', photo_assessable: false, guide_slug: 'miniature-golf', source_ref: CH2 },
+  { section: '§240', chapter: 2, title: 'Play Areas (scoping)', fixture: 'scoping', rule: 'Scoping for accessible play components and routes (per 1008).', access_role: 'scoping', photo_assessable: false, guide_slug: 'play-areas', source_ref: CH2 },
+  { section: '§241', chapter: 2, title: 'Saunas and Steam Rooms (scoping)', fixture: 'scoping', rule: 'Where provided in clusters, a portion must be accessible (per 612).', access_role: 'scoping', photo_assessable: false, guide_slug: 'saunas-steam', source_ref: CH2 },
+  { section: '§242', chapter: 2, title: 'Swimming Pools, Wading Pools, and Spas (scoping)', fixture: 'scoping', rule: 'Scoping for accessible means of entry to pools, wading pools, and spas (per 1009).', access_role: 'scoping', photo_assessable: false, guide_slug: 'pools-spas', source_ref: CH2 },
+  { section: '§243', chapter: 2, title: 'Shooting Facilities with Firing Positions (scoping)', fixture: 'scoping', rule: 'Scoping for accessible firing positions (per 1010).', access_role: 'scoping', photo_assessable: false, guide_slug: 'shooting-facilities', source_ref: CH2 },
+
+  // --- Chapter 3: remaining building blocks ---
+  { section: '§301', chapter: 3, title: 'General', fixture: 'reference', rule: 'Chapter 3 applies where required by Chapter 2 or where referenced.', access_role: 'reference', photo_assessable: false, guide_slug: 'building-blocks', source_ref: CH3 },
+  { section: '§303', chapter: 3, title: 'Changes in Level', fixture: 'maneuvering', rule: 'Vertical changes 1/4 in max; 1/4 to 1/2 in must be beveled at 1:2 max; changes over 1/2 in must be ramped (per 405 or 406). This is the rule a raised curb fails.', access_role: 'gating', photo_assessable: true, guide_slug: 'changes-in-level', source_ref: CH3 },
+  { section: '§307', chapter: 3, title: 'Protruding Objects', fixture: 'route', rule: 'Objects with leading edges between 27 and 80 in above the floor may protrude 4 in max into circulation paths; post-mounted objects 12 in max; provide 80 in min vertical clearance (307).', access_role: 'gating', photo_assessable: true, guide_slug: 'protruding-objects', source_ref: CH3 },
+  { section: '§308', chapter: 3, title: 'Reach Ranges', fixture: 'maneuvering', rule: 'Unobstructed forward or side reach 15 in min to 48 in max above the floor, with reduced maximums where reaching over an obstruction (308).', access_role: 'component', photo_assessable: true, guide_slug: 'reach-ranges', source_ref: CH3 },
+  { section: '§309', chapter: 3, title: 'Operable Parts', fixture: 'maneuvering', rule: 'Operable parts must have a clear floor space, be within reach (308), and be operable with one hand without tight grasping, pinching, or twisting, 5 lbf max (309).', access_role: 'component', photo_assessable: true, guide_slug: 'operable-parts', source_ref: CH3 },
+
+  // --- Chapter 4: remaining accessible-route elements ---
+  { section: '§401', chapter: 4, title: 'General', fixture: 'reference', rule: 'Chapter 4 applies where required by Chapter 2 or where referenced.', access_role: 'reference', photo_assessable: false, guide_slug: 'accessible-routes', source_ref: CH4 },
+  { section: '§402', chapter: 4, title: 'Accessible Routes', fixture: 'route', rule: 'Accessible routes are made of walking surfaces, doorways, ramps, curb ramps, elevators, and platform lifts, each complying with its section; running and cross slopes are limited (402).', access_role: 'gating', photo_assessable: true, guide_slug: 'accessible-routes', source_ref: CH4 },
+  { section: '§403', chapter: 4, title: 'Walking Surfaces', fixture: 'route', rule: 'Walking surfaces on accessible routes: running slope 1:20 max, cross slope 1:48 max, clear width 36 in min (32 in at a point), with passing spaces on long narrow routes (403).', access_role: 'gating', photo_assessable: true, guide_slug: 'walking-surfaces', source_ref: CH4 },
+  { section: '§404', chapter: 4, title: 'Doors, Doorways, and Gates', fixture: 'door', rule: 'Clear opening width 32 in min, maneuvering clearances by approach direction, thresholds 1/2 in max, hardware operable one-handed and 34 to 48 in above the floor, with opening-force and closing-speed limits (404).', access_role: 'gating', photo_assessable: true, guide_slug: 'doors', source_ref: CH4 },
+  { section: '§405', chapter: 4, title: 'Ramps', fixture: 'ramp', rule: 'Running slope 1:12 max, cross slope 1:48 max, 36 in min clear width, level landings at top, bottom, and turns, handrails where the rise exceeds 6 in, and edge protection (405).', access_role: 'gating', photo_assessable: true, guide_slug: 'ramps', source_ref: CH4 },
+  { section: '§407', chapter: 4, title: 'Elevators', fixture: 'elevator', rule: 'Accessible elevators must meet call-button, hall-signal, car-dimension, leveling, door-timing, control, and signage requirements (407).', access_role: 'gating', photo_assessable: true, guide_slug: 'elevators', source_ref: CH4 },
+  { section: '§408', chapter: 4, title: 'Limited-Use/Limited-Application Elevators', fixture: 'elevator', rule: 'LULA elevators are permitted in limited circumstances and must comply with 408.', access_role: 'component', photo_assessable: true, guide_slug: 'elevators', source_ref: CH4 },
+  { section: '§409', chapter: 4, title: 'Private Residence Elevators', fixture: 'elevator', rule: 'Private residence elevators, where part of a required accessible route in a dwelling, must comply with 409.', access_role: 'component', photo_assessable: true, guide_slug: 'elevators', source_ref: CH4 },
+  { section: '§410', chapter: 4, title: 'Platform Lifts', fixture: 'platform_lift', rule: 'Platform (wheelchair) lifts are permitted as part of an accessible route in limited conditions; must comply with ASME A18.1, with a compliant clear floor space, controls, and entry (410).', access_role: 'gating', photo_assessable: true, guide_slug: 'platform-lifts', source_ref: CH4 },
+
+  // --- Chapter 5: remaining site and building elements ---
+  { section: '§501', chapter: 5, title: 'General', fixture: 'reference', rule: 'Chapter 5 applies where required by Chapter 2 or where referenced.', access_role: 'reference', photo_assessable: false, guide_slug: 'site-elements', source_ref: CH5 },
+  { section: '§502', chapter: 5, title: 'Parking Spaces', fixture: 'parking', rule: 'Accessible car spaces 96 in wide with a 60 in access aisle; van spaces 132 in wide (or 96 in with a 96 in aisle) with 98 in vertical clearance on the van route; marked, on the shortest accessible route, with signage (502).', access_role: 'gating', photo_assessable: true, guide_slug: 'parking', source_ref: CH5 },
+  { section: '§504', chapter: 5, title: 'Stairways', fixture: 'stairway', rule: 'Stairs that are part of a means of egress must have uniform riser and tread dimensions, closed risers, compliant nosings, and handrails per 505 (504).', access_role: 'component', photo_assessable: true, guide_slug: 'stairways', source_ref: CH5 },
+  { section: '§505', chapter: 5, title: 'Handrails', fixture: 'handrail', rule: 'Handrails 34 to 38 in above the surface, continuous along the run, 1-1/4 to 2 in gripping surface, 1-1/2 in wall clearance, with extensions at the top and bottom (505).', access_role: 'component', photo_assessable: true, guide_slug: 'handrails', source_ref: CH5 },
+
+  // --- Chapter 6: general scope ---
+  { section: '§601', chapter: 6, title: 'General', fixture: 'reference', rule: 'Chapter 6 applies where required by Chapter 2 or where referenced.', access_role: 'reference', photo_assessable: false, guide_slug: 'plumbing', source_ref: CH6 },
+
+  // --- Chapter 7: remaining communication elements ---
+  { section: '§701', chapter: 7, title: 'General', fixture: 'reference', rule: 'Chapter 7 applies where required by Chapter 2 or where referenced.', access_role: 'reference', photo_assessable: false, guide_slug: 'communication', source_ref: CH7 },
+  { section: '§703', chapter: 7, title: 'Signs', fixture: 'sign', rule: 'Tactile signs (raised characters plus Braille) for permanent rooms/spaces, mounted 48 to 60 in to the baseline beside the latch; visual characters sized and contrasted by viewing distance; pictograms and directional/informational signage as required (703).', access_role: 'component', photo_assessable: true, guide_slug: 'signs', source_ref: CH7 },
+  { section: '§705', chapter: 7, title: 'Detectable Warnings', fixture: 'detectable_warning', rule: 'Truncated-dome detectable warnings at transit platform boarding edges and where else required, with specified dome size and spacing and visual contrast (705).', access_role: 'component', photo_assessable: true, guide_slug: 'detectable-warnings', source_ref: CH7 },
+
+  // --- Chapter 8: remaining special rooms ---
+  { section: '§801', chapter: 8, title: 'General', fixture: 'reference', rule: 'Chapter 8 applies where required by Chapter 2 or where referenced.', access_role: 'reference', photo_assessable: false, guide_slug: 'special-rooms', source_ref: CH8 },
+  { section: '§807', chapter: 8, title: 'Holding Cells and Housing Cells', fixture: 'cell', rule: 'Required accessible cells must provide mobility or communication features, with accessible routes, beds, and toilets (807).', access_role: 'component', photo_assessable: true, guide_slug: 'cells', source_ref: CH8 },
+  { section: '§808', chapter: 8, title: 'Courtrooms', fixture: 'courtroom', rule: 'Courtrooms must provide accessible routes to all stations (judge, jury, witness, parties) and accessible seating (808).', access_role: 'component', photo_assessable: true, guide_slug: 'courtrooms', source_ref: CH8 },
+
+  // --- Chapter 9: remaining built-in elements ---
+  { section: '§901', chapter: 9, title: 'General', fixture: 'reference', rule: 'Chapter 9 applies where required by Chapter 2 or where referenced.', access_role: 'reference', photo_assessable: false, guide_slug: 'built-in', source_ref: CH9 },
+  { section: '§904', chapter: 9, title: 'Sales and Service Counters', fixture: 'service_counter', rule: 'A portion of a sales/service counter must be 36 in max above the floor for a parallel approach, or provide a 30 by 48 in forward-approach work surface; check-out aisles accessible by type (904).', access_role: 'component', photo_assessable: true, guide_slug: 'service-counters', source_ref: CH9 },
+
+  // --- Chapter 10: remaining recreation facilities ---
+  { section: '§1001', chapter: 10, title: 'General', fixture: 'reference', rule: 'Chapter 10 applies where required by Chapter 2 or where referenced.', access_role: 'reference', photo_assessable: false, guide_slug: 'recreation', source_ref: CH10 },
+  { section: '§1002', chapter: 10, title: 'Amusement Rides', fixture: 'amusement_ride', rule: 'Accessible amusement rides must provide wheelchair spaces, transfer seats, or transfer devices and an accessible route to the load and unload area (1002).', access_role: 'component', photo_assessable: true, guide_slug: 'amusement-rides', source_ref: CH10 },
+  { section: '§1003', chapter: 10, title: 'Recreational Boating Facilities', fixture: 'boating', rule: 'Accessible boat slips and boarding piers with clear pier space, edge clearances, and gangway requirements (1003).', access_role: 'component', photo_assessable: true, guide_slug: 'boating', source_ref: CH10 },
+  { section: '§1005', chapter: 10, title: 'Fishing Piers and Platforms', fixture: 'fishing_pier', rule: 'Accessible fishing piers: railings 34 in max at accessible positions, clear floor spaces, and an accessible route (1005).', access_role: 'component', photo_assessable: true, guide_slug: 'fishing-piers', source_ref: CH10 },
+  { section: '§1006', chapter: 10, title: 'Golf Facilities', fixture: 'golf', rule: 'Accessible routes or golf-car passages to teeing grounds, putting greens, and weather shelters (1006).', access_role: 'component', photo_assessable: true, guide_slug: 'golf', source_ref: CH10 },
+  { section: '§1007', chapter: 10, title: 'Miniature Golf Facilities', fixture: 'miniature_golf', rule: 'A minimum number of holes must be accessible and connected by an accessible route (1007).', access_role: 'component', photo_assessable: true, guide_slug: 'miniature-golf', source_ref: CH10 },
+  { section: '§1010', chapter: 10, title: 'Shooting Facilities with Firing Positions', fixture: 'shooting', rule: 'At least 5 percent (minimum one) of firing positions must provide a 60 in turning space (1010).', access_role: 'component', photo_assessable: true, guide_slug: 'shooting-facilities', source_ref: CH10 },
 ];
 
 /** All catalog rows governing a given fixture or space. */
