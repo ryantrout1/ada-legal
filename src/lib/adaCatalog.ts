@@ -366,7 +366,7 @@ export const ADA_CATALOG: AdaStandardRow[] = [
     rule: 'A passenger loading zone must provide an access aisle 60 in wide min and 20 ft long min, adjacent and parallel to the vehicle pull-up space, at the same level, with a firm stable surface.',
     access_role: 'component',
     photo_assessable: true,
-    guide_slug: 'parking',
+    guide_slug: 'parking-requirements',
     source_ref: CH5,
   },
 
@@ -728,7 +728,7 @@ export const ADA_CATALOG: AdaStandardRow[] = [
 
   // --- Chapter 5: remaining site and building elements ---
   { section: '§501', chapter: 5, title: 'General', fixture: 'reference', rule: 'Chapter 5 applies where required by Chapter 2 or where referenced.', access_role: 'reference', photo_assessable: false, guide_slug: '', source_ref: CH5 },
-  { section: '§502', chapter: 5, title: 'Parking Spaces', fixture: 'parking', rule: 'Accessible car spaces 96 in wide with a 60 in access aisle; van spaces 132 in wide (or 96 in with a 96 in aisle) with 98 in vertical clearance on the van route; marked, on the shortest accessible route, with signage (502).', access_role: 'gating', photo_assessable: true, guide_slug: 'parking', source_ref: CH5 },
+  { section: '§502', chapter: 5, title: 'Parking Spaces', fixture: 'parking', rule: 'Accessible car spaces 96 in wide with a 60 in access aisle; van spaces 132 in wide (or 96 in with a 96 in aisle) with 98 in vertical clearance on the van route; marked, on the shortest accessible route, with signage (502).', access_role: 'gating', photo_assessable: true, guide_slug: 'parking-requirements', source_ref: CH5 },
   { section: '§504', chapter: 5, title: 'Stairways', fixture: 'stairway', rule: 'Stairs that are part of a means of egress must have uniform riser and tread dimensions, closed risers, compliant nosings, and handrails per 505 (504).', access_role: 'component', photo_assessable: true, guide_slug: '', source_ref: CH5 },
   { section: '§505', chapter: 5, title: 'Handrails', fixture: 'handrail', rule: 'Handrails 34 to 38 in above the surface, continuous along the run, 1-1/4 to 2 in gripping surface, 1-1/2 in wall clearance, with extensions at the top and bottom (505).', access_role: 'component', photo_assessable: true, guide_slug: 'turning-handrails', source_ref: CH5 },
 
@@ -818,4 +818,38 @@ export function renderCatalogForPrompt(): string {
   }
 
   return lines.join('\n');
+}
+
+/**
+ * Resolve a section cite (e.g. "§608.7", "§604") to its catalog row.
+ * Tries an exact match, then the 3-digit base (§608.7 -> §608), then any
+ * subsection under that base. Returns undefined if the section is not in
+ * the catalog at all.
+ */
+function rowForSection(sectionRef: string): AdaStandardRow | undefined {
+  const norm = sectionRef.trim();
+  const exact = ADA_CATALOG.find((r) => r.section === norm);
+  if (exact) return exact;
+  const base = /^(§\d{3,4})/.exec(norm)?.[1];
+  if (!base) return undefined;
+  const baseRow = ADA_CATALOG.find((r) => r.section === base);
+  if (baseRow) return baseRow;
+  return ADA_CATALOG.find((r) => r.section.startsWith(base + '.'));
+}
+
+/**
+ * Authoritative section -> Standards Guide URL. The catalog owns the
+ * section -> guide-page mapping; rows with no dedicated page ('') fall
+ * back to the chapter URL. Mirrors the URL format of guideUrlForTopic()
+ * in standardsIndex.ts so links are consistent across surfaces. Returns
+ * undefined only when the section is not in the catalog at all.
+ */
+export function guideUrlForSection(sectionRef: string): string | undefined {
+  const row = rowForSection(sectionRef);
+  if (!row) return undefined;
+  if (row.guide_slug) return `/standards-guide/guide/${row.guide_slug}`;
+  if (row.chapter >= 1 && row.chapter <= 10) {
+    return `/standards-guide/chapter/${row.chapter}`;
+  }
+  return '/standards-guide';
 }

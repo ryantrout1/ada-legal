@@ -17,7 +17,8 @@
 
 import type { AdaTool, ToolResult, ToolExecuteContext } from '../types.js';
 import type { PhotoAnalysisOutput, PhotoFinding } from '../../../types/db.js';
-import { guideUrlForTopic, topicsForSection, topicsForText } from '../../../lib/standardsIndex.js';
+import { guideUrlForTopic, topicsForText } from '../../../lib/standardsIndex.js';
+import { guideUrlForSection } from '../../../lib/adaCatalog.js';
 
 const MAX_PHOTOS_PER_CALL = 3;
 
@@ -30,13 +31,15 @@ interface AnalyzePhotoInput {
  * Enrich a raw finding from the photo analyzer with a guide_url when
  * we can resolve one. Resolution order:
  *
- *   1. Try topicsForSection(finding.standard). The analyzer returns
- *      strings like "§405.2", "ADAAG §405", "2010 ADA Standards §604.8"
- *      — we extract the first §-token and match.
- *   2. If no section match, try topicsForText(finding.finding_standard).
- *      This catches cases where the analyzer cites a rule that doesn't
- *      have a section number we index (e.g. "service animal") but the
- *      finding text mentions something we recognize.
+ *   1. Try guideUrlForSection(finding.standard) against the catalog —
+ *      the authoritative section -> guide-page map (every numbered
+ *      section, with '' falling back to the chapter URL). The analyzer
+ *      returns strings like "§405.2", "ADAAG §405", "2010 ADA
+ *      Standards §604.8" — we extract the first §-token and resolve it.
+ *   2. If there is no section token (or it isn't in the catalog), try
+ *      topicsForText(finding.finding_standard). This catches rules with
+ *      no section number we index (e.g. "service animal") via the
+ *      keyword layer in standardsIndex.
  *
  * When neither matches, guide_url is left undefined. The finding
  * still ships to Ada and the attorney package — just without the
@@ -45,10 +48,8 @@ interface AnalyzePhotoInput {
 function enrichFindingWithGuideUrl(f: PhotoFinding): PhotoFinding {
   const sectionMatch = /§\s*\d{3,4}(?:\.\d+)*/i.exec(f.standard ?? '');
   if (sectionMatch) {
-    const hits = topicsForSection(sectionMatch[0].replace(/\s+/g, ''));
-    if (hits.length > 0) {
-      return { ...f, guide_url: guideUrlForTopic(hits[0]) };
-    }
+    const url = guideUrlForSection(sectionMatch[0].replace(/\s+/g, ''));
+    if (url) return { ...f, guide_url: url };
   }
 
   const textHits = topicsForText(`${f.finding_standard} ${f.standard}`);
