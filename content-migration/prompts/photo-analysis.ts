@@ -66,7 +66,7 @@ For the \`bounding_box\` field on each concern: provide the approximate bounding
 - Pictograms: 6" min field height with verbal description below (§703.6)
 - Accessible parking: ISA at each space, van-accessible designation
 
-### Restrooms (§603–§609)
+### Restrooms (§603–§610)
 
 - Clear floor space 60"×60" turning radius (§603.2.1)
 - Accessible stall: min 60" wide × 56" deep (wall-mounted) / 59" (floor-mounted) (§604.3)
@@ -77,6 +77,11 @@ For the \`bounding_box\` field on each concern: provide the approximate bounding
 - Faucets: lever, push, touch, or auto — no tight grasping (§606.4)
 - Mirror: bottom edge max 40" AFF (§603.3)
 - Dispensers/accessories: 15"–48" AFF reach range (§308)
+- Urinal: rim max 17" AFF; clear floor space 30" x 48" (§605)
+- Bathtub: grab bars, a head-end or in-tub seat, reachable controls, and 60" clear floor space (§607)
+- Shower — CHECK ENTRY FIRST: a roll-in shower must be curbless (threshold 1/2" max); a transfer shower threshold is 1/2" max and beveled (§608.7). A raised curb or step that blocks wheelchair entry defeats the whole fixture — flag it before any in-shower item, and do not assume "roll-in": a curb + hinged door + built-in bench usually indicates a transfer/standard shower, and the seat rules differ by type.
+- Shower interior: grab bars on walls 33"-36" AFF (§608.3); seat where required, folding type for a standard roll-in (§608.4, §610.3); controls and spray within 38"-48" reach, operable one-handed (§608.5, §309.4); enclosure must not obstruct controls or transfer (§608.8)
+- Grab bar construction: 1-1/4" to 2" diameter, 1-1/2" clearance from the wall, must support 250 lbf (§609)
 
 ### Counters & service areas (§904)
 
@@ -126,6 +131,12 @@ For the \`bounding_box\` field on each concern: provide the approximate bounding
 
 ## Analysis guidance
 
+### Disqualifying barriers come first
+
+Before enumerating component-level deficiencies (grab bars, mirror height, dispenser reach), decide for each major fixture — and for the room itself — whether a wheelchair user can approach, enter, and reach it AT ALL. Access-gating barriers include: a raised curb or step where a curbless or 1/2"-max entry is required, a turning or clear-floor space too small to maneuver in, or a fixture you could not position a wheelchair in front of.
+
+When a gating barrier is present, the fixture is unusable no matter what else it has. Mark that finding \`severity: "critical"\` (the schema defines critical as "blocks access entirely"), state plainly in the \`finding\` that it prevents use of the fixture, and LEAD the \`summary\` with it — never let it sit mid-list below lesser items. A roll-in shower with perfect grab bars but a 4-inch curb still fails, because you cannot roll in.
+
 For each photo, check ALL applicable categories above. Do not skip categories just because they seem less obvious. Be specific in your findings: not "door looks narrow" but "Door appears narrower than the 32-inch minimum clear width requirement." Cite the standard in the \`standard\` field — e.g., \`§404.2.3\`, \`ADAAG §404\`, \`2010 Standards §502.2\`. **The cite is universal — the same string regardless of reading level. Do not localize or translate the section number.**
 
 This analysis is informational only, not a professional inspection. Be thorough and flag anything that warrants on-site verification.
@@ -168,7 +179,7 @@ Each finding requires:
 - **\`standard\`** — the cite. Universal. Same value for all reading levels.
 - **\`severity\`** — \`critical\` | \`major\` | \`minor\` | \`advisory\`.
 - **\`confidence\`** — 0..1 honest assessment.
-- **\`confirmable\`** — \`true\` if you can fully assess from the photo. \`false\` when the angle, framing, or lighting prevents conclusive measurement (e.g. you can see a door closer but can't time its closing speed; you can see a threshold but can't measure its exact height). The finding still ships either way; this flag tells downstream consumers to render it as needs-on-site-verification rather than as a confirmed violation.
+- **\`confirmable\`** — \`true\` if the photo is enough to establish that the concern is real, *even when the exact dimension still needs a tape measure.* A visibly raised multi-inch curb where a curbless or 1/2"-max entry is required is \`confirmable: true\` — you can see it is a barrier; just note in the prose that the precise height needs on-site measurement. Reserve \`false\` for concerns you genuinely cannot establish from the image at all (e.g. a door closer whose closing speed you can't time, a faucet hidden from view, a slope you can't judge without an instrument). Do not downgrade a plainly visible categorical barrier to \`false\` only because you can't read its exact measurement. This flag tells downstream consumers whether to render the item as a confirmed concern or as needs-on-site-verification.
 - **\`bounding_box\`** — optional, especially when a finding spans multiple photos. When present, fractions of the image dimensions (0.0 to 1.0). \`x\` and \`y\` are the top-left corner, \`w\` and \`h\` are width and height. If you cannot locate visually, omit the field.
 
 ### Cross-photo reasoning (when multiple photos present)
