@@ -47,8 +47,14 @@ import type {
 } from '../../types/db.js';
 import photoAnalysisSystemPrompt from '../../../content-migration/prompts/photo-analysis.js';
 import readingLevelsPrompt from '../../../content-migration/prompts/reading-levels.js';
+import { renderCatalogForPrompt } from '../../lib/adaCatalog.js';
 
 const DEFAULT_MODEL = 'claude-opus-4-8';
+
+// The ADA standards checklist the analyzer reasons against, rendered from
+// the single-source-of-truth catalog (src/lib/adaCatalog.ts) and sent as a
+// second cached system block. Computed once at module load — it is static.
+const ADA_STANDARDS_CHECKLIST = renderCatalogForPrompt();
 // Standard reading level only — one variant of scene + summary +
 // positive_findings + (title + finding) per concern. Generating all
 // three reading levels at capture was ~60% of the output and the cause
@@ -259,6 +265,11 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
         {
           type: 'text',
           text: photoAnalysisSystemPrompt,
+          cache_control: { type: 'ephemeral' },
+        },
+        {
+          type: 'text',
+          text: ADA_STANDARDS_CHECKLIST,
           cache_control: { type: 'ephemeral' },
         },
       ] as never,

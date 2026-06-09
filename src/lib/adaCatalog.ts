@@ -776,3 +776,44 @@ export const PHOTO_ASSESSABLE: AdaStandardRow[] = ADA_CATALOG.filter(
 export const SCOPING_SECTIONS: AdaStandardRow[] = ADA_CATALOG.filter(
   (row) => row.access_role === 'scoping',
 );
+
+/**
+ * Render the photo-assessable catalog as a checklist for the analyzer's
+ * system prompt: grouped by fixture, with [GATING] rules first and flagged.
+ * This is the single source of truth for the standards the analyzer checks
+ * — it replaces the hand-written prose catalog that used to live in the
+ * prompt. Mirrors renderStandardsIndexForPrompt() used by the chat engine.
+ */
+export function renderCatalogForPrompt(): string {
+  const rows = ADA_CATALOG.filter((row) => row.photo_assessable);
+  const byFixture = new Map<string, AdaStandardRow[]>();
+  for (const row of rows) {
+    const list = byFixture.get(row.fixture) ?? [];
+    list.push(row);
+    byFixture.set(row.fixture, list);
+  }
+
+  const lines: string[] = [
+    '# ADA standards checklist (authoritative source of record)',
+    '',
+    'Apply ONLY the sections relevant to the fixtures and spaces actually visible in the photos — do not flag a fixture that is not present. Within each fixture, the rules marked [GATING] determine whether the fixture can be used at all; check those first, and a gating failure outranks every component-level deficiency.',
+    '',
+    'Scoping caveat: before flagging missing required features, consider whether the space is even required to be accessible. In transient lodging, only designated accessible guest rooms (\u00a7224, \u00a7806) must have grab bars or a roll-in shower — a standard guest room lacking them is not a violation. When you cannot tell whether a room is a designated accessible unit, say so rather than assuming.',
+    '',
+  ];
+
+  for (const [fixture, fixtureRows] of byFixture) {
+    fixtureRows.sort(
+      (a, b) =>
+        Number(b.access_role === 'gating') - Number(a.access_role === 'gating'),
+    );
+    lines.push(`## ${fixture}`);
+    for (const row of fixtureRows) {
+      const tag = row.access_role === 'gating' ? ' [GATING]' : '';
+      lines.push(`- ${row.section} ${row.title}${tag}: ${row.rule}`);
+    }
+    lines.push('');
+  }
+
+  return lines.join('\n');
+}
