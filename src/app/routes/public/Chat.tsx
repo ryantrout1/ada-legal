@@ -927,7 +927,7 @@ export default function Chat() {
           is informational only.{' '}
           <a
             href="/about-ada"
-            className="inline-block px-1.5 py-1 -my-1 rounded text-accent-500 hover:text-accent-600 underline underline-offset-2"
+            className="inline-block px-1.5 py-1 -my-1 rounded text-ada-500 hover:text-ada-600 underline underline-offset-2"
           >
             Why is she called Ada?
           </a>
@@ -1116,7 +1116,7 @@ function SendOrUndoButton({
     <button
       type="submit"
       disabled={disabled}
-      className="flex-none inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 disabled:bg-surface-300 disabled:cursor-not-allowed text-white font-medium px-5 py-2.5 rounded-md transition-colors"
+      className="flex-none inline-flex items-center gap-2 bg-ada-500 hover:bg-ada-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium px-5 py-2.5 rounded-md transition-colors"
     >
       Send
     </button>
