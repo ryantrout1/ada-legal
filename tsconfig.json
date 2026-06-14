@@ -21,7 +21,8 @@
     "types": ["node", "vite/client"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@content/*": ["content-migration/*"]
     }
   },
   "include": ["src", "api", "tests", "content-migration/prompts", "vite.config.ts", "vitest.config.ts"],
