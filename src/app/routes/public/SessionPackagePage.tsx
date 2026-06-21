@@ -421,14 +421,23 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
           <pre className="bg-surface-100 border border-surface-200 rounded p-4 overflow-x-auto text-sm whitespace-pre-wrap text-ink-900 font-mono">
             {pkg.demandLetter}
           </pre>
-          <button
-            type="button"
-            onClick={() => navigator.clipboard?.writeText(pkg.demandLetter ?? '')}
-            className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded border border-surface-300 text-ink-700 hover:border-accent-500 hover:text-accent-600 transition-colors print:hidden"
-            aria-label="Copy the draft letter to your clipboard"
-          >
-            Copy letter to clipboard
-          </button>
+          <div className="mt-3 flex flex-wrap gap-3 print:hidden">
+            <button
+              type="button"
+              onClick={() => navigator.clipboard?.writeText(pkg.demandLetter ?? '')}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded border border-surface-300 text-ink-700 hover:border-accent-500 hover:text-accent-600 transition-colors"
+              aria-label="Copy the draft letter to your clipboard"
+            >
+              Copy letter to clipboard
+            </button>
+            <a
+              href={`/api/packages/${pkg.slug}/letter.pdf`}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded border border-surface-300 text-ink-700 hover:border-accent-500 hover:text-accent-600 transition-colors"
+              aria-label="Download the draft letter as a PDF"
+            >
+              Download letter (PDF)
+            </a>
+          </div>
         </section>
       )}
 
