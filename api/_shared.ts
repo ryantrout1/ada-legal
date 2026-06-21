@@ -29,6 +29,7 @@ export function makeClientsFromEnv(): AdaClients {
   const resendFromAddress = process.env.RESEND_FROM_ADDRESS;
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
   const photoAnalysisModel = process.env.PHOTO_ANALYSIS_MODEL;
+  const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
   if (!databaseUrl) {
     throw new Error('DATABASE_URL is not set in environment');
   }
@@ -50,6 +51,9 @@ export function makeClientsFromEnv(): AdaClients {
   // PHOTO_ANALYSIS_MODEL is optional. Without it, analyze_photo uses
   // the client's hard-coded default (currently Opus 4.8). Set to
   // `claude-haiku-4-5` for the lighter-weight analyzer.
+  // GOOGLE_MAPS_API_KEY is optional (v1a). Without it, the demand-letter
+  // address-standardization step no-ops and the letter uses the
+  // conversationally-captured business address.
   return makeAdaClients({
     databaseUrl,
     anthropicApiKey,
@@ -60,6 +64,7 @@ export function makeClientsFromEnv(): AdaClients {
     resendFromAddress,
     stripeSecretKey,
     photoAnalysisModel,
+    googleMapsApiKey,
   });
 }
 

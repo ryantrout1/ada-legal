@@ -35,6 +35,7 @@ import { AnthropicPhotoAnalysisClient } from './anthropicPhotoAnalysisClient.js'
 import { makeOpenAIEmbeddingClient } from '../knowledge/embeddings.js';
 import { ResendEmailClient, StubResendEmailClient } from './resendEmailClient.js';
 import { StripeClient, StubStripeClient } from './stripeClient.js';
+import { GooglePlacesClient } from './googlePlacesClient.js';
 import type {
   AdaClients,
   AuditClient,
@@ -198,6 +199,13 @@ export interface AdaClientsConfig {
    * Wired from PHOTO_ANALYSIS_MODEL in makeClientsFromEnv.
    */
   photoAnalysisModel?: string;
+  /**
+   * Google Maps Platform API key (v1a). Optional — when absent,
+   * clients.places is undefined and the demand letter uses the
+   * conversationally-captured business address rather than a Places-
+   * standardized one. Wired from GOOGLE_MAPS_API_KEY in makeClientsFromEnv.
+   */
+  googleMapsApiKey?: string;
 }
 
 export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
@@ -255,5 +263,11 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
     embeddings,
     hopSecret: config.hopSecret,
     stripe,
+    // v1a: Places client only when the key is configured. Undefined
+    // otherwise — the address-standardization step no-ops and the letter
+    // uses the conversationally-captured address.
+    places: config.googleMapsApiKey
+      ? new GooglePlacesClient(config.googleMapsApiKey)
+      : undefined,
   };
 }

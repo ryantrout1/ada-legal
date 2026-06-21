@@ -1612,6 +1612,49 @@ export interface EmailClient {
   send(opts: EmailSendOptions): Promise<{ id: string }>;
 }
 
+// ─── Places (address standardization) ─────────────────────────────────────────
+//
+// v1a: standardize the business address on a self-help demand letter by
+// resolving the business to its canonical Google Places record. Optional
+// on AdaClients — when GOOGLE_MAPS_API_KEY is unset, clients.places is
+// undefined and the letter falls back to the conversationally-captured
+// address. This client does NOT resolve property owners or registered
+// agents (that's a separate, deferred capability); it only cleans up the
+// address the user gave for the business itself.
+
+export interface ResolveBusinessAddressRequest {
+  /** The business name the user gave (required — it's the search anchor). */
+  businessName: string;
+  /** Optional captured street to tighten the match. */
+  street: string | null;
+  city: string | null;
+  state: string | null;
+}
+
+export interface ResolvedBusinessAddress {
+  /** Google's canonical display name for the matched place, if any. */
+  businessName: string | null;
+  street: string | null;
+  city: string | null;
+  state: string | null;
+  postalCode: string | null;
+  /** Google Place ID of the matched business. */
+  placeId: string;
+  /** Google's single-line formatted address (kept for the audit receipt). */
+  formattedAddress: string;
+}
+
+export interface PlacesClient {
+  /**
+   * Resolve a business to its canonical Google Places address. Returns
+   * null when there's no confident match or the match lacks a usable
+   * address. Throws on transport/auth failure — callers soft-fail.
+   */
+  resolveBusinessAddress(
+    req: ResolveBusinessAddressRequest,
+  ): Promise<ResolvedBusinessAddress | null>;
+}
+
 // ─── Time + random (for determinism in tests) ─────────────────────────────────
 
 export interface ClockClient {
@@ -1689,4 +1732,11 @@ export interface AdaClients {
    * without it (they don't touch Stripe).
    */
   stripe?: import('./stripeClient.js').AdaStripeClient;
+  /**
+   * v1a: Google Places client for standardizing the business address on
+   * a self-help demand letter. Optional — when GOOGLE_MAPS_API_KEY is
+   * unset, this is undefined and the letter uses the conversationally-
+   * captured address. Absent in most tests.
+   */
+  places?: PlacesClient;
 }
