@@ -466,6 +466,7 @@ function buildSessionContextSection(state: AdaSessionState): string {
         '3. In your final message, tell the user — warmly and briefly — that you have put together a personalized summary of their situation and the steps they can take, and that it is ready for them just below this conversation.' +
           letterSentence +
           ' Keep this closing note short; the summary itself carries the detail.',
+        '4. You can also offer the user a copy for their records by emailing a copy of the summary to them. This is optional — if they say yes, ask for their email and capture it with `extract_field` using the field name `contact_email`. Never let this hold up ending the conversation; if they decline or do not give an address, close out normally.',
       ].join('\n'),
     );
   }
