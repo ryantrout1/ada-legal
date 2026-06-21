@@ -39,6 +39,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { processAdaTurn } from '../../src/engine/processAdaTurn.js';
 import { runSessionQualityCheck } from '../../src/engine/observability/qualityCheck.js';
 import { assemblePackage } from '../../src/engine/package/assemble.js';
+import { maybeSendSelfHelpEmail } from '../../src/engine/handoff/selfHelpEmail.js';
 import type { AdaTurnResult } from '../../src/engine/types.js';
 import type { AdaClients } from '../../src/engine/clients/types.js';
 import { hashAnonToken } from '../../src/lib/anonCookie.js';
@@ -48,6 +49,10 @@ import {
   readJsonBody,
   resolveRequestContext,
 } from '../_shared.js';
+
+// Canonical public host for links emailed to users (the /s/[slug] page
+// lives on the Vercel SPA). Mirrors api/sitemap.ts's SITE_URL.
+const PUBLIC_BASE_URL = 'https://ada.adalegallink.com';
 
 interface Body {
   session_id?: string;
@@ -389,6 +394,20 @@ async function finalizeTurn(
           expiresAt,
         });
         packageSlug = pkg.slug;
+
+        // Phase 2: email the user a copy of their readout when they
+        // captured a contact email. Gated to public_ada so class-action
+        // intakes (which send their own confirmation via finalize_intake)
+        // don't double-email. Soft-fails internally; the receipt is
+        // written to session metadata.
+        if (result.nextState.sessionType === 'public_ada') {
+          await maybeSendSelfHelpEmail(
+            { email: clients.email, db: clients.db },
+            result.nextState,
+            pkg,
+            `${PUBLIC_BASE_URL}/s/${pkg.slug}`,
+          );
+        }
       } catch (pkgErr) {
         console.error('package generation failed', pkgErr);
       }
