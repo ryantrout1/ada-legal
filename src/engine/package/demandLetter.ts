@@ -89,11 +89,19 @@ export function buildDemandLetter(input: DemandLetterInput): string | null {
   const businessType = fieldString(facts, 'business_type');
   const city = fieldString(facts, 'location_city');
   const state = fieldString(facts, 'location_state');
+  const businessAddress = fieldString(facts, 'business_address');
+  const businessZip = fieldString(facts, 'business_postal_code');
   const incidentDate = fieldString(facts, 'incident_date');
   const subtype = fieldString(facts, 'violation_subtype');
 
   const dateLine = formatHumanDate(generatedOn);
-  const businessAddressBlock = buildBusinessAddressBlock(business, city, state);
+  const businessAddressBlock = buildBusinessAddressBlock(
+    business,
+    businessAddress,
+    city,
+    state,
+    businessZip,
+  );
   const incidentPhrase = incidentDate
     ? `On ${incidentDate}, I visited your ${businessType?.toLowerCase() ?? 'business'}`
     : `Recently, I visited your ${businessType?.toLowerCase() ?? 'business'}`;
@@ -168,18 +176,21 @@ function formatHumanDate(iso: string): string {
 
 function buildBusinessAddressBlock(
   business: string,
+  street: string | null,
   city: string | null,
   state: string | null,
+  zip: string | null,
 ): string {
-  const lines = [business, `[Business street address]`];
+  const z = zip ?? `[ZIP]`;
+  const lines = [business, street ?? `[Business street address]`];
   if (city && state) {
-    lines.push(`${city}, ${state} [ZIP]`);
+    lines.push(`${city}, ${state} ${z}`);
   } else if (state) {
-    lines.push(`[City], ${state} [ZIP]`);
+    lines.push(`[City], ${state} ${z}`);
   } else if (city) {
-    lines.push(`${city}, [State] [ZIP]`);
+    lines.push(`${city}, [State] ${z}`);
   } else {
-    lines.push(`[City, State, ZIP]`);
+    lines.push(zip ? `[City, State] ${z}` : `[City, State, ZIP]`);
   }
   return lines.join('\n');
 }
