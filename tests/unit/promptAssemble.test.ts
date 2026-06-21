@@ -297,6 +297,25 @@ describe('assemblePrompt — session context', () => {
     });
     expect(out).not.toContain('CLOSING THE LOOP');
   });
+
+  it('tells Ada she can optionally email a copy (public_ada)', () => {
+    const out = assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).toContain('emailing a copy');
+    expect(out).toContain('contact_email');
+  });
+
+  it('omits the email-copy guidance for class-action intake sessions', () => {
+    const out = assemblePrompt({
+      state: baseState({ sessionType: 'class_action_intake' }),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).not.toContain('emailing a copy');
+  });
 });
 
 describe('assemblePrompt — org context', () => {
