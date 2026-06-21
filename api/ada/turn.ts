@@ -392,6 +392,16 @@ async function finalizeTurn(
       } catch (pkgErr) {
         console.error('package generation failed', pkgErr);
       }
+    } else {
+      // Silent-failure guard. A completed session with no classification
+      // produces no package, so the user never receives their readout.
+      // Previously this skipped without a trace. Log it loudly so it is
+      // visible in observability and we can measure how often Ada closes
+      // a session without classifying it first.
+      console.warn(
+        `session ${result.nextState.sessionId} completed without a classification — no readout package generated. ` +
+          `sessionType=${result.nextState.sessionType}, outcome=${result.nextState.metadata.outcome ?? 'n/a'}`,
+      );
     }
   }
 

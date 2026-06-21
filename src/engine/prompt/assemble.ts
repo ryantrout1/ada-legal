@@ -440,6 +440,36 @@ function buildSessionContextSection(state: AdaSessionState): string {
     parts.push('No fields extracted yet.');
   }
 
+  // Closing protocol (public_ada self-help sessions only). The
+  // end-of-conversation package — the user's personalized readout, plus a
+  // sample letter when the barrier involves a business they could contact
+  // directly — is generated server-side ONLY when the session is both
+  // classified AND completed (see api/ada/turn.ts → finalizeTurn). Ada is
+  // the only actor who can trigger both, via set_classification +
+  // end_session. Without explicit guidance she tends to give her answer
+  // and stop, so the package never gets built and the user leaves with
+  // nothing. This block spells out the closing sequence so she always
+  // lands the handoff. Class-action and gov intakes close via
+  // finalize_intake / route instead and are intentionally excluded.
+  if (state.sessionType === 'public_ada') {
+    const c = state.classification;
+    const includeLetter =
+      !!c && (c.title === 'III' || c.title === 'class_action');
+    const letterSentence = includeLetter
+      ? ' Because this involves a business the user could contact directly, their package also includes a sample letter they can send — let them know it is there.'
+      : '';
+    parts.push(
+      [
+        'CLOSING THE LOOP. When the conversation reaches a natural stopping point — you have given the user a clear read on their situation and concrete next steps — do not simply trail off. Close it out so they leave with something in hand:',
+        '1. Make sure you have called `set_classification`. The system cannot build the takeaway package without it, and the user will leave empty-handed.',
+        '2. Call `end_session` with a short outcome slug and a one- to two-sentence summary.',
+        '3. In your final message, tell the user — warmly and briefly — that you have put together a personalized summary of their situation and the steps they can take, and that it is ready for them just below this conversation.' +
+          letterSentence +
+          ' Keep this closing note short; the summary itself carries the detail.',
+      ].join('\n'),
+    );
+  }
+
   return parts.join('\n\n');
 }
 

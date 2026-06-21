@@ -245,6 +245,58 @@ describe('assemblePrompt — session context', () => {
     });
     expect(out).toContain('No fields extracted yet');
   });
+
+  it('includes the closing-loop protocol for public_ada sessions', () => {
+    const out = assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).toContain('CLOSING THE LOOP');
+    expect(out).toContain('Call `end_session`');
+  });
+
+  it('promises a sample letter when classified Title III', () => {
+    const out = assemblePrompt({
+      state: baseState({
+        classification: {
+          title: 'III',
+          tier: 'high',
+          reasoning: 'store has no accessible entrance',
+          standard: '28 CFR §36.304',
+        },
+      }),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).toContain('sample letter');
+  });
+
+  it('does not promise a sample letter for Title I (none is generated)', () => {
+    const out = assemblePrompt({
+      state: baseState({
+        classification: {
+          title: 'I',
+          tier: 'high',
+          reasoning: 'employer denied a reasonable accommodation',
+          standard: '42 U.S.C. §12112',
+        },
+      }),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).toContain('CLOSING THE LOOP');
+    expect(out).not.toContain('sample letter');
+  });
+
+  it('omits the closing-loop protocol for class-action intake sessions', () => {
+    const out = assemblePrompt({
+      state: baseState({ sessionType: 'class_action_intake' }),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).not.toContain('CLOSING THE LOOP');
+  });
 });
 
 describe('assemblePrompt — org context', () => {
