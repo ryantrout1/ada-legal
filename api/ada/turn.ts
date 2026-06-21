@@ -281,6 +281,12 @@ async function runSseTurn(
           if (aborted) return;
           writeSseFrame(res, 'text', { delta });
         },
+        onStreamReset: () => {
+          if (aborted) return;
+          // Tool-loop boundary: tell the client to clear the in-progress
+          // bubble so the model's re-emitted reply doesn't double up.
+          writeSseFrame(res, 'reset', {});
+        },
       },
       orgDisplayName: org?.displayName ?? 'ADA Legal Link',
       orgAdaIntroPrompt: org?.adaIntroPrompt ?? null,

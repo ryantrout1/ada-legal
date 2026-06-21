@@ -441,6 +441,19 @@ export async function processAdaTurn({
           },
         ],
       };
+      // This iteration streamed text alongside its tool calls; the next
+      // iteration will re-stream the conversational reply (often verbatim).
+      // Signal a reset so the client drops what it buffered and only the
+      // final iteration's text remains — otherwise the two copies
+      // concatenate into a duplicated bubble. Persisted finalText is
+      // already single; this repairs the live-stream view to match.
+      if (turnOutput.text.trim().length > 0) {
+        try {
+          input.onStreamReset?.();
+        } catch (err) {
+          console.error('onStreamReset listener threw', err);
+        }
+      }
       // Loop — Ada sees the tool results and continues.
       continue;
     }

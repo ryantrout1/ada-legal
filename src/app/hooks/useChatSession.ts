@@ -599,6 +599,16 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
               ),
             }));
           },
+          onReset: () => {
+            // Tool-loop boundary: the next iteration re-streams the reply.
+            // Drop what we've buffered so the two copies don't concatenate.
+            setState((s) => ({
+              ...s,
+              messages: s.messages.map((m) =>
+                m.id === placeholderId ? { ...m, content: '' } : m,
+              ),
+            }));
+          },
           onDone: (final) => {
             setState((s) => ({
               ...s,
@@ -740,6 +750,9 @@ interface SseHandlers {
   onTextDelta: (delta: string) => void;
   onDone: (final: TurnResponse) => void;
   onError: (message: string) => void;
+  /** Tool-loop boundary: clear the in-progress bubble so the model's
+   *  re-emitted reply doesn't concatenate into a duplicated message. */
+  onReset?: () => void;
 }
 
 /**
@@ -824,6 +837,9 @@ function dispatchFrame(frame: string, handlers: SseHandlers): void {
       if (typeof delta === 'string') handlers.onTextDelta(delta);
       return;
     }
+    case 'reset':
+      handlers.onReset?.();
+      return;
     case 'done':
       handlers.onDone(parsed as TurnResponse);
       return;

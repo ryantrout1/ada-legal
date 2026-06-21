@@ -113,6 +113,69 @@ describe('processAdaTurn — integration', () => {
     expect(result.assistantMessage.content).toBe('Got it — Arizona. Tell me more?');
   });
 
+  it('emits onStreamReset at the tool-loop boundary so re-streamed text does not double (triage finding 2)', async () => {
+    const clients = makeInMemoryClients();
+    const state = newSession(clients);
+    const reply = "You couldn't get in. That's a Title III access issue.";
+
+    // Iteration 1: model emits its conversational reply ALONGSIDE a tool call.
+    clients.ai.enqueueResponse([
+      { type: 'text_delta', content: reply },
+      ...toolUseChunks('tu_1', 'extract_field', {
+        field: 'access_denied',
+        value: true,
+        confidence: 1,
+      }),
+    ]);
+    // Iteration 2 (final): model RE-EMITS the identical reply.
+    clients.ai.enqueueResponse(textOnlyTurn(reply));
+
+    // Simulate the browser: append deltas, clear on reset.
+    let bubble = '';
+    let resetCount = 0;
+
+    const result = await processAdaTurn({
+      clients,
+      state,
+      input: {
+        userMessage: 'there was no ramp and I could not get inside',
+        onTextDelta: (d) => {
+          bubble += d;
+        },
+        onStreamReset: () => {
+          resetCount += 1;
+          bubble = '';
+        },
+      },
+    });
+
+    // Reset fired once — after the text-bearing tool iteration.
+    expect(resetCount).toBe(1);
+    // The live bubble holds a single copy, not the doubled concatenation.
+    expect(bubble).toBe(reply);
+    // Persisted message was already single.
+    expect(result.assistantMessage.content).toBe(reply);
+  });
+
+  it('does not emit onStreamReset on a plain text-only turn', async () => {
+    const clients = makeInMemoryClients();
+    const state = newSession(clients);
+    clients.ai.enqueueResponse(textOnlyTurn('Hi! What happened?'));
+
+    let resetCount = 0;
+    await processAdaTurn({
+      clients,
+      state,
+      input: {
+        userMessage: 'hello',
+        onStreamReset: () => {
+          resetCount += 1;
+        },
+      },
+    });
+    expect(resetCount).toBe(0);
+  });
+
   it('chain of tool calls: extract + classify + respond', async () => {
     const clients = makeInMemoryClients();
     const state = newSession(clients);

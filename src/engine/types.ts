@@ -87,6 +87,17 @@ export interface AdaTurnInput {
    * conversational preamble the user should see before tool work starts.
    */
   onTextDelta?: (delta: string) => void;
+  /**
+   * Optional callback fired at a tool-loop iteration boundary when the
+   * just-completed iteration streamed visible text. The SSE handler
+   * forwards this as a `reset` frame so the client clears the in-progress
+   * bubble before the next iteration re-streams the conversational reply
+   * (the model often re-emits it verbatim). Without this, the two copies
+   * concatenate into a duplicated message. The persisted finalText is
+   * already single — this only repairs the live-stream view. Errors are
+   * swallowed like onTextDelta.
+   */
+  onStreamReset?: () => void;
 }
 
 export interface AdaTurnResult {
