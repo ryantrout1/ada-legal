@@ -299,6 +299,43 @@ describe('buildDemandLetter', () => {
     expect(letter!).toContain('service dog');
   });
 
+  it('fills the recipient block with a captured street address and ZIP', () => {
+    const facts: ExtractedFields = {
+      business_name: { value: "Joe's Diner", confidence: 0.95, extracted_at: generatedOn },
+      business_type: { value: 'Restaurant', confidence: 0.9, extracted_at: generatedOn },
+      business_address: { value: '123 Main St', confidence: 0.9, extracted_at: generatedOn },
+      location_city: { value: 'Phoenix', confidence: 0.9, extracted_at: generatedOn },
+      location_state: { value: 'AZ', confidence: 1.0, extracted_at: generatedOn },
+      business_postal_code: { value: '85001', confidence: 0.9, extracted_at: generatedOn },
+    };
+    const letter = buildDemandLetter({
+      facts,
+      classification,
+      userNarrative: 'There was no accessible entrance.',
+      generatedOn,
+    });
+    expect(letter!).toContain('123 Main St');
+    expect(letter!).toContain('Phoenix, AZ 85001');
+    expect(letter!).not.toContain('[Business street address]');
+    expect(letter!).not.toContain('[ZIP]');
+  });
+
+  it('keeps fill-in placeholders when address fields are absent', () => {
+    const facts: ExtractedFields = {
+      business_name: { value: "Joe's Diner", confidence: 0.95, extracted_at: generatedOn },
+      location_city: { value: 'Phoenix', confidence: 0.9, extracted_at: generatedOn },
+      location_state: { value: 'AZ', confidence: 1.0, extracted_at: generatedOn },
+    };
+    const letter = buildDemandLetter({
+      facts,
+      classification,
+      userNarrative: 'There was no accessible entrance.',
+      generatedOn,
+    });
+    expect(letter!).toContain('[Business street address]');
+    expect(letter!).toContain('Phoenix, AZ [ZIP]');
+  });
+
   it('does NOT contain dollar figures or damage demands', () => {
     const facts: ExtractedFields = {
       business_name: { value: 'Bad Hotel', confidence: 1, extracted_at: generatedOn },

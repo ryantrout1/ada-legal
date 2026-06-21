@@ -316,6 +316,39 @@ describe('assemblePrompt — session context', () => {
     });
     expect(out).not.toContain('emailing a copy');
   });
+
+  it('tells Ada to capture the business address when a letter applies (Title III)', () => {
+    const out = assemblePrompt({
+      state: baseState({
+        classification: {
+          title: 'III',
+          tier: 'high',
+          reasoning: 'no accessible entrance',
+          standard: '28 CFR §36.304',
+        },
+      }),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).toContain('business_address');
+    expect(out).toContain('business_postal_code');
+  });
+
+  it('does not ask for the business address when no letter applies (Title I)', () => {
+    const out = assemblePrompt({
+      state: baseState({
+        classification: {
+          title: 'I',
+          tier: 'high',
+          reasoning: 'employer denied accommodation',
+          standard: '42 U.S.C. §12112',
+        },
+      }),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+    expect(out).not.toContain('business_address');
+  });
 });
 
 describe('assemblePrompt — org context', () => {
