@@ -40,6 +40,7 @@ import { processAdaTurn } from '../../src/engine/processAdaTurn.js';
 import { runSessionQualityCheck } from '../../src/engine/observability/qualityCheck.js';
 import { assemblePackage } from '../../src/engine/package/assemble.js';
 import { maybeSendSelfHelpEmail } from '../../src/engine/handoff/selfHelpEmail.js';
+import { maybeResolveBusinessAddress } from '../../src/engine/package/resolveBusinessAddress.js';
 import type { AdaTurnResult } from '../../src/engine/types.js';
 import type { AdaClients } from '../../src/engine/clients/types.js';
 import { hashAnonToken } from '../../src/lib/anonCookie.js';
@@ -378,10 +379,19 @@ async function finalizeTurn(
           }
         }
 
+        // v1a: standardize the business address (Google Places) before
+        // building the letter. No-op when GOOGLE_MAPS_API_KEY is unset or
+        // the gates don't apply; soft-fails to the captured address.
+        const standardizedAddress = await maybeResolveBusinessAddress(
+          { places: clients.places, db: clients.db },
+          result.nextState,
+        );
+
         const pkg = assemblePackage({
           state: result.nextState,
           attorneyMatched,
           matchedListing,
+          standardizedAddress,
           knowledgeHits: [], // TODO: thread retrieved chunks from the turn when available
         });
         const expiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();

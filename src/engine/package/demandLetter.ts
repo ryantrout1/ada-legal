@@ -54,6 +54,7 @@
  */
 
 import type { Classification, ExtractedFields } from '../../types/db.js';
+import type { ResolvedBusinessAddress } from '../clients/types.js';
 
 export interface DemandLetterInput {
   facts: ExtractedFields;
@@ -65,6 +66,14 @@ export interface DemandLetterInput {
    * testable.
    */
   generatedOn: string;
+  /**
+   * v1a: a Places-standardized version of the business's address. When
+   * present, its street/city/state/ZIP take precedence over the
+   * conversationally-captured fields in the recipient block (the
+   * business name stays the one the user gave). Null/absent → the letter
+   * uses the captured fields, exactly as before.
+   */
+  standardizedAddress?: ResolvedBusinessAddress | null;
 }
 
 /**
@@ -87,10 +96,13 @@ export function buildDemandLetter(input: DemandLetterInput): string | null {
   }
 
   const businessType = fieldString(facts, 'business_type');
-  const city = fieldString(facts, 'location_city');
-  const state = fieldString(facts, 'location_state');
-  const businessAddress = fieldString(facts, 'business_address');
-  const businessZip = fieldString(facts, 'business_postal_code');
+  // v1a: prefer the Places-standardized address when available, falling
+  // back to the conversationally-captured fields per component.
+  const std = input.standardizedAddress ?? null;
+  const city = std?.city ?? fieldString(facts, 'location_city');
+  const state = std?.state ?? fieldString(facts, 'location_state');
+  const businessAddress = std?.street ?? fieldString(facts, 'business_address');
+  const businessZip = std?.postalCode ?? fieldString(facts, 'business_postal_code');
   const incidentDate = fieldString(facts, 'incident_date');
   const subtype = fieldString(facts, 'violation_subtype');
 

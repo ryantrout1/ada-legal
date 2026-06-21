@@ -336,6 +336,33 @@ describe('buildDemandLetter', () => {
     expect(letter!).toContain('Phoenix, AZ [ZIP]');
   });
 
+  it('uses the standardized address over the captured fields when provided', () => {
+    const facts: ExtractedFields = {
+      business_name: { value: "Joe's Diner", confidence: 0.95, extracted_at: generatedOn },
+      business_address: { value: '123 main', confidence: 0.5, extracted_at: generatedOn },
+      location_city: { value: 'phoenix', confidence: 0.5, extracted_at: generatedOn },
+      location_state: { value: 'az', confidence: 0.5, extracted_at: generatedOn },
+    };
+    const letter = buildDemandLetter({
+      facts,
+      classification,
+      userNarrative: 'There was no accessible entrance.',
+      generatedOn,
+      standardizedAddress: {
+        businessName: "Joe's Diner",
+        street: '500 W Washington St',
+        city: 'Phoenix',
+        state: 'AZ',
+        postalCode: '85003',
+        placeId: 'ChIJ_x',
+        formattedAddress: '500 W Washington St, Phoenix, AZ 85003, USA',
+      },
+    });
+    expect(letter!).toContain('500 W Washington St');
+    expect(letter!).toContain('Phoenix, AZ 85003');
+    expect(letter!).not.toContain('123 main');
+  });
+
   it('does NOT contain dollar figures or damage demands', () => {
     const facts: ExtractedFields = {
       business_name: { value: 'Bad Hotel', confidence: 1, extracted_at: generatedOn },

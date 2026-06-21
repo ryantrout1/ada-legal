@@ -14,7 +14,7 @@
  */
 
 import type { AdaSessionState } from '../types.js';
-import type { KnowledgeChunkHit } from '../clients/types.js';
+import type { KnowledgeChunkHit, ResolvedBusinessAddress } from '../clients/types.js';
 import { routeFor } from '../routing/destinations.js';
 import { generatePackageSlug } from './slug.js';
 import { labelFor } from './labels.js';
@@ -62,6 +62,12 @@ export interface AssemblePackageContext {
    * placeholder copy.
    */
   matchedListing?: MatchedListing | null;
+  /**
+   * v1a: Places-standardized business address, resolved by the caller
+   * (the assembler stays pure / sync). Threaded into the demand letter's
+   * recipient block. Omitted/null → the letter uses the captured fields.
+   */
+  standardizedAddress?: ResolvedBusinessAddress | null;
 }
 
 /**
@@ -124,6 +130,7 @@ export function assemblePackage(ctx: AssemblePackageContext): SessionPackage {
         classification,
         userNarrative,
         generatedOn: generatedAt,
+        standardizedAddress: ctx.standardizedAddress ?? null,
       })
     : null;
 
