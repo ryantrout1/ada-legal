@@ -299,6 +299,24 @@ describe('buildDemandLetter', () => {
     expect(letter!).toContain('service dog');
   });
 
+  it('formats the incident date as Month D, YYYY in the body (not raw ISO)', () => {
+    const facts: ExtractedFields = {
+      business_name: { value: "Joe's Diner", confidence: 0.95, extracted_at: generatedOn },
+      business_type: { value: 'Restaurant', confidence: 0.9, extracted_at: generatedOn },
+      location_city: { value: 'Phoenix', confidence: 0.9, extracted_at: generatedOn },
+      location_state: { value: 'AZ', confidence: 1.0, extracted_at: generatedOn },
+      incident_date: { value: '2026-06-15', confidence: 0.8, extracted_at: generatedOn },
+    };
+    const letter = buildDemandLetter({
+      facts,
+      classification,
+      userNarrative: 'There was no wheelchair ramp.',
+      generatedOn,
+    });
+    expect(letter!).toContain('On June 15, 2026, I visited');
+    expect(letter!).not.toContain('2026-06-15');
+  });
+
   it('fills the recipient block with a captured street address and ZIP', () => {
     const facts: ExtractedFields = {
       business_name: { value: "Joe's Diner", confidence: 0.95, extracted_at: generatedOn },

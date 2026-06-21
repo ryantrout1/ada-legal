@@ -115,7 +115,7 @@ export function buildDemandLetter(input: DemandLetterInput): string | null {
     businessZip,
   );
   const incidentPhrase = incidentDate
-    ? `On ${incidentDate}, I visited your ${businessType?.toLowerCase() ?? 'business'}`
+    ? `On ${formatHumanDate(incidentDate)}, I visited your ${businessType?.toLowerCase() ?? 'business'}`
     : `Recently, I visited your ${businessType?.toLowerCase() ?? 'business'}`;
 
   const narrativeBlock = userNarrative
