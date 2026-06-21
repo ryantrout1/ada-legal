@@ -469,6 +469,12 @@ function buildSessionContextSection(state: AdaSessionState): string {
         '4. You can also offer the user a copy for their records by emailing a copy of the summary to them. This is optional — if they say yes, ask for their email and capture it with `extract_field` using the field name `contact_email`. Never let this hold up ending the conversation; if they decline or do not give an address, close out normally.',
       ].join('\n'),
     );
+
+    if (includeLetter) {
+      parts.push(
+        "LETTER RECIPIENT. Because this barrier is at a business, the summary includes a sample letter the user can send. So the letter can be pre-addressed, capture the business's mailing details when they come up: its street address with `extract_field` (field name `business_address`) and its ZIP code (field name `business_postal_code`). The user usually knows the business's street address even when they do not know who owns the property, so it is fine to ask for it. Do not interrogate — capture these naturally if they are mentioned, and the letter falls back to fill-in-the-blank placeholders when they are not provided.",
+      );
+    }
   }
 
   return parts.join('\n\n');
