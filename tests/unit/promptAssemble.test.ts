@@ -626,3 +626,31 @@ describe('assemblePrompt — page context (Commit 29/6)', () => {
     expect(toolsIdx).toBeLessThan(pageIdx);
   });
 });
+
+describe('assemblePrompt — legal-verdict + intake guardrails (triage findings 1 & 3)', () => {
+  const out = () =>
+    assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+
+  // Finding 1: the persona no longer models a flat legal verdict, and
+  // explicitly forbids declaring a named business broke the law.
+  it('does not model the "a clear Title III violation" verdict exemplar', () => {
+    expect(out()).not.toContain('a clear Title III violation');
+  });
+
+  it('forbids declaring that a business broke the law or violated the ADA', () => {
+    expect(out()).toMatch(/do NOT declare that a business broke the law/i);
+  });
+
+  it('includes the readily-achievable nuance (no auto-violation)', () => {
+    expect(out()).toMatch(/readily achievable/i);
+  });
+
+  // Finding 3: Ada must parse the opener and not re-ask facts already given.
+  it('instructs Ada to read the opener before asking', () => {
+    expect(out()).toContain('First, read what they already told you');
+  });
+});
