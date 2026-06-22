@@ -120,7 +120,6 @@ describe('extractOutputFromResponse', () => {
         input: {
           scene: 'A storefront entrance.',
           summary: 'A 6-inch step blocks the entrance.',
-          overall_risk: 'high',
           positive_findings: ['Curb cut visible at sidewalk.'],
           findings: [
             makeFinding({
@@ -246,7 +245,6 @@ describe('extractOutputFromResponse', () => {
         input: {
           scene: makeRLT(''),
           summary: makeRLT(''),
-          overall_risk: 'none',
           positive_findings: makeRLSL([]),
           findings: 'not-an-array',
         },
@@ -276,7 +274,6 @@ describe('extractOutputFromResponse', () => {
         input: {
           scene: makeRLT(''),
           summary: makeRLT(''),
-          overall_risk: 'medium',
           positive_findings: makeRLSL([]),
           findings: [valid, missingTitle, missingSeverity, invalidSeverity, missingConfirmable],
         },
@@ -296,7 +293,6 @@ describe('extractOutputFromResponse', () => {
         input: {
           scene: makeRLT(''),
           summary: makeRLT(''),
-          overall_risk: 'low',
           positive_findings: makeRLSL([]),
           findings: [
             makeFinding({ title: 'over', text: 'over', severity: 'minor', standard: '§A', confidence: 1.5, confirmable: true }),
@@ -327,7 +323,6 @@ describe('extractOutputFromResponse', () => {
         input: {
           scene: makeRLT(''),
           summary: makeRLT(''),
-          overall_risk: 'low',
           positive_findings: makeRLSL([]),
           findings: [{ ...finding, bounding_box: { x: 0.1, y: 0.2 } }], // missing w, h
         },
@@ -338,23 +333,6 @@ describe('extractOutputFromResponse', () => {
     expect(out.findings[0].bounding_box).toBeUndefined();
   });
 
-  it('falls back to overall_risk=none when value is invalid', () => {
-    const response = makeFakeResponse([
-      {
-        type: 'tool_use',
-        id: 't1',
-        name: 'report_findings',
-        input: {
-          scene: makeRLT(''),
-          summary: makeRLT(''),
-          overall_risk: 'extreme',
-          positive_findings: makeRLSL([]),
-          findings: [],
-        },
-      },
-    ]);
-    expect(extractOutputFromResponse(response).overall_risk).toBe('none');
-  });
 });
 
 // ─── helpers ──────────────────────────────────────────────────────────────────

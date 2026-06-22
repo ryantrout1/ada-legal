@@ -25,8 +25,10 @@
  * Structured output:
  *   The `report_findings` tool's input schema is the standard-level
  *   projection of PhotoAnalysisOutput: top-level scene/summary (strings),
- *   overall_risk, positive_findings (string list), plus a findings[]
- *   array (title + finding per concern). We force its use via tool_choice
+ *   positive_findings (string list), plus a findings[] array (title +
+ *   finding per concern). overall_risk is computed in code from the
+ *   findings (computeOverallRisk in lib/photoRisk), not requested from the
+ *   model. We force its use via tool_choice
  *   — no free-form JSON. validateOutput wraps each string as the
  *   `standard` variant of its reading-level field.
  *
@@ -43,8 +45,8 @@ import type {
   PhotoAnalysisOutput,
   PhotoFinding,
   PhotoFindingSeverity,
-  PhotoOverallRisk,
 } from '../../types/db.js';
+import { computeOverallRisk } from '../../lib/photoRisk.js';
 import photoAnalysisSystemPrompt from '../../../content-migration/prompts/photo-analysis.js';
 import readingLevelsPrompt from '../../../content-migration/prompts/reading-levels.js';
 import { renderCatalogForPrompt } from '../../lib/adaCatalog.js';
@@ -96,12 +98,6 @@ const REPORT_FINDINGS_SCHEMA = {
       type: 'string',
       description:
         '2-3 sentence overall assessment of the batch. Mention the headline concerns, anything notably compliant, and whether the angle/framing limited assessment. Standard (8th-grade) reading level.',
-    },
-    overall_risk: {
-      type: 'string',
-      enum: ['high', 'medium', 'low', 'none'],
-      description:
-        'high = any confirmable critical/major finding. medium = any major-severity unconfirmable, OR any minor finding. low = only advisory findings. none = zero findings.',
     },
     positive_findings: {
       type: 'array',
@@ -173,7 +169,7 @@ const REPORT_FINDINGS_SCHEMA = {
       },
     },
   },
-  required: ['scene', 'summary', 'overall_risk', 'positive_findings', 'findings'],
+  required: ['scene', 'summary', 'positive_findings', 'findings'],
 };
 
 /**
@@ -547,7 +543,7 @@ function validateOutput(raw: Record<string, unknown>): PhotoAnalysisOutput {
   return {
     scene: { standard: typeof raw.scene === 'string' ? raw.scene : '' },
     summary: { standard: typeof raw.summary === 'string' ? raw.summary : '' },
-    overall_risk: isValidRisk(raw.overall_risk) ? raw.overall_risk : 'none',
+    overall_risk: computeOverallRisk(findings),
     positive_findings: { standard: toStringArray(raw.positive_findings) },
     findings,
   };
@@ -590,8 +586,4 @@ export function validateFinding(raw: unknown): PhotoFinding | null {
 
 function isValidSeverity(s: unknown): s is PhotoFindingSeverity {
   return s === 'critical' || s === 'major' || s === 'minor' || s === 'advisory';
-}
-
-function isValidRisk(s: unknown): s is PhotoOverallRisk {
-  return s === 'high' || s === 'medium' || s === 'low' || s === 'none';
 }

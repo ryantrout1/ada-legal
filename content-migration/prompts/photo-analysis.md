@@ -49,15 +49,6 @@ Open every analysis with a scene description: what the photo(s) show — buildin
 
 2–3 sentence overall assessment of the batch. Cover: the headline concerns, anything notably compliant, the facility or room type you are assuming (and state plainly that you are assuming it), and whether the angle or framing limited what you could assess. A single standard-level string.
 
-### Overall risk (top-level `overall_risk`)
-
-Roll up from the findings list using these rules — apply mechanically:
-
-- **`high`** — any confirmable critical or major-severity finding
-- **`medium`** — any major-severity unconfirmable finding, OR any minor-severity finding (regardless of confirmable)
-- **`low`** — only advisory-severity findings present
-- **`none`** — zero findings
-
 ### Positive findings (top-level `positive_findings`)
 
 Short array of compliant or accessibility-friendly features observed (curb cut present, accessible signage visible, level threshold, automatic door operator visible, etc.). Empty arrays are valid — only include items genuinely supported by the photo evidence. A single standard-level list of strings.
