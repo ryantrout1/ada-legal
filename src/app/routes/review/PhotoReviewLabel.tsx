@@ -184,7 +184,7 @@ export default function PhotoReviewLabel() {
                 </span>
                 {!f.confirmable && (
                   <span className="rounded bg-amber-50 px-2 py-0.5 text-sm text-amber-700">
-                    needs on-site check
+                    verify on site — not confirmed
                   </span>
                 )}
               </div>

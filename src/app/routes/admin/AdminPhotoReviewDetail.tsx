@@ -219,7 +219,7 @@ export default function AdminPhotoReviewDetail() {
                 <span className="font-mono text-xs text-ink-500">{f.standard}</span>
                 {!f.confirmable && (
                   <span className="rounded bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
-                    needs on-site check
+                    verify on site — not confirmed
                   </span>
                 )}
                 {f.guide_url && (
