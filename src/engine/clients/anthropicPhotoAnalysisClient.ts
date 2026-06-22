@@ -124,7 +124,7 @@ const REPORT_FINDINGS_SCHEMA = {
           finding: {
             type: 'string',
             description:
-              'Full prose explanation of the concern, including measurement estimates where visible. Standard reading level.',
+              'Full prose explanation of the concern. Cite the section and explain the requirement. State a specific measured dimension only when a visible reference in the photo establishes it; otherwise compare the apparent condition to the requirement threshold and note the exact figure needs on-site measurement — do not assert an unmeasured number. Standard reading level.',
           },
           severity: {
             type: 'string',
