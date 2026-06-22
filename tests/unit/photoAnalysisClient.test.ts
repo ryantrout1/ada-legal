@@ -165,6 +165,36 @@ describe('extractOutputFromResponse', () => {
     expect(output.meta?.tool_call_present).toBe(true);
   });
 
+  it('computes overall_risk in code, ignoring any model-supplied value', () => {
+    // Model claims 'high', but the only finding is unconfirmable — the
+    // deterministic roll-up must demote to 'low' (Phase 3: unconfirmable
+    // findings never inflate risk, and code owns the value, not the model).
+    const response = makeFakeResponse([
+      {
+        type: 'tool_use',
+        id: 't1',
+        name: 'report_findings',
+        input: {
+          scene: makeRLT(''),
+          summary: makeRLT(''),
+          overall_risk: 'high',
+          positive_findings: makeRLSL([]),
+          findings: [
+            makeFinding({
+              title: 'maybe a barrier',
+              text: 'cannot confirm from the photo',
+              severity: 'critical',
+              standard: '§X',
+              confidence: 0.4,
+              confirmable: false,
+            }),
+          ],
+        },
+      },
+    ]);
+    expect(extractOutputFromResponse(response).overall_risk).toBe('low');
+  });
+
   it('returns an empty output when no tool_use block is present', () => {
     // Suppress the expected console.warn from this code path.
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
