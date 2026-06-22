@@ -184,3 +184,40 @@ describe('adaCatalog — curb gating-first regression (p5-2)', () => {
     );
   });
 });
+
+describe('adaCatalog — Phase 2 accuracy additions (floor urinal, dispenser, changing table)', () => {
+  const checklist = renderCatalogForPrompt();
+
+  // Criterion 2: a floor-mounted / trough urinal's rim is at the floor and is
+  // NOT governed by the 17in wall-hung rim limit — so the analyzer must not
+  // flag it for rim height.
+  it('§605 distinguishes floor/trough urinals from the wall-hung 17in rim limit', () => {
+    const row = ADA_CATALOG.find((r) => r.section === '§605');
+    expect(row).toBeTruthy();
+    expect(row!.rule.toLowerCase()).toContain('trough');
+    const line = checklist.split('\n').find((l) => l.includes('Urinals'));
+    expect(line).toBeTruthy();
+    expect(line!.toLowerCase()).toContain('trough');
+  });
+
+  // Criterion 4a: the toilet-paper dispenser reach/position gap Peter flagged
+  // (§604.7) now has a row, and it reaches the analyzer (photo_assessable +
+  // rendered into the checklist).
+  it('adds a §604.7 toilet-paper dispenser row, photo-assessable and rendered', () => {
+    const row = ADA_CATALOG.find((r) => r.section === '§604.7');
+    expect(row).toBeTruthy();
+    expect(row!.fixture).toBe('water_closet');
+    expect(row!.photo_assessable).toBe(true);
+    expect(row!.rule.toLowerCase()).toMatch(/dispenser|toilet paper/);
+    expect(checklist).toContain('604.7');
+  });
+
+  // Criterion 4b: a fold-down changing table that reduces the required clear
+  // floor space when open — expressed on a real section (§604.3 clearance),
+  // not an invented one.
+  it('covers fold-down changing tables that obstruct clearance when open', () => {
+    const covered = ADA_CATALOG.some((r) => /changing table/i.test(r.rule));
+    expect(covered).toBe(true);
+    expect(checklist.toLowerCase()).toContain('changing table');
+  });
+});
