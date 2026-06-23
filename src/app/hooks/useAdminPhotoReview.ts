@@ -300,3 +300,88 @@ export function useAdminPhotoReviewEval() {
 
   return { rows, loading };
 }
+
+// ── Re-analysis preview ───────────────────────────────────────────────────────
+// Re-runs the CURRENT analyzer over the already-reviewed photos and returns a
+// before/after, WITHOUT writing anything. Used by the admin "preview" button to
+// confirm analyzer changes on photos that were already reviewed, so we never
+// create duplicate records in the review queue.
+
+export interface ReanalyzePreviewFinding {
+  title: string;
+  severity: FindingSeverity;
+  standard: string;
+  confirmable: boolean;
+}
+
+export interface ReanalyzePreviewSide {
+  overallRisk: OverallRisk | null;
+  findings: ReanalyzePreviewFinding[];
+}
+
+export interface ReanalyzePreviewItem {
+  id: string;
+  analyzedAt: string;
+  before: ReanalyzePreviewSide;
+  after: ReanalyzePreviewSide;
+}
+
+export function useReanalyzePreview() {
+  const [running, setRunning] = useState(false);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+  const [results, setResults] = useState<ReanalyzePreviewItem[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const run = useCallback(async () => {
+    setRunning(true);
+    setError(null);
+    setResults([]);
+    setProgress(null);
+    try {
+      // 1. Which photos have been reviewed?
+      const listRes = await fetch(
+        '/api/admin/photo-analyses?review_state=reviewed&page_size=100',
+        { credentials: 'include' },
+      );
+      if (!listRes.ok) {
+        throw new Error(`Could not load reviewed photos (${listRes.status})`);
+      }
+      const list = (await listRes.json()) as { items: PhotoReviewListItem[] };
+      const ids = list.items.map((i) => i.photoAnalysisId);
+      setProgress({ done: 0, total: ids.length });
+
+      // 2. Re-run each one at a time — every request is its own ~15s
+      //    Opus call, so we stay well under the 60s function limit and
+      //    can show results as they land.
+      let failures = 0;
+      for (let i = 0; i < ids.length; i++) {
+        try {
+          const r = await fetch('/api/admin/photo-analyses/reanalyze-preview', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: ids[i] }),
+          });
+          if (r.ok) {
+            const item = (await r.json()) as ReanalyzePreviewItem;
+            setResults((prev) => [...prev, item]);
+          } else {
+            failures += 1;
+          }
+        } catch {
+          failures += 1;
+        }
+        setProgress({ done: i + 1, total: ids.length });
+      }
+      if (failures > 0) {
+        setError(`${failures} photo(s) could not be re-analyzed — see server logs.`);
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Re-analysis failed');
+    } finally {
+      setRunning(false);
+    }
+  }, []);
+
+  return { run, running, progress, results, error };
+}

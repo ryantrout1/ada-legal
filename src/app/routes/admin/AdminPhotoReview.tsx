@@ -11,8 +11,10 @@ import { Link } from 'react-router-dom';
 import {
   useAdminPhotoReviewList,
   useAdminPhotoReviewEval,
+  useReanalyzePreview,
   type OverallRisk,
   type ReviewState,
+  type ReanalyzePreviewFinding,
 } from '../../hooks/useAdminPhotoReview.js';
 
 const RISK_BADGE: Record<OverallRisk, { bg: string; text: string; label: string }> = {
@@ -38,10 +40,61 @@ function fmtDate(iso: string): string {
   });
 }
 
+function RiskPill({ risk }: { risk: OverallRisk | null }) {
+  const b = risk
+    ? RISK_BADGE[risk]
+    : { bg: 'bg-surface-100', text: 'text-ink-500', label: '—' };
+  return (
+    <span className={`rounded px-2 py-0.5 text-xs font-medium ${b.bg} ${b.text}`}>
+      {b.label}
+    </span>
+  );
+}
+
+function FindingsColumn({
+  title,
+  findings,
+}: {
+  title: string;
+  findings: ReanalyzePreviewFinding[];
+}) {
+  return (
+    <div>
+      <p className="mb-1 text-xs font-medium uppercase tracking-wide text-ink-500">
+        {title}
+      </p>
+      {findings.length === 0 ? (
+        <p className="text-sm text-ink-500">No findings.</p>
+      ) : (
+        <ul className="space-y-1">
+          {findings.map((f, i) => (
+            <li key={i} className="text-sm text-ink-900">
+              <span className="font-mono text-xs text-ink-500">{f.standard}</span>{' '}
+              {f.title} <span className="text-ink-500">· {f.severity}</span>
+              {!f.confirmable && (
+                <span className="ml-1 rounded bg-amber-50 px-1.5 py-0.5 text-xs text-amber-700">
+                  verify on site
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export default function AdminPhotoReview() {
   const { items, totalCount, filters, setFilters, loading, error, unauthenticated, totalPages } =
     useAdminPhotoReviewList();
   const { rows: evalRows } = useAdminPhotoReviewEval();
+  const {
+    run: runPreview,
+    running: previewRunning,
+    progress: previewProgress,
+    results: previewResults,
+    error: previewError,
+  } = useReanalyzePreview();
 
   if (unauthenticated) {
     return (
@@ -67,6 +120,78 @@ export default function AdminPhotoReview() {
           over-flagged, and what it missed — that record is how we tune the analyzer.
         </p>
       </header>
+
+      {/* Re-analysis preview — re-run the current analyzer over the reviewed
+          photos and show before/after. Writes nothing. */}
+      <div className="mb-6 rounded-md border border-surface-200 bg-surface-50 p-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="max-w-xl">
+            <h2 className="font-display text-lg text-ink-900">
+              Analyzer preview — before / after
+            </h2>
+            <p className="mt-1 text-sm text-ink-700">
+              Re-runs the current analyzer over every reviewed photo and shows the new
+              result next to the stored one. Writes nothing — no new records, and nothing
+              shows up in the review queue.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => void runPreview()}
+            disabled={previewRunning}
+            aria-busy={previewRunning}
+            className="shrink-0 rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-white hover:bg-accent-600 disabled:opacity-50"
+          >
+            {previewRunning ? 'Re-running…' : 'Re-run reviewed photos (preview)'}
+          </button>
+        </div>
+
+        {previewProgress && (
+          <p className="mt-3 text-sm text-ink-700" role="status">
+            {previewProgress.done} of {previewProgress.total} re-analyzed
+          </p>
+        )}
+        {previewError && (
+          <p className="mt-2 text-sm text-danger-500" role="alert">
+            {previewError}
+          </p>
+        )}
+
+        {previewResults.length > 0 && (
+          <ul className="mt-4 space-y-3">
+            {previewResults.map((item) => {
+              const changed = item.before.overallRisk !== item.after.overallRisk;
+              return (
+                <li
+                  key={item.id}
+                  className="rounded-md border border-surface-200 bg-white p-3"
+                >
+                  <div className="mb-2 flex flex-wrap items-center gap-2 text-sm">
+                    <span className="text-ink-500">{fmtDate(item.analyzedAt)}</span>
+                    <RiskPill risk={item.before.overallRisk} />
+                    <span aria-hidden className="text-ink-500">
+                      →
+                    </span>
+                    <RiskPill risk={item.after.overallRisk} />
+                    {changed && (
+                      <span className="rounded bg-accent-50 px-2 py-0.5 text-xs text-accent-600">
+                        risk changed
+                      </span>
+                    )}
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <FindingsColumn title="Before (stored)" findings={item.before.findings} />
+                    <FindingsColumn
+                      title="After (current analyzer)"
+                      findings={item.after.findings}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
 
       {/* Eval strip — accuracy by engine version */}
       {evalRows.length > 0 && (
