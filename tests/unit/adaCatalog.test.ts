@@ -224,7 +224,7 @@ describe('adaCatalog — Phase 2 accuracy additions (floor urinal, dispenser, ch
 
 describe('analyzer prompt — batch-2 reasoning rules (p-batch2-1)', () => {
   it('carries the do-not-assert-absence rule and the multi-unit scan', () => {
-    expect(photoAnalysisSystemPrompt).toContain('Do not assert absence you cannot see');
+    expect(photoAnalysisSystemPrompt).toContain('Surface every concern');
     expect(photoAnalysisSystemPrompt).toContain('Scan every unit before concluding');
   });
 
@@ -266,5 +266,24 @@ describe('adaCatalog — batch-2 accuracy additions (detectable warnings, ramps,
     const row = ADA_CATALOG.find((r) => r.section === '§403');
     expect(row).toBeDefined();
     expect(row!.rule.toLowerCase()).toContain('pinched');
+  });
+});
+
+describe('analyzer prompt — batch-3 surface-don\'t-suppress (p-batch3-1)', () => {
+  it('tells the model to hedge to verify-on-site, not drop the finding', () => {
+    expect(photoAnalysisSystemPrompt).toContain('Hedge, do not drop');
+    expect(photoAnalysisSystemPrompt).toContain('empty findings list means');
+  });
+
+  it('keeps the absence rule from swallowing visible conditions', () => {
+    expect(photoAnalysisSystemPrompt).toContain('governs absence, not visible conditions');
+  });
+
+  it('flags wall-mounted fixtures on the path of travel for §307', () => {
+    expect(photoAnalysisSystemPrompt).toContain('wall-mounted fixtures on the path of travel');
+  });
+
+  it('states a confirmable:false finding is still reported, never omitted', () => {
+    expect(photoAnalysisSystemPrompt).toContain('is never omitted');
   });
 });
