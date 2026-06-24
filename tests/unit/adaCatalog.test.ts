@@ -236,3 +236,35 @@ describe('analyzer prompt — batch-2 reasoning rules (p-batch2-1)', () => {
     expect(photoAnalysisSystemPrompt).toContain('flat push bar or push plate');
   });
 });
+
+describe('adaCatalog — batch-2 accuracy additions (detectable warnings, ramps, protruding objects)', () => {
+  const checklist = renderCatalogForPrompt();
+
+  it('§705 scopes detectable warnings to where required, not every ramp', () => {
+    const row = ADA_CATALOG.find((r) => r.section === '§705');
+    expect(row).toBeDefined();
+    expect(row!.rule.toLowerCase()).toContain('right-of-way');
+    expect(row!.rule.toLowerCase()).toContain('not required');
+  });
+
+  it('§307 names wall-mounted fixtures (e.g. drinking fountains) as protruding objects', () => {
+    const row = ADA_CATALOG.find((r) => r.section === '§307');
+    expect(row).toBeDefined();
+    expect(row!.rule.toLowerCase()).toContain('drinking fountain');
+    expect(row!.rule.toLowerCase()).toContain('cane-detectable');
+    expect(checklist.toLowerCase()).toContain('drinking fountain');
+  });
+
+  it('§405 flags missing level landings and visibly narrow ramp runs', () => {
+    const row = ADA_CATALOG.find((r) => r.section === '§405');
+    expect(row).toBeDefined();
+    expect(row!.rule.toLowerCase()).toContain('lacking a level landing');
+    expect(row!.rule.toLowerCase()).toContain('visibly narrow');
+  });
+
+  it('§403 flags a pinched or narrow route', () => {
+    const row = ADA_CATALOG.find((r) => r.section === '§403');
+    expect(row).toBeDefined();
+    expect(row!.rule.toLowerCase()).toContain('pinched');
+  });
+});
