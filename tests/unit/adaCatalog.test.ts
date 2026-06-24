@@ -221,3 +221,18 @@ describe('adaCatalog — Phase 2 accuracy additions (floor urinal, dispenser, ch
     expect(checklist.toLowerCase()).toContain('changing table');
   });
 });
+
+describe('analyzer prompt — batch-2 reasoning rules (p-batch2-1)', () => {
+  it('carries the do-not-assert-absence rule and the multi-unit scan', () => {
+    expect(photoAnalysisSystemPrompt).toContain('Do not assert absence you cannot see');
+    expect(photoAnalysisSystemPrompt).toContain('Scan every unit before concluding');
+  });
+
+  it('exempts sensor/automatic controls from manual reach-range limits', () => {
+    expect(photoAnalysisSystemPrompt).toContain('sensor-operated or automatic control');
+  });
+
+  it('keeps the push/pull approach-side nudge for door hardware', () => {
+    expect(photoAnalysisSystemPrompt).toContain('flat push bar or push plate');
+  });
+});

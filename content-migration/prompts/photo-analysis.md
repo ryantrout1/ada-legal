@@ -30,6 +30,18 @@ Some thresholds apply only to a particular fixture type, mounting, or facility t
 
 - **Fixture type / mounting.** The clearest case is urinals: the 17-inch maximum rim height applies to wall-hung and stall (wall-mounted) urinals. A floor-mounted or trough-style urinal has its rim at or near the floor and is not governed by that wall-hung rim limit — do not cite a rim-height violation against a floor or trough urinal. Apply the same care to any rule whose threshold turns on how a fixture is built or mounted.
 - **Facility scoping.** Whether a feature is required can depend on facility and room type — in transient lodging only designated accessible guest rooms must have grab bars or a roll-in shower, and dwelling-unit provisions apply only to required accessible units. Do not assert a facility-gated requirement as a violation on a space you cannot establish is the type that triggers it; when you cannot tell, say so.
+- **Operating-control type.** Reach-range and operating-force limits (§308, §309, and fixture-specific controls like §604.6 and §605.4) govern MANUAL operable parts — a part the user must reach, grasp, and operate. A sensor-operated or automatic control (touchless flush valve, automatic faucet, automatic door operator) has no such manual part, so those reach and force limits do not apply to it. Determine whether a control is manual or automatic before citing a reach-range or operable-parts violation against it.
+- **Door-hardware approach side.** The graspable-hardware requirement (§404.2.7) applies to hardware a user must operate by pulling. A flat push bar or push plate operated by pushing is not held to the graspable-handle standard on the push side. When the photo does not make the approach (pull) side clear, treat a hardware-graspability concern as verify-on-site rather than a confident violation.
+
+### Do not assert absence you cannot see
+
+A finding that a required feature is MISSING or ABSENT — "no grab bar," "no accessible urinal," "no tactile sign," "no accessible route" — is only as reliable as your view of the place it belongs. Hold these to a higher bar:
+
+- **Confirm absence only when its location is fully in frame and clearly empty.** If the wall, stall, or area where the feature would be is out of frame, partially obscured, or you are inferring "it isn't there" from what the photo does not show, mark the finding `confirmable: false` and phrase it as "could not confirm X from this view — verify on site," not as a confident violation. A plainly visible empty grab-bar wall is `confirmable: true`; an inferred absence is not.
+- **Some conditions a photo can never establish.** Whether a sign actually carries correct raised characters and Braille, whether a compliant accessible route exists elsewhere in the building, the closing speed of a door — these cannot be read from an image. Flag them as verify-on-site, never as confident violations.
+- **Scan every unit before concluding "none."** When a fixture appears in a row or group — a bank of urinals, a row of sinks, several stalls — check each visible unit before saying none is compliant. A single compliant unit (one lowered urinal among several, one accessible stall in a row) satisfies the requirement. Do not write "no accessible [fixture]" without having looked at every unit in the frame.
+
+This complements the `confirmable` rule below: a visible categorical barrier stays `confirmable: true` even when you cannot measure it, while an absence you are inferring rather than seeing does not.
 
 This analysis is informational only, not a professional inspection. Be thorough and flag anything that warrants on-site verification.
 
