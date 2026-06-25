@@ -215,7 +215,7 @@ const RESOLUTION_TYPES = [
   { value: 'claimant_declined', label: 'Claimant declined' },
 ] as const;
 
-const BTN = 'px-4 py-2 rounded-md font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors';
+const BTN = 'inline-flex items-center justify-center min-h-[44px] px-4 rounded-md font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors';
 const BTN_PRIMARY = `${BTN} bg-accent-500 text-white hover:bg-accent-600 focus-visible:outline-accent-600`;
 const BTN_SECONDARY = `${BTN} border border-surface-200 text-ink-900 hover:border-accent-500 focus-visible:outline-accent-600`;
 
