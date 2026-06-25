@@ -18,7 +18,7 @@
 import type { CaseRow } from '../clients/types.js';
 import type { RenderedEmail } from '../handoff/emailTemplates.js';
 
-const APP_BASE = 'https://ada.adalegallink.com';
+export const APP_BASE = 'https://ada.adalegallink.com';
 const FONT_STACK = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 
 function escapeHtml(s: string): string {

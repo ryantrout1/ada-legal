@@ -21,6 +21,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { makeClientsFromEnv } from '../../_shared.js';
 import { isValidPackageSlug } from '../../../src/engine/package/slug.js';
 import { sendConsentNotifications } from '../../../src/engine/notifications/routingNotifications.js';
+import { APP_BASE } from '../../../src/engine/notifications/routingEmailTemplates.js';
 
 const SCOPE_BY_LANE: Record<string, string> = {
   routed_firm: 'matched_firm',
@@ -91,8 +92,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // yet (admin was already notified at routing time). Isolated soft-fail.
       if (result.caseRow.lane === 'routed_firm') {
         try {
-          const host = req.headers.host ?? 'ada.adalegallink.com';
-          const readoutUrl = `https://${host}/s/${slug.toLowerCase()}`;
+          const readoutUrl = `${APP_BASE}/s/${slug.toLowerCase()}`;
           await sendConsentNotifications(
             { email: clients.email, db: clients.db },
             result.caseRow,
