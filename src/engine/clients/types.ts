@@ -1825,4 +1825,12 @@ export interface AdaClients {
    * captured address. Absent in most tests.
    */
   places?: PlacesClient;
+
+  /**
+   * Phase 1c: recipient for admin routing notifications (sourcing /
+   * general_queue cases). Sourced from process.env.ADMIN_NOTIFICATION_EMAIL.
+   * When unset, those notifications are skipped (with a receipt) rather than
+   * failing — pilots without an ops inbox still route cleanly.
+   */
+  adminNotificationEmail?: string;
 }

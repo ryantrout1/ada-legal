@@ -49,7 +49,7 @@ function makeState(partial: {
   } as unknown as AdaSessionState;
 }
 
-function clients(email: EmailClient, adminEmail: string | null) {
+function clients(email: EmailClient, adminEmail: string) {
   return {
     db: new InMemoryDbClient(),
     clock: new InMemoryClock(),

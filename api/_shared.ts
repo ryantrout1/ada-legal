@@ -54,6 +54,9 @@ export function makeClientsFromEnv(): AdaClients {
   // GOOGLE_MAPS_API_KEY is optional (v1a). Without it, the demand-letter
   // address-standardization step no-ops and the letter uses the
   // conversationally-captured business address.
+  // ADMIN_NOTIFICATION_EMAIL is optional (Phase 1c). Without it, admin
+  // routing notifications (sourcing / general_queue) are skipped with a
+  // receipt rather than failing.
   return makeAdaClients({
     databaseUrl,
     anthropicApiKey,
@@ -65,6 +68,7 @@ export function makeClientsFromEnv(): AdaClients {
     stripeSecretKey,
     photoAnalysisModel,
     googleMapsApiKey,
+    adminNotificationEmail: process.env.ADMIN_NOTIFICATION_EMAIL,
   });
 }
 

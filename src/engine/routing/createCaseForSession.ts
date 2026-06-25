@@ -17,11 +17,13 @@
 import type { AdaClients, CaseRow } from '../clients/types.js';
 import type { AdaSessionState } from '../types.js';
 import { decideLane } from './routeCase.js';
+import { sendAdminRoutingNotification } from '../notifications/routingNotifications.js';
 
 /** First-contact SLA window for a routed_firm case (24h). */
 const FIRST_CONTACT_SLA_MS = 24 * 60 * 60 * 1000;
 
-type RoutingClients = Pick<AdaClients, 'db' | 'clock' | 'audit'>;
+type RoutingClients = Pick<AdaClients, 'db' | 'clock' | 'audit'> &
+  Partial<Pick<AdaClients, 'email' | 'adminNotificationEmail'>>;
 
 /**
  * Resolve the firm a matched litigation routes to: lead counsel if set,
@@ -102,6 +104,22 @@ export async function createCaseForSession(
           litigationListingId,
         },
       });
+
+      // Phase 1c: notify the admin inbox for sourcing / general_queue cases.
+      // Isolated soft-fail — a notification failure must never null a case
+      // that was already written. The orchestrator lane-guards itself. Routing
+      // never depends on email being configured (clients.email may be absent
+      // in tests / minimal setups).
+      if (clients.email) {
+        try {
+          await sendAdminRoutingNotification(
+            { email: clients.email, db: clients.db, adminEmail: clients.adminNotificationEmail },
+            result.caseRow,
+          );
+        } catch (notifyErr) {
+          console.error('admin routing notification failed', notifyErr);
+        }
+      }
     }
 
     return result.caseRow;

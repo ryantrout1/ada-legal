@@ -438,7 +438,13 @@ async function finalizeTurn(
       if (result.nextState.sessionType === 'public_ada') {
         try {
           await createCaseForSession(
-            { db: clients.db, clock: clients.clock, audit: clients.audit },
+            {
+              db: clients.db,
+              clock: clients.clock,
+              audit: clients.audit,
+              email: clients.email,
+              adminNotificationEmail: clients.adminNotificationEmail,
+            },
             result.nextState,
           );
         } catch (routeErr) {

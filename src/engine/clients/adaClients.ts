@@ -206,6 +206,13 @@ export interface AdaClientsConfig {
    * standardized one. Wired from GOOGLE_MAPS_API_KEY in makeClientsFromEnv.
    */
   googleMapsApiKey?: string;
+
+  /**
+   * Phase 1c: recipient for admin routing notifications. Wired from
+   * ADMIN_NOTIFICATION_EMAIL in makeClientsFromEnv. Optional — unset means
+   * those notifications are skipped (with a receipt).
+   */
+  adminNotificationEmail?: string;
 }
 
 export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
@@ -269,5 +276,6 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
     places: config.googleMapsApiKey
       ? new GooglePlacesClient(config.googleMapsApiKey)
       : undefined,
+    adminNotificationEmail: config.adminNotificationEmail,
   };
 }

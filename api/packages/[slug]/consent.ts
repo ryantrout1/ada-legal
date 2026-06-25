@@ -20,6 +20,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { makeClientsFromEnv } from '../../_shared.js';
 import { isValidPackageSlug } from '../../../src/engine/package/slug.js';
+import { sendConsentNotifications } from '../../../src/engine/notifications/routingNotifications.js';
 
 const SCOPE_BY_LANE: Record<string, string> = {
   routed_firm: 'matched_firm',
@@ -84,6 +85,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         resourceId: result.caseRow.id,
         metadata: { scope, sessionId: pkg.sessionId },
       });
+
+      // Phase 1c: on first consent for a matched case, notify the firm and
+      // the claimant. routed_firm only — sourcing / general_queue have no firm
+      // yet (admin was already notified at routing time). Isolated soft-fail.
+      if (result.caseRow.lane === 'routed_firm') {
+        try {
+          const host = req.headers.host ?? 'ada.adalegallink.com';
+          const readoutUrl = `https://${host}/s/${slug.toLowerCase()}`;
+          await sendConsentNotifications(
+            { email: clients.email, db: clients.db },
+            result.caseRow,
+            readoutUrl,
+          );
+        } catch (notifyErr) {
+          console.error('consent notifications failed', notifyErr);
+        }
+      }
     }
 
     return res.status(200).json({ consentToShare: true });
