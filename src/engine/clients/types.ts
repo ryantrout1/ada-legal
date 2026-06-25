@@ -749,6 +749,24 @@ export interface PortalCaseActivityRow {
   createdAt: string;
 }
 
+/** Phase 3: a row in the admin cases / placement queue. */
+export interface AdminCaseRow {
+  caseId: string;
+  adaSessionId: string | null;
+  caseNumber: string;
+  lane: string;
+  status: string;
+  classificationTitle: string | null;
+  jurisdictionState: string | null;
+  consentToShare: boolean;
+  claimantName: string | null;
+  claimantEmail: string | null;
+  caseName: string | null;
+  firmId: string | null;
+  firmName: string | null;
+  createdAt: string;
+}
+
 /** Phase 2b: the full case detail for the firm workspace. */
 export interface PortalCaseDetailFull {
   caseId: string;
@@ -1217,6 +1235,28 @@ export interface DbClient {
     lawFirmId: string;
     body: string;
   }): Promise<boolean>;
+
+  /**
+   * Phase 3a: list the org's cases for the admin queue. Optional lane filter;
+   * 'unplaced' returns sourcing + general_queue cases with no firm (the
+   * placement backlog). Joins claimant / litigation / firm name.
+   */
+  listCasesForAdmin(
+    orgId: string,
+    opts?: { lane?: CaseLane | 'unplaced' },
+  ): Promise<{ cases: AdminCaseRow[] }>;
+
+  /**
+   * Phase 3b: place an unplaced case to a firm. Org-scoped (the firm must
+   * belong to the org). Sets firm_id + lane=routed_firm + routed_at +
+   * first_contact_due, and writes a PLACED activity row. Returns null when the
+   * case or firm isn't in the org. Idempotent.
+   */
+  placeCaseToFirm(opts: {
+    caseId: string;
+    orgId: string;
+    firmId: string;
+  }): Promise<{ caseRow: CaseRow } | null>;
 
   /**
    * Full case package for a single session, scoped to a firm. Returns null

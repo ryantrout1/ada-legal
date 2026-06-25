@@ -18,7 +18,7 @@
  * Ref: docs/ARCHITECTURE.md §2, §6, docs/DO_NOT_TOUCH.md rule 1
  */
 
-import { and, eq, ilike, inArray, or, sql } from 'drizzle-orm';
+import { and, eq, ilike, inArray, isNull, or, sql } from 'drizzle-orm';
 import type { Database } from '../../db/client.js';
 import { NATIONWIDE_SENTINEL, normalizeAffectedStates } from './litigationStates.js';
 import {
@@ -120,6 +120,7 @@ import type {
   PortalQueueResult,
   PortalCaseListRow,
   PortalCaseListResult,
+  AdminCaseRow,
   PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
@@ -2278,6 +2279,114 @@ export class NeonDbClient implements DbClient {
       metadata: { note: true },
     });
     return true;
+  }
+
+  async listCasesForAdmin(
+    orgId: string,
+    opts?: { lane?: CaseLane | 'unplaced' },
+  ): Promise<{ cases: AdminCaseRow[] }> {
+    const conds = [eq(casesTable.orgId, orgId)];
+    if (opts?.lane === 'unplaced') {
+      conds.push(inArray(casesTable.lane, ['sourcing', 'general_queue']));
+      conds.push(isNull(casesTable.firmId));
+    } else if (opts?.lane) {
+      conds.push(eq(casesTable.lane, opts.lane));
+    }
+
+    const rows = await this.db
+      .select({
+        caseId: casesTable.id,
+        adaSessionId: casesTable.adaSessionId,
+        caseNumber: casesTable.caseNumber,
+        lane: casesTable.lane,
+        status: casesTable.status,
+        classificationTitle: casesTable.classificationTitle,
+        jurisdictionState: casesTable.jurisdictionState,
+        consentToShare: casesTable.consentToShare,
+        firmId: casesTable.firmId,
+        firmName: lawFirmsTable.name,
+        caseName: litigationTable.caseName,
+        createdAt: casesTable.createdAt,
+        extractedFields: adaSessions.extractedFields,
+      })
+      .from(casesTable)
+      .leftJoin(lawFirmsTable, eq(lawFirmsTable.id, casesTable.firmId))
+      .leftJoin(litigationTable, eq(litigationTable.id, casesTable.litigationListingId))
+      .leftJoin(adaSessions, eq(adaSessions.id, casesTable.adaSessionId))
+      .where(and(...conds))
+      .orderBy(sql`${casesTable.createdAt} DESC`);
+
+    const fStr = (f: ExtractedFields | null, k: string): string | null => {
+      const v = f?.[k]?.value;
+      return v == null ? null : typeof v === 'string' ? v : String(v);
+    };
+    const iso = (v: unknown): string =>
+      v == null ? '' : v instanceof Date ? v.toISOString() : String(v);
+
+    const cases: AdminCaseRow[] = rows.map((r) => {
+      const fields = (r.extractedFields ?? null) as ExtractedFields | null;
+      return {
+        caseId: r.caseId,
+        adaSessionId: r.adaSessionId,
+        caseNumber: r.caseNumber,
+        lane: r.lane,
+        status: r.status,
+        classificationTitle: r.classificationTitle ?? null,
+        jurisdictionState: r.jurisdictionState ?? null,
+        consentToShare: r.consentToShare,
+        claimantName: fStr(fields, 'claimant_name'),
+        claimantEmail: fStr(fields, 'claimant_email'),
+        caseName: r.caseName ?? null,
+        firmId: r.firmId,
+        firmName: r.firmName ?? null,
+        createdAt: iso(r.createdAt),
+      };
+    });
+    return { cases };
+  }
+
+  async placeCaseToFirm(opts: {
+    caseId: string;
+    orgId: string;
+    firmId: string;
+  }): Promise<{ caseRow: CaseRow } | null> {
+    const caseRows = await this.db
+      .select({ id: casesTable.id })
+      .from(casesTable)
+      .where(and(eq(casesTable.id, opts.caseId), eq(casesTable.orgId, opts.orgId)))
+      .limit(1);
+    if (!caseRows[0]) return null;
+
+    const firmRows = await this.db
+      .select({ id: lawFirmsTable.id, name: lawFirmsTable.name })
+      .from(lawFirmsTable)
+      .where(and(eq(lawFirmsTable.id, opts.firmId), eq(lawFirmsTable.orgId, opts.orgId)))
+      .limit(1);
+    if (!firmRows[0]) return null;
+
+    const now = new Date();
+    const firstContactDue = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    const updated = await this.db
+      .update(casesTable)
+      .set({
+        firmId: opts.firmId,
+        lane: 'routed_firm',
+        routedAt: now,
+        firstContactDue,
+        updatedAt: now,
+      })
+      .where(eq(casesTable.id, opts.caseId))
+      .returning();
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'system',
+      eventType: 'PLACED',
+      summary: `Placed to ${firmRows[0].name}`,
+      metadata: { firmId: opts.firmId },
+    });
+
+    return { caseRow: toCaseRow(updated[0]) };
   }
 
   async resolveAttorneyByClerkUserId(

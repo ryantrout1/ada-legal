@@ -48,6 +48,7 @@ import AdminSessionDetail from './routes/admin/AdminSessionDetail.js';
 import AdminAttorneys from './routes/admin/AdminAttorneys.js';
 import AdminAttorneyEdit from './routes/admin/AdminAttorneyEdit.js';
 import AdminFirms from './routes/admin/AdminFirms.js';
+import AdminCases from './routes/admin/AdminCases.js';
 import AdminFirmDetail from './routes/admin/AdminFirmDetail.js';
 import AdminFirmEdit from './routes/admin/AdminFirmEdit.js';
 import AdminListings from './routes/admin/AdminListings.js';
@@ -147,6 +148,7 @@ function AdminShell() {
           <Route index element={<Navigate to="/admin/sessions" replace />} />
           <Route path="sessions" element={<AdminSessions />} />
           <Route path="sessions/:id" element={<AdminSessionDetail />} />
+          <Route path="cases" element={<AdminCases />} />
           <Route path="attorneys" element={<AdminAttorneys />} />
           <Route path="attorneys/new" element={<AdminAttorneyEdit />} />
           <Route path="attorneys/:id" element={<AdminAttorneyEdit />} />

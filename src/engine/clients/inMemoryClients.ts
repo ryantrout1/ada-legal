@@ -13,7 +13,7 @@
  */
 
 import { applyCaseTransition, caseTransitionSummary } from '../cases/caseStateMachine.js';
-import type { CaseStatus, CaseTransition } from '../cases/caseStateMachine.js';
+import type { CaseStatus, CaseTransition, CaseLane } from '../cases/caseStateMachine.js';
 import type { AdaSessionState } from '../types.js';
 import type {
   AdaClients,
@@ -94,6 +94,7 @@ import type {
   PortalQueueResult,
   PortalCaseListRow,
   PortalCaseListResult,
+  AdminCaseRow,
   PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
@@ -1491,6 +1492,78 @@ export class InMemoryDbClient implements DbClient {
       createdAt: new Date(0).toISOString(),
     });
     return true;
+  }
+
+  async listCasesForAdmin(
+    orgId: string,
+    opts?: { lane?: CaseLane | 'unplaced' },
+  ): Promise<{ cases: AdminCaseRow[] }> {
+    let rows = this.cases.filter((c) => c.orgId === orgId);
+    if (opts?.lane === 'unplaced') {
+      rows = rows.filter((c) => (c.lane === 'sourcing' || c.lane === 'general_queue') && !c.firmId);
+    } else if (opts?.lane) {
+      rows = rows.filter((c) => c.lane === opts.lane);
+    }
+    rows = [...rows].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+
+    const cases: AdminCaseRow[] = rows.map((c) => {
+      const session = c.adaSessionId ? this.sessions.get(c.adaSessionId) : undefined;
+      const fields = session?.extractedFields ?? {};
+      const extras = this.caseExtras.get(c.id);
+      const litig = this.adminLitigation.find((l) => l.id === c.litigationListingId);
+      const firm = c.firmId ? this.lawFirms.find((f) => f.id === c.firmId) : undefined;
+      return {
+        caseId: c.id,
+        adaSessionId: c.adaSessionId,
+        caseNumber: c.caseNumber,
+        lane: c.lane,
+        status: c.status,
+        classificationTitle: extras?.classificationTitle ?? null,
+        jurisdictionState: extras?.jurisdictionState ?? null,
+        consentToShare: c.consentToShare,
+        claimantName: portalFieldStr(fields, 'claimant_name'),
+        claimantEmail: portalFieldStr(fields, 'claimant_email'),
+        caseName: litig?.caseName ?? null,
+        firmId: c.firmId,
+        firmName: firm?.name ?? null,
+        createdAt: c.createdAt,
+      };
+    });
+    return { cases };
+  }
+
+  async placeCaseToFirm(opts: {
+    caseId: string;
+    orgId: string;
+    firmId: string;
+  }): Promise<{ caseRow: CaseRow } | null> {
+    const c = this.cases.find((x) => x.id === opts.caseId && x.orgId === opts.orgId);
+    if (!c) return null;
+    const firm = this.lawFirms.find((f) => f.id === opts.firmId && f.orgId === opts.orgId);
+    if (!firm) return null;
+
+    c.firmId = opts.firmId;
+    c.lane = 'routed_firm';
+    const routedAt = new Date(0).toISOString();
+    const firstContactDue = new Date(24 * 60 * 60 * 1000).toISOString();
+    const extras = this.caseExtras.get(c.id);
+    this.caseExtras.set(c.id, {
+      classificationTitle: extras?.classificationTitle ?? null,
+      jurisdictionState: extras?.jurisdictionState ?? null,
+      routedAt,
+      firstContactDue,
+    });
+
+    this.caseActivity.push({
+      caseId: c.id,
+      actorType: 'system',
+      eventType: 'PLACED',
+      summary: `Placed to ${firm.name}`,
+      metadata: { firmId: opts.firmId },
+      createdAt: routedAt,
+    });
+
+    return { caseRow: { ...c } };
   }
 
   async resolveAttorneyByClerkUserId(
