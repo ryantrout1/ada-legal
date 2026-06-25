@@ -713,6 +713,34 @@ export interface PortalQueueResult {
   pageSize: number;
 }
 
+/** Phase 2a: a row in the cases-backed firm queue. */
+export interface PortalCaseListRow {
+  caseId: string;
+  adaSessionId: string | null;
+  caseNumber: string;
+  status: string;
+  lane: string;
+  caseName: string | null;
+  classificationTitle: string | null;
+  jurisdictionState: string | null;
+  claimantName: string | null;
+  claimantEmail: string | null;
+  claimantPhone: string | null;
+  routedAt: string | null;
+  firstContactDue: string | null;
+  createdAt: string;
+}
+
+/** Phase 2a: the firm queue grouped by stage with counts. */
+export interface PortalCaseListResult {
+  groups: {
+    new: PortalCaseListRow[];
+    working: PortalCaseListRow[];
+    resolved: PortalCaseListRow[];
+  };
+  counts: { new: number; working: number; resolved: number };
+}
+
 /** One qualifying-question answer surfaced in the case detail. */
 export interface PortalCaseQqAnswer {
   question: string;
@@ -1115,6 +1143,13 @@ export interface DbClient {
     lawFirmId: string,
     opts?: PortalQueueOptions,
   ): Promise<PortalQueueResult>;
+
+  /**
+   * Phase 2a: the firm's intake queue read off the cases table. Firm-scoped,
+   * consent-gated HARD (only consent_to_share=true), grouped New / Working /
+   * Resolved. Claimant identity joined from the routed session.
+   */
+  listCasesForFirm(lawFirmId: string): Promise<PortalCaseListResult>;
 
   /**
    * Full case package for a single session, scoped to a firm. Returns null

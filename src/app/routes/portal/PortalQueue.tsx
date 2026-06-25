@@ -1,13 +1,11 @@
 /**
- * PortalQueue — the attorney portal landing page (criteria 2, 6).
+ * PortalQueue — the firm's intake queue (Phase 2a).
  *
- * Summary tiles (open / handled, firm-scoped per DO3) + the queue list of
- * matched sessions for the attorney's firm. Cases handled by another firm that
- * shares the case render grayed with a badge (criterion 6); cases this firm
- * handled show a "Handled" badge. Each row links to the case detail.
- *
- * Firm scope is enforced server-side (requireAttorney); this page never sends a
- * firm id. Tokens + semantic HTML for WCAG 2.2 AAA.
+ * Reads the cases table (not sessions): matched + CONSENTED cases routed to the
+ * attorney's firm, grouped New / Working / Resolved with live counts. Each row
+ * links to the case detail by case id. Firm scope + the hard consent gate are
+ * enforced server-side (requireAttorney + listCasesForFirm); this page never
+ * sends a firm id. Tokens + semantic HTML for WCAG 2.2 AAA.
  */
 
 import { useCallback, useEffect, useState } from 'react';
@@ -16,13 +14,17 @@ import {
   fetchPortalQueue,
   PortalApiError,
   type PortalQueueResponse,
+  type PortalCaseRow,
 } from '../../data/portalClient.js';
 
-type HandledFilter = 'false' | 'all';
+const GROUPS = [
+  { key: 'new', label: 'New' },
+  { key: 'working', label: 'Working' },
+  { key: 'resolved', label: 'Resolved' },
+] as const;
 
 export default function PortalQueue() {
   const [data, setData] = useState<PortalQueueResponse | null>(null);
-  const [filter, setFilter] = useState<HandledFilter>('false');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [unauth, setUnauth] = useState(false);
@@ -32,20 +34,15 @@ export default function PortalQueue() {
     setLoading(true);
     setError(null);
     try {
-      const result = await fetchPortalQueue({ handled: filter });
-      setData(result);
+      setData(await fetchPortalQueue());
     } catch (err) {
-      if (err instanceof PortalApiError && err.status === 401) {
-        setUnauth(true);
-      } else if (err instanceof PortalApiError && err.status === 403) {
-        setNotOnboarded(true);
-      } else {
-        setError(err instanceof Error ? err.message : 'Failed to load the queue');
-      }
+      if (err instanceof PortalApiError && err.status === 401) setUnauth(true);
+      else if (err instanceof PortalApiError && err.status === 403) setNotOnboarded(true);
+      else setError(err instanceof Error ? err.message : 'Failed to load the queue');
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, []);
 
   useEffect(() => {
     void load();
@@ -58,52 +55,39 @@ export default function PortalQueue() {
       <section role="alert" className="rounded-md border border-surface-200 bg-white px-5 py-6">
         <h1 className="font-display text-2xl text-ink-900 mb-2">Not onboarded yet</h1>
         <p className="text-ink-700">
-          Your account isn’t paired with a law firm yet. Contact ADA Legal Link to
-          finish onboarding, then sign in again.
+          Your account isn’t paired with a law firm yet. Contact ADA Legal Link to finish
+          onboarding, then sign in again.
         </p>
       </section>
     );
   }
 
+  const total = data ? data.counts.new + data.counts.working + data.counts.resolved : 0;
+
   return (
     <section>
-      <header className="mb-6 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">Your queue</h1>
-          <p className="text-ink-500 text-sm">Sessions matched to your firm.</p>
-        </div>
-        <div className="flex items-center gap-2 text-sm">
-          <label htmlFor="handled-filter" className="text-ink-700">
-            Show
-          </label>
-          <select
-            id="handled-filter"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value as HandledFilter)}
-            className="rounded-md border border-surface-200 bg-white px-2 py-1 text-ink-900"
-          >
-            <option value="false">Open</option>
-            <option value="all">All</option>
-          </select>
-        </div>
+      <header className="mb-6">
+        <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">Your intake queue</h1>
+        <p className="text-ink-500 text-sm">Matched cases your clients consented to share.</p>
       </header>
 
       {data && (
-        <div className="grid grid-cols-2 gap-3 mb-6 max-w-md">
-          <div className="rounded-md border border-surface-200 bg-white px-4 py-3">
-            <div className="text-ink-500 text-xs uppercase tracking-wide">Open</div>
-            <div className="text-ink-900 text-2xl font-display">{data.summary.open_count}</div>
-          </div>
-          <div className="rounded-md border border-surface-200 bg-white px-4 py-3">
-            <div className="text-ink-500 text-xs uppercase tracking-wide">Handled by your firm</div>
-            <div className="text-ink-900 text-2xl font-display">{data.summary.handled_count}</div>
-          </div>
+        <div className="grid grid-cols-3 gap-3 mb-8 max-w-lg">
+          {GROUPS.map((g) => (
+            <div key={g.key} className="rounded-md border border-surface-200 bg-white px-4 py-3">
+              <div className="text-ink-500 text-xs uppercase tracking-wide">{g.label}</div>
+              <div className="text-ink-900 text-2xl font-display">{data.counts[g.key]}</div>
+            </div>
+          ))}
         </div>
       )}
 
       {loading && <p className="text-ink-500">Loading…</p>}
       {error && (
-        <div role="alert" className="rounded-md border border-danger-500 bg-danger-50 px-4 py-3 text-danger-500">
+        <div
+          role="alert"
+          className="rounded-md border border-danger-500 bg-danger-50 px-4 py-3 text-danger-500"
+        >
           {error}{' '}
           <button type="button" onClick={() => void load()} className="underline">
             Retry
@@ -111,48 +95,58 @@ export default function PortalQueue() {
         </div>
       )}
 
-      {!loading && !error && data && data.cases.length === 0 && (
+      {!loading && !error && data && total === 0 && (
         <p className="text-ink-500">No matched cases yet.</p>
       )}
 
-      {!loading && !error && data && data.cases.length > 0 && (
-        <ul className="flex flex-col gap-2">
-          {data.cases.map((c) => {
-            const grayed = c.handled_by_other_firm && !c.handled_by_this_firm;
+      {!loading && !error && data && total > 0 && (
+        <div className="flex flex-col gap-8">
+          {GROUPS.map((g) => {
+            const rows = data.groups[g.key];
+            if (rows.length === 0) return null;
             return (
-              <li key={c.session_id}>
-                <Link
-                  to={`/portal/cases/${c.session_id}`}
-                  className={
-                    'block rounded-md border border-surface-200 bg-white px-4 py-3 transition-colors hover:border-accent-500 ' +
-                    (grayed ? 'opacity-70' : '')
-                  }
+              <section key={g.key} aria-labelledby={`group-${g.key}`}>
+                <h2
+                  id={`group-${g.key}`}
+                  className="font-display text-lg text-ink-900 mb-3 flex items-center gap-2"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <span className={grayed ? 'text-ink-500' : 'text-ink-900'}>
-                      {c.case_name}
-                    </span>
-                    {c.handled_by_this_firm && (
-                      <span className="text-xs font-mono uppercase tracking-wide text-ink-500">
-                        Handled
-                      </span>
-                    )}
-                    {grayed && (
-                      <span className="text-xs font-mono uppercase tracking-wide text-ink-500">
-                        Handled by another firm
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-ink-500 text-sm mt-0.5">
-                    {c.user_name ?? 'Unknown claimant'}
-                    {c.user_email ? ` · ${c.user_email}` : ''}
-                  </div>
-                </Link>
-              </li>
+                  {g.label}
+                  <span className="text-ink-500 text-sm font-mono">{rows.length}</span>
+                </h2>
+                <ul className="flex flex-col gap-2">
+                  {rows.map((c) => (
+                    <li key={c.case_id}>
+                      <CaseRowLink c={c} />
+                    </li>
+                  ))}
+                </ul>
+              </section>
             );
           })}
-        </ul>
+        </div>
       )}
     </section>
+  );
+}
+
+function CaseRowLink({ c }: { c: PortalCaseRow }) {
+  const meta = [c.classification_title ? `Title ${c.classification_title}` : null, c.jurisdiction_state]
+    .filter(Boolean)
+    .join(' · ');
+  return (
+    <Link
+      to={`/portal/cases/${c.case_id}`}
+      className="block rounded-md border border-surface-200 bg-white px-4 py-3 transition-colors hover:border-accent-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600"
+    >
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-ink-900 font-medium">{c.claimant_name ?? 'Unknown claimant'}</span>
+        <span className="text-xs font-mono uppercase tracking-wide text-ink-500">{c.case_number}</span>
+      </div>
+      <div className="text-ink-500 text-sm mt-0.5">
+        {c.case_name ?? (meta || 'Matched case')}
+        {c.case_name && meta ? ` · ${meta}` : ''}
+        {c.claimant_email ? ` · ${c.claimant_email}` : ''}
+      </div>
+    </Link>
   );
 }

@@ -90,6 +90,8 @@ import type {
   HardDeleteActor,
   PortalQueueOptions,
   PortalQueueResult,
+  PortalCaseListRow,
+  PortalCaseListResult,
   PortalQueueRow,
   PortalCaseDetail,
   PortalCaseQqAnswer,
@@ -187,6 +189,16 @@ export class InMemoryDbClient implements DbClient {
 
   // ─── Cases foundation (migration 0023) + routing (Phase 1a) ─────────────────
   public readonly cases: CaseRow[] = [];
+  /** Phase 2a: fields the lean CaseRow drops but the portal queue needs. */
+  private readonly caseExtras = new Map<
+    string,
+    {
+      classificationTitle: string | null;
+      jurisdictionState: string | null;
+      routedAt: string | null;
+      firstContactDue: string | null;
+    }
+  >();
   public readonly caseActivity: Array<{
     caseId: string;
     actorType: string;
@@ -1266,6 +1278,12 @@ export class InMemoryDbClient implements DbClient {
       createdAt: new Date(0).toISOString(),
     };
     this.cases.push(caseRow);
+    this.caseExtras.set(caseRow.id, {
+      classificationTitle: opts.classificationTitle,
+      jurisdictionState: opts.jurisdictionState,
+      routedAt: opts.routedAt,
+      firstContactDue: opts.firstContactDue,
+    });
 
     this.caseActivity.push({
       caseId: caseRow.id,
@@ -1323,6 +1341,53 @@ export class InMemoryDbClient implements DbClient {
       metadata: opts.metadata ?? {},
       createdAt: new Date(0).toISOString(),
     });
+  }
+
+  async listCasesForFirm(lawFirmId: string): Promise<PortalCaseListResult> {
+    const STATUS_GROUP: Record<string, 'new' | 'working' | 'resolved' | null> = {
+      new: 'new',
+      accepted: 'working',
+      working: 'working',
+      resolved: 'resolved',
+      closed: 'resolved',
+    };
+
+    const groups = { new: [] as PortalCaseListRow[], working: [] as PortalCaseListRow[], resolved: [] as PortalCaseListRow[] };
+
+    // Firm-scoped + HARD consent gate.
+    const firmCases = this.cases.filter((c) => c.firmId === lawFirmId && c.consentToShare);
+    // Stable order: newest first.
+    firmCases.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+
+    for (const c of firmCases) {
+      const group = STATUS_GROUP[c.status];
+      if (!group) continue; // declined / reclaimed are not in the active queue
+      const session = c.adaSessionId ? this.sessions.get(c.adaSessionId) : undefined;
+      const fields = session?.extractedFields ?? {};
+      const extras = this.caseExtras.get(c.id);
+      const litig = this.adminLitigation.find((l) => l.id === c.litigationListingId);
+      groups[group].push({
+        caseId: c.id,
+        adaSessionId: c.adaSessionId,
+        caseNumber: c.caseNumber,
+        status: c.status,
+        lane: c.lane,
+        caseName: litig?.caseName ?? null,
+        classificationTitle: extras?.classificationTitle ?? null,
+        jurisdictionState: extras?.jurisdictionState ?? null,
+        claimantName: portalFieldStr(fields, 'claimant_name'),
+        claimantEmail: portalFieldStr(fields, 'claimant_email'),
+        claimantPhone: portalFieldStr(fields, 'claimant_phone'),
+        routedAt: extras?.routedAt ?? null,
+        firstContactDue: extras?.firstContactDue ?? null,
+        createdAt: c.createdAt,
+      });
+    }
+
+    return {
+      groups,
+      counts: { new: groups.new.length, working: groups.working.length, resolved: groups.resolved.length },
+    };
   }
 
   async resolveAttorneyByClerkUserId(

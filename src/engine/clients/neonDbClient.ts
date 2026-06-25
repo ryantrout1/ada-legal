@@ -117,6 +117,8 @@ import type {
   HardDeleteActor,
   PortalQueueOptions,
   PortalQueueResult,
+  PortalCaseListRow,
+  PortalCaseListResult,
   PortalQueueRow,
   PortalCaseDetail,
   PortalCaseQqAnswer,
@@ -2037,6 +2039,81 @@ export class NeonDbClient implements DbClient {
       summary: opts.summary,
       metadata: opts.metadata ?? {},
     });
+  }
+
+  async listCasesForFirm(lawFirmId: string): Promise<PortalCaseListResult> {
+    const rows = await this.db
+      .select({
+        caseId: casesTable.id,
+        adaSessionId: casesTable.adaSessionId,
+        caseNumber: casesTable.caseNumber,
+        status: casesTable.status,
+        lane: casesTable.lane,
+        caseName: litigationTable.caseName,
+        classificationTitle: casesTable.classificationTitle,
+        jurisdictionState: casesTable.jurisdictionState,
+        routedAt: casesTable.routedAt,
+        firstContactDue: casesTable.firstContactDue,
+        createdAt: casesTable.createdAt,
+        extractedFields: adaSessions.extractedFields,
+      })
+      .from(casesTable)
+      .leftJoin(litigationTable, eq(litigationTable.id, casesTable.litigationListingId))
+      .leftJoin(adaSessions, eq(adaSessions.id, casesTable.adaSessionId))
+      // Firm-scoped + HARD consent gate.
+      .where(and(eq(casesTable.firmId, lawFirmId), eq(casesTable.consentToShare, true)))
+      .orderBy(sql`${casesTable.createdAt} DESC`);
+
+    const STATUS_GROUP: Record<string, 'new' | 'working' | 'resolved' | undefined> = {
+      new: 'new',
+      accepted: 'working',
+      working: 'working',
+      resolved: 'resolved',
+      closed: 'resolved',
+    };
+    const fStr = (f: ExtractedFields | null, k: string): string | null => {
+      const v = f?.[k]?.value;
+      return v == null ? null : typeof v === 'string' ? v : String(v);
+    };
+    const iso = (v: unknown): string | null =>
+      v == null ? null : v instanceof Date ? v.toISOString() : String(v);
+
+    const groups = {
+      new: [] as PortalCaseListRow[],
+      working: [] as PortalCaseListRow[],
+      resolved: [] as PortalCaseListRow[],
+    };
+
+    for (const r of rows) {
+      const group = STATUS_GROUP[r.status];
+      if (!group) continue;
+      const fields = (r.extractedFields ?? null) as ExtractedFields | null;
+      groups[group].push({
+        caseId: r.caseId,
+        adaSessionId: r.adaSessionId,
+        caseNumber: r.caseNumber,
+        status: r.status,
+        lane: r.lane,
+        caseName: r.caseName ?? null,
+        classificationTitle: r.classificationTitle ?? null,
+        jurisdictionState: r.jurisdictionState ?? null,
+        claimantName: fStr(fields, 'claimant_name'),
+        claimantEmail: fStr(fields, 'claimant_email'),
+        claimantPhone: fStr(fields, 'claimant_phone'),
+        routedAt: iso(r.routedAt),
+        firstContactDue: iso(r.firstContactDue),
+        createdAt: iso(r.createdAt) ?? '',
+      });
+    }
+
+    return {
+      groups,
+      counts: {
+        new: groups.new.length,
+        working: groups.working.length,
+        resolved: groups.resolved.length,
+      },
+    };
   }
 
   async resolveAttorneyByClerkUserId(

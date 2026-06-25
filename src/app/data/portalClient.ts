@@ -13,23 +13,30 @@
 
 import type { ContentBlock } from '../../types/db.js';
 
-export interface PortalQueueCase {
-  session_id: string;
-  case_name: string;
-  user_name: string | null;
-  user_email: string | null;
-  user_phone: string | null;
-  matched_at: string | null;
-  handled_by_other_firm: boolean;
-  handled_by_this_firm: boolean;
+export interface PortalCaseRow {
+  case_id: string;
+  ada_session_id: string | null;
+  case_number: string;
+  status: string;
+  lane: string;
+  case_name: string | null;
+  classification_title: string | null;
+  jurisdiction_state: string | null;
+  claimant_name: string | null;
+  claimant_email: string | null;
+  claimant_phone: string | null;
+  routed_at: string | null;
+  first_contact_due: string | null;
+  created_at: string;
 }
 
 export interface PortalQueueResponse {
-  summary: { open_count: number; handled_count: number };
-  cases: PortalQueueCase[];
-  total_count: number;
-  page: number;
-  page_size: number;
+  counts: { new: number; working: number; resolved: number };
+  groups: {
+    new: PortalCaseRow[];
+    working: PortalCaseRow[];
+    resolved: PortalCaseRow[];
+  };
 }
 
 export interface PortalTranscriptMessage {
@@ -79,16 +86,8 @@ async function failFor(resp: Response): Promise<never> {
   throw new PortalApiError(resp.status, message);
 }
 
-export async function fetchPortalQueue(
-  params: PortalQueueParams = {},
-): Promise<PortalQueueResponse> {
-  const qs = new URLSearchParams();
-  if (params.page) qs.set('page', String(params.page));
-  if (params.pageSize) qs.set('page_size', String(params.pageSize));
-  if (params.handled) qs.set('handled', params.handled);
-  const suffix = qs.toString() ? `?${qs.toString()}` : '';
-
-  const resp = await fetch(`/api/portal/queue${suffix}`, { credentials: 'include' });
+export async function fetchPortalQueue(): Promise<PortalQueueResponse> {
+  const resp = await fetch(`/api/portal/queue`, { credentials: 'include' });
   if (!resp.ok) return failFor(resp);
   return (await resp.json()) as PortalQueueResponse;
 }

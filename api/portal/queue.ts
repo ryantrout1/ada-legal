@@ -16,7 +16,6 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAttorney } from '../_attorney.js';
 import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv } from '../_shared.js';
-import type { PortalQueueOptions } from '../../src/engine/clients/types.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
@@ -30,33 +29,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const opts: PortalQueueOptions = {
-      page: intParam(req.query.page),
-      pageSize: intParam(req.query.page_size),
-      handled: handledParam(req.query.handled),
-    };
-
     const clients = makeClientsFromEnv();
-    const result = await clients.db.listPortalQueueForFirm(auth.lawFirmId, opts);
+    const result = await clients.db.listCasesForFirm(auth.lawFirmId);
+
+    const row = (c: (typeof result.groups.new)[number]) => ({
+      case_id: c.caseId,
+      ada_session_id: c.adaSessionId,
+      case_number: c.caseNumber,
+      status: c.status,
+      lane: c.lane,
+      case_name: c.caseName,
+      classification_title: c.classificationTitle,
+      jurisdiction_state: c.jurisdictionState,
+      claimant_name: c.claimantName,
+      claimant_email: c.claimantEmail,
+      claimant_phone: c.claimantPhone,
+      routed_at: c.routedAt,
+      first_contact_due: c.firstContactDue,
+      created_at: c.createdAt,
+    });
 
     return res.status(200).json({
-      summary: {
-        open_count: result.summary.openCount,
-        handled_count: result.summary.handledCount,
+      counts: result.counts,
+      groups: {
+        new: result.groups.new.map(row),
+        working: result.groups.working.map(row),
+        resolved: result.groups.resolved.map(row),
       },
-      cases: result.cases.map((c) => ({
-        session_id: c.sessionId,
-        case_name: c.caseName,
-        user_name: c.userName,
-        user_email: c.userEmail,
-        user_phone: c.userPhone,
-        matched_at: c.matchedAt,
-        handled_by_other_firm: c.handledByOtherFirm,
-        handled_by_this_firm: c.handledByThisFirm,
-      })),
-      total_count: result.totalCount,
-      page: result.page,
-      page_size: result.pageSize,
     });
   } catch (err) {
     console.error('GET /api/portal/queue failed', err);
@@ -66,15 +65,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 }
 
-function intParam(v: unknown): number | undefined {
-  const raw = typeof v === 'string' ? v : Array.isArray(v) ? v[0] : undefined;
-  if (raw == null) return undefined;
-  const n = Number.parseInt(raw, 10);
-  return Number.isFinite(n) ? n : undefined;
-}
 
-function handledParam(v: unknown): 'true' | 'false' | 'all' | undefined {
-  const raw = typeof v === 'string' ? v : Array.isArray(v) ? v[0] : undefined;
-  if (raw === 'true' || raw === 'false' || raw === 'all') return raw;
-  return undefined;
-}
