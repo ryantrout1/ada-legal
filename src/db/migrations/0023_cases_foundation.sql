@@ -57,11 +57,11 @@ CREATE TABLE IF NOT EXISTS cases (
 
   -- Routing destination, set once by the router.
   lane                    text NOT NULL
-                            CHECK (lane IN ('routed_firm', 'sourcing', 'general_queue', 'self_help', 'no_action')),
+                            CONSTRAINT cases_lane_enum CHECK (lane IN ('routed_firm', 'sourcing', 'general_queue', 'self_help', 'no_action')),
 
   -- Work lifecycle, mutated only via the case state machine.
   status                  text NOT NULL DEFAULT 'new'
-                            CHECK (status IN ('new', 'accepted', 'declined', 'working', 'resolved', 'reclaimed', 'closed')),
+                            CONSTRAINT cases_status_enum CHECK (status IN ('new', 'accepted', 'declined', 'working', 'resolved', 'reclaimed', 'closed')),
 
   -- Ownership. firm_id FK declared here (law_firms in schema-ch1.ts).
   firm_id                 uuid REFERENCES law_firms(id),
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS cases (
 
   -- Resolution.
   resolution_type         text
-                            CHECK (resolution_type IN ('engaged', 'referred_out', 'not_viable', 'claimant_unresponsive', 'claimant_declined', 'admin_closed')),
+                            CONSTRAINT cases_resolution_type_enum CHECK (resolution_type IN ('engaged', 'referred_out', 'not_viable', 'claimant_unresponsive', 'claimant_declined', 'admin_closed')),
   resolution_notes        text,
   outcome_amount_cents    bigint,
   resolved_at             timestamptz,
@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS case_people (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   case_id     uuid NOT NULL REFERENCES cases(id)    ON DELETE CASCADE,
   contact_id  uuid NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
-  role        text NOT NULL CHECK (role IN ('client', 'witness', 'opposing_counsel', 'expert', 'other')),
+  role        text NOT NULL CONSTRAINT case_people_role_enum CHECK (role IN ('client', 'witness', 'opposing_counsel', 'expert', 'other')),
   notes       text,
   created_at  timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT case_people_unique UNIQUE (case_id, contact_id, role)
@@ -142,7 +142,7 @@ CREATE INDEX IF NOT EXISTS case_people_case ON case_people (case_id);
 CREATE TABLE IF NOT EXISTS case_activity (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   case_id     uuid NOT NULL REFERENCES cases(id) ON DELETE CASCADE,
-  actor_type  text NOT NULL CHECK (actor_type IN ('user', 'system', 'ada', 'client')),
+  actor_type  text NOT NULL CONSTRAINT case_activity_actor_type_enum CHECK (actor_type IN ('user', 'system', 'ada', 'client')),
   actor_id    uuid,
   event_type  text NOT NULL,
   summary     text,
@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS case_tasks (
   case_id       uuid NOT NULL REFERENCES cases(id) ON DELETE CASCADE,
   title         text NOT NULL,
   due_date      date,
-  priority      text NOT NULL DEFAULT 'medium' CHECK (priority IN ('high', 'medium', 'low')),
+  priority      text NOT NULL DEFAULT 'medium' CONSTRAINT case_tasks_priority_enum CHECK (priority IN ('high', 'medium', 'low')),
   completed_at  timestamptz,
   created_by    uuid REFERENCES users(id),
   created_at    timestamptz NOT NULL DEFAULT now(),
