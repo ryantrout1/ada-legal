@@ -124,6 +124,7 @@ import type {
   PortalAttorneyResolution,
   CreateCaseOptions,
   CreateCaseResult,
+  RecordConsentResult,
   CaseRow,
 } from './types.js';
 import type { AdaSessionState } from '../types.js';
@@ -1749,7 +1750,19 @@ export class NeonDbClient implements DbClient {
         eq(adaSessions.litigationListingId, litigationFirmAssignments.litigationListingId),
       )
       .innerJoin(litigationTable, eq(litigationTable.id, adaSessions.litigationListingId))
-      .where(eq(litigationFirmAssignments.lawFirmId, lawFirmId))
+      .where(
+        and(
+          eq(litigationFirmAssignments.lawFirmId, lawFirmId),
+          // Consent gate (Phase 1b, soft): hide a matched session that has an
+          // UNCONSENTED case. A session with no case (legacy / pre-routing) is
+          // unaffected — every real post-Phase-1a session has a case, so
+          // consent is enforced. Phase 2 tightens this in the cases cutover.
+          sql`not exists (
+            select 1 from ${casesTable} c
+            where c.ada_session_id = ${adaSessions.id} and c.consent_to_share = false
+          )`,
+        ),
+      )
       .orderBy(sql`${adaSessions.updatedAt} DESC`);
 
     const fieldStr = (f: ExtractedFields, k: string): string | null => {
@@ -1962,6 +1975,52 @@ export class NeonDbClient implements DbClient {
     });
 
     return { caseRow: toCaseRow(row), created: true };
+  }
+
+  async getCaseBySessionId(sessionId: string): Promise<CaseRow | null> {
+    const rows = await this.db
+      .select()
+      .from(casesTable)
+      .where(eq(casesTable.adaSessionId, sessionId))
+      .limit(1);
+    return rows[0] ? toCaseRow(rows[0]) : null;
+  }
+
+  async recordCaseConsent(opts: {
+    sessionId: string;
+    scope: string;
+  }): Promise<RecordConsentResult | null> {
+    const existing = await this.db
+      .select()
+      .from(casesTable)
+      .where(eq(casesTable.adaSessionId, opts.sessionId))
+      .limit(1);
+    if (!existing[0]) return null;
+
+    if (existing[0].consentToShare) {
+      // Idempotent: already consented — no write, no duplicate activity.
+      return { caseRow: toCaseRow(existing[0]), alreadyConsented: true };
+    }
+
+    const updated = await this.db
+      .update(casesTable)
+      .set({
+        consentToShare: true,
+        consentAt: new Date(),
+        consentScope: opts.scope,
+      })
+      .where(eq(casesTable.id, existing[0].id))
+      .returning();
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: existing[0].id,
+      actorType: 'client',
+      eventType: 'CONSENT',
+      summary: `claimant consented to share (${opts.scope})`,
+      metadata: { scope: opts.scope },
+    });
+
+    return { caseRow: toCaseRow(updated[0]), alreadyConsented: false };
   }
 
   async resolveAttorneyByClerkUserId(

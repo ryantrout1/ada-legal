@@ -97,6 +97,7 @@ import type {
   PortalAttorneyResolution,
   CreateCaseOptions,
   CreateCaseResult,
+  RecordConsentResult,
   CaseRow,
   PhotoReviewListOptions,
   PhotoReviewListResult,
@@ -1089,7 +1090,13 @@ export class InMemoryDbClient implements DbClient {
     );
 
     const matched = [...this.sessions.values()].filter(
-      (s) => s.litigationListingId && assignedLitigationIds.has(s.litigationListingId),
+      (s) =>
+        s.litigationListingId &&
+        assignedLitigationIds.has(s.litigationListingId) &&
+        // Consent gate (Phase 1b, soft): hide a session with an UNCONSENTED
+        // case. No case (legacy / pre-routing) → unaffected. Mirrors the neon
+        // NOT EXISTS predicate.
+        !this.cases.some((c) => c.adaSessionId === s.sessionId && c.consentToShare === false),
     );
 
     const caseName = (litigationListingId: string): string =>
@@ -1270,6 +1277,35 @@ export class InMemoryDbClient implements DbClient {
     });
 
     return { caseRow: { ...caseRow }, created: true };
+  }
+
+  async getCaseBySessionId(sessionId: string): Promise<CaseRow | null> {
+    const found = this.cases.find((c) => c.adaSessionId === sessionId);
+    return found ? { ...found } : null;
+  }
+
+  async recordCaseConsent(opts: {
+    sessionId: string;
+    scope: string;
+  }): Promise<RecordConsentResult | null> {
+    const c = this.cases.find((x) => x.adaSessionId === opts.sessionId);
+    if (!c) return null;
+
+    if (c.consentToShare) {
+      return { caseRow: { ...c }, alreadyConsented: true };
+    }
+
+    c.consentToShare = true;
+    this.caseActivity.push({
+      caseId: c.id,
+      actorType: 'client',
+      eventType: 'CONSENT',
+      summary: `claimant consented to share (${opts.scope})`,
+      metadata: { scope: opts.scope },
+      createdAt: new Date(0).toISOString(),
+    });
+
+    return { caseRow: { ...c }, alreadyConsented: false };
   }
 
   async resolveAttorneyByClerkUserId(

@@ -783,6 +783,12 @@ export interface CreateCaseResult {
   created: boolean;
 }
 
+/** Result of recordCaseConsent: the case plus whether it had already consented (idempotent no-op). */
+export interface RecordConsentResult {
+  caseRow: CaseRow;
+  alreadyConsented: boolean;
+}
+
 export interface DbClient {
   /** Read the current state of a session. Returns null if not found. */
   readSession(opts: SessionReadOptions): Promise<AdaSessionState | null>;
@@ -1152,6 +1158,21 @@ export interface DbClient {
    * On a fresh create, also writes the initial ROUTED case_activity row.
    */
   createCase(opts: CreateCaseOptions): Promise<CreateCaseResult>;
+
+  /** Read the case routed from a given session, or null. Used by the consent surface. */
+  getCaseBySessionId(sessionId: string): Promise<CaseRow | null>;
+
+  /**
+   * Phase 1b: record claimant consent to share their info for the case routed
+   * from this session. Idempotent — if already consented, returns
+   * alreadyConsented=true and writes nothing. On first consent, sets
+   * consent_to_share + consent_at + consent_scope and writes one CONSENT
+   * case_activity row. Returns null when no case exists for the session.
+   */
+  recordCaseConsent(opts: {
+    sessionId: string;
+    scope: string;
+  }): Promise<RecordConsentResult | null>;
 
   /**
    * Resolve a signed-in Clerk user id to a paired attorney (Clerk user →
