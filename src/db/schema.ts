@@ -7,3 +7,4 @@
 
 export * from './schema-core.js';
 export * from './schema-ch1.js';
+export * from './schema-cases.js';

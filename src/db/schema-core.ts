@@ -15,6 +15,7 @@ import {
   uuid,
   text,
   boolean,
+  integer,
   timestamp,
   date,
   jsonb,
@@ -325,6 +326,11 @@ export const attorneys = pgTable(
     // The FK constraint is declared in the SQL migration.
     userId: uuid('user_id').references(() => users.id),
     lawFirmId: uuid('law_firm_id'),
+    // Capacity / routing throttle (migration 0023). The Phase 1 router reads
+    // these to stop pushing to a full or paused attorney.
+    acceptingReferrals: boolean('accepting_referrals').notNull().default(true),
+    routingPaused: boolean('routing_paused').notNull().default(false),
+    maxActiveCases: integer('max_active_cases'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
   },
