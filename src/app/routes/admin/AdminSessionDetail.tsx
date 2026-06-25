@@ -9,6 +9,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import type { ReadingLevel, SessionStatus } from '../../hooks/useAdminSessions.js';
+import type { ContentBlock } from '../../../types/db.js';
+import MessageContent from '../../components/MessageContent.js';
 
 interface ConversationMessage {
   role: 'user' | 'assistant' | 'system' | 'tool_result';
@@ -328,8 +330,6 @@ function MessageRow({ message }: { message: ConversationMessage }) {
       ? 'border-l-ink-900'
       : 'border-l-ink-500';
 
-  const displayContent = formatContent(message.content);
-
   return (
     <div className={`border-l-4 ${borderColor} pl-3 py-1`}>
       <div className="flex items-baseline gap-2 mb-0.5">
@@ -342,23 +342,14 @@ function MessageRow({ message }: { message: ConversationMessage }) {
           </span>
         )}
       </div>
-      <div className="text-sm text-ink-900 whitespace-pre-wrap">
-        {displayContent}
+      <div className="text-sm text-ink-900">
+        <MessageContent content={message.content as string | ContentBlock[]} />
       </div>
     </div>
   );
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function formatContent(content: unknown): string {
-  if (typeof content === 'string') return content;
-  try {
-    return JSON.stringify(content, null, 2);
-  } catch {
-    return String(content);
-  }
-}
 
 function formatValue(value: unknown): string {
   if (value === null || value === undefined) return '—';
