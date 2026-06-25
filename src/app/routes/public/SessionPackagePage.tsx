@@ -37,6 +37,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import type { SessionPackage } from '../../../engine/package/types.js';
 import type { ActionDestination } from '../../../engine/routing/destinations.js';
+import ConsentCard from './ConsentCard.js';
 
 type LoadState =
   | { kind: 'loading' }
@@ -48,6 +49,10 @@ export default function SessionPackagePage() {
   const params = useParams<{ slug: string }>();
   const slug = params.slug ?? '';
   const [state, setState] = useState<LoadState>({ kind: 'loading' });
+  const [consent, setConsent] = useState<{
+    lane: 'routed_firm' | 'sourcing' | 'general_queue' | 'self_help' | 'no_action' | null;
+    consentToShare: boolean | null;
+  } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -71,6 +76,17 @@ export default function SessionPackagePage() {
         }
         const body = (await res.json()) as { package: SessionPackage };
         if (!cancelled) setState({ kind: 'ready', pkg: body.package });
+
+        // Consent state is a separate, uncached read (the package is cached).
+        // Soft-fails: if it can't load, the page just omits the consent action.
+        try {
+          const cRes = await fetch(`/api/packages/${encodeURIComponent(slug)}/consent`);
+          if (cRes.ok && !cancelled) {
+            setConsent(await cRes.json());
+          }
+        } catch {
+          /* no consent action shown */
+        }
       } catch (err) {
         if (!cancelled) {
           setState({
@@ -139,12 +155,23 @@ export default function SessionPackagePage() {
   }
 
   const pkg = state.pkg;
-  return <PackageView pkg={pkg} />;
+  return <PackageView pkg={pkg} slug={slug} consent={consent} />;
 }
 
 // ─── Main view ────────────────────────────────────────────────────────────────
 
-function PackageView({ pkg }: { pkg: SessionPackage }) {
+function PackageView({
+  pkg,
+  slug,
+  consent,
+}: {
+  pkg: SessionPackage;
+  slug: string;
+  consent: {
+    lane: 'routed_firm' | 'sourcing' | 'general_queue' | 'self_help' | 'no_action' | null;
+    consentToShare: boolean | null;
+  } | null;
+}) {
   const label = pkg.classificationLabel;
   const generatedDate = formatHumanDate(pkg.generatedAt);
 
@@ -245,6 +272,13 @@ function PackageView({ pkg }: { pkg: SessionPackage }) {
           </details>
         )}
       </section>
+
+      {/* Consent to share — the claimant's explicit, in-their-control choice
+          to hand their details to an attorney / the team. Rendered only for
+          handoff lanes and only until consent is given (ConsentCard self-gates). */}
+      {consent && (
+        <ConsentCard slug={slug} lane={consent.lane} initialConsented={consent.consentToShare} />
+      )}
 
       {/* Matched class-action listing (real match — Ada bound the
           session to a live case via match_listing). This replaces the
