@@ -1308,6 +1308,23 @@ export class InMemoryDbClient implements DbClient {
     return { caseRow: { ...c }, alreadyConsented: false };
   }
 
+  async appendCaseActivity(opts: {
+    caseId: string;
+    actorType: 'user' | 'system' | 'ada' | 'client';
+    eventType: string;
+    summary: string;
+    metadata?: Record<string, unknown>;
+  }): Promise<void> {
+    this.caseActivity.push({
+      caseId: opts.caseId,
+      actorType: opts.actorType,
+      eventType: opts.eventType,
+      summary: opts.summary,
+      metadata: opts.metadata ?? {},
+      createdAt: new Date(0).toISOString(),
+    });
+  }
+
   async resolveAttorneyByClerkUserId(
     clerkUserId: string,
   ): Promise<PortalAttorneyResolution | null> {

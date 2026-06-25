@@ -2023,6 +2023,22 @@ export class NeonDbClient implements DbClient {
     return { caseRow: toCaseRow(updated[0]), alreadyConsented: false };
   }
 
+  async appendCaseActivity(opts: {
+    caseId: string;
+    actorType: 'user' | 'system' | 'ada' | 'client';
+    eventType: string;
+    summary: string;
+    metadata?: Record<string, unknown>;
+  }): Promise<void> {
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: opts.actorType,
+      eventType: opts.eventType,
+      summary: opts.summary,
+      metadata: opts.metadata ?? {},
+    });
+  }
+
   async resolveAttorneyByClerkUserId(
     clerkUserId: string,
   ): Promise<PortalAttorneyResolution | null> {

@@ -1175,6 +1175,20 @@ export interface DbClient {
   }): Promise<RecordConsentResult | null>;
 
   /**
+   * Append a case_activity row. The general primitive for server-side case
+   * audit events (e.g. Phase 1c NOTIFIED receipts). actorType 'system' for
+   * platform-emitted events. metadata carries structured context, never
+   * conversation content (Rule 8).
+   */
+  appendCaseActivity(opts: {
+    caseId: string;
+    actorType: 'user' | 'system' | 'ada' | 'client';
+    eventType: string;
+    summary: string;
+    metadata?: Record<string, unknown>;
+  }): Promise<void>;
+
+  /**
    * Resolve a signed-in Clerk user id to a paired attorney (Clerk user →
    * users.clerk_user_id → attorneys.user_id → law_firms). Null when no
    * paired attorney exists. Consumed by requireAttorney in Phase 3.
