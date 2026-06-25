@@ -11,6 +11,8 @@
  * Ref: .design/attorney-portal.md (src/app/data/portalClient.ts).
  */
 
+import type { ContentBlock } from '../../types/db.js';
+
 export interface PortalQueueCase {
   session_id: string;
   case_name: string;
@@ -32,7 +34,7 @@ export interface PortalQueueResponse {
 
 export interface PortalTranscriptMessage {
   role: string;
-  content: string;
+  content: string | ContentBlock[];
   timestamp?: string;
 }
 

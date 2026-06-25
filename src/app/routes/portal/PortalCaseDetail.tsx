@@ -18,6 +18,7 @@ import {
   PortalApiError,
   type PortalCaseDetailResponse,
 } from '../../data/portalClient.js';
+import MessageContent from '../../components/MessageContent.js';
 
 export default function PortalCaseDetail() {
   const { id } = useParams<{ id: string }>();
@@ -169,7 +170,9 @@ export default function PortalCaseDetail() {
                     <span className="text-ink-500 font-mono text-xs uppercase tracking-wide">
                       {m.role}
                     </span>
-                    <p className="text-ink-900 mt-0.5 whitespace-pre-wrap">{m.content}</p>
+                    <div className="text-ink-900 mt-0.5">
+                      <MessageContent content={m.content} />
+                    </div>
                   </li>
                 ))}
               </ol>
