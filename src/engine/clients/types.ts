@@ -29,7 +29,7 @@ import type {
   ReadingLevelStringList,
 } from '../../types/db.js';
 import type { AdaSessionState } from '../types.js';
-import type { CaseLane } from '../cases/caseStateMachine.js';
+import type { CaseLane, CaseTransition } from '../cases/caseStateMachine.js';
 
 // ─── AI client ────────────────────────────────────────────────────────────────
 
@@ -1191,6 +1191,22 @@ export interface DbClient {
     caseId: string,
     lawFirmId: string,
   ): Promise<PortalCaseDetailFull | null>;
+
+  /**
+   * Phase 2c: drive a case through the lifecycle from the firm workspace.
+   * Firm-scoped + consent-gated. Validates against the Phase 0 state machine
+   * (throws IllegalCaseTransitionError on a bad transition), stamps the
+   * relevant timestamps, and writes a user-actor activity row. Returns null
+   * when the case isn't this firm's.
+   */
+  transitionCaseForFirm(opts: {
+    caseId: string;
+    lawFirmId: string;
+    transition: CaseTransition;
+    reason?: string;
+    resolutionType?: string;
+    resolutionNotes?: string;
+  }): Promise<{ caseRow: CaseRow } | null>;
 
   /**
    * Full case package for a single session, scoped to a firm. Returns null

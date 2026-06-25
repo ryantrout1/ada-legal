@@ -119,6 +119,28 @@ export async function fetchPortalCase(
   return (await resp.json()) as PortalCaseDetailResponse;
 }
 
+export type PortalCaseAction = 'accept' | 'decline' | 'begin_work' | 'resolve';
+
+export async function transitionPortalCase(
+  id: string,
+  action: PortalCaseAction,
+  opts?: { reason?: string; resolutionType?: string; resolutionNotes?: string },
+): Promise<{ status: string }> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/transition`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action,
+      reason: opts?.reason,
+      resolution_type: opts?.resolutionType,
+      resolution_notes: opts?.resolutionNotes,
+    }),
+  });
+  if (!resp.ok) return failFor(resp);
+  return (await resp.json()) as { status: string };
+}
+
 export async function markPortalCaseHandled(id: string): Promise<void> {
   const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/handle`, {
     method: 'POST',

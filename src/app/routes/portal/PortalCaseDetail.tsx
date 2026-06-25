@@ -14,6 +14,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import {
   fetchPortalCase,
+  transitionPortalCase,
+  type PortalCaseAction,
   PortalApiError,
   type PortalCaseDetailResponse,
 } from '../../data/portalClient.js';
@@ -108,6 +110,8 @@ export default function PortalCaseDetail() {
             <p className="text-ink-500 text-sm font-mono">{data.case_number}</p>
           </header>
 
+          <ActionBar status={data.status} caseId={data.case_id} onDone={load} />
+
           <dl className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3 mb-8 max-w-2xl">
             <Meta label="Matched case" value={data.case_name} />
             <Meta
@@ -189,6 +193,150 @@ function Meta({ label, value }: { label: string; value: string | null }) {
     <div>
       <dt className="text-ink-500 text-xs uppercase tracking-wide">{label}</dt>
       <dd className="text-ink-900">{value ?? '—'}</dd>
+    </div>
+  );
+}
+
+const RESOLUTION_TYPES = [
+  { value: 'engaged', label: 'Engaged the client' },
+  { value: 'referred_out', label: 'Referred out' },
+  { value: 'not_viable', label: 'Not viable' },
+  { value: 'claimant_unresponsive', label: 'Claimant unresponsive' },
+  { value: 'claimant_declined', label: 'Claimant declined' },
+] as const;
+
+const BTN = 'px-4 py-2 rounded-md font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors';
+const BTN_PRIMARY = `${BTN} bg-accent-500 text-white hover:bg-accent-600 focus-visible:outline-accent-600`;
+const BTN_SECONDARY = `${BTN} border border-surface-200 text-ink-900 hover:border-accent-500 focus-visible:outline-accent-600`;
+
+function ActionBar({
+  status,
+  caseId,
+  onDone,
+}: {
+  status: string;
+  caseId: string;
+  onDone: () => Promise<void> | void;
+}) {
+  const [mode, setMode] = useState<'idle' | 'declining' | 'resolving'>('idle');
+  const [busy, setBusy] = useState(false);
+  const [reason, setReason] = useState('');
+  const [resolutionType, setResolutionType] = useState<string>(RESOLUTION_TYPES[0].value);
+  const [error, setError] = useState<string | null>(null);
+
+  const run = async (action: PortalCaseAction, opts?: { reason?: string; resolutionType?: string }) => {
+    setBusy(true);
+    setError(null);
+    try {
+      await transitionPortalCase(caseId, action, opts);
+      setMode('idle');
+      setReason('');
+      await onDone();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Action failed');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // No actions for terminal / declined cases.
+  if (status === 'resolved' || status === 'closed' || status === 'declined' || status === 'reclaimed') {
+    return null;
+  }
+
+  return (
+    <div className="mb-8">
+      {error && (
+        <p role="alert" className="text-danger-500 mb-2 text-sm">
+          {error}
+        </p>
+      )}
+
+      {mode === 'idle' && (
+        <div className="flex flex-wrap gap-2">
+          {status === 'new' && (
+            <button type="button" disabled={busy} onClick={() => void run('accept')} className={BTN_PRIMARY}>
+              Accept
+            </button>
+          )}
+          {status === 'accepted' && (
+            <button type="button" disabled={busy} onClick={() => void run('begin_work')} className={BTN_PRIMARY}>
+              Start work
+            </button>
+          )}
+          {status === 'working' && (
+            <button type="button" disabled={busy} onClick={() => setMode('resolving')} className={BTN_PRIMARY}>
+              Resolve
+            </button>
+          )}
+          {(status === 'new' || status === 'accepted') && (
+            <button type="button" disabled={busy} onClick={() => setMode('declining')} className={BTN_SECONDARY}>
+              Decline
+            </button>
+          )}
+        </div>
+      )}
+
+      {mode === 'declining' && (
+        <div className="rounded-md border border-surface-200 bg-white p-4 max-w-lg">
+          <label htmlFor="decline-reason" className="block text-ink-900 font-medium mb-1">
+            Why are you declining?
+          </label>
+          <textarea
+            id="decline-reason"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            rows={3}
+            className="w-full rounded-md border border-surface-200 px-3 py-2 text-ink-900 mb-3"
+          />
+          <div className="flex gap-2">
+            <button
+              type="button"
+              disabled={busy || reason.trim() === ''}
+              onClick={() => void run('decline', { reason: reason.trim() })}
+              className={`${BTN_PRIMARY} disabled:opacity-60`}
+            >
+              Confirm decline
+            </button>
+            <button type="button" disabled={busy} onClick={() => setMode('idle')} className={BTN_SECONDARY}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {mode === 'resolving' && (
+        <div className="rounded-md border border-surface-200 bg-white p-4 max-w-lg">
+          <label htmlFor="resolution-type" className="block text-ink-900 font-medium mb-1">
+            How was this resolved?
+          </label>
+          <select
+            id="resolution-type"
+            value={resolutionType}
+            onChange={(e) => setResolutionType(e.target.value)}
+            className="w-full rounded-md border border-surface-200 px-3 py-2 text-ink-900 mb-3"
+          >
+            {RESOLUTION_TYPES.map((r) => (
+              <option key={r.value} value={r.value}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void run('resolve', { resolutionType })}
+              className={BTN_PRIMARY}
+            >
+              Confirm resolve
+            </button>
+            <button type="button" disabled={busy} onClick={() => setMode('idle')} className={BTN_SECONDARY}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -45,7 +45,8 @@ import {
   stripeWebhookEvents as stripeWebhookEventsTable,
 } from '../../db/schema-ch1.js';
 import { cases as casesTable, caseActivity as caseActivityTable } from '../../db/schema-cases.js';
-import type { CaseLane } from '../cases/caseStateMachine.js';
+import type { CaseLane, CaseStatus, CaseTransition } from '../cases/caseStateMachine.js';
+import { applyCaseTransition, caseTransitionSummary } from '../cases/caseStateMachine.js';
 import type {
   AdminAnalyticsOptions,
   AdminAnalyticsResult,
@@ -2202,6 +2203,58 @@ export class NeonDbClient implements DbClient {
         createdAt: iso(a.createdAt) ?? '',
       })),
     };
+  }
+
+  async transitionCaseForFirm(opts: {
+    caseId: string;
+    lawFirmId: string;
+    transition: CaseTransition;
+    reason?: string;
+    resolutionType?: string;
+    resolutionNotes?: string;
+  }): Promise<{ caseRow: CaseRow } | null> {
+    const existing = await this.db
+      .select()
+      .from(casesTable)
+      .where(and(eq(casesTable.id, opts.caseId), eq(casesTable.firmId, opts.lawFirmId)))
+      .limit(1);
+    const row = existing[0];
+    if (!row || !row.consentToShare) return null;
+
+    // Validates against the Phase 0 state machine — throws if illegal.
+    const nextStatus = applyCaseTransition(row.status as CaseStatus, opts.transition);
+
+    const now = new Date();
+    const patch: Record<string, unknown> = { status: nextStatus, updatedAt: now };
+    if (opts.transition === 'decline') {
+      patch.declinedAt = now;
+      patch.declineReason = opts.reason ?? null;
+    }
+    if (opts.transition === 'resolve') {
+      patch.resolvedAt = now;
+      patch.resolutionType = opts.resolutionType ?? null;
+      patch.resolutionNotes = opts.resolutionNotes ?? null;
+    }
+
+    const updated = await this.db
+      .update(casesTable)
+      .set(patch)
+      .where(eq(casesTable.id, opts.caseId))
+      .returning();
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: opts.transition.toUpperCase(),
+      summary: caseTransitionSummary(opts),
+      metadata: {
+        transition: opts.transition,
+        reason: opts.reason ?? null,
+        resolutionType: opts.resolutionType ?? null,
+      },
+    });
+
+    return { caseRow: toCaseRow(updated[0]) };
   }
 
   async resolveAttorneyByClerkUserId(

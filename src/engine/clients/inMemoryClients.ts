@@ -12,6 +12,8 @@
  * Ref: docs/ARCHITECTURE.md §13
  */
 
+import { applyCaseTransition, caseTransitionSummary } from '../cases/caseStateMachine.js';
+import type { CaseStatus, CaseTransition } from '../cases/caseStateMachine.js';
 import type { AdaSessionState } from '../types.js';
 import type {
   AdaClients,
@@ -1441,6 +1443,36 @@ export class InMemoryDbClient implements DbClient {
       transcript: (session?.conversationHistory ?? []) as Message[],
       activity,
     };
+  }
+
+  async transitionCaseForFirm(opts: {
+    caseId: string;
+    lawFirmId: string;
+    transition: CaseTransition;
+    reason?: string;
+    resolutionType?: string;
+    resolutionNotes?: string;
+  }): Promise<{ caseRow: CaseRow } | null> {
+    const c = this.cases.find((x) => x.id === opts.caseId && x.firmId === opts.lawFirmId);
+    if (!c || !c.consentToShare) return null;
+
+    // Throws IllegalCaseTransitionError on a bad transition.
+    c.status = applyCaseTransition(c.status as CaseStatus, opts.transition);
+
+    this.caseActivity.push({
+      caseId: c.id,
+      actorType: 'user',
+      eventType: opts.transition.toUpperCase(),
+      summary: caseTransitionSummary(opts),
+      metadata: {
+        transition: opts.transition,
+        reason: opts.reason ?? null,
+        resolutionType: opts.resolutionType ?? null,
+      },
+      createdAt: new Date(0).toISOString(),
+    });
+
+    return { caseRow: { ...c } };
   }
 
   async resolveAttorneyByClerkUserId(

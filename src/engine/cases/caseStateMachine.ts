@@ -107,3 +107,31 @@ export function canTransitionCase(from: CaseStatus, transition: CaseTransition):
 export function isCaseTerminal(status: CaseStatus): boolean {
   return TERMINAL.has(status);
 }
+
+/** Human-readable summary for a transition activity row (Phase 2c). */
+export function caseTransitionSummary(opts: {
+  transition: CaseTransition;
+  reason?: string;
+  resolutionType?: string;
+}): string {
+  switch (opts.transition) {
+    case 'accept':
+      return 'Attorney accepted the case';
+    case 'decline':
+      return opts.reason ? `Attorney declined: ${opts.reason}` : 'Attorney declined the case';
+    case 'begin_work':
+      return 'Attorney started work';
+    case 'resolve':
+      return opts.resolutionType
+        ? `Attorney resolved the case (${opts.resolutionType})`
+        : 'Attorney resolved the case';
+    case 'reclaim':
+      return 'Case reclaimed';
+    case 'close':
+      return 'Case closed';
+    case 'reroute':
+      return 'Case re-routed';
+    default:
+      return `Case ${opts.transition}`;
+  }
+}
