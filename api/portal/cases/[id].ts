@@ -38,23 +38,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const clients = makeClientsFromEnv();
-    const detail = await clients.db.getPortalCaseForFirm(id, auth.lawFirmId);
-    if (!detail) return res.status(404).json({ error: 'Case not found' });
+    const d = await clients.db.getCaseDetailForFirm(id, auth.lawFirmId);
+    if (!d) return res.status(404).json({ error: 'Case not found' });
 
     return res.status(200).json({
-      session_id: detail.sessionId,
-      litigation_listing_id: detail.litigationListingId,
-      case_name: detail.caseName,
-      user_name: detail.userName,
-      user_email: detail.userEmail,
-      user_phone: detail.userPhone,
-      qualifying_answers: detail.qualifyingAnswers.map((a) => ({
-        question: a.question,
-        answer: a.answer,
+      case_id: d.caseId,
+      ada_session_id: d.adaSessionId,
+      case_number: d.caseNumber,
+      status: d.status,
+      lane: d.lane,
+      classification_title: d.classificationTitle,
+      jurisdiction_state: d.jurisdictionState,
+      consent_to_share: d.consentToShare,
+      routed_at: d.routedAt,
+      first_contact_due: d.firstContactDue,
+      created_at: d.createdAt,
+      case_name: d.caseName,
+      claimant_name: d.claimantName,
+      claimant_email: d.claimantEmail,
+      claimant_phone: d.claimantPhone,
+      qualifying_answers: d.qualifyingAnswers,
+      transcript: d.transcript,
+      activity: d.activity.map((a) => ({
+        event_type: a.eventType,
+        summary: a.summary,
+        actor_type: a.actorType,
+        created_at: a.createdAt,
       })),
-      transcript: detail.transcript,
-      matched_at: detail.matchedAt,
-      handled_by_this_firm: detail.handledByThisFirm,
     });
   } catch (err) {
     console.error('GET /api/portal/cases/[id] failed', err);

@@ -92,6 +92,7 @@ import type {
   PortalQueueResult,
   PortalCaseListRow,
   PortalCaseListResult,
+  PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
   PortalCaseQqAnswer,
@@ -1387,6 +1388,58 @@ export class InMemoryDbClient implements DbClient {
     return {
       groups,
       counts: { new: groups.new.length, working: groups.working.length, resolved: groups.resolved.length },
+    };
+  }
+
+  async getCaseDetailForFirm(
+    caseId: string,
+    lawFirmId: string,
+  ): Promise<PortalCaseDetailFull | null> {
+    const c = this.cases.find((x) => x.id === caseId && x.firmId === lawFirmId);
+    if (!c || !c.consentToShare) return null;
+
+    const session = c.adaSessionId ? this.sessions.get(c.adaSessionId) : undefined;
+    const fields = session?.extractedFields ?? {};
+    const extras = this.caseExtras.get(c.id);
+    const litig = this.adminLitigation.find((l) => l.id === c.litigationListingId);
+
+    const identity = new Set(['claimant_name', 'claimant_email', 'claimant_phone', 'contact_preference']);
+    const qualifyingAnswers: { question: string; answer: string }[] = [];
+    for (const [key, field] of Object.entries(fields)) {
+      if (identity.has(key)) continue;
+      const v = field?.value;
+      if (v == null) continue;
+      qualifyingAnswers.push({ question: key, answer: typeof v === 'string' ? v : String(v) });
+    }
+
+    const activity = this.caseActivity
+      .filter((a) => a.caseId === caseId)
+      .map((a) => ({
+        eventType: a.eventType,
+        summary: a.summary,
+        actorType: a.actorType,
+        createdAt: a.createdAt,
+      }));
+
+    return {
+      caseId: c.id,
+      adaSessionId: c.adaSessionId,
+      caseNumber: c.caseNumber,
+      status: c.status,
+      lane: c.lane,
+      classificationTitle: extras?.classificationTitle ?? null,
+      jurisdictionState: extras?.jurisdictionState ?? null,
+      consentToShare: c.consentToShare,
+      routedAt: extras?.routedAt ?? null,
+      firstContactDue: extras?.firstContactDue ?? null,
+      createdAt: c.createdAt,
+      caseName: litig?.caseName ?? null,
+      claimantName: portalFieldStr(fields, 'claimant_name'),
+      claimantEmail: portalFieldStr(fields, 'claimant_email'),
+      claimantPhone: portalFieldStr(fields, 'claimant_phone'),
+      qualifyingAnswers,
+      transcript: (session?.conversationHistory ?? []) as Message[],
+      activity,
     };
   }
 

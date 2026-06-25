@@ -45,17 +45,32 @@ export interface PortalTranscriptMessage {
   timestamp?: string;
 }
 
+export interface PortalCaseActivityEntry {
+  event_type: string;
+  summary: string | null;
+  actor_type: string;
+  created_at: string;
+}
+
 export interface PortalCaseDetailResponse {
-  session_id: string;
-  litigation_listing_id: string;
-  case_name: string;
-  user_name: string | null;
-  user_email: string | null;
-  user_phone: string | null;
+  case_id: string;
+  ada_session_id: string | null;
+  case_number: string;
+  status: string;
+  lane: string;
+  classification_title: string | null;
+  jurisdiction_state: string | null;
+  consent_to_share: boolean;
+  routed_at: string | null;
+  first_contact_due: string | null;
+  created_at: string;
+  case_name: string | null;
+  claimant_name: string | null;
+  claimant_email: string | null;
+  claimant_phone: string | null;
   qualifying_answers: Array<{ question: string; answer: string }>;
   transcript: PortalTranscriptMessage[];
-  matched_at: string | null;
-  handled_by_this_firm: boolean;
+  activity: PortalCaseActivityEntry[];
 }
 
 export interface PortalQueueParams {

@@ -1,11 +1,11 @@
 /**
- * PortalCaseDetail — single matched-case view (criterion 3) + mark-handled
- * (criterion 6).
+ * PortalCaseDetail — single case view in the firm workspace (Phase 2b).
  *
- * Renders the full case package: claimant contact, matched case, qualifying-
- * question answers, and the conversation transcript. A "Mark handled" action
- * POSTs to the handle endpoint (idempotent; permanent per DO2). Server enforces
- * the firm boundary — an out-of-firm id returns 404 here.
+ * Reads the case by id (cases-backed): header (case number, stage, lane,
+ * classification, jurisdiction, matched case, SLA), claimant contact, the Ada
+ * intake (qualifying answers + transcript), and the activity timeline. Server
+ * enforces the firm boundary + consent gate — an out-of-firm / unconsented id
+ * returns 404 here. Accept / decline / resolve actions land in Phase 2c.
  *
  * Tokens + semantic HTML for WCAG 2.2 AAA.
  */
@@ -14,11 +14,20 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import {
   fetchPortalCase,
-  markPortalCaseHandled,
   PortalApiError,
   type PortalCaseDetailResponse,
 } from '../../data/portalClient.js';
 import MessageContent from '../../components/MessageContent.js';
+
+const STAGE_LABEL: Record<string, string> = {
+  new: 'New',
+  accepted: 'Accepted',
+  working: 'Working',
+  resolved: 'Resolved',
+  closed: 'Closed',
+  declined: 'Declined',
+  reclaimed: 'Reclaimed',
+};
 
 export default function PortalCaseDetail() {
   const { id } = useParams<{ id: string }>();
@@ -27,7 +36,6 @@ export default function PortalCaseDetail() {
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [unauth, setUnauth] = useState(false);
-  const [handling, setHandling] = useState(false);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -41,11 +49,8 @@ export default function PortalCaseDetail() {
       }
       setData(detail);
     } catch (err) {
-      if (err instanceof PortalApiError && err.status === 401) {
-        setUnauth(true);
-      } else {
-        setError(err instanceof Error ? err.message : 'Failed to load the case');
-      }
+      if (err instanceof PortalApiError && err.status === 401) setUnauth(true);
+      else setError(err instanceof Error ? err.message : 'Failed to load the case');
     } finally {
       setLoading(false);
     }
@@ -54,20 +59,6 @@ export default function PortalCaseDetail() {
   useEffect(() => {
     void load();
   }, [load]);
-
-  const onMarkHandled = useCallback(async () => {
-    if (!id) return;
-    setHandling(true);
-    setError(null);
-    try {
-      await markPortalCaseHandled(id);
-      await load();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to mark handled');
-    } finally {
-      setHandling(false);
-    }
-  }, [id, load]);
 
   if (unauth) return <Navigate to="/portal/sign-in" replace />;
 
@@ -95,91 +86,109 @@ export default function PortalCaseDetail() {
 
       {loading && <p className="text-ink-500">Loading…</p>}
       {error && (
-        <div role="alert" className="rounded-md border border-danger-500 bg-danger-50 px-4 py-3 text-danger-500 mb-4">
+        <div
+          role="alert"
+          className="rounded-md border border-danger-500 bg-danger-50 px-4 py-3 text-danger-500 mb-4"
+        >
           {error}
         </div>
       )}
 
-      {!loading && data && (
-        <article className="flex flex-col gap-6">
-          <header className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">
-                {data.case_name}
+      {data && (
+        <>
+          <header className="mb-6">
+            <div className="flex items-center gap-3 mb-1">
+              <h1 className="font-display text-2xl sm:text-3xl text-ink-900">
+                {data.claimant_name ?? 'Claimant'}
               </h1>
-              {data.handled_by_this_firm ? (
-                <span className="text-sm text-ink-500 font-mono uppercase tracking-wide">
-                  Handled by your firm
-                </span>
-              ) : null}
+              <span className="text-xs font-mono uppercase tracking-wide rounded-full border border-surface-200 px-2 py-0.5 text-ink-700">
+                {STAGE_LABEL[data.status] ?? data.status}
+              </span>
             </div>
-            {!data.handled_by_this_firm && (
-              <button
-                type="button"
-                onClick={() => void onMarkHandled()}
-                disabled={handling}
-                className="rounded-md bg-accent-500 px-4 py-2 text-white hover:bg-accent-600 disabled:opacity-60"
-              >
-                {handling ? 'Marking…' : 'Mark handled'}
-              </button>
-            )}
+            <p className="text-ink-500 text-sm font-mono">{data.case_number}</p>
           </header>
 
-          <section aria-labelledby="contact-h">
-            <h2 id="contact-h" className="font-display text-lg text-ink-900 mb-2">
-              Claimant contact
-            </h2>
-            <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-              <dt className="text-ink-500">Name</dt>
-              <dd className="text-ink-900">{data.user_name ?? '—'}</dd>
-              <dt className="text-ink-500">Email</dt>
-              <dd className="text-ink-900">{data.user_email ?? '—'}</dd>
-              <dt className="text-ink-500">Phone</dt>
-              <dd className="text-ink-900">{data.user_phone ?? '—'}</dd>
-            </dl>
-          </section>
+          <dl className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3 mb-8 max-w-2xl">
+            <Meta label="Matched case" value={data.case_name} />
+            <Meta
+              label="Claim"
+              value={data.classification_title ? `Title ${data.classification_title}` : null}
+            />
+            <Meta label="Jurisdiction" value={data.jurisdiction_state} />
+            <Meta label="Email" value={data.claimant_email} />
+            <Meta label="Phone" value={data.claimant_phone} />
+            <Meta
+              label="First contact due"
+              value={data.first_contact_due ? new Date(data.first_contact_due).toLocaleString() : null}
+            />
+          </dl>
 
-          <section aria-labelledby="qq-h">
-            <h2 id="qq-h" className="font-display text-lg text-ink-900 mb-2">
-              Qualifying answers
-            </h2>
-            {data.qualifying_answers.length === 0 ? (
-              <p className="text-ink-500 text-sm">No qualifying answers recorded.</p>
-            ) : (
-              <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+          {data.qualifying_answers.length > 0 && (
+            <section aria-labelledby="qq-h" className="mb-8">
+              <h2 id="qq-h" className="font-display text-lg text-ink-900 mb-2">
+                Intake answers
+              </h2>
+              <dl className="flex flex-col gap-2">
                 {data.qualifying_answers.map((a) => (
-                  <div key={a.question} className="contents">
-                    <dt className="text-ink-500">{a.question}</dt>
+                  <div key={a.question} className="rounded-md border border-surface-200 bg-white px-4 py-3">
+                    <dt className="text-ink-500 text-xs uppercase tracking-wide mb-0.5">
+                      {a.question.replace(/_/g, ' ')}
+                    </dt>
                     <dd className="text-ink-900">{a.answer}</dd>
                   </div>
                 ))}
               </dl>
-            )}
-          </section>
+            </section>
+          )}
 
-          <section aria-labelledby="transcript-h">
+          <section aria-labelledby="transcript-h" className="mb-8">
             <h2 id="transcript-h" className="font-display text-lg text-ink-900 mb-2">
-              Conversation transcript
+              Ada intake
             </h2>
             {data.transcript.length === 0 ? (
               <p className="text-ink-500 text-sm">No transcript.</p>
             ) : (
-              <ol className="flex flex-col gap-2">
+              <ul className="flex flex-col gap-3">
                 {data.transcript.map((m, i) => (
-                  <li key={i} className="rounded-md border border-surface-200 bg-white px-3 py-2 text-sm">
-                    <span className="text-ink-500 font-mono text-xs uppercase tracking-wide">
-                      {m.role}
-                    </span>
-                    <div className="text-ink-900 mt-0.5">
-                      <MessageContent content={m.content} />
+                  <li key={i} className="rounded-md border border-surface-200 bg-white px-4 py-3">
+                    <div className="text-ink-500 text-xs uppercase tracking-wide mb-1">
+                      {m.role === 'assistant' ? 'Ada' : m.role === 'user' ? 'Claimant' : m.role}
                     </div>
+                    <MessageContent content={m.content} />
                   </li>
                 ))}
-              </ol>
+              </ul>
             )}
           </section>
-        </article>
+
+          {data.activity.length > 0 && (
+            <section aria-labelledby="activity-h">
+              <h2 id="activity-h" className="font-display text-lg text-ink-900 mb-2">
+                Activity
+              </h2>
+              <ul className="flex flex-col gap-1.5">
+                {data.activity.map((a, i) => (
+                  <li key={i} className="flex items-baseline gap-3 text-sm">
+                    <span className="text-ink-500 font-mono text-xs whitespace-nowrap">
+                      {new Date(a.created_at).toLocaleDateString()}
+                    </span>
+                    <span className="text-ink-700">{a.summary ?? a.event_type}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </>
       )}
     </section>
+  );
+}
+
+function Meta({ label, value }: { label: string; value: string | null }) {
+  return (
+    <div>
+      <dt className="text-ink-500 text-xs uppercase tracking-wide">{label}</dt>
+      <dd className="text-ink-900">{value ?? '—'}</dd>
+    </div>
   );
 }

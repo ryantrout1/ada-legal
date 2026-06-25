@@ -119,6 +119,7 @@ import type {
   PortalQueueResult,
   PortalCaseListRow,
   PortalCaseListResult,
+  PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
   PortalCaseQqAnswer,
@@ -2113,6 +2114,93 @@ export class NeonDbClient implements DbClient {
         working: groups.working.length,
         resolved: groups.resolved.length,
       },
+    };
+  }
+
+  async getCaseDetailForFirm(
+    caseId: string,
+    lawFirmId: string,
+  ): Promise<PortalCaseDetailFull | null> {
+    const rows = await this.db
+      .select({
+        caseId: casesTable.id,
+        adaSessionId: casesTable.adaSessionId,
+        caseNumber: casesTable.caseNumber,
+        status: casesTable.status,
+        lane: casesTable.lane,
+        classificationTitle: casesTable.classificationTitle,
+        jurisdictionState: casesTable.jurisdictionState,
+        consentToShare: casesTable.consentToShare,
+        routedAt: casesTable.routedAt,
+        firstContactDue: casesTable.firstContactDue,
+        createdAt: casesTable.createdAt,
+        litigationListingId: casesTable.litigationListingId,
+        caseName: litigationTable.caseName,
+        extractedFields: adaSessions.extractedFields,
+        transcript: adaSessions.conversationHistory,
+      })
+      .from(casesTable)
+      .leftJoin(litigationTable, eq(litigationTable.id, casesTable.litigationListingId))
+      .leftJoin(adaSessions, eq(adaSessions.id, casesTable.adaSessionId))
+      // Firm-scoped access boundary + consent gate. No match → null (404).
+      .where(and(eq(casesTable.id, caseId), eq(casesTable.firmId, lawFirmId)))
+      .limit(1);
+
+    const r = rows[0];
+    if (!r || !r.consentToShare) return null;
+
+    const fields = (r.extractedFields ?? {}) as ExtractedFields;
+    const fStr = (k: string): string | null => {
+      const v = fields[k]?.value;
+      return v == null ? null : typeof v === 'string' ? v : String(v);
+    };
+    const identity = new Set(['claimant_name', 'claimant_email', 'claimant_phone', 'contact_preference']);
+    const qualifyingAnswers: { question: string; answer: string }[] = [];
+    for (const [key, field] of Object.entries(fields)) {
+      if (identity.has(key)) continue;
+      const v = field?.value;
+      if (v == null) continue;
+      qualifyingAnswers.push({ question: key, answer: typeof v === 'string' ? v : String(v) });
+    }
+
+    const activityRows = await this.db
+      .select({
+        eventType: caseActivityTable.eventType,
+        summary: caseActivityTable.summary,
+        actorType: caseActivityTable.actorType,
+        createdAt: caseActivityTable.createdAt,
+      })
+      .from(caseActivityTable)
+      .where(eq(caseActivityTable.caseId, caseId))
+      .orderBy(sql`${caseActivityTable.createdAt} ASC`);
+
+    const iso = (v: unknown): string | null =>
+      v == null ? null : v instanceof Date ? v.toISOString() : String(v);
+
+    return {
+      caseId: r.caseId,
+      adaSessionId: r.adaSessionId,
+      caseNumber: r.caseNumber,
+      status: r.status,
+      lane: r.lane,
+      classificationTitle: r.classificationTitle ?? null,
+      jurisdictionState: r.jurisdictionState ?? null,
+      consentToShare: r.consentToShare,
+      routedAt: iso(r.routedAt),
+      firstContactDue: iso(r.firstContactDue),
+      createdAt: iso(r.createdAt) ?? '',
+      caseName: r.caseName ?? null,
+      claimantName: fStr('claimant_name'),
+      claimantEmail: fStr('claimant_email'),
+      claimantPhone: fStr('claimant_phone'),
+      qualifyingAnswers,
+      transcript: (r.transcript ?? []) as Message[],
+      activity: activityRows.map((a) => ({
+        eventType: a.eventType,
+        summary: a.summary,
+        actorType: a.actorType,
+        createdAt: iso(a.createdAt) ?? '',
+      })),
     };
   }
 

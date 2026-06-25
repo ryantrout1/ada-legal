@@ -731,7 +731,7 @@ export interface PortalCaseListRow {
   createdAt: string;
 }
 
-/** Phase 2a: the firm queue grouped by stage with counts. */
+/** Phase 2b: the firm queue grouped by stage with counts. */
 export interface PortalCaseListResult {
   groups: {
     new: PortalCaseListRow[];
@@ -739,6 +739,36 @@ export interface PortalCaseListResult {
     resolved: PortalCaseListRow[];
   };
   counts: { new: number; working: number; resolved: number };
+}
+
+/** Phase 2b: one case_activity entry for the detail timeline. */
+export interface PortalCaseActivityRow {
+  eventType: string;
+  summary: string | null;
+  actorType: string;
+  createdAt: string;
+}
+
+/** Phase 2b: the full case detail for the firm workspace. */
+export interface PortalCaseDetailFull {
+  caseId: string;
+  adaSessionId: string | null;
+  caseNumber: string;
+  status: string;
+  lane: string;
+  classificationTitle: string | null;
+  jurisdictionState: string | null;
+  consentToShare: boolean;
+  routedAt: string | null;
+  firstContactDue: string | null;
+  createdAt: string;
+  caseName: string | null;
+  claimantName: string | null;
+  claimantEmail: string | null;
+  claimantPhone: string | null;
+  qualifyingAnswers: { question: string; answer: string }[];
+  transcript: Message[];
+  activity: PortalCaseActivityRow[];
 }
 
 /** One qualifying-question answer surfaced in the case detail. */
@@ -1150,6 +1180,17 @@ export interface DbClient {
    * Resolved. Claimant identity joined from the routed session.
    */
   listCasesForFirm(lawFirmId: string): Promise<PortalCaseListResult>;
+
+  /**
+   * Phase 2b: the full case detail for the firm workspace, keyed by case id.
+   * Firm-scoped + consent-gated; returns null when the case isn't this firm's
+   * (a 404 boundary, no existence leak). Carries the case header, claimant,
+   * qualifying answers, the Ada intake transcript, and the activity timeline.
+   */
+  getCaseDetailForFirm(
+    caseId: string,
+    lawFirmId: string,
+  ): Promise<PortalCaseDetailFull | null>;
 
   /**
    * Full case package for a single session, scoped to a firm. Returns null
