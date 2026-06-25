@@ -44,6 +44,8 @@ import {
   routingRules as routingRulesTable,
   stripeWebhookEvents as stripeWebhookEventsTable,
 } from '../../db/schema-ch1.js';
+import { cases as casesTable, caseActivity as caseActivityTable } from '../../db/schema-cases.js';
+import type { CaseLane } from '../cases/caseStateMachine.js';
 import type {
   AdminAnalyticsOptions,
   AdminAnalyticsResult,
@@ -120,6 +122,9 @@ import type {
   PortalCaseQqAnswer,
   LitigationFirmAssignment,
   PortalAttorneyResolution,
+  CreateCaseOptions,
+  CreateCaseResult,
+  CaseRow,
 } from './types.js';
 import type { AdaSessionState } from '../types.js';
 import type {
@@ -1911,6 +1916,54 @@ export class NeonDbClient implements DbClient {
     return inserted.map(toLitigationFirmAssignment);
   }
 
+  async createCase(opts: CreateCaseOptions): Promise<CreateCaseResult> {
+    // Idempotent on ada_session_id: a session routes to at most one case.
+    // onConflictDoNothing returns [] when a case already exists for the
+    // session; we then read the existing row and report created=false so the
+    // caller knows not to re-emit the ROUTED activity / audit.
+    const inserted = await this.db
+      .insert(casesTable)
+      .values({
+        orgId: opts.orgId,
+        adaSessionId: opts.adaSessionId,
+        litigationListingId: opts.litigationListingId,
+        lane: opts.lane,
+        firmId: opts.firmId,
+        classificationTitle: opts.classificationTitle,
+        classificationStandard: opts.classificationStandard,
+        matchConfidence: opts.matchConfidence,
+        jurisdictionState: opts.jurisdictionState,
+        routedAt: opts.routedAt ? new Date(opts.routedAt) : null,
+        firstContactDue: opts.firstContactDue ? new Date(opts.firstContactDue) : null,
+      })
+      .onConflictDoNothing({ target: casesTable.adaSessionId })
+      .returning();
+
+    if (inserted.length === 0) {
+      // Existing case for this session — fetch and return without re-writing.
+      const existing = await this.db
+        .select()
+        .from(casesTable)
+        .where(eq(casesTable.adaSessionId, opts.adaSessionId as string))
+        .limit(1);
+      return { caseRow: toCaseRow(existing[0]), created: false };
+    }
+
+    const row = inserted[0];
+
+    // Fresh create → write the initial ROUTED case_activity row (the routing
+    // basis). No conversation content (DO_NOT_TOUCH rule 8).
+    await this.db.insert(caseActivityTable).values({
+      caseId: row.id,
+      actorType: 'system',
+      eventType: 'ROUTED',
+      summary: opts.routingReason,
+      metadata: { lane: opts.lane, firmId: opts.firmId },
+    });
+
+    return { caseRow: toCaseRow(row), created: true };
+  }
+
   async resolveAttorneyByClerkUserId(
     clerkUserId: string,
   ): Promise<PortalAttorneyResolution | null> {
@@ -2572,6 +2625,21 @@ function toLitigationFirmAssignment(r: {
     litigationListingId: r.litigationListingId,
     lawFirmId: r.lawFirmId,
     assignedByUserId: r.assignedByUserId,
+    createdAt: r.createdAt.toISOString(),
+  };
+}
+
+function toCaseRow(r: typeof casesTable.$inferSelect): CaseRow {
+  return {
+    id: r.id,
+    orgId: r.orgId,
+    adaSessionId: r.adaSessionId,
+    litigationListingId: r.litigationListingId,
+    caseNumber: r.caseNumber,
+    lane: r.lane as CaseLane,
+    status: r.status,
+    firmId: r.firmId,
+    consentToShare: r.consentToShare,
     createdAt: r.createdAt.toISOString(),
   };
 }

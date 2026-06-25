@@ -29,6 +29,7 @@ import type {
   ReadingLevelStringList,
 } from '../../types/db.js';
 import type { AdaSessionState } from '../types.js';
+import type { CaseLane } from '../cases/caseStateMachine.js';
 
 // ─── AI client ────────────────────────────────────────────────────────────────
 
@@ -740,6 +741,48 @@ export interface PortalAttorneyResolution {
   email: string | null;
 }
 
+/**
+ * Options for createCase (Phase 1a routing). Creates the worked-case row at
+ * the moment a completed session is routed. The router (createCaseForSession)
+ * supplies the lane + resolved firm; the DB layer assigns id/case_number and,
+ * for a freshly-created case, writes the initial ROUTED case_activity row.
+ */
+export interface CreateCaseOptions {
+  orgId: string;
+  adaSessionId: string | null;
+  litigationListingId: string | null;
+  lane: CaseLane;
+  firmId: string | null;
+  classificationTitle: string | null;
+  classificationStandard: string | null;
+  matchConfidence: string | null;
+  jurisdictionState: string | null;
+  /** ISO timestamps — set for routed_firm, null otherwise. */
+  routedAt: string | null;
+  firstContactDue: string | null;
+  /** Recorded on the initial ROUTED case_activity row (the routing basis). */
+  routingReason: string;
+}
+
+export interface CaseRow {
+  id: string;
+  orgId: string;
+  adaSessionId: string | null;
+  litigationListingId: string | null;
+  caseNumber: string;
+  lane: CaseLane;
+  status: string;
+  firmId: string | null;
+  consentToShare: boolean;
+  createdAt: string;
+}
+
+/** Result of createCase: the row plus whether this call created it (vs found an existing one). */
+export interface CreateCaseResult {
+  caseRow: CaseRow;
+  created: boolean;
+}
+
 export interface DbClient {
   /** Read the current state of a session. Returns null if not found. */
   readSession(opts: SessionReadOptions): Promise<AdaSessionState | null>;
@@ -1101,6 +1144,14 @@ export interface DbClient {
     lawFirmIds: string[],
     assignedByUserId?: string | null,
   ): Promise<LitigationFirmAssignment[]>;
+
+  /**
+   * Phase 1a routing: create the worked-case row for a routed session.
+   * Idempotent on ada_session_id — a second call for the same session
+   * returns the existing case with created=false and writes nothing new.
+   * On a fresh create, also writes the initial ROUTED case_activity row.
+   */
+  createCase(opts: CreateCaseOptions): Promise<CreateCaseResult>;
 
   /**
    * Resolve a signed-in Clerk user id to a paired attorney (Clerk user →

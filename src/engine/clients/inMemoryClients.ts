@@ -95,6 +95,9 @@ import type {
   PortalCaseQqAnswer,
   LitigationFirmAssignment,
   PortalAttorneyResolution,
+  CreateCaseOptions,
+  CreateCaseResult,
+  CaseRow,
   PhotoReviewListOptions,
   PhotoReviewListResult,
   PhotoReviewDetail,
@@ -180,6 +183,18 @@ export class InMemoryDbClient implements DbClient {
     handledByUserId: string | null;
     handledAt: string;
   }> = [];
+
+  // ─── Cases foundation (migration 0023) + routing (Phase 1a) ─────────────────
+  public readonly cases: CaseRow[] = [];
+  public readonly caseActivity: Array<{
+    caseId: string;
+    actorType: string;
+    eventType: string;
+    summary: string | null;
+    metadata: Record<string, unknown>;
+    createdAt: string;
+  }> = [];
+  private caseSeq = 0;
   /**
    * Test-only clerk-user → attorney pairing. The real Neon client resolves
    * clerk_user_id → users → attorneys; in-memory has no users table, so
@@ -1217,6 +1232,44 @@ export class InMemoryDbClient implements DbClient {
     }));
     this.litigationFirmAssignments.push(...created.map((c) => ({ ...c })));
     return created;
+  }
+
+  async createCase(opts: CreateCaseOptions): Promise<CreateCaseResult> {
+    // Idempotent on ada_session_id (matches the cases_ada_session_unique
+    // constraint). A non-null session that already has a case returns the
+    // existing row with created=false and writes nothing new.
+    if (opts.adaSessionId !== null) {
+      const existing = this.cases.find((c) => c.adaSessionId === opts.adaSessionId);
+      if (existing) {
+        return { caseRow: { ...existing }, created: false };
+      }
+    }
+
+    this.caseSeq += 1;
+    const caseRow: CaseRow = {
+      id: `mem-case-${this.caseSeq}`,
+      orgId: opts.orgId,
+      adaSessionId: opts.adaSessionId,
+      litigationListingId: opts.litigationListingId,
+      caseNumber: `CASE-${String(this.caseSeq).padStart(4, '0')}`,
+      lane: opts.lane,
+      status: 'new',
+      firmId: opts.firmId,
+      consentToShare: false,
+      createdAt: new Date(0).toISOString(),
+    };
+    this.cases.push(caseRow);
+
+    this.caseActivity.push({
+      caseId: caseRow.id,
+      actorType: 'system',
+      eventType: 'ROUTED',
+      summary: opts.routingReason,
+      metadata: { lane: opts.lane, firmId: opts.firmId },
+      createdAt: new Date(0).toISOString(),
+    });
+
+    return { caseRow: { ...caseRow }, created: true };
   }
 
   async resolveAttorneyByClerkUserId(

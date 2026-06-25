@@ -30,6 +30,17 @@
  * ada_sessions.status). /plan Phase 0.
  */
 
+/**
+ * The routing destination, set once by the router (Phase 1) and immutable
+ * thereafter. Distinct from CaseStatus (the work lifecycle within a lane).
+ */
+export type CaseLane =
+  | 'routed_firm'
+  | 'sourcing'
+  | 'general_queue'
+  | 'self_help'
+  | 'no_action';
+
 export type CaseStatus =
   | 'new'
   | 'accepted'
