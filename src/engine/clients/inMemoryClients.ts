@@ -1475,6 +1475,24 @@ export class InMemoryDbClient implements DbClient {
     return { caseRow: { ...c } };
   }
 
+  async addCaseNoteForFirm(opts: {
+    caseId: string;
+    lawFirmId: string;
+    body: string;
+  }): Promise<boolean> {
+    const c = this.cases.find((x) => x.id === opts.caseId && x.firmId === opts.lawFirmId);
+    if (!c || !c.consentToShare) return false;
+    this.caseActivity.push({
+      caseId: c.id,
+      actorType: 'user',
+      eventType: 'NOTE',
+      summary: opts.body,
+      metadata: { note: true },
+      createdAt: new Date(0).toISOString(),
+    });
+    return true;
+  }
+
   async resolveAttorneyByClerkUserId(
     clerkUserId: string,
   ): Promise<PortalAttorneyResolution | null> {

@@ -1209,6 +1209,16 @@ export interface DbClient {
   }): Promise<{ caseRow: CaseRow } | null>;
 
   /**
+   * Phase 2d: append an attorney note to a case (a NOTE activity row),
+   * firm-scoped + consent-gated. Returns false when the case isn't this firm's.
+   */
+  addCaseNoteForFirm(opts: {
+    caseId: string;
+    lawFirmId: string;
+    body: string;
+  }): Promise<boolean>;
+
+  /**
    * Full case package for a single session, scoped to a firm. Returns null
    * when the session doesn't exist OR the firm has no assignment for the
    * session's litigation row (the access boundary).

@@ -2257,6 +2257,29 @@ export class NeonDbClient implements DbClient {
     return { caseRow: toCaseRow(updated[0]) };
   }
 
+  async addCaseNoteForFirm(opts: {
+    caseId: string;
+    lawFirmId: string;
+    body: string;
+  }): Promise<boolean> {
+    const existing = await this.db
+      .select({ id: casesTable.id, consentToShare: casesTable.consentToShare })
+      .from(casesTable)
+      .where(and(eq(casesTable.id, opts.caseId), eq(casesTable.firmId, opts.lawFirmId)))
+      .limit(1);
+    const row = existing[0];
+    if (!row || !row.consentToShare) return false;
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'NOTE',
+      summary: opts.body,
+      metadata: { note: true },
+    });
+    return true;
+  }
+
   async resolveAttorneyByClerkUserId(
     clerkUserId: string,
   ): Promise<PortalAttorneyResolution | null> {

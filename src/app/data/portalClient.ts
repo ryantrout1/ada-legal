@@ -119,6 +119,16 @@ export async function fetchPortalCase(
   return (await resp.json()) as PortalCaseDetailResponse;
 }
 
+export async function addPortalCaseNote(id: string, body: string): Promise<void> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/notes`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ body }),
+  });
+  if (!resp.ok) await failFor(resp);
+}
+
 export type PortalCaseAction = 'accept' | 'decline' | 'begin_work' | 'resolve';
 
 export async function transitionPortalCase(
