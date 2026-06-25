@@ -40,6 +40,7 @@ import { processAdaTurn } from '../../src/engine/processAdaTurn.js';
 import { runSessionQualityCheck } from '../../src/engine/observability/qualityCheck.js';
 import { assemblePackage } from '../../src/engine/package/assemble.js';
 import { maybeSendSelfHelpEmail } from '../../src/engine/handoff/selfHelpEmail.js';
+import { createCaseForSession } from '../../src/engine/routing/createCaseForSession.js';
 import { maybeResolveBusinessAddress } from '../../src/engine/package/resolveBusinessAddress.js';
 import type { AdaTurnResult } from '../../src/engine/types.js';
 import type { AdaClients } from '../../src/engine/clients/types.js';
@@ -426,6 +427,23 @@ async function finalizeTurn(
         }
       } catch (pkgErr) {
         console.error('package generation failed', pkgErr);
+      }
+
+      // Phase 1a routing: turn the completed, classified session into a
+      // routed `case` in exactly one lane. public_ada only (Ch1
+      // class_action_intake has its own finalize_intake handoff). The self-
+      // help readout above is unaffected. createCaseForSession never throws;
+      // this guard is belt-and-suspenders so routing can never break
+      // completion (/plan Phase 1a AC6).
+      if (result.nextState.sessionType === 'public_ada') {
+        try {
+          await createCaseForSession(
+            { db: clients.db, clock: clients.clock, audit: clients.audit },
+            result.nextState,
+          );
+        } catch (routeErr) {
+          console.error('case routing failed', routeErr);
+        }
       }
     } else {
       // Silent-failure guard. A completed session with no classification
