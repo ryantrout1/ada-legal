@@ -867,3 +867,102 @@ body {
     outline-offset: 2px !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Lawyer Workspace (portal) design system — Phase 5 §7.0
+ * ───────────────────────────────────────────────────────────────────────────
+ * The attorney portal renders the mockup's slate-on-warm palette. Everything
+ * is scoped under `.lawyer-workspace` so the slate NEVER bleeds into the
+ * consumer site (which keeps its warm-brown surface/ink system).
+ *
+ * Display-Settings interplay (why this "just works" across modes):
+ *   This block re-points the --color-* tokens at (0,1,0) specificity, placed
+ *   AFTER the :root defaults — so in DEFAULT display mode the portal renders
+ *   slate. Every per-mode override (:root[data-display="dark|warm|contrast|
+ *   low-vision"], and the @media (prefers-contrast: more) block) is authored
+ *   at >= (0,2,0) and therefore WINS over this block. A user who picked a
+ *   display mode — or whose OS asks for more contrast — keeps that mode's
+ *   already-AAA palette in the portal too. §9 "Display Settings honored" holds
+ *   without any per-mode portal CSS.
+ *
+ * AAA note: every text token below was contrast-checked to clear 7:1 on BOTH
+ * the warm page (#FAF7F2) AND white cards (#FFFFFF). The page is the harder
+ * background for dark text, so several values are a touch darker than a
+ * white-only computation gives (body-secondary #4A5567, muted #4D5460,
+ * accent #8E2F09, link #953211). Non-text control borders clear 3:1 (1.4.11).
+ * Sidebar internals (white/​muted/​active on #1E293B) all clear 7:1.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.lawyer-workspace {
+  /* UI/body font: Manrope (mockup). Fraunces stays the display face. A user-
+     chosen a11y font (data-font=atkinson|opendyslexic|lexend) is authored at
+     higher specificity on :root and still wins. */
+  --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Surface — warm page, white cards, slate-tinted subtle lift */
+  --color-surface-50:  #FAF7F2;   /* page background */
+  --color-surface-100: #F1F5F9;   /* subtle slate lift — table headers, chips */
+  --color-surface-200: #E2E8F0;   /* decorative hairline dividers (non-control) */
+  --color-surface-300: #CBD5E1;   /* heavier divider */
+  --color-control-border: #7E8DA3; /* interactive control borders — 3.08:1 (1.4.11) */
+
+  /* Ink — slate */
+  --color-ink-900: #1E293B;       /* heading — 13.7:1 page / 14.6:1 card */
+  --color-ink-700: #334155;       /* body — 9.7:1 / 10.4:1 */
+  --color-ink-500: #4A5567;       /* secondary / meta — 7.0:1 page / 7.5:1 card */
+
+  /* Accent — terracotta, darkened for AAA on the warm page */
+  --color-accent-500: #8E2F09;    /* links / CTA text + fill — 7.1:1 page; white-on-fill 8.2:1 */
+  --color-accent-600: #6E2308;    /* hover / active (darker → higher contrast) */
+  --color-accent-50:  #F9ECE5;    /* accent surface tint */
+
+  /* Mockup's standalone --muted / --link, kept distinct from ink-500 */
+  --lw-muted: #4D5460;            /* 7.1:1 page / 7.6:1 card */
+  --lw-link:  #953211;            /* 7.2:1 page / 7.7:1 card */
+
+  /* Sidebar — fixed dark slate in default mode; high internal contrast */
+  --lw-sidebar-bg:        #1E293B;
+  --lw-sidebar-fg:        rgba(255, 255, 255, 0.92); /* ~12:1 on sidebar */
+  --lw-sidebar-muted:     #B4C0CF;                   /* firm + meta — 7.9:1 */
+  --lw-sidebar-active:    #FDBA74;                   /* active text/border — 8.7:1 */
+  --lw-sidebar-active-bg: rgba(194, 65, 12, 0.16);
+  --lw-sidebar-border:    rgba(255, 255, 255, 0.10);
+
+  /* Pills — mockup semantic set; text computed to 7:1 on each pale tint */
+  --lw-green-bg:  #DCFCE7; --lw-green-tx:  #0F5D2C; --lw-green-bd:  #BBF7D0;
+  --lw-amber-bg:  #FEF3C7; --lw-amber-tx:  #853A0D; --lw-amber-bd:  #FDE68A;
+  --lw-red-bg:    #FEE2E2; --lw-red-tx:    #941616; --lw-red-bd:    #FECACA;
+  --lw-blue-bg:   #DBEAFE; --lw-blue-tx:   #1E3A8A; --lw-blue-bd:   #BFDBFE;
+  --lw-purple-bg: #F3E8FF; --lw-purple-tx: #6B21A8; --lw-purple-bd: #E9D5FF;
+  --lw-gray-bg:   #F1F5F9; --lw-gray-tx:   #455266; --lw-gray-bd:   #E2E8F0;
+
+  font-family: var(--font-body);
+}
+
+/* Pill — portal semantic badge. Color is never the sole signal: each pill
+   carries its own text label, satisfying 1.4.1. */
+.lawyer-workspace .lw-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.lawyer-workspace .lw-pill .lw-pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: 0 0 auto;
+}
+.lawyer-workspace .lw-pill.green  { background: var(--lw-green-bg);  color: var(--lw-green-tx);  border-color: var(--lw-green-bd); }
+.lawyer-workspace .lw-pill.amber  { background: var(--lw-amber-bg);  color: var(--lw-amber-tx);  border-color: var(--lw-amber-bd); }
+.lawyer-workspace .lw-pill.red    { background: var(--lw-red-bg);    color: var(--lw-red-tx);    border-color: var(--lw-red-bd); }
+.lawyer-workspace .lw-pill.blue   { background: var(--lw-blue-bg);   color: var(--lw-blue-tx);   border-color: var(--lw-blue-bd); }
+.lawyer-workspace .lw-pill.purple { background: var(--lw-purple-bg); color: var(--lw-purple-tx); border-color: var(--lw-purple-bd); }
+.lawyer-workspace .lw-pill.gray   { background: var(--lw-gray-bg);   color: var(--lw-gray-tx);   border-color: var(--lw-gray-bd); }
+.lawyer-workspace .lw-pill.terra  { background: var(--color-accent-50); color: var(--color-accent-500); border-color: #FED7AA; }
