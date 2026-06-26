@@ -23,6 +23,7 @@ import {
   Building2,
   FileText,
   MessagesSquare,
+  X,
 } from 'lucide-react';
 import TaskPanel from './TaskPanel.js';
 import MessageContent from '../../components/MessageContent.js';
@@ -33,10 +34,14 @@ import {
   addPortalCaseNote,
   setCaseSolDate,
   setCaseDefendant,
+  fetchCasePeople,
+  addCasePerson,
+  removeCasePerson,
   type PortalCaseAction,
   type PortalCaseActivityEntry,
   type PortalTask,
   type PortalDefendant,
+  type PortalPerson,
   PortalApiError,
   type PortalCaseDetailResponse,
 } from '../../data/portalClient.js';
@@ -270,7 +275,7 @@ export default function PortalCaseDetail() {
         <aside className="flex flex-col gap-4">
           <NextStep openTasks={openTasks} solDate={data.sol_date} />
           <KeyDates openTasks={openTasks} solDate={data.sol_date} firstContactDue={data.first_contact_due} />
-          <PeopleCard claimant={data.claimant_name} email={data.claimant_email} phone={data.claimant_phone} />
+          <PeopleCard caseId={data.case_id} claimant={data.claimant_name} email={data.claimant_email} phone={data.claimant_phone} />
           <DefendantCard caseId={data.case_id} defendant={data.defendant} onSaved={load} />
         </aside>
       </div>
@@ -519,12 +524,89 @@ function initials(name: string): string {
   return (p[0][0] + p[p.length - 1][0]).toUpperCase();
 }
 
-function PeopleCard({ claimant, email, phone }: { claimant: string | null; email: string | null; phone: string | null }) {
+const ROLE_LABEL: Record<string, string> = {
+  witness: 'Witness',
+  expert: 'Expert',
+  opposing_counsel: 'Opposing counsel',
+  other: 'Other',
+};
+const ROLE_OPTIONS = ['witness', 'expert', 'opposing_counsel', 'other'] as const;
+
+function PeopleCard({
+  caseId,
+  claimant,
+  email,
+  phone,
+}: {
+  caseId: string;
+  claimant: string | null;
+  email: string | null;
+  phone: string | null;
+}) {
+  const [people, setPeople] = useState<PortalPerson[]>([]);
+  const [adding, setAdding] = useState(false);
+  const [name, setName] = useState('');
+  const [role, setRole] = useState<string>('witness');
+  const [contact, setContact] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    try {
+      setPeople(await fetchCasePeople(caseId));
+    } catch {
+      setPeople([]);
+    }
+  }, [caseId]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  const add = async () => {
+    if (name.trim() === '') return;
+    setBusy(true);
+    setError(null);
+    try {
+      const looksEmail = contact.includes('@');
+      await addCasePerson(caseId, {
+        name: name.trim(),
+        role,
+        email: looksEmail ? contact.trim() || null : null,
+        phone: !looksEmail ? contact.trim() || null : null,
+      });
+      setName('');
+      setContact('');
+      setRole('witness');
+      setAdding(false);
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not add');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const remove = async (id: string) => {
+    setBusy(true);
+    try {
+      await removeCasePerson(caseId, id);
+      await load();
+    } catch {
+      /* surfaced on reload */
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const fieldCls = 'w-full min-h-[44px] rounded-md border border-control-border bg-white px-2 text-ink-900 text-sm';
+
   return (
     <div className="rounded-lg border border-control-border bg-white p-5">
       <h3 className="text-ink-500 text-xs font-bold uppercase tracking-wide mb-3 flex items-center gap-2">
         <Users size={14} aria-hidden="true" /> People
       </h3>
+
       <div className="flex items-center gap-3 pb-3 border-b border-surface-200">
         <div className="w-8 h-8 rounded-full bg-ada-50 text-ada-600 flex items-center justify-center text-xs font-bold shrink-0" aria-hidden="true">
           {initials(claimant ?? 'Claimant')}
@@ -535,7 +617,58 @@ function PeopleCard({ claimant, email, phone }: { claimant: string | null; email
           {(email || phone) && <div className="text-ink-500 text-xs mt-0.5 truncate">{email ?? phone}</div>}
         </div>
       </div>
-      <p className="text-ink-500 text-xs mt-3">Witnesses &amp; team — coming soon.</p>
+
+      {people.length > 0 && (
+        <ul className="flex flex-col">
+          {people.map((p) => (
+            <li key={p.id} className="flex items-center gap-3 py-3 border-b border-surface-200 last:border-b-0">
+              <div className="w-8 h-8 rounded-full bg-surface-100 text-ink-700 flex items-center justify-center text-xs font-bold shrink-0" aria-hidden="true">
+                {initials(p.name ?? '?')}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-ink-900 text-sm font-semibold truncate">{p.name ?? 'Unnamed'}</div>
+                <div className="text-ink-500 text-[11px] uppercase tracking-wide">{ROLE_LABEL[p.role] ?? p.role}</div>
+                {(p.email || p.phone) && <div className="text-ink-500 text-xs mt-0.5 truncate">{p.email ?? p.phone}</div>}
+              </div>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => void remove(p.id)}
+                aria-label={`Remove ${p.name ?? 'person'}`}
+                className="inline-flex items-center justify-center w-11 h-11 rounded-md text-ink-500 hover:text-danger-500 hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50"
+              >
+                <X size={16} aria-hidden="true" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {adding ? (
+        <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-surface-200">
+          <div>
+            <label htmlFor="person-name" className="block text-ink-700 text-xs font-semibold mb-1">Name</label>
+            <input id="person-name" value={name} onChange={(e) => setName(e.target.value)} className={fieldCls} />
+          </div>
+          <div>
+            <label htmlFor="person-role" className="block text-ink-700 text-xs font-semibold mb-1">Role</label>
+            <select id="person-role" value={role} onChange={(e) => setRole(e.target.value)} className={fieldCls}>
+              {ROLE_OPTIONS.map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="person-contact" className="block text-ink-700 text-xs font-semibold mb-1">Email or phone <span className="font-normal text-ink-500">(optional)</span></label>
+            <input id="person-contact" value={contact} onChange={(e) => setContact(e.target.value)} className={fieldCls} />
+          </div>
+          {error && <p role="alert" className="text-danger-500 text-xs">{error}</p>}
+          <div className="flex gap-2 mt-1">
+            <button type="button" disabled={busy || name.trim() === ''} onClick={() => void add()} className="inline-flex items-center justify-center min-h-[44px] px-3 rounded-lg bg-accent-500 text-white text-sm font-semibold hover:bg-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60">Add</button>
+            <button type="button" disabled={busy} onClick={() => { setAdding(false); setName(''); setContact(''); setError(null); }} className="inline-flex items-center justify-center min-h-[44px] px-3 rounded-lg border border-control-border text-ink-700 text-sm font-medium hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Cancel</button>
+          </div>
+        </div>
+      ) : (
+        <button type="button" onClick={() => setAdding(true)} className="text-xs text-accent-600 underline mt-3">Add witness or contact</button>
+      )}
     </div>
   );
 }

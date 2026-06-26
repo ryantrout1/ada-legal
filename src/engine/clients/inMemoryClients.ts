@@ -102,6 +102,7 @@ import type {
   TaskRow,
   FirmTaskRow,
   CaseDefendant,
+  CasePersonRow,
   PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
@@ -220,6 +221,22 @@ export class InMemoryDbClient implements DbClient {
     metadata: Record<string, unknown>;
     createdAt: string;
   }> = [];
+  public readonly contactsStore: Array<{
+    id: string;
+    orgId: string;
+    name: string | null;
+    email: string | null;
+    phone: string | null;
+  }> = [];
+  public readonly casePeopleStore: Array<{
+    id: string;
+    caseId: string;
+    contactId: string;
+    role: string;
+    notes: string | null;
+    createdAt: string;
+  }> = [];
+  private peopleSeq = 0;
   private caseSeq = 0;
   /**
    * Test-only clerk-user → attorney pairing. The real Neon client resolves
@@ -1559,6 +1576,96 @@ export class InMemoryDbClient implements DbClient {
       eventType: 'DEFENDANT_SET',
       summary: opts.defendant ? `Defendant set to ${opts.defendant.name}` : 'Defendant cleared',
       metadata: { defendant: opts.defendant },
+      createdAt: new Date(0).toISOString(),
+    });
+    return true;
+  }
+
+  private firmCase(caseId: string, lawFirmId: string) {
+    const c = this.cases.find((x) => x.id === caseId && x.firmId === lawFirmId);
+    return c && c.consentToShare ? c : null;
+  }
+
+  async listCasePeople(caseId: string, lawFirmId: string): Promise<CasePersonRow[]> {
+    if (!this.firmCase(caseId, lawFirmId)) return [];
+    return this.casePeopleStore
+      .filter((p) => p.caseId === caseId)
+      .map((p) => {
+        const contact = this.contactsStore.find((c) => c.id === p.contactId);
+        return {
+          id: p.id,
+          name: contact?.name ?? null,
+          email: contact?.email ?? null,
+          phone: contact?.phone ?? null,
+          role: p.role,
+          notes: p.notes,
+        };
+      });
+  }
+
+  async addCasePerson(opts: {
+    caseId: string;
+    lawFirmId: string;
+    name: string;
+    role: string;
+    email?: string | null;
+    phone?: string | null;
+    notes?: string | null;
+  }): Promise<CasePersonRow | null> {
+    const c = this.firmCase(opts.caseId, opts.lawFirmId);
+    if (!c) return null;
+    const contactId = `contact-${++this.peopleSeq}`;
+    this.contactsStore.push({
+      id: contactId,
+      orgId: c.orgId,
+      name: opts.name,
+      email: opts.email ?? null,
+      phone: opts.phone ?? null,
+    });
+    const id = `cp-${++this.peopleSeq}`;
+    this.casePeopleStore.push({
+      id,
+      caseId: opts.caseId,
+      contactId,
+      role: opts.role,
+      notes: opts.notes ?? null,
+      createdAt: new Date(0).toISOString(),
+    });
+    this.caseActivity.push({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'PERSON_ADDED',
+      summary: `Added ${opts.name} (${opts.role})`,
+      metadata: { role: opts.role },
+      createdAt: new Date(0).toISOString(),
+    });
+    return {
+      id,
+      name: opts.name,
+      email: opts.email ?? null,
+      phone: opts.phone ?? null,
+      role: opts.role,
+      notes: opts.notes ?? null,
+    };
+  }
+
+  async removeCasePerson(opts: {
+    caseId: string;
+    lawFirmId: string;
+    casePersonId: string;
+  }): Promise<boolean> {
+    if (!this.firmCase(opts.caseId, opts.lawFirmId)) return false;
+    const idx = this.casePeopleStore.findIndex(
+      (p) => p.id === opts.casePersonId && p.caseId === opts.caseId,
+    );
+    if (idx === -1) return false;
+    this.casePeopleStore.splice(idx, 1);
+    this.caseActivity.push({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'PERSON_REMOVED',
+      summary: 'Removed a person from the matter',
+      metadata: {},
       createdAt: new Date(0).toISOString(),
     });
     return true;

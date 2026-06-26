@@ -794,6 +794,16 @@ export interface CaseDefendant {
   notes?: string | null;
 }
 
+/** A person attached to a matter (case_people ⋈ contacts). Phase 5 §7.5. */
+export interface CasePersonRow {
+  id: string;
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  role: string;
+  notes: string | null;
+}
+
 export interface PortalCaseDetailFull {
   caseId: string;
   adaSessionId: string | null;
@@ -1287,6 +1297,27 @@ export interface DbClient {
     caseId: string;
     lawFirmId: string;
     defendant: CaseDefendant | null;
+  }): Promise<boolean>;
+
+  /**
+   * Phase 5 §7.5: people attached to a matter (witnesses / experts / opposing
+   * counsel / other) — the claimant is implicit from the case and not stored
+   * here. All firm-scoped + consent-gated.
+   */
+  listCasePeople(caseId: string, lawFirmId: string): Promise<CasePersonRow[]>;
+  addCasePerson(opts: {
+    caseId: string;
+    lawFirmId: string;
+    name: string;
+    role: string;
+    email?: string | null;
+    phone?: string | null;
+    notes?: string | null;
+  }): Promise<CasePersonRow | null>;
+  removeCasePerson(opts: {
+    caseId: string;
+    lawFirmId: string;
+    casePersonId: string;
   }): Promise<boolean>;
 
   /**

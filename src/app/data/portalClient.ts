@@ -161,6 +161,44 @@ export interface PortalDefendant {
   notes?: string | null;
 }
 
+export interface PortalPerson {
+  id: string;
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  role: string;
+  notes: string | null;
+}
+
+export async function fetchCasePeople(id: string): Promise<PortalPerson[]> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/people`, {
+    credentials: 'include',
+  });
+  if (!resp.ok) await failFor(resp);
+  return ((await resp.json()) as { people: PortalPerson[] }).people;
+}
+
+export async function addCasePerson(
+  id: string,
+  person: { name: string; role: string; email?: string | null; phone?: string | null; notes?: string | null },
+): Promise<void> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/people`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(person),
+  });
+  if (!resp.ok) await failFor(resp);
+}
+
+export async function removeCasePerson(id: string, personId: string): Promise<void> {
+  const resp = await fetch(
+    `/api/portal/cases/${encodeURIComponent(id)}/people?person_id=${encodeURIComponent(personId)}`,
+    { method: 'DELETE', credentials: 'include' },
+  );
+  if (!resp.ok) await failFor(resp);
+}
+
 /** Set or clear (null) the attorney-entered defendant record. */
 export async function setCaseDefendant(id: string, defendant: PortalDefendant | null): Promise<void> {
   const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/defendant`, {

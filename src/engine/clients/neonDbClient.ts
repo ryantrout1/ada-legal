@@ -44,7 +44,7 @@ import {
   routingRules as routingRulesTable,
   stripeWebhookEvents as stripeWebhookEventsTable,
 } from '../../db/schema-ch1.js';
-import { cases as casesTable, caseActivity as caseActivityTable, caseTasks as caseTasksTable } from '../../db/schema-cases.js';
+import { cases as casesTable, caseActivity as caseActivityTable, caseTasks as caseTasksTable, casePeople as casePeopleTable, contacts as contactsTable } from '../../db/schema-cases.js';
 import { computePipelineStats } from '../cases/pipelineStats.js';
 import type { PipelineStats } from '../cases/pipelineStats.js';
 import type { CaseLane, CaseStatus, CaseTransition } from '../cases/caseStateMachine.js';
@@ -126,6 +126,7 @@ import type {
   TaskRow,
   FirmTaskRow,
   CaseDefendant,
+  CasePersonRow,
   PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
@@ -2347,6 +2348,110 @@ export class NeonDbClient implements DbClient {
         ? `Defendant set to ${opts.defendant.name}`
         : 'Defendant cleared',
       metadata: { defendant: opts.defendant },
+    });
+    return true;
+  }
+
+  /** Verify a case belongs to the firm and is consented; returns its orgId. */
+  private async firmCaseOrgId(caseId: string, lawFirmId: string): Promise<string | null> {
+    const rows = await this.db
+      .select({ orgId: casesTable.orgId, consentToShare: casesTable.consentToShare })
+      .from(casesTable)
+      .where(and(eq(casesTable.id, caseId), eq(casesTable.firmId, lawFirmId)))
+      .limit(1);
+    const r = rows[0];
+    if (!r || !r.consentToShare) return null;
+    return r.orgId;
+  }
+
+  async listCasePeople(caseId: string, lawFirmId: string): Promise<CasePersonRow[]> {
+    if (!(await this.firmCaseOrgId(caseId, lawFirmId))) return [];
+    const rows = await this.db
+      .select({
+        id: casePeopleTable.id,
+        role: casePeopleTable.role,
+        notes: casePeopleTable.notes,
+        name: contactsTable.name,
+        email: contactsTable.email,
+        phone: contactsTable.phone,
+        createdAt: casePeopleTable.createdAt,
+      })
+      .from(casePeopleTable)
+      .innerJoin(contactsTable, eq(contactsTable.id, casePeopleTable.contactId))
+      .where(eq(casePeopleTable.caseId, caseId))
+      .orderBy(sql`${casePeopleTable.createdAt} ASC`);
+    return rows.map((r) => ({
+      id: r.id,
+      name: r.name ?? null,
+      email: r.email ?? null,
+      phone: r.phone ?? null,
+      role: r.role,
+      notes: r.notes ?? null,
+    }));
+  }
+
+  async addCasePerson(opts: {
+    caseId: string;
+    lawFirmId: string;
+    name: string;
+    role: string;
+    email?: string | null;
+    phone?: string | null;
+    notes?: string | null;
+  }): Promise<CasePersonRow | null> {
+    const orgId = await this.firmCaseOrgId(opts.caseId, opts.lawFirmId);
+    if (!orgId) return null;
+
+    const [contact] = await this.db
+      .insert(contactsTable)
+      .values({ orgId, name: opts.name, email: opts.email ?? null, phone: opts.phone ?? null })
+      .returning({ id: contactsTable.id });
+
+    const [link] = await this.db
+      .insert(casePeopleTable)
+      .values({
+        caseId: opts.caseId,
+        contactId: contact!.id,
+        role: opts.role,
+        notes: opts.notes ?? null,
+      })
+      .returning({ id: casePeopleTable.id });
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'PERSON_ADDED',
+      summary: `Added ${opts.name} (${opts.role})`,
+      metadata: { role: opts.role },
+    });
+
+    return {
+      id: link!.id,
+      name: opts.name,
+      email: opts.email ?? null,
+      phone: opts.phone ?? null,
+      role: opts.role,
+      notes: opts.notes ?? null,
+    };
+  }
+
+  async removeCasePerson(opts: {
+    caseId: string;
+    lawFirmId: string;
+    casePersonId: string;
+  }): Promise<boolean> {
+    if (!(await this.firmCaseOrgId(opts.caseId, opts.lawFirmId))) return false;
+    const deleted = await this.db
+      .delete(casePeopleTable)
+      .where(and(eq(casePeopleTable.id, opts.casePersonId), eq(casePeopleTable.caseId, opts.caseId)))
+      .returning({ id: casePeopleTable.id });
+    if (deleted.length === 0) return false;
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'PERSON_REMOVED',
+      summary: 'Removed a person from the matter',
+      metadata: {},
     });
     return true;
   }
