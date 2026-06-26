@@ -66,6 +66,7 @@ import PortalSignIn from './routes/portal/SignIn.js';
 import PortalSignUp from './routes/portal/SignUp.js';
 import PortalQueue from './routes/portal/PortalQueue.js';
 import PortalBoard from './routes/portal/PortalBoard.js';
+import PortalTasks from './routes/portal/PortalTasks.js';
 import PortalCaseDetail from './routes/portal/PortalCaseDetail.js';
 import { HelmetProvider } from 'react-helmet-async';
 import RequireAdmin from './components/RequireAdmin.js';
@@ -204,6 +205,7 @@ function PortalShell() {
         >
           <Route index element={<PortalQueue />} />
           <Route path="board" element={<PortalBoard />} />
+          <Route path="tasks" element={<PortalTasks />} />
           <Route path="cases/:id" element={<PortalCaseDetail />} />
           <Route path="*" element={<Navigate to="/portal" replace />} />
         </Route>

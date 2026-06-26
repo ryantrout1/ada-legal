@@ -44,7 +44,7 @@ import {
   routingRules as routingRulesTable,
   stripeWebhookEvents as stripeWebhookEventsTable,
 } from '../../db/schema-ch1.js';
-import { cases as casesTable, caseActivity as caseActivityTable } from '../../db/schema-cases.js';
+import { cases as casesTable, caseActivity as caseActivityTable, caseTasks as caseTasksTable } from '../../db/schema-cases.js';
 import type { CaseLane, CaseStatus, CaseTransition } from '../cases/caseStateMachine.js';
 import { applyCaseTransition, caseTransitionSummary } from '../cases/caseStateMachine.js';
 import type {
@@ -121,6 +121,8 @@ import type {
   PortalCaseListRow,
   PortalCaseListResult,
   AdminCaseRow,
+  TaskRow,
+  FirmTaskRow,
   PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
@@ -2389,6 +2391,107 @@ export class NeonDbClient implements DbClient {
     return { caseRow: toCaseRow(updated[0]) };
   }
 
+  // ─── Phase 4b: case tasks ───────────────────────────────────────────────
+
+  /** True when the case belongs to the firm and the claimant has consented. */
+  private async caseAccessibleToFirm(caseId: string, lawFirmId: string): Promise<boolean> {
+    const rows = await this.db
+      .select({ id: casesTable.id })
+      .from(casesTable)
+      .where(
+        and(
+          eq(casesTable.id, caseId),
+          eq(casesTable.firmId, lawFirmId),
+          eq(casesTable.consentToShare, true),
+        ),
+      )
+      .limit(1);
+    return rows.length > 0;
+  }
+
+  async listTasksForCase(caseId: string, lawFirmId: string): Promise<TaskRow[] | null> {
+    if (!(await this.caseAccessibleToFirm(caseId, lawFirmId))) return null;
+    const rows = await this.db
+      .select()
+      .from(caseTasksTable)
+      .where(eq(caseTasksTable.caseId, caseId))
+      .orderBy(sql`${caseTasksTable.createdAt} ASC`);
+    return rows.map(toTaskRow);
+  }
+
+  async addTaskForCase(opts: {
+    caseId: string;
+    lawFirmId: string;
+    title: string;
+    dueDate?: string | null;
+    priority?: string;
+    createdBy?: string | null;
+  }): Promise<TaskRow | null> {
+    if (!(await this.caseAccessibleToFirm(opts.caseId, opts.lawFirmId))) return null;
+    const inserted = await this.db
+      .insert(caseTasksTable)
+      .values({
+        caseId: opts.caseId,
+        title: opts.title,
+        dueDate: opts.dueDate ?? null,
+        priority: opts.priority ?? 'medium',
+        createdBy: opts.createdBy ?? null,
+      })
+      .returning();
+    return toTaskRow(inserted[0]);
+  }
+
+  async completeTaskForCase(opts: { taskId: string; lawFirmId: string }): Promise<boolean> {
+    const task = await this.db
+      .select({ id: caseTasksTable.id, caseId: caseTasksTable.caseId })
+      .from(caseTasksTable)
+      .where(eq(caseTasksTable.id, opts.taskId))
+      .limit(1);
+    if (!task[0]) return false;
+    if (!(await this.caseAccessibleToFirm(task[0].caseId, opts.lawFirmId))) return false;
+    await this.db
+      .update(caseTasksTable)
+      .set({ completedAt: new Date() })
+      .where(eq(caseTasksTable.id, opts.taskId));
+    return true;
+  }
+
+  async listOpenTasksForFirm(lawFirmId: string): Promise<FirmTaskRow[]> {
+    const rows = await this.db
+      .select({
+        id: caseTasksTable.id,
+        caseId: caseTasksTable.caseId,
+        title: caseTasksTable.title,
+        dueDate: caseTasksTable.dueDate,
+        priority: caseTasksTable.priority,
+        completedAt: caseTasksTable.completedAt,
+        createdAt: caseTasksTable.createdAt,
+        caseNumber: casesTable.caseNumber,
+        extractedFields: adaSessions.extractedFields,
+      })
+      .from(caseTasksTable)
+      .innerJoin(casesTable, eq(casesTable.id, caseTasksTable.caseId))
+      .leftJoin(adaSessions, eq(adaSessions.id, casesTable.adaSessionId))
+      .where(
+        and(
+          eq(casesTable.firmId, lawFirmId),
+          eq(casesTable.consentToShare, true),
+          isNull(caseTasksTable.completedAt),
+        ),
+      )
+      .orderBy(sql`${caseTasksTable.dueDate} ASC NULLS LAST`);
+
+    const fStr = (f: ExtractedFields | null, k: string): string | null => {
+      const v = f?.[k]?.value;
+      return v == null ? null : typeof v === 'string' ? v : String(v);
+    };
+    return rows.map((r) => ({
+      ...toTaskRow(r),
+      caseNumber: r.caseNumber,
+      claimantName: fStr((r.extractedFields ?? null) as ExtractedFields | null, 'claimant_name'),
+    }));
+  }
+
   async resolveAttorneyByClerkUserId(
     clerkUserId: string,
   ): Promise<PortalAttorneyResolution | null> {
@@ -3051,6 +3154,28 @@ function toLitigationFirmAssignment(r: {
     lawFirmId: r.lawFirmId,
     assignedByUserId: r.assignedByUserId,
     createdAt: r.createdAt.toISOString(),
+  };
+}
+
+function toTaskRow(r: {
+  id: string;
+  caseId: string;
+  title: string;
+  dueDate: string | null;
+  priority: string;
+  completedAt: Date | string | null;
+  createdAt: Date | string;
+}): TaskRow {
+  const iso = (v: Date | string | null): string | null =>
+    v == null ? null : v instanceof Date ? v.toISOString() : String(v);
+  return {
+    id: r.id,
+    caseId: r.caseId,
+    title: r.title,
+    dueDate: r.dueDate == null ? null : String(r.dueDate),
+    priority: r.priority,
+    completedAt: iso(r.completedAt),
+    createdAt: iso(r.createdAt) ?? '',
   };
 }
 

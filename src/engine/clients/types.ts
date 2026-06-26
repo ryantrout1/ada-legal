@@ -767,6 +767,23 @@ export interface AdminCaseRow {
   createdAt: string;
 }
 
+/** Phase 4b: a case task row (open while completedAt is null). */
+export interface TaskRow {
+  id: string;
+  caseId: string;
+  title: string;
+  dueDate: string | null;
+  priority: string;
+  completedAt: string | null;
+  createdAt: string;
+}
+
+/** Phase 4b: an open task with its case context, for the cross-matter screen. */
+export interface FirmTaskRow extends TaskRow {
+  caseNumber: string;
+  claimantName: string | null;
+}
+
 /** Phase 2b: the full case detail for the firm workspace. */
 export interface PortalCaseDetailFull {
   caseId: string;
@@ -1257,6 +1274,25 @@ export interface DbClient {
     orgId: string;
     firmId: string;
   }): Promise<{ caseRow: CaseRow } | null>;
+
+  /**
+   * Phase 4b: tasks on a case. All firm-scoped + consent-gated — the list/add
+   * paths return null when the case isn't this firm's (or isn't consented), and
+   * complete returns false. A task is open while completedAt is null.
+   */
+  listTasksForCase(caseId: string, lawFirmId: string): Promise<TaskRow[] | null>;
+  addTaskForCase(opts: {
+    caseId: string;
+    lawFirmId: string;
+    title: string;
+    dueDate?: string | null;
+    priority?: string;
+    createdBy?: string | null;
+  }): Promise<TaskRow | null>;
+  completeTaskForCase(opts: { taskId: string; lawFirmId: string }): Promise<boolean>;
+
+  /** Phase 4b: open tasks across the firm's consented cases (cross-matter). */
+  listOpenTasksForFirm(lawFirmId: string): Promise<FirmTaskRow[]>;
 
   /**
    * Full case package for a single session, scoped to a firm. Returns null

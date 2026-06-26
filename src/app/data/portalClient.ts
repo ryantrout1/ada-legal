@@ -158,3 +158,66 @@ export async function markPortalCaseHandled(id: string): Promise<void> {
   });
   if (!resp.ok && resp.status !== 204) return failFor(resp);
 }
+
+// ─── Phase 4b: tasks ────────────────────────────────────────────────────────
+
+export interface PortalTask {
+  id: string;
+  case_id: string;
+  title: string;
+  due_date: string | null;
+  priority: string;
+  completed_at: string | null;
+  created_at: string;
+}
+
+export interface PortalFirmTask {
+  id: string;
+  case_id: string;
+  case_number: string;
+  claimant_name: string | null;
+  title: string;
+  due_date: string | null;
+  priority: string;
+  created_at: string;
+}
+
+export async function fetchCaseTasks(caseId: string): Promise<PortalTask[]> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(caseId)}/tasks`, {
+    credentials: 'include',
+  });
+  if (!resp.ok) return failFor(resp);
+  return ((await resp.json()) as { tasks: PortalTask[] }).tasks;
+}
+
+export async function addCaseTask(
+  caseId: string,
+  input: { title: string; dueDate?: string | null; priority?: string },
+): Promise<PortalTask> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(caseId)}/tasks`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      title: input.title,
+      due_date: input.dueDate || undefined,
+      priority: input.priority,
+    }),
+  });
+  if (!resp.ok) return failFor(resp);
+  return ((await resp.json()) as { task: PortalTask }).task;
+}
+
+export async function completeCaseTask(caseId: string, taskId: string): Promise<void> {
+  const resp = await fetch(
+    `/api/portal/cases/${encodeURIComponent(caseId)}/tasks/${encodeURIComponent(taskId)}`,
+    { method: 'PATCH', credentials: 'include' },
+  );
+  if (!resp.ok) await failFor(resp);
+}
+
+export async function fetchFirmTasks(): Promise<PortalFirmTask[]> {
+  const resp = await fetch('/api/portal/tasks', { credentials: 'include' });
+  if (!resp.ok) return failFor(resp);
+  return ((await resp.json()) as { tasks: PortalFirmTask[] }).tasks;
+}

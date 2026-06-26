@@ -11,6 +11,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import TaskPanel from './TaskPanel.js';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import {
   fetchPortalCase,
@@ -166,6 +167,8 @@ export default function PortalCaseDetail() {
               </ul>
             )}
           </section>
+
+          <TaskPanel caseId={data.case_id} />
 
           <NotesPanel
             caseId={data.case_id}

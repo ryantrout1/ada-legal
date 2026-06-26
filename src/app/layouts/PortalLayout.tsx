@@ -11,7 +11,7 @@
  */
 
 import { useUser, useClerk } from '@clerk/clerk-react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 
 export default function PortalLayout() {
   const { user } = useUser();
@@ -31,6 +31,7 @@ export default function PortalLayout() {
 
       <header className="border-b border-surface-200 bg-white">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 min-w-0">
           <Link
             to="/portal"
             className="font-display text-lg text-ink-900 hover:text-accent-600 transition-colors"
@@ -41,6 +42,26 @@ export default function PortalLayout() {
               Portal
             </span>
           </Link>
+          <nav aria-label="Portal sections" className="flex items-center gap-1">
+            {[
+              { to: '/portal', label: 'Cases', end: true },
+              { to: '/portal/tasks', label: 'Tasks', end: false },
+            ].map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  `inline-flex items-center min-h-[44px] px-3 rounded-md text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+                    isActive ? 'text-accent-600 bg-accent-50' : 'text-ink-700 hover:bg-surface-100'
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+          </div>
           <div className="flex items-center gap-4 text-sm">
             <span className="text-ink-500 hidden sm:inline font-mono text-xs">{email}</span>
             <button

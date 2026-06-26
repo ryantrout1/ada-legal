@@ -95,6 +95,8 @@ import type {
   PortalCaseListRow,
   PortalCaseListResult,
   AdminCaseRow,
+  TaskRow,
+  FirmTaskRow,
   PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
@@ -1564,6 +1566,73 @@ export class InMemoryDbClient implements DbClient {
     });
 
     return { caseRow: { ...c } };
+  }
+
+  // ─── Phase 4b: case tasks ───────────────────────────────────────────────
+  private caseTasks: TaskRow[] = [];
+
+  private accessibleCase(caseId: string, lawFirmId: string): CaseRow | null {
+    const c = this.cases.find((x) => x.id === caseId && x.firmId === lawFirmId);
+    return c && c.consentToShare ? c : null;
+  }
+
+  async listTasksForCase(caseId: string, lawFirmId: string): Promise<TaskRow[] | null> {
+    if (!this.accessibleCase(caseId, lawFirmId)) return null;
+    return this.caseTasks
+      .filter((t) => t.caseId === caseId)
+      .map((t) => ({ ...t }))
+      .sort((a, b) => (a.createdAt < b.createdAt ? -1 : 1));
+  }
+
+  async addTaskForCase(opts: {
+    caseId: string;
+    lawFirmId: string;
+    title: string;
+    dueDate?: string | null;
+    priority?: string;
+    createdBy?: string | null;
+  }): Promise<TaskRow | null> {
+    if (!this.accessibleCase(opts.caseId, opts.lawFirmId)) return null;
+    const row: TaskRow = {
+      id: `task-${this.caseTasks.length + 1}-${Math.random().toString(36).slice(2, 8)}`,
+      caseId: opts.caseId,
+      title: opts.title,
+      dueDate: opts.dueDate ?? null,
+      priority: opts.priority ?? 'medium',
+      completedAt: null,
+      createdAt: new Date(this.caseTasks.length).toISOString(),
+    };
+    this.caseTasks.push(row);
+    return { ...row };
+  }
+
+  async completeTaskForCase(opts: { taskId: string; lawFirmId: string }): Promise<boolean> {
+    const task = this.caseTasks.find((t) => t.id === opts.taskId);
+    if (!task) return false;
+    if (!this.accessibleCase(task.caseId, opts.lawFirmId)) return false;
+    task.completedAt = new Date(0).toISOString();
+    return true;
+  }
+
+  async listOpenTasksForFirm(lawFirmId: string): Promise<FirmTaskRow[]> {
+    const out: FirmTaskRow[] = [];
+    for (const t of this.caseTasks) {
+      if (t.completedAt) continue;
+      const c = this.cases.find((x) => x.id === t.caseId);
+      if (!c || c.firmId !== lawFirmId || !c.consentToShare) continue;
+      const session = c.adaSessionId ? this.sessions.get(c.adaSessionId) : undefined;
+      out.push({
+        ...t,
+        caseNumber: c.caseNumber,
+        claimantName: session ? portalFieldStr(session.extractedFields, 'claimant_name') : null,
+      });
+    }
+    return out.sort((a, b) => {
+      if (a.dueDate === b.dueDate) return 0;
+      if (!a.dueDate) return 1;
+      if (!b.dueDate) return -1;
+      return a.dueDate < b.dueDate ? -1 : 1;
+    });
   }
 
   async resolveAttorneyByClerkUserId(
