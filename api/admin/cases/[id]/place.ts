@@ -10,6 +10,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAdmin } from '../../../_admin.js';
 import { applyCors } from '../../../_cors.js';
 import { makeClientsFromEnv } from '../../../_shared.js';
+import { sendPlacementNotification } from '../../../../src/engine/notifications/routingNotifications.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
@@ -51,6 +52,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       resourceId: id,
       metadata: { firmId },
     });
+
+    // Phase 3 fast-follow: notify the firm it's been matched. Self-gates on
+    // consent (an unconsented placement no-ops; the later consent fires the
+    // firm + claimant emails instead). Isolated soft-fail — never blocks the
+    // placement response.
+    try {
+      await sendPlacementNotification({ email: clients.email, db: clients.db }, result.caseRow);
+    } catch (notifyErr) {
+      console.error('placement notification failed', notifyErr);
+    }
 
     return res.status(200).json({ ok: true, lane: result.caseRow.lane, firm_id: firmId });
   } catch (err) {

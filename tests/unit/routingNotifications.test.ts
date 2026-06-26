@@ -15,6 +15,7 @@ import { InMemoryDbClient } from '@/engine/clients/inMemoryClients';
 import type { EmailClient, EmailSendOptions } from '@/engine/clients/types';
 import {
   sendConsentNotifications,
+  sendPlacementNotification,
   sendAdminRoutingNotification,
 } from '@/engine/notifications/routingNotifications';
 import type { AdaSessionState } from '@/engine/types';
@@ -181,5 +182,59 @@ describe('sendAdminRoutingNotification', () => {
     expect(email.sent).toHaveLength(0);
     const notified = db.caseActivity.find((a) => a.eventType === 'NOTIFIED')!;
     expect((notified.metadata as { skipped: string[] }).skipped).toContain('admin:no_recipient');
+  });
+});
+
+describe('sendPlacementNotification', () => {
+  it('emails the firm (matched email) when the placed case is consented', async () => {
+    const db = new InMemoryDbClient();
+    const email = new CapturingEmail();
+    await seed(db, { lane: 'routed_firm' });
+    await db.recordCaseConsent({ sessionId: 'sess-1', scope: 'matched_firm' });
+    const caseRow = (await db.getCaseBySessionId('sess-1'))!;
+
+    await sendPlacementNotification({ email, db }, caseRow);
+
+    expect(email.sent.map((s) => s.to)).toEqual(['firm@x.com']);
+    const notified = db.caseActivity.find((a) => a.eventType === 'NOTIFIED')!;
+    expect((notified.metadata as { recipients: string[] }).recipients).toEqual(['firm:firm@x.com']);
+  });
+
+  it('no-ops (no email, no receipt) when the case is not yet consented', async () => {
+    const db = new InMemoryDbClient();
+    const email = new CapturingEmail();
+    const caseRow = await seed(db, { lane: 'routed_firm' }); // consent not recorded
+
+    await sendPlacementNotification({ email, db }, caseRow);
+
+    expect(email.sent).toHaveLength(0);
+    expect(db.caseActivity.some((a) => a.eventType === 'NOTIFIED')).toBe(false);
+  });
+
+  it('records a firm:no_email skip when the firm has no address', async () => {
+    const db = new InMemoryDbClient();
+    const email = new CapturingEmail();
+    await seed(db, { lane: 'routed_firm', firmEmail: null });
+    await db.recordCaseConsent({ sessionId: 'sess-1', scope: 'matched_firm' });
+    const caseRow = (await db.getCaseBySessionId('sess-1'))!;
+
+    await sendPlacementNotification({ email, db }, caseRow);
+
+    expect(email.sent).toHaveLength(0);
+    const notified = db.caseActivity.find((a) => a.eventType === 'NOTIFIED')!;
+    expect((notified.metadata as { skipped: string[] }).skipped).toContain('firm:no_email');
+  });
+
+  it('soft-fails (no throw) when the email client throws', async () => {
+    const db = new InMemoryDbClient();
+    await seed(db, { lane: 'routed_firm' });
+    await db.recordCaseConsent({ sessionId: 'sess-1', scope: 'matched_firm' });
+    const caseRow = (await db.getCaseBySessionId('sess-1'))!;
+
+    await expect(
+      sendPlacementNotification({ email: new ThrowingEmail(), db }, caseRow),
+    ).resolves.toBeUndefined();
+    const notified = db.caseActivity.find((a) => a.eventType === 'NOTIFIED')!;
+    expect((notified.metadata as { skipped: string[] }).skipped).toContain('firm:send_failed');
   });
 });

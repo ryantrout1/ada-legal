@@ -111,6 +111,53 @@ export async function sendConsentNotifications(
 }
 
 /**
+ * Firm notification when an admin places a case to a firm (Phase 3 fast-follow).
+ *
+ * Reuses the firm-matched email. Consent-gated: if the claimant hasn't consented
+ * yet this no-ops — the firm can't see the case until consent, and the later
+ * consent fires sendConsentNotifications (the lane is routed_firm by then), so
+ * there's no double-send. The claimant "you're connected" email is deferred: it
+ * needs the package slug for the readout link, which placement doesn't carry.
+ */
+export async function sendPlacementNotification(
+  deps: ConsentNotifyDeps,
+  caseRow: CaseRow,
+): Promise<void> {
+  if (!caseRow.consentToShare) return;
+
+  const firm = caseRow.firmId ? await deps.db.readLawFirmById(caseRow.firmId) : null;
+  const firmName = firm?.name ?? null;
+  const firmEmail = firm?.email ?? null;
+
+  const session = caseRow.adaSessionId
+    ? await deps.db.readSession({ sessionId: caseRow.adaSessionId })
+    : null;
+  const claimantName = session ? fieldStr(session.extractedFields, 'claimant_name') : null;
+
+  const recipients: string[] = [];
+  const skipped: string[] = [];
+  if (firmEmail && firmName) {
+    const ok = await softSend(
+      deps.email,
+      firmEmail,
+      renderFirmMatchedEmail({ caseRow, firmName, claimantName }),
+    );
+    if (ok) recipients.push(`firm:${firmEmail}`);
+    else skipped.push('firm:send_failed');
+  } else {
+    skipped.push('firm:no_email');
+  }
+
+  await deps.db.appendCaseActivity({
+    caseId: caseRow.id,
+    actorType: 'system',
+    eventType: 'NOTIFIED',
+    summary: `placement notification (${recipients.length} sent, ${skipped.length} skipped)`,
+    metadata: { recipients, skipped },
+  });
+}
+
+/**
  * Admin notification for a sourcing / general_queue case at routing time.
  * Lane-guarded; skips (with a receipt) when no admin recipient is configured.
  */
