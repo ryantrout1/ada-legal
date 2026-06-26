@@ -101,6 +101,7 @@ import type {
   AdminCaseRow,
   TaskRow,
   FirmTaskRow,
+  CaseDefendant,
   PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
@@ -208,6 +209,7 @@ export class InMemoryDbClient implements DbClient {
       routedAt: string | null;
       firstContactDue: string | null;
       solDate: string | null;
+      defendant: CaseDefendant | null;
     }
   >();
   public readonly caseActivity: Array<{
@@ -1295,6 +1297,7 @@ export class InMemoryDbClient implements DbClient {
       routedAt: opts.routedAt,
       firstContactDue: opts.firstContactDue,
       solDate: null,
+      defendant: null,
     });
 
     this.caseActivity.push({
@@ -1447,6 +1450,7 @@ export class InMemoryDbClient implements DbClient {
       createdAt: c.createdAt,
       caseName: litig?.caseName ?? null,
       solDate: extras?.solDate ?? null,
+      defendant: extras?.defendant ?? null,
       claimantName: portalFieldStr(fields, 'claimant_name'),
       claimantEmail: portalFieldStr(fields, 'claimant_email'),
       claimantPhone: portalFieldStr(fields, 'claimant_phone'),
@@ -1518,6 +1522,7 @@ export class InMemoryDbClient implements DbClient {
       routedAt: extras?.routedAt ?? null,
       firstContactDue: extras?.firstContactDue ?? null,
       solDate: opts.solDate,
+      defendant: extras?.defendant ?? null,
     });
     this.caseActivity.push({
       caseId: c.id,
@@ -1527,6 +1532,33 @@ export class InMemoryDbClient implements DbClient {
         ? `Statute of limitations set to ${opts.solDate}`
         : 'Statute of limitations cleared',
       metadata: { solDate: opts.solDate },
+      createdAt: new Date(0).toISOString(),
+    });
+    return true;
+  }
+
+  async setCaseDefendant(opts: {
+    caseId: string;
+    lawFirmId: string;
+    defendant: CaseDefendant | null;
+  }): Promise<boolean> {
+    const c = this.cases.find((x) => x.id === opts.caseId && x.firmId === opts.lawFirmId);
+    if (!c || !c.consentToShare) return false;
+    const extras = this.caseExtras.get(c.id);
+    this.caseExtras.set(c.id, {
+      classificationTitle: extras?.classificationTitle ?? null,
+      jurisdictionState: extras?.jurisdictionState ?? null,
+      routedAt: extras?.routedAt ?? null,
+      firstContactDue: extras?.firstContactDue ?? null,
+      solDate: extras?.solDate ?? null,
+      defendant: opts.defendant,
+    });
+    this.caseActivity.push({
+      caseId: c.id,
+      actorType: 'user',
+      eventType: 'DEFENDANT_SET',
+      summary: opts.defendant ? `Defendant set to ${opts.defendant.name}` : 'Defendant cleared',
+      metadata: { defendant: opts.defendant },
       createdAt: new Date(0).toISOString(),
     });
     return true;
@@ -1591,6 +1623,7 @@ export class InMemoryDbClient implements DbClient {
       routedAt,
       firstContactDue,
       solDate: extras?.solDate ?? null,
+      defendant: extras?.defendant ?? null,
     });
 
     this.caseActivity.push({

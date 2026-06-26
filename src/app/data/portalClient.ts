@@ -66,6 +66,7 @@ export interface PortalCaseDetailResponse {
   created_at: string;
   case_name: string | null;
   sol_date: string | null;
+  defendant: PortalDefendant | null;
   claimant_name: string | null;
   claimant_email: string | null;
   claimant_phone: string | null;
@@ -149,6 +150,24 @@ export async function setCaseSolDate(id: string, solDate: string | null): Promis
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sol_date: solDate }),
+  });
+  if (!resp.ok) await failFor(resp);
+}
+
+export interface PortalDefendant {
+  name: string;
+  kind?: string | null;
+  address?: string | null;
+  notes?: string | null;
+}
+
+/** Set or clear (null) the attorney-entered defendant record. */
+export async function setCaseDefendant(id: string, defendant: PortalDefendant | null): Promise<void> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/defendant`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ defendant }),
   });
   if (!resp.ok) await failFor(resp);
 }

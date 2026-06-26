@@ -786,6 +786,14 @@ export interface FirmTaskRow extends TaskRow {
 }
 
 /** Phase 2b: the full case detail for the firm workspace. */
+/** Attorney-entered defendant record (jsonb on the case). Phase 5 §7.5. */
+export interface CaseDefendant {
+  name: string;
+  kind?: string | null;
+  address?: string | null;
+  notes?: string | null;
+}
+
 export interface PortalCaseDetailFull {
   caseId: string;
   adaSessionId: string | null;
@@ -801,6 +809,8 @@ export interface PortalCaseDetailFull {
   caseName: string | null;
   /** Attorney-set statute-of-limitations date (YYYY-MM-DD) or null. */
   solDate: string | null;
+  /** Attorney-entered defendant record or null. */
+  defendant: CaseDefendant | null;
   claimantName: string | null;
   claimantEmail: string | null;
   claimantPhone: string | null;
@@ -1266,6 +1276,17 @@ export interface DbClient {
     caseId: string;
     lawFirmId: string;
     solDate: string | null;
+  }): Promise<boolean>;
+
+  /**
+   * Phase 5 §7.5: set (or clear, with null) the attorney-entered defendant
+   * record on a case. Firm-scoped + consent-gated; writes a DEFENDANT_SET
+   * activity. Returns false when the case isn't this firm's.
+   */
+  setCaseDefendant(opts: {
+    caseId: string;
+    lawFirmId: string;
+    defendant: CaseDefendant | null;
   }): Promise<boolean>;
 
   /**

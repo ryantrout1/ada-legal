@@ -70,6 +70,15 @@ export const cases = pgTable(
     // malpractice). Null until an attorney enters it. Phase 5 §7.3.
     solDate: date('sol_date'),
 
+    // Defendant record — attorney-entered, free-form (name + optional kind /
+    // address / notes). jsonb so it can grow without a migration. Phase 5 §7.5.
+    defendant: jsonb('defendant').$type<{
+      name: string;
+      kind?: string | null;
+      address?: string | null;
+      notes?: string | null;
+    } | null>(),
+
     consentToShare: boolean('consent_to_share').notNull().default(false),
     consentAt: timestamp('consent_at', { withTimezone: true }),
     consentScope: text('consent_scope'),

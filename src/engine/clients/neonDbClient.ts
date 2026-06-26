@@ -125,6 +125,7 @@ import type {
   AdminCaseRow,
   TaskRow,
   FirmTaskRow,
+  CaseDefendant,
   PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
@@ -2142,6 +2143,7 @@ export class NeonDbClient implements DbClient {
         firstContactDue: casesTable.firstContactDue,
         createdAt: casesTable.createdAt,
         solDate: casesTable.solDate,
+        defendant: casesTable.defendant,
         litigationListingId: casesTable.litigationListingId,
         caseName: litigationTable.caseName,
         extractedFields: adaSessions.extractedFields,
@@ -2199,6 +2201,7 @@ export class NeonDbClient implements DbClient {
       createdAt: iso(r.createdAt) ?? '',
       caseName: r.caseName ?? null,
       solDate: r.solDate == null ? null : String(r.solDate),
+      defendant: (r.defendant as PortalCaseDetailFull['defendant']) ?? null,
       claimantName: fStr('claimant_name'),
       claimantEmail: fStr('claimant_email'),
       claimantPhone: fStr('claimant_phone'),
@@ -2314,6 +2317,36 @@ export class NeonDbClient implements DbClient {
         ? `Statute of limitations set to ${opts.solDate}`
         : 'Statute of limitations cleared',
       metadata: { solDate: opts.solDate },
+    });
+    return true;
+  }
+
+  async setCaseDefendant(opts: {
+    caseId: string;
+    lawFirmId: string;
+    defendant: CaseDefendant | null;
+  }): Promise<boolean> {
+    const existing = await this.db
+      .select({ id: casesTable.id, consentToShare: casesTable.consentToShare })
+      .from(casesTable)
+      .where(and(eq(casesTable.id, opts.caseId), eq(casesTable.firmId, opts.lawFirmId)))
+      .limit(1);
+    const row = existing[0];
+    if (!row || !row.consentToShare) return false;
+
+    await this.db
+      .update(casesTable)
+      .set({ defendant: opts.defendant })
+      .where(eq(casesTable.id, opts.caseId));
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'DEFENDANT_SET',
+      summary: opts.defendant
+        ? `Defendant set to ${opts.defendant.name}`
+        : 'Defendant cleared',
+      metadata: { defendant: opts.defendant },
     });
     return true;
   }

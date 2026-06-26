@@ -32,9 +32,11 @@ import {
   transitionPortalCase,
   addPortalCaseNote,
   setCaseSolDate,
+  setCaseDefendant,
   type PortalCaseAction,
   type PortalCaseActivityEntry,
   type PortalTask,
+  type PortalDefendant,
   PortalApiError,
   type PortalCaseDetailResponse,
 } from '../../data/portalClient.js';
@@ -187,8 +189,8 @@ export default function PortalCaseDetail() {
             </p>
             <h1 className="font-display text-2xl text-ink-900 leading-tight">
               {data.claimant_name ?? 'Claimant'}
-              {data.case_name && (
-                <span className="text-ink-500 font-normal"> · {data.case_name}</span>
+              {data.defendant?.name && (
+                <span className="text-ink-500 font-normal"> v. {data.defendant.name}</span>
               )}
             </h1>
 
@@ -269,7 +271,7 @@ export default function PortalCaseDetail() {
           <NextStep openTasks={openTasks} solDate={data.sol_date} />
           <KeyDates openTasks={openTasks} solDate={data.sol_date} firstContactDue={data.first_contact_due} />
           <PeopleCard claimant={data.claimant_name} email={data.claimant_email} phone={data.claimant_phone} />
-          <DefendantCard />
+          <DefendantCard caseId={data.case_id} defendant={data.defendant} onSaved={load} />
         </aside>
       </div>
     </section>
@@ -538,14 +540,107 @@ function PeopleCard({ claimant, email, phone }: { claimant: string | null; email
   );
 }
 
-function DefendantCard() {
+function DefendantCard({
+  caseId,
+  defendant,
+  onSaved,
+}: {
+  caseId: string;
+  defendant: PortalDefendant | null;
+  onSaved: () => Promise<void> | void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(defendant?.name ?? '');
+  const [kind, setKind] = useState(defendant?.kind ?? '');
+  const [address, setAddress] = useState(defendant?.address ?? '');
+  const [notes, setNotes] = useState(defendant?.notes ?? '');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const reset = () => {
+    setName(defendant?.name ?? '');
+    setKind(defendant?.kind ?? '');
+    setAddress(defendant?.address ?? '');
+    setNotes(defendant?.notes ?? '');
+  };
+
+  const save = async (next: PortalDefendant | null) => {
+    setBusy(true);
+    setError(null);
+    try {
+      await setCaseDefendant(caseId, next);
+      setEditing(false);
+      await onSaved();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not save');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const fieldCls = 'w-full min-h-[44px] rounded-md border border-control-border bg-white px-2 text-ink-900 text-sm';
+
   return (
     <div className="rounded-lg border border-control-border bg-white p-5">
       <h3 className="text-ink-500 text-xs font-bold uppercase tracking-wide mb-3 flex items-center gap-2">
         <Building2 size={14} aria-hidden="true" /> Defendant
       </h3>
-      <p className="text-ink-500 text-sm">Not recorded yet.</p>
-      <p className="text-ink-500 text-xs mt-2">Defendant details are coming soon.</p>
+
+      {editing ? (
+        <div className="flex flex-col gap-2">
+          <div>
+            <label htmlFor="def-name" className="block text-ink-700 text-xs font-semibold mb-1">Name</label>
+            <input id="def-name" value={name} onChange={(e) => setName(e.target.value)} className={fieldCls} />
+          </div>
+          <div>
+            <label htmlFor="def-kind" className="block text-ink-700 text-xs font-semibold mb-1">Type <span className="font-normal text-ink-500">(optional)</span></label>
+            <input id="def-kind" value={kind} onChange={(e) => setKind(e.target.value)} placeholder="business, government, individual…" className={fieldCls} />
+          </div>
+          <div>
+            <label htmlFor="def-address" className="block text-ink-700 text-xs font-semibold mb-1">Address <span className="font-normal text-ink-500">(optional)</span></label>
+            <input id="def-address" value={address} onChange={(e) => setAddress(e.target.value)} className={fieldCls} />
+          </div>
+          <div>
+            <label htmlFor="def-notes" className="block text-ink-700 text-xs font-semibold mb-1">Notes <span className="font-normal text-ink-500">(optional)</span></label>
+            <textarea id="def-notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className={fieldCls} />
+          </div>
+          {error && <p role="alert" className="text-danger-500 text-xs">{error}</p>}
+          <div className="flex gap-2 mt-1">
+            <button
+              type="button"
+              disabled={busy || name.trim() === ''}
+              onClick={() => void save({ name: name.trim(), kind: kind.trim() || null, address: address.trim() || null, notes: notes.trim() || null })}
+              className="inline-flex items-center justify-center min-h-[44px] px-3 rounded-lg bg-accent-500 text-white text-sm font-semibold hover:bg-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => { setEditing(false); reset(); }}
+              className="inline-flex items-center justify-center min-h-[44px] px-3 rounded-lg border border-control-border text-ink-700 text-sm font-medium hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : defendant ? (
+        <div>
+          <div className="text-ink-900 text-sm font-semibold">{defendant.name}</div>
+          {defendant.kind && <div className="text-ink-500 text-[11px] uppercase tracking-wide mt-0.5">{defendant.kind}</div>}
+          {defendant.address && <div className="text-ink-700 text-xs mt-1.5">{defendant.address}</div>}
+          {defendant.notes && <div className="text-ink-500 text-xs mt-1.5 whitespace-pre-wrap">{defendant.notes}</div>}
+          <div className="flex gap-3 mt-3">
+            <button type="button" onClick={() => setEditing(true)} className="text-xs text-accent-600 underline">Edit</button>
+            <button type="button" disabled={busy} onClick={() => void save(null)} className="text-xs text-ink-500 underline">Clear</button>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <p className="text-ink-500 text-sm">Not recorded yet.</p>
+          <button type="button" onClick={() => setEditing(true)} className="text-xs text-accent-600 underline mt-2">Add defendant</button>
+        </div>
+      )}
     </div>
   );
 }
