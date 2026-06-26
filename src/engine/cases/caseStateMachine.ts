@@ -1,33 +1,30 @@
 /**
  * Case state machine.
  *
- * Defines the legal transitions for `cases.status` — the worked-case
- * lifecycle that sits downstream of routing:
+ * Defines the legal transitions for `cases.status` — the worked-case lifecycle
+ * that sits downstream of routing. Phase 5 §7.5 expands the mid-pipeline from
+ * the original accepted/working pair to the mockup's three working stages:
  *
- *   new       → accepted   (firm takes a matched case)
- *   new       → declined   (firm passes — conflict / capacity / not viable)
- *   new       → closed     (terminal-lane cases: self_help / no_action; or admin close)
- *   accepted  → working    (first contact logged)
- *   accepted  → declined   (firm backs out after accepting)
- *   accepted  → reclaimed  (first-contact SLA breached → admin pulls it back)
- *   working   → resolved   (lawyer closes with an outcome)
- *   working   → reclaimed  (stalled → admin pulls it back)
- *   declined  → new        (re-routed to the next firm / sourcing queue)
- *   reclaimed → new        (re-routed)
- *   resolved / closed      (terminal — no transitions out)
+ *   new          → investigating  (firm accepts a matched case → enters pipeline)
+ *   new          → declined       (firm passes — conflict / capacity / not viable)
+ *   new          → closed         (terminal-lane cases: self_help / no_action; admin close)
+ *   investigating→ demand_sent    (demand letter sent)
+ *   investigating→ declined       (firm backs out after accepting)
+ *   demand_sent  → negotiating    (negotiation opened)
+ *   investigating/demand_sent/negotiating → resolved   (lawyer closes with an outcome)
+ *   investigating/demand_sent/negotiating → reclaimed  (stalled → admin pulls it back)
+ *   declined     → new            (re-routed to the next firm / sourcing queue)
+ *   reclaimed    → new            (re-routed)
+ *   resolved / closed             (terminal — no transitions out)
  *
- * A declined or reclaimed case never dead-ends: `reroute` returns it to
- * `new` so the router can place it again. `firm_id` / `assigned_lawyer_id`
+ * A declined or reclaimed case never dead-ends: `reroute` returns it to `new`
+ * so the router can place it again. `firm_id` / `assigned_lawyer_id`
  * reassignment is the caller's job; this module only governs `status`.
  *
- * This module is pure: given a current status and a proposed transition it
- * returns the new status or throws. No DB calls, no I/O. Case persistence
- * wraps this — reads current status, calls applyCaseTransition(), writes the
- * new status atomically, and appends a case_activity row.
+ * Pure: given a current status and a proposed transition it returns the new
+ * status or throws. No DB calls, no I/O. Case persistence wraps this.
  *
- * Ref: docs/DO_NOT_TOUCH.md rule 2 (status only mutated via the state
- * machine — `cases` has its own status, never driven through
- * ada_sessions.status). /plan Phase 0.
+ * Ref: docs/DO_NOT_TOUCH.md rule 2. /plan Phase 0; Phase 5 §7.5.
  */
 
 /**
@@ -43,9 +40,10 @@ export type CaseLane =
 
 export type CaseStatus =
   | 'new'
-  | 'accepted'
+  | 'investigating'
+  | 'demand_sent'
+  | 'negotiating'
   | 'declined'
-  | 'working'
   | 'resolved'
   | 'reclaimed'
   | 'closed';
@@ -53,7 +51,8 @@ export type CaseStatus =
 export type CaseTransition =
   | 'accept'
   | 'decline'
-  | 'begin_work'
+  | 'send_demand'
+  | 'begin_negotiation'
   | 'reclaim'
   | 'resolve'
   | 'close'
@@ -64,11 +63,12 @@ export type CaseTransition =
  * A (transition, from) pair absent from the table is illegal.
  */
 const TRANSITIONS: Record<CaseTransition, Partial<Record<CaseStatus, CaseStatus>>> = {
-  accept: { new: 'accepted' },
-  decline: { new: 'declined', accepted: 'declined' },
-  begin_work: { accepted: 'working' },
-  reclaim: { accepted: 'reclaimed', working: 'reclaimed' },
-  resolve: { working: 'resolved' },
+  accept: { new: 'investigating' },
+  decline: { new: 'declined', investigating: 'declined' },
+  send_demand: { investigating: 'demand_sent' },
+  begin_negotiation: { demand_sent: 'negotiating' },
+  resolve: { investigating: 'resolved', demand_sent: 'resolved', negotiating: 'resolved' },
+  reclaim: { investigating: 'reclaimed', demand_sent: 'reclaimed', negotiating: 'reclaimed' },
   close: { new: 'closed' },
   reroute: { declined: 'new', reclaimed: 'new' },
 };
@@ -108,7 +108,7 @@ export function isCaseTerminal(status: CaseStatus): boolean {
   return TERMINAL.has(status);
 }
 
-/** Human-readable summary for a transition activity row (Phase 2c). */
+/** Human-readable summary for a transition activity row. */
 export function caseTransitionSummary(opts: {
   transition: CaseTransition;
   reason?: string;
@@ -119,8 +119,10 @@ export function caseTransitionSummary(opts: {
       return 'Attorney accepted the case';
     case 'decline':
       return opts.reason ? `Attorney declined: ${opts.reason}` : 'Attorney declined the case';
-    case 'begin_work':
-      return 'Attorney started work';
+    case 'send_demand':
+      return 'Attorney sent the demand letter';
+    case 'begin_negotiation':
+      return 'Attorney opened negotiation';
     case 'resolve':
       return opts.resolutionType
         ? `Attorney resolved the case (${opts.resolutionType})`

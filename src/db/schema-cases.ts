@@ -108,7 +108,7 @@ export const cases = pgTable(
     ),
     check(
       'cases_status_enum',
-      sql`${t.status} IN ('new', 'accepted', 'declined', 'working', 'resolved', 'reclaimed', 'closed')`,
+      sql`${t.status} IN ('new', 'investigating', 'demand_sent', 'negotiating', 'declined', 'resolved', 'reclaimed', 'closed')`,
     ),
     check(
       'cases_resolution_type_enum',

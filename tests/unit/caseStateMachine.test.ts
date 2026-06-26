@@ -1,14 +1,10 @@
 /**
- * Layer 1 tests for the case state machine.
+ * Layer 1 tests for the case state machine (5-stage lifecycle, Phase 5 §7.5).
  *
- * The case state machine is the only place `cases.status` may be mutated —
- * the same discipline docs/DO_NOT_TOUCH.md rule 2 imposes on
- * ada_sessions.status. This file is the contract test for the worked-case
- * lifecycle: new → accepted/declined/closed → working → resolved, plus the
- * reclaim + re-route paths that keep a passed/abandoned case from dead-ending.
- *
- * Encodes acceptance criterion 2 from /plan Phase 0 (CHECK/transition
- * enforcement: invalid transitions are rejected).
+ * The case state machine is the only place `cases.status` may be mutated.
+ * Contract: new → investigating → demand_sent → negotiating → resolved, plus
+ * decline/reclaim/re-route paths that keep a passed/abandoned case from
+ * dead-ending. Encodes acceptance criterion 2 from /plan Phase 0.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -22,14 +18,18 @@ import type { CaseStatus, CaseTransition } from '@/engine/cases/caseStateMachine
 
 describe('applyCaseTransition', () => {
   it.each<[CaseStatus, CaseTransition, CaseStatus]>([
-    ['new', 'accept', 'accepted'],
+    ['new', 'accept', 'investigating'],
     ['new', 'decline', 'declined'],
     ['new', 'close', 'closed'],
-    ['accepted', 'begin_work', 'working'],
-    ['accepted', 'decline', 'declined'],
-    ['accepted', 'reclaim', 'reclaimed'],
-    ['working', 'resolve', 'resolved'],
-    ['working', 'reclaim', 'reclaimed'],
+    ['investigating', 'send_demand', 'demand_sent'],
+    ['investigating', 'decline', 'declined'],
+    ['investigating', 'reclaim', 'reclaimed'],
+    ['investigating', 'resolve', 'resolved'],
+    ['demand_sent', 'begin_negotiation', 'negotiating'],
+    ['demand_sent', 'reclaim', 'reclaimed'],
+    ['demand_sent', 'resolve', 'resolved'],
+    ['negotiating', 'resolve', 'resolved'],
+    ['negotiating', 'reclaim', 'reclaimed'],
     ['declined', 'reroute', 'new'],
     ['reclaimed', 'reroute', 'new'],
   ])('%s → %s via %s', (from, transition, expected) => {
@@ -37,10 +37,11 @@ describe('applyCaseTransition', () => {
   });
 
   it.each<[CaseStatus, CaseTransition]>([
-    ['working', 'accept'],
-    ['new', 'begin_work'],
-    ['accepted', 'resolve'],
-    ['working', 'close'],
+    ['negotiating', 'accept'],
+    ['new', 'send_demand'],
+    ['new', 'begin_negotiation'],
+    ['investigating', 'begin_negotiation'],
+    ['demand_sent', 'accept'],
     ['new', 'reclaim'],
     ['resolved', 'reclaim'],
     ['closed', 'reroute'],
@@ -65,8 +66,9 @@ describe('applyCaseTransition', () => {
 describe('isCaseTerminal', () => {
   it.each<[CaseStatus, boolean]>([
     ['new', false],
-    ['accepted', false],
-    ['working', false],
+    ['investigating', false],
+    ['demand_sent', false],
+    ['negotiating', false],
     ['declined', false],
     ['reclaimed', false],
     ['resolved', true],
@@ -79,8 +81,8 @@ describe('isCaseTerminal', () => {
 describe('canTransitionCase', () => {
   it.each<[CaseStatus, CaseTransition, boolean]>([
     ['new', 'accept', true],
-    ['new', 'begin_work', false],
-    ['working', 'resolve', true],
+    ['new', 'send_demand', false],
+    ['negotiating', 'resolve', true],
     ['resolved', 'reclaim', false],
   ])('canTransitionCase(%s, %s) = %s', (from, transition, expected) => {
     expect(canTransitionCase(from, transition)).toBe(expected);

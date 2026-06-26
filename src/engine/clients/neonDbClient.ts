@@ -2073,8 +2073,9 @@ export class NeonDbClient implements DbClient {
 
     const STATUS_GROUP: Record<string, 'new' | 'working' | 'resolved' | undefined> = {
       new: 'new',
-      accepted: 'working',
-      working: 'working',
+      investigating: 'working',
+      demand_sent: 'working',
+      negotiating: 'working',
       resolved: 'resolved',
       closed: 'resolved',
     };
@@ -2548,7 +2549,7 @@ export class NeonDbClient implements DbClient {
         and(
           eq(casesTable.firmId, lawFirmId),
           eq(casesTable.consentToShare, true),
-          inArray(caseActivityTable.eventType, ['ROUTED', 'ACCEPT', 'BEGIN_WORK', 'RESOLVE']),
+          inArray(caseActivityTable.eventType, ['ROUTED', 'ACCEPT', 'SEND_DEMAND', 'BEGIN_NEGOTIATION', 'RESOLVE']),
         ),
       );
     const events = eventRows.map((e) => ({

@@ -1358,8 +1358,9 @@ export class InMemoryDbClient implements DbClient {
   async listCasesForFirm(lawFirmId: string): Promise<PortalCaseListResult> {
     const STATUS_GROUP: Record<string, 'new' | 'working' | 'resolved' | null> = {
       new: 'new',
-      accepted: 'working',
-      working: 'working',
+      investigating: 'working',
+      demand_sent: 'working',
+      negotiating: 'working',
       resolved: 'resolved',
       closed: 'resolved',
     };

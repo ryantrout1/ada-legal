@@ -41,8 +41,9 @@ import {
 
 const STAGE_LABEL: Record<string, string> = {
   new: 'New',
-  accepted: 'Accepted',
-  working: 'Working',
+  investigating: 'Investigating',
+  demand_sent: 'Demand sent',
+  negotiating: 'Negotiating',
   resolved: 'Resolved',
   closed: 'Closed',
   declined: 'Declined',
@@ -50,8 +51,9 @@ const STAGE_LABEL: Record<string, string> = {
 };
 const STAGE_PILL: Record<string, string> = {
   new: 'terra',
-  accepted: 'blue',
-  working: 'purple',
+  investigating: 'blue',
+  demand_sent: 'amber',
+  negotiating: 'purple',
   resolved: 'green',
   closed: 'gray',
   declined: 'gray',
@@ -593,9 +595,10 @@ function ActionBar({ status, caseId, onDone }: { status: string; caseId: string;
       {mode === 'idle' && (
         <div className="flex flex-wrap gap-2">
           {status === 'new' && <button type="button" disabled={busy} onClick={() => void run('accept')} className={BTN_PRIMARY}>Accept</button>}
-          {status === 'accepted' && <button type="button" disabled={busy} onClick={() => void run('begin_work')} className={BTN_PRIMARY}>Start work</button>}
-          {status === 'working' && <button type="button" disabled={busy} onClick={() => setMode('resolving')} className={BTN_PRIMARY}>Resolve</button>}
-          {(status === 'new' || status === 'accepted') && <button type="button" disabled={busy} onClick={() => setMode('declining')} className={BTN_SECONDARY}>Decline</button>}
+          {status === 'investigating' && <button type="button" disabled={busy} onClick={() => void run('send_demand')} className={BTN_PRIMARY}>Send demand</button>}
+          {status === 'demand_sent' && <button type="button" disabled={busy} onClick={() => void run('begin_negotiation')} className={BTN_PRIMARY}>Begin negotiation</button>}
+          {(status === 'investigating' || status === 'demand_sent' || status === 'negotiating') && <button type="button" disabled={busy} onClick={() => setMode('resolving')} className={BTN_PRIMARY}>Resolve</button>}
+          {(status === 'new' || status === 'investigating') && <button type="button" disabled={busy} onClick={() => setMode('declining')} className={BTN_SECONDARY}>Decline</button>}
         </div>
       )}
 

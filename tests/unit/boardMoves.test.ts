@@ -1,5 +1,5 @@
 /**
- * Layer 1 tests — pipeline board move logic (Phase 4a).
+ * Layer 1 tests — pipeline board move logic (5-stage rework, Phase 5 §7.4).
  *
  * Pure mapping the board uses for both drag and the keyboard move-menu:
  * column-for-status, the transition a forward drag implies, and the firm
@@ -18,8 +18,9 @@ import {
 describe('columnForStatus', () => {
   it('maps each status to its board column; closed folds into Resolved', () => {
     expect(columnForStatus('new')).toBe('new');
-    expect(columnForStatus('accepted')).toBe('accepted');
-    expect(columnForStatus('working')).toBe('working');
+    expect(columnForStatus('investigating')).toBe('investigating');
+    expect(columnForStatus('demand_sent')).toBe('demand_sent');
+    expect(columnForStatus('negotiating')).toBe('negotiating');
     expect(columnForStatus('resolved')).toBe('resolved');
     expect(columnForStatus('closed')).toBe('resolved');
   });
@@ -30,18 +31,22 @@ describe('columnForStatus', () => {
 });
 
 describe('dragTransition', () => {
-  it('maps the three valid forward drags', () => {
-    expect(dragTransition('new', 'accepted')).toBe('accept');
-    expect(dragTransition('accepted', 'working')).toBe('begin_work');
-    expect(dragTransition('working', 'resolved')).toBe('resolve');
+  it('maps the forward single-step drags', () => {
+    expect(dragTransition('new', 'investigating')).toBe('accept');
+    expect(dragTransition('investigating', 'demand_sent')).toBe('send_demand');
+    expect(dragTransition('demand_sent', 'negotiating')).toBe('begin_negotiation');
+    expect(dragTransition('negotiating', 'resolved')).toBe('resolve');
+  });
+  it('allows dragging any active stage straight to Resolved', () => {
+    expect(dragTransition('investigating', 'resolved')).toBe('resolve');
+    expect(dragTransition('demand_sent', 'resolved')).toBe('resolve');
   });
   it('rejects skip-ahead and backward drags', () => {
-    expect(dragTransition('new', 'working')).toBeNull();
+    expect(dragTransition('new', 'demand_sent')).toBeNull();
     expect(dragTransition('new', 'resolved')).toBeNull();
-    expect(dragTransition('accepted', 'resolved')).toBeNull();
-    expect(dragTransition('accepted', 'new')).toBeNull();
-    expect(dragTransition('working', 'accepted')).toBeNull();
-    expect(dragTransition('resolved', 'working')).toBeNull();
+    expect(dragTransition('investigating', 'negotiating')).toBeNull();
+    expect(dragTransition('investigating', 'new')).toBeNull();
+    expect(dragTransition('resolved', 'negotiating')).toBeNull();
   });
 });
 
@@ -49,13 +54,20 @@ describe('moveOptions', () => {
   it('offers accept + decline from new', () => {
     expect(moveOptions('new').map((o) => o.transition)).toEqual(['accept', 'decline']);
   });
-  it('offers start-work + decline from accepted', () => {
-    expect(moveOptions('accepted').map((o) => o.transition)).toEqual(['begin_work', 'decline']);
+  it('offers send-demand, resolve, decline from investigating', () => {
+    expect(moveOptions('investigating').map((o) => o.transition)).toEqual([
+      'send_demand',
+      'resolve',
+      'decline',
+    ]);
   });
-  it('offers resolve (flagged) from working, and nothing terminal', () => {
-    const w = moveOptions('working');
-    expect(w.map((o) => o.transition)).toEqual(['resolve']);
-    expect(w[0]!.isResolve).toBe(true);
+  it('offers begin-negotiation + resolve from demand_sent', () => {
+    expect(moveOptions('demand_sent').map((o) => o.transition)).toEqual(['begin_negotiation', 'resolve']);
+  });
+  it('offers resolve (flagged) from negotiating, and nothing terminal', () => {
+    const n = moveOptions('negotiating');
+    expect(n.map((o) => o.transition)).toEqual(['resolve']);
+    expect(n[0]!.isResolve).toBe(true);
     expect(moveOptions('resolved')).toEqual([]);
     expect(moveOptions('closed')).toEqual([]);
   });
@@ -65,7 +77,7 @@ describe('moveOptions', () => {
 });
 
 describe('BOARD_COLUMNS', () => {
-  it('is the four active stages left to right', () => {
-    expect(BOARD_COLUMNS).toEqual(['new', 'accepted', 'working', 'resolved']);
+  it('is the five pipeline stages left to right', () => {
+    expect(BOARD_COLUMNS).toEqual(['new', 'investigating', 'demand_sent', 'negotiating', 'resolved']);
   });
 });

@@ -73,7 +73,7 @@ describe('listCasesForFirm', () => {
   it('returns only this firm\'s consented cases, grouped New/Working/Resolved with counts', async () => {
     const db = new InMemoryDbClient();
     await seedCase(db, { sessionId: 's-new', firmId: 'firm-1', consented: true, status: 'new', claimant: 'Jane' });
-    await seedCase(db, { sessionId: 's-work', firmId: 'firm-1', consented: true, status: 'working' });
+    await seedCase(db, { sessionId: 's-work', firmId: 'firm-1', consented: true, status: 'negotiating' });
     await seedCase(db, { sessionId: 's-res', firmId: 'firm-1', consented: true, status: 'resolved' });
     await seedCase(db, { sessionId: 's-unconsented', firmId: 'firm-1', consented: false, status: 'new' });
     await seedCase(db, { sessionId: 's-otherfirm', firmId: 'firm-2', consented: true, status: 'new' });
@@ -99,8 +99,8 @@ describe('listCasesForFirm', () => {
 
   it('groups accepted+working together and resolved+closed together', async () => {
     const db = new InMemoryDbClient();
-    await seedCase(db, { sessionId: 'a', firmId: 'firm-1', consented: true, status: 'accepted' });
-    await seedCase(db, { sessionId: 'w', firmId: 'firm-1', consented: true, status: 'working' });
+    await seedCase(db, { sessionId: 'a', firmId: 'firm-1', consented: true, status: 'investigating' });
+    await seedCase(db, { sessionId: 'w', firmId: 'firm-1', consented: true, status: 'negotiating' });
     await seedCase(db, { sessionId: 'c', firmId: 'firm-1', consented: true, status: 'closed' });
     const result = await db.listCasesForFirm('firm-1');
     expect(result.counts.working).toBe(2);

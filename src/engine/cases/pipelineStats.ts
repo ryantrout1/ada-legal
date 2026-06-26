@@ -7,7 +7,7 @@
  *     moving on).
  *
  * Pure and deterministic — the neon / in-memory methods just hand it rows. Stage
- * entry is read from the activity log (ROUTED/ACCEPT/BEGIN_WORK/RESOLVE), with
+ * entry is read from the activity log (ROUTED/ACCEPT/SEND_DEMAND/BEGIN_NEGOTIATION/RESOLVE), with
  * the case's createdAt standing in for "entered New". The earliest event of each
  * type wins, so replays / duplicates don't skew the numbers.
  */
@@ -19,6 +19,8 @@ export interface PipelineStageCounts {
   resolved: number;
 }
 
+// Legacy stat keys retained for the funnel shape: 'accepted' now tracks the
+// ACCEPT→investigating milestone, 'working' the SEND_DEMAND→demand_sent one.
 export type TimedStage = 'new' | 'accepted' | 'working';
 
 export interface PipelineStats {
@@ -70,7 +72,7 @@ export function computePipelineStats(
   const stageCounts: PipelineStageCounts = {
     new: cases.length,
     accepted: cases.filter((c) => has(c.id, 'ACCEPT')).length,
-    working: cases.filter((c) => has(c.id, 'BEGIN_WORK')).length,
+    working: cases.filter((c) => has(c.id, 'SEND_DEMAND')).length,
     resolved: cases.filter((c) => has(c.id, 'RESOLVE')).length,
   };
 
@@ -83,7 +85,7 @@ export function computePipelineStats(
     const ev = firstEvent.get(c.id);
     const created = Date.parse(c.createdAt);
     const accept = ev?.get('ACCEPT');
-    const begin = ev?.get('BEGIN_WORK');
+    const begin = ev?.get('SEND_DEMAND');
     const resolve = ev?.get('RESOLVE');
 
     if (accept !== undefined && !Number.isNaN(created) && accept >= created) {

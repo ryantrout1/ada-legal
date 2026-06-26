@@ -9,15 +9,15 @@ import PortalViewToggle from './PortalViewToggle.js';
 
 const STAGES = [
   { key: 'new', label: 'New' },
-  { key: 'accepted', label: 'Accepted' },
-  { key: 'working', label: 'Working' },
+  { key: 'accepted', label: 'Investigating' },
+  { key: 'working', label: 'Demand sent' },
   { key: 'resolved', label: 'Resolved' },
 ] as const;
 
 const TIMED_LABEL: Record<string, string> = {
-  new: 'New → Accepted',
-  accepted: 'Accepted → Working',
-  working: 'Working → Resolved',
+  new: 'New → Investigating',
+  accepted: 'Investigating → Demand sent',
+  working: 'Demand sent → Resolved',
 };
 
 function pct(part: number, whole: number): string {

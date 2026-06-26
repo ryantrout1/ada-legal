@@ -153,7 +153,7 @@ export async function setCaseSolDate(id: string, solDate: string | null): Promis
   if (!resp.ok) await failFor(resp);
 }
 
-export type PortalCaseAction = 'accept' | 'decline' | 'begin_work' | 'resolve';
+export type PortalCaseAction = 'accept' | 'decline' | 'send_demand' | 'begin_negotiation' | 'resolve';
 
 export async function transitionPortalCase(
   id: string,

@@ -14,7 +14,7 @@ const base = Date.parse('2026-06-01T00:00:00Z');
 const at = (hours: number) => new Date(base + hours * H).toISOString();
 
 describe('computePipelineStats', () => {
-  it('counts the funnel: everyone is new, accept/begin_work/resolve narrow it', () => {
+  it('counts the funnel: everyone is new, accept/send_demand/resolve narrow it', () => {
     const cases = [
       { id: 'c1', createdAt: at(0) },
       { id: 'c2', createdAt: at(0) },
@@ -22,7 +22,7 @@ describe('computePipelineStats', () => {
     ];
     const events = [
       { caseId: 'c1', eventType: 'ACCEPT', createdAt: at(2) },
-      { caseId: 'c1', eventType: 'BEGIN_WORK', createdAt: at(5) },
+      { caseId: 'c1', eventType: 'SEND_DEMAND', createdAt: at(5) },
       { caseId: 'c1', eventType: 'RESOLVE', createdAt: at(15) },
       { caseId: 'c2', eventType: 'ACCEPT', createdAt: at(4) },
     ];
@@ -38,7 +38,7 @@ describe('computePipelineStats', () => {
     const events = [
       // a: new→accepted in 2h, accepted→working in 4h
       { caseId: 'a', eventType: 'ACCEPT', createdAt: at(2) },
-      { caseId: 'a', eventType: 'BEGIN_WORK', createdAt: at(6) },
+      { caseId: 'a', eventType: 'SEND_DEMAND', createdAt: at(6) },
       // b: new→accepted in 4h
       { caseId: 'b', eventType: 'ACCEPT', createdAt: at(4) },
     ];

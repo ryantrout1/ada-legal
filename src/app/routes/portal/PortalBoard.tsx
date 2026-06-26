@@ -43,6 +43,14 @@ const RESOLUTION_TYPES: ReadonlyArray<{ value: string; label: string }> = [
 
 const DND_MIME = 'application/x-adall-case';
 
+const COLUMN_PILL: Record<BoardColumn, string> = {
+  new: 'terra',
+  investigating: 'blue',
+  demand_sent: 'amber',
+  negotiating: 'purple',
+  resolved: 'green',
+};
+
 interface Pending {
   caseId: string;
   claimant: string;
@@ -143,12 +151,22 @@ export default function PortalBoard() {
     <div>
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">Pipeline</h1>
+          <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">My Matters</h1>
           <p className="text-sm text-ink-500">
             Drag a case to its next stage, or use each card&rsquo;s Move menu.
           </p>
         </div>
-        <PortalViewToggle active="board" />
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            disabled
+            aria-label="New matter — coming soon"
+            className="inline-flex items-center gap-1.5 min-h-[44px] px-4 rounded-lg border border-control-border bg-white text-ink-500 text-sm font-semibold cursor-not-allowed"
+          >
+            New matter
+          </button>
+          <PortalViewToggle active="board" />
+        </div>
       </header>
 
       {moveError && (
@@ -170,7 +188,7 @@ export default function PortalBoard() {
       ) : loading ? (
         <p className="text-sm text-ink-500">Loading the board…</p>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {BOARD_COLUMNS.map((column) => {
             const items = byColumn(column);
             return (
@@ -187,8 +205,8 @@ export default function PortalBoard() {
                   dragOver === column ? 'border-accent-500 bg-accent-50' : 'border-control-border bg-surface-100'
                 }`}
               >
-                <h2 className="font-display text-sm uppercase tracking-wide text-ink-700 mb-3 flex items-center justify-between">
-                  <span>{COLUMN_LABEL[column]}</span>
+                <h2 className="mb-3 flex items-center justify-between">
+                  <span className={`lw-pill ${COLUMN_PILL[column]}`}><span className="lw-pill-dot" />{COLUMN_LABEL[column]}</span>
                   <span className="font-mono text-xs text-ink-500">{items.length}</span>
                 </h2>
                 <ul className="flex flex-col gap-2">

@@ -26,11 +26,11 @@ async function seedCase(db: InMemoryDbClient, firmId = 'firm-1') {
 }
 
 describe('transitionCaseForFirm', () => {
-  it('accept moves new → accepted and writes an ACCEPT activity', async () => {
+  it('accept moves new → investigating and writes an ACCEPT activity', async () => {
     const db = new InMemoryDbClient();
     const c = await seedCase(db);
     const res = await db.transitionCaseForFirm({ caseId: c.id, lawFirmId: 'firm-1', transition: 'accept' });
-    expect(res!.caseRow.status).toBe('accepted');
+    expect(res!.caseRow.status).toBe('investigating');
     expect(db.caseActivity.some((a) => a.caseId === c.id && a.eventType === 'ACCEPT')).toBe(true);
   });
 
@@ -45,11 +45,12 @@ describe('transitionCaseForFirm', () => {
     expect((act.metadata as { reason?: string }).reason).toBe('Outside our practice area');
   });
 
-  it('accept → begin_work → resolve walks the full path', async () => {
+  it('accept → send_demand → begin_negotiation → resolve walks the full path', async () => {
     const db = new InMemoryDbClient();
     const c = await seedCase(db);
     await db.transitionCaseForFirm({ caseId: c.id, lawFirmId: 'firm-1', transition: 'accept' });
-    await db.transitionCaseForFirm({ caseId: c.id, lawFirmId: 'firm-1', transition: 'begin_work' });
+    await db.transitionCaseForFirm({ caseId: c.id, lawFirmId: 'firm-1', transition: 'send_demand' });
+    await db.transitionCaseForFirm({ caseId: c.id, lawFirmId: 'firm-1', transition: 'begin_negotiation' });
     const res = await db.transitionCaseForFirm({
       caseId: c.id, lawFirmId: 'firm-1', transition: 'resolve', resolutionType: 'engaged',
     });

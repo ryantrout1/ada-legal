@@ -2,7 +2,7 @@
  * POST /api/portal/cases/[id]/transition
  *
  * Drive a case through the workspace lifecycle (Phase 2c). Body:
- *   { action: 'accept'|'decline'|'begin_work'|'resolve',
+ *   { action: 'accept'|'decline'|'send_demand'|'begin_negotiation'|'resolve',
  *     reason?, resolution_type?, resolution_notes? }
  *
  * Attorney-only, firm-scoped server-side. 404 when the case isn't this firm's
@@ -23,7 +23,8 @@ import {
 const ALLOWED: ReadonlySet<CaseTransition> = new Set<CaseTransition>([
   'accept',
   'decline',
-  'begin_work',
+  'send_demand',
+  'begin_negotiation',
   'resolve',
 ]);
 
