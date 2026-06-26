@@ -40,6 +40,13 @@ describe('filterAccountPatch — allowed fields', () => {
     expect(r.firmPatch.email).toBe('firm@firm.com');
   });
 
+  it('maps bar_number to barNumber', () => {
+    const r = filterAccountPatch({ attorney: { bar_number: '  AZ-12345 ' } });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.attorneyPatch.barNumber).toBe('AZ-12345');
+  });
+
   it('treats blank max_active_cases as null (no limit)', () => {
     const r = filterAccountPatch({ attorney: { max_active_cases: '' } });
     expect(r.ok).toBe(true);
