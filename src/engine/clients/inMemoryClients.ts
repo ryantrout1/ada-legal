@@ -568,6 +568,7 @@ export class InMemoryDbClient implements DbClient {
 
     let filtered = this.adminLitigation.slice();
     if (opts.kind) filtered = filtered.filter((l) => l.kind === opts.kind);
+    else if (opts.massGroup) filtered = filtered.filter((l) => l.kind !== 'class');
     if (opts.status) filtered = filtered.filter((l) => l.status === opts.status);
     if (opts.leadAttorneyId)
       filtered = filtered.filter((l) => l.leadAttorneyId === opts.leadAttorneyId);

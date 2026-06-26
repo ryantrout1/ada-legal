@@ -567,3 +567,35 @@ describe('buildLitigationSection with focused row — via assemble (Phase 6a)', 
     expect(promptText.toLowerCase()).not.toMatch(/already interested|starting point|came in about/);
   });
 });
+
+describe('listLitigationForAdmin — mass-actions grouping (§3.5b)', () => {
+  async function seedMixed() {
+    const c = makeInMemoryClients();
+    await c.db.createLitigation({ orgId: 'o', kind: 'class', caseName: 'A Class', slug: 'a-class', eligibility: 'x', status: 'active' });
+    await c.db.createLitigation({ orgId: 'o', kind: 'pattern_of_practice', caseName: 'B Pattern', slug: 'b-pattern', eligibility: 'x', status: 'active' });
+    await c.db.createLitigation({ orgId: 'o', kind: 'enforcement_action', caseName: 'C Enforcement', slug: 'c-enforcement', eligibility: 'x', status: 'active' });
+    await c.db.createLitigation({ orgId: 'o', kind: 'consent_decree', caseName: 'D Decree', slug: 'd-decree', eligibility: 'x', status: 'active' });
+    return c;
+  }
+
+  it('kind=class returns only class actions', async () => {
+    const c = await seedMixed();
+    const res = await c.db.listLitigationForAdmin({ kind: 'class' });
+    expect(res.litigation.map((l) => l.kind)).toEqual(['class']);
+  });
+
+  it('massGroup returns every NON-class litigation', async () => {
+    const c = await seedMixed();
+    const res = await c.db.listLitigationForAdmin({ massGroup: true });
+    const kinds = res.litigation.map((l) => l.kind).sort();
+    expect(kinds).toEqual(['consent_decree', 'enforcement_action', 'pattern_of_practice']);
+    expect(kinds).not.toContain('class');
+    expect(res.totalCount).toBe(3);
+  });
+
+  it('explicit kind wins over massGroup', async () => {
+    const c = await seedMixed();
+    const res = await c.db.listLitigationForAdmin({ kind: 'class', massGroup: true });
+    expect(res.litigation.map((l) => l.kind)).toEqual(['class']);
+  });
+});

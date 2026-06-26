@@ -18,7 +18,7 @@
  * Ref: docs/ARCHITECTURE.md §2, §6, docs/DO_NOT_TOUCH.md rule 1
  */
 
-import { and, eq, ilike, inArray, isNull, or, sql } from 'drizzle-orm';
+import { and, eq, ilike, inArray, isNull, ne, or, sql } from 'drizzle-orm';
 import type { Database } from '../../db/client.js';
 import { NATIONWIDE_SENTINEL, normalizeAffectedStates } from './litigationStates.js';
 import {
@@ -904,6 +904,7 @@ export class NeonDbClient implements DbClient {
 
     const conds = [];
     if (opts.kind) conds.push(eq(litigationTable.kind, opts.kind));
+    else if (opts.massGroup) conds.push(ne(litigationTable.kind, 'class'));
     if (opts.status) conds.push(eq(litigationTable.status, opts.status));
     if (opts.leadAttorneyId)
       conds.push(eq(litigationTable.leadAttorneyId, opts.leadAttorneyId));

@@ -42,6 +42,9 @@ async function handleList(req: VercelRequest, res: VercelResponse) {
   try {
     const kindRaw = typeof req.query.kind === 'string' ? req.query.kind : undefined;
     const kind = isKind(kindRaw) ? kindRaw : undefined;
+    // "mass" is a UI grouping, not a stored kind: every non-class litigation.
+    // The B44 AdminMassActions page passes ?kind=mass.
+    const massGroup = kindRaw === 'mass';
 
     const statusRaw = typeof req.query.status === 'string' ? req.query.status : undefined;
     const status = isStatus(statusRaw) ? statusRaw : undefined;
@@ -55,6 +58,7 @@ async function handleList(req: VercelRequest, res: VercelResponse) {
     const clients = makeClientsFromEnv();
     const result = await clients.db.listLitigationForAdmin({
       kind,
+      massGroup,
       status,
       search,
       leadAttorneyId,

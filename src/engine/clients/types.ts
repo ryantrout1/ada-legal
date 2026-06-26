@@ -500,6 +500,8 @@ export interface LitigationAdminRow extends LitigationRow {
 
 export interface ListLitigationForAdminOptions {
   kind?: LitigationKind;
+  /** "Mass actions" UI grouping: every litigation that is NOT a class action. Ignored when `kind` is set. */
+  massGroup?: boolean;
   status?: LitigationStatus;
   search?: string;
   leadAttorneyId?: string;
