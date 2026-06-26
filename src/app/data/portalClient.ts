@@ -65,6 +65,7 @@ export interface PortalCaseDetailResponse {
   first_contact_due: string | null;
   created_at: string;
   case_name: string | null;
+  sol_date: string | null;
   claimant_name: string | null;
   claimant_email: string | null;
   claimant_phone: string | null;
@@ -137,6 +138,17 @@ export async function addPortalCaseNote(id: string, body: string): Promise<void>
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ body }),
+  });
+  if (!resp.ok) await failFor(resp);
+}
+
+/** Set or clear (null) the attorney-set statute-of-limitations date. */
+export async function setCaseSolDate(id: string, solDate: string | null): Promise<void> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/sol`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sol_date: solDate }),
   });
   if (!resp.ok) await failFor(resp);
 }

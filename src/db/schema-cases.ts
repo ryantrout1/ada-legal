@@ -66,6 +66,10 @@ export const cases = pgTable(
     matchConfidence: text('match_confidence'),
     jurisdictionState: text('jurisdiction_state'),
 
+    // Statute of limitations — ATTORNEY-SET ONLY, never auto-computed (UPL /
+    // malpractice). Null until an attorney enters it. Phase 5 §7.3.
+    solDate: date('sol_date'),
+
     consentToShare: boolean('consent_to_share').notNull().default(false),
     consentAt: timestamp('consent_at', { withTimezone: true }),
     consentScope: text('consent_scope'),

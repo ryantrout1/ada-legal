@@ -207,6 +207,7 @@ export class InMemoryDbClient implements DbClient {
       jurisdictionState: string | null;
       routedAt: string | null;
       firstContactDue: string | null;
+      solDate: string | null;
     }
   >();
   public readonly caseActivity: Array<{
@@ -1293,6 +1294,7 @@ export class InMemoryDbClient implements DbClient {
       jurisdictionState: opts.jurisdictionState,
       routedAt: opts.routedAt,
       firstContactDue: opts.firstContactDue,
+      solDate: null,
     });
 
     this.caseActivity.push({
@@ -1443,6 +1445,7 @@ export class InMemoryDbClient implements DbClient {
       firstContactDue: extras?.firstContactDue ?? null,
       createdAt: c.createdAt,
       caseName: litig?.caseName ?? null,
+      solDate: extras?.solDate ?? null,
       claimantName: portalFieldStr(fields, 'claimant_name'),
       claimantEmail: portalFieldStr(fields, 'claimant_email'),
       claimantPhone: portalFieldStr(fields, 'claimant_phone'),
@@ -1495,6 +1498,34 @@ export class InMemoryDbClient implements DbClient {
       eventType: 'NOTE',
       summary: opts.body,
       metadata: { note: true },
+      createdAt: new Date(0).toISOString(),
+    });
+    return true;
+  }
+
+  async setCaseSolDate(opts: {
+    caseId: string;
+    lawFirmId: string;
+    solDate: string | null;
+  }): Promise<boolean> {
+    const c = this.cases.find((x) => x.id === opts.caseId && x.firmId === opts.lawFirmId);
+    if (!c || !c.consentToShare) return false;
+    const extras = this.caseExtras.get(c.id);
+    this.caseExtras.set(c.id, {
+      classificationTitle: extras?.classificationTitle ?? null,
+      jurisdictionState: extras?.jurisdictionState ?? null,
+      routedAt: extras?.routedAt ?? null,
+      firstContactDue: extras?.firstContactDue ?? null,
+      solDate: opts.solDate,
+    });
+    this.caseActivity.push({
+      caseId: c.id,
+      actorType: 'user',
+      eventType: 'SOL_SET',
+      summary: opts.solDate
+        ? `Statute of limitations set to ${opts.solDate}`
+        : 'Statute of limitations cleared',
+      metadata: { solDate: opts.solDate },
       createdAt: new Date(0).toISOString(),
     });
     return true;
@@ -1558,6 +1589,7 @@ export class InMemoryDbClient implements DbClient {
       jurisdictionState: extras?.jurisdictionState ?? null,
       routedAt,
       firstContactDue,
+      solDate: extras?.solDate ?? null,
     });
 
     this.caseActivity.push({

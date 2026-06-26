@@ -2140,6 +2140,7 @@ export class NeonDbClient implements DbClient {
         routedAt: casesTable.routedAt,
         firstContactDue: casesTable.firstContactDue,
         createdAt: casesTable.createdAt,
+        solDate: casesTable.solDate,
         litigationListingId: casesTable.litigationListingId,
         caseName: litigationTable.caseName,
         extractedFields: adaSessions.extractedFields,
@@ -2196,6 +2197,7 @@ export class NeonDbClient implements DbClient {
       firstContactDue: iso(r.firstContactDue),
       createdAt: iso(r.createdAt) ?? '',
       caseName: r.caseName ?? null,
+      solDate: r.solDate == null ? null : String(r.solDate),
       claimantName: fStr('claimant_name'),
       claimantEmail: fStr('claimant_email'),
       claimantPhone: fStr('claimant_phone'),
@@ -2281,6 +2283,36 @@ export class NeonDbClient implements DbClient {
       eventType: 'NOTE',
       summary: opts.body,
       metadata: { note: true },
+    });
+    return true;
+  }
+
+  async setCaseSolDate(opts: {
+    caseId: string;
+    lawFirmId: string;
+    solDate: string | null;
+  }): Promise<boolean> {
+    const existing = await this.db
+      .select({ id: casesTable.id, consentToShare: casesTable.consentToShare })
+      .from(casesTable)
+      .where(and(eq(casesTable.id, opts.caseId), eq(casesTable.firmId, opts.lawFirmId)))
+      .limit(1);
+    const row = existing[0];
+    if (!row || !row.consentToShare) return false;
+
+    await this.db
+      .update(casesTable)
+      .set({ solDate: opts.solDate })
+      .where(eq(casesTable.id, opts.caseId));
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'SOL_SET',
+      summary: opts.solDate
+        ? `Statute of limitations set to ${opts.solDate}`
+        : 'Statute of limitations cleared',
+      metadata: { solDate: opts.solDate },
     });
     return true;
   }

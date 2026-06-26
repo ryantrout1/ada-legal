@@ -799,6 +799,8 @@ export interface PortalCaseDetailFull {
   firstContactDue: string | null;
   createdAt: string;
   caseName: string | null;
+  /** Attorney-set statute-of-limitations date (YYYY-MM-DD) or null. */
+  solDate: string | null;
   claimantName: string | null;
   claimantEmail: string | null;
   claimantPhone: string | null;
@@ -1252,6 +1254,18 @@ export interface DbClient {
     caseId: string;
     lawFirmId: string;
     body: string;
+  }): Promise<boolean>;
+
+  /**
+   * Phase 5 §7.3: set (or clear, with null) the attorney-set statute-of-
+   * limitations date on a case. Firm-scoped + consent-gated; writes a SOL_SET
+   * activity row. Returns false when the case isn't this firm's. NEVER computes
+   * the date — the attorney supplies it.
+   */
+  setCaseSolDate(opts: {
+    caseId: string;
+    lawFirmId: string;
+    solDate: string | null;
   }): Promise<boolean>;
 
   /**

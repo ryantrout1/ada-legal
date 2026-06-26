@@ -54,6 +54,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       first_contact_due: d.firstContactDue,
       created_at: d.createdAt,
       case_name: d.caseName,
+      sol_date: d.solDate,
       claimant_name: d.claimantName,
       claimant_email: d.claimantEmail,
       claimant_phone: d.claimantPhone,
