@@ -62,6 +62,38 @@ export async function resolveAttorneyContext(
   };
 }
 
+/** Display identity for the portal shell (sidebar brand + footer). */
+export interface PortalIdentity {
+  attorney: { id: string; name: string; email: string | null };
+  firm: { id: string; name: string };
+}
+
+/**
+ * Load the signed-in attorney's display name + firm name for the portal shell.
+ * Pure-ish (no HTTP, no env) so it's unit-testable against the in-memory client.
+ * Falls back gracefully when a name is missing — the shell must always render.
+ */
+export async function loadPortalIdentity(
+  db: DbClient,
+  ctx: AttorneyAuthContext,
+): Promise<PortalIdentity> {
+  const [firm, attorney] = await Promise.all([
+    db.readLawFirmById(ctx.lawFirmId),
+    db.getAttorneyById(ctx.attorneyId),
+  ]);
+  return {
+    attorney: {
+      id: ctx.attorneyId,
+      name: attorney?.name ?? ctx.email ?? 'Attorney',
+      email: ctx.email,
+    },
+    firm: {
+      id: ctx.lawFirmId,
+      name: firm?.name ?? 'Your firm',
+    },
+  };
+}
+
 /**
  * Verify the request is an authorized, paired attorney. On failure writes the
  * response (401 unauth, 403 not-onboarded, 500 misconfig) and returns null.
