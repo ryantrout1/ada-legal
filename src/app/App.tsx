@@ -64,7 +64,7 @@ import AdminPhotoReviewDetail from './routes/admin/AdminPhotoReviewDetail.js';
 import PortalLayout from './layouts/PortalLayout.js';
 import PortalSignIn from './routes/portal/SignIn.js';
 import PortalSignUp from './routes/portal/SignUp.js';
-import PortalQueue from './routes/portal/PortalQueue.js';
+import PortalInbox from './routes/portal/PortalInbox.js';
 import PortalBoard from './routes/portal/PortalBoard.js';
 import PortalTasks from './routes/portal/PortalTasks.js';
 import PortalPipeline from './routes/portal/PortalPipeline.js';
@@ -205,7 +205,7 @@ function PortalShell() {
             </RequireAttorney>
           }
         >
-          <Route index element={<PortalQueue />} />
+          <Route index element={<PortalInbox />} />
           <Route path="board" element={<PortalBoard />} />
           <Route path="tasks" element={<PortalTasks />} />
           <Route path="pipeline" element={<PortalPipeline />} />
