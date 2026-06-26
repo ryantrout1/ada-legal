@@ -14,6 +14,10 @@
 
 import { applyCaseTransition, caseTransitionSummary } from '../cases/caseStateMachine.js';
 import type { CaseStatus, CaseTransition, CaseLane } from '../cases/caseStateMachine.js';
+import { computePipelineStats } from '../cases/pipelineStats.js';
+import type { PipelineStats } from '../cases/pipelineStats.js';
+
+const PIPELINE_EVENT_TYPES: ReadonlySet<string> = new Set(['ROUTED', 'ACCEPT', 'BEGIN_WORK', 'RESOLVE']);
 import type { AdaSessionState } from '../types.js';
 import type {
   AdaClients,
@@ -1633,6 +1637,16 @@ export class InMemoryDbClient implements DbClient {
       if (!b.dueDate) return -1;
       return a.dueDate < b.dueDate ? -1 : 1;
     });
+  }
+
+  async getFirmPipelineStats(lawFirmId: string): Promise<PipelineStats> {
+    const firmCases = this.cases.filter((c) => c.firmId === lawFirmId && c.consentToShare);
+    const ids = new Set(firmCases.map((c) => c.id));
+    const cases = firmCases.map((c) => ({ id: c.id, createdAt: c.createdAt }));
+    const events = this.caseActivity
+      .filter((a) => ids.has(a.caseId) && PIPELINE_EVENT_TYPES.has(a.eventType))
+      .map((a) => ({ caseId: a.caseId, eventType: a.eventType, createdAt: a.createdAt }));
+    return computePipelineStats(cases, events);
   }
 
   async resolveAttorneyByClerkUserId(

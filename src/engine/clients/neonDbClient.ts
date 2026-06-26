@@ -45,6 +45,8 @@ import {
   stripeWebhookEvents as stripeWebhookEventsTable,
 } from '../../db/schema-ch1.js';
 import { cases as casesTable, caseActivity as caseActivityTable, caseTasks as caseTasksTable } from '../../db/schema-cases.js';
+import { computePipelineStats } from '../cases/pipelineStats.js';
+import type { PipelineStats } from '../cases/pipelineStats.js';
 import type { CaseLane, CaseStatus, CaseTransition } from '../cases/caseStateMachine.js';
 import { applyCaseTransition, caseTransitionSummary } from '../cases/caseStateMachine.js';
 import type {
@@ -2490,6 +2492,40 @@ export class NeonDbClient implements DbClient {
       caseNumber: r.caseNumber,
       claimantName: fStr((r.extractedFields ?? null) as ExtractedFields | null, 'claimant_name'),
     }));
+  }
+
+  async getFirmPipelineStats(lawFirmId: string): Promise<PipelineStats> {
+    const toIso = (v: unknown): string =>
+      v instanceof Date ? v.toISOString() : v == null ? '' : String(v);
+
+    const caseRows = await this.db
+      .select({ id: casesTable.id, createdAt: casesTable.createdAt })
+      .from(casesTable)
+      .where(and(eq(casesTable.firmId, lawFirmId), eq(casesTable.consentToShare, true)));
+    const cases = caseRows.map((c) => ({ id: c.id, createdAt: toIso(c.createdAt) }));
+
+    const eventRows = await this.db
+      .select({
+        caseId: caseActivityTable.caseId,
+        eventType: caseActivityTable.eventType,
+        createdAt: caseActivityTable.createdAt,
+      })
+      .from(caseActivityTable)
+      .innerJoin(casesTable, eq(casesTable.id, caseActivityTable.caseId))
+      .where(
+        and(
+          eq(casesTable.firmId, lawFirmId),
+          eq(casesTable.consentToShare, true),
+          inArray(caseActivityTable.eventType, ['ROUTED', 'ACCEPT', 'BEGIN_WORK', 'RESOLVE']),
+        ),
+      );
+    const events = eventRows.map((e) => ({
+      caseId: e.caseId,
+      eventType: e.eventType,
+      createdAt: toIso(e.createdAt),
+    }));
+
+    return computePipelineStats(cases, events);
   }
 
   async resolveAttorneyByClerkUserId(

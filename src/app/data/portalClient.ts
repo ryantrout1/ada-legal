@@ -221,3 +221,16 @@ export async function fetchFirmTasks(): Promise<PortalFirmTask[]> {
   if (!resp.ok) return failFor(resp);
   return ((await resp.json()) as { tasks: PortalFirmTask[] }).tasks;
 }
+
+// ─── Phase 4c: pipeline analytics ───────────────────────────────────────────
+
+export interface PipelineStatsResponse {
+  stage_counts: { new: number; accepted: number; working: number; resolved: number };
+  time_in_stage: { stage: string; median_hours: number; n: number }[];
+}
+
+export async function fetchPipelineStats(): Promise<PipelineStatsResponse> {
+  const resp = await fetch('/api/portal/pipeline', { credentials: 'include' });
+  if (!resp.ok) return failFor(resp);
+  return (await resp.json()) as PipelineStatsResponse;
+}

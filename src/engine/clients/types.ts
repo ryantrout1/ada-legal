@@ -30,6 +30,7 @@ import type {
 } from '../../types/db.js';
 import type { AdaSessionState } from '../types.js';
 import type { CaseLane, CaseTransition } from '../cases/caseStateMachine.js';
+import type { PipelineStats } from '../cases/pipelineStats.js';
 
 // ─── AI client ────────────────────────────────────────────────────────────────
 
@@ -1293,6 +1294,9 @@ export interface DbClient {
 
   /** Phase 4b: open tasks across the firm's consented cases (cross-matter). */
   listOpenTasksForFirm(lawFirmId: string): Promise<FirmTaskRow[]>;
+
+  /** Phase 4c: pipeline analytics (funnel + median time-in-stage) for the firm. */
+  getFirmPipelineStats(lawFirmId: string): Promise<PipelineStats>;
 
   /**
    * Full case package for a single session, scoped to a firm. Returns null
