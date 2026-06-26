@@ -69,6 +69,7 @@ import PortalBoard from './routes/portal/PortalBoard.js';
 import PortalTasks from './routes/portal/PortalTasks.js';
 import PortalPipeline from './routes/portal/PortalPipeline.js';
 import PortalCaseDetail from './routes/portal/PortalCaseDetail.js';
+import PortalPlaceholder from './routes/portal/PortalPlaceholder.js';
 import { HelmetProvider } from 'react-helmet-async';
 import RequireAdmin from './components/RequireAdmin.js';
 import RequireAttorney from './components/RequireAttorney.js';
@@ -209,6 +210,19 @@ function PortalShell() {
           <Route path="tasks" element={<PortalTasks />} />
           <Route path="pipeline" element={<PortalPipeline />} />
           <Route path="cases/:id" element={<PortalCaseDetail />} />
+          {/* Nav-visible, backend-pending destinations (Phase 5 §7.1). */}
+          <Route
+            path="calendar"
+            element={<PortalPlaceholder title="Calendar" />}
+          />
+          <Route
+            path="contacts"
+            element={<PortalPlaceholder title="Contacts" />}
+          />
+          <Route
+            path="settings"
+            element={<PortalPlaceholder title="Settings" />}
+          />
           <Route path="*" element={<Navigate to="/portal" replace />} />
         </Route>
       </Routes>

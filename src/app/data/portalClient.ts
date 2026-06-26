@@ -107,6 +107,18 @@ export async function fetchPortalQueue(): Promise<PortalQueueResponse> {
   return (await resp.json()) as PortalQueueResponse;
 }
 
+/** Signed-in attorney's display identity for the shell (brand + footer). */
+export interface PortalIdentity {
+  attorney: { id: string; name: string; email: string | null };
+  firm: { id: string; name: string };
+}
+
+export async function fetchPortalIdentity(): Promise<PortalIdentity> {
+  const resp = await fetch(`/api/portal/me`, { credentials: 'include' });
+  if (!resp.ok) return failFor(resp);
+  return (await resp.json()) as PortalIdentity;
+}
+
 /** Returns null on 404 (out-of-firm or unknown case); throws PortalApiError otherwise. */
 export async function fetchPortalCase(
   id: string,

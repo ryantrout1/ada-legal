@@ -919,6 +919,12 @@ body {
   --lw-muted: #4D5460;            /* 7.1:1 page / 7.6:1 card */
   --lw-link:  #953211;            /* 7.2:1 page / 7.7:1 card */
 
+  /* Card + topbar surfaces — white in default, re-themed per display mode
+     below so the shell flattens correctly in dark / warm / low-vision /
+     contrast (Display Settings honored). */
+  --lw-card:       #FFFFFF;
+  --lw-topbar-bg:  #FFFFFF;
+
   /* Sidebar — fixed dark slate in default mode; high internal contrast */
   --lw-sidebar-bg:        #1E293B;
   --lw-sidebar-fg:        rgba(255, 255, 255, 0.92); /* ~12:1 on sidebar */
@@ -966,3 +972,269 @@ body {
 .lawyer-workspace .lw-pill.purple { background: var(--lw-purple-bg); color: var(--lw-purple-tx); border-color: var(--lw-purple-bd); }
 .lawyer-workspace .lw-pill.gray   { background: var(--lw-gray-bg);   color: var(--lw-gray-tx);   border-color: var(--lw-gray-bd); }
 .lawyer-workspace .lw-pill.terra  { background: var(--color-accent-50); color: var(--color-accent-500); border-color: #FED7AA; }
+
+/* ─── Portal shell (Phase 5 §7.1) ──────────────────────────────────────────
+ * Sidebar + topbar + content frame for the lawyer workspace. Slate sidebar,
+ * warm content. All interactive targets are >= 44px (2.5.5); focus is visible;
+ * the active nav item carries a left border + tint + color (never color-only)
+ * AND aria-current for SR/forced-colors. Reflows to a single column < 860px.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.lawyer-workspace.lw-shell {
+  display: grid;
+  grid-template-columns: 232px 1fr;
+  min-height: 100vh;
+  background: var(--color-surface-50);
+  color: var(--color-ink-700);
+}
+
+/* Sidebar */
+.lw-sidebar {
+  background: var(--lw-sidebar-bg);
+  color: var(--lw-sidebar-fg);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  min-width: 0;
+}
+.lw-sidebar-brand {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--lw-sidebar-border);
+  margin-bottom: 12px;
+}
+.lw-sidebar-brand .lw-logo {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3ch;
+}
+.lw-sidebar-brand .lw-logo .accent { color: var(--lw-sidebar-active); }
+.lw-sidebar-brand .lw-firm {
+  font-size: 0.6875rem;
+  color: var(--lw-sidebar-muted);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.lw-sidebar-section {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--lw-sidebar-muted);
+  padding: 16px 20px 6px;
+  font-weight: 700;
+}
+.lw-sidebar-nav { display: flex; flex-direction: column; }
+.lw-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 20px;
+  color: var(--lw-sidebar-fg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.lw-sidebar-link:hover { background: rgba(255, 255, 255, 0.06); }
+.lw-sidebar-link[aria-current="page"] {
+  background: var(--lw-sidebar-active-bg);
+  border-left-color: var(--lw-sidebar-active);
+  color: var(--lw-sidebar-active);
+  font-weight: 700;
+}
+.lw-sidebar-link .lw-icon { width: 18px; height: 18px; flex: 0 0 auto; }
+.lw-sidebar-link .lw-badge {
+  margin-left: auto;
+  background: var(--color-accent-500);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  min-width: 20px;
+  text-align: center;
+}
+.lw-sidebar-link:focus-visible {
+  outline: 3px solid var(--lw-sidebar-active);
+  outline-offset: -3px;
+}
+.lw-sidebar-footer {
+  margin-top: auto;
+  padding: 14px 20px 0;
+  border-top: 1px solid var(--lw-sidebar-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.lw-sidebar-footer .lw-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--color-accent-500);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.8125rem;
+  flex: 0 0 auto;
+}
+.lw-sidebar-footer .lw-who { min-width: 0; }
+.lw-sidebar-footer .lw-name { font-size: 0.8125rem; font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lw-sidebar-footer .lw-role { font-size: 0.6875rem; color: var(--lw-sidebar-muted); }
+.lw-signout {
+  margin-left: auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px;
+  border-radius: 8px;
+  color: var(--lw-sidebar-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.lw-signout:hover { color: #fff; background: rgba(255, 255, 255, 0.06); }
+.lw-signout:focus-visible { outline: 3px solid var(--lw-sidebar-active); outline-offset: 2px; }
+
+/* Main column */
+.lw-main { display: flex; flex-direction: column; min-width: 0; }
+.lw-topbar {
+  background: var(--lw-topbar-bg);
+  border-bottom: 1px solid var(--color-surface-200);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+}
+.lw-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 460px;
+  padding: 0 12px;
+  height: 38px;
+  border: 1px solid var(--color-control-border);
+  border-radius: 8px;
+  background: var(--color-surface-50);
+  color: var(--color-ink-500);
+  font: inherit;
+  font-size: 0.8125rem;
+  text-align: left;
+  cursor: not-allowed;
+}
+.lw-search .lw-search-label { flex: 1; }
+.lw-search .lw-kbd {
+  font-size: 0.625rem;
+  border: 1px solid var(--color-surface-200);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+}
+.lw-topbar-actions { display: flex; gap: 8px; margin-left: auto; }
+.lw-iconbtn {
+  width: 44px; height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--color-control-border);
+  background: var(--lw-card);
+  color: var(--color-ink-500);
+}
+.lw-iconbtn[disabled] { opacity: 1; color: var(--color-ink-500); cursor: not-allowed; }
+.lw-content { padding: 28px 24px; flex: 1; min-width: 0; }
+
+/* "Coming soon" placeholder for stubbed nav destinations */
+.lw-placeholder {
+  max-width: 520px;
+  margin: 48px auto;
+  text-align: center;
+  background: var(--lw-card);
+  border: 1px solid var(--color-surface-200);
+  border-radius: 12px;
+  padding: 40px 32px;
+}
+.lw-placeholder h1 { font-family: var(--font-display); font-size: 1.5rem; color: var(--color-ink-900); margin: 0 0 8px; }
+.lw-placeholder p { color: var(--color-ink-500); font-size: 0.9375rem; margin: 0; }
+.lw-placeholder .lw-badge-soon {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-accent-500);
+  background: var(--color-accent-50);
+  border: 1px solid #FED7AA;
+  border-radius: 999px;
+  padding: 3px 12px;
+}
+
+/* Reflow < 860px: single column, sidebar becomes a top band with a
+   horizontally-scrollable nav. No loss of function at 320px (1.4.10). */
+@media (max-width: 860px) {
+  .lawyer-workspace.lw-shell { grid-template-columns: 1fr; }
+  .lw-sidebar { padding: 12px 0; }
+  .lw-sidebar-nav { flex-direction: row; overflow-x: auto; gap: 2px; }
+  .lw-sidebar-section { display: none; }
+  .lw-sidebar-link { border-left: none; border-bottom: 3px solid transparent; white-space: nowrap; padding: 0 14px; }
+  .lw-sidebar-link[aria-current="page"] { border-left-color: transparent; border-bottom-color: var(--lw-sidebar-active); }
+  .lw-sidebar-footer { margin-top: 12px; }
+}
+
+/* ─── Portal surfaces per display mode (Display Settings honored) ───────────
+ * The card/topbar surfaces and (in contrast only) the sidebar adapt to the
+ * user's chosen display mode. These selectors are >= (0,2,0) so they win over
+ * the (0,1,0) .lawyer-workspace defaults. Dark + low-vision keep the dark-slate
+ * sidebar (verified AAA, reads as intentional); contrast flattens it to pure
+ * black with a white border so the sidebar/content boundary stays visible.
+ * ─────────────────────────────────────────────────────────────────────────── */
+:root[data-display="dark"] .lawyer-workspace       { --lw-card: #2A2620; --lw-topbar-bg: #1E1B17; }
+:root[data-display="warm"] .lawyer-workspace        { --lw-card: #FBF6EC; --lw-topbar-bg: #FBF6EC; }
+:root[data-display="low-vision"] .lawyer-workspace  { --lw-card: #FFFFFF; --lw-topbar-bg: #FFFFFF; }
+
+:root[data-display="contrast"] .lawyer-workspace {
+  --lw-card: #000000;
+  --lw-topbar-bg: #000000;
+  --lw-sidebar-bg: #000000;
+  --lw-sidebar-fg: #FFFFFF;
+  --lw-sidebar-muted: #E0E0E0;       /* AAA on black */
+  --lw-sidebar-active: #F4A56B;      /* contrast accent amber, 9.8:1 on black */
+  --lw-sidebar-active-bg: transparent;
+  --lw-sidebar-border: #FFFFFF;
+}
+/* Contrast: borders the token-flattened surfaces can't get from bg-white rules
+   (these classes aren't bg-white), plus a re-themed avatar. */
+:root[data-display="contrast"] .lw-sidebar { border-right: 2px solid #FFFFFF; }
+:root[data-display="contrast"] .lw-topbar { border-bottom: 2px solid #FFFFFF; }
+:root[data-display="contrast"] .lw-placeholder { border: 2px solid #FFFFFF; }
+:root[data-display="contrast"] .lw-sidebar-footer .lw-avatar {
+  background: transparent;
+  border: 2px solid #FFFFFF;
+  color: #FFFFFF;
+}
+
+/* OS "Increase Contrast" with no explicit panel choice — mirror the contrast
+   treatment (matches the app's existing prefers-contrast handling). */
+@media (prefers-contrast: more) {
+  :root:not([data-display]) .lawyer-workspace {
+    --lw-card: #000000;
+    --lw-topbar-bg: #000000;
+    --lw-sidebar-bg: #000000;
+    --lw-sidebar-fg: #FFFFFF;
+    --lw-sidebar-muted: #E0E0E0;
+    --lw-sidebar-active: #F4A56B;
+    --lw-sidebar-active-bg: transparent;
+    --lw-sidebar-border: #FFFFFF;
+  }
+  :root:not([data-display]) .lw-sidebar { border-right: 2px solid #FFFFFF; }
+  :root:not([data-display]) .lw-topbar { border-bottom: 2px solid #FFFFFF; }
+  :root:not([data-display]) .lw-placeholder { border: 2px solid #FFFFFF; }
+  :root:not([data-display]) .lw-sidebar-footer .lw-avatar {
+    background: transparent;
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF;
+  }
+}
