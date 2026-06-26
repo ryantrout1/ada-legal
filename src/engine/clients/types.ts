@@ -812,6 +812,8 @@ export interface CaseDocumentRow {
   mimeType: string | null;
   sizeBytes: number | null;
   uploadedAt: string;
+  /** 'reference' = external link opened directly; 'blob' = private blob streamed via the download Function. */
+  storageKind: string;
 }
 
 export interface PortalCaseDetailFull {
@@ -1337,6 +1339,12 @@ export interface DbClient {
    * gated. NEVER computes or fabricates a URL.
    */
   listCaseDocuments(caseId: string, lawFirmId: string): Promise<CaseDocumentRow[]>;
+  /** Fetch a single document, firm-scoped. Returns null when the case isn't this firm's or the doc isn't on it. Used by the gated download Function. */
+  getCaseDocument(
+    caseId: string,
+    lawFirmId: string,
+    documentId: string,
+  ): Promise<CaseDocumentRow | null>;
   addCaseDocument(opts: {
     caseId: string;
     lawFirmId: string;
@@ -1345,6 +1353,7 @@ export interface DbClient {
     mimeType?: string | null;
     sizeBytes?: number | null;
     uploadedBy?: string | null;
+    storageKind?: 'reference' | 'blob';
   }): Promise<CaseDocumentRow | null>;
   removeCaseDocument(opts: {
     caseId: string;

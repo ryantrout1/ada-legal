@@ -209,6 +209,7 @@ export const caseDocuments = pgTable(
     mimeType: text('mime_type'),
     sizeBytes: bigint('size_bytes', { mode: 'number' }),
     storageUrl: text('storage_url').notNull(),
+    storageKind: text('storage_kind').notNull().default('reference'),
     tags: text('tags').array().notNull().default(sql`'{}'::text[]`),
     uploadedBy: uuid('uploaded_by').references(() => users.id),
     uploadedAt: timestamp('uploaded_at', { withTimezone: true }).notNull().defaultNow(),

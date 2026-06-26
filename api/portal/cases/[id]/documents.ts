@@ -59,6 +59,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const b = (req.body ?? {}) as Record<string, unknown>;
       const filename = str(b.filename);
       const url = str(b.url);
+      const kind = b.storage_kind === 'blob' ? 'blob' : 'reference';
       if (!filename) return res.status(400).json({ error: 'filename is required' });
       if (!url || !isHttpUrl(url)) return res.status(400).json({ error: 'url must be an http(s) link' });
       const size = typeof b.size_bytes === 'number' && Number.isFinite(b.size_bytes) ? b.size_bytes : null;
@@ -70,6 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         mimeType: str(b.mime_type),
         sizeBytes: size,
         uploadedBy: auth.userId ?? null,
+        storageKind: kind,
       });
       if (!document) return res.status(404).json({ error: 'Case not found' });
       return res.status(200).json({ document });

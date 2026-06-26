@@ -56,4 +56,27 @@ describe('case documents', () => {
     expect(await db.listCaseDocuments(c.id, 'firm-2')).toHaveLength(0);
     expect(await db.removeCaseDocument({ caseId: c.id, lawFirmId: 'firm-2', documentId: mine!.id })).toBe(false);
   });
+
+  it('defaults storageKind to reference and records blob kind when asked', async () => {
+    const db = new InMemoryDbClient();
+    const c = await seedCase(db);
+    const ref = await db.addCaseDocument({ caseId: c.id, lawFirmId: 'firm-1', filename: 'a.pdf', url: 'https://a.test/a.pdf' });
+    expect(ref?.storageKind).toBe('reference');
+    const blob = await db.addCaseDocument({
+      caseId: c.id, lawFirmId: 'firm-1', filename: 'b.pdf',
+      url: 'https://store.private.blob.vercel-storage.com/cases/c/b.pdf', storageKind: 'blob',
+    });
+    expect(blob?.storageKind).toBe('blob');
+  });
+
+  it('getCaseDocument returns one doc firm-scoped, null cross-firm', async () => {
+    const db = new InMemoryDbClient();
+    const c = await seedCase(db, 'firm-1');
+    const d = await db.addCaseDocument({ caseId: c.id, lawFirmId: 'firm-1', filename: 'z.pdf', url: 'https://z.test/z.pdf', storageKind: 'blob' });
+    const got = await db.getCaseDocument(c.id, 'firm-1', d!.id);
+    expect(got?.filename).toBe('z.pdf');
+    expect(got?.storageKind).toBe('blob');
+    expect(await db.getCaseDocument(c.id, 'firm-2', d!.id)).toBeNull();
+    expect(await db.getCaseDocument(c.id, 'firm-1', 'nonexistent')).toBeNull();
+  });
 });

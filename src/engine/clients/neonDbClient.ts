@@ -2467,6 +2467,7 @@ export class NeonDbClient implements DbClient {
         mimeType: caseDocumentsTable.mimeType,
         sizeBytes: caseDocumentsTable.sizeBytes,
         uploadedAt: caseDocumentsTable.uploadedAt,
+        storageKind: caseDocumentsTable.storageKind,
       })
       .from(caseDocumentsTable)
       .where(eq(caseDocumentsTable.caseId, caseId))
@@ -2478,7 +2479,39 @@ export class NeonDbClient implements DbClient {
       mimeType: r.mimeType ?? null,
       sizeBytes: r.sizeBytes ?? null,
       uploadedAt: r.uploadedAt instanceof Date ? r.uploadedAt.toISOString() : String(r.uploadedAt),
+      storageKind: r.storageKind,
     }));
+  }
+
+  async getCaseDocument(
+    caseId: string,
+    lawFirmId: string,
+    documentId: string,
+  ): Promise<CaseDocumentRow | null> {
+    if (!(await this.firmCaseOrgId(caseId, lawFirmId))) return null;
+    const [r] = await this.db
+      .select({
+        id: caseDocumentsTable.id,
+        filename: caseDocumentsTable.filename,
+        url: caseDocumentsTable.storageUrl,
+        mimeType: caseDocumentsTable.mimeType,
+        sizeBytes: caseDocumentsTable.sizeBytes,
+        uploadedAt: caseDocumentsTable.uploadedAt,
+        storageKind: caseDocumentsTable.storageKind,
+      })
+      .from(caseDocumentsTable)
+      .where(and(eq(caseDocumentsTable.id, documentId), eq(caseDocumentsTable.caseId, caseId)))
+      .limit(1);
+    if (!r) return null;
+    return {
+      id: r.id,
+      filename: r.filename,
+      url: r.url,
+      mimeType: r.mimeType ?? null,
+      sizeBytes: r.sizeBytes ?? null,
+      uploadedAt: r.uploadedAt instanceof Date ? r.uploadedAt.toISOString() : String(r.uploadedAt),
+      storageKind: r.storageKind,
+    };
   }
 
   async addCaseDocument(opts: {
@@ -2489,6 +2522,7 @@ export class NeonDbClient implements DbClient {
     mimeType?: string | null;
     sizeBytes?: number | null;
     uploadedBy?: string | null;
+    storageKind?: 'reference' | 'blob';
   }): Promise<CaseDocumentRow | null> {
     if (!(await this.firmCaseOrgId(opts.caseId, opts.lawFirmId))) return null;
     const [row] = await this.db
@@ -2497,6 +2531,7 @@ export class NeonDbClient implements DbClient {
         caseId: opts.caseId,
         filename: opts.filename,
         storageUrl: opts.url,
+        storageKind: opts.storageKind ?? 'reference',
         mimeType: opts.mimeType ?? null,
         sizeBytes: opts.sizeBytes ?? null,
         uploadedBy: opts.uploadedBy ?? null,
@@ -2518,6 +2553,7 @@ export class NeonDbClient implements DbClient {
       mimeType: opts.mimeType ?? null,
       sizeBytes: opts.sizeBytes ?? null,
       uploadedAt: row!.uploadedAt instanceof Date ? row!.uploadedAt.toISOString() : String(row!.uploadedAt),
+      storageKind: opts.storageKind ?? 'reference',
     };
   }
 

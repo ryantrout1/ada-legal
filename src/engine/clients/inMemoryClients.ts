@@ -246,6 +246,7 @@ export class InMemoryDbClient implements DbClient {
     mimeType: string | null;
     sizeBytes: number | null;
     uploadedAt: string;
+    storageKind: string;
   }> = [];
   private docSeq = 0;
   private caseSeq = 0;
@@ -1693,7 +1694,27 @@ export class InMemoryDbClient implements DbClient {
         mimeType: d.mimeType,
         sizeBytes: d.sizeBytes,
         uploadedAt: d.uploadedAt,
+        storageKind: d.storageKind,
       }));
+  }
+
+  async getCaseDocument(
+    caseId: string,
+    lawFirmId: string,
+    documentId: string,
+  ): Promise<CaseDocumentRow | null> {
+    if (!this.firmCase(caseId, lawFirmId)) return null;
+    const d = this.caseDocumentsStore.find((x) => x.id === documentId && x.caseId === caseId);
+    if (!d) return null;
+    return {
+      id: d.id,
+      filename: d.filename,
+      url: d.url,
+      mimeType: d.mimeType,
+      sizeBytes: d.sizeBytes,
+      uploadedAt: d.uploadedAt,
+      storageKind: d.storageKind,
+    };
   }
 
   async addCaseDocument(opts: {
@@ -1704,10 +1725,12 @@ export class InMemoryDbClient implements DbClient {
     mimeType?: string | null;
     sizeBytes?: number | null;
     uploadedBy?: string | null;
+    storageKind?: 'reference' | 'blob';
   }): Promise<CaseDocumentRow | null> {
     if (!this.firmCase(opts.caseId, opts.lawFirmId)) return null;
     const id = `doc-${++this.docSeq}`;
     const uploadedAt = new Date(0).toISOString();
+    const storageKind = opts.storageKind ?? 'reference';
     this.caseDocumentsStore.push({
       id,
       caseId: opts.caseId,
@@ -1716,6 +1739,7 @@ export class InMemoryDbClient implements DbClient {
       mimeType: opts.mimeType ?? null,
       sizeBytes: opts.sizeBytes ?? null,
       uploadedAt,
+      storageKind,
     });
     this.caseActivity.push({
       caseId: opts.caseId,
@@ -1732,6 +1756,7 @@ export class InMemoryDbClient implements DbClient {
       mimeType: opts.mimeType ?? null,
       sizeBytes: opts.sizeBytes ?? null,
       uploadedAt,
+      storageKind,
     };
   }
 
