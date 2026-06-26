@@ -16,6 +16,7 @@ import { requireAttorney } from '../_attorney.js';
 import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv } from '../_shared.js';
 import { filterAccountPatch } from '../../src/engine/portal/accountBoundary.js';
+import { computeReadiness } from '../../src/engine/portal/accountReadiness.js';
 import type { AttorneyAdminRow, LawFirmRow } from '../../src/engine/clients/types.js';
 
 function toAccountAttorney(a: AttorneyAdminRow) {
@@ -32,6 +33,7 @@ function toAccountAttorney(a: AttorneyAdminRow) {
     website_url: a.websiteUrl,
     bio: a.bio,
     photo_url: a.photoUrl,
+    bar_number: a.barNumber ?? null,
     status: a.status,
     accepting_referrals: a.acceptingReferrals ?? true,
     routing_paused: a.routingPaused ?? false,
@@ -68,6 +70,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({
         attorney: toAccountAttorney(attorney),
         firm: firm ? toAccountFirm(firm) : null,
+        readiness: computeReadiness(attorney, firm),
       });
     } catch (err) {
       console.error('GET /api/portal/account failed', err);
@@ -102,6 +105,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({
         attorney: toAccountAttorney(attorney),
         firm: firm ? toAccountFirm(firm) : null,
+        readiness: computeReadiness(attorney, firm),
       });
     } catch (err) {
       console.error('PATCH /api/portal/account failed', err);

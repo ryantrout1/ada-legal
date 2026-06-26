@@ -11,7 +11,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { User, SlidersHorizontal, Building2 } from 'lucide-react';
+import { User, SlidersHorizontal, Building2, CheckCircle2, AlertCircle } from 'lucide-react';
 import {
   fetchAccount,
   saveAccount,
@@ -20,12 +20,14 @@ import {
   type PortalAccountAttorney,
   type PortalAccountFirm,
   type AccountPatch,
+  type AccountReadiness,
 } from '../../data/portalClient.js';
 
 type AttorneyForm = {
   name: string;
   location_city: string;
   location_state: string;
+  bar_number: string;
   email: string;
   phone: string;
   website_url: string;
@@ -55,6 +57,7 @@ function attorneyToForm(a: PortalAccountAttorney): AttorneyForm {
     name: a.name ?? '',
     location_city: a.location_city ?? '',
     location_state: a.location_state ?? '',
+    bar_number: a.bar_number ?? '',
     email: a.email ?? '',
     phone: a.phone ?? '',
     website_url: a.website_url ?? '',
@@ -162,6 +165,7 @@ export default function PortalAccount() {
         name: attorney.name,
         location_city: attorney.location_city,
         location_state: attorney.location_state,
+        bar_number: attorney.bar_number,
         email: attorney.email,
         phone: attorney.phone,
         website_url: attorney.website_url,
@@ -210,6 +214,8 @@ export default function PortalAccount() {
         </p>
       </header>
 
+      {account && <ReadinessBanner readiness={account.readiness} />}
+
       {/* Your profile */}
       <Section
         icon={<User size={18} aria-hidden="true" />}
@@ -237,6 +243,9 @@ export default function PortalAccount() {
           </Field>
           <Field label="Home state" htmlFor="a-state" hint="Two-letter code, e.g. AZ.">
             <input id="a-state" className={INPUT} value={attorney.location_state} onChange={(e) => set({ location_state: e.target.value })} />
+          </Field>
+          <Field label="Bar number" htmlFor="a-bar" hint="Required before you can go live.">
+            <input id="a-bar" className={INPUT} value={attorney.bar_number} onChange={(e) => set({ bar_number: e.target.value })} />
           </Field>
           <Field label="Email" htmlFor="a-email">
             <input id="a-email" type="email" className={INPUT} value={attorney.email} onChange={(e) => set({ email: e.target.value })} />
@@ -331,6 +340,31 @@ export default function PortalAccount() {
           <p className="text-sm text-ink-500">No firm is linked to your account yet.</p>
         )}
       </Section>
+    </div>
+  );
+}
+
+function ReadinessBanner({ readiness }: { readiness: AccountReadiness }) {
+  if (readiness.ready) {
+    return (
+      <div role="status" className="mb-6 flex items-start gap-2 rounded-lg border border-success-500 bg-success-50 px-4 py-3 text-sm text-success-500">
+        <CheckCircle2 size={18} aria-hidden="true" className="mt-0.5 shrink-0" />
+        <p className="font-medium">Your profile is complete and ready to go live.</p>
+      </div>
+    );
+  }
+  const n = readiness.missing.length;
+  return (
+    <div role="status" className="mb-6 rounded-lg border border-control-border bg-surface-100 px-4 py-3">
+      <p className="flex items-center gap-2 text-sm font-medium text-ink-900">
+        <AlertCircle size={18} aria-hidden="true" className="text-ink-500 shrink-0" />
+        {n} {n === 1 ? 'thing' : 'things'} left before you can go live
+      </p>
+      <ul className="mt-2 ml-7 list-disc text-sm text-ink-700">
+        {readiness.missing.map((m) => (
+          <li key={m.key}>{m.label}</li>
+        ))}
+      </ul>
     </div>
   );
 }

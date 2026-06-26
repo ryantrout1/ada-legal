@@ -403,6 +403,7 @@ export interface PortalAccountAttorney {
   website_url: string | null;
   bio: string | null;
   photo_url: string | null;
+  bar_number: string | null;
   status: string;
   accepting_referrals: boolean;
   routing_paused: boolean;
@@ -418,9 +419,20 @@ export interface PortalAccountFirm {
   status: string;
 }
 
+export interface AccountReadinessItem {
+  key: string;
+  label: string;
+}
+
+export interface AccountReadiness {
+  ready: boolean;
+  missing: AccountReadinessItem[];
+}
+
 export interface PortalAccount {
   attorney: PortalAccountAttorney;
   firm: PortalAccountFirm | null;
+  readiness: AccountReadiness;
 }
 
 /** PATCH body: only the section being saved is sent. */
