@@ -97,6 +97,7 @@ export function filterAccountPatch(body: unknown): AccountPatchResult {
   if ('website_url' in attorneyIn) attorneyPatch.websiteUrl = stringOrNull(attorneyIn.website_url);
   if ('bio' in attorneyIn) attorneyPatch.bio = stringOrNull(attorneyIn.bio);
   if ('photo_url' in attorneyIn) attorneyPatch.photoUrl = stringOrNull(attorneyIn.photo_url);
+  if ('bar_number' in attorneyIn) attorneyPatch.barNumber = stringOrNull(attorneyIn.bar_number);
   if (Array.isArray(attorneyIn.practice_areas)) attorneyPatch.practiceAreas = stringArray(attorneyIn.practice_areas);
   if (Array.isArray(attorneyIn.additional_states)) attorneyPatch.additionalStates = stringArray(attorneyIn.additional_states, true);
   if (Array.isArray(attorneyIn.specialty_tags)) attorneyPatch.specialtyTags = stringArray(attorneyIn.specialty_tags);

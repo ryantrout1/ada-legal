@@ -100,6 +100,7 @@ async function handlePatch(id: string, req: VercelRequest, res: VercelResponse) 
     if ('website_url' in body) patch.websiteUrl = stringOrNull(body.website_url);
     if ('bio' in body) patch.bio = stringOrNull(body.bio);
     if ('photo_url' in body) patch.photoUrl = stringOrNull(body.photo_url);
+    if ('bar_number' in body) patch.barNumber = stringOrNull(body.bar_number);
     if (typeof body.status === 'string' && isAttorneyStatus(body.status)) {
       patch.status = body.status;
     }

@@ -143,6 +143,7 @@ export interface AttorneyAdminRow extends AttorneyRow {
   bio: string | null;
   photoUrl: string | null;
   status: AttorneyStatus;
+  barNumber?: string | null;
   createdAt: string;
   updatedAt: string;
   /**
@@ -378,6 +379,7 @@ export interface UpdateAttorneyInput {
   websiteUrl?: string | null;
   bio?: string | null;
   photoUrl?: string | null;
+  barNumber?: string | null;
   status?: AttorneyStatus;
   acceptingReferrals?: boolean;
   routingPaused?: boolean;

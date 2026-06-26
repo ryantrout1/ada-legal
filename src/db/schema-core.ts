@@ -317,6 +317,9 @@ export const attorneys = pgTable(
     websiteUrl: text('website_url'),
     bio: text('bio'),
     photoUrl: text('photo_url'),
+    // Bar number (migration 0029). Required-to-go-live; feeds readiness +
+    // the admin approve gate. Attorney-entered on the Account page.
+    barNumber: text('bar_number'),
     status: text('status').notNull().default('pending'),
     approvedBy: uuid('approved_by').references(() => users.id),
     approvedAt: timestamp('approved_at', { withTimezone: true }),
