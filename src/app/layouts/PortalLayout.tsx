@@ -55,7 +55,7 @@ const WORKSPACE_NAV: NavItem[] = [
 
 const PRACTICE_NAV: NavItem[] = [
   { to: '/portal/pipeline', label: 'Reports', icon: BarChart3 },
-  { to: '/portal/settings', label: 'Settings', icon: Settings },
+  { to: '/portal/account', label: 'Account', icon: Settings },
 ];
 
 function SidebarLink({ item }: { item: NavItem }) {
