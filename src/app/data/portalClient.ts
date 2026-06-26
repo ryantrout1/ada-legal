@@ -387,3 +387,61 @@ export async function fetchPipelineStats(): Promise<PipelineStatsResponse> {
   if (!resp.ok) return failFor(resp);
   return (await resp.json()) as PipelineStatsResponse;
 }
+
+// --- Account (portal self-serve profile + firm) ----------------------------
+
+export interface PortalAccountAttorney {
+  id: string;
+  name: string;
+  location_city: string | null;
+  location_state: string | null;
+  practice_areas: string[];
+  additional_states: string[];
+  specialty_tags: string[];
+  email: string | null;
+  phone: string | null;
+  website_url: string | null;
+  bio: string | null;
+  photo_url: string | null;
+  status: string;
+  accepting_referrals: boolean;
+  routing_paused: boolean;
+  max_active_cases: number | null;
+}
+
+export interface PortalAccountFirm {
+  id: string;
+  name: string;
+  primary_contact: string | null;
+  email: string | null;
+  phone: string | null;
+  status: string;
+}
+
+export interface PortalAccount {
+  attorney: PortalAccountAttorney;
+  firm: PortalAccountFirm | null;
+}
+
+/** PATCH body: only the section being saved is sent. */
+export interface AccountPatch {
+  attorney?: Partial<Record<string, unknown>>;
+  firm?: Partial<Record<string, unknown>>;
+}
+
+export async function fetchAccount(): Promise<PortalAccount> {
+  const resp = await fetch('/api/portal/account', { credentials: 'include' });
+  if (!resp.ok) return failFor(resp);
+  return (await resp.json()) as PortalAccount;
+}
+
+export async function saveAccount(patch: AccountPatch): Promise<PortalAccount> {
+  const resp = await fetch('/api/portal/account', {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(patch),
+  });
+  if (!resp.ok) return failFor(resp);
+  return (await resp.json()) as PortalAccount;
+}
