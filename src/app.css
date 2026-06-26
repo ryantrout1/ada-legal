@@ -898,8 +898,11 @@ body {
      higher specificity on :root and still wins. */
   --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Surface — warm page, white cards, slate-tinted subtle lift */
-  --color-surface-50:  #FAF7F2;   /* page background */
+  /* Surface — cool near-white page, white cards, slate-tinted subtle lift.
+     Cool-light restyle (Phase 1): #FAF7F2 → #F7F8FA. Verified AAA — body-meta
+     ink-500 #4A5567 clears 7.09:1 here (#F5F6F8 would dip to 6.97:1, failing
+     7:1); control-border #7E8DA3 holds 3.17:1 (1.4.11). */
+  --color-surface-50:  #F7F8FA;   /* page background */
   --color-surface-100: #F1F5F9;   /* subtle slate lift — table headers, chips */
   --color-surface-200: #E2E8F0;   /* decorative hairline dividers (non-control) */
   --color-surface-300: #CBD5E1;   /* heavier divider */
@@ -943,6 +946,26 @@ body {
 
   font-family: var(--font-body);
 }
+
+/* De-serif the workspace (Phase 1). Page titles and the big metric/date
+   figures use the `.font-display` utility (Fraunces); inside the portal we
+   repoint it to the body face so the workspace reads as a crisp tool, not an
+   editorial page. (0,2,0) beats the (0,1,0) utility. The brand wordmark uses
+   its own `.lw-logo` rule, not this utility, so it stays Fraunces. A user-
+   chosen a11y font on :root still wins via higher specificity. */
+.lawyer-workspace .font-display {
+  font-family: var(--font-body);
+  letter-spacing: -0.02em;
+}
+
+/* Tighten geometry to 4px (Phase 1). Scoped utility overrides — deterministic,
+   independent of Tailwind's internal radius tokens. Directional corners keep
+   their direction so the Ada panel's joined top/bottom halves stay correct.
+   `rounded-sm` (small) and `rounded-full` (pills/dots) are intentionally left. */
+.lawyer-workspace .rounded-lg { border-radius: 4px; }
+.lawyer-workspace .rounded-md { border-radius: 4px; }
+.lawyer-workspace .rounded-t-lg { border-top-left-radius: 4px; border-top-right-radius: 4px; }
+.lawyer-workspace .rounded-b-lg { border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; }
 
 /* Pill — portal semantic badge. Color is never the sole signal: each pill
    carries its own text label, satisfying 1.4.1. */
@@ -1191,8 +1214,49 @@ body {
  * sidebar (verified AAA, reads as intentional); contrast flattens it to pure
  * black with a white border so the sidebar/content boundary stays visible.
  * ─────────────────────────────────────────────────────────────────────────── */
-:root[data-display="dark"] .lawyer-workspace       { --lw-card: #2A2620; --lw-topbar-bg: #1E1B17; }
-:root[data-display="warm"] .lawyer-workspace        { --lw-card: #FBF6EC; --lw-topbar-bg: #FBF6EC; }
+/* Dark → cool-dark portal (Phase 1). Default dark mode is warm-dark; the
+   workspace gets a cool slate-dark palette instead (Open Decision 1: cool-light
+   + cool-dark). (0,3,0) wins over the global (0,2,0) dark block. AAA on the
+   #0F1722 page: ink-900 16.4:1, ink-700 12.1:1, ink-500 #A2B0C4 8.2:1 page,
+   accent #F0A57A 8.9:1; control-border #647488 3.8:1 vs page / 3.4:1 vs card. */
+:root[data-display="dark"] .lawyer-workspace {
+  --color-surface-50:  #0F1722;
+  --color-surface-100: #1A2433;
+  --color-surface-200: #2C3A4D;
+  --color-surface-300: #3D4D63;
+  --color-control-border: #647488;
+  --color-ink-900: #F1F5F9;
+  --color-ink-700: #CBD5E1;
+  --color-ink-500: #A2B0C4;
+  --color-accent-500: #F0A57A;
+  --color-accent-600: #F6BC97;
+  --color-accent-50:  #2A1B12;
+  --lw-muted: #A2B0C4;
+  --lw-link:  #F0A57A;
+  --lw-card: #16202E;
+  --lw-topbar-bg: #16202E;
+}
+/* Warm → cool-light portal (Phase 1). Warm mode recolors every --color-* token
+   to warm-brown; the workspace overrides them back to the cool-light set so it
+   matches the default-mode portal (Open Decision 1: warm → cool-light). All
+   values are the AAA-verified cool-light tokens. */
+:root[data-display="warm"] .lawyer-workspace {
+  --color-surface-50:  #F7F8FA;
+  --color-surface-100: #F1F5F9;
+  --color-surface-200: #E2E8F0;
+  --color-surface-300: #CBD5E1;
+  --color-control-border: #7E8DA3;
+  --color-ink-900: #1E293B;
+  --color-ink-700: #334155;
+  --color-ink-500: #4A5567;
+  --color-accent-500: #8E2F09;
+  --color-accent-600: #6E2308;
+  --color-accent-50:  #F9ECE5;
+  --lw-muted: #4D5460;
+  --lw-link:  #953211;
+  --lw-card: #FFFFFF;
+  --lw-topbar-bg: #FFFFFF;
+}
 :root[data-display="low-vision"] .lawyer-workspace  { --lw-card: #FFFFFF; --lw-topbar-bg: #FFFFFF; }
 
 :root[data-display="contrast"] .lawyer-workspace {
