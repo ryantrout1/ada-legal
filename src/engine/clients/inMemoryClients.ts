@@ -103,6 +103,7 @@ import type {
   FirmTaskRow,
   CaseDefendant,
   CasePersonRow,
+  CaseDocumentRow,
   PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
@@ -237,6 +238,16 @@ export class InMemoryDbClient implements DbClient {
     createdAt: string;
   }> = [];
   private peopleSeq = 0;
+  public readonly caseDocumentsStore: Array<{
+    id: string;
+    caseId: string;
+    filename: string;
+    url: string;
+    mimeType: string | null;
+    sizeBytes: number | null;
+    uploadedAt: string;
+  }> = [];
+  private docSeq = 0;
   private caseSeq = 0;
   /**
    * Test-only clerk-user → attorney pairing. The real Neon client resolves
@@ -1665,6 +1676,81 @@ export class InMemoryDbClient implements DbClient {
       actorType: 'user',
       eventType: 'PERSON_REMOVED',
       summary: 'Removed a person from the matter',
+      metadata: {},
+      createdAt: new Date(0).toISOString(),
+    });
+    return true;
+  }
+
+  async listCaseDocuments(caseId: string, lawFirmId: string): Promise<CaseDocumentRow[]> {
+    if (!this.firmCase(caseId, lawFirmId)) return [];
+    return this.caseDocumentsStore
+      .filter((d) => d.caseId === caseId)
+      .map((d) => ({
+        id: d.id,
+        filename: d.filename,
+        url: d.url,
+        mimeType: d.mimeType,
+        sizeBytes: d.sizeBytes,
+        uploadedAt: d.uploadedAt,
+      }));
+  }
+
+  async addCaseDocument(opts: {
+    caseId: string;
+    lawFirmId: string;
+    filename: string;
+    url: string;
+    mimeType?: string | null;
+    sizeBytes?: number | null;
+    uploadedBy?: string | null;
+  }): Promise<CaseDocumentRow | null> {
+    if (!this.firmCase(opts.caseId, opts.lawFirmId)) return null;
+    const id = `doc-${++this.docSeq}`;
+    const uploadedAt = new Date(0).toISOString();
+    this.caseDocumentsStore.push({
+      id,
+      caseId: opts.caseId,
+      filename: opts.filename,
+      url: opts.url,
+      mimeType: opts.mimeType ?? null,
+      sizeBytes: opts.sizeBytes ?? null,
+      uploadedAt,
+    });
+    this.caseActivity.push({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'DOCUMENT_ADDED',
+      summary: `Attached ${opts.filename}`,
+      metadata: { filename: opts.filename },
+      createdAt: uploadedAt,
+    });
+    return {
+      id,
+      filename: opts.filename,
+      url: opts.url,
+      mimeType: opts.mimeType ?? null,
+      sizeBytes: opts.sizeBytes ?? null,
+      uploadedAt,
+    };
+  }
+
+  async removeCaseDocument(opts: {
+    caseId: string;
+    lawFirmId: string;
+    documentId: string;
+  }): Promise<boolean> {
+    if (!this.firmCase(opts.caseId, opts.lawFirmId)) return false;
+    const idx = this.caseDocumentsStore.findIndex(
+      (d) => d.id === opts.documentId && d.caseId === opts.caseId,
+    );
+    if (idx === -1) return false;
+    this.caseDocumentsStore.splice(idx, 1);
+    this.caseActivity.push({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'DOCUMENT_REMOVED',
+      summary: 'Removed a document from the matter',
       metadata: {},
       createdAt: new Date(0).toISOString(),
     });

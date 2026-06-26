@@ -804,6 +804,16 @@ export interface CasePersonRow {
   notes: string | null;
 }
 
+/** A document attached to a matter (case_documents). Phase 5 §7.5. */
+export interface CaseDocumentRow {
+  id: string;
+  filename: string;
+  url: string;
+  mimeType: string | null;
+  sizeBytes: number | null;
+  uploadedAt: string;
+}
+
 export interface PortalCaseDetailFull {
   caseId: string;
   adaSessionId: string | null;
@@ -1318,6 +1328,28 @@ export interface DbClient {
     caseId: string;
     lawFirmId: string;
     casePersonId: string;
+  }): Promise<boolean>;
+
+  /**
+   * Phase 5 §7.5: documents attached to a matter (case_documents). A document
+   * here is a filename + a URL reference (an attorney's DMS/Drive link, or — once
+   * Blob storage is provisioned — an uploaded file's URL). Firm-scoped + consent-
+   * gated. NEVER computes or fabricates a URL.
+   */
+  listCaseDocuments(caseId: string, lawFirmId: string): Promise<CaseDocumentRow[]>;
+  addCaseDocument(opts: {
+    caseId: string;
+    lawFirmId: string;
+    filename: string;
+    url: string;
+    mimeType?: string | null;
+    sizeBytes?: number | null;
+    uploadedBy?: string | null;
+  }): Promise<CaseDocumentRow | null>;
+  removeCaseDocument(opts: {
+    caseId: string;
+    lawFirmId: string;
+    documentId: string;
   }): Promise<boolean>;
 
   /**

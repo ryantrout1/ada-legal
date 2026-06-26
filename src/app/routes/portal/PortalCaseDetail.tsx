@@ -24,6 +24,8 @@ import {
   FileText,
   MessagesSquare,
   X,
+  Plus,
+  ExternalLink,
 } from 'lucide-react';
 import TaskPanel from './TaskPanel.js';
 import MessageContent from '../../components/MessageContent.js';
@@ -37,11 +39,15 @@ import {
   fetchCasePeople,
   addCasePerson,
   removeCasePerson,
+  fetchCaseDocuments,
+  addCaseDocument,
+  removeCaseDocument,
   type PortalCaseAction,
   type PortalCaseActivityEntry,
   type PortalTask,
   type PortalDefendant,
   type PortalPerson,
+  type PortalDocument,
   PortalApiError,
   type PortalCaseDetailResponse,
 } from '../../data/portalClient.js';
@@ -262,9 +268,7 @@ export default function PortalCaseDetail() {
             {tab === 'Activity' && <ActivityTab timeline={timeline} />}
             {tab === 'Notes' && <NotesPanel caseId={data.case_id} notes={notes} onAdded={load} />}
             {tab === 'Tasks' && <TaskPanel caseId={data.case_id} />}
-            {tab === 'Documents' && (
-              <StubPanel icon={<FileText size={22} aria-hidden="true" />} title="Documents" blurb="Document storage for this matter is coming soon. For now, keep file references in Notes." />
-            )}
+            {tab === 'Documents' && <DocumentsPanel caseId={data.case_id} />}
             {tab === 'Communications' && (
               <StubPanel icon={<MessagesSquare size={22} aria-hidden="true" />} title="Communications" blurb="A dedicated communications log is coming soon. Notes covers contact records in the meantime." />
             )}
@@ -437,6 +441,118 @@ function Timeline({ entries }: { entries: PortalCaseActivityEntry[] }) {
         </li>
       ))}
     </ol>
+  );
+}
+
+function DocumentsPanel({ caseId }: { caseId: string }) {
+  const [docs, setDocs] = useState<PortalDocument[]>([]);
+  const [adding, setAdding] = useState(false);
+  const [filename, setFilename] = useState('');
+  const [url, setUrl] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    try {
+      setDocs(await fetchCaseDocuments(caseId));
+    } catch {
+      setDocs([]);
+    }
+  }, [caseId]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  const add = async () => {
+    if (filename.trim() === '' || url.trim() === '') return;
+    setBusy(true);
+    setError(null);
+    try {
+      await addCaseDocument(caseId, { filename: filename.trim(), url: url.trim() });
+      setFilename('');
+      setUrl('');
+      setAdding(false);
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not attach the document');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const remove = async (id: string) => {
+    setBusy(true);
+    try {
+      await removeCaseDocument(caseId, id);
+      await load();
+    } catch {
+      /* surfaced on reload */
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const fieldCls = 'w-full min-h-[44px] rounded-md border border-control-border bg-white px-3 text-ink-900 text-sm';
+
+  return (
+    <section aria-labelledby="docs-h">
+      <div className="flex items-center justify-between mb-3">
+        <h2 id="docs-h" className="font-display text-base text-ink-900">Documents</h2>
+        {!adding && (
+          <button type="button" onClick={() => setAdding(true)} className="inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-lg border border-control-border text-ink-700 text-sm font-semibold hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+            <Plus size={15} aria-hidden="true" /> Attach
+          </button>
+        )}
+      </div>
+
+      {adding && (
+        <div className="rounded-lg border border-surface-200 bg-surface-50 p-4 mb-4 flex flex-col gap-2">
+          <div>
+            <label htmlFor="doc-name" className="block text-ink-700 text-xs font-semibold mb-1">File name</label>
+            <input id="doc-name" value={filename} onChange={(e) => setFilename(e.target.value)} placeholder="demand-letter.pdf" className={fieldCls} />
+          </div>
+          <div>
+            <label htmlFor="doc-url" className="block text-ink-700 text-xs font-semibold mb-1">Link</label>
+            <input id="doc-url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" className={fieldCls} />
+            <p className="text-ink-500 text-xs mt-1">Paste a link to the file in your document system or drive.</p>
+          </div>
+          {error && <p role="alert" className="text-danger-500 text-xs">{error}</p>}
+          <div className="flex gap-2 mt-1">
+            <button type="button" disabled={busy || filename.trim() === '' || url.trim() === ''} onClick={() => void add()} className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-lg bg-accent-500 text-white text-sm font-semibold hover:bg-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60">Attach</button>
+            <button type="button" disabled={busy} onClick={() => { setAdding(false); setFilename(''); setUrl(''); setError(null); }} className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-lg border border-control-border text-ink-700 text-sm font-medium hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {docs.length === 0 && !adding ? (
+        <p className="text-ink-500 text-sm">No documents attached yet.</p>
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {docs.map((d) => (
+            <li key={d.id} className="flex items-center gap-3 rounded-md border border-surface-200 bg-white px-4 py-3">
+              <FileText size={18} className="text-ink-500 shrink-0" aria-hidden="true" />
+              <div className="min-w-0 flex-1">
+                <a href={d.url} target="_blank" rel="noopener noreferrer" className="text-ink-900 text-sm font-semibold hover:text-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-sm truncate inline-flex items-center gap-1">
+                  {d.filename}
+                  <ExternalLink size={12} aria-hidden="true" />
+                </a>
+                <div className="text-ink-500 text-xs mt-0.5">Attached {fmtDate(d.uploadedAt)}</div>
+              </div>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => void remove(d.id)}
+                aria-label={`Remove ${d.filename}`}
+                className="inline-flex items-center justify-center w-11 h-11 rounded-md text-ink-500 hover:text-danger-500 hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50"
+              >
+                <X size={16} aria-hidden="true" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 

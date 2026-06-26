@@ -44,7 +44,7 @@ import {
   routingRules as routingRulesTable,
   stripeWebhookEvents as stripeWebhookEventsTable,
 } from '../../db/schema-ch1.js';
-import { cases as casesTable, caseActivity as caseActivityTable, caseTasks as caseTasksTable, casePeople as casePeopleTable, contacts as contactsTable } from '../../db/schema-cases.js';
+import { cases as casesTable, caseActivity as caseActivityTable, caseTasks as caseTasksTable, casePeople as casePeopleTable, contacts as contactsTable, caseDocuments as caseDocumentsTable } from '../../db/schema-cases.js';
 import { computePipelineStats } from '../cases/pipelineStats.js';
 import type { PipelineStats } from '../cases/pipelineStats.js';
 import type { CaseLane, CaseStatus, CaseTransition } from '../cases/caseStateMachine.js';
@@ -127,6 +127,7 @@ import type {
   FirmTaskRow,
   CaseDefendant,
   CasePersonRow,
+  CaseDocumentRow,
   PortalCaseDetailFull,
   PortalQueueRow,
   PortalCaseDetail,
@@ -2451,6 +2452,91 @@ export class NeonDbClient implements DbClient {
       actorType: 'user',
       eventType: 'PERSON_REMOVED',
       summary: 'Removed a person from the matter',
+      metadata: {},
+    });
+    return true;
+  }
+
+  async listCaseDocuments(caseId: string, lawFirmId: string): Promise<CaseDocumentRow[]> {
+    if (!(await this.firmCaseOrgId(caseId, lawFirmId))) return [];
+    const rows = await this.db
+      .select({
+        id: caseDocumentsTable.id,
+        filename: caseDocumentsTable.filename,
+        url: caseDocumentsTable.storageUrl,
+        mimeType: caseDocumentsTable.mimeType,
+        sizeBytes: caseDocumentsTable.sizeBytes,
+        uploadedAt: caseDocumentsTable.uploadedAt,
+      })
+      .from(caseDocumentsTable)
+      .where(eq(caseDocumentsTable.caseId, caseId))
+      .orderBy(sql`${caseDocumentsTable.uploadedAt} DESC`);
+    return rows.map((r) => ({
+      id: r.id,
+      filename: r.filename,
+      url: r.url,
+      mimeType: r.mimeType ?? null,
+      sizeBytes: r.sizeBytes ?? null,
+      uploadedAt: r.uploadedAt instanceof Date ? r.uploadedAt.toISOString() : String(r.uploadedAt),
+    }));
+  }
+
+  async addCaseDocument(opts: {
+    caseId: string;
+    lawFirmId: string;
+    filename: string;
+    url: string;
+    mimeType?: string | null;
+    sizeBytes?: number | null;
+    uploadedBy?: string | null;
+  }): Promise<CaseDocumentRow | null> {
+    if (!(await this.firmCaseOrgId(opts.caseId, opts.lawFirmId))) return null;
+    const [row] = await this.db
+      .insert(caseDocumentsTable)
+      .values({
+        caseId: opts.caseId,
+        filename: opts.filename,
+        storageUrl: opts.url,
+        mimeType: opts.mimeType ?? null,
+        sizeBytes: opts.sizeBytes ?? null,
+        uploadedBy: opts.uploadedBy ?? null,
+      })
+      .returning({ id: caseDocumentsTable.id, uploadedAt: caseDocumentsTable.uploadedAt });
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'DOCUMENT_ADDED',
+      summary: `Attached ${opts.filename}`,
+      metadata: { filename: opts.filename },
+    });
+
+    return {
+      id: row!.id,
+      filename: opts.filename,
+      url: opts.url,
+      mimeType: opts.mimeType ?? null,
+      sizeBytes: opts.sizeBytes ?? null,
+      uploadedAt: row!.uploadedAt instanceof Date ? row!.uploadedAt.toISOString() : String(row!.uploadedAt),
+    };
+  }
+
+  async removeCaseDocument(opts: {
+    caseId: string;
+    lawFirmId: string;
+    documentId: string;
+  }): Promise<boolean> {
+    if (!(await this.firmCaseOrgId(opts.caseId, opts.lawFirmId))) return false;
+    const deleted = await this.db
+      .delete(caseDocumentsTable)
+      .where(and(eq(caseDocumentsTable.id, opts.documentId), eq(caseDocumentsTable.caseId, opts.caseId)))
+      .returning({ id: caseDocumentsTable.id });
+    if (deleted.length === 0) return false;
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'DOCUMENT_REMOVED',
+      summary: 'Removed a document from the matter',
       metadata: {},
     });
     return true;

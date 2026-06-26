@@ -199,6 +199,44 @@ export async function removeCasePerson(id: string, personId: string): Promise<vo
   if (!resp.ok) await failFor(resp);
 }
 
+export interface PortalDocument {
+  id: string;
+  filename: string;
+  url: string;
+  mimeType: string | null;
+  sizeBytes: number | null;
+  uploadedAt: string;
+}
+
+export async function fetchCaseDocuments(id: string): Promise<PortalDocument[]> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/documents`, {
+    credentials: 'include',
+  });
+  if (!resp.ok) await failFor(resp);
+  return ((await resp.json()) as { documents: PortalDocument[] }).documents;
+}
+
+export async function addCaseDocument(
+  id: string,
+  doc: { filename: string; url: string; mime_type?: string | null },
+): Promise<void> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/documents`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(doc),
+  });
+  if (!resp.ok) await failFor(resp);
+}
+
+export async function removeCaseDocument(id: string, documentId: string): Promise<void> {
+  const resp = await fetch(
+    `/api/portal/cases/${encodeURIComponent(id)}/documents?document_id=${encodeURIComponent(documentId)}`,
+    { method: 'DELETE', credentials: 'include' },
+  );
+  if (!resp.ok) await failFor(resp);
+}
+
 /** Set or clear (null) the attorney-entered defendant record. */
 export async function setCaseDefendant(id: string, defendant: PortalDefendant | null): Promise<void> {
   const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/defendant`, {
