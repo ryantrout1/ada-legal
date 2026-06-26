@@ -20,6 +20,7 @@ interface FormState {
   email: string;
   phone: string;
   website_url: string;
+  bar_number: string;
   bio: string;
   status: Status;
 }
@@ -33,6 +34,7 @@ const EMPTY: FormState = {
   email: '',
   phone: '',
   website_url: '',
+  bar_number: '',
   bio: '',
   status: 'pending',
 };
@@ -46,6 +48,8 @@ export default function AdminAttorneyEdit() {
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [readiness, setReadiness] = useState<{ ready: boolean; missing: { key: string; label: string }[] } | null>(null);
+  const [blockedMissing, setBlockedMissing] = useState<{ label: string }[]>([]);
 
   useEffect(() => {
     if (isNew) return;
@@ -65,9 +69,11 @@ export default function AdminAttorneyEdit() {
             email: string | null;
             phone: string | null;
             websiteUrl: string | null;
+            barNumber: string | null;
             bio: string | null;
             status: Status;
           };
+          readiness?: { ready: boolean; missing: { key: string; label: string }[] };
         };
         setForm({
           name: data.attorney.name,
@@ -78,9 +84,11 @@ export default function AdminAttorneyEdit() {
           email: data.attorney.email ?? '',
           phone: data.attorney.phone ?? '',
           website_url: data.attorney.websiteUrl ?? '',
+          bar_number: data.attorney.barNumber ?? '',
           bio: data.attorney.bio ?? '',
           status: data.attorney.status,
         });
+        setReadiness(data.readiness ?? null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load attorney');
       } finally {
@@ -93,6 +101,7 @@ export default function AdminAttorneyEdit() {
     e.preventDefault();
     setSaving(true);
     setError(null);
+    setBlockedMissing([]);
     try {
       const payload = {
         name: form.name.trim(),
@@ -106,6 +115,7 @@ export default function AdminAttorneyEdit() {
         email: form.email.trim() || null,
         phone: form.phone.trim() || null,
         website_url: form.website_url.trim() || null,
+        bar_number: form.bar_number.trim() || null,
         bio: form.bio.trim() || null,
         status: form.status,
       };
@@ -121,7 +131,8 @@ export default function AdminAttorneyEdit() {
         body: JSON.stringify(payload),
       });
       if (!resp.ok) {
-        const body = (await resp.json().catch(() => ({}))) as { error?: string };
+        const body = (await resp.json().catch(() => ({}))) as { error?: string ; missing?: { label: string }[] };
+        if (body.missing) setBlockedMissing(body.missing);
         throw new Error(body.error ?? `HTTP ${resp.status}`);
       }
       navigate('/admin/attorneys');
@@ -152,6 +163,20 @@ export default function AdminAttorneyEdit() {
           className="mb-4 rounded-md border border-danger-500 bg-danger-50 px-4 py-3 text-sm text-danger-500"
         >
           {error}
+        </div>
+      )}
+
+      {blockedMissing.length > 0 && (
+        <div
+          role="alert"
+          className="mb-4 rounded-md border border-danger-500 bg-danger-50 px-4 py-3 text-sm text-danger-500"
+        >
+          <p className="font-medium">Can&rsquo;t approve yet — still missing:</p>
+          <ul className="mt-1 ml-5 list-disc">
+            {blockedMissing.map((m, i) => (
+              <li key={i}>{m.label}</li>
+            ))}
+          </ul>
         </div>
       )}
 
@@ -194,6 +219,15 @@ export default function AdminAttorneyEdit() {
             />
           </Field>
         </div>
+
+        <Field label="Bar number" hint="Required before this attorney can go live">
+          <input
+            type="text"
+            value={form.bar_number}
+            onChange={(e) => setForm({ ...form, bar_number: e.target.value })}
+            className="w-full rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900"
+          />
+        </Field>
 
         <Field label="Practice areas" hint="Comma-separated slugs, e.g. ada, employment">
           <input
@@ -241,6 +275,20 @@ export default function AdminAttorneyEdit() {
             className="w-full rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900"
           />
         </Field>
+
+        {readiness && (
+          <div
+            className={`rounded-md border px-4 py-3 text-sm ${
+              readiness.ready
+                ? 'border-success-500 bg-success-50 text-success-500'
+                : 'border-control-border bg-surface-100 text-ink-700'
+            }`}
+          >
+            {readiness.ready
+              ? 'Ready to go live — all required fields are present.'
+              : `Not ready to go live. Missing: ${readiness.missing.map((m) => m.label).join(', ')}.`}
+          </div>
+        )}
 
         <Field
           label="Status"

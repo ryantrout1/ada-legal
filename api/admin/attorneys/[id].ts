@@ -20,6 +20,7 @@ import { requireAdmin } from '../../_admin.js';
 import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
 import type { AttorneyStatus } from '../../../src/engine/clients/types.js';
+import { computeReadiness } from '../../../src/engine/portal/accountReadiness.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return; // preflight handled
@@ -59,7 +60,8 @@ async function handleGet(id: string, res: VercelResponse) {
     const clients = makeClientsFromEnv();
     const row = await clients.db.getAttorneyById(id);
     if (!row) return res.status(404).json({ error: 'Attorney not found' });
-    return res.status(200).json({ attorney: row });
+    const firm = row.lawFirmId ? await clients.db.readLawFirmById(row.lawFirmId) : null;
+    return res.status(200).json({ attorney: row, readiness: computeReadiness(row, firm) });
   } catch (err) {
     console.error('GET /api/admin/attorneys/[id] failed', err);
     return res.status(500).json({
@@ -106,9 +108,36 @@ async function handlePatch(id: string, req: VercelRequest, res: VercelResponse) 
     }
 
     const clients = makeClientsFromEnv();
+
+    // Go-live gate: an attorney can only be flipped to 'approved' once their
+    // profile + firm carry the required-to-go-live fields. Readiness is
+    // computed on the merged (existing + this patch) view so the admin can
+    // fill the missing fields and approve in the same save.
+    if (patch.status === 'approved') {
+      const existing = await clients.db.getAttorneyById(id);
+      if (!existing) return res.status(404).json({ error: 'Attorney not found' });
+      const firm = existing.lawFirmId ? await clients.db.readLawFirmById(existing.lawFirmId) : null;
+      const merged = {
+        name: (patch.name as string | undefined) ?? existing.name,
+        email: 'email' in patch ? (patch.email as string | null) : existing.email,
+        barNumber: 'barNumber' in patch ? (patch.barNumber as string | null) : existing.barNumber,
+        locationState: 'locationState' in patch ? (patch.locationState as string | null) : existing.locationState,
+        additionalStates:
+          'additionalStates' in patch ? (patch.additionalStates as string[]) : existing.additionalStates,
+      };
+      const readiness = computeReadiness(merged, firm);
+      if (!readiness.ready) {
+        return res.status(400).json({
+          error: 'Cannot approve until the profile is complete',
+          missing: readiness.missing,
+        });
+      }
+    }
+
     const updated = await clients.db.updateAttorney(id, patch as never);
     if (!updated) return res.status(404).json({ error: 'Attorney not found' });
-    return res.status(200).json({ attorney: updated });
+    const firm = updated.lawFirmId ? await clients.db.readLawFirmById(updated.lawFirmId) : null;
+    return res.status(200).json({ attorney: updated, readiness: computeReadiness(updated, firm) });
   } catch (err) {
     console.error('PATCH /api/admin/attorneys/[id] failed', err);
     return res.status(500).json({
