@@ -184,7 +184,7 @@ export default function PortalBoard() {
                 onDragLeave={() => setDragOver((c) => (c === column ? null : c))}
                 onDrop={(e) => onDropTo(column, e)}
                 className={`rounded-lg border p-3 min-h-[8rem] transition-colors ${
-                  dragOver === column ? 'border-accent-500 bg-accent-50' : 'border-surface-200 bg-surface-100'
+                  dragOver === column ? 'border-accent-500 bg-accent-50' : 'border-control-border bg-surface-100'
                 }`}
               >
                 <h2 className="font-display text-sm uppercase tracking-wide text-ink-700 mb-3 flex items-center justify-between">
@@ -247,7 +247,7 @@ function BoardCard({
         );
         e.dataTransfer.effectAllowed = 'move';
       }}
-      className={`rounded-md border border-surface-200 bg-white p-3 ${
+      className={`rounded-md border border-control-border bg-white p-3 ${
         options.length > 0 ? 'cursor-grab active:cursor-grabbing' : ''
       } ${busy ? 'opacity-60' : ''}`}
     >
@@ -279,7 +279,7 @@ function BoardCard({
                 onClick={() => onMove(o.transition)}
                 className={`inline-flex items-center justify-center min-h-[44px] px-3 rounded-md text-sm font-medium border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60 ${
                   o.isDecline
-                    ? 'border-surface-200 text-ink-700 hover:bg-surface-100'
+                    ? 'border-control-border text-ink-700 hover:bg-surface-100'
                     : 'border-accent-500 text-white bg-accent-500 hover:bg-accent-600'
                 }`}
               >
@@ -307,16 +307,39 @@ function MoveModal({
   const [resolutionType, setResolutionType] = useState('');
   const [reason, setReason] = useState('');
   const firstFieldRef = useRef<HTMLSelectElement | HTMLTextAreaElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const isResolve = pending.action === 'resolve';
   const titleId = 'move-modal-title';
 
   useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
     firstFieldRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCancel();
+      if (e.key === 'Escape') {
+        onCancel();
+        return;
+      }
+      if (e.key === 'Tab' && dialogRef.current) {
+        const f = dialogRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        );
+        if (f.length === 0) return;
+        const first = f[0]!;
+        const last = f[f.length - 1]!;
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      opener?.focus?.();
+    };
   }, [onCancel]);
 
   const canConfirm = isResolve ? resolutionType !== '' : true;
@@ -327,6 +350,7 @@ function MoveModal({
       onClick={onCancel}
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -351,7 +375,7 @@ function MoveModal({
               ref={firstFieldRef as React.RefObject<HTMLSelectElement>}
               value={resolutionType}
               onChange={(e) => setResolutionType(e.target.value)}
-              className="w-full min-h-[44px] rounded-md border border-surface-200 bg-white px-3 text-ink-900"
+              className="w-full min-h-[44px] rounded-md border border-control-border bg-white px-3 text-ink-900"
             >
               <option value="">Select a resolution…</option>
               {RESOLUTION_TYPES.map((r) => (
@@ -372,7 +396,7 @@ function MoveModal({
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}
-              className="w-full rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900"
+              className="w-full rounded-md border border-control-border bg-white px-3 py-2 text-ink-900"
             />
           </div>
         )}
@@ -381,7 +405,7 @@ function MoveModal({
           <button
             type="button"
             onClick={onCancel}
-            className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-md border border-surface-200 text-ink-700 font-medium hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-md border border-control-border text-ink-700 font-medium hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Cancel
           </button>

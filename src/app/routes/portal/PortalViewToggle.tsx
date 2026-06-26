@@ -29,7 +29,7 @@ export default function PortalViewToggle({ active }: { active: 'list' | 'board' 
             className={`${BASE} ${round} ${
               on
                 ? 'bg-accent-500 text-white border-accent-500'
-                : 'bg-white text-ink-700 border-surface-200 hover:bg-surface-100'
+                : 'bg-white text-ink-700 border-control-border hover:bg-surface-100'
             }`}
           >
             {v.label}

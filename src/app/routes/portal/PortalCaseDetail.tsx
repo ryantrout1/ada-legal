@@ -69,7 +69,7 @@ export default function PortalCaseDetail() {
 
   if (notFound) {
     return (
-      <section role="alert" className="rounded-md border border-surface-200 bg-white px-5 py-6">
+      <section role="alert" className="rounded-md border border-control-border bg-white px-5 py-6">
         <h1 className="font-display text-2xl text-ink-900 mb-2">Case not found</h1>
         <p className="text-ink-700">
           This case isn’t available to your firm.{' '}
@@ -106,7 +106,7 @@ export default function PortalCaseDetail() {
               <h1 className="font-display text-2xl sm:text-3xl text-ink-900">
                 {data.claimant_name ?? 'Claimant'}
               </h1>
-              <span className="text-xs font-mono uppercase tracking-wide rounded-full border border-surface-200 px-2 py-0.5 text-ink-700">
+              <span className="text-xs font-mono uppercase tracking-wide rounded-full border border-control-border px-2 py-0.5 text-ink-700">
                 {STAGE_LABEL[data.status] ?? data.status}
               </span>
             </div>
@@ -137,7 +137,7 @@ export default function PortalCaseDetail() {
               </h2>
               <dl className="flex flex-col gap-2">
                 {data.qualifying_answers.map((a) => (
-                  <div key={a.question} className="rounded-md border border-surface-200 bg-white px-4 py-3">
+                  <div key={a.question} className="rounded-md border border-control-border bg-white px-4 py-3">
                     <dt className="text-ink-500 text-xs uppercase tracking-wide mb-0.5">
                       {a.question.replace(/_/g, ' ')}
                     </dt>
@@ -157,7 +157,7 @@ export default function PortalCaseDetail() {
             ) : (
               <ul className="flex flex-col gap-3">
                 {data.transcript.map((m, i) => (
-                  <li key={i} className="rounded-md border border-surface-200 bg-white px-4 py-3">
+                  <li key={i} className="rounded-md border border-control-border bg-white px-4 py-3">
                     <div className="text-ink-500 text-xs uppercase tracking-wide mb-1">
                       {m.role === 'assistant' ? 'Ada' : m.role === 'user' ? 'Claimant' : m.role}
                     </div>
@@ -220,7 +220,7 @@ const RESOLUTION_TYPES = [
 
 const BTN = 'inline-flex items-center justify-center min-h-[44px] px-4 rounded-md font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors';
 const BTN_PRIMARY = `${BTN} bg-accent-500 text-white hover:bg-accent-600 focus-visible:outline-accent-600`;
-const BTN_SECONDARY = `${BTN} border border-surface-200 text-ink-900 hover:border-accent-500 focus-visible:outline-accent-600`;
+const BTN_SECONDARY = `${BTN} border border-control-border text-ink-900 hover:border-accent-500 focus-visible:outline-accent-600`;
 
 function ActionBar({
   status,
@@ -291,7 +291,7 @@ function ActionBar({
       )}
 
       {mode === 'declining' && (
-        <div className="rounded-md border border-surface-200 bg-white p-4 max-w-lg">
+        <div className="rounded-md border border-control-border bg-white p-4 max-w-lg">
           <label htmlFor="decline-reason" className="block text-ink-900 font-medium mb-1">
             Why are you declining?
           </label>
@@ -300,7 +300,7 @@ function ActionBar({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             rows={3}
-            className="w-full rounded-md border border-surface-200 px-3 py-2 text-ink-900 mb-3"
+            className="w-full rounded-md border border-control-border px-3 py-2 text-ink-900 mb-3"
           />
           <div className="flex gap-2">
             <button
@@ -319,7 +319,7 @@ function ActionBar({
       )}
 
       {mode === 'resolving' && (
-        <div className="rounded-md border border-surface-200 bg-white p-4 max-w-lg">
+        <div className="rounded-md border border-control-border bg-white p-4 max-w-lg">
           <label htmlFor="resolution-type" className="block text-ink-900 font-medium mb-1">
             How was this resolved?
           </label>
@@ -327,7 +327,7 @@ function ActionBar({
             id="resolution-type"
             value={resolutionType}
             onChange={(e) => setResolutionType(e.target.value)}
-            className="w-full rounded-md border border-surface-200 px-3 py-2 text-ink-900 mb-3"
+            className="w-full rounded-md border border-control-border px-3 py-2 text-ink-900 mb-3"
           >
             {RESOLUTION_TYPES.map((r) => (
               <option key={r.value} value={r.value}>
@@ -392,7 +392,7 @@ function NotesPanel({
       {notes.length > 0 && (
         <ul className="flex flex-col gap-2 mb-3">
           {notes.map((n, i) => (
-            <li key={i} className="rounded-md border border-surface-200 bg-white px-4 py-3">
+            <li key={i} className="rounded-md border border-control-border bg-white px-4 py-3">
               <p className="text-ink-900 whitespace-pre-wrap">{n.summary}</p>
               <p className="text-ink-500 text-xs mt-1">
                 {new Date(n.created_at).toLocaleString()}
@@ -412,7 +412,7 @@ function NotesPanel({
           onChange={(e) => setBody(e.target.value)}
           rows={2}
           placeholder="Add a note…"
-          className="w-full rounded-md border border-surface-200 px-3 py-2 text-ink-900 mb-2"
+          className="w-full rounded-md border border-control-border px-3 py-2 text-ink-900 mb-2"
         />
         {error && (
           <p role="alert" className="text-danger-500 text-sm mb-2">

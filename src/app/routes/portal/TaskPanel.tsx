@@ -15,7 +15,7 @@ import {
 const PRIORITY_LABEL: Record<string, string> = { high: 'High', medium: 'Medium', low: 'Low' };
 
 const FIELD =
-  'min-h-[44px] rounded-md border border-surface-200 bg-white px-3 text-ink-900 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
+  'min-h-[44px] rounded-md border border-control-border bg-white px-3 text-ink-900 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
 
 export default function TaskPanel({ caseId }: { caseId: string }) {
   const [tasks, setTasks] = useState<PortalTask[]>([]);
@@ -90,7 +90,7 @@ export default function TaskPanel({ caseId }: { caseId: string }) {
           {open.map((t) => (
             <li
               key={t.id}
-              className="flex items-start gap-3 rounded-md border border-surface-200 bg-white px-4 py-3"
+              className="flex items-start gap-3 rounded-md border border-control-border bg-white px-4 py-3"
             >
               <button
                 type="button"
@@ -98,7 +98,7 @@ export default function TaskPanel({ caseId }: { caseId: string }) {
                 aria-label={`Mark "${t.title}" complete`}
                 className="-m-2.5 p-2.5 shrink-0 inline-flex items-center justify-center rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
-                <span className="h-6 w-6 rounded border-2 border-surface-300 hover:border-accent-500" />
+                <span className="h-6 w-6 rounded border-2 border-control-border hover:border-accent-500" />
               </button>
               <div className="min-w-0">
                 <p className="text-ink-900">{t.title}</p>
@@ -126,7 +126,7 @@ export default function TaskPanel({ caseId }: { caseId: string }) {
         </details>
       )}
 
-      <div className="rounded-md border border-surface-200 bg-surface-100 p-3 max-w-lg">
+      <div className="rounded-md border border-control-border bg-surface-100 p-3 max-w-lg">
         <label htmlFor="task-title" className="block text-sm font-medium text-ink-700 mb-1">
           New task
         </label>

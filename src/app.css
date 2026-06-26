@@ -30,16 +30,17 @@
   --color-surface-100: #F4F0E8;   /* subtle lift — cards, message bubbles */
   --color-surface-200: #E8E2D4;   /* dividers, input borders */
   --color-surface-300: #D4CCB9;   /* disabled, hints */
+  --color-control-border: #948F81; /* interactive control borders — 3:1 in every theme (WCAG 1.4.11) */
 
   /* Ink — deep, warm-biased black for long-form reading */
   --color-ink-900: #1A1814;       /* primary text, 16.5:1 on surface-50 (AAA) */
   --color-ink-700: #3A3530;       /* secondary, 10.6:1 (AAA) */
-  --color-ink-500: #5A524A;       /* tertiary / meta, 6.8:1 (AAA body)
+  --color-ink-500: #554D46;       /* tertiary / meta — 7.3:1 on surface-100, 7.8:1 on surface-50 (AAA body)
                                      darkened from #6A625A which was 5.2:1
                                      and only AAA for large text */
 
   /* Accent — muted terracotta, AAA on surface-50 */
-  --color-accent-500: #8C3F18;    /* primary CTA / links, 7.4:1 (AAA body)
+  --color-accent-500: #883D17;    /* primary CTA / links, 7.4:1 (AAA body)
                                      darkened from #A64B1D which was 5.5:1
                                      and only AAA for large text */
   --color-accent-600: #6E2F10;    /* hover, active */
@@ -54,11 +55,11 @@
   --color-ada-50:  #F3EEFE;       /* purple surface tint */
 
   /* Semantic — kept muted, not neon */
-  --color-success-500: #3B6A3F;
+  --color-success-500: #366039;
   --color-success-50:  #E8EFE9;
   --color-warning-500: #8C5E19;
   --color-warning-50:  #F4EBD9;
-  --color-danger-500:  #8C2E1F;
+  --color-danger-500:  #822B1D;
   --color-danger-100:  #EBC8C2;   /* hover tier — used by retry buttons */
   --color-danger-50:   #F4E1DD;
 }
@@ -293,11 +294,11 @@ body {
   --color-ada-500: #B9A6FC;       /* light violet, AAA on dark surfaces */
   --color-ada-600: #C9BCFD;       /* hover — brighter */
   --color-ada-50:  #1E1633;       /* dark purple tint */
-  --color-success-500: #6FA176;
+  --color-success-500: #86C28E;
   --color-success-50:  #1A2A1C;
   --color-warning-500: #D4A04D;
   --color-warning-50:  #2A2113;
-  --color-danger-500:  #D4695A;
+  --color-danger-500:  #FF8572;
   --color-danger-100:  #3D1F1A;
   --color-danger-50:   #2A1714;
 }

@@ -86,7 +86,7 @@ export default function PortalPipeline() {
                 const count = stats.stage_counts[s.key];
                 const prev = i === 0 ? count : stats.stage_counts[STAGES[i - 1]!.key];
                 return (
-                  <li key={s.key} className="rounded-md border border-surface-200 bg-white px-4 py-3">
+                  <li key={s.key} className="rounded-md border border-control-border bg-white px-4 py-3">
                     <div className="text-ink-500 text-xs uppercase tracking-wide">{s.label}</div>
                     <div className="text-ink-900 text-3xl font-display">{count}</div>
                     {i > 0 && (
@@ -106,7 +106,7 @@ export default function PortalPipeline() {
               {stats.time_in_stage.map((t) => (
                 <li
                   key={t.stage}
-                  className="flex items-center justify-between rounded-md border border-surface-200 bg-white px-4 py-3"
+                  className="flex items-center justify-between rounded-md border border-control-border bg-white px-4 py-3"
                 >
                   <span className="text-ink-700">{TIMED_LABEL[t.stage] ?? t.stage}</span>
                   <span className="text-ink-900 font-medium">

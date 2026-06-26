@@ -51,7 +51,7 @@ const LANE_LABEL: Record<string, string> = {
 const TAB =
   'inline-flex items-center justify-center min-h-[44px] px-4 rounded-md text-sm font-medium border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
 const FIELD =
-  'min-h-[44px] rounded-md border border-surface-200 bg-white px-3 text-ink-900 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
+  'min-h-[44px] rounded-md border border-control-border bg-white px-3 text-ink-900 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
 const BTN =
   'inline-flex items-center justify-center min-h-[44px] px-4 rounded-md bg-accent-500 text-white text-sm font-medium hover:bg-accent-600 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60';
 
@@ -119,7 +119,7 @@ export default function AdminCases() {
               className={`${TAB} ${
                 active
                   ? 'bg-accent-500 text-white border-accent-500'
-                  : 'bg-white text-ink-700 border-surface-200 hover:bg-surface-100'
+                  : 'bg-white text-ink-700 border-control-border hover:bg-surface-100'
               }`}
             >
               {f.label}
@@ -142,7 +142,7 @@ export default function AdminCases() {
       ) : cases.length === 0 ? (
         <p className="text-sm text-ink-500">No cases in this view.</p>
       ) : (
-        <div className="overflow-x-auto rounded-md border border-surface-200 bg-white">
+        <div className="overflow-x-auto rounded-md border border-control-border bg-white">
           <table className="w-full text-sm">
             <caption className="sr-only">Intake cases</caption>
             <thead className="bg-surface-100 text-left text-xs uppercase tracking-wider font-mono text-ink-500">
@@ -156,7 +156,7 @@ export default function AdminCases() {
                 <th scope="col" className="px-3 py-2">Firm / placement</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-200">
+            <tbody className="divide-y divide-control-border">
               {cases.map((c) => (
                 <tr key={c.case_id} className="align-top">
                   <td className="px-3 py-3 text-ink-900">{c.claimant_name ?? '—'}</td>

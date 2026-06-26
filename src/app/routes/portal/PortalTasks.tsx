@@ -82,7 +82,7 @@ export default function PortalTasks() {
                   {items.map((t) => (
                     <li
                       key={t.id}
-                      className="flex items-start justify-between gap-3 rounded-md border border-surface-200 bg-white px-4 py-3"
+                      className="flex items-start justify-between gap-3 rounded-md border border-control-border bg-white px-4 py-3"
                     >
                       <div className="min-w-0">
                         <p className="text-ink-900">{t.title}</p>

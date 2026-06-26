@@ -29,7 +29,7 @@ export default function PortalLayout() {
         Skip to main content
       </a>
 
-      <header className="border-b border-surface-200 bg-white">
+      <header className="border-b border-control-border bg-white">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 min-w-0">
           <Link

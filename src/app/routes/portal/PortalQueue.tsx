@@ -53,7 +53,7 @@ export default function PortalQueue() {
 
   if (notOnboarded) {
     return (
-      <section role="alert" className="rounded-md border border-surface-200 bg-white px-5 py-6">
+      <section role="alert" className="rounded-md border border-control-border bg-white px-5 py-6">
         <h1 className="font-display text-2xl text-ink-900 mb-2">Not onboarded yet</h1>
         <p className="text-ink-700">
           Your account isn’t paired with a law firm yet. Contact ADA Legal Link to finish
@@ -78,7 +78,7 @@ export default function PortalQueue() {
       {data && (
         <div className="grid grid-cols-3 gap-3 mb-8 max-w-lg">
           {GROUPS.map((g) => (
-            <div key={g.key} className="rounded-md border border-surface-200 bg-white px-4 py-3">
+            <div key={g.key} className="rounded-md border border-control-border bg-white px-4 py-3">
               <div className="text-ink-500 text-xs uppercase tracking-wide">{g.label}</div>
               <div className="text-ink-900 text-2xl font-display">{data.counts[g.key]}</div>
             </div>
@@ -140,7 +140,7 @@ function CaseRowLink({ c }: { c: PortalCaseRow }) {
   return (
     <Link
       to={`/portal/cases/${c.case_id}`}
-      className="block rounded-md border border-surface-200 bg-white px-4 py-3 transition-colors hover:border-accent-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600"
+      className="block rounded-md border border-control-border bg-white px-4 py-3 transition-colors hover:border-accent-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600"
     >
       <div className="flex items-center justify-between gap-3">
         <span className="text-ink-900 font-medium">{c.claimant_name ?? 'Unknown claimant'}</span>
