@@ -26,6 +26,8 @@ import {
   X,
   Plus,
   ExternalLink,
+  Upload,
+  Download,
 } from 'lucide-react';
 import TaskPanel from './TaskPanel.js';
 import MessageContent from '../../components/MessageContent.js';
@@ -41,6 +43,8 @@ import {
   removeCasePerson,
   fetchCaseDocuments,
   addCaseDocument,
+  uploadCaseDocument,
+  caseDocumentDownloadUrl,
   removeCaseDocument,
   type PortalCaseAction,
   type PortalCaseActivityEntry,
@@ -450,7 +454,9 @@ function DocumentsPanel({ caseId }: { caseId: string }) {
   const [filename, setFilename] = useState('');
   const [url, setUrl] = useState('');
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
     try {
@@ -463,6 +469,22 @@ function DocumentsPanel({ caseId }: { caseId: string }) {
   useEffect(() => {
     void load();
   }, [load]);
+
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setError(null);
+    try {
+      await uploadCaseDocument(caseId, file);
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Upload failed');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const add = async () => {
     if (filename.trim() === '' || url.trim() === '') return;
@@ -497,14 +519,34 @@ function DocumentsPanel({ caseId }: { caseId: string }) {
 
   return (
     <section aria-labelledby="docs-h">
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3 gap-2">
         <h2 id="docs-h" className="font-display text-base text-ink-900">Documents</h2>
-        {!adding && (
-          <button type="button" onClick={() => setAdding(true)} className="inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-lg border border-control-border text-ink-700 text-sm font-semibold hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
-            <Plus size={15} aria-hidden="true" /> Attach
+        <div className="flex items-center gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="sr-only"
+            aria-hidden="true"
+            tabIndex={-1}
+            onChange={(e) => void onFile(e)}
+          />
+          <button
+            type="button"
+            disabled={uploading}
+            onClick={() => fileInputRef.current?.click()}
+            className="inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-lg bg-accent-500 text-white text-sm font-semibold hover:bg-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60"
+          >
+            <Upload size={15} aria-hidden="true" /> {uploading ? 'Uploading…' : 'Upload'}
           </button>
-        )}
+          {!adding && (
+            <button type="button" onClick={() => setAdding(true)} className="inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-lg border border-control-border text-ink-700 text-sm font-semibold hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+              <Plus size={15} aria-hidden="true" /> Attach link
+            </button>
+          )}
+        </div>
       </div>
+
+      {error && !adding && <p role="alert" className="text-danger-500 text-xs mb-3">{error}</p>}
 
       {adding && (
         <div className="rounded-lg border border-surface-200 bg-surface-50 p-4 mb-4 flex flex-col gap-2">
@@ -529,15 +571,20 @@ function DocumentsPanel({ caseId }: { caseId: string }) {
         <p className="text-ink-500 text-sm">No documents attached yet.</p>
       ) : (
         <ul className="flex flex-col gap-2">
-          {docs.map((d) => (
+          {docs.map((d) => {
+            const isBlob = d.storageKind === 'blob';
+            const href = isBlob ? caseDocumentDownloadUrl(caseId, d.id) : d.url;
+            return (
             <li key={d.id} className="flex items-center gap-3 rounded-md border border-surface-200 bg-white px-4 py-3">
               <FileText size={18} className="text-ink-500 shrink-0" aria-hidden="true" />
               <div className="min-w-0 flex-1">
-                <a href={d.url} target="_blank" rel="noopener noreferrer" className="text-ink-900 text-sm font-semibold hover:text-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-sm truncate inline-flex items-center gap-1">
+                <a href={href} target="_blank" rel="noopener noreferrer" className="text-ink-900 text-sm font-semibold hover:text-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-sm truncate inline-flex items-center gap-1">
                   {d.filename}
-                  <ExternalLink size={12} aria-hidden="true" />
+                  {isBlob ? <Download size={12} aria-hidden="true" /> : <ExternalLink size={12} aria-hidden="true" />}
                 </a>
-                <div className="text-ink-500 text-xs mt-0.5">Attached {fmtDate(d.uploadedAt)}</div>
+                <div className="text-ink-500 text-xs mt-0.5">
+                  {isBlob ? 'Uploaded' : 'Linked'} {fmtDate(d.uploadedAt)}
+                </div>
               </div>
               <button
                 type="button"
@@ -549,7 +596,8 @@ function DocumentsPanel({ caseId }: { caseId: string }) {
                 <X size={16} aria-hidden="true" />
               </button>
             </li>
-          ))}
+            );
+          })}
         </ul>
       )}
     </section>

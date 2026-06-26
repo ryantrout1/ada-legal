@@ -206,6 +206,7 @@ export interface PortalDocument {
   mimeType: string | null;
   sizeBytes: number | null;
   uploadedAt: string;
+  storageKind: string;
 }
 
 export async function fetchCaseDocuments(id: string): Promise<PortalDocument[]> {
@@ -218,7 +219,13 @@ export async function fetchCaseDocuments(id: string): Promise<PortalDocument[]> 
 
 export async function addCaseDocument(
   id: string,
-  doc: { filename: string; url: string; mime_type?: string | null },
+  doc: {
+    filename: string;
+    url: string;
+    mime_type?: string | null;
+    size_bytes?: number | null;
+    storage_kind?: 'reference' | 'blob';
+  },
 ): Promise<void> {
   const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/documents`, {
     method: 'POST',
@@ -227,6 +234,32 @@ export async function addCaseDocument(
     body: JSON.stringify(doc),
   });
   if (!resp.ok) await failFor(resp);
+}
+
+/**
+ * Upload a file to the private docs Blob store via @vercel/blob/client, then
+ * record it in case_documents. The browser uploads bytes directly to the store
+ * (bypassing the Function body limit); the token endpoint gates it firm-scoped.
+ */
+export async function uploadCaseDocument(id: string, file: File): Promise<void> {
+  const { upload } = await import('@vercel/blob/client');
+  const result = await upload(`cases/${id}/${file.name}`, file, {
+    access: 'private',
+    handleUploadUrl: `/api/portal/cases/${encodeURIComponent(id)}/documents/upload`,
+    contentType: file.type || undefined,
+  });
+  await addCaseDocument(id, {
+    filename: file.name,
+    url: result.url,
+    mime_type: file.type || null,
+    size_bytes: file.size,
+    storage_kind: 'blob',
+  });
+}
+
+/** URL of the firm-scoped streaming download Function for a stored ('blob') document. */
+export function caseDocumentDownloadUrl(id: string, documentId: string): string {
+  return `/api/portal/cases/${encodeURIComponent(id)}/documents/${encodeURIComponent(documentId)}/download`;
 }
 
 export async function removeCaseDocument(id: string, documentId: string): Promise<void> {
