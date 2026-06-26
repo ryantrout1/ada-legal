@@ -5,7 +5,6 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { fetchPipelineStats, type PipelineStatsResponse } from '../../data/portalClient.js';
-import PortalViewToggle from './PortalViewToggle.js';
 
 const STAGES = [
   { key: 'new', label: 'New' },
@@ -59,7 +58,6 @@ export default function PortalPipeline() {
           <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">Pipeline stats</h1>
           <p className="text-ink-500 text-sm">How your matched cases move through the stages.</p>
         </div>
-        <PortalViewToggle active="stats" />
       </header>
 
       {error && (

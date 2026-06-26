@@ -31,7 +31,6 @@ import {
   moveOptions,
   type BoardColumn,
 } from '../../../engine/cases/boardMoves.js';
-import PortalViewToggle from './PortalViewToggle.js';
 
 const RESOLUTION_TYPES: ReadonlyArray<{ value: string; label: string }> = [
   { value: 'engaged', label: 'Engaged / representing' },
@@ -165,7 +164,6 @@ export default function PortalBoard() {
           >
             New matter
           </button>
-          <PortalViewToggle active="board" />
         </div>
       </header>
 
