@@ -155,27 +155,32 @@ export default function PortalInbox() {
         </button>
       </header>
 
-      {/* Stat strip */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard
+      {/* Metric strip — one compact, hairline-divided panel (was four cards) */}
+      <div className="mb-6 grid grid-cols-2 lg:grid-cols-4 rounded-lg border border-control-border bg-white">
+        <Metric
           label="Awaiting decision"
           value={counts ? String(counts.new) : '—'}
           sub="Referrals to review"
+          accent
+          pos={0}
         />
-        <StatCard
+        <Metric
           label="Accepted this week"
           value={stats ? String(stats.accepted_this_week) : '—'}
           sub="Last 7 days"
+          pos={1}
         />
-        <StatCard
+        <Metric
           label="Response time"
           value={formatHours(responseHours)}
           sub="Median, routed → accepted"
+          pos={2}
         />
-        <StatCard
+        <Metric
           label="Active matters"
           value={counts ? String(counts.working) : '—'}
           sub="In progress"
+          pos={3}
         />
       </div>
 
@@ -276,12 +281,40 @@ export default function PortalInbox() {
   );
 }
 
-function StatCard({ label, value, sub }: { label: string; value: string; sub: string }) {
+function Metric({
+  label,
+  value,
+  sub,
+  accent,
+  pos,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  accent?: boolean;
+  pos: number;
+}) {
+  // Hairline dividers: vertical between columns on desktop (4-up single row),
+  // a 2×2 grid with both dividers on mobile.
+  const smRight = pos % 2 === 0;
+  const smBottom = pos < 2;
+  const lgRight = pos < 3;
+  const cls = [
+    'px-5 py-4 border-surface-200',
+    smRight ? 'border-r' : '',
+    smBottom ? 'border-b' : '',
+    'lg:border-b-0',
+    lgRight ? 'lg:border-r' : 'lg:border-r-0',
+  ].join(' ');
   return (
-    <div className="rounded-lg border border-control-border bg-white px-4 py-4">
-      <div className="text-ink-500 text-xs uppercase tracking-wide font-semibold mb-1.5">{label}</div>
-      <div className="font-display text-3xl text-ink-900 leading-none">{value}</div>
-      <div className="text-ink-500 text-xs mt-2">{sub}</div>
+    <div className={cls}>
+      <div className="text-ink-500 text-xs uppercase tracking-wide font-bold">{label}</div>
+      <div
+        className={`text-2xl font-bold leading-tight tabular-nums mt-1 ${accent ? 'text-accent-500' : 'text-ink-900'}`}
+      >
+        {value}
+      </div>
+      <div className="text-ink-500 text-xs mt-0.5">{sub}</div>
     </div>
   );
 }
@@ -337,7 +370,7 @@ function ReferralRow({
   const ageSource = c.routed_at ?? c.created_at;
   const summary = c.case_name ?? 'Open to view the full intake.';
   return (
-    <tr className="border-t border-surface-200 hover:bg-accent-50">
+    <tr className="border-t border-surface-200 hover:bg-surface-100">
       <td className="px-4 py-3 align-top">
         <span className={`inline-block w-2.5 h-2.5 rounded-full ${DOT_CLASS[priority]}`} aria-hidden="true" />
         <span className="sr-only">{PRIORITY_LABEL[priority]}</span>
