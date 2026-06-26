@@ -145,6 +145,14 @@ export interface AttorneyAdminRow extends AttorneyRow {
   status: AttorneyStatus;
   createdAt: string;
   updatedAt: string;
+  /**
+   * Capacity & routing controls (portal Account self-serve). Optional so
+   * existing AttorneyAdminRow constructors (seeds, fixtures) are unaffected;
+   * real DB reads always populate them via toAttorneyAdminRow.
+   */
+  acceptingReferrals?: boolean;
+  routingPaused?: boolean;
+  maxActiveCases?: number | null;
 }
 
 export interface AdminAttorneyListOptions {
@@ -371,6 +379,9 @@ export interface UpdateAttorneyInput {
   bio?: string | null;
   photoUrl?: string | null;
   status?: AttorneyStatus;
+  acceptingReferrals?: boolean;
+  routingPaused?: boolean;
+  maxActiveCases?: number | null;
 }
 
 /**

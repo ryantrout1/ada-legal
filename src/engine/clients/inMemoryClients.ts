@@ -461,6 +461,9 @@ export class InMemoryDbClient implements DbClient {
       bio: input.bio ?? null,
       photoUrl: input.photoUrl ?? null,
       status: input.status ?? 'pending',
+      acceptingReferrals: true,
+      routingPaused: false,
+      maxActiveCases: null,
       createdAt: now,
       updatedAt: now,
       orgId: input.orgId,
@@ -495,6 +498,9 @@ export class InMemoryDbClient implements DbClient {
       ...(input.bio !== undefined ? { bio: input.bio } : {}),
       ...(input.photoUrl !== undefined ? { photoUrl: input.photoUrl } : {}),
       ...(input.status !== undefined ? { status: input.status } : {}),
+      ...(input.acceptingReferrals !== undefined ? { acceptingReferrals: input.acceptingReferrals } : {}),
+      ...(input.routingPaused !== undefined ? { routingPaused: input.routingPaused } : {}),
+      ...(input.maxActiveCases !== undefined ? { maxActiveCases: input.maxActiveCases } : {}),
       updatedAt: new Date().toISOString(),
     };
     this.adminAttorneys[idx] = next;

@@ -820,6 +820,9 @@ export class NeonDbClient implements DbClient {
     if (input.bio !== undefined) patch.bio = input.bio;
     if (input.photoUrl !== undefined) patch.photoUrl = input.photoUrl;
     if (input.status !== undefined) patch.status = input.status;
+    if (input.acceptingReferrals !== undefined) patch.acceptingReferrals = input.acceptingReferrals;
+    if (input.routingPaused !== undefined) patch.routingPaused = input.routingPaused;
+    if (input.maxActiveCases !== undefined) patch.maxActiveCases = input.maxActiveCases;
 
     if (Object.keys(patch).length === 0) {
       return this.getAttorneyById(id);
@@ -3643,6 +3646,9 @@ function toAttorneyAdminRow(r: typeof attorneysTable.$inferSelect): AttorneyAdmi
     bio: r.bio,
     photoUrl: r.photoUrl,
     status: r.status as AttorneyStatus,
+    acceptingReferrals: r.acceptingReferrals,
+    routingPaused: r.routingPaused,
+    maxActiveCases: r.maxActiveCases,
     createdAt: (r.createdAt as Date).toISOString(),
     updatedAt: (r.updatedAt as Date).toISOString(),
   };
