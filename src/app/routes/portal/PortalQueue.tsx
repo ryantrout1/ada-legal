@@ -10,6 +10,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
+import PortalViewToggle from './PortalViewToggle.js';
 import {
   fetchPortalQueue,
   PortalApiError,
@@ -66,9 +67,12 @@ export default function PortalQueue() {
 
   return (
     <section>
-      <header className="mb-6">
-        <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">Your intake queue</h1>
-        <p className="text-ink-500 text-sm">Matched cases your clients consented to share.</p>
+      <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">Your intake queue</h1>
+          <p className="text-ink-500 text-sm">Matched cases your clients consented to share.</p>
+        </div>
+        <PortalViewToggle active="list" />
       </header>
 
       {data && (
