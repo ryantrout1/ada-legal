@@ -15,6 +15,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Scale, Clock } from 'lucide-react';
+import { relativeAge, priorityForSla, type InboxPriority } from '../../utils/inboxFormat.js';
 import {
   fetchPortalQueue,
   transitionPortalCase,
@@ -186,7 +188,7 @@ export default function PortalBoard() {
       ) : loading ? (
         <p className="text-sm text-ink-500">Loading the board…</p>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {BOARD_COLUMNS.map((column) => {
             const items = byColumn(column);
             return (
@@ -199,7 +201,7 @@ export default function PortalBoard() {
                 }}
                 onDragLeave={() => setDragOver((c) => (c === column ? null : c))}
                 onDrop={(e) => onDropTo(column, e)}
-                className={`rounded-lg border p-3 min-h-[8rem] transition-colors ${
+                className={`rounded-lg border p-2.5 min-h-[8rem] transition-colors ${
                   dragOver === column ? 'border-accent-500 bg-accent-50' : 'border-control-border bg-surface-100'
                 }`}
               >
@@ -243,6 +245,18 @@ export default function PortalBoard() {
   );
 }
 
+const DUE_CLASS: Record<InboxPriority, string> = {
+  high: 'text-danger-500',
+  medium: 'text-ink-700',
+  none: 'text-ink-500',
+};
+
+function formatDue(iso: string | null): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
 function BoardCard({
   row,
   busy,
@@ -253,6 +267,8 @@ function BoardCard({
   onMove: (transition: CaseTransition) => void;
 }) {
   const options = moveOptions(row.status as CaseStatus);
+  const due = formatDue(row.first_contact_due);
+  const priority = priorityForSla(row.first_contact_due);
   return (
     <li
       draggable={options.length > 0}
@@ -267,18 +283,42 @@ function BoardCard({
         options.length > 0 ? 'cursor-grab active:cursor-grabbing' : ''
       } ${busy ? 'opacity-60' : ''}`}
     >
-      <Link
-        to={`/portal/cases/${row.case_id}`}
-        className="block font-medium text-ink-900 hover:text-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-sm"
-      >
-        {row.claimant_name ?? 'Unnamed claimant'}
-      </Link>
+      <div className="flex items-start justify-between gap-2">
+        <Link
+          to={`/portal/cases/${row.case_id}`}
+          className="block font-medium text-ink-900 hover:text-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-sm"
+        >
+          {row.claimant_name ?? 'Unnamed claimant'}
+        </Link>
+        <span className="shrink-0 text-xs text-ink-500 tabular-nums">
+          {relativeAge(row.routed_at ?? row.created_at)}
+        </span>
+      </div>
       <p className="text-xs text-ink-500 font-mono mt-0.5">{row.case_number}</p>
-      {row.classification_title && (
-        <p className="text-xs text-ink-700 mt-1">
-          {row.classification_title}
-          {row.jurisdiction_state ? <span className="text-ink-500"> · {row.jurisdiction_state}</span> : null}
-        </p>
+
+      {row.case_name && (
+        <div className="flex items-center gap-1.5 mt-2 text-xs text-ink-700">
+          <Scale size={13} className="shrink-0 text-ink-500" aria-hidden="true" />
+          <span className="truncate">{row.case_name}</span>
+        </div>
+      )}
+
+      {(row.classification_title || row.jurisdiction_state) && (
+        <div className="flex flex-wrap items-center gap-1.5 mt-2">
+          {row.classification_title && <span className="lw-pill purple">{row.classification_title}</span>}
+          {row.jurisdiction_state && (
+            <span className="lw-pill blue"><span className="lw-pill-dot" />{row.jurisdiction_state}</span>
+          )}
+        </div>
+      )}
+
+      {due && (
+        <div className="mt-2.5 pt-2.5 border-t border-surface-200">
+          <span className={`inline-flex items-center gap-1 text-xs font-medium ${DUE_CLASS[priority]}`}>
+            <Clock size={12} aria-hidden="true" />
+            Contact · {due}
+          </span>
+        </div>
       )}
 
       {options.length > 0 && (
