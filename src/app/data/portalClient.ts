@@ -239,6 +239,7 @@ export async function fetchFirmTasks(): Promise<PortalFirmTask[]> {
 export interface PipelineStatsResponse {
   stage_counts: { new: number; accepted: number; working: number; resolved: number };
   time_in_stage: { stage: string; median_hours: number; n: number }[];
+  accepted_this_week: number;
 }
 
 export async function fetchPipelineStats(): Promise<PipelineStatsResponse> {

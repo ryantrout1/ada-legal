@@ -66,6 +66,24 @@ describe('computePipelineStats', () => {
     const s = computePipelineStats([], []);
     expect(s.stageCounts).toEqual({ new: 0, accepted: 0, working: 0, resolved: 0 });
     expect(s.timeInStage.every((t) => t.n === 0)).toBe(true);
+    expect(s.acceptedThisWeek).toBe(0);
+  });
+
+  it('counts acceptedThisWeek by first-ACCEPT inside the trailing 7 days', () => {
+    const now = base + 100 * 24 * H; // a fixed "now" well after base
+    const cases = [
+      { id: 'recent', createdAt: at(0) }, // accepted 2 days ago → counts
+      { id: 'old', createdAt: at(0) }, // accepted 20 days ago → excluded
+      { id: 'edge', createdAt: at(0) }, // accepted exactly 7 days ago → counts (inclusive)
+      { id: 'never', createdAt: at(0) }, // never accepted → excluded
+    ];
+    const events = [
+      { caseId: 'recent', eventType: 'ACCEPT', createdAt: new Date(now - 2 * 24 * H).toISOString() },
+      { caseId: 'old', eventType: 'ACCEPT', createdAt: new Date(now - 20 * 24 * H).toISOString() },
+      { caseId: 'edge', eventType: 'ACCEPT', createdAt: new Date(now - 7 * 24 * H).toISOString() },
+    ];
+    const s = computePipelineStats(cases, events, now);
+    expect(s.acceptedThisWeek).toBe(2);
   });
 });
 

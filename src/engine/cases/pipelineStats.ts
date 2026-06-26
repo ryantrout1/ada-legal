@@ -24,6 +24,8 @@ export type TimedStage = 'new' | 'accepted' | 'working';
 export interface PipelineStats {
   stageCounts: PipelineStageCounts;
   timeInStage: { stage: TimedStage; medianHours: number; n: number }[];
+  /** Cases whose first ACCEPT fell within the last 7 days (inbox KPI). */
+  acceptedThisWeek: number;
 }
 
 interface CaseInput {
@@ -44,7 +46,11 @@ function median(values: number[]): number {
   return Math.round(m * 10) / 10;
 }
 
-export function computePipelineStats(cases: CaseInput[], events: EventInput[]): PipelineStats {
+export function computePipelineStats(
+  cases: CaseInput[],
+  events: EventInput[],
+  now: number = Date.now(),
+): PipelineStats {
   // Earliest timestamp of each transition type, per case.
   const firstEvent = new Map<string, Map<string, number>>();
   for (const e of events) {
@@ -91,6 +97,14 @@ export function computePipelineStats(cases: CaseInput[], events: EventInput[]): 
     }
   }
 
+  // Cases first accepted within the last 7 days (inbox "Accepted this week" KPI).
+  const weekAgo = now - 7 * 24 * H;
+  let acceptedThisWeek = 0;
+  for (const c of cases) {
+    const accept = firstEvent.get(c.id)?.get('ACCEPT');
+    if (accept !== undefined && accept >= weekAgo && accept <= now) acceptedThisWeek++;
+  }
+
   return {
     stageCounts,
     timeInStage: [
@@ -98,5 +112,6 @@ export function computePipelineStats(cases: CaseInput[], events: EventInput[]): 
       { stage: 'accepted', medianHours: median(acceptedDur), n: acceptedDur.length },
       { stage: 'working', medianHours: median(workingDur), n: workingDur.length },
     ],
+    acceptedThisWeek,
   };
 }

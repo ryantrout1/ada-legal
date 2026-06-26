@@ -30,6 +30,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         median_hours: t.medianHours,
         n: t.n,
       })),
+      accepted_this_week: stats.acceptedThisWeek,
     });
   } catch (err) {
     console.error('/api/portal/pipeline failed', err);
