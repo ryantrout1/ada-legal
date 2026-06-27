@@ -103,7 +103,7 @@ export function StateGrid({
       <div
         role="group"
         aria-label={label}
-        className={`flex flex-wrap gap-1.5 ${disabled ? 'opacity-50' : ''}`}
+        className={`flex flex-wrap gap-2 ${disabled ? 'opacity-50' : ''}`}
       >
         {US_STATES.filter((s) => s !== exclude).map((s) => {
           const active = selected.includes(s);
@@ -196,7 +196,7 @@ export function TagPicker({
       {hint && <p className="text-xs text-ink-500 mb-2">{hint}</p>}
 
       {selected.length > 0 && (
-        <ul className="flex flex-wrap gap-1.5 mb-2">
+        <ul className="flex flex-wrap gap-2 mb-2">
           {selected.map((a) => (
             <li key={a}>
               <button
@@ -214,7 +214,7 @@ export function TagPicker({
       )}
 
       {open.length > 0 && (
-        <ul className="flex flex-wrap gap-1.5 mb-2">
+        <ul className="flex flex-wrap gap-2 mb-2">
           {open.map((a) => (
             <li key={a}>
               <button type="button" onClick={() => add(a)} className={`${PILL} ${PILL_OFF}`}>

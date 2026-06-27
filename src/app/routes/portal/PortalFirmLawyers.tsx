@@ -514,11 +514,16 @@ function FirmEditor({
               aria-checked={form.serves_nationwide}
               aria-labelledby="fe-nation-label"
               onClick={() => set({ serves_nationwide: !form.serves_nationwide })}
-              className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
-                form.serves_nationwide ? 'bg-accent-500 border-accent-500' : 'bg-white border-control-border'
-              }`}
+              className="shrink-0 grid place-items-center h-11 w-12 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
-              <span className={`inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${form.serves_nationwide ? 'translate-x-6' : 'translate-x-1'} border border-control-border`} />
+              <span
+                aria-hidden="true"
+                className={`relative inline-flex h-7 w-12 items-center rounded-full border transition-colors ${
+                  form.serves_nationwide ? 'bg-accent-500 border-accent-500' : 'bg-white border-control-border'
+                }`}
+              >
+                <span className={`inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${form.serves_nationwide ? 'translate-x-6' : 'translate-x-1'} border border-control-border`} />
+              </span>
             </button>
           </div>
           <div className="mt-4">
