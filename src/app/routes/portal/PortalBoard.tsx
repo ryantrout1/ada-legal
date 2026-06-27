@@ -152,7 +152,7 @@ export default function PortalBoard() {
     <div>
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">My Matters</h1>
+          <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">Matters</h1>
           <p className="text-sm text-ink-500">
             Drag a case to its next stage, or use each card&rsquo;s Move menu.
           </p>

@@ -25,7 +25,7 @@ export default function PortalPlaceholder({ title, blurb }: Props) {
         <h1 id="lw-placeholder-h">{title}</h1>
         <p>
           {blurb ??
-            `${title} isn't available in the workspace yet. It's on the roadmap — for now, use Inbox and My Matters to work your cases.`}
+            `${title} isn't available in the workspace yet. It's on the roadmap — for now, use Inbox and Matters to work your cases.`}
         </p>
       </section>
     </>

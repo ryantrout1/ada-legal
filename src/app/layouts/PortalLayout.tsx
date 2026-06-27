@@ -53,7 +53,7 @@ interface NavItem {
 
 const WORKSPACE_NAV: NavItem[] = [
   { to: '/portal', label: 'Inbox', icon: Home, end: true },
-  { to: '/portal/board', label: 'My Matters', icon: FileText },
+  { to: '/portal/board', label: 'Matters', icon: FileText },
   { to: '/portal/calendar', label: 'Calendar', icon: Calendar },
   { to: '/portal/tasks', label: 'Tasks', icon: CheckSquare },
   { to: '/portal/contacts', label: 'Contacts', icon: Users },
