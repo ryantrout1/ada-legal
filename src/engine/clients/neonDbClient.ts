@@ -822,6 +822,46 @@ export class NeonDbClient implements DbClient {
     return toAttorneyAdminRow(updated[0]);
   }
 
+  /**
+   * Offboard an attorney from a firm (owner action, /plan Phase C).
+   * Reclaim their assigned cases FIRST (never strand a claimant), then
+   * soft-archive + unbind the login. Reversible via admin un-archive;
+   * the severed user_id frees a future re-bind. Firm-scoped.
+   */
+  async offboardAttorneyFromFirm(
+    attorneyId: string,
+    firmId: string,
+    actor: { actorUserId: string | null; actorEmail: string | null },
+  ): Promise<{ attorney: AttorneyAdminRow; reclaimedCount: number } | null> {
+    // 1. Reclaim — unassign their live cases back to the firm queue.
+    const reclaimed = await this.db
+      .update(casesTable)
+      .set({ assignedLawyerId: null, updatedAt: new Date() })
+      .where(and(eq(casesTable.assignedLawyerId, attorneyId), eq(casesTable.firmId, firmId)))
+      .returning({ id: casesTable.id });
+
+    // 2. Archive + unbind (firm-scoped so an owner can't reach another firm).
+    const updated = await this.db
+      .update(attorneysTable)
+      .set({ status: 'archived', userId: null })
+      .where(and(eq(attorneysTable.id, attorneyId), eq(attorneysTable.lawFirmId, firmId)))
+      .returning();
+    if (!updated[0]) return null;
+
+    // 3. Audit.
+    await this.db.insert(auditLog).values({
+      orgId: updated[0].orgId,
+      actorType: 'attorney',
+      actorId: actor.actorUserId,
+      action: 'attorney.offboarded',
+      resourceType: 'attorney',
+      resourceId: attorneyId,
+      metadata: { actor_email: actor.actorEmail, reclaimed_case_count: reclaimed.length },
+    });
+
+    return { attorney: toAttorneyAdminRow(updated[0]), reclaimedCount: reclaimed.length };
+  }
+
   async upsertUserByClerkId(input: {
     clerkUserId: string;
     email: string | null;
@@ -846,7 +886,13 @@ export class NeonDbClient implements DbClient {
     const rows = await this.db
       .select()
       .from(attorneysTable)
-      .where(and(isNull(attorneysTable.userId), sql`lower(${attorneysTable.email}) = lower(${email})`));
+      .where(
+        and(
+          isNull(attorneysTable.userId),
+          sql`lower(${attorneysTable.email}) = lower(${email})`,
+          sql`${attorneysTable.status} <> 'archived'`,
+        ),
+      );
     return rows.map(toAttorneyAdminRow);
   }
 

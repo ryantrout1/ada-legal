@@ -994,6 +994,15 @@ export interface DbClient {
     role: string,
     actor: { actorUserId: string | null; actorEmail: string | null },
   ): Promise<AttorneyAdminRow | null>;
+  /**
+   * Offboard an attorney from a firm: reclaim their cases, then archive +
+   * unbind the login. Firm-scoped. Returns null if not in the firm.
+   */
+  offboardAttorneyFromFirm(
+    attorneyId: string,
+    firmId: string,
+    actor: { actorUserId: string | null; actorEmail: string | null },
+  ): Promise<{ attorney: AttorneyAdminRow; reclaimedCount: number } | null>;
   /** Insert-or-update a users row by clerk_user_id. Returns the ada_legal users.id. */
   upsertUserByClerkId(input: {
     clerkUserId: string;

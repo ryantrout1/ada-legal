@@ -19,3 +19,15 @@ export function canStepDown(roster: RosterRole[], callerId: string): boolean {
   const owners = ownerIds(roster);
   return owners.includes(callerId) && owners.some((id) => id !== callerId);
 }
+
+/**
+ * An attorney can be removed from the firm unless doing so would leave the
+ * firm with zero owners. Members are always removable; an owner is removable
+ * only while another owner remains. (Archived rows must be filtered out of
+ * `roster` before calling — they are not part of the live firm.)
+ */
+export function canRemoveAttorney(roster: RosterRole[], targetId: string): boolean {
+  const owners = ownerIds(roster);
+  if (owners.includes(targetId) && owners.length <= 1) return false;
+  return true;
+}

@@ -527,6 +527,53 @@ export class InMemoryDbClient implements DbClient {
     return next;
   }
 
+  async offboardAttorneyFromFirm(
+    attorneyId: string,
+    firmId: string,
+    actor: { actorUserId: string | null; actorEmail: string | null },
+  ): Promise<{ attorney: AttorneyAdminRow; reclaimedCount: number } | null> {
+    const idx = this.adminAttorneys.findIndex(
+      (a) => a.id === attorneyId && a.lawFirmId === firmId,
+    );
+    if (idx === -1) return null;
+
+    // 1. Reclaim assigned cases (best-effort: assignment may be untracked).
+    let reclaimedCount = 0;
+    for (const c of this.cases) {
+      const cc = c as { assignedLawyerId?: string | null };
+      if (cc.assignedLawyerId === attorneyId) {
+        cc.assignedLawyerId = null;
+        reclaimedCount++;
+      }
+    }
+
+    // 2. Archive + unbind.
+    const prev = this.adminAttorneys[idx];
+    const next: AttorneyAdminRow = {
+      ...prev,
+      status: 'archived',
+      userId: null,
+      updatedAt: new Date().toISOString(),
+    };
+    this.adminAttorneys[idx] = next;
+    const publicIdx = this.attorneys.findIndex((a) => a.id === attorneyId);
+    if (publicIdx !== -1) this.attorneys.splice(publicIdx, 1);
+
+    // 3. Audit.
+    this.auditLog.push({
+      orgId: (prev as AttorneyAdminRow & { orgId?: string }).orgId ?? null,
+      actorType: 'attorney',
+      actorId: actor.actorUserId,
+      action: 'attorney.offboarded',
+      resourceType: 'attorney',
+      resourceId: attorneyId,
+      metadata: { actor_email: actor.actorEmail, reclaimed_case_count: reclaimedCount },
+      createdAt: new Date().toISOString(),
+    });
+
+    return { attorney: next, reclaimedCount };
+  }
+
   async hardDeleteAttorney(
     id: string,
     actor: HardDeleteActor,
@@ -1986,7 +2033,7 @@ export class InMemoryDbClient implements DbClient {
   async listUnboundAttorneysByEmail(email: string): Promise<AttorneyAdminRow[]> {
     const target = email.trim().toLowerCase();
     return this.adminAttorneys.filter(
-      (a) => !a.userId && (a.email ?? '').trim().toLowerCase() === target,
+      (a) => !a.userId && a.status !== 'archived' && (a.email ?? '').trim().toLowerCase() === target,
     );
   }
 

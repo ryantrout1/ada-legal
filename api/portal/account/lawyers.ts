@@ -79,7 +79,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       clients.db.readLawFirmById(auth.lawFirmId),
     ]);
 
-    const lawyers = roster.map((a) => {
+    const lawyers = roster
+      .filter((a) => a.status !== 'archived')
+      .map((a) => {
       const readiness = computeReadiness(a, firm);
       return {
         id: a.id,

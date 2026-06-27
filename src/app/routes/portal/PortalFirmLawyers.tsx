@@ -7,7 +7,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ChevronLeft, CheckCircle2, AlertCircle, UserPlus, Globe, MapPin, Building2, Pencil } from 'lucide-react';
+import { ChevronLeft, CheckCircle2, AlertCircle, UserPlus, Globe, MapPin, Building2, Pencil, UserMinus } from 'lucide-react';
 import {
   fetchFirmLawyers,
   fetchFirmLawyer,
@@ -15,6 +15,7 @@ import {
   promoteOwner,
   transferOwnership,
   saveAccount,
+  removeFirmLawyer,
   PortalApiError,
   type PortalFirmLawyerSummary,
   type PortalLawyerDetail,
@@ -34,6 +35,8 @@ const BTN =
   'inline-flex items-center justify-center gap-2 min-h-[44px] px-4 rounded-md text-sm font-semibold border border-accent-500 bg-accent-500 text-white hover:bg-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60';
 const BTN_SECONDARY =
   'inline-flex items-center justify-center gap-2 min-h-[44px] px-4 rounded-md text-sm font-semibold border border-control-border bg-white text-ink-900 hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60';
+const BTN_DANGER =
+  'inline-flex items-center justify-center gap-2 min-h-[44px] px-4 rounded-md text-sm font-semibold border border-danger-500 text-danger-500 bg-white hover:bg-danger-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60';
 
 export default function PortalFirmLawyers() {
   const [lawyers, setLawyers] = useState<PortalFirmLawyerSummary[] | null>(null);
@@ -74,9 +77,12 @@ export default function PortalFirmLawyers() {
   }
 
   if (selected) {
+    const ownerCount = lawyers?.filter((l) => l.firm_role === 'owner').length ?? 0;
+    const canRemove = !(selected.firm_role === 'owner' && ownerCount <= 1);
     return (
       <LawyerDetail
         summary={selected}
+        canRemove={canRemove}
         onBack={() => setSelected(null)}
         onChanged={() => {
           setSelected(null);
@@ -531,10 +537,12 @@ function AddLawyer({ onAdded }: { onAdded: () => void }) {
 
 function LawyerDetail({
   summary,
-  onBack,
+  canRemove,
   onChanged,
+  onBack,
 }: {
   summary: PortalFirmLawyerSummary;
+  canRemove: boolean;
   onBack: () => void;
   onChanged: () => void;
 }) {
@@ -543,6 +551,7 @@ function LawyerDetail({
   const [notFound, setNotFound] = useState(false);
   const [actionErr, setActionErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -641,17 +650,18 @@ function LawyerDetail({
             Read-only. Lawyers edit their own profile; an admin can edit anyone.
           </p>
 
+          {actionErr && (
+            <div role="alert" className="mt-6 rounded-md border border-danger-500 bg-danger-50 px-3 py-2 text-sm text-danger-500">
+              {actionErr}
+            </div>
+          )}
+
           {canManage && (
             <section className="mt-6 rounded-lg border border-control-border bg-white p-5">
               <h2 className="font-display text-lg text-ink-900 mb-1">Ownership</h2>
               <p className="text-sm text-ink-500 mb-4">
                 Owners can manage the firm and its lawyers.
               </p>
-              {actionErr && (
-                <div role="alert" className="mb-3 rounded-md border border-danger-500 bg-danger-50 px-3 py-2 text-sm text-danger-500">
-                  {actionErr}
-                </div>
-              )}
               <div className="flex flex-wrap gap-3">
                 <button
                   type="button"
@@ -676,6 +686,42 @@ function LawyerDetail({
                 <p className="mt-2 text-xs text-ink-500">
                   Transfer becomes available once this lawyer has signed in.
                 </p>
+              )}
+            </section>
+          )}
+
+          {canRemove && !summary.is_self && (
+            <section className="mt-6 rounded-lg border border-control-border bg-white p-5">
+              <h2 className="flex items-center gap-2 font-display text-lg text-ink-900 mb-1">
+                <UserMinus size={18} aria-hidden="true" className="text-ink-500" /> Remove from firm
+              </h2>
+              <p className="text-sm text-ink-700 mb-4">
+                Archives {detail?.attorney.name ?? 'this lawyer'} and signs them out of the firm. Any cases they’re
+                working return to the firm’s queue — nothing is lost, and you can re-invite them later.
+              </p>
+              {!confirming ? (
+                <button type="button" className={BTN_DANGER} disabled={busy} onClick={() => setConfirming(true)}>
+                  Remove from firm
+                </button>
+              ) : (
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="text-sm font-medium text-ink-900">
+                    Remove {detail?.attorney.name ?? 'this lawyer'}?
+                  </span>
+                  <button
+                    type="button"
+                    className={BTN_DANGER}
+                    disabled={busy}
+                    onClick={() => void runAction(async () => {
+                      await removeFirmLawyer(summary.id);
+                    })}
+                  >
+                    {busy ? 'Removing…' : 'Yes, remove'}
+                  </button>
+                  <button type="button" className={BTN_SECONDARY} disabled={busy} onClick={() => setConfirming(false)}>
+                    Cancel
+                  </button>
+                </div>
               )}
             </section>
           )}

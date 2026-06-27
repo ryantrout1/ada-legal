@@ -559,3 +559,14 @@ async function ownerAction(payload: Record<string, unknown>): Promise<void> {
 export const promoteOwner = (attorneyId: string) => ownerAction({ action: 'promote', attorney_id: attorneyId });
 export const transferOwnership = (toAttorneyId: string) => ownerAction({ action: 'transfer', to_attorney_id: toAttorneyId });
 export const stepDownOwner = () => ownerAction({ action: 'step_down' });
+
+/** Offboard a lawyer from the firm (owner-only). Returns how many cases were reclaimed. */
+export async function removeFirmLawyer(attorneyId: string): Promise<{ reclaimed: number }> {
+  const resp = await fetch(`/api/portal/account/lawyers/${encodeURIComponent(attorneyId)}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!resp.ok) return failFor(resp);
+  const data = (await resp.json()) as { reclaimed?: number };
+  return { reclaimed: data.reclaimed ?? 0 };
+}
