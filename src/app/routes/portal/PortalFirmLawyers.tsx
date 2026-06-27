@@ -186,7 +186,19 @@ function FirmRecord({
       : 'border-control-border bg-surface-100 text-ink-700';
 
   return (
-    <section className="mb-8 rounded-xl border border-surface-200 bg-white p-5 sm:p-6 shadow-sm">
+    <section
+      className={`relative mb-8 rounded-xl border border-surface-200 bg-white p-5 sm:p-6 shadow-sm ${
+        canEdit ? 'group cursor-pointer transition-colors hover:border-accent-500' : ''
+      }`}
+    >
+      {canEdit && (
+        <button
+          type="button"
+          onClick={onEdit}
+          aria-label={`Edit ${firm.name} details`}
+          className="absolute inset-0 z-10 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        />
+      )}
       <div className="flex items-start gap-4">
         <div className="grid place-items-center h-12 w-12 shrink-0 rounded-lg bg-accent-50 text-accent-500" aria-hidden="true">
           <Building2 size={24} />
@@ -202,13 +214,9 @@ function FirmRecord({
                 {firm.status}
               </span>
               {canEdit && (
-                <button
-                  type="button"
-                  onClick={onEdit}
-                  className="inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-md text-sm font-semibold border border-control-border bg-white text-ink-900 hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                >
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-semibold text-ink-500 group-hover:text-accent-600">
                   <Pencil size={15} aria-hidden="true" /> Edit firm
-                </button>
+                </span>
               )}
             </div>
           </div>
@@ -238,7 +246,7 @@ function FirmRecord({
                     href={firm.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-accent-600 underline truncate focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    className="relative z-20 inline-flex items-center gap-1.5 text-accent-600 underline truncate focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                   >
                     <Globe size={14} aria-hidden="true" />
                     {firm.website_url.replace(/^https?:\/\//, '')}
