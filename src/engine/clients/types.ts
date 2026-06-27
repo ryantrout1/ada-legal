@@ -1499,6 +1499,32 @@ export interface DbClient {
   ): Promise<LitigationFirmAssignment[]>;
 
   /**
+   * Firm self-select: list every litigation this firm has opted into. Drives
+   * the portal "Litigations we accept" screen and (via the router's sole-
+   * assignment resolution) which intakes route to the firm. Firm-scoped.
+   */
+  listFirmAssignmentsForFirm(lawFirmId: string): Promise<LitigationFirmAssignment[]>;
+
+  /**
+   * Firm self-select: opt a firm into a litigation (idempotent on the
+   * (litigation, firm) unique index — a repeat call returns the existing row).
+   * The caller resolves lawFirmId from the authenticated attorney; it is never
+   * taken from the request body.
+   */
+  addFirmAssignment(input: {
+    litigationListingId: string;
+    lawFirmId: string;
+    assignedByUserId?: string | null;
+  }): Promise<LitigationFirmAssignment>;
+
+  /**
+   * Firm self-select: opt a firm out of a litigation. Firm-scoped (deletes
+   * only this firm's row). Returns true when a row was removed, false when
+   * there was nothing to remove (idempotent).
+   */
+  removeFirmAssignment(litigationListingId: string, lawFirmId: string): Promise<boolean>;
+
+  /**
    * Phase 1a routing: create the worked-case row for a routed session.
    * Idempotent on ada_session_id — a second call for the same session
    * returns the existing case with created=false and writes nothing new.

@@ -2132,6 +2132,64 @@ export class NeonDbClient implements DbClient {
     return inserted.map(toLitigationFirmAssignment);
   }
 
+  async listFirmAssignmentsForFirm(lawFirmId: string): Promise<LitigationFirmAssignment[]> {
+    const rows = await this.db
+      .select()
+      .from(litigationFirmAssignments)
+      .where(eq(litigationFirmAssignments.lawFirmId, lawFirmId));
+    return rows.map(toLitigationFirmAssignment);
+  }
+
+  async addFirmAssignment(input: {
+    litigationListingId: string;
+    lawFirmId: string;
+    assignedByUserId?: string | null;
+  }): Promise<LitigationFirmAssignment> {
+    // Idempotent on the (litigation, firm) unique index. A repeat opt-in is a
+    // no-op insert; we then read back the existing row so callers always get a
+    // concrete assignment regardless of whether this call created it.
+    const inserted = await this.db
+      .insert(litigationFirmAssignments)
+      .values({
+        litigationListingId: input.litigationListingId,
+        lawFirmId: input.lawFirmId,
+        assignedByUserId: input.assignedByUserId ?? null,
+      })
+      .onConflictDoNothing({
+        target: [
+          litigationFirmAssignments.litigationListingId,
+          litigationFirmAssignments.lawFirmId,
+        ],
+      })
+      .returning();
+    if (inserted[0]) return toLitigationFirmAssignment(inserted[0]);
+
+    const existing = await this.db
+      .select()
+      .from(litigationFirmAssignments)
+      .where(
+        and(
+          eq(litigationFirmAssignments.litigationListingId, input.litigationListingId),
+          eq(litigationFirmAssignments.lawFirmId, input.lawFirmId),
+        ),
+      )
+      .limit(1);
+    return toLitigationFirmAssignment(existing[0]!);
+  }
+
+  async removeFirmAssignment(litigationListingId: string, lawFirmId: string): Promise<boolean> {
+    const deleted = await this.db
+      .delete(litigationFirmAssignments)
+      .where(
+        and(
+          eq(litigationFirmAssignments.litigationListingId, litigationListingId),
+          eq(litigationFirmAssignments.lawFirmId, lawFirmId),
+        ),
+      )
+      .returning({ id: litigationFirmAssignments.id });
+    return deleted.length > 0;
+  }
+
   async createCase(opts: CreateCaseOptions): Promise<CreateCaseResult> {
     // Idempotent on ada_session_id: a session routes to at most one case.
     // onConflictDoNothing returns [] when a case already exists for the

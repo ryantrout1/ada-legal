@@ -1362,6 +1362,45 @@ export class InMemoryDbClient implements DbClient {
     return created;
   }
 
+  async listFirmAssignmentsForFirm(lawFirmId: string): Promise<LitigationFirmAssignment[]> {
+    return this.litigationFirmAssignments
+      .filter((a) => a.lawFirmId === lawFirmId)
+      .map((a) => ({ ...a }));
+  }
+
+  async addFirmAssignment(input: {
+    litigationListingId: string;
+    lawFirmId: string;
+    assignedByUserId?: string | null;
+  }): Promise<LitigationFirmAssignment> {
+    const existing = this.litigationFirmAssignments.find(
+      (a) =>
+        a.litigationListingId === input.litigationListingId &&
+        a.lawFirmId === input.lawFirmId,
+    );
+    if (existing) return { ...existing };
+    const created: LitigationFirmAssignment = {
+      id: `lfa-${input.litigationListingId}-${input.lawFirmId}`,
+      litigationListingId: input.litigationListingId,
+      lawFirmId: input.lawFirmId,
+      assignedByUserId: input.assignedByUserId ?? null,
+      createdAt: new Date(0).toISOString(),
+    };
+    this.litigationFirmAssignments.push({ ...created });
+    return created;
+  }
+
+  async removeFirmAssignment(litigationListingId: string, lawFirmId: string): Promise<boolean> {
+    const before = this.litigationFirmAssignments.length;
+    for (let i = this.litigationFirmAssignments.length - 1; i >= 0; i--) {
+      const a = this.litigationFirmAssignments[i]!;
+      if (a.litigationListingId === litigationListingId && a.lawFirmId === lawFirmId) {
+        this.litigationFirmAssignments.splice(i, 1);
+      }
+    }
+    return this.litigationFirmAssignments.length < before;
+  }
+
   async createCase(opts: CreateCaseOptions): Promise<CreateCaseResult> {
     // Idempotent on ada_session_id (matches the cases_ada_session_unique
     // constraint). A non-null session that already has a case returns the

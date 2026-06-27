@@ -23,6 +23,7 @@ import {
   CheckSquare,
   Users,
   BarChart3,
+  Scale,
   Building2,
   UserCircle,
   Search,
@@ -60,6 +61,7 @@ const WORKSPACE_NAV: NavItem[] = [
 ];
 
 const PRACTICE_NAV: NavItem[] = [
+  { to: '/portal/litigations', label: 'Litigations', icon: Scale },
   { to: '/portal/pipeline', label: 'Reports', icon: BarChart3 },
   { to: '/portal/account', label: 'My profile', icon: UserCircle },
 ];

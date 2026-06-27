@@ -570,3 +570,48 @@ export async function removeFirmLawyer(attorneyId: string): Promise<{ reclaimed:
   const data = (await resp.json()) as { reclaimed?: number };
   return { reclaimed: data.reclaimed ?? 0 };
 }
+
+// ─── Firm self-select: litigations we accept ──────────────────────────────────
+
+/**
+ * A litigation in the self-select catalog, flagged with whether the signed-in
+ * attorney's firm has opted in. `accepted` is the only firm-specific field;
+ * everything else is the shared listing.
+ */
+export interface PortalLitigation {
+  id: string;
+  kind: string;
+  case_name: string;
+  slug: string;
+  legal_theory: string | null;
+  short_description: string | null;
+  defendants: string[];
+  affected_states: string[];
+  accepted: boolean;
+}
+
+/** The active catalog with this firm's current selections flagged. */
+export async function fetchPortalLitigations(): Promise<PortalLitigation[]> {
+  const resp = await fetch(`/api/portal/litigations`, { credentials: 'include' });
+  if (!resp.ok) return failFor(resp);
+  const data = (await resp.json()) as { litigations: PortalLitigation[] };
+  return data.litigations;
+}
+
+/** Opt the firm into a litigation (idempotent). */
+export async function acceptLitigation(id: string): Promise<void> {
+  const resp = await fetch(`/api/portal/litigations/${encodeURIComponent(id)}`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!resp.ok) await failFor(resp);
+}
+
+/** Opt the firm out of a litigation (idempotent). */
+export async function unacceptLitigation(id: string): Promise<void> {
+  const resp = await fetch(`/api/portal/litigations/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!resp.ok) await failFor(resp);
+}

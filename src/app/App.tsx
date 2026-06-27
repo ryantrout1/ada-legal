@@ -70,6 +70,7 @@ import PortalAccount from './routes/portal/PortalAccount.js';
 import PortalFirmLawyers from './routes/portal/PortalFirmLawyers.js';
 import PortalTasks from './routes/portal/PortalTasks.js';
 import PortalPipeline from './routes/portal/PortalPipeline.js';
+import PortalLitigations from './routes/portal/PortalLitigations.js';
 import PortalCaseDetail from './routes/portal/PortalCaseDetail.js';
 import PortalPlaceholder from './routes/portal/PortalPlaceholder.js';
 import { HelmetProvider } from 'react-helmet-async';
@@ -211,6 +212,7 @@ function PortalShell() {
           <Route path="board" element={<PortalBoard />} />
           <Route path="tasks" element={<PortalTasks />} />
           <Route path="pipeline" element={<PortalPipeline />} />
+          <Route path="litigations" element={<PortalLitigations />} />
           <Route path="cases/:id" element={<PortalCaseDetail />} />
           {/* Nav-visible, backend-pending destinations (Phase 5 §7.1). */}
           <Route
