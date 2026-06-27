@@ -23,6 +23,7 @@ import {
   CheckSquare,
   Users,
   BarChart3,
+  Building2,
   Settings,
   Search,
   Bell,
@@ -94,6 +95,16 @@ export default function PortalLayout() {
   const attorneyName = identity?.attorney.name ?? clerkName;
   const firmName = identity?.firm.name ?? '';
 
+  // Owners get a "Firm" entry (roster + per-lawyer view); members don't.
+  const practiceNav: NavItem[] =
+    identity?.firmRole === 'owner'
+      ? [
+          PRACTICE_NAV[0],
+          { to: '/portal/firm', label: 'Firm', icon: Building2 },
+          ...PRACTICE_NAV.slice(1),
+        ]
+      : PRACTICE_NAV;
+
   return (
     <div className="lawyer-workspace lw-shell">
       <a
@@ -127,7 +138,7 @@ export default function PortalLayout() {
           <div className="lw-sidebar-section" aria-hidden="true">
             Practice
           </div>
-          {PRACTICE_NAV.map((item) => (
+          {practiceNav.map((item) => (
             <SidebarLink key={item.to} item={item} />
           ))}
         </nav>

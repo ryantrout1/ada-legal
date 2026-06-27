@@ -113,6 +113,7 @@ export async function fetchPortalQueue(): Promise<PortalQueueResponse> {
 export interface PortalIdentity {
   attorney: { id: string; name: string; email: string | null };
   firm: { id: string; name: string };
+  firmRole: string;
 }
 
 export async function fetchPortalIdentity(): Promise<PortalIdentity> {
@@ -404,6 +405,7 @@ export interface PortalAccountAttorney {
   bio: string | null;
   photo_url: string | null;
   bar_number: string | null;
+  firm_role: string;
   status: string;
   accepting_referrals: boolean;
   routing_paused: boolean;
@@ -456,4 +458,40 @@ export async function saveAccount(patch: AccountPatch): Promise<PortalAccount> {
   });
   if (!resp.ok) return failFor(resp);
   return (await resp.json()) as PortalAccount;
+}
+
+// --- Firm roster (owner-only) ----------------------------------------------
+
+export interface PortalFirmLawyerSummary {
+  id: string;
+  name: string;
+  email: string | null;
+  status: string;
+  firm_role: string;
+  is_self: boolean;
+  ready: boolean;
+  missing_count: number;
+}
+
+export interface PortalLawyerDetail {
+  attorney: PortalAccountAttorney;
+  firm: PortalAccountFirm | null;
+  readiness: AccountReadiness;
+}
+
+export async function fetchFirmLawyers(): Promise<PortalFirmLawyerSummary[]> {
+  const resp = await fetch('/api/portal/account/lawyers', { credentials: 'include' });
+  if (!resp.ok) return failFor(resp);
+  const data = (await resp.json()) as { lawyers: PortalFirmLawyerSummary[] };
+  return data.lawyers;
+}
+
+/** Returns null on 404 (lawyer not in your firm); throws otherwise. */
+export async function fetchFirmLawyer(id: string): Promise<PortalLawyerDetail | null> {
+  const resp = await fetch(`/api/portal/account/lawyers/${encodeURIComponent(id)}`, {
+    credentials: 'include',
+  });
+  if (resp.status === 404) return null;
+  if (!resp.ok) return failFor(resp);
+  return (await resp.json()) as PortalLawyerDetail;
 }

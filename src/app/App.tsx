@@ -67,6 +67,7 @@ import PortalSignUp from './routes/portal/SignUp.js';
 import PortalInbox from './routes/portal/PortalInbox.js';
 import PortalBoard from './routes/portal/PortalBoard.js';
 import PortalAccount from './routes/portal/PortalAccount.js';
+import PortalFirmLawyers from './routes/portal/PortalFirmLawyers.js';
 import PortalTasks from './routes/portal/PortalTasks.js';
 import PortalPipeline from './routes/portal/PortalPipeline.js';
 import PortalCaseDetail from './routes/portal/PortalCaseDetail.js';
@@ -221,6 +222,7 @@ function PortalShell() {
             element={<PortalPlaceholder title="Contacts" />}
           />
           <Route path="account" element={<PortalAccount />} />
+          <Route path="firm" element={<PortalFirmLawyers />} />
           {/* Back-compat: the old Settings path now redirects to Account. */}
           <Route path="settings" element={<Navigate to="/portal/account" replace />} />
           <Route path="*" element={<Navigate to="/portal" replace />} />
