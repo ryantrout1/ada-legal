@@ -272,38 +272,58 @@ export class NeonDbClient implements DbClient {
 
     const limit = opts.limit && opts.limit > 0 ? Math.min(opts.limit, 10) : 5;
     const rows = await this.db
-      .select()
+      .select({
+        id: attorneysTable.id,
+        name: attorneysTable.name,
+        attorneyFirmName: attorneysTable.firmName,
+        locationCity: attorneysTable.locationCity,
+        locationState: attorneysTable.locationState,
+        attorneyPracticeAreas: attorneysTable.practiceAreas,
+        additionalStates: attorneysTable.additionalStates,
+        specialtyTags: attorneysTable.specialtyTags,
+        email: attorneysTable.email,
+        phone: attorneysTable.phone,
+        attorneyWebsiteUrl: attorneysTable.websiteUrl,
+        lawFirmId: attorneysTable.lawFirmId,
+        firmName: lawFirmsTable.name,
+        firmPracticeAreas: lawFirmsTable.practiceAreas,
+        firmWebsiteUrl: lawFirmsTable.websiteUrl,
+      })
       .from(attorneysTable)
+      .leftJoin(lawFirmsTable, eq(attorneysTable.lawFirmId, lawFirmsTable.id))
       .where(and(...conds))
       .limit(limit);
 
-    // In-memory filter for practice areas (legacy) and specialty tags (new
-    // canonical taxonomy). Both are OR-of-overlap semantics: an attorney
-    // matches if any of their tags overlap any of the requested tags.
+    // Firm is the canonical home for practice areas + website after the
+    // firm/attorney split; fall back to attorney-level for firmless rows.
     return rows
+      .map((r) => {
+        const firmAreas = (r.firmPracticeAreas ?? []) as string[];
+        const practiceAreas =
+          firmAreas.length > 0 ? firmAreas : ((r.attorneyPracticeAreas ?? []) as string[]);
+        return {
+          id: r.id,
+          name: r.name,
+          firmName: r.firmName ?? r.attorneyFirmName,
+          locationCity: r.locationCity,
+          locationState: r.locationState,
+          practiceAreas,
+          additionalStates: (r.additionalStates ?? []) as string[],
+          specialtyTags: (r.specialtyTags ?? []) as string[],
+          email: r.email,
+          phone: r.phone,
+          websiteUrl: r.firmWebsiteUrl ?? r.attorneyWebsiteUrl,
+          lawFirmId: r.lawFirmId,
+        };
+      })
       .filter((r) => {
         if (!opts.practiceAreas || opts.practiceAreas.length === 0) return true;
-        const areas = (r.practiceAreas ?? []) as string[];
-        return opts.practiceAreas.some((p) => areas.includes(p));
+        return opts.practiceAreas.some((p) => r.practiceAreas.includes(p));
       })
       .filter((r) => {
         if (!opts.specialtyTags || opts.specialtyTags.length === 0) return true;
-        const tags = (r.specialtyTags ?? []) as string[];
-        return opts.specialtyTags.some((t) => tags.includes(t));
-      })
-      .map((r) => ({
-        id: r.id,
-        name: r.name,
-        firmName: r.firmName,
-        locationCity: r.locationCity,
-        locationState: r.locationState,
-        practiceAreas: (r.practiceAreas ?? []) as string[],
-        additionalStates: (r.additionalStates ?? []) as string[],
-        specialtyTags: (r.specialtyTags ?? []) as string[],
-        email: r.email,
-        phone: r.phone,
-        websiteUrl: r.websiteUrl,
-      }));
+        return opts.specialtyTags.some((t) => r.specialtyTags.includes(t));
+      });
   }
 
   async getOrgByCode(orgCode: string): Promise<OrganizationRow | null> {
@@ -357,20 +377,24 @@ export class NeonDbClient implements DbClient {
 
   async getAttorneyFacets(): Promise<AttorneyFacets> {
     // Small cardinality — 8 rows today, bounded at ~hundreds long-term.
-    // A single SELECT is cheaper than two separate queries or a view.
+    // Practice areas come from the firm (post-split); states stay attorney-level.
     const rows = await this.db
       .select({
         locationState: attorneysTable.locationState,
-        practiceAreas: attorneysTable.practiceAreas,
+        attorneyPracticeAreas: attorneysTable.practiceAreas,
+        firmPracticeAreas: lawFirmsTable.practiceAreas,
       })
       .from(attorneysTable)
+      .leftJoin(lawFirmsTable, eq(attorneysTable.lawFirmId, lawFirmsTable.id))
       .where(eq(attorneysTable.status, 'approved'));
 
     const states = new Set<string>();
     const practiceAreas = new Set<string>();
     for (const r of rows) {
       if (r.locationState) states.add(r.locationState);
-      for (const p of (r.practiceAreas ?? []) as string[]) {
+      const firmAreas = (r.firmPracticeAreas ?? []) as string[];
+      const areas = firmAreas.length > 0 ? firmAreas : ((r.attorneyPracticeAreas ?? []) as string[]);
+      for (const p of areas) {
         practiceAreas.add(p);
       }
     }

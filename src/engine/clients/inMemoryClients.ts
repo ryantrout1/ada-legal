@@ -279,22 +279,24 @@ export class InMemoryDbClient implements DbClient {
   }
 
   async searchAttorneys(opts: AttorneySearchOptions): Promise<AttorneyRow[]> {
-    const results = this.attorneys.filter((a) => {
-      if (opts.state) {
-        const matchesPrimary = a.locationState === opts.state;
-        const matchesAdditional = (a.additionalStates ?? []).includes(opts.state);
-        if (!matchesPrimary && !matchesAdditional) return false;
-      }
-      if (opts.city && a.locationCity !== opts.city) return false;
-      if (opts.practiceAreas && opts.practiceAreas.length > 0) {
-        if (!opts.practiceAreas.some((p) => a.practiceAreas.includes(p))) return false;
-      }
-      if (opts.specialtyTags && opts.specialtyTags.length > 0) {
-        const tags = a.specialtyTags ?? [];
-        if (!opts.specialtyTags.some((t) => tags.includes(t))) return false;
-      }
-      return true;
-    });
+    const results = this.attorneys
+      .map((a) => resolveDirectoryFields(a, this.lawFirms))
+      .filter((a) => {
+        if (opts.state) {
+          const matchesPrimary = a.locationState === opts.state;
+          const matchesAdditional = (a.additionalStates ?? []).includes(opts.state);
+          if (!matchesPrimary && !matchesAdditional) return false;
+        }
+        if (opts.city && a.locationCity !== opts.city) return false;
+        if (opts.practiceAreas && opts.practiceAreas.length > 0) {
+          if (!opts.practiceAreas.some((p) => a.practiceAreas.includes(p))) return false;
+        }
+        if (opts.specialtyTags && opts.specialtyTags.length > 0) {
+          const tags = a.specialtyTags ?? [];
+          if (!opts.specialtyTags.some((t) => tags.includes(t))) return false;
+        }
+        return true;
+      });
     return opts.limit ? results.slice(0, opts.limit) : results;
   }
 
@@ -316,7 +318,8 @@ export class InMemoryDbClient implements DbClient {
   async getAttorneyFacets(): Promise<AttorneyFacets> {
     const states = new Set<string>();
     const practiceAreas = new Set<string>();
-    for (const a of this.attorneys) {
+    for (const raw of this.attorneys) {
+      const a = resolveDirectoryFields(raw, this.lawFirms);
       if (a.locationState) states.add(a.locationState);
       for (const p of a.practiceAreas) practiceAreas.add(p);
     }
@@ -2584,6 +2587,24 @@ function toPublicAttorney(a: AttorneyAdminRow): AttorneyRow {
     email: a.email,
     phone: a.phone,
     websiteUrl: a.websiteUrl,
+    lawFirmId: a.lawFirmId ?? null,
+  };
+}
+
+/**
+ * Resolve the directory-facing fields that moved to the firm in the
+ * firm/attorney split: practice areas + website come from the firm when it
+ * has them, falling back to attorney-level for firmless/unsplit rows.
+ */
+function resolveDirectoryFields(a: AttorneyRow, firms: LawFirmRow[]): AttorneyRow {
+  const firm = a.lawFirmId ? firms.find((f) => f.id === a.lawFirmId) : undefined;
+  if (!firm) return a;
+  const firmAreas = firm.practiceAreas ?? [];
+  return {
+    ...a,
+    firmName: firm.name ?? a.firmName,
+    practiceAreas: firmAreas.length > 0 ? firmAreas : a.practiceAreas,
+    websiteUrl: firm.websiteUrl ?? a.websiteUrl,
   };
 }
 
