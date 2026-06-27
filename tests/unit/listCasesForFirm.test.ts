@@ -106,4 +106,26 @@ describe('listCasesForFirm', () => {
     expect(result.counts.working).toBe(2);
     expect(result.counts.resolved).toBe(1);
   });
+
+  it('surfaces the matter owner (id + joined name); an unaccepted case reports null owner', async () => {
+    const db = new InMemoryDbClient();
+    const att = await db.createAttorney({
+      orgId: ORG, name: 'Kelley Brooks', practiceAreas: [], lawFirmId: 'firm-1',
+    });
+    const owned = await seedCase(db, { sessionId: 's-owned', firmId: 'firm-1', consented: true });
+    // accept assigns the owner (new → investigating → working group)
+    await db.transitionCaseForFirm({
+      caseId: owned.id, lawFirmId: 'firm-1', transition: 'accept', assignedLawyerId: att.id,
+    });
+    await seedCase(db, { sessionId: 's-unowned', firmId: 'firm-1', consented: true, status: 'new' });
+
+    const result = await db.listCasesForFirm('firm-1');
+    const ownedRow = result.groups.working.find((r) => r.adaSessionId === 's-owned')!;
+    expect(ownedRow.assignedLawyerId).toBe(att.id);
+    expect(ownedRow.assignedLawyerName).toBe('Kelley Brooks');
+
+    const unownedRow = result.groups.new.find((r) => r.adaSessionId === 's-unowned')!;
+    expect(unownedRow.assignedLawyerId).toBeNull();
+    expect(unownedRow.assignedLawyerName).toBeNull();
+  });
 });

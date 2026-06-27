@@ -34,6 +34,27 @@ describe('transitionCaseForFirm', () => {
     expect(db.caseActivity.some((a) => a.caseId === c.id && a.eventType === 'ACCEPT')).toBe(true);
   });
 
+  it('accept sets the matter owner to the accepting attorney; later non-accept leaves it unchanged', async () => {
+    const db = new InMemoryDbClient();
+    const c = await seedCase(db);
+    const res = await db.transitionCaseForFirm({
+      caseId: c.id, lawFirmId: 'firm-1', transition: 'accept', assignedLawyerId: 'att-kelley',
+    });
+    expect(res!.caseRow.assignedLawyerId).toBe('att-kelley');
+    // A subsequent non-accept transition must not reassign the owner, even if an
+    // actor id is passed along.
+    const res2 = await db.transitionCaseForFirm({
+      caseId: c.id, lawFirmId: 'firm-1', transition: 'send_demand', assignedLawyerId: 'att-someone-else',
+    });
+    expect(res2!.caseRow.assignedLawyerId).toBe('att-kelley');
+  });
+
+  it('a brand-new (unaccepted) case has no owner', async () => {
+    const db = new InMemoryDbClient();
+    const c = await seedCase(db);
+    expect(c.assignedLawyerId).toBeNull();
+  });
+
   it('decline records the reason and moves to declined', async () => {
     const db = new InMemoryDbClient();
     const c = await seedCase(db);
