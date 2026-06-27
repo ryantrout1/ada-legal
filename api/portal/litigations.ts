@@ -33,7 +33,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const clients = makeClientsFromEnv();
     const [catalog, assignments] = await Promise.all([
-      clients.db.listActiveLitigation({ limit: 200 }),
+      // Same status set Ada matches against (processAdaTurn / api/ada/session):
+      // a firm should be able to accept anything Ada can route to it. Without
+      // this, the default ['active'] silently hides compliance/investigating/
+      // tracking litigations — most of the catalog.
+      clients.db.listActiveLitigation({
+        limit: 200,
+        statuses: ['active', 'compliance', 'investigating', 'tracking'],
+      }),
       clients.db.listFirmAssignmentsForFirm(auth.lawFirmId),
     ]);
     const acceptedIds = new Set(assignments.map((a) => a.litigationListingId));
