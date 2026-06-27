@@ -7,7 +7,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { ChevronLeft, CheckCircle2, AlertCircle, UserPlus } from 'lucide-react';
+import { ChevronLeft, CheckCircle2, AlertCircle, UserPlus, Globe, MapPin, Building2 } from 'lucide-react';
 import {
   fetchFirmLawyers,
   fetchFirmLawyer,
@@ -17,6 +17,7 @@ import {
   PortalApiError,
   type PortalFirmLawyerSummary,
   type PortalLawyerDetail,
+  type PortalAccountFirm,
 } from '../../data/portalClient.js';
 
 const STATUS_LABEL: Record<string, string> = {
@@ -35,13 +36,16 @@ const BTN_SECONDARY =
 
 export default function PortalFirmLawyers() {
   const [lawyers, setLawyers] = useState<PortalFirmLawyerSummary[] | null>(null);
+  const [firm, setFirm] = useState<PortalAccountFirm | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<PortalFirmLawyerSummary | null>(null);
 
   const loadRoster = useCallback(async () => {
     setError(null);
     try {
-      setLawyers(await fetchFirmLawyers());
+      const data = await fetchFirmLawyers();
+      setLawyers(data.lawyers);
+      setFirm(data.firm);
     } catch (err) {
       setError(err instanceof PortalApiError ? err.message : 'Could not load your firm.');
     }
@@ -77,10 +81,12 @@ export default function PortalFirmLawyers() {
 
   return (
     <div className="max-w-3xl">
-      <header className="mb-6">
-        <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">Lawyers in your firm</h1>
-        <p className="text-sm text-ink-500">Everyone on your firm and where they stand on going live.</p>
-      </header>
+      <FirmRecord firm={firm} />
+
+      <div className="flex items-baseline justify-between mb-3">
+        <h2 className="font-display text-xl text-ink-900">Attorneys</h2>
+        {lawyers && <span className="text-sm text-ink-500">{lawyers.length} in this firm</span>}
+      </div>
 
       <AddLawyer onAdded={() => void loadRoster()} />
 
@@ -118,6 +124,101 @@ export default function PortalFirmLawyers() {
           ))}
         </ul>
       )}
+    </div>
+  );
+}
+
+function FirmRecord({ firm }: { firm: PortalAccountFirm | null }) {
+  if (!firm) {
+    return (
+      <header className="mb-6">
+        <h1 className="font-display text-2xl sm:text-3xl text-ink-900 mb-1">Your firm</h1>
+        <p className="text-sm text-ink-500">Loading…</p>
+      </header>
+    );
+  }
+
+  const coverage =
+    firm.serves_nationwide
+      ? 'Nationwide'
+      : [firm.location_state, ...firm.additional_states].filter(Boolean).join(', ') || null;
+  const statusCls =
+    firm.status === 'active'
+      ? 'border-success-500 bg-success-50 text-success-500'
+      : 'border-control-border bg-surface-100 text-ink-700';
+
+  return (
+    <section className="mb-8 rounded-xl border border-surface-200 bg-white p-5 sm:p-6 shadow-sm">
+      <div className="flex items-start gap-4">
+        <div className="grid place-items-center h-12 w-12 shrink-0 rounded-lg bg-accent-50 text-accent-500" aria-hidden="true">
+          <Building2 size={24} />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-xs uppercase tracking-wide text-ink-500 mb-0.5">Your firm</p>
+              <h1 className="font-display text-2xl sm:text-3xl text-ink-900 leading-tight">{firm.name}</h1>
+            </div>
+            <span className={`shrink-0 inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold capitalize ${statusCls}`}>
+              {firm.status}
+            </span>
+          </div>
+
+          {firm.description ? (
+            <p className="mt-3 text-sm text-ink-700 leading-relaxed">{firm.description}</p>
+          ) : (
+            <p className="mt-3 text-sm text-ink-500 italic">No firm description yet.</p>
+          )}
+
+          <dl className="mt-4 grid sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+            <FirmMeta label="Contact" value={firm.primary_contact} />
+            <FirmMeta label="Email" value={firm.email} />
+            <FirmMeta label="Phone" value={firm.phone} />
+            <FirmMeta
+              label="Location"
+              value={[firm.location_city, firm.location_state].filter(Boolean).join(', ') || null}
+              icon={<MapPin size={14} aria-hidden="true" className="text-ink-500" />}
+            />
+            <FirmMeta label="Coverage" value={coverage} />
+            <div className="flex items-center gap-1.5">
+              <dt className="sr-only">Website</dt>
+              <dd className="min-w-0">
+                {firm.website_url ? (
+                  <a
+                    href={firm.website_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-accent-600 underline truncate focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                  >
+                    <Globe size={14} aria-hidden="true" />
+                    {firm.website_url.replace(/^https?:\/\//, '')}
+                  </a>
+                ) : (
+                  <span className="text-ink-500">No website yet</span>
+                )}
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FirmMeta({ label, value, icon }: { label: string; value: string | null; icon?: React.ReactNode }) {
+  return (
+    <div className="flex items-baseline gap-2">
+      <dt className="text-ink-500 shrink-0">{label}</dt>
+      <dd className="text-ink-900 min-w-0 truncate flex items-center gap-1.5">
+        {value ? (
+          <>
+            {icon}
+            {value}
+          </>
+        ) : (
+          <span className="text-ink-500">—</span>
+        )}
+      </dd>
     </div>
   );
 }

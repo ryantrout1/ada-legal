@@ -443,6 +443,13 @@ export interface PortalAccountFirm {
   email: string | null;
   phone: string | null;
   status: string;
+  website_url: string | null;
+  description: string | null;
+  logo_url: string | null;
+  location_city: string | null;
+  location_state: string | null;
+  additional_states: string[];
+  serves_nationwide: boolean;
 }
 
 export interface AccountReadinessItem {
@@ -505,11 +512,15 @@ export interface PortalLawyerDetail {
   bound: boolean;
 }
 
-export async function fetchFirmLawyers(): Promise<PortalFirmLawyerSummary[]> {
+export interface FirmRoster {
+  lawyers: PortalFirmLawyerSummary[];
+  firm: PortalAccountFirm | null;
+}
+
+export async function fetchFirmLawyers(): Promise<FirmRoster> {
   const resp = await fetch('/api/portal/account/lawyers', { credentials: 'include' });
   if (!resp.ok) return failFor(resp);
-  const data = (await resp.json()) as { lawyers: PortalFirmLawyerSummary[] };
-  return data.lawyers;
+  return (await resp.json()) as FirmRoster;
 }
 
 /** Returns null on 404 (lawyer not in your firm); throws otherwise. */

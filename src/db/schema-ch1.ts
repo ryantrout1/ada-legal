@@ -38,6 +38,14 @@ export const lawFirms = pgTable('law_firms', {
   stripeCustomerId: text('stripe_customer_id'),
   status: text('status').notNull().default('active'),
   isPilot: boolean('is_pilot').notNull().default(false),
+  // Phase A — firm is a first-class record with its own public face.
+  websiteUrl: text('website_url'),
+  description: text('description'),
+  logoUrl: text('logo_url'),
+  locationCity: text('location_city'),
+  locationState: text('location_state'),
+  additionalStates: jsonb('additional_states').$type<string[]>().notNull().default([]),
+  servesNationwide: boolean('serves_nationwide').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });

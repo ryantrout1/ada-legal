@@ -39,5 +39,12 @@ export function toAccountFirm(f: LawFirmRow) {
     email: f.email,
     phone: f.phone,
     status: f.status,
+    website_url: f.websiteUrl ?? null,
+    description: f.description ?? null,
+    logo_url: f.logoUrl ?? null,
+    location_city: f.locationCity ?? null,
+    location_state: f.locationState ?? null,
+    additional_states: f.additionalStates ?? [],
+    serves_nationwide: f.servesNationwide ?? false,
   };
 }

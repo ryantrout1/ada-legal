@@ -1551,6 +1551,14 @@ export interface LawFirmRow {
    * to transition into paid billing. Step 23.
    */
   isPilot: boolean;
+  /** Firm public face (Phase A — firm is a first-class record). */
+  websiteUrl?: string | null;
+  description?: string | null;
+  logoUrl?: string | null;
+  locationCity?: string | null;
+  locationState?: string | null;
+  additionalStates?: string[];
+  servesNationwide?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

@@ -3557,6 +3557,13 @@ function toLawFirmRow(r: {
   stripeCustomerId: string | null;
   status: string;
   isPilot: boolean;
+  websiteUrl: string | null;
+  description: string | null;
+  logoUrl: string | null;
+  locationCity: string | null;
+  locationState: string | null;
+  additionalStates: string[] | null;
+  servesNationwide: boolean | null;
   createdAt: Date;
   updatedAt: Date;
 }): LawFirmRow {
@@ -3570,6 +3577,13 @@ function toLawFirmRow(r: {
     stripeCustomerId: r.stripeCustomerId,
     status: r.status as LawFirmRow['status'],
     isPilot: r.isPilot,
+    websiteUrl: r.websiteUrl ?? null,
+    description: r.description ?? null,
+    logoUrl: r.logoUrl ?? null,
+    locationCity: r.locationCity ?? null,
+    locationState: r.locationState ?? null,
+    additionalStates: r.additionalStates ?? [],
+    servesNationwide: r.servesNationwide ?? false,
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
   };

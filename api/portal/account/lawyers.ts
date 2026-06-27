@@ -13,6 +13,7 @@ import { requireOwner } from '../../_attorney.js';
 import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
 import { computeReadiness } from '../../../src/engine/portal/accountReadiness.js';
+import { toAccountFirm } from '../../../src/engine/portal/accountView.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
@@ -93,7 +94,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       };
     });
 
-    return res.status(200).json({ lawyers });
+    return res.status(200).json({ lawyers, firm: firm ? toAccountFirm(firm) : null });
   } catch (err) {
     console.error('GET /api/portal/account/lawyers failed', err);
     return res.status(500).json({ error: err instanceof Error ? err.message : 'Internal error' });
