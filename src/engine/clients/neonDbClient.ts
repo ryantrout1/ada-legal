@@ -284,6 +284,7 @@ export class NeonDbClient implements DbClient {
         email: attorneysTable.email,
         phone: attorneysTable.phone,
         attorneyWebsiteUrl: attorneysTable.websiteUrl,
+        bio: attorneysTable.bio,
         lawFirmId: attorneysTable.lawFirmId,
         firmName: lawFirmsTable.name,
         firmPracticeAreas: lawFirmsTable.practiceAreas,
@@ -313,6 +314,7 @@ export class NeonDbClient implements DbClient {
           email: r.email,
           phone: r.phone,
           websiteUrl: r.firmWebsiteUrl ?? r.attorneyWebsiteUrl,
+          bio: r.bio,
           lawFirmId: r.lawFirmId,
         };
       })

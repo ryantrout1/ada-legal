@@ -121,6 +121,8 @@ export interface AttorneyRow {
   email: string | null;
   phone: string | null;
   websiteUrl: string | null;
+  /** Claimant-facing intro shown on the public directory card. */
+  bio?: string | null;
   /**
    * Attorney portal (migration 0019): the ada_legal `users.id` this attorney
    * is paired to (NOT the Clerk user id). Null until paired. Optional so

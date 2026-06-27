@@ -2587,6 +2587,7 @@ function toPublicAttorney(a: AttorneyAdminRow): AttorneyRow {
     email: a.email,
     phone: a.phone,
     websiteUrl: a.websiteUrl,
+    bio: a.bio ?? null,
     lawFirmId: a.lawFirmId ?? null,
   };
 }
