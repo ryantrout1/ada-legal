@@ -8,6 +8,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { makeInMemoryClients } from '@/engine/clients/inMemoryClients';
+import { filterAccountPatch } from '@/engine/portal/accountBoundary';
 import { seedPortalFixture } from '../fixtures/portalSeed';
 
 describe('firm roster + role resolution', () => {
@@ -46,5 +47,28 @@ describe('firm roster + role resolution', () => {
     const resolution = await clients.db.resolveAttorneyByClerkUserId(clerkId);
     expect(resolution).not.toBeNull();
     expect(resolution?.firmRole).toBe('member');
+  });
+
+  it('firm edits are owner-only (member blocked writes nothing, owner persists)', async () => {
+    // Mirrors the role gate in api/portal/account.ts PATCH.
+    const clients = makeInMemoryClients();
+    const fx = await seedPortalFixture(clients);
+    const firmId = fx.firms.firmA.id;
+
+    const applyFirmEdit = async (firmRole: string, patch: Record<string, unknown>) => {
+      const result = filterAccountPatch({ firm: patch });
+      if (!result.ok) return 'invalid';
+      if (Object.keys(result.firmPatch).length > 0 && firmRole !== 'owner') return 'forbidden';
+      const firm = await clients.db.readLawFirmById(firmId);
+      if (firm) await clients.db.writeLawFirm({ ...firm, ...result.firmPatch });
+      return 'ok';
+    };
+
+    const beforeName = (await clients.db.readLawFirmById(firmId))?.name;
+    expect(await applyFirmEdit('member', { name: 'Member Rename' })).toBe('forbidden');
+    expect((await clients.db.readLawFirmById(firmId))?.name).toBe(beforeName);
+
+    expect(await applyFirmEdit('owner', { name: 'Owner Rename' })).toBe('ok');
+    expect((await clients.db.readLawFirmById(firmId))?.name).toBe('Owner Rename');
   });
 });

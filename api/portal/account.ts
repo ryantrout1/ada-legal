@@ -17,40 +17,7 @@ import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv } from '../_shared.js';
 import { filterAccountPatch } from '../../src/engine/portal/accountBoundary.js';
 import { computeReadiness } from '../../src/engine/portal/accountReadiness.js';
-import type { AttorneyAdminRow, LawFirmRow } from '../../src/engine/clients/types.js';
-
-function toAccountAttorney(a: AttorneyAdminRow) {
-  return {
-    id: a.id,
-    name: a.name,
-    location_city: a.locationCity,
-    location_state: a.locationState,
-    practice_areas: a.practiceAreas,
-    additional_states: a.additionalStates,
-    specialty_tags: a.specialtyTags,
-    email: a.email,
-    phone: a.phone,
-    website_url: a.websiteUrl,
-    bio: a.bio,
-    photo_url: a.photoUrl,
-    bar_number: a.barNumber ?? null,
-    status: a.status,
-    accepting_referrals: a.acceptingReferrals ?? true,
-    routing_paused: a.routingPaused ?? false,
-    max_active_cases: a.maxActiveCases ?? null,
-  };
-}
-
-function toAccountFirm(f: LawFirmRow) {
-  return {
-    id: f.id,
-    name: f.name,
-    primary_contact: f.primaryContact,
-    email: f.email,
-    phone: f.phone,
-    status: f.status,
-  };
-}
+import { toAccountAttorney, toAccountFirm } from '../../src/engine/portal/accountView.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
@@ -86,6 +53,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           error: 'Some fields cannot be edited here',
           forbidden: result.forbidden,
         });
+      }
+
+      // Firm display fields are owner-only. A member editing their own
+      // profile is fine; editing the firm requires firm_role='owner'.
+      if (Object.keys(result.firmPatch).length > 0 && auth.firmRole !== 'owner') {
+        return res.status(403).json({ error: 'Only a firm owner can edit firm details' });
       }
 
       let attorney = await clients.db.getAttorneyById(auth.attorneyId);

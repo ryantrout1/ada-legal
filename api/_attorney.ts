@@ -68,6 +68,7 @@ export async function resolveAttorneyContext(
 export interface PortalIdentity {
   attorney: { id: string; name: string; email: string | null };
   firm: { id: string; name: string };
+  firmRole: string;
 }
 
 /**
@@ -93,6 +94,7 @@ export async function loadPortalIdentity(
       id: ctx.lawFirmId,
       name: firm?.name ?? 'Your firm',
     },
+    firmRole: ctx.firmRole,
   };
 }
 
@@ -104,6 +106,24 @@ export async function loadPortalIdentity(
  *   const auth = await requireAttorney(req, res);
  *   if (!auth) return; // response already sent
  */
+/**
+ * Like requireAttorney, but additionally requires the attorney to be a firm
+ * owner (firm_role='owner'). On a non-owner writes 403 and returns null.
+ * Used by the owner-only firm-management endpoints (roster, lawyer detail).
+ */
+export async function requireOwner(
+  req: VercelRequest,
+  res: VercelResponse,
+): Promise<AttorneyAuthContext | null> {
+  const auth = await requireAttorney(req, res);
+  if (!auth) return null;
+  if (auth.firmRole !== 'owner') {
+    res.status(403).json({ error: 'Owner access required' });
+    return null;
+  }
+  return auth;
+}
+
 export async function requireAttorney(
   req: VercelRequest,
   res: VercelResponse,
