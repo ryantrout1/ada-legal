@@ -1423,6 +1423,7 @@ export class InMemoryDbClient implements DbClient {
       status: 'new',
       firmId: opts.firmId,
       consentToShare: false,
+      assignedLawyerId: null,
       createdAt: new Date(0).toISOString(),
     };
     this.cases.push(caseRow);
@@ -1517,6 +1518,9 @@ export class InMemoryDbClient implements DbClient {
       const fields = session?.extractedFields ?? {};
       const extras = this.caseExtras.get(c.id);
       const litig = this.adminLitigation.find((l) => l.id === c.litigationListingId);
+      const owner = c.assignedLawyerId
+        ? this.adminAttorneys.find((a) => a.id === c.assignedLawyerId)
+        : undefined;
       groups[group].push({
         caseId: c.id,
         adaSessionId: c.adaSessionId,
@@ -1529,6 +1533,8 @@ export class InMemoryDbClient implements DbClient {
         claimantName: portalFieldStr(fields, 'claimant_name'),
         claimantEmail: portalFieldStr(fields, 'claimant_email'),
         claimantPhone: portalFieldStr(fields, 'claimant_phone'),
+        assignedLawyerId: c.assignedLawyerId ?? null,
+        assignedLawyerName: owner?.name ?? null,
         routedAt: extras?.routedAt ?? null,
         firstContactDue: extras?.firstContactDue ?? null,
         createdAt: c.createdAt,
@@ -1602,12 +1608,18 @@ export class InMemoryDbClient implements DbClient {
     reason?: string;
     resolutionType?: string;
     resolutionNotes?: string;
+    assignedLawyerId?: string | null;
   }): Promise<{ caseRow: CaseRow } | null> {
     const c = this.cases.find((x) => x.id === opts.caseId && x.firmId === opts.lawFirmId);
     if (!c || !c.consentToShare) return null;
 
     // Throws IllegalCaseTransitionError on a bad transition.
     c.status = applyCaseTransition(c.status as CaseStatus, opts.transition);
+
+    // Whoever accepts owns the matter; later transitions never reassign.
+    if (opts.transition === 'accept') {
+      c.assignedLawyerId = opts.assignedLawyerId ?? null;
+    }
 
     this.caseActivity.push({
       caseId: c.id,

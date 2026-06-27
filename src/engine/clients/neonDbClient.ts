@@ -2315,10 +2315,13 @@ export class NeonDbClient implements DbClient {
         firstContactDue: casesTable.firstContactDue,
         createdAt: casesTable.createdAt,
         extractedFields: adaSessions.extractedFields,
+        assignedLawyerId: casesTable.assignedLawyerId,
+        assignedLawyerName: attorneysTable.name,
       })
       .from(casesTable)
       .leftJoin(litigationTable, eq(litigationTable.id, casesTable.litigationListingId))
       .leftJoin(adaSessions, eq(adaSessions.id, casesTable.adaSessionId))
+      .leftJoin(attorneysTable, eq(attorneysTable.id, casesTable.assignedLawyerId))
       // Firm-scoped + HARD consent gate.
       .where(and(eq(casesTable.firmId, lawFirmId), eq(casesTable.consentToShare, true)))
       .orderBy(sql`${casesTable.createdAt} DESC`);
@@ -2360,6 +2363,8 @@ export class NeonDbClient implements DbClient {
         claimantName: fStr(fields, 'claimant_name'),
         claimantEmail: fStr(fields, 'claimant_email'),
         claimantPhone: fStr(fields, 'claimant_phone'),
+        assignedLawyerId: r.assignedLawyerId ?? null,
+        assignedLawyerName: r.assignedLawyerName ?? null,
         routedAt: iso(r.routedAt),
         firstContactDue: iso(r.firstContactDue),
         createdAt: iso(r.createdAt) ?? '',
@@ -2474,6 +2479,7 @@ export class NeonDbClient implements DbClient {
     reason?: string;
     resolutionType?: string;
     resolutionNotes?: string;
+    assignedLawyerId?: string | null;
   }): Promise<{ caseRow: CaseRow } | null> {
     const existing = await this.db
       .select()
@@ -2488,6 +2494,11 @@ export class NeonDbClient implements DbClient {
 
     const now = new Date();
     const patch: Record<string, unknown> = { status: nextStatus, updatedAt: now };
+    if (opts.transition === 'accept') {
+      // Whoever accepts owns the matter. Only set on accept — later transitions
+      // (send_demand / resolve / …) never reassign the owner.
+      patch.assignedLawyerId = opts.assignedLawyerId ?? null;
+    }
     if (opts.transition === 'decline') {
       patch.declinedAt = now;
       patch.declineReason = opts.reason ?? null;
@@ -3786,6 +3797,7 @@ function toCaseRow(r: typeof casesTable.$inferSelect): CaseRow {
     status: r.status,
     firmId: r.firmId,
     consentToShare: r.consentToShare,
+    assignedLawyerId: r.assignedLawyerId,
     createdAt: r.createdAt.toISOString(),
   };
 }

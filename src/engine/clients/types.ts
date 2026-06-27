@@ -747,6 +747,9 @@ export interface PortalCaseListRow {
   claimantName: string | null;
   claimantEmail: string | null;
   claimantPhone: string | null;
+  /** Matter owner (the accepting attorney) + their joined name, or null. */
+  assignedLawyerId: string | null;
+  assignedLawyerName: string | null;
   routedAt: string | null;
   firstContactDue: string | null;
   createdAt: string;
@@ -923,6 +926,8 @@ export interface CaseRow {
   status: string;
   firmId: string | null;
   consentToShare: boolean;
+  /** The firm attorney who owns this matter (set when accepted), or null. */
+  assignedLawyerId: string | null;
   createdAt: string;
 }
 
@@ -1334,6 +1339,8 @@ export interface DbClient {
     reason?: string;
     resolutionType?: string;
     resolutionNotes?: string;
+    /** Accepting attorney — applied as the matter owner only on `accept`. */
+    assignedLawyerId?: string | null;
   }): Promise<{ caseRow: CaseRow } | null>;
 
   /**
