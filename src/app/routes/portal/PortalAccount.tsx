@@ -32,6 +32,7 @@ import {
   type PortalAccountAttorney,
   type AccountPatch,
 } from '../../data/portalClient.js';
+import { StateSelect, StateGrid, SpecialtyChecklist } from './practiceControls';
 
 type AttorneyForm = {
   name: string;
@@ -42,8 +43,8 @@ type AttorneyForm = {
   phone: string;
   bio: string;
   photo_url: string;
-  additional_states: string;
-  specialty_tags: string;
+  additional_states: string[];
+  specialty_tags: string[];
   accepting_referrals: boolean;
   routing_paused: boolean;
   max_active_cases: string;
@@ -71,15 +72,12 @@ function attorneyToForm(a: PortalAccountAttorney): AttorneyForm {
     phone: a.phone ?? '',
     bio: a.bio ?? '',
     photo_url: a.photo_url ?? '',
-    additional_states: (a.additional_states ?? []).join(', '),
-    specialty_tags: (a.specialty_tags ?? []).join(', '),
+    additional_states: a.additional_states ?? [],
+    specialty_tags: a.specialty_tags ?? [],
     accepting_referrals: a.accepting_referrals,
     routing_paused: a.routing_paused,
     max_active_cases: a.max_active_cases == null ? '' : String(a.max_active_cases),
   };
-}
-function splitList(s: string): string[] {
-  return s.split(',').map((x) => x.trim()).filter(Boolean);
 }
 function initials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -147,8 +145,8 @@ export default function PortalAccount() {
         phone: attorney.phone,
         bio: attorney.bio,
         photo_url: attorney.photo_url,
-        additional_states: splitList(attorney.additional_states),
-        specialty_tags: splitList(attorney.specialty_tags),
+        additional_states: attorney.additional_states,
+        specialty_tags: attorney.specialty_tags,
         accepting_referrals: attorney.accepting_referrals,
         routing_paused: attorney.routing_paused,
         max_active_cases: attorney.max_active_cases.trim() === '' ? null : Number(attorney.max_active_cases),
@@ -234,13 +232,17 @@ export default function PortalAccount() {
           <Field label="Bar number" htmlFor="a-bar" required>
             <input id="a-bar" className={INPUT} value={attorney.bar_number} onChange={(e) => set({ bar_number: e.target.value })} />
           </Field>
-          <Field label="Home state" htmlFor="a-state" required hint="Two-letter code, e.g. AZ.">
-            <input id="a-state" className={INPUT} value={attorney.location_state} onChange={(e) => set({ location_state: e.target.value })} />
+          <Field label="Home state" htmlFor="a-state" required hint="Where you’re primarily licensed.">
+            <StateSelect id="a-state" value={attorney.location_state} onChange={(v) => set({ location_state: v })} />
           </Field>
         </Grid>
-        <Field label="Other licensed states" htmlFor="a-states" hint="Comma-separated, e.g. NV, CA.">
-          <input id="a-states" className={INPUT} value={attorney.additional_states} onChange={(e) => set({ additional_states: e.target.value })} />
-        </Field>
+        <StateGrid
+          label="Other licensed states"
+          hint="Click any states you’re also licensed in — used for matching alongside your home state."
+          selected={attorney.additional_states}
+          exclude={attorney.location_state}
+          onChange={(v) => set({ additional_states: v })}
+        />
       </Card>
 
       {/* Public profile */}
@@ -249,9 +251,11 @@ export default function PortalAccount() {
           <Field label="Photo URL" htmlFor="a-photo" hint="Link to a headshot (upload coming later).">
             <input id="a-photo" className={INPUT} placeholder="https://" value={attorney.photo_url} onChange={(e) => set({ photo_url: e.target.value })} />
           </Field>
-          <Field label="Specialty tags" htmlFor="a-tags" hint="Comma-separated. Your personal focus areas.">
-            <input id="a-tags" className={INPUT} value={attorney.specialty_tags} onChange={(e) => set({ specialty_tags: e.target.value })} />
-          </Field>
+          <div>
+            <p className="block text-sm font-medium text-ink-700 mb-1">Specialty tags</p>
+            <p className="text-xs text-ink-500 mb-2">Canonical taxonomy Ada matches referrals on.</p>
+            <SpecialtyChecklist selected={attorney.specialty_tags} onChange={(v) => set({ specialty_tags: v })} />
+          </div>
         </Grid>
         <Field label="Bio" htmlFor="a-bio" hint="A short intro claimants will read.">
           <textarea id="a-bio" rows={4} className={TEXTAREA} value={attorney.bio} onChange={(e) => set({ bio: e.target.value })} />

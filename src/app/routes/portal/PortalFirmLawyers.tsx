@@ -22,6 +22,7 @@ import {
   type PortalLawyerDetail,
   type PortalAccountFirm,
 } from '../../data/portalClient.js';
+import { StateSelect, StateGrid, TagPicker, SUGGESTED_PRACTICE_AREAS } from './practiceControls';
 
 const STATUS_LABEL: Record<string, string> = {
   approved: 'Active',
@@ -393,10 +394,10 @@ type FirmForm = {
   phone: string;
   website_url: string;
   description: string;
-  practice_areas: string;
+  practice_areas: string[];
   location_city: string;
   location_state: string;
-  additional_states: string;
+  additional_states: string[];
   serves_nationwide: boolean;
 };
 
@@ -408,19 +409,13 @@ function firmToForm(f: PortalAccountFirm): FirmForm {
     phone: f.phone ?? '',
     website_url: f.website_url ?? '',
     description: f.description ?? '',
-    practice_areas: f.practice_areas.join(', '),
+    practice_areas: f.practice_areas,
     location_city: f.location_city ?? '',
     location_state: f.location_state ?? '',
-    additional_states: f.additional_states.join(', '),
+    additional_states: f.additional_states,
     serves_nationwide: f.serves_nationwide,
   };
 }
-
-const toList = (s: string) =>
-  s
-    .split(',')
-    .map((x) => x.trim())
-    .filter(Boolean);
 
 function FirmEditor({
   firm,
@@ -452,10 +447,10 @@ function FirmEditor({
           phone: form.phone,
           website_url: form.website_url,
           description: form.description,
-          practice_areas: toList(form.practice_areas),
+          practice_areas: form.practice_areas,
           location_city: form.location_city,
           location_state: form.location_state,
-          additional_states: toList(form.additional_states),
+          additional_states: form.additional_states,
           serves_nationwide: form.serves_nationwide,
         },
       });
@@ -495,20 +490,60 @@ function FirmEditor({
         <EditField label="Website" id="fe-web">
           <input id="fe-web" type="url" inputMode="url" className={INPUT} value={form.website_url} onChange={(e) => set({ website_url: e.target.value })} />
         </EditField>
-        <EditField label="Practice areas" id="fe-pa" hint="Comma-separated">
-          <input id="fe-pa" className={INPUT} value={form.practice_areas} onChange={(e) => set({ practice_areas: e.target.value })} />
-        </EditField>
         <EditField label="City" id="fe-city">
           <input id="fe-city" className={INPUT} value={form.location_city} onChange={(e) => set({ location_city: e.target.value })} />
         </EditField>
-        <EditField label="State" id="fe-state" hint="2-letter">
-          <input id="fe-state" maxLength={2} className={INPUT} value={form.location_state} onChange={(e) => set({ location_state: e.target.value })} />
-        </EditField>
-        <div className="sm:col-span-2">
-          <EditField label="Other coverage states" id="fe-cov" hint="Comma-separated, e.g. VA, MD">
-            <input id="fe-cov" className={INPUT} value={form.additional_states} onChange={(e) => set({ additional_states: e.target.value })} />
-          </EditField>
+        <div>
+          <label htmlFor="fe-state" className="block text-sm font-medium text-ink-700 mb-1">
+            Primary state
+          </label>
+          <StateSelect id="fe-state" value={form.location_state} onChange={(v) => set({ location_state: v })} />
         </div>
+
+        <div className="sm:col-span-2 rounded-md border border-control-border bg-surface-100 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <span className="min-w-0">
+              <span id="fe-nation-label" className="block text-sm font-medium text-ink-900">
+                Serves nationwide
+              </span>
+              <span className="text-xs text-ink-500">On = matched to claimants in any state. Off = only the states below.</span>
+            </span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={form.serves_nationwide}
+              aria-labelledby="fe-nation-label"
+              onClick={() => set({ serves_nationwide: !form.serves_nationwide })}
+              className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+                form.serves_nationwide ? 'bg-accent-500 border-accent-500' : 'bg-white border-control-border'
+              }`}
+            >
+              <span className={`inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${form.serves_nationwide ? 'translate-x-6' : 'translate-x-1'} border border-control-border`} />
+            </button>
+          </div>
+          <div className="mt-4">
+            <StateGrid
+              label="Coverage states"
+              hint="Click the states this firm serves. The primary state is always covered."
+              selected={form.additional_states}
+              exclude={form.location_state}
+              onChange={(v) => set({ additional_states: v })}
+              disabled={form.serves_nationwide}
+            />
+          </div>
+        </div>
+
+        <div className="sm:col-span-2">
+          <TagPicker
+            label="Practice areas"
+            inputId="fe-pa"
+            hint="Click a suggestion to add it, or type your own. These help Ada match the right referrals."
+            selected={form.practice_areas}
+            suggestions={SUGGESTED_PRACTICE_AREAS}
+            onChange={(v) => set({ practice_areas: v })}
+          />
+        </div>
+
         <div className="sm:col-span-2">
           <EditField label="Description" id="fe-desc">
             <textarea
@@ -519,23 +554,6 @@ function FirmEditor({
               onChange={(e) => set({ description: e.target.value })}
             />
           </EditField>
-        </div>
-        <div className="sm:col-span-2 flex items-center justify-between gap-3 rounded-md border border-control-border bg-surface-100 px-4 py-3">
-          <span id="fe-nation-label" className="text-sm font-medium text-ink-900">
-            Serves nationwide
-          </span>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={form.serves_nationwide}
-            aria-labelledby="fe-nation-label"
-            onClick={() => set({ serves_nationwide: !form.serves_nationwide })}
-            className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
-              form.serves_nationwide ? 'bg-accent-500 border-accent-500' : 'bg-white border-control-border'
-            }`}
-          >
-            <span className={`inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${form.serves_nationwide ? 'translate-x-6' : 'translate-x-1'} border border-control-border`} />
-          </button>
         </div>
       </div>
 
