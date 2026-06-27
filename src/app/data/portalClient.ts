@@ -469,6 +469,7 @@ export interface PortalFirmLawyerSummary {
   status: string;
   firm_role: string;
   is_self: boolean;
+  bound: boolean;
   ready: boolean;
   missing_count: number;
 }
@@ -477,6 +478,7 @@ export interface PortalLawyerDetail {
   attorney: PortalAccountAttorney;
   firm: PortalAccountFirm | null;
   readiness: AccountReadiness;
+  bound: boolean;
 }
 
 export async function fetchFirmLawyers(): Promise<PortalFirmLawyerSummary[]> {
@@ -495,3 +497,29 @@ export async function fetchFirmLawyer(id: string): Promise<PortalLawyerDetail | 
   if (!resp.ok) return failFor(resp);
   return (await resp.json()) as PortalLawyerDetail;
 }
+
+export async function addFirmLawyer(name: string, email: string): Promise<PortalFirmLawyerSummary> {
+  const resp = await fetch('/api/portal/account/lawyers', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email }),
+  });
+  if (!resp.ok) return failFor(resp);
+  const data = (await resp.json()) as { lawyer: PortalFirmLawyerSummary };
+  return data.lawyer;
+}
+
+async function ownerAction(payload: Record<string, unknown>): Promise<void> {
+  const resp = await fetch('/api/portal/account/owner', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!resp.ok) return failFor(resp);
+}
+
+export const promoteOwner = (attorneyId: string) => ownerAction({ action: 'promote', attorney_id: attorneyId });
+export const transferOwnership = (toAttorneyId: string) => ownerAction({ action: 'transfer', to_attorney_id: toAttorneyId });
+export const stepDownOwner = () => ownerAction({ action: 'step_down' });
