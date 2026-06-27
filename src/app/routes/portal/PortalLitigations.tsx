@@ -19,7 +19,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Scale, MapPin, Check, Plus } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Scale, MapPin, Check, Plus, ChevronRight } from 'lucide-react';
 import {
   fetchPortalLitigations,
   acceptLitigation,
@@ -82,7 +83,13 @@ function LitigationRow({
   return (
     <li className="flex items-start justify-between gap-4 rounded-lg border border-control-border bg-white p-4">
       <div className="min-w-0">
-        <h3 className="text-base font-semibold text-ink-900">{lit.case_name}</h3>
+        <Link
+          to={`/portal/litigations/${encodeURIComponent(lit.id)}`}
+          className="group inline-flex items-center gap-1 text-base font-semibold text-ink-900 hover:text-accent-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          <span className="underline-offset-2 group-hover:underline">{lit.case_name}</span>
+          <ChevronRight className="h-4 w-4 shrink-0 text-ink-500" aria-hidden="true" />
+        </Link>
         {lit.legal_theory && <p className="text-sm text-ink-700">{lit.legal_theory}</p>}
         {lit.short_description && (
           <p className="mt-1 line-clamp-2 text-sm text-ink-500">{lit.short_description}</p>

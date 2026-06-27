@@ -615,3 +615,35 @@ export async function unacceptLitigation(id: string): Promise<void> {
   });
   if (!resp.ok) await failFor(resp);
 }
+
+/** Full litigation detail for the decide-to-accept page. */
+export interface PortalLitigationDetail {
+  id: string;
+  kind: string;
+  case_name: string;
+  slug: string;
+  legal_theory: string | null;
+  full_description: string | null;
+  eligibility: string | null;
+  documentation_required: string | null;
+  no_documentation_path: string | null;
+  evidence_guidance: string | null;
+  what_this_is_not: string | null;
+  defendants: string[];
+  affected_states: string[];
+  court: string | null;
+  docket_number: string | null;
+  filing_date: string | null;
+  key_dates: Record<string, string>;
+  accepted: boolean;
+}
+
+/** Returns null on 404 (unknown / non-routable litigation). */
+export async function fetchPortalLitigation(id: string): Promise<PortalLitigationDetail | null> {
+  const resp = await fetch(`/api/portal/litigations/${encodeURIComponent(id)}`, {
+    credentials: 'include',
+  });
+  if (resp.status === 404) return null;
+  if (!resp.ok) return failFor(resp);
+  return (await resp.json()) as PortalLitigationDetail;
+}

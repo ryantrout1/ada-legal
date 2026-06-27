@@ -1,4 +1,5 @@
 /**
+ * GET    /api/portal/litigations/[id]   — full detail for the decide-to-accept view
  * POST   /api/portal/litigations/[id]   — opt this firm into a litigation
  * DELETE /api/portal/litigations/[id]   — opt this firm out
  *
@@ -15,6 +16,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAttorney } from '../../_attorney.js';
 import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
+import { toPortalLitigationDetail } from '../../../src/engine/portal/litigationDetail.js';
 
 // Statuses Ada can match against (mirrors listActiveLitigation's allow-set).
 // Opting into anything outside this set is pointless — it never routes.
@@ -26,8 +28,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const auth = await requireAttorney(req, res);
   if (!auth) return;
 
-  if (req.method !== 'POST' && req.method !== 'DELETE') {
-    res.setHeader('Allow', 'POST, DELETE');
+  if (req.method !== 'GET' && req.method !== 'POST' && req.method !== 'DELETE') {
+    res.setHeader('Allow', 'GET, POST, DELETE');
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
@@ -41,6 +43,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const clients = makeClientsFromEnv();
+
+    if (req.method === 'GET') {
+      const lit = await clients.db.getLitigationById(id);
+      // 404 for missing OR non-routable — the detail page only exists for
+      // catalog items the firm could actually accept.
+      if (!lit || !ROUTABLE_STATUSES.has(lit.status)) {
+        return res.status(404).json({ error: 'Litigation not found' });
+      }
+      const assignments = await clients.db.listFirmAssignmentsForFirm(auth.lawFirmId);
+      const accepted = assignments.some((a) => a.litigationListingId === id);
+      return res.status(200).json(toPortalLitigationDetail(lit, accepted));
+    }
 
     if (req.method === 'POST') {
       const lit = await clients.db.getLitigationById(id);
