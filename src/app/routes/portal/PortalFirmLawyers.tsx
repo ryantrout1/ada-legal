@@ -7,6 +7,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, CheckCircle2, AlertCircle, UserPlus, Globe, MapPin, Building2, Pencil, UserMinus } from 'lucide-react';
 import {
   fetchFirmLawyers,
@@ -44,6 +45,7 @@ export default function PortalFirmLawyers() {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<PortalFirmLawyerSummary | null>(null);
   const [editingFirm, setEditingFirm] = useState(false);
+  const navigate = useNavigate();
 
   const isOwner = useMemo(
     () => !!lawyers?.some((l) => l.is_self && l.firm_role === 'owner'),
@@ -126,7 +128,7 @@ export default function PortalFirmLawyers() {
                 <li key={l.id}>
                   <button
                     type="button"
-                    onClick={() => setSelected(l)}
+                    onClick={() => (l.is_self ? navigate('/portal/account') : setSelected(l))}
                     className="w-full min-h-[44px] flex items-center justify-between gap-3 rounded-lg border border-control-border bg-white px-4 py-3 text-left hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                   >
                     <span className="min-w-0">
