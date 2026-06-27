@@ -822,6 +822,57 @@ export class NeonDbClient implements DbClient {
     return toAttorneyAdminRow(updated[0]);
   }
 
+  async upsertUserByClerkId(input: {
+    clerkUserId: string;
+    email: string | null;
+    displayName: string | null;
+  }): Promise<{ userId: string }> {
+    const rows = await this.db
+      .insert(users)
+      .values({
+        clerkUserId: input.clerkUserId,
+        email: input.email,
+        displayName: input.displayName,
+      })
+      .onConflictDoUpdate({
+        target: users.clerkUserId,
+        set: { email: input.email, displayName: input.displayName },
+      })
+      .returning({ id: users.id });
+    return { userId: rows[0].id };
+  }
+
+  async listUnboundAttorneysByEmail(email: string): Promise<AttorneyAdminRow[]> {
+    const rows = await this.db
+      .select()
+      .from(attorneysTable)
+      .where(and(isNull(attorneysTable.userId), sql`lower(${attorneysTable.email}) = lower(${email})`));
+    return rows.map(toAttorneyAdminRow);
+  }
+
+  async bindAttorneyToUser(
+    attorneyId: string,
+    userId: string,
+    actor: { actorUserId: string | null; actorEmail: string | null },
+  ): Promise<AttorneyAdminRow | null> {
+    const updated = await this.db
+      .update(attorneysTable)
+      .set({ userId })
+      .where(and(eq(attorneysTable.id, attorneyId), isNull(attorneysTable.userId)))
+      .returning();
+    if (!updated[0]) return null;
+    await this.db.insert(auditLog).values({
+      orgId: updated[0].orgId,
+      actorType: 'attorney',
+      actorId: actor.actorUserId,
+      action: 'attorney.bound',
+      resourceType: 'attorney',
+      resourceId: attorneyId,
+      metadata: { actor_email: actor.actorEmail, user_id: userId },
+    });
+    return toAttorneyAdminRow(updated[0]);
+  }
+
   async createAttorney(input: CreateAttorneyInput): Promise<AttorneyAdminRow> {
     const inserted = await this.db
       .insert(attorneysTable)

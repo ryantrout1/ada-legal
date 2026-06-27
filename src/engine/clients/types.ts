@@ -994,6 +994,24 @@ export interface DbClient {
     role: string,
     actor: { actorUserId: string | null; actorEmail: string | null },
   ): Promise<AttorneyAdminRow | null>;
+  /** Insert-or-update a users row by clerk_user_id. Returns the ada_legal users.id. */
+  upsertUserByClerkId(input: {
+    clerkUserId: string;
+    email: string | null;
+    displayName: string | null;
+  }): Promise<{ userId: string }>;
+  /** Unbound (user_id IS NULL) attorneys whose email matches, case-insensitive. */
+  listUnboundAttorneysByEmail(email: string): Promise<AttorneyAdminRow[]>;
+  /**
+   * Race-safe email-bind: set attorneys.user_id only when it is still NULL.
+   * Returns the bound row, or null if it was already bound (lost the race).
+   * Writes an `attorney.bound` audit row on success.
+   */
+  bindAttorneyToUser(
+    attorneyId: string,
+    userId: string,
+    actor: { actorUserId: string | null; actorEmail: string | null },
+  ): Promise<AttorneyAdminRow | null>;
   /** Partial update of an attorney. Returns the updated row or null. */
   updateAttorney(id: string, input: UpdateAttorneyInput): Promise<AttorneyAdminRow | null>;
   /**

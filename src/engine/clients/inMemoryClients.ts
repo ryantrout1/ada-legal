@@ -250,17 +250,23 @@ export class InMemoryDbClient implements DbClient {
   }> = [];
   private docSeq = 0;
   private caseSeq = 0;
+
   /**
-   * Test-only clerk-user → attorney pairing. The real Neon client resolves
-   * clerk_user_id → users → attorneys; in-memory has no users table, so
-   * tests/fixtures pair explicitly via linkClerkUser(). Mirrors how the AI
-   * client exposes test-only enqueue helpers.
+   * Test/runtime users store, keyed by clerk_user_id, mirroring the real
+   * users table (clerk_user_id → users.id). resolveAttorneyByClerkUserId
+   * walks clerk_user_id → users.id → attorneys.user_id, same two hops as Neon.
    */
-  public readonly clerkUserLinks = new Map<string, string>();
+  public readonly users = new Map<
+    string,
+    { userId: string; email: string | null; displayName: string | null }
+  >();
+  private userSeq = 0;
 
   /** Test-only: pair a Clerk user id to an attorney id (for resolveAttorneyByClerkUserId). */
   linkClerkUser(clerkUserId: string, attorneyId: string): void {
-    this.clerkUserLinks.set(clerkUserId, attorneyId);
+    const a = this.adminAttorneys.find((x) => x.id === attorneyId);
+    const userId = a?.userId ?? attorneyId;
+    this.users.set(clerkUserId, { userId, email: a?.email ?? null, displayName: a?.name ?? null });
   }
 
   async readSession({ sessionId }: SessionReadOptions): Promise<AdaSessionState | null> {
@@ -1947,9 +1953,9 @@ export class InMemoryDbClient implements DbClient {
   async resolveAttorneyByClerkUserId(
     clerkUserId: string,
   ): Promise<PortalAttorneyResolution | null> {
-    const attorneyId = this.clerkUserLinks.get(clerkUserId);
-    if (!attorneyId) return null;
-    const a = this.adminAttorneys.find((x) => x.id === attorneyId);
+    const u = this.users.get(clerkUserId);
+    if (!u) return null;
+    const a = this.adminAttorneys.find((x) => x.userId === u.userId);
     if (!a || !a.userId || !a.lawFirmId) return null;
     return {
       attorneyId: a.id,
@@ -1958,6 +1964,54 @@ export class InMemoryDbClient implements DbClient {
       email: a.email,
       firmRole: a.firmRole ?? 'member',
     };
+  }
+
+  async upsertUserByClerkId(input: {
+    clerkUserId: string;
+    email: string | null;
+    displayName: string | null;
+  }): Promise<{ userId: string }> {
+    const existing = this.users.get(input.clerkUserId);
+    if (existing) {
+      existing.email = input.email;
+      existing.displayName = input.displayName;
+      return { userId: existing.userId };
+    }
+    this.userSeq += 1;
+    const userId = '90000000-0000-4000-8000-' + this.userSeq.toString(16).padStart(12, '0');
+    this.users.set(input.clerkUserId, { userId, email: input.email, displayName: input.displayName });
+    return { userId };
+  }
+
+  async listUnboundAttorneysByEmail(email: string): Promise<AttorneyAdminRow[]> {
+    const target = email.trim().toLowerCase();
+    return this.adminAttorneys.filter(
+      (a) => !a.userId && (a.email ?? '').trim().toLowerCase() === target,
+    );
+  }
+
+  async bindAttorneyToUser(
+    attorneyId: string,
+    userId: string,
+    actor: { actorUserId: string | null; actorEmail: string | null },
+  ): Promise<AttorneyAdminRow | null> {
+    const row = this.adminAttorneys.find((a) => a.id === attorneyId) as
+      | (AttorneyAdminRow & { orgId?: string })
+      | undefined;
+    if (!row || row.userId) return null; // missing or already bound (race-safe)
+    row.userId = userId;
+    row.updatedAt = new Date().toISOString();
+    this.auditLog.push({
+      orgId: row.orgId ?? null,
+      actorType: 'attorney',
+      actorId: actor.actorUserId,
+      action: 'attorney.bound',
+      resourceType: 'attorney',
+      resourceId: attorneyId,
+      metadata: { actor_email: actor.actorEmail, user_id: userId },
+      createdAt: new Date().toISOString(),
+    });
+    return row;
   }
 
   async listAttorneysForFirm(firmId: string): Promise<AttorneyAdminRow[]> {

@@ -117,3 +117,29 @@ describe('attorney email-bind', () => {
     expect(resolved?.lawFirmId).toBe(fx.firms.firmA.id);
   });
 });
+
+describe('bind orchestration (composition mirror of POST /api/portal/session)', () => {
+  it('already-bound clerk user resolves without a second bind', async () => {
+    const clients = makeInMemoryClients();
+    const fx = await seedPortalFixture(clients);
+    const clerk = fx.attorneys.attorneyA.clerkUserId;
+
+    // Mirror the handler: upsert, then resolve — already bound, no decideBind needed.
+    await clients.db.upsertUserByClerkId({ clerkUserId: clerk, email: 'a@x.com', displayName: 'A' });
+    const resolved = await clients.db.resolveAttorneyByClerkUserId(clerk);
+    expect(resolved?.attorneyId).toBe(fx.attorneys.attorneyA.attorney.id);
+  });
+
+  it('verified email with no unbound match yields no_match (onboarded:false)', async () => {
+    const clients = makeInMemoryClients();
+    await seedPortalFixture(clients);
+    const { decideBind } = await import('@/engine/portal/attorneyBinding');
+
+    await clients.db.upsertUserByClerkId({ clerkUserId: 'clerk_new', email: 'nobody@firm.com', displayName: null });
+    const resolved = await clients.db.resolveAttorneyByClerkUserId('clerk_new');
+    expect(resolved).toBeNull();
+    const matches = await clients.db.listUnboundAttorneysByEmail('nobody@firm.com');
+    const decision = decideBind({ alreadyBound: false, emailVerified: true, email: 'nobody@firm.com', matches });
+    expect(decision.action).toBe('no_match');
+  });
+});

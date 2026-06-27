@@ -124,19 +124,29 @@ export async function requireOwner(
   return auth;
 }
 
-export async function requireAttorney(
+/**
+ * Verify a Clerk session and return the user's id + primary email (with its
+ * verification status) — WITHOUT requiring a paired attorney. Used by both
+ * requireAttorney (which then resolves the attorney) and the bind/bootstrap
+ * endpoint (which may create the pairing). On failure writes 401/500 + null.
+ */
+export interface VerifiedClerkUser {
+  clerkUserId: string;
+  email: string | null;
+  emailVerified: boolean;
+  name: string | null;
+}
+
+export async function verifyClerkRequest(
   req: VercelRequest,
   res: VercelResponse,
-): Promise<AttorneyAuthContext | null> {
+): Promise<VerifiedClerkUser | null> {
   const secret = process.env.CLERK_SECRET_KEY;
   const publishable = process.env.VITE_CLERK_PUBLISHABLE_KEY;
   if (!secret || !publishable) {
     res.status(500).json({ error: 'Clerk is not configured on the server' });
     return null;
   }
-
-  let clerkUserId: string;
-  let clerkEmail: string | null = null;
   try {
     const clerk = createClerkClient({ secretKey: secret, publishableKey: publishable });
     const state = await clerk.authenticateRequest(vercelRequestToWebRequest(req), {
@@ -152,18 +162,34 @@ export async function requireAttorney(
       res.status(401).json({ error: 'Unauthorized' });
       return null;
     }
-    clerkUserId = auth.userId;
+    let email: string | null = null;
+    let emailVerified = false;
+    let name: string | null = null;
     try {
-      const user = await clerk.users.getUser(clerkUserId);
-      clerkEmail = user.primaryEmailAddress?.emailAddress ?? null;
+      const user = await clerk.users.getUser(auth.userId);
+      const primary = user.primaryEmailAddress;
+      email = primary?.emailAddress ?? null;
+      emailVerified = primary?.verification?.status === 'verified';
+      name = [user.firstName, user.lastName].filter(Boolean).join(' ') || null;
     } catch {
-      // email is decorative for the context; ignore lookup failure
+      // email/name are best-effort; an unresolved lookup stays unverified.
     }
+    return { clerkUserId: auth.userId, email, emailVerified, name };
   } catch (err) {
-    console.error('requireAttorney: Clerk verification failed', err);
+    console.error('verifyClerkRequest: Clerk verification failed', err);
     res.status(401).json({ error: 'Unauthorized' });
     return null;
   }
+}
+
+export async function requireAttorney(
+  req: VercelRequest,
+  res: VercelResponse,
+): Promise<AttorneyAuthContext | null> {
+  const verified = await verifyClerkRequest(req, res);
+  if (!verified) return null;
+  const clerkUserId = verified.clerkUserId;
+  const clerkEmail = verified.email;
 
   let ctx: AttorneyAuthContext | null;
   try {
