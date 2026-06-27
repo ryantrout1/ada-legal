@@ -13,7 +13,7 @@
  * renders inside the Clerk-wrapped /portal subtree.
  */
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
@@ -30,7 +30,12 @@ import {
   HelpCircle,
   LogOut,
 } from 'lucide-react';
-import { fetchPortalIdentity, type PortalIdentity } from '../data/portalClient.js';
+import {
+  bootstrapSession,
+  portalSessionView,
+  type PortalSession,
+} from '../data/portalClient.js';
+import PortalNoAccount from '../routes/portal/PortalNoAccount.js';
 
 function initials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -75,29 +80,45 @@ export default function PortalLayout() {
   const location = useLocation();
 
   const clerkName = user?.fullName ?? user?.primaryEmailAddress?.emailAddress ?? 'Attorney';
-  const [identity, setIdentity] = useState<PortalIdentity | null>(null);
+  const [session, setSession] = useState<PortalSession | null>(null);
+  const [bootError, setBootError] = useState(false);
 
-  useEffect(() => {
-    let alive = true;
-    fetchPortalIdentity()
-      .then((id) => {
-        if (alive) setIdentity(id);
-      })
-      .catch(() => {
-        // 401/403/5xx — keep the shell usable with Clerk-derived fallbacks.
-        if (alive) setIdentity(null);
-      });
-    return () => {
-      alive = false;
-    };
+  const reload = useCallback(() => {
+    setBootError(false);
+    setSession(null);
+    bootstrapSession()
+      .then(setSession)
+      .catch(() => setBootError(true));
   }, []);
 
-  const attorneyName = identity?.attorney.name ?? clerkName;
-  const firmName = identity?.firm.name ?? '';
+  useEffect(() => {
+    reload();
+  }, [reload]);
+
+  const view = portalSessionView({ session, error: bootError });
+
+  if (view === 'loading') {
+    return (
+      <main className="lawyer-workspace min-h-screen flex items-center justify-center bg-surface-50 text-ink-500">
+        Loading your workspace…
+      </main>
+    );
+  }
+
+  if (view === 'holding') {
+    const reason = session && !session.onboarded ? session.reason : 'error';
+    const email = session && !session.onboarded ? session.email : null;
+    return <PortalNoAccount reason={reason} email={email} onRetry={reload} />;
+  }
+
+  // view === 'shell' → onboarded; identity fields are present on the session.
+  const identity = session as Extract<PortalSession, { onboarded: true }>;
+  const attorneyName = identity.attorney.name ?? clerkName;
+  const firmName = identity.firm.name ?? '';
 
   // Owners get a "Firm" entry (roster + per-lawyer view); members don't.
   const practiceNav: NavItem[] =
-    identity?.firmRole === 'owner'
+    identity.firmRole === 'owner'
       ? [
           PRACTICE_NAV[0],
           { to: '/portal/firm', label: 'Firm', icon: Building2 },

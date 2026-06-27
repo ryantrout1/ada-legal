@@ -122,6 +122,30 @@ export async function fetchPortalIdentity(): Promise<PortalIdentity> {
   return (await resp.json()) as PortalIdentity;
 }
 
+/**
+ * Result of the portal bootstrap (POST /api/portal/session): either the user is
+ * onboarded (identity returned) or not (reason for the holding screen).
+ */
+export type PortalSession =
+  | ({ onboarded: true } & PortalIdentity)
+  | { onboarded: false; reason: string; email: string | null };
+
+/** Bootstrap + email-bind on portal entry. 401/5xx throw PortalApiError. */
+export async function bootstrapSession(): Promise<PortalSession> {
+  const resp = await fetch(`/api/portal/session`, { method: 'POST', credentials: 'include' });
+  if (!resp.ok) return failFor(resp);
+  return (await resp.json()) as PortalSession;
+}
+
+export type PortalView = 'loading' | 'holding' | 'shell';
+
+/** Pure: which top-level view the portal shell should render. */
+export function portalSessionView(input: { session: PortalSession | null; error: boolean }): PortalView {
+  if (input.error) return 'holding';
+  if (!input.session) return 'loading';
+  return input.session.onboarded ? 'shell' : 'holding';
+}
+
 /** Returns null on 404 (out-of-firm or unknown case); throws PortalApiError otherwise. */
 export async function fetchPortalCase(
   id: string,
