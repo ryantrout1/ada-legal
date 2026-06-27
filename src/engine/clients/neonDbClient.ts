@@ -777,6 +777,27 @@ export class NeonDbClient implements DbClient {
     return rows[0] ? toAttorneyAdminRow(rows[0]) : null;
   }
 
+  async listAttorneysForFirm(firmId: string): Promise<AttorneyAdminRow[]> {
+    const rows = await this.db
+      .select()
+      .from(attorneysTable)
+      .where(eq(attorneysTable.lawFirmId, firmId))
+      .orderBy(attorneysTable.name);
+    return rows.map(toAttorneyAdminRow);
+  }
+
+  async getAttorneyForFirm(
+    attorneyId: string,
+    firmId: string,
+  ): Promise<AttorneyAdminRow | null> {
+    const rows = await this.db
+      .select()
+      .from(attorneysTable)
+      .where(and(eq(attorneysTable.id, attorneyId), eq(attorneysTable.lawFirmId, firmId)))
+      .limit(1);
+    return rows[0] ? toAttorneyAdminRow(rows[0]) : null;
+  }
+
   async createAttorney(input: CreateAttorneyInput): Promise<AttorneyAdminRow> {
     const inserted = await this.db
       .insert(attorneysTable)
@@ -2835,6 +2856,7 @@ export class NeonDbClient implements DbClient {
         userId: attorneysTable.userId,
         lawFirmId: attorneysTable.lawFirmId,
         email: attorneysTable.email,
+        firmRole: attorneysTable.firmRole,
       })
       .from(attorneysTable)
       .innerJoin(users, eq(users.id, attorneysTable.userId))
@@ -2848,6 +2870,7 @@ export class NeonDbClient implements DbClient {
       userId: r.userId,
       lawFirmId: r.lawFirmId,
       email: r.email,
+      firmRole: r.firmRole ?? 'member',
     };
   }
 
@@ -3648,6 +3671,7 @@ function toAttorneyAdminRow(r: typeof attorneysTable.$inferSelect): AttorneyAdmi
     photoUrl: r.photoUrl,
     status: r.status as AttorneyStatus,
     barNumber: r.barNumber,
+    firmRole: r.firmRole,
     acceptingReferrals: r.acceptingReferrals,
     routingPaused: r.routingPaused,
     maxActiveCases: r.maxActiveCases,

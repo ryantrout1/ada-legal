@@ -60,6 +60,7 @@ describe('loadPortalIdentity', () => {
       clerkUserId: 'nope-clerk',
       lawFirmId: 'nope-firm',
       email: 'fallback@x.com',
+      firmRole: 'member',
     };
     const identity = await loadPortalIdentity(clients.db, orphan);
 

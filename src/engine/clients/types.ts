@@ -144,6 +144,7 @@ export interface AttorneyAdminRow extends AttorneyRow {
   photoUrl: string | null;
   status: AttorneyStatus;
   barNumber?: string | null;
+  firmRole?: string;
   createdAt: string;
   updatedAt: string;
   /**
@@ -882,6 +883,7 @@ export interface PortalAttorneyResolution {
   userId: string;
   lawFirmId: string;
   email: string | null;
+  firmRole: string;
 }
 
 /**
@@ -978,6 +980,10 @@ export interface DbClient {
   listAttorneysForAdmin(opts: AdminAttorneyListOptions): Promise<AdminAttorneyListResult>;
   /** Read a single attorney by id for admin view. */
   getAttorneyById(id: string): Promise<AttorneyAdminRow | null>;
+  /** Firm-scoped roster: every attorney in the firm (owner view). */
+  listAttorneysForFirm(firmId: string): Promise<AttorneyAdminRow[]>;
+  /** Firm-scoped single read: returns null if the attorney isn't in the firm. */
+  getAttorneyForFirm(attorneyId: string, firmId: string): Promise<AttorneyAdminRow | null>;
   /** Insert a new attorney row. Returns the created row. */
   createAttorney(input: CreateAttorneyInput): Promise<AttorneyAdminRow>;
   /** Partial update of an attorney. Returns the updated row or null. */

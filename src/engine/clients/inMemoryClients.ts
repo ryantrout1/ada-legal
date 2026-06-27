@@ -462,6 +462,7 @@ export class InMemoryDbClient implements DbClient {
       photoUrl: input.photoUrl ?? null,
       status: input.status ?? 'pending',
       barNumber: null,
+      firmRole: 'member',
       acceptingReferrals: true,
       routingPaused: false,
       maxActiveCases: null,
@@ -1954,7 +1955,23 @@ export class InMemoryDbClient implements DbClient {
       userId: a.userId,
       lawFirmId: a.lawFirmId,
       email: a.email,
+      firmRole: a.firmRole ?? 'member',
     };
+  }
+
+  async listAttorneysForFirm(firmId: string): Promise<AttorneyAdminRow[]> {
+    return this.adminAttorneys
+      .filter((a) => a.lawFirmId === firmId)
+      .sort((x, y) => x.name.localeCompare(y.name));
+  }
+
+  async getAttorneyForFirm(
+    attorneyId: string,
+    firmId: string,
+  ): Promise<AttorneyAdminRow | null> {
+    return (
+      this.adminAttorneys.find((a) => a.id === attorneyId && a.lawFirmId === firmId) ?? null
+    );
   }
 
   async listFirmsForAdmin(

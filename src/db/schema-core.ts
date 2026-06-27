@@ -321,6 +321,9 @@ export const attorneys = pgTable(
     // the admin approve gate. Attorney-entered on the Account page.
     barNumber: text('bar_number'),
     status: text('status').notNull().default('pending'),
+    // Firm role (migration 0030). 'owner' | 'member'. Gates the owner-only
+    // Lawyers-in-firm view + firm editing. Default 'member'.
+    firmRole: text('firm_role').notNull().default('member'),
     approvedBy: uuid('approved_by').references(() => users.id),
     approvedAt: timestamp('approved_at', { withTimezone: true }),
     // Attorney portal (migration 0019). law_firm_id is a plain uuid (no

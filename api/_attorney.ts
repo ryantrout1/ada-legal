@@ -39,6 +39,7 @@ export interface AttorneyAuthContext {
   clerkUserId: string;
   lawFirmId: string;
   email: string | null;
+  firmRole: string;
 }
 
 /**
@@ -59,6 +60,7 @@ export async function resolveAttorneyContext(
     clerkUserId,
     lawFirmId: resolved.lawFirmId,
     email: resolved.email ?? clerkEmail,
+    firmRole: resolved.firmRole ?? 'member',
   };
 }
 
