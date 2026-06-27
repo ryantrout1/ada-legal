@@ -462,7 +462,8 @@ export class InMemoryDbClient implements DbClient {
       photoUrl: input.photoUrl ?? null,
       status: input.status ?? 'pending',
       barNumber: null,
-      firmRole: 'member',
+      firmRole: input.firmRole ?? 'member',
+      lawFirmId: input.lawFirmId ?? undefined,
       acceptingReferrals: true,
       routingPaused: false,
       maxActiveCases: null,
@@ -1972,6 +1973,30 @@ export class InMemoryDbClient implements DbClient {
     return (
       this.adminAttorneys.find((a) => a.id === attorneyId && a.lawFirmId === firmId) ?? null
     );
+  }
+
+  async setAttorneyFirmRole(
+    id: string,
+    role: string,
+    actor: { actorUserId: string | null; actorEmail: string | null },
+  ): Promise<AttorneyAdminRow | null> {
+    const row = this.adminAttorneys.find((a) => a.id === id) as
+      | (AttorneyAdminRow & { orgId?: string })
+      | undefined;
+    if (!row) return null;
+    row.firmRole = role;
+    row.updatedAt = new Date().toISOString();
+    this.auditLog.push({
+      orgId: row.orgId ?? null,
+      actorType: 'attorney',
+      actorId: actor.actorUserId,
+      action: 'attorney.firm_role_changed',
+      resourceType: 'attorney',
+      resourceId: id,
+      metadata: { actor_email: actor.actorEmail, to: role },
+      createdAt: new Date().toISOString(),
+    });
+    return row;
   }
 
   async listFirmsForAdmin(

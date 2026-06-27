@@ -35,6 +35,7 @@ import {
   users,
   photoAnalyses,
   photoReviews,
+  auditLog,
 } from '../../db/schema-core.js';
 import {
   lawFirms as lawFirmsTable,
@@ -798,11 +799,36 @@ export class NeonDbClient implements DbClient {
     return rows[0] ? toAttorneyAdminRow(rows[0]) : null;
   }
 
+  async setAttorneyFirmRole(
+    id: string,
+    role: string,
+    actor: { actorUserId: string | null; actorEmail: string | null },
+  ): Promise<AttorneyAdminRow | null> {
+    const updated = await this.db
+      .update(attorneysTable)
+      .set({ firmRole: role })
+      .where(eq(attorneysTable.id, id))
+      .returning();
+    if (!updated[0]) return null;
+    await this.db.insert(auditLog).values({
+      orgId: updated[0].orgId,
+      actorType: 'attorney',
+      actorId: actor.actorUserId,
+      action: 'attorney.firm_role_changed',
+      resourceType: 'attorney',
+      resourceId: id,
+      metadata: { actor_email: actor.actorEmail, to: role },
+    });
+    return toAttorneyAdminRow(updated[0]);
+  }
+
   async createAttorney(input: CreateAttorneyInput): Promise<AttorneyAdminRow> {
     const inserted = await this.db
       .insert(attorneysTable)
       .values({
         orgId: input.orgId,
+        lawFirmId: input.lawFirmId ?? null,
+        firmRole: input.firmRole ?? 'member',
         name: input.name,
         firmName: input.firmName ?? null,
         locationCity: input.locationCity ?? null,

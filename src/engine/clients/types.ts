@@ -351,6 +351,8 @@ export interface AdminIntakeReadResult {
 /** All fields required to create a new attorney row. */
 export interface CreateAttorneyInput {
   orgId: string;
+  lawFirmId?: string | null;
+  firmRole?: string;
   name: string;
   firmName?: string | null;
   locationCity?: string | null;
@@ -986,6 +988,12 @@ export interface DbClient {
   getAttorneyForFirm(attorneyId: string, firmId: string): Promise<AttorneyAdminRow | null>;
   /** Insert a new attorney row. Returns the created row. */
   createAttorney(input: CreateAttorneyInput): Promise<AttorneyAdminRow>;
+  /** Set an attorney's firm role ('owner'|'member') + write an audit row. */
+  setAttorneyFirmRole(
+    id: string,
+    role: string,
+    actor: { actorUserId: string | null; actorEmail: string | null },
+  ): Promise<AttorneyAdminRow | null>;
   /** Partial update of an attorney. Returns the updated row or null. */
   updateAttorney(id: string, input: UpdateAttorneyInput): Promise<AttorneyAdminRow | null>;
   /**
