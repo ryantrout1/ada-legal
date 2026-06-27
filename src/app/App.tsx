@@ -218,10 +218,6 @@ function PortalShell() {
           <Route path="cases/:id" element={<PortalCaseDetail />} />
           {/* Nav-visible, backend-pending destinations (Phase 5 §7.1). */}
           <Route
-            path="calendar"
-            element={<PortalPlaceholder title="Calendar" />}
-          />
-          <Route
             path="contacts"
             element={<PortalPlaceholder title="Contacts" />}
           />

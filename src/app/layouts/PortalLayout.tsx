@@ -19,7 +19,6 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
   Home,
   FileText,
-  Calendar,
   CheckSquare,
   Users,
   BarChart3,
@@ -55,7 +54,6 @@ interface NavItem {
 const WORKSPACE_NAV: NavItem[] = [
   { to: '/portal', label: 'Inbox', icon: Home, end: true },
   { to: '/portal/board', label: 'Matters', icon: FileText },
-  { to: '/portal/calendar', label: 'Calendar', icon: Calendar },
   { to: '/portal/tasks', label: 'Tasks', icon: CheckSquare },
   { to: '/portal/contacts', label: 'Contacts', icon: Users },
 ];
