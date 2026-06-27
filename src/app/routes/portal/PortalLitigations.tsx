@@ -20,7 +20,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Scale, MapPin, Check, Plus, ChevronRight, Calendar } from 'lucide-react';
+import { Scale, MapPin, Check, Plus, ChevronRight, Calendar, Search, X } from 'lucide-react';
 import {
   fetchPortalLitigations,
   acceptLitigation,
@@ -145,6 +145,9 @@ export default function PortalLitigations() {
   const [litigations, setLitigations] = useState<PortalLitigation[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
+  const [query, setQuery] = useState('');
+  const [typeFilter, setTypeFilter] = useState<'all' | 'class' | 'mass'>('all');
+  const [acceptedOnly, setAcceptedOnly] = useState(false);
 
   const load = useCallback(async () => {
     setError(null);
@@ -159,14 +162,38 @@ export default function PortalLitigations() {
     void load();
   }, [load]);
 
-  const { classActions, massActions, acceptedCount } = useMemo(() => {
-    const all = litigations ?? [];
-    return {
-      classActions: all.filter((l) => l.kind === 'class'),
-      massActions: all.filter((l) => l.kind !== 'class'),
-      acceptedCount: all.filter((l) => l.accepted).length,
+  const acceptedCount = useMemo(
+    () => (litigations ?? []).filter((l) => l.accepted).length,
+    [litigations],
+  );
+
+  const filtersActive = query.trim().length > 0 || typeFilter !== 'all' || acceptedOnly;
+
+  const { classActions, massActions, total } = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const matches = (l: PortalLitigation) => {
+      if (acceptedOnly && !l.accepted) return false;
+      if (typeFilter === 'class' && l.kind !== 'class') return false;
+      if (typeFilter === 'mass' && l.kind === 'class') return false;
+      if (!q) return true;
+      const hay = [l.case_name, l.legal_theory ?? '', l.short_description ?? '', l.eligibility ?? '', ...l.defendants]
+        .join(' ')
+        .toLowerCase();
+      return hay.includes(q);
     };
-  }, [litigations]);
+    const filtered = (litigations ?? []).filter(matches);
+    return {
+      classActions: filtered.filter((l) => l.kind === 'class'),
+      massActions: filtered.filter((l) => l.kind !== 'class'),
+      total: filtered.length,
+    };
+  }, [litigations, query, typeFilter, acceptedOnly]);
+
+  const clearFilters = useCallback(() => {
+    setQuery('');
+    setTypeFilter('all');
+    setAcceptedOnly(false);
+  }, []);
 
   const toggle = useCallback(async (lit: PortalLitigation) => {
     const next = !lit.accepted;
@@ -208,6 +235,85 @@ export default function PortalLitigations() {
         </p>
       </header>
 
+      {litigations !== null && litigations.length > 0 && (
+        <div className="mb-5 space-y-3">
+          <div className="relative">
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-500"
+              aria-hidden="true"
+            />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search by name, defendant, or who qualifies"
+              aria-label="Search litigations"
+              className="w-full min-h-[44px] rounded-md border border-control-border bg-white pl-9 pr-3 text-ink-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <div
+              role="group"
+              aria-label="Filter by type"
+              className="inline-flex overflow-hidden rounded-md border border-control-border"
+            >
+              {([
+                ['all', 'All'],
+                ['class', 'Class'],
+                ['mass', 'Mass'],
+              ] as const).map(([value, label], i) => {
+                const active = typeFilter === value;
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => setTypeFilter(value)}
+                    className={`min-h-[44px] px-4 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+                      i > 0 ? 'border-l border-control-border' : ''
+                    } ${active ? 'bg-accent-500 text-white' : 'bg-white text-ink-900 hover:bg-surface-100'}`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              type="button"
+              aria-pressed={acceptedOnly}
+              onClick={() => setAcceptedOnly((v) => !v)}
+              className={`inline-flex items-center gap-2 min-h-[44px] px-4 rounded-md border text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+                acceptedOnly
+                  ? 'border-accent-500 bg-accent-500 text-white'
+                  : 'border-control-border bg-white text-ink-900 hover:bg-surface-100'
+              }`}
+            >
+              {acceptedOnly && <Check className="h-4 w-4" aria-hidden="true" strokeWidth={2.5} />}
+              Accepted only
+            </button>
+
+            {filtersActive && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="inline-flex items-center gap-1 min-h-[44px] px-3 rounded-md text-sm font-semibold text-accent-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                <X className="h-4 w-4" aria-hidden="true" />
+                Clear
+              </button>
+            )}
+          </div>
+
+          {filtersActive && (
+            <p className="text-sm text-ink-500" aria-live="polite">
+              Showing {total} of {litigations.length}
+            </p>
+          )}
+        </div>
+      )}
+
       {error && (
         <div
           role="alert"
@@ -225,6 +331,19 @@ export default function PortalLitigations() {
         <p className="py-12 text-center text-sm text-ink-500">
           No litigations are available right now.
         </p>
+      )}
+
+      {litigations !== null && litigations.length > 0 && total === 0 && (
+        <div className="py-12 text-center">
+          <p className="text-sm text-ink-500">No litigations match your search.</p>
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="mt-2 inline-flex items-center gap-1 min-h-[44px] px-3 text-sm font-semibold text-accent-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            Clear filters
+          </button>
+        </div>
       )}
 
       {classActions.length > 0 && (
