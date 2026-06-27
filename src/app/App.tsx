@@ -73,7 +73,6 @@ import PortalPipeline from './routes/portal/PortalPipeline.js';
 import PortalLitigations from './routes/portal/PortalLitigations.js';
 import PortalLitigationDetail from './routes/portal/PortalLitigationDetail.js';
 import PortalCaseDetail from './routes/portal/PortalCaseDetail.js';
-import PortalPlaceholder from './routes/portal/PortalPlaceholder.js';
 import { HelmetProvider } from 'react-helmet-async';
 import RequireAdmin from './components/RequireAdmin.js';
 import RequireAttorney from './components/RequireAttorney.js';
@@ -216,11 +215,6 @@ function PortalShell() {
           <Route path="litigations" element={<PortalLitigations />} />
           <Route path="litigations/:id" element={<PortalLitigationDetail />} />
           <Route path="cases/:id" element={<PortalCaseDetail />} />
-          {/* Nav-visible, backend-pending destinations (Phase 5 §7.1). */}
-          <Route
-            path="contacts"
-            element={<PortalPlaceholder title="Contacts" />}
-          />
           <Route path="account" element={<PortalAccount />} />
           <Route path="firm" element={<PortalFirmLawyers />} />
           {/* Back-compat: the old Settings path now redirects to Account. */}
