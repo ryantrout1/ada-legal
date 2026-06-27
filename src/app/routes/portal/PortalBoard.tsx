@@ -13,9 +13,9 @@
  * decline open a small modal to capture the required field before committing.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Scale, Clock } from 'lucide-react';
+import { Scale, Clock, User } from 'lucide-react';
 import { relativeAge, priorityForSla, type InboxPriority } from '../../utils/inboxFormat.js';
 import {
   fetchPortalQueue,
@@ -66,12 +66,17 @@ export default function PortalBoard() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [pending, setPending] = useState<Pending | null>(null);
   const [dragOver, setDragOver] = useState<BoardColumn | null>(null);
+  const [viewerAttorneyId, setViewerAttorneyId] = useState<string | null>(null);
+  // Owner lens: 'all' | 'mine' | 'unassigned' | <attorneyId>. A view filter, not
+  // a permission — every firm matter stays reachable, this only narrows what's shown.
+  const [ownerFilter, setOwnerFilter] = useState<string>('all');
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const data = await fetchPortalQueue();
+      setViewerAttorneyId(data.viewer_attorney_id);
       setRows([...data.groups.new, ...data.groups.working, ...data.groups.resolved]);
     } catch (err) {
       setError(
@@ -145,8 +150,30 @@ export default function PortalBoard() {
     [rows, chooseMove],
   );
 
+  // Distinct owners present in the loaded matters, for the filter dropdown.
+  const owners = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const r of rows) {
+      if (r.assigned_lawyer_id) m.set(r.assigned_lawyer_id, r.assigned_lawyer_name ?? 'Unknown');
+    }
+    return [...m.entries()]
+      .map(([id, name]) => ({ id, name }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [rows]);
+
+  const visibleRows = useMemo(
+    () =>
+      rows.filter((r) => {
+        if (ownerFilter === 'all') return true;
+        if (ownerFilter === 'mine') return r.assigned_lawyer_id === viewerAttorneyId;
+        if (ownerFilter === 'unassigned') return r.assigned_lawyer_id == null;
+        return r.assigned_lawyer_id === ownerFilter;
+      }),
+    [rows, ownerFilter, viewerAttorneyId],
+  );
+
   const byColumn = (column: BoardColumn) =>
-    rows.filter((r) => columnForStatus(r.status as CaseStatus) === column);
+    visibleRows.filter((r) => columnForStatus(r.status as CaseStatus) === column);
 
   return (
     <div>
@@ -158,6 +185,24 @@ export default function PortalBoard() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <label className="flex items-center gap-2 text-sm font-medium text-ink-700">
+            <span className="sr-only sm:not-sr-only">Show</span>
+            <select
+              value={ownerFilter}
+              onChange={(e) => setOwnerFilter(e.target.value)}
+              aria-label="Filter matters by owner"
+              className="min-h-[44px] rounded-lg border border-control-border bg-white px-3 text-sm font-semibold text-ink-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              <option value="all">All firm matters</option>
+              <option value="mine">My matters</option>
+              <option value="unassigned">Unassigned</option>
+              {owners.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.name}
+                </option>
+              ))}
+            </select>
+          </label>
           <button
             type="button"
             disabled
@@ -311,6 +356,15 @@ function BoardCard({
           )}
         </div>
       )}
+
+      <div className="flex items-center gap-1.5 mt-2 text-xs">
+        <User size={13} className="shrink-0 text-ink-500" aria-hidden="true" />
+        {row.assigned_lawyer_name ? (
+          <span className="text-ink-700">{row.assigned_lawyer_name}</span>
+        ) : (
+          <span className="text-ink-500 italic">Unassigned</span>
+        )}
+      </div>
 
       {due && (
         <div className="mt-2.5 pt-2.5 border-t border-surface-200">

@@ -25,6 +25,8 @@ export interface PortalCaseRow {
   claimant_name: string | null;
   claimant_email: string | null;
   claimant_phone: string | null;
+  assigned_lawyer_id: string | null;
+  assigned_lawyer_name: string | null;
   routed_at: string | null;
   first_contact_due: string | null;
   created_at: string;
@@ -32,6 +34,8 @@ export interface PortalCaseRow {
 
 export interface PortalQueueResponse {
   counts: { new: number; working: number; resolved: number };
+  /** The signed-in attorney's id — drives the "Mine" matters filter. */
+  viewer_attorney_id: string | null;
   groups: {
     new: PortalCaseRow[];
     working: PortalCaseRow[];

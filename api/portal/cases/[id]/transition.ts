@@ -67,6 +67,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       reason: body.reason,
       resolutionType: body.resolution_type,
       resolutionNotes: body.resolution_notes,
+      // Whoever accepts owns the matter; the db applies this only on 'accept'.
+      assignedLawyerId: auth.attorneyId,
     });
     if (!result) return res.status(404).json({ error: 'Case not found' });
     return res.status(200).json({ status: result.caseRow.status });

@@ -44,6 +44,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       claimant_name: c.claimantName,
       claimant_email: c.claimantEmail,
       claimant_phone: c.claimantPhone,
+      assigned_lawyer_id: c.assignedLawyerId,
+      assigned_lawyer_name: c.assignedLawyerName,
       routed_at: c.routedAt,
       first_contact_due: c.firstContactDue,
       created_at: c.createdAt,
@@ -51,6 +53,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(200).json({
       counts: result.counts,
+      // The signed-in attorney — lets the Matters view resolve "Mine".
+      viewer_attorney_id: auth.attorneyId,
       groups: {
         new: result.groups.new.map(row),
         working: result.groups.working.map(row),
