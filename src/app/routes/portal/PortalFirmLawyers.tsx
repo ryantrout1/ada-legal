@@ -6,9 +6,9 @@
  * Portal-scoped (.lawyer-workspace), AAA.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, CheckCircle2, AlertCircle, UserPlus, Globe, MapPin, Building2, Pencil, UserMinus } from 'lucide-react';
+import { ChevronLeft, CheckCircle2, AlertCircle, UserPlus, Globe, MapPin, Building2, Pencil, UserMinus, Mail, Phone, User, X, Plus } from 'lucide-react';
 import {
   fetchFirmLawyers,
   fetchFirmLawyer,
@@ -30,6 +30,23 @@ const STATUS_LABEL: Record<string, string> = {
   archived: 'Archived',
 };
 
+/** 'public_accommodations' -> 'Public accommodations'; keeps known acronyms upper. */
+const UPPER_SLUGS = new Set(['ada', 'eeoc', 'doj', 'hud']);
+function humanizeSlug(slug: string): string {
+  if (UPPER_SLUGS.has(slug)) return slug.toUpperCase();
+  return slug
+    .split('_')
+    .map((w, i) => (i === 0 ? w.charAt(0).toUpperCase() + w.slice(1) : w))
+    .join(' ');
+}
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0]!.charAt(0).toUpperCase();
+  return (parts[0]!.charAt(0) + parts[parts.length - 1]!.charAt(0)).toUpperCase();
+}
+
 const INPUT =
   'w-full min-h-[44px] rounded-md border border-control-border bg-white px-3 text-ink-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
 const BTN =
@@ -45,6 +62,8 @@ export default function PortalFirmLawyers() {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<PortalFirmLawyerSummary | null>(null);
   const [editingFirm, setEditingFirm] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
+  const [addedMsg, setAddedMsg] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const isOwner = useMemo(
@@ -111,17 +130,39 @@ export default function PortalFirmLawyers() {
 
       {!editingFirm && (
         <>
-          <div className="flex items-baseline justify-between mb-3">
-            <h2 className="font-display text-xl text-ink-900">Attorneys</h2>
-            {lawyers && <span className="text-sm text-ink-500">{lawyers.length} in this firm</span>}
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="flex items-baseline gap-3">
+              <h2 className="font-display text-xl text-ink-900">Attorneys</h2>
+              {lawyers && <span className="text-sm text-ink-500">{lawyers.length} in this firm</span>}
+            </div>
+            {isOwner && (
+              <button
+                type="button"
+                onClick={() => {
+                  setAddedMsg(null);
+                  setAddOpen(true);
+                }}
+                className={BTN}
+              >
+                <UserPlus size={16} aria-hidden="true" /> Add attorney
+              </button>
+            )}
           </div>
 
-          <AddLawyer onAdded={() => void loadRoster()} />
+          {addedMsg && (
+            <div
+              role="status"
+              className="mb-3 flex items-start gap-2 rounded-md border border-success-500 bg-success-50 px-3 py-2 text-sm text-success-500"
+            >
+              <CheckCircle2 size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
+              <span className="font-medium">{addedMsg}</span>
+            </div>
+          )}
 
           {!lawyers ? (
             <p className="text-sm text-ink-500">Loading…</p>
           ) : lawyers.length === 0 ? (
-            <p className="text-sm text-ink-500">No lawyers in your firm yet.</p>
+            <p className="text-sm text-ink-500">No attorneys in your firm yet.</p>
           ) : (
             <ul className="flex flex-col gap-2">
               {lawyers.map((l) => (
@@ -129,9 +170,15 @@ export default function PortalFirmLawyers() {
                   <button
                     type="button"
                     onClick={() => (l.is_self ? navigate('/portal/account') : setSelected(l))}
-                    className="w-full min-h-[44px] flex items-center justify-between gap-3 rounded-lg border border-control-border bg-white px-4 py-3 text-left hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    className="w-full flex items-center gap-3 rounded-lg border border-control-border bg-white px-4 py-3 text-left hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                   >
-                    <span className="min-w-0">
+                    <span
+                      aria-hidden="true"
+                      className="grid place-items-center h-9 w-9 shrink-0 rounded-full bg-accent-50 text-accent-600 text-sm font-semibold"
+                    >
+                      {getInitials(l.name)}
+                    </span>
+                    <span className="min-w-0 flex-1">
                       <span className="flex items-center gap-2">
                         <span className="font-medium text-ink-900 truncate">{l.name}</span>
                         {l.is_self && <span className="lw-pill">You</span>}
@@ -153,6 +200,17 @@ export default function PortalFirmLawyers() {
             </ul>
           )}
         </>
+      )}
+
+      {addOpen && (
+        <AddLawyerModal
+          onClose={() => setAddOpen(false)}
+          onAdded={(msg) => {
+            setAddOpen(false);
+            setAddedMsg(msg);
+            void loadRoster();
+          }}
+        />
       )}
     </div>
   );
@@ -176,108 +234,155 @@ function FirmRecord({
     );
   }
 
-  const coverage =
-    firm.serves_nationwide
-      ? 'Nationwide'
-      : [firm.location_state, ...firm.additional_states].filter(Boolean).join(', ') || null;
+  const location = [firm.location_city, firm.location_state].filter(Boolean).join(', ') || null;
+  const coverage = firm.serves_nationwide
+    ? ['Nationwide']
+    : [firm.location_state, ...firm.additional_states].filter((s): s is string => Boolean(s));
+  const practiceAreas = firm.practice_areas.map(humanizeSlug);
   const statusCls =
     firm.status === 'active'
       ? 'border-success-500 bg-success-50 text-success-500'
       : 'border-control-border bg-surface-100 text-ink-700';
 
   return (
-    <section
-      className={`relative mb-8 rounded-xl border border-surface-200 bg-white p-5 sm:p-6 shadow-sm ${
-        canEdit ? 'group cursor-pointer transition-colors hover:border-accent-500' : ''
-      }`}
-    >
-      {canEdit && (
-        <button
-          type="button"
-          onClick={onEdit}
-          aria-label={`Edit ${firm.name} details`}
-          className="absolute inset-0 z-10 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-        />
-      )}
-      <div className="flex items-start gap-4">
-        <div className="grid place-items-center h-12 w-12 shrink-0 rounded-lg bg-accent-50 text-accent-500" aria-hidden="true">
+    <section className="mb-8 rounded-xl border border-surface-200 bg-white shadow-sm overflow-hidden">
+      {/* Header band */}
+      <div className="flex items-start gap-4 p-5 sm:p-6">
+        <div
+          className="grid place-items-center h-12 w-12 shrink-0 rounded-lg bg-accent-50 text-accent-600"
+          aria-hidden="true"
+        >
           <Building2 size={24} />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-xs uppercase tracking-wide text-ink-500 mb-0.5">Your firm</p>
-              <h1 className="font-display text-2xl sm:text-3xl text-ink-900 leading-tight">{firm.name}</h1>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold capitalize ${statusCls}`}>
-                {firm.status}
-              </span>
-              {canEdit && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-semibold text-ink-500 group-hover:text-accent-600">
-                  <Pencil size={15} aria-hidden="true" /> Edit firm
+              <p className="text-xs font-medium uppercase tracking-wide text-ink-500">Your firm</p>
+              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <h1 className="font-display text-2xl sm:text-3xl text-ink-900 leading-tight">{firm.name}</h1>
+                <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold capitalize ${statusCls}`}>
+                  {firm.status}
                 </span>
-              )}
+              </div>
             </div>
+            {canEdit && (
+              <button type="button" onClick={onEdit} className={`${BTN_SECONDARY} shrink-0`}>
+                <Pencil size={15} aria-hidden="true" /> Edit firm
+              </button>
+            )}
           </div>
 
           {firm.description ? (
-            <p className="mt-3 text-sm text-ink-700 leading-relaxed">{firm.description}</p>
+            <p className="mt-3 max-w-prose text-sm text-ink-700 leading-relaxed">{firm.description}</p>
           ) : (
             <p className="mt-3 text-sm text-ink-500 italic">No firm description yet.</p>
           )}
+        </div>
+      </div>
 
-          <dl className="mt-4 grid sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
-            <FirmMeta label="Contact" value={firm.primary_contact} />
-            <FirmMeta label="Email" value={firm.email} />
-            <FirmMeta label="Phone" value={firm.phone} />
-            <FirmMeta
-              label="Location"
-              value={[firm.location_city, firm.location_state].filter(Boolean).join(', ') || null}
-              icon={<MapPin size={14} aria-hidden="true" className="text-ink-500" />}
-            />
-            <FirmMeta label="Coverage" value={coverage} />
-            <FirmMeta label="Practice areas" value={firm.practice_areas.join(', ') || null} />
-            <div className="flex items-center gap-1.5">
-              <dt className="sr-only">Website</dt>
-              <dd className="min-w-0">
-                {firm.website_url ? (
-                  <a
-                    href={firm.website_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="relative z-20 inline-flex items-center gap-1.5 text-accent-600 underline truncate focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                  >
-                    <Globe size={14} aria-hidden="true" />
-                    {firm.website_url.replace(/^https?:\/\//, '')}
-                  </a>
-                ) : (
-                  <span className="text-ink-500">No website yet</span>
-                )}
-              </dd>
-            </div>
-          </dl>
+      {/* Details */}
+      <div className="border-t border-surface-200 px-5 sm:px-6 py-5 grid gap-5">
+        <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
+          <DetailItem icon={<User size={15} aria-hidden="true" />} label="Contact" value={firm.primary_contact} />
+          <DetailItem
+            icon={<Mail size={15} aria-hidden="true" />}
+            label="Email"
+            value={firm.email}
+            href={firm.email ? `mailto:${firm.email}` : undefined}
+          />
+          <DetailItem
+            icon={<Phone size={15} aria-hidden="true" />}
+            label="Phone"
+            value={firm.phone}
+            href={firm.phone ? `tel:${firm.phone.replace(/[^\d+]/g, '')}` : undefined}
+          />
+          <DetailItem icon={<MapPin size={15} aria-hidden="true" />} label="Location" value={location} />
+        </dl>
+
+        <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-ink-500 mb-1.5">Coverage</p>
+            <Chips items={coverage} />
+          </div>
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-ink-500 mb-1.5">Practice areas</p>
+            <Chips items={practiceAreas} />
+          </div>
+        </div>
+
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide text-ink-500 mb-1.5">Website</p>
+          {firm.website_url ? (
+            <a
+              href={firm.website_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-accent-600 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              <Globe size={14} aria-hidden="true" />
+              {firm.website_url.replace(/^https?:\/\//, '')}
+            </a>
+          ) : (
+            <span className="text-sm text-ink-500">No website yet</span>
+          )}
         </div>
       </div>
     </section>
   );
 }
 
-function FirmMeta({ label, value, icon }: { label: string; value: string | null; icon?: React.ReactNode }) {
+function DetailItem({
+  icon,
+  label,
+  value,
+  href,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string | null;
+  href?: string;
+}) {
   return (
-    <div className="flex items-baseline gap-2">
-      <dt className="text-ink-500 shrink-0">{label}</dt>
-      <dd className="text-ink-900 min-w-0 truncate flex items-center gap-1.5">
-        {value ? (
-          <>
-            {icon}
-            {value}
-          </>
-        ) : (
-          <span className="text-ink-500">—</span>
-        )}
-      </dd>
+    <div className="flex items-start gap-2.5">
+      <span className="mt-0.5 shrink-0 text-ink-500" aria-hidden="true">
+        {icon}
+      </span>
+      <div className="min-w-0">
+        <dt className="text-xs font-medium uppercase tracking-wide text-ink-500">{label}</dt>
+        <dd className="mt-0.5 text-sm text-ink-900 break-words">
+          {value ? (
+            href ? (
+              <a
+                href={href}
+                className="text-accent-600 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                {value}
+              </a>
+            ) : (
+              value
+            )
+          ) : (
+            <span className="text-ink-500">—</span>
+          )}
+        </dd>
+      </div>
     </div>
+  );
+}
+
+function Chips({ items }: { items: string[] }) {
+  if (items.length === 0) return <span className="text-sm text-ink-500">—</span>;
+  return (
+    <ul className="flex flex-wrap gap-1.5">
+      {items.map((it) => (
+        <li
+          key={it}
+          className="inline-flex items-center rounded-full border border-control-border bg-surface-100 px-2.5 py-1 text-xs font-medium text-ink-700"
+        >
+          {it}
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -476,16 +581,48 @@ function EditField({
   );
 }
 
-function AddLawyer({ onAdded }: { onAdded: () => void }) {
+function AddLawyerModal({ onClose, onAdded }: { onClose: () => void; onAdded: (msg: string) => void }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const [done, setDone] = useState<string | null>(null);
+  const firstFieldRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const titleId = 'add-lawyer-title';
+
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    firstFieldRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key === 'Tab' && dialogRef.current) {
+        const f = dialogRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        );
+        if (f.length === 0) return;
+        const first = f[0]!;
+        const last = f[f.length - 1]!;
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      opener?.focus?.();
+    };
+  }, [onClose]);
 
   const submit = async () => {
     setErr(null);
-    setDone(null);
     if (!name.trim() || !email.trim()) {
       setErr('Add a name and an email.');
       return;
@@ -493,55 +630,89 @@ function AddLawyer({ onAdded }: { onAdded: () => void }) {
     setBusy(true);
     try {
       const added = await addFirmLawyer(name.trim(), email.trim());
-      setDone(`Invited ${added.name}. They’ll be linked when they sign up with ${added.email}.`);
-      setName('');
-      setEmail('');
-      onAdded();
+      onAdded(`Invited ${added.name}. They’ll be linked when they sign up with ${added.email}.`);
     } catch (e) {
-      setErr(e instanceof PortalApiError ? e.message : 'Could not add the lawyer.');
-    } finally {
+      setErr(e instanceof PortalApiError ? e.message : 'Could not add the attorney.');
       setBusy(false);
     }
   };
 
   return (
-    <section className="mb-6 rounded-lg border border-control-border bg-white p-5">
-      <h2 className="flex items-center gap-2 font-display text-lg text-ink-900 mb-3">
-        <UserPlus size={18} aria-hidden="true" className="text-ink-500" /> Add a lawyer
-      </h2>
-      <div className="grid sm:grid-cols-2 gap-3">
-        <div>
-          <label htmlFor="add-name" className="block text-sm font-medium text-ink-700 mb-1">
-            Name
-          </label>
-          <input id="add-name" className={INPUT} value={name} onChange={(e) => setName(e.target.value)} />
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/40 p-4"
+      onClick={onClose}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+      >
+        <div className="mb-1 flex items-start justify-between gap-3">
+          <h2 id={titleId} className="font-display text-lg text-ink-900">
+            Add an attorney
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="-mr-2 -mt-2 grid h-11 w-11 place-items-center rounded-md text-ink-500 hover:bg-surface-100 hover:text-ink-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            <X size={18} aria-hidden="true" />
+          </button>
         </div>
-        <div>
-          <label htmlFor="add-email" className="block text-sm font-medium text-ink-700 mb-1">
-            Email
-          </label>
-          <input id="add-email" type="email" className={INPUT} value={email} onChange={(e) => setEmail(e.target.value)} />
-        </div>
-      </div>
-      {err && (
-        <div role="alert" className="mt-3 rounded-md border border-danger-500 bg-danger-50 px-3 py-2 text-sm text-danger-500">
-          {err}
-        </div>
-      )}
-      {done && (
-        <p role="status" className="mt-3 text-sm text-success-500 font-medium">
-          {done}
+        <p className="mb-4 text-sm text-ink-500">
+          They’ll show as <span className="font-medium text-ink-700">pending</span> until they sign up with this email.
         </p>
-      )}
-      <div className="mt-4">
-        <button type="button" className={BTN} disabled={busy} onClick={() => void submit()}>
-          {busy ? 'Adding…' : 'Add lawyer'}
-        </button>
+
+        {err && (
+          <div role="alert" className="mb-4 rounded-md border border-danger-500 bg-danger-50 px-3 py-2 text-sm text-danger-500">
+            {err}
+          </div>
+        )}
+
+        <div className="grid gap-4">
+          <div>
+            <label htmlFor="add-name" className="block text-sm font-medium text-ink-700 mb-1">
+              Full name
+            </label>
+            <input id="add-name" ref={firstFieldRef} className={INPUT} value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div>
+            <label htmlFor="add-email" className="block text-sm font-medium text-ink-700 mb-1">
+              Email
+            </label>
+            <input
+              id="add-email"
+              type="email"
+              className={INPUT}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !busy) void submit();
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="mt-6 flex justify-end gap-2">
+          <button type="button" onClick={onClose} disabled={busy} className={BTN_SECONDARY}>
+            Cancel
+          </button>
+          <button type="button" onClick={() => void submit()} disabled={busy} className={BTN}>
+            {busy ? (
+              'Adding…'
+            ) : (
+              <>
+                <Plus size={16} aria-hidden="true" /> Add attorney
+              </>
+            )}
+          </button>
+        </div>
       </div>
-      <p className="mt-2 text-xs text-ink-500">
-        They’ll appear as “pending” until they sign up with this email.
-      </p>
-    </section>
+    </div>
   );
 }
 
