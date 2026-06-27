@@ -45,6 +45,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       attorney: toAccountAttorney(attorney),
       firm: firm ? toAccountFirm(firm) : null,
       readiness: computeReadiness(attorney, firm),
+      bound: !!attorney.userId,
     });
   } catch (err) {
     console.error('GET /api/portal/account/lawyers/[id] failed', err);

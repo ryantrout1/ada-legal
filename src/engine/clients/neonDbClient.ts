@@ -3698,6 +3698,8 @@ function toAttorneyAdminRow(r: typeof attorneysTable.$inferSelect): AttorneyAdmi
     status: r.status as AttorneyStatus,
     barNumber: r.barNumber,
     firmRole: r.firmRole,
+    userId: r.userId ?? undefined,
+    lawFirmId: r.lawFirmId ?? undefined,
     acceptingReferrals: r.acceptingReferrals,
     routingPaused: r.routingPaused,
     maxActiveCases: r.maxActiveCases,
