@@ -24,7 +24,7 @@ import {
   Users,
   BarChart3,
   Building2,
-  Settings,
+  UserCircle,
   Search,
   Bell,
   HelpCircle,
@@ -61,7 +61,7 @@ const WORKSPACE_NAV: NavItem[] = [
 
 const PRACTICE_NAV: NavItem[] = [
   { to: '/portal/pipeline', label: 'Reports', icon: BarChart3 },
-  { to: '/portal/account', label: 'Account', icon: Settings },
+  { to: '/portal/account', label: 'My profile', icon: UserCircle },
 ];
 
 function SidebarLink({ item }: { item: NavItem }) {

@@ -14,6 +14,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   User,
   IdCard,
@@ -39,10 +40,8 @@ type AttorneyForm = {
   bar_number: string;
   email: string;
   phone: string;
-  website_url: string;
   bio: string;
   photo_url: string;
-  practice_areas: string;
   additional_states: string;
   specialty_tags: string;
   accepting_referrals: boolean;
@@ -70,10 +69,8 @@ function attorneyToForm(a: PortalAccountAttorney): AttorneyForm {
     bar_number: a.bar_number ?? '',
     email: a.email ?? '',
     phone: a.phone ?? '',
-    website_url: a.website_url ?? '',
     bio: a.bio ?? '',
     photo_url: a.photo_url ?? '',
-    practice_areas: (a.practice_areas ?? []).join(', '),
     additional_states: (a.additional_states ?? []).join(', '),
     specialty_tags: (a.specialty_tags ?? []).join(', '),
     accepting_referrals: a.accepting_referrals,
@@ -148,10 +145,8 @@ export default function PortalAccount() {
         bar_number: attorney.bar_number,
         email: attorney.email,
         phone: attorney.phone,
-        website_url: attorney.website_url,
         bio: attorney.bio,
         photo_url: attorney.photo_url,
-        practice_areas: splitList(attorney.practice_areas),
         additional_states: splitList(attorney.additional_states),
         specialty_tags: splitList(attorney.specialty_tags),
         accepting_referrals: attorney.accepting_referrals,
@@ -198,9 +193,15 @@ export default function PortalAccount() {
           </div>
         )}
         <div className="min-w-0">
-          <p className="text-xs uppercase tracking-wide text-ink-500 mb-0.5">Your account</p>
+          <p className="text-xs uppercase tracking-wide text-ink-500 mb-0.5">My profile</p>
           <h1 className="font-display text-2xl sm:text-3xl text-ink-900 truncate">{attorney.name || 'Your profile'}</h1>
-          {account.firm?.name && <p className="text-sm text-ink-500 truncate">{account.firm.name}</p>}
+          {account.firm?.name && (
+            <p className="text-sm truncate">
+              <Link to="/portal/firm" className="text-accent-600 underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                {account.firm.name}
+              </Link>
+            </p>
+          )}
         </div>
         <span className={`ml-auto shrink-0 inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${status.cls}`}>
           {status.label}
@@ -248,13 +249,7 @@ export default function PortalAccount() {
           <Field label="Photo URL" htmlFor="a-photo" hint="Link to a headshot (upload coming later).">
             <input id="a-photo" className={INPUT} placeholder="https://" value={attorney.photo_url} onChange={(e) => set({ photo_url: e.target.value })} />
           </Field>
-          <Field label="Website" htmlFor="a-web">
-            <input id="a-web" className={INPUT} placeholder="https://" value={attorney.website_url} onChange={(e) => set({ website_url: e.target.value })} />
-          </Field>
-          <Field label="Practice areas" htmlFor="a-areas" hint="Comma-separated, e.g. ada, employment.">
-            <input id="a-areas" className={INPUT} value={attorney.practice_areas} onChange={(e) => set({ practice_areas: e.target.value })} />
-          </Field>
-          <Field label="Specialty tags" htmlFor="a-tags" hint="Comma-separated.">
+          <Field label="Specialty tags" htmlFor="a-tags" hint="Comma-separated. Your personal focus areas.">
             <input id="a-tags" className={INPUT} value={attorney.specialty_tags} onChange={(e) => set({ specialty_tags: e.target.value })} />
           </Field>
         </Grid>
