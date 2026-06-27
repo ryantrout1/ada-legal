@@ -585,8 +585,11 @@ export interface PortalLitigation {
   slug: string;
   legal_theory: string | null;
   short_description: string | null;
+  eligibility: string | null;
   defendants: string[];
   affected_states: string[];
+  court: string | null;
+  filing_date: string | null;
   accepted: boolean;
 }
 

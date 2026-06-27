@@ -31,7 +31,7 @@ export interface PortalLitigationDetail {
 }
 
 /** First non-empty string in preference order, else null. */
-function pick(...candidates: (string | null | undefined)[]): string | null {
+export function firstNonEmpty(...candidates: (string | null | undefined)[]): string | null {
   for (const c of candidates) {
     if (typeof c === 'string' && c.trim().length > 0) return c;
   }
@@ -47,27 +47,27 @@ export function toPortalLitigationDetail(
     kind: lit.kind,
     case_name: lit.caseName,
     slug: lit.slug,
-    legal_theory: pick(lit.legalTheory),
-    full_description: pick(
+    legal_theory: firstNonEmpty(lit.legalTheory),
+    full_description: firstNonEmpty(
       lit.fullDescriptionProfessional,
       lit.fullDescriptionSimple,
       lit.fullDescription,
     ),
-    eligibility: pick(lit.eligibilityProfessional, lit.eligibilitySimple, lit.eligibility),
-    documentation_required: pick(
+    eligibility: firstNonEmpty(lit.eligibilityProfessional, lit.eligibilitySimple, lit.eligibility),
+    documentation_required: firstNonEmpty(
       lit.documentationRequiredProfessional,
       lit.documentationRequiredSimple,
     ),
-    no_documentation_path: pick(
+    no_documentation_path: firstNonEmpty(
       lit.noDocumentationPathProfessional,
       lit.noDocumentationPathSimple,
     ),
-    evidence_guidance: pick(lit.evidenceGuidanceProfessional, lit.evidenceGuidanceSimple),
-    what_this_is_not: pick(lit.whatThisIsNotProfessional, lit.whatThisIsNotSimple),
+    evidence_guidance: firstNonEmpty(lit.evidenceGuidanceProfessional, lit.evidenceGuidanceSimple),
+    what_this_is_not: firstNonEmpty(lit.whatThisIsNotProfessional, lit.whatThisIsNotSimple),
     defendants: lit.defendants,
     affected_states: lit.affectedStates,
-    court: pick(lit.court),
-    docket_number: pick(lit.docketNumber),
+    court: firstNonEmpty(lit.court),
+    docket_number: firstNonEmpty(lit.docketNumber),
     filing_date: lit.filingDate,
     key_dates: lit.keyDates,
     accepted,

@@ -18,6 +18,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAttorney } from '../_attorney.js';
 import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv } from '../_shared.js';
+import { firstNonEmpty } from '../../src/engine/portal/litigationDetail.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
@@ -52,8 +53,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       slug: l.slug,
       legal_theory: l.legalTheory,
       short_description: l.shortDescription,
+      // "Who qualifies" snippet for the card — professional copy preferred.
+      eligibility: firstNonEmpty(l.eligibilityProfessional, l.eligibilitySimple, l.eligibility),
       defendants: l.defendants,
       affected_states: l.affectedStates,
+      court: l.court,
+      filing_date: l.filingDate,
       accepted: acceptedIds.has(l.id),
     }));
 

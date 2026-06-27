@@ -142,7 +142,13 @@ export default function PortalLitigationDetail() {
 
       <header className="mt-4 flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <span className="inline-block rounded-full bg-surface-100 px-2 py-0.5 text-xs font-semibold text-ink-700">
+          <span
+            className={
+              lit.kind === 'class'
+                ? 'inline-block rounded-full border border-accent-500 px-2 py-0.5 text-xs font-semibold text-accent-500'
+                : 'inline-block rounded-full bg-surface-100 px-2 py-0.5 text-xs font-semibold text-ink-700'
+            }
+          >
             {kindLabel}
           </span>
           <h1 className="mt-2 text-2xl font-bold text-ink-900">{lit.case_name}</h1>
