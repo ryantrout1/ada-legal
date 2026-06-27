@@ -448,6 +448,7 @@ export interface PortalAccountFirm {
   logo_url: string | null;
   location_city: string | null;
   location_state: string | null;
+  practice_areas: string[];
   additional_states: string[];
   serves_nationwide: boolean;
 }

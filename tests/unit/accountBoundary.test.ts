@@ -91,3 +91,42 @@ describe('filterAccountPatch — sensitive fields are rejected', () => {
     expect(r.forbidden).toContain('attorney.status');
   });
 });
+
+// ── Phase B: firm becomes editable across its full public face ──────────────
+describe('filterAccountPatch — firm public-face fields (Phase B)', () => {
+  it('maps website, description, practice areas, location and coverage', () => {
+    const r = filterAccountPatch({
+      firm: {
+        website_url: 'https://x.com',
+        description: 'About the firm.',
+        practice_areas: ['ada', 'civil_rights'],
+        location_city: 'Washington',
+        location_state: 'DC',
+        additional_states: ['VA', 'MD'],
+        serves_nationwide: true,
+      },
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.firmPatch.websiteUrl).toBe('https://x.com');
+    expect(r.firmPatch.description).toBe('About the firm.');
+    expect(r.firmPatch.practiceAreas).toEqual(['ada', 'civil_rights']);
+    expect(r.firmPatch.locationCity).toBe('Washington');
+    expect(r.firmPatch.locationState).toBe('DC');
+    expect(r.firmPatch.additionalStates).toEqual(['VA', 'MD']);
+    expect(r.firmPatch.servesNationwide).toBe(true);
+  });
+
+  it('still rejects structural firm keys', () => {
+    const r = filterAccountPatch({ firm: { law_firm_id: 'x', status: 'churned' } });
+    expect(r.ok).toBe(false);
+  });
+
+  it('coerces nullable text fields to null when blanked', () => {
+    const r = filterAccountPatch({ firm: { website_url: '', description: '  ' } });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.firmPatch.websiteUrl).toBeNull();
+    expect(r.firmPatch.description).toBeNull();
+  });
+});

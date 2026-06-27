@@ -19,7 +19,6 @@ import {
   IdCard,
   Megaphone,
   SlidersHorizontal,
-  Building2,
   CheckCircle2,
   Circle,
   ArrowRight,
@@ -30,7 +29,6 @@ import {
   PortalApiError,
   type PortalAccount,
   type PortalAccountAttorney,
-  type PortalAccountFirm,
   type AccountPatch,
 } from '../../data/portalClient.js';
 
@@ -51,7 +49,6 @@ type AttorneyForm = {
   routing_paused: boolean;
   max_active_cases: string;
 };
-type FirmForm = { name: string; primary_contact: string; email: string; phone: string };
 
 const INPUT =
   'w-full min-h-[44px] rounded-lg border border-control-border bg-white px-3.5 text-ink-900 placeholder:text-ink-500/60 transition-colors hover:border-ink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500';
@@ -84,9 +81,6 @@ function attorneyToForm(a: PortalAccountAttorney): AttorneyForm {
     max_active_cases: a.max_active_cases == null ? '' : String(a.max_active_cases),
   };
 }
-function firmToForm(f: PortalAccountFirm | null): FirmForm {
-  return { name: f?.name ?? '', primary_contact: f?.primary_contact ?? '', email: f?.email ?? '', phone: f?.phone ?? '' };
-}
 function splitList(s: string): string[] {
   return s.split(',').map((x) => x.trim()).filter(Boolean);
 }
@@ -106,7 +100,6 @@ function focusField(id: string) {
 export default function PortalAccount() {
   const [account, setAccount] = useState<PortalAccount | null>(null);
   const [attorney, setAttorney] = useState<AttorneyForm | null>(null);
-  const [firm, setFirm] = useState<FirmForm | null>(null);
   const [initial, setInitial] = useState('');
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -116,11 +109,9 @@ export default function PortalAccount() {
 
   const sync = useCallback((acc: PortalAccount) => {
     const a = attorneyToForm(acc.attorney);
-    const f = firmToForm(acc.firm);
     setAccount(acc);
     setAttorney(a);
-    setFirm(f);
-    setInitial(JSON.stringify({ a, f }));
+    setInitial(JSON.stringify({ a }));
   }, []);
 
   const load = useCallback(async () => {
@@ -139,10 +130,9 @@ export default function PortalAccount() {
     void load();
   }, [load]);
 
-  const isOwner = account?.attorney.firm_role === 'owner';
   const dirty = useMemo(
-    () => !!attorney && JSON.stringify({ a: attorney, f: firm }) !== initial,
-    [attorney, firm, initial],
+    () => !!attorney && JSON.stringify({ a: attorney }) !== initial,
+    [attorney, initial],
   );
 
   const saveAll = useCallback(async () => {
@@ -168,9 +158,6 @@ export default function PortalAccount() {
         routing_paused: attorney.routing_paused,
         max_active_cases: attorney.max_active_cases.trim() === '' ? null : Number(attorney.max_active_cases),
       },
-      ...(isOwner && firm
-        ? { firm: { name: firm.name, primary_contact: firm.primary_contact, email: firm.email, phone: firm.phone } }
-        : {}),
     };
     try {
       sync(await saveAccount(patch));
@@ -181,7 +168,7 @@ export default function PortalAccount() {
     } finally {
       setSaving(false);
     }
-  }, [attorney, firm, isOwner, sync]);
+  }, [attorney, sync]);
 
   if (loading) return <p className="text-sm text-ink-500">Loading your account…</p>;
 
@@ -197,7 +184,6 @@ export default function PortalAccount() {
   }
 
   const set = (patch: Partial<AttorneyForm>) => setAttorney((p) => (p ? { ...p, ...patch } : p));
-  const setF = (patch: Partial<FirmForm>) => setFirm((p) => (p ? { ...p, ...patch } : p));
   const status = STATUS[account.attorney.status] ?? STATUS.pending;
 
   return (
@@ -221,7 +207,7 @@ export default function PortalAccount() {
         </span>
       </header>
 
-      <GoLiveCard account={account} isOwner={!!isOwner} />
+      <GoLiveCard account={account} />
 
       {/* You */}
       <Card icon={<User size={18} aria-hidden="true" />} title="You" subtitle="Your name and how we reach you.">
@@ -298,25 +284,6 @@ export default function PortalAccount() {
         </Field>
       </Card>
 
-      {/* Firm (owners only) */}
-      {isOwner && firm && (
-        <Card icon={<Building2 size={18} aria-hidden="true" />} title="Firm" subtitle="Your firm’s public details.">
-          <Grid>
-            <Field label="Firm name" htmlFor="f-name" required>
-              <input id="f-name" className={INPUT} value={firm.name} onChange={(e) => setF({ name: e.target.value })} />
-            </Field>
-            <Field label="Primary contact" htmlFor="f-contact">
-              <input id="f-contact" className={INPUT} value={firm.primary_contact} onChange={(e) => setF({ primary_contact: e.target.value })} />
-            </Field>
-            <Field label="Firm email" htmlFor="f-email" required>
-              <input id="f-email" type="email" className={INPUT} value={firm.email} onChange={(e) => setF({ email: e.target.value })} />
-            </Field>
-            <Field label="Firm phone" htmlFor="f-phone">
-              <input id="f-phone" className={INPUT} value={firm.phone} onChange={(e) => setF({ phone: e.target.value })} />
-            </Field>
-          </Grid>
-        </Card>
-      )}
 
       {/* Sticky save bar */}
       {(dirty || justSaved || saveError) && (
@@ -360,19 +327,13 @@ export default function PortalAccount() {
 
 /* ── Go-live progress ─────────────────────────────────────────────────────── */
 
-function GoLiveCard({ account, isOwner }: { account: PortalAccount; isOwner: boolean }) {
+function GoLiveCard({ account }: { account: PortalAccount }) {
   const missing = new Set(account.readiness.missing.map((m) => m.key));
   const items: { key: string; label: string; field: string }[] = [
     { key: 'name', label: 'Add your name', field: 'a-name' },
     { key: 'email', label: 'Add your email', field: 'a-email' },
     { key: 'bar_number', label: 'Add your bar number', field: 'a-bar' },
     { key: 'licensed_state', label: 'Add at least one licensed state', field: 'a-state' },
-    ...(isOwner && account.firm
-      ? [
-          { key: 'firm_name', label: 'Add your firm name', field: 'f-name' },
-          { key: 'firm_email', label: 'Add your firm email', field: 'f-email' },
-        ]
-      : []),
   ];
   const done = items.filter((i) => !missing.has(i.key)).length;
   const total = items.length;

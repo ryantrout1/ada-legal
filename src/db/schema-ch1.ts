@@ -44,6 +44,7 @@ export const lawFirms = pgTable('law_firms', {
   logoUrl: text('logo_url'),
   locationCity: text('location_city'),
   locationState: text('location_state'),
+  practiceAreas: jsonb('practice_areas').$type<string[]>().notNull().default([]),
   additionalStates: jsonb('additional_states').$type<string[]>().notNull().default([]),
   servesNationwide: boolean('serves_nationwide').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

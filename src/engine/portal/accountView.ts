@@ -44,6 +44,7 @@ export function toAccountFirm(f: LawFirmRow) {
     logo_url: f.logoUrl ?? null,
     location_city: f.locationCity ?? null,
     location_state: f.locationState ?? null,
+    practice_areas: f.practiceAreas ?? [],
     additional_states: f.additionalStates ?? [],
     serves_nationwide: f.servesNationwide ?? false,
   };

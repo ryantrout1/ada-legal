@@ -1755,6 +1755,14 @@ export class NeonDbClient implements DbClient {
         stripeCustomerId: row.stripeCustomerId,
         status: row.status,
         isPilot: row.isPilot,
+        websiteUrl: row.websiteUrl ?? null,
+        description: row.description ?? null,
+        logoUrl: row.logoUrl ?? null,
+        locationCity: row.locationCity ?? null,
+        locationState: row.locationState ?? null,
+        practiceAreas: row.practiceAreas ?? [],
+        additionalStates: row.additionalStates ?? [],
+        servesNationwide: row.servesNationwide ?? false,
       })
       .onConflictDoUpdate({
         target: lawFirmsTable.id,
@@ -1766,6 +1774,14 @@ export class NeonDbClient implements DbClient {
           stripeCustomerId: row.stripeCustomerId,
           status: row.status,
           isPilot: row.isPilot,
+          websiteUrl: row.websiteUrl ?? null,
+          description: row.description ?? null,
+          logoUrl: row.logoUrl ?? null,
+          locationCity: row.locationCity ?? null,
+          locationState: row.locationState ?? null,
+          practiceAreas: row.practiceAreas ?? [],
+          additionalStates: row.additionalStates ?? [],
+          servesNationwide: row.servesNationwide ?? false,
           updatedAt: new Date(),
         },
       });
@@ -3562,6 +3578,7 @@ function toLawFirmRow(r: {
   logoUrl: string | null;
   locationCity: string | null;
   locationState: string | null;
+  practiceAreas: string[] | null;
   additionalStates: string[] | null;
   servesNationwide: boolean | null;
   createdAt: Date;
@@ -3582,6 +3599,7 @@ function toLawFirmRow(r: {
     logoUrl: r.logoUrl ?? null,
     locationCity: r.locationCity ?? null,
     locationState: r.locationState ?? null,
+    practiceAreas: r.practiceAreas ?? [],
     additionalStates: r.additionalStates ?? [],
     servesNationwide: r.servesNationwide ?? false,
     createdAt: r.createdAt.toISOString(),

@@ -6,14 +6,15 @@
  * Portal-scoped (.lawyer-workspace), AAA.
  */
 
-import { useCallback, useEffect, useState } from 'react';
-import { ChevronLeft, CheckCircle2, AlertCircle, UserPlus, Globe, MapPin, Building2 } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ChevronLeft, CheckCircle2, AlertCircle, UserPlus, Globe, MapPin, Building2, Pencil } from 'lucide-react';
 import {
   fetchFirmLawyers,
   fetchFirmLawyer,
   addFirmLawyer,
   promoteOwner,
   transferOwnership,
+  saveAccount,
   PortalApiError,
   type PortalFirmLawyerSummary,
   type PortalLawyerDetail,
@@ -39,6 +40,12 @@ export default function PortalFirmLawyers() {
   const [firm, setFirm] = useState<PortalAccountFirm | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<PortalFirmLawyerSummary | null>(null);
+  const [editingFirm, setEditingFirm] = useState(false);
+
+  const isOwner = useMemo(
+    () => !!lawyers?.some((l) => l.is_self && l.firm_role === 'owner'),
+    [lawyers],
+  );
 
   const loadRoster = useCallback(async () => {
     setError(null);
@@ -81,54 +88,77 @@ export default function PortalFirmLawyers() {
 
   return (
     <div className="max-w-3xl">
-      <FirmRecord firm={firm} />
-
-      <div className="flex items-baseline justify-between mb-3">
-        <h2 className="font-display text-xl text-ink-900">Attorneys</h2>
-        {lawyers && <span className="text-sm text-ink-500">{lawyers.length} in this firm</span>}
-      </div>
-
-      <AddLawyer onAdded={() => void loadRoster()} />
-
-      {!lawyers ? (
-        <p className="text-sm text-ink-500">Loading…</p>
-      ) : lawyers.length === 0 ? (
-        <p className="text-sm text-ink-500">No lawyers in your firm yet.</p>
+      {editingFirm && firm ? (
+        <FirmEditor
+          firm={firm}
+          onCancel={() => setEditingFirm(false)}
+          onSaved={() => {
+            setEditingFirm(false);
+            void loadRoster();
+          }}
+        />
       ) : (
-        <ul className="flex flex-col gap-2">
-          {lawyers.map((l) => (
-            <li key={l.id}>
-              <button
-                type="button"
-                onClick={() => setSelected(l)}
-                className="w-full min-h-[44px] flex items-center justify-between gap-3 rounded-lg border border-control-border bg-white px-4 py-3 text-left hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-              >
-                <span className="min-w-0">
-                  <span className="flex items-center gap-2">
-                    <span className="font-medium text-ink-900 truncate">{l.name}</span>
-                    {l.is_self && <span className="lw-pill">You</span>}
-                    {l.firm_role === 'owner' && <span className="lw-pill purple">Owner</span>}
-                  </span>
-                  <span className="block text-sm text-ink-500 truncate">{l.email ?? 'No email on file'}</span>
-                </span>
-                <span className="flex items-center gap-2 shrink-0">
-                  <span className="text-xs text-ink-700">{STATUS_LABEL[l.status] ?? l.status}</span>
-                  {l.ready ? (
-                    <span className="lw-pill text-success-500">Ready</span>
-                  ) : (
-                    <span className="lw-pill">{l.missing_count} to go</span>
-                  )}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
+        <FirmRecord firm={firm} canEdit={isOwner} onEdit={() => setEditingFirm(true)} />
+      )}
+
+      {!editingFirm && (
+        <>
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="font-display text-xl text-ink-900">Attorneys</h2>
+            {lawyers && <span className="text-sm text-ink-500">{lawyers.length} in this firm</span>}
+          </div>
+
+          <AddLawyer onAdded={() => void loadRoster()} />
+
+          {!lawyers ? (
+            <p className="text-sm text-ink-500">Loading…</p>
+          ) : lawyers.length === 0 ? (
+            <p className="text-sm text-ink-500">No lawyers in your firm yet.</p>
+          ) : (
+            <ul className="flex flex-col gap-2">
+              {lawyers.map((l) => (
+                <li key={l.id}>
+                  <button
+                    type="button"
+                    onClick={() => setSelected(l)}
+                    className="w-full min-h-[44px] flex items-center justify-between gap-3 rounded-lg border border-control-border bg-white px-4 py-3 text-left hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                  >
+                    <span className="min-w-0">
+                      <span className="flex items-center gap-2">
+                        <span className="font-medium text-ink-900 truncate">{l.name}</span>
+                        {l.is_self && <span className="lw-pill">You</span>}
+                        {l.firm_role === 'owner' && <span className="lw-pill purple">Owner</span>}
+                      </span>
+                      <span className="block text-sm text-ink-500 truncate">{l.email ?? 'No email on file'}</span>
+                    </span>
+                    <span className="flex items-center gap-2 shrink-0">
+                      <span className="text-xs text-ink-700">{STATUS_LABEL[l.status] ?? l.status}</span>
+                      {l.ready ? (
+                        <span className="lw-pill text-success-500">Ready</span>
+                      ) : (
+                        <span className="lw-pill">{l.missing_count} to go</span>
+                      )}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
       )}
     </div>
   );
 }
 
-function FirmRecord({ firm }: { firm: PortalAccountFirm | null }) {
+function FirmRecord({
+  firm,
+  canEdit,
+  onEdit,
+}: {
+  firm: PortalAccountFirm | null;
+  canEdit: boolean;
+  onEdit: () => void;
+}) {
   if (!firm) {
     return (
       <header className="mb-6">
@@ -159,9 +189,20 @@ function FirmRecord({ firm }: { firm: PortalAccountFirm | null }) {
               <p className="text-xs uppercase tracking-wide text-ink-500 mb-0.5">Your firm</p>
               <h1 className="font-display text-2xl sm:text-3xl text-ink-900 leading-tight">{firm.name}</h1>
             </div>
-            <span className={`shrink-0 inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold capitalize ${statusCls}`}>
-              {firm.status}
-            </span>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold capitalize ${statusCls}`}>
+                {firm.status}
+              </span>
+              {canEdit && (
+                <button
+                  type="button"
+                  onClick={onEdit}
+                  className="inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-md text-sm font-semibold border border-control-border bg-white text-ink-900 hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                >
+                  <Pencil size={15} aria-hidden="true" /> Edit firm
+                </button>
+              )}
+            </div>
           </div>
 
           {firm.description ? (
@@ -180,6 +221,7 @@ function FirmRecord({ firm }: { firm: PortalAccountFirm | null }) {
               icon={<MapPin size={14} aria-hidden="true" className="text-ink-500" />}
             />
             <FirmMeta label="Coverage" value={coverage} />
+            <FirmMeta label="Practice areas" value={firm.practice_areas.join(', ') || null} />
             <div className="flex items-center gap-1.5">
               <dt className="sr-only">Website</dt>
               <dd className="min-w-0">
@@ -219,6 +261,201 @@ function FirmMeta({ label, value, icon }: { label: string; value: string | null;
           <span className="text-ink-500">—</span>
         )}
       </dd>
+    </div>
+  );
+}
+
+type FirmForm = {
+  name: string;
+  primary_contact: string;
+  email: string;
+  phone: string;
+  website_url: string;
+  description: string;
+  practice_areas: string;
+  location_city: string;
+  location_state: string;
+  additional_states: string;
+  serves_nationwide: boolean;
+};
+
+function firmToForm(f: PortalAccountFirm): FirmForm {
+  return {
+    name: f.name ?? '',
+    primary_contact: f.primary_contact ?? '',
+    email: f.email ?? '',
+    phone: f.phone ?? '',
+    website_url: f.website_url ?? '',
+    description: f.description ?? '',
+    practice_areas: f.practice_areas.join(', '),
+    location_city: f.location_city ?? '',
+    location_state: f.location_state ?? '',
+    additional_states: f.additional_states.join(', '),
+    serves_nationwide: f.serves_nationwide,
+  };
+}
+
+const toList = (s: string) =>
+  s
+    .split(',')
+    .map((x) => x.trim())
+    .filter(Boolean);
+
+function FirmEditor({
+  firm,
+  onCancel,
+  onSaved,
+}: {
+  firm: PortalAccountFirm;
+  onCancel: () => void;
+  onSaved: () => void;
+}) {
+  const [form, setForm] = useState<FirmForm>(() => firmToForm(firm));
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const set = (patch: Partial<FirmForm>) => setForm((p) => ({ ...p, ...patch }));
+
+  const save = async () => {
+    setErr(null);
+    if (!form.name.trim()) {
+      setErr('Firm name is required.');
+      return;
+    }
+    setBusy(true);
+    try {
+      await saveAccount({
+        firm: {
+          name: form.name.trim(),
+          primary_contact: form.primary_contact,
+          email: form.email,
+          phone: form.phone,
+          website_url: form.website_url,
+          description: form.description,
+          practice_areas: toList(form.practice_areas),
+          location_city: form.location_city,
+          location_state: form.location_state,
+          additional_states: toList(form.additional_states),
+          serves_nationwide: form.serves_nationwide,
+        },
+      });
+      onSaved();
+    } catch (e) {
+      setErr(e instanceof PortalApiError ? e.message : 'Could not save the firm. Please try again.');
+      setBusy(false);
+    }
+  };
+
+  return (
+    <section className="mb-8 rounded-xl border border-surface-200 bg-white p-5 sm:p-6 shadow-sm" aria-labelledby="firm-edit-h">
+      <h1 id="firm-edit-h" className="font-display text-2xl text-ink-900 mb-1">
+        Edit firm
+      </h1>
+      <p className="text-sm text-ink-500 mb-5">Your firm’s public details. Required to go live is marked.</p>
+
+      {err && (
+        <div role="alert" className="mb-4 rounded-md border border-danger-500 bg-danger-50 px-3 py-2 text-sm text-danger-500">
+          {err}
+        </div>
+      )}
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        <EditField label="Firm name" id="fe-name" required>
+          <input id="fe-name" className={INPUT} value={form.name} onChange={(e) => set({ name: e.target.value })} />
+        </EditField>
+        <EditField label="Primary contact" id="fe-contact">
+          <input id="fe-contact" className={INPUT} value={form.primary_contact} onChange={(e) => set({ primary_contact: e.target.value })} />
+        </EditField>
+        <EditField label="Firm email" id="fe-email">
+          <input id="fe-email" type="email" className={INPUT} value={form.email} onChange={(e) => set({ email: e.target.value })} />
+        </EditField>
+        <EditField label="Firm phone" id="fe-phone">
+          <input id="fe-phone" className={INPUT} value={form.phone} onChange={(e) => set({ phone: e.target.value })} />
+        </EditField>
+        <EditField label="Website" id="fe-web">
+          <input id="fe-web" type="url" inputMode="url" className={INPUT} value={form.website_url} onChange={(e) => set({ website_url: e.target.value })} />
+        </EditField>
+        <EditField label="Practice areas" id="fe-pa" hint="Comma-separated">
+          <input id="fe-pa" className={INPUT} value={form.practice_areas} onChange={(e) => set({ practice_areas: e.target.value })} />
+        </EditField>
+        <EditField label="City" id="fe-city">
+          <input id="fe-city" className={INPUT} value={form.location_city} onChange={(e) => set({ location_city: e.target.value })} />
+        </EditField>
+        <EditField label="State" id="fe-state" hint="2-letter">
+          <input id="fe-state" maxLength={2} className={INPUT} value={form.location_state} onChange={(e) => set({ location_state: e.target.value })} />
+        </EditField>
+        <div className="sm:col-span-2">
+          <EditField label="Other coverage states" id="fe-cov" hint="Comma-separated, e.g. VA, MD">
+            <input id="fe-cov" className={INPUT} value={form.additional_states} onChange={(e) => set({ additional_states: e.target.value })} />
+          </EditField>
+        </div>
+        <div className="sm:col-span-2">
+          <EditField label="Description" id="fe-desc">
+            <textarea
+              id="fe-desc"
+              rows={4}
+              className="w-full rounded-md border border-control-border bg-white px-3 py-2 text-ink-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              value={form.description}
+              onChange={(e) => set({ description: e.target.value })}
+            />
+          </EditField>
+        </div>
+        <div className="sm:col-span-2 flex items-center justify-between gap-3 rounded-md border border-control-border bg-surface-100 px-4 py-3">
+          <span id="fe-nation-label" className="text-sm font-medium text-ink-900">
+            Serves nationwide
+          </span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={form.serves_nationwide}
+            aria-labelledby="fe-nation-label"
+            onClick={() => set({ serves_nationwide: !form.serves_nationwide })}
+            className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+              form.serves_nationwide ? 'bg-accent-500 border-accent-500' : 'bg-white border-control-border'
+            }`}
+          >
+            <span className={`inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${form.serves_nationwide ? 'translate-x-6' : 'translate-x-1'} border border-control-border`} />
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-6 flex items-center gap-3">
+        <button type="button" onClick={() => void save()} disabled={busy} className={BTN}>
+          {busy ? 'Saving…' : 'Save firm'}
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          disabled={busy}
+          className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-md text-sm font-semibold border border-control-border bg-white text-ink-900 hover:bg-surface-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60"
+        >
+          Cancel
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function EditField({
+  label,
+  id,
+  required,
+  hint,
+  children,
+}: {
+  label: string;
+  id: string;
+  required?: boolean;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label htmlFor={id} className="block text-sm font-medium text-ink-700 mb-1">
+        {label}
+        {required && <span className="text-danger-500"> (required)</span>}
+        {hint && <span className="font-normal text-ink-500"> · {hint}</span>}
+      </label>
+      {children}
     </div>
   );
 }
@@ -393,9 +630,7 @@ function LawyerDetail({
             <Row label="Home state" value={detail.attorney.location_state} />
             <Row label="City" value={detail.attorney.location_city} />
             <Row label="Other licensed states" value={detail.attorney.additional_states.join(', ') || null} />
-            <Row label="Practice areas" value={detail.attorney.practice_areas.join(', ') || null} />
             <Row label="Specialty tags" value={detail.attorney.specialty_tags.join(', ') || null} />
-            <Row label="Website" value={detail.attorney.website_url} />
             <Row label="Bio" value={detail.attorney.bio} />
             <Row
               label="Accepting referrals"

@@ -25,6 +25,14 @@ export interface FirmDisplayPatch {
   primaryContact?: string | null;
   email?: string | null;
   phone?: string | null;
+  websiteUrl?: string | null;
+  description?: string | null;
+  logoUrl?: string | null;
+  locationCity?: string | null;
+  locationState?: string | null;
+  practiceAreas?: string[];
+  additionalStates?: string[];
+  servesNationwide?: boolean;
 }
 
 export type AccountPatchResult =
@@ -114,6 +122,16 @@ export function filterAccountPatch(body: unknown): AccountPatchResult {
   if ('primary_contact' in firmIn) firmPatch.primaryContact = stringOrNull(firmIn.primary_contact);
   if ('email' in firmIn) firmPatch.email = stringOrNull(firmIn.email);
   if ('phone' in firmIn) firmPatch.phone = stringOrNull(firmIn.phone);
+  if ('website_url' in firmIn) firmPatch.websiteUrl = stringOrNull(firmIn.website_url);
+  if ('description' in firmIn) firmPatch.description = stringOrNull(firmIn.description);
+  if ('logo_url' in firmIn) firmPatch.logoUrl = stringOrNull(firmIn.logo_url);
+  if ('location_city' in firmIn) firmPatch.locationCity = stringOrNull(firmIn.location_city);
+  if ('location_state' in firmIn) {
+    firmPatch.locationState = stringOrNull(firmIn.location_state)?.toUpperCase() ?? null;
+  }
+  if (Array.isArray(firmIn.practice_areas)) firmPatch.practiceAreas = stringArray(firmIn.practice_areas);
+  if (Array.isArray(firmIn.additional_states)) firmPatch.additionalStates = stringArray(firmIn.additional_states, true);
+  if (typeof firmIn.serves_nationwide === 'boolean') firmPatch.servesNationwide = firmIn.serves_nationwide;
 
   return { ok: true, attorneyPatch, firmPatch };
 }

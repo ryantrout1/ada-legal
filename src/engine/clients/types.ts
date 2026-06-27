@@ -1557,6 +1557,7 @@ export interface LawFirmRow {
   logoUrl?: string | null;
   locationCity?: string | null;
   locationState?: string | null;
+  practiceAreas?: string[];
   additionalStates?: string[];
   servesNationwide?: boolean;
   createdAt?: string;
