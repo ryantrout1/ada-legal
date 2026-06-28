@@ -112,6 +112,7 @@ import type {
   PortalAttorneyResolution,
   CreateCaseOptions,
   CreateCaseResult,
+  CreateDirectCaseOptions,
   RecordConsentResult,
   CaseRow,
   PhotoReviewListOptions,
@@ -1448,6 +1449,74 @@ export class InMemoryDbClient implements DbClient {
     return { caseRow: { ...caseRow }, created: true };
   }
 
+  async createDirectCase(opts: CreateDirectCaseOptions): Promise<CaseRow> {
+    // Mirror of NeonDbClient.createDirectCase. Self-originated matter: no
+    // session, no routing, born 'investigating' in the 'direct' lane, owned by
+    // its creator, consent-true. Non-idempotent.
+    this.caseSeq += 1;
+    const caseRow: CaseRow = {
+      id: `mem-case-${this.caseSeq}`,
+      orgId: opts.orgId,
+      adaSessionId: null,
+      litigationListingId: null,
+      caseNumber: `CASE-${String(this.caseSeq).padStart(4, '0')}`,
+      lane: 'direct',
+      status: 'investigating',
+      firmId: opts.firmId,
+      consentToShare: true,
+      assignedLawyerId: opts.assignedLawyerId,
+      createdAt: new Date(0).toISOString(),
+    };
+    this.cases.push(caseRow);
+    this.caseExtras.set(caseRow.id, {
+      classificationTitle: opts.classificationTitle ?? null,
+      jurisdictionState: opts.jurisdictionState ?? null,
+      routedAt: null,
+      firstContactDue: null,
+      solDate: null,
+      defendant: opts.defendant ?? null,
+    });
+
+    const contactId = `contact-${++this.peopleSeq}`;
+    this.contactsStore.push({
+      id: contactId,
+      orgId: opts.orgId,
+      name: opts.client.name,
+      email: opts.client.email ?? null,
+      phone: opts.client.phone ?? null,
+    });
+    this.casePeopleStore.push({
+      id: `cp-${++this.peopleSeq}`,
+      caseId: caseRow.id,
+      contactId,
+      role: 'client',
+      notes: null,
+      createdAt: new Date(0).toISOString(),
+    });
+
+    this.caseActivity.push({
+      caseId: caseRow.id,
+      actorType: 'user',
+      eventType: 'CREATED',
+      summary: `Attorney created this matter for ${opts.client.name}`,
+      metadata: { lane: 'direct' },
+      createdAt: new Date(0).toISOString(),
+    });
+
+    if (opts.openingNote) {
+      this.caseActivity.push({
+        caseId: caseRow.id,
+        actorType: 'user',
+        eventType: 'NOTE',
+        summary: opts.openingNote,
+        metadata: { note: true },
+        createdAt: new Date(0).toISOString(),
+      });
+    }
+
+    return { ...caseRow };
+  }
+
   async getCaseBySessionId(sessionId: string): Promise<CaseRow | null> {
     const found = this.cases.find((c) => c.adaSessionId === sessionId);
     return found ? { ...found } : null;
@@ -1516,6 +1585,12 @@ export class InMemoryDbClient implements DbClient {
       if (!group) continue; // declined / reclaimed are not in the active queue
       const session = c.adaSessionId ? this.sessions.get(c.adaSessionId) : undefined;
       const fields = session?.extractedFields ?? {};
+      const clientPerson = this.casePeopleStore.find(
+        (p) => p.caseId === c.id && p.role === 'client',
+      );
+      const clientContact = clientPerson
+        ? this.contactsStore.find((ct) => ct.id === clientPerson.contactId)
+        : undefined;
       const extras = this.caseExtras.get(c.id);
       const litig = this.adminLitigation.find((l) => l.id === c.litigationListingId);
       const owner = c.assignedLawyerId
@@ -1530,9 +1605,9 @@ export class InMemoryDbClient implements DbClient {
         caseName: litig?.caseName ?? null,
         classificationTitle: extras?.classificationTitle ?? null,
         jurisdictionState: extras?.jurisdictionState ?? null,
-        claimantName: portalFieldStr(fields, 'claimant_name'),
-        claimantEmail: portalFieldStr(fields, 'claimant_email'),
-        claimantPhone: portalFieldStr(fields, 'claimant_phone'),
+        claimantName: portalFieldStr(fields, 'claimant_name') ?? clientContact?.name ?? null,
+        claimantEmail: portalFieldStr(fields, 'claimant_email') ?? clientContact?.email ?? null,
+        claimantPhone: portalFieldStr(fields, 'claimant_phone') ?? clientContact?.phone ?? null,
         assignedLawyerId: c.assignedLawyerId ?? null,
         assignedLawyerName: owner?.name ?? null,
         routedAt: extras?.routedAt ?? null,
@@ -1556,6 +1631,12 @@ export class InMemoryDbClient implements DbClient {
 
     const session = c.adaSessionId ? this.sessions.get(c.adaSessionId) : undefined;
     const fields = session?.extractedFields ?? {};
+    const clientPerson = this.casePeopleStore.find(
+      (p) => p.caseId === c.id && p.role === 'client',
+    );
+    const clientContact = clientPerson
+      ? this.contactsStore.find((ct) => ct.id === clientPerson.contactId)
+      : undefined;
     const extras = this.caseExtras.get(c.id);
     const litig = this.adminLitigation.find((l) => l.id === c.litigationListingId);
 
@@ -1592,9 +1673,9 @@ export class InMemoryDbClient implements DbClient {
       caseName: litig?.caseName ?? null,
       solDate: extras?.solDate ?? null,
       defendant: extras?.defendant ?? null,
-      claimantName: portalFieldStr(fields, 'claimant_name'),
-      claimantEmail: portalFieldStr(fields, 'claimant_email'),
-      claimantPhone: portalFieldStr(fields, 'claimant_phone'),
+      claimantName: portalFieldStr(fields, 'claimant_name') ?? clientContact?.name ?? null,
+      claimantEmail: portalFieldStr(fields, 'claimant_email') ?? clientContact?.email ?? null,
+      claimantPhone: portalFieldStr(fields, 'claimant_phone') ?? clientContact?.phone ?? null,
       assignedLawyerId: c.assignedLawyerId ?? null,
       assignedLawyerName: c.assignedLawyerId
         ? this.adminAttorneys.find((a) => a.id === c.assignedLawyerId)?.name ?? null
@@ -1933,7 +2014,7 @@ export class InMemoryDbClient implements DbClient {
     orgId: string,
     opts?: { lane?: CaseLane | 'unplaced' },
   ): Promise<{ cases: AdminCaseRow[] }> {
-    let rows = this.cases.filter((c) => c.orgId === orgId);
+    let rows = this.cases.filter((c) => c.orgId === orgId && c.lane !== 'direct');
     if (opts?.lane === 'unplaced') {
       rows = rows.filter((c) => (c.lane === 'sourcing' || c.lane === 'general_queue') && !c.firmId);
     } else if (opts?.lane) {

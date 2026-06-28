@@ -137,6 +137,7 @@ import type {
   PortalAttorneyResolution,
   CreateCaseOptions,
   CreateCaseResult,
+  CreateDirectCaseOptions,
   RecordConsentResult,
   CaseRow,
 } from './types.js';
@@ -200,6 +201,21 @@ function stateToInsert(state: AdaSessionState): typeof adaSessions.$inferInsert 
 }
 
 // ─── The client ───────────────────────────────────────────────────────────────
+
+/**
+ * Correlated subquery for a self-originated matter's client contact field.
+ * A 'direct' matter has no ada_session, so its claimant identity lives in the
+ * case_people('client') → contacts row rather than session.extracted_fields.
+ * Used to COALESCE the client name/email/phone into the firm queue + detail
+ * reads. `col` is a fixed literal (not user input), so sql.raw is safe.
+ */
+const clientContactCol = (col: 'name' | 'email' | 'phone') =>
+  sql<string | null>`(
+    select ct.${sql.raw(col)} from case_people cp
+    join contacts ct on ct.id = cp.contact_id
+    where cp.case_id = ${casesTable.id} and cp.role = 'client'
+    order by cp.created_at asc limit 1
+  )`;
 
 export class NeonDbClient implements DbClient {
   constructor(private readonly db: Database) {}
@@ -2238,6 +2254,79 @@ export class NeonDbClient implements DbClient {
     return { caseRow: toCaseRow(row), created: true };
   }
 
+  async createDirectCase(opts: CreateDirectCaseOptions): Promise<CaseRow> {
+    // Self-originated matter: no session, no routing. Born in the 'direct'
+    // lane, 'investigating' status, owned by its creator. Non-idempotent —
+    // each call is a distinct matter (no ada_session_id key to conflict on).
+    const now = new Date();
+
+    const inserted = await this.db
+      .insert(casesTable)
+      .values({
+        orgId: opts.orgId,
+        adaSessionId: null,
+        litigationListingId: null,
+        lane: 'direct',
+        status: 'investigating',
+        firmId: opts.firmId,
+        assignedLawyerId: opts.assignedLawyerId,
+        classificationTitle: opts.classificationTitle ?? null,
+        jurisdictionState: opts.jurisdictionState ?? null,
+        defendant: opts.defendant ?? null,
+        // Attorney-created: the firm already holds the client relationship, so
+        // the consent gate is satisfied at creation — there is no claimant
+        // handoff to gate. (Distinct from a routed case, which gates on a real
+        // claimant consent event.)
+        consentToShare: true,
+        consentAt: now,
+        consentScope: 'attorney_created',
+        createdBy: opts.createdBy,
+      })
+      .returning();
+
+    const row = inserted[0];
+
+    // Capture the client as a case person (contact + case_people('client')).
+    const [contact] = await this.db
+      .insert(contactsTable)
+      .values({
+        orgId: opts.orgId,
+        name: opts.client.name,
+        email: opts.client.email ?? null,
+        phone: opts.client.phone ?? null,
+      })
+      .returning({ id: contactsTable.id });
+
+    await this.db.insert(casePeopleTable).values({
+      caseId: row.id,
+      contactId: contact!.id,
+      role: 'client',
+    });
+
+    // Initial CREATED activity (the matter's origin). No conversation content.
+    await this.db.insert(caseActivityTable).values({
+      caseId: row.id,
+      actorType: 'user',
+      actorId: opts.createdBy,
+      eventType: 'CREATED',
+      summary: `Attorney created this matter for ${opts.client.name}`,
+      metadata: { lane: 'direct' },
+    });
+
+    if (opts.openingNote) {
+      await this.db.insert(caseActivityTable).values({
+        caseId: row.id,
+        actorType: 'user',
+        actorId: opts.createdBy,
+        eventType: 'NOTE',
+        summary: opts.openingNote,
+        metadata: { note: true },
+      });
+    }
+
+    return toCaseRow(row);
+  }
+
   async getCaseBySessionId(sessionId: string): Promise<CaseRow | null> {
     const rows = await this.db
       .select()
@@ -2317,6 +2406,9 @@ export class NeonDbClient implements DbClient {
         extractedFields: adaSessions.extractedFields,
         assignedLawyerId: casesTable.assignedLawyerId,
         assignedLawyerName: attorneysTable.name,
+        clientContactName: clientContactCol('name'),
+        clientContactEmail: clientContactCol('email'),
+        clientContactPhone: clientContactCol('phone'),
       })
       .from(casesTable)
       .leftJoin(litigationTable, eq(litigationTable.id, casesTable.litigationListingId))
@@ -2360,9 +2452,9 @@ export class NeonDbClient implements DbClient {
         caseName: r.caseName ?? null,
         classificationTitle: r.classificationTitle ?? null,
         jurisdictionState: r.jurisdictionState ?? null,
-        claimantName: fStr(fields, 'claimant_name'),
-        claimantEmail: fStr(fields, 'claimant_email'),
-        claimantPhone: fStr(fields, 'claimant_phone'),
+        claimantName: fStr(fields, 'claimant_name') ?? r.clientContactName ?? null,
+        claimantEmail: fStr(fields, 'claimant_email') ?? r.clientContactEmail ?? null,
+        claimantPhone: fStr(fields, 'claimant_phone') ?? r.clientContactPhone ?? null,
         assignedLawyerId: r.assignedLawyerId ?? null,
         assignedLawyerName: r.assignedLawyerName ?? null,
         routedAt: iso(r.routedAt),
@@ -2406,6 +2498,9 @@ export class NeonDbClient implements DbClient {
         transcript: adaSessions.conversationHistory,
         assignedLawyerId: casesTable.assignedLawyerId,
         assignedLawyerName: attorneysTable.name,
+        clientContactName: clientContactCol('name'),
+        clientContactEmail: clientContactCol('email'),
+        clientContactPhone: clientContactCol('phone'),
       })
       .from(casesTable)
       .leftJoin(litigationTable, eq(litigationTable.id, casesTable.litigationListingId))
@@ -2461,9 +2556,9 @@ export class NeonDbClient implements DbClient {
       caseName: r.caseName ?? null,
       solDate: r.solDate == null ? null : String(r.solDate),
       defendant: (r.defendant as PortalCaseDetailFull['defendant']) ?? null,
-      claimantName: fStr('claimant_name'),
-      claimantEmail: fStr('claimant_email'),
-      claimantPhone: fStr('claimant_phone'),
+      claimantName: fStr('claimant_name') ?? r.clientContactName ?? null,
+      claimantEmail: fStr('claimant_email') ?? r.clientContactEmail ?? null,
+      claimantPhone: fStr('claimant_phone') ?? r.clientContactPhone ?? null,
       assignedLawyerId: r.assignedLawyerId ?? null,
       assignedLawyerName: r.assignedLawyerName ?? null,
       qualifyingAnswers,
@@ -2884,6 +2979,9 @@ export class NeonDbClient implements DbClient {
     opts?: { lane?: CaseLane | 'unplaced' },
   ): Promise<{ cases: AdminCaseRow[] }> {
     const conds = [eq(casesTable.orgId, orgId)];
+    // Self-originated ('direct') matters already have a firm + owner and are
+    // never placed through the admin queue — keep them out of every view.
+    conds.push(ne(casesTable.lane, 'direct'));
     if (opts?.lane === 'unplaced') {
       conds.push(inArray(casesTable.lane, ['sourcing', 'general_queue']));
       conds.push(isNull(casesTable.firmId));

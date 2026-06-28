@@ -940,6 +940,27 @@ export interface CreateCaseResult {
   created: boolean;
 }
 
+/**
+ * Options for createDirectCase — a self-originated matter an attorney creates
+ * themselves (no ada_session, no routing). The row is born in the 'direct'
+ * lane, 'investigating' status, owned by its creator, and consent-true (there
+ * is no claimant handoff to gate). The client is captured as a case person.
+ */
+export interface CreateDirectCaseOptions {
+  orgId: string;
+  firmId: string;
+  /** The attorney who owns the matter (its creator). */
+  assignedLawyerId: string;
+  /** users.id of the creator (audit / created_by), or null. */
+  createdBy: string | null;
+  classificationTitle?: string | null;
+  jurisdictionState?: string | null;
+  defendant?: { name: string; kind?: string | null; address?: string | null; notes?: string | null } | null;
+  client: { name: string; email?: string | null; phone?: string | null };
+  /** Optional opening note, written as a NOTE activity if present. */
+  openingNote?: string | null;
+}
+
 /** Result of recordCaseConsent: the case plus whether it had already consented (idempotent no-op). */
 export interface RecordConsentResult {
   caseRow: CaseRow;
@@ -1553,6 +1574,15 @@ export interface DbClient {
    * On a fresh create, also writes the initial ROUTED case_activity row.
    */
   createCase(opts: CreateCaseOptions): Promise<CreateCaseResult>;
+
+  /**
+   * Create a self-originated matter (no ada_session, no routing). Born in the
+   * 'direct' lane, 'investigating' status, owned by its creator, consent-true.
+   * Captures the client as a case person and writes a CREATED activity (and a
+   * NOTE activity if an opening note is given). Non-idempotent — each call is a
+   * new matter. Returns the created case row.
+   */
+  createDirectCase(opts: CreateDirectCaseOptions): Promise<CaseRow>;
 
   /** Read the case routed from a given session, or null. Used by the consent surface. */
   getCaseBySessionId(sessionId: string): Promise<CaseRow | null>;
