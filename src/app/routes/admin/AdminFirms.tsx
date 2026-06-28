@@ -164,12 +164,12 @@ export default function AdminFirms() {
         <table className="w-full text-sm">
           <thead className="bg-surface-100 text-left text-xs uppercase tracking-wider font-mono text-ink-500">
             <tr>
-              <th className="px-3 py-2">Name</th>
-              <th className="px-3 py-2">Primary contact</th>
-              <th className="px-3 py-2">Email</th>
-              <th className="px-3 py-2">Mode</th>
-              <th className="px-3 py-2">Status</th>
-              <th className="px-3 py-2"></th>
+              <th scope="col" className="px-3 py-2">Name</th>
+              <th scope="col" className="px-3 py-2">Primary contact</th>
+              <th scope="col" className="px-3 py-2">Email</th>
+              <th scope="col" className="px-3 py-2">Mode</th>
+              <th scope="col" className="px-3 py-2">Status</th>
+              <th scope="col" className="px-3 py-2"></th>
             </tr>
           </thead>
           <tbody>

@@ -191,13 +191,13 @@ export default function AdminSubscriptions() {
         <table className="w-full text-sm">
           <thead className="bg-surface-100 text-left text-xs uppercase tracking-wider font-mono text-ink-500">
             <tr>
-              <th className="px-3 py-2">Firm</th>
-              <th className="px-3 py-2">Listing</th>
-              <th className="px-3 py-2">Stripe id</th>
-              <th className="px-3 py-2">Tier</th>
-              <th className="px-3 py-2">Status</th>
-              <th className="px-3 py-2">Period ends</th>
-              <th className="px-3 py-2">Cancels at period end?</th>
+              <th scope="col" className="px-3 py-2">Firm</th>
+              <th scope="col" className="px-3 py-2">Listing</th>
+              <th scope="col" className="px-3 py-2">Stripe id</th>
+              <th scope="col" className="px-3 py-2">Tier</th>
+              <th scope="col" className="px-3 py-2">Status</th>
+              <th scope="col" className="px-3 py-2">Period ends</th>
+              <th scope="col" className="px-3 py-2">Cancels at period end?</th>
             </tr>
           </thead>
           <tbody>

@@ -20,7 +20,7 @@ import {
 const SEV: Record<FindingSeverity, { bg: string; text: string }> = {
   critical: { bg: 'bg-danger-50', text: 'text-danger-500' },
   major: { bg: 'bg-danger-50', text: 'text-danger-500' },
-  minor: { bg: 'bg-amber-50', text: 'text-amber-700' },
+  minor: { bg: 'bg-warning-50', text: 'text-warning-500' },
   advisory: { bg: 'bg-surface-100', text: 'text-ink-500' },
 };
 
@@ -153,6 +153,8 @@ export default function AdminPhotoReviewDetail() {
         </Link>
       </div>
 
+      <h1 className="mb-4 font-display text-2xl text-ink-900">Photo review</h1>
+
       <img
         src={detail.photoUrl}
         alt="Submitted field-test photo under review"
@@ -189,7 +191,7 @@ export default function AdminPhotoReviewDetail() {
                   </span>
                 )}
                 {rv.status === 'addressed' && (
-                  <span className="ml-2 rounded bg-emerald-50 px-1.5 py-0.5 text-xs text-emerald-700">
+                  <span className="ml-2 rounded bg-success-50 px-1.5 py-0.5 text-xs text-success-500">
                     addressed
                   </span>
                 )}
@@ -218,7 +220,7 @@ export default function AdminPhotoReviewDetail() {
                 </span>
                 <span className="font-mono text-xs text-ink-500">{f.standard}</span>
                 {!f.confirmable && (
-                  <span className="rounded bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
+                  <span className="rounded bg-warning-50 px-2 py-0.5 text-xs text-warning-500">
                     verify on site — not confirmed
                   </span>
                 )}
@@ -356,7 +358,7 @@ export default function AdminPhotoReviewDetail() {
           >
             {saving ? 'Saving…' : ownReview ? 'Update my review' : 'Save my review'}
           </button>
-          {savedFlash && <span className="text-sm text-emerald-700">Saved.</span>}
+          {savedFlash && <span className="text-sm text-success-500">Saved.</span>}
           {error && <span className="text-sm text-danger-500">{error}</span>}
           {detail.viewerReviewer && (
             <span className="text-xs text-ink-500">

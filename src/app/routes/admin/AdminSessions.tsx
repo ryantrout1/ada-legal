@@ -114,13 +114,13 @@ export default function AdminSessions() {
         <table className="w-full text-sm">
           <thead className="bg-surface-100 text-left text-xs uppercase tracking-wider font-mono text-ink-500">
             <tr>
-              <th className="px-3 py-2">Updated</th>
-              <th className="px-3 py-2">Status</th>
-              <th className="px-3 py-2">Level</th>
-              <th className="px-3 py-2">Classification</th>
-              <th className="px-3 py-2 text-right">Msgs</th>
-              <th className="px-3 py-2 text-right">Fields</th>
-              <th className="px-3 py-2"></th>
+              <th scope="col" className="px-3 py-2">Updated</th>
+              <th scope="col" className="px-3 py-2">Status</th>
+              <th scope="col" className="px-3 py-2">Level</th>
+              <th scope="col" className="px-3 py-2">Classification</th>
+              <th scope="col" className="px-3 py-2 text-right">Msgs</th>
+              <th scope="col" className="px-3 py-2 text-right">Fields</th>
+              <th scope="col" className="px-3 py-2"></th>
             </tr>
           </thead>
           <tbody>

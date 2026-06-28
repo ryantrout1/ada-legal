@@ -19,15 +19,15 @@ import {
 
 const RISK_BADGE: Record<OverallRisk, { bg: string; text: string; label: string }> = {
   high: { bg: 'bg-danger-50', text: 'text-danger-500', label: 'HIGH' },
-  medium: { bg: 'bg-amber-50', text: 'text-amber-700', label: 'MEDIUM' },
-  low: { bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'LOW' },
+  medium: { bg: 'bg-warning-50', text: 'text-warning-500', label: 'MEDIUM' },
+  low: { bg: 'bg-success-50', text: 'text-success-500', label: 'LOW' },
   none: { bg: 'bg-surface-100', text: 'text-ink-500', label: 'NONE' },
 };
 
 const STATE_BADGE: Record<ReviewState, { bg: string; text: string; label: string }> = {
   unreviewed: { bg: 'bg-accent-50', text: 'text-accent-600', label: 'Needs review' },
   reviewed: { bg: 'bg-surface-100', text: 'text-ink-700', label: 'Reviewed' },
-  addressed: { bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Addressed' },
+  addressed: { bg: 'bg-success-50', text: 'text-success-500', label: 'Addressed' },
 };
 
 function fmtDate(iso: string): string {
@@ -72,7 +72,7 @@ function FindingsColumn({
               <span className="font-mono text-xs text-ink-500">{f.standard}</span>{' '}
               {f.title} <span className="text-ink-500">· {f.severity}</span>
               {!f.confirmable && (
-                <span className="ml-1 rounded bg-amber-50 px-1.5 py-0.5 text-xs text-amber-700">
+                <span className="ml-1 rounded bg-warning-50 px-1.5 py-0.5 text-xs text-warning-500">
                   verify on site
                 </span>
               )}
@@ -200,14 +200,14 @@ export default function AdminPhotoReview() {
             <caption className="sr-only">Accuracy by engine version</caption>
             <thead className="text-xs uppercase tracking-wide text-ink-500">
               <tr>
-                <th className="px-3 py-2">Engine version</th>
-                <th className="px-3 py-2">Reviewed</th>
-                <th className="px-3 py-2">Findings</th>
-                <th className="px-3 py-2">Correct</th>
-                <th className="px-3 py-2">Over-flagged</th>
-                <th className="px-3 py-2">Partial</th>
-                <th className="px-3 py-2">Wrong cite</th>
-                <th className="px-3 py-2">Missed</th>
+                <th scope="col" className="px-3 py-2">Engine version</th>
+                <th scope="col" className="px-3 py-2">Reviewed</th>
+                <th scope="col" className="px-3 py-2">Findings</th>
+                <th scope="col" className="px-3 py-2">Correct</th>
+                <th scope="col" className="px-3 py-2">Over-flagged</th>
+                <th scope="col" className="px-3 py-2">Partial</th>
+                <th scope="col" className="px-3 py-2">Wrong cite</th>
+                <th scope="col" className="px-3 py-2">Missed</th>
               </tr>
             </thead>
             <tbody>
@@ -216,9 +216,9 @@ export default function AdminPhotoReview() {
                   <td className="px-3 py-2 font-mono text-xs">{r.modelVersion}</td>
                   <td className="px-3 py-2">{r.analysesReviewed}</td>
                   <td className="px-3 py-2">{r.findingsLabeled}</td>
-                  <td className="px-3 py-2 text-emerald-700">{r.correct}</td>
+                  <td className="px-3 py-2 text-success-500">{r.correct}</td>
                   <td className="px-3 py-2 text-danger-500">{r.overFlagged}</td>
-                  <td className="px-3 py-2 text-amber-700">{r.partial}</td>
+                  <td className="px-3 py-2 text-warning-500">{r.partial}</td>
                   <td className="px-3 py-2 text-danger-500">{r.wrongCite}</td>
                   <td className="px-3 py-2 text-danger-500">{r.missedTotal}</td>
                 </tr>

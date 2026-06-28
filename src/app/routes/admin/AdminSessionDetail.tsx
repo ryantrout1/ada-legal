@@ -165,9 +165,9 @@ export default function AdminSessionDetail() {
             <table className="w-full text-sm">
               <thead className="bg-surface-100 text-left text-xs uppercase tracking-wider font-mono text-ink-500">
                 <tr>
-                  <th className="px-3 py-2">Field</th>
-                  <th className="px-3 py-2">Value</th>
-                  <th className="px-3 py-2 text-right">Confidence</th>
+                  <th scope="col" className="px-3 py-2">Field</th>
+                  <th scope="col" className="px-3 py-2">Value</th>
+                  <th scope="col" className="px-3 py-2 text-right">Confidence</th>
                 </tr>
               </thead>
               <tbody>
