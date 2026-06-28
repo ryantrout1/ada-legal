@@ -2530,6 +2530,42 @@ export class NeonDbClient implements DbClient {
     return { caseRow: toCaseRow(updated[0]) };
   }
 
+  async setCaseOwnerForFirm(opts: {
+    caseId: string;
+    lawFirmId: string;
+    attorneyId: string;
+  }): Promise<{ caseRow: CaseRow } | null> {
+    const existing = await this.db
+      .select()
+      .from(casesTable)
+      .where(and(eq(casesTable.id, opts.caseId), eq(casesTable.firmId, opts.lawFirmId)))
+      .limit(1);
+    const row = existing[0];
+    if (!row || !row.consentToShare) return null;
+
+    // Target must belong to the same firm (firm-scope guard).
+    const firmAttorneys = await this.listAttorneysForFirm(opts.lawFirmId);
+    const target = firmAttorneys.find((a) => a.id === opts.attorneyId);
+    if (!target) return null;
+
+    const now = new Date();
+    const updated = await this.db
+      .update(casesTable)
+      .set({ assignedLawyerId: opts.attorneyId, updatedAt: now })
+      .where(eq(casesTable.id, opts.caseId))
+      .returning();
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'OWNER_CHANGED',
+      summary: `Reassigned to ${target.name}`,
+      metadata: { assignedLawyerId: opts.attorneyId },
+    });
+
+    return { caseRow: toCaseRow(updated[0]) };
+  }
+
   async addCaseNoteForFirm(opts: {
     caseId: string;
     lawFirmId: string;

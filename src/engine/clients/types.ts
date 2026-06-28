@@ -1344,6 +1344,18 @@ export interface DbClient {
   }): Promise<{ caseRow: CaseRow } | null>;
 
   /**
+   * Reassign a matter's owner to another attorney in the SAME firm (Phase 2).
+   * Firm-scoped both ways: the case must be the firm's (and consented), and the
+   * target attorney must belong to the firm. Writes an OWNER_CHANGED activity.
+   * Returns null when the case isn't the firm's or the target isn't in the firm.
+   */
+  setCaseOwnerForFirm(opts: {
+    caseId: string;
+    lawFirmId: string;
+    attorneyId: string;
+  }): Promise<{ caseRow: CaseRow } | null>;
+
+  /**
    * Phase 2d: append an attorney note to a case (a NOTE activity row),
    * firm-scoped + consent-gated. Returns false when the case isn't this firm's.
    */

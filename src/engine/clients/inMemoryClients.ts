@@ -1637,6 +1637,31 @@ export class InMemoryDbClient implements DbClient {
     return { caseRow: { ...c } };
   }
 
+  async setCaseOwnerForFirm(opts: {
+    caseId: string;
+    lawFirmId: string;
+    attorneyId: string;
+  }): Promise<{ caseRow: CaseRow } | null> {
+    const c = this.cases.find((x) => x.id === opts.caseId && x.firmId === opts.lawFirmId);
+    if (!c || !c.consentToShare) return null;
+
+    // Target must belong to the same firm (firm-scope guard).
+    const firmAttorneys = await this.listAttorneysForFirm(opts.lawFirmId);
+    const target = firmAttorneys.find((a) => a.id === opts.attorneyId);
+    if (!target) return null;
+
+    c.assignedLawyerId = opts.attorneyId;
+    this.caseActivity.push({
+      caseId: c.id,
+      actorType: 'user',
+      eventType: 'OWNER_CHANGED',
+      summary: `Reassigned to ${target.name}`,
+      metadata: { assignedLawyerId: opts.attorneyId },
+      createdAt: new Date(0).toISOString(),
+    });
+    return { caseRow: { ...c } };
+  }
+
   async addCaseNoteForFirm(opts: {
     caseId: string;
     lawFirmId: string;
