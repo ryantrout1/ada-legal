@@ -994,7 +994,7 @@ body {
 .lawyer-workspace .lw-pill.blue   { background: var(--lw-blue-bg);   color: var(--lw-blue-tx);   border-color: var(--lw-blue-bd); }
 .lawyer-workspace .lw-pill.purple { background: var(--lw-purple-bg); color: var(--lw-purple-tx); border-color: var(--lw-purple-bd); }
 .lawyer-workspace .lw-pill.gray   { background: var(--lw-gray-bg);   color: var(--lw-gray-tx);   border-color: var(--lw-gray-bd); }
-.lawyer-workspace .lw-pill.terra  { background: var(--color-accent-50); color: var(--color-accent-500); border-color: #FED7AA; }
+.lawyer-workspace .lw-pill.terra  { background: var(--color-accent-50); color: var(--color-accent-600); border-color: #FED7AA; }
 
 /* ─── Portal shell (Phase 5 §7.1) ──────────────────────────────────────────
  * Sidebar + topbar + content frame for the lawyer workspace. Slate sidebar,

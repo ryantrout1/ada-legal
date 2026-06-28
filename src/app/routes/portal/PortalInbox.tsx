@@ -16,7 +16,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { Sliders } from 'lucide-react';
+import { Sliders, AlertTriangle, Clock, Circle } from 'lucide-react';
 import {
   fetchPortalQueue,
   fetchPipelineStats,
@@ -356,11 +356,13 @@ function FilterChip({
   );
 }
 
-const DOT_CLASS: Record<InboxPriority, string> = {
-  high: 'bg-accent-500 ring-4 ring-accent-500/20',
-  medium: 'bg-warning-500',
-  none: 'bg-surface-300',
-};
+// Priority is conveyed by SHAPE + colour (WCAG 1.4.1 — not colour alone):
+// overdue = triangle, due-soon = clock, standard = hollow circle.
+function PriorityIcon({ priority }: { priority: InboxPriority }) {
+  if (priority === 'high') return <AlertTriangle size={15} className="text-danger-500" aria-hidden="true" />;
+  if (priority === 'medium') return <Clock size={15} className="text-warning-500" aria-hidden="true" />;
+  return <Circle size={13} className="text-ink-500" aria-hidden="true" />;
+}
 
 function ReferralRow({
   c,
@@ -379,7 +381,7 @@ function ReferralRow({
   return (
     <tr className="border-t border-surface-200 hover:bg-surface-100">
       <td className="px-4 py-3 align-top">
-        <span className={`inline-block w-2.5 h-2.5 rounded-full ${DOT_CLASS[priority]}`} aria-hidden="true" />
+        <PriorityIcon priority={priority} />
         <span className="sr-only">{PRIORITY_LABEL[priority]}</span>
       </td>
       <td className="px-4 py-3 align-top">
