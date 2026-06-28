@@ -17,6 +17,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Scale, Clock, User } from 'lucide-react';
 import { relativeAge, priorityForSla, type InboxPriority } from '../../utils/inboxFormat.js';
+import { useAnnounce } from '../../portal/announcer.js';
 import {
   fetchPortalQueue,
   transitionPortalCase,
@@ -44,6 +45,15 @@ const RESOLUTION_TYPES: ReadonlyArray<{ value: string; label: string }> = [
 
 const DND_MIME = 'application/x-adall-case';
 
+// Spoken confirmation per transition (WCAG 4.1.3) — keyed by CaseTransition.
+const MOVE_ANNOUNCEMENT: Record<string, string> = {
+  accept: 'Matter accepted — moved to Investigating.',
+  send_demand: 'Demand sent — moved to Demand sent.',
+  begin_negotiation: 'Matter moved to Negotiating.',
+  resolve: 'Matter resolved.',
+  decline: 'Matter declined — re-routed for placement.',
+};
+
 const COLUMN_PILL: Record<BoardColumn, string> = {
   new: 'terra',
   investigating: 'blue',
@@ -70,6 +80,7 @@ export default function PortalBoard() {
   // Owner lens: 'all' | 'mine' | 'unassigned' | <attorneyId>. A view filter, not
   // a permission — every firm matter stays reachable, this only narrows what's shown.
   const [ownerFilter, setOwnerFilter] = useState<string>('all');
+  const announce = useAnnounce();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -102,6 +113,7 @@ export default function PortalBoard() {
       try {
         await transitionPortalCase(caseId, action as PortalCaseAction, opts);
         await load();
+        announce(MOVE_ANNOUNCEMENT[action] ?? 'Matter updated.');
       } catch (err) {
         setMoveError(
           err instanceof PortalApiError ? err.message : 'That move could not be completed.',
@@ -110,7 +122,7 @@ export default function PortalBoard() {
         setBusyId(null);
       }
     },
-    [load],
+    [load, announce],
   );
 
   // A move chosen from the keyboard menu (or a non-modal drag).

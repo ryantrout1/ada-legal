@@ -16,6 +16,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { PortalAnnouncerProvider } from '../portal/announcer.js';
 import {
   Home,
   FileText,
@@ -125,6 +126,7 @@ export default function PortalLayout() {
       : PRACTICE_NAV;
 
   return (
+    <PortalAnnouncerProvider>
     <div className="lawyer-workspace lw-shell">
       <a
         href="#portal-main"
@@ -207,5 +209,6 @@ export default function PortalLayout() {
         </main>
       </div>
     </div>
+    </PortalAnnouncerProvider>
   );
 }

@@ -26,6 +26,7 @@ import {
   type PipelineStatsResponse,
 } from '../../data/portalClient.js';
 import { priorityForSla, relativeAge, formatHours, type InboxPriority } from '../../utils/inboxFormat.js';
+import { useAnnounce } from '../../portal/announcer.js';
 
 const PRIORITY_LABEL: Record<InboxPriority, string> = {
   high: 'High priority — contact overdue',
@@ -51,6 +52,7 @@ export default function PortalInbox() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [declineFor, setDeclineFor] = useState<DeclineTarget | null>(null);
+  const announce = useAnnounce();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -85,6 +87,11 @@ export default function PortalInbox() {
       try {
         await transitionPortalCase(caseId, action, reason ? { reason } : undefined);
         await load();
+        announce(
+          action === 'accept'
+            ? 'Referral accepted — moved to your matters.'
+            : 'Referral declined — re-routed for placement.',
+        );
       } catch (err) {
         setActionError(
           err instanceof PortalApiError ? err.message : 'That action could not be completed.',
@@ -93,7 +100,7 @@ export default function PortalInbox() {
         setBusyId(null);
       }
     },
-    [load],
+    [load, announce],
   );
 
   // Filter chips derived from the real attributes present on awaiting rows.

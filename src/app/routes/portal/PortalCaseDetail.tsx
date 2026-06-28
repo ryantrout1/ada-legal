@@ -15,6 +15,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams, useLocation } from 'react-router-dom';
+import { useAnnounce } from '../../portal/announcer.js';
 import {
   ArrowLeft,
   Sparkles,
@@ -670,6 +671,7 @@ function OwnerCard({
   const [roster, setRoster] = useState<PortalFirmAttorney[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const announce = useAnnounce();
 
   useEffect(() => {
     let live = true;
@@ -693,13 +695,15 @@ function OwnerCard({
       try {
         await reassignCaseOwner(caseId, attorneyId);
         await onReassigned();
+        const name = roster.find((a) => a.id === attorneyId)?.name;
+        announce(name ? `Matter reassigned to ${name}.` : 'Matter reassigned.');
       } catch (err) {
         setError(err instanceof PortalApiError ? err.message : 'Could not reassign this matter.');
       } finally {
         setBusy(false);
       }
     },
-    [caseId, ownerId, onReassigned],
+    [caseId, ownerId, onReassigned, roster, announce],
   );
 
   return (
@@ -1053,6 +1057,15 @@ const RESOLUTION_TYPES = [
   { value: 'claimant_declined', label: 'Claimant declined' },
 ] as const;
 
+// Spoken confirmation per transition (WCAG 4.1.3).
+const ACTION_ANNOUNCEMENT: Record<string, string> = {
+  accept: 'Matter accepted — moved to Investigating.',
+  send_demand: 'Demand sent.',
+  begin_negotiation: 'Negotiation started.',
+  resolve: 'Matter resolved.',
+  decline: 'Matter declined — re-routed for placement.',
+};
+
 const BTN = 'inline-flex items-center justify-center min-h-[44px] px-4 rounded-lg font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors';
 const BTN_PRIMARY = `${BTN} bg-accent-500 text-white hover:bg-accent-600`;
 const BTN_SECONDARY = `${BTN} border border-control-border text-ink-900 hover:border-accent-500`;
@@ -1063,6 +1076,7 @@ function ActionBar({ status, caseId, onDone }: { status: string; caseId: string;
   const [reason, setReason] = useState('');
   const [resolutionType, setResolutionType] = useState<string>(RESOLUTION_TYPES[0].value);
   const [error, setError] = useState<string | null>(null);
+  const announce = useAnnounce();
 
   const run = async (action: PortalCaseAction, opts?: { reason?: string; resolutionType?: string }) => {
     setBusy(true);
@@ -1072,6 +1086,7 @@ function ActionBar({ status, caseId, onDone }: { status: string; caseId: string;
       setMode('idle');
       setReason('');
       await onDone();
+      announce(ACTION_ANNOUNCEMENT[action] ?? 'Matter updated.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Action failed');
     } finally {

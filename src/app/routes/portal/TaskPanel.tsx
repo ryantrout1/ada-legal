@@ -11,6 +11,7 @@ import {
   completeCaseTask,
   type PortalTask,
 } from '../../data/portalClient.js';
+import { useAnnounce } from '../../portal/announcer.js';
 
 const PRIORITY_LABEL: Record<string, string> = { high: 'High', medium: 'Medium', low: 'Low' };
 
@@ -25,6 +26,7 @@ export default function TaskPanel({ caseId }: { caseId: string }) {
   const [dueDate, setDueDate] = useState('');
   const [priority, setPriority] = useState('medium');
   const [busy, setBusy] = useState(false);
+  const announce = useAnnounce();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -53,6 +55,7 @@ export default function TaskPanel({ caseId }: { caseId: string }) {
       setDueDate('');
       setPriority('medium');
       await load();
+      announce('Task added.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not add the task');
     } finally {
@@ -65,6 +68,7 @@ export default function TaskPanel({ caseId }: { caseId: string }) {
     try {
       await completeCaseTask(caseId, taskId);
       await load();
+      announce('Task completed.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not update the task');
     }
