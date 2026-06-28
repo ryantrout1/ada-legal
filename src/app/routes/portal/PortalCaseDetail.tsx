@@ -46,6 +46,9 @@ import {
   uploadCaseDocument,
   caseDocumentDownloadUrl,
   removeCaseDocument,
+  fetchFirmAttorneys,
+  reassignCaseOwner,
+  type PortalFirmAttorney,
   type PortalCaseAction,
   type PortalCaseActivityEntry,
   type PortalTask,
@@ -282,6 +285,12 @@ export default function PortalCaseDetail() {
         {/* Right rail */}
         <aside className="flex flex-col gap-4">
           <NextStep openTasks={openTasks} solDate={data.sol_date} />
+          <OwnerCard
+            caseId={data.case_id}
+            ownerId={data.assigned_lawyer_id}
+            ownerName={data.assigned_lawyer_name}
+            onReassigned={load}
+          />
           <KeyDates openTasks={openTasks} solDate={data.sol_date} firstContactDue={data.first_contact_due} />
           <PeopleCard caseId={data.case_id} claimant={data.claimant_name} email={data.claimant_email} phone={data.claimant_phone} />
           <DefendantCard caseId={data.case_id} defendant={data.defendant} onSaved={load} />
@@ -631,6 +640,87 @@ function NextStep({ openTasks, solDate }: { openTasks: PortalTask[]; solDate: st
         </div>
       ) : (
         <div className="text-ink-700 text-sm">Open the Tasks tab to plan next steps.</div>
+      )}
+    </div>
+  );
+}
+
+function OwnerCard({
+  caseId,
+  ownerId,
+  ownerName,
+  onReassigned,
+}: {
+  caseId: string;
+  ownerId: string | null;
+  ownerName: string | null;
+  onReassigned: () => Promise<void> | void;
+}) {
+  const [roster, setRoster] = useState<PortalFirmAttorney[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let live = true;
+    fetchFirmAttorneys()
+      .then((r) => {
+        if (live) setRoster(r);
+      })
+      .catch(() => {
+        /* roster optional — the card still shows the current owner */
+      });
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  const reassign = useCallback(
+    async (attorneyId: string) => {
+      if (!attorneyId || attorneyId === (ownerId ?? '')) return;
+      setBusy(true);
+      setError(null);
+      try {
+        await reassignCaseOwner(caseId, attorneyId);
+        await onReassigned();
+      } catch (err) {
+        setError(err instanceof PortalApiError ? err.message : 'Could not reassign this matter.');
+      } finally {
+        setBusy(false);
+      }
+    },
+    [caseId, ownerId, onReassigned],
+  );
+
+  return (
+    <div className="rounded-lg border border-control-border bg-white p-5">
+      <h3 className="text-ink-500 text-xs font-bold uppercase tracking-wide mb-3 flex items-center gap-2">
+        <Users size={14} aria-hidden="true" /> Owner
+      </h3>
+      <p className="text-sm font-semibold text-ink-900 mb-3">
+        {ownerName ?? <span className="font-normal italic text-ink-500">Unassigned</span>}
+      </p>
+      <label className="block text-xs font-bold uppercase tracking-wide text-ink-500 mb-1">
+        Reassign to
+        <select
+          value={ownerId ?? ''}
+          disabled={busy}
+          onChange={(e) => void reassign(e.target.value)}
+          className="mt-1 w-full min-h-[44px] rounded-md border border-control-border bg-white px-3 text-sm font-semibold text-ink-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60"
+        >
+          <option value="" disabled>
+            Choose an attorney…
+          </option>
+          {roster.map((a) => (
+            <option key={a.id} value={a.id}>
+              {a.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      {error && (
+        <p role="alert" className="mt-2 text-sm text-danger-500">
+          {error}
+        </p>
       )}
     </div>
   );

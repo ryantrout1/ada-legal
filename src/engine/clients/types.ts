@@ -859,6 +859,9 @@ export interface PortalCaseDetailFull {
   claimantName: string | null;
   claimantEmail: string | null;
   claimantPhone: string | null;
+  /** Matter owner (accepting/reassigned attorney) + joined name, or null. */
+  assignedLawyerId: string | null;
+  assignedLawyerName: string | null;
   qualifyingAnswers: { question: string; answer: string }[];
   transcript: Message[];
   activity: PortalCaseActivityRow[];

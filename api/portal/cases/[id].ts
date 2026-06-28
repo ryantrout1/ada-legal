@@ -59,6 +59,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       claimant_name: d.claimantName,
       claimant_email: d.claimantEmail,
       claimant_phone: d.claimantPhone,
+      assigned_lawyer_id: d.assignedLawyerId,
+      assigned_lawyer_name: d.assignedLawyerName,
       qualifying_answers: d.qualifyingAnswers,
       transcript: d.transcript,
       activity: d.activity.map((a) => ({

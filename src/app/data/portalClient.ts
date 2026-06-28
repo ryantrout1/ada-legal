@@ -74,6 +74,8 @@ export interface PortalCaseDetailResponse {
   claimant_name: string | null;
   claimant_email: string | null;
   claimant_phone: string | null;
+  assigned_lawyer_id: string | null;
+  assigned_lawyer_name: string | null;
   qualifying_answers: Array<{ question: string; answer: string }>;
   transcript: PortalTranscriptMessage[];
   activity: PortalCaseActivityEntry[];
@@ -160,6 +162,30 @@ export async function fetchPortalCase(
   if (resp.status === 404) return null;
   if (!resp.ok) return failFor(resp);
   return (await resp.json()) as PortalCaseDetailResponse;
+}
+
+export interface PortalFirmAttorney {
+  id: string;
+  name: string;
+}
+
+/** The firm roster (id + name), member-accessible — powers the reassign picker. */
+export async function fetchFirmAttorneys(): Promise<PortalFirmAttorney[]> {
+  const resp = await fetch(`/api/portal/firm/attorneys`, { credentials: 'include' });
+  if (!resp.ok) return failFor(resp);
+  const data = (await resp.json()) as { attorneys: PortalFirmAttorney[] };
+  return data.attorneys;
+}
+
+/** Reassign a matter's owner to another firm attorney. */
+export async function reassignCaseOwner(id: string, attorneyId: string): Promise<void> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/owner`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ attorney_id: attorneyId }),
+  });
+  if (!resp.ok) await failFor(resp);
 }
 
 export async function addPortalCaseNote(id: string, body: string): Promise<void> {

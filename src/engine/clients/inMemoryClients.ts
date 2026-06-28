@@ -1595,6 +1595,10 @@ export class InMemoryDbClient implements DbClient {
       claimantName: portalFieldStr(fields, 'claimant_name'),
       claimantEmail: portalFieldStr(fields, 'claimant_email'),
       claimantPhone: portalFieldStr(fields, 'claimant_phone'),
+      assignedLawyerId: c.assignedLawyerId ?? null,
+      assignedLawyerName: c.assignedLawyerId
+        ? this.adminAttorneys.find((a) => a.id === c.assignedLawyerId)?.name ?? null
+        : null,
       qualifyingAnswers,
       transcript: (session?.conversationHistory ?? []) as Message[],
       activity,

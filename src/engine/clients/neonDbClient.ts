@@ -2404,10 +2404,13 @@ export class NeonDbClient implements DbClient {
         caseName: litigationTable.caseName,
         extractedFields: adaSessions.extractedFields,
         transcript: adaSessions.conversationHistory,
+        assignedLawyerId: casesTable.assignedLawyerId,
+        assignedLawyerName: attorneysTable.name,
       })
       .from(casesTable)
       .leftJoin(litigationTable, eq(litigationTable.id, casesTable.litigationListingId))
       .leftJoin(adaSessions, eq(adaSessions.id, casesTable.adaSessionId))
+      .leftJoin(attorneysTable, eq(attorneysTable.id, casesTable.assignedLawyerId))
       // Firm-scoped access boundary + consent gate. No match → null (404).
       .where(and(eq(casesTable.id, caseId), eq(casesTable.firmId, lawFirmId)))
       .limit(1);
@@ -2461,6 +2464,8 @@ export class NeonDbClient implements DbClient {
       claimantName: fStr('claimant_name'),
       claimantEmail: fStr('claimant_email'),
       claimantPhone: fStr('claimant_phone'),
+      assignedLawyerId: r.assignedLawyerId ?? null,
+      assignedLawyerName: r.assignedLawyerName ?? null,
       qualifyingAnswers,
       transcript: (r.transcript ?? []) as Message[],
       activity: activityRows.map((a) => ({
