@@ -89,6 +89,7 @@ export default function PortalTasks() {
                         <p className="text-xs text-ink-500 mt-0.5">
                           <Link
                             to={`/portal/cases/${t.case_id}`}
+                            state={{ from: '/portal/tasks' }}
                             className="underline hover:text-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-sm"
                           >
                             {t.claimant_name ?? t.case_number}

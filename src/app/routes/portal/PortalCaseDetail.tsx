@@ -14,7 +14,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams, useLocation } from 'react-router-dom';
 import {
   ArrowLeft,
   Sparkles,
@@ -99,6 +99,17 @@ function monthDay(iso: string): { month: string; day: string } {
 
 export default function PortalCaseDetail() {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  // Return to wherever the matter was opened from. Each list stamps `from` in
+  // link state; we map known origins to a label and default to the Inbox.
+  const BACK_LABELS: Record<string, string> = {
+    '/portal': 'Back to inbox',
+    '/portal/board': 'Back to matters',
+    '/portal/tasks': 'Back to tasks',
+  };
+  const from = (location.state as { from?: string } | null)?.from;
+  const backTo = from && BACK_LABELS[from] ? from : '/portal';
+  const backLabel = BACK_LABELS[backTo];
   const [data, setData] = useState<PortalCaseDetailResponse | null>(null);
   const [tasks, setTasks] = useState<PortalTask[]>([]);
   const [tab, setTab] = useState<Tab>('Overview');
@@ -151,7 +162,7 @@ export default function PortalCaseDetail() {
         <h1 className="font-display text-2xl text-ink-900 mb-2">Case not found</h1>
         <p className="text-ink-700">
           This case isn’t available to your firm.{' '}
-          <Link to="/portal" className="text-accent-500 underline">Back to the inbox</Link>
+          <Link to={backTo} className="text-accent-500 underline">{backLabel}</Link>
         </p>
       </section>
     );
@@ -192,8 +203,8 @@ export default function PortalCaseDetail() {
   return (
     <section>
       <nav className="mb-4">
-        <Link to="/portal" className="inline-flex items-center gap-1.5 text-sm text-accent-500 hover:text-accent-600">
-          <ArrowLeft size={15} aria-hidden="true" /> Back to inbox
+        <Link to={backTo} className="inline-flex items-center gap-1.5 text-sm text-accent-500 hover:text-accent-600">
+          <ArrowLeft size={15} aria-hidden="true" /> {backLabel}
         </Link>
       </nav>
 

@@ -331,6 +331,7 @@ function BoardCard({
       <div className="flex items-start justify-between gap-2">
         <Link
           to={`/portal/cases/${row.case_id}`}
+          state={{ from: '/portal/board' }}
           className="block font-medium text-ink-900 hover:text-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-sm"
         >
           {row.claimant_name ?? 'Unnamed claimant'}

@@ -378,6 +378,7 @@ function ReferralRow({
       <td className="px-4 py-3 align-top">
         <Link
           to={`/portal/cases/${c.case_id}`}
+          state={{ from: '/portal' }}
           className="font-semibold text-ink-900 hover:text-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-sm"
         >
           {c.claimant_name ?? 'Unnamed claimant'}
