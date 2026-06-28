@@ -97,6 +97,21 @@ describe('listCasesForFirm', () => {
     expect(result.counts).toEqual({ new: 0, working: 0, resolved: 0 });
   });
 
+  it('a direct (self-originated) matter shows the client name from the case contact (no session)', async () => {
+    const db = new InMemoryDbClient();
+    await db.createDirectCase({
+      orgId: ORG,
+      firmId: 'firm-1',
+      assignedLawyerId: 'a1',
+      createdBy: 'u1',
+      client: { name: 'Sam Vance' },
+    });
+    const result = await db.listCasesForFirm('firm-1');
+    expect(result.counts.working).toBe(1);
+    expect(result.groups.working[0]!.claimantName).toBe('Sam Vance');
+    expect(result.groups.working[0]!.lane).toBe('direct');
+  });
+
   it('groups accepted+working together and resolved+closed together', async () => {
     const db = new InMemoryDbClient();
     await seedCase(db, { sessionId: 'a', firmId: 'firm-1', consented: true, status: 'investigating' });

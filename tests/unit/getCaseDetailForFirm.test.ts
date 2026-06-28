@@ -47,6 +47,24 @@ async function seed(db: InMemoryDbClient, sessionId: string, firmId: string, con
 }
 
 describe('getCaseDetailForFirm', () => {
+  it('a direct matter coalesces the client name and has no transcript / qualifying answers', async () => {
+    const db = new InMemoryDbClient();
+    const row = await db.createDirectCase({
+      orgId: ORG,
+      firmId: 'firm-1',
+      assignedLawyerId: 'a1',
+      createdBy: 'u1',
+      client: { name: 'Sam Vance', email: 'sam@x.com' },
+    });
+    const d = await db.getCaseDetailForFirm(row.id, 'firm-1');
+    expect(d).not.toBeNull();
+    expect(d!.claimantName).toBe('Sam Vance');
+    expect(d!.claimantEmail).toBe('sam@x.com');
+    expect(d!.transcript).toEqual([]);
+    expect(d!.qualifyingAnswers).toEqual([]);
+    expect(d!.activity.some((a) => a.eventType === 'CREATED')).toBe(true);
+  });
+
   it('returns the full detail for a firm-owned consented case', async () => {
     const db = new InMemoryDbClient();
     const c = await seed(db, 's1', 'firm-1', true);
