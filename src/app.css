@@ -55,9 +55,9 @@
   --color-ada-50:  #F3EEFE;       /* purple surface tint */
 
   /* Semantic — kept muted, not neon */
-  --color-success-500: #366039;
+  --color-success-500: #305533;  /* AAA: 7.26:1 on success-50, darkened from #366039 (6.21) */
   --color-success-50:  #E8EFE9;
-  --color-warning-500: #8C5E19;
+  --color-warning-500: #664512;  /* AAA: 7.31:1 on warning-50, darkened from #8C5E19 (4.75) */
   --color-warning-50:  #F4EBD9;
   --color-danger-500:  #822B1D;
   --color-danger-100:  #EBC8C2;   /* hover tier — used by retry buttons */

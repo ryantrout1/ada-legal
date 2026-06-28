@@ -324,7 +324,7 @@ export default function AdminListingEdit() {
             </div>
             <Link
               to={`/admin/listings/${id}/config`}
-              className="px-4 py-2 rounded-md border border-accent-500 text-accent-500 text-sm font-medium hover:bg-accent-50 whitespace-nowrap"
+              className="px-4 py-2 rounded-md border border-accent-500 text-accent-600 text-sm font-medium hover:bg-accent-50 whitespace-nowrap"
             >
               Edit config →
             </Link>
@@ -342,7 +342,7 @@ export default function AdminListingEdit() {
             </div>
             <Link
               to={`/admin/listings/${id}/preview`}
-              className="px-4 py-2 rounded-md border border-accent-500 text-accent-500 text-sm font-medium hover:bg-accent-50 whitespace-nowrap"
+              className="px-4 py-2 rounded-md border border-accent-500 text-accent-600 text-sm font-medium hover:bg-accent-50 whitespace-nowrap"
             >
               Preview →
             </Link>
