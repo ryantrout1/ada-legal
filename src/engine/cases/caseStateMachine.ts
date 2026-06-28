@@ -28,15 +28,19 @@
  */
 
 /**
- * The routing destination, set once by the router (Phase 1) and immutable
- * thereafter. Distinct from CaseStatus (the work lifecycle within a lane).
+ * The routing destination, set once at case creation and immutable thereafter.
+ * Distinct from CaseStatus (the work lifecycle within a lane). Set by the
+ * router (Phase 1) for intake-derived cases, or by createDirectCase for
+ * self-originated matters an attorney creates themselves ('direct' — born in
+ * the 'investigating' status, skipping the new→accept triage).
  */
 export type CaseLane =
   | 'routed_firm'
   | 'sourcing'
   | 'general_queue'
   | 'self_help'
-  | 'no_action';
+  | 'no_action'
+  | 'direct';
 
 export type CaseStatus =
   | 'new'

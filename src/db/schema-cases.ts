@@ -113,7 +113,7 @@ export const cases = pgTable(
       .where(sql`${t.status} IN ('accepted', 'working')`),
     check(
       'cases_lane_enum',
-      sql`${t.lane} IN ('routed_firm', 'sourcing', 'general_queue', 'self_help', 'no_action')`,
+      sql`${t.lane} IN ('routed_firm', 'sourcing', 'general_queue', 'self_help', 'no_action', 'direct')`,
     ),
     check(
       'cases_status_enum',
