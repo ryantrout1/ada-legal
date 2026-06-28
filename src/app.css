@@ -445,6 +445,28 @@ body {
   font-size: 16px;
 }
 
+/* ─── Admin control target size (WCAG 2.5.5 Enhanced, 44×44) ──────────────────
+ *
+ * The admin surfaces predate the portal's 44px-everywhere discipline — their
+ * buttons (px-3 py-2 ≈ 36px) and filters (py-1.5 ≈ 32px) fall short. Gina, a
+ * quad, runs placement + firm management here daily, so the enhanced 44px bar
+ * applies. One scoped baseline rather than editing dozens of inline classes.
+ * Checkboxes/radios are excluded (their hit area comes from the wrapping label);
+ * `td a` covers text-styled row actions (Edit / View / …) that aren't buttons.
+ * ────────────────────────────────────────────────────────────────────────── */
+.admin-shell button,
+.admin-shell [role="button"],
+.admin-shell input:not([type="checkbox"]):not([type="radio"]),
+.admin-shell select,
+.admin-shell textarea {
+  min-height: 44px;
+}
+.admin-shell td a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 /* ─── Line + paragraph spacing ──────────────────────────────────────────── */
 
 /* Paragraph spacing values are calibrated against AAA 1.4.8, which

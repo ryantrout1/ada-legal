@@ -33,7 +33,7 @@ export default function AdminLayout() {
   const email = user?.primaryEmailAddress?.emailAddress ?? 'admin';
 
   return (
-    <div className="min-h-screen bg-surface-50 text-ink-900 flex flex-col">
+    <div className="admin-shell min-h-screen bg-surface-50 text-ink-900 flex flex-col">
       {/* Skip link */}
       <a
         href="#admin-main"
