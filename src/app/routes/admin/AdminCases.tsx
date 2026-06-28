@@ -9,6 +9,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAnnounce } from '../../portal/announcer.js';
 
 interface AdminCase {
   case_id: string;
@@ -214,6 +215,7 @@ function PlaceControl({
   const [firmId, setFirmId] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const announce = useAnnounce();
   const selectId = `place-firm-${caseId}`;
 
   const place = async () => {
@@ -229,6 +231,8 @@ function PlaceControl({
       });
       if (!resp.ok) throw new Error(`Placement failed (${resp.status})`);
       await onPlaced();
+      const firmName = firms.find((f) => f.id === firmId)?.name;
+      announce(firmName ? `Case placed with ${firmName}.` : 'Case placed.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not place');
       setBusy(false);

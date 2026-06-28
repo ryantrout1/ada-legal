@@ -11,6 +11,7 @@
 
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { PortalAnnouncerProvider } from '../portal/announcer.js';
 
 const NAV_ITEMS = [
   { to: '/admin/sessions', label: 'Sessions' },
@@ -33,6 +34,7 @@ export default function AdminLayout() {
   const email = user?.primaryEmailAddress?.emailAddress ?? 'admin';
 
   return (
+    <PortalAnnouncerProvider>
     <div className="admin-shell min-h-screen bg-surface-50 text-ink-900 flex flex-col">
       {/* Skip link */}
       <a
@@ -94,5 +96,6 @@ export default function AdminLayout() {
         </main>
       </div>
     </div>
+    </PortalAnnouncerProvider>
   );
 }

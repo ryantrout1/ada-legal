@@ -9,6 +9,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { HardDeleteAttorneyModal } from './components/HardDeleteAttorneyModal.js';
+import { useAnnounce } from '../../portal/announcer.js';
 
 type Status = 'pending' | 'approved' | 'rejected' | 'archived';
 
@@ -33,6 +34,7 @@ export default function AdminAttorneys() {
   const navigate = useNavigate();
   const [rows, setRows] = useState<AdminAttorney[]>([]);
   const [total, setTotal] = useState(0);
+  const announce = useAnnounce();
   const [status, setStatus] = useState<Status | ''>('');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -84,6 +86,7 @@ export default function AdminAttorneys() {
       });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       await load();
+      announce('Attorney archived.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Archive failed');
     }
