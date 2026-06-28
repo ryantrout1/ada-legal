@@ -215,14 +215,12 @@ export default function PortalBoard() {
               ))}
             </select>
           </label>
-          <button
-            type="button"
-            disabled
-            aria-label="New matter — coming soon"
-            className="inline-flex items-center gap-1.5 min-h-[44px] px-4 rounded-lg border border-control-border bg-white text-ink-500 text-sm font-semibold cursor-not-allowed"
+          <Link
+            to="/portal/cases/new"
+            className="inline-flex items-center gap-1.5 min-h-[44px] px-4 rounded-lg border border-accent-500 bg-accent-500 text-white text-sm font-semibold hover:bg-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             New matter
-          </button>
+          </Link>
         </div>
       </header>
 

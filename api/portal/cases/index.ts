@@ -55,7 +55,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       openingNote: matter.openingNote,
     });
 
-    return res.status(201).json({ caseId: caseRow.id, caseNumber: caseRow.caseNumber });
+    return res.status(201).json({ case_id: caseRow.id, case_number: caseRow.caseNumber });
   } catch (err) {
     console.error('POST /api/portal/cases failed', err);
     return res.status(500).json({ error: err instanceof Error ? err.message : 'Internal error' });

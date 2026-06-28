@@ -152,6 +152,31 @@ export function portalSessionView(input: { session: PortalSession | null; error:
   return input.session.onboarded ? 'shell' : 'holding';
 }
 
+/** Body for creating a self-originated matter (POST /api/portal/cases). */
+export interface NewMatterInput {
+  clientName: string;
+  clientEmail?: string;
+  clientPhone?: string;
+  classificationTitle?: string;
+  jurisdictionState?: string;
+  defendantName?: string;
+  note?: string;
+}
+
+/** Create a self-originated matter; resolves to the new case id + number. */
+export async function createMatter(
+  input: NewMatterInput,
+): Promise<{ case_id: string; case_number: string }> {
+  const resp = await fetch('/api/portal/cases', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  if (!resp.ok) return failFor(resp);
+  return (await resp.json()) as { case_id: string; case_number: string };
+}
+
 /** Returns null on 404 (out-of-firm or unknown case); throws PortalApiError otherwise. */
 export async function fetchPortalCase(
   id: string,
