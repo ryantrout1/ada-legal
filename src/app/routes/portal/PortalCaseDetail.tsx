@@ -31,6 +31,7 @@ import {
   Download,
 } from 'lucide-react';
 import TaskPanel from './TaskPanel.js';
+import CaseEvidencePanel from './CaseEvidencePanel.js';
 import MessageContent from '../../components/MessageContent.js';
 import {
   fetchPortalCase,
@@ -81,7 +82,7 @@ const STAGE_PILL: Record<string, string> = {
   reclaimed: 'amber',
 };
 
-const TABS = ['Overview', 'Ada intake', 'Activity', 'Notes', 'Tasks', 'Documents', 'Communications'] as const;
+const TABS = ['Overview', 'Ada intake', 'Evidence', 'Activity', 'Notes', 'Tasks', 'Documents', 'Communications'] as const;
 type Tab = (typeof TABS)[number];
 
 function fmtDate(iso: string | null): string {
@@ -285,6 +286,7 @@ export default function PortalCaseDetail() {
           >
             {tab === 'Overview' && <Overview data={data} timeline={timeline} />}
             {tab === 'Ada intake' && <AdaIntake data={data} />}
+            {tab === 'Evidence' && <CaseEvidencePanel caseId={data.case_id} />}
             {tab === 'Activity' && <ActivityTab timeline={timeline} />}
             {tab === 'Notes' && <NotesPanel caseId={data.case_id} notes={notes} onAdded={load} />}
             {tab === 'Tasks' && <TaskPanel caseId={data.case_id} />}
