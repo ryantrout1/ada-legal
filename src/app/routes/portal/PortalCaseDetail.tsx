@@ -105,6 +105,7 @@ export default function PortalCaseDetail() {
   // link state; we map known origins to a label and default to the Inbox.
   const BACK_LABELS: Record<string, string> = {
     '/portal': 'Back to inbox',
+    '/portal/agenda': 'Back to needs attention',
     '/portal/board': 'Back to matters',
     '/portal/tasks': 'Back to tasks',
   };

@@ -74,6 +74,7 @@ import PortalLitigations from './routes/portal/PortalLitigations.js';
 import PortalLitigationDetail from './routes/portal/PortalLitigationDetail.js';
 import PortalCaseDetail from './routes/portal/PortalCaseDetail.js';
 import PortalNewMatter from './routes/portal/PortalNewMatter.js';
+import PortalAgenda from './routes/portal/PortalAgenda.js';
 import { HelmetProvider } from 'react-helmet-async';
 import RequireAdmin from './components/RequireAdmin.js';
 import RequireAttorney from './components/RequireAttorney.js';
@@ -212,6 +213,7 @@ function PortalShell() {
           <Route index element={<PortalInbox />} />
           <Route path="board" element={<PortalBoard />} />
           <Route path="tasks" element={<PortalTasks />} />
+          <Route path="agenda" element={<PortalAgenda />} />
           <Route path="pipeline" element={<PortalPipeline />} />
           <Route path="litigations" element={<PortalLitigations />} />
           <Route path="litigations/:id" element={<PortalLitigationDetail />} />
