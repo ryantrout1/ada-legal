@@ -48,6 +48,7 @@ import {
 import { cases as casesTable, caseActivity as caseActivityTable, caseTasks as caseTasksTable, casePeople as casePeopleTable, contacts as contactsTable, caseDocuments as caseDocumentsTable } from '../../db/schema-cases.js';
 import { computePipelineStats } from '../cases/pipelineStats.js';
 import type { PipelineStats } from '../cases/pipelineStats.js';
+import type { AgendaInputs } from '../cases/agenda.js';
 import type { CaseLane, CaseStatus, CaseTransition } from '../cases/caseStateMachine.js';
 import { applyCaseTransition, caseTransitionSummary } from '../cases/caseStateMachine.js';
 import type {
@@ -3184,6 +3185,56 @@ export class NeonDbClient implements DbClient {
       caseNumber: r.caseNumber,
       claimantName: fStr((r.extractedFields ?? null) as ExtractedFields | null, 'claimant_name'),
     }));
+  }
+
+  async getAgendaInputsForFirm(lawFirmId: string): Promise<AgendaInputs> {
+    const toIsoOrNull = (v: unknown): string | null =>
+      v instanceof Date ? v.toISOString() : v == null ? null : String(v);
+    const fStr = (f: ExtractedFields | null, k: string): string | null => {
+      const val = f?.[k]?.value;
+      return val == null ? null : typeof val === 'string' ? val : String(val);
+    };
+
+    const matterRows = await this.db
+      .select({
+        caseId: casesTable.id,
+        caseNumber: casesTable.caseNumber,
+        clientContactName: clientContactCol('name'),
+        solDate: casesTable.solDate,
+        status: casesTable.status,
+        firstContactDue: casesTable.firstContactDue,
+        lastActivityAt: sql<
+          string | null
+        >`(select max(created_at) from case_activity where case_id = ${casesTable.id})`,
+        extractedFields: adaSessions.extractedFields,
+      })
+      .from(casesTable)
+      .leftJoin(adaSessions, eq(adaSessions.id, casesTable.adaSessionId))
+      .where(and(eq(casesTable.firmId, lawFirmId), eq(casesTable.consentToShare, true)));
+
+    const matters = matterRows.map((r) => ({
+      caseId: r.caseId,
+      caseNumber: r.caseNumber,
+      clientName:
+        fStr((r.extractedFields ?? null) as ExtractedFields | null, 'claimant_name') ??
+        r.clientContactName ??
+        null,
+      solDate: r.solDate ?? null,
+      status: r.status,
+      firstContactDue: toIsoOrNull(r.firstContactDue),
+      lastActivityAt: toIsoOrNull(r.lastActivityAt),
+    }));
+
+    const taskRows = await this.listOpenTasksForFirm(lawFirmId);
+    const tasks = taskRows.map((t) => ({
+      id: t.id,
+      caseId: t.caseId,
+      title: t.title,
+      dueDate: t.dueDate,
+      priority: t.priority,
+    }));
+
+    return { matters, tasks };
   }
 
   async getFirmPipelineStats(lawFirmId: string): Promise<PipelineStats> {

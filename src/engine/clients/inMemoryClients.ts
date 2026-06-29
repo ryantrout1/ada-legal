@@ -16,6 +16,7 @@ import { applyCaseTransition, caseTransitionSummary } from '../cases/caseStateMa
 import type { CaseStatus, CaseTransition, CaseLane } from '../cases/caseStateMachine.js';
 import { computePipelineStats } from '../cases/pipelineStats.js';
 import type { PipelineStats } from '../cases/pipelineStats.js';
+import type { AgendaInputs } from '../cases/agenda.js';
 
 const PIPELINE_EVENT_TYPES: ReadonlySet<string> = new Set(['ROUTED', 'ACCEPT', 'BEGIN_WORK', 'RESOLVE']);
 import type { AdaSessionState } from '../types.js';
@@ -2149,6 +2150,42 @@ export class InMemoryDbClient implements DbClient {
       if (!b.dueDate) return -1;
       return a.dueDate < b.dueDate ? -1 : 1;
     });
+  }
+
+  async getAgendaInputsForFirm(lawFirmId: string): Promise<AgendaInputs> {
+    const matters = this.cases
+      .filter((c) => c.firmId === lawFirmId && c.consentToShare)
+      .map((c) => {
+        const extras = this.caseExtras.get(c.id);
+        const session = c.adaSessionId ? this.sessions.get(c.adaSessionId) : undefined;
+        const clientPerson = this.casePeopleStore.find(
+          (p) => p.caseId === c.id && p.role === 'client',
+        );
+        const clientContact = clientPerson
+          ? this.contactsStore.find((ct) => ct.id === clientPerson.contactId)
+          : undefined;
+        const acts = this.caseActivity.filter((a) => a.caseId === c.id).map((a) => a.createdAt);
+        return {
+          caseId: c.id,
+          caseNumber: c.caseNumber,
+          clientName:
+            (session ? portalFieldStr(session.extractedFields, 'claimant_name') : null) ??
+            clientContact?.name ??
+            null,
+          solDate: extras?.solDate ?? null,
+          status: c.status,
+          firstContactDue: extras?.firstContactDue ?? null,
+          lastActivityAt: acts.length ? acts.reduce((m, x) => (x > m ? x : m)) : null,
+        };
+      });
+    const tasks = (await this.listOpenTasksForFirm(lawFirmId)).map((t) => ({
+      id: t.id,
+      caseId: t.caseId,
+      title: t.title,
+      dueDate: t.dueDate,
+      priority: t.priority,
+    }));
+    return { matters, tasks };
   }
 
   async getFirmPipelineStats(lawFirmId: string): Promise<PipelineStats> {

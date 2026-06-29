@@ -31,6 +31,7 @@ import type {
 import type { AdaSessionState } from '../types.js';
 import type { CaseLane, CaseTransition } from '../cases/caseStateMachine.js';
 import type { PipelineStats } from '../cases/pipelineStats.js';
+import type { AgendaInputs } from '../cases/agenda.js';
 
 // ─── AI client ────────────────────────────────────────────────────────────────
 
@@ -1505,6 +1506,14 @@ export interface DbClient {
 
   /** Phase 4c: pipeline analytics (funnel + median time-in-stage) for the firm. */
   getFirmPipelineStats(lawFirmId: string): Promise<PipelineStats>;
+
+  /**
+   * Build-list #2: raw inputs for the "Needs attention" view — the firm's
+   * consented matters (with SOL, status, first-contact SLA, last-activity) plus
+   * open tasks. Firm-scoped + consent-gated; client name coalesced for direct
+   * matters. The agenda itself is assembled by the pure buildAgenda().
+   */
+  getAgendaInputsForFirm(lawFirmId: string): Promise<AgendaInputs>;
 
   /**
    * Full case package for a single session, scoped to a firm. Returns null

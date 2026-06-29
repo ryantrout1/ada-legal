@@ -454,6 +454,43 @@ export async function fetchFirmTasks(): Promise<PortalFirmTask[]> {
   return ((await resp.json()) as { tasks: PortalFirmTask[] }).tasks;
 }
 
+// ─── Build-list #2: Needs attention ──────────────────────────────────────────
+
+export type AgendaBucket = 'overdue' | 'today' | 'this_week' | 'later';
+
+export interface PortalAgendaDate {
+  kind: 'sol' | 'task';
+  case_id: string;
+  case_number: string;
+  client_name: string | null;
+  title: string;
+  due_date: string | null;
+  bucket: AgendaBucket;
+  priority: string | null;
+  task_id: string | null;
+}
+
+export interface PortalAgendaFollowUp {
+  case_id: string;
+  case_number: string;
+  client_name: string | null;
+  status: string;
+  reason: 'no_activity' | 'first_contact_overdue';
+  days_since_activity: number | null;
+  last_activity_at: string | null;
+}
+
+export interface PortalAgenda {
+  key_dates: PortalAgendaDate[];
+  follow_up: PortalAgendaFollowUp[];
+}
+
+export async function fetchAgenda(): Promise<PortalAgenda> {
+  const resp = await fetch('/api/portal/agenda', { credentials: 'include' });
+  if (!resp.ok) return failFor(resp);
+  return (await resp.json()) as PortalAgenda;
+}
+
 // ─── Phase 4c: pipeline analytics ───────────────────────────────────────────
 
 export interface PipelineStatsResponse {
