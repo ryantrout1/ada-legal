@@ -50,6 +50,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         photos: evidence.photos.map((p) => ({
           url: p.url,
           uploaded_at: p.uploadedAt,
+          source: p.source,
           analyzed_at: p.analyzedAt,
           analysis: p.analysis,
         })),

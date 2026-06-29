@@ -11,13 +11,15 @@
  * photo reads "no barriers detected," never "compliant."
  */
 
-import { useCallback, useEffect, useState } from 'react';
-import { ScanSearch } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { ScanSearch, ImagePlus } from 'lucide-react';
 import {
   fetchCaseEvidence,
   analyzeCasePhoto,
+  addCasePhoto,
   type PortalEvidencePhoto,
 } from '../../data/portalClient.js';
+import { downscalePhoto } from '../../utils/downscalePhoto.js';
 import type {
   PhotoAnalysisOutput,
   ReadingLevelText,
@@ -34,6 +36,25 @@ const RISK_LABEL: Record<string, string> = {
   none: 'None',
 };
 
+const SOURCE_LABEL: Record<string, string> = {
+  claimant: 'From intake',
+  attorney: 'Added by you',
+};
+
+/** Strip the data: URL prefix and return the raw base64 payload. */
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : '';
+      const comma = result.indexOf(',');
+      resolve(comma >= 0 ? result.slice(comma + 1) : result);
+    };
+    reader.onerror = () => reject(new Error('Could not read the file'));
+    reader.readAsDataURL(file);
+  });
+}
+
 function fmtDate(iso: string | null): string {
   if (!iso) return '';
   const d = new Date(iso);
@@ -47,6 +68,8 @@ export default function CaseEvidencePanel({ caseId }: { caseId: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -82,16 +105,60 @@ export default function CaseEvidencePanel({ caseId }: { caseId: string }) {
     }
   };
 
+  const onPickFile = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // let the same file be chosen again later
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setError('Choose an image file (JPEG, PNG, WebP, or GIF).');
+      return;
+    }
+    setUploading(true);
+    setError(null);
+    try {
+      const downscaled = await downscalePhoto(file);
+      const base64 = await fileToBase64(downscaled);
+      const photo = await addCasePhoto(caseId, base64, downscaled.type);
+      setPhotos((prev) => [photo, ...(prev ?? [])]);
+    } catch {
+      setError('That photo could not be added. Try again with a smaller image.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   if (loading) return <p className="text-ink-500 text-sm">Loading evidence…</p>;
 
   return (
     <section aria-label="Evidence">
-      <div className="mb-4">
-        <h2 className="font-display text-lg text-ink-900">Evidence</h2>
-        <p className="text-ink-500 text-sm mt-0.5">
-          Photos the claimant shared during intake. Run the accessibility analyzer to see the
-          full barrier read for each one.
-        </p>
+      <div className="mb-4 flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <h2 className="font-display text-lg text-ink-900">Evidence</h2>
+          <p className="text-ink-500 text-sm mt-0.5">
+            Photos from intake and any you add. Run the accessibility analyzer to see the full
+            barrier read for each one.
+          </p>
+        </div>
+        <div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={(e) => void onPickFile(e)}
+            className="sr-only"
+            tabIndex={-1}
+            aria-hidden="true"
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="inline-flex items-center gap-1.5 min-h-[44px] px-4 rounded-lg border border-surface-200 bg-white text-ink-900 text-sm font-semibold hover:bg-surface-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60"
+          >
+            <ImagePlus size={16} aria-hidden="true" />
+            {uploading ? 'Uploading & analyzing… (~30s)' : 'Add photo'}
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -101,7 +168,7 @@ export default function CaseEvidencePanel({ caseId }: { caseId: string }) {
       )}
 
       {!photos || photos.length === 0 ? (
-        <p className="text-ink-500 text-sm">No photos on this matter.</p>
+        <p className="text-ink-500 text-sm">No photos on this matter yet. Use “Add photo” to upload one.</p>
       ) : (
         <ul className="flex flex-col gap-5">
           {photos.map((p) => (
@@ -116,6 +183,9 @@ export default function CaseEvidencePanel({ caseId }: { caseId: string }) {
                 className="w-full max-h-80 object-contain bg-surface-50 border-b border-surface-200"
               />
               <div className="p-4">
+                <p className="text-ink-500 text-[11px] uppercase tracking-wider font-semibold mb-2">
+                  {SOURCE_LABEL[p.source] ?? 'Photo'}
+                </p>
                 {p.analysis ? (
                   <AnalysisView analysis={p.analysis} analyzedAt={p.analyzed_at} />
                 ) : (

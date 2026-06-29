@@ -198,8 +198,38 @@ export async function fetchPortalCase(
 export interface PortalEvidencePhoto {
   url: string;
   uploaded_at: string;
+  source: 'claimant' | 'attorney';
   analyzed_at: string | null;
   analysis: PhotoAnalysisOutput | null;
+}
+
+/**
+ * Upload an attorney-supplied photo to a matter and analyze it in one step.
+ * Works on any matter the firm owns, including direct matters with no claimant
+ * session. `imageBase64` is the raw base64 (no data: prefix); the caller should
+ * downscale first. A slow call (upload + ~10-18s vision + a professional
+ * rewrite) — show a clear in-progress state.
+ */
+export async function addCasePhoto(
+  id: string,
+  imageBase64: string,
+  contentType: string,
+): Promise<PortalEvidencePhoto> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/photos`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ image_base64: imageBase64, content_type: contentType }),
+  });
+  if (!resp.ok) return failFor(resp);
+  const data = (await resp.json()) as { analysis: PhotoAnalysisOutput; photo_url: string };
+  return {
+    url: data.photo_url,
+    uploaded_at: new Date().toISOString(),
+    source: 'attorney',
+    analyzed_at: new Date().toISOString(),
+    analysis: data.analysis,
+  };
 }
 
 /** The matter's photos + any stored analyses. Firm-scoped + consent-gated server-side. */
