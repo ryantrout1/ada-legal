@@ -17,6 +17,8 @@ import type { CaseStatus, CaseTransition, CaseLane } from '../cases/caseStateMac
 import { computePipelineStats } from '../cases/pipelineStats.js';
 import type { PipelineStats } from '../cases/pipelineStats.js';
 import type { AgendaInputs } from '../cases/agenda.js';
+import { buildCaseEvidence } from '../cases/caseEvidence.js';
+import type { CaseEvidence } from '../cases/caseEvidence.js';
 
 const PIPELINE_EVENT_TYPES: ReadonlySet<string> = new Set(['ROUTED', 'ACCEPT', 'BEGIN_WORK', 'RESOLVE']);
 import type { AdaSessionState } from '../types.js';
@@ -124,7 +126,14 @@ import type {
   SavePhotoAnalysisInput,
   UpdatePhotoAnalysisReadingLevelsInput,
 } from './types.js';
-import type { ExtractedFields, Message, PhotoAnalysisOutput } from '../../types/db.js';
+import type {
+  ExtractedFields,
+  Message,
+  PhotoAnalysisOutput,
+  ReadingLevelText,
+  ReadingLevelStringList,
+  AttachedPhoto,
+} from '../../types/db.js';
 
 /** Read an extracted-field value as a string|null (portal projection). */
 function portalFieldStr(fields: ExtractedFields, key: string): string | null {
@@ -368,9 +377,55 @@ export class InMemoryDbClient implements DbClient {
 
   // ─── Admin: attorneys ───────────────────────────────────────────────────────
 
-  async savePhotoAnalysis(_input: SavePhotoAnalysisInput): Promise<string> {
-    // Not modeled in-memory; photo persistence is exercised against Neon.
-    return `mem-analysis-${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
+  /** Build-list #3: in-memory photo-analysis store, keyed loosely by case. */
+  public readonly photoAnalyses: Array<{
+    id: string;
+    sessionId: string;
+    caseId: string | null;
+    photoUrl: string;
+    analysis: PhotoAnalysisOutput;
+    analyzedAt: string;
+  }> = [];
+
+  async savePhotoAnalysis(input: SavePhotoAnalysisInput): Promise<string> {
+    const id = `mem-analysis-${this.photoAnalyses.length + 1}`;
+    const EMPTY_TEXT: ReadingLevelText = { standard: '' };
+    const EMPTY_LIST: ReadingLevelStringList = { standard: [] };
+    this.photoAnalyses.push({
+      id,
+      sessionId: input.sessionId,
+      caseId: input.caseId ?? null,
+      photoUrl: input.photoUrl,
+      analysis: {
+        scene: input.scene ?? EMPTY_TEXT,
+        summary: input.summary ?? EMPTY_TEXT,
+        overall_risk: input.overallRisk ?? 'none',
+        positive_findings: input.positiveFindings ?? EMPTY_LIST,
+        findings: input.findings,
+      },
+      analyzedAt: new Date(this.photoAnalyses.length).toISOString(),
+    });
+    return id;
+  }
+
+  async getCaseEvidenceForFirm(
+    caseId: string,
+    lawFirmId: string,
+  ): Promise<CaseEvidence | null> {
+    const c = this.cases.find((x) => x.id === caseId && x.firmId === lawFirmId);
+    if (!c || !c.consentToShare) return null;
+    const session = c.adaSessionId ? this.sessions.get(c.adaSessionId) : undefined;
+    const photos = (session?.metadata?.photos ?? []) as AttachedPhoto[];
+    const analyses = this.photoAnalyses
+      .filter((a) => a.caseId === caseId)
+      .map((a) => ({ photoUrl: a.photoUrl, analysis: a.analysis, analyzedAt: a.analyzedAt }));
+    return buildCaseEvidence({
+      caseId: c.id,
+      orgId: c.orgId,
+      adaSessionId: c.adaSessionId,
+      photos,
+      analyses,
+    });
   }
 
   async savePhotoTesterComment(_sessionId: string, _comment: string): Promise<boolean> {

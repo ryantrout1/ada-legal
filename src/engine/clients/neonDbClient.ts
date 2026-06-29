@@ -49,6 +49,8 @@ import { cases as casesTable, caseActivity as caseActivityTable, caseTasks as ca
 import { computePipelineStats } from '../cases/pipelineStats.js';
 import type { PipelineStats } from '../cases/pipelineStats.js';
 import type { AgendaInputs } from '../cases/agenda.js';
+import { buildCaseEvidence } from '../cases/caseEvidence.js';
+import type { CaseEvidence } from '../cases/caseEvidence.js';
 import type { CaseLane, CaseStatus, CaseTransition } from '../cases/caseStateMachine.js';
 import { applyCaseTransition, caseTransitionSummary } from '../cases/caseStateMachine.js';
 import type {
@@ -155,6 +157,11 @@ import type {
   PhotoFindingLabel,
   MissedFinding,
   ReviewStatus,
+  PhotoAnalysisOutput,
+  AttachedPhoto,
+  ReadingLevelText,
+  ReadingLevelStringList,
+  PhotoOverallRisk,
 } from '../../types/db.js';
 
 // ─── Row ↔ State mapping ──────────────────────────────────────────────────────
@@ -495,6 +502,7 @@ export class NeonDbClient implements DbClient {
       .insert(photoAnalyses)
       .values({
         sessionId: input.sessionId,
+        caseId: input.caseId ?? null,
         orgId: input.orgId,
         photoUrl: input.photoUrl,
         photoBlobKey: input.photoBlobKey,
@@ -507,6 +515,68 @@ export class NeonDbClient implements DbClient {
       })
       .returning({ id: photoAnalyses.id });
     return rows[0]!.id;
+  }
+
+  async getCaseEvidenceForFirm(
+    caseId: string,
+    lawFirmId: string,
+  ): Promise<CaseEvidence | null> {
+    const caseRows = await this.db
+      .select({
+        caseId: casesTable.id,
+        orgId: casesTable.orgId,
+        consentToShare: casesTable.consentToShare,
+        adaSessionId: casesTable.adaSessionId,
+        metadata: adaSessions.metadata,
+      })
+      .from(casesTable)
+      .leftJoin(adaSessions, eq(adaSessions.id, casesTable.adaSessionId))
+      // Firm-scoped access boundary + consent gate. No match → null (404).
+      .where(and(eq(casesTable.id, caseId), eq(casesTable.firmId, lawFirmId)))
+      .limit(1);
+
+    const r = caseRows[0];
+    if (!r || !r.consentToShare) return null;
+
+    const photos = ((r.metadata as SessionMetadata | null)?.photos ?? []) as AttachedPhoto[];
+
+    const analysisRows = await this.db
+      .select({
+        photoUrl: photoAnalyses.photoUrl,
+        findings: photoAnalyses.findings,
+        scene: photoAnalyses.scene,
+        summary: photoAnalyses.summary,
+        overallRisk: photoAnalyses.overallRisk,
+        positiveFindings: photoAnalyses.positiveFindings,
+        analyzedAt: photoAnalyses.analyzedAt,
+      })
+      .from(photoAnalyses)
+      .where(eq(photoAnalyses.caseId, caseId));
+
+    const toIso = (v: unknown): string =>
+      v instanceof Date ? v.toISOString() : v == null ? '' : String(v);
+    const EMPTY_TEXT: ReadingLevelText = { standard: '' };
+    const EMPTY_LIST: ReadingLevelStringList = { standard: [] };
+
+    const analyses = analysisRows.map((a) => ({
+      photoUrl: a.photoUrl,
+      analyzedAt: toIso(a.analyzedAt),
+      analysis: {
+        scene: a.scene ?? EMPTY_TEXT,
+        summary: a.summary ?? EMPTY_TEXT,
+        overall_risk: (a.overallRisk ?? 'none') as PhotoOverallRisk,
+        positive_findings: a.positiveFindings ?? EMPTY_LIST,
+        findings: (a.findings ?? []) as PhotoFinding[],
+      } satisfies PhotoAnalysisOutput,
+    }));
+
+    return buildCaseEvidence({
+      caseId: r.caseId,
+      orgId: r.orgId,
+      adaSessionId: r.adaSessionId,
+      photos,
+      analyses,
+    });
   }
 
   async savePhotoTesterComment(sessionId: string, comment: string): Promise<boolean> {

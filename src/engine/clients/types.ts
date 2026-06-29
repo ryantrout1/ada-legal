@@ -32,6 +32,7 @@ import type { AdaSessionState } from '../types.js';
 import type { CaseLane, CaseTransition } from '../cases/caseStateMachine.js';
 import type { PipelineStats } from '../cases/pipelineStats.js';
 import type { AgendaInputs } from '../cases/agenda.js';
+import type { CaseEvidence } from '../cases/caseEvidence.js';
 
 // ─── AI client ────────────────────────────────────────────────────────────────
 
@@ -987,6 +988,13 @@ export interface DbClient {
    *  addressable row. The review queue, eval rollup, and per-analysis
    *  deep-links all read these. Returns the new analysis id. */
   savePhotoAnalysis(input: SavePhotoAnalysisInput): Promise<string>;
+
+  /**
+   * Build-list #3: firm-scoped evidence for one matter — its photos (from the
+   * claimant session) joined to any stored structured analyses. Firm-scope +
+   * consent gated (returns null → 404 when out-of-scope or unconsented).
+   */
+  getCaseEvidenceForFirm(caseId: string, lawFirmId: string): Promise<CaseEvidence | null>;
   /** Attach the tester's post-analysis comment to the latest field-test
    *  analysis for a session. Scoped to is_test sessions so a public
    *  caller can never touch a real claimant's analysis. Returns true if
@@ -1940,6 +1948,8 @@ export interface AdminSessionListResult {
 
 export interface SavePhotoAnalysisInput {
   sessionId: string;
+  /** The matter this analysis belongs to (build-list #3). Null for field-test rows. */
+  caseId?: string | null;
   orgId: string;
   photoUrl: string;
   photoBlobKey: string;

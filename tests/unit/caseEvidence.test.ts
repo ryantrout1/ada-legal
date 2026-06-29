@@ -1,0 +1,75 @@
+/**
+ * Unit tests for buildCaseEvidence (build-list #3) — the pure join of a
+ * matter's photos to their stored analyses.
+ */
+
+import { describe, it, expect } from 'vitest';
+import { buildCaseEvidence } from '@/engine/cases/caseEvidence';
+import type { PhotoAnalysisOutput } from '@/types/db';
+
+function analysis(over: Partial<PhotoAnalysisOutput> = {}): PhotoAnalysisOutput {
+  return {
+    scene: { standard: 'A storefront entrance.' },
+    summary: { standard: 'One concern found.' },
+    overall_risk: 'medium',
+    positive_findings: { standard: [] },
+    findings: [],
+    ...over,
+  };
+}
+
+const base = { caseId: 'c1', orgId: 'o1', adaSessionId: 's1' as string | null };
+
+describe('buildCaseEvidence', () => {
+  it('a photo with no analysis carries analysis null', () => {
+    const ev = buildCaseEvidence({
+      ...base,
+      photos: [{ url: 'p1', uploadedAt: '2026-06-01T00:00:00Z' }],
+      analyses: [],
+    });
+    expect(ev.photos).toHaveLength(1);
+    expect(ev.photos[0]).toMatchObject({ url: 'p1', analysis: null, analyzedAt: null });
+  });
+
+  it('joins an analysis to its photo by url', () => {
+    const a = analysis();
+    const ev = buildCaseEvidence({
+      ...base,
+      photos: [{ url: 'p1', uploadedAt: '2026-06-01T00:00:00Z' }],
+      analyses: [{ photoUrl: 'p1', analysis: a, analyzedAt: '2026-06-02T00:00:00Z' }],
+    });
+    expect(ev.photos[0]!.analysis).toBe(a);
+    expect(ev.photos[0]!.analyzedAt).toBe('2026-06-02T00:00:00Z');
+  });
+
+  it('the most recent analysis wins when a photo was analyzed twice', () => {
+    const older = analysis({ summary: { standard: 'old' } });
+    const newer = analysis({ summary: { standard: 'new' } });
+    const ev = buildCaseEvidence({
+      ...base,
+      photos: [{ url: 'p1', uploadedAt: '2026-06-01T00:00:00Z' }],
+      analyses: [
+        { photoUrl: 'p1', analysis: older, analyzedAt: '2026-06-02T00:00:00Z' },
+        { photoUrl: 'p1', analysis: newer, analyzedAt: '2026-06-05T00:00:00Z' },
+      ],
+    });
+    expect(ev.photos[0]!.analysis).toBe(newer);
+  });
+
+  it('preserves photo order and ignores analyses for unknown photos', () => {
+    const ev = buildCaseEvidence({
+      ...base,
+      photos: [
+        { url: 'p1', uploadedAt: '2026-06-01T00:00:00Z' },
+        { url: 'p2', uploadedAt: '2026-06-01T00:00:00Z' },
+      ],
+      analyses: [
+        { photoUrl: 'p2', analysis: analysis(), analyzedAt: '2026-06-02T00:00:00Z' },
+        { photoUrl: 'ghost', analysis: analysis(), analyzedAt: '2026-06-02T00:00:00Z' },
+      ],
+    });
+    expect(ev.photos.map((p) => p.url)).toEqual(['p1', 'p2']);
+    expect(ev.photos[0]!.analysis).toBeNull();
+    expect(ev.photos[1]!.analysis).not.toBeNull();
+  });
+});

@@ -11,7 +11,7 @@
  * Ref: .design/attorney-portal.md (src/app/data/portalClient.ts).
  */
 
-import type { ContentBlock } from '../../types/db.js';
+import type { ContentBlock, PhotoAnalysisOutput } from '../../types/db.js';
 
 export interface PortalCaseRow {
   case_id: string;
@@ -187,6 +187,49 @@ export async function fetchPortalCase(
   if (resp.status === 404) return null;
   if (!resp.ok) return failFor(resp);
   return (await resp.json()) as PortalCaseDetailResponse;
+}
+
+/**
+ * One photo on a matter (build-list #3) and its structured analysis, or null
+ * when the photo hasn't been analyzed yet. `analysis` is the full output —
+ * professional reading level, with each finding's cited section, confidence,
+ * and `confirmable` hedge.
+ */
+export interface PortalEvidencePhoto {
+  url: string;
+  uploaded_at: string;
+  analyzed_at: string | null;
+  analysis: PhotoAnalysisOutput | null;
+}
+
+/** The matter's photos + any stored analyses. Firm-scoped + consent-gated server-side. */
+export async function fetchCaseEvidence(id: string): Promise<PortalEvidencePhoto[]> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/evidence`, {
+    credentials: 'include',
+  });
+  if (!resp.ok) return failFor(resp);
+  const data = (await resp.json()) as { photos: PortalEvidencePhoto[] };
+  return data.photos;
+}
+
+/**
+ * Run the structured accessibility analyzer on one of the matter's photos and
+ * return the full analysis. A slow call (~10-18s vision + a professional
+ * rewrite) — callers should show a clear in-progress state.
+ */
+export async function analyzeCasePhoto(
+  id: string,
+  photoUrl: string,
+): Promise<PhotoAnalysisOutput> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/evidence`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ photo_url: photoUrl }),
+  });
+  if (!resp.ok) return failFor(resp);
+  const data = (await resp.json()) as { analysis: PhotoAnalysisOutput };
+  return data.analysis;
 }
 
 export interface PortalFirmAttorney {

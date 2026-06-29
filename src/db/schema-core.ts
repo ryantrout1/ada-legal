@@ -216,6 +216,13 @@ export const photoAnalyses = pgTable(
     sessionId: uuid('session_id')
       .notNull()
       .references(() => adaSessions.id, { onDelete: 'cascade' }),
+    /**
+     * The matter this analysis belongs to (build-list #3). Nullable: field-test
+     * rows have no case. FK to cases enforced in the DB (migration 0034);
+     * declared bare here to avoid a schema-core ⇄ schema-cases import cycle,
+     * matching cases.firm_id.
+     */
+    caseId: uuid('case_id'),
     orgId: uuid('org_id')
       .notNull()
       .references(() => organizations.id),
@@ -246,7 +253,10 @@ export const photoAnalyses = pgTable(
     analyzedAt: timestamp('analyzed_at', { withTimezone: true }).notNull().defaultNow(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [index('photo_analyses_session').on(t.sessionId)],
+  (t) => [
+    index('photo_analyses_session').on(t.sessionId),
+    index('photo_analyses_case').on(t.caseId),
+  ],
 );
 
 // ─── photo_reviews (expert labeling loop) ───────────────────────────────────
