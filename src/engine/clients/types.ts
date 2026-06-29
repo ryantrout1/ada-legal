@@ -1947,9 +1947,12 @@ export interface AdminSessionListResult {
 // ─── Admin: photo review (expert labeling loop) ─────────────────────────────
 
 export interface SavePhotoAnalysisInput {
-  sessionId: string;
+  /** Origin session for claimant photos; null for attorney-uploaded photos. */
+  sessionId: string | null;
   /** The matter this analysis belongs to (build-list #3). Null for field-test rows. */
   caseId?: string | null;
+  /** Who supplied the photo. Defaults to 'claimant' (the Phase 1 path). */
+  source?: 'claimant' | 'attorney';
   orgId: string;
   photoUrl: string;
   photoBlobKey: string;

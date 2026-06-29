@@ -503,6 +503,7 @@ export class NeonDbClient implements DbClient {
       .values({
         sessionId: input.sessionId,
         caseId: input.caseId ?? null,
+        source: input.source ?? 'claimant',
         orgId: input.orgId,
         photoUrl: input.photoUrl,
         photoBlobKey: input.photoBlobKey,
@@ -538,11 +539,14 @@ export class NeonDbClient implements DbClient {
     const r = caseRows[0];
     if (!r || !r.consentToShare) return null;
 
-    const photos = ((r.metadata as SessionMetadata | null)?.photos ?? []) as AttachedPhoto[];
+    const claimantPhotos = (
+      ((r.metadata as SessionMetadata | null)?.photos ?? []) as AttachedPhoto[]
+    ).map((p) => ({ url: p.url, uploadedAt: p.uploadedAt, source: 'claimant' as const }));
 
     const analysisRows = await this.db
       .select({
         photoUrl: photoAnalyses.photoUrl,
+        source: photoAnalyses.source,
         findings: photoAnalyses.findings,
         scene: photoAnalyses.scene,
         summary: photoAnalyses.summary,
@@ -557,6 +561,17 @@ export class NeonDbClient implements DbClient {
       v instanceof Date ? v.toISOString() : v == null ? '' : String(v);
     const EMPTY_TEXT: ReadingLevelText = { standard: '' };
     const EMPTY_LIST: ReadingLevelStringList = { standard: [] };
+
+    // Attorney-uploaded photos live only as their analysis rows (no session
+    // metadata), so surface them from there. Dedupe against claimant photos.
+    const seen = new Set(claimantPhotos.map((p) => p.url));
+    const attorneyPhotos: { url: string; uploadedAt: string; source: 'attorney' }[] = [];
+    for (const a of analysisRows) {
+      if (a.source === 'attorney' && !seen.has(a.photoUrl)) {
+        seen.add(a.photoUrl);
+        attorneyPhotos.push({ url: a.photoUrl, uploadedAt: toIso(a.analyzedAt), source: 'attorney' });
+      }
+    }
 
     const analyses = analysisRows.map((a) => ({
       photoUrl: a.photoUrl,
@@ -574,7 +589,7 @@ export class NeonDbClient implements DbClient {
       caseId: r.caseId,
       orgId: r.orgId,
       adaSessionId: r.adaSessionId,
-      photos,
+      photos: [...claimantPhotos, ...attorneyPhotos],
       analyses,
     });
   }
@@ -663,7 +678,9 @@ export class NeonDbClient implements DbClient {
         reviewerCount === 0 ? 'unreviewed' : r.anyAddressed ? 'addressed' : 'reviewed';
       return {
         photoAnalysisId: r.id,
-        sessionId: r.sessionId,
+        // session_id is nullable since #3 Phase 2, but the inner join on
+        // adaSessions (is_test) above guarantees a non-null session here.
+        sessionId: r.sessionId!,
         photoUrl: r.photoUrl,
         overallRisk: r.overallRisk ?? null,
         findingCount: findings.length,
@@ -739,7 +756,8 @@ export class NeonDbClient implements DbClient {
 
     return {
       photoAnalysisId: r.id,
-      sessionId: r.sessionId,
+      // Non-null by the is_test inner join (see listPhotoAnalysesForReview).
+      sessionId: r.sessionId!,
       photoUrl: r.photoUrl,
       scene: r.scene ?? null,
       summary: r.summary ?? null,

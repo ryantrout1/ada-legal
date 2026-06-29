@@ -13,9 +13,10 @@
 import { describe, it, expect } from 'vitest';
 import {
   makeInMemoryClients,
+  InMemoryDbClient,
   InMemoryPhotoAnalysisClient,
 } from '@/engine/clients/inMemoryClients';
-import { analyzeCaseEvidencePhoto } from '@/engine/cases/caseEvidence';
+import { analyzeCaseEvidencePhoto, analyzeAttorneyPhoto } from '@/engine/cases/caseEvidence';
 import { resolveAttorneyContext } from '../../api/_attorney';
 import { seedPortalFixture } from '../fixtures/portalSeed';
 import type { AdaSessionState } from '@/engine/types';
@@ -152,6 +153,72 @@ describe('case evidence seam (read → analyze → store, firm-scoped)', () => {
       caseId,
       lawFirmId: ctxA.lawFirmId,
       photoUrl: OFF_MATTER_URL,
+    });
+    expect(res).toMatchObject({ ok: false, status: 404 });
+  });
+});
+
+const ATTORNEY_PHOTO_URL = 'https://acme.public.blob.vercel-storage.com/site-visit.jpg';
+
+describe('attorney-attached photos on any matter (Phase 2)', () => {
+  it('an attorney photo on a direct matter (no session) analyzes and appears with source attorney', async () => {
+    const clients = makeInMemoryClients();
+    await seedPortalFixture(clients);
+    const ctxA = (await resolveAttorneyContext(clients.db, 'clerk_user_a', null))!;
+    const firmA = (await clients.db.readLawFirmById(ctxA.lawFirmId))!;
+
+    // A self-originated matter — no claimant session, consent true at creation.
+    const matter = await clients.db.createDirectCase({
+      orgId: firmA.orgId,
+      firmId: ctxA.lawFirmId,
+      assignedLawyerId: ctxA.attorneyId,
+      createdBy: ctxA.userId,
+      client: { name: 'Walk-in Client' },
+    });
+
+    // No photos to start.
+    const before = await clients.db.getCaseEvidenceForFirm(matter.id, ctxA.lawFirmId);
+    expect(before!.photos).toHaveLength(0);
+
+    // Attorney uploads + analyzes a photo.
+    (clients.photo as InMemoryPhotoAnalysisClient).enqueueResult(analysisResult());
+    const res = await analyzeAttorneyPhoto(clients, {
+      caseId: matter.id,
+      lawFirmId: ctxA.lawFirmId,
+      photoUrl: ATTORNEY_PHOTO_URL,
+    });
+    expect(res.ok).toBe(true);
+
+    const after = await clients.db.getCaseEvidenceForFirm(matter.id, ctxA.lawFirmId);
+    expect(after!.photos).toHaveLength(1);
+    expect(after!.photos[0]).toMatchObject({ url: ATTORNEY_PHOTO_URL, source: 'attorney' });
+    expect(after!.photos[0]!.analysis!.findings[0]!.standard).toBe('§405.2');
+    // stored with a null origin session
+    const stored = (clients.db as InMemoryDbClient).photoAnalyses.find((a) => a.photoUrl === ATTORNEY_PHOTO_URL);
+    expect(stored!.sessionId).toBeNull();
+    expect(stored!.source).toBe('attorney');
+  });
+
+  it('another firm cannot attach a photo to the matter (404 boundary)', async () => {
+    const clients = makeInMemoryClients();
+    await seedPortalFixture(clients);
+    const ctxA = (await resolveAttorneyContext(clients.db, 'clerk_user_a', null))!;
+    const ctxB = (await resolveAttorneyContext(clients.db, 'clerk_user_b', null))!;
+    const firmA = (await clients.db.readLawFirmById(ctxA.lawFirmId))!;
+
+    const matter = await clients.db.createDirectCase({
+      orgId: firmA.orgId,
+      firmId: ctxA.lawFirmId,
+      assignedLawyerId: ctxA.attorneyId,
+      createdBy: ctxA.userId,
+      client: { name: 'Walk-in Client' },
+    });
+
+    (clients.photo as InMemoryPhotoAnalysisClient).enqueueResult(analysisResult());
+    const res = await analyzeAttorneyPhoto(clients, {
+      caseId: matter.id,
+      lawFirmId: ctxB.lawFirmId,
+      photoUrl: ATTORNEY_PHOTO_URL,
     });
     expect(res).toMatchObject({ ok: false, status: 404 });
   });

@@ -380,8 +380,9 @@ export class InMemoryDbClient implements DbClient {
   /** Build-list #3: in-memory photo-analysis store, keyed loosely by case. */
   public readonly photoAnalyses: Array<{
     id: string;
-    sessionId: string;
+    sessionId: string | null;
     caseId: string | null;
+    source: 'claimant' | 'attorney';
     photoUrl: string;
     analysis: PhotoAnalysisOutput;
     analyzedAt: string;
@@ -395,6 +396,7 @@ export class InMemoryDbClient implements DbClient {
       id,
       sessionId: input.sessionId,
       caseId: input.caseId ?? null,
+      source: input.source ?? 'claimant',
       photoUrl: input.photoUrl,
       analysis: {
         scene: input.scene ?? EMPTY_TEXT,
@@ -415,15 +417,30 @@ export class InMemoryDbClient implements DbClient {
     const c = this.cases.find((x) => x.id === caseId && x.firmId === lawFirmId);
     if (!c || !c.consentToShare) return null;
     const session = c.adaSessionId ? this.sessions.get(c.adaSessionId) : undefined;
-    const photos = (session?.metadata?.photos ?? []) as AttachedPhoto[];
-    const analyses = this.photoAnalyses
-      .filter((a) => a.caseId === caseId)
-      .map((a) => ({ photoUrl: a.photoUrl, analysis: a.analysis, analyzedAt: a.analyzedAt }));
+    const claimantPhotos = ((session?.metadata?.photos ?? []) as AttachedPhoto[]).map((p) => ({
+      url: p.url,
+      uploadedAt: p.uploadedAt,
+      source: 'claimant' as const,
+    }));
+    const rows = this.photoAnalyses.filter((a) => a.caseId === caseId);
+    const seen = new Set(claimantPhotos.map((p) => p.url));
+    const attorneyPhotos: { url: string; uploadedAt: string; source: 'attorney' }[] = [];
+    for (const a of rows) {
+      if (a.source === 'attorney' && !seen.has(a.photoUrl)) {
+        seen.add(a.photoUrl);
+        attorneyPhotos.push({ url: a.photoUrl, uploadedAt: a.analyzedAt, source: 'attorney' });
+      }
+    }
+    const analyses = rows.map((a) => ({
+      photoUrl: a.photoUrl,
+      analysis: a.analysis,
+      analyzedAt: a.analyzedAt,
+    }));
     return buildCaseEvidence({
       caseId: c.id,
       orgId: c.orgId,
       adaSessionId: c.adaSessionId,
-      photos,
+      photos: [...claimantPhotos, ...attorneyPhotos],
       analyses,
     });
   }

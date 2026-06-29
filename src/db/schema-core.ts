@@ -213,9 +213,7 @@ export const photoAnalyses = pgTable(
   'photo_analyses',
   {
     id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
-    sessionId: uuid('session_id')
-      .notNull()
-      .references(() => adaSessions.id, { onDelete: 'cascade' }),
+    sessionId: uuid('session_id').references(() => adaSessions.id, { onDelete: 'cascade' }),
     /**
      * The matter this analysis belongs to (build-list #3). Nullable: field-test
      * rows have no case. FK to cases enforced in the DB (migration 0034);
@@ -223,6 +221,12 @@ export const photoAnalyses = pgTable(
      * matching cases.firm_id.
      */
     caseId: uuid('case_id'),
+    /**
+     * Who supplied the photo (build-list #3 Phase 2). 'claimant' — shared during
+     * Ada intake (session_id set); 'attorney' — uploaded in the workspace
+     * (session_id null). Migration 0035.
+     */
+    source: text('source').notNull().default('claimant'),
     orgId: uuid('org_id')
       .notNull()
       .references(() => organizations.id),
