@@ -573,6 +573,7 @@ export class InMemoryDbClient implements DbClient {
       ...prev,
       ...(input.name !== undefined ? { name: input.name } : {}),
       ...(input.firmName !== undefined ? { firmName: input.firmName } : {}),
+      ...(input.lawFirmId !== undefined ? { lawFirmId: input.lawFirmId } : {}),
       ...(input.locationCity !== undefined ? { locationCity: input.locationCity } : {}),
       ...(input.locationState !== undefined ? { locationState: input.locationState } : {}),
       ...(input.practiceAreas !== undefined ? { practiceAreas: input.practiceAreas } : {}),

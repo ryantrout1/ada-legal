@@ -376,6 +376,8 @@ export interface CreateAttorneyInput {
 export interface UpdateAttorneyInput {
   name?: string;
   firmName?: string | null;
+  /** Firm entity link (Neon = source of truth). Null unlinks to solo. */
+  lawFirmId?: string | null;
   locationCity?: string | null;
   locationState?: string | null;
   practiceAreas?: string[];

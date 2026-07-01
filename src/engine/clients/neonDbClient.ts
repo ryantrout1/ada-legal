@@ -1084,6 +1084,7 @@ export class NeonDbClient implements DbClient {
     const patch: Record<string, unknown> = {};
     if (input.name !== undefined) patch.name = input.name;
     if (input.firmName !== undefined) patch.firmName = input.firmName;
+    if (input.lawFirmId !== undefined) patch.lawFirmId = input.lawFirmId;
     if (input.locationCity !== undefined) patch.locationCity = input.locationCity;
     if (input.locationState !== undefined) patch.locationState = input.locationState;
     if (input.practiceAreas !== undefined) patch.practiceAreas = input.practiceAreas;
