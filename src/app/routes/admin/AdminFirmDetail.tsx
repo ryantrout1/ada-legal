@@ -15,6 +15,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useAnnounce } from '../../portal/announcer.js';
 
 type Status = 'active' | 'suspended' | 'churned';
 type ListingStatus = 'draft' | 'published' | 'archived';
@@ -79,6 +80,7 @@ interface DetailResponse {
 
 export default function AdminFirmDetail() {
   const { id } = useParams<{ id: string }>();
+  const announce = useAnnounce();
   const [data, setData] = useState<DetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -177,6 +179,29 @@ export default function AdminFirmDetail() {
     }
   }
 
+  async function handleSetRole(attorneyId: string, role: 'owner' | 'member') {
+    setActionPending(true);
+    setActionError(null);
+    try {
+      const resp = await fetch(`/api/admin/attorneys/${encodeURIComponent(attorneyId)}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ firm_role: role }),
+      });
+      if (!resp.ok) {
+        const b = (await resp.json().catch(() => ({}))) as { error?: string };
+        throw new Error(b.error ?? `HTTP ${resp.status}`);
+      }
+      await load(); // refetch → roster reflects the new role
+      announce(role === 'owner' ? 'Attorney promoted to owner.' : 'Owner removed.');
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Role change failed');
+    } finally {
+      setActionPending(false);
+    }
+  }
+
   if (unauth) {
     return (
       <div
@@ -227,6 +252,10 @@ export default function AdminFirmDetail() {
 
   const { firm, attorneys, listings, subscriptions } = data;
   const hasStripeCustomer = Boolean(firm.stripeCustomerId);
+  // Live owners (archived rows don't count) — drives the "only owner" state.
+  const ownerCount = attorneys.filter(
+    (a) => a.firmRole === 'owner' && a.status !== 'archived',
+  ).length;
 
   // Map listingId → active subscription (if any) for per-row billing state
   const activeSubByListing = new Map<string, Subscription>();
@@ -333,6 +362,9 @@ export default function AdminFirmDetail() {
                   <th scope="col" className="px-3 py-2">Status</th>
                   <th scope="col" className="px-3 py-2">Portal login</th>
                   <th scope="col" className="px-3 py-2">Location</th>
+                  <th scope="col" className="px-3 py-2">
+                    <span className="sr-only">Owner actions</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -359,6 +391,33 @@ export default function AdminFirmDetail() {
                       {a.locationCity && a.locationState
                         ? `${a.locationCity}, ${a.locationState}`
                         : (a.locationState ?? a.locationCity ?? '—')}
+                    </td>
+                    <td className="px-3 py-2 text-right whitespace-nowrap">
+                      {a.status === 'archived' ? (
+                        <span className="text-ink-500">—</span>
+                      ) : a.firmRole === 'owner' ? (
+                        ownerCount > 1 ? (
+                          <button
+                            type="button"
+                            onClick={() => handleSetRole(a.id, 'member')}
+                            disabled={actionPending}
+                            className="text-accent-500 hover:text-accent-600 underline underline-offset-2 disabled:opacity-50"
+                          >
+                            Remove owner
+                          </button>
+                        ) : (
+                          <span className="text-ink-500 italic">Only owner</span>
+                        )
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleSetRole(a.id, 'owner')}
+                          disabled={actionPending}
+                          className="text-accent-500 hover:text-accent-600 underline underline-offset-2 disabled:opacity-50"
+                        >
+                          Make owner
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

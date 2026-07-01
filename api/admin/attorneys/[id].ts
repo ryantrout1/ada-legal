@@ -22,6 +22,7 @@ import { makeClientsFromEnv } from '../../_shared.js';
 import type { AttorneyStatus } from '../../../src/engine/clients/types.js';
 import { computeReadiness } from '../../../src/engine/portal/accountReadiness.js';
 import { resolveAttorneyFirmLink } from '../../../src/engine/attorneyFirmLink.js';
+import { canStepDown } from '../../../src/engine/portal/firmOwnership.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return; // preflight handled
@@ -38,7 +39,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!id) return res.status(400).json({ error: 'id is required' });
 
   if (req.method === 'GET') return handleGet(id, res);
-  if (req.method === 'PATCH') return handlePatch(id, req, res);
+  if (req.method === 'PATCH') return handlePatch(id, req, res, auth);
   if (req.method === 'DELETE') {
     // Branch on ?hard=true. The default DELETE behavior (no query
     // param) stays exactly as it was — back-compat for the existing
@@ -71,7 +72,12 @@ async function handleGet(id: string, res: VercelResponse) {
   }
 }
 
-async function handlePatch(id: string, req: VercelRequest, res: VercelResponse) {
+async function handlePatch(
+  id: string,
+  req: VercelRequest,
+  res: VercelResponse,
+  auth: { email: string | null; userId: string | null },
+) {
   try {
     const body = req.body as Record<string, unknown> | undefined;
     if (!body) return res.status(400).json({ error: 'Body required' });
@@ -136,6 +142,34 @@ async function handlePatch(id: string, req: VercelRequest, res: VercelResponse) 
       patch.firmName = link.firmName;
     }
 
+    // Firm role (owner/member) with the never-zero-owner guard. Uses the
+    // audited setAttorneyFirmRole path — not the general patch — and mirrors
+    // the portal owner.ts guard: an owner may be demoted only while another
+    // LIVE (non-archived) owner remains.
+    if ('firm_role' in body) {
+      const role = body.firm_role;
+      if (role !== 'owner' && role !== 'member') {
+        return res.status(400).json({ error: "firm_role must be 'owner' or 'member'" });
+      }
+      const current = await clients.db.getAttorneyById(id);
+      if (!current) return res.status(404).json({ error: 'Attorney not found' });
+      if (role === 'member' && current.firmRole === 'owner' && current.lawFirmId) {
+        const roster = (await clients.db.listAttorneysForFirm(current.lawFirmId)).filter(
+          (a) => a.status !== 'archived',
+        );
+        if (!canStepDown(roster, id)) {
+          return res.status(400).json({
+            error:
+              "This attorney is the firm's only owner — make someone else an owner first.",
+          });
+        }
+      }
+      await clients.db.setAttorneyFirmRole(id, role, {
+        actorUserId: auth.userId,
+        actorEmail: auth.email,
+      });
+    }
+
     // Go-live gate: an attorney can only be flipped to 'approved' once their
     // profile + firm carry the required-to-go-live fields. Readiness is
     // computed on the merged (existing + this patch) view so the admin can
@@ -165,7 +199,10 @@ async function handlePatch(id: string, req: VercelRequest, res: VercelResponse) 
       }
     }
 
-    const updated = await clients.db.updateAttorney(id, patch as never);
+    const updated =
+      Object.keys(patch).length > 0
+        ? await clients.db.updateAttorney(id, patch as never)
+        : await clients.db.getAttorneyById(id);
     if (!updated) return res.status(404).json({ error: 'Attorney not found' });
     const firm = updated.lawFirmId ? await clients.db.readLawFirmById(updated.lawFirmId) : null;
     return res.status(200).json({ attorney: updated, readiness: computeReadiness(updated, firm) });
