@@ -60,8 +60,19 @@ interface Subscription {
   cancelAtPeriodEnd: boolean;
 }
 
+interface RosterAttorney {
+  id: string;
+  name: string;
+  firmRole?: string;
+  status: 'pending' | 'approved' | 'rejected' | 'archived';
+  userId?: string | null;
+  locationCity: string | null;
+  locationState: string | null;
+}
+
 interface DetailResponse {
   firm: Firm;
+  attorneys: RosterAttorney[];
   listings: Listing[];
   subscriptions: Subscription[];
 }
@@ -214,7 +225,7 @@ export default function AdminFirmDetail() {
   }
   if (!data) return null;
 
-  const { firm, listings, subscriptions } = data;
+  const { firm, attorneys, listings, subscriptions } = data;
   const hasStripeCustomer = Boolean(firm.stripeCustomerId);
 
   // Map listingId → active subscription (if any) for per-row billing state
@@ -297,6 +308,65 @@ export default function AdminFirmDetail() {
           {actionError}
         </div>
       )}
+
+      {/* Attorneys (firm roster) section */}
+      <section className="mb-8">
+        <h2 className="font-display text-lg text-ink-900 mb-3">
+          Attorneys{' '}
+          <span className="text-ink-500 font-mono text-xs font-normal">
+            {attorneys.length}
+          </span>
+        </h2>
+        {attorneys.length === 0 ? (
+          <p className="text-sm text-ink-500 italic">
+            No attorneys are linked to this firm yet. Assign one from the
+            Attorneys section (open an attorney and set their firm).
+          </p>
+        ) : (
+          <div className="overflow-x-auto rounded-md border border-surface-200 bg-white">
+            <table className="w-full text-sm">
+              <caption className="sr-only">Attorneys at this firm</caption>
+              <thead className="bg-surface-100 text-left text-xs uppercase tracking-wider font-mono text-ink-500">
+                <tr>
+                  <th scope="col" className="px-3 py-2">Name</th>
+                  <th scope="col" className="px-3 py-2">Firm role</th>
+                  <th scope="col" className="px-3 py-2">Status</th>
+                  <th scope="col" className="px-3 py-2">Portal login</th>
+                  <th scope="col" className="px-3 py-2">Location</th>
+                </tr>
+              </thead>
+              <tbody>
+                {attorneys.map((a) => (
+                  <tr key={a.id} className="border-t border-surface-200">
+                    <td className="px-3 py-2">
+                      <Link
+                        to={`/admin/attorneys/${a.id}`}
+                        className="text-accent-500 hover:text-accent-600 underline underline-offset-2 font-medium"
+                      >
+                        {a.name}
+                      </Link>
+                    </td>
+                    <td className="px-3 py-2">
+                      <RolePill role={a.firmRole} />
+                    </td>
+                    <td className="px-3 py-2">
+                      <AttorneyStatusPill status={a.status} />
+                    </td>
+                    <td className="px-3 py-2 text-ink-700">
+                      {a.userId ? 'Signed in' : 'No login yet'}
+                    </td>
+                    <td className="px-3 py-2 text-ink-700">
+                      {a.locationCity && a.locationState
+                        ? `${a.locationCity}, ${a.locationState}`
+                        : (a.locationState ?? a.locationCity ?? '—')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
 
       {/* Listings section */}
       <section className="mb-8">
@@ -476,6 +546,42 @@ function ModePill({ isPilot }: { isPilot: boolean }) {
       }`}
     >
       {isPilot ? 'Pilot' : 'Paid'}
+    </span>
+  );
+}
+
+function RolePill({ role }: { role?: string }) {
+  const isOwner = role === 'owner';
+  return (
+    <span
+      className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
+        isOwner ? 'bg-accent-50 text-accent-600' : 'bg-surface-200 text-ink-700'
+      }`}
+    >
+      {isOwner ? 'Owner' : 'Member'}
+    </span>
+  );
+}
+
+function AttorneyStatusPill({
+  status,
+}: {
+  status: 'pending' | 'approved' | 'rejected' | 'archived';
+}) {
+  const classes: Record<typeof status, string> = {
+    pending: 'bg-warning-50 text-warning-500 border-warning-500',
+    approved: 'bg-success-50 text-success-500 border-success-500',
+    rejected: 'bg-danger-50 text-danger-500 border-danger-500',
+    archived: 'bg-surface-100 text-ink-500 border-surface-200',
+  };
+  return (
+    <span
+      className={
+        'inline-block px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider font-mono border ' +
+        classes[status]
+      }
+    >
+      {status}
     </span>
   );
 }

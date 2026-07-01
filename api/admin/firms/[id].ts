@@ -53,15 +53,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'GET') {
-    // Admin detail view: return firm plus its listings and subscriptions
-    // so the detail page can render in one round-trip. Listings and
-    // subscriptions are small per-firm (tens, not thousands).
-    const [listings, subscriptions] = await Promise.all([
+    // Admin detail view: return firm plus its roster, listings and
+    // subscriptions so the detail page can render in one round-trip. All
+    // three are small per-firm (tens, not thousands).
+    const [attorneys, listings, subscriptions] = await Promise.all([
+      clients.db.listAttorneysForFirm(id),
       clients.db.listListingsForFirm(id),
       clients.db.listSubscriptionsForFirm(id),
     ]);
     return res.status(200).json({
       firm: existing,
+      attorneys,
       listings,
       subscriptions,
     });
