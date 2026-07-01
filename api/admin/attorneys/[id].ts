@@ -21,6 +21,7 @@ import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
 import type { AttorneyStatus } from '../../../src/engine/clients/types.js';
 import { computeReadiness } from '../../../src/engine/portal/accountReadiness.js';
+import { resolveAttorneyFirmLink } from '../../../src/engine/attorneyFirmLink.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return; // preflight handled
@@ -109,6 +110,32 @@ async function handlePatch(id: string, req: VercelRequest, res: VercelResponse) 
 
     const clients = makeClientsFromEnv();
 
+    // Firm linkage (sync-on-write). Authoritative when law_firm_id is present:
+    // resolve + org-check the firm, derive firm_name from it, or unlink to
+    // solo when null. Runs after the free-text firm_name handling above so it
+    // wins; consumers that send only firm_name (no law_firm_id) keep the old
+    // free-text behavior for back-compat.
+    if ('law_firm_id' in body) {
+      let firmRow: { id: string; name: string } | null = null;
+      if (typeof body.law_firm_id === 'string' && body.law_firm_id.trim()) {
+        const org = await clients.db.getOrgByCode('adall');
+        const firm = await clients.db.readLawFirmById(body.law_firm_id.trim());
+        if (!firm || !org || firm.orgId !== org.id) {
+          return res
+            .status(400)
+            .json({ error: 'law_firm_id does not match a firm in this organization' });
+        }
+        firmRow = { id: firm.id, name: firm.name };
+      }
+      const link = resolveAttorneyFirmLink({
+        lawFirmId: firmRow?.id ?? null,
+        firm: firmRow,
+        firmName: 'firm_name' in body ? stringOrNull(body.firm_name) : null,
+      });
+      patch.lawFirmId = link.lawFirmId;
+      patch.firmName = link.firmName;
+    }
+
     // Go-live gate: an attorney can only be flipped to 'approved' once their
     // profile + firm carry the required-to-go-live fields. Readiness is
     // computed on the merged (existing + this patch) view so the admin can
@@ -116,7 +143,11 @@ async function handlePatch(id: string, req: VercelRequest, res: VercelResponse) 
     if (patch.status === 'approved') {
       const existing = await clients.db.getAttorneyById(id);
       if (!existing) return res.status(404).json({ error: 'Attorney not found' });
-      const firm = existing.lawFirmId ? await clients.db.readLawFirmById(existing.lawFirmId) : null;
+      // Use the firm this save lands on — if the linkage changed in this same
+      // PATCH, readiness must reflect the new firm, not the old one.
+      const effectiveFirmId =
+        'lawFirmId' in patch ? (patch.lawFirmId as string | null) : existing.lawFirmId;
+      const firm = effectiveFirmId ? await clients.db.readLawFirmById(effectiveFirmId) : null;
       const merged = {
         name: (patch.name as string | undefined) ?? existing.name,
         email: 'email' in patch ? (patch.email as string | null) : existing.email,

@@ -14,6 +14,7 @@ import { requireAdmin } from '../../_admin.js';
 import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
 import type { AttorneyStatus } from '../../../src/engine/clients/types.js';
+import { resolveAttorneyFirmLink } from '../../../src/engine/attorneyFirmLink.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return; // preflight handled
@@ -77,10 +78,30 @@ async function handleCreate(req: VercelRequest, res: VercelResponse) {
       return res.status(500).json({ error: 'Default organization not found' });
     }
 
+    // Firm linkage (sync-on-write): if a firm is chosen, resolve + org-check
+    // it and derive firm_name from it; otherwise treat as solo and keep the
+    // free-text firm name. law_firm_id is the source of truth.
+    let firmRow: { id: string; name: string } | null = null;
+    if (typeof body.law_firm_id === 'string' && body.law_firm_id.trim()) {
+      const firm = await clients.db.readLawFirmById(body.law_firm_id.trim());
+      if (!firm || firm.orgId !== org.id) {
+        return res
+          .status(400)
+          .json({ error: 'law_firm_id does not match a firm in this organization' });
+      }
+      firmRow = { id: firm.id, name: firm.name };
+    }
+    const link = resolveAttorneyFirmLink({
+      lawFirmId: firmRow?.id ?? null,
+      firm: firmRow,
+      firmName: stringOrNull(body.firm_name),
+    });
+
     const created = await clients.db.createAttorney({
       orgId: org.id,
       name: body.name.trim(),
-      firmName: stringOrNull(body.firm_name),
+      firmName: link.firmName,
+      lawFirmId: link.lawFirmId,
       locationCity: stringOrNull(body.location_city),
       locationState: stringOrNull(body.location_state)?.toUpperCase() ?? null,
       practiceAreas: Array.isArray(body.practice_areas)

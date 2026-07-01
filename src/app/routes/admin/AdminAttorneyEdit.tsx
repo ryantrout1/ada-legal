@@ -13,6 +13,7 @@ type Status = 'pending' | 'approved' | 'rejected' | 'archived';
 
 interface FormState {
   name: string;
+  law_firm_id: string;
   firm_name: string;
   location_city: string;
   location_state: string;
@@ -27,6 +28,7 @@ interface FormState {
 
 const EMPTY: FormState = {
   name: '',
+  law_firm_id: '',
   firm_name: '',
   location_city: '',
   location_state: '',
@@ -50,6 +52,21 @@ export default function AdminAttorneyEdit() {
   const [error, setError] = useState<string | null>(null);
   const [readiness, setReadiness] = useState<{ ready: boolean; missing: { key: string; label: string }[] } | null>(null);
   const [blockedMissing, setBlockedMissing] = useState<{ label: string }[]>([]);
+  const [firms, setFirms] = useState<{ id: string; name: string }[]>([]);
+
+  // Load the firm list for the picker (both create + edit modes).
+  useEffect(() => {
+    void (async () => {
+      try {
+        const resp = await fetch('/api/admin/firms', { credentials: 'include' });
+        if (!resp.ok) return; // non-fatal — picker just offers "solo"
+        const data = (await resp.json()) as { firms: { id: string; name: string }[] };
+        setFirms(data.firms.map((f) => ({ id: f.id, name: f.name })));
+      } catch {
+        /* non-fatal */
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     if (isNew) return;
@@ -63,6 +80,7 @@ export default function AdminAttorneyEdit() {
           attorney: {
             name: string;
             firmName: string | null;
+            lawFirmId: string | null;
             locationCity: string | null;
             locationState: string | null;
             practiceAreas: string[];
@@ -77,6 +95,7 @@ export default function AdminAttorneyEdit() {
         };
         setForm({
           name: data.attorney.name,
+          law_firm_id: data.attorney.lawFirmId ?? '',
           firm_name: data.attorney.firmName ?? '',
           location_city: data.attorney.locationCity ?? '',
           location_state: data.attorney.locationState ?? '',
@@ -103,9 +122,13 @@ export default function AdminAttorneyEdit() {
     setError(null);
     setBlockedMissing([]);
     try {
+      const linkedToFirm = form.law_firm_id !== '';
       const payload = {
         name: form.name.trim(),
-        firm_name: form.firm_name.trim() || null,
+        law_firm_id: form.law_firm_id || null,
+        // Linked → the server derives firm_name from the firm (sync-on-write),
+        // so we don't send free text. Solo → send the practice name.
+        ...(linkedToFirm ? {} : { firm_name: form.firm_name.trim() || null }),
         location_city: form.location_city.trim() || null,
         location_state: form.location_state.trim().toUpperCase() || null,
         practice_areas: form.practice_areas
@@ -144,6 +167,8 @@ export default function AdminAttorneyEdit() {
   }
 
   if (loading) return <p className="text-ink-500 italic">Loading…</p>;
+
+  const selectedFirm = firms.find((f) => f.id === form.law_firm_id) ?? null;
 
   return (
     <section>
@@ -191,14 +216,47 @@ export default function AdminAttorneyEdit() {
           />
         </Field>
 
-        <Field label="Firm">
-          <input
-            type="text"
-            value={form.firm_name}
-            onChange={(e) => setForm({ ...form, firm_name: e.target.value })}
-            className="w-full rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900"
-          />
+        <Field
+          label="Firm"
+          hint="Link to a firm entity, or choose solo for an unaffiliated attorney"
+        >
+          <select
+            value={form.law_firm_id}
+            onChange={(e) => setForm({ ...form, law_firm_id: e.target.value })}
+            className="w-full rounded-md border border-control-border bg-white px-3 py-2 text-ink-900"
+          >
+            <option value="">No firm / solo practitioner</option>
+            {firms.map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.name}
+              </option>
+            ))}
+          </select>
         </Field>
+
+        {form.law_firm_id === '' ? (
+          <Field
+            label="Firm name (solo)"
+            hint="Practice name shown on the directory for an unaffiliated attorney"
+          >
+            <input
+              type="text"
+              value={form.firm_name}
+              onChange={(e) => setForm({ ...form, firm_name: e.target.value })}
+              className="w-full rounded-md border border-surface-200 bg-white px-3 py-2 text-ink-900"
+            />
+          </Field>
+        ) : (
+          <p className="text-xs text-ink-500">
+            Firm name is managed by the linked firm
+            {selectedFirm ? (
+              <>
+                {' '}(<span className="text-ink-700">{selectedFirm.name}</span>)
+              </>
+            ) : null}
+            . Edit it on the firm.
+          </p>
+        )}
 
         <div className="grid grid-cols-2 gap-4">
           <Field label="City">
