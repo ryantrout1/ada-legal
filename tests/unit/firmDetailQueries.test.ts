@@ -184,3 +184,91 @@ describe('listSubscriptionsForFirm', () => {
     expect(result).toEqual([]);
   });
 });
+
+// ─── listAttorneysForFirm (firm-detail roster) ──────────────────────────────
+// Phase 1 of /plan "Firms as a first-class admin surface". The firm detail
+// page now shows the firm's member attorneys; this asserts the roster query
+// that feeds it is firm-scoped and carries the fields the roster displays
+// (firm_role for owner/member, status, and user_id for the has-login flag).
+
+describe('listAttorneysForFirm (firm detail roster)', () => {
+  it('returns only that firm’s attorneys, scoped by law_firm_id', async () => {
+    const clients = makeInMemoryClients();
+    await clients.db.writeLawFirm(firm(FIRM_A, 'A'));
+    await clients.db.writeLawFirm(firm(FIRM_B, 'B'));
+
+    const owner = await clients.db.createAttorney({
+      orgId: ORG,
+      name: 'Firm A Owner',
+      lawFirmId: FIRM_A,
+      firmRole: 'owner',
+      status: 'approved',
+      practiceAreas: [],
+    });
+    await clients.db.createAttorney({
+      orgId: ORG,
+      name: 'Firm A Member',
+      lawFirmId: FIRM_A,
+      firmRole: 'member',
+      status: 'pending',
+      practiceAreas: [],
+    });
+    const otherFirm = await clients.db.createAttorney({
+      orgId: ORG,
+      name: 'Firm B Attorney',
+      lawFirmId: FIRM_B,
+      firmRole: 'owner',
+      status: 'approved',
+      practiceAreas: [],
+    });
+
+    const roster = await clients.db.listAttorneysForFirm(FIRM_A);
+    const ids = roster.map((a) => a.id);
+    expect(roster).toHaveLength(2);
+    expect(ids).toContain(owner.id);
+    expect(ids).not.toContain(otherFirm.id);
+  });
+
+  it('carries firm_role, status, and the login pairing the roster renders', async () => {
+    const clients = makeInMemoryClients();
+    await clients.db.writeLawFirm(firm(FIRM_A, 'A'));
+
+    const owner = await clients.db.createAttorney({
+      orgId: ORG,
+      name: 'Owner With Login',
+      lawFirmId: FIRM_A,
+      firmRole: 'owner',
+      status: 'approved',
+      practiceAreas: [],
+    });
+    // Pair the owner to a user so the roster's "has login" flag is true for one
+    // row and false for the other — the exact distinction AC#1 surfaces.
+    await clients.db.bindAttorneyToUser(
+      owner.id,
+      '20000000-0000-4000-8000-000000000001',
+      { actorUserId: null, actorEmail: 'admin@adalegallink.com' },
+    );
+    await clients.db.createAttorney({
+      orgId: ORG,
+      name: 'Member No Login',
+      lawFirmId: FIRM_A,
+      firmRole: 'member',
+      status: 'pending',
+      practiceAreas: [],
+    });
+
+    const roster = await clients.db.listAttorneysForFirm(FIRM_A);
+    const byName = Object.fromEntries(roster.map((a) => [a.name, a]));
+
+    expect(byName['Owner With Login']!.firmRole).toBe('owner');
+    expect(byName['Owner With Login']!.status).toBe('approved');
+    expect(byName['Owner With Login']!.userId).toBe(
+      '20000000-0000-4000-8000-000000000001',
+    );
+
+    expect(byName['Member No Login']!.firmRole).toBe('member');
+    expect(byName['Member No Login']!.status).toBe('pending');
+    // No pairing → no login. Null or undefined both read as "no login".
+    expect(byName['Member No Login']!.userId ?? null).toBeNull();
+  });
+});
