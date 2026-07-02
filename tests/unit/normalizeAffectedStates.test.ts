@@ -29,6 +29,16 @@ describe('normalizeAffectedStates', () => {
 });
 
 describe('sanitizeIncomingStates (admin write boundary)', () => {
+  // REGRESSION GUARD — origin: /triage "__nationwide__ renders as code
+  // in the admin lists" (2026-07-01) → /fixit b4aa0ac.
+  // What broke: the admin litigation POST/PATCH handlers uppercased
+  // incoming affected_states without stripping the __nationwide__
+  // sentinel, so any admin-editor save of a wave 2–5 row would store
+  // __NATIONWIDE__ — which the case-sensitive read filter no longer
+  // strips, leaking the raw token to the public page and Ada's prompt.
+  // Falsification: with the seam reverted to the pre-fix behavior
+  // (uppercase, no strip), 3/9 tests in this file fail — exactly the
+  // three bug-targeting assertions below; all pass against b4aa0ac.
   it('strips the sentinel instead of uppercasing it into corruption', () => {
     // The regression this exists for: the handlers uppercase state
     // codes; before this, ['__nationwide__'] became ['__NATIONWIDE__']
