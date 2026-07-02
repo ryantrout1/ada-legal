@@ -14,6 +14,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAdmin } from '../../_admin.js';
 import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
+import { sanitizeIncomingStates } from '../../../src/engine/clients/litigationStates.js';
 import type {
   LitigationKind,
   LitigationStatus,
@@ -73,9 +74,9 @@ async function handlePatch(id: string, req: VercelRequest, res: VercelResponse) 
     if ('court' in body) patch.court = stringOrNull(body.court);
     if ('docket_number' in body) patch.docketNumber = stringOrNull(body.docket_number);
     if (Array.isArray(body.affected_states)) {
-      patch.affectedStates = body.affected_states
-        .filter((s): s is string => typeof s === 'string')
-        .map((s) => s.toUpperCase());
+      // Strips the __nationwide__ sentinel before uppercasing — see
+      // sanitizeIncomingStates (sentinel-corruption backstop).
+      patch.affectedStates = sanitizeIncomingStates(body.affected_states);
     }
     if ('filing_date' in body) patch.filingDate = stringOrNull(body.filing_date);
     if ('lead_attorney_id' in body) patch.leadAttorneyId = stringOrNull(body.lead_attorney_id);

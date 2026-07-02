@@ -39,3 +39,24 @@ export function normalizeAffectedStates(
   if (!states) return [];
   return states.filter((s) => s !== NATIONWIDE_SENTINEL);
 }
+
+/**
+ * Sanitize an incoming (client-supplied) affected_states array at the
+ * WRITE boundary — the admin POST/PATCH handlers.
+ *
+ * The handlers uppercase state codes, which previously corrupted the
+ * sentinel (`__nationwide__` → `__NATIONWIDE__`) whenever the admin
+ * editor round-tripped a wave 2–5 row; the corrupted token then slipped
+ * past the case-sensitive read-side filter above and leaked to the
+ * public page and Ada's prompt context. This strips the sentinel
+ * case-insensitively BEFORE uppercasing, so neither the sentinel nor
+ * its corruption can ever be written again — nationwide is stored as
+ * the empty-array convention going forward.
+ */
+export function sanitizeIncomingStates(input: unknown): string[] {
+  if (!Array.isArray(input)) return [];
+  return input
+    .filter((s): s is string => typeof s === 'string')
+    .filter((s) => s.toLowerCase() !== NATIONWIDE_SENTINEL)
+    .map((s) => s.toUpperCase());
+}

@@ -18,6 +18,7 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAdmin } from '../../_admin.js';
+import { sanitizeIncomingStates } from '../../../src/engine/clients/litigationStates.js';
 import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
 import type {
@@ -119,11 +120,8 @@ async function handleCreate(req: VercelRequest, res: VercelResponse) {
         : [],
       court: stringOrNull(body.court),
       docketNumber: stringOrNull(body.docket_number),
-      affectedStates: Array.isArray(body.affected_states)
-        ? body.affected_states
-            .filter((s): s is string => typeof s === 'string')
-            .map((s) => s.toUpperCase())
-        : [],
+      // Sentinel-safe (see sanitizeIncomingStates).
+      affectedStates: sanitizeIncomingStates(body.affected_states),
       filingDate: stringOrNull(body.filing_date),
       leadAttorneyId: stringOrNull(body.lead_attorney_id),
       status,
