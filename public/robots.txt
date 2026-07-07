@@ -1,11 +1,10 @@
 User-agent: *
-Allow: /
+Disallow: /
 
-# Disallow crawler access to admin surfaces, API endpoints, and
-# session-specific package slugs (those are unguessable per-user
-# artifacts, not meant to be indexed).
-Disallow: /admin/
-Disallow: /api/
-Disallow: /s/
-
-Sitemap: https://ada.adalegallink.com/sitemap.xml
+# ada.adalegallink.com is the platform/engine domain, not a public
+# destination. The public product lives on adalegallink.com (Base44).
+# The only surfaces intentionally reachable here are /photo and /review
+# (internal reviewer tools), /portal (Clerk-gated attorney login), and
+# /s/<slug> (per-user consent readouts, unguessable). None should be
+# crawled or indexed. Full disallow + X-Robots-Tag: noindex in vercel.json.
+# No Sitemap line — we do not advertise a map to a non-public domain.

@@ -5,10 +5,22 @@
       "has": [{ "type": "host", "value": "portal.adalegallink.com" }],
       "destination": "/portal",
       "permanent": false
-    }
+    },
+    { "source": "/", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/chat", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/class-actions", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/class-actions/:path*", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/attorneys", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/for-attorneys", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/about-ada", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/accessibility", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/privacy", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/terms", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/glossary", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/standards-guide", "destination": "https://adalegallink.com", "permanent": false },
+    { "source": "/standards-guide/:path*", "destination": "https://adalegallink.com", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/api/:path*", "destination": "/api/:path*" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
@@ -16,6 +28,10 @@
     {
       "source": "/(.*)",
       "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
         {
           "key": "Strict-Transport-Security",
           "value": "max-age=63072000; includeSubDomains; preload"
