@@ -36,8 +36,16 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { makeClientsFromEnv } from '../_shared.js';
+import { applyCors } from '../_cors.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // The public attorney directory on adalegallink.com (Base44) fetches
+  // this cross-origin. Without CORS the browser blocks the response and
+  // the directory renders its "couldn't load" error even though the API
+  // returns 200. adalegallink.com is in the _cors.ts allowlist. This
+  // mirrors every other public endpoint (api/public/*, api/ada/*).
+  if (applyCors(req, res)) return; // preflight handled
+
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET');
     return res.status(405).json({ error: 'Method not allowed' });
