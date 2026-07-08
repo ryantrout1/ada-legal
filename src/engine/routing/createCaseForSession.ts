@@ -30,8 +30,8 @@ type RoutingClients = Pick<AdaClients, 'db' | 'clock' | 'audit'> &
  * otherwise the sole assigned firm. Returns null when there is no firm or the
  * assignment is ambiguous (multiple firms, no lead) — those fall to sourcing.
  */
-async function resolveRoutingFirm(
-  clients: RoutingClients,
+export async function resolveRoutingFirm(
+  clients: Pick<AdaClients, 'db'>,
   litigationListingId: string,
 ): Promise<string | null> {
   const lit = await clients.db.getLitigationById(litigationListingId);

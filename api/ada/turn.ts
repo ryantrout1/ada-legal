@@ -40,6 +40,8 @@ import { processAdaTurn } from '../../src/engine/processAdaTurn.js';
 import { runSessionQualityCheck } from '../../src/engine/observability/qualityCheck.js';
 import { assemblePackage } from '../../src/engine/package/assemble.js';
 import { backfillClassificationFromLitigation } from '../../src/engine/package/backfillClassification.js';
+import { buildLitigationMatchedListing } from '../../src/engine/package/litigationMatchedListing.js';
+import type { MatchedListing } from '../../src/engine/package/types.js';
 import { maybeSendSelfHelpEmail } from '../../src/engine/handoff/selfHelpEmail.js';
 import { createCaseForSession } from '../../src/engine/routing/createCaseForSession.js';
 import { maybeResolveBusinessAddress } from '../../src/engine/package/resolveBusinessAddress.js';
@@ -385,7 +387,7 @@ async function finalizeTurn(
           (t) => t.name === 'search_attorneys' && t.result_kind === 'ok',
         );
 
-        let matchedListing = null;
+        let matchedListing: MatchedListing | null = null;
         const boundListingId = result.nextState.listingId;
         if (boundListingId) {
           try {
@@ -406,6 +408,21 @@ async function finalizeTurn(
             }
           } catch (lookupErr) {
             console.error('matched listing lookup failed', lookupErr);
+          }
+        }
+
+        // Litigation match (the routed_firm path): the Ch1 listingId lookup
+        // above doesn't see it, so build the MatchedListing from the bound
+        // litigation + its firm. Without this the readout falls back to the
+        // generic class-action placeholder and names no firm.
+        if (!matchedListing && result.nextState.litigationListingId) {
+          try {
+            matchedListing = await buildLitigationMatchedListing(
+              clients,
+              result.nextState.litigationListingId,
+            );
+          } catch (litLookupErr) {
+            console.error('litigation matched listing lookup failed', litLookupErr);
           }
         }
 
