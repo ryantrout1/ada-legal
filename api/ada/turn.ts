@@ -52,6 +52,15 @@ import {
   resolveRequestContext,
 } from '../_shared.js';
 
+// A turn can run several tool loops, each with its own model round-trip
+// (assemble prompt, stream, dispatch tools, loop). On the JSON path the
+// whole thing is one blocking request; without a raised limit a long
+// tool-heavy turn can be killed at the platform default mid-stream,
+// leaving the session half-updated. 90s gives the loop headroom while
+// staying under the Vercel function ceiling. The SSE path streams, but
+// the same server work runs behind it, so it needs the same headroom.
+export const config = { maxDuration: 90 };
+
 // Canonical public host for links emailed to users (the /s/[slug] page
 // lives on the Vercel SPA). Mirrors api/sitemap.ts's SITE_URL.
 const PUBLIC_BASE_URL = 'https://ada.adalegallink.com';
