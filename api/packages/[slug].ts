@@ -14,9 +14,10 @@
  *   405 — method not POST
  *   500 — any DB failure
  *
- * Cache policy: short public cache (60s) so the /s/{slug} page loads
- * snappily on back-navigation, but not so long that a regenerated
- * package is invisible for hours.
+ * Cache policy: short PRIVATE cache (60s) so the /s/{slug} page loads
+ * snappily on back-navigation, but kept out of shared/CDN caches — the
+ * payload is claimant PII behind a capability URL, so only the
+ * requesting browser should retain it.
  *
  * Ref: Step 18, Commit 4.
  */
@@ -50,11 +51,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(404).json({ error: 'Not found' });
     }
 
-    res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=60');
+    // The package is a claimant's readout (names, business, barrier
+    // narrative) behind an unguessable capability URL. `private` keeps
+    // it out of shared/CDN caches so it can only sit in the requesting
+    // browser's cache; the short max-age still makes back-navigation snappy.
+    res.setHeader('Cache-Control', 'private, max-age=60');
     return res.status(200).json({ package: row.payload });
   } catch (err) {
+    // Full detail stays in the server log; the client gets a generic
+    // message so we never leak stack/DB/env internals to a public caller.
     console.error('GET /api/packages/[slug] failed', err);
-    const message = err instanceof Error ? err.message : 'Internal error';
-    return res.status(500).json({ error: message });
+    return res.status(500).json({ error: 'Internal error' });
   }
 }
