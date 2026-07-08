@@ -34,6 +34,7 @@ import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { hashAnonToken, parseAnonCookie } from '../../src/lib/anonCookie.js';
 import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv } from '../_shared.js';
+import { readAdaAvailability } from '../../src/lib/adaAvailability.js';
 
 const ALLOWED_CONTENT_TYPES = [
   'image/jpeg',
@@ -96,6 +97,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
       const tokenHash = await hashAnonToken(anonToken);
       const clients = makeClientsFromEnv();
+
+      // Kill switch (a7). Refuse to mint an upload token when the photo
+      // path is disabled — this is the front door to the Opus analyzer,
+      // so it goes dark with it. Only the token-gen branch is gated; the
+      // Vercel-Blob completion callback below is server-to-server and
+      // must still complete any upload that was already authorized.
+      const availability = await readAdaAvailability(clients.db);
+      if (!availability.photoEnabled) {
+        res.setHeader('Retry-After', '3600');
+        return res.status(503).json({ error: 'Photo upload is currently unavailable.' });
+      }
+
       const anonSessionId = await clients.db.findAnonSessionByHash(tokenHash);
       if (!anonSessionId) {
         return res.status(401).json({ error: 'Unauthorized' });

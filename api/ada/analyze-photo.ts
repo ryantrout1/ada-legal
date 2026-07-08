@@ -24,6 +24,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv, readJsonBody } from '../_shared.js';
+import { readAdaAvailability } from '../../src/lib/adaAvailability.js';
 import {
   parseAnalyzePhotoBody,
   gateAnalyzePhotoSession,
@@ -50,6 +51,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const clients = makeClientsFromEnv();
+
+    // Kill switch (a7). The structured analyzer is a public, budgeted
+    // Opus vision call — dark by default for launch. When an admin has
+    // not explicitly enabled ada_photo_enabled, refuse before reading
+    // the session or touching the model. 503 so callers know it's
+    // deliberate + temporary, not a client error.
+    const availability = await readAdaAvailability(clients.db);
+    if (!availability.photoEnabled) {
+      res.setHeader('Retry-After', '3600');
+      return res.status(503).json({ error: 'Photo analysis is currently unavailable.' });
+    }
 
     // Gate: field-test sessions only.
     const state = await clients.db.readSession({ sessionId });
