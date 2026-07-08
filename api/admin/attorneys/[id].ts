@@ -20,7 +20,7 @@ import { requireAdmin } from '../../_admin.js';
 import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
 import type { AttorneyStatus } from '../../../src/engine/clients/types.js';
-import { computeReadiness } from '../../../src/engine/portal/accountReadiness.js';
+import { computeReadiness, shouldEnforceApprovalGate } from '../../../src/engine/portal/accountReadiness.js';
 import { resolveAttorneyFirmLink } from '../../../src/engine/attorneyFirmLink.js';
 import { canStepDown } from '../../../src/engine/portal/firmOwnership.js';
 
@@ -177,25 +177,30 @@ async function handlePatch(
     if (patch.status === 'approved') {
       const existing = await clients.db.getAttorneyById(id);
       if (!existing) return res.status(404).json({ error: 'Attorney not found' });
-      // Use the firm this save lands on — if the linkage changed in this same
-      // PATCH, readiness must reflect the new firm, not the old one.
-      const effectiveFirmId =
-        'lawFirmId' in patch ? (patch.lawFirmId as string | null) : existing.lawFirmId;
-      const firm = effectiveFirmId ? await clients.db.readLawFirmById(effectiveFirmId) : null;
-      const merged = {
-        name: (patch.name as string | undefined) ?? existing.name,
-        email: 'email' in patch ? (patch.email as string | null) : existing.email,
-        barNumber: 'barNumber' in patch ? (patch.barNumber as string | null) : existing.barNumber,
-        locationState: 'locationState' in patch ? (patch.locationState as string | null) : existing.locationState,
-        additionalStates:
-          'additionalStates' in patch ? (patch.additionalStates as string[]) : existing.additionalStates,
-      };
-      const readiness = computeReadiness(merged, firm);
-      if (!readiness.ready) {
-        return res.status(400).json({
-          error: 'Cannot approve until the profile is complete',
-          missing: readiness.missing,
-        });
+      // Only gate a genuine transition INTO approved. Re-saving a row that
+      // is already approved (even an incomplete one) must be allowed, or an
+      // admin editing an approved attorney gets locked out of every edit.
+      if (shouldEnforceApprovalGate(existing.status, 'approved')) {
+        // Use the firm this save lands on — if the linkage changed in this same
+        // PATCH, readiness must reflect the new firm, not the old one.
+        const effectiveFirmId =
+          'lawFirmId' in patch ? (patch.lawFirmId as string | null) : existing.lawFirmId;
+        const firm = effectiveFirmId ? await clients.db.readLawFirmById(effectiveFirmId) : null;
+        const merged = {
+          name: (patch.name as string | undefined) ?? existing.name,
+          email: 'email' in patch ? (patch.email as string | null) : existing.email,
+          barNumber: 'barNumber' in patch ? (patch.barNumber as string | null) : existing.barNumber,
+          locationState: 'locationState' in patch ? (patch.locationState as string | null) : existing.locationState,
+          additionalStates:
+            'additionalStates' in patch ? (patch.additionalStates as string[]) : existing.additionalStates,
+        };
+        const readiness = computeReadiness(merged, firm);
+        if (!readiness.ready) {
+          return res.status(400).json({
+            error: 'Cannot approve until the profile is complete',
+            missing: readiness.missing,
+          });
+        }
       }
     }
 

@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { computeReadiness } from '@/engine/portal/accountReadiness';
+import { computeReadiness, shouldEnforceApprovalGate } from '@/engine/portal/accountReadiness';
 
 const fullAttorney = {
   name: 'Kelley Simoneaux',
@@ -75,5 +75,24 @@ describe('computeReadiness', () => {
     expect(r.ready).toBe(false);
     expect(keys(r)).toContain('firm_email');
     expect(keys(r)).not.toContain('firm_name');
+  });
+});
+
+describe('shouldEnforceApprovalGate — only the transition INTO approved is gated', () => {
+  it('gates a genuine transition into approved', () => {
+    expect(shouldEnforceApprovalGate('pending', 'approved')).toBe(true);
+    expect(shouldEnforceApprovalGate('rejected', 'approved')).toBe(true);
+    expect(shouldEnforceApprovalGate('archived', 'approved')).toBe(true);
+  });
+
+  it('does NOT gate re-saving an already-approved row (the bug this fixes)', () => {
+    // The B44 form echoes status:'approved' on every edit of an approved
+    // attorney; that must not re-trigger the readiness gate and block the save.
+    expect(shouldEnforceApprovalGate('approved', 'approved')).toBe(false);
+  });
+
+  it('does not gate saves that are not setting status to approved', () => {
+    expect(shouldEnforceApprovalGate('approved', 'pending')).toBe(false);
+    expect(shouldEnforceApprovalGate('pending', 'rejected')).toBe(false);
   });
 });

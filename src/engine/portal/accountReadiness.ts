@@ -58,3 +58,18 @@ export function computeReadiness(
 
   return { ready: missing.length === 0, missing };
 }
+
+/**
+ * Whether a PATCH that sets status to `nextStatus` must pass the go-live
+ * readiness gate. Only a transition INTO approved is gated — re-saving a
+ * row that is ALREADY approved (even an incomplete one) must be allowed,
+ * so an admin editing an already-approved attorney isn't locked out of
+ * unrelated edits by the gate. Genuine approvals (pending/rejected/
+ * archived -> approved) still run the gate.
+ */
+export function shouldEnforceApprovalGate(
+  existingStatus: string,
+  nextStatus: string,
+): boolean {
+  return nextStatus === 'approved' && existingStatus !== 'approved';
+}
