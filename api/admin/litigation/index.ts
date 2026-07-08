@@ -21,6 +21,7 @@ import { requireAdmin } from '../../_admin.js';
 import { sanitizeIncomingStates } from '../../../src/engine/clients/litigationStates.js';
 import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
+import { isUuid } from '../../../src/lib/uuid.js';
 import type {
   LitigationKind,
   LitigationStatus,
@@ -53,6 +54,12 @@ async function handleList(req: VercelRequest, res: VercelResponse) {
     const search = typeof req.query.search === 'string' ? req.query.search : undefined;
     const leadAttorneyId =
       typeof req.query.lead_attorney_id === 'string' ? req.query.lead_attorney_id : undefined;
+    // Guard the uuid cast: a malformed lead_attorney_id (e.g. a legacy
+    // 24-hex Base44 id) would throw at the Postgres uuid column and
+    // surface as a 500. Reject it as a clean 400 instead. (h3)
+    if (leadAttorneyId !== undefined && !isUuid(leadAttorneyId)) {
+      return res.status(400).json({ error: 'lead_attorney_id must be a valid UUID' });
+    }
     const page = parseIntOr(req.query.page, 1);
     const pageSize = Math.min(parseIntOr(req.query.page_size, 50), 100);
 
