@@ -32,12 +32,13 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * Pull the user's contact email from captured fields. Prefers
- * `contact_email`, then `email`, then `user_email`. Returns the first
- * field that holds a value, validated as an email — null if that value
- * isn't a well-formed address, and null when none of the fields are set.
+ * `claimant_email` (the field Ada actually writes during intake), then
+ * `contact_email`, `email`, `user_email`. Returns the first field that
+ * holds a value, validated as an email — null if that value isn't a
+ * well-formed address, and null when none of the fields are set.
  */
 export function extractContactEmail(fields: ExtractedFields): string | null {
-  for (const key of ['contact_email', 'email', 'user_email']) {
+  for (const key of ['claimant_email', 'contact_email', 'email', 'user_email']) {
     const raw = fields[key]?.value;
     if (typeof raw === 'string' && raw.trim().length > 0) {
       const v = raw.trim();

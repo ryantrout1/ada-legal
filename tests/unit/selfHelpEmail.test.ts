@@ -70,6 +70,13 @@ describe('extractContactEmail', () => {
   it('returns contact_email when present and valid', () => {
     expect(extractContactEmail({ contact_email: field('a@b.com') })).toBe('a@b.com');
   });
+  it('reads claimant_email — the field Ada actually writes during intake', () => {
+    // Regression: Ada captures the address as claimant_email; the extractor
+    // used to miss it, so the user/self-help emails silently never sent.
+    expect(extractContactEmail({ claimant_email: field('ryan@adalegallink.com') })).toBe(
+      'ryan@adalegallink.com',
+    );
+  });
   it('falls back to email / user_email', () => {
     expect(extractContactEmail({ email: field('x@y.org') })).toBe('x@y.org');
     expect(extractContactEmail({ user_email: field('z@w.net') })).toBe('z@w.net');
