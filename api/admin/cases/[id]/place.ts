@@ -43,15 +43,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const result = await clients.db.placeCaseToFirm({ caseId: id, orgId: org.id, firmId });
     if (!result) return res.status(404).json({ error: 'Case or firm not found' });
 
-    await clients.audit.log({
-      orgId: org.id,
-      actorType: auth.via === 'clerk' ? 'user' : 'system',
-      actorId: auth.userId,
-      action: 'case.placed',
-      resourceType: 'case',
-      resourceId: id,
-      metadata: { firmId },
-    });
+    // Audit is a side-record: never let it block the placement.
+    try {
+      await clients.audit.log({
+        orgId: org.id,
+        actorType: auth.via === 'clerk' ? 'user' : 'system',
+        actorId: auth.userId,
+        action: 'case.placed',
+        resourceType: 'case',
+        resourceId: id,
+        metadata: { firmId },
+      });
+    } catch (auditErr) {
+      console.error('place audit log failed', auditErr);
+    }
 
     // Phase 3 fast-follow: notify the firm it's been matched. Self-gates on
     // consent (an unconsented placement no-ops; the later consent fires the

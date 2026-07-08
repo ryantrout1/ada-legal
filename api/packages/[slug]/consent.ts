@@ -77,15 +77,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Audit the first consent only (server-side; no conversation content).
     if (!result.alreadyConsented) {
-      await clients.audit.log({
-        orgId: result.caseRow.orgId,
-        actorType: 'system',
-        actorId: null,
-        action: 'case.consent',
-        resourceType: 'case',
-        resourceId: result.caseRow.id,
-        metadata: { scope, sessionId: pkg.sessionId },
-      });
+      // Audit is a side-record: a failure here must never block the consent
+      // or the notifications below (this is the exact bug that shipped the
+      // NeonAuditClient stub throw into the user's consent path).
+      try {
+        await clients.audit.log({
+          orgId: result.caseRow.orgId,
+          actorType: 'system',
+          actorId: null,
+          action: 'case.consent',
+          resourceType: 'case',
+          resourceId: result.caseRow.id,
+          metadata: { scope, sessionId: pkg.sessionId },
+        });
+      } catch (auditErr) {
+        console.error('consent audit log failed', auditErr);
+      }
 
       // Phase 1c: on first consent for a matched case, notify the firm and
       // the claimant. routed_firm only — sourcing / general_queue have no firm
@@ -106,8 +113,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(200).json({ consentToShare: true });
   } catch (err) {
+    // Full detail to the log; generic message to the client (a5).
     console.error('/api/packages/[slug]/consent failed', err);
-    const message = err instanceof Error ? err.message : 'Internal error';
-    return res.status(500).json({ error: message });
+    return res.status(500).json({ error: 'Internal error' });
   }
 }

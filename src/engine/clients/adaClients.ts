@@ -28,8 +28,9 @@
  */
 
 import { randomUUID, randomBytes } from 'node:crypto';
-import { makeDb } from '../../db/client.js';
+import { makeDb, type Database } from '../../db/client.js';
 import { NeonDbClient } from './neonDbClient.js';
+import { auditLog } from '../../db/schema-core.js';
 import { AnthropicAiClient } from './anthropicAiClient.js';
 import { AnthropicPhotoAnalysisClient } from './anthropicPhotoAnalysisClient.js';
 import { makeOpenAIEmbeddingClient } from '../knowledge/embeddings.js';
@@ -69,13 +70,22 @@ class CryptoRandom implements RandomClient {
 // Real NeonDbClient lives in ./neonDbClient.ts and is imported into the factory
 // below. No stub here anymore — session persistence is implemented (Step 6).
 
-// ─── Audit (ready now; writes to audit_log via Drizzle in Step 6) ─────────────
+// ─── Audit (writes to audit_log via Drizzle) ─────────────────────────────────
 
-class NeonAuditClient implements AuditClient {
-  async log(_entry: AuditEntry): Promise<void> {
-    throw new Error(
-      'NeonAuditClient.log: not yet implemented (Phase A Step 6).',
-    );
+export class NeonAuditClient implements AuditClient {
+  constructor(private readonly db: Database) {}
+
+  async log(entry: AuditEntry): Promise<void> {
+    // Append-only audit row. id + created_at default in the schema.
+    await this.db.insert(auditLog).values({
+      orgId: entry.orgId,
+      actorType: entry.actorType,
+      actorId: entry.actorId,
+      action: entry.action,
+      resourceType: entry.resourceType,
+      resourceId: entry.resourceId,
+      metadata: entry.metadata,
+    });
   }
 }
 
@@ -266,7 +276,7 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
     email,
     clock: new SystemClock(),
     random: new CryptoRandom(),
-    audit: new NeonAuditClient(),
+    audit: new NeonAuditClient(db),
     embeddings,
     hopSecret: config.hopSecret,
     stripe,
