@@ -180,6 +180,9 @@ export class InMemoryAiClient implements AiClient {
 
 export class InMemoryDbClient implements DbClient {
   public readonly sessions = new Map<string, AdaSessionState>();
+  /** Per-session last-write timestamp, mirroring ada_sessions.updated_at.
+   *  Used by listStaleActiveSessionIds (the abandonment sweep). */
+  private readonly sessionUpdatedAt = new Map<string, string>();
   public readonly attorneys: AttorneyRow[] = [];
   public readonly adminAttorneys: AttorneyAdminRow[] = [];
   public readonly adminLitigation: LitigationAdminRow[] = [];
@@ -287,6 +290,34 @@ export class InMemoryDbClient implements DbClient {
   async writeSession({ state }: SessionWriteOptions): Promise<void> {
     // Deep clone so later mutations by the caller don't silently change stored state.
     this.sessions.set(state.sessionId, structuredClone(state));
+    // Mirror the DB's updated_at $onUpdate hook so the abandonment sweep
+    // has a last-activity timestamp to filter on. Wall-clock by default;
+    // tests backdate via __setSessionUpdatedAt to simulate staleness.
+    this.sessionUpdatedAt.set(state.sessionId, new Date().toISOString());
+  }
+
+  async listStaleActiveSessionIds({
+    olderThanIso,
+    limit,
+  }: {
+    olderThanIso: string;
+    limit: number;
+  }): Promise<string[]> {
+    const cutoff = new Date(olderThanIso).getTime();
+    const stale: Array<{ id: string; at: number }> = [];
+    for (const state of this.sessions.values()) {
+      if (state.status !== 'active') continue;
+      const iso = this.sessionUpdatedAt.get(state.sessionId);
+      const at = iso ? new Date(iso).getTime() : 0;
+      if (at < cutoff) stale.push({ id: state.sessionId, at });
+    }
+    stale.sort((a, b) => a.at - b.at); // oldest first
+    return stale.slice(0, limit).map((s) => s.id);
+  }
+
+  /** Test hook: backdate a session's last-write timestamp to simulate staleness. */
+  __setSessionUpdatedAt(sessionId: string, iso: string): void {
+    this.sessionUpdatedAt.set(sessionId, iso);
   }
 
   async searchAttorneys(opts: AttorneySearchOptions): Promise<AttorneyRow[]> {

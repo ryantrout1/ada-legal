@@ -976,6 +976,16 @@ export interface DbClient {
   readSession(opts: SessionReadOptions): Promise<AdaSessionState | null>;
   /** Persist a session state. Overwrites prior row. */
   writeSession(opts: SessionWriteOptions): Promise<void>;
+  /**
+   * IDs of `active` sessions whose last write (updated_at) is older than
+   * the given ISO cutoff, oldest first, capped at `limit`. Read-only —
+   * the abandonment sweep transitions each id via the state machine
+   * (never a bulk status UPDATE; DO_NOT_TOUCH rule 2).
+   */
+  listStaleActiveSessionIds(opts: {
+    olderThanIso: string;
+    limit: number;
+  }): Promise<string[]>;
   /** Look up matching attorneys for the attorney-directory tool. */
   searchAttorneys(opts: AttorneySearchOptions): Promise<AttorneyRow[]>;
   /** Distinct facet values for the attorney directory filter UI. */

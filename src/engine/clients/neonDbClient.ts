@@ -18,7 +18,7 @@
  * Ref: docs/ARCHITECTURE.md §2, §6, docs/DO_NOT_TOUCH.md rule 1
  */
 
-import { and, eq, ilike, inArray, isNull, ne, or, sql } from 'drizzle-orm';
+import { and, eq, ilike, inArray, isNull, lt, ne, or, sql } from 'drizzle-orm';
 import type { Database } from '../../db/client.js';
 import { NATIONWIDE_SENTINEL, normalizeAffectedStates } from './litigationStates.js';
 import {
@@ -275,6 +275,30 @@ export class NeonDbClient implements DbClient {
           litigationListingId: values.litigationListingId,
         },
       });
+  }
+
+  async listStaleActiveSessionIds({
+    olderThanIso,
+    limit,
+  }: {
+    olderThanIso: string;
+    limit: number;
+  }): Promise<string[]> {
+    // Uses the ada_sessions_status (status, updated_at) index. Oldest
+    // first so the sweep always drains the longest-stale sessions when a
+    // run is capped by `limit`.
+    const rows = await this.db
+      .select({ id: adaSessions.id })
+      .from(adaSessions)
+      .where(
+        and(
+          eq(adaSessions.status, 'active'),
+          lt(adaSessions.updatedAt, new Date(olderThanIso)),
+        ),
+      )
+      .orderBy(sql`${adaSessions.updatedAt} ASC`)
+      .limit(limit);
+    return rows.map((r) => r.id);
   }
 
   async searchAttorneys(opts: AttorneySearchOptions): Promise<AttorneyRow[]> {
