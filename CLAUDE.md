@@ -35,6 +35,16 @@ Gina's B44 admin page → `base44.functions.invoke('adallProxy')` → **this rep
 - WCAG 2.2 AAA floor. 44px targets. 7:1 text / 3:1 non-text. Full keyboard parity incl. DnD.
 - No fabricated data in UI — honest empty / "coming" states.
 
+## STOP — the skill pairs are mandatory
+
+`/triage` → `/fixit` (bugs) and `/plan` → `/shipit` (builds) are **pairs with a hard stop between them.**
+
+- `/triage` and `/plan` are **diagnosis/design ONLY.** Read, reason, write the plan, **STOP.** No edit, no commit, no push. End with "Ready for /fixit?" and wait.
+- Only `/fixit` / `/shipit` authorizes code changes.
+- **The failure mode:** getting confident mid-diagnosis and collapsing the pair into one turn — fixing before the plan is confirmed. This has been the most expensive mistake in this project. Confidence is NOT a license to skip the stop; "the fix is obvious" is the exact thought that precedes the wrong-layer fix.
+- Actually open the skill file (`/mnt/skills/user/*/SKILL.md`) and follow it — including the **falsification test**. Skipping it ships symptom fixes disguised as root causes.
+- Editing code in the same turn `/triage` or `/plan` was invoked = error condition. Stop, hand back the plan.
+
 ## Gates before every push (all must pass)
 ```
 tsc --noEmit && npm run build && npx vitest run

@@ -114,14 +114,29 @@ Hard rules:
 
 ---
 
-## 4. Workflow skills
+## 4. Workflow skills — THE PAIRS ARE MANDATORY, NOT OPTIONAL
 
-- `/plan` before complex multi-phase work → phased build plan, no code.
-- `/shipit [Phase N]` executes one plan phase end-to-end.
-- `/triage` deep-diagnose a bug to 100% root-cause confidence, no code.
-- `/fixit` executes the triage plan.
+Two paired skills. **The pair is the point.** Each pair splits *thinking* from *doing* with a hard stop in between, so Ryan sanity-checks the plan before any code moves. This split has saved this project repeatedly; collapsing it has failed it repeatedly.
+
+- **`/plan` → `/shipit`** — design/architecture work. `/plan` produces a phased build plan, **no code**. `/shipit [Phase N]` executes one phase.
+- **`/triage` → `/fixit`** — bug work. `/triage` diagnoses to 100% root cause + a fix plan, **no code**. `/fixit` executes it.
 - `/regress` pins a just-fixed bug as a permanent test + ledger row.
 - `/handoff` packs the thread for a fresh session.
+
+### The enforcement rule (read before every bug or build task)
+
+When Ryan says `/triage` or `/plan`, that is a **diagnosis-only / design-only** instruction. Claude's job that turn is to **read, reason, and write the plan — then STOP.** Do not edit a file. Do not commit. Do not push. End the turn with the plan and the "Ready for /fixit?" (or "Ready for /shipit?") line, and **wait for Ryan to say `/fixit` / `/shipit`.**
+
+**The failure mode this exists to prevent:** Claude gets confident mid-diagnosis, decides the fix is obvious, and collapses `/triage` → `/fixit` into one turn — diagnosing, editing, committing, and pushing without stopping. **This is the single most expensive mistake in this project's history.** Every time it has happened, the "obvious" fix was the wrong layer and cost multiple failed rounds. Every time the stop was honored, the root cause was found on the first try.
+
+Concretely:
+- `/triage` or `/plan` invoked → **produce the plan, change nothing, stop.** Confidence is not a license to skip the stop. "I'm sure I know the fix" is exactly the thought that precedes the expensive mistakes.
+- Only `/fixit` / `/shipit` authorizes code changes. No code moves before that word.
+- If Claude believes the fix is trivial and wants to skip straight to it, that belief is **not** grounds to collapse the pair — surface it in the plan and still wait.
+- If the plan isn't at 100% confidence, `/triage` says so and does **not** offer `/fixit` — it names the missing piece (per the skill).
+- Actually invoke the skill file (`/mnt/skills/user/triage/SKILL.md` etc.) and follow its flow — including the **falsification test** step. Skipping "read the skill, run the falsification test" is how symptom-level fixes get shipped as if they were root causes.
+
+If Claude ever finds itself editing code in the same turn `/triage` or `/plan` was invoked, that is the error condition — stop, and hand back the plan instead.
 
 Operating mode: **Claude implements, Ryan runs live validation.** Terse output, single decisive recommendations, no confirmation loops, no option menus. Ryan often dictates — interpret phonetics ("Versailles"/"Brazil" = Vercel, "Base Forty Four" = Base44).
 
