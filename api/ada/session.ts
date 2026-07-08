@@ -48,6 +48,7 @@ import {
   resolveRequestContext,
 } from '../_shared.js';
 import { applyCors } from '../_cors.js';
+import { readAdaAvailability } from '../../src/lib/adaAvailability.js';
 import {
   FIELD_CAPTURE_HEADER,
   resolveFieldCaptureFlag,
@@ -139,6 +140,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         : 'standard';
 
     const clients = makeClientsFromEnv();
+
+    // Kill switch (a6). When an admin flips ada_chat_enabled off, stop
+    // creating sessions platform-wide — no cookie mint, no row, no
+    // greeting — and return a friendly 503 the chat UI can render.
+    // Fail-open: only an explicit false disables, so a settings-read
+    // hiccup never takes live chat dark. Checked before any work so a
+    // disabled surface costs one settings read, nothing more.
+    // NOTE (copy): the message below is claimant-facing — pending Gina's
+    // §3 copy review before user-facing enable.
+    const availability = await readAdaAvailability(clients.db);
+    if (!availability.chatEnabled) {
+      res.setHeader('Retry-After', '3600');
+      return res.status(503).json({
+        error: 'Ada is temporarily unavailable. Please check back soon.',
+      });
+    }
 
     // Resolve the organization row.
     const org = await clients.db.getOrgByCode(orgCode);
