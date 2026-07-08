@@ -209,16 +209,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     return runJsonTurn(res, clients, state, body, org);
   } catch (err) {
+    // Full detail stays in the server log; the client gets a generic
+    // message so we never leak stack/DB/env internals to a public caller.
     console.error('POST /api/ada/turn failed', err);
-    const message = err instanceof Error ? err.message : 'Internal error';
     // If we already started an SSE response, surface as an error frame;
     // otherwise return a normal 500 JSON.
     if (wantsSse && res.headersSent) {
-      writeSseFrame(res, 'error', { error: message });
+      writeSseFrame(res, 'error', { error: 'Internal error' });
       res.end();
       return;
     }
-    return res.status(500).json({ error: message });
+    return res.status(500).json({ error: 'Internal error' });
   }
 }
 
@@ -315,10 +316,11 @@ async function runSseTurn(
     writeSseFrame(res, 'done', final);
     res.end();
   } catch (err) {
+    // Full detail stays in the server log; the client gets a generic
+    // frame so we never leak stack/DB/env internals to a public caller.
     console.error('SSE turn failed', err);
-    const message = err instanceof Error ? err.message : 'Internal error';
     if (!aborted) {
-      writeSseFrame(res, 'error', { error: message });
+      writeSseFrame(res, 'error', { error: 'Internal error' });
     }
     res.end();
   }

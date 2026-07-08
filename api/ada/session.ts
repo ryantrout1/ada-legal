@@ -287,9 +287,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       reading_level: session.readingLevel,
     });
   } catch (err) {
+    // Full detail stays in the server log; the client gets a generic
+    // message so we never leak stack/DB/env internals to a public caller.
     console.error('POST /api/ada/session failed', err);
-    const message = err instanceof Error ? err.message : 'Internal error';
-    return res.status(500).json({ error: message });
+    return res.status(500).json({ error: 'Internal error' });
   }
 }
 
