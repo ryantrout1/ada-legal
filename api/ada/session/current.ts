@@ -28,10 +28,16 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { makeClientsFromEnv, resolveRequestContext } from '../../_shared.js';
+import { applyCors } from '../../_cors.js';
 import { hashAnonToken } from '../../../src/lib/anonCookie.js';
 import type { LitigationContext, ReadingLevel } from '../../../src/types/db.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // applyCors so the B44 consumer chat (adalegallink.com) can hydrate a
+  // resumable session / render the readout cross-origin. Echoes the allowed
+  // origin's Access-Control-Allow-Origin; preflight OPTIONS returns 204.
+  if (applyCors(req, res)) return;
+
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET');
     return res.status(405).json({ error: 'Method not allowed' });
