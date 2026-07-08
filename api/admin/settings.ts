@@ -19,13 +19,26 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAdmin } from '../_admin.js';
 import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv } from '../_shared.js';
+import {
+  ADA_AVAILABILITY_DEFAULTS,
+  ADA_CHAT_ENABLED_KEY,
+  ADA_PHOTO_ENABLED_KEY,
+} from '../../src/lib/adaAvailability.js';
 
 interface SettingsShape {
   data_collection_enabled: boolean;
+  /** Kill switch for the live claimant chat (POST /api/ada/session). */
+  ada_chat_enabled: boolean;
+  /** Enable/disable the Opus field-test photo path (/photo). */
+  ada_photo_enabled: boolean;
 }
 
+// Defaults for the availability flags come from the shared resolver so
+// the admin UI baseline and the enforcement path can never disagree.
 const DEFAULTS: SettingsShape = {
   data_collection_enabled: true,
+  ada_chat_enabled: ADA_AVAILABILITY_DEFAULTS.chatEnabled,
+  ada_photo_enabled: ADA_AVAILABILITY_DEFAULTS.photoEnabled,
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -66,6 +79,12 @@ async function handlePatch(req: VercelRequest, res: VercelResponse, _userId: str
 
     if (typeof body.data_collection_enabled === 'boolean') {
       next.data_collection_enabled = body.data_collection_enabled;
+    }
+    if (typeof body[ADA_CHAT_ENABLED_KEY] === 'boolean') {
+      next.ada_chat_enabled = body[ADA_CHAT_ENABLED_KEY];
+    }
+    if (typeof body[ADA_PHOTO_ENABLED_KEY] === 'boolean') {
+      next.ada_photo_enabled = body[ADA_PHOTO_ENABLED_KEY];
     }
 
     // TODO: updated_by FK expects a users.id uuid, not a Clerk user id.
