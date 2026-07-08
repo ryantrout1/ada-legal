@@ -45,6 +45,7 @@ import { dispatchTool } from './tools/dispatcher.js';
 import type { ToolStateChanges } from './tools/types.js';
 import { applyTransition } from './session/stateMachine.js';
 import { evaluateRoutingRules } from './routing/evaluate.js';
+import { evaluateTurnCap } from '../lib/turnCap.js';
 
 /** Maximum tool-use loops per turn. Safety cap against runaway tool chains. */
 const MAX_TOOL_LOOPS = 5;
@@ -114,6 +115,32 @@ export async function processAdaTurn({
       photos: mergedPhotos,
     },
   };
+
+  // Per-session turn cap (a3). Evaluated on the transcript BEFORE this
+  // turn was appended: once a session has already had MAX_USER_TURNS user
+  // turns, refuse the next one instead of calling the model again. We
+  // still record the user's final message (already in workingState), add
+  // a graceful wrap-up, and complete the session so the normal
+  // finalizeTurn path produces the readout. Real sessions top out ~56
+  // turns, so this only fires on runaway/abuse — never a legitimate user.
+  const turnCap = evaluateTurnCap(state.conversationHistory);
+  if (turnCap.capReached) {
+    const capMessage: Message = {
+      role: 'assistant',
+      content: turnCap.wrapUpMessage,
+      timestamp: clients.clock.now().toISOString(),
+    };
+    const cappedState: AdaSessionState = {
+      ...workingState,
+      conversationHistory: [...workingState.conversationHistory, capMessage],
+      status: applyTransition(workingState.status, 'complete'),
+    };
+    return {
+      nextState: cappedState,
+      assistantMessage: capMessage,
+      toolInvocations: [],
+    };
+  }
 
   // Ch0 tools are universal; Ch1 tools (match_listing, finalize_intake)
   // are added globally so Ada can promote any public_ada session that
