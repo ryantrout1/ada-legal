@@ -39,6 +39,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { processAdaTurn } from '../../src/engine/processAdaTurn.js';
 import { runSessionQualityCheck } from '../../src/engine/observability/qualityCheck.js';
 import { assemblePackage } from '../../src/engine/package/assemble.js';
+import { backfillClassificationFromLitigation } from '../../src/engine/package/backfillClassification.js';
 import { maybeSendSelfHelpEmail } from '../../src/engine/handoff/selfHelpEmail.js';
 import { createCaseForSession } from '../../src/engine/routing/createCaseForSession.js';
 import { maybeResolveBusinessAddress } from '../../src/engine/package/resolveBusinessAddress.js';
@@ -345,6 +346,17 @@ async function finalizeTurn(
   clients: AdaClients,
   result: AdaTurnResult,
 ): Promise<FinalPayload> {
+  // A completed session that matched a litigation but was never classified
+  // would drop its readout, routed case, and notification (all gated on
+  // classification below). Derive a classification from the matched
+  // litigation so the intake still produces its outputs. No-op otherwise.
+  if (result.nextState.status === 'completed' && !result.nextState.classification) {
+    result = {
+      ...result,
+      nextState: await backfillClassificationFromLitigation(clients.db, result.nextState),
+    };
+  }
+
   // Persist the new session state.
   await clients.db.writeSession({ state: result.nextState });
 
