@@ -26,11 +26,19 @@ type RoutingClients = Pick<AdaClients, 'db' | 'clock' | 'audit'> &
   Partial<Pick<AdaClients, 'email' | 'adminNotificationEmail'>>;
 
 /**
- * Resolve the firm a matched litigation routes to: lead counsel if set,
+ * Resolve the DISPLAY firm for a matched litigation: lead counsel if set,
  * otherwise the sole assigned firm. Returns null when there is no firm or the
- * assignment is ambiguous (multiple firms, no lead) — those fall to sourcing.
+ * assignment is ambiguous (multiple firms, no lead).
+ *
+ * Eligibility-INDEPENDENT: this is the firm whose public contact the readout
+ * shows for any matched litigation, whether or not that firm has signed up to
+ * receive routed leads. The routing decision uses a separate resolver
+ * (resolveRoutingFirm) so "show a firm's contact" and "route a lead to a firm"
+ * can diverge.
+ *
+ * Ref: routing rebuild /plan Phase 1 (decouple display from routing).
  */
-export async function resolveRoutingFirm(
+export async function resolveDisplayFirm(
   clients: Pick<AdaClients, 'db'>,
   litigationListingId: string,
 ): Promise<string | null> {
@@ -40,6 +48,23 @@ export async function resolveRoutingFirm(
   const assignments = await clients.db.listFirmAssignmentsForLitigation(litigationListingId);
   if (assignments.length === 1) return assignments[0]!.lawFirmId;
   return null;
+}
+
+/**
+ * Resolve the firm a matched litigation ROUTES to (the exclusive lead handoff).
+ *
+ * Phase 1: identical to resolveDisplayFirm — no behavior change. Phase 2
+ * replaces the body with an eligibility gate (firm active + subscribed/pilot
+ * AND opted in to this litigation); until then routing and display resolve the
+ * same firm.
+ *
+ * Ref: routing rebuild /plan Phase 1.
+ */
+export async function resolveRoutingFirm(
+  clients: Pick<AdaClients, 'db'>,
+  litigationListingId: string,
+): Promise<string | null> {
+  return resolveDisplayFirm(clients, litigationListingId);
 }
 
 /** Best-effort claimant jurisdiction from extracted fields (snapshot only; gating is deferred). */
