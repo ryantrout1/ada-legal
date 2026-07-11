@@ -39,6 +39,13 @@
  * so it never enters a firm queue; the readout shows the firm's public contact
  * for the claimant to reach out themselves. It never routes or gets accepted —
  * only admin-closed (new → closed).
+ *
+ * 'pool' (routing rebuild R4) is the shared self-select lane: a non-matched
+ * actionable intake, firm_id null, status 'new', consent-gated. Any eligible
+ * firm covering its jurisdiction can atomically claim it (first-come-wins),
+ * which sets firm_id + assigned_lawyer_id and moves it to 'investigating' —
+ * from there it is that firm's normal worked case. Until claimed it belongs to
+ * no firm and appears in no firm queue.
  */
 export type CaseLane =
   | 'routed_firm'
@@ -47,7 +54,8 @@ export type CaseLane =
   | 'self_help'
   | 'no_action'
   | 'direct'
-  | 'matched_self_referral';
+  | 'matched_self_referral'
+  | 'pool';
 
 export type CaseStatus =
   | 'new'

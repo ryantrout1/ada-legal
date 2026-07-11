@@ -143,6 +143,7 @@ import type {
   CreateDirectCaseOptions,
   RecordConsentResult,
   CaseRow,
+  PoolCaseRow,
 } from './types.js';
 import type { AdaSessionState } from '../types.js';
 import type {
@@ -3216,6 +3217,86 @@ export class NeonDbClient implements DbClient {
       eventType: 'PLACED',
       summary: `Placed to ${firmRows[0].name}`,
       metadata: { firmId: opts.firmId },
+    });
+
+    return { caseRow: toCaseRow(updated[0]) };
+  }
+
+  async listPoolCases(): Promise<PoolCaseRow[]> {
+    const rows = await this.db
+      .select({
+        id: casesTable.id,
+        caseNumber: casesTable.caseNumber,
+        classificationTitle: casesTable.classificationTitle,
+        classificationStandard: casesTable.classificationStandard,
+        jurisdictionState: casesTable.jurisdictionState,
+        createdAt: casesTable.createdAt,
+        // adaSessions.extractedFields is the ONLY claimant-adjacent source read
+        // here; we extract only business_name (the establishment, not PII).
+        extractedFields: adaSessions.extractedFields,
+      })
+      .from(casesTable)
+      .leftJoin(adaSessions, eq(adaSessions.id, casesTable.adaSessionId))
+      .where(
+        and(
+          eq(casesTable.lane, 'pool'),
+          isNull(casesTable.firmId),
+          eq(casesTable.consentToShare, true),
+        ),
+      )
+      .orderBy(sql`${casesTable.createdAt} DESC`);
+
+    return rows.map((r) => {
+      const ef = (r.extractedFields ?? null) as Record<string, { value?: unknown } | undefined> | null;
+      const bn = ef?.business_name?.value;
+      return {
+        id: r.id,
+        caseNumber: r.caseNumber,
+        classificationTitle: r.classificationTitle,
+        classificationStandard: r.classificationStandard,
+        jurisdictionState: r.jurisdictionState,
+        businessName: typeof bn === 'string' && bn.trim() !== '' ? bn : null,
+        createdAt: r.createdAt instanceof Date ? r.createdAt.toISOString() : String(r.createdAt),
+      };
+    });
+  }
+
+  async claimPoolCase(opts: {
+    caseId: string;
+    lawFirmId: string;
+    attorneyId: string;
+  }): Promise<{ caseRow: CaseRow } | null> {
+    const now = new Date();
+    // Race-safe: the guard (lane='pool' AND firm_id IS NULL AND consented)
+    // means exactly one concurrent claim can flip the row. A lost race returns
+    // zero rows → null.
+    const updated = await this.db
+      .update(casesTable)
+      .set({
+        firmId: opts.lawFirmId,
+        assignedLawyerId: opts.attorneyId,
+        status: 'investigating',
+        routedAt: now,
+        updatedAt: now,
+      })
+      .where(
+        and(
+          eq(casesTable.id, opts.caseId),
+          eq(casesTable.lane, 'pool'),
+          isNull(casesTable.firmId),
+          eq(casesTable.consentToShare, true),
+        ),
+      )
+      .returning();
+    if (!updated[0]) return null;
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      actorId: opts.attorneyId,
+      eventType: 'CLAIMED',
+      summary: 'Attorney claimed this case from the pool',
+      metadata: { lawFirmId: opts.lawFirmId },
     });
 
     return { caseRow: toCaseRow(updated[0]) };

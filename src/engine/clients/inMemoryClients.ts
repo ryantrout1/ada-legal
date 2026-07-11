@@ -118,6 +118,7 @@ import type {
   CreateDirectCaseOptions,
   RecordConsentResult,
   CaseRow,
+  PoolCaseRow,
   PhotoReviewListOptions,
   PhotoReviewListResult,
   PhotoReviewDetail,
@@ -231,6 +232,7 @@ export class InMemoryDbClient implements DbClient {
   public readonly caseActivity: Array<{
     caseId: string;
     actorType: string;
+    actorId?: string | null;
     eventType: string;
     summary: string | null;
     metadata: Record<string, unknown>;
@@ -2197,6 +2199,59 @@ export class InMemoryDbClient implements DbClient {
       summary: `Placed to ${firm.name}`,
       metadata: { firmId: opts.firmId },
       createdAt: routedAt,
+    });
+
+    return { caseRow: { ...c } };
+  }
+
+  async listPoolCases(): Promise<PoolCaseRow[]> {
+    return this.cases
+      .filter((c) => c.lane === 'pool' && c.firmId === null && c.consentToShare === true)
+      .map((c) => {
+        const extras = this.caseExtras.get(c.id);
+        const session = c.adaSessionId ? this.sessions.get(c.adaSessionId) : undefined;
+        const ef = session?.extractedFields as
+          | Record<string, { value?: unknown } | undefined>
+          | undefined;
+        const bn = ef?.business_name?.value;
+        return {
+          id: c.id,
+          caseNumber: c.caseNumber,
+          classificationTitle: extras?.classificationTitle ?? null,
+          classificationStandard: null,
+          jurisdictionState: extras?.jurisdictionState ?? null,
+          businessName: typeof bn === 'string' && bn.trim() !== '' ? bn : null,
+          createdAt: c.createdAt,
+        };
+      });
+  }
+
+  async claimPoolCase(opts: {
+    caseId: string;
+    lawFirmId: string;
+    attorneyId: string;
+  }): Promise<{ caseRow: CaseRow } | null> {
+    const c = this.cases.find(
+      (x) =>
+        x.id === opts.caseId &&
+        x.lane === 'pool' &&
+        x.firmId === null &&
+        x.consentToShare === true,
+    );
+    if (!c) return null;
+
+    c.firmId = opts.lawFirmId;
+    c.assignedLawyerId = opts.attorneyId;
+    c.status = 'investigating';
+
+    this.caseActivity.push({
+      caseId: c.id,
+      actorType: 'user',
+      actorId: opts.attorneyId,
+      eventType: 'CLAIMED',
+      summary: 'Attorney claimed this case from the pool',
+      metadata: { lawFirmId: opts.lawFirmId },
+      createdAt: new Date(0).toISOString(),
     });
 
     return { caseRow: { ...c } };

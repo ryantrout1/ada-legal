@@ -11,8 +11,9 @@
  *   POST → records claimant consent (idempotent). { consentToShare: true }.
  *
  * Consent scope is derived from the lane: routed_firm → matched_firm,
- * sourcing → sourcing, general_queue → general_placement. no_action carries no
- * handoff, so consent does not apply (the page never shows a CTA for it).
+ * sourcing → sourcing, general_queue → general_placement, pool → pool.
+ * matched_self_referral / no_action carry no handoff, so consent does not apply
+ * (the page never shows a CTA for them).
  *
  * Ref: /plan Phase 1b.
  */
@@ -27,6 +28,7 @@ const SCOPE_BY_LANE: Record<string, string> = {
   routed_firm: 'matched_firm',
   sourcing: 'sourcing',
   general_queue: 'general_placement',
+  pool: 'pool',
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

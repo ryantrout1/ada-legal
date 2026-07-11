@@ -50,7 +50,7 @@ export default function SessionPackagePage() {
   const slug = params.slug ?? '';
   const [state, setState] = useState<LoadState>({ kind: 'loading' });
   const [consent, setConsent] = useState<{
-    lane: 'routed_firm' | 'sourcing' | 'general_queue' | 'self_help' | 'no_action' | 'direct' | 'matched_self_referral' | null;
+    lane: 'routed_firm' | 'sourcing' | 'general_queue' | 'self_help' | 'no_action' | 'direct' | 'matched_self_referral' | 'pool' | null;
     consentToShare: boolean | null;
   } | null>(null);
 
@@ -168,7 +168,7 @@ function PackageView({
   pkg: SessionPackage;
   slug: string;
   consent: {
-    lane: 'routed_firm' | 'sourcing' | 'general_queue' | 'self_help' | 'no_action' | 'direct' | 'matched_self_referral' | null;
+    lane: 'routed_firm' | 'sourcing' | 'general_queue' | 'self_help' | 'no_action' | 'direct' | 'matched_self_referral' | 'pool' | null;
     consentToShare: boolean | null;
   } | null;
 }) {

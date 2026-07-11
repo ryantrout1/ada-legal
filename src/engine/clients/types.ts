@@ -949,6 +949,24 @@ export interface CreateCaseResult {
 }
 
 /**
+ * A de-identified pool case for the self-select browse (routing rebuild R4).
+ * Deliberately carries NO claimant PII (no name/email/phone) — those are
+ * revealed only to the firm that claims the case, via the normal firm queue /
+ * case detail. Surfaces the establishment (business), classification, state,
+ * and age so a firm can decide whether to claim.
+ */
+export interface PoolCaseRow {
+  id: string;
+  caseNumber: string;
+  classificationTitle: string | null;
+  classificationStandard: string | null;
+  jurisdictionState: string | null;
+  /** The establishment the claimant described (the defendant/target — not claimant PII). */
+  businessName: string | null;
+  createdAt: string;
+}
+
+/**
  * Options for createDirectCase — a self-originated matter an attorney creates
  * themselves (no ada_session, no routing). The row is born in the 'direct'
  * lane, 'investigating' status, owned by its creator, and consent-true (there
@@ -1507,6 +1525,28 @@ export interface DbClient {
     caseId: string;
     orgId: string;
     firmId: string;
+  }): Promise<{ caseRow: CaseRow } | null>;
+
+  /**
+   * R4 self-select pool: list every consented, unclaimed pool case
+   * (lane='pool', firm_id null, consent_to_share true) as de-identified rows
+   * (no claimant PII). Jurisdiction filtering is applied by the caller via
+   * firmCoversState; this returns the full claimable set.
+   */
+  listPoolCases(): Promise<PoolCaseRow[]>;
+
+  /**
+   * R4 self-select pool: atomically claim a pool case for a firm. Race-safe —
+   * the UPDATE only fires when the case is still lane='pool', firm_id IS NULL,
+   * and consented, so exactly one concurrent claim wins. On success sets
+   * firm_id + assigned_lawyer_id + status='investigating' + routed_at and
+   * writes a CLAIMED activity. Returns null when the claim lost the race, the
+   * case isn't a claimable pool case, or it isn't consented.
+   */
+  claimPoolCase(opts: {
+    caseId: string;
+    lawFirmId: string;
+    attorneyId: string;
   }): Promise<{ caseRow: CaseRow } | null>;
 
   /**

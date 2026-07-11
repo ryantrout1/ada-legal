@@ -27,6 +27,7 @@ type Lane =
   | 'no_action'
   | 'direct'
   | 'matched_self_referral'
+  | 'pool'
   | null;
 
 interface ConsentCopy {
@@ -36,7 +37,7 @@ interface ConsentCopy {
   button: string;
 }
 
-const COPY: Record<'routed_firm' | 'sourcing' | 'general_queue', ConsentCopy> = {
+const COPY: Record<'routed_firm' | 'sourcing' | 'general_queue' | 'pool', ConsentCopy> = {
   routed_firm: {
     eyebrow: 'Connect with an attorney',
     heading: 'Want us to share your details with the attorney on this case?',
@@ -54,6 +55,12 @@ const COPY: Record<'routed_firm' | 'sourcing' | 'general_queue', ConsentCopy> = 
     heading: 'Want someone on our team to review your situation?',
     body: 'Our team can review what you described and connect you with the right help. Nothing is shared until you say yes.',
     button: 'Yes, review my situation',
+  },
+  pool: {
+    eyebrow: 'Make your case available to attorneys',
+    heading: 'Want to make your case available for an attorney to pick up?',
+    body: 'We can add your situation to a list attorneys review. Your name and contact details stay private until an attorney takes your case — then they can reach out to you. Nothing is shared until you say yes.',
+    button: 'Yes, make my case available',
   },
 };
 
@@ -74,7 +81,14 @@ export default function ConsentCard({
   // Only the handoff lanes get a consent action. matched_self_referral shows
   // the firm's public contact on the readout but involves no handoff, so it
   // gets no consent card — the claimant reaches out to the firm themselves.
-  if (lane !== 'routed_firm' && lane !== 'sourcing' && lane !== 'general_queue') {
+  // 'pool' does get a consent action: consenting is what makes the case
+  // available for an attorney to claim (contact stays private until claimed).
+  if (
+    lane !== 'routed_firm' &&
+    lane !== 'sourcing' &&
+    lane !== 'general_queue' &&
+    lane !== 'pool'
+  ) {
     return null;
   }
   const copy = COPY[lane];
