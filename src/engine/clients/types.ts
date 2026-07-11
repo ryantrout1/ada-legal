@@ -699,6 +699,10 @@ export interface LitigationFirmAssignment {
   litigationListingId: string;
   lawFirmId: string;
   assignedByUserId: string | null;
+  /** Routing-rebuild Phase 2: the firm has opted in to receive routed leads for this litigation. */
+  receivesMatches: boolean;
+  /** ISO timestamp when the firm opted in, or null. */
+  optedInAt: string | null;
   createdAt: string;
 }
 
@@ -1587,6 +1591,13 @@ export interface DbClient {
     litigationListingId: string;
     lawFirmId: string;
     assignedByUserId?: string | null;
+    /**
+     * Routing-rebuild Phase 2: opt the firm in to receive routed leads for this
+     * litigation. Default false (assignment ≠ opt-in). When true, opted_in_at
+     * is stamped. On a repeat call for an existing row, a true value promotes
+     * the row to opted-in.
+     */
+    receivesMatches?: boolean;
   }): Promise<LitigationFirmAssignment>;
 
   /**

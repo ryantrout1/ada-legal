@@ -2274,16 +2274,24 @@ export class NeonDbClient implements DbClient {
     litigationListingId: string;
     lawFirmId: string;
     assignedByUserId?: string | null;
+    receivesMatches?: boolean;
   }): Promise<LitigationFirmAssignment> {
-    // Idempotent on the (litigation, firm) unique index. A repeat opt-in is a
-    // no-op insert; we then read back the existing row so callers always get a
-    // concrete assignment regardless of whether this call created it.
+    const optIn = input.receivesMatches === true;
+    const optedInAt = optIn ? new Date() : null;
+
+    // Idempotent on the (litigation, firm) unique index. On insert we set the
+    // opt-in flag directly. On conflict, if this call is opting the firm in, we
+    // promote the existing row (assignment already existed, now opted in);
+    // otherwise it's a no-op and we read the existing row back so callers
+    // always get a concrete assignment.
     const inserted = await this.db
       .insert(litigationFirmAssignments)
       .values({
         litigationListingId: input.litigationListingId,
         lawFirmId: input.lawFirmId,
         assignedByUserId: input.assignedByUserId ?? null,
+        receivesMatches: optIn,
+        optedInAt,
       })
       .onConflictDoNothing({
         target: [
@@ -2293,6 +2301,20 @@ export class NeonDbClient implements DbClient {
       })
       .returning();
     if (inserted[0]) return toLitigationFirmAssignment(inserted[0]);
+
+    if (optIn) {
+      const promoted = await this.db
+        .update(litigationFirmAssignments)
+        .set({ receivesMatches: true, optedInAt: optedInAt ?? new Date() })
+        .where(
+          and(
+            eq(litigationFirmAssignments.litigationListingId, input.litigationListingId),
+            eq(litigationFirmAssignments.lawFirmId, input.lawFirmId),
+          ),
+        )
+        .returning();
+      if (promoted[0]) return toLitigationFirmAssignment(promoted[0]);
+    }
 
     const existing = await this.db
       .select()
@@ -4056,6 +4078,8 @@ function toLitigationFirmAssignment(r: {
   litigationListingId: string;
   lawFirmId: string;
   assignedByUserId: string | null;
+  receivesMatches: boolean;
+  optedInAt: Date | null;
   createdAt: Date;
 }): LitigationFirmAssignment {
   return {
@@ -4063,6 +4087,8 @@ function toLitigationFirmAssignment(r: {
     litigationListingId: r.litigationListingId,
     lawFirmId: r.lawFirmId,
     assignedByUserId: r.assignedByUserId,
+    receivesMatches: r.receivesMatches,
+    optedInAt: r.optedInAt ? r.optedInAt.toISOString() : null,
     createdAt: r.createdAt.toISOString(),
   };
 }

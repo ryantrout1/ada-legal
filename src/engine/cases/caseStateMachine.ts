@@ -33,6 +33,12 @@
  * router (Phase 1) for intake-derived cases, or by createDirectCase for
  * self-originated matters an attorney creates themselves ('direct' — born in
  * the 'investigating' status, skipping the new→accept triage).
+ *
+ * 'matched_self_referral' (routing rebuild Phase 2) is passive: a matched
+ * litigation whose firm has not opted in / is not eligible. firm_id stays null
+ * so it never enters a firm queue; the readout shows the firm's public contact
+ * for the claimant to reach out themselves. It never routes or gets accepted —
+ * only admin-closed (new → closed).
  */
 export type CaseLane =
   | 'routed_firm'
@@ -40,7 +46,8 @@ export type CaseLane =
   | 'general_queue'
   | 'self_help'
   | 'no_action'
-  | 'direct';
+  | 'direct'
+  | 'matched_self_referral';
 
 export type CaseStatus =
   | 'new'

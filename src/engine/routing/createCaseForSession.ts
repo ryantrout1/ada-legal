@@ -17,6 +17,7 @@
 import type { AdaClients, CaseRow } from '../clients/types.js';
 import type { AdaSessionState } from '../types.js';
 import { decideLane } from './routeCase.js';
+import { isFirmEligible } from './firmEligibility.js';
 import { sendAdminRoutingNotification } from '../notifications/routingNotifications.js';
 
 /** First-contact SLA window for a routed_firm case (24h). */
@@ -33,8 +34,8 @@ type RoutingClients = Pick<AdaClients, 'db' | 'clock' | 'audit'> &
  * Eligibility-INDEPENDENT: this is the firm whose public contact the readout
  * shows for any matched litigation, whether or not that firm has signed up to
  * receive routed leads. The routing decision uses a separate resolver
- * (resolveRoutingFirm) so "show a firm's contact" and "route a lead to a firm"
- * can diverge.
+ * (resolveEligibleRoutingFirm) so "show a firm's contact" and "route a lead to
+ * a firm" can diverge.
  *
  * Ref: routing rebuild /plan Phase 1 (decouple display from routing).
  */
@@ -51,20 +52,47 @@ export async function resolveDisplayFirm(
 }
 
 /**
- * Resolve the firm a matched litigation ROUTES to (the exclusive lead handoff).
+ * Resolve the firm a matched litigation ROUTES to (the exclusive lead handoff),
+ * or null when none qualifies (→ matched_self_referral / sourcing).
  *
- * Phase 1: identical to resolveDisplayFirm — no behavior change. Phase 2
- * replaces the body with an eligibility gate (firm active + subscribed/pilot
- * AND opted in to this litigation); until then routing and display resolve the
- * same firm.
+ * A firm qualifies only when it has opted in to THIS litigation
+ * (litigation_firm_assignments.receives_matches) AND clears the eligibility
+ * floor (isFirmEligible: active + subscribed/pilot).
  *
- * Ref: routing rebuild /plan Phase 1.
+ * Lead precedence: if the litigation designates a lead firm, we route to it
+ * only when the lead firm is itself opted in + eligible — we never route to a
+ * different firm behind the lead. With no lead, we route to the sole opted-in +
+ * eligible firm; zero or more than one → null (ambiguous, don't guess).
+ *
+ * Ref: /plan "Gate exclusive routing behind firm eligibility", Phase 2.
  */
-export async function resolveRoutingFirm(
+export async function resolveEligibleRoutingFirm(
   clients: Pick<AdaClients, 'db'>,
   litigationListingId: string,
 ): Promise<string | null> {
-  return resolveDisplayFirm(clients, litigationListingId);
+  const assignments = await clients.db.listFirmAssignmentsForLitigation(litigationListingId);
+  const optedIn = assignments.filter((a) => a.receivesMatches);
+  if (optedIn.length === 0) return null;
+
+  const isEligible = async (firmId: string): Promise<boolean> => {
+    const firm = await clients.db.readLawFirmById(firmId);
+    return firm != null && isFirmEligible(firm);
+  };
+
+  const lit = await clients.db.getLitigationById(litigationListingId);
+  const leadFirmId = lit?.leadFirmId ?? null;
+
+  if (leadFirmId) {
+    const leadOptedIn = optedIn.some((a) => a.lawFirmId === leadFirmId);
+    if (!leadOptedIn) return null;
+    return (await isEligible(leadFirmId)) ? leadFirmId : null;
+  }
+
+  const eligible: string[] = [];
+  for (const a of optedIn) {
+    if (await isEligible(a.lawFirmId)) eligible.push(a.lawFirmId);
+  }
+  return eligible.length === 1 ? eligible[0]! : null;
 }
 
 /** Best-effort claimant jurisdiction from extracted fields (snapshot only; gating is deferred). */
@@ -83,14 +111,22 @@ export async function createCaseForSession(
 ): Promise<CaseRow | null> {
   try {
     const litigationListingId = state.litigationListingId;
-    const litigationFirmId = litigationListingId
-      ? await resolveRoutingFirm(clients, litigationListingId)
+    // Routing rebuild Phase 2: the firm we ROUTE to (opted in + eligible) is
+    // resolved separately from whether ANY firm is resolvable for contact
+    // DISPLAY. A matched litigation whose firm hasn't opted in still shows
+    // contact info (hasDisplayFirm) but does not route (eligibleFirmId null).
+    const eligibleFirmId = litigationListingId
+      ? await resolveEligibleRoutingFirm(clients, litigationListingId)
       : null;
+    const hasDisplayFirm = litigationListingId
+      ? (await resolveDisplayFirm(clients, litigationListingId)) != null
+      : false;
 
     const decision = decideLane({
       classificationTitle: state.classification?.title ?? null,
       litigationListingId,
-      litigationFirmId,
+      eligibleFirmId,
+      hasDisplayFirm,
     });
 
     const now = clients.clock.now();

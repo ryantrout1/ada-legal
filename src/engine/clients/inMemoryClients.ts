@@ -1462,6 +1462,8 @@ export class InMemoryDbClient implements DbClient {
       litigationListingId,
       lawFirmId,
       assignedByUserId: assignedByUserId ?? null,
+      receivesMatches: false,
+      optedInAt: null,
       createdAt: new Date(0).toISOString(),
     }));
     this.litigationFirmAssignments.push(...created.map((c) => ({ ...c })));
@@ -1478,18 +1480,29 @@ export class InMemoryDbClient implements DbClient {
     litigationListingId: string;
     lawFirmId: string;
     assignedByUserId?: string | null;
+    receivesMatches?: boolean;
   }): Promise<LitigationFirmAssignment> {
+    const optIn = input.receivesMatches === true;
     const existing = this.litigationFirmAssignments.find(
       (a) =>
         a.litigationListingId === input.litigationListingId &&
         a.lawFirmId === input.lawFirmId,
     );
-    if (existing) return { ...existing };
+    if (existing) {
+      // Promote to opted-in on a repeat call that opts the firm in.
+      if (optIn && !existing.receivesMatches) {
+        existing.receivesMatches = true;
+        existing.optedInAt = new Date(0).toISOString();
+      }
+      return { ...existing };
+    }
     const created: LitigationFirmAssignment = {
       id: `lfa-${input.litigationListingId}-${input.lawFirmId}`,
       litigationListingId: input.litigationListingId,
       lawFirmId: input.lawFirmId,
       assignedByUserId: input.assignedByUserId ?? null,
+      receivesMatches: optIn,
+      optedInAt: optIn ? new Date(0).toISOString() : null,
       createdAt: new Date(0).toISOString(),
     };
     this.litigationFirmAssignments.push({ ...created });

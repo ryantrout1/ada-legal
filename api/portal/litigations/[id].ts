@@ -66,6 +66,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         litigationListingId: id,
         lawFirmId: auth.lawFirmId,
         assignedByUserId: auth.userId,
+        // Self-select IS opting in to receive routed matches (routing rebuild
+        // Phase 2). The firm-level eligibility floor (active + subscribed/pilot)
+        // still gates whether matches actually route.
+        receivesMatches: true,
       });
       return res.status(200).json({ ok: true, accepted: true, assignment_id: assignment.id });
     }

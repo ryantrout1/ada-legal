@@ -466,6 +466,12 @@ export const litigationFirmAssignments = pgTable(
       .references(() => litigationListings.id, { onDelete: 'cascade' }),
     lawFirmId: uuid('law_firm_id').notNull(),
     assignedByUserId: uuid('assigned_by_user_id').references(() => users.id),
+    // Routing-rebuild Phase 2: per-litigation opt-in. A firm receives an
+    // exclusive routed lead for this litigation only when receives_matches is
+    // true AND the firm clears the eligibility floor (isFirmEligible). Default
+    // false — assignment ≠ opted-in.
+    receivesMatches: boolean('receives_matches').notNull().default(false),
+    optedInAt: timestamp('opted_in_at', { withTimezone: true }),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
