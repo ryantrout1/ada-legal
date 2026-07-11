@@ -19,6 +19,7 @@ import { describe, it, expect } from 'vitest';
 import { assemblePrompt } from '@/engine/prompt/assemble';
 import { CH0_TOOLS } from '@/engine/tools/registry';
 import type { AdaSessionState } from '@/engine/types';
+import readingLevelsDoc from '@content/prompts/reading-levels.js';
 
 function baseState(overrides: Partial<AdaSessionState> = {}): AdaSessionState {
   return {
@@ -145,6 +146,16 @@ describe('assemblePrompt — reading levels', () => {
     expect(out).toContain('Reading level: professional');
     expect(out).toContain('legal literacy');
     expect(out).not.toContain('COGA');
+  });
+
+  // Phase 2: the simple guide previously told the model to say "the store
+  // broke the law" — a legal verdict Ada's boundaries forbid. The reading-
+  // levels content must not carry that instruction, while keeping its
+  // jargon-avoidance intent.
+  it('does not instruct declaring a business broke the law (aligns with boundaries)', () => {
+    expect(readingLevelsDoc).not.toMatch(/broke the law/i);
+    // Jargon-avoidance intent survives.
+    expect(readingLevelsDoc.toLowerCase()).toContain('never use legal terms');
   });
 });
 
