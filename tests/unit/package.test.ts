@@ -255,6 +255,28 @@ describe('buildSummary', () => {
     const summary = buildSummary({}, baseClassification);
     expect(summary).toContain('shared your experience');
   });
+
+  // Phase 0: experience fields captured during a barrier chat must surface
+  // in the claimant readout, not only in admin session detail.
+  it('surfaces the barrier experience when the claimant could not get in', () => {
+    const facts: ExtractedFields = {
+      ...baseFacts,
+      could_access: { value: 'no', confidence: 0.95, extracted_at: '2026-04-22T12:00:00.000Z' },
+      alternative_route_present: { value: 'no', confidence: 0.9, extracted_at: '2026-04-22T12:00:00.000Z' },
+    };
+    const summary = buildSummary(facts, baseClassification);
+    // Plain, non-verdict phrasing describing the lived barrier.
+    expect(summary).toMatch(/were.?n.?t able to get in|could not get in|kept you from getting in/i);
+  });
+
+  it('notes a temporary barrier as temporary', () => {
+    const facts: ExtractedFields = {
+      ...baseFacts,
+      barrier_permanence: { value: 'temporary', confidence: 0.9, extracted_at: '2026-04-22T12:00:00.000Z' },
+    };
+    const summary = buildSummary(facts, baseClassification);
+    expect(summary).toMatch(/temporar/i);
+  });
 });
 
 // ─── demand letter ───────────────────────────────────────────────────────────

@@ -196,6 +196,35 @@ function describeSituation(facts: ExtractedFields): string {
     pieces.push(`on ${date}`);
   }
 
+  // Barrier experience (Phase 0). Plain, non-verdict clauses that surface
+  // what the person actually experienced — captured by the barrier
+  // experience-question module. These read as continuations ("...and that
+  // it kept you from getting in"), so they only attach when there is a
+  // preceding situation clause to continue; otherwise they would dangle
+  // after "You told Ada that". Never predicts an outcome or declares a
+  // violation.
+  if (pieces.length === 0) {
+    return '';
+  }
+  const couldAccess = fieldString(facts, 'could_access');
+  if (couldAccess === 'no') {
+    pieces.push('and that it kept you from getting in');
+  } else if (couldAccess === 'with_difficulty') {
+    pieces.push('and that you could only get in with difficulty');
+  }
+
+  const altRoute = fieldString(facts, 'alternative_route_present');
+  if (altRoute === 'no') {
+    pieces.push('with no other way around it');
+  }
+
+  const permanence = fieldString(facts, 'barrier_permanence');
+  if (permanence === 'temporary') {
+    pieces.push('(the barrier was there only temporarily)');
+  } else if (permanence === 'permanent') {
+    pieces.push('(the barrier is there permanently)');
+  }
+
   return pieces.join(' ').replace(/\s+/g, ' ').trim();
 }
 
