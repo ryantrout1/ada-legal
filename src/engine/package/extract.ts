@@ -136,6 +136,22 @@ export function buildSummary(
     parts.push(
       'Based on what you described, this does not appear to be an ADA matter, but resources below can still help.',
     );
+  } else if (classification.title === 'no_apparent_issue') {
+    // The education outcome. NEVER certify compliance, and never land a
+    // clean "no apparent barrier" at low confidence — a false "you're
+    // fine" is as harmful as missing a real barrier. Low tier downgrades
+    // to a needs-more-info read.
+    if (classification.tier === 'low') {
+      parts.push(
+        'Ada could not fully tell from what was shared whether there is a barrier here. It is worth a closer look — a clearer photo or an on-site check — before assuming there is no issue, and the resources below can help.',
+      );
+    } else {
+      const cite =
+        classification.standard && classification.standard.trim() !== '' && classification.standard.trim().toLowerCase() !== 'n/a'
+          ? ` The standard that speaks to this is ${classification.standard.trim()}.`
+          : '';
+      parts.push(`${label.plainDescription}${cite}`);
+    }
   } else if (classification.title === 'class_action') {
     parts.push(
       `Ada thinks this may be ${labelLower(label.shortLabel)}. ${label.plainDescription}`,
@@ -146,8 +162,11 @@ export function buildSummary(
     );
   }
 
-  // Part 3: confidence caveat only when low.
-  if (classification.tier === 'low') {
+  // Part 3: confidence caveat only when low. Skipped for no_apparent_issue,
+  // whose low-tier read is already handled with tailored, conservative
+  // language in Part 2 (a generic "talk to a lawyer to confirm" would
+  // muddy the needs-more-info framing).
+  if (classification.tier === 'low' && classification.title !== 'no_apparent_issue') {
     parts.push(
       'Ada is not fully certain about the classification, so talking to someone like a lawyer or an ADA information line can help confirm.',
     );

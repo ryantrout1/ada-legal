@@ -43,6 +43,7 @@ const VALID_TITLES: AdaTitle[] = [
   'III',
   'class_action',
   'out_of_scope',
+  'no_apparent_issue',
   'none',
 ];
 const VALID_TIERS: ConfidenceTier[] = ['high', 'medium', 'low'];
@@ -59,6 +60,11 @@ export const setClassificationTool: AdaTool<SetClassificationInput> = {
     "out_of_scope = the user's experience is not ADA-covered but Ada can still be useful " +
     "(a civil-rights matter under a different law, a consumer issue, etc.). Use this instead " +
     "of 'none' whenever you can point the user somewhere useful. " +
+    "no_apparent_issue = you assessed the situation (often from a photo or description) and did " +
+    "NOT see an apparent barrier — the feature appears allowed or not required. Use ONLY at tier " +
+    "'high' or 'medium'; if you are unsure, do NOT use this — keep gathering or leave it unclassified. " +
+    "Never certify compliance; this is a screening read. Cite the standard that explains why it appears " +
+    "allowed when you can. " +
     "none = truly no identifiable issue and no useful referral possible (rare). " +
     "Cite the relevant ADA standard section when it applies (e.g. '28 CFR §35.130' for Title II " +
     "non-discrimination). For out_of_scope, cite the regime you think DOES apply " +
@@ -73,6 +79,7 @@ export const setClassificationTool: AdaTool<SetClassificationInput> = {
         description:
           "Classification: 'I' (employment/EEOC), 'II' (government/DOJ), 'III' (public accommodation), " +
           "'class_action' (matches active class action pattern), 'out_of_scope' (not ADA but useful referral), " +
+          "'no_apparent_issue' (assessed, no apparent barrier — screening only, high/medium tier only), " +
           "or 'none' (no identifiable issue).",
       },
       tier: {

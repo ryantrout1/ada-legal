@@ -67,6 +67,13 @@ export function labelFor(title: AdaTitle): ClassificationLabel {
           "Ada could not identify a specific legal issue based on what was shared, but the resources below can still help if you want to talk to someone.",
         technicalLabel: 'No classification',
       };
+    case 'no_apparent_issue':
+      return {
+        shortLabel: 'No Apparent Barrier',
+        plainDescription:
+          "Based on what you described, Ada did not see an apparent accessibility barrier here. This is a screening read, not a compliance check — if something felt wrong in person, it is worth verifying on site, and the resources below can help.",
+        technicalLabel: 'No apparent barrier (screening only)',
+      };
     default: {
       const _exhaustive: never = title;
       void _exhaustive;

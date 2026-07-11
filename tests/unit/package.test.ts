@@ -72,7 +72,7 @@ describe('package slug', () => {
 
 describe('classification labels', () => {
   it('produces plain-language labels for all classifications', () => {
-    for (const title of ['I', 'II', 'III', 'class_action', 'out_of_scope', 'none'] as const) {
+    for (const title of ['I', 'II', 'III', 'class_action', 'out_of_scope', 'none', 'no_apparent_issue'] as const) {
       const lbl = labelFor(title);
       expect(lbl.shortLabel).toBeTruthy();
       expect(lbl.shortLabel.length).toBeLessThanOrEqual(40);
@@ -81,6 +81,16 @@ describe('classification labels', () => {
       // No HTML in any label content.
       expect(lbl.shortLabel + lbl.plainDescription).not.toMatch(/<[a-z]/i);
     }
+  });
+
+  // Phase 1: the no-apparent-issue outcome must NEVER certify compliance.
+  it('frames no_apparent_issue as screening, never as a compliance certification', () => {
+    const lbl = labelFor('no_apparent_issue');
+    const all = lbl.shortLabel + ' ' + lbl.plainDescription + ' ' + lbl.technicalLabel;
+    // Never asserts the place "is compliant" / "is accessible" / "meets the ADA".
+    expect(all).not.toMatch(/is compliant|is accessible|meets the ADA|complies with/i);
+    // Reads as a screening / verify-on-site outcome, not a verdict.
+    expect(all).toMatch(/apparent|verify|screening|on site/i);
   });
 
   it('does NOT put "Title I/II/III" in the short label', () => {
@@ -276,6 +286,33 @@ describe('buildSummary', () => {
     };
     const summary = buildSummary(facts, baseClassification);
     expect(summary).toMatch(/temporar/i);
+  });
+
+  // Phase 1: the no-apparent-issue education outcome.
+  const noIssue: Classification = {
+    title: 'no_apparent_issue',
+    tier: 'high',
+    reasoning: 'ramp slope looks within range and there is a level landing',
+    standard: '2010 ADA Standards §405',
+  };
+
+  it('renders no_apparent_issue as a hedged, non-certifying explanation with the cite', () => {
+    const summary = buildSummary(baseFacts, noIssue);
+    // Hedged + verify-on-site, never a compliance certification.
+    expect(summary).toMatch(/apparent|verify|on site/i);
+    expect(summary).not.toMatch(/is compliant|fully accessible|meets the ADA|complies with|you have no case/i);
+    // Surfaces the cited standard so the reader can see the "why".
+    expect(summary).toContain('§405');
+    // Not the out_of_scope "not an ADA matter" message.
+    expect(summary).not.toMatch(/not an ADA matter/i);
+  });
+
+  it('downgrades low-confidence no_apparent_issue to needs-more-info (never a clean no-issue)', () => {
+    const low: Classification = { ...noIssue, tier: 'low' };
+    const summary = buildSummary(baseFacts, low);
+    // Conservative: signals uncertainty / a closer look, does not assert
+    // there is no barrier.
+    expect(summary).toMatch(/could(n't| not) (fully )?tell|closer look|more information|verify|not certain/i);
   });
 });
 

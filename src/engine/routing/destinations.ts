@@ -492,6 +492,11 @@ export function routeFor(ctx: RoutingContext): Route {
 
     case 'out_of_scope':
     case 'none':
+    case 'no_apparent_issue':
+      // no_apparent_issue: there is no apparent barrier to act on, so no
+      // demand letter and no attorney handoff — point the user to the
+      // Regional ADA Center (who can advise or help them verify) and the
+      // info line. Same resource shape as out_of_scope/none.
       return {
         primary: REGIONAL_ADA_CENTERS,
         alternates: stateDest ? [stateDest] : [],

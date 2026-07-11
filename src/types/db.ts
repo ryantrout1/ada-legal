@@ -58,6 +58,7 @@ export type AdaTitle =
   | 'III'           // Public accommodation (private business)
   | 'class_action'  // Matches pattern of an active class action (Phase D populates candidate registry)
   | 'out_of_scope'  // Not ADA-covered, but Ada still documents and refers out
+  | 'no_apparent_issue' // Assessed (often with a photo) — no apparent barrier; screening only, never a compliance certification. Routes to no_action, no attorney handoff.
   | 'none';         // Legacy value: no ADA issue identified (prefer 'out_of_scope' going forward)
 
 export type ConfidenceTier = 'high' | 'medium' | 'low';
