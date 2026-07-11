@@ -41,19 +41,54 @@ function matchedState(sessionId: string): AdaSessionState {
 }
 
 describe('firm self-select → routing', () => {
-  it('a single firm opting in → that matched intake routes to the firm', async () => {
+  it('a single firm opting in (eligible) → that matched intake routes to the firm', async () => {
     const c = clients();
-    await c.db.addFirmAssignment({ litigationListingId: LIT, lawFirmId: 'firm-solo' });
+    c.db.lawFirms.push({
+      id: 'firm-solo',
+      name: 'Solo',
+      status: 'active',
+      isPilot: true,
+      stripeCustomerId: null,
+    } as unknown as import('@/engine/clients/types').LawFirmRow);
+    await c.db.addFirmAssignment({
+      litigationListingId: LIT,
+      lawFirmId: 'firm-solo',
+      receivesMatches: true,
+    });
 
     const row = await createCaseForSession(c, matchedState('sess-solo'));
     expect(row!.lane).toBe('routed_firm');
     expect(row!.firmId).toBe('firm-solo');
   });
 
+  it('a firm assigned but NOT opted in → matched_self_referral (contact info only)', async () => {
+    const c = clients();
+    c.db.lawFirms.push({
+      id: 'firm-solo',
+      name: 'Solo',
+      status: 'active',
+      isPilot: true,
+      stripeCustomerId: null,
+    } as unknown as import('@/engine/clients/types').LawFirmRow);
+    await c.db.addFirmAssignment({ litigationListingId: LIT, lawFirmId: 'firm-solo' });
+
+    const row = await createCaseForSession(c, matchedState('sess-noopt'));
+    expect(row!.lane).toBe('matched_self_referral');
+    expect(row!.firmId).toBeNull();
+  });
+
   it('two firms opting in with no lead → sourcing (safety valve, no guess)', async () => {
     const c = clients();
-    await c.db.addFirmAssignment({ litigationListingId: LIT, lawFirmId: 'firm-1' });
-    await c.db.addFirmAssignment({ litigationListingId: LIT, lawFirmId: 'firm-2' });
+    await c.db.addFirmAssignment({
+      litigationListingId: LIT,
+      lawFirmId: 'firm-1',
+      receivesMatches: true,
+    });
+    await c.db.addFirmAssignment({
+      litigationListingId: LIT,
+      lawFirmId: 'firm-2',
+      receivesMatches: true,
+    });
 
     const row = await createCaseForSession(c, matchedState('sess-multi'));
     expect(row!.lane).toBe('sourcing');

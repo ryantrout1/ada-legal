@@ -38,8 +38,17 @@ function seed() {
     litigationListingId: LIT_ID,
     lawFirmId: FIRM_ID,
     assignedByUserId: null,
+    receivesMatches: true,
+    optedInAt: new Date(0).toISOString(),
     createdAt: new Date(0).toISOString(),
   });
+  db.lawFirms.push({
+    id: FIRM_ID,
+    name: 'The Spinal Cord Injury Law Firm',
+    status: 'active',
+    isPilot: true,
+    stripeCustomerId: null,
+  } as unknown as import('@/engine/clients/types').LawFirmRow);
   return { db, clock: new InMemoryClock(), audit: new InMemoryAuditClient() };
 }
 

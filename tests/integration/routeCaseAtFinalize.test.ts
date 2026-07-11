@@ -49,16 +49,33 @@ function clients() {
   };
 }
 
+/** Seed an assignment + firm row. eligible = active pilot firm; optedIn flips receives_matches. */
+function seedFirm(
+  c: ReturnType<typeof clients>,
+  opts: { litId: string; firmId: string; optedIn: boolean; eligible: boolean },
+) {
+  c.db.litigationFirmAssignments.push({
+    id: `a-${opts.firmId}`,
+    litigationListingId: opts.litId,
+    lawFirmId: opts.firmId,
+    assignedByUserId: null,
+    receivesMatches: opts.optedIn,
+    optedInAt: opts.optedIn ? new Date(0).toISOString() : null,
+    createdAt: new Date(0).toISOString(),
+  });
+  c.db.lawFirms.push({
+    id: opts.firmId,
+    name: 'Firm',
+    status: opts.eligible ? 'active' : 'suspended',
+    isPilot: true,
+    stripeCustomerId: null,
+  } as unknown as import('@/engine/clients/types').LawFirmRow);
+}
+
 describe('createCaseForSession — lane selection', () => {
-  it('matched litigation WITH an assigned firm → routed_firm (AC1)', async () => {
+  it('matched litigation + eligible, opted-in firm → routed_firm (AC1)', async () => {
     const c = clients();
-    c.db.litigationFirmAssignments.push({
-      id: 'a1',
-      litigationListingId: 'lit-1',
-      lawFirmId: 'firm-1',
-      assignedByUserId: null,
-      createdAt: new Date(0).toISOString(),
-    });
+    seedFirm(c, { litId: 'lit-1', firmId: 'firm-1', optedIn: true, eligible: true });
 
     const row = await createCaseForSession(c, makeState({ litigationListingId: 'lit-1' }));
 
@@ -66,13 +83,34 @@ describe('createCaseForSession — lane selection', () => {
     expect(row!.lane).toBe('routed_firm');
     expect(row!.firmId).toBe('firm-1');
     expect(c.db.cases).toHaveLength(1);
-    // routed_firm carries SLA timestamps.
     const stored = c.db.cases[0]!;
     expect(stored.caseNumber).toMatch(/^CASE-\d{4,}$/);
     expect(stored.consentToShare).toBe(false);
   });
 
-  it('matched litigation WITHOUT a firm → sourcing (AC2)', async () => {
+  it('matched litigation + firm NOT opted in → matched_self_referral, firm_id null (the Hilton case)', async () => {
+    const c = clients();
+    seedFirm(c, { litId: 'lit-1', firmId: 'firm-1', optedIn: false, eligible: true });
+
+    const row = await createCaseForSession(c, makeState({ litigationListingId: 'lit-1' }));
+
+    expect(row!.lane).toBe('matched_self_referral');
+    expect(row!.firmId).toBeNull();
+    // No admin routing notification fires for a self-referral case.
+    expect(c.db.caseActivity.filter((a) => a.eventType === 'NOTIFIED')).toHaveLength(0);
+  });
+
+  it('matched litigation + opted-in but INELIGIBLE firm → matched_self_referral', async () => {
+    const c = clients();
+    seedFirm(c, { litId: 'lit-1', firmId: 'firm-1', optedIn: true, eligible: false });
+
+    const row = await createCaseForSession(c, makeState({ litigationListingId: 'lit-1' }));
+
+    expect(row!.lane).toBe('matched_self_referral');
+    expect(row!.firmId).toBeNull();
+  });
+
+  it('matched litigation WITHOUT any firm → sourcing (AC2)', async () => {
     const c = clients();
     const row = await createCaseForSession(c, makeState({ litigationListingId: 'lit-2' }));
     expect(row!.lane).toBe('sourcing');

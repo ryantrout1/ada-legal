@@ -13,10 +13,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { InMemoryDbClient } from '@/engine/clients/inMemoryClients';
-import {
-  resolveDisplayFirm,
-  resolveRoutingFirm,
-} from '@/engine/routing/createCaseForSession';
+import { resolveDisplayFirm } from '@/engine/routing/createCaseForSession';
 import type { LitigationAdminRow, LitigationFirmAssignment } from '@/engine/clients/types';
 
 const LIT_ID = 'lit-hilton';
@@ -30,6 +27,8 @@ function assignment(id: string, firmId: string): LitigationFirmAssignment {
     litigationListingId: LIT_ID,
     lawFirmId: firmId,
     assignedByUserId: null,
+    receivesMatches: false,
+    optedInAt: null,
     createdAt: new Date(0).toISOString(),
   };
 }
@@ -81,12 +80,3 @@ describe('resolveDisplayFirm', () => {
   });
 });
 
-describe('resolveRoutingFirm (Phase 1 — delegates to display)', () => {
-  it('resolves the same firm as resolveDisplayFirm', async () => {
-    const db = seed({ leadFirmId: LEAD_FIRM, assignments: [FIRM_A] });
-    const display = await resolveDisplayFirm({ db }, LIT_ID);
-    const routing = await resolveRoutingFirm({ db }, LIT_ID);
-    expect(routing).toBe(display);
-    expect(routing).toBe(LEAD_FIRM);
-  });
-});

@@ -29,6 +29,8 @@ function seed(opts: { withAssignment: boolean; withFirmRow: boolean }) {
       litigationListingId: LIT_ID,
       lawFirmId: FIRM_ID,
       assignedByUserId: null,
+      receivesMatches: false,
+      optedInAt: null,
       createdAt: new Date(0).toISOString(),
     });
   }

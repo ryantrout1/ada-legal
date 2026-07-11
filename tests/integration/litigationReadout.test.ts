@@ -33,6 +33,8 @@ function seed() {
     litigationListingId: LIT_ID,
     lawFirmId: FIRM_ID,
     assignedByUserId: null,
+    receivesMatches: false,
+    optedInAt: null,
     createdAt: new Date(0).toISOString(),
   });
   db.lawFirms.push({
