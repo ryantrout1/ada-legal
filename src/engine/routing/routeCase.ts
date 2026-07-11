@@ -13,8 +13,13 @@
  *   - bound litigation, no eligible firm,
  *       a display firm exists                 → matched_self_referral (show contact, no handoff)
  *   - bound litigation, no firm at all        → sourcing              (admin recruits)
- *   - no litigation, actionable               → general_queue         (I / II / III / class_action)
+ *   - no litigation, actionable               → pool                  (I / II / III / class_action — self-select)
  *   - no litigation, not actionable           → no_action             (out_of_scope / none / unclassified)
+ *
+ * 'general_queue' is no longer produced by the router (R4 cutover) — actionable
+ * unmatched intakes go to the shared self-select pool instead of admin
+ * placement. general_queue remains a valid lane for legacy rows and the manual
+ * admin placement override.
  *
  * `self_help` is not produced as a routing destination here: every classified
  * public_ada session already gets a self-help readout downstream, so self-help
@@ -74,9 +79,9 @@ export function decideLane(input: RouteInput): RouteDecision {
 
   if (input.classificationTitle && ACTIONABLE_TITLES.has(input.classificationTitle)) {
     return {
-      lane: 'general_queue',
+      lane: 'pool',
       firmId: null,
-      reason: `actionable classification (${input.classificationTitle}), no litigation match`,
+      reason: `actionable classification (${input.classificationTitle}), no litigation match — self-select pool`,
     };
   }
 

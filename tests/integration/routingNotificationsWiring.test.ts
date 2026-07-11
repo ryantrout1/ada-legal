@@ -60,23 +60,37 @@ function clients(email: EmailClient, adminEmail: string) {
 }
 
 describe('createCaseForSession — admin notification wiring', () => {
-  it('emails the admin when it creates a general_queue case', async () => {
+  it('emails the admin when it creates a sourcing case', async () => {
     const email = new CapturingEmail();
     const c = clients(email, 'admin@adalegallink.com');
 
-    // No litigation + actionable title → general_queue.
+    // Matched litigation with no resolvable firm → sourcing (admin-notified).
+    const row = await createCaseForSession(
+      c,
+      makeState({ title: 'III', litigationListingId: 'lit-orphan' }),
+    );
+
+    expect(row!.lane).toBe('sourcing');
+    expect(email.sent.map((s) => s.to)).toEqual(['admin@adalegallink.com']);
+  });
+
+  it('does NOT email the admin for a pool case (self-select, no admin in the loop)', async () => {
+    const email = new CapturingEmail();
+    const c = clients(email, 'admin@adalegallink.com');
+
+    // No litigation + actionable title → pool (R4 cutover).
     const row = await createCaseForSession(c, makeState({ title: 'III', litigationListingId: null }));
 
-    expect(row!.lane).toBe('general_queue');
-    expect(email.sent.map((s) => s.to)).toEqual(['admin@adalegallink.com']);
+    expect(row!.lane).toBe('pool');
+    expect(email.sent).toHaveLength(0);
   });
 
   it('does not re-notify on idempotent re-finalize of the same session', async () => {
     const email = new CapturingEmail();
     const c = clients(email, 'admin@adalegallink.com');
 
-    await createCaseForSession(c, makeState({ title: 'III', litigationListingId: null }));
-    await createCaseForSession(c, makeState({ title: 'III', litigationListingId: null }));
+    await createCaseForSession(c, makeState({ title: 'III', litigationListingId: 'lit-orphan' }));
+    await createCaseForSession(c, makeState({ title: 'III', litigationListingId: 'lit-orphan' }));
 
     // Created once → notified once.
     expect(email.sent).toHaveLength(1);

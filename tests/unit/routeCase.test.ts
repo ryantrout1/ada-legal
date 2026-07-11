@@ -72,7 +72,7 @@ describe('decideLane — matched litigation', () => {
 
 describe('decideLane — no litigation', () => {
   it.each<AdaTitle>(['I', 'II', 'III', 'class_action'])(
-    'actionable title %s → general_queue',
+    'actionable title %s → pool',
     (title) => {
       const d = decideLane({
         classificationTitle: title,
@@ -80,7 +80,7 @@ describe('decideLane — no litigation', () => {
         eligibleFirmId: null,
         hasDisplayFirm: false,
       });
-      expect(d.lane).toBe('general_queue');
+      expect(d.lane).toBe('pool');
       expect(d.firmId).toBeNull();
     },
   );

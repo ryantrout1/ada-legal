@@ -117,10 +117,10 @@ describe('createCaseForSession — lane selection', () => {
     expect(row!.firmId).toBeNull();
   });
 
-  it('no litigation + actionable title → general_queue (AC3)', async () => {
+  it('no litigation + actionable title → pool (AC3)', async () => {
     const c = clients();
     const row = await createCaseForSession(c, makeState({ title: 'III' }));
-    expect(row!.lane).toBe('general_queue');
+    expect(row!.lane).toBe('pool');
   });
 
   it('no litigation + out_of_scope → no_action (AC3)', async () => {
