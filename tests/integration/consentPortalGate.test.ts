@@ -47,4 +47,31 @@ describe('portal queue — consent gate', () => {
     const after = await clients.db.listPortalQueueForFirm(firmA);
     expect(after.cases.map((c) => c.sessionId)).toContain(s1);
   });
+
+  it('a matched_self_referral case (firm_id null) never enters a firm queue', async () => {
+    const clients = makeInMemoryClients();
+    const fx = await seedPortalFixture(clients);
+    const firmA = fx.firms.firmA.id;
+    const [, s2] = [...fx.sessions.sessionIds];
+
+    await clients.db.createCase({
+      orgId: fx.firms.firmA.orgId,
+      adaSessionId: s2,
+      litigationListingId: null,
+      lane: 'matched_self_referral',
+      firmId: null,
+      classificationTitle: 'class_action',
+      classificationStandard: null,
+      matchConfidence: null,
+      jurisdictionState: null,
+      routedAt: null,
+      firstContactDue: null,
+      routingReason: 'firm not opted in — contact info only',
+    });
+
+    // No firm owns it (firm_id null), so it is absent from firmA's queue —
+    // there is no handoff to gate. Consent never applies.
+    const queue = await clients.db.listPortalQueueForFirm(firmA);
+    expect(queue.cases.map((c) => c.sessionId)).not.toContain(s2);
+  });
 });

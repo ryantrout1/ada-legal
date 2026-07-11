@@ -19,7 +19,15 @@
 
 import { useState } from 'react';
 
-type Lane = 'routed_firm' | 'sourcing' | 'general_queue' | 'self_help' | 'no_action' | null;
+type Lane =
+  | 'routed_firm'
+  | 'sourcing'
+  | 'general_queue'
+  | 'self_help'
+  | 'no_action'
+  | 'direct'
+  | 'matched_self_referral'
+  | null;
 
 interface ConsentCopy {
   eyebrow: string;
@@ -63,7 +71,9 @@ export default function ConsentCard({
   const [status, setStatus] = useState<Status>(initialConsented ? 'done' : 'idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Only the handoff lanes get a consent action.
+  // Only the handoff lanes get a consent action. matched_self_referral shows
+  // the firm's public contact on the readout but involves no handoff, so it
+  // gets no consent card — the claimant reaches out to the firm themselves.
   if (lane !== 'routed_firm' && lane !== 'sourcing' && lane !== 'general_queue') {
     return null;
   }
