@@ -654,3 +654,44 @@ describe('assemblePrompt — legal-verdict + intake guardrails (triage findings 
     expect(out()).toContain('First, read what they already told you');
   });
 });
+
+// ─── Phase 0: barrier-context questions + no-measurement rule ──────────────────
+// The identity carries a barrier-scoped experience-question module. It must
+// (a) forbid asking the claimant for a measurement, (b) offer experience
+// branches, and (c) register the canonical experience fields. Ada adapts the
+// wording to reading level at runtime, so the module text itself must be
+// jargon-free in its example questions.
+describe('assemblePrompt — barrier experience-question module (Phase 0)', () => {
+  const out = () =>
+    assemblePrompt({
+      state: baseState(),
+      orgDisplayName: 'ADA Legal Link',
+      orgAdaIntroPrompt: null,
+    });
+
+  it('forbids asking the claimant for a dimension or measurement', () => {
+    expect(out()).toMatch(/never ask (a|the) claimant for a dimension/i);
+  });
+
+  it('routes measurements to the photo, not the claimant', () => {
+    expect(out()).toMatch(/measurements are the photo's job/i);
+  });
+
+  it('registers the canonical experience fields', () => {
+    const o = out();
+    expect(o).toContain('facility_type');
+    expect(o).toContain('could_access');
+    expect(o).toContain('alternative_route_present');
+    expect(o).toContain('barrier_permanence');
+    expect(o).toContain('altered_since_built');
+  });
+
+  it('keeps example questions free of inspector jargon', () => {
+    // The rule may NAME "rise and run" to forbid it, but the example
+    // questions Ada asks must not be phrased in inspector units.
+    const questionsBlock = out();
+    // No claimant-facing question should demand a unit measurement.
+    expect(questionsBlock).not.toMatch(/what (is|are) the (rise|run|slope|clear width)/i);
+    expect(questionsBlock).not.toMatch(/how many inches/i);
+  });
+});
