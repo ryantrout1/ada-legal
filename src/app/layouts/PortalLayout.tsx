@@ -23,6 +23,7 @@ import {
   CheckSquare,
   CalendarClock,
   BarChart3,
+  Layers,
   Scale,
   Building2,
   UserCircle,
@@ -54,6 +55,7 @@ interface NavItem {
 
 const WORKSPACE_NAV: NavItem[] = [
   { to: '/portal', label: 'Inbox', icon: Home, end: true },
+  { to: '/portal/pool', label: 'Case pool', icon: Layers },
   { to: '/portal/agenda', label: 'Needs attention', icon: CalendarClock },
   { to: '/portal/board', label: 'Matters', icon: FileText },
   { to: '/portal/tasks', label: 'Tasks', icon: CheckSquare },

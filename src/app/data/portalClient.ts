@@ -784,6 +784,42 @@ export async function unacceptLitigation(id: string): Promise<void> {
   if (!resp.ok) await failFor(resp);
 }
 
+/**
+ * A de-identified pool case (routing rebuild R4). No claimant PII — contact is
+ * revealed only after this firm claims the case, via the normal queue.
+ */
+export interface PoolCase {
+  id: string;
+  case_number: string;
+  classification_title: string | null;
+  classification_standard: string | null;
+  jurisdiction_state: string | null;
+  business_name: string | null;
+  created_at: string;
+}
+
+export interface PoolBrowse {
+  /** False when this firm isn't eligible to claim (subscribe to unlock). */
+  eligible: boolean;
+  cases: PoolCase[];
+}
+
+/** The self-select pool: consented, unclaimed cases this firm covers. */
+export async function fetchPool(): Promise<PoolBrowse> {
+  const resp = await fetch(`/api/portal/pool`, { credentials: 'include' });
+  if (!resp.ok) return failFor(resp);
+  return (await resp.json()) as PoolBrowse;
+}
+
+/** Atomically claim a pool case for this firm. Throws PortalApiError (409) if it was taken. */
+export async function claimPoolCase(id: string): Promise<void> {
+  const resp = await fetch(`/api/portal/pool/${encodeURIComponent(id)}/claim`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!resp.ok) await failFor(resp);
+}
+
 /** Full litigation detail for the decide-to-accept page. */
 export interface PortalLitigationDetail {
   id: string;

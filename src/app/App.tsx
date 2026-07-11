@@ -71,6 +71,7 @@ import PortalFirmLawyers from './routes/portal/PortalFirmLawyers.js';
 import PortalTasks from './routes/portal/PortalTasks.js';
 import PortalPipeline from './routes/portal/PortalPipeline.js';
 import PortalLitigations from './routes/portal/PortalLitigations.js';
+import PortalPool from './routes/portal/PortalPool.js';
 import PortalLitigationDetail from './routes/portal/PortalLitigationDetail.js';
 import PortalCaseDetail from './routes/portal/PortalCaseDetail.js';
 import PortalNewMatter from './routes/portal/PortalNewMatter.js';
@@ -216,6 +217,7 @@ function PortalShell() {
           <Route path="agenda" element={<PortalAgenda />} />
           <Route path="pipeline" element={<PortalPipeline />} />
           <Route path="litigations" element={<PortalLitigations />} />
+          <Route path="pool" element={<PortalPool />} />
           <Route path="litigations/:id" element={<PortalLitigationDetail />} />
           <Route path="cases/new" element={<PortalNewMatter />} />
           <Route path="cases/:id" element={<PortalCaseDetail />} />
