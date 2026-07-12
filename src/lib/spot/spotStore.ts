@@ -12,8 +12,9 @@
 
 import { and, count, eq, gte } from 'drizzle-orm';
 import { makeDb, type Database } from '../../db/client.js';
-import { spotReads, spotRateLimits } from '../../db/schema-spot.js';
+import { spotReads, spotRateLimits, spotSessions } from '../../db/schema-spot.js';
 import type { SpotTier } from './rateLimitDecision.js';
+import { canTransition, type SpotSessionStatus } from './spotSessionStatus.js';
 
 export interface SpotReadRow {
   rateLimitKey: string;
@@ -29,10 +30,32 @@ export interface SpotRateLimitRow {
   outcome: SpotTier;
 }
 
+export interface SpotSessionRow {
+  id: string;
+  status: SpotSessionStatus;
+  stripeCheckoutSessionId: string | null;
+  buyerEmail: string | null;
+  amountCents: number | null;
+}
+
 export interface SpotStore {
   countReadsSince(rateLimitKey: string, since: Date): Promise<number>;
   insertRead(row: SpotReadRow): Promise<void>;
   insertRateLimit(row: SpotRateLimitRow): Promise<void>;
+  /** Create a pending_payment session; returns its id. */
+  createSession(input: { amountCents: number }): Promise<string>;
+  getSession(id: string): Promise<SpotSessionRow | null>;
+  setCheckoutSessionId(id: string, stripeCheckoutSessionId: string): Promise<void>;
+  /**
+   * Flip pending_payment → paid. Conditional on the current status, so a
+   * replayed webhook is a safe no-op. Returns true iff this call transitioned.
+   */
+  markPaid(input: {
+    spotSessionId: string;
+    paymentIntentId?: string;
+    email?: string;
+    amountCents?: number;
+  }): Promise<boolean>;
 }
 
 function requireDatabaseUrl(): string {
@@ -65,6 +88,52 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
         ipHash: row.ipHash ?? null,
         outcome: row.outcome,
       });
+    },
+    async createSession(input) {
+      const rows = await db
+        .insert(spotSessions)
+        .values({ status: 'pending_payment', amountCents: input.amountCents })
+        .returning({ id: spotSessions.id });
+      return rows[0].id;
+    },
+    async getSession(id) {
+      const rows = await db
+        .select({
+          id: spotSessions.id,
+          status: spotSessions.status,
+          stripeCheckoutSessionId: spotSessions.stripeCheckoutSessionId,
+          buyerEmail: spotSessions.buyerEmail,
+          amountCents: spotSessions.amountCents,
+        })
+        .from(spotSessions)
+        .where(eq(spotSessions.id, id))
+        .limit(1);
+      return rows[0] ?? null;
+    },
+    async setCheckoutSessionId(id, stripeCheckoutSessionId) {
+      await db
+        .update(spotSessions)
+        .set({ stripeCheckoutSessionId, updatedAt: new Date() })
+        .where(eq(spotSessions.id, id));
+    },
+    async markPaid(input) {
+      // Guard against illegal transitions at the type level, then let the DB
+      // enforce idempotency: the conditional WHERE only matches a still-pending
+      // row, so a replayed webhook updates 0 rows and returns false.
+      if (!canTransition('pending_payment', 'paid')) return false;
+      const rows = await db
+        .update(spotSessions)
+        .set({
+          status: 'paid',
+          paidAt: new Date(),
+          stripePaymentIntentId: input.paymentIntentId ?? null,
+          buyerEmail: input.email ?? null,
+          updatedAt: new Date(),
+          ...(typeof input.amountCents === 'number' ? { amountCents: input.amountCents } : {}),
+        })
+        .where(and(eq(spotSessions.id, input.spotSessionId), eq(spotSessions.status, 'pending_payment')))
+        .returning({ id: spotSessions.id });
+      return rows.length > 0;
     },
   };
 }

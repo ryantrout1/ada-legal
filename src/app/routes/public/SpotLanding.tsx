@@ -10,10 +10,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSpotCapture, type SpotUpsell } from './spot/useSpotCapture';
 import SpotResultView from './spot/SpotResultView';
+import SpotCheckout from './spot/SpotCheckout';
 
 const MAX_PHOTOS = 2;
 
-function UpsellCard({ upsell }: { upsell?: SpotUpsell }) {
+function UpsellCard({ upsell, onStart }: { upsell?: SpotUpsell; onStart: () => void }) {
   const price = upsell?.price_usd ?? 79;
   const maxPhotos = upsell?.max_photos ?? 10;
   return (
@@ -28,11 +29,11 @@ function UpsellCard({ upsell }: { upsell?: SpotUpsell }) {
       {upsell?.anchor ? <p className="mt-1 text-sm text-ink-700">{upsell.anchor}</p> : null}
       <button
         type="button"
+        onClick={onStart}
         className="mt-4 inline-flex min-h-[44px] items-center rounded-md bg-accent-500 px-5 py-2 font-display text-lg text-surface-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
       >
         Get the ${price} report
       </button>
-      <p className="mt-2 text-xs text-ink-500">Coming soon.</p>
     </section>
   );
 }
@@ -40,6 +41,8 @@ function UpsellCard({ upsell }: { upsell?: SpotUpsell }) {
 export default function SpotLanding() {
   const { state, run, reset } = useSpotCapture();
   const [files, setFiles] = useState<File[]>([]);
+  const [checkoutActive, setCheckoutActive] = useState(false);
+  const [paidSessionId, setPaidSessionId] = useState<string | null>(null);
 
   const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
   useEffect(() => () => previews.forEach((u) => URL.revokeObjectURL(u)), [previews]);
@@ -58,6 +61,29 @@ export default function SpotLanding() {
   const showResult = state.status === 'done' && state.tier !== 'blocked';
   const showBlocked = state.status === 'done' && state.tier === 'blocked';
 
+  // Payment flow takes over the page once the CTA is pressed.
+  if (paidSessionId || checkoutActive) {
+    return (
+      <div className="min-h-screen bg-surface-50 text-ink-900 font-body">
+        <div className="mx-auto max-w-xl px-4 py-8 sm:py-12">
+          <header className="mb-6">
+            <h1 className="font-display text-3xl text-ink-900">Ada Spot</h1>
+          </header>
+          {paidSessionId ? (
+            <div className="rounded-lg border border-surface-200 bg-surface-100 p-5" aria-live="polite">
+              <h2 className="font-display text-xl text-ink-900">Payment received</h2>
+              <p className="mt-2 text-ink-900">
+                Next you'll add your photos — that upload step is being finalized.
+              </p>
+            </div>
+          ) : (
+            <SpotCheckout onPaid={setPaidSessionId} />
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-surface-50 text-ink-900 font-body">
       <div className="mx-auto max-w-xl px-4 py-8 sm:py-12">
@@ -75,7 +101,7 @@ export default function SpotLanding() {
             <p className="mt-2 text-ink-700">
               For a full, remediation-focused report on more photos, grab the paid report below.
             </p>
-            <UpsellCard upsell={state.upsell} />
+            <UpsellCard upsell={state.upsell} onStart={() => setCheckoutActive(true)} />
           </div>
         ) : (
           <>
@@ -145,7 +171,7 @@ export default function SpotLanding() {
                   </p>
                 ) : null}
                 <SpotResultView view={state.view} onRetry={startOver} />
-                <UpsellCard upsell={state.upsell} />
+                <UpsellCard upsell={state.upsell} onStart={() => setCheckoutActive(true)} />
                 <button
                   type="button"
                   onClick={startOver}
