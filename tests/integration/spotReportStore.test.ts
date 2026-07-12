@@ -42,6 +42,20 @@ describe.skipIf(!DATABASE_URL)('spotStore report methods — live DB', () => {
       expect(await store.markInReview(id)).toBe(true);
       expect(await store.markInReview(id)).toBe(false); // idempotent
       expect((await store.getSession(id))?.status).toBe('in_review');
+
+      // 4a: delivery + HITL
+      expect(await store.getReleasedReportBySlug(slug)).toBeNull(); // not released yet
+      const rel = await store.releaseReport({ slug, reviewedBy: 'Ryan' });
+      expect(rel?.sessionId).toBe(id);
+      expect(await store.getReleasedReportBySlug(slug)).not.toBeNull(); // now visible
+      expect(await store.releaseReport({ slug, reviewedBy: 'Ryan' })).toBeNull(); // idempotent
+      expect(await store.rejectReport({ slug, reviewedBy: 'Ryan' })).toBe(false); // already released
+
+      expect(await store.markDelivered(id)).toBe(true);
+      expect((await store.getSession(id))?.status).toBe('delivered');
+
+      await store.markReportSent(slug);
+      expect((await store.listReports(100)).find((r) => r.slug === slug)?.sentAt).not.toBeNull();
     } finally {
       await db.delete(spotReports).where(eq(spotReports.sessionId, id));
       await db.delete(spotPhotos).where(eq(spotPhotos.sessionId, id));

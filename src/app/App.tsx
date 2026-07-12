@@ -39,6 +39,7 @@ import StandardsChapter from './routes/public/StandardsChapter.js';
 import GuidePage from './routes/public/GuidePage.js';
 import PhotoCapture from './routes/public/PhotoCapture.js';
 import SpotLanding from './routes/public/SpotLanding.js';
+import SpotReadout from './routes/public/spot/SpotReadout.js';
 import SpotReview from './routes/review/SpotReview.js';
 import ReviewLayout from './routes/review/ReviewLayout.js';
 import PhotoReviewQueue from './routes/review/PhotoReviewQueue.js';
@@ -127,6 +128,10 @@ export default function App() {
             Outside PublicLayout (single-task, no chrome), like /photo. Ships
             dark via the spot_enabled flag. See /plan: Ada Spot Phase 1b. */}
         <Route path="/spot" element={<SpotLanding />} />
+
+        {/* Public hosted readout — the buyer's report link from the release email. */}
+        <Route path="/spot/r/:slug" element={<SpotReadout />} />
+
 
         {/* Standalone — Ada Spot internal report review + model A/B. Admin-gated
             at the API (requireAdmin); own surface, not the bench review. */}

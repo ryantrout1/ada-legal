@@ -78,13 +78,23 @@ export interface SpotStore {
   markInReview(sessionId: string): Promise<boolean>;
   /** Recent reports for the admin preview list. */
   listReports(limit: number): Promise<
-    Array<{ id: string; sessionId: string; slug: string; modelVersion: string | null; hitlStatus: string; createdAt: Date }>
+    Array<{ id: string; sessionId: string; slug: string; modelVersion: string | null; hitlStatus: string; sentAt: Date | null; createdAt: Date }>
   >;
   /** A single report's full content + metadata, by slug. */
   getReportBySlug(slug: string): Promise<
     | { id: string; sessionId: string; slug: string; content: unknown; modelVersion: string | null; hitlStatus: string; createdAt: Date }
     | null
   >;
+  /** Public readout: content ONLY if the report is released (else null). */
+  getReleasedReportBySlug(slug: string): Promise<{ content: unknown } | null>;
+  /** Release a pending report (guarded, idempotent). Returns the session + buyer for delivery, or null. */
+  releaseReport(input: { slug: string; reviewedBy: string }): Promise<{ sessionId: string; buyerEmail: string | null } | null>;
+  /** Mark a released report's email as sent. */
+  markReportSent(slug: string): Promise<void>;
+  /** Reject a pending report (guarded). Returns true iff transitioned. */
+  rejectReport(input: { slug: string; reviewedBy: string }): Promise<boolean>;
+  /** Flip in_review → delivered (conditional; idempotent). */
+  markDelivered(sessionId: string): Promise<boolean>;
 }
 
 function requireDatabaseUrl(): string {
@@ -243,6 +253,7 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
           slug: spotReports.slug,
           modelVersion: spotReports.modelVersion,
           hitlStatus: spotReports.hitlStatus,
+          sentAt: spotReports.sentAt,
           createdAt: spotReports.createdAt,
         })
         .from(spotReports)
@@ -264,6 +275,51 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
         .where(eq(spotReports.slug, slug))
         .limit(1);
       return rows[0] ?? null;
+    },
+    async getReleasedReportBySlug(slug) {
+      const rows = await db
+        .select({ content: spotReports.content })
+        .from(spotReports)
+        .where(and(eq(spotReports.slug, slug), eq(spotReports.hitlStatus, 'released')))
+        .limit(1);
+      return rows[0] ?? null;
+    },
+    async releaseReport(input) {
+      // Guarded: only a pending report releases, so a re-release is a no-op
+      // (returns null) and never re-sends.
+      const released = await db
+        .update(spotReports)
+        .set({ hitlStatus: 'released', reviewedBy: input.reviewedBy, reviewedAt: new Date() })
+        .where(and(eq(spotReports.slug, input.slug), eq(spotReports.hitlStatus, 'pending_review')))
+        .returning({ sessionId: spotReports.sessionId });
+      const row = released[0];
+      if (!row) return null;
+      const sess = await db
+        .select({ buyerEmail: spotSessions.buyerEmail })
+        .from(spotSessions)
+        .where(eq(spotSessions.id, row.sessionId))
+        .limit(1);
+      return { sessionId: row.sessionId, buyerEmail: sess[0]?.buyerEmail ?? null };
+    },
+    async markReportSent(slug) {
+      await db.update(spotReports).set({ sentAt: new Date() }).where(eq(spotReports.slug, slug));
+    },
+    async rejectReport(input) {
+      const rows = await db
+        .update(spotReports)
+        .set({ hitlStatus: 'rejected', reviewedBy: input.reviewedBy, reviewedAt: new Date() })
+        .where(and(eq(spotReports.slug, input.slug), eq(spotReports.hitlStatus, 'pending_review')))
+        .returning({ id: spotReports.id });
+      return rows.length > 0;
+    },
+    async markDelivered(sessionId) {
+      if (!canTransition('in_review', 'delivered')) return false;
+      const rows = await db
+        .update(spotSessions)
+        .set({ status: 'delivered', updatedAt: new Date() })
+        .where(and(eq(spotSessions.id, sessionId), eq(spotSessions.status, 'in_review')))
+        .returning({ id: spotSessions.id });
+      return rows.length > 0;
     },
   };
 }

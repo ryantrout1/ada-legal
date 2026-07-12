@@ -19,6 +19,7 @@ interface ReportRow {
   slug: string;
   modelVersion: string | null;
   hitlStatus: string;
+  sentAt: string | null;
   createdAt: string;
 }
 
@@ -84,6 +85,30 @@ export default function SpotReview() {
     }
   }
 
+  async function act(path: 'release' | 'reject', slug: string) {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/spot/admin/${path}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ slug }),
+      });
+      if (!res.ok) {
+        setError(`${path} failed.`);
+        return;
+      }
+      if (path === 'release') {
+        const data = (await res.json()) as { released: boolean; sent: boolean };
+        if (data.released && !data.sent) setError('Released, but the email did not send — retry release to resend.');
+      }
+      await loadList();
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const btn =
     'min-h-[44px] rounded-md border border-control-border px-3 py-1 text-sm text-ink-700 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50';
 
@@ -115,6 +140,9 @@ export default function SpotReview() {
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
                   <span className="font-medium text-ink-900">{r.modelVersion ?? 'unknown model'}</span>
                   <span className="text-ink-500">{r.hitlStatus}</span>
+                  {r.hitlStatus === 'released' ? (
+                    <span className="text-ink-500">{r.sentAt ? 'emailed' : 'not emailed'}</span>
+                  ) : null}
                   <span className="text-ink-500">{new Date(r.createdAt).toLocaleString()}</span>
                   <span className="text-ink-500">session {r.sessionId.slice(0, 8)}</span>
                 </div>
@@ -122,6 +150,26 @@ export default function SpotReview() {
                   <button type="button" className={btn} onClick={() => void view(r.slug)}>
                     View
                   </button>
+                  {r.hitlStatus === 'released' ? (
+                    <a
+                      className={`${btn} inline-flex items-center`}
+                      href={`/spot/r/${encodeURIComponent(r.slug)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Open readout
+                    </a>
+                  ) : null}
+                  {r.hitlStatus === 'pending_review' ? (
+                    <>
+                      <button type="button" disabled={busy} className={btn} onClick={() => void act('release', r.slug)}>
+                        Release + email
+                      </button>
+                      <button type="button" disabled={busy} className={btn} onClick={() => void act('reject', r.slug)}>
+                        Reject
+                      </button>
+                    </>
+                  ) : null}
                   {SPOT_REPORT_MODELS.map((m) => (
                     <button
                       key={m}
