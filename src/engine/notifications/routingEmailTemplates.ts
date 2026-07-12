@@ -82,8 +82,9 @@ export function renderUserConnectedEmail(opts: {
   const html = wrap(
     `<h1 style="font-size:20px;margin:0 0 16px">You're all set</h1>` +
       `<p style="margin:0 0 12px">Thanks for confirming. ${firmName ? escapeHtml(firmName) + ' can' : 'An attorney can'} now review what you described and will reach out to you directly.</p>` +
-      `<p style="margin:0 0 12px;color:#555">You're in control — you can withdraw anytime by replying to this email.</p>` +
-      button(readoutUrl, 'View your summary'),
+      `<p style="margin:0 0 16px;color:#555">There's nothing more you need to do right now — they'll be in touch.</p>` +
+      button(readoutUrl, 'View your summary') +
+      `<p style="margin:22px 0 0;color:#555">— Ada, ADA Legal Link</p>`,
   );
 
   const text = [
@@ -91,9 +92,11 @@ export function renderUserConnectedEmail(opts: {
     ``,
     `Thanks for confirming. ${firmName ?? 'An attorney'} can now review what you described and will reach out to you directly.`,
     ``,
-    `You're in control — you can withdraw anytime by replying to this email.`,
+    `There's nothing more you need to do right now — they'll be in touch.`,
     ``,
     `View your summary: ${readoutUrl}`,
+    ``,
+    `— Ada, ADA Legal Link`,
   ].join('\n');
 
   return { subject, html, text };
