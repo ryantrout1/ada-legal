@@ -1,6 +1,7 @@
 {
   "crons": [
-    { "path": "/api/cron/sweep-abandoned", "schedule": "0 */6 * * *" }
+    { "path": "/api/cron/sweep-abandoned", "schedule": "0 */6 * * *" },
+    { "path": "/api/cron/generate-spot-reports", "schedule": "*/10 * * * *" }
   ],
   "redirects": [
     {

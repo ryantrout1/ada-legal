@@ -10,9 +10,9 @@
  * default constructs the production neon-http handle from DATABASE_URL.
  */
 
-import { and, count, eq, gte, isNull } from 'drizzle-orm';
+import { and, asc, count, eq, gte, isNull } from 'drizzle-orm';
 import { makeDb, type Database } from '../../db/client.js';
-import { spotReads, spotRateLimits, spotSessions, spotPhotos } from '../../db/schema-spot.js';
+import { spotReads, spotRateLimits, spotSessions, spotPhotos, spotReports } from '../../db/schema-spot.js';
 import type { SpotTier } from './rateLimitDecision.js';
 import { canTransition, type SpotSessionStatus } from './spotSessionStatus.js';
 
@@ -62,6 +62,20 @@ export interface SpotStore {
   countPhotos(sessionId: string): Promise<number>;
   /** Flip paid → uploaded (conditional; idempotent). Returns true iff transitioned. */
   markUploaded(input: { spotSessionId: string; photoCount: number }): Promise<boolean>;
+  /** Oldest session still awaiting report generation (status 'uploaded'). */
+  nextUploadedSession(): Promise<{ id: string } | null>;
+  /** Live (non-deleted) photo URLs for a session, in insertion order. */
+  listSessionPhotos(sessionId: string): Promise<{ blobUrl: string }[]>;
+  /** The report for a session, if one exists (idempotency guard). */
+  getReportBySession(sessionId: string): Promise<{ slug: string } | null>;
+  insertReport(input: {
+    sessionId: string;
+    slug: string;
+    content: unknown;
+    modelVersion: string;
+  }): Promise<void>;
+  /** Flip uploaded → in_review (conditional; idempotent). Returns true iff transitioned. */
+  markInReview(sessionId: string): Promise<boolean>;
 }
 
 function requireDatabaseUrl(): string {
@@ -166,6 +180,49 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
           updatedAt: new Date(),
         })
         .where(and(eq(spotSessions.id, input.spotSessionId), eq(spotSessions.status, 'paid')))
+        .returning({ id: spotSessions.id });
+      return rows.length > 0;
+    },
+    async nextUploadedSession() {
+      const rows = await db
+        .select({ id: spotSessions.id })
+        .from(spotSessions)
+        .where(eq(spotSessions.status, 'uploaded'))
+        .orderBy(asc(spotSessions.uploadedAt))
+        .limit(1);
+      return rows[0] ?? null;
+    },
+    async listSessionPhotos(sessionId) {
+      const rows = await db
+        .select({ blobUrl: spotPhotos.blobUrl })
+        .from(spotPhotos)
+        .where(and(eq(spotPhotos.sessionId, sessionId), isNull(spotPhotos.deletedAt)))
+        .orderBy(asc(spotPhotos.createdAt));
+      return rows
+        .filter((r): r is { blobUrl: string } => typeof r.blobUrl === 'string' && r.blobUrl.length > 0);
+    },
+    async getReportBySession(sessionId) {
+      const rows = await db
+        .select({ slug: spotReports.slug })
+        .from(spotReports)
+        .where(eq(spotReports.sessionId, sessionId))
+        .limit(1);
+      return rows[0] ?? null;
+    },
+    async insertReport(input) {
+      await db.insert(spotReports).values({
+        sessionId: input.sessionId,
+        slug: input.slug,
+        content: input.content,
+        modelVersion: input.modelVersion,
+      });
+    },
+    async markInReview(sessionId) {
+      if (!canTransition('uploaded', 'in_review')) return false;
+      const rows = await db
+        .update(spotSessions)
+        .set({ status: 'in_review', updatedAt: new Date() })
+        .where(and(eq(spotSessions.id, sessionId), eq(spotSessions.status, 'uploaded')))
         .returning({ id: spotSessions.id });
       return rows.length > 0;
     },
