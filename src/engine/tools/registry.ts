@@ -27,6 +27,7 @@ import { searchAttorneysTool } from './impls/searchAttorneys.js';
 import { searchAdaStandardsTool } from './impls/searchAdaStandards.js';
 import { setReadingLevelTool } from './impls/setReadingLevel.js';
 import { endSessionTool } from './impls/endSession.js';
+import { proposeSummaryTool } from './impls/proposeSummary.js';
 import { matchLitigationTool } from './impls/matchLitigation.js';
 
 export const CH0_TOOLS: ReadonlyArray<AnyAdaTool> = [
@@ -35,6 +36,7 @@ export const CH0_TOOLS: ReadonlyArray<AnyAdaTool> = [
   searchAttorneysTool,
   searchAdaStandardsTool,
   setReadingLevelTool,
+  proposeSummaryTool,
   endSessionTool,
   matchLitigationTool,
 ] as const;

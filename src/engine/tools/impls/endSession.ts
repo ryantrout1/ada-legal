@@ -14,6 +14,7 @@
 
 import type { AdaTool, ToolResult, ToolExecuteContext } from '../types.js';
 import { canTransition } from '../../session/stateMachine.js';
+import { confirmationSatisfied, NEEDS_CONFIRMATION_MESSAGE } from '../finalizeGuard.js';
 
 interface EndSessionInput {
   outcome: string;
@@ -60,6 +61,11 @@ export const endSessionTool: AdaTool<EndSessionInput> = {
         ok: false,
         error: `Cannot end session: already in status '${state.status}'.`,
       };
+    }
+    // Confirm-before-finalize gate (R5a). Live sessions only — preview/test
+    // bypasses, same as the other finalize gates.
+    if (!state.isTest && !confirmationSatisfied(state)) {
+      return { ok: false, error: NEEDS_CONFIRMATION_MESSAGE };
     }
     return {
       ok: true,

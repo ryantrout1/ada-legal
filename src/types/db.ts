@@ -105,6 +105,16 @@ export interface SessionMetadata {
   abandoned_at_step?: string;
   duration_ms?: number;
   message_count?: number;
+  /**
+   * Confirm-before-finalize gate (R5a). Set by propose_summary: the number of
+   * user turns in the transcript at the moment Ada proposed the final summary,
+   * plus a timestamp for observability. end_session / finalize_intake refuse to
+   * complete a live session unless the user has taken another turn since (i.e.
+   * current user-turn count exceeds this) — proof the user had a window to
+   * correct the summary. Absent until Ada proposes a summary.
+   */
+  summary_proposed_at_user_turns?: number;
+  summary_proposed_at?: string;
   input_tokens_total?: number;
   output_tokens_total?: number;
   /**

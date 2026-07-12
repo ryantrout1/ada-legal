@@ -49,6 +49,7 @@ import {
   renderUserEmail,
 } from '../../handoff/emailTemplates.js';
 import { renderAndUploadTranscript } from '../../handoff/transcriptPdf.js';
+import { confirmationSatisfied, NEEDS_CONFIRMATION_MESSAGE } from '../finalizeGuard.js';
 
 interface FinalizeIntakeInput {
   qualified: boolean;
@@ -125,6 +126,12 @@ export const finalizeIntakeTool: AdaTool<FinalizeIntakeInput> = {
           outcome: ctx.state.metadata.outcome ?? 'unknown',
         },
       };
+    }
+
+    // Confirm-before-finalize gate (R5a). Live sessions only — the is_test
+    // preview path below intentionally bypasses every finalize gate.
+    if (!ctx.state.isTest && !confirmationSatisfied(ctx.state)) {
+      return { ok: false, error: NEEDS_CONFIRMATION_MESSAGE };
     }
 
     // is_test short-circuit (Step 25 Commit 5).
