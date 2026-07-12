@@ -138,6 +138,12 @@ export default function SpotLanding() {
 
             {showResult && state.view ? (
               <>
+                {state.tier === 'soft_gated' ? (
+                  <p className="mb-4 rounded-md border border-surface-200 bg-surface-100 px-4 py-3 text-sm text-ink-700">
+                    This one's on us — you're near the end of your free reads. For more photos and a
+                    remediation report, see below.
+                  </p>
+                ) : null}
                 <SpotResultView view={state.view} onRetry={startOver} />
                 <UpsellCard upsell={state.upsell} />
                 <button
