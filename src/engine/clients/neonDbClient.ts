@@ -27,7 +27,6 @@ import {
   attorneys as attorneysTable,
   litigationListings as litigationTable,
   litigationFirmAssignments,
-  firmSessionHandled,
   organizations,
   sessionPackages,
   sessionQualityChecks,
@@ -122,8 +121,6 @@ import type {
   ListLitigationForAdminResult,
   UpdateLitigationInput,
   HardDeleteActor,
-  PortalQueueOptions,
-  PortalQueueResult,
   PortalCaseListRow,
   PortalCaseListResult,
   AdminCaseRow,
@@ -133,9 +130,6 @@ import type {
   CasePersonRow,
   CaseDocumentRow,
   PortalCaseDetailFull,
-  PortalQueueRow,
-  PortalCaseDetail,
-  PortalCaseQqAnswer,
   LitigationFirmAssignment,
   PortalAttorneyResolution,
   CreateCaseOptions,
@@ -2048,183 +2042,6 @@ export class NeonDbClient implements DbClient {
   }
 
   // ─── Attorney portal (migration 0019) ──────────────────────────────────────
-
-  async listPortalQueueForFirm(
-    lawFirmId: string,
-    opts?: PortalQueueOptions,
-  ): Promise<PortalQueueResult> {
-    const page = opts?.page && opts.page > 0 ? opts.page : 1;
-    const pageSize =
-      opts?.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 50;
-    const handledFilter = opts?.handled ?? 'false';
-
-    const handledByThisFirm = sql<boolean>`exists (
-      select 1 from ${firmSessionHandled} fsh
-      where fsh.session_id = ${adaSessions.id} and fsh.law_firm_id = ${lawFirmId}
-    )`;
-    const handledByOtherFirm = sql<boolean>`exists (
-      select 1 from ${firmSessionHandled} fsh
-      where fsh.session_id = ${adaSessions.id} and fsh.law_firm_id <> ${lawFirmId}
-    )`;
-
-    // v1 scale: fetch all matched rows, then compute firm-scoped counts and
-    // paginate in JS (mirrors the in-memory client exactly). Volume is low.
-    const rows = await this.db
-      .select({
-        sessionId: adaSessions.id,
-        caseName: litigationTable.caseName,
-        extractedFields: adaSessions.extractedFields,
-        matchedAt: adaSessions.updatedAt,
-        handledByThisFirm,
-        handledByOtherFirm,
-      })
-      .from(litigationFirmAssignments)
-      .innerJoin(
-        adaSessions,
-        eq(adaSessions.litigationListingId, litigationFirmAssignments.litigationListingId),
-      )
-      .innerJoin(litigationTable, eq(litigationTable.id, adaSessions.litigationListingId))
-      .where(
-        and(
-          eq(litigationFirmAssignments.lawFirmId, lawFirmId),
-          // Consent gate (Phase 1b, soft): hide a matched session that has an
-          // UNCONSENTED case. A session with no case (legacy / pre-routing) is
-          // unaffected — every real post-Phase-1a session has a case, so
-          // consent is enforced. Phase 2 tightens this in the cases cutover.
-          sql`not exists (
-            select 1 from ${casesTable} c
-            where c.ada_session_id = ${adaSessions.id} and c.consent_to_share = false
-          )`,
-        ),
-      )
-      .orderBy(sql`${adaSessions.updatedAt} DESC`);
-
-    const fieldStr = (f: ExtractedFields, k: string): string | null => {
-      const v = f[k]?.value;
-      return v == null ? null : typeof v === 'string' ? v : String(v);
-    };
-
-    const all: PortalQueueRow[] = rows.map((r) => ({
-      sessionId: r.sessionId,
-      caseName: r.caseName,
-      userName: fieldStr(r.extractedFields, 'claimant_name'),
-      userEmail: fieldStr(r.extractedFields, 'claimant_email'),
-      userPhone: fieldStr(r.extractedFields, 'claimant_phone'),
-      matchedAt: r.matchedAt ? r.matchedAt.toISOString() : null,
-      handledByThisFirm: Boolean(r.handledByThisFirm),
-      handledByOtherFirm: Boolean(r.handledByOtherFirm),
-    }));
-
-    // Firm-scoped counts (DO3): openCount excludes other-firm-handled.
-    const openCount = all.filter(
-      (c) => !c.handledByThisFirm && !c.handledByOtherFirm,
-    ).length;
-    const handledCount = all.filter((c) => c.handledByThisFirm).length;
-
-    const filtered = all.filter((c) => {
-      if (handledFilter === 'all') return true;
-      if (handledFilter === 'true') return c.handledByThisFirm;
-      // 'false' (open view): exclude this-firm-handled; keep other-firm-handled
-      // so the queue can show them grayed.
-      return !c.handledByThisFirm;
-    });
-
-    const offset = (page - 1) * pageSize;
-    return {
-      summary: { openCount, handledCount },
-      cases: filtered.slice(offset, offset + pageSize),
-      totalCount: filtered.length,
-      page,
-      pageSize,
-    };
-  }
-
-  async getPortalCaseForFirm(
-    sessionId: string,
-    lawFirmId: string,
-  ): Promise<PortalCaseDetail | null> {
-    // The inner join to litigation_firm_assignments (scoped to this firm) IS
-    // the access boundary: no assignment → no row → null.
-    const rows = await this.db
-      .select({
-        sessionId: adaSessions.id,
-        litigationListingId: adaSessions.litigationListingId,
-        caseName: litigationTable.caseName,
-        extractedFields: adaSessions.extractedFields,
-        transcript: adaSessions.conversationHistory,
-        matchedAt: adaSessions.updatedAt,
-      })
-      .from(adaSessions)
-      .innerJoin(
-        litigationFirmAssignments,
-        and(
-          eq(litigationFirmAssignments.litigationListingId, adaSessions.litigationListingId),
-          eq(litigationFirmAssignments.lawFirmId, lawFirmId),
-        ),
-      )
-      .innerJoin(litigationTable, eq(litigationTable.id, adaSessions.litigationListingId))
-      .where(eq(adaSessions.id, sessionId))
-      .limit(1);
-
-    const r = rows[0];
-    if (!r || !r.litigationListingId) return null;
-
-    const handledRows = await this.db
-      .select({ sessionId: firmSessionHandled.sessionId })
-      .from(firmSessionHandled)
-      .where(
-        and(
-          eq(firmSessionHandled.sessionId, sessionId),
-          eq(firmSessionHandled.lawFirmId, lawFirmId),
-        ),
-      )
-      .limit(1);
-
-    const fieldStr = (f: ExtractedFields, k: string): string | null => {
-      const v = f[k]?.value;
-      return v == null ? null : typeof v === 'string' ? v : String(v);
-    };
-    const identity = new Set([
-      'claimant_name',
-      'claimant_email',
-      'claimant_phone',
-      'contact_preference',
-    ]);
-    const qualifyingAnswers: PortalCaseQqAnswer[] = [];
-    for (const [key, field] of Object.entries(r.extractedFields)) {
-      if (identity.has(key)) continue;
-      const v = field?.value;
-      if (v == null) continue;
-      qualifyingAnswers.push({
-        question: key,
-        answer: typeof v === 'string' ? v : String(v),
-      });
-    }
-
-    return {
-      sessionId: r.sessionId,
-      litigationListingId: r.litigationListingId,
-      caseName: r.caseName,
-      userName: fieldStr(r.extractedFields, 'claimant_name'),
-      userEmail: fieldStr(r.extractedFields, 'claimant_email'),
-      userPhone: fieldStr(r.extractedFields, 'claimant_phone'),
-      qualifyingAnswers,
-      transcript: (r.transcript ?? []) as Message[],
-      matchedAt: r.matchedAt ? r.matchedAt.toISOString() : null,
-      handledByThisFirm: handledRows.length > 0,
-    };
-  }
-
-  async markFirmSessionHandled(
-    sessionId: string,
-    lawFirmId: string,
-    handledByUserId: string | null,
-  ): Promise<void> {
-    await this.db
-      .insert(firmSessionHandled)
-      .values({ sessionId, lawFirmId, handledByUserId })
-      .onConflictDoNothing();
-  }
 
   async listFirmAssignmentsForLitigation(
     litigationListingId: string,

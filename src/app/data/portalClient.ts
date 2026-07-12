@@ -456,14 +456,6 @@ export async function transitionPortalCase(
   return (await resp.json()) as { status: string };
 }
 
-export async function markPortalCaseHandled(id: string): Promise<void> {
-  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/handle`, {
-    method: 'POST',
-    credentials: 'include',
-  });
-  if (!resp.ok && resp.status !== 204) return failFor(resp);
-}
-
 // ─── Phase 4b: tasks ────────────────────────────────────────────────────────
 
 export interface PortalTask {

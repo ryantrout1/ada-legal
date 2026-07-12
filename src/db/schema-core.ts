@@ -23,7 +23,6 @@ import {
   index,
   check,
   foreignKey,
-  primaryKey,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import type {
@@ -481,26 +480,9 @@ export const litigationFirmAssignments = pgTable(
   ],
 );
 
-// ─── firm_session_handled ─────────────────────────────────────────────────────
 // Attorney portal (migration 0019): sparse one-bit "handled" state. A row
 // exists ONLY when a firm has marked a case handled. Composite PK on
 // (session_id, law_firm_id). law_firm_id FK declared in the SQL migration.
-
-export const firmSessionHandled = pgTable(
-  'firm_session_handled',
-  {
-    sessionId: uuid('session_id')
-      .notNull()
-      .references(() => adaSessions.id, { onDelete: 'cascade' }),
-    lawFirmId: uuid('law_firm_id').notNull(),
-    handledByUserId: uuid('handled_by_user_id').references(() => users.id),
-    handledAt: timestamp('handled_at', { withTimezone: true }).notNull().defaultNow(),
-  },
-  (t) => [
-    primaryKey({ columns: [t.sessionId, t.lawFirmId] }),
-    index('fsh_session').on(t.sessionId),
-  ],
-);
 
 // ─── ada_knowledge_chunks ─────────────────────────────────────────────────────
 // pgvector is enabled in migration 0001; the embedding column is typed as

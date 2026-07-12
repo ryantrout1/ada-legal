@@ -97,8 +97,6 @@ import type {
   UpdateLitigationInput,
   AuditLogEntry,
   HardDeleteActor,
-  PortalQueueOptions,
-  PortalQueueResult,
   PortalCaseListRow,
   PortalCaseListResult,
   AdminCaseRow,
@@ -108,9 +106,6 @@ import type {
   CasePersonRow,
   CaseDocumentRow,
   PortalCaseDetailFull,
-  PortalQueueRow,
-  PortalCaseDetail,
-  PortalCaseQqAnswer,
   LitigationFirmAssignment,
   PortalAttorneyResolution,
   CreateCaseOptions,
@@ -208,13 +203,6 @@ export class InMemoryDbClient implements DbClient {
 
   // ─── Attorney portal (migration 0019) ──────────────────────────────────────
   public readonly litigationFirmAssignments: LitigationFirmAssignment[] = [];
-  public readonly firmSessionHandled: Array<{
-    sessionId: string;
-    lawFirmId: string;
-    handledByUserId: string | null;
-    handledAt: string;
-  }> = [];
-
   // ─── Cases foundation (migration 0023) + routing (Phase 1a) ─────────────────
   public readonly cases: CaseRow[] = [];
   /** Phase 2a: fields the lean CaseRow drops but the portal queue needs. */
@@ -1302,142 +1290,6 @@ export class InMemoryDbClient implements DbClient {
   }
 
   // ─── Attorney portal (migration 0019) ──────────────────────────────────────
-
-  async listPortalQueueForFirm(
-    lawFirmId: string,
-    opts?: PortalQueueOptions,
-  ): Promise<PortalQueueResult> {
-    const page = Math.max(1, opts?.page ?? 1);
-    const pageSize = Math.min(100, Math.max(1, opts?.pageSize ?? 50));
-    const handledFilter = opts?.handled ?? 'false';
-
-    // Litigation rows assigned to this firm.
-    const assignedLitigationIds = new Set(
-      this.litigationFirmAssignments
-        .filter((a) => a.lawFirmId === lawFirmId)
-        .map((a) => a.litigationListingId),
-    );
-
-    const matched = [...this.sessions.values()].filter(
-      (s) =>
-        s.litigationListingId &&
-        assignedLitigationIds.has(s.litigationListingId) &&
-        // Consent gate (Phase 1b, soft): hide a session with an UNCONSENTED
-        // case. No case (legacy / pre-routing) → unaffected. Mirrors the neon
-        // NOT EXISTS predicate.
-        !this.cases.some((c) => c.adaSessionId === s.sessionId && c.consentToShare === false),
-    );
-
-    const caseName = (litigationListingId: string): string =>
-      this.adminLitigation.find((l) => l.id === litigationListingId)?.caseName ?? '';
-
-    const all: PortalQueueRow[] = matched.map((s) => {
-      const handledByThisFirm = this.firmSessionHandled.some(
-        (h) => h.sessionId === s.sessionId && h.lawFirmId === lawFirmId,
-      );
-      const handledByOtherFirm = this.firmSessionHandled.some(
-        (h) => h.sessionId === s.sessionId && h.lawFirmId !== lawFirmId,
-      );
-      return {
-        sessionId: s.sessionId,
-        caseName: caseName(s.litigationListingId!),
-        userName: portalFieldStr(s.extractedFields, 'claimant_name'),
-        userEmail: portalFieldStr(s.extractedFields, 'claimant_email'),
-        userPhone: portalFieldStr(s.extractedFields, 'claimant_phone'),
-        matchedAt: null, // in-memory tracks no updated_at
-        handledByThisFirm,
-        handledByOtherFirm,
-      };
-    });
-
-    // Firm-scoped counts (DO3): openCount excludes other-firm-handled.
-    const openCount = all.filter(
-      (c) => !c.handledByThisFirm && !c.handledByOtherFirm,
-    ).length;
-    const handledCount = all.filter((c) => c.handledByThisFirm).length;
-
-    const filtered = all.filter((c) => {
-      if (handledFilter === 'all') return true;
-      if (handledFilter === 'true') return c.handledByThisFirm;
-      return !c.handledByThisFirm; // 'false' (open) — keeps other-firm-handled (grayed)
-    });
-
-    const start = (page - 1) * pageSize;
-    return {
-      summary: { openCount, handledCount },
-      cases: filtered.slice(start, start + pageSize),
-      totalCount: filtered.length,
-      page,
-      pageSize,
-    };
-  }
-
-  async getPortalCaseForFirm(
-    sessionId: string,
-    lawFirmId: string,
-  ): Promise<PortalCaseDetail | null> {
-    const s = this.sessions.get(sessionId);
-    if (!s || !s.litigationListingId) return null;
-
-    // Access boundary: the firm must be assigned to the session's litigation row.
-    const assigned = this.litigationFirmAssignments.some(
-      (a) => a.litigationListingId === s.litigationListingId && a.lawFirmId === lawFirmId,
-    );
-    if (!assigned) return null;
-
-    const litigation = this.adminLitigation.find((l) => l.id === s.litigationListingId);
-
-    const identity = new Set([
-      'claimant_name',
-      'claimant_email',
-      'claimant_phone',
-      'contact_preference',
-    ]);
-    const qualifyingAnswers: PortalCaseQqAnswer[] = [];
-    for (const [key, field] of Object.entries(s.extractedFields)) {
-      if (identity.has(key)) continue;
-      const v = field?.value;
-      if (v == null) continue;
-      qualifyingAnswers.push({
-        question: key,
-        answer: typeof v === 'string' ? v : String(v),
-      });
-    }
-
-    const handledByThisFirm = this.firmSessionHandled.some(
-      (h) => h.sessionId === sessionId && h.lawFirmId === lawFirmId,
-    );
-
-    return {
-      sessionId: s.sessionId,
-      litigationListingId: s.litigationListingId,
-      caseName: litigation?.caseName ?? '',
-      userName: portalFieldStr(s.extractedFields, 'claimant_name'),
-      userEmail: portalFieldStr(s.extractedFields, 'claimant_email'),
-      userPhone: portalFieldStr(s.extractedFields, 'claimant_phone'),
-      qualifyingAnswers,
-      transcript: s.conversationHistory as Message[],
-      matchedAt: null,
-      handledByThisFirm,
-    };
-  }
-
-  async markFirmSessionHandled(
-    sessionId: string,
-    lawFirmId: string,
-    handledByUserId: string | null,
-  ): Promise<void> {
-    const exists = this.firmSessionHandled.some(
-      (h) => h.sessionId === sessionId && h.lawFirmId === lawFirmId,
-    );
-    if (exists) return; // idempotent
-    this.firmSessionHandled.push({
-      sessionId,
-      lawFirmId,
-      handledByUserId,
-      handledAt: new Date(0).toISOString(),
-    });
-  }
 
   async listFirmAssignmentsForLitigation(
     litigationListingId: string,

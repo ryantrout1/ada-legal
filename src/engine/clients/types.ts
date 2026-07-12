@@ -706,42 +706,6 @@ export interface LitigationFirmAssignment {
   createdAt: string;
 }
 
-/** Options for listPortalQueueForFirm. */
-export interface PortalQueueOptions {
-  page?: number;
-  pageSize?: number;
-  /**
-   * Which cases to list. Default 'false' (open view): excludes cases this
-   * firm has handled, but still lists cases handled by ANOTHER firm (grayed).
-   * 'true' lists only cases this firm handled. 'all' lists everything.
-   */
-  handled?: 'true' | 'false' | 'all';
-}
-
-/** One case in the firm's portal queue. camelCase domain shape; the Phase 3 endpoint maps to snake_case JSON. */
-export interface PortalQueueRow {
-  sessionId: string;
-  caseName: string;
-  userName: string | null;
-  userEmail: string | null;
-  userPhone: string | null;
-  /** session.updatedAt when the litigation match landed; null in-memory (no timestamp tracked). */
-  matchedAt: string | null;
-  /** A firm_session_handled row exists for this session by some OTHER assigned firm. */
-  handledByOtherFirm: boolean;
-  /** A firm_session_handled row exists for (session, this firm). */
-  handledByThisFirm: boolean;
-}
-
-export interface PortalQueueResult {
-  /** Counts are firm-scoped (DO3). openCount excludes other-firm-handled; handledCount = this firm. */
-  summary: { openCount: number; handledCount: number };
-  cases: PortalQueueRow[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
-}
-
 /** Phase 2a: a row in the cases-backed firm queue. */
 export interface PortalCaseListRow {
   caseId: string;
@@ -873,26 +837,6 @@ export interface PortalCaseDetailFull {
   qualifyingAnswers: { question: string; answer: string }[];
   transcript: Message[];
   activity: PortalCaseActivityRow[];
-}
-
-/** One qualifying-question answer surfaced in the case detail. */
-export interface PortalCaseQqAnswer {
-  question: string;
-  answer: string;
-}
-
-/** Full case package for a single portal case. */
-export interface PortalCaseDetail {
-  sessionId: string;
-  litigationListingId: string;
-  caseName: string;
-  userName: string | null;
-  userEmail: string | null;
-  userPhone: string | null;
-  qualifyingAnswers: PortalCaseQqAnswer[];
-  transcript: Message[];
-  matchedAt: string | null;
-  handledByThisFirm: boolean;
 }
 
 /** Result of resolving a signed-in Clerk user to an attorney (used by requireAttorney in Phase 3). */
@@ -1364,17 +1308,6 @@ export interface DbClient {
   // ─── Attorney portal (migration 0019) ──────────────────────────────────────
 
   /**
-   * Portal queue for a firm: sessions whose litigation row is assigned to
-   * `lawFirmId` (via litigation_firm_assignments), with firm-scoped summary
-   * counts and gray-out flags from firm_session_handled. See PortalQueueOptions
-   * for the handled-filter semantics.
-   */
-  listPortalQueueForFirm(
-    lawFirmId: string,
-    opts?: PortalQueueOptions,
-  ): Promise<PortalQueueResult>;
-
-  /**
    * Phase 2a: the firm's intake queue read off the cases table. Firm-scoped,
    * consent-gated HARD (only consent_to_share=true), grouped New / Working /
    * Resolved. Claimant identity joined from the routed session.
@@ -1578,26 +1511,6 @@ export interface DbClient {
    * matters. The agenda itself is assembled by the pure buildAgenda().
    */
   getAgendaInputsForFirm(lawFirmId: string): Promise<AgendaInputs>;
-
-  /**
-   * Full case package for a single session, scoped to a firm. Returns null
-   * when the session doesn't exist OR the firm has no assignment for the
-   * session's litigation row (the access boundary).
-   */
-  getPortalCaseForFirm(
-    sessionId: string,
-    lawFirmId: string,
-  ): Promise<PortalCaseDetail | null>;
-
-  /**
-   * Mark a case handled by a firm. Idempotent — a second call for the same
-   * (session, firm) is a no-op. One-bit state (DO2: permanent in v1).
-   */
-  markFirmSessionHandled(
-    sessionId: string,
-    lawFirmId: string,
-    handledByUserId: string | null,
-  ): Promise<void>;
 
   /** List the firms currently assigned to a litigation row. */
   listFirmAssignmentsForLitigation(

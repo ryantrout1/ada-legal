@@ -34,26 +34,14 @@ describe.skipIf(!DATABASE_URL)('migration 0019 — schema applied (live DB)', ()
     expect(cols).toEqual(['law_firm_id', 'user_id']);
   });
 
-  it('litigation_firm_assignments and firm_session_handled tables exist', async () => {
+  it('litigation_firm_assignments table exists', async () => {
     const sql = getSql();
     const rows = (await sql`
       SELECT table_name FROM information_schema.tables
-      WHERE table_name IN ('litigation_firm_assignments', 'firm_session_handled')
+      WHERE table_name IN ('litigation_firm_assignments')
     `) as Array<{ table_name: string }>;
     const tables = rows.map((r) => r.table_name).sort();
-    expect(tables).toEqual(['firm_session_handled', 'litigation_firm_assignments']);
-  });
-
-  it('firm_session_handled has the composite primary key (session_id, law_firm_id)', async () => {
-    const sql = getSql();
-    const rows = (await sql`
-      SELECT a.attname AS column_name
-      FROM pg_index i
-      JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
-      WHERE i.indrelid = 'firm_session_handled'::regclass AND i.indisprimary
-    `) as Array<{ column_name: string }>;
-    const pk = rows.map((r) => r.column_name).sort();
-    expect(pk).toEqual(['law_firm_id', 'session_id']);
+    expect(tables).toEqual(['litigation_firm_assignments']);
   });
 
   it('litigation_firm_assignments enforces UNIQUE (litigation_listing_id, law_firm_id)', async () => {
