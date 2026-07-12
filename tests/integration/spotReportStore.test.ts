@@ -62,4 +62,29 @@ describe.skipIf(!DATABASE_URL)('spotStore report methods — live DB', () => {
       await db.delete(spotSessions).where(eq(spotSessions.id, id));
     }
   });
+
+  it('photosToSweep finds past-retention photos; markPhotoDeleted removes them from the sweep', async () => {
+    const db = makeDb(DATABASE_URL!);
+    const store = makeSpotStore(db);
+    const id = await store.createSession({ amountCents: 7900 });
+    try {
+      await store.insertPhoto({ sessionId: id, blobKey: 'k', blobUrl: 'https://blob/sweep.jpg' });
+      // Force this photo past its retention window.
+      await db
+        .update(spotPhotos)
+        .set({ deleteAfter: new Date('2000-01-01T00:00:00Z') })
+        .where(eq(spotPhotos.sessionId, id));
+
+      const due = await store.photosToSweep(new Date(), 100);
+      const mine = due.find((p) => p.blobUrl === 'https://blob/sweep.jpg');
+      expect(mine).toBeTruthy();
+
+      await store.markPhotoDeleted(mine!.id);
+      const after = await store.photosToSweep(new Date(), 100);
+      expect(after.some((p) => p.id === mine!.id)).toBe(false); // no longer swept
+    } finally {
+      await db.delete(spotPhotos).where(eq(spotPhotos.sessionId, id));
+      await db.delete(spotSessions).where(eq(spotSessions.id, id));
+    }
+  });
 });

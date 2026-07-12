@@ -10,7 +10,7 @@
  * default constructs the production neon-http handle from DATABASE_URL.
  */
 
-import { and, asc, count, desc, eq, gte, isNull } from 'drizzle-orm';
+import { and, asc, count, desc, eq, gte, isNull, lte } from 'drizzle-orm';
 import { makeDb, type Database } from '../../db/client.js';
 import { spotReads, spotRateLimits, spotSessions, spotPhotos, spotReports } from '../../db/schema-spot.js';
 import type { SpotTier } from './rateLimitDecision.js';
@@ -95,6 +95,10 @@ export interface SpotStore {
   rejectReport(input: { slug: string; reviewedBy: string }): Promise<boolean>;
   /** Flip in_review → delivered (conditional; idempotent). */
   markDelivered(sessionId: string): Promise<boolean>;
+  /** Live photos past their retention window (delete_after), for the 90-day sweep. */
+  photosToSweep(now: Date, limit: number): Promise<Array<{ id: string; blobUrl: string }>>;
+  /** Mark a photo's blob deleted (soft-delete the row; keeps metadata). */
+  markPhotoDeleted(id: string): Promise<void>;
 }
 
 function requireDatabaseUrl(): string {
@@ -320,6 +324,20 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
         .where(and(eq(spotSessions.id, sessionId), eq(spotSessions.status, 'in_review')))
         .returning({ id: spotSessions.id });
       return rows.length > 0;
+    },
+    async photosToSweep(now, limit) {
+      const rows = await db
+        .select({ id: spotPhotos.id, blobUrl: spotPhotos.blobUrl })
+        .from(spotPhotos)
+        .where(and(lte(spotPhotos.deleteAfter, now), isNull(spotPhotos.deletedAt)))
+        .limit(limit);
+      return rows.filter((r): r is { id: string; blobUrl: string } => typeof r.blobUrl === 'string' && r.blobUrl.length > 0);
+    },
+    async markPhotoDeleted(id) {
+      await db
+        .update(spotPhotos)
+        .set({ deletedAt: new Date() })
+        .where(and(eq(spotPhotos.id, id), isNull(spotPhotos.deletedAt)));
     },
   };
 }
