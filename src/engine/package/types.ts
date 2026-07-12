@@ -162,6 +162,14 @@ export interface SessionPackage {
   demandLetter: string | null;
 
   /**
+   * ADALL Standards-Guide "learn more" URL for the standard the demand letter
+   * cites (R5b). Present only when a demand letter is (a specific chapter when
+   * the cited section resolves, the guide index otherwise). Null when there's
+   * no demand letter.
+   */
+  demandLetterGuideUrl: string | null;
+
+  /**
    * Class-action placeholder flag. True when classification is
    * class_action AND no specific listing was bound. Signals the
    * rendering layer to surface the generic "class-action matching

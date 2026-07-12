@@ -452,6 +452,19 @@ function PackageView({
             your own email or by mail. You are the sender — I'm only
             providing the draft.
           </p>
+          {pkg.demandLetterGuideUrl && (
+            <p className="mb-4">
+              <a
+                href={pkg.demandLetterGuideUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 min-h-[44px] text-accent-600 underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                Learn what this ADA requirement means on our Standards Guide
+                <span aria-hidden="true">→</span>
+              </a>
+            </p>
+          )}
           <pre className="bg-surface-100 border border-surface-200 rounded p-4 overflow-x-auto text-sm whitespace-pre-wrap text-ink-900 font-mono">
             {pkg.demandLetter}
           </pre>

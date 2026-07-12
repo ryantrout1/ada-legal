@@ -20,6 +20,7 @@ import { generatePackageSlug } from './slug.js';
 import { labelFor } from './labels.js';
 import { extractNarrative, buildSummary } from './extract.js';
 import { buildDemandLetter } from './demandLetter.js';
+import { guideUrlForStandard } from './standardsGuideLink.js';
 import type { SessionPackage, CitedRegulation, MatchedListing } from './types.js';
 
 export interface AssemblePackageContext {
@@ -157,6 +158,7 @@ export function assemblePackage(ctx: AssemblePackageContext): SessionPackage {
     alternateActions: route.alternates,
     infoDestinations: route.info,
     demandLetter,
+    demandLetterGuideUrl: demandLetter ? guideUrlForStandard(classification.standard) : null,
     classActionPlaceholder,
     matchedListing,
     disclaimer: PACKAGE_DISCLAIMER,
