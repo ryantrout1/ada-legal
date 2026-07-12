@@ -647,6 +647,21 @@ describe('assemblePackage', () => {
     expect(pkg.demandLetter!).toContain("Joe's Diner");
   });
 
+  it('non-viable classifications still route to a destination and skip the letter (R5c soft-reject)', () => {
+    for (const title of ['out_of_scope', 'no_apparent_issue', 'none'] as const) {
+      const pkg = assemblePackage({
+        state: makeState({ classification: { ...baseClassification, title } }),
+        now: baseNow,
+      });
+      // Never a dead end — routeFor always returns a primary destination.
+      expect(pkg.primaryAction).toBeTruthy();
+      expect(pkg.primaryAction.id).toBeTruthy();
+      // And no demand letter for a non-viable outcome.
+      expect(pkg.demandLetter).toBeNull();
+      expect(pkg.demandLetterGuideUrl).toBeNull();
+    }
+  });
+
   it('does NOT generate a demand letter for Title I', () => {
     const state = makeState({
       classification: { ...baseClassification, title: 'I', standard: '42 USC §12112' },
