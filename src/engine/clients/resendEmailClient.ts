@@ -31,7 +31,12 @@ export class ResendEmailClient implements EmailClient {
 
   async send(opts: EmailSendOptions): Promise<{ id: string }> {
     const body: Record<string, unknown> = {
-      from: this.fromAddress,
+      // Resend shows the local-part as the sender name when no display name
+      // is present (e.g. "ada"). Wrap with a brand display name unless the
+      // configured from-address already carries one ("Name <addr>").
+      from: this.fromAddress.includes('<')
+        ? this.fromAddress
+        : `ADA Legal Link <${this.fromAddress}>`,
       to: [opts.to],
       subject: opts.subject,
       html: opts.html,

@@ -80,14 +80,14 @@ export function renderUserConnectedEmail(opts: {
   const subject = `You're connected${withFirm}`;
 
   const html = wrap(
-    `<h1 style="font-size:20px;margin:0 0 16px">You're connected${escapeHtml(withFirm)}</h1>` +
+    `<h1 style="font-size:20px;margin:0 0 16px">You're all set</h1>` +
       `<p style="margin:0 0 12px">Thanks for confirming. ${firmName ? escapeHtml(firmName) + ' can' : 'An attorney can'} now review what you described and will reach out to you directly.</p>` +
       `<p style="margin:0 0 12px;color:#555">You're in control — you can withdraw anytime by replying to this email.</p>` +
       button(readoutUrl, 'View your summary'),
   );
 
   const text = [
-    `You're connected${withFirm}`,
+    `You're all set`,
     ``,
     `Thanks for confirming. ${firmName ?? 'An attorney'} can now review what you described and will reach out to you directly.`,
     ``,
