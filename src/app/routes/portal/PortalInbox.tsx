@@ -89,8 +89,8 @@ export default function PortalInbox() {
         await load();
         announce(
           action === 'accept'
-            ? 'Referral accepted — moved to your matters.'
-            : 'Referral declined — re-routed for placement.',
+            ? 'Case accepted — moved to your matters.'
+            : 'Case declined — re-routed for placement.',
         );
       } catch (err) {
         setActionError(
@@ -149,7 +149,7 @@ export default function PortalInbox() {
           <p className="text-ink-500 text-xs font-semibold uppercase tracking-wider mb-1.5">
             Workspace · Inbox
           </p>
-          <h1 className="font-display text-2xl sm:text-3xl text-ink-900">Incoming Referrals</h1>
+          <h1 className="font-display text-2xl sm:text-3xl text-ink-900">Incoming Cases</h1>
         </div>
         <button
           type="button"
@@ -167,7 +167,7 @@ export default function PortalInbox() {
         <Metric
           label="Awaiting decision"
           value={counts ? String(counts.new) : '—'}
-          sub="Referrals to review"
+          sub="Cases to review"
           accent
           pos={0}
         />
@@ -193,7 +193,7 @@ export default function PortalInbox() {
 
       {/* Filter chips */}
       {rows.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2 mb-4" role="group" aria-label="Filter referrals">
+        <div className="flex flex-wrap items-center gap-2 mb-4" role="group" aria-label="Filter cases">
           <FilterChip label="All" count={rows.length} active={filter === 'all'} onClick={() => setFilter('all')} />
           {chips.classes.map(([c, n]) => (
             <FilterChip
@@ -234,7 +234,7 @@ export default function PortalInbox() {
         </div>
       ) : rows.length === 0 ? (
         <div className="rounded-lg border border-control-border bg-white px-6 py-12 text-center">
-          <h2 className="font-display text-xl text-ink-900 mb-2">No referrals awaiting your decision</h2>
+          <h2 className="font-display text-xl text-ink-900 mb-2">No cases awaiting your decision</h2>
           <p className="text-ink-500">New matched cases will appear here once a claimant consents to share.</p>
         </div>
       ) : (
@@ -263,7 +263,7 @@ export default function PortalInbox() {
               {visibleRows.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-ink-500 text-sm">
-                    No referrals match this filter.
+                    No cases match this filter.
                   </td>
                 </tr>
               )}
@@ -492,7 +492,7 @@ function DeclineDialog({
         className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl"
       >
         <h2 id={titleId} className="font-display text-lg text-ink-900 mb-1">
-          Decline referral
+          Decline case
         </h2>
         <p className="text-sm text-ink-500 mb-4">
           The case re-routes for placement elsewhere. Optionally note why you’re passing on {target.claimant}.
