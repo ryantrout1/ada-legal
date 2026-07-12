@@ -62,6 +62,10 @@ const COLUMN_PILL: Record<BoardColumn, string> = {
   resolved: 'green',
 };
 
+// The board shows accepted matters only — the 'new' (un-accepted) column lives
+// in the Inbox. boardMoves keeps 'new' for the state machine; the view omits it.
+const BOARD_VIEW_COLUMNS = BOARD_COLUMNS.filter((c) => c !== 'new');
+
 interface Pending {
   caseId: string;
   claimant: string;
@@ -88,7 +92,10 @@ export default function PortalBoard() {
     try {
       const data = await fetchPortalQueue();
       setViewerAttorneyId(data.viewer_attorney_id);
-      setRows([...data.groups.new, ...data.groups.working, ...data.groups.resolved]);
+      // The board is the accepted-matters pipeline. Un-accepted intakes
+      // (status 'new') live in the Inbox for accept/decline — don't mirror them
+      // here (was duplicating the Inbox in a 'New' column).
+      setRows([...data.groups.working, ...data.groups.resolved]);
     } catch (err) {
       setError(
         err instanceof PortalApiError ? err.message : 'Could not load the board. Please retry.',
@@ -244,7 +251,7 @@ export default function PortalBoard() {
         <p className="text-sm text-ink-500">Loading the board…</p>
       ) : (
         <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {BOARD_COLUMNS.map((column) => {
+          {BOARD_VIEW_COLUMNS.map((column) => {
             const items = byColumn(column);
             return (
               <section
