@@ -35,10 +35,14 @@ function baseState(overrides: Partial<AdaSessionState> = {}): AdaSessionState {
     userId: null,
     listingId: null,
     litigationListingId: null,
-    conversationHistory: [],
+    conversationHistory: [
+      { role: 'user', content: 'hi', timestamp: '2026-01-01T00:00:00.000Z' },
+    ],
     extractedFields: {},
     classification: null,
-    metadata: {},
+    // Pre-confirmed so the R5a confirm-before-finalize gate is satisfied and
+    // these tests reach the finalize mechanics they actually exercise.
+    metadata: { summary_proposed_at_user_turns: 0 },
     accessibilitySettings: {},
     isTest: false,
     ...overrides,

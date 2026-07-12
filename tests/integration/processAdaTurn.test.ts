@@ -220,7 +220,10 @@ describe('processAdaTurn — integration', () => {
 
   it('session transition via end_session: status moves active → completed', async () => {
     const clients = makeInMemoryClients();
-    const state = newSession(clients);
+    const base = newSession(clients);
+    // A summary was proposed on a prior turn (R5a gate); the user's message
+    // this turn is their confirmation, so end_session is allowed to complete.
+    const state = { ...base, metadata: { ...base.metadata, summary_proposed_at_user_turns: 0 } };
 
     clients.ai.enqueueResponse(
       toolUseChunks('tu_1', 'end_session', {

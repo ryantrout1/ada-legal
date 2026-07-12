@@ -248,7 +248,16 @@ describe('finalize_intake: non-test sessions still gate normally', () => {
     const result = await finalizeIntakeTool.execute(
       {
         clients: h.clients,
-        state: testState({ isTest: false, listingId: null }),
+        state: testState({
+          isTest: false,
+          listingId: null,
+          // Confirmation-satisfied (R5a) so the confirm gate passes and we
+          // reach the listingId gate this test is asserting.
+          conversationHistory: [
+            { role: 'user', content: 'hi', timestamp: '2026-01-01T00:00:00.000Z' },
+          ],
+          metadata: { summary_proposed_at_user_turns: 0 },
+        }),
       },
       { qualified: true, disqualifying_reason: null },
     );

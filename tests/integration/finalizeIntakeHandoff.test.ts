@@ -133,7 +133,10 @@ function qualifiedState(): AdaSessionState {
       standard: 'ADA Title III',
       class_action_candidate: null,
     },
-    metadata: {},
+    // Pre-confirmed (R5a): the user has taken a turn after the summary was
+    // proposed, so end/finalize is allowed — these tests exercise the handoff,
+    // not the confirm gate.
+    metadata: { summary_proposed_at_user_turns: 0 },
     accessibilitySettings: {},
     isTest: false,
   };
