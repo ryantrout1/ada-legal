@@ -11,6 +11,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSpotCapture, type SpotUpsell } from './spot/useSpotCapture';
 import SpotResultView from './spot/SpotResultView';
 import SpotCheckout from './spot/SpotCheckout';
+import SpotUpload from './spot/SpotUpload';
 
 const MAX_PHOTOS = 2;
 
@@ -70,12 +71,7 @@ export default function SpotLanding() {
             <h1 className="font-display text-3xl text-ink-900">Ada Spot</h1>
           </header>
           {paidSessionId ? (
-            <div className="rounded-lg border border-surface-200 bg-surface-100 p-5" aria-live="polite">
-              <h2 className="font-display text-xl text-ink-900">Payment received</h2>
-              <p className="mt-2 text-ink-900">
-                Next you'll add your photos — that upload step is being finalized.
-              </p>
-            </div>
+            <SpotUpload spotSessionId={paidSessionId} />
           ) : (
             <SpotCheckout onPaid={setPaidSessionId} />
           )}

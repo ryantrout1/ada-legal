@@ -10,9 +10,9 @@
  * default constructs the production neon-http handle from DATABASE_URL.
  */
 
-import { and, count, eq, gte } from 'drizzle-orm';
+import { and, count, eq, gte, isNull } from 'drizzle-orm';
 import { makeDb, type Database } from '../../db/client.js';
-import { spotReads, spotRateLimits, spotSessions } from '../../db/schema-spot.js';
+import { spotReads, spotRateLimits, spotSessions, spotPhotos } from '../../db/schema-spot.js';
 import type { SpotTier } from './rateLimitDecision.js';
 import { canTransition, type SpotSessionStatus } from './spotSessionStatus.js';
 
@@ -56,6 +56,12 @@ export interface SpotStore {
     email?: string;
     amountCents?: number;
   }): Promise<boolean>;
+  /** Record one uploaded paid photo (session-parented; read_id stays null). */
+  insertPhoto(input: { sessionId: string; blobKey: string; blobUrl: string }): Promise<void>;
+  /** Count live (non-deleted) photos for a session — drives the 10-photo cap. */
+  countPhotos(sessionId: string): Promise<number>;
+  /** Flip paid → uploaded (conditional; idempotent). Returns true iff transitioned. */
+  markUploaded(input: { spotSessionId: string; photoCount: number }): Promise<boolean>;
 }
 
 function requireDatabaseUrl(): string {
@@ -132,6 +138,34 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
           ...(typeof input.amountCents === 'number' ? { amountCents: input.amountCents } : {}),
         })
         .where(and(eq(spotSessions.id, input.spotSessionId), eq(spotSessions.status, 'pending_payment')))
+        .returning({ id: spotSessions.id });
+      return rows.length > 0;
+    },
+    async insertPhoto(input) {
+      await db.insert(spotPhotos).values({
+        sessionId: input.sessionId,
+        blobKey: input.blobKey,
+        blobUrl: input.blobUrl,
+      });
+    },
+    async countPhotos(sessionId) {
+      const rows = await db
+        .select({ n: count() })
+        .from(spotPhotos)
+        .where(and(eq(spotPhotos.sessionId, sessionId), isNull(spotPhotos.deletedAt)));
+      return Number(rows[0]?.n ?? 0);
+    },
+    async markUploaded(input) {
+      if (!canTransition('paid', 'uploaded')) return false;
+      const rows = await db
+        .update(spotSessions)
+        .set({
+          status: 'uploaded',
+          uploadedAt: new Date(),
+          photoCount: input.photoCount,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(spotSessions.id, input.spotSessionId), eq(spotSessions.status, 'paid')))
         .returning({ id: spotSessions.id });
       return rows.length > 0;
     },
