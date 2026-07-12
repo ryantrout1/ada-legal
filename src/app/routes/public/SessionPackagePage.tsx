@@ -350,6 +350,16 @@ function PackageView({
             )}
           </dl>
 
+          {(pkg.matchedListing.firmEmail || pkg.matchedListing.firmPhone) && (
+            <div className="mb-5">
+              <FirmContactCopyButton
+                firmName={pkg.matchedListing.firmName}
+                firmEmail={pkg.matchedListing.firmEmail}
+                firmPhone={pkg.matchedListing.firmPhone}
+              />
+            </div>
+          )}
+
           <div className="flex flex-wrap gap-3">
             {pkg.matchedListing.firmEmail && (
               <a
@@ -714,6 +724,55 @@ function ShareLinkButton({ slug }: { slug: string }) {
     >
       {copied ? 'Link copied' : 'Share link'}
     </button>
+  );
+}
+
+/**
+ * Copies the matched firm's contact details to the clipboard. For the
+ * self-referral case the mailto:/tel: links do nothing without an OS
+ * handler, so a self-represented claimant needs a way to grab the raw
+ * details. AAA: 44px target, visible focus, aria-live confirmation.
+ */
+function FirmContactCopyButton({
+  firmName,
+  firmEmail,
+  firmPhone,
+}: {
+  firmName: string;
+  firmEmail?: string | null;
+  firmPhone?: string | null;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    const lines = [firmName, firmEmail ?? undefined, firmPhone ?? undefined].filter(
+      (l): l is string => Boolean(l),
+    );
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(lines.join('\n'));
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch {
+      // Clipboard unavailable — the details are still visible above.
+    }
+  }
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={handleCopy}
+        className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 rounded border border-surface-300 text-ink-700 hover:border-accent-600 hover:text-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600 transition-colors"
+        aria-label={`Copy contact details for ${firmName}`}
+      >
+        {copied ? 'Contact details copied' : 'Copy contact details'}
+      </button>
+      <span className="sr-only" aria-live="polite" aria-atomic="true">
+        {copied ? 'Contact details copied to clipboard.' : ''}
+      </span>
+    </>
   );
 }
 
