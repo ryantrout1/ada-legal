@@ -33,6 +33,12 @@ describe.skipIf(!DATABASE_URL)('spotStore report methods — live DB', () => {
       await store.insertReport({ sessionId: id, slug, content: { kind: 'clear' }, modelVersion: 'opus-test' });
       expect((await store.getReportBySession(id))?.slug).toBe(slug);
 
+      // admin read methods (Phase 3b)
+      const bySlug = await store.getReportBySlug(slug);
+      expect(bySlug?.sessionId).toBe(id);
+      expect((bySlug?.content as { kind?: string })?.kind).toBe('clear');
+      expect((await store.listReports(100)).some((r) => r.slug === slug)).toBe(true);
+
       expect(await store.markInReview(id)).toBe(true);
       expect(await store.markInReview(id)).toBe(false); // idempotent
       expect((await store.getSession(id))?.status).toBe('in_review');

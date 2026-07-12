@@ -10,7 +10,7 @@
  * default constructs the production neon-http handle from DATABASE_URL.
  */
 
-import { and, asc, count, eq, gte, isNull } from 'drizzle-orm';
+import { and, asc, count, desc, eq, gte, isNull } from 'drizzle-orm';
 import { makeDb, type Database } from '../../db/client.js';
 import { spotReads, spotRateLimits, spotSessions, spotPhotos, spotReports } from '../../db/schema-spot.js';
 import type { SpotTier } from './rateLimitDecision.js';
@@ -76,6 +76,15 @@ export interface SpotStore {
   }): Promise<void>;
   /** Flip uploaded → in_review (conditional; idempotent). Returns true iff transitioned. */
   markInReview(sessionId: string): Promise<boolean>;
+  /** Recent reports for the admin preview list. */
+  listReports(limit: number): Promise<
+    Array<{ id: string; sessionId: string; slug: string; modelVersion: string | null; hitlStatus: string; createdAt: Date }>
+  >;
+  /** A single report's full content + metadata, by slug. */
+  getReportBySlug(slug: string): Promise<
+    | { id: string; sessionId: string; slug: string; content: unknown; modelVersion: string | null; hitlStatus: string; createdAt: Date }
+    | null
+  >;
 }
 
 function requireDatabaseUrl(): string {
@@ -225,6 +234,36 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
         .where(and(eq(spotSessions.id, sessionId), eq(spotSessions.status, 'uploaded')))
         .returning({ id: spotSessions.id });
       return rows.length > 0;
+    },
+    async listReports(limit) {
+      return db
+        .select({
+          id: spotReports.id,
+          sessionId: spotReports.sessionId,
+          slug: spotReports.slug,
+          modelVersion: spotReports.modelVersion,
+          hitlStatus: spotReports.hitlStatus,
+          createdAt: spotReports.createdAt,
+        })
+        .from(spotReports)
+        .orderBy(desc(spotReports.createdAt))
+        .limit(limit);
+    },
+    async getReportBySlug(slug) {
+      const rows = await db
+        .select({
+          id: spotReports.id,
+          sessionId: spotReports.sessionId,
+          slug: spotReports.slug,
+          content: spotReports.content,
+          modelVersion: spotReports.modelVersion,
+          hitlStatus: spotReports.hitlStatus,
+          createdAt: spotReports.createdAt,
+        })
+        .from(spotReports)
+        .where(eq(spotReports.slug, slug))
+        .limit(1);
+      return rows[0] ?? null;
     },
   };
 }
