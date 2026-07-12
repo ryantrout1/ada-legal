@@ -38,6 +38,7 @@ import StandardsGuide from './routes/public/StandardsGuide.js';
 import StandardsChapter from './routes/public/StandardsChapter.js';
 import GuidePage from './routes/public/GuidePage.js';
 import PhotoCapture from './routes/public/PhotoCapture.js';
+import SpotLanding from './routes/public/SpotLanding.js';
 import ReviewLayout from './routes/review/ReviewLayout.js';
 import PhotoReviewQueue from './routes/review/PhotoReviewQueue.js';
 import PhotoReviewLabel from './routes/review/PhotoReviewLabel.js';
@@ -120,6 +121,12 @@ export default function App() {
             chrome competing with the single-task form. Unlisted; not
             linked from the public site. See /plan: /photo. */}
         <Route path="/photo" element={<PhotoCapture />} />
+
+        {/* Standalone — Ada Spot, the business-facing free screening landing.
+            Outside PublicLayout (single-task, no chrome), like /photo. Ships
+            dark via the spot_enabled flag. See /plan: Ada Spot Phase 1b. */}
+        <Route path="/spot" element={<SpotLanding />} />
+
 
         {/* Standalone — public, no-auth reviewer tool for Peter/Gina/Ryan.
             Self-identifies by name (no login); outside PublicLayout and
