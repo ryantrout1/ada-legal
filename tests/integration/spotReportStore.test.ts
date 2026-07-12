@@ -1,0 +1,45 @@
+/**
+ * Integration test — Ada Spot report store methods against the live DB.
+ *
+ * uploaded session → insertReport → getReportBySession → markInReview
+ * (idempotent), verifying the pickup + persistence + status flip. Self-cleaning.
+ * Skips without DATABASE_URL. Ref: /plan Phase 3a.
+ */
+
+import { describe, it, expect } from 'vitest';
+import { eq } from 'drizzle-orm';
+import { makeDb } from '@/db/client';
+import { spotSessions, spotPhotos, spotReports } from '@/db/schema-spot';
+import { makeSpotStore } from '@/lib/spot/spotStore';
+import { generatePackageSlug } from '@/engine/package/slug';
+
+const DATABASE_URL = process.env.DATABASE_URL;
+
+describe.skipIf(!DATABASE_URL)('spotStore report methods — live DB', () => {
+  it('uploaded → insertReport → getReportBySession → markInReview', async () => {
+    const db = makeDb(DATABASE_URL!);
+    const store = makeSpotStore(db);
+    const id = await store.createSession({ amountCents: 7900 });
+    try {
+      await store.markPaid({ spotSessionId: id, amountCents: 7900 });
+      await store.insertPhoto({ sessionId: id, blobKey: 'k', blobUrl: 'https://blob/x.jpg' });
+      await store.markUploaded({ spotSessionId: id, photoCount: 1 });
+
+      const photos = await store.listSessionPhotos(id);
+      expect(photos.map((p) => p.blobUrl)).toContain('https://blob/x.jpg');
+
+      expect(await store.getReportBySession(id)).toBeNull();
+      const slug = generatePackageSlug();
+      await store.insertReport({ sessionId: id, slug, content: { kind: 'clear' }, modelVersion: 'opus-test' });
+      expect((await store.getReportBySession(id))?.slug).toBe(slug);
+
+      expect(await store.markInReview(id)).toBe(true);
+      expect(await store.markInReview(id)).toBe(false); // idempotent
+      expect((await store.getSession(id))?.status).toBe('in_review');
+    } finally {
+      await db.delete(spotReports).where(eq(spotReports.sessionId, id));
+      await db.delete(spotPhotos).where(eq(spotPhotos.sessionId, id));
+      await db.delete(spotSessions).where(eq(spotSessions.id, id));
+    }
+  });
+});
