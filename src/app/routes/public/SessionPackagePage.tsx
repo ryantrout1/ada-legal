@@ -726,7 +726,9 @@ function formatHumanDate(iso: string): string {
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December',
   ];
-  return `${months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`;
+  // Local time, not UTC — an evening session in a negative-offset zone
+  // (e.g. Arizona) was rendering as the next calendar day under getUTC*.
+  return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 }
 
 function humanizeFieldName(snake: string): string {
