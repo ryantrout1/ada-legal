@@ -37,7 +37,7 @@ import type {
   AdaTurnResult,
   ToolInvocation,
 } from './types.js';
-import type { Message, AttachedPhoto } from '../types/db.js';
+import type { Message, AttachedPhoto, InvokedTool } from '../types/db.js';
 import { assemblePromptStructured } from './prompt/assemble.js';
 import { CH0_TOOLS, buildToolIndex } from './tools/registry.js';
 import { CH1_TOOLS } from './tools/registryCh1.js';
@@ -518,6 +518,26 @@ export async function processAdaTurn({
     workingState = {
       ...workingState,
       conversationHistory: [...workingState.conversationHistory, assistantMessage],
+    };
+  }
+
+  // Record this turn's tool invocations into the observability sidecar
+  // (metadata.tools_invoked) — the single source of truth QC and attorneyMatched
+  // read. Tool calls otherwise live only as tool_use blocks in message.content,
+  // which neither consumer inspects. Accumulate across turns (mirrors photos).
+  if (toolInvocations.length > 0) {
+    const invoked: InvokedTool[] = toolInvocations.map((t) => ({
+      name: t.name,
+      args: t.args,
+      timestamp: t.timestamp,
+      result_kind: t.isError ? 'error' : 'ok',
+    }));
+    workingState = {
+      ...workingState,
+      metadata: {
+        ...workingState.metadata,
+        tools_invoked: [...(workingState.metadata.tools_invoked ?? []), ...invoked],
+      },
     };
   }
 

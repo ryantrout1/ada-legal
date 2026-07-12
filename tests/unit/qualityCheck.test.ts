@@ -88,7 +88,13 @@ function baseGoodState(
     conversationHistory,
     extractedFields,
     classification,
-    metadata: { turnCount: 2 } as AdaSessionState['metadata'],
+    metadata: {
+      turnCount: 2,
+      tools_invoked: [
+        { name: 'extract_field', args: { field: 'facility_type', value: 'restaurant' }, timestamp: '2026-04-20T00:00:01Z', result_kind: 'ok' },
+        { name: 'set_classification', args: { title: 'Title III' }, timestamp: '2026-04-20T00:00:03Z', result_kind: 'ok' },
+      ],
+    } as AdaSessionState['metadata'],
     accessibilitySettings: {
       readingLevel: 'standard',
     } as AdaSessionState['accessibilitySettings'],
@@ -143,7 +149,7 @@ describe('runSessionQualityCheck', () => {
     expect(result.failures.map((f) => f.code)).toContain('conversation_too_short');
   });
 
-  it('WARN no_tool_use when no tool calls in conversation', () => {
+  it('WARN no_tool_use when no tools were invoked', () => {
     const result = runSessionQualityCheck(
       baseGoodState({
         conversationHistory: [
@@ -155,6 +161,8 @@ describe('runSessionQualityCheck', () => {
           },
           { role: 'user', content: 'bye', timestamp: '2026-04-20T00:00:02Z' },
         ],
+        // no_tool_use now reads metadata.tools_invoked (the source of truth).
+        metadata: { turnCount: 2 } as AdaSessionState['metadata'],
       }),
     );
     expect(result.warnings.map((w) => w.code)).toContain('no_tool_use');
@@ -185,9 +193,11 @@ describe('runSessionQualityCheck', () => {
         accessibilitySettings: {} as AdaSessionState['accessibilitySettings'],
       }),
     );
-    // Two warnings, zero failures → still passed.
+    // Empty metadata now also trips no_tool_use (tools_invoked is the source of
+    // truth): missing_metadata + no_tool_use + missing_accessibility_settings —
+    // three warnings, zero failures → still passed.
     expect(result.passed).toBe(true);
-    expect(result.warnings.length).toBe(2);
+    expect(result.warnings.length).toBe(3);
     expect(result.failures.length).toBe(0);
   });
 

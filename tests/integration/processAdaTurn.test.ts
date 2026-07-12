@@ -242,6 +242,10 @@ describe('processAdaTurn — integration', () => {
     expect(result.nextState.status).toBe('completed');
     expect(result.toolInvocations[0].name).toBe('end_session');
     expect(result.toolInvocations[0].isError).toBe(false);
+    // Regression (tools_invoked gap): the turn's tool calls are recorded into
+    // metadata.tools_invoked — the source QC + attorneyMatched read.
+    expect(result.nextState.metadata.tools_invoked?.map((t) => t.name)).toContain('end_session');
+    expect(result.nextState.metadata.tools_invoked?.[0].result_kind).toBe('ok');
   });
 
   it('set_reading_level: state.readingLevel updates mid-turn', async () => {

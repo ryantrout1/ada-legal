@@ -74,11 +74,8 @@ export function runSessionQualityCheck(
 
   // ── WARNINGS ──────────────────────────────────────────────────────────────
 
-  const toolNames = new Set<string>();
-  for (const msg of state.conversationHistory ?? []) {
-    for (const tc of msg.tool_calls ?? []) toolNames.add(tc.name);
-  }
-  if (toolNames.size === 0) {
+  const toolsInvoked = state.metadata?.tools_invoked ?? [];
+  if (toolsInvoked.length === 0) {
     warnings.push({
       code: 'no_tool_use',
       message:
