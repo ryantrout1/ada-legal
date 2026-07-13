@@ -16,7 +16,7 @@ import SpotReportView from './spot/SpotReportView';
 import { downscalePhoto } from '@/app/utils/downscalePhoto';
 import type { SpotReportContent } from '@/lib/spot/reportSchema';
 
-const MAX_PHOTOS = 2;
+const MAX_PHOTOS = 1;
 
 /** Test-drive only (?test=1): reachable when the admin flips spot_test_payment. */
 const IS_TEST_MODE =
@@ -128,8 +128,8 @@ export default function SpotLanding() {
         <header className="mb-6">
           <h1 className="font-display text-3xl text-ink-900">Ada Spot</h1>
           <p className="mt-2 text-ink-700">
-            See what a visitor with a disability might run into at your entrance — free, from a
-            couple of photos.
+            A quick spot-check — see what a visitor with a disability might run into at your
+            entrance, free, from a single photo.
           </p>
         </header>
 
@@ -164,7 +164,7 @@ export default function SpotLanding() {
                     e.target.value = '';
                   }}
                 />
-                <p className="text-sm text-ink-500">Up to {MAX_PHOTOS} photos.</p>
+                <p className="text-sm text-ink-500">One photo — a quick spot-check.</p>
 
                 {previews.length > 0 ? (
                   <ul className="grid grid-cols-2 gap-3">

@@ -14,9 +14,9 @@ describe('parseSpotAnalyzeBody', () => {
     if (out.ok) expect(out.photos).toHaveLength(1);
   });
 
-  it('accepts two photos (the free-tier max)', () => {
-    expect(MAX_FREE_PHOTOS).toBe(2);
-    const out = parseSpotAnalyzeBody({ photos: [png(), `data:image/jpeg;base64,${'B'.repeat(30)}`] });
+  it('accepts one photo (the free-tier max)', () => {
+    expect(MAX_FREE_PHOTOS).toBe(1);
+    const out = parseSpotAnalyzeBody({ photos: [png()] });
     expect(out.ok).toBe(true);
   });
 
@@ -25,8 +25,8 @@ describe('parseSpotAnalyzeBody', () => {
     expect(parseSpotAnalyzeBody({}).ok).toBe(false);
   });
 
-  it('rejects more than two photos (free tier)', () => {
-    const out = parseSpotAnalyzeBody({ photos: [png(), png(), png()] });
+  it('rejects more than one photo (free tier is a single spot-check)', () => {
+    const out = parseSpotAnalyzeBody({ photos: [png(), png()] });
     expect(out.ok).toBe(false);
     if (!out.ok) expect(out.status).toBe(400);
   });

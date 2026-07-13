@@ -8,7 +8,6 @@
 
 import {
   SPOT_SEVERITY_LABEL,
-  SPOT_HEDGE_NOTE,
   SPOT_CLEAR_HEADLINE,
   SPOT_NO_READ_HEADLINE,
   type SpotResultView as SpotResultViewModel,
@@ -72,37 +71,26 @@ export default function SpotResultView({ view, onRetry }: Props) {
         {view.kind === 'clear' ? SPOT_CLEAR_HEADLINE : 'What these photos show'}
       </h2>
 
-      {view.scene ? <p className="mt-2 text-sm text-ink-700">{view.scene}</p> : null}
       {view.summary ? <p className="mt-2 text-ink-900">{view.summary}</p> : null}
 
       {view.items.length > 0 ? (
-        <ul className="mt-4 space-y-4">
+        <ul className="mt-4 space-y-2">
           {view.items.map((item, i) => (
-            <li key={i} className="rounded-md border border-surface-200 bg-surface-50 p-4">
-              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <span className="rounded-full bg-accent-50 px-2 py-0.5 text-xs font-medium text-accent-600">
-                  {SPOT_SEVERITY_LABEL[item.severity]}
-                </span>
-                <span className="font-display text-base text-ink-900">{item.title}</span>
-              </div>
-              <p className="mt-2 text-sm text-ink-700">{item.body}</p>
-              {item.hedged ? (
-                <p className="mt-2 text-sm text-ink-500">{SPOT_HEDGE_NOTE}</p>
-              ) : null}
-              {item.citedSection ? (
-                <p className="mt-2 text-xs text-ink-500">Related standard: {item.citedSection}</p>
-              ) : null}
+            <li
+              key={i}
+              className="flex flex-wrap items-baseline gap-x-2 gap-y-1 rounded-md border border-surface-200 bg-surface-50 px-3 py-2.5"
+            >
+              <span className="rounded-full bg-accent-50 px-2 py-0.5 text-xs font-medium text-accent-600">
+                {SPOT_SEVERITY_LABEL[item.severity]}
+              </span>
+              <span className="font-display text-base text-ink-900">{item.title}</span>
+              {item.hedged ? <span className="text-xs text-ink-500">· worth verifying on-site</span> : null}
             </li>
           ))}
         </ul>
       ) : null}
 
       <Positives items={view.positives} />
-
-      <p className="mt-6 text-xs text-ink-500">
-        This is an automated screening from your photos — a starting point, not a professional
-        inspection or a legal determination.
-      </p>
     </div>
   );
 }

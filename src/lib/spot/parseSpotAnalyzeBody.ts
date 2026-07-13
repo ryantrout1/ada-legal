@@ -13,7 +13,7 @@
  * Unit-testable without a req/res harness (the repo tests pure helpers).
  */
 
-export const MAX_FREE_PHOTOS = 2;
+export const MAX_FREE_PHOTOS = 1;
 /** Per-photo base64 char cap (~6MB decoded) — keeps the total body under Vercel's limit. */
 export const MAX_PHOTO_CHARS = 8_000_000;
 

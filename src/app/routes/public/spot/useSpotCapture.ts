@@ -59,7 +59,7 @@ export function useSpotCapture() {
     setState({ status: 'analyzing' });
     try {
       const photos = await Promise.all(
-        files.slice(0, 2).map(async (f) => fileToDataUrl(await downscalePhoto(f))),
+        files.slice(0, 1).map(async (f) => fileToDataUrl(await downscalePhoto(f))),
       );
 
       const res = await fetch('/api/spot/analyze', {
