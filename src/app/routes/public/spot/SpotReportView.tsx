@@ -8,10 +8,14 @@
  */
 
 import type { SpotReportContent } from '@/lib/spot/reportSchema';
+import { SPOT_REPORT_STARTER_DISCLAIMER } from '@/lib/spot/spotDisclaimers';
 
 export default function SpotReportView({ content }: { content: SpotReportContent }) {
   return (
     <article className="rounded-lg border border-surface-200 bg-surface-100 p-5">
+      <p className="mb-4 rounded-md border border-surface-200 bg-surface-50 px-4 py-3 text-xs text-ink-700">
+        {SPOT_REPORT_STARTER_DISCLAIMER}
+      </p>
       <h2 className="font-display text-2xl text-ink-900">{content.headline}</h2>
       {content.overview ? <p className="mt-2 text-ink-900">{content.overview}</p> : null}
 

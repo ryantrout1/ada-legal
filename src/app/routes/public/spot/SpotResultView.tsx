@@ -13,10 +13,19 @@ import {
   SPOT_NO_READ_HEADLINE,
   type SpotResultView as SpotResultViewModel,
 } from '@/lib/spot/mapSpotFindings';
+import { SPOT_FREE_STARTER_DISCLAIMER } from '@/lib/spot/spotDisclaimers';
 
 interface Props {
   view: SpotResultViewModel;
   onRetry: () => void;
+}
+
+function StarterNote() {
+  return (
+    <p className="mb-4 rounded-md border border-surface-200 bg-surface-100 px-4 py-2.5 text-xs text-ink-700">
+      {SPOT_FREE_STARTER_DISCLAIMER}
+    </p>
+  );
 }
 
 function Positives({ items }: { items: string[] }) {
@@ -58,6 +67,7 @@ export default function SpotResultView({ view, onRetry }: Props) {
 
   return (
     <div className="rounded-lg border border-surface-200 bg-surface-100 p-5" aria-live="polite">
+      <StarterNote />
       <h2 className="font-display text-xl text-ink-900">
         {view.kind === 'clear' ? SPOT_CLEAR_HEADLINE : 'What these photos show'}
       </h2>
