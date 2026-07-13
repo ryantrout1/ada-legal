@@ -62,6 +62,14 @@
   --color-danger-500:  #822B1D;
   --color-danger-100:  #EBC8C2;   /* hover tier — used by retry buttons */
   --color-danger-50:   #F4E1DD;
+
+  /* Brand chrome — the canonical dark-navy header/footer from adalegallink.com
+     (Base44 Layout.jsx). SCOPED to the site header + footer only; page content
+     stays on the surface/ink/accent tokens above. gold on navy = 7.96:1,
+     white on navy = 14.7:1 — both AAA. */
+  --color-brand-navy:       #1E293B;  /* header + footer background */
+  --color-brand-navy-hover: #334155;  /* hover/active surfaces on the navy bar */
+  --color-brand-gold:       #FBB040;  /* logo "Link" + nav hover/active, 7.96:1 on navy (AAA) */
 }
 
 /* Base reset and default body style */

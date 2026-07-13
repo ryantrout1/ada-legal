@@ -69,9 +69,15 @@ export interface AccessibilityPanelProps {
     value: ReadingLevel;
     onChange: (level: ReadingLevel) => void;
   };
+  /**
+   * When true, the eyeball trigger is styled for a dark (navy) header bar —
+   * white icon, gold hover, navy focus offset. Default (false) keeps the
+   * light-surface styling. Only affects the trigger button, not the panel.
+   */
+  onDark?: boolean;
 }
 
-export function AccessibilityPanel({ readingLevel }: AccessibilityPanelProps) {
+export function AccessibilityPanel({ readingLevel, onDark = false }: AccessibilityPanelProps) {
   const [open, setOpen] = useState(false);
   const a11y = useAccessibilitySettings();
   const panelId = useId();
@@ -183,7 +189,11 @@ export function AccessibilityPanel({ readingLevel }: AccessibilityPanelProps) {
         aria-haspopup="dialog"
         aria-controls={panelId}
         aria-label="Accessibility settings"
-        className="p-2 rounded-full text-ink-700 hover:bg-surface-100 hover:text-accent-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50 transition-colors"
+        className={
+          onDark
+            ? 'p-2 rounded-full text-white hover:bg-brand-navy-hover hover:text-brand-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy transition-colors'
+            : 'p-2 rounded-full text-ink-700 hover:bg-surface-100 hover:text-accent-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50 transition-colors'
+        }
       >
         {/* Eyeball icon — inline SVG to keep bundle size minimal */}
         <svg

@@ -92,11 +92,11 @@ export default function PublicLayout() {
         Skip to main content
       </a>
 
-      <header className="border-b border-surface-200 relative z-40 bg-surface-50">
+      <header className="border-b border-brand-navy-hover relative z-40 bg-brand-navy">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
           <Link
             to="/"
-            className="flex items-center gap-2 sm:gap-3 font-display text-xl sm:text-2xl text-ink-900 tracking-tight hover:text-accent-600 transition-colors"
+            className="flex items-center gap-2 sm:gap-3 font-display text-xl sm:text-2xl text-white tracking-tight hover:text-brand-gold transition-colors"
             aria-label="ADA Legal Link home"
           >
             <img
@@ -107,7 +107,7 @@ export default function PublicLayout() {
               className="w-8 h-8 sm:w-9 sm:h-9 rounded-md flex-shrink-0"
             />
             <span>
-              ADA <span className="text-accent-500">Legal</span> Link
+              ADA Legal <span className="text-brand-gold">Link</span>
             </span>
           </Link>
 
@@ -119,32 +119,32 @@ export default function PublicLayout() {
             {!onHome && (
               <Link
                 to="/"
-                className="text-ink-700 hover:text-accent-600 transition-colors"
+                className="text-white hover:text-brand-gold transition-colors"
               >
                 Home
               </Link>
             )}
             <Link
               to="/chat"
-              className="text-ink-700 hover:text-accent-600 transition-colors"
+              className="text-white hover:text-brand-gold transition-colors"
             >
               Talk to Ada
             </Link>
             <Link
               to="/standards-guide"
-              className="text-ink-700 hover:text-accent-600 transition-colors"
+              className="text-white hover:text-brand-gold transition-colors"
             >
               Standards Guide
             </Link>
             <Link
               to="/class-actions"
-              className="text-ink-700 hover:text-accent-600 transition-colors"
+              className="text-white hover:text-brand-gold transition-colors"
             >
               Class actions
             </Link>
             <Link
               to="/attorneys"
-              className="text-ink-700 hover:text-accent-600 transition-colors"
+              className="text-white hover:text-brand-gold transition-colors"
             >
               Attorneys
             </Link>
@@ -153,7 +153,7 @@ export default function PublicLayout() {
           {/* Right-side controls — eyeball is always visible at every
               breakpoint; hamburger is mobile-only */}
           <div className="flex items-center gap-1">
-            <AccessibilityPanel />
+            <AccessibilityPanel onDark />
             <button
               ref={hamburgerRef}
               type="button"
@@ -161,7 +161,7 @@ export default function PublicLayout() {
               aria-expanded={menuOpen}
               aria-controls={drawerId}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              className="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-md text-ink-700 hover:bg-surface-100 hover:text-accent-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50 transition-colors"
+              className="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-md text-white hover:bg-brand-navy-hover hover:text-brand-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy transition-colors"
             >
               {menuOpen ? (
                 <svg
@@ -214,38 +214,38 @@ export default function PublicLayout() {
               role="dialog"
               aria-modal="true"
               aria-label="Site menu"
-              className="md:hidden absolute left-0 right-0 top-full z-40 bg-surface-50 border-b border-surface-200 shadow-lg"
+              className="md:hidden absolute left-0 right-0 top-full z-40 bg-brand-navy border-b border-brand-navy-hover shadow-lg"
             >
               <nav aria-label="Primary" className="flex flex-col">
                 {!onHome && (
                   <Link
                     to="/"
-                    className="px-5 py-4 text-base text-ink-700 hover:bg-surface-100 hover:text-accent-600 border-b border-surface-200 transition-colors focus:outline-none focus-visible:bg-surface-100 focus-visible:text-accent-600"
+                    className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
                   >
                     Home
                   </Link>
                 )}
                 <Link
                   to="/chat"
-                  className="px-5 py-4 text-base text-ink-700 hover:bg-surface-100 hover:text-accent-600 border-b border-surface-200 transition-colors focus:outline-none focus-visible:bg-surface-100 focus-visible:text-accent-600"
+                  className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
                 >
                   Talk to Ada
                 </Link>
                 <Link
                   to="/standards-guide"
-                  className="px-5 py-4 text-base text-ink-700 hover:bg-surface-100 hover:text-accent-600 border-b border-surface-200 transition-colors focus:outline-none focus-visible:bg-surface-100 focus-visible:text-accent-600"
+                  className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
                 >
                   Standards Guide
                 </Link>
                 <Link
                   to="/class-actions"
-                  className="px-5 py-4 text-base text-ink-700 hover:bg-surface-100 hover:text-accent-600 border-b border-surface-200 transition-colors focus:outline-none focus-visible:bg-surface-100 focus-visible:text-accent-600"
+                  className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
                 >
                   Class actions
                 </Link>
                 <Link
                   to="/attorneys"
-                  className="px-5 py-4 text-base text-ink-700 hover:bg-surface-100 hover:text-accent-600 transition-colors focus:outline-none focus-visible:bg-surface-100 focus-visible:text-accent-600"
+                  className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
                 >
                   Attorneys
                 </Link>
@@ -267,8 +267,8 @@ export default function PublicLayout() {
           disclaimer ('Not a law firm') has room to wrap to multiple
           lines without truncating — UPL liability, that statement
           cannot ellipsis. */}
-      <footer className="border-t border-surface-200 mt-auto">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 text-xs text-ink-700">
+      <footer className="border-t border-brand-navy-hover mt-auto bg-brand-navy">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 text-xs text-white/80">
           <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-y-3 sm:gap-y-2 sm:gap-x-6">
             <div className="flex items-start sm:items-center gap-2.5 min-w-0">
               <img
@@ -279,7 +279,7 @@ export default function PublicLayout() {
                 className="w-6 h-6 rounded-sm flex-shrink-0 mt-0.5 sm:mt-0"
               />
               <p>
-                <span className="font-display text-sm text-ink-700">
+                <span className="font-display text-sm text-white">
                   ADA Legal Link
                 </span>
                 <span className="ml-2">
@@ -291,7 +291,7 @@ export default function PublicLayout() {
               <li>
                 <a
                   href="/about-ada"
-                  className="hover:text-accent-600 transition-colors"
+                  className="hover:text-brand-gold transition-colors"
                 >
                   Why she's called Ada
                 </a>
@@ -299,7 +299,7 @@ export default function PublicLayout() {
               <li>
                 <a
                   href="/standards-guide"
-                  className="hover:text-accent-600 transition-colors"
+                  className="hover:text-brand-gold transition-colors"
                 >
                   Standards Guide
                 </a>
@@ -307,7 +307,7 @@ export default function PublicLayout() {
               <li>
                 <a
                   href="/glossary"
-                  className="hover:text-accent-600 transition-colors"
+                  className="hover:text-brand-gold transition-colors"
                 >
                   Glossary
                 </a>
@@ -315,7 +315,7 @@ export default function PublicLayout() {
               <li>
                 <a
                   href="/privacy"
-                  className="hover:text-accent-600 transition-colors"
+                  className="hover:text-brand-gold transition-colors"
                 >
                   Privacy
                 </a>
@@ -323,7 +323,7 @@ export default function PublicLayout() {
               <li>
                 <a
                   href="/terms"
-                  className="hover:text-accent-600 transition-colors"
+                  className="hover:text-brand-gold transition-colors"
                 >
                   Terms
                 </a>
@@ -331,7 +331,7 @@ export default function PublicLayout() {
               <li>
                 <a
                   href="/accessibility"
-                  className="hover:text-accent-600 transition-colors"
+                  className="hover:text-brand-gold transition-colors"
                 >
                   Accessibility
                 </a>
@@ -339,7 +339,7 @@ export default function PublicLayout() {
               <li>
                 <a
                   href="/for-attorneys"
-                  className="hover:text-accent-600 transition-colors"
+                  className="hover:text-brand-gold transition-colors"
                 >
                   For attorneys
                 </a>
