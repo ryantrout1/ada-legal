@@ -116,6 +116,13 @@ export default function App() {
             path="/standards-guide/guide/:slug"
             element={<GuidePage />}
           />
+
+          {/* Spot — business-facing screening. Inside PublicLayout so it wears
+              the site chrome (header/nav/footer), like the other public pages.
+              Ships dark via the spot_enabled flag. */}
+          <Route path="/spot" element={<SpotLanding />} />
+          {/* Public hosted readout — the buyer's report link from the email. */}
+          <Route path="/spot/r/:slug" element={<SpotReadout />} />
         </Route>
 
         {/* Standalone — internal field-test capture tool. Deliberately
@@ -124,16 +131,7 @@ export default function App() {
             linked from the public site. See /plan: /photo. */}
         <Route path="/photo" element={<PhotoCapture />} />
 
-        {/* Standalone — Ada Spot, the business-facing free screening landing.
-            Outside PublicLayout (single-task, no chrome), like /photo. Ships
-            dark via the spot_enabled flag. See /plan: Ada Spot Phase 1b. */}
-        <Route path="/spot" element={<SpotLanding />} />
-
-        {/* Public hosted readout — the buyer's report link from the release email. */}
-        <Route path="/spot/r/:slug" element={<SpotReadout />} />
-
-
-        {/* Standalone — Ada Spot internal report review + model A/B. Admin-gated
+        {/* Standalone — Spot internal report review + model A/B. Admin-gated
             at the API (requireAdmin); own surface, not the bench review. */}
         <Route path="/spot-review" element={<SpotReview />} />
 

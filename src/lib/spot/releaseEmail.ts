@@ -31,13 +31,13 @@ export function buildReleaseEmail({ slug, baseUrl }: ReleaseEmailInput): BuiltEm
   const readoutUrl = `${baseUrl.replace(/\/+$/, '')}/spot/r/${encodeURIComponent(slug)}`;
   const safeUrl = escapeHtml(readoutUrl);
 
-  const subject = 'Your accessibility screening from Ada Spot is ready';
+  const subject = 'Your accessibility screening from Spot is ready';
 
   const html = [
     '<!doctype html><html><body style="margin:0;background:#faf7f2;font-family:sans-serif">',
     '<div style="max-width:560px;margin:0 auto;padding:28px 20px;color:#334155">',
     '<h1 style="font-size:20px;color:#1e293b;margin:0 0 12px">Your screening is ready</h1>',
-    '<p style="margin:0 0 16px">Thanks for using Ada Spot. Your accessibility screening report is ready to view:</p>',
+    '<p style="margin:0 0 16px">Thanks for using Spot. Your accessibility screening report is ready to view:</p>',
     `<p style="margin:0 0 20px"><a href="${safeUrl}" style="color:#9c340a">${safeUrl}</a></p>`,
     '<p style="margin:0 0 16px;font-size:14px;color:#64748b">This report is an automated screening based on the photos you provided — a starting point for planning remediation, not a professional inspection or a legal determination. Findings should be confirmed on-site.</p>',
     '<p style="margin:0;font-size:13px;color:#94a3b8">Your uploaded photos are automatically deleted after 90 days. Your report stays available.</p>',
@@ -45,7 +45,7 @@ export function buildReleaseEmail({ slug, baseUrl }: ReleaseEmailInput): BuiltEm
   ].join('');
 
   const text = [
-    'Your accessibility screening from Ada Spot is ready.',
+    'Your accessibility screening from Spot is ready.',
     '',
     `View your report: ${readoutUrl}`,
     '',

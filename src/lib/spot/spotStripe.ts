@@ -44,7 +44,7 @@ export function buildSpotCheckoutParams(input: SpotCheckoutInput): URLSearchPara
   p.set('ui_mode', 'embedded');
   p.set('redirect_on_completion', 'never');
   p.set('line_items[0][price_data][currency]', 'usd');
-  p.set('line_items[0][price_data][product_data][name]', 'Ada Spot accessibility report');
+  p.set('line_items[0][price_data][product_data][name]', 'Spot accessibility report');
   p.set('line_items[0][price_data][unit_amount]', String(input.priceCents));
   p.set('line_items[0][quantity]', '1');
   p.set('metadata[spot_session_id]', input.spotSessionId);

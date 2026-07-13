@@ -46,7 +46,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const clients = makeClientsFromEnv();
       if (!(await readSpotEnabled(clients.db))) {
         res.setHeader('Retry-After', '3600');
-        return res.status(503).json({ error: 'Ada Spot is currently unavailable.' });
+        return res.status(503).json({ error: 'Spot is currently unavailable.' });
       }
     }
 

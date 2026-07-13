@@ -69,7 +69,7 @@ export function useSpotCapture() {
       });
 
       if (res.status === 503) {
-        setState({ status: 'error', unavailable: true, error: "Ada Spot isn't available right now. Please check back soon." });
+        setState({ status: 'error', unavailable: true, error: "Spot isn't available right now. Please check back soon." });
         return;
       }
       if (res.status === 413) {

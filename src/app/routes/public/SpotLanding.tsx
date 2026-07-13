@@ -108,10 +108,10 @@ export default function SpotLanding() {
   // Payment flow takes over the page once the CTA is pressed.
   if (paidSessionId || checkoutActive) {
     return (
-      <div className="min-h-screen bg-surface-50 text-ink-900 font-body">
+      <div>
         <div className="mx-auto max-w-xl px-4 py-8 sm:py-12">
           <header className="mb-6">
-            <h1 className="font-display text-3xl text-ink-900">Ada Spot</h1>
+            <h1 className="font-display text-3xl text-ink-900">Spot</h1>
           </header>
           {paidSessionId ? (
             <SpotUpload spotSessionId={paidSessionId} />
@@ -124,10 +124,10 @@ export default function SpotLanding() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-50 text-ink-900 font-body">
+    <div>
       <div className="mx-auto max-w-xl px-4 py-8 sm:py-12">
         <header className="mb-6">
-          <h1 className="font-display text-3xl text-ink-900">Ada Spot</h1>
+          <h1 className="font-display text-3xl text-ink-900">Spot</h1>
           <p className="mt-2 text-ink-700">
             A quick spot-check — see what a visitor with a disability might run into at your
             entrance, free, from a single photo.

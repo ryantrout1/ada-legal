@@ -41,9 +41,9 @@ export default function SpotReadout() {
   }, [slug]);
 
   return (
-    <div className="min-h-screen bg-surface-50 text-ink-900 font-body">
+    <div>
       <div className="mx-auto max-w-2xl px-4 py-10">
-        <p className="mb-6 font-display text-lg text-ink-700">Ada Spot</p>
+        <p className="mb-6 font-display text-lg text-ink-700">Spot</p>
         {state === 'loading' ? (
           <p aria-live="polite" className="text-ink-700">
             Loading your report…

@@ -49,7 +49,7 @@ const PUBLIC_ROUTES = [
   { path: '/accessibility', name: 'accessibility statement' },
   { path: '/privacy', name: 'privacy policy' },
   { path: '/terms', name: 'terms of service' },
-  { path: '/spot', name: 'Ada Spot landing' },
+  { path: '/spot', name: 'Spot landing' },
 ];
 
 const AAA_TAGS = [

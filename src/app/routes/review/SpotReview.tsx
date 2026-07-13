@@ -35,7 +35,7 @@ export default function SpotReview() {
     try {
       const res = await fetch('/api/spot/admin/reports', { credentials: 'include' });
       if (res.status === 401) {
-        setError('Sign in as an admin to view Ada Spot reports.');
+        setError('Sign in as an admin to view Spot reports.');
         setReports([]);
         return;
       }
@@ -116,7 +116,7 @@ export default function SpotReview() {
     <div className="min-h-screen bg-surface-50 text-ink-900 font-body">
       <div className="mx-auto max-w-3xl px-4 py-8">
         <header className="mb-6">
-          <h1 className="font-display text-3xl text-ink-900">Ada Spot — report review</h1>
+          <h1 className="font-display text-3xl text-ink-900">Spot — report review</h1>
           <p className="mt-2 text-sm text-ink-700">
             Internal preview + model A/B. Regenerating spends on the chosen model.
           </p>
