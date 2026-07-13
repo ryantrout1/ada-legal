@@ -22,13 +22,19 @@ export const SPOT_REPORT_DEFAULT_MODEL = 'claude-opus-4-8';
 
 const SYNTHESIS_SYSTEM =
   'You are composing a remediation-oriented ADA accessibility screening report for a business ' +
-  'owner from the per-photo analyses below. Your job is to help them FIX issues, never to assess ' +
-  'legal exposure. Use screening language ("possible", "appears", "worth checking") and never say ' +
-  '"violation", "compliant", or "certified". Group concerns by area, and for each give the concern, ' +
-  'what to fix and how, a severity, and the ADA section ONLY if an analysis provided it (never ' +
-  'invent one). Mark an area confirmable:false when a photo cannot conclusively establish it. If ' +
-  'the analyses found nothing concerning, return an empty areas list. Respond by calling the ' +
-  'compose_report tool.';
+  'owner who photographed ONE spot — a single situation such as an entrance, a ramp, or a ' +
+  'doorway — from several angles. Treat the photos as multiple views of the SAME place: fuse ' +
+  'them into one coherent read, use closer or clearer angles to resolve what an earlier angle ' +
+  'left uncertain, and never list the same barrier twice just because it shows up in more than ' +
+  'one photo. Write directly to the owner — plain language, second person — remembering they ' +
+  'took these because they do not know. Your job is to help them FIX the problem, never to ' +
+  'assess legal exposure. Use screening language ("possible", "appears", "worth checking") and ' +
+  'never say "violation", "compliant", or "certified". For each distinct concern give: what it ' +
+  'is, what to do about it (a concrete fix AND, where a photo cannot settle it, a simple check ' +
+  'THEY can do themselves — e.g. "measure the step; anything over half an inch needs a ramp"), ' +
+  'a severity, and the ADA section ONLY if an analysis provided it (never invent one). Mark a ' +
+  'concern confirmable:false when the photos cannot conclusively establish it. If nothing ' +
+  'concerning was found, return an empty areas list. Respond by calling the compose_report tool.';
 
 export interface GenerateReportInput {
   photos: { blobUrl: string }[];
@@ -50,7 +56,7 @@ function serializeAnalyses(analyses: PhotoAnalysisOutput[]): string {
   return analyses
     .map((a, i) => {
       if (a.meta?.tool_call_present === false) {
-        return `Batch ${i + 1}: the model could not read these photos (no reliable analysis).`;
+        return `View group ${i + 1}: could not be read clearly (no reliable analysis).`;
       }
       const findings = (a.findings ?? [])
         .map(
@@ -61,7 +67,7 @@ function serializeAnalyses(analyses: PhotoAnalysisOutput[]): string {
         .join('\n');
       const positives = (a.positive_findings?.standard ?? []).join('; ');
       return [
-        `Batch ${i + 1}:`,
+        `View group ${i + 1} (angles of the same spot):`,
         `Scene: ${a.scene?.standard ?? ''}`,
         `Summary: ${a.summary?.standard ?? ''}`,
         findings ? `Findings:\n${findings}` : 'Findings: none',
@@ -102,7 +108,7 @@ export async function generateReport(
     messages: [
       {
         role: 'user',
-        content: `Per-photo analyses:\n\n${serializeAnalyses(analyses)}`,
+        content: `Analyses of the photographed spot (grouped views, each up to 3 angles):\n\n${serializeAnalyses(analyses)}`,
         timestamp: new Date().toISOString(),
       },
     ],

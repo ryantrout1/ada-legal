@@ -19,7 +19,7 @@ export const SPOT_REPORT_SEVERITY_LABEL: Record<PhotoFindingSeverity, string> = 
   advisory: 'Minor note',
 };
 
-export const SPOT_REPORT_HEDGE_NOTE = 'Based on the photo alone — confirm on-site.';
+export const SPOT_REPORT_HEDGE_NOTE = 'Worth a quick check in person to be sure.';
 export const SPOT_REPORT_CLEAR_HEADLINE = 'Nothing in these photos stands out as a likely barrier.';
 export const SPOT_REPORT_NO_READ_HEADLINE = "We couldn't get a clear enough read from these photos.";
 export const SPOT_REPORT_FINDINGS_HEADLINE = 'What these photos show — and how to address it';
