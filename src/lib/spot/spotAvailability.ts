@@ -33,3 +33,25 @@ export async function readSpotEnabled(db: AdaClients['db']): Promise<boolean> {
   const stored = await db.getSystemSetting<Record<string, unknown>>(SPOT_SETTINGS_KEY);
   return resolveSpotEnabled(stored);
 }
+
+/**
+ * Test-only: when `spot_test_payment` is true in the admin blob, the
+ * /api/spot/simulate-payment endpoint may bypass Stripe and generate a report
+ * directly (for previewing the paid report without a live payment). Defaults
+ * OFF; flip via a Neon upsert and flip back when done. Never leave it on in a
+ * real launch.
+ */
+export const SPOT_TEST_PAYMENT_KEY = 'spot_test_payment';
+
+export function resolveSpotTestPayment(stored: unknown): boolean {
+  if (stored && typeof stored === 'object' && SPOT_TEST_PAYMENT_KEY in stored) {
+    const value = (stored as Record<string, unknown>)[SPOT_TEST_PAYMENT_KEY];
+    if (typeof value === 'boolean') return value;
+  }
+  return false;
+}
+
+export async function readSpotTestPayment(db: AdaClients['db']): Promise<boolean> {
+  const stored = await db.getSystemSetting<Record<string, unknown>>(SPOT_SETTINGS_KEY);
+  return resolveSpotTestPayment(stored);
+}

@@ -12,8 +12,24 @@ import { useSpotCapture, type SpotUpsell } from './spot/useSpotCapture';
 import SpotResultView from './spot/SpotResultView';
 import SpotCheckout from './spot/SpotCheckout';
 import SpotUpload from './spot/SpotUpload';
+import SpotReportView from './spot/SpotReportView';
+import { downscalePhoto } from '@/app/utils/downscalePhoto';
+import type { SpotReportContent } from '@/lib/spot/reportSchema';
 
 const MAX_PHOTOS = 2;
+
+/** Test-drive only (?test=1): reachable when the admin flips spot_test_payment. */
+const IS_TEST_MODE =
+  typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('test') === '1';
+
+function fileToDataUrl(file: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result as string);
+    r.onerror = () => reject(new Error('read failed'));
+    r.readAsDataURL(file);
+  });
+}
 
 function UpsellCard({ upsell, onStart }: { upsell?: SpotUpsell; onStart: () => void }) {
   const price = upsell?.price_usd ?? 79;
@@ -44,6 +60,32 @@ export default function SpotLanding() {
   const [files, setFiles] = useState<File[]>([]);
   const [checkoutActive, setCheckoutActive] = useState(false);
   const [paidSessionId, setPaidSessionId] = useState<string | null>(null);
+  const [testReport, setTestReport] = useState<SpotReportContent | null>(null);
+  const [testBusy, setTestBusy] = useState(false);
+  const [testError, setTestError] = useState<string | null>(null);
+
+  async function runTestReport() {
+    setTestBusy(true);
+    setTestError(null);
+    try {
+      const photos = await Promise.all(files.map(async (f) => fileToDataUrl(await downscalePhoto(f))));
+      const res = await fetch('/api/spot/simulate-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photos }),
+      });
+      if (!res.ok) {
+        setTestError(res.status === 403 ? 'Test payments are not enabled.' : 'Report generation failed.');
+        return;
+      }
+      const data = (await res.json()) as { content: SpotReportContent };
+      setTestReport(data.content);
+    } catch {
+      setTestError('Report generation failed.');
+    } finally {
+      setTestBusy(false);
+    }
+  }
 
   const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
   useEffect(() => () => previews.forEach((u) => URL.revokeObjectURL(u)), [previews]);
@@ -168,6 +210,35 @@ export default function SpotLanding() {
                 ) : null}
                 <SpotResultView view={state.view} onRetry={startOver} />
                 <UpsellCard upsell={state.upsell} onStart={() => setCheckoutActive(true)} />
+
+                {IS_TEST_MODE ? (
+                  <div className="mt-4 rounded-md border border-dashed border-control-border p-3">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-500">Test drive</p>
+                    <button
+                      type="button"
+                      onClick={() => void runTestReport()}
+                      disabled={testBusy || files.length === 0}
+                      className="min-h-[44px] w-full rounded-md bg-accent-600 px-4 py-2 text-white disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+                    >
+                      {testBusy ? 'Generating the full report…' : 'Simulate payment → generate the $79 report'}
+                    </button>
+                    {testError ? (
+                      <p role="alert" className="mt-2 text-sm text-danger-500">
+                        {testError}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                {testReport ? (
+                  <section className="mt-6" aria-live="polite">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-500">
+                      Full report (test) — this is the $79 deliverable
+                    </p>
+                    <SpotReportView content={testReport} />
+                  </section>
+                ) : null}
+
                 <button
                   type="button"
                   onClick={startOver}

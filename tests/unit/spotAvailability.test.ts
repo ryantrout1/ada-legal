@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   resolveSpotEnabled,
+  resolveSpotTestPayment,
   SPOT_ENABLED_DEFAULT,
   SPOT_ENABLED_KEY,
   SPOT_SETTINGS_KEY,
@@ -30,5 +31,14 @@ describe('resolveSpotEnabled', () => {
 
   it('reads from the shared admin settings blob', () => {
     expect(SPOT_SETTINGS_KEY).toBe('admin');
+  });
+});
+
+describe('resolveSpotTestPayment', () => {
+  it('defaults OFF and only a boolean true enables it', () => {
+    expect(resolveSpotTestPayment(null)).toBe(false);
+    expect(resolveSpotTestPayment({})).toBe(false);
+    expect(resolveSpotTestPayment({ spot_test_payment: 'true' })).toBe(false);
+    expect(resolveSpotTestPayment({ spot_test_payment: true })).toBe(true);
   });
 });
