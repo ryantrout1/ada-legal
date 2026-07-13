@@ -109,7 +109,7 @@ export default function SpotLanding() {
   if (paidSessionId || checkoutActive) {
     return (
       <div>
-        <div className="mx-auto max-w-xl px-4 py-8 sm:py-12">
+        <div className="mx-auto max-w-2xl px-5 sm:px-8 py-10">
           <header className="mb-6">
             <h1 className="font-display text-3xl text-ink-900">Spot</h1>
           </header>
@@ -125,7 +125,7 @@ export default function SpotLanding() {
 
   return (
     <div>
-      <div className="mx-auto max-w-xl px-4 py-8 sm:py-12">
+      <div className="mx-auto max-w-2xl px-5 sm:px-8 py-10">
         <header className="mb-6">
           <h1 className="font-display text-3xl text-ink-900">Spot</h1>
           <p className="mt-2 text-ink-700">
