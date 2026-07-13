@@ -53,6 +53,21 @@ describe('composeReport', () => {
     expect(out.items[0].citedUrl).toMatch(/^https?:\/\//);
   });
 
+  it('attaches plain-language education (title + rule) for a cataloged citation', () => {
+    const out = composeReport(modelOut(), [source()]);
+    expect(out.items[0].ruleTitle).toBeTruthy();
+    expect(out.items[0].ruleExplanation).toBeTruthy();
+  });
+
+  it('adds no education when the citation was dropped as invalid', () => {
+    const out = composeReport(
+      modelOut({ areas: [{ title: 'X', concern: 'c', remediation: 'r', severity: 'minor', cited_section: '§999.9', confirmable: true }] }),
+      [source()],
+    );
+    expect(out.items[0].citedSection).toBeUndefined();
+    expect(out.items[0].ruleExplanation).toBeUndefined();
+  });
+
   it('preserves an unconfirmable area as hedged — never dropped', () => {
     const out = composeReport(
       modelOut({ areas: [{ title: 'Ramp', concern: 'Slope may be steep.', remediation: 'Measure and regrade.', severity: 'major', confirmable: false }] }),

@@ -53,6 +53,8 @@ export interface SpotReportItem {
   severityLabel: string;
   citedSection?: string;
   citedUrl?: string;
+  ruleTitle?: string;
+  ruleExplanation?: string;
   hedged: boolean;
   hedgeNote?: string;
 }

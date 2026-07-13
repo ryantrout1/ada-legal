@@ -864,3 +864,26 @@ export function guideUrlForSection(sectionRef: string): string | undefined {
   }
   return '/standards-guide';
 }
+
+/**
+ * Plain-language education for a cited section, for the Ada Spot paid report.
+ * Returns the section's human-readable title, the paraphrased plain-language
+ * rule (NOT verbatim statute), and an absolute Standards-Guide link. Undefined
+ * for an unknown section. Subsections resolve to their parent via rowForSection.
+ */
+export function educationForSection(
+  sectionRef: string,
+): { ruleTitle: string; ruleExplanation: string; guideUrl: string } | undefined {
+  const row = rowForSection(sectionRef);
+  if (!row) return undefined;
+  const path = row.guide_slug
+    ? `/standards-guide/guide/${row.guide_slug}`
+    : row.chapter >= 1 && row.chapter <= 10
+      ? `/standards-guide/chapter/${row.chapter}`
+      : '/standards-guide';
+  return {
+    ruleTitle: row.title,
+    ruleExplanation: row.rule,
+    guideUrl: `https://ada.adalegallink.com${path}`,
+  };
+}

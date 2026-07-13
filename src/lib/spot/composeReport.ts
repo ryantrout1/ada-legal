@@ -15,6 +15,7 @@
  */
 
 import { guideUrlForStandard } from '../../engine/package/standardsGuideLink.js';
+import { educationForSection } from '../adaCatalog.js';
 import type { PhotoAnalysisOutput } from '../../types/db.js';
 import {
   SPOT_REPORT_SEVERITY_LABEL,
@@ -47,6 +48,7 @@ export function composeReport(
 
   const items: SpotReportItem[] = (modelOutput.areas ?? []).map((a) => {
     const citedSection = a.cited_section && validSections.has(a.cited_section) ? a.cited_section : undefined;
+    const education = citedSection ? educationForSection(citedSection) : undefined;
     const hedged = a.confirmable === false;
     return {
       title: a.title,
@@ -55,7 +57,11 @@ export function composeReport(
       severity: a.severity,
       severityLabel: SPOT_REPORT_SEVERITY_LABEL[a.severity],
       citedSection,
-      citedUrl: citedSection ? guideUrlForStandard(citedSection) : undefined,
+      // Prefer the section-specific guide page from the catalog; fall back to
+      // the chapter-level link.
+      citedUrl: citedSection ? (education?.guideUrl ?? guideUrlForStandard(citedSection)) : undefined,
+      ruleTitle: education?.ruleTitle,
+      ruleExplanation: education?.ruleExplanation,
       hedged,
       hedgeNote: hedged ? SPOT_REPORT_HEDGE_NOTE : undefined,
     };

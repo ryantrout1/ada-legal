@@ -36,6 +36,14 @@ export default function SpotReportView({ content }: { content: SpotReportContent
               {item.hedged && item.hedgeNote ? (
                 <p className="mt-2 text-sm text-ink-500">{item.hedgeNote}</p>
               ) : null}
+              {item.ruleExplanation ? (
+                <div className="mt-2 rounded-md bg-surface-100 px-3 py-2">
+                  <p className="text-xs font-medium text-ink-700">
+                    What this rule means{item.ruleTitle ? ` — ${item.ruleTitle}` : ''}
+                  </p>
+                  <p className="mt-1 text-xs text-ink-700">{item.ruleExplanation}</p>
+                </div>
+              ) : null}
               {item.citedSection ? (
                 <p className="mt-2 text-xs text-ink-500">
                   Related standard:{' '}
