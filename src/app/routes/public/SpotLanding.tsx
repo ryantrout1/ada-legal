@@ -37,11 +37,12 @@ function UpsellCard({ upsell, onStart }: { upsell?: SpotUpsell; onStart: () => v
   return (
     <section className="mt-6 rounded-lg border-2 border-accent-500 bg-accent-50 p-5" aria-labelledby="spot-cta-h">
       <h2 id="spot-cta-h" className="font-display text-xl text-ink-900">
-        Want the full picture?
+        Want the full read on this spot?
       </h2>
       <p className="mt-2 text-ink-900">
-        Get a remediation-focused report on up to {maxPhotos} photos — what to fix and how — for
-        ${price}.
+        Take a few more angles of this same spot — up to {maxPhotos} photos — and get the full
+        report: what's wrong, what the rules actually require, and exactly how to fix it, for $
+        {price}.
       </p>
       {upsell?.anchor ? <p className="mt-1 text-sm text-ink-700">{upsell.anchor}</p> : null}
       <button
@@ -137,7 +138,8 @@ export default function SpotLanding() {
           <div className="rounded-lg border border-surface-200 bg-surface-100 p-5">
             <h2 className="font-display text-xl text-ink-900">You've used your free reads</h2>
             <p className="mt-2 text-ink-700">
-              For a full, remediation-focused report on more photos, grab the paid report below.
+              For the full report on this spot — more angles, what the rules require, and how to
+              fix it — grab the paid report below.
             </p>
             <UpsellCard upsell={state.upsell} onStart={() => setCheckoutActive(true)} />
           </div>

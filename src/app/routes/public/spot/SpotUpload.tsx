@@ -85,10 +85,11 @@ export default function SpotUpload({ spotSessionId, buyerEmail }: Props) {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="font-display text-xl text-ink-900">Add your photos</h2>
+        <h2 className="font-display text-xl text-ink-900">Add angles of your spot</h2>
         <p className="mt-1 text-sm text-ink-700">
-          Add up to {MAX_PHOTOS} photos of the areas you want screened — entrance, path, restroom,
-          parking. {count} added.
+          Photograph the <strong>same spot</strong> from a few angles — straight on, from the side,
+          and a close-up of anything that looks like a step, door, threshold, or sign. Up to{' '}
+          {MAX_PHOTOS} photos. {count} added.
         </p>
       </div>
 
