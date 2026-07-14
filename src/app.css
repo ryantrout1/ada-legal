@@ -23,6 +23,7 @@
   /* Typography */
   --font-display: 'Fraunces', 'Georgia', 'Cambria', serif;
   --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-chrome: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Surface — warm off-white, high contrast against ink */

@@ -31,7 +31,6 @@ import { ReadingLevelProvider } from '../components/standards/ReadingLevelContex
 
 export default function PublicLayout() {
   const location = useLocation();
-  const onHome = location.pathname === '/';
   const [menuOpen, setMenuOpen] = useState(false);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -92,67 +91,59 @@ export default function PublicLayout() {
         Skip to main content
       </a>
 
-      <header className="border-b border-brand-navy-hover relative z-40 bg-brand-navy">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+      <header className="bg-brand-navy text-white relative z-40 shadow-[0_1px_3px_rgba(0,0,0,0.1)]">
+        <div
+          className="w-full flex items-center justify-between"
+          style={{ height: 72, padding: '0 clamp(16px, 4vw, 40px)' }}
+        >
           <Link
             to="/"
-            className="flex items-center gap-2 sm:gap-3 font-display text-xl sm:text-2xl text-white tracking-tight hover:text-brand-gold transition-colors"
+            className="flex items-center gap-3 font-display font-bold text-white no-underline"
+            style={{ fontSize: '1.5rem' }}
             aria-label="ADA Legal Link home"
           >
             <img
-              src="/logo.png"
+              src="/logo-transparent.png"
               alt=""
-              width="36"
-              height="36"
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-md flex-shrink-0"
+              width="44"
+              height="44"
+              className="w-11 h-11 object-contain flex-shrink-0"
             />
-            <span>
-              ADA Legal <span className="text-brand-gold">Link</span>
+            <span className="whitespace-nowrap">
+              ADA Legal <span style={{ color: '#FDBA74' }}>Link</span>
             </span>
           </Link>
 
-          {/* Desktop / tablet nav — visible at md and up */}
-          <nav
-            aria-label="Primary"
-            className="hidden md:flex items-center gap-5 text-sm"
-          >
-            {!onHome && (
+          {/* Right cluster — nav, display settings, mobile menu (logo left,
+              everything else right, matching adalegallink.com) */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            <nav
+              aria-label="Primary"
+              className="hidden md:flex items-center gap-1 font-chrome"
+            >
               <Link
-                to="/"
-                className="text-white hover:text-brand-gold transition-colors"
+                to="/standards-guide"
+                className="text-white hover:text-brand-gold transition-colors inline-flex items-center"
+                style={{ fontSize: '0.9375rem', fontWeight: 500, minHeight: 44, padding: '6px 12px' }}
               >
-                Home
+                ADA Standards Guide
               </Link>
-            )}
-            <Link
-              to="/chat"
-              className="text-white hover:text-brand-gold transition-colors"
-            >
-              Talk to Ada
-            </Link>
-            <Link
-              to="/standards-guide"
-              className="text-white hover:text-brand-gold transition-colors"
-            >
-              Standards Guide
-            </Link>
-            <Link
-              to="/class-actions"
-              className="text-white hover:text-brand-gold transition-colors"
-            >
-              Class actions
-            </Link>
-            <Link
-              to="/attorneys"
-              className="text-white hover:text-brand-gold transition-colors"
-            >
-              Attorneys
-            </Link>
-          </nav>
+              <Link
+                to="/attorneys"
+                className="text-white hover:text-brand-gold transition-colors inline-flex items-center"
+                style={{ fontSize: '0.9375rem', fontWeight: 500, minHeight: 44, padding: '6px 12px' }}
+              >
+                Find an Attorney
+              </Link>
+              <Link
+                to="/class-actions"
+                className="text-white hover:text-brand-gold transition-colors inline-flex items-center"
+                style={{ fontSize: '0.9375rem', fontWeight: 500, minHeight: 44, padding: '6px 12px' }}
+              >
+                Lawsuits
+              </Link>
+            </nav>
 
-          {/* Right-side controls — eyeball is always visible at every
-              breakpoint; hamburger is mobile-only */}
-          <div className="flex items-center gap-1">
             <AccessibilityPanel onDark />
             <button
               ref={hamburgerRef}
@@ -216,38 +207,24 @@ export default function PublicLayout() {
               aria-label="Site menu"
               className="md:hidden absolute left-0 right-0 top-full z-40 bg-brand-navy border-b border-brand-navy-hover shadow-lg"
             >
-              <nav aria-label="Primary" className="flex flex-col">
-                {!onHome && (
-                  <Link
-                    to="/"
-                    className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
-                  >
-                    Home
-                  </Link>
-                )}
-                <Link
-                  to="/chat"
-                  className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
-                >
-                  Talk to Ada
-                </Link>
+              <nav aria-label="Primary" className="flex flex-col font-chrome">
                 <Link
                   to="/standards-guide"
                   className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
                 >
-                  Standards Guide
-                </Link>
-                <Link
-                  to="/class-actions"
-                  className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
-                >
-                  Class actions
+                  ADA Standards Guide
                 </Link>
                 <Link
                   to="/attorneys"
+                  className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
+                >
+                  Find an Attorney
+                </Link>
+                <Link
+                  to="/class-actions"
                   className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
                 >
-                  Attorneys
+                  Lawsuits
                 </Link>
               </nav>
             </div>
@@ -267,83 +244,49 @@ export default function PublicLayout() {
           disclaimer ('Not a law firm') has room to wrap to multiple
           lines without truncating — UPL liability, that statement
           cannot ellipsis. */}
-      <footer className="border-t border-brand-navy-hover mt-auto bg-brand-navy">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 text-xs text-white/80">
-          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-y-3 sm:gap-y-2 sm:gap-x-6">
-            <div className="flex items-start sm:items-center gap-2.5 min-w-0">
-              <img
-                src="/logo.png"
-                alt=""
-                width="24"
-                height="24"
-                className="w-6 h-6 rounded-sm flex-shrink-0 mt-0.5 sm:mt-0"
-              />
-              <p>
-                <span className="font-display text-sm text-white">
-                  ADA Legal Link
-                </span>
-                <span className="ml-2">
-                  Informational only. Not legal advice. Not a law firm.
-                </span>
-              </p>
-            </div>
-            <ul className="flex flex-wrap gap-4">
-              <li>
-                <a
-                  href="/about-ada"
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  Why she's called Ada
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/standards-guide"
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  Standards Guide
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/glossary"
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  Glossary
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/privacy"
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  Privacy
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/terms"
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  Terms
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/accessibility"
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  Accessibility
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/for-attorneys"
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  For attorneys
-                </a>
-              </li>
+      <footer className="mt-auto bg-brand-navy" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        {/* Primary brand row — matches adalegallink.com (brand · © · tagline) */}
+        <div
+          className="w-full flex flex-wrap items-center justify-between gap-2 font-chrome"
+          style={{ maxWidth: 1400, margin: '0 auto', padding: '0 1.5rem', minHeight: 48 }}
+        >
+          <div className="flex items-center gap-2.5" aria-hidden="true">
+            <img
+              src="/logo-transparent.png"
+              alt=""
+              width="28"
+              height="28"
+              className="w-7 h-7 object-contain flex-shrink-0"
+            />
+            <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#E2E8F0', letterSpacing: '0.01em' }}>
+              ADA Legal Link
+            </span>
+          </div>
+          <p className="m-0 whitespace-nowrap" style={{ fontSize: '0.75rem', color: '#B0BEC5' }}>
+            © 2026 ADA Legal Link. All rights reserved.
+          </p>
+          <p className="m-0" style={{ fontSize: '0.75rem', color: '#B0BEC5' }}>
+            Connecting people with experienced ADA attorneys.
+          </p>
+        </div>
+
+        {/* Secondary — UPL disclaimer + site links (kept from the Vercel footer) */}
+        <div className="w-full font-chrome" style={{ maxWidth: 1400, margin: '0 auto', padding: '10px 1.5rem 16px' }}>
+          <div
+            className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-y-2 sm:gap-x-6"
+            style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 10 }}
+          >
+            <p className="m-0" style={{ fontSize: '0.72rem', color: '#B0BEC5' }}>
+              Informational only. Not legal advice. Not a law firm.
+            </p>
+            <ul className="flex flex-wrap gap-4" style={{ fontSize: '0.72rem' }}>
+              <li><a href="/about-ada" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Why she's called Ada</a></li>
+              <li><a href="/standards-guide" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Standards Guide</a></li>
+              <li><a href="/glossary" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Glossary</a></li>
+              <li><a href="/privacy" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Privacy</a></li>
+              <li><a href="/terms" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Terms</a></li>
+              <li><a href="/accessibility" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Accessibility</a></li>
+              <li><a href="/for-attorneys" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">For attorneys</a></li>
             </ul>
           </div>
         </div>
