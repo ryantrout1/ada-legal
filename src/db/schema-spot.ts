@@ -9,7 +9,7 @@
  * by rate-limit identity, not by Clerk/org membership.
  */
 
-import { pgTable, uuid, text, integer, timestamp, jsonb, index, check } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, integer, timestamp, jsonb, index, uniqueIndex, check } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import type { SpotSessionStatus } from '@/lib/spot/spotSessionStatus';
 
@@ -75,7 +75,10 @@ export const spotReports = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
-    index('spot_report_session').on(t.sessionId),
+    // 0039: unique — the report pipeline has two triggers (inline +
+    // cron sweeper); at-most-one report per session is the invariant
+    // the recovery path relies on.
+    uniqueIndex('spot_report_session').on(t.sessionId),
     index('spot_report_hitl_status').on(t.hitlStatus),
   ],
 );
