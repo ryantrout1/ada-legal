@@ -138,6 +138,57 @@ describe('AdaClients seam — InMemory contract', () => {
       });
       expect(azAdaOnly.map((a) => a.id)).toEqual(['a1']);
     });
+
+    // ── ada_sessions.completed_at ───────────────────────────────────────
+    // A DB-layer lifecycle column: derived from status at the write
+    // boundary, not carried on AdaSessionState (same family as created_at
+    // / updated_at). The Neon client implements it as
+    // COALESCE(completed_at, now()) on a completed write; these cases pin
+    // the behaviour every implementation owes. The column was NULL on
+    // every row from 0001 until this contract existed.
+
+    it('does not set completed_at while a session is active', async () => {
+      const { db } = makeInMemoryClients();
+      await db.writeSession({ state: sampleState('sess-ca-1') });
+      expect(db.__getSessionCompletedAt('sess-ca-1')).toBeNull();
+    });
+
+    it('sets completed_at when a session is written as completed', async () => {
+      const { db } = makeInMemoryClients();
+      const state = sampleState('sess-ca-2');
+      await db.writeSession({ state });
+      await db.writeSession({ state: { ...state, status: 'completed' } });
+
+      const at = db.__getSessionCompletedAt('sess-ca-2');
+      expect(at).not.toBeNull();
+      expect(Number.isNaN(Date.parse(at!))).toBe(false);
+    });
+
+    it('write-once: later writes of an already-completed session do not move completed_at', async () => {
+      // finalizeTurn writes the completed state, then
+      // maybeResolveBusinessAddress and maybeSendSelfHelpEmail each write
+      // it again seconds later. The first write is the completion moment.
+      const { db } = makeInMemoryClients();
+      const completed = { ...sampleState('sess-ca-3'), status: 'completed' as const };
+
+      await db.writeSession({ state: completed });
+      const first = db.__getSessionCompletedAt('sess-ca-3');
+
+      await new Promise((r) => setTimeout(r, 5));
+      await db.writeSession({ state: completed });
+      await db.writeSession({ state: completed });
+
+      expect(db.__getSessionCompletedAt('sess-ca-3')).toBe(first);
+    });
+
+    it('leaves completed_at null for an abandoned session', async () => {
+      const { db } = makeInMemoryClients();
+      const state = sampleState('sess-ca-4');
+      await db.writeSession({ state });
+      await db.writeSession({ state: { ...state, status: 'abandoned' } });
+
+      expect(db.__getSessionCompletedAt('sess-ca-4')).toBeNull();
+    });
   });
 
   describe('ai', () => {

@@ -179,6 +179,11 @@ export class InMemoryDbClient implements DbClient {
   /** Per-session last-write timestamp, mirroring ada_sessions.updated_at.
    *  Used by listStaleActiveSessionIds (the abandonment sweep). */
   private readonly sessionUpdatedAt = new Map<string, string>();
+  /** Per-session completion timestamp, mirroring ada_sessions.completed_at.
+   *  Like updated_at, it's a DB-layer lifecycle column the Neon client
+   *  derives at the write boundary rather than reading off AdaSessionState,
+   *  so it lives in a sidecar here too. Write-once (see writeSession). */
+  private readonly sessionCompletedAt = new Map<string, string>();
   public readonly attorneys: AttorneyRow[] = [];
   public readonly adminAttorneys: AttorneyAdminRow[] = [];
   public readonly adminLitigation: LitigationAdminRow[] = [];
@@ -284,6 +289,17 @@ export class InMemoryDbClient implements DbClient {
     // has a last-activity timestamp to filter on. Wall-clock by default;
     // tests backdate via __setSessionUpdatedAt to simulate staleness.
     this.sessionUpdatedAt.set(state.sessionId, new Date().toISOString());
+    // Mirror the Neon client's derived, write-once completed_at:
+    // COALESCE(completed_at, now()) when the status is 'completed', NULL
+    // otherwise. A completing turn writes 2-3 times; only the first one
+    // may set the timestamp.
+    if (state.status === 'completed') {
+      if (!this.sessionCompletedAt.has(state.sessionId)) {
+        this.sessionCompletedAt.set(state.sessionId, new Date().toISOString());
+      }
+    } else {
+      this.sessionCompletedAt.delete(state.sessionId);
+    }
   }
 
   async listStaleActiveSessionIds({
@@ -308,6 +324,11 @@ export class InMemoryDbClient implements DbClient {
   /** Test hook: backdate a session's last-write timestamp to simulate staleness. */
   __setSessionUpdatedAt(sessionId: string, iso: string): void {
     this.sessionUpdatedAt.set(sessionId, iso);
+  }
+
+  /** Test hook: read the mirrored ada_sessions.completed_at (null when unset). */
+  __getSessionCompletedAt(sessionId: string): string | null {
+    return this.sessionCompletedAt.get(sessionId) ?? null;
   }
 
   async searchAttorneys(opts: AttorneySearchOptions): Promise<AttorneyRow[]> {

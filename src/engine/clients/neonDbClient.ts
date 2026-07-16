@@ -200,6 +200,12 @@ function stateToInsert(state: AdaSessionState): typeof adaSessions.$inferInsert 
     metadata: state.metadata,
     accessibilitySettings: state.accessibilitySettings,
     isTest: state.isTest,
+    // Derived, not mirrored from state — see the maintenance note in
+    // writeSession. AdaSessionState carries no lifecycle timestamps
+    // (created_at/updated_at are DB-managed too); completed_at is the
+    // third one, and its value is fully determined by the terminal
+    // status. Null for active/abandoned: the column means *completed*.
+    completedAt: state.status === 'completed' ? new Date() : null,
   };
 }
 
@@ -252,6 +258,21 @@ export class NeonDbClient implements DbClient {
     // intentionally omitted — they're set at creation and should never
     // change. If you need to change them, that's a different operation
     // (anonymization, account merge, etc).
+    //
+    // completed_at is DERIVED here rather than mirrored from state, and is
+    // the one exception to the rule above. AdaSessionState deliberately
+    // carries no lifecycle timestamps — created_at (defaultNow) and
+    // updated_at ($onUpdate) are DB-managed, and completed_at is the third
+    // of that family; its value is fully determined by the terminal status.
+    // Do NOT "fix" this by adding completedAt to AdaSessionState.
+    //
+    // Write-once via COALESCE: a completing turn calls writeSession 2-3
+    // times (turn.ts finalizeTurn, then maybeResolveBusinessAddress and
+    // maybeSendSelfHelpEmail both re-write the already-completed state).
+    // The first completed write wins; the follow-ons cannot drag the
+    // timestamp forward. now() is the DB transaction clock, matching the
+    // sibling timestamps. Prior to this the column was never written at
+    // all — NULL on every row since 0001.
     await this.db
       .insert(adaSessions)
       .values(values)
@@ -268,6 +289,10 @@ export class NeonDbClient implements DbClient {
           accessibilitySettings: values.accessibilitySettings,
           listingId: values.listingId,
           litigationListingId: values.litigationListingId,
+          completedAt:
+            values.status === 'completed'
+              ? sql`COALESCE(${adaSessions.completedAt}, now())`
+              : null,
         },
       });
   }
