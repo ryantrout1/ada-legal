@@ -27,9 +27,11 @@ import { rateLimitDecision } from '../../src/lib/spot/rateLimitDecision.js';
 import { parseSpotAnalyzeBody, type SpotAnalyzeBody } from '../../src/lib/spot/parseSpotAnalyzeBody.js';
 import { makeSpotStore } from '../../src/lib/spot/spotStore.js';
 
-// The analyzer makes a blocking ~10-18s Opus vision call — mirror the raised
-// limit in /api/ada/analyze-photo so slow runs aren't killed mid-analysis.
-export const config = { maxDuration: 60 };
+// The analyzer makes one blocking Opus vision call, typically 15-45s (forced
+// report_findings tool, ~1-2k output tokens). 90s gives the slow tail room —
+// at 60 a thorough read could be killed mid-analysis and the user, having
+// already waited a minute, got an error for it.
+export const config = { maxDuration: 90 };
 
 // Trailing window the free-read count is measured over.
 const RATE_WINDOW_MS = 24 * 60 * 60 * 1000;

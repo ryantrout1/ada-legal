@@ -4,8 +4,9 @@
  * Why this exists: modern phone photos are 3–5 MB raw. Sending them
  * over Vercel's platform edge (even via client-direct-upload to Blob)
  * is slow enough to feel broken — users see 30+ second upload times.
- * Our AI vision model (Haiku) also downscales server-side before it
- * runs, so the extra pixels are literally discarded. We lose nothing
+ * The vision model also downscales server-side before it runs (Anthropic
+ * caps input images around 1568px), so the extra pixels are literally
+ * discarded. We lose nothing
  * by shrinking client-side first.
  *
  * What it does: takes a File, resizes via HTMLCanvasElement to max

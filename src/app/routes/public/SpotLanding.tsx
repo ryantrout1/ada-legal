@@ -18,6 +18,34 @@ import type { SpotReportContent } from '@/lib/spot/reportSchema';
 
 const MAX_PHOTOS = 1;
 
+/**
+ * Staged progress for the free read. The analyzer is one blocking model
+ * call (~15-45s) with no intermediate output, so this is honest
+ * status-by-elapsed-time — never fabricated findings. Stages advance on a
+ * timer; aria-live announces each once. Copy pending Gina's review.
+ */
+const READ_STAGES: Array<{ atMs: number; text: string }> = [
+  { atMs: 0, text: 'Reading your photo…' },
+  { atMs: 6_000, text: 'Checking it against ADA standards — parking, routes, entrances, restrooms…' },
+  { atMs: 15_000, text: 'Writing up what it found…' },
+  { atMs: 28_000, text: 'Almost there — a thorough read can take up to a minute.' },
+];
+
+function SpotReadProgress() {
+  const [stage, setStage] = useState(0);
+  useEffect(() => {
+    const timers = READ_STAGES.slice(1).map((s, i) =>
+      window.setTimeout(() => setStage(i + 1), s.atMs),
+    );
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, []);
+  return (
+    <p aria-live="polite" className="mt-3 text-center text-ink-900">
+      {READ_STAGES[stage].text}
+    </p>
+  );
+}
+
 /** Test-drive only (?test=1): reachable when the admin flips spot_test_payment. */
 const IS_TEST_MODE =
   typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('test') === '1';
@@ -193,6 +221,8 @@ export default function SpotLanding() {
                 >
                   {analyzing ? 'Reading your photos…' : 'Screen my photos'}
                 </button>
+
+                {analyzing ? <SpotReadProgress /> : null}
 
                 {state.status === 'error' ? (
                   <p role="alert" className="text-sm text-danger-500">
