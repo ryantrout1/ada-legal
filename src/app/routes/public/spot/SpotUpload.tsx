@@ -61,6 +61,17 @@ export default function SpotUpload({ spotSessionId, buyerEmail }: Props) {
         body: JSON.stringify({ spotSessionId }),
       });
       if (!res.ok) throw new Error('finish failed');
+      // Kick generation immediately (fast path) — fire-and-forget. Vercel
+      // functions run to completion after client disconnect, so leaving
+      // the page doesn't kill the run; if this request never leaves the
+      // device, the cron sweeper picks the session up within 10 minutes.
+      void fetch('/api/spot/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ spotSessionId }),
+      }).catch(() => {
+        /* sweeper backstop */
+      });
       setDone(true);
     } catch {
       setError('Could not submit your photos. Please try again.');
