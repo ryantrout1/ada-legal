@@ -72,4 +72,53 @@ describe('generateReport', () => {
     const clients = fakeClients({ onAnalyze: () => {}, stream: () => emptyStream() });
     await expect(generateReport(clients, { photos: photos(1), model: 'opus-test' })).rejects.toThrow();
   });
+
+  it('runs batches in parallel and preserves batch order even when a later batch resolves first', async () => {
+    // 4 photos → 2 batches. Batch 0 resolves SLOWER than batch 1; the
+    // analyses array (and thus view-group numbering in the synthesis
+    // prompt) must still be in batch order. Also proves parallelism:
+    // both analyze calls start before either resolves.
+    const started: string[] = [];
+    let releaseFirst!: () => void;
+    const firstGate = new Promise<void>((r) => (releaseFirst = r));
+
+    const outputFor = (label: string): PhotoAnalysisOutput => ({
+      ...cannedOutput(),
+      scene: { standard: label },
+    });
+
+    let sawSynthesisOrder = '';
+    const clients = {
+      photo: {
+        analyze: async ({ blobKeys }: { blobKeys: string[] }) => {
+          const label = blobKeys[0];
+          started.push(label);
+          if (label === 'https://blob/0.jpg') {
+            await firstGate; // batch 0 stalls until batch 1 has resolved
+          } else {
+            releaseFirst();
+          }
+          return { output: outputFor(label), modelVersion: 'opus-test' };
+        },
+      },
+      ai: {
+        stream: (req: { messages: Array<{ content: string }> }) => {
+          sawSynthesisOrder = req.messages[0].content;
+          return composeStream({ overview: 'ok', areas: [] });
+        },
+      },
+    } as unknown as AdaClients;
+
+    await generateReport(clients, { photos: photos(4), model: 'opus-test' });
+
+    // Both batches started (parallel); a sequential loop would deadlock
+    // here, because batch 0 awaits a gate only batch 1 releases.
+    expect(started.length).toBe(2);
+    // Batch 0's scene appears before batch 1's in the synthesis prompt.
+    const i0 = sawSynthesisOrder.indexOf('https://blob/0.jpg');
+    const i3 = sawSynthesisOrder.indexOf('https://blob/3.jpg');
+    expect(i0).toBeGreaterThan(-1);
+    expect(i3).toBeGreaterThan(-1);
+    expect(i0).toBeLessThan(i3);
+  });
 });

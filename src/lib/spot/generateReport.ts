@@ -97,11 +97,17 @@ export async function generateReport(
   if (input.photos.length === 0) throw new Error('no photos to analyze');
   const model = input.model ?? process.env.SPOT_REPORT_MODEL ?? SPOT_REPORT_DEFAULT_MODEL;
 
-  const analyses: PhotoAnalysisOutput[] = [];
-  for (const batch of chunk(input.photos.map((p) => p.blobUrl), SPOT_REPORT_BATCH_SIZE)) {
-    const res = await clients.photo.analyze({ blobKeys: batch });
-    analyses.push(res.output);
-  }
+  // Batches are independent (each is its own vision call over its own
+  // photos) — run them in parallel. `map` preserves batch order in the
+  // resulting analyses array, so view-group numbering in the synthesis
+  // prompt is unchanged. Any batch failure rejects the whole report,
+  // same semantics as the previous sequential loop (the caller leaves
+  // the session `uploaded` for retry).
+  const analyses: PhotoAnalysisOutput[] = await Promise.all(
+    chunk(input.photos.map((p) => p.blobUrl), SPOT_REPORT_BATCH_SIZE).map(
+      async (batch) => (await clients.photo.analyze({ blobKeys: batch })).output,
+    ),
+  );
 
   const stream = clients.ai.stream({
     systemPrompt: SYNTHESIS_SYSTEM,
