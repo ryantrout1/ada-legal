@@ -395,9 +395,26 @@ export async function processAdaTurn({
         latestVisibleText = turnOutput.text;
       }
 
+      // Short-circuit eligibility (turn-latency fix). extract_field is a
+      // pure state write — its result carries nothing the model needs to
+      // see. When an iteration's tool calls are ALL extract_field and the
+      // model already streamed its conversational reply alongside them
+      // (the prompt now instructs exactly this), a second model round-trip
+      // would only re-produce that reply. If every dispatch succeeds
+      // (checked below — schema-validation failures must loop so Ada can
+      // correct), we end the turn here instead: the streamed text IS the
+      // reply. When eligible, hold the text out of the blocks message and
+      // append it as the plain final assistant message after the
+      // tool_results, so history is byte-shaped like a normal completed
+      // loop (assistant tool_use → user tool_result → assistant text) and
+      // the transcript renderer shows one bubble.
+      const shortCircuitEligible =
+        turnOutput.text.trim().length > 0 &&
+        turnOutput.toolCalls.every((c) => c.name === 'extract_field');
+
       // Append the assistant turn to history (mixed text + tool_use blocks).
       const assistantTurnContent: ContentBlockLite[] = [];
-      if (turnOutput.text.length > 0) {
+      if (turnOutput.text.length > 0 && !shortCircuitEligible) {
         assistantTurnContent.push({ type: 'text', text: turnOutput.text });
       }
       for (const call of turnOutput.toolCalls) {
@@ -416,6 +433,7 @@ export async function processAdaTurn({
 
       // Dispatch each tool in order. Collect tool_result blocks and state changes.
       const toolResultBlocks: ContentBlockLite[] = [];
+      let allToolsOk = true;
       for (const call of turnOutput.toolCalls) {
         const record = await dispatchTool({
           name: call.name,
@@ -430,6 +448,9 @@ export async function processAdaTurn({
           isError: !record.result.ok,
           timestamp: record.timestamp,
         });
+        if (!record.result.ok) {
+          allToolsOk = false;
+        }
 
         // Apply state changes from successful tools.
         if (record.result.ok && record.result.stateChanges) {
@@ -468,6 +489,23 @@ export async function processAdaTurn({
           },
         ],
       };
+      // Short-circuit: all calls were extract_field, all succeeded, and
+      // the reply already streamed. End the turn with that text — no
+      // second model round-trip, no reset frame (the client's buffered
+      // text is exactly the final reply).
+      if (shortCircuitEligible && allToolsOk) {
+        assistantMessage = {
+          role: 'assistant',
+          content: turnOutput.text,
+          timestamp: clients.clock.now().toISOString(),
+        };
+        workingState = {
+          ...workingState,
+          conversationHistory: [...workingState.conversationHistory, assistantMessage],
+        };
+        break;
+      }
+
       // This iteration streamed text alongside its tool calls; the next
       // iteration will re-stream the conversational reply (often verbatim).
       // Signal a reset so the client drops what it buffered and only the

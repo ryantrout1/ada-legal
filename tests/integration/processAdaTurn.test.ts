@@ -113,12 +113,14 @@ describe('processAdaTurn — integration', () => {
     expect(result.assistantMessage.content).toBe('Got it — Arizona. Tell me more?');
   });
 
-  it('emits onStreamReset at the tool-loop boundary so re-streamed text does not double (triage finding 2)', async () => {
+  it('short-circuits an all-extract_field iteration with streamed text: one model round-trip, no reset (turn-latency fix)', async () => {
     const clients = makeInMemoryClients();
     const state = newSession(clients);
     const reply = "You couldn't get in. That's a Title III access issue.";
 
-    // Iteration 1: model emits its conversational reply ALONGSIDE a tool call.
+    // Iteration 1: model emits its conversational reply ALONGSIDE the
+    // extract_field call. Under the short-circuit this is the WHOLE turn —
+    // no second response is queued, so a second stream() would throw.
     clients.ai.enqueueResponse([
       { type: 'text_delta', content: reply },
       ...toolUseChunks('tu_1', 'extract_field', {
@@ -127,8 +129,6 @@ describe('processAdaTurn — integration', () => {
         confidence: 1,
       }),
     ]);
-    // Iteration 2 (final): model RE-EMITS the identical reply.
-    clients.ai.enqueueResponse(textOnlyTurn(reply));
 
     // Simulate the browser: append deltas, clear on reset.
     let bubble = '';
@@ -149,11 +149,146 @@ describe('processAdaTurn — integration', () => {
       },
     });
 
-    // Reset fired once — after the text-bearing tool iteration.
-    expect(resetCount).toBe(1);
-    // The live bubble holds a single copy, not the doubled concatenation.
+    // Exactly one model round-trip — the extract_field result never goes
+    // back to the model.
+    expect(clients.ai.requests.length).toBe(1);
+    // No reset: the buffered text IS the final reply.
+    expect(resetCount).toBe(0);
     expect(bubble).toBe(reply);
-    // Persisted message was already single.
+    expect(result.assistantMessage.content).toBe(reply);
+    // The extraction still landed.
+    expect(result.nextState.extractedFields.access_denied?.value).toBe(true);
+    // tools_invoked sidecar still records the call (QC / attorneyMatched read it).
+    expect(
+      result.nextState.metadata.tools_invoked?.some(
+        (t) => t.name === 'extract_field' && t.result_kind === 'ok',
+      ),
+    ).toBe(true);
+    // History keeps the normal completed-loop shape: assistant tool_use →
+    // user tool_result → assistant text — with the reply present exactly
+    // once (no doubled transcript bubble).
+    const history = result.nextState.conversationHistory;
+    const last = history[history.length - 1];
+    expect(last.role).toBe('assistant');
+    expect(last.content).toBe(reply);
+    const copies = history.filter(
+      (m) =>
+        m.role === 'assistant' &&
+        (typeof m.content === 'string'
+          ? m.content.includes(reply)
+          : JSON.stringify(m.content).includes(reply)),
+    );
+    expect(copies.length).toBe(1);
+  });
+
+  it('does NOT short-circuit a silent all-extract_field iteration — loops so the user still gets a reply', async () => {
+    const clients = makeInMemoryClients();
+    const state = newSession(clients);
+    const reply = 'Got it — recorded. What state did this happen in?';
+
+    // Iteration 1: extract_field with NO text (legacy silent extraction).
+    clients.ai.enqueueResponse([
+      ...toolUseChunks('tu_1', 'extract_field', {
+        field: 'business_name',
+        value: 'Subway',
+        confidence: 0.9,
+      }),
+    ]);
+    // Iteration 2: the model produces the reply.
+    clients.ai.enqueueResponse(textOnlyTurn(reply));
+
+    let resetCount = 0;
+    const result = await processAdaTurn({
+      clients,
+      state,
+      input: {
+        userMessage: 'no ramp at Subway',
+        onStreamReset: () => {
+          resetCount += 1;
+        },
+      },
+    });
+
+    expect(clients.ai.requests.length).toBe(2);
+    // No text streamed in iteration 1, so no reset was needed either.
+    expect(resetCount).toBe(0);
+    expect(result.assistantMessage.content).toBe(reply);
+  });
+
+  it('does NOT short-circuit when an extract_field dispatch fails — loops so Ada can correct', async () => {
+    const clients = makeInMemoryClients();
+    const state = newSession(clients);
+    const reply = 'Noted — thanks.';
+    const corrected = 'Let me note that properly. What state was this in?';
+
+    // Iteration 1: text + an INVALID extract_field (confidence out of
+    // range → validateInput rejects → { ok: false }).
+    clients.ai.enqueueResponse([
+      { type: 'text_delta', content: reply },
+      ...toolUseChunks('tu_1', 'extract_field', {
+        field: 'location_state',
+        value: 'AZ',
+        confidence: 5,
+      }),
+    ]);
+    // Iteration 2: model sees the error tool_result and recovers.
+    clients.ai.enqueueResponse(textOnlyTurn(corrected));
+
+    let resetCount = 0;
+    const result = await processAdaTurn({
+      clients,
+      state,
+      input: {
+        userMessage: 'it was in AZ',
+        onStreamReset: () => {
+          resetCount += 1;
+        },
+      },
+    });
+
+    // Failure path keeps the loop: two round-trips, reset fired for the
+    // superseded iteration-1 text.
+    expect(clients.ai.requests.length).toBe(2);
+    expect(resetCount).toBe(1);
+    expect(result.assistantMessage.content).toBe(corrected);
+  });
+
+  it('does NOT short-circuit when a non-extract_field tool rides along — loops with reset as before', async () => {
+    const clients = makeInMemoryClients();
+    const state = newSession(clients);
+    const reply = 'That sounds like a Title III issue.';
+
+    clients.ai.enqueueResponse([
+      { type: 'text_delta', content: reply },
+      ...toolUseChunks('tu_1', 'extract_field', {
+        field: 'access_denied',
+        value: true,
+        confidence: 1,
+      }),
+      ...toolUseChunks('tu_2', 'set_reading_level', { level: 'simple' }),
+    ]);
+    clients.ai.enqueueResponse(textOnlyTurn(reply));
+
+    let bubble = '';
+    let resetCount = 0;
+    const result = await processAdaTurn({
+      clients,
+      state,
+      input: {
+        userMessage: 'no ramp, please keep it simple',
+        onTextDelta: (d) => {
+          bubble += d;
+        },
+        onStreamReset: () => {
+          resetCount += 1;
+          bubble = '';
+        },
+      },
+    });
+
+    expect(clients.ai.requests.length).toBe(2);
+    expect(resetCount).toBe(1);
+    expect(bubble).toBe(reply);
     expect(result.assistantMessage.content).toBe(reply);
   });
 
