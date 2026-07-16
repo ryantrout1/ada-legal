@@ -10,6 +10,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSpotCapture, type SpotUpsell } from './spot/useSpotCapture';
 import SpotResultView from './spot/SpotResultView';
+import SpotProgressPanel from './spot/SpotProgressPanel';
 import SpotCheckout from './spot/SpotCheckout';
 import SpotUpload from './spot/SpotUpload';
 import SpotReportView from './spot/SpotReportView';
@@ -19,10 +20,15 @@ import type { SpotReportContent } from '@/lib/spot/reportSchema';
 const MAX_PHOTOS = 1;
 
 /**
- * Staged progress for the free read. The analyzer is one blocking model
- * call (~15-45s) with no intermediate output, so this is honest
- * status-by-elapsed-time — never fabricated findings. Stages advance on a
- * timer; aria-live announces each once. Copy pending Gina's review.
+ * The accessible status channel for the free read.
+ *
+ * The read now streams (SpotProgressPanel renders content as it lands), but
+ * that panel is aria-live="off" — scene, summary and each finding arrive
+ * separately and announcing every one would machine-gun a screen reader.
+ * This stays the calm channel: a handful of coarse, honest, elapsed-time
+ * stages, each announced once. It never claims a finding — the analyzer
+ * gives no intermediate signal to base a claim on. Copy pending Gina's
+ * review.
  */
 const READ_STAGES: Array<{ atMs: number; text: string }> = [
   { atMs: 0, text: 'Reading your photo…' },
@@ -223,6 +229,11 @@ export default function SpotLanding() {
                 </button>
 
                 {analyzing ? <SpotReadProgress /> : null}
+                {analyzing && state.progress ? (
+                  <div className="mt-4">
+                    <SpotProgressPanel view={state.progress} />
+                  </div>
+                ) : null}
 
                 {state.status === 'error' ? (
                   <p role="alert" className="text-sm text-danger-500">
