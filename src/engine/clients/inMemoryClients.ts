@@ -2914,9 +2914,16 @@ export class InMemoryPhotoAnalysisClient implements PhotoAnalysisClient {
     output: PhotoAnalysisOutput;
     level: 'simple' | 'professional';
   }> = [];
+  /** Snapshots analyzeStream() will replay to onProgress, in order. */
+  public readonly progressQueue: unknown[][] = [];
 
   enqueueResult(result: PhotoAnalysisResult): void {
     this.responseQueue.push(result);
+  }
+
+  /** Script the progress snapshots the next analyzeStream() call emits. */
+  enqueueProgress(snapshots: unknown[]): void {
+    this.progressQueue.push(snapshots);
   }
 
   async analyze(req: PhotoAnalysisRequest): Promise<PhotoAnalysisResult> {
@@ -2928,6 +2935,24 @@ export class InMemoryPhotoAnalysisClient implements PhotoAnalysisClient {
       );
     }
     return result;
+  }
+
+  async analyzeStream(
+    req: PhotoAnalysisRequest,
+    onProgress: (snapshot: unknown) => void,
+  ): Promise<PhotoAnalysisResult> {
+    // Replay any scripted snapshots, then resolve exactly as analyze()
+    // would — the real client's contract is that the streamed read and the
+    // blocking read produce the same result.
+    const snapshots = this.progressQueue.shift() ?? [];
+    for (const snap of snapshots) {
+      try {
+        onProgress(snap);
+      } catch {
+        /* a throwing listener must not break the analysis */
+      }
+    }
+    return this.analyze(req);
   }
 
   async rewriteToLevel(

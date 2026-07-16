@@ -422,4 +422,56 @@ describe('NeonDbClient.writeSession upsert — column coverage', () => {
     expect(setMatch).not.toBeNull();
     expect(setMatch![1]).toContain('sessionType');
   });
+
+  describe('photo', () => {
+    // analyzeStream is the streamed twin of analyze (Ada Spot's free read).
+    // The contract every implementation owes: same result as analyze, and
+    // progress is advisory — never load-bearing, never able to break the
+    // analysis.
+    const result = () => ({
+      output: {
+        scene: { standard: 'Entrance' },
+        summary: { standard: 'One concern.' },
+        overall_risk: 'medium' as const,
+        positive_findings: { standard: [] },
+        findings: [],
+        meta: { tool_call_present: true, stop_reason: 'tool_use' },
+      },
+      modelVersion: 'opus-test',
+    });
+
+    it('analyzeStream resolves to the same result analyze would', async () => {
+      const { photo } = makeInMemoryClients();
+      photo.enqueueResult(result());
+
+      const out = await photo.analyzeStream({ blobKeys: ['https://blob/1.jpg'] }, () => {});
+      expect(out).toEqual(result());
+      expect(photo.requests).toHaveLength(1);
+    });
+
+    it('analyzeStream reports progress snapshots in order before resolving', async () => {
+      const { photo } = makeInMemoryClients();
+      photo.enqueueResult(result());
+      photo.enqueueProgress([{ scene: 'A concrete entrance' }, { scene: 'A concrete entrance', summary: 'Sum.' }]);
+
+      const seen: unknown[] = [];
+      await photo.analyzeStream({ blobKeys: ['https://blob/1.jpg'] }, (s) => seen.push(s));
+
+      expect(seen).toEqual([
+        { scene: 'A concrete entrance' },
+        { scene: 'A concrete entrance', summary: 'Sum.' },
+      ]);
+    });
+
+    it('analyzeStream survives a throwing onProgress listener', async () => {
+      const { photo } = makeInMemoryClients();
+      photo.enqueueResult(result());
+      photo.enqueueProgress([{ scene: 'boom' }]);
+
+      const out = await photo.analyzeStream({ blobKeys: ['https://blob/1.jpg'] }, () => {
+        throw new Error('listener exploded');
+      });
+      expect(out.output.scene.standard).toBe('Entrance');
+    });
+  });
 });

@@ -213,6 +213,66 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
   }
 
   async analyze(req: PhotoAnalysisRequest): Promise<PhotoAnalysisResult> {
+    const params = this.buildAnalyzeParams(req);
+    const response = await this.client.messages.create(params);
+
+    const output = extractOutputFromResponse(response);
+    return {
+      output,
+      modelVersion: this.model,
+    };
+  }
+
+  /**
+   * Ada Spot's free read (api/spot/analyze) streams so the user sees the
+   * report build itself instead of ~15-25s of dead air. The request is the
+   * SAME params object analyze() sends — same model, system blocks +
+   * cache_control, forced tool_choice, schema, max_tokens, image blocks —
+   * and the result comes back through the SAME extractOutputFromResponse.
+   * Only the transport differs, so analyzer accuracy is untouched.
+   *
+   * Progress: the SDK's MessageStream re-parses the tool's partial JSON on
+   * every input_json_delta (via its vendored tolerant parser) and hands us
+   * the snapshot. That parser DROPS incomplete values — a half-written
+   * string is simply absent — which is exactly the property we want: a
+   * field surfaces only once it is fully formed, so a truncated compliance
+   * claim ("no accessible route" that was going to end "...visible from
+   * this angle") can never render. Callers get raw tool-JSON shape, not
+   * PhotoAnalysisOutput shape; see mapSpotProgress.
+   *
+   * onProgress must never break the analysis — it is called inside a
+   * try/catch and a throwing listener is logged and ignored.
+   */
+  async analyzeStream(
+    req: PhotoAnalysisRequest,
+    onProgress: (snapshot: unknown) => void,
+  ): Promise<PhotoAnalysisResult> {
+    const params = this.buildAnalyzeParams(req);
+    const stream = this.client.messages.stream(params);
+
+    stream.on('inputJson', (_partialJson: string, snapshot: unknown) => {
+      try {
+        onProgress(snapshot);
+      } catch (err) {
+        console.error('[photo-analyzer] onProgress listener threw', err);
+      }
+    });
+
+    const response = await stream.finalMessage();
+    const output = extractOutputFromResponse(response);
+    return {
+      output,
+      modelVersion: this.model,
+    };
+  }
+
+  /**
+   * The single source of truth for the analyze request. Both analyze() and
+   * analyzeStream() send exactly this — keeping them in one place is what
+   * makes "the streamed read is the same read" a structural guarantee
+   * rather than a promise two call sites have to keep.
+   */
+  private buildAnalyzeParams(req: PhotoAnalysisRequest) {
     if (!Array.isArray(req.blobKeys) || req.blobKeys.length === 0) {
       throw new Error(
         'AnthropicPhotoAnalysisClient: blobKeys must be a non-empty array',
@@ -246,7 +306,7 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
       });
     }
 
-    const response = await this.client.messages.create({
+    return {
       model: this.model,
       max_tokens: DEFAULT_MAX_TOKENS,
       // System prompt + tool schema are stable across every photo
@@ -278,14 +338,8 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
           cache_control: { type: 'ephemeral' },
         } as never,
       ],
-      tool_choice: { type: 'tool', name: 'report_findings' },
-      messages: [{ role: 'user', content: userContent }],
-    });
-
-    const output = extractOutputFromResponse(response);
-    return {
-      output,
-      modelVersion: this.model,
+      tool_choice: { type: 'tool' as const, name: 'report_findings' },
+      messages: [{ role: 'user' as const, content: userContent }],
     };
   }
 

@@ -2102,6 +2102,22 @@ export interface PhotoAnalysisResult {
 export interface PhotoAnalysisClient {
   analyze(req: PhotoAnalysisRequest): Promise<PhotoAnalysisResult>;
   /**
+   * Same analysis as analyze() — same model, params, prompt, schema and
+   * output extraction — but streamed, with a progress callback fired as
+   * the model's tool payload fills in. Exists for Ada Spot's free read,
+   * where a user is watching ~15-25s of generation; background callers
+   * (report cron, case evidence) should keep using analyze().
+   *
+   * `snapshot` is the tool's partially-parsed JSON in RAW tool shape
+   * (scene: string), not PhotoAnalysisOutput shape (scene: {standard}).
+   * Incomplete values are absent rather than truncated, so a field only
+   * ever appears fully formed. See mapSpotProgress for the view mapping.
+   */
+  analyzeStream(
+    req: PhotoAnalysisRequest,
+    onProgress: (snapshot: unknown) => void,
+  ): Promise<PhotoAnalysisResult>;
+  /**
    * Generate the simple or professional variant of an analysis that was
    * captured at the standard reading level, reusing the standard text as
    * the source. Returns a NEW output with the requested level filled in
