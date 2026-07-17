@@ -77,9 +77,9 @@ function UpsellCard({ upsell, onStart }: { upsell?: SpotUpsell; onStart: () => v
         Want the full read on this spot?
       </h2>
       <p className="mt-2 text-ink-900">
-        Take a few more angles of this same spot — up to {maxPhotos} photos — and get the full
-        report: what's wrong, what the rules actually require, and exactly how to fix it, for $
-        {price}.
+        Take a few more angles of this same spot — up to {maxPhotos} photos — and we’ll read
+        them together: what each finding is, which rule it points to, and what people usually do
+        about it. ${price}, yours to keep.
       </p>
       {upsell?.anchor ? <p className="mt-1 text-sm text-ink-700">{upsell.anchor}</p> : null}
       <button
@@ -190,12 +190,12 @@ export default function SpotLanding() {
             Spot — from ADA Legal Link
           </p>
           <h1 className="mt-2 font-display text-3xl text-ink-900">
-            See your business the way a customer with a disability does.
+            If someone can’t get in, you’ll probably never hear about it.
           </h1>
+          <p className="mt-3 text-lg text-ink-900">They don’t complain. They just leave.</p>
           <p className="mt-3 text-lg text-ink-700">
-            Point your camera at whatever you’re unsure about — the front door, the ramp, the
-            parking space, the restroom, the counter. One photo. In about a minute we’ll tell you
-            what someone with a disability might run into there — free.
+            Take one photo — the door, the ramp, the restroom, the counter — and in about a
+            minute we’ll tell you what they’d hit. Free.
           </p>
         </header>
 
