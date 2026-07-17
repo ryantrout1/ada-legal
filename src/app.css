@@ -397,6 +397,38 @@ body {
 
 /* Default uses the --font-body defined in @theme (IBM Plex Sans). */
 
+/* Spot — typographic parity with adalegallink.com.
+ *
+ * /spot is where Gina's QR code lands. The consumer site sets `body {
+ * font-family: 'Manrope' }` (B44 src/Layout.jsx) with Fraunces headings; this
+ * app defaults to IBM Plex Sans body with the same Fraunces headings. Someone
+ * scanning a card and landing here should not feel they changed products —
+ * and the ported header/footer chrome is already Manrope (--font-chrome), so
+ * leaving the body on Plex sets two sans faces against each other on one page.
+ *
+ * Authored on :root via :has() rather than as a `.spot-surface { --font-body }`
+ * block, and that distinction is load-bearing. Custom properties inherit from
+ * the NEAREST ancestor that sets them, so declaring --font-body on a wrapper
+ * div would beat :root[data-font="..."] outright — regardless of specificity —
+ * and silently strip a user's chosen a11y font (Atkinson / OpenDyslexic /
+ * Lexend) inside Spot. Matching on :root keeps this rule on the same element
+ * as the a11y rules: equal specificity (0,2,0), so source order decides, and
+ * the data-font block below deliberately comes AFTER. A user's font choice
+ * wins. Verified by tests/unit/spotFontScope.test.ts.
+ *
+ * Scoped, not global: IBM Plex Sans is a deliberate default here ("known to
+ * aid readability for dyslexic users", see the header note), and swapping it
+ * platform-wide would silently restyle Ada intake, the standards guide and the
+ * portal. Browsers without :has() simply keep Plex — a clean fallback.
+ *
+ * Deliberately fonts only. The consumer site's palette is AA-level (its accent
+ * #C2410C is 5.18:1); this app's AAA floor is why accent-500 is #883D17. Theme
+ * parity would mean regressing contrast, so the tokens stay put.
+ */
+:root:has(.spot-surface) {
+  --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 :root[data-font="atkinson"] {
   --font-body: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Atkinson Hyperlegible', 'Georgia', serif;
