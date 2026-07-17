@@ -72,7 +72,7 @@ export default function SpotIntro() {
   return (
     <div className="mt-10 space-y-8">
       <section aria-labelledby="spot-how-h">
-        <h2 id="spot-how-h" className="font-display text-2xl text-ink-900">
+        <h2 id="spot-how-h" className="font-display text-2xl font-extrabold text-ink-900">
           How this works
         </h2>
         <ol className="mt-4 space-y-4">
@@ -80,7 +80,7 @@ export default function SpotIntro() {
             <li key={step.title} className="flex gap-4">
               <span
                 aria-hidden="true"
-                className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-accent-50 font-display text-lg text-accent-600"
+                className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-accent-50 font-display text-lg font-bold text-accent-600"
               >
                 {i + 1}
               </span>
@@ -94,7 +94,7 @@ export default function SpotIntro() {
       </section>
 
       <section aria-labelledby="spot-scope-h">
-        <h2 id="spot-scope-h" className="font-display text-2xl text-ink-900">
+        <h2 id="spot-scope-h" className="font-display text-2xl font-extrabold text-ink-900">
           What you can point it at
         </h2>
         <p className="mt-3 text-ink-700">
@@ -111,19 +111,19 @@ export default function SpotIntro() {
       </section>
 
       <section aria-labelledby="spot-tiers-h">
-        <h2 id="spot-tiers-h" className="font-display text-2xl text-ink-900">
+        <h2 id="spot-tiers-h" className="font-display text-2xl font-extrabold text-ink-900">
           What you get
         </h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div className="rounded-lg border border-surface-200 bg-surface-100 p-4">
-            <h3 className="font-display text-lg text-ink-900">Free — one photo</h3>
+            <h3 className="font-display text-lg font-bold text-ink-900">Free — one photo</h3>
             <p className="mt-2 text-ink-700">
               What stands out, and how serious it looks. Enough to know whether you’ve got
               something to look at.
             </p>
           </div>
           <div className="rounded-lg border border-surface-200 bg-surface-100 p-4">
-            <h3 className="font-display text-lg text-ink-900">
+            <h3 className="font-display text-lg font-bold text-ink-900">
               Full report — up to {SPOT_DEFAULT_MAX_PHOTOS} angles, ${SPOT_DEFAULT_PRICE_USD}
             </h3>
             <p className="mt-2 text-ink-700">
@@ -136,7 +136,7 @@ export default function SpotIntro() {
       </section>
 
       <section aria-labelledby="spot-limits-h">
-        <h2 id="spot-limits-h" className="font-display text-2xl text-ink-900">
+        <h2 id="spot-limits-h" className="font-display text-2xl font-extrabold text-ink-900">
           What this is — and what it isn’t
         </h2>
         <p className="mt-3 text-ink-900">
@@ -158,7 +158,7 @@ export default function SpotIntro() {
       </section>
 
       <section aria-labelledby="spot-who-h">
-        <h2 id="spot-who-h" className="font-display text-2xl text-ink-900">
+        <h2 id="spot-who-h" className="font-display text-2xl font-extrabold text-ink-900">
           Who we are
         </h2>
         <p className="mt-3 text-ink-700">
@@ -171,7 +171,7 @@ export default function SpotIntro() {
       </section>
 
       <section aria-labelledby="spot-photo-h">
-        <h2 id="spot-photo-h" className="font-display text-2xl text-ink-900">
+        <h2 id="spot-photo-h" className="font-display text-2xl font-extrabold text-ink-900">
           Your photo
         </h2>
         <p className="mt-3 text-ink-700">

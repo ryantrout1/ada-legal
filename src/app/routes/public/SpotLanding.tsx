@@ -73,7 +73,7 @@ function UpsellCard({ upsell, onStart }: { upsell?: SpotUpsell; onStart: () => v
   const maxPhotos = upsell?.max_photos ?? SPOT_DEFAULT_MAX_PHOTOS;
   return (
     <section className="mt-6 rounded-lg border-2 border-accent-500 bg-accent-50 p-5" aria-labelledby="spot-cta-h">
-      <h2 id="spot-cta-h" className="font-display text-xl text-ink-900">
+      <h2 id="spot-cta-h" className="font-display text-xl font-extrabold text-ink-900">
         Want the full read on this spot?
       </h2>
       <p className="mt-2 text-ink-900">
@@ -85,7 +85,7 @@ function UpsellCard({ upsell, onStart }: { upsell?: SpotUpsell; onStart: () => v
       <button
         type="button"
         onClick={onStart}
-        className="mt-4 inline-flex min-h-[44px] items-center rounded-md bg-accent-500 px-5 py-2 font-display text-lg text-surface-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+        className="mt-4 inline-flex min-h-[44px] items-center rounded-md bg-accent-500 px-5 py-2 font-display text-lg font-bold text-surface-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
       >
         Get the ${price} report
       </button>
@@ -170,7 +170,7 @@ export default function SpotLanding() {
       <div className="spot-surface">
         <div className="mx-auto max-w-2xl px-5 sm:px-8 py-10">
           <header className="mb-6">
-            <h1 className="font-display text-3xl text-ink-900">Spot</h1>
+            <h1 className="font-display text-3xl font-extrabold text-ink-900">Spot</h1>
           </header>
           {paidSessionId ? (
             <SpotUpload spotSessionId={paidSessionId} />
@@ -186,10 +186,10 @@ export default function SpotLanding() {
     <div className="spot-surface">
       <div className="mx-auto max-w-2xl px-5 sm:px-8 py-10">
         <header className="mb-6">
-          <p className="font-display text-sm uppercase tracking-wide text-accent-600">
+          <p className="font-display text-sm font-bold uppercase tracking-widest text-accent-600">
             Spot — from ADA Legal Link
           </p>
-          <h1 className="mt-2 font-display text-3xl text-ink-900">
+          <h1 className="mt-2 font-display text-3xl font-extrabold leading-tight text-ink-900">
             If someone can’t get in, you’ll probably never hear about it.
           </h1>
           <p className="mt-3 text-lg text-ink-900">They don’t complain. They just leave.</p>
@@ -201,7 +201,7 @@ export default function SpotLanding() {
 
         {showBlocked ? (
           <div className="rounded-lg border border-surface-200 bg-surface-100 p-5">
-            <h2 className="font-display text-xl text-ink-900">You've used your free reads</h2>
+            <h2 className="font-display text-xl font-extrabold text-ink-900">You've used your free reads</h2>
             <p className="mt-2 text-ink-700">
               For the full report on this spot — more angles, what the rules require, and how to
               fix it — grab the paid report below.
@@ -222,7 +222,7 @@ export default function SpotLanding() {
                   <>
                     <label
                       htmlFor="spot-photo-input"
-                      className="block w-full min-h-[44px] cursor-pointer rounded-md border-2 border-accent-500 bg-accent-50 px-4 py-3 text-center font-display text-lg text-accent-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-accent-500 focus-within:ring-offset-2 focus-within:ring-offset-surface-50"
+                      className="block w-full min-h-[44px] cursor-pointer rounded-md border-2 border-accent-500 bg-accent-50 px-4 py-3 text-center font-display text-lg font-bold text-accent-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-accent-500 focus-within:ring-offset-2 focus-within:ring-offset-surface-50"
                     >
                       Take or upload a photo
                     </label>
@@ -272,7 +272,7 @@ export default function SpotLanding() {
                     ref={screenRef}
                     disabled={analyzing}
                     onClick={() => run(files)}
-                    className="min-h-[44px] w-full rounded-md bg-accent-500 px-5 py-3 font-display text-lg text-surface-50 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+                    className="min-h-[44px] w-full rounded-md bg-accent-500 px-5 py-3 font-display text-lg font-bold text-surface-50 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
                   >
                     {analyzing ? 'Reading your photos…' : 'Screen my photos'}
                   </button>

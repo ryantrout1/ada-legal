@@ -427,6 +427,27 @@ body {
  */
 :root:has(.spot-surface) {
   --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* De-serif Spot, same move as .lawyer-workspace above and for the same reason.
+ * The consumer landing people scan into (B44 components/landing-v2/*) sets its
+ * headline inline at Manrope 800 / -0.01em / 1.1 and never touches Fraunces —
+ * the base `h1..h6 { Fraunces }` rule in B44's Layout.jsx is overridden on
+ * every live landing section, so reading that rule alone is misleading. On
+ * adalegallink.com the serif survives ONLY in the logo wordmark, which lives
+ * in the chrome outside .spot-surface and is therefore untouched here.
+ *
+ * Repointing --font-display (rather than restyling each heading) carries both
+ * the `h1..h6` rule and the `.font-display` utility on the eyebrow and
+ * buttons in one move. Weights are set per element with Tailwind utilities,
+ * so nothing here fights a user's chosen a11y font: the data-font block below
+ * overrides --font-display too, and still wins on source order. */
+.spot-surface h1,
+.spot-surface h2,
+.spot-surface h3,
+.spot-surface .font-display {
+  letter-spacing: -0.01em;
 }
 
 :root[data-font="atkinson"] {

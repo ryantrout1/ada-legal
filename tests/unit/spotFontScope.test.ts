@@ -29,11 +29,15 @@ const SPOT_RULE = ':root:has(.spot-surface)';
 const A11Y_FONTS = ['atkinson', 'opendyslexic', 'lexend'] as const;
 
 describe('Spot font scope', () => {
-  it('scopes Manrope to the Spot surface', () => {
+  it.each(['--font-body', '--font-display'])('scopes %s to Manrope on the Spot surface', (prop) => {
     const i = css.indexOf(SPOT_RULE);
     expect(i, `${SPOT_RULE} missing from app.css`).toBeGreaterThan(-1);
     const block = css.slice(i, css.indexOf('}', i));
-    expect(block).toContain('--font-body');
+    // --font-display too: adalegallink.com's live landing is Manrope 800 and
+    // never uses Fraunces (the base h1..h6 Fraunces rule is overridden inline
+    // on every section). Leaving the display face as the serif is what made
+    // /spot read as an editorial page instead of the consumer site.
+    expect(block).toContain(prop);
     expect(block).toContain('Manrope');
   });
 
@@ -49,6 +53,11 @@ describe('Spot font scope', () => {
     expect(fontAt, `data-font="${font}" rule missing`).toBeGreaterThan(-1);
     // Equal specificity (0,2,0) — later declaration wins.
     expect(spotAt).toBeLessThan(fontAt);
+    // The a11y block must override BOTH faces, or Spot would keep Manrope for
+    // headings while the body switched to the user's font.
+    const block = css.slice(fontAt, css.indexOf('}', fontAt));
+    expect(block).toContain('--font-body');
+    expect(block).toContain('--font-display');
   });
 
   it('does not import the consumer site\'s AA-level accent', () => {
