@@ -10,17 +10,40 @@ const NOW = Date.parse('2026-06-26T12:00:00Z');
 
 describe('priorityForSla', () => {
   it('flags an overdue SLA as high', () => {
-    expect(priorityForSla(new Date(NOW - H).toISOString(), NOW)).toBe('high');
+    expect(priorityForSla(new Date(NOW - H).toISOString(), 'new', NOW)).toBe('high');
   });
   it('flags a due-within-6h SLA as medium', () => {
-    expect(priorityForSla(new Date(NOW + 3 * H).toISOString(), NOW)).toBe('medium');
+    expect(priorityForSla(new Date(NOW + 3 * H).toISOString(), 'new', NOW)).toBe('medium');
   });
   it('leaves a far-off SLA unflagged', () => {
-    expect(priorityForSla(new Date(NOW + 48 * H).toISOString(), NOW)).toBe('none');
+    expect(priorityForSla(new Date(NOW + 48 * H).toISOString(), 'new', NOW)).toBe('none');
   });
   it('returns none for a missing or unparseable due date', () => {
-    expect(priorityForSla(null, NOW)).toBe('none');
-    expect(priorityForSla('not-a-date', NOW)).toBe('none');
+    expect(priorityForSla(null, 'new', NOW)).toBe('none');
+    expect(priorityForSla('not-a-date', 'new', NOW)).toBe('none');
+  });
+
+  // The clock has no stop button: cases.contacted_at is declared but never
+  // written, so a due date alone would flag every accepted matter as overdue
+  // to make first contact, forever. Accepting is the only signal we have that
+  // someone picked the case up.
+  it('does not flag an accepted case, however far past the due date', () => {
+    const longOverdue = new Date(NOW - 20 * 24 * H).toISOString();
+    for (const status of ['investigating', 'demand_sent', 'negotiating'] as const) {
+      expect(priorityForSla(longOverdue, status, NOW)).toBe('none');
+    }
+  });
+
+  it('does not flag a case that is already finished', () => {
+    const longOverdue = new Date(NOW - 20 * 24 * H).toISOString();
+    for (const status of ['resolved', 'declined', 'reclaimed', 'closed'] as const) {
+      expect(priorityForSla(longOverdue, status, NOW)).toBe('none');
+    }
+  });
+
+  it('still flags an un-accepted case that is overdue', () => {
+    // The guard must not swallow the case the SLA actually exists for.
+    expect(priorityForSla(new Date(NOW - 20 * 24 * H).toISOString(), 'new', NOW)).toBe('high');
   });
 });
 

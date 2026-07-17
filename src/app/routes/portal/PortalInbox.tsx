@@ -375,7 +375,7 @@ function ReferralRow({
   onAccept: () => void;
   onDecline: () => void;
 }) {
-  const priority = priorityForSla(c.first_contact_due);
+  const priority = priorityForSla(c.first_contact_due, c.status);
   const ageSource = c.routed_at ?? c.created_at;
   const summary = c.case_name ?? 'Open to view the full intake.';
   return (

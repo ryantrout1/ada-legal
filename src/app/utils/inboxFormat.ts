@@ -10,11 +10,30 @@ const H = 3600_000;
 
 export type InboxPriority = 'high' | 'medium' | 'none';
 
-/** Priority from the first-contact SLA. Overdue → high, due within 6h → medium. */
+/**
+ * Priority from the first-contact SLA. Overdue → high, due within 6h → medium.
+ *
+ * Only ever flags a case still awaiting the firm's decision. `status` is
+ * required for a reason: cases.contacted_at is declared but has no writer and
+ * no reader anywhere in the codebase, so the SLA clock has no stop button —
+ * judged on the due date alone, every routed case reads "overdue to make first
+ * contact" forever, including one where the attorney has already sent a demand
+ * letter. Accepting a case is the only signal we actually have that someone
+ * picked it up, so acceptance clears the flag. This mirrors the proxy
+ * cases/agenda.ts:160 already uses (status 'new' → check the due date; past
+ * that → staleness on last activity).
+ *
+ * Passing status is a required argument rather than an optional one so a new
+ * caller has to decide, instead of silently re-introducing the bug this
+ * replaced. When contacted_at grows a real writer, this becomes a genuine
+ * "contacted?" check and the proxy goes away.
+ */
 export function priorityForSla(
   firstContactDue: string | null,
+  status: string,
   now: number = Date.now(),
 ): InboxPriority {
+  if (status !== 'new') return 'none';
   if (!firstContactDue) return 'none';
   const due = Date.parse(firstContactDue);
   if (Number.isNaN(due)) return 'none';

@@ -15,8 +15,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Scale, Clock, User } from 'lucide-react';
-import { relativeAge, priorityForSla, type InboxPriority } from '../../utils/inboxFormat.js';
+import { Scale, User } from 'lucide-react';
+import { relativeAge } from '../../utils/inboxFormat.js';
 import { useAnnounce } from '../../portal/announcer.js';
 import {
   fetchPortalQueue,
@@ -307,18 +307,6 @@ export default function PortalBoard() {
   );
 }
 
-const DUE_CLASS: Record<InboxPriority, string> = {
-  high: 'text-danger-500',
-  medium: 'text-ink-700',
-  none: 'text-ink-500',
-};
-
-function formatDue(iso: string | null): string | null {
-  if (!iso) return null;
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? null : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
 function BoardCard({
   row,
   busy,
@@ -329,8 +317,6 @@ function BoardCard({
   onMove: (transition: CaseTransition) => void;
 }) {
   const options = moveOptions(row.status as CaseStatus);
-  const due = formatDue(row.first_contact_due);
-  const priority = priorityForSla(row.first_contact_due);
   return (
     <li
       draggable={options.length > 0}
@@ -384,14 +370,16 @@ function BoardCard({
         )}
       </div>
 
-      {due && (
-        <div className="mt-2.5 pt-2.5 border-t border-surface-200">
-          <span className={`inline-flex items-center gap-1 text-xs font-medium ${DUE_CLASS[priority]}`}>
-            <Clock size={12} aria-hidden="true" />
-            Contact · {due}
-          </span>
-        </div>
-      )}
+      {/*
+        No first-contact SLA badge here. BOARD_VIEW_COLUMNS drops 'new', so
+        every card on this board is a case the firm already accepted — the
+        first-contact clock is spent by definition. It used to render the due
+        date against priorityForSla with no status check, which meant an
+        accepted matter (up to and including one in demand_sent) showed a red
+        "Contact · overdue" that could never clear, because cases.contacted_at
+        has no writer to clear it with. The stage column and the age in the
+        header carry the real signal until the contact loop is built.
+      */}
 
       {options.length > 0 && (
         <details className="mt-2 group">
