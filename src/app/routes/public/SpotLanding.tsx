@@ -14,8 +14,11 @@ import SpotProgressPanel from './spot/SpotProgressPanel';
 import SpotCheckout from './spot/SpotCheckout';
 import SpotUpload from './spot/SpotUpload';
 import SpotReportView from './spot/SpotReportView';
+import SpotIntro from './spot/SpotIntro';
 import { downscalePhoto } from '@/app/utils/downscalePhoto';
 import type { SpotReportContent } from '@/lib/spot/reportSchema';
+import { SPOT_DEFAULT_MAX_PHOTOS, SPOT_DEFAULT_PRICE_USD } from '@/lib/spot/spotOffer';
+import { SPOT_PHOTO_RETENTION_DAYS } from '@/lib/spot/retention';
 
 const MAX_PHOTOS = 1;
 
@@ -66,8 +69,8 @@ function fileToDataUrl(file: Blob): Promise<string> {
 }
 
 function UpsellCard({ upsell, onStart }: { upsell?: SpotUpsell; onStart: () => void }) {
-  const price = upsell?.price_usd ?? 79;
-  const maxPhotos = upsell?.max_photos ?? 10;
+  const price = upsell?.price_usd ?? SPOT_DEFAULT_PRICE_USD;
+  const maxPhotos = upsell?.max_photos ?? SPOT_DEFAULT_MAX_PHOTOS;
   return (
     <section className="mt-6 rounded-lg border-2 border-accent-500 bg-accent-50 p-5" aria-labelledby="spot-cta-h">
       <h2 id="spot-cta-h" className="font-display text-xl text-ink-900">
@@ -161,10 +164,15 @@ export default function SpotLanding() {
     <div>
       <div className="mx-auto max-w-2xl px-5 sm:px-8 py-10">
         <header className="mb-6">
-          <h1 className="font-display text-3xl text-ink-900">Spot</h1>
-          <p className="mt-2 text-ink-700">
-            A quick spot-check — see what a visitor with a disability might run into at your
-            entrance, free, from a single photo.
+          <p className="font-display text-sm uppercase tracking-wide text-accent-600">
+            Spot — from ADA Legal Link
+          </p>
+          <h1 className="mt-2 font-display text-3xl text-ink-900">
+            See your entrance the way a customer with a disability does.
+          </h1>
+          <p className="mt-3 text-lg text-ink-700">
+            Take one photo. In about a minute we’ll tell you what a wheelchair user, a person with
+            low vision, or someone using a walker might run into — free.
           </p>
         </header>
 
@@ -180,6 +188,7 @@ export default function SpotLanding() {
         ) : (
           <>
             {!showResult ? (
+              <>
               <div className="space-y-4">
                 <label
                   htmlFor="spot-photo-input"
@@ -200,7 +209,10 @@ export default function SpotLanding() {
                     e.target.value = '';
                   }}
                 />
-                <p className="text-sm text-ink-500">One photo — a quick spot-check.</p>
+                <p className="text-sm text-ink-500">
+                  One photo — a quick spot-check. No account, no sales call. Photos auto-delete
+                  after {SPOT_PHOTO_RETENTION_DAYS} days.
+                </p>
 
                 {previews.length > 0 ? (
                   <ul className="grid grid-cols-2 gap-3">
@@ -241,6 +253,11 @@ export default function SpotLanding() {
                   </p>
                 ) : null}
               </div>
+              {/* The pitch is for the person who scrolls instead of shooting.
+                  While a read is in flight the progress panel owns the page —
+                  marketing under a working spinner is noise. */}
+              {!analyzing ? <SpotIntro /> : null}
+              </>
             ) : null}
 
             {showResult && state.view ? (
