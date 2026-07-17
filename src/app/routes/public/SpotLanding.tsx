@@ -7,7 +7,7 @@
  * admin enables it. AAA: 44px targets, visible focus, keyboard, CSS tokens.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSpotCapture, type SpotUpsell } from './spot/useSpotCapture';
 import SpotResultView from './spot/SpotResultView';
 import SpotProgressPanel from './spot/SpotProgressPanel';
@@ -128,6 +128,28 @@ export default function SpotLanding() {
   const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
   useEffect(() => () => previews.forEach((u) => URL.revokeObjectURL(u)), [previews]);
 
+  /**
+   * Focus follows the uploader/CTA swap.
+   *
+   * Picking a photo unmounts the file input — which is exactly where focus is
+   * sitting, since the OS picker returns it there. Removing a photo unmounts
+   * the CTA the same way. Either way focus would drop to <body>, stranding
+   * anyone on a screen reader, switch control, sip-and-puff or eye-gaze with
+   * no place in the document. So focus moves to whichever control replaced
+   * the one that vanished: the CTA after a pick, the uploader after a remove.
+   * Only on an actual transition — never mid-analysis, never on first paint.
+   */
+  const screenRef = useRef<HTMLButtonElement>(null);
+  const uploadRef = useRef<HTMLInputElement>(null);
+  const hadFiles = useRef(false);
+  useEffect(() => {
+    const hasFiles = files.length > 0;
+    if (hasFiles !== hadFiles.current) {
+      (hasFiles ? screenRef : uploadRef).current?.focus();
+    }
+    hadFiles.current = hasFiles;
+  }, [files.length]);
+
   const addFiles = (list: FileList | null) => {
     if (!list) return;
     setFiles((prev) => [...prev, ...Array.from(list)].slice(0, MAX_PHOTOS));
@@ -190,29 +212,39 @@ export default function SpotLanding() {
             {!showResult ? (
               <>
               <div className="space-y-4">
-                <label
-                  htmlFor="spot-photo-input"
-                  className="block w-full min-h-[44px] cursor-pointer rounded-md border-2 border-accent-500 bg-accent-50 px-4 py-3 text-center font-display text-lg text-accent-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-accent-500 focus-within:ring-offset-2 focus-within:ring-offset-surface-50"
-                >
-                  Take or upload a photo
-                </label>
-                <input
-                  id="spot-photo-input"
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  multiple
-                  className="sr-only"
-                  disabled={files.length >= MAX_PHOTOS || analyzing}
-                  onChange={(e) => {
-                    addFiles(e.target.files);
-                    e.target.value = '';
-                  }}
-                />
-                <p className="text-sm text-ink-500">
-                  One photo — a quick spot-check. No account, no sales call. Photos auto-delete
-                  after {SPOT_PHOTO_RETENTION_DAYS} days.
-                </p>
+                {/* Before a photo: the uploader is the only action. After one
+                    is picked MAX_PHOTOS is reached and the input goes
+                    disabled — leaving the label visible would render a
+                    button that looks live and does nothing. Remove brings
+                    it back. */}
+                {files.length === 0 ? (
+                  <>
+                    <label
+                      htmlFor="spot-photo-input"
+                      className="block w-full min-h-[44px] cursor-pointer rounded-md border-2 border-accent-500 bg-accent-50 px-4 py-3 text-center font-display text-lg text-accent-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-accent-500 focus-within:ring-offset-2 focus-within:ring-offset-surface-50"
+                    >
+                      Take or upload a photo
+                    </label>
+                    <input
+                      id="spot-photo-input"
+                      ref={uploadRef}
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      multiple
+                      className="sr-only"
+                      disabled={analyzing}
+                      onChange={(e) => {
+                        addFiles(e.target.files);
+                        e.target.value = '';
+                      }}
+                    />
+                    <p className="text-sm text-ink-500">
+                      One photo — a quick spot-check. No account, no sales call. Photos auto-delete
+                      after {SPOT_PHOTO_RETENTION_DAYS} days.
+                    </p>
+                  </>
+                ) : null}
 
                 {previews.length > 0 ? (
                   <ul className="grid grid-cols-2 gap-3">
@@ -231,14 +263,19 @@ export default function SpotLanding() {
                   </ul>
                 ) : null}
 
-                <button
-                  type="button"
-                  disabled={files.length === 0 || analyzing}
-                  onClick={() => run(files)}
-                  className="min-h-[44px] w-full rounded-md bg-accent-500 px-5 py-3 font-display text-lg text-surface-50 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
-                >
-                  {analyzing ? 'Reading your photos…' : 'Screen my photos'}
-                </button>
+                {/* Only appears once there's something to screen — a
+                    permanently disabled CTA under the uploader is noise. */}
+                {files.length > 0 ? (
+                  <button
+                    type="button"
+                    ref={screenRef}
+                    disabled={analyzing}
+                    onClick={() => run(files)}
+                    className="min-h-[44px] w-full rounded-md bg-accent-500 px-5 py-3 font-display text-lg text-surface-50 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+                  >
+                    {analyzing ? 'Reading your photos…' : 'Screen my photos'}
+                  </button>
+                ) : null}
 
                 {analyzing ? <SpotReadProgress /> : null}
                 {analyzing && state.progress ? (
