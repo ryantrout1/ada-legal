@@ -32,15 +32,52 @@ import { SPOT_DEFAULT_MAX_PHOTOS, SPOT_DEFAULT_PRICE_USD } from '@/lib/spot/spot
 const STEPS: Array<{ title: string; body: string }> = [
   {
     title: 'Take one photo.',
-    body: 'Stand back far enough to get the door, the threshold, and the path up to it.',
+    body: 'Point it at the spot you’re wondering about, and stand back far enough to show the space around it — a lot of what matters is the room to approach, reach and turn.',
   },
   {
     title: 'Get a free read.',
-    body: 'We name what stands out — a step at the door, a narrow approach, a hard-to-grab handle — and how serious each one looks.',
+    body: 'We name what stands out — a step at the door, a ramp pitched too steep, a grab bar on the wrong wall, a counter too high to reach sitting down — and how serious each one looks.',
   },
   {
     title: 'Go deeper if you want.',
-    body: 'Add photos from a few more angles and we build the full report: what each finding means, which rule it points to, and plain-language guidance on what to do about it.',
+    body: 'Add photos of that same spot from a few more angles and we build the full report: what each finding means, which rule it points to, and plain-language guidance on what to do about it.',
+  },
+];
+
+/**
+ * What Spot can be pointed at.
+ *
+ * Every item here maps to a `photo_assessable` fixture in src/lib/adaCatalog.ts
+ * — the same catalog renderCatalogForPrompt() sends the analyzer. Nothing is
+ * listed that the analyzer isn’t actually given rules for. Grouped by the shape
+ * of a visit rather than by ADA chapter, because a business owner thinks
+ * “getting in”, not “Chapter 4”.
+ *
+ * The point of the section: the product is not an entrance checker. A barrier is
+ * wherever someone hits it — the lot, the ramp, the restroom, the table height.
+ * If this list grows past what the catalog covers, it becomes a false promise on
+ * the one page whose whole pitch is honesty.
+ */
+const CAN_READ: Array<{ group: string; items: string }> = [
+  {
+    group: 'Getting there',
+    items: 'Parking spaces and access aisles, passenger loading zones, curb ramps, walkways and routes.',
+  },
+  {
+    group: 'Getting in',
+    items: 'Doors, thresholds and hardware, ramps and landings, handrails, stairs, elevators and lifts.',
+  },
+  {
+    group: 'Moving around',
+    items: 'Room to turn, clear floor space, changes in level, reach ranges, signs.',
+  },
+  {
+    group: 'Using the place',
+    items: 'Restrooms and grab bars, sinks, drinking fountains, service counters, dining and work surfaces, benches, fitting rooms.',
+  },
+  {
+    group: 'And the rest',
+    items: 'Guest rooms, kitchens, laundry, pools and spas, play areas, exercise equipment, assembly seating.',
   },
 ];
 
@@ -75,6 +112,29 @@ export default function SpotIntro() {
         </ol>
       </section>
 
+      <section aria-labelledby="spot-scope-h">
+        <h2 id="spot-scope-h" className="font-display text-2xl text-ink-900">
+          What you can point it at
+        </h2>
+        <p className="mt-3 text-ink-700">
+          A barrier is wherever someone hits it — not just the front door. Spot reads your photo
+          against the 2010 ADA Standards and only speaks to what’s actually in frame. Places
+          people start:
+        </p>
+        <dl className="mt-4 space-y-3">
+          {CAN_READ.map((row) => (
+            <div key={row.group} className="rounded-lg border border-surface-200 bg-surface-100 p-4">
+              <dt className="font-display text-lg text-ink-900">{row.group}</dt>
+              <dd className="mt-1 text-ink-700">{row.items}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-3 text-sm text-ink-500">
+          Not sure yours is on the list? Photograph it anyway. Spot won’t flag something that
+          isn’t in the picture.
+        </p>
+      </section>
+
       <section aria-labelledby="spot-tiers-h">
         <h2 id="spot-tiers-h" className="font-display text-2xl text-ink-900">
           What you get
@@ -92,7 +152,7 @@ export default function SpotIntro() {
               Full report — up to {SPOT_DEFAULT_MAX_PHOTOS} angles, ${SPOT_DEFAULT_PRICE_USD}
             </h3>
             <p className="mt-2 text-ink-700">
-              One entrance, photographed from several sides and read together. What each finding
+              One spot, photographed from several sides and read together. What each finding
               is, why it matters, and how it’s usually fixed. Yours to keep and hand to a
               contractor.
             </p>

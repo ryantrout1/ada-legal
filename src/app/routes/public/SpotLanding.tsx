@@ -190,11 +190,12 @@ export default function SpotLanding() {
             Spot — from ADA Legal Link
           </p>
           <h1 className="mt-2 font-display text-3xl text-ink-900">
-            See your entrance the way a customer with a disability does.
+            See your business the way a customer with a disability does.
           </h1>
           <p className="mt-3 text-lg text-ink-700">
-            Take one photo. In about a minute we’ll tell you what a wheelchair user, a person with
-            low vision, or someone using a walker might run into — free.
+            Point your camera at whatever you’re unsure about — the front door, the ramp, the
+            parking space, the restroom, the counter. One photo. In about a minute we’ll tell you
+            what someone with a disability might run into there — free.
           </p>
         </header>
 
