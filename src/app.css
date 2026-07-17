@@ -427,26 +427,34 @@ body {
  */
 :root:has(.spot-surface) {
   --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* De-serif Spot, same move as .lawyer-workspace above and for the same reason.
+/* De-serif Spot's own copy — same move as .lawyer-workspace above.
+ *
  * The consumer landing people scan into (B44 components/landing-v2/*) sets its
  * headline inline at Manrope 800 / -0.01em / 1.1 and never touches Fraunces —
  * the base `h1..h6 { Fraunces }` rule in B44's Layout.jsx is overridden on
- * every live landing section, so reading that rule alone is misleading. On
- * adalegallink.com the serif survives ONLY in the logo wordmark, which lives
- * in the chrome outside .spot-surface and is therefore untouched here.
+ * every live landing section, so reading that rule alone is misleading. The
+ * serif survives in the logo wordmark, which must match the homepage exactly.
  *
- * Repointing --font-display (rather than restyling each heading) carries both
- * the `h1..h6` rule and the `.font-display` utility on the eyebrow and
- * buttons in one move. Weights are set per element with Tailwind utilities,
- * so nothing here fights a user's chosen a11y font: the data-font block below
- * overrides --font-display too, and still wins on source order. */
+ * CRITICAL — do NOT do this by adding --font-display to the :root:has() block
+ * above. :root is the whole document, so repointing the display token there
+ * rides the cascade straight into the chrome: the header/footer wordmark
+ * carries the `font-display` utility, and doing exactly that turned the
+ * wordmark sans on /spot while the homepage stayed serif. The nav and footer
+ * escaped only because they sit on `font-chrome`. Scope the SELECTOR to
+ * .spot-surface and set `font-family` on descendants — a real declaration, not
+ * an inherited token — so nothing leaks past the surface.
+ *
+ * Reading var(--font-body) rather than naming Manrope is what preserves the
+ * a11y font: a user's Atkinson / OpenDyslexic / Lexend is authored on :root in
+ * the block below, overrides the :has() rule on source order, and these
+ * declarations resolve to whatever it lands on. Pinned by spotFontScope. */
 .spot-surface h1,
 .spot-surface h2,
 .spot-surface h3,
 .spot-surface .font-display {
+  font-family: var(--font-body);
   letter-spacing: -0.01em;
 }
 

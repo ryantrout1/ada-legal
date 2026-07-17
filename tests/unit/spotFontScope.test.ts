@@ -29,16 +29,31 @@ const SPOT_RULE = ':root:has(.spot-surface)';
 const A11Y_FONTS = ['atkinson', 'opendyslexic', 'lexend'] as const;
 
 describe('Spot font scope', () => {
-  it.each(['--font-body', '--font-display'])('scopes %s to Manrope on the Spot surface', (prop) => {
+  it('scopes the body font to Manrope on the Spot surface', () => {
     const i = css.indexOf(SPOT_RULE);
     expect(i, `${SPOT_RULE} missing from app.css`).toBeGreaterThan(-1);
     const block = css.slice(i, css.indexOf('}', i));
-    // --font-display too: adalegallink.com's live landing is Manrope 800 and
-    // never uses Fraunces (the base h1..h6 Fraunces rule is overridden inline
-    // on every section). Leaving the display face as the serif is what made
-    // /spot read as an editorial page instead of the consumer site.
-    expect(block).toContain(prop);
+    expect(block).toContain('--font-body');
     expect(block).toContain('Manrope');
+  });
+
+  it('never repoints --font-display at :root — that leaks into the chrome wordmark', () => {
+    // Regression: adding --font-display here turned the header/footer wordmark
+    // sans on /spot while the homepage stayed serif. :root is the whole
+    // document, so the token rides the cascade past .spot-surface into the
+    // chrome, where the wordmark carries the `font-display` utility. The nav
+    // and footer escaped only because they sit on `font-chrome`.
+    const i = css.indexOf(SPOT_RULE);
+    const block = css.slice(i, css.indexOf('}', i));
+    expect(block).not.toContain('--font-display');
+  });
+
+  it('de-serifs Spot headings via font-family: var(--font-body) on descendants', () => {
+    // A real declaration scoped to the surface — not an inherited token — so
+    // it cannot escape .spot-surface. Reading var(--font-body) rather than
+    // naming Manrope is what lets a user's a11y font still win.
+    const rule = /\.spot-surface \.font-display\s*\{[^}]*font-family:\s*var\(--font-body\)/;
+    expect(rule.test(css)).toBe(true);
   });
 
   it('matches on :root, not a descendant — a descendant would beat the a11y font', () => {
@@ -53,11 +68,10 @@ describe('Spot font scope', () => {
     expect(fontAt, `data-font="${font}" rule missing`).toBeGreaterThan(-1);
     // Equal specificity (0,2,0) — later declaration wins.
     expect(spotAt).toBeLessThan(fontAt);
-    // The a11y block must override BOTH faces, or Spot would keep Manrope for
-    // headings while the body switched to the user's font.
+    // Spot's headings read var(--font-body), so overriding --font-body is what
+    // carries a user's font to the headings too.
     const block = css.slice(fontAt, css.indexOf('}', fontAt));
     expect(block).toContain('--font-body');
-    expect(block).toContain('--font-display');
   });
 
   it('does not import the consumer site\'s AA-level accent', () => {
