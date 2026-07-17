@@ -1,19 +1,27 @@
 /**
  * SpotIntro — the page under the camera on /spot.
  *
- * Most people reach /spot by scanning a QR card, cold, standing outside their
- * own business. They arrive knowing nothing: not who we are, not why we want a
- * photo, not that a paid tier exists, not what happens to the image.
+ * Nearly everyone reaches /spot by scanning the QR on the card Gina designed —
+ * standing outside their own business, holding a black-and-yellow notice that
+ * reads POSSIBLE ADA VIOLATION in 100pt type and mentions "risk of future ADA
+ * claims". (adalegallink.com/spot bridges to ada.adalegallink.com/spot via
+ * B44's main.jsx apex hop.) They do not arrive curious. They arrive alarmed,
+ * knowing nothing about us: not why we want a photo, not that a paid tier
+ * exists, not what happens to the image.
  *
- * This block answers that in the order a stranger asks — how it works → what
- * you can point it at → free vs paid → what it isn't → who's asking → your
- * photo. It sits BELOW the camera on purpose: someone who just wants to shoot
+ * That arrival governs the order: about the card → how it works → what you can
+ * point it at → free vs paid → what it isn't → who's asking → your photo. The
+ * card question comes first because it is the only one they actually have.
+ * The block sits BELOW the camera on purpose: someone who just wants to shoot
  * shouldn't scroll past a pitch to reach the button. This is for the scroller.
  *
  * ── Voice ──────────────────────────────────────────────────────────────────
  * Spot's belief: nobody meant to build a barrier; it's there anyway. That
  * split — intent from effect — is the whole point of the ADA and the only way
- * an owner hears this without going defensive. So Spot reports the world, not
+ * an owner hears this without going defensive. The spine is Gina's own line
+ * off the card ("ACCESS IS A RIGHT. NOT A SUGGESTION."), which is Ada's
+ * identity line ("Access is a right, not a favor") arrived at independently —
+ * so Spot inherits it rather than inventing a third version. So Spot reports the world, not
  * the person ("there's a lip at the door", never "you failed to"), names the
  * effect ("someone in a chair stops here"), and says where its sight ends
  * flatly, without apology.
@@ -71,6 +79,38 @@ const LIMITS: string[] = [
 export default function SpotIntro() {
   return (
     <div className="mt-10 space-y-8">
+      {/* First, because it is the only question an alarmed card-holder has.
+          Gina's card front says POSSIBLE ADA VIOLATION in 100pt; the back says
+          THIS IS NOT A LAWSUIT and promises "Access for All starts here" —
+          this page is "here", so it has to catch what the card throws. Confirm
+          her de-escalation rather than leave them wondering, and claim nothing
+          past it: she hedges every assertion (possible / may not / likely /
+          potential) and we hold the same line. */}
+      <section aria-labelledby="spot-card-h">
+        <h2 id="spot-card-h" className="font-display text-2xl font-extrabold text-ink-900">
+          About that card
+        </h2>
+        <p className="mt-3 text-ink-700">
+          The card’s right — this isn’t a lawsuit. It isn’t a legal claim, it isn’t a demand,
+          and nobody has decided anything. Someone came here, ran into something, and left you a
+          card instead of leaving quietly.
+        </p>
+        <p className="mt-3 text-ink-700">
+          It doesn’t tell you what they hit, though, or how much it matters. That’s what the
+          photo is for.
+        </p>
+        <p className="mt-3 text-sm text-ink-500">
+          Ran into a barrier here yourself? Spot is built for the person who owns the place —{' '}
+          <a
+            href="/chat"
+            className="text-accent-600 underline underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+          >
+            talk to Ada instead
+          </a>
+          . She’s the side of this built for you.
+        </p>
+      </section>
+
       <section aria-labelledby="spot-how-h">
         <h2 id="spot-how-h" className="font-display text-2xl font-extrabold text-ink-900">
           How this works
@@ -163,10 +203,10 @@ export default function SpotIntro() {
         </h2>
         <p className="mt-3 text-ink-700">
           ADA Legal Link. We spend our days on the other side of this — with the people who turned
-          around and left, and with the attorneys they eventually called. Almost none of it is
-          malice. It’s a step nobody measured. A door nobody thought about. Nobody meant to build a
-          barrier; it’s there anyway. Easier to find it yourself, now, than to hear about it later
-          from someone else.
+          around and left, and with the attorneys they eventually called. Access is a right, not a
+          suggestion. And almost none of what we see is malice: it’s a step nobody measured, a
+          door nobody thought about. Nobody meant to build a barrier; it’s there anyway. Easier to
+          find it yourself, now, than to hear about it later from someone else.
         </p>
       </section>
 

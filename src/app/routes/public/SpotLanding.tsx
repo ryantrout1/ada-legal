@@ -190,12 +190,14 @@ export default function SpotLanding() {
             Spot — from ADA Legal Link
           </p>
           <h1 className="mt-2 font-display text-3xl font-extrabold leading-tight text-ink-900">
-            If someone can’t get in, you’ll probably never hear about it.
+            Someone told you.
           </h1>
-          <p className="mt-3 text-lg text-ink-900">They don’t complain. They just leave.</p>
+          <p className="mt-3 text-lg text-ink-900">
+            Most people don’t. They can’t get in, they turn around, and you never find out.
+          </p>
           <p className="mt-3 text-lg text-ink-700">
-            Take one photo — the door, the ramp, the restroom, the counter — and in about a
-            minute we’ll tell you what they’d hit. Free.
+            A card is the cheapest way you’ll ever hear about it. Let’s find out what they saw —
+            one photo, about a minute, free.
           </p>
         </header>
 
