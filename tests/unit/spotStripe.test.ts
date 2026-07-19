@@ -7,7 +7,7 @@ describe('buildSpotCheckoutParams', () => {
 
   it('is a one-time, on-page embedded payment (no redirect)', () => {
     expect(params.get('mode')).toBe('payment');
-    expect(params.get('ui_mode')).toBe('embedded');
+    expect(params.get('ui_mode')).toBe('embedded_page');
     expect(params.get('redirect_on_completion')).toBe('never');
   });
 

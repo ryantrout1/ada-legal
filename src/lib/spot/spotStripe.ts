@@ -34,14 +34,14 @@ export interface ResolvedSpotCheckout {
 
 /**
  * Build the x-www-form-urlencoded params for an embedded, one-time Checkout
- * Session. `ui_mode=embedded` + `redirect_on_completion=never` keeps the whole
+ * Session. `ui_mode=embedded_page` + `redirect_on_completion=never` keeps the whole
  * flow on /spot (client mounts the form, then polls session-status) — no
  * external URLs. Pure + testable.
  */
 export function buildSpotCheckoutParams(input: SpotCheckoutInput): URLSearchParams {
   const p = new URLSearchParams();
   p.set('mode', 'payment');
-  p.set('ui_mode', 'embedded');
+  p.set('ui_mode', 'embedded_page');
   p.set('redirect_on_completion', 'never');
   p.set('line_items[0][price_data][currency]', 'usd');
   p.set('line_items[0][price_data][product_data][name]', 'Spot accessibility report');
