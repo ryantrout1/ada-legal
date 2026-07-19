@@ -6,12 +6,20 @@
  * a session + report (seeding the HITL/readout surfaces), and returns the
  * rendered content so the landing can show it inline.
  *
- * Gated by the `spot_test_payment` admin-blob flag (default OFF, flipped by a
- * Neon upsert) — with it off, this is a 403 no-op, so no one gets a free report.
- * The landing only shows the button under ?test=1; this flag is the real gate.
- * Flip it back off when done. Ref: Ryan test-drive request.
+ * TWO gates, both required:
+ *   1. the `spot_test_payment` admin-blob flag (default OFF, flipped by a Neon
+ *      upsert), and
+ *   2. a shared secret in SPOT_TEST_KEY that the caller must present (header
+ *      `x-spot-test-key` or body `testKey`).
+ * The flag alone is not a security boundary — this endpoint mints a free $79
+ * report and its path is visible in the public JS bundle, so a flag-only gate
+ * is world-open. The key lives only in the server env and the operator's
+ * private URL (?test=1&key=…); it is never shipped to the browser. With the key
+ * unset the endpoint is closed even if the flag is on (fail-safe).
+ * Ref: Ryan test-drive request.
  */
 
+import { timingSafeEqual } from 'node:crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv } from '../_shared.js';
@@ -25,6 +33,14 @@ export const config = { maxDuration: 300 };
 const MAX_TEST_PHOTOS = 10;
 const TEST_AMOUNT_CENTS = 7900;
 
+/** Constant-time string compare; false on any length/type mismatch (no timing oracle). */
+function timingSafeEqualStr(a: string, b: string): boolean {
+  const ab = Buffer.from(a, 'utf8');
+  const bb = Buffer.from(b, 'utf8');
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
   if (req.method !== 'POST') {
@@ -34,6 +50,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const clients = makeClientsFromEnv();
   if (!(await readSpotTestPayment(clients.db))) {
+    return res.status(403).json({ error: 'Test payments are not enabled.' });
+  }
+
+  // Second gate: a shared secret only the operator holds. The admin flag alone
+  // is not enough — this endpoint mints a free $79 report and its URL is
+  // visible in the public bundle, so a flag-only gate is world-open. The key
+  // lives ONLY in SPOT_TEST_KEY (server env) and in the operator's private
+  // URL; it is never shipped to the browser. Unset key => closed (fail-safe),
+  // so a missing env var can't silently leave the door open.
+  const expectedKey = process.env.SPOT_TEST_KEY ?? '';
+  const providedKey =
+    (typeof req.headers['x-spot-test-key'] === 'string' ? (req.headers['x-spot-test-key'] as string) : '') ||
+    (typeof req.body?.testKey === 'string' ? (req.body.testKey as string) : '');
+  if (!expectedKey || !timingSafeEqualStr(providedKey, expectedKey)) {
     return res.status(403).json({ error: 'Test payments are not enabled.' });
   }
 

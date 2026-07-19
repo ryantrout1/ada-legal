@@ -55,9 +55,20 @@ function SpotReadProgress() {
   );
 }
 
-/** Test-drive only (?test=1): reachable when the admin flips spot_test_payment. */
+/**
+ * Test-drive only. Reachable when the admin flips spot_test_payment AND the URL
+ * carries the operator secret (?test=1&key=…). The key is read from the URL and
+ * forwarded to /api/spot/simulate-payment, which enforces it server-side — it is
+ * never hardcoded here, so it never ships in the bundle. Without the key the
+ * button is hidden and the endpoint 403s, so a public visitor can't mint a free
+ * report even if they find the page.
+ */
+const TEST_KEY =
+  typeof window !== 'undefined' ? (new URLSearchParams(window.location.search).get('key') ?? '') : '';
 const IS_TEST_MODE =
-  typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('test') === '1';
+  typeof window !== 'undefined' &&
+  new URLSearchParams(window.location.search).get('test') === '1' &&
+  TEST_KEY.length > 0;
 
 function fileToDataUrl(file: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -109,8 +120,8 @@ export default function SpotLanding() {
       const photos = await Promise.all(files.map(async (f) => fileToDataUrl(await downscalePhoto(f))));
       const res = await fetch('/api/spot/simulate-payment', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ photos }),
+        headers: { 'Content-Type': 'application/json', 'x-spot-test-key': TEST_KEY },
+        body: JSON.stringify({ photos, testKey: TEST_KEY }),
       });
       if (!res.ok) {
         setTestError(res.status === 403 ? 'Test payments are not enabled.' : 'Report generation failed.');
