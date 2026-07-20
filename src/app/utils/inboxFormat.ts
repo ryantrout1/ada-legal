@@ -32,7 +32,12 @@ export function priorityForSla(
   firstContactDue: string | null,
   status: string,
   now: number = Date.now(),
+  contactedAt: string | null = null,
 ): InboxPriority {
+  // First contact logged satisfies the SLA outright — this is the real
+  // signal the 'new'-status proxy was standing in for. Once contacted_at is
+  // set, the flag clears regardless of status or due date.
+  if (contactedAt) return 'none';
   if (status !== 'new') return 'none';
   if (!firstContactDue) return 'none';
   const due = Date.parse(firstContactDue);

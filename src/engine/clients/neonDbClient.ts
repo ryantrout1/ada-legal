@@ -2381,6 +2381,7 @@ export class NeonDbClient implements DbClient {
         jurisdictionState: casesTable.jurisdictionState,
         routedAt: casesTable.routedAt,
         firstContactDue: casesTable.firstContactDue,
+        contactedAt: casesTable.contactedAt,
         createdAt: casesTable.createdAt,
         extractedFields: adaSessions.extractedFields,
         assignedLawyerId: casesTable.assignedLawyerId,
@@ -2438,6 +2439,7 @@ export class NeonDbClient implements DbClient {
         assignedLawyerName: r.assignedLawyerName ?? null,
         routedAt: iso(r.routedAt),
         firstContactDue: iso(r.firstContactDue),
+      contactedAt: iso(r.contactedAt),
         createdAt: iso(r.createdAt) ?? '',
       });
     }
@@ -2468,6 +2470,7 @@ export class NeonDbClient implements DbClient {
         consentToShare: casesTable.consentToShare,
         routedAt: casesTable.routedAt,
         firstContactDue: casesTable.firstContactDue,
+        contactedAt: casesTable.contactedAt,
         createdAt: casesTable.createdAt,
         solDate: casesTable.solDate,
         defendant: casesTable.defendant,
@@ -2531,6 +2534,7 @@ export class NeonDbClient implements DbClient {
       consentToShare: r.consentToShare,
       routedAt: iso(r.routedAt),
       firstContactDue: iso(r.firstContactDue),
+      contactedAt: iso(r.contactedAt),
       createdAt: iso(r.createdAt) ?? '',
       caseName: r.caseName ?? null,
       solDate: r.solDate == null ? null : String(r.solDate),
@@ -2696,6 +2700,50 @@ export class NeonDbClient implements DbClient {
       metadata: { solDate: opts.solDate },
     });
     return true;
+  }
+
+  async markCaseContacted(opts: {
+    caseId: string;
+    lawFirmId: string;
+  }): Promise<{ ok: boolean; contactedAt: string | null }> {
+    const existing = await this.db
+      .select({
+        id: casesTable.id,
+        consentToShare: casesTable.consentToShare,
+        contactedAt: casesTable.contactedAt,
+      })
+      .from(casesTable)
+      .where(and(eq(casesTable.id, opts.caseId), eq(casesTable.firmId, opts.lawFirmId)))
+      .limit(1);
+    const row = existing[0];
+    // Firm-scoped + consent-gated, same boundary as every other case action.
+    if (!row || !row.consentToShare) return { ok: false, contactedAt: null };
+
+    // Write-once (self-attest, no un-mark): if already contacted, this is a
+    // no-op that returns the existing stamp and logs nothing. Only the first
+    // call stamps and writes the activity.
+    if (row.contactedAt) {
+      const at = row.contactedAt;
+      return {
+        ok: true,
+        contactedAt: at instanceof Date ? at.toISOString() : String(at),
+      };
+    }
+
+    const now = new Date();
+    await this.db
+      .update(casesTable)
+      .set({ contactedAt: now })
+      .where(eq(casesTable.id, opts.caseId));
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'CONTACT_LOGGED',
+      summary: 'First contact logged with the claimant',
+      metadata: { contactedAt: now.toISOString() },
+    });
+    return { ok: true, contactedAt: now.toISOString() };
   }
 
   async setCaseDefendant(opts: {

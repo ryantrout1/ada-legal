@@ -218,6 +218,7 @@ export class InMemoryDbClient implements DbClient {
       jurisdictionState: string | null;
       routedAt: string | null;
       firstContactDue: string | null;
+      contactedAt: string | null;
       solDate: string | null;
       defendant: CaseDefendant | null;
     }
@@ -1426,6 +1427,7 @@ export class InMemoryDbClient implements DbClient {
       jurisdictionState: opts.jurisdictionState,
       routedAt: opts.routedAt,
       firstContactDue: opts.firstContactDue,
+      contactedAt: null,
       solDate: null,
       defendant: null,
     });
@@ -1466,6 +1468,7 @@ export class InMemoryDbClient implements DbClient {
       jurisdictionState: opts.jurisdictionState ?? null,
       routedAt: null,
       firstContactDue: null,
+      contactedAt: null,
       solDate: null,
       defendant: opts.defendant ?? null,
     });
@@ -1605,6 +1608,7 @@ export class InMemoryDbClient implements DbClient {
         assignedLawyerName: owner?.name ?? null,
         routedAt: extras?.routedAt ?? null,
         firstContactDue: extras?.firstContactDue ?? null,
+        contactedAt: extras?.contactedAt ?? null,
         createdAt: c.createdAt,
       });
     }
@@ -1662,6 +1666,7 @@ export class InMemoryDbClient implements DbClient {
       consentToShare: c.consentToShare,
       routedAt: extras?.routedAt ?? null,
       firstContactDue: extras?.firstContactDue ?? null,
+      contactedAt: extras?.contactedAt ?? null,
       createdAt: c.createdAt,
       caseName: litig?.caseName ?? null,
       solDate: extras?.solDate ?? null,
@@ -1758,6 +1763,39 @@ export class InMemoryDbClient implements DbClient {
     return true;
   }
 
+  async markCaseContacted(opts: {
+    caseId: string;
+    lawFirmId: string;
+  }): Promise<{ ok: boolean; contactedAt: string | null }> {
+    const c = this.cases.find((x) => x.id === opts.caseId && x.firmId === opts.lawFirmId);
+    // Firm-scoped + consent-gated, same boundary as every other case action.
+    if (!c || !c.consentToShare) return { ok: false, contactedAt: null };
+    const extras = this.caseExtras.get(c.id);
+    // Write-once: an already-contacted case is a no-op that returns the
+    // existing stamp and logs nothing.
+    if (extras?.contactedAt) return { ok: true, contactedAt: extras.contactedAt };
+
+    const contactedAt = new Date().toISOString();
+    this.caseExtras.set(c.id, {
+      classificationTitle: extras?.classificationTitle ?? null,
+      jurisdictionState: extras?.jurisdictionState ?? null,
+      routedAt: extras?.routedAt ?? null,
+      firstContactDue: extras?.firstContactDue ?? null,
+      contactedAt,
+      solDate: extras?.solDate ?? null,
+      defendant: extras?.defendant ?? null,
+    });
+    this.caseActivity.push({
+      caseId: c.id,
+      actorType: 'user',
+      eventType: 'CONTACT_LOGGED',
+      summary: 'First contact logged with the claimant',
+      metadata: { contactedAt },
+      createdAt: new Date(0).toISOString(),
+    });
+    return { ok: true, contactedAt };
+  }
+
   async setCaseSolDate(opts: {
     caseId: string;
     lawFirmId: string;
@@ -1771,6 +1809,7 @@ export class InMemoryDbClient implements DbClient {
       jurisdictionState: extras?.jurisdictionState ?? null,
       routedAt: extras?.routedAt ?? null,
       firstContactDue: extras?.firstContactDue ?? null,
+      contactedAt: extras?.contactedAt ?? null,
       solDate: opts.solDate,
       defendant: extras?.defendant ?? null,
     });
@@ -1800,6 +1839,7 @@ export class InMemoryDbClient implements DbClient {
       jurisdictionState: extras?.jurisdictionState ?? null,
       routedAt: extras?.routedAt ?? null,
       firstContactDue: extras?.firstContactDue ?? null,
+      contactedAt: extras?.contactedAt ?? null,
       solDate: extras?.solDate ?? null,
       defendant: opts.defendant,
     });
@@ -2061,6 +2101,7 @@ export class InMemoryDbClient implements DbClient {
       jurisdictionState: extras?.jurisdictionState ?? null,
       routedAt,
       firstContactDue,
+      contactedAt: extras?.contactedAt ?? null,
       solDate: extras?.solDate ?? null,
       defendant: extras?.defendant ?? null,
     });

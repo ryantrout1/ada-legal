@@ -724,6 +724,7 @@ export interface PortalCaseListRow {
   assignedLawyerName: string | null;
   routedAt: string | null;
   firstContactDue: string | null;
+  contactedAt: string | null;
   createdAt: string;
 }
 
@@ -822,6 +823,7 @@ export interface PortalCaseDetailFull {
   consentToShare: boolean;
   routedAt: string | null;
   firstContactDue: string | null;
+  contactedAt: string | null;
   createdAt: string;
   caseName: string | null;
   /** Attorney-set statute-of-limitations date (YYYY-MM-DD) or null. */
@@ -1376,6 +1378,18 @@ export interface DbClient {
     lawFirmId: string;
     solDate: string | null;
   }): Promise<boolean>;
+
+  /**
+   * Attorney self-attests first contact with the claimant. Firm-scoped +
+   * consent-gated. Write-once: an already-contacted case is a no-op that
+   * returns the existing stamp. Writes a CONTACT_LOGGED activity on the
+   * first call only. Returns { ok:false } when the case isn't the firm's
+   * or isn't consented.
+   */
+  markCaseContacted(opts: {
+    caseId: string;
+    lawFirmId: string;
+  }): Promise<{ ok: boolean; contactedAt: string | null }>;
 
   /**
    * Phase 5 §7.5: set (or clear, with null) the attorney-entered defendant
