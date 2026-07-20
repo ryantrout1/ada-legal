@@ -45,6 +45,20 @@ describe('priorityForSla', () => {
     // The guard must not swallow the case the SLA actually exists for.
     expect(priorityForSla(new Date(NOW - 20 * 24 * H).toISOString(), 'new', NOW)).toBe('high');
   });
+
+  // Once contact is logged, the SLA is satisfied — this is the real signal the
+  // 'new'-status proxy was standing in for. A contacted case never flags,
+  // even while still 'new' and past due.
+  it('does not flag a contacted case, even new and overdue', () => {
+    const overdue = new Date(NOW - 5 * H).toISOString();
+    const contactedAt = new Date(NOW - 2 * H).toISOString();
+    expect(priorityForSla(overdue, 'new', NOW, contactedAt)).toBe('none');
+  });
+
+  it('still flags a new, overdue, NOT-yet-contacted case', () => {
+    const overdue = new Date(NOW - 5 * H).toISOString();
+    expect(priorityForSla(overdue, 'new', NOW, null)).toBe('high');
+  });
 });
 
 describe('relativeAge', () => {
