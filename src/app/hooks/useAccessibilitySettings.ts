@@ -45,15 +45,17 @@ export type Spacing = 'tight' | 'default' | 'loose';
  * (message goes immediately, no recall). 5 / 8 / 10 are values in
  * seconds.
  *
- * Default is 8s. Picked because (a) 5s is too tight for the audience
- * (motor difficulties, cognitive load, distress sending — all benefit
- * from more time to catch a mistake) and (b) 10s+ starts feeling like
- * dead air to users who aren't using undo. 8s is the sweet spot for
- * this audience.
+ * Default is Off (per product decision 2026-07-21). The undo affordance
+ * remains available for anyone who turns it on (5 / 8 / 10s); those
+ * values still suit this audience — motor difficulties, cognitive load,
+ * or distress all benefit from time to catch a mistake — but it is no
+ * longer on by default. When enabled, 8s is the recommended middle
+ * setting: 5s is tight for the audience, 10s+ starts to feel like dead
+ * air to users who aren't using undo.
  *
- * Only affects perceived latency for users who watch the input area
- * after sending — most users see the typing indicator and look away
- * to read the response, so the 8s pre-pause is invisible to them.
+ * When on, this only affects perceived latency for users who watch the
+ * input area after sending — most see the typing indicator and look away
+ * to read the response, so the pre-pause is invisible to them.
  */
 export type UndoWindow = 'off' | '5' | '8' | '10';
 
@@ -70,7 +72,7 @@ export const DEFAULT_SETTINGS: AccessibilitySettings = {
   font: 'default',
   size: 'medium',
   spacing: 'default',
-  undoWindow: '8',
+  undoWindow: 'off',
 };
 
 const STORAGE_KEY = 'ada-a11y';
