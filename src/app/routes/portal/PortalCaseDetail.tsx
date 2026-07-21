@@ -39,6 +39,7 @@ import {
   transitionPortalCase,
   addPortalCaseNote,
   setCaseSolDate,
+  markCaseContacted,
   setCaseDefendant,
   fetchCasePeople,
   addCasePerson,
@@ -240,6 +241,7 @@ export default function PortalCaseDetail() {
 
             <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-5 pt-5 border-t border-surface-200">
               <SolField caseId={data.case_id} solDate={data.sol_date} onSaved={load} />
+              <ContactField caseId={data.case_id} contactedAt={data.contacted_at} onSaved={load} />
               <MetaCell label="First contact due" value={fmtDate(data.first_contact_due)} />
               <MetaCell label="Source" value="ADA Legal Link · Ada" />
               <MetaCell label="Matched case" value={data.case_name ?? '—'} />
@@ -320,6 +322,47 @@ function MetaCell({ label, value }: { label: string; value: string }) {
     <div>
       <dt className="text-ink-500 text-[10px] uppercase tracking-wider font-bold mb-1">{label}</dt>
       <dd className="text-ink-900 text-sm font-semibold">{value}</dd>
+    </div>
+  );
+}
+
+function ContactField({ caseId, contactedAt, onSaved }: { caseId: string; contactedAt: string | null; onSaved: () => Promise<void> | void }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const mark = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await markCaseContacted(caseId);
+      await onSaved();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not save');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div>
+      <dt className="text-ink-500 text-[10px] uppercase tracking-wider font-bold mb-1">First contact</dt>
+      {contactedAt ? (
+        <dd className="text-ink-900 text-sm font-semibold">
+          Contacted {fmtDate(contactedAt)}
+        </dd>
+      ) : (
+        <dd className="text-ink-900 text-sm">
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => void mark()}
+            className="text-xs font-semibold text-accent-600 underline disabled:opacity-50 min-h-[44px] pr-2"
+          >
+            {busy ? 'Saving…' : 'Mark contacted'}
+          </button>
+          {error && <p role="alert" className="text-danger-500 text-xs mt-1">{error}</p>}
+        </dd>
+      )}
     </div>
   );
 }

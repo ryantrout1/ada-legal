@@ -29,6 +29,7 @@ export interface PortalCaseRow {
   assigned_lawyer_name: string | null;
   routed_at: string | null;
   first_contact_due: string | null;
+  contacted_at: string | null;
   created_at: string;
 }
 
@@ -67,6 +68,7 @@ export interface PortalCaseDetailResponse {
   consent_to_share: boolean;
   routed_at: string | null;
   first_contact_due: string | null;
+  contacted_at: string | null;
   created_at: string;
   case_name: string | null;
   sol_date: string | null;
@@ -305,6 +307,17 @@ export async function setCaseSolDate(id: string, solDate: string | null): Promis
     body: JSON.stringify({ sol_date: solDate }),
   });
   if (!resp.ok) await failFor(resp);
+}
+
+/** Attorney self-attests first contact. Returns the (write-once) timestamp. */
+export async function markCaseContacted(id: string): Promise<string | null> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/contact`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!resp.ok) await failFor(resp);
+  const data = (await resp.json()) as { contacted_at: string | null };
+  return data.contacted_at;
 }
 
 export interface PortalDefendant {

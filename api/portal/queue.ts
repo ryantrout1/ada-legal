@@ -48,6 +48,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       assigned_lawyer_name: c.assignedLawyerName,
       routed_at: c.routedAt,
       first_contact_due: c.firstContactDue,
+      contacted_at: c.contactedAt,
       created_at: c.createdAt,
     });
 

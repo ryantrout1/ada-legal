@@ -52,6 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       consent_to_share: d.consentToShare,
       routed_at: d.routedAt,
       first_contact_due: d.firstContactDue,
+      contacted_at: d.contactedAt,
       created_at: d.createdAt,
       case_name: d.caseName,
       sol_date: d.solDate,
