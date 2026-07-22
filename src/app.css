@@ -728,6 +728,12 @@ body {
   --accent-light:     var(--color-ada-500);
   --accent-lighter:   var(--color-ada-50);
   --section-label:    var(--color-ada-500);
+  /* Repointed alongside --section-label. Custom properties substitute at
+     computed-value time on the element that DECLARES them, so a --link
+     declared only on :root would inherit terracotta into this scope even
+     though --color-accent-500 is violet here. Every sibling alias above is
+     re-declared for the same reason. */
+  --link:             var(--color-ada-500);
 }
 
 :root {
@@ -738,6 +744,14 @@ body {
   --body:             var(--color-ink-700);
   --body-secondary:   var(--color-ink-500);
   --section-label:    var(--color-accent-500);
+  /* --link — B44 declares --link and --section-label as the same terracotta
+     link tone (#9A3412 in its default mode). This app referenced var(--link)
+     from 8 Standards Guide pages (badge colors, pill fills, inline emphasis)
+     without ever declaring it, so those declarations were invalid and the
+     elements silently inherited. Aliased to the accent token rather than a
+     literal hex so it inherits every per-display-mode override — a pinned
+     hex would go unreadable in dark / contrast / low-vision. */
+  --link:             var(--color-accent-500);
   --card-bg:          var(--color-surface-50);
   --card-border:      var(--color-surface-200);
   --card-bg-tinted:   var(--color-accent-50);
