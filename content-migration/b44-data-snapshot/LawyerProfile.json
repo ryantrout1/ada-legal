@@ -1,0 +1,47 @@
+[
+ {
+  "account_status": "approved",
+  "admin_notes": null,
+  "admin_rating": null,
+  "approved_at": null,
+  "bar_numbers": "",
+  "bio": "Founder of The Spinal Cord Injury Law Firm, a boutique national practice representing individuals after catastrophic injuries and protecting the rights of people with disabilities. Kelley sustained a T-12 spinal cord injury at age 16 in a 2001 car crash and went on to graduate from Birmingham-Southern College and the University of Tennessee College of Law. She has tried numerous cases in state and federal court and helped secure tens of millions of dollars in recoveries for her clients. Beyond the courtroom, Kelley founded the Wheel2Ride campaign on rideshare accessibility, serves as Director of Law and Advocacy for SPINALpedia.org, and sits on the WMATA Accessibility Advisory Council and the Fairfax Area Disability Services Board.",
+  "cases_reclaimed": 0,
+  "created_by": "rttg123@gmail.com",
+  "created_by_id": "6994acc34810e36068eddec4",
+  "created_date": "2026-06-05T19:17:55.401000",
+  "date_joined": null,
+  "email": "info@spinalcordinjurylawyers.com",
+  "firm_name": "The Spinal Cord Injury Law Firm",
+  "flag_reason": null,
+  "flagged": false,
+  "full_name": "Kelley Brooks Simoneaux",
+  "id": "6a2320e3dec7b270a46a29f1",
+  "is_sample": false,
+  "last_active": null,
+  "lawyer_id": null,
+  "location_city": "Washington",
+  "location_state": "DC",
+  "marketplace_rules_accepted": false,
+  "phone": "(202) 507-9180",
+  "photo_url": "",
+  "practice_areas": [
+   "Title III \u2013 Public Accommodations",
+   "Transportation",
+   "Civil Rights",
+   "Disability Rights"
+  ],
+  "serves_nationwide": true,
+  "specialty_tags": [
+   "Spinal cord & catastrophic injury"
+  ],
+  "states_of_practice": [
+   "DC"
+  ],
+  "stripe_customer_id": null,
+  "stripe_subscription_id": null,
+  "subscription_status": "inactive",
+  "updated_date": "2026-06-05T23:26:20.885000",
+  "website_url": "https://spinalcordinjurylawyers.com"
+ }
+]

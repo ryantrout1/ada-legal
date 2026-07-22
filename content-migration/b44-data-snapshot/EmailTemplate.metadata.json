@@ -1,0 +1,195 @@
+[
+ {
+  "available_variables": [
+   "reporter_name",
+   "violation_type",
+   "business_name",
+   "incident_date",
+   "case_url"
+  ],
+  "body_html": "<EXCLUDED \u2014 see MANIFEST.md: retrievable via Base44 MCP until decommission; branded shell in ada-legal-link-B44/src/components/emails/brandedEmailTemplate.jsx>",
+  "created_date": "2026-02-25T14:40:23.575000",
+  "id": "699f09d76f1b9f4a45843ff9",
+  "is_active": true,
+  "recipient_type": "reporter",
+  "subject_line": "ADA Legal Link \u2014 Report Received",
+  "template_key": "report_submitted",
+  "template_name": "Report Received Confirmation",
+  "trigger_description": "Sent to reporter when they submit a new violation report and create an account",
+  "updated_date": "2026-02-25T18:48:05.189000"
+ },
+ {
+  "available_variables": [
+   "reporter_name",
+   "business_name",
+   "rejection_reason",
+   "case_url",
+   "standards_guide_url",
+   "intake_url"
+  ],
+  "body_html": "<EXCLUDED \u2014 see MANIFEST.md: retrievable via Base44 MCP until decommission; branded shell in ada-legal-link-B44/src/components/emails/brandedEmailTemplate.jsx>",
+  "created_date": "2026-02-25T14:40:23.575000",
+  "id": "699f09d76f1b9f4a45843ffa",
+  "is_active": true,
+  "recipient_type": "reporter",
+  "subject_line": "ADA Legal Link \u2014 Submission Update",
+  "template_key": "case_rejected",
+  "template_name": "Report Rejected Notification",
+  "trigger_description": "Sent to reporter when admin rejects a report (single or bulk)",
+  "updated_date": "2026-02-25T18:48:06.890000"
+ },
+ {
+  "available_variables": [
+   "reporter_name",
+   "business_name",
+   "contact_preference",
+   "case_url"
+  ],
+  "body_html": "<EXCLUDED \u2014 see MANIFEST.md: retrievable via Base44 MCP until decommission; branded shell in ada-legal-link-B44/src/components/emails/brandedEmailTemplate.jsx>",
+  "created_date": "2026-02-25T14:40:23.575000",
+  "id": "699f09d76f1b9f4a45843ffb",
+  "is_active": true,
+  "recipient_type": "reporter",
+  "subject_line": "ADA Legal Link \u2014 Case Approved",
+  "template_key": "case_approved",
+  "template_name": "Case Approved Notification",
+  "trigger_description": "Sent to reporter when admin approves a report (currently unused \u2014 activate when ready)",
+  "updated_date": "2026-02-25T18:49:22.485000"
+ },
+ {
+  "available_variables": [
+   "reporter_name",
+   "business_name",
+   "attorney_name",
+   "attorney_firm",
+   "contact_preference",
+   "case_url"
+  ],
+  "body_html": "<EXCLUDED \u2014 see MANIFEST.md: retrievable via Base44 MCP until decommission; branded shell in ada-legal-link-B44/src/components/emails/brandedEmailTemplate.jsx>",
+  "created_date": "2026-02-25T14:40:23.575000",
+  "id": "699f09d76f1b9f4a45843ffc",
+  "is_active": false,
+  "recipient_type": "reporter",
+  "subject_line": "Attorney Assigned \u2014 ADA Legal Link",
+  "template_key": "attorney_assigned_reporter",
+  "template_name": "Attorney Assigned \u2014 Reporter Notification",
+  "trigger_description": "Sent to reporter when an attorney initiates support on their case",
+  "updated_date": "2026-02-25T18:49:24.075000"
+ },
+ {
+  "available_variables": [
+   "attorney_name",
+   "business_name",
+   "case_location",
+   "violation_type",
+   "reporter_name",
+   "reporter_email",
+   "reporter_phone",
+   "contact_preference",
+   "dashboard_url"
+  ],
+  "body_html": "<EXCLUDED \u2014 see MANIFEST.md: retrievable via Base44 MCP until decommission; branded shell in ada-legal-link-B44/src/components/emails/brandedEmailTemplate.jsx>",
+  "created_date": "2026-02-25T14:40:23.575000",
+  "id": "699f09d76f1b9f4a45843ffd",
+  "is_active": true,
+  "recipient_type": "attorney",
+  "subject_line": "Support Initiation Confirmed \u2014 ADA Legal Link",
+  "template_key": "attorney_assigned_confirmation",
+  "template_name": "Support Initiation Confirmed \u2014 Attorney",
+  "trigger_description": "Sent to attorney when they initiate support on a case \u2014 confirmation with reporter details",
+  "updated_date": "2026-04-12T22:30:22.301000"
+ },
+ {
+  "available_variables": [
+   "reporter_name",
+   "business_name",
+   "case_url"
+  ],
+  "body_html": "<EXCLUDED \u2014 see MANIFEST.md: retrievable via Base44 MCP until decommission; branded shell in ada-legal-link-B44/src/components/emails/brandedEmailTemplate.jsx>",
+  "created_date": "2026-02-25T14:40:23.575000",
+  "id": "699f09d76f1b9f4a45843ffe",
+  "is_active": false,
+  "recipient_type": "reporter",
+  "subject_line": "ADA Legal Link \u2014 Case Closed",
+  "template_key": "case_closed",
+  "template_name": "Case Closed Notification",
+  "trigger_description": "Sent to reporter when their case status changes to closed",
+  "updated_date": "2026-02-25T18:51:10.271000"
+ },
+ {
+  "available_variables": [
+   "attorney_name",
+   "subscribe_url"
+  ],
+  "body_html": "<EXCLUDED \u2014 see MANIFEST.md: retrievable via Base44 MCP until decommission; branded shell in ada-legal-link-B44/src/components/emails/brandedEmailTemplate.jsx>",
+  "created_date": "2026-02-25T14:40:23.575000",
+  "id": "699f09d76f1b9f4a45843fff",
+  "is_active": true,
+  "recipient_type": "attorney",
+  "subject_line": "Welcome to ADA Legal Link",
+  "template_key": "lawyer_approved",
+  "template_name": "Attorney Account Approved",
+  "trigger_description": "Sent to attorney when their account is approved by admin",
+  "updated_date": "2026-04-12T22:29:57.173000"
+ },
+ {
+  "available_variables": [
+   "attorney_name",
+   "business_name",
+   "case_location",
+   "assigned_at",
+   "dashboard_url"
+  ],
+  "body_html": "<EXCLUDED \u2014 see MANIFEST.md: retrievable via Base44 MCP until decommission; branded shell in ada-legal-link-B44/src/components/emails/brandedEmailTemplate.jsx>",
+  "created_date": "2026-02-25T14:40:23.575000",
+  "id": "699f09d76f1b9f4a45844000",
+  "is_active": true,
+  "recipient_type": "attorney",
+  "subject_line": "24-Hour Contact Reminder \u2014 ADA Legal Link",
+  "template_key": "contact_reminder",
+  "template_name": "24-Hour Contact Reminder",
+  "trigger_description": "Sent to attorney 22-25 hours after case assignment when no contact has been logged",
+  "updated_date": "2026-04-12T22:30:28.203000"
+ },
+ {
+  "available_variables": [
+   "attorney_name",
+   "new_case_count",
+   "new_case_plural",
+   "state_match_note",
+   "type_badges",
+   "case_table",
+   "more_text",
+   "browse_url"
+  ],
+  "body_html": "<EXCLUDED \u2014 see MANIFEST.md: retrievable via Base44 MCP until decommission; branded shell in ada-legal-link-B44/src/components/emails/brandedEmailTemplate.jsx>",
+  "created_date": "2026-02-25T14:40:23.575000",
+  "id": "699f09d76f1b9f4a45844001",
+  "is_active": false,
+  "recipient_type": "attorney",
+  "subject_line": "New Cases Available \u2014 ADA Legal Link",
+  "template_key": "daily_digest",
+  "template_name": "Daily New Cases Digest",
+  "trigger_description": "Sent daily to all active attorneys when new cases become available in the last 24 hours",
+  "updated_date": "2026-02-25T18:51:20.378000"
+ },
+ {
+  "available_variables": [
+   "attorney_name",
+   "business_name",
+   "case_location",
+   "violation_type",
+   "dashboard_url"
+  ],
+  "body_html": "<EXCLUDED \u2014 see MANIFEST.md: retrievable via Base44 MCP until decommission; branded shell in ada-legal-link-B44/src/components/emails/brandedEmailTemplate.jsx>",
+  "created_date": "2026-02-25T14:40:23.575000",
+  "id": "699f09d76f1b9f4a45844002",
+  "is_active": false,
+  "recipient_type": "attorney",
+  "subject_line": "Case Reclaimed \u2014 ADA Legal Link",
+  "template_key": "case_reclaimed",
+  "template_name": "Case Reclaimed Notification",
+  "trigger_description": "Sent to attorney when their assigned case is reclaimed due to no contact within 24 hours",
+  "updated_date": "2026-02-25T18:51:21.660000"
+ }
+]

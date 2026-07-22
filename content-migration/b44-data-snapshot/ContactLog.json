@@ -1,0 +1,17 @@
+[
+ {
+  "case_id": "699ca70d0a34c9b309020dba",
+  "contact_method": "email",
+  "contact_type": "initial_contact",
+  "created_by": "ryan+lawyer@miloe.ai",
+  "created_by_id": "6994c76ea84cd3b728a63b62",
+  "created_date": "2026-02-23T21:29:43.898000",
+  "id": "699cc6c7593611a95f54512f",
+  "is_sample": false,
+  "lawyer_id": "6994c39e40cc7286be2f3230",
+  "log_id": null,
+  "logged_at": "2026-02-23T21:29:42.957Z",
+  "notes": "Contacted to schedule a meeting",
+  "updated_date": "2026-02-23T21:29:43.898000"
+ }
+]
