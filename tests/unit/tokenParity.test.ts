@@ -237,3 +237,97 @@ function blockFor(selector: string): string {
   }
   return bodies.join('\n');
 }
+
+/**
+ * Phase 4b — default-mode palette parity with B44, and the contrast floor.
+ *
+ * Values are READ FROM app.css and the ratios computed here, so this cannot
+ * drift from what ships: change a token without changing its parity row and
+ * the test fails. That is deliberate — every previous contrast claim in this
+ * codebase lived in a comment, and three of them turned out to be wrong
+ * (.lawyer-workspace's font claim, Ada's "8.2:1", Phase 2's diagram accent
+ * rationale). Comments are not checked; this is.
+ */
+describe('default palette parity with B44', () => {
+  const theme = (() => {
+    const clean = css.replace(/\/\*[\s\S]*?\*\//g, '');
+    const at = clean.indexOf('@theme');
+    return clean.slice(at, clean.indexOf('}', at));
+  })();
+
+  function token(name: string): string {
+    const m = theme.match(new RegExp(`${name}:\\s*(#[0-9A-Fa-f]{6})`));
+    if (!m) throw new Error(`${name} not declared in @theme`);
+    return m[1].toUpperCase();
+  }
+
+  function luminance(hex: string): number {
+    const h = hex.replace('#', '');
+    const ch = [0, 2, 4].map((i) => {
+      const c = parseInt(h.slice(i, i + 2), 16) / 255;
+      return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+  }
+  function contrast(a: string, b: string): number {
+    const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+
+  /**
+   * The parity table. `b44` is what adalegallink.com uses; `reason` is null
+   * when we match it exactly and a string when we deliberately don't. A
+   * divergence with reason: null is a bug — either the value drifted or
+   * someone changed it without recording why.
+   */
+  const PARITY: Array<{ token: string; b44: string; reason: string | null }> = [
+    { token: '--color-surface-0',      b44: '#FFFFFF', reason: null },
+    { token: '--color-surface-50',     b44: '#F8FAFC', reason: null },
+    { token: '--color-surface-100',    b44: '#F1F5F9', reason: null },
+    { token: '--color-surface-200',    b44: '#E2E8F0', reason: null },
+    { token: '--color-ink-900',        b44: '#1E293B', reason: null },
+    { token: '--color-ink-700',        b44: '#3D4A5C', reason: null },
+    { token: '--color-ink-500',        b44: '#4B5563',
+      reason: 'B44 value is 6.90:1 on surface-100; darkened to clear 7:1' },
+    { token: '--color-accent-500',     b44: '#C2410C',
+      reason: 'B44 value is 4.85:1 (AA); darkened to clear 7:1' },
+    { token: '--color-ada-500',        b44: '#6D28D9',
+      reason: 'B44 value is 6.79:1 on our page tier; darkened to clear 7:1' },
+    { token: '--color-control-border', b44: '#E2E8F0',
+      reason: 'B44 has no >=3:1 interactive border tone (its #E2E8F0 is 1.23:1, failing 1.4.11)' },
+  ];
+
+  it.each(PARITY)('$token matches B44 or records why not', ({ token: name, b44, reason }) => {
+    const ours = token(name);
+    if (reason === null) {
+      expect(ours, `${name} drifted from B44 with no recorded reason`).toBe(b44);
+    } else {
+      expect(ours, `${name} claims a divergence but matches B44`).not.toBe(b44);
+    }
+  });
+
+  const TEXT = ['--color-ink-900', '--color-ink-700', '--color-ink-500',
+                '--color-accent-500', '--color-ada-500', '--color-ada-600',
+                '--color-success-500', '--color-warning-500', '--color-danger-500'];
+  const SURFACES = ['--color-surface-0', '--color-surface-50', '--color-surface-100'];
+
+  it.each(TEXT)('%s clears 7:1 on every surface tier', (name) => {
+    const fg = token(name);
+    const failing = SURFACES
+      .map((s) => ({ s, r: contrast(fg, token(s)) }))
+      .filter(({ r }) => r < 7)
+      .map(({ s, r }) => `${s} ${r.toFixed(2)}:1`);
+    expect(failing, `${name} below the AAA floor`).toEqual([]);
+  });
+
+  it('control-border clears 3:1 on page and card (WCAG 1.4.11)', () => {
+    const cb = token('--color-control-border');
+    for (const s of ['--color-surface-0', '--color-surface-50']) {
+      expect(contrast(cb, token(s)), `control-border on ${s}`).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it('button text clears 7:1 on the accent fill', () => {
+    expect(contrast('#FFFFFF', token('--color-accent-500'))).toBeGreaterThanOrEqual(7);
+  });
+});
