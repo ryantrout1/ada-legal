@@ -244,7 +244,7 @@ export default function PublicLayout() {
           disclaimer ('Not a law firm') has room to wrap to multiple
           lines without truncating — UPL liability, that statement
           cannot ellipsis. */}
-      <footer className="mt-auto bg-brand-navy" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+      <footer className="mt-auto bg-brand-footer" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         {/* Primary brand row — matches adalegallink.com (brand · © · tagline) */}
         <div
           className="w-full flex flex-wrap items-center justify-between gap-2 font-chrome"
