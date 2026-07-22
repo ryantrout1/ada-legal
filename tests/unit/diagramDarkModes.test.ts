@@ -31,9 +31,31 @@ const APP_CSS = resolve(__dirname, '../../src/app.css');
 const DIAGRAM_DIR = resolve(__dirname, '../../src/app/components/standards/diagrams');
 const css = readFileSync(APP_CSS, 'utf8');
 
-/** Backdrop each mode resolves --page-bg-subtle to (see app.css display blocks). */
-const DARK_BACKDROP = '#1E1B17';      // dark: --color-surface-100
-const CONTRAST_BACKDROP = '#000000';  // contrast: --color-surface-100
+/**
+ * Backdrop each mode resolves --page-bg-subtle to. Read from app.css rather
+ * than hardcoded: these were pinned as literals (#1E1B17 / #000000) and went
+ * stale the moment Phase 4c re-valued the dark surfaces to #151C28. A test
+ * measuring against a backdrop the app no longer uses is worse than no test —
+ * it reports green while the thing it guards drifts.
+ */
+function surface100(mode: string): string {
+  const bodies: string[] = [];
+  const sel = `:root[data-display="${mode}"]`;
+  for (let from = 0; ; ) {
+    const at = css.indexOf(sel, from);
+    if (at === -1) break;
+    const open = css.indexOf('{', at);
+    const close = css.indexOf('}', open);
+    bodies.push(css.slice(open, close));
+    from = close;
+  }
+  const m = bodies.join('\n').match(/--color-surface-100:\s*(#[0-9A-Fa-f]{6})/);
+  if (!m) throw new Error(`no --color-surface-100 for ${mode}`);
+  return m[1].toUpperCase();
+}
+
+const DARK_BACKDROP = surface100('dark');
+const CONTRAST_BACKDROP = surface100('contrast');
 
 /** WCAG relative luminance + contrast ratio. */
 function luminance(hex: string): number {

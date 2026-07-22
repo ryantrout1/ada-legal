@@ -296,56 +296,59 @@ body {
    surface-200 up to ~#3A342C territory for clear divider contrast,
    and keeps surface-300 even higher for the disabled/hint tier. */
 :root[data-display="dark"] {
-  --color-surface-0:   #2A2620;   /* card tier — was the .bg-white override + --card-bg literal */
-  --color-surface-50:  #141210;   /* page bg */
-  --color-surface-100: #1E1B17;   /* card lift, ~7% brighter */
-  --color-surface-200: #3A342C;   /* borders / dividers, ~20% brighter */
-  --color-surface-300: #4D453B;   /* hints / disabled, ~30% brighter */
-  --color-ink-900: #F4F0E8;
-  --color-ink-700: #D4CCB9;
-  --color-ink-500: #B8AE9C;       /* lifted slightly (was #A89E8C) so
+  --color-surface-0:   #1B2436;   /* card tier — was the .bg-white override + --card-bg literal */
+  --color-surface-50:  #0F1520;   /* page bg */
+  --color-surface-100: #151C28;   /* card lift, ~7% brighter */
+  --color-surface-200: #39445A;   /* borders / dividers, ~20% brighter */
+  --color-surface-300: #4C5872;   /* hints / disabled, ~30% brighter */
+  --color-ink-900: #F1F5F9;
+  --color-ink-700: #CBD5E1;
+  --color-ink-500: #A8B4C4;       /* lifted slightly (was #A89E8C) so
                                      meta text + secondary actions hit
                                      AAA, not just AA, on surface-50 */
-  --color-accent-500: #EF9367;    /* terracotta-orange, AAA on dark surfaces.
+  --color-accent-500: #FDBA74;    /* terracotta-orange, AAA on dark surfaces.
                                      8.04:1 on surface-50 (page bg),
                                      7.38:1 on surface-100 (cards),
                                      6.47:1 on .bg-white override (#2A2620).
                                      Was #D9824A which only hit 6.44:1 on
                                      surface-50 — under AAA 7:1 ceiling. */
-  --color-accent-600: #F4AA84;    /* hover state, lighter than 500.
+  --color-accent-600: #FED7AA;    /* hover state, lighter than 500.
                                      9.73:1 on surface-50, 8.93:1 on
                                      surface-100. Was #E89969 (8.18:1)
                                      which is now too close to the new
                                      500 to be visibly distinct. */
-  --color-accent-50:  #2A1E15;
+  --color-accent-50:  #2A1B12;
   --color-ada-500: #B9A6FC;       /* light violet, AAA on dark surfaces */
   --color-ada-600: #C9BCFD;       /* hover — brighter */
   --color-ada-50:  #1E1633;       /* dark purple tint */
   --color-success-500: #86C28E;
   --color-success-50:  #1A2A1C;
-  --color-warning-500: #D4A04D;
+  --color-warning-500: #DCAB5C;
   --color-warning-50:  #2A2113;
-  --color-danger-500:  #FF8572;
+  --color-danger-500:  #FF9384;
   --color-danger-100:  #3D1F1A;
   --color-danger-50:   #2A1714;
+  --color-control-border: #7A8699;
 }
 
 /* Warm — amber-tinted surface, helpful for light sensitivity, migraine,
    and evening reading. Softer than default, still AAA. */
 :root[data-display="warm"] {
-  --color-surface-0:   #FBF6EC;   /* card tier — almost-white with the warm bias preserved */
-  --color-surface-50:  #F5EFE2;
-  --color-surface-100: #EDE4D0;
-  --color-surface-200: #E0D3B8;
-  --color-surface-300: #C7B895;
-  --color-ink-900: #2A1F15;
-  --color-ink-700: #3D2D1E;       /* darkened from #4A3826 → 11.7:1 AAA */
-  --color-ink-500: #5C4528;       /* darkened from #7A5E3F → 7.0:1 AAA */
-  --color-accent-500: #7A3413;    /* darkened from #8A3D17 → 8.1:1 AAA */
+  --color-surface-0:   #FFF8F0;   /* card tier — almost-white with the warm bias preserved */
+  --color-surface-50:  #FBF7F0;
+  --color-surface-100: #F5EDE0;
+  --color-surface-200: #D4C4A8;
+  --color-surface-300: #C0AC8A;
+  --color-ink-900: #3D2B1F;
+  --color-ink-700: #5C4033;       /* darkened from #4A3826 → 11.7:1 AAA */
+  --color-ink-500: #5E4839;       /* darkened from #7A5E3F → 7.0:1 AAA */
+  --color-accent-500: #7C2D12;    /* darkened from #8A3D17 → 8.1:1 AAA */
   --color-accent-600: #5C2710;
-  --color-ada-500: #6D28D9;       /* violet, AAA on warm-light surfaces */
+  --color-ada-500: #5F23C0;       /* violet, AAA on warm-light surfaces */
   --color-ada-600: #5B21B6;
   --color-ada-50:  #EFE7FB;
+  --color-control-border: #96866A;
+  --color-accent-50: #FFF0E6;
 }
 
 /* Contrast — high contrast on a DARK canvas, matching the aesthetic
@@ -364,16 +367,16 @@ body {
  * (calculated ratio: 9.8:1 against pure black). Body text at pure
  * white is 21:1. Both exceed AAA thresholds. */
 :root[data-display="contrast"] {
-  --color-surface-0:   #000000;   /* card tier — flat black; the contrast block adds 2px white borders */
+  --color-surface-0:   #0A0A0A;   /* card tier — flat black; the contrast block adds 2px white borders */
   --color-surface-50:  #000000;   /* page bg — pure black */
-  --color-surface-100: #000000;   /* was decorative surface — flatten */
+  --color-surface-100: #0A0A0A;   /* was decorative surface — flatten */
   --color-surface-200: #FFFFFF;   /* border color — pure white */
   --color-surface-300: #FFFFFF;
   --color-ink-900: #FFFFFF;        /* headings + strong body */
   --color-ink-700: #FFFFFF;        /* all body text to pure white */
   --color-ink-500: #E0E0E0;        /* tertiary text — slightly dim, still AAA */
-  --color-accent-500: #F4A56B;     /* bright amber, AAA against black */
-  --color-accent-600: #FFCA92;     /* hover — even brighter */
+  --color-accent-500: #FFB347;     /* bright amber, AAA against black */
+  --color-accent-600: #FDE68A;     /* hover — even brighter */
   --color-accent-50:  #000000;     /* kill the pale tint — flatten to bg */
   --color-ada-500: #C4B5FD;        /* bright violet, AAA against black */
   --color-ada-600: #DDD6FE;        /* hover — brighter */
@@ -384,6 +387,7 @@ body {
   --color-warning-50:  #000000;
   --color-danger-500:  #FF8A7A;    /* bright coral-red */
   --color-danger-50:   #000000;
+  --color-control-border: #FFFFFF;
 }
 
 /* Low vision — high contrast + enlarged UI affordances. Pairs with larger
@@ -1470,9 +1474,15 @@ body {
 :root[data-display="contrast"] svg[role="img"] text[fill="#7C2D12"],
 :root[data-display="contrast"] svg[role="img"] text[fill="#B45309"] { fill: #FDBA74; }
 
-/* Accent terracotta — mapped to this app's own dark-mode accent tone so the
-   diagrams agree with the surrounding UI rather than drifting to the amber
-   family above. */
+/* Accent terracotta — kept on its own tone rather than folded into the amber
+   family above, so the diagrams' category encoding survives: #C2410C means
+   "the measured thing" and #B45309 means "caution", and collapsing both to
+   #FDBA74 would erase that distinction.
+   This deliberately no longer tracks the UI accent. Phase 4c moved dark
+   accent-500 to #FDBA74, which is the amber family; matching it here would
+   cost the encoding for a consistency nobody looking at a diagram would
+   notice. Verified against the current backdrops by
+   tests/unit/diagramDarkModes.test.ts, which reads them from this file. */
 :root[data-display="dark"] svg[role="img"] text[fill="#C2410C"],
 :root[data-display="contrast"] svg[role="img"] text[fill="#C2410C"] { fill: #EF9367; }
 
