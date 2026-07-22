@@ -15,11 +15,15 @@ import { SignIn } from '@clerk/clerk-react';
 
 const portalClerkAppearance = {
   variables: {
+    // Clerk's appearance.variables take literal colour strings, not CSS custom
+    // properties, so these are the only hand-copied hexes left in the app. They
+    // mirror the @theme tokens; if those move, move these. Ratios deliberately
+    // not restated — tests/unit/tokenParity.test.ts is the authority.
     colorPrimary: '#8C3F18', // accent-500 — white text on it ≈ 8:1 (AAA)
-    colorText: '#1A1814', // ink-900 — 16.5:1 on surface (AAA)
-    colorTextSecondary: '#3A3530', // ink-700 — 10.6:1 (AAA)
+    colorText: '#1E293B', // ink-900
+    colorTextSecondary: '#3D4A5C', // ink-700
     colorBackground: '#FFFFFF',
-    colorInputText: '#1A1814',
+    colorInputText: '#1E293B',
     colorInputBackground: '#FFFFFF',
     colorDanger: '#8C2E1F', // danger-500
   },

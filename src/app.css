@@ -41,31 +41,38 @@
      nobody notices until two adjacent cards render differently. Re-tinted per
      display mode below; pinned by tests/unit/tokenParity.test.ts. */
   --color-surface-0:   #FFFFFF;   /* card / highest elevation */
-  --color-surface-50:  #FAF8F4;   /* page background */
-  --color-surface-100: #F4F0E8;   /* subtle lift — cards, message bubbles */
-  --color-surface-200: #E8E2D4;   /* dividers, input borders */
-  --color-surface-300: #D4CCB9;   /* disabled, hints */
-  --color-control-border: #948F81; /* interactive control borders — 3:1 in every theme (WCAG 1.4.11) */
+  --color-surface-50:  #F8FAFC;   /* page background */
+  --color-surface-100: #F1F5F9;   /* subtle lift — cards, message bubbles */
+  --color-surface-200: #E2E8F0;   /* dividers, input borders */
+  --color-surface-300: #CBD5E1;   /* disabled, hints */
+  --color-control-border: #7E8DA3; /* interactive control borders — 3:1 in every theme (WCAG 1.4.11) */
 
-  /* Ink — deep, warm-biased black for long-form reading */
-  --color-ink-900: #1A1814;       /* primary text, 16.5:1 on surface-50 (AAA) */
-  --color-ink-700: #3A3530;       /* secondary, 10.6:1 (AAA) */
-  --color-ink-500: #554D46;       /* tertiary / meta — 7.3:1 on surface-100, 7.8:1 on surface-50 (AAA body)
-                                     darkened from #6A625A which was 5.2:1
-                                     and only AAA for large text */
+  /* Ink — cool slate, matching adalegallink.com.
+     Ratios are NOT restated here. Every contrast claim previously written into
+     a comment in this file was wrong by the time someone checked it — the
+     portal's font claim, Ada's "8.2:1", the diagram-accent rationale. The
+     authority is tests/unit/tokenParity.test.ts, which reads these values and
+     computes the ratios against all three surface tiers. */
+  --color-ink-900: #1E293B;       /* headings — B44 --heading */
+  --color-ink-700: #3D4A5C;       /* body — B44 --body */
+  --color-ink-500: #495260;       /* meta — B44 --body-secondary #4B5563 darkened;
+                                     B44's own value is 6.90:1 on surface-100 */
 
-  /* Accent — muted terracotta, AAA on surface-50 */
-  --color-accent-500: #883D17;    /* primary CTA / links, 7.4:1 (AAA body)
-                                     darkened from #A64B1D which was 5.5:1
-                                     and only AAA for large text */
-  --color-accent-600: #6E2F10;    /* hover, active */
-  --color-accent-50:  #F9ECE5;    /* accent surface tint */
+  /* Accent — terracotta. B44 uses #C2410C (4.85:1, AA only); this is the
+     minimum darkening that clears 7:1 on all three tiers, and is the same
+     value the attorney portal already runs on, so the two surfaces agree. */
+  --color-accent-500: #8E2F09;
+  --color-accent-600: #6E2308;    /* hover, active */
+  --color-accent-50:  #FEF1EC;    /* accent surface tint */
 
   /* Ada accent — violet, brand-matched to the Base44 home page (--v2-ada
      #7C5CFC family). Used ONLY on Ada's chat surfaces (scoped via .ada-accent);
      the terracotta accent above remains the app + Standards Guide accent.
-     Light-mode value darkened for AAA: #6D28D9 = 8.2:1 on surface-50. */
-  --color-ada-500: #6D28D9;       /* primary / links, AAA on light */
+     Darkened from B44's #6D28D9, which measured 6.79:1 on our page tier — the
+     surface Ada's chat actually renders against, since .ada-accent sections
+     carry no background of their own. The comment this replaces claimed
+     8.2:1; the real figure was 6.70:1 against the old surface-50. */
+  --color-ada-500: #6326C8;       /* primary / links, AAA on light */
   --color-ada-600: #5B21B6;       /* hover, active */
   --color-ada-50:  #F3EEFE;       /* purple surface tint */
 
