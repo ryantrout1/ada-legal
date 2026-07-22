@@ -331,3 +331,92 @@ describe('default palette parity with B44', () => {
     expect(contrast('#FFFFFF', token('--color-accent-500'))).toBeGreaterThanOrEqual(7);
   });
 });
+
+/**
+ * Phase 4c — non-default display modes.
+ *
+ * Resolves each token the way the cascade does: a mode's own block if it
+ * declares the token, otherwise the @theme default. Then checks every text
+ * token against every surface tier in that mode.
+ *
+ * This covers the semantic and Ada tokens, not just the four primary ones.
+ * The plan's hand-written table only listed the primaries, and this sweep
+ * caught three sub-7:1 values it had missed (dark warning 6.61, dark danger
+ * 6.54, warm ada 6.84) — which is the argument for computing rather than
+ * tabulating by hand.
+ *
+ * low-vision is deliberately absent. Its canvas is white with black text,
+ * the polar opposite of B44's black-and-gold, and reconciling them is a
+ * product decision about the users most dependent on that mode — not a token
+ * swap. Tracked as an open decision.
+ */
+describe('non-default display mode contrast', () => {
+  const MODES = ['dark', 'warm', 'contrast'] as const;
+
+  const themeBlock = (() => {
+    const masked = css.replace(/\/\*[\s\S]*?\*\//g, (m) => ' '.repeat(m.length));
+    const start = masked.indexOf('@theme');
+    let depth = 0;
+    const open = masked.indexOf('{', start);
+    for (let j = open; j < masked.length; j++) {
+      if (masked[j] === '{') depth++;
+      else if (masked[j] === '}' && --depth === 0) return css.slice(start, j);
+    }
+    return '';
+  })();
+
+  function resolve(name: string, mode: string): string {
+    const scoped = blockFor(`:root[data-display="${mode}"]`);
+    const re = new RegExp(`${name}:\\s*(#[0-9A-Fa-f]{6})`);
+    const m = scoped.match(re) ?? themeBlock.match(re);
+    if (!m) throw new Error(`${name} unresolvable in ${mode}`);
+    return m[1].toUpperCase();
+  }
+
+  function luminance(hex: string): number {
+    const h = hex.replace('#', '');
+    const ch = [0, 2, 4].map((i) => {
+      const c = parseInt(h.slice(i, i + 2), 16) / 255;
+      return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+  }
+  function contrast(a: string, b: string): number {
+    const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+
+  const TEXT = ['--color-ink-900', '--color-ink-700', '--color-ink-500',
+                '--color-accent-500', '--color-accent-600',
+                '--color-ada-500', '--color-ada-600',
+                '--color-success-500', '--color-warning-500', '--color-danger-500'];
+  const SURFACES = ['--color-surface-0', '--color-surface-50', '--color-surface-100'];
+
+  it.each(MODES)('every text token clears 7:1 on every surface in %s mode', (mode) => {
+    const failing: string[] = [];
+    for (const t of TEXT) {
+      for (const s of SURFACES) {
+        const r = contrast(resolve(t, mode), resolve(s, mode));
+        if (r < 7) failing.push(`${t} on ${s} = ${r.toFixed(2)}:1`);
+      }
+    }
+    expect(failing, `${mode} mode below the AAA floor`).toEqual([]);
+  });
+
+  it.each(MODES)('control-border clears 3:1 in %s mode (WCAG 1.4.11)', (mode) => {
+    const cb = resolve('--color-control-border', mode);
+    for (const s of ['--color-surface-0', '--color-surface-50']) {
+      expect(contrast(cb, resolve(s, mode)), `${mode}: control-border on ${s}`)
+        .toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it.each(MODES)('%s declares its own card tier distinct from the page', (mode) => {
+    // Elevation must survive per mode: a card that equals the page reads flat.
+    // Contrast mode gets a near-black card rather than a literally equal one,
+    // so the tier stays addressable even though its white borders do the
+    // visual work.
+    expect(resolve('--color-surface-0', mode), `${mode}: card equals page, elevation lost`)
+      .not.toBe(resolve('--color-surface-50', mode));
+  });
+});
