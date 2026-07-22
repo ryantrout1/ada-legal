@@ -163,3 +163,61 @@ describe('typography parity with B44', () => {
     ).toEqual([]);
   });
 });
+
+/**
+ * Phase 4a — one elevation stack.
+ *
+ * The app had two independent card systems: the Tailwind utility `bg-white`
+ * (186 uses, app surfaces) and the alias `var(--card-bg)` (234 uses, ported
+ * Standards Guide content). Both mean "the lifted surface above the page",
+ * both were maintained by hand, and in default mode they had already drifted
+ * apart — #FFFFFF vs #FAF8F4.
+ *
+ * `--color-surface-0` is now the single card tier. Both systems read it, so
+ * they cannot disagree again. Asserted structurally (each reads the same
+ * token) rather than by comparing resolved literals, because the structural
+ * form is what actually prevents the drift.
+ */
+describe('card elevation tier', () => {
+  const DISPLAY_MODES = ['dark', 'warm', 'contrast', 'low-vision'] as const;
+
+  it('declares --color-surface-0 in the @theme default', () => {
+    const cssNoComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
+    const start = cssNoComments.indexOf('@theme');
+    const theme = cssNoComments.slice(start, cssNoComments.indexOf('}', start));
+    expect(theme).toMatch(/--color-surface-0:\s*#[0-9A-Fa-f]{6}/);
+  });
+
+  it.each(DISPLAY_MODES)('declares --color-surface-0 for %s mode', (mode) => {
+    // Each display mode re-tints the card tier. Missing one means cards in
+    // that mode silently fall back to the default (white) and blow out.
+    const block = blockFor(`:root[data-display="${mode}"]`);
+    expect(block, `no :root[data-display="${mode}"] block declares --color-surface-0`)
+      .toMatch(/--color-surface-0:/);
+  });
+
+  it('points --card-bg at the shared tier, not a per-mode literal', () => {
+    const declarations = [...css.matchAll(/--card-bg:\s*([^;]+);/g)].map((m) => m[1].trim());
+    expect(declarations.length, '--card-bg not declared').toBeGreaterThan(0);
+    const notShared = declarations.filter((v) => v !== 'var(--color-surface-0)');
+    expect(
+      notShared,
+      '--card-bg must read var(--color-surface-0) everywhere; per-mode literals reintroduce the drift',
+    ).toEqual([]);
+  });
+
+  it('points every .bg-white override at the shared tier', () => {
+    const overrides = [...css.matchAll(/\.bg-white\s*\{\s*background-color:\s*([^;!]+)/g)]
+      .map((m) => m[1].trim());
+    expect(overrides.length, 'no .bg-white override found').toBeGreaterThan(0);
+    const notShared = overrides.filter((v) => v !== 'var(--color-surface-0)');
+    expect(notShared, '.bg-white must read var(--color-surface-0)').toEqual([]);
+  });
+});
+
+/** Grab the body of the first rule whose selector starts with `selector`. */
+function blockFor(selector: string): string {
+  const at = css.indexOf(selector);
+  if (at === -1) return '';
+  return css.slice(at, css.indexOf('}', at));
+}
