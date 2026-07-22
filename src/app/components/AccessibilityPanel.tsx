@@ -244,7 +244,7 @@ export function AccessibilityPanel({ readingLevel, onDark = false }: Accessibili
               // Desktop override: popover anchored to trigger
               'sm:absolute sm:inset-x-auto sm:bottom-auto sm:right-0 sm:top-full sm:mt-2 sm:max-h-none sm:overflow-visible sm:rounded-lg sm:w-[360px] sm:max-w-[calc(100vw-2rem)] ' +
               // Shared visuals
-              'bg-surface-100 border border-surface-200 shadow-xl text-ink-900 ' +
+              'bg-white border border-surface-200 shadow-xl text-ink-900 ' +
               // Padding — slightly more on mobile to give the sheet
               // breathing room around the close button
               'p-4 pt-3 sm:p-4'
@@ -516,6 +516,7 @@ function SizeSection({
           <OptionButton
             key={s}
             selected={value === s}
+            variant="segmented"
             onClick={() => onChange(s)}
             ariaLabel={`${s} text size`}
           >
@@ -554,6 +555,7 @@ function SpacingSection({
           <OptionButton
             key={s}
             selected={value === s}
+            variant="segmented"
             onClick={() => onChange(s)}
             ariaLabel={`${s} line spacing`}
           >
@@ -616,6 +618,7 @@ function ReadingLevelSection({
           <OptionButton
             key={l.value}
             selected={value === l.value}
+            variant="segmented"
             onClick={() => onChange(l.value)}
           >
             <span className="text-xs font-semibold py-1">{l.label}</span>
@@ -658,6 +661,7 @@ function UndoSendSection({
           <OptionButton
             key={o.value}
             selected={value === o.value}
+            variant="segmented"
             onClick={() => onChange(o.value)}
           >
             <span className="text-xs font-semibold py-1">{o.label}</span>
@@ -670,19 +674,46 @@ function UndoSendSection({
 
 // ─── Shared button ──────────────────────────────────────────────────────────
 
+/**
+ * Two selected-state treatments, matching adalegallink.com.
+ *
+ *   tile      — Display and Font. Accent border + tinted fill; the icon or
+ *               type sample inside is the content, so the fill stays light.
+ *   segmented — Size, Spacing, Reading Level, Undo. Solid accent fill with
+ *               white text, the way a segmented control reads.
+ *
+ * The distinction is load-bearing, not decorative. With a tint-only selected
+ * state the fill carries 1.10:1 against the panel — no signal at all — and the
+ * whole "which option is active" cue rests on a 1px border. This is the panel
+ * users with low vision open specifically to find these controls, so it is the
+ * wrong surface on which to be subtle.
+ *
+ * Solid fill is accent-500, not B44's #C2410C: white on that is 5.18:1, under
+ * this app's floor. White on accent-500 is 8.20:1.
+ *
+ * border-2 on both states rather than B44's 1px-to-2px transition, which
+ * reflows the row by a pixel on every selection.
+ */
 function OptionButton({
   selected,
   onClick,
   children,
   first,
   ariaLabel,
+  variant = 'tile',
 }: {
   selected: boolean;
   onClick: () => void;
   children: React.ReactNode;
   first?: boolean;
   ariaLabel?: string;
+  variant?: 'tile' | 'segmented';
 }) {
+  const selectedClass =
+    variant === 'segmented'
+      ? 'border-accent-500 bg-accent-500 text-white font-semibold'
+      : 'border-accent-500 bg-accent-50 text-accent-600 font-semibold';
+
   return (
     <button
       type="button"
@@ -691,10 +722,10 @@ function OptionButton({
       aria-label={ariaLabel}
       data-panel-first={first || undefined}
       className={
-        'rounded border px-2 py-1.5 text-ink-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-1 transition-colors flex items-center justify-center ' +
+        'rounded border-2 px-2 py-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-1 transition-colors flex items-center justify-center ' +
         (selected
-          ? 'border-accent-500 bg-accent-50 text-accent-600 font-semibold'
-          : 'border-surface-200 hover:border-surface-300 hover:bg-surface-200')
+          ? selectedClass
+          : 'border-surface-200 text-ink-700 hover:border-surface-300 hover:bg-surface-200')
       }
     >
       {children}

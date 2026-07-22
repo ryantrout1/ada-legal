@@ -495,3 +495,75 @@ describe('site chrome per display mode', () => {
     expect(failing, `${mode ?? 'default'} chrome below the AAA floor`).toEqual([]);
   });
 });
+
+/**
+ * Accessibility panel — selected-state signal.
+ *
+ * The panel had one selected treatment for all six groups: a 1px accent border
+ * plus an accent-50 tint. That tint is 1.10:1 against the panel, so the entire
+ * "which option is active" cue rested on the border. This is the surface users
+ * with low vision open to find these controls; a near-invisible selected state
+ * there is the defect, not a style preference.
+ *
+ * adalegallink.com uses two tiers — tinted tiles for Display/Font, solid fill
+ * for the segmented controls — and this pins ours to the same shape, at our
+ * contrast rather than B44's (white on its #C2410C is 5.18:1).
+ */
+describe('accessibility panel selected state', () => {
+  const panel = readFileSync(
+    resolve(__dirname, '../../src/app/components/AccessibilityPanel.tsx'),
+    'utf8',
+  );
+
+  function themeToken(name: string): string {
+    const masked = css.replace(/\/\*[\s\S]*?\*\//g, (m) => ' '.repeat(m.length));
+    const start = masked.indexOf('@theme');
+    let depth = 0;
+    const open = masked.indexOf('{', start);
+    let theme = '';
+    for (let j = open; j < masked.length; j++) {
+      if (masked[j] === '{') depth++;
+      else if (masked[j] === '}' && --depth === 0) { theme = css.slice(start, j); break; }
+    }
+    const m = theme.match(new RegExp(`${name}:\\s*(#[0-9A-Fa-f]{6})`));
+    if (!m) throw new Error(`${name} not in @theme`);
+    return m[1].toUpperCase();
+  }
+  function luminance(hex: string): number {
+    const h = hex.replace('#', '');
+    const ch = [0, 2, 4].map((i) => {
+      const c = parseInt(h.slice(i, i + 2), 16) / 255;
+      return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+  }
+  function contrast(a: string, b: string): number {
+    const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+
+  it('offers a solid-fill variant, not tint-only for every group', () => {
+    expect(panel).toMatch(/variant\?:\s*'tile'\s*\|\s*'segmented'/);
+    expect(panel).toMatch(/bg-accent-500\s+text-white/);
+  });
+
+  it('applies the solid variant to all four segmented controls', () => {
+    // Size, Spacing, Reading Level, Undo. Display and Font stay tiles.
+    expect((panel.match(/variant="segmented"/g) ?? []).length).toBe(4);
+  });
+
+  it('white text on the solid fill clears 7:1', () => {
+    expect(contrast('#FFFFFF', themeToken('--color-accent-500'))).toBeGreaterThanOrEqual(7);
+  });
+
+  it('the solid fill is distinguishable from the panel surface (1.4.11)', () => {
+    // The failure being guarded against: a selected fill so close to the panel
+    // that only the border says anything. Needs 3:1 as a state indicator.
+    expect(contrast(themeToken('--color-accent-500'), themeToken('--color-surface-0')))
+      .toBeGreaterThanOrEqual(3);
+  });
+
+  it('draws selected borders at 2px so the tile tier reads too', () => {
+    expect(panel).toMatch(/rounded border-2 /);
+  });
+});
