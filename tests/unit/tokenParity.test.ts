@@ -420,3 +420,78 @@ describe('non-default display mode contrast', () => {
       .not.toBe(resolve('--color-surface-50', mode));
   });
 });
+
+/**
+ * Phase 4d — site chrome re-tints per display mode.
+ *
+ * adalegallink.com's header reads var(--dark-bg) and its footer
+ * var(--dark-bg-footer); both shift per display mode, and the two are
+ * deliberately different tones in default (#1E293B header, #141820 footer).
+ * This app pinned a single navy for both, so in contrast mode a slate-blue bar
+ * sat on a pure-black page looking like the header hadn't been told.
+ */
+describe('site chrome per display mode', () => {
+  const MODES = ['dark', 'warm', 'contrast', 'low-vision'] as const;
+  const CHROME = ['--color-brand-navy', '--color-brand-footer', '--color-brand-navy-hover'];
+
+  const themeBlock = (() => {
+    const masked = css.replace(/\/\*[\s\S]*?\*\//g, (m) => ' '.repeat(m.length));
+    const start = masked.indexOf('@theme');
+    let depth = 0;
+    const open = masked.indexOf('{', start);
+    for (let j = open; j < masked.length; j++) {
+      if (masked[j] === '{') depth++;
+      else if (masked[j] === '}' && --depth === 0) return css.slice(start, j);
+    }
+    return '';
+  })();
+
+  function chrome(name: string, mode?: string): string {
+    const re = new RegExp(`${name}:\\s*(#[0-9A-Fa-f]{6})`);
+    const scoped = mode ? blockFor(`:root[data-display="${mode}"]`) : '';
+    const m = scoped.match(re) ?? themeBlock.match(re);
+    if (!m) throw new Error(`${name} unresolvable${mode ? ` in ${mode}` : ''}`);
+    return m[1].toUpperCase();
+  }
+
+  function luminance(hex: string): number {
+    const h = hex.replace('#', '');
+    const ch = [0, 2, 4].map((i) => {
+      const c = parseInt(h.slice(i, i + 2), 16) / 255;
+      return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+  }
+  function contrast(a: string, b: string): number {
+    const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+
+  it.each(CHROME)('%s is declared in every display mode', (name) => {
+    expect(() => chrome(name)).not.toThrow();
+    for (const mode of MODES) {
+      const scoped = blockFor(`:root[data-display="${mode}"]`);
+      expect(scoped, `${name} not re-tinted for ${mode} — the bar would stay navy`)
+        .toMatch(new RegExp(name + ':'));
+    }
+  });
+
+  it('header and footer are distinct tones in default, matching B44', () => {
+    expect(chrome('--color-brand-navy')).not.toBe(chrome('--color-brand-footer'));
+  });
+
+  it.each([undefined, ...MODES])('chrome text clears 7:1 in %s mode', (mode) => {
+    // White nav text, the gold wordmark/active state, and the footer's muted
+    // link tone all sit ON the bar, so each needs the AAA floor against it.
+    const failing: string[] = [];
+    for (const bar of ['--color-brand-navy', '--color-brand-footer']) {
+      const bg = chrome(bar, mode);
+      for (const [label, fg] of [['white', '#FFFFFF'], ['gold', chrome('--color-brand-gold', mode)], ['footer-link', '#B0BEC5']] as const) {
+        if (label === 'footer-link' && bar === '--color-brand-navy') continue;
+        const r = contrast(fg, bg);
+        if (r < 7) failing.push(`${label} on ${bar} = ${r.toFixed(2)}:1`);
+      }
+    }
+    expect(failing, `${mode ?? 'default'} chrome below the AAA floor`).toEqual([]);
+  });
+});
