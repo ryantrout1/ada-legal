@@ -215,9 +215,25 @@ describe('card elevation tier', () => {
   });
 });
 
-/** Grab the body of the first rule whose selector starts with `selector`. */
+/**
+ * Concatenate the bodies of EVERY rule whose selector starts with `selector`.
+ *
+ * Scanning all of them is load-bearing: each display mode has several separate
+ * :root[data-display="..."] rules (one sets color-scheme, another the surface
+ * stack, another the alias overrides). Reading only the first found the
+ * color-scheme block and reported a correct stylesheet as broken.
+ */
 function blockFor(selector: string): string {
-  const at = css.indexOf(selector);
-  if (at === -1) return '';
-  return css.slice(at, css.indexOf('}', at));
+  const bodies: string[] = [];
+  let from = 0;
+  for (;;) {
+    const at = css.indexOf(selector, from);
+    if (at === -1) break;
+    const open = css.indexOf('{', at);
+    const close = css.indexOf('}', open);
+    if (open === -1 || close === -1) break;
+    bodies.push(css.slice(open, close));
+    from = close;
+  }
+  return bodies.join('\n');
 }

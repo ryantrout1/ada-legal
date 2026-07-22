@@ -33,6 +33,14 @@
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Surface — warm off-white, high contrast against ink */
+  /* surface-0 — the card tier: the lifted surface that sits ABOVE the page.
+     Single source of truth for both card systems in this app: the Tailwind
+     `bg-white` utility (app surfaces) and the `--card-bg` alias (ported
+     Standards Guide content). Those were maintained separately and had already
+     drifted in default mode — #FFFFFF vs #FAF8F4 — which is the kind of split
+     nobody notices until two adjacent cards render differently. Re-tinted per
+     display mode below; pinned by tests/unit/tokenParity.test.ts. */
+  --color-surface-0:   #FFFFFF;   /* card / highest elevation */
   --color-surface-50:  #FAF8F4;   /* page background */
   --color-surface-100: #F4F0E8;   /* subtle lift — cards, message bubbles */
   --color-surface-200: #E8E2D4;   /* dividers, input borders */
@@ -263,18 +271,14 @@ body {
  *
  * Tailwind 4's `bg-white` compiles to `background-color: var(--color-white)`
  * which we cannot redefine via @theme without breaking real white
- * usage elsewhere. So we override the COMPILED bg-white class for
- * each non-default display mode via the `[data-display]` attribute
- * selector. Default mode (no attribute) keeps the literal white.
+ * usage elsewhere. So we override the COMPILED bg-white class to read
+ * --color-surface-0, the shared card tier, which is re-tinted per display
+ * mode below. One rule rather than one per mode: the per-mode values now
+ * live on the token, not on three near-duplicate overrides that had to be
+ * kept in sync by hand.
  * ────────────────────────────────────────────────────────────────────── */
-:root[data-display="dark"] .bg-white {
-  background-color: #2A2620 !important;
-}
-:root[data-display="warm"] .bg-white {
-  background-color: #FBF6EC !important;
-}
-:root[data-display="low-vision"] .bg-white {
-  background-color: #FFFFFF !important;
+.bg-white {
+  background-color: var(--color-surface-0) !important;
 }
 
 /* Dark — deep ink surface, warm cream text. Maintains AAA contrast.
@@ -285,6 +289,7 @@ body {
    surface-200 up to ~#3A342C territory for clear divider contrast,
    and keeps surface-300 even higher for the disabled/hint tier. */
 :root[data-display="dark"] {
+  --color-surface-0:   #2A2620;   /* card tier — was the .bg-white override + --card-bg literal */
   --color-surface-50:  #141210;   /* page bg */
   --color-surface-100: #1E1B17;   /* card lift, ~7% brighter */
   --color-surface-200: #3A342C;   /* borders / dividers, ~20% brighter */
@@ -321,6 +326,7 @@ body {
 /* Warm — amber-tinted surface, helpful for light sensitivity, migraine,
    and evening reading. Softer than default, still AAA. */
 :root[data-display="warm"] {
+  --color-surface-0:   #FBF6EC;   /* card tier — almost-white with the warm bias preserved */
   --color-surface-50:  #F5EFE2;
   --color-surface-100: #EDE4D0;
   --color-surface-200: #E0D3B8;
@@ -351,6 +357,7 @@ body {
  * (calculated ratio: 9.8:1 against pure black). Body text at pure
  * white is 21:1. Both exceed AAA thresholds. */
 :root[data-display="contrast"] {
+  --color-surface-0:   #000000;   /* card tier — flat black; the contrast block adds 2px white borders */
   --color-surface-50:  #000000;   /* page bg — pure black */
   --color-surface-100: #000000;   /* was decorative surface — flatten */
   --color-surface-200: #FFFFFF;   /* border color — pure white */
@@ -375,6 +382,7 @@ body {
 /* Low vision — high contrast + enlarged UI affordances. Pairs with larger
    text size by default but doesn't force it. Stronger focus ring. */
 :root[data-display="low-vision"] {
+  --color-surface-0:   #FFFFFF;   /* card tier — pure white; the mode exists for maximum legibility */
   --color-surface-50:  #FFFFFF;
   --color-surface-100: #F5F5F5;
   --color-surface-200: #999999;
@@ -758,7 +766,7 @@ body {
      literal hex so it inherits every per-display-mode override — a pinned
      hex would go unreadable in dark / contrast / low-vision. */
   --link:             var(--color-accent-500);
-  --card-bg:          var(--color-surface-50);
+  --card-bg:          var(--color-surface-0);
   --card-border:      var(--color-surface-200);
   --card-bg-tinted:   var(--color-accent-50);
   --card-bg-warm:     var(--color-warning-50);
@@ -815,20 +823,11 @@ body {
  *
  * Light/default mode is unchanged.
  */
-:root[data-display="dark"] {
-  --card-bg: #2A2620;
-}
-:root[data-display="warm"] {
-  --card-bg: #FBF6EC;
-}
-:root[data-display="low-vision"] {
-  --card-bg: #FFFFFF;
-}
-:root[data-display="contrast"] {
-  --card-bg: var(--color-surface-50);  /* contrast keeps cards flat
-                                          black; the contrast block
-                                          adds 2px white borders. */
-}
+/* The four per-mode --card-bg literals that used to live here are gone.
+   --card-bg now reads --color-surface-0, which is re-tinted per display mode
+   alongside the rest of the surface stack. The values are unchanged; they just
+   live in one place instead of being restated here and again on the .bg-white
+   overrides. */
 
 /* ─── High-contrast enforcement (Step 29 post-migration fix) ─────────────
  *
