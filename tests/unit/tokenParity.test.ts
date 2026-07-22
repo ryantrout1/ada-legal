@@ -113,8 +113,17 @@ describe('B44 alias tokens', () => {
  * two sites read as different products. Phase 3 flips the default.
  */
 describe('typography parity with B44', () => {
-  /** The @theme block, where Tailwind's design tokens are declared. */
-  const theme = css.slice(css.indexOf('@theme'), css.indexOf('}', css.indexOf('@theme')));
+  /**
+   * The @theme block, where Tailwind's design tokens are declared.
+   *
+   * Comments are stripped before slicing: a `}` inside a comment (this file
+   * quotes B44's `body { font-family: 'Manrope' }` rule) would otherwise
+   * terminate the block early and the assertions below would read an empty
+   * string. Found the hard way — the test failed against a correct stylesheet.
+   */
+  const cssNoComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  const themeStart = cssNoComments.indexOf('@theme');
+  const theme = cssNoComments.slice(themeStart, cssNoComments.indexOf('}', themeStart));
 
   it('defaults --font-body to Manrope, matching B44 body copy', () => {
     expect(theme).toMatch(/--font-body:\s*'Manrope'/);

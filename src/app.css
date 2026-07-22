@@ -22,7 +22,13 @@
 @theme {
   /* Typography */
   --font-display: 'Fraunces', 'Georgia', 'Cambria', serif;
-  --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Manrope — matches adalegallink.com, which sets `body { font-family:
+     'Manrope' }` with Fraunces headings (B44 src/Layout.jsx). This app
+     previously defaulted to IBM Plex Sans, so the two halves of the same
+     product read as two products. Flipped platform-wide rather than scoped,
+     which is what retires the per-surface Manrope carve-outs that had
+     accumulated on /spot and the portal. */
+  --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-chrome: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
 
@@ -999,10 +1005,15 @@ body {
  * Sidebar internals (white/​muted/​active on #1E293B) all clear 7:1.
  * ─────────────────────────────────────────────────────────────────────────── */
 .lawyer-workspace {
-  /* UI/body font: Manrope (mockup). Fraunces stays the display face. A user-
-     chosen a11y font (data-font=atkinson|opendyslexic|lexend) is authored at
-     higher specificity on :root and still wins. */
-  --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* No --font-body declaration here, deliberately. Manrope is now the platform
+     default (see @theme), so the portal gets the mockup's UI face for free.
+     Re-declaring it on this wrapper would be actively harmful: custom
+     properties inherit from the nearest declaring ancestor regardless of
+     specificity, so this block used to override :root[data-font="..."] and
+     silently strip a user's chosen accessibility font inside the portal — the
+     surface where attorneys using assistive tech spend their day. That is the
+     same trap the :root:has(.spot-surface) rule above is written to avoid.
+     Pinned by tests/unit/tokenParity.test.ts. */
 
   /* Surface — cool near-white page, white cards, slate-tinted subtle lift.
      Cool-light restyle (Phase 1): #FAF7F2 → #F7F8FA. Verified AAA — body-meta
