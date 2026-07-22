@@ -1408,3 +1408,116 @@ body {
     color: #FFFFFF;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Diagram category-colour remap for dark canvases
+ * ───────────────────────────────────────────────────────────────────────────
+ * The 43 Standards Guide diagrams encode meaning in colour: green = compliant,
+ * red-brown = violation, amber = caution, blue = dimension, violet = note,
+ * slate = neutral annotation. Those values are hardcoded per-element in the
+ * SVG source. The diagram BACKDROP is tokenised
+ * (`<rect fill="var(--page-bg-subtle)">`) so it follows the display mode —
+ * which means in dark and contrast modes the canvas goes near-black while the
+ * labels stay dark, and the text vanishes. Measured against the dark backdrop
+ * (#1E1B17): #1E3A8A 1.66:1, #7C2D12 1.83:1, #14532D 1.88:1.
+ *
+ * Each fill maps to a lighter member of the SAME family, so the category
+ * encoding survives. Every target clears 7:1 on both dark backdrops (pinned by
+ * tests/unit/diagramDarkModes.test.ts, which also fails if a new diagram
+ * introduces an unremapped dark fill).
+ *
+ * NOT ported wholesale from Base44. B44's equivalent block omits #C2410C
+ * (152 fills + 161 strokes here — the most common colour in the set) and
+ * #2563EB, and carries #78716C / #57534E which appear zero times in this repo.
+ * The list below is derived from these diagrams.
+ *
+ * Applies to dark + contrast ONLY. This app's low-vision mode is a WHITE
+ * canvas (unlike B44's black-and-gold), so lightening text there would invert
+ * the bug. Low-vision's mirror defect — the light STRUCTURAL set (#E2E8F0
+ * lines and circles at 1.13:1 on white) — is non-text shape contrast under
+ * 1.4.11 and needs its own pass; it is deliberately not addressed here.
+ *
+ * Colour is never the sole signal in these diagrams: every callout carries a
+ * text label and a bounded shape (1.4.1).
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+:root[data-display="dark"] svg[role="img"] text[fill="#14532D"],
+:root[data-display="dark"] svg[role="img"] text[fill="#15803D"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#14532D"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#15803D"] { fill: #4ADE80; }
+
+:root[data-display="dark"] svg[role="img"] text[fill="#78350F"],
+:root[data-display="dark"] svg[role="img"] text[fill="#7C2D12"],
+:root[data-display="dark"] svg[role="img"] text[fill="#B45309"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#78350F"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#7C2D12"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#B45309"] { fill: #FDBA74; }
+
+/* Accent terracotta — mapped to this app's own dark-mode accent tone so the
+   diagrams agree with the surrounding UI rather than drifting to the amber
+   family above. */
+:root[data-display="dark"] svg[role="img"] text[fill="#C2410C"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#C2410C"] { fill: #EF9367; }
+
+:root[data-display="dark"] svg[role="img"] text[fill="#1E3A8A"],
+:root[data-display="dark"] svg[role="img"] text[fill="#2563EB"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#1E3A8A"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#2563EB"] { fill: #93C5FD; }
+
+:root[data-display="dark"] svg[role="img"] text[fill="#5B21B6"],
+:root[data-display="dark"] svg[role="img"] text[fill="#7C3AED"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#5B21B6"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#7C3AED"] { fill: #C4B5FD; }
+
+/* Two neutral tiers kept visually distinct, as in the light-mode originals.
+   #A2B0C4 is this app's portal dark ink-500 — 7.79:1 dark / 9.54:1 contrast. */
+:root[data-display="dark"] svg[role="img"] text[fill="#475569"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#475569"] { fill: #A2B0C4; }
+
+:root[data-display="dark"] svg[role="img"] text[fill="#64748B"],
+:root[data-display="contrast"] svg[role="img"] text[fill="#64748B"] { fill: #CBD5E1; }
+
+/* Non-text: only #475569 strokes fall below the 3:1 floor (1.4.11) on these
+   backdrops — 2.26:1 dark, 2.77:1 contrast. Every other stroke in the set
+   already clears 3:1, so leader lines, dimension arrows and shape outlines are
+   left alone rather than flattened. Filled shapes are untouched: they read as
+   shapes at their existing ratios, and recolouring them would change what the
+   diagram depicts. */
+:root[data-display="dark"] svg[role="img"] line[stroke="#475569"],
+:root[data-display="dark"] svg[role="img"] circle[stroke="#475569"],
+:root[data-display="dark"] svg[role="img"] path[stroke="#475569"],
+:root[data-display="dark"] svg[role="img"] polygon[stroke="#475569"],
+:root[data-display="contrast"] svg[role="img"] line[stroke="#475569"],
+:root[data-display="contrast"] svg[role="img"] circle[stroke="#475569"],
+:root[data-display="contrast"] svg[role="img"] path[stroke="#475569"],
+:root[data-display="contrast"] svg[role="img"] polygon[stroke="#475569"] { stroke: #94A3B8; }
+
+/* OS "Increase Contrast" with no explicit panel choice. That path flattens
+   --color-surface-100 to #000000 (see the prefers-contrast block above), so
+   the diagram canvas goes black and the same remap is required. Mirrors the
+   app's existing pattern of pairing every [data-display="contrast"] rule with
+   a :root:not([data-display]) equivalent. */
+@media (prefers-contrast: more) {
+  :root:not([data-display]) svg[role="img"] text[fill="#14532D"],
+  :root:not([data-display]) svg[role="img"] text[fill="#15803D"] { fill: #4ADE80; }
+
+  :root:not([data-display]) svg[role="img"] text[fill="#78350F"],
+  :root:not([data-display]) svg[role="img"] text[fill="#7C2D12"],
+  :root:not([data-display]) svg[role="img"] text[fill="#B45309"] { fill: #FDBA74; }
+
+  :root:not([data-display]) svg[role="img"] text[fill="#C2410C"] { fill: #EF9367; }
+
+  :root:not([data-display]) svg[role="img"] text[fill="#1E3A8A"],
+  :root:not([data-display]) svg[role="img"] text[fill="#2563EB"] { fill: #93C5FD; }
+
+  :root:not([data-display]) svg[role="img"] text[fill="#5B21B6"],
+  :root:not([data-display]) svg[role="img"] text[fill="#7C3AED"] { fill: #C4B5FD; }
+
+  :root:not([data-display]) svg[role="img"] text[fill="#475569"] { fill: #A2B0C4; }
+  :root:not([data-display]) svg[role="img"] text[fill="#64748B"] { fill: #CBD5E1; }
+
+  :root:not([data-display]) svg[role="img"] line[stroke="#475569"],
+  :root:not([data-display]) svg[role="img"] circle[stroke="#475569"],
+  :root:not([data-display]) svg[role="img"] path[stroke="#475569"],
+  :root:not([data-display]) svg[role="img"] polygon[stroke="#475569"] { stroke: #94A3B8; }
+}
