@@ -27,7 +27,14 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { AccessibilityPanel } from '../components/AccessibilityPanel.js';
+import LiveAnnouncer from '../components/a11y/LiveAnnouncer.js';
 import { ReadingLevelProvider } from '../components/standards/ReadingLevelContext.js';
+
+// B44 Layout parity: the current page's nav link renders in the brand
+// gold (#FBB040 — --color-brand-gold) and carries aria-current="page".
+function isActive(pathname: string, prefix: string): boolean {
+  return pathname === prefix || pathname.startsWith(prefix + '/');
+}
 
 export default function PublicLayout() {
   const location = useLocation();
@@ -42,6 +49,8 @@ export default function PublicLayout() {
   // open in our state, which would then break the next user-toggle.
   useEffect(() => {
     setMenuOpen(false);
+    // B44 Layout parity: every page change starts at the top.
+    window.scrollTo(0, 0);
   }, [location.pathname]);
 
   // Escape closes the drawer and returns focus to the hamburger trigger.
@@ -81,12 +90,19 @@ export default function PublicLayout() {
   }, [menuOpen]);
 
   return (
+    <LiveAnnouncer>
     <ReadingLevelProvider>
     <div className="min-h-screen flex flex-col bg-surface-50 text-ink-900">
       {/* Skip link — first focusable element, hidden until focused */}
+      {/* B44 skip-link visual: accent pill anchored at the left edge that
+          slides down into view on focus (Layout.jsx). Accent token is the
+          AAA-corrected value; white-on-accent clears 7:1 (tokenParity). */}
       <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:px-4 focus:py-2 focus:bg-ink-900 focus:text-surface-50 focus:rounded"
+        href="#main-content"
+        className="fixed left-4 z-[10000] font-chrome font-semibold text-white bg-accent-500 rounded-b-lg px-6 py-3 transition-[top] duration-200 motion-reduce:transition-none"
+        style={{ top: -200, fontSize: '0.9375rem', textDecoration: 'none' }}
+        onFocus={(e) => { e.currentTarget.style.top = '0px'; }}
+        onBlur={(e) => { e.currentTarget.style.top = '-200px'; }}
       >
         Skip to main content
       </a>
@@ -123,21 +139,24 @@ export default function PublicLayout() {
             >
               <Link
                 to="/standards-guide"
-                className="text-white hover:text-brand-gold transition-colors inline-flex items-center"
+                aria-current={isActive(location.pathname, '/standards-guide') ? 'page' : undefined}
+                className={`transition-colors inline-flex items-center hover:text-brand-gold ${isActive(location.pathname, '/standards-guide') ? 'text-brand-gold' : 'text-white'}`}
                 style={{ fontSize: '0.9375rem', fontWeight: 500, minHeight: 44, padding: '6px 12px' }}
               >
                 ADA Standards Guide
               </Link>
               <Link
                 to="/attorneys"
-                className="text-white hover:text-brand-gold transition-colors inline-flex items-center"
+                aria-current={isActive(location.pathname, '/attorneys') ? 'page' : undefined}
+                className={`transition-colors inline-flex items-center hover:text-brand-gold ${isActive(location.pathname, '/attorneys') ? 'text-brand-gold' : 'text-white'}`}
                 style={{ fontSize: '0.9375rem', fontWeight: 500, minHeight: 44, padding: '6px 12px' }}
               >
                 Find an Attorney
               </Link>
               <Link
                 to="/class-actions"
-                className="text-white hover:text-brand-gold transition-colors inline-flex items-center"
+                aria-current={isActive(location.pathname, '/class-actions') ? 'page' : undefined}
+                className={`transition-colors inline-flex items-center hover:text-brand-gold ${isActive(location.pathname, '/class-actions') ? 'text-brand-gold' : 'text-white'}`}
                 style={{ fontSize: '0.9375rem', fontWeight: 500, minHeight: 44, padding: '6px 12px' }}
               >
                 Lawsuits
@@ -210,19 +229,22 @@ export default function PublicLayout() {
               <nav aria-label="Primary" className="flex flex-col font-chrome">
                 <Link
                   to="/standards-guide"
-                  className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
+                  aria-current={isActive(location.pathname, '/standards-guide') ? 'page' : undefined}
+                  className={`px-5 py-4 text-base hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold ${isActive(location.pathname, '/standards-guide') ? 'text-brand-gold' : 'text-white'}`}
                 >
                   ADA Standards Guide
                 </Link>
                 <Link
                   to="/attorneys"
-                  className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
+                  aria-current={isActive(location.pathname, '/attorneys') ? 'page' : undefined}
+                  className={`px-5 py-4 text-base hover:bg-brand-navy-hover hover:text-brand-gold border-b border-brand-navy-hover transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold ${isActive(location.pathname, '/attorneys') ? 'text-brand-gold' : 'text-white'}`}
                 >
                   Find an Attorney
                 </Link>
                 <Link
                   to="/class-actions"
-                  className="px-5 py-4 text-base text-white hover:bg-brand-navy-hover hover:text-brand-gold transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold"
+                  aria-current={isActive(location.pathname, '/class-actions') ? 'page' : undefined}
+                  className={`px-5 py-4 text-base hover:bg-brand-navy-hover hover:text-brand-gold transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold ${isActive(location.pathname, '/class-actions') ? 'text-brand-gold' : 'text-white'}`}
                 >
                   Lawsuits
                 </Link>
@@ -233,7 +255,7 @@ export default function PublicLayout() {
       </header>
 
       {/* Main content slot */}
-      <main id="main" className="flex-1">
+      <main id="main-content" className="flex-1">
         <Outlet />
       </main>
 
@@ -293,5 +315,6 @@ export default function PublicLayout() {
       </footer>
     </div>
     </ReadingLevelProvider>
+    </LiveAnnouncer>
   );
 }
