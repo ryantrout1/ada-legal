@@ -29,6 +29,11 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import { AccessibilityPanel } from '../components/AccessibilityPanel.js';
 import LiveAnnouncer from '../components/a11y/LiveAnnouncer.js';
 import { ReadingLevelProvider } from '../components/standards/ReadingLevelContext.js';
+// M5: site-wide widgets. ComingSoonProvider owns the waitlist modal and
+// exposes openModal() through context; FeedbackButton owns its own modal.
+// Both mount once here rather than per-page, matching B44's Layout.
+import { ComingSoonProvider } from '../components/site/useComingSoonModal.jsx';
+import FeedbackButton from '../components/site/FeedbackButton.jsx';
 
 // B44 Layout parity: the current page's nav link renders in the brand
 // gold (#FBB040 — --color-brand-gold) and carries aria-current="page".
@@ -92,6 +97,7 @@ export default function PublicLayout() {
   return (
     <LiveAnnouncer>
     <ReadingLevelProvider>
+    <ComingSoonProvider>
     <div className="min-h-screen flex flex-col bg-surface-50 text-ink-900">
       {/* Skip link — first focusable element, hidden until focused */}
       {/* B44 skip-link visual: accent pill anchored at the left edge that
@@ -313,7 +319,12 @@ export default function PublicLayout() {
           </div>
         </div>
       </footer>
+
+      {/* Site-wide feedback affordance. Renders last so it sits above the
+          footer in the tab order rather than interrupting the page. */}
+      <FeedbackButton />
     </div>
+    </ComingSoonProvider>
     </ReadingLevelProvider>
     </LiveAnnouncer>
   );

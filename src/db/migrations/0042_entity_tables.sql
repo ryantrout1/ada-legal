@@ -37,7 +37,21 @@ CREATE TABLE IF NOT EXISTS feedback (
   created_at    timestamptz NOT NULL DEFAULT now()
 );
 
+-- B44's FeedbackModal carries more than a message: a type (suggestion /
+-- bug_report / question / general_feedback / testimonial), an optional
+-- name and location, and a separate display_name + consent pair used only
+-- when someone offers a testimonial we may quote. Consent is stored
+-- explicitly rather than inferred from display_name being present —
+-- quoting someone who did not agree to be quoted is the failure here.
+ALTER TABLE feedback ADD COLUMN IF NOT EXISTS feedback_type text NOT NULL DEFAULT 'general_feedback';
+ALTER TABLE feedback ADD COLUMN IF NOT EXISTS name text;
+ALTER TABLE feedback ADD COLUMN IF NOT EXISTS display_name text;
+ALTER TABLE feedback ADD COLUMN IF NOT EXISTS location text;
+ALTER TABLE feedback ADD COLUMN IF NOT EXISTS testimonial_consent boolean NOT NULL DEFAULT false;
+ALTER TABLE feedback ADD COLUMN IF NOT EXISTS page_url text;
+
 CREATE INDEX IF NOT EXISTS feedback_created_at_idx ON feedback (created_at DESC);
+CREATE INDEX IF NOT EXISTS feedback_type_idx ON feedback (feedback_type, created_at DESC);
 
 CREATE TABLE IF NOT EXISTS waitlist_signups (
   id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),

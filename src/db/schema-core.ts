@@ -609,10 +609,18 @@ export const feedback = pgTable(
   'feedback',
   {
     id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    feedbackType: text('feedback_type').notNull().default('general_feedback'),
     rating: text('rating'),
     message: text('message').notNull(),
+    name: text('name'),
     email: text('email'),
+    // display_name + testimonial_consent travel together: consent is
+    // stored explicitly rather than inferred from a name being present.
+    displayName: text('display_name'),
+    location: text('location'),
+    testimonialConsent: boolean('testimonial_consent').notNull().default(false),
     page: text('page'),
+    pageUrl: text('page_url'),
     userAgent: text('user_agent'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },

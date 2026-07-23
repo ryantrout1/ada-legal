@@ -34,9 +34,15 @@ function requireDatabaseUrl(): string {
 
 export interface FeedbackInput {
   message: string;
+  feedbackType?: string | null;
   rating?: string | null;
+  name?: string | null;
   email?: string | null;
+  displayName?: string | null;
+  location?: string | null;
+  testimonialConsent?: boolean;
   page?: string | null;
+  pageUrl?: string | null;
   userAgent?: string | null;
 }
 
@@ -73,9 +79,16 @@ export function makeEntityStore(
     async recordFeedback(input) {
       await db.insert(feedback).values({
         message: input.message,
+        feedbackType: input.feedbackType ?? 'general_feedback',
         rating: input.rating ?? null,
+        name: input.name ?? null,
         email: input.email ?? null,
+        displayName: input.displayName ?? null,
+        location: input.location ?? null,
+        // Defaults false: never treat a missing flag as permission to quote.
+        testimonialConsent: input.testimonialConsent === true,
         page: input.page ?? null,
+        pageUrl: input.pageUrl ?? null,
         userAgent: input.userAgent ?? null,
       });
     },

@@ -28,12 +28,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const body = (req.body ?? {}) as {
-    message?: unknown;
-    rating?: unknown;
-    email?: unknown;
-    page?: unknown;
-  };
+  const body = (req.body ?? {}) as Record<string, unknown>;
+  const str = (v: unknown, max: number): string | null =>
+    typeof v === 'string' && v.trim() ? v.trim().slice(0, max) : null;
 
   const message = typeof body.message === 'string' ? body.message.trim() : '';
   if (!message) {
@@ -43,12 +40,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     await makeEntityStore().recordFeedback({
       message: message.slice(0, MAX_MESSAGE),
-      rating: typeof body.rating === 'string' ? body.rating.slice(0, 40) : null,
-      email:
-        typeof body.email === 'string' && body.email.trim()
-          ? body.email.trim().slice(0, 320)
-          : null,
-      page: typeof body.page === 'string' ? body.page.slice(0, 200) : null,
+      feedbackType: str(body.feedback_type, 40) ?? 'general_feedback',
+      rating: str(body.rating, 40),
+      name: str(body.name, 200),
+      email: str(body.email, 320),
+      displayName: str(body.display_name, 200),
+      location: str(body.location, 200),
+      // Only an explicit true is consent.
+      testimonialConsent: body.testimonial_consent === true,
+      page: str(body.page, 200),
+      pageUrl: str(body.page_url, 500),
       userAgent:
         typeof req.headers['user-agent'] === 'string'
           ? req.headers['user-agent'].slice(0, 300)
