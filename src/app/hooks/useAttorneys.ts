@@ -21,18 +21,21 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { PublicAttorneyRow } from '../lib/attorneyTypes.js';
 
-export interface AttorneyDisplay {
-  id: string;
-  name: string;
-  firm_name: string | null;
-  location_city: string | null;
-  location_state: string | null;
-  practice_areas: string[];
-  email: string | null;
-  phone: string | null;
-  website_url: string | null;
-}
+/**
+ * M4: the display row is now the full public payload.
+ *
+ * This interface used to declare nine fields while /api/attorneys
+ * returned twelve — `bio`, `specialty_tags` and `states_of_practice`
+ * were arriving over the wire on every request and being discarded by
+ * the type, so the card could not render them without a cast. Aliased
+ * to PublicAttorneyRow rather than re-declared, so the two cannot drift.
+ *
+ * The name is kept as an alias: the sort helpers and their tests import
+ * it, and renaming them is churn with no benefit.
+ */
+export type AttorneyDisplay = PublicAttorneyRow;
 
 export interface AttorneyFilters {
   state: string | null;

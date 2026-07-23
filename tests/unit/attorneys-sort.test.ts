@@ -74,6 +74,11 @@ function mkAttorney(partial: Partial<AttorneyDisplay>): AttorneyDisplay {
     location_city: partial.location_city ?? null,
     location_state: partial.location_state ?? null,
     practice_areas: partial.practice_areas ?? [],
+    // M4: AttorneyDisplay is now the full public row. These three were
+    // already arriving from /api/attorneys; the type just discarded them.
+    specialty_tags: partial.specialty_tags ?? [],
+    states_of_practice: partial.states_of_practice ?? [],
+    bio: partial.bio ?? null,
     email: partial.email ?? null,
     phone: partial.phone ?? null,
     website_url: partial.website_url ?? null,

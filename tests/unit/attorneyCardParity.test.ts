@@ -96,3 +96,56 @@ describe('AttorneyCard — B44 anatomy is present', () => {
     expect(code).toContain('target="_blank"');
   });
 });
+
+/**
+ * M4 Phase 2 — the page keeps the data layer B44 has no equivalent of.
+ *
+ * The plan's risk register named exactly one way this milestone could
+ * go wrong: a "faithful port" of B44's page deletes useAttorneys and
+ * with it the facets endpoint, the debounced server-side filtering,
+ * and the thin-roster gate — because B44 fetches the whole roster once
+ * and filters it in memory, and matching that would look like fidelity.
+ *
+ * That is the same shape M2 caught on the guide shells and M3 caught on
+ * the lawsuit detail page. Third time it gets a test.
+ */
+describe('Attorneys page — ahead-of-B44 data layer survives', () => {
+  const PAGE = 'src/app/routes/public/Attorneys.tsx';
+  const pageCode = readCode(PAGE);
+
+  // NOTE: these assert on CALL SITES, not bare identifiers. An earlier
+  // version checked `toContain('shouldShowFilters')`, which the import
+  // line satisfied on its own — deleting the actual call left the guard
+  // green. Caught by mutation-checking it; a guard that cannot fail is
+  // worse than no guard, because it reads as coverage.
+  it('still routes its data through useAttorneys', () => {
+    expect(pageCode, 'the facets + debounce + server-filter layer was dropped').toMatch(
+      /useAttorneys\(\)/,
+    );
+  });
+
+  it('still gates the filter UI on the thin-roster threshold', () => {
+    expect(pageCode, 'thin-roster gate no longer consulted').toMatch(
+      /shouldShowFilters\(\s*totalApproved\s*\)/,
+    );
+  });
+
+  it('still applies the client-side search filter', () => {
+    expect(pageCode).toMatch(/filterAttorneys\(/);
+  });
+
+  it('does not fetch /api/attorneys directly, bypassing the hook', () => {
+    // A direct fetch here would silently strip the debounce and the
+    // facets call while still appearing to work.
+    expect(pageCode).not.toMatch(/fetch\(\s*['"`]\/api\/attorneys/);
+  });
+
+  it('renders the ported card, not an inline one', () => {
+    // The old page declared its own AttorneyCard at the bottom of the
+    // file. That is the thing this milestone replaces.
+    expect(pageCode).toContain('AttorneyCard');
+    expect(pageCode, 'card re-declared inline instead of imported').not.toMatch(
+      /function AttorneyCard/,
+    );
+  });
+});
