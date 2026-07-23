@@ -22,6 +22,7 @@ import type {
   AttorneyFilterState,
   AttorneyFacets,
 } from '../../lib/attorneyFilters.js';
+import { practiceAreaLabel } from '../../lib/attorneyLabels.js';
 
 const labelStyle: CSSProperties = {
   display: 'block',
@@ -96,8 +97,9 @@ export default function AttorneyFilters({ filters, facets, onChange }: Props) {
         >
           <option value="all">All practice areas</option>
           {facets.practiceAreas.map((pa) => (
+            // value stays the raw slug — it is the server query param.
             <option key={pa} value={pa}>
-              {pa}
+              {practiceAreaLabel(pa)}
             </option>
           ))}
         </select>

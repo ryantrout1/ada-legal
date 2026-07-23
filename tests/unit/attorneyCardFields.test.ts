@@ -22,6 +22,7 @@ import {
   getInitials,
   normalizeUrl,
 } from '@/app/lib/attorneyCardFields';
+import { practiceAreaLabel } from '@/app/lib/attorneyLabels';
 import type { PublicAttorneyRow } from '@/app/lib/attorneyTypes';
 
 function row(overrides: Partial<PublicAttorneyRow> = {}): PublicAttorneyRow {
@@ -87,7 +88,31 @@ describe('toCardFields — full row', () => {
 
   it('merges practice areas and specialty tags into one chip list', () => {
     const full = toCardFields(row({ specialty_tags: ['wheelchair_access'] }));
-    expect(full.chips).toEqual(['ada', 'civil_rights', 'wheelchair_access']);
+    expect(full.chips).toEqual(['ADA', 'Civil rights', 'Wheelchair access']);
+  });
+
+  it('renders human labels, never raw slugs', () => {
+    // The directory is public-facing. `public_accommodations` on a legal
+    // directory reads as an unfinished site.
+    const labelled = toCardFields(
+      row({ practice_areas: ['ada', 'civil_rights', 'public_accommodations', 'transportation'] }),
+    );
+    expect(labelled.chips).toEqual([
+      'ADA',
+      'Civil rights',
+      'Public accommodations',
+      'Transportation',
+    ]);
+    for (const chip of labelled.chips) {
+      expect(chip, `raw slug leaked into a chip: ${chip}`).not.toContain('_');
+    }
+  });
+
+  it('preserves chip order — practice areas first, then specialty tags', () => {
+    const ordered = toCardFields(
+      row({ practice_areas: ['transportation', 'ada'], specialty_tags: ['spinal_cord'] }),
+    );
+    expect(ordered.chips).toEqual(['Transportation', 'ADA', 'Spinal cord']);
   });
 
   it('decides every optional section is renderable', () => {
@@ -147,12 +172,45 @@ describe('toCardFields — sparse row (the live shape)', () => {
 
   it('drops empty strings from the chip list', () => {
     const messy = toCardFields(row({ practice_areas: ['', 'ada'], specialty_tags: [''] }));
-    expect(messy.chips).toEqual(['ada']);
+    expect(messy.chips).toEqual(['ADA']);
   });
 
   it('strips punctuation from the tel: href but not the label', () => {
     const f = toCardFields(row());
     expect(f.telHref).toBe('tel:2025079180');
     expect(f.phoneLabel).toBe('(202) 507-9180');
+  });
+});
+
+/**
+ * The label mapping itself. Lives with the card-field tests because the
+ * mapper is its only production caller besides the filter dropdown.
+ *
+ * LABEL, NEVER VALUE — the slug stays the option value and the query
+ * param. A test that formatted the value would pass while silently
+ * breaking server-side filtering, so the filter tests deliberately
+ * still compare raw slugs.
+ */
+describe('practiceAreaLabel', () => {
+  it('upper-cases known acronyms rather than sentence-casing them', () => {
+    expect(practiceAreaLabel('ada')).toBe('ADA');
+    expect(practiceAreaLabel('eeoc')).toBe('EEOC');
+    expect(practiceAreaLabel('doj')).toBe('DOJ');
+    expect(practiceAreaLabel('hud')).toBe('HUD');
+  });
+
+  it('sentence-cases multi-word slugs', () => {
+    expect(practiceAreaLabel('civil_rights')).toBe('Civil rights');
+    expect(practiceAreaLabel('public_accommodations')).toBe('Public accommodations');
+  });
+
+  it('humanizes an unknown slug rather than passing it through raw', () => {
+    expect(practiceAreaLabel('service_animal_denial')).toBe('Service animal denial');
+  });
+
+  it('returns empty string for nothing usable', () => {
+    expect(practiceAreaLabel(null)).toBe('');
+    expect(practiceAreaLabel('')).toBe('');
+    expect(practiceAreaLabel('   ')).toBe('');
   });
 });

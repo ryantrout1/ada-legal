@@ -14,6 +14,7 @@
  */
 
 import type { PublicAttorneyRow } from './attorneyTypes.js';
+import { practiceAreaLabel } from './attorneyLabels.js';
 
 /** First + last initial. Never blank — a blank avatar looks like a bug. */
 export function getInitials(name: string | null | undefined): string {
@@ -67,7 +68,12 @@ export function toCardFields(row: PublicAttorneyRow): AttorneyCardFields {
 
   // B44 renders practice areas and specialty tags in one list under a
   // single "Practice areas" heading; merging them here keeps that.
-  const chips = [...nonEmpty(row.practice_areas), ...nonEmpty(row.specialty_tags)];
+  // Formatted here rather than in the JSX so the label mapping stays in
+  // the tested mapper — the same reason every other render decision
+  // lives in this function.
+  const chips = [...nonEmpty(row.practice_areas), ...nonEmpty(row.specialty_tags)].map(
+    practiceAreaLabel,
+  );
   const states = nonEmpty(row.states_of_practice);
   const website = normalizeUrl(row.website_url);
   const email = row.email && row.email.trim() ? row.email : null;
