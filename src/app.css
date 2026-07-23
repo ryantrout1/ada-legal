@@ -1645,13 +1645,20 @@ body {
  * declared once.
  */
 .lawsuit-card-link:focus-visible,
-.lawsuit-back-link:focus-visible {
+.lawsuit-back-link:focus-visible,
+.directory-card-link:focus-visible {
   outline: 3px solid var(--link);
   outline-offset: 2px;
   border-radius: 8px;
 }
 
-.lawsuit-filter-control:focus-visible {
+.lawsuit-filter-control:focus-visible,
+.directory-filter-control:focus-visible {
   outline: 3px solid var(--link);
   outline-offset: 1px;
+}
+
+/* M4: contact links thicken on hover, matching B44's attorney card. */
+.directory-card-link:hover {
+  text-decoration-thickness: 2px;
 }
