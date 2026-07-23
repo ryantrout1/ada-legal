@@ -81,3 +81,27 @@ Debug tip: if you hit an opaque `FUNCTION_INVOCATION_FAILED`, ship a diagnostic 
 ---
 
 *Rules are added as we make decisions we know we'll be tempted to regret. When you add one, date it and cite the decision context.*
+
+## `vercel.json` consumer-route redirects (added 2026-07-23)
+
+`ada.adalegallink.com` is the engine domain; `adalegallink.com` (Base44) is
+the live public site until the M7 cutover. Every consumer route here — `/`,
+`/chat`, `/attorneys`, `/class-actions`, `/standards-guide` and
+`/standards-guide/:path*` (which covers all 46 guides and 10 chapters) — is
+parked with a redirect to the public site.
+
+Each of those redirects carries `"missing": [{ "type": "query", "key":
+"preview" }]`. Appending `?preview=1` renders the real page instead of
+bouncing; React Router takes over after first paint, so one gated entry is
+enough to browse the whole app.
+
+**This is a visibility gate, not a security control.** What keeps these
+unfinished pages out of search is `public/robots.txt` (full disallow) plus
+the `X-Robots-Tag: noindex` header. Don't treat `?preview=1` as auth.
+
+M7 deletes the whole redirect block at cutover.
+
+**`vercel.json` accepts no comments and no unknown top-level keys** — the
+schema rejects them and the deployment fails at config validation, before
+the build runs (so there are no build logs to read). That is why this note
+lives here.
