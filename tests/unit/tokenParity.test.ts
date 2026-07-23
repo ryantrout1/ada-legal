@@ -351,7 +351,7 @@ describe('default palette parity with B44', () => {
  * swap. Tracked as an open decision.
  */
 describe('non-default display mode contrast', () => {
-  const MODES = ['dark', 'warm', 'contrast'] as const;
+  const MODES = ['dark', 'warm', 'contrast', 'low-vision'] as const;
 
   const themeBlock = (() => {
     const masked = css.replace(/\/\*[\s\S]*?\*\//g, (m) => ' '.repeat(m.length));

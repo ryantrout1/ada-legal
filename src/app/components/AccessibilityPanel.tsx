@@ -378,7 +378,7 @@ const DISPLAY_OPTS: DisplayOption[] = [
   },
   {
     value: 'contrast',
-    label: 'High Contrast',
+    label: 'Contrast', // B44 label
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
         <circle cx="12" cy="12" r="9" />
@@ -440,7 +440,7 @@ const FONT_OPTS: FontOption[] = [
     value: 'default',
     label: 'Default',
     description: 'Standard site fonts',
-    style: { fontFamily: "'IBM Plex Sans', sans-serif" },
+    style: { fontFamily: 'Georgia, serif' }, // B44 FONT_OPTIONS preview
   },
   {
     value: 'atkinson',
@@ -506,29 +506,32 @@ function SizeSection({
   value: TextSize;
   onChange: (v: TextSize) => void;
 }) {
+  // B44's option set (DisplaySettings.jsx): Default / Large / XL. The
+  // hook still speaks the legacy vocabulary where 'medium' is the
+  // resting state, so 'default' maps to setSize('medium'). A stored
+  // legacy 'small' has no tile here (B44 has no small tier); its CSS
+  // keeps rendering, and picking any tile moves the user onto B44 tiers.
+  const OPTS = [
+    { key: 'default', set: 'medium', sz: '0.8rem', aria: 'Default text size' },
+    { key: 'large', set: 'large', sz: '1rem', aria: 'Large text size' },
+    { key: 'xl', set: 'xl', sz: '1.2rem', aria: 'Extra large text size' },
+  ] as const;
+  const current = value === 'medium' ? 'default' : value;
   return (
     <section>
       <h3 className="text-[0.65625rem] font-semibold uppercase tracking-wider text-ink-500 mb-2">
         Size
       </h3>
       <div className="grid grid-cols-3 gap-1.5" role="group" aria-label="Text size">
-        {(['small', 'medium', 'large'] as const).map((s) => (
+        {OPTS.map((s) => (
           <OptionButton
-            key={s}
-            selected={value === s}
+            key={s.key}
+            selected={current === s.key}
             variant="segmented"
-            onClick={() => onChange(s)}
-            ariaLabel={`${s} text size`}
+            onClick={() => onChange(s.set)}
+            ariaLabel={s.aria}
           >
-            <span
-              className={
-                s === 'small'
-                  ? 'text-sm font-semibold'
-                  : s === 'medium'
-                  ? 'text-base font-semibold'
-                  : 'text-xl font-semibold'
-              }
-            >
+            <span className="font-semibold" style={{ fontSize: s.sz }}>
               A
             </span>
           </OptionButton>
@@ -545,42 +548,33 @@ function SpacingSection({
   value: Spacing;
   onChange: (v: Spacing) => void;
 }) {
+  // B44's option set: Default / Relaxed / Loose, previewed with B44's
+  // SpacingIcon geometry (three lines, gap 2 / 4 / 5). A stored legacy
+  // 'tight' has no tile (B44 has no tight tier); its CSS keeps
+  // rendering until the user picks a tile.
+  const OPTS = [
+    { key: 'default', gap: 2, aria: 'Default line spacing' },
+    { key: 'relaxed', gap: 4, aria: 'Relaxed line spacing' },
+    { key: 'loose', gap: 5, aria: 'Loose line spacing' },
+  ] as const;
   return (
     <section>
       <h3 className="text-[0.65625rem] font-semibold uppercase tracking-wider text-ink-500 mb-2">
         Spacing
       </h3>
       <div className="grid grid-cols-3 gap-1.5" role="group" aria-label="Line spacing">
-        {(['tight', 'default', 'loose'] as const).map((s) => (
+        {OPTS.map((s) => (
           <OptionButton
-            key={s}
-            selected={value === s}
+            key={s.key}
+            selected={value === s.key}
             variant="segmented"
-            onClick={() => onChange(s)}
-            ariaLabel={`${s} line spacing`}
+            onClick={() => onChange(s.key)}
+            ariaLabel={s.aria}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-              {s === 'tight' && (
-                <g stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <line x1="4" y1="7" x2="20" y2="7" />
-                  <line x1="4" y1="11" x2="20" y2="11" />
-                  <line x1="4" y1="15" x2="20" y2="15" />
-                </g>
-              )}
-              {s === 'default' && (
-                <g stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <line x1="4" y1="6" x2="20" y2="6" />
-                  <line x1="4" y1="12" x2="20" y2="12" />
-                  <line x1="4" y1="18" x2="20" y2="18" />
-                </g>
-              )}
-              {s === 'loose' && (
-                <g stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <line x1="4" y1="5" x2="20" y2="5" />
-                  <line x1="4" y1="12" x2="20" y2="12" />
-                  <line x1="4" y1="19" x2="20" y2="19" />
-                </g>
-              )}
+            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+              <rect x="2" y={1} width="14" height="2" rx="1" fill="currentColor" />
+              <rect x="2" y={3 + s.gap} width="14" height="2" rx="1" fill="currentColor" />
+              <rect x="2" y={5 + s.gap * 2} width="10" height="2" rx="1" fill="currentColor" />
             </svg>
           </OptionButton>
         ))}
