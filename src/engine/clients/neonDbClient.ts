@@ -4270,6 +4270,10 @@ function toLitigationPublicRow(
     adaQualifyingQuestions: (r.adaQualifyingQuestions ?? {}) as Record<string, unknown>,
     leadAttorneyId: r.leadAttorneyId,
     leadFirmId: r.leadFirmId,
+    // M3: the public pages render a status badge and filter by status.
+    // Callers have already restricted to surface-visible statuses, so
+    // nothing admin-only reaches a public payload through here.
+    status: r.status as LitigationStatus,
   };
 }
 
@@ -4282,7 +4286,7 @@ function toLitigationAdminRow(
     // __nationwide__ sentinel) so editors don't lose it on save; only the
     // public + prompt surfaces get the normalized value.
     affectedStates: (r.affectedStates ?? []) as string[],
-    status: r.status as LitigationStatus,
+    // status comes through the public mapper as of M3.
     createdAt: (r.createdAt as Date).toISOString(),
     updatedAt: (r.updatedAt as Date).toISOString(),
   };

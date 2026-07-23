@@ -983,6 +983,10 @@ export class InMemoryDbClient implements DbClient {
       adaQualifyingQuestions: l.adaQualifyingQuestions,
       leadAttorneyId: l.leadAttorneyId,
       leadFirmId: l.leadFirmId,
+      // M3: mirrors the Neon mapper. Rows are already filtered to the
+      // surface-visible statuses above, so this cannot leak an
+      // admin-only status to a public caller.
+      status: l.status,
     }));
   }
 
@@ -1034,6 +1038,9 @@ export class InMemoryDbClient implements DbClient {
       kind: row.kind,
       caseName: row.caseName,
       slug: row.slug,
+      // M3: mirrors the list projection and the Neon mapper. `row` is
+      // already status-filtered above, so no admin-only status escapes.
+      status: row.status,
       legalTheory: row.legalTheory,
       shortDescription: row.shortDescription,
       shortDescriptionSimple: row.shortDescriptionSimple,

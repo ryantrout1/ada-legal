@@ -55,6 +55,9 @@ function makeRow(overrides: Partial<LitigationRow> = {}): LitigationRow {
     adaQualifyingQuestions: {},
     leadAttorneyId: ATTORNEY_ID,
     leadFirmId: null,
+    // M3: status is part of the public row now. Fixture rows stand in for
+    // what the public endpoints return, which is always surface-visible.
+    status: 'active',
     ...overrides,
   };
 }

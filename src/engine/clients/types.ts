@@ -511,11 +511,28 @@ export interface LitigationRow {
   leadAttorneyId: string | null;
   /** Phase A1: optional lead firm (separate from lead attorney). */
   leadFirmId: string | null;
+  /**
+   * M3: the row's lifecycle status, projected onto the PUBLIC payload.
+   *
+   * The public pages render a status badge per case and offer a status
+   * filter, both of which need this. Only surface-visible statuses ever
+   * reach a public caller — the list and detail methods filter to
+   * active/compliance/investigating/tracking before projecting — so this
+   * never leaks draft/closed/archived to the front end.
+   *
+   * Additive: `LitigationAdminRow` already declared the same field with
+   * the same type, so it is now inherited rather than re-declared.
+   */
+  status: LitigationStatus;
 }
 
-/** Admin row, exposes status + timestamps. */
+/**
+ * Admin row: timestamps, plus the RAW affected_states (the public
+ * projection normalizes the `__nationwide__` sentinel away; editors must
+ * not lose it on save). `status` is inherited from LitigationRow as of
+ * M3 — it used to be re-declared here because the public row lacked it.
+ */
 export interface LitigationAdminRow extends LitigationRow {
-  status: LitigationStatus;
   createdAt: string;
   updatedAt: string;
 }
