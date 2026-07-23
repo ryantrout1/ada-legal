@@ -124,7 +124,12 @@ export default function LawsuitDetail() {
   const [row, setRow] = useState<PublicLawsuitDetailRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  // Two separate error states on purpose. A failed page load and a
+  // failed chat start need different copy and appear in different
+  // places; sharing one state rendered "Couldn't load this case: Could
+  // not start chat" at the top of a page that had loaded fine.
   const [error, setError] = useState<string | null>(null);
+  const [chatError, setChatError] = useState<string | null>(null);
   const [startingChat, setStartingChat] = useState(false);
 
   const load = useCallback(async () => {
@@ -161,7 +166,7 @@ export default function LawsuitDetail() {
   async function handleTalkToAda() {
     if (!row) return;
     setStartingChat(true);
-    setError(null);
+    setChatError(null);
     try {
       const resp = await fetch('/api/ada/session', {
         method: 'POST',
@@ -178,7 +183,7 @@ export default function LawsuitDetail() {
       }
       navigate('/chat');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not start chat');
+      setChatError(err instanceof Error ? err.message : 'Could not start chat');
       setStartingChat(false);
     }
   }
@@ -275,7 +280,7 @@ export default function LawsuitDetail() {
         </p>
       )}
 
-      {error && !startingChat && (
+      {error && (
         <div
           role="alert"
           style={{
@@ -425,6 +430,19 @@ export default function LawsuitDetail() {
               >
                 {startingChat ? 'Starting chat…' : 'Talk to Ada about this case →'}
               </button>
+              {chatError && (
+                <p
+                  role="alert"
+                  style={{
+                    margin: '0.75rem 0 0',
+                    fontFamily: 'Manrope, sans-serif',
+                    fontSize: '0.875rem',
+                    color: 'var(--color-danger-500)',
+                  }}
+                >
+                  Couldn&rsquo;t start the chat: {chatError}
+                </p>
+              )}
             </div>
           )}
 
