@@ -51,3 +51,31 @@ export async function readLawsuitsAdaCta(db: AdaClients['db']): Promise<boolean>
   );
   return resolveLawsuitsAdaCta(stored);
 }
+
+// ─── ada_universal_cta (M5) ──────────────────────────────────────────────────
+
+/**
+ * `ada_universal_cta` — retarget site CTAs to Ada rather than the Pathway
+ * pages. Migrated from Base44's SiteConfig at M0; false today.
+ *
+ * Same shape and same fail-closed posture as the lawsuits flag, read from
+ * the same shared `admin` blob by its own resolver so neither flag can
+ * switch the other on.
+ */
+export const ADA_UNIVERSAL_CTA_KEY = 'ada_universal_cta';
+export const ADA_UNIVERSAL_CTA_DEFAULT = false;
+
+export function resolveAdaUniversalCta(stored: unknown): boolean {
+  if (stored && typeof stored === 'object' && ADA_UNIVERSAL_CTA_KEY in stored) {
+    const value = (stored as Record<string, unknown>)[ADA_UNIVERSAL_CTA_KEY];
+    if (typeof value === 'boolean') return value;
+  }
+  return ADA_UNIVERSAL_CTA_DEFAULT;
+}
+
+export async function readAdaUniversalCta(db: AdaClients['db']): Promise<boolean> {
+  const stored = await db.getSystemSetting<Record<string, unknown>>(
+    LAWSUITS_ADA_CTA_SETTINGS_KEY,
+  );
+  return resolveAdaUniversalCta(stored);
+}

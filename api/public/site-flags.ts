@@ -26,7 +26,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { makeClientsFromEnv } from '../_shared.js';
 import { applyCors } from '../_cors.js';
-import { readLawsuitsAdaCta } from '../../src/lib/site/lawsuitsAdaCta.js';
+import {
+  readLawsuitsAdaCta,
+  readAdaUniversalCta,
+} from '../../src/lib/site/lawsuitsAdaCta.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return; // preflight handled
@@ -37,14 +40,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   let lawsuitsAdaCtaEnabled = false;
+  let adaUniversalCta = false;
   try {
     const clients = makeClientsFromEnv();
-    lawsuitsAdaCtaEnabled = await readLawsuitsAdaCta(clients.db);
+    // Both flags live in the same `admin` blob, so this is one read.
+    [lawsuitsAdaCtaEnabled, adaUniversalCta] = await Promise.all([
+      readLawsuitsAdaCta(clients.db),
+      readAdaUniversalCta(clients.db),
+    ]);
   } catch (err) {
     // Fail closed, and say so in the logs so a persistent read failure
     // is still visible rather than silently pinning the CTA off.
     console.error('[public/site-flags GET] flag read failed, serving off:', err);
     lawsuitsAdaCtaEnabled = false;
+    adaUniversalCta = false;
   }
 
   res.setHeader(
@@ -53,5 +62,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   );
   return res.status(200).json({
     lawsuits_ada_cta_enabled: lawsuitsAdaCtaEnabled,
+    // M5: additive. Existing consumers keep reading the field above.
+    ada_universal_cta: adaUniversalCta,
   });
 }
