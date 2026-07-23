@@ -88,7 +88,10 @@ describe('buildSystemPrompt', () => {
 });
 
 describe('trimHistory', () => {
-  const turn = (i: number) => ({ role: (i % 2 ? 'assistant' : 'user') as const, content: `m${i}` });
+  const turn = (i: number): { role: 'user' | 'assistant'; content: string } => ({
+    role: i % 2 ? 'assistant' : 'user',
+    content: `m${i}`,
+  });
 
   it('keeps the recent window B44 used', () => {
     const many = Array.from({ length: 20 }, (_, i) => turn(i));
