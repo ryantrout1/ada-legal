@@ -1,0 +1,143 @@
+/**
+ * M2 Phase 2 — shell drift guards.
+ *
+ * Recon result: of the six shells the M2 plan listed for "re-port
+ * verbatim from B44", FOUR are ahead of B44 on our side, and porting
+ * B44 over them would be a regression, not a sync:
+ *
+ *   GuideReportCTA     B44 links to a `RightsPathway` page that was never
+ *                      built, under "launching soon" copy. Ours starts a
+ *                      real Ada session with guide page context and routes
+ *                      to /chat, in Ada's own voice.
+ *   ChapterPageLayout  Feature-equal to B44 (all-chapters map, section
+ *                      blocks, prev/next) PLUS the `tldr` block B44 has no
+ *                      equivalent of.
+ *   AutoCiteLinks      Ours fixed a real React bug — B44 keys list items
+ *                      with Math.random(), which produces a new key every
+ *                      render and defeats reconciliation.
+ *   ShareBar           B44 switches button styles imperatively per display
+ *                      mode; ours renders only inside the always-dark hero
+ *                      and uses the dark token family directly. Same output,
+ *                      and it inlines the Facebook/X/LinkedIn glyphs that
+ *                      lucide-react dropped for trademark reasons.
+ *
+ * These assertions are tripwires, not behavior tests: they fail loudly if
+ * a later "sync from B44" reintroduces the older shape. Each names the
+ * capability at stake rather than pinning a whole file, so ordinary
+ * refactors don't trip them.
+ */
+
+import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+const read = (rel: string) => readFileSync(resolve(root, rel), 'utf8');
+
+/**
+ * Source with comments removed. Absence assertions must run against this:
+ * these files legitimately *describe* the B44 shapes they diverge from, so
+ * matching raw source would fire on the explanation rather than the code.
+ */
+const readCode = (rel: string) =>
+  read(rel)
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^\s*\/\/.*$/gm, '');
+
+const CTA = 'src/app/components/standards/GuideReportCTA.jsx';
+const LAYOUT = 'src/app/components/standards/ChapterPageLayout.tsx';
+const CITE = 'src/app/components/standards/AutoCiteLinks.tsx';
+const SHARE = 'src/app/components/standards/ShareBar.tsx';
+const HERO = 'src/app/components/standards/GuideHeroBanner.tsx';
+
+describe('GuideReportCTA keeps the live Ada handoff', () => {
+  const src = read(CTA);
+
+  it('starts an Ada session carrying the guide page context', () => {
+    expect(src).toMatch(/startAdaSessionWithContext/);
+    expect(src).toMatch(/kind:\s*'guide'/);
+  });
+
+  it('routes to the chat surface Ada actually lives on', () => {
+    expect(src).toMatch(/navigate\('\/chat'\)/);
+  });
+
+  it('does not resurrect the RightsPathway destination or pre-launch copy', () => {
+    // B44 points at a page that was never built on main, under copy
+    // promising a feature that does not exist.
+    const code = readCode(CTA);
+    expect(code).not.toMatch(/RightsPathway/);
+    expect(code).not.toMatch(/launching soon/i);
+    expect(code).not.toMatch(/60 [Ss]econds/);
+  });
+});
+
+describe('ChapterPageLayout stays a superset of B44', () => {
+  const src = read(LAYOUT);
+
+  it('accepts and renders the tldr block B44 has no equivalent of', () => {
+    expect(src).toMatch(/tldr\?:/);
+    expect(src).toMatch(/\{tldr/);
+  });
+
+  it('keeps prev / next chapter navigation', () => {
+    expect(src).toMatch(/ALL_CHAPTERS/);
+    expect(src).toMatch(/const prev =/);
+    expect(src).toMatch(/const next =/);
+  });
+});
+
+describe('AutoCiteLinks keeps the stable-key fix', () => {
+  const src = read(CITE);
+
+  it('never keys elements with Math.random()', () => {
+    // A fresh key every render forces React to discard and rebuild the
+    // node; B44's copy does exactly this.
+    expect(src).not.toMatch(/key=\{Math\.random\(\)\}/);
+  });
+
+  it('uses a deterministic counter for link keys', () => {
+    expect(src).toMatch(/linkCounter/);
+  });
+});
+
+describe('ShareBar keeps its own icon set and dark styling', () => {
+  const src = read(SHARE);
+
+  it('inlines the brand glyphs lucide-react no longer ships', () => {
+    // Importing these from lucide-react would resolve to undefined and
+    // render nothing.
+    expect(src).not.toMatch(/import\s*\{[^}]*\b(Facebook|Twitter|Linkedin)\b[^}]*\}\s*from\s*'lucide-react'/);
+    expect(src).toMatch(/function FacebookIcon/);
+    expect(src).toMatch(/function TwitterIcon/);
+    expect(src).toMatch(/function LinkedinIcon/);
+  });
+
+  it('does not reintroduce per-display-mode style switching', () => {
+    const code = readCode(SHARE);
+    expect(code).not.toMatch(/getDisplayMode/);
+    expect(code).not.toMatch(/MODE_STYLES/);
+  });
+});
+
+describe('GuideHeroBanner watermark', () => {
+  const src = read(HERO);
+
+  it('renders the logo watermark from the local asset', () => {
+    expect(src).toMatch(/logo-transparent\.png/);
+    expect(src).toMatch(/opacity:\s*0\.04/);
+  });
+
+  it('serves it locally, never from Base44 storage', () => {
+    expect(readCode(HERO)).not.toMatch(/supabase/i);
+  });
+
+  it('marks the watermark decorative', () => {
+    const code = readCode(HERO);
+    const start = code.indexOf('<div');
+    const wm = code.slice(start, code.indexOf('/>', code.indexOf('backgroundImage')));
+    expect(wm, 'watermark div must be hidden from assistive tech').toMatch(/aria-hidden="true"/);
+    expect(wm).toMatch(/pointerEvents:\s*'none'/);
+  });
+});
