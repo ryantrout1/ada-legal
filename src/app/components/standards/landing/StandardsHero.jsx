@@ -10,6 +10,7 @@
 
 import React, { useState, useCallback, useRef } from 'react';
 import { Shield } from 'lucide-react';
+import ADAAssistant from './ADAAssistant.jsx';
 
 const QUOTES = [
   {
@@ -225,10 +226,8 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
             language alongside the official legal text.
           </p>
 
-          {/* AI Assistant */}
-          {/* ADAAssistant (the section search) lands in M2 Phase 4 with
-              the AI helper it shares a surface with. Nothing is rendered
-              here in the meantime — no placeholder, no dead control. */}
+          {/* Search over the standards index */}
+          <ADAAssistant />
         </div>
 
         {/* Right column */}
