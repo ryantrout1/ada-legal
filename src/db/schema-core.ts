@@ -573,3 +573,28 @@ export const sessionPackages = pgTable(
   },
   (t) => [index('session_packages_session_id_idx').on(t.sessionId)],
 );
+
+// ─── Public API rate limiting ────────────────────────────────────────────
+// One row per allowed request against a public endpoint, discriminated by
+// `bucket` so several endpoints share the table (M5 adds feedback, waitlist
+// and votes). Blocked requests are deliberately NOT recorded — see
+// src/lib/rateLimit/apiRateLimit.ts.
+//
+// `rateLimitKey` is the SHA-256 from deriveRateLimitKey (IP + coarsened
+// user agent); `ipHash` is its first 16 chars, for grouping without a join.
+// No raw IP is stored. See migration 0041_api_rate_limit.sql.
+
+export const apiRateLimits = pgTable(
+  'api_rate_limit',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    bucket: text('bucket').notNull(),
+    rateLimitKey: text('rate_limit_key').notNull(),
+    ipHash: text('ip_hash'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index('api_rate_limit_lookup').on(t.bucket, t.rateLimitKey, t.createdAt),
+    index('api_rate_limit_created_at').on(t.createdAt),
+  ],
+);

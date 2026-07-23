@@ -10,17 +10,10 @@
  *
  *   - Kill switch (`guide_assistant_enabled`) defaults OFF. Flip via a
  *     Neon upsert once Gina has reviewed the copy; no redeploy.
- *   - NOT YET RATE LIMITED. The plan assumed Spot's rateLimitDecision
- *     could be reused; it cannot. That helper encodes Spot's paid-product
- *     economics (two free reads, then a soft gate) against Spot's own
- *     spot_reads / spot_rate_limits tables — it is a metering rule, not a
- *     per-window throttle, and borrowing its tables would pollute Spot's
- *     data. A real limiter needs its own table and migration.
- *
- *     This is why guide_assistant_enabled MUST stay false until that
- *     lands: flipping it without a limiter exposes an unauthenticated
- *     endpoint that spends money per request with nothing to stop a
- *     script. The kill switch is the only control today.
+ *   - Rate limited per identity (IP + coarsened user agent) on two sliding
+ *     windows. Runs BEFORE the SSE headers are written, so a rejection is a
+ *     clean JSON 429 rather than a half-open stream. Spot's own limiter
+ *     documents the same ordering requirement.
  *   - Question hard-capped at 500 chars and sanitized server-side; the
  *     browser's stripping is a hint, not a control, once anyone can POST.
  *   - History trimmed to 6 turns so a long thread cannot inflate spend.
@@ -39,6 +32,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { makeClientsFromEnv } from '../_shared.js';
 import { applyCors } from '../_cors.js';
+import { deriveRateLimitKey } from '../../src/lib/spot/spotRateLimitKey.js';
+import {
+  GUIDE_ASSISTANT_BUCKET,
+  checkRateLimit,
+} from '../../src/lib/rateLimit/apiRateLimit.js';
+import { makeApiRateLimitStore } from '../../src/lib/rateLimit/apiRateLimitStore.js';
 import {
   GUIDE_ASSISTANT_MODEL,
   GUIDE_ASSISTANT_SETTINGS_KEY,
@@ -58,6 +57,12 @@ export const config = { maxDuration: 30 };
 const MAX_CONTEXT_CHARS = 12_000;
 
 const READING_LEVELS: ReadonlySet<string> = new Set(['simple', 'standard', 'professional']);
+
+function clientIp(req: VercelRequest): string {
+  const fwd = req.headers['x-forwarded-for'];
+  const raw = Array.isArray(fwd) ? fwd[0] : fwd;
+  return raw?.split(',')[0]?.trim() || '0.0.0.0';
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
@@ -121,6 +126,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // A settings read failure must fail closed: an unreadable flag is not
     // permission to spend.
     return res.status(503).json({ error: 'The guide assistant is not available right now.' });
+  }
+
+  // Throttle before spending. Every gate above this point returns a clean
+  // JSON status; once the headers below are written the status is already
+  // 200 and a rejection would have to travel as a stream event.
+  const rateKey = deriveRateLimitKey(
+    clientIp(req),
+    (req.headers['user-agent'] as string) ?? '',
+  );
+  const limit = await checkRateLimit(
+    makeApiRateLimitStore(),
+    GUIDE_ASSISTANT_BUCKET,
+    rateKey,
+  );
+  if (!limit.allowed) {
+    res.setHeader('Retry-After', String(limit.retryAfterSeconds));
+    return res.status(429).json({
+      error: "That's a lot of questions in a short time. Give it a few minutes and try again — the guide below has the answer to most of them.",
+    });
   }
 
   res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
