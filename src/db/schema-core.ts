@@ -598,3 +598,66 @@ export const apiRateLimits = pgTable(
     index('api_rate_limit_created_at').on(t.createdAt),
   ],
 );
+
+// ─── Consumer-write tables (M5) ──────────────────────────────────────────
+// Replace the Base44 entities the consumer site wrote to directly. No FK to
+// ada_sessions on any of them: these are anonymous public writes and a
+// visitor leaving feedback may never have started a session.
+// See migration 0042_entity_tables.sql.
+
+export const feedback = pgTable(
+  'feedback',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    rating: text('rating'),
+    message: text('message').notNull(),
+    email: text('email'),
+    page: text('page'),
+    userAgent: text('user_agent'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('feedback_created_at_idx').on(t.createdAt)],
+);
+
+export const waitlistSignups = pgTable(
+  'waitlist_signups',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    email: text('email').notNull(),
+    source: text('source'),
+    interest: text('interest'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+);
+
+export const communityVotes = pgTable(
+  'community_votes',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    optionId: text('option_id').notNull(),
+    pollId: text('poll_id').notNull().default('community_voices'),
+    voterKey: text('voter_key'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('community_votes_tally_idx').on(t.pollId, t.optionId)],
+);
+
+// `isInternal` separates founder/test traffic from public traffic — 515 of
+// the 1,647 imported B44 rows were internal and B44's own is_sample flag
+// was false on every one. `occurredAt` is distinct from `createdAt` so
+// imported history keeps its original timestamps.
+export const analyticsEvents = pgTable(
+  'analytics_events',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    eventName: text('event_name').notNull(),
+    page: text('page'),
+    properties: jsonb('properties').notNull().default({}),
+    sessionId: text('session_id'),
+    isInternal: boolean('is_internal').notNull().default(false),
+    importedFromB44: boolean('imported_from_b44').notNull().default(false),
+    occurredAt: timestamp('occurred_at', { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('analytics_events_name_time_idx').on(t.eventName, t.occurredAt)],
+);
