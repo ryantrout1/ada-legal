@@ -50,6 +50,7 @@ import {
   type UndoWindow,
 } from '../hooks/useAccessibilitySettings.js';
 import { useReadingLevel } from './standards/ReadingLevelContext.js';
+import { useAnnounce } from './a11y/LiveAnnouncer.js';
 
 export type ReadingLevel = 'simple' | 'standard' | 'professional';
 
@@ -80,6 +81,7 @@ export interface AccessibilityPanelProps {
 export function AccessibilityPanel({ readingLevel, onDark = false }: AccessibilityPanelProps) {
   const [open, setOpen] = useState(false);
   const a11y = useAccessibilitySettings();
+  const announce = useAnnounce();
   const panelId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
   // Site-wide reading-level state from context. Always available
@@ -289,14 +291,32 @@ export function AccessibilityPanel({ readingLevel, onDark = false }: Accessibili
 
             <DisplaySection
               value={a11y.settings.display}
-              onChange={a11y.setDisplay}
+              onChange={(v) => {
+                a11y.setDisplay(v);
+                announce(`Display mode changed to ${v === 'contrast' ? 'high contrast' : v}`);
+              }}
             />
-            <FontSection value={a11y.settings.font} onChange={a11y.setFont} />
+            <FontSection
+              value={a11y.settings.font}
+              onChange={(v) => {
+                a11y.setFont(v);
+                announce(`Font changed to ${v === 'default' ? 'default site fonts' : v}`);
+              }}
+            />
             <div className="grid grid-cols-2 gap-3 mt-4">
-              <SizeSection value={a11y.settings.size} onChange={a11y.setSize} />
+              <SizeSection
+                value={a11y.settings.size}
+                onChange={(v) => {
+                  a11y.setSize(v);
+                  announce(`Text size changed to ${v === 'medium' ? 'default' : v === 'xl' ? 'extra large' : v}`);
+                }}
+              />
               <SpacingSection
                 value={a11y.settings.spacing}
-                onChange={a11y.setSpacing}
+                onChange={(v) => {
+                  a11y.setSpacing(v);
+                  announce(`Line spacing changed to ${v}`);
+                }}
               />
             </div>
             {effectiveReadingLevel && (
@@ -313,6 +333,7 @@ export function AccessibilityPanel({ readingLevel, onDark = false }: Accessibili
               type="button"
               onClick={() => {
                 a11y.reset();
+                announce('All display preferences reset to defaults');
               }}
               className="mt-4 w-full py-2 px-3 rounded border border-surface-200 text-sm text-ink-700 hover:bg-surface-200 hover:border-surface-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 transition-colors flex items-center justify-center gap-2"
             >
