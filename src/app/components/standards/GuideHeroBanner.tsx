@@ -6,8 +6,9 @@
  * Ported from base44-archive src/components/guide/GuideHeroBanner.jsx.
  * Simplifications relative to the original:
  *   - Removed trackEvent analytics call (analytics not wired yet)
- *   - Removed Base44 Supabase-hosted logo watermark (we don't serve
- *     assets out of base44-prod/public/)
+ *   - Logo watermark restored in M2 Phase 2 against the local asset.
+ *     It was dropped at port time because Base44 served it out of
+ *     base44-prod/public/; M1 Phase 4 brought the logo in-repo.
  *   - Hardcoded /standards-guide route instead of createPageUrl()
  *
  * The banner is intentionally ALWAYS dark. It stays dark in every
@@ -40,6 +41,26 @@ export default function GuideHeroBanner({
         overflow: 'hidden',
       }}
     >
+      {/* Logo watermark — B44 parity (GuideHeroBanner.jsx). Dropped at
+          port time because the asset was Supabase-hosted; restored in M2
+          now that the logo is served locally (M1 Phase 4). Decorative
+          only: aria-hidden, no pointer events, 4% opacity. */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          bottom: '-10%',
+          right: '2%',
+          width: '200px',
+          height: '200px',
+          backgroundImage: 'url(/logo-transparent.png)',
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          opacity: 0.04,
+          pointerEvents: 'none',
+        }}
+      />
       <div
         style={{
           maxWidth: '800px',
