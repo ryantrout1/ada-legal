@@ -114,3 +114,73 @@ describe('Phase A3a — listActiveLitigation statuses filter', () => {
     expect(rows.map((r) => r.slug)).toEqual(['enf-investigating']);
   });
 });
+
+/**
+ * M3 Phase 1 — `status` on the public list projection.
+ *
+ * The rebuilt /lawsuits browse page renders a StatusBadge per card and
+ * offers a status filter, both of which read `row.status`. Before this
+ * phase `toLitigationPublicRow` projected every field the page needs
+ * EXCEPT status — the one additive gap M3 recon turned up.
+ *
+ * Additive-only: the live B44 site consumes this same endpoint until
+ * cutover, so this asserts status was ADDED, not that anything moved.
+ *
+ * Ref: /plan M3 Phase 1, AC1.
+ */
+describe('M3 Phase 1 — status on the public list projection', () => {
+  it('projects status on every returned row', async () => {
+    const c = await seedAllStatuses();
+    const rows = await c.db.listActiveLitigation({
+      statuses: ['active', 'compliance', 'investigating', 'tracking'],
+    });
+    expect(rows).toHaveLength(4);
+    for (const r of rows) {
+      expect(r.status, `${r.slug} has no status`).toBeDefined();
+    }
+  });
+
+  it('projects the row\u2019s actual status, not a constant', async () => {
+    const c = await seedAllStatuses();
+    const rows = await c.db.listActiveLitigation({
+      statuses: ['active', 'compliance', 'investigating', 'tracking'],
+    });
+    const bySlug = Object.fromEntries(rows.map((r) => [r.slug, r.status]));
+    expect(bySlug['row-active']).toBe('active');
+    expect(bySlug['row-compliance']).toBe('compliance');
+    expect(bySlug['row-investigating']).toBe('investigating');
+    expect(bySlug['row-tracking']).toBe('tracking');
+  });
+
+  it('keeps every pre-existing public field (additive-only)', async () => {
+    // The B44 Lawsuits page reads these off the same payload. A rename
+    // or removal here breaks the live site before cutover.
+    const c = makeInMemoryClients();
+    await c.db.createLitigation(
+      mkInput('additive-check', 'active', {
+        shortDescription: 'base',
+        shortDescriptionSimple: 'simple',
+        shortDescriptionProfessional: 'professional',
+        court: 'D. Ariz.',
+        affectedStates: ['AZ'],
+      }),
+    );
+    const [row] = await c.db.listActiveLitigation({ statuses: ['active'] });
+    for (const key of [
+      'id',
+      'kind',
+      'caseName',
+      'slug',
+      'legalTheory',
+      'shortDescription',
+      'shortDescriptionSimple',
+      'shortDescriptionProfessional',
+      'defendants',
+      'court',
+      'affectedStates',
+      'filingDate',
+    ]) {
+      expect(row, `public field ${key} disappeared`).toHaveProperty(key);
+    }
+  });
+});

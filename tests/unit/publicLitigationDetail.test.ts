@@ -223,3 +223,41 @@ describe('Phase C1 — relatedCases inlining on readActiveLitigationBySlug', () 
     expect(row!.relatedCases[0].slug).toBe('real');
   });
 });
+
+/**
+ * M3 Phase 1 — `status` on the public detail projection.
+ *
+ * LawsuitDetail's header renders a StatusBadge from `row.status`.
+ * `LitigationDetailRow` extends `LitigationRow`, so the field lands
+ * through the same projection the list endpoint uses — this pins it at
+ * the detail seam too, because the two go through different client
+ * methods and could drift independently.
+ *
+ * Ref: /plan M3 Phase 1, AC1.
+ */
+describe('M3 Phase 1 — status on the public detail projection', () => {
+  it('projects status on the detail row', async () => {
+    const c = makeInMemoryClients();
+    await c.db.createLitigation(mkInput('detail-status', 'compliance'));
+    const row = await c.db.readActiveLitigationBySlug({
+      orgId: ORG_ID,
+      slug: 'detail-status',
+      statuses: ['active', 'compliance', 'investigating', 'tracking'],
+    });
+    expect(row).not.toBeNull();
+    expect(row!.status).toBe('compliance');
+  });
+
+  it('keeps leadAttorneyName and relatedCases alongside it (additive-only)', async () => {
+    const c = makeInMemoryClients();
+    await c.db.createLitigation(mkInput('detail-additive', 'active'));
+    const row = await c.db.readActiveLitigationBySlug({
+      orgId: ORG_ID,
+      slug: 'detail-additive',
+      statuses: ['active'],
+    });
+    expect(row).toHaveProperty('leadAttorneyName');
+    expect(row).toHaveProperty('relatedCases');
+    expect(row).toHaveProperty('status');
+  });
+});

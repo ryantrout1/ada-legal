@@ -24,6 +24,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { makeInMemoryClients } from '@/engine/clients/inMemoryClients';
+import { readCode } from '../support/sourceText.js';
 import type { AdaSessionState } from '@/engine/types';
 
 function sampleState(sessionId: string): AdaSessionState {
@@ -473,5 +474,46 @@ describe('NeonDbClient.writeSession upsert — column coverage', () => {
       });
       expect(out.output.scene.standard).toBe('Entrance');
     });
+  });
+});
+
+/**
+ * M3 Phase 1 — litigation projection parity across client implementations.
+ *
+ * WHY THIS LIVES HERE: `status` has to be projected by BOTH the in-memory
+ * client (which every unit test runs against) and the Neon client (which
+ * production runs against). Only the in-memory one is executable in a unit
+ * test, so a Neon-side omission would sail through a fully green suite and
+ * surface as a missing StatusBadge in production. That is the
+ * contract/shape-mismatch failure shape, and this pair of assertions is
+ * what closes it: a functional check on the runnable implementation, plus a
+ * source-level check on the one that isn't.
+ *
+ * Ref: /plan M3 Phase 1, AC1.
+ */
+describe('litigation public projection — cross-implementation parity', () => {
+  it('in-memory listActiveLitigation projects status', async () => {
+    const c = makeInMemoryClients();
+    await c.db.createLitigation({
+      orgId: '00000000-0000-4000-8000-000000000001',
+      kind: 'class',
+      caseName: 'Parity Case',
+      slug: 'parity-case',
+      status: 'active',
+    });
+    const [row] = await c.db.listActiveLitigation({ statuses: ['active'] });
+    expect(row.status).toBe('active');
+  });
+
+  it('the Neon mapper projects status too', () => {
+    // readCode strips comments — otherwise this fires on the doc block
+    // above toLitigationPublicRow rather than the projection itself.
+    const src = readCode('src/engine/clients/neonDbClient.ts');
+    const mapper = src.slice(src.indexOf('function toLitigationPublicRow'));
+    const body = mapper.slice(0, mapper.indexOf('\n}'));
+    expect(
+      body,
+      'toLitigationPublicRow must project status or the public pages lose their StatusBadge',
+    ).toMatch(/status:\s*r\.status/);
   });
 });
