@@ -963,7 +963,7 @@ function ReadingLevelPicker({
     },
     {
       id: 'professional',
-      label: 'Legal',
+      label: 'Professional',
       description:
         'Precise legal language with citations. For attorneys, advocates, or anyone already familiar with ADA terminology.',
     },
@@ -1403,6 +1403,6 @@ function readingLevelLabel(level: ReadingLevel): string {
     case 'standard':
       return 'Standard';
     case 'professional':
-      return 'Legal';
+      return 'Professional';
   }
 }

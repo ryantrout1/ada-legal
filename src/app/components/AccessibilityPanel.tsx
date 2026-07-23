@@ -614,7 +614,7 @@ function ReadingLevelSection({
   const LEVELS: Array<{ value: ReadingLevel; label: string }> = [
     { value: 'simple', label: 'Simple' },
     { value: 'standard', label: 'Standard' },
-    { value: 'professional', label: 'Legal' },
+    { value: 'professional', label: 'Professional' },
   ];
   return (
     <section className="mt-4">

@@ -25,7 +25,7 @@ import { useReadingLevel, type ReadingLevel } from './ReadingLevelContext.js';
 const LABELS: Record<ReadingLevel, string> = {
   simple: 'Simple',
   standard: 'Standard',
-  professional: 'Legal',
+  professional: 'Professional',
 };
 
 interface CurrentReadingLevelProps {

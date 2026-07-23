@@ -47,7 +47,7 @@ const LEVELS: Array<{
   },
   {
     key: 'professional',
-    label: 'Legal',
+    label: 'Professional',
     desc: 'Full citations',
     hint: '⚖️ Includes legal citations',
   },

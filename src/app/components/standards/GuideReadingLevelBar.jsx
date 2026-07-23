@@ -1,4 +1,5 @@
 import React from 'react';
+import { FileText } from 'lucide-react';
 import { useReadingLevel } from './ReadingLevelContext.js';
 
 /**
@@ -21,8 +22,17 @@ export default function GuideReadingLevelBar() {
   const levels = [
     { key: 'simple', label: 'Simple', desc: 'Plain language' },
     { key: 'standard', label: 'Standard', desc: 'Default view' },
-    { key: 'professional', label: 'Legal', desc: 'Full citations' },
+    { key: 'professional', label: 'Professional', desc: 'Full citations' },
   ];
+
+  // B44 parity: the caption is plain text beside an icon. It used to be
+  // prefixed with emoji, which screen readers announce verbatim
+  // ("book emoji Plain-language summaries").
+  const captions = {
+    simple: 'Plain-language summaries',
+    standard: 'Plain language + legal text',
+    professional: 'Includes legal citations',
+  };
 
   return (
     <div role="group" aria-label="Reading level" style={{
@@ -32,12 +42,12 @@ export default function GuideReadingLevelBar() {
       padding: '8px 12px',
       marginBottom: '20px',
       borderRadius: '8px',
-      background: 'var(--page-bg-subtle)',
-      border: '1px solid var(--border)',
+      background: 'var(--card-bg)',
+      border: '1px solid var(--card-border)',
       fontFamily: 'Manrope, sans-serif',
       flexWrap: 'wrap',
     }}>
-      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--body)', whiteSpace: 'nowrap' }}>Reading level</span>
+      <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--body)', whiteSpace: 'nowrap' }}>Reading level</span>
       <div style={{ display: 'flex', gap: '3px' }}>
         {levels.map(r => {
           const active = readingLevel === r.key;
@@ -52,10 +62,10 @@ export default function GuideReadingLevelBar() {
                 padding: '5px 14px',
                 minHeight: '44px',
                 borderRadius: '6px',
-                border: active ? '2px solid var(--accent)' : '1px solid var(--border)',
-                background: active ? 'var(--accent)' : 'var(--page-bg)',
+                border: active ? '2px solid var(--accent)' : '1px solid var(--card-border)',
+                background: active ? 'var(--accent)' : 'var(--card-bg)',
                 color: active ? 'var(--btn-text)' : 'var(--body)',
-                fontSize: '0.72rem', fontWeight: active ? 700 : 500,
+                fontSize: '0.9375rem', fontWeight: active ? 700 : 500,
                 fontFamily: 'Manrope, sans-serif',
                 cursor: 'pointer', transition: 'all 0.15s',
                 whiteSpace: 'nowrap',
@@ -66,10 +76,12 @@ export default function GuideReadingLevelBar() {
           );
         })}
       </div>
-      <span style={{ fontSize: '0.65rem', color: 'var(--body-secondary)', marginLeft: 'auto' }}>
-        {readingLevel === 'simple' && '📖 Plain-language summaries'}
-        {readingLevel === 'standard' && '📄 Plain language + legal text'}
-        {readingLevel === 'professional' && '⚖️ Includes legal citations'}
+      <span style={{
+        display: 'inline-flex', alignItems: 'center', gap: '6px',
+        fontSize: '0.9375rem', color: 'var(--body-secondary)', marginLeft: 'auto',
+      }}>
+        <FileText size={18} aria-hidden="true" style={{ flexShrink: 0 }} />
+        {captions[readingLevel]}
       </span>
     </div>
   );
