@@ -518,6 +518,9 @@ body {
 :root[data-size="small"]  { font-size: 14px; }
 :root[data-size="medium"] { font-size: 16px; }
 :root[data-size="large"]  { font-size: 20px; }
+/* B44 'xl' tier (125%). Phase 1 alias so a migrated B44 pref renders;
+   the Phase 2 size-semantics pass re-values large to B44's 112.5%. */
+:root[data-size="xl"]     { font-size: 20px; }
 
 /* When the user picks size=small, every interactive control still
    needs to meet WCAG 2.5.8 (Target Size — Minimum, 24×24px). Buttons
@@ -599,6 +602,12 @@ body {
   --a11y-line-height: 1.6;
   --a11y-paragraph-gap: 2.4em;
   --a11y-letter-spacing: 0;
+}
+:root[data-spacing="relaxed"] {
+  /* B44's middle spacing tier — between default (1.6) and loose (1.9). */
+  --a11y-line-height: 1.75;
+  --a11y-paragraph-gap: 2.7em;
+  --a11y-letter-spacing: 0.01em;
 }
 :root[data-spacing="loose"] {
   --a11y-line-height: 1.9;
