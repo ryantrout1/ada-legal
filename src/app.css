@@ -455,6 +455,48 @@ body {
   min-width: 48px;
 }
 
+/* ─── Standards Guide landing — resource category colours ─────────────────
+   B44's landing hardcodes five hues for the section icon tiles and the
+   card type-dots (ResourceSections.jsx). Two problems with porting the
+   literals: it breaks the no-hardcoded-colour rule, and the values are
+   authored for a light canvas only — measured against the dark-mode card
+   tier (#1B2436) they land at 1.50–2.43:1, well under WCAG 1.4.11's 3:1
+   for non-text. The dots effectively disappear in dark, contrast and
+   low-vision modes.
+
+   So they become tokens: B44's hue in default/warm, lifted per mode
+   elsewhere. The icon tiles keep the saturated fill (white glyph on top,
+   ≥4:1 in every mode); the dots read against whatever card they sit on. */
+:root {
+  --sg-cat-rights:   #D4570A;
+  --sg-cat-business: #9A3412;
+  --sg-cat-design:   #2D6A4F;
+  --sg-cat-web:      #5B2C6F;
+  --sg-cat-gov:      #8B1A1A;
+}
+:root[data-display="dark"] {
+  --sg-cat-rights:   #FDBA74;
+  --sg-cat-business: #F0A882;
+  --sg-cat-design:   #86C28E;
+  --sg-cat-web:      #C4B5FD;
+  --sg-cat-gov:      #FF9384;
+}
+:root[data-display="contrast"] {
+  --sg-cat-rights:   #FFB347;
+  --sg-cat-business: #FDE68A;
+  --sg-cat-design:   #7FE39E;
+  --sg-cat-web:      #C4B5FD;
+  --sg-cat-gov:      #FF8A7A;
+}
+:root[data-display="low-vision"] {
+  /* The mode is gold-on-black by design; category hue yields to legibility. */
+  --sg-cat-rights:   #FFD700;
+  --sg-cat-business: #FFE566;
+  --sg-cat-design:   #00FF88;
+  --sg-cat-web:      #C4B5FD;
+  --sg-cat-gov:      #FF8A7A;
+}
+
 /* ─── Font family ────────────────────────────────────────────────────────── */
 
 /* Default uses the --font-body defined in @theme (IBM Plex Sans). */
