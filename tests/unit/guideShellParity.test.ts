@@ -31,19 +31,13 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { readCode as readCodeAt } from '../support/sourceText.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const read = (rel: string) => readFileSync(resolve(root, rel), 'utf8');
 
-/**
- * Source with comments removed. Absence assertions must run against this:
- * these files legitimately *describe* the B44 shapes they diverge from, so
- * matching raw source would fire on the explanation rather than the code.
- */
-const readCode = (rel: string) =>
-  read(rel)
-    .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/^\s*\/\/.*$/gm, '');
+/** Absence assertions run against comment-stripped source — see tests/support. */
+const readCode = (rel: string) => readCodeAt(resolve(root, rel));
 
 const CTA = 'src/app/components/standards/GuideReportCTA.jsx';
 const LAYOUT = 'src/app/components/standards/ChapterPageLayout.tsx';

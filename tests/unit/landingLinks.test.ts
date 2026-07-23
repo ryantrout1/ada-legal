@@ -13,6 +13,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { b44PageToRoute, isB44PageRef } from '../../src/app/components/standards/landing/b44PageToRoute.js';
+import { readCode } from '../support/sourceText.js';
 import { GUIDE_LOADERS, ALL_GUIDES } from '../../src/app/routes/public/standardsGuideIndex.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -176,5 +177,33 @@ describe('resource category colours clear 3:1 in every display mode', () => {
       if (hits) offenders.push(`${f}: ${hits.join(', ')}`);
     }
     expect(offenders, 'design tokens only — see policy.md').toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Hero search index (ADAAssistant) — same link contract as the resource cards
+// ---------------------------------------------------------------------------
+
+describe('hero search index resolves', () => {
+  const src = read('ADAAssistant.jsx');
+  const pages = [...new Set([...src.matchAll(/page:\s*"([A-Za-z0-9]+)"/g)].map((m) => m[1]))];
+
+  it('finds the full index', () => {
+    // Guards the extraction: a data-shape change must not make this vacuous.
+    expect(pages.length).toBeGreaterThanOrEqual(50);
+  });
+
+  it('routes every indexed page somewhere real', () => {
+    const broken = pages.filter((p) => !b44PageToRoute(p));
+    expect(broken, 'search results that would 404').toEqual([]);
+  });
+
+  it('renders in the hero rather than being deferred', () => {
+    // The component was briefly omitted on the assumption it shared the AI
+    // helper's backend. It makes no network call at all.
+    const hero = read('StandardsHero.jsx');
+    expect(hero).toMatch(/<ADAAssistant\s*\/>/);
+    expect(readCode(resolve(LANDING_DIR, 'ADAAssistant.jsx')))
+      .not.toMatch(/InvokeLLM|base44|useUniversalCta/);
   });
 });
