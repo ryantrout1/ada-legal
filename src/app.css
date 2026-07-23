@@ -1638,3 +1638,20 @@ body {
   :root:not([data-display]) svg[role="img"] path[stroke="#475569"],
   :root:not([data-display]) svg[role="img"] polygon[stroke="#475569"] { stroke: #94A3B8; }
 }
+
+/* ── Lawsuit browse + detail focus rings (M3) ───────────────────────────
+ * Base44 emitted these as a <style> block inside LawsuitCard, so a
+ * 36-card grid rendered 36 identical style tags. Same visual result,
+ * declared once.
+ */
+.lawsuit-card-link:focus-visible,
+.lawsuit-back-link:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.lawsuit-filter-control:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: 1px;
+}

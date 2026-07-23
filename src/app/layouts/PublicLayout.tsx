@@ -154,9 +154,9 @@ export default function PublicLayout() {
                 Find an Attorney
               </Link>
               <Link
-                to="/class-actions"
-                aria-current={isActive(location.pathname, '/class-actions') ? 'page' : undefined}
-                className={`transition-colors inline-flex items-center hover:text-brand-gold ${isActive(location.pathname, '/class-actions') ? 'text-brand-gold' : 'text-white'}`}
+                to="/lawsuits"
+                aria-current={isActive(location.pathname, '/lawsuits') ? 'page' : undefined}
+                className={`transition-colors inline-flex items-center hover:text-brand-gold ${isActive(location.pathname, '/lawsuits') ? 'text-brand-gold' : 'text-white'}`}
                 style={{ fontSize: '0.9375rem', fontWeight: 500, minHeight: 44, padding: '6px 12px' }}
               >
                 Lawsuits
@@ -242,9 +242,9 @@ export default function PublicLayout() {
                   Find an Attorney
                 </Link>
                 <Link
-                  to="/class-actions"
-                  aria-current={isActive(location.pathname, '/class-actions') ? 'page' : undefined}
-                  className={`px-5 py-4 text-base hover:bg-brand-navy-hover hover:text-brand-gold transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold ${isActive(location.pathname, '/class-actions') ? 'text-brand-gold' : 'text-white'}`}
+                  to="/lawsuits"
+                  aria-current={isActive(location.pathname, '/lawsuits') ? 'page' : undefined}
+                  className={`px-5 py-4 text-base hover:bg-brand-navy-hover hover:text-brand-gold transition-colors focus:outline-none focus-visible:bg-brand-navy-hover focus-visible:text-brand-gold ${isActive(location.pathname, '/lawsuits') ? 'text-brand-gold' : 'text-white'}`}
                 >
                   Lawsuits
                 </Link>

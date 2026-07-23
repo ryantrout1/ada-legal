@@ -1,33 +1,205 @@
 {
   "crons": [
-    { "path": "/api/cron/sweep-abandoned", "schedule": "0 */6 * * *" },
-    { "path": "/api/cron/generate-spot-reports", "schedule": "*/10 * * * *" },
-    { "path": "/api/cron/sweep-spot-photos", "schedule": "0 3 * * *" }
+    {
+      "path": "/api/cron/sweep-abandoned",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/generate-spot-reports",
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/cron/sweep-spot-photos",
+      "schedule": "0 3 * * *"
+    }
   ],
   "redirects": [
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "portal.adalegallink.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "portal.adalegallink.com"
+        }
+      ],
       "destination": "/portal",
       "permanent": false
     },
-    { "source": "/", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/chat", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/class-actions", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/class-actions/:path*", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/attorneys", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/for-attorneys", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/about-ada", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/accessibility", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/privacy", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/terms", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/glossary", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/standards-guide", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] },
-    { "source": "/standards-guide/:path*", "destination": "https://adalegallink.com", "permanent": false, "missing": [{ "type": "query", "key": "preview" }] }
+    {
+      "source": "/",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/chat",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/lawsuits",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/lawsuits/:path*",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/class-actions",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/class-actions/:path*",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/attorneys",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/for-attorneys",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/about-ada",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/accessibility",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/privacy",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/terms",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/glossary",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/standards-guide",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    },
+    {
+      "source": "/standards-guide/:path*",
+      "destination": "https://adalegallink.com",
+      "permanent": false,
+      "missing": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
+    }
   ],
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/:path*" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {

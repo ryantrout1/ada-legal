@@ -48,7 +48,7 @@ const EXPLICIT: Record<string, string> = {
   Ada: '/chat',
   StandardsGuide: '/standards-guide',
   Attorneys: '/attorneys',
-  Lawsuits: '/class-actions',
+  Lawsuits: '/lawsuits',
 };
 
 /**

@@ -64,7 +64,17 @@ describe('consumer-route parking', () => {
 
   it('parks the consumer routes that M7 will unpark', () => {
     const sources = parked.map((r) => r.source);
-    for (const route of ['/', '/chat', '/attorneys', '/standards-guide', '/standards-guide/:path*']) {
+    for (const route of [
+      '/',
+      '/chat',
+      '/attorneys',
+      '/standards-guide',
+      '/standards-guide/:path*',
+      // M3: the rebuilt lawsuits surface. Unparked, these would be the
+      // only consumer routes reachable on the engine domain pre-cutover.
+      '/lawsuits',
+      '/lawsuits/:path*',
+    ]) {
       expect(sources, `${route} should still be parked pre-cutover`).toContain(route);
     }
   });
