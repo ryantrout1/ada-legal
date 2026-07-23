@@ -41,7 +41,7 @@
  *   1. OTHER_ORG_LISTING_SLUG env var set to a known cross-org slug
  *   2. /api/public/listings does not include that slug
  *   3. /api/public/listings/<that-slug> returns 404
- *   4. /class-actions/<that-slug> page does not render listing
+ *   4. /lawsuits/<that-slug> page does not render listing
  *      details (either a 404 or a not-found message)
  *
  * Pre-flight skip: if OTHER_ORG_LISTING_SLUG is not set, persona
@@ -115,9 +115,9 @@ test(
         `(expected 404)`,
     );
 
-    // ── UI check: /class-actions/<that-slug> shows not-found ────────
-    await page.goto(`/class-actions/${otherSlug}`);
-    recorder.navigate(`/class-actions/${otherSlug}`);
+    // ── UI check: /lawsuits/<that-slug> shows not-found ────────
+    await page.goto(`/lawsuits/${otherSlug}`);
+    recorder.navigate(`/lawsuits/${otherSlug}`);
 
     // Look for a not-found indicator. The route should either 404 or
     // render a "not found" message. A real listing detail would show

@@ -11,7 +11,7 @@ describe('resolveOrg', () => {
     });
 
     it('adalegallink.com with any path → adall', () => {
-      expect(resolveOrg('adalegallink.com', '/class-actions')).toEqual({
+      expect(resolveOrg('adalegallink.com', '/lawsuits')).toEqual({
         orgCode: 'adall',
         notFound: false,
       });

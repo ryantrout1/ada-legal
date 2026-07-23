@@ -77,7 +77,7 @@ export interface ClassificationLabel {
  * back to the generic class-action placeholder.
  */
 export interface MatchedListing {
-  /** The listing's slug for /class-actions/{slug} link-back. */
+  /** The listing's slug for /lawsuits/{slug} link-back. */
   listingSlug: string;
   /** Listing title, e.g. "Rideshare wheelchair and service animal denials". */
   listingTitle: string;

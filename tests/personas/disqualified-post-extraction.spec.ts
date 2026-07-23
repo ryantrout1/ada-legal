@@ -70,8 +70,8 @@ test(
       recorder.step('console-error', { message: err.message });
     });
 
-    await page.goto(`/class-actions/${LISTING_SLUG}`);
-    recorder.navigate(`/class-actions/${LISTING_SLUG}`);
+    await page.goto(`/lawsuits/${LISTING_SLUG}`);
+    recorder.navigate(`/lawsuits/${LISTING_SLUG}`);
     const ctaButton = page.getByRole('button', {
       name: /Talk to Ada about this/i,
     });

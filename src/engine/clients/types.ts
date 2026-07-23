@@ -631,7 +631,7 @@ export interface ListActiveLitigationOptions {
   /**
    * Phase A3a: statuses to include. Defaults to `['active']` for
    * back-compat with Ada's prompt context (only active rows feed
-   * her vocabulary). The public `/class-actions` page passes
+   * her vocabulary). The public `/lawsuits` page passes
    * `['active','compliance','investigating','tracking']` to surface
    * settled-compliance, DOJ-investigation, and regulatory-challenge
    * rows alongside the active class actions. Admin-only statuses

@@ -59,8 +59,12 @@ describe('route rename — no live /class-actions references remain', () => {
   it('has no /class-actions path left in any executable code', () => {
     const offenders: string[] = [];
     for (const file of sourceFiles) {
-      // This guard file necessarily contains the string it looks for.
+      // Two files necessarily contain the string they police: this
+      // guard, and the LawsuitDetail parity guard, which asserts the
+      // detail page does NOT link to the retired path. Both are
+      // absence assertions, not live routes.
       if (file.endsWith('routeRename.test.ts')) continue;
+      if (file.endsWith('lawsuitDetailParity.test.ts')) continue;
       const code = readCode(file);
       if (code.includes('/class-actions')) {
         offenders.push(relative(root, file));

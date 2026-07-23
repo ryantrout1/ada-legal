@@ -73,7 +73,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const clients = makeClientsFromEnv();
     // Phase A3a: surface the 4 page-visible statuses. Ada's prompt
     // context uses the default ['active']; this endpoint serves the
-    // public /class-actions directory, which renders settled-
+    // public /lawsuits directory, which renders settled-
     // compliance, DOJ-investigation, and regulatory-challenge rows
     // alongside active ones. Admin-only statuses (draft/closed/
     // archived) are never returned regardless of what's requested.

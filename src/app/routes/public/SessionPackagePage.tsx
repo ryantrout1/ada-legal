@@ -372,7 +372,7 @@ function PackageView({
               </a>
             )}
             <a
-              href={`/class-actions/${encodeURIComponent(pkg.matchedListing.listingSlug)}`}
+              href={`/lawsuits/${encodeURIComponent(pkg.matchedListing.listingSlug)}`}
               className="inline-block px-5 py-3 rounded-md border border-accent-500 text-accent-600 font-medium hover:bg-accent-50"
             >
               See the full case

@@ -39,9 +39,9 @@ import AxeBuilder from '@axe-core/playwright';
 const PUBLIC_ROUTES = [
   { path: '/', name: 'homepage' },
   { path: '/chat', name: 'chat' },
-  { path: '/class-actions', name: 'class-actions directory' },
+  { path: '/lawsuits', name: 'class-actions directory' },
   {
-    path: '/class-actions/hotel-accessible-room-fraud',
+    path: '/lawsuits/hotel-accessible-room-fraud',
     name: 'class-action detail',
   },
   { path: '/attorneys', name: 'attorneys directory' },

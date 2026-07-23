@@ -5,7 +5,7 @@
  * Tags: @harness-a @qualified @listing-scoped
  *
  * Scenario:
- *   A user lands on /class-actions/hotel-accessible-room-fraud from a
+ *   A user lands on /lawsuits/hotel-accessible-room-fraud from a
  *   search result or direct link. She reads the case description, sees
  *   her situation matches, and clicks "Talk to Ada about this." The
  *   button fires POST /api/ada/session with listing_slug pre-bound.
@@ -90,8 +90,8 @@ test(
     });
 
     // ── Phase 1: land on the public detail page ─────────────────────
-    await page.goto(`/class-actions/${LISTING_SLUG}`);
-    recorder.navigate(`/class-actions/${LISTING_SLUG}`);
+    await page.goto(`/lawsuits/${LISTING_SLUG}`);
+    recorder.navigate(`/lawsuits/${LISTING_SLUG}`);
     recorder.step('detail-page-loaded');
 
     const ctaButton = page.getByRole('button', {

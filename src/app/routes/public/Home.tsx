@@ -62,7 +62,7 @@ export default function Home() {
             <span aria-hidden="true">→</span>
           </Link>
           <Link
-            to="/class-actions"
+            to="/lawsuits"
             className="inline-flex items-center px-5 py-3 rounded-md border border-surface-300 text-ink-700 font-medium hover:border-accent-500 hover:text-accent-600 transition-colors"
           >
             Browse class actions

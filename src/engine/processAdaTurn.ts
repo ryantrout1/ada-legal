@@ -225,7 +225,7 @@ export async function processAdaTurn({
       // canonical discovery surface; see fetchActiveLitigation below.
       // Bound (class_action_intake) sessions keep their boundListing
       // path above — that's the listing_slug-bound flow from
-      // /class-actions, which remains valid.
+      // /lawsuits, which remains valid.
     } catch {
       // Listing context is non-critical; proceed without it.
     }

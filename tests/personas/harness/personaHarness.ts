@@ -9,7 +9,7 @@
  *   personaTest('listing-scoped-qualified', {
  *     tags: ['@harness-a', '@qualified'],
  *   }, async ({ page, recorder }) => {
- *     await page.goto('/class-actions/hotel-accessible-room-fraud');
+ *     await page.goto('/lawsuits/hotel-accessible-room-fraud');
  *     await recorder.step('landed-on-detail');
  *     ...
  *   });

@@ -6,7 +6,7 @@
  * via vercel.json so the canonical URL still reads correctly.
  *
  * Includes:
- *   - Static public pages (/, /chat, /class-actions, /attorneys, etc.)
+ *   - Static public pages (/, /chat, /lawsuits, /attorneys, etc.)
  *   - One <url> entry per active class-action listing, with lastmod
  *     set to the listing row's current_period_end (a cheap proxy for
  *     "the subscription last rolled," acceptable freshness hint for
@@ -54,7 +54,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       { loc: `${SITE_URL}/`, changefreq: 'weekly', priority: '1.0' },
       { loc: `${SITE_URL}/chat`, changefreq: 'weekly', priority: '0.9' },
       {
-        loc: `${SITE_URL}/class-actions`,
+        loc: `${SITE_URL}/lawsuits`,
         changefreq: 'daily',
         priority: '0.9',
       },
@@ -112,7 +112,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     for (const l of uniqueListings) {
       entries.push({
-        loc: `${SITE_URL}/class-actions/${encodeURIComponent(l.slug)}`,
+        loc: `${SITE_URL}/lawsuits/${encodeURIComponent(l.slug)}`,
         lastmod: l.currentPeriodEnd ?? undefined,
         changefreq: 'weekly',
         priority: '0.8',

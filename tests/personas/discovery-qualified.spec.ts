@@ -20,7 +20,7 @@
  *   exercised.
  *
  * Fact pattern: same hotel story as Persona 1 but user never touches
- * /class-actions; she finds Ada via home page / search / referral
+ * /lawsuits; she finds Ada via home page / search / referral
  * and just starts talking.
  *
  * Pass criteria:

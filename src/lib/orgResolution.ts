@@ -8,7 +8,7 @@
  *
  * Routing rules (per brief §4):
  *   adalegallink.com                  → 'adall' (default org, Ch0 + Ch1)
- *   adalegallink.com/class-actions    → 'adall' (Ch1 directory)
+ *   adalegallink.com/lawsuits    → 'adall' (Ch1 directory)
  *   adalegallink.com/admin            → 'adall' (Ch0 admin)
  *   gov.adalegallink.com/[org-code]   → org-code from path (Ch2+)
  *   gov.adalegallink.com (root)       → null (404 — no default on gov)

@@ -60,7 +60,7 @@ interface Body {
    *  (lazy-create: the row is created on the first real message). */
   preview?: boolean;
   /**
-   * Optional deep-link from /class-actions/:slug. When set and the
+   * Optional deep-link from /lawsuits/:slug. When set and the
    * slug maps to an ACTIVE listing in this org, the new session is
    * created as a class_action_intake pre-bound to that listing.
    * Invalid or inactive slugs are ignored (session is created as

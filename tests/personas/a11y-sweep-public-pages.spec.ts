@@ -5,7 +5,7 @@
  * Tags: @harness-a @a11y
  *
  * Runs @axe-core/playwright against the two highest-traffic public
- * pages (homepage + /class-actions directory) and records any
+ * pages (homepage + /lawsuits directory) and records any
  * violations in the persona trace. Fails if any serious or critical
  * violation is detected.
  *
@@ -17,7 +17,7 @@
  * the nightly run flags it the next morning.
  *
  * Pass criteria:
- *   - No serious or critical axe violations on / or /class-actions
+ *   - No serious or critical axe violations on / or /lawsuits
  *   - Moderate/minor violations are logged in the trace but don't
  *     fail the persona (matches the tolerance of aaa-audit.spec.ts)
  */
@@ -27,7 +27,7 @@ import { test } from './harness/personaHarness.js';
 
 const ROUTES = [
   { path: '/', name: 'homepage' },
-  { path: '/class-actions', name: 'class-actions-directory' },
+  { path: '/lawsuits', name: 'class-actions-directory' },
 ];
 
 const AAA_TAGS = [

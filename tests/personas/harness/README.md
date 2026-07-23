@@ -143,7 +143,7 @@ Each persona declares tags in its `test(...)` call. Current tags:
 - `@harness-b` — rotating coverage pool (~12 personas)
 - `@qualified` — intake completes with qualified=true
 - `@disqualified` — intake completes with qualified=false
-- `@listing-scoped` — session started from /class-actions/:slug deep-link
+- `@listing-scoped` — session started from /lawsuits/:slug deep-link
 - `@discovery` — session started at /chat, Ada surfaced the listing index
 - `@a11y` — axe-core accessibility sweep
 - `@regression` — guards a specific fix we've already made
