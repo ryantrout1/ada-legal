@@ -117,8 +117,7 @@ html, body, #root {
 :root[data-display="contrast"] {
   color-scheme: dark;
 }
-:root[data-display="warm"],
-:root[data-display="low-vision"] {
+:root[data-display="warm"] {
   color-scheme: light;
 }
 
@@ -354,6 +353,15 @@ body {
   --color-ada-50:  #EFE7FB;
   --color-control-border: #96866A;
   --color-accent-50: #FFF0E6;
+  /* Semantic tiers, warm-tinted (B44 warm banner palette adapted to the
+     500/50 architecture; values verified by tokenParity's mode matrix). */
+  --color-success-500: #2A4A2D;
+  --color-success-50:  #E9EFE3;
+  --color-warning-500: #5B3A1A;   /* B44 --banner-info-text */
+  --color-warning-50:  #F5E6C8;   /* B44 --banner-info-bg */
+  --color-danger-500:  #7A1212;   /* B44 --banner-error-text */
+  --color-danger-100:  #EFC9C9;
+  --color-danger-50:   #F5D5D5;   /* B44 --banner-error-bg */
   --color-brand-navy: #231912;
   --color-brand-footer: #1A110A;
   --color-brand-navy-hover: #3D2B1F;
@@ -394,6 +402,7 @@ body {
   --color-warning-500: #FFCE5C;    /* bright amber-yellow */
   --color-warning-50:  #000000;
   --color-danger-500:  #FF8A7A;    /* bright coral-red */
+  --color-danger-100:  #2A0E09;    /* hover tier on the black canvas */
   --color-danger-50:   #000000;
   --color-control-border: #FFFFFF;
   --color-brand-navy: #000000;
@@ -401,25 +410,39 @@ body {
   --color-brand-navy-hover: #1A1A1A;
 }
 
-/* Low vision — high contrast + enlarged UI affordances. Pairs with larger
-   text size by default but doesn't force it. Stronger focus ring. */
+/* Low vision — B44's RNIB-standard treatment: gold (#FFD700) on pure
+   black, ~19.6:1. Rebuilt in M1 Phase 2: this app had shipped an
+   inverted (light-canvas) low-vision mode, the OPPOSITE of the live
+   adalegallink.com mode a returning B44 user saved. B44 is design
+   authority; danger is lightened from B44's #FF6B6B (5.9:1) to clear
+   7:1 — same AAA-correction rule as every other ported value. */
 :root[data-display="low-vision"] {
-  --color-surface-0:   #FFFFFF;   /* card tier — pure white; the mode exists for maximum legibility */
-  --color-surface-50:  #FFFFFF;
-  --color-surface-100: #F5F5F5;
-  --color-surface-200: #999999;
-  --color-surface-300: #666666;
-  --color-ink-900: #000000;
-  --color-ink-700: #1F1F1F;
-  --color-ink-500: #404040;
-  --color-accent-500: #8A3D17;
-  --color-accent-600: #6E2F10;
-  --color-ada-500: #6D28D9;        /* violet, AAA on white */
-  --color-ada-600: #5B21B6;
-  --color-ada-50:  #EFE7FB;
+  color-scheme: dark;
+  --color-surface-0:   #111100;   /* card tier — B44 --card-bg */
+  --color-surface-50:  #000000;   /* page — pure black */
+  --color-surface-100: #111100;
+  --color-surface-200: #B8960C;   /* dividers — B44 --border-lighter */
+  --color-surface-300: #FFD700;
+  --color-ink-900: #FFD700;       /* headings — B44 --heading */
+  --color-ink-700: #FFFFFF;       /* body — B44 --body */
+  --color-ink-500: #FFE566;       /* secondary — B44 --body-secondary */
+  --color-accent-500: #FFD700;
+  --color-accent-600: #FFE566;
+  --color-accent-50:  #111100;
+  --color-ada-500: #C4B5FD;       /* B44 --ada-accent in LV */
+  --color-ada-600: #DDD6FE;
+  --color-ada-50:  #000000;
+  --color-success-500: #00FF88;   /* B44 --accent-success */
+  --color-success-50:  #002200;
+  --color-warning-500: #FFE566;
+  --color-warning-50:  #1A1A00;
+  --color-danger-500:  #FF8A7A;   /* B44 #FF6B6B lightened to clear 7:1 */
+  --color-danger-100:  #3D1A14;
+  --color-danger-50:   #000000;
+  --color-control-border: #FFD700;
   --color-brand-navy: #000000;
   --color-brand-footer: #000000;
-  --color-brand-navy-hover: #1A1A1A;
+  --color-brand-navy-hover: #1A1A00;
 }
 :root[data-display="low-vision"] *:focus-visible {
   outline: 4px solid var(--color-accent-500) !important;
@@ -516,11 +539,17 @@ body {
    rem-based layouts move in step. px-based layouts don't scale — fine,
    because most Tailwind utilities are rem-based. */
 :root[data-size="small"]  { font-size: 14px; }
-:root[data-size="medium"] { font-size: 16px; }
-:root[data-size="large"]  { font-size: 20px; }
-/* B44 'xl' tier (125%). Phase 1 alias so a migrated B44 pref renders;
-   the Phase 2 size-semantics pass re-values large to B44's 112.5%. */
-:root[data-size="xl"]     { font-size: 20px; }
+/* large / xl — B44 semantics (DisplaySettings.jsx): CSS zoom scoped to
+   the content region so nav/footer don't reflow; rem-based text scales
+   with everything else. large = 112.5%, xl = 125%; diagrams get a touch
+   more. `main` covers both this app's <main id="main"> and the ported
+   B44 chrome's <main id="main-content">. Zoom only scales UP here, so
+   44px targets only grow (2.5.5 safe). Legacy 'small' keeps the root-px
+   mechanism — a 0.875 zoom would shrink targets below 44px. */
+:root[data-size="large"] main { zoom: 1.125; }
+:root[data-size="xl"]    main { zoom: 1.25; }
+:root[data-size="large"] main .ada-diagram-wrap { zoom: 1.15; }
+:root[data-size="xl"]    main .ada-diagram-wrap { zoom: 1.3; }
 
 /* When the user picks size=small, every interactive control still
    needs to meet WCAG 2.5.8 (Target Size — Minimum, 24×24px). Buttons
@@ -598,19 +627,15 @@ body {
   --a11y-paragraph-gap: 2.1em;
   --a11y-letter-spacing: 0;
 }
-:root[data-spacing="default"] {
-  --a11y-line-height: 1.6;
-  --a11y-paragraph-gap: 2.4em;
-  --a11y-letter-spacing: 0;
-}
 :root[data-spacing="relaxed"] {
-  /* B44's middle spacing tier — between default (1.6) and loose (1.9). */
-  --a11y-line-height: 1.75;
+  /* B44: relaxed = double-spaced (line-height 2). */
+  --a11y-line-height: 2;
   --a11y-paragraph-gap: 2.7em;
   --a11y-letter-spacing: 0.01em;
 }
 :root[data-spacing="loose"] {
-  --a11y-line-height: 1.9;
+  /* B44: loose = line-height 2.5. */
+  --a11y-line-height: 2.5;
   --a11y-paragraph-gap: 3em;
   --a11y-letter-spacing: 0.02em;
 }
