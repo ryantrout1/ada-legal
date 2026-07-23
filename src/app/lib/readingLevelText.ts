@@ -39,3 +39,29 @@ export function pickReadingLevelText(
   }
   return fallback;
 }
+
+/**
+ * Pick a simple/professional pair for the fields that have NO standard
+ * column — `documentationRequired`, `noDocumentationPath`,
+ * `evidenceGuidance`, `whatThisIsNot`. These are Neon-only guidance
+ * fields with no Base44 counterpart; they go straight from simple to
+ * professional with no canonical middle.
+ *
+ * Standard reading level prefers the professional variant (the more
+ * rigorous default) and falls back to simple, so the field still
+ * renders when only one variant was authored.
+ *
+ * Returns null rather than '' so callers can omit the whole section —
+ * an empty guidance card is worse than no card.
+ */
+export function pickSimpleProText(
+  row: Record<string, unknown> | null | undefined,
+  base: string,
+  readingLevel: ReadingLevel,
+): string | null {
+  if (!row) return null;
+  const simple = nonEmpty(row[`${base}Simple`]);
+  const professional = nonEmpty(row[`${base}Professional`]);
+  if (readingLevel === 'simple') return simple ?? professional;
+  return professional ?? simple;
+}

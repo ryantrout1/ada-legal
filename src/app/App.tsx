@@ -26,6 +26,7 @@ import Home from './routes/public/Home.js';
 import Chat from './routes/public/Chat.js';
 import ClassActions from './routes/public/ClassActions.js';
 import Lawsuits from './routes/public/Lawsuits.js';
+import LawsuitDetail from './routes/public/LawsuitDetail.js';
 import ClassActionDetail from './routes/public/ClassActionDetail.js';
 import Attorneys from './routes/public/Attorneys.js';
 import ForAttorneys from './routes/public/ForAttorneys.js';
@@ -100,6 +101,7 @@ export default function App() {
               legacy links in the sitemap and session packages keep
               resolving while the detail page is still being built. */}
           <Route path="/lawsuits" element={<Lawsuits />} />
+          <Route path="/lawsuits/:slug" element={<LawsuitDetail />} />
           <Route path="/class-actions" element={<ClassActions />} />
           <Route
             path="/class-actions/:slug"

@@ -34,3 +34,44 @@ export interface PublicLitigationListResponse {
   litigation: PublicLawsuitRow[];
   total_count: number;
 }
+
+/**
+ * The detail payload from /api/public/litigation/:slug.
+ *
+ * Extends the list row with the prose blocks, the resolved lead
+ * attorney name, and the inlined related cases. The four
+ * `*Simple` / `*Professional` guidance pairs have NO standard column —
+ * they are Neon-only fields with no Base44 counterpart, preserved
+ * through the M0 reconciliation and rendered via pickSimpleProText.
+ */
+export interface PublicLawsuitDetailRow extends PublicLawsuitRow {
+  fullDescription: string | null;
+  fullDescriptionSimple: string | null;
+  fullDescriptionProfessional: string | null;
+  eligibility: string | null;
+  eligibilitySimple: string | null;
+  eligibilityProfessional: string | null;
+  documentationRequiredSimple: string | null;
+  documentationRequiredProfessional: string | null;
+  noDocumentationPathSimple: string | null;
+  noDocumentationPathProfessional: string | null;
+  evidenceGuidanceSimple: string | null;
+  evidenceGuidanceProfessional: string | null;
+  whatThisIsNotSimple: string | null;
+  whatThisIsNotProfessional: string | null;
+  keyDates: Record<string, string>;
+  leadAttorneyName: string | null;
+  relatedCases: RelatedLawsuit[];
+}
+
+export interface RelatedLawsuit {
+  id: string;
+  slug: string;
+  caseName: string;
+  kind: string;
+  status: string;
+}
+
+export interface PublicLitigationDetailResponse {
+  litigation: PublicLawsuitDetailRow;
+}
