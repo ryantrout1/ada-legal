@@ -86,7 +86,7 @@ function toLegacy(prefs: DisplayPrefs): AccessibilitySettings {
   return {
     display: prefs.displayMode === 'high-contrast' ? 'contrast' : prefs.displayMode,
     font: prefs.fontFamily,
-    // B44 'default' is the legacy 'medium' resting state; 'large'/'xl' pass through.
+    // B44 'default' is the legacy 'medium' resting state; small/large/xl pass through.
     size: prefs.fontSize === 'default' ? 'medium' : prefs.fontSize,
     spacing: prefs.lineSpacing,
     undoWindow: prefs.undoWindow,
@@ -98,14 +98,14 @@ function displayToB44(value: DisplayMode): B44DisplayMode {
 }
 
 function sizeToB44(value: TextSize): DisplayPrefs['fontSize'] {
-  // Legacy 'small' has no B44 tier; both sub-large legacy steps rest at default.
-  if (value === 'small' || value === 'medium') return 'default';
+  // 'medium' is the B44 'default' resting state; 'small' is our
+  // superset tier and passes through (see displayPrefs.ts).
+  if (value === 'medium') return 'default';
   return value;
 }
 
 function spacingToB44(value: Spacing): DisplayPrefs['lineSpacing'] {
-  // Legacy 'tight' has no B44 tier; it rests at default.
-  if (value === 'tight') return 'default';
+  // 'tight' is our superset tier and passes through (see displayPrefs.ts).
   return value;
 }
 

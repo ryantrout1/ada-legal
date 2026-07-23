@@ -46,8 +46,12 @@ export type B44DisplayMode =
   | 'high-contrast'
   | 'warm'
   | 'low-vision';
-export type B44FontSize = 'default' | 'large' | 'xl';
-export type B44LineSpacing = 'default' | 'relaxed' | 'loose';
+/** 'small' is a Vercel-side superset value (this app's historical 14px
+ *  tier). B44 blobs never contain it; kept so migrating users lose
+ *  nothing. Phase 2's panel-parity pass owns its long-term fate. */
+export type B44FontSize = 'small' | 'default' | 'large' | 'xl';
+/** 'tight' is the same kind of Vercel-side superset value. */
+export type B44LineSpacing = 'tight' | 'default' | 'relaxed' | 'loose';
 export type B44FontFamily = 'default' | 'atkinson' | 'opendyslexic' | 'lexend';
 export type B44ReadingLevel = 'simple' | 'standard' | 'professional';
 export type B44UndoWindow = 'off' | '5' | '8' | '10';
@@ -65,8 +69,8 @@ export interface DisplayPrefs {
 export interface DomAttrs {
   display: 'dark' | 'contrast' | 'warm' | 'low-vision' | null;
   font: 'atkinson' | 'opendyslexic' | 'lexend' | null;
-  size: 'large' | 'xl' | null;
-  spacing: 'relaxed' | 'loose' | null;
+  size: 'small' | 'large' | 'xl' | null;
+  spacing: 'tight' | 'relaxed' | 'loose' | null;
   readingLevel: B44ReadingLevel;
 }
 
@@ -90,8 +94,8 @@ export const DEFAULT_PREFS: DisplayPrefs = {
 
 const VALID: { [K in keyof DisplayPrefs]: readonly DisplayPrefs[K][] } = {
   displayMode: ['default', 'dark', 'high-contrast', 'warm', 'low-vision'],
-  fontSize: ['default', 'large', 'xl'],
-  lineSpacing: ['default', 'relaxed', 'loose'],
+  fontSize: ['small', 'default', 'large', 'xl'],
+  lineSpacing: ['tight', 'default', 'relaxed', 'loose'],
   fontFamily: ['default', 'atkinson', 'opendyslexic', 'lexend'],
   readingLevel: ['simple', 'standard', 'professional'],
   undoWindow: ['off', '5', '8', '10'],
@@ -133,11 +137,11 @@ function fromLegacy(
   legacyReadingLevel: string | null,
 ): DisplayPrefs {
   const display = legacy.display === 'contrast' ? 'high-contrast' : legacy.display;
-  const size =
-    legacy.size === 'small' || legacy.size === 'medium'
-      ? 'default'
-      : legacy.size;
-  const spacing = legacy.spacing === 'tight' ? 'default' : legacy.spacing;
+  // 'small' and 'tight' survive as superset values — a migrating user
+  // keeps exactly the rendering they had. Only 'medium' folds into the
+  // B44 'default' resting state (they were already the same 16px).
+  const size = legacy.size === 'medium' ? 'default' : legacy.size;
+  const spacing = legacy.spacing;
   return coerce({
     displayMode: display,
     fontSize: size,

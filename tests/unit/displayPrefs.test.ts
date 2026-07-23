@@ -235,7 +235,7 @@ describe('AC-2: legacy ada-a11y migration', () => {
     expect(localStorage.getItem(LEGACY_READING_KEY)).toBe('professional');
   });
 
-  it('maps legacy size small/medium → default and legacy spacing tight → default', () => {
+  it('preserves the small and tight superset tiers; medium folds into default', () => {
     const { localStorage } = installWindow();
     localStorage.setItem(
       LEGACY_A11Y_KEY,
@@ -243,8 +243,19 @@ describe('AC-2: legacy ada-a11y migration', () => {
     );
     const prefs = loadPrefs();
     expect(prefs.displayMode).toBe('warm');
-    expect(prefs.fontSize).toBe('default'); // B44 has no small tier
-    expect(prefs.lineSpacing).toBe('default'); // B44 has no tight tier
+    // A migrating user keeps exactly the rendering they had — 'small'
+    // and 'tight' are Vercel-side superset values B44 blobs never carry.
+    expect(prefs.fontSize).toBe('small');
+    expect(prefs.lineSpacing).toBe('tight');
+
+    localStorage.clear();
+    localStorage.setItem(
+      LEGACY_A11Y_KEY,
+      JSON.stringify({ display: 'warm', size: 'medium', spacing: 'default' }),
+    );
+    const prefs2 = loadPrefs();
+    expect(prefs2.fontSize).toBe('default'); // medium === the 16px resting state
+    expect(prefs2.lineSpacing).toBe('default');
   });
 
   it('prefers an existing ada-display-prefs blob over legacy keys', () => {
