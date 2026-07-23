@@ -32,3 +32,24 @@ Preserve untouched: `id`, `org_id`, `created_at`, `slug`, `kind`, `case_name`, `
 **Reversibility:** before any UPDATE, dump the current Neon values of every to-be-changed column for all 38 rows to `neon-pre-merge-backup.json`, committed to git alongside this doc. Rollback = re-apply backup values.
 
 **Blast radius (why this stops for review):** `litigation_listings` feeds Ada's case matching + qualifying questions and Gina's admin immediately. Net effect of the merge: newest human-edited copy + apostrophe corruption fixed; Kelley's attorney wiring and listing cross-refs preserved.
+
+---
+
+## Merge applied — 2026-07-23 (completed across two sessions)
+
+The first merge attempt (2026-07-22 ~23:47 UTC) crashed mid-application. State found at recovery: corruption fix fully applied (zero doubled apostrophes anywhere, prose + jsonb), jsonb fields aligned, but the B44 editorial prose diffs largely unapplied.
+
+**Recovery session completed the merge:**
+1. `bryant` + `niles`: `full_description` + `eligibility` applied from B44.
+2. 31 further rows: exactly the differing fields applied from B44 — `full_description` (31 rows), `eligibility` (26), `full_description_professional` (2: anoka, higher-ed).
+
+**One correction to the original proposal:** the 8 guidance fields (`documentation_required_*`, `evidence_guidance_*`, `no_documentation_path_*`, `what_this_is_not_*`) are **empty in the entire B44 export** — Neon holds the only content. Authority for these flips to **Neon (preserve)**; they were correctly never overwritten.
+
+**Final verification (2026-07-23):**
+- Global md5 digest over the 9 B44-authority prose fields × 38 shared slugs: **identical** on both sides (`4d8e639907d5b9b1639015d86a2bf6b7`).
+- Zero doubled-apostrophe corruption across all prose + jsonb columns.
+- Preserved: Kelley's attorney wiring on niles (`7f21fb79…`), listing cross-references (9 rows), Neon ids/timestamps, demo listing untouched (`draft`).
+
+**SiteConfig flags migrated** into `system_settings.admin` (full-blob read-modify-write): `ada_universal_cta: false`, `lawsuits_ada_cta_enabled: false`. Existing keys (`spot_enabled`, `ada_chat_enabled`, `ada_photo_enabled`, `spot_test_payment`) untouched.
+
+Rollback remains available via `neon-pre-merge-backup.json`.
