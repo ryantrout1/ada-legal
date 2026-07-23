@@ -29,7 +29,7 @@ import LawsuitDetail from './routes/public/LawsuitDetail.js';
 import Attorneys from './routes/public/Attorneys.js';
 import ForAttorneys from './routes/public/ForAttorneys.js';
 import Accessibility from './routes/public/Accessibility.js';
-import AboutAda from './routes/public/AboutAda.js';
+import AboutAda from './routes/public/AboutAdaV2.jsx';
 import Privacy from './routes/public/Privacy.js';
 import Terms from './routes/public/Terms.js';
 import Glossary from './routes/public/Glossary.js';
