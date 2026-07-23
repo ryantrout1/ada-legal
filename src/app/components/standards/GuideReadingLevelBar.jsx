@@ -11,14 +11,11 @@ import { useReadingLevel } from './ReadingLevelContext.js';
 export default function GuideReadingLevelBar() {
   const { readingLevel, setReadingLevel } = useReadingLevel();
 
+  // M1 Phase 1: setReadingLevel (ReadingLevelContext) now persists into
+  // the ada-display-prefs blob and fires ada-prefs-changed itself — the
+  // hand-rolled localStorage write this bar used to carry is gone.
   const handleChange = (key) => {
     setReadingLevel(key);
-    try {
-      const prefs = JSON.parse(localStorage.getItem('ada-display-prefs') || '{}');
-      prefs.readingLevel = key;
-      localStorage.setItem('ada-display-prefs', JSON.stringify(prefs));
-      window.dispatchEvent(new CustomEvent('ada-prefs-changed'));
-    } catch {}
   };
 
   const levels = [

@@ -1,43 +1,46 @@
 /**
- * useAccessibilitySettings — the state behind the eyeball panel (Step 15.5).
+ * useAccessibilitySettings — the state behind the eyeball panel.
  *
- * Holds four independent user preferences:
- *   display  — visual theme: default, dark, warm, contrast, low-vision
- *   font     — typeface: default, atkinson, opendyslexic, lexend
- *   size     — text size: small, medium, large
- *   spacing  — line/paragraph spacing: tight, default, loose
+ * M1 Phase 1 (Base44 exit plan): storage moved to the shared
+ * `displayPrefs` module — localStorage key `ada-display-prefs`, B44 field
+ * vocabulary stored verbatim so B44 users' saved prefs survive the M7
+ * cutover. This hook keeps its ORIGINAL public API (legacy enums:
+ * display 'contrast', size small/medium/large, spacing tight/…): the
+ * panel and chat consume it unchanged; the B44↔legacy translation lives
+ * at the storage boundary.
  *
- * Reading level is a separate concern owned by the chat session state
- * (it affects how Ada WRITES, not how the site is rendered). The
- * accessibility panel surfaces it for convenience but stores it in the
- * session, not localStorage.
+ * Canonical state is the B44 blob. Setters translate a legacy value into
+ * its B44 counterpart and patch ONLY that field, so a stored value the
+ * legacy enums can't express (e.g. fontSize 'xl', lineSpacing 'relaxed')
+ * survives unrelated changes untouched.
  *
- * Persistence:
- *   - localStorage `ada-a11y` as the single source of truth. Written on
- *     every change; read on mount.
- *   - FOUC prevention: index.html runs a tiny sync script in <head> that
- *     reads the same localStorage key and sets data-* attributes BEFORE
- *     React mounts. The hook then re-syncs on mount, which is a no-op
- *     in the common case but handles the "localStorage changed in
- *     another tab" edge case.
- *
- * Rendering:
- *   - The hook sets data-display, data-font, data-size, data-spacing on
- *     <html>. All visual rules in app.css key off those attributes.
- *   - No inline styles, no CSS-in-JS. Everything is CSS variables +
- *     attribute selectors so the theme cascades naturally.
- *
- * Cross-tab sync: the 'storage' event fires in OTHER tabs when one tab
- * writes localStorage. We listen for it and re-sync so a user who
- * changes the theme on /chat sees /attorneys update too.
+ * Rendering is unchanged: data-* attributes on <html>, all theming in
+ * app.css (see displayPrefs.applyToDom). Cross-tab sync via the
+ * 'storage' event; same-tab external writes (ReadingLevelProvider,
+ * GuideReadingLevelBar) via the 'ada-prefs-changed' event. OS-level
+ * display changes are followed per B44's guard (never overriding an
+ * explicit warm / low-vision choice).
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import {
+  DISPLAY_PREFS_KEY,
+  DEFAULT_PREFS,
+  PREFS_CHANGED_EVENT,
+  applyToDom,
+  loadPrefs,
+  savePrefs,
+  watchOsPreferences,
+  type B44DisplayMode,
+  type DisplayPrefs,
+} from '../lib/displayPrefs.js';
 
 export type DisplayMode = 'default' | 'dark' | 'warm' | 'contrast' | 'low-vision';
 export type FontFamily = 'default' | 'atkinson' | 'opendyslexic' | 'lexend';
-export type TextSize = 'small' | 'medium' | 'large';
-export type Spacing = 'tight' | 'default' | 'loose';
+/** 'xl' and 'relaxed' are read-side values (B44 vocabulary) the panel
+ *  cannot set yet — the Phase 2 panel-parity pass adds the controls. */
+export type TextSize = 'small' | 'medium' | 'large' | 'xl';
+export type Spacing = 'tight' | 'default' | 'relaxed' | 'loose';
 
 /**
  * UndoWindow — how long the chat keeps a "Sent · Undo (Xs)" affordance
@@ -75,46 +78,35 @@ export const DEFAULT_SETTINGS: AccessibilitySettings = {
   undoWindow: 'off',
 };
 
-const STORAGE_KEY = 'ada-a11y';
+// ---------------------------------------------------------------------------
+// B44 ↔ legacy translation (storage boundary only)
+// ---------------------------------------------------------------------------
 
-function readStorage(): AccessibilitySettings {
-  if (typeof window === 'undefined') return DEFAULT_SETTINGS;
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_SETTINGS;
-    const parsed = JSON.parse(raw) as Partial<AccessibilitySettings>;
-    return { ...DEFAULT_SETTINGS, ...parsed };
-  } catch {
-    return DEFAULT_SETTINGS;
-  }
+function toLegacy(prefs: DisplayPrefs): AccessibilitySettings {
+  return {
+    display: prefs.displayMode === 'high-contrast' ? 'contrast' : prefs.displayMode,
+    font: prefs.fontFamily,
+    // B44 'default' is the legacy 'medium' resting state; 'large'/'xl' pass through.
+    size: prefs.fontSize === 'default' ? 'medium' : prefs.fontSize,
+    spacing: prefs.lineSpacing,
+    undoWindow: prefs.undoWindow,
+  };
 }
 
-function writeStorage(s: AccessibilitySettings): void {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
-  } catch {
-    // ignore — quota exceeded, private mode, etc.
-  }
+function displayToB44(value: DisplayMode): B44DisplayMode {
+  return value === 'contrast' ? 'high-contrast' : value;
 }
 
-/**
- * Mirror the settings onto the <html> element as data-* attributes so
- * CSS in app.css can key off them. Matches the init script in index.html
- * exactly — this is the "re-sync" path that runs after React mounts.
- */
-function applyToDom(s: AccessibilitySettings): void {
-  if (typeof document === 'undefined') return;
-  const h = document.documentElement;
-  // Only set attributes when they differ from default, to keep the
-  // DOM clean and the default path fully untouched.
-  if (s.display !== 'default') h.setAttribute('data-display', s.display);
-  else h.removeAttribute('data-display');
-  if (s.font !== 'default') h.setAttribute('data-font', s.font);
-  else h.removeAttribute('data-font');
-  if (s.size !== 'medium') h.setAttribute('data-size', s.size);
-  else h.removeAttribute('data-size');
-  if (s.spacing !== 'default') h.setAttribute('data-spacing', s.spacing);
-  else h.removeAttribute('data-spacing');
+function sizeToB44(value: TextSize): DisplayPrefs['fontSize'] {
+  // Legacy 'small' has no B44 tier; both sub-large legacy steps rest at default.
+  if (value === 'small' || value === 'medium') return 'default';
+  return value;
+}
+
+function spacingToB44(value: Spacing): DisplayPrefs['lineSpacing'] {
+  // Legacy 'tight' has no B44 tier; it rests at default.
+  if (value === 'tight') return 'default';
+  return value;
 }
 
 export interface UseAccessibilitySettingsResult {
@@ -128,43 +120,67 @@ export interface UseAccessibilitySettingsResult {
 }
 
 export function useAccessibilitySettings(): UseAccessibilitySettingsResult {
-  const [settings, setSettings] = useState<AccessibilitySettings>(readStorage);
+  const [prefs, setPrefs] = useState<DisplayPrefs>(loadPrefs);
 
-  // Apply on mount — covers the "localStorage changed in another tab"
-  // case and re-syncs if the init script failed for some reason.
+  // Mirror onto <html> whenever prefs change — re-syncs after the
+  // index.html boot script and covers external updates.
   useEffect(() => {
-    applyToDom(settings);
-  }, [settings]);
+    applyToDom(prefs);
+  }, [prefs]);
 
-  // Cross-tab sync: when another tab writes ada-a11y, mirror it here.
+  // Cross-tab sync: another tab wrote the blob.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     function onStorage(e: StorageEvent) {
-      if (e.key !== STORAGE_KEY) return;
-      setSettings(readStorage());
+      if (e.key !== DISPLAY_PREFS_KEY) return;
+      setPrefs(loadPrefs());
     }
     window.addEventListener('storage', onStorage);
     return () => window.removeEventListener('storage', onStorage);
   }, []);
 
-  const update = useCallback((patch: Partial<AccessibilitySettings>) => {
-    setSettings((prev) => {
-      const next = { ...prev, ...patch };
-      writeStorage(next);
+  // Same-tab external writes (ReadingLevelProvider, guide bars) announce
+  // via ada-prefs-changed; re-read so this hook's view stays canonical.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const onChanged = () => setPrefs((prev) => {
+      const next = loadPrefs();
+      return JSON.stringify(next) === JSON.stringify(prev) ? prev : next;
+    });
+    window.addEventListener(PREFS_CHANGED_EVENT, onChanged);
+    return () => window.removeEventListener(PREFS_CHANGED_EVENT, onChanged);
+  }, []);
+
+  // Follow OS display changes (B44 parity, guarded inside the watcher).
+  useEffect(() => {
+    return watchOsPreferences((mode) => {
+      setPrefs((prev) => {
+        const next = { ...prev, displayMode: mode };
+        savePrefs(next);
+        return next;
+      });
+    });
+  }, []);
+
+  const patch = useCallback((partial: Partial<DisplayPrefs>) => {
+    setPrefs((prev) => {
+      const next = { ...prev, ...partial };
+      savePrefs(next);
       return next;
     });
   }, []);
 
   return {
-    settings,
-    setDisplay: (value) => update({ display: value }),
-    setFont: (value) => update({ font: value }),
-    setSize: (value) => update({ size: value }),
-    setSpacing: (value) => update({ spacing: value }),
-    setUndoWindow: (value) => update({ undoWindow: value }),
+    settings: toLegacy(prefs),
+    setDisplay: (value) => patch({ displayMode: displayToB44(value) }),
+    setFont: (value) => patch({ fontFamily: value }),
+    setSize: (value) => patch({ fontSize: sizeToB44(value) }),
+    setSpacing: (value) => patch({ lineSpacing: spacingToB44(value) }),
+    setUndoWindow: (value) => patch({ undoWindow: value }),
     reset: () => {
-      writeStorage(DEFAULT_SETTINGS);
-      setSettings(DEFAULT_SETTINGS);
+      const next = { ...DEFAULT_PREFS };
+      savePrefs(next);
+      setPrefs(next);
     },
   };
 }
