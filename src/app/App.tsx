@@ -45,7 +45,6 @@ import ReviewLayout from './routes/review/ReviewLayout.js';
 import PhotoReviewQueue from './routes/review/PhotoReviewQueue.js';
 import PhotoReviewLabel from './routes/review/PhotoReviewLabel.js';
 import AdminSignIn from './routes/admin/SignIn.js';
-import AdminSignUp from './routes/admin/SignUp.js';
 import AdminSessions from './routes/admin/AdminSessions.js';
 import AdminSessionDetail from './routes/admin/AdminSessionDetail.js';
 import AdminAttorneys from './routes/admin/AdminAttorneys.js';
@@ -163,7 +162,11 @@ function AdminShell() {
     <ClerkProvider publishableKey={publishableKey} afterSignOutUrl="/">
       <Routes>
         <Route path="sign-in/*" element={<AdminSignIn />} />
-        <Route path="sign-up/*" element={<AdminSignUp />} />
+        {/* M6: /admin/sign-up is gone. It was a publicly routable Clerk
+            sign-up page for an admin console — self-service admin
+            registration. Admins are provisioned by adding an address to
+            ADMIN_EMAILS; there is nothing for a stranger to sign up for.
+            The portal keeps its own sign-up below. */}
         <Route
           element={
             <RequireAdmin>
