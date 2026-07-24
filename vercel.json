@@ -106,7 +106,6 @@
     {"source": "/TitleIIPathway", "destination": "/ada", "permanent": true},
     {"source": "/TitleIPathway", "destination": "/ada", "permanent": true},
     {"source": "/aboutada", "destination": "/about-ada", "permanent": true},
-    {"source": "/ada", "destination": "/ada", "permanent": true},
     {"source": "/adaspike", "destination": "/ada", "permanent": true},
     {"source": "/adminanalyticsv2", "destination": "/admin/analytics", "permanent": true},
     {"source": "/adminattorneyedit", "destination": "/admin/attorneys", "permanent": true},

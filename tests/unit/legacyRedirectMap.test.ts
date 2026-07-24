@@ -114,6 +114,42 @@ describe('B44 flat-route 301 map', () => {
   });
 });
 
+describe('no redirect loops', () => {
+  it('has no self-redirect', () => {
+    // /ada -> /ada shipped and took the page down with
+    // ERR_TOO_MANY_REDIRECTS. It happened because a blanket retarget of
+    // every "/chat" destination to "/ada" also rewrote the lowercase
+    // alias whose source was already /ada. A destination rewrite must
+    // never be applied without re-checking sources.
+    const loops = config.redirects.filter((r) => r.source === r.destination);
+    expect(
+      loops.map((r) => r.source),
+      'a redirect pointing at itself is an infinite loop',
+    ).toEqual([]);
+  });
+
+  it('has no two-step cycle', () => {
+    const dest = new Map(config.redirects.map((r) => [r.source, r.destination]));
+    const cycles: string[] = [];
+    for (const [src, d] of dest) if (dest.get(d) === src) cycles.push(`${src} <-> ${d}`);
+    expect(cycles, 'redirects bouncing between two paths').toEqual([]);
+  });
+
+  it('never redirects a path that is a real route', () => {
+    // A redirect on a live route shadows the page entirely — the
+    // request never reaches React.
+    // Conditional redirects (a `has` clause) do not shadow: they fire
+    // only on a matching host or query. The portal subdomain sends / to
+    // /portal that way, which is correct.
+    const unconditional = new Set(
+      config.redirects.filter((r) => r.has === undefined).map((r) => r.source),
+    );
+    const realRoutes = ['/', '/ada', '/lawsuits', '/attorneys', '/standards-guide', '/about-ada'];
+    const shadowed = realRoutes.filter((r) => unconditional.has(r));
+    expect(shadowed, 'these routes are shadowed by a redirect').toEqual([]);
+  });
+});
+
 describe('lowercase legacy paths resolve too', () => {
   it('redirects the lowercase form of every legacy route', () => {
     // Vercel matches redirect sources case-sensitively, and Base44's
@@ -125,14 +161,22 @@ describe('lowercase legacy paths resolve too', () => {
       if (!/^\/[A-Z]/.test(r.source)) continue;
       const low = r.source.toLowerCase();
       if (low === r.destination) continue;
+      // /Ada lowercases to /ada, which is a real route — it needs no
+      // redirect, and adding one would shadow the page.
+      if (low === '/ada') continue;
       if (!bySource.has(low)) missing.push(low);
     }
     expect(missing, `lowercase forms with no redirect: ${missing.join(', ')}`).toEqual([]);
   });
 
-  it('sends /ada to the chat, not a 404', () => {
-    // Our route is /chat; B44's is /Ada. This is the one people type.
-    expect(bySource.get('/ada')?.destination).toBe('/ada');
+  it('serves /ada directly and points the legacy forms at it', () => {
+    // /ada is the real route now — renamed from /chat because it is
+    // B44's path and it is her name. It must NOT carry a redirect of
+    // its own: /ada -> /ada shipped once and took the page down with
+    // ERR_TOO_MANY_REDIRECTS.
+    expect(bySource.has('/ada'), '/ada must be a route, not a redirect').toBe(false);
+    expect(bySource.get('/Ada')?.destination).toBe('/ada');
+    expect(bySource.get('/chat')?.destination).toBe('/ada');
   });
 });
 
