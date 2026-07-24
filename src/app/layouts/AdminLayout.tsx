@@ -86,74 +86,75 @@ export default function AdminLayout() {
 
   return (
     <PortalAnnouncerProvider>
-    <div className="admin-shell min-h-screen bg-surface-50 text-ink-900 flex flex-col">
+    <div className="admin-shell min-h-screen flex flex-col md:flex-row">
       {/* Skip link */}
       <a
         href="#admin-main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-ink-900 focus:text-surface-50 focus:rounded"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-ink-900 focus:text-white focus:rounded"
       >
         Skip to main content
       </a>
 
-      {/* Top bar */}
-      <header className="border-b border-surface-200 bg-white">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between gap-4">
+      {/* Sidebar — B44 puts the brand here, not in the header bar. */}
+      <aside className="admin-sidebar md:w-60 md:flex-none px-4 py-6">
+        <div className="mb-8 px-3">
           <Link
-            to="/admin/sessions"
-            className="font-display text-lg text-ink-900 hover:text-accent-600 transition-colors"
+            to="/admin/dashboard"
+            className="admin-brand block text-[1.05rem] font-semibold no-underline"
             aria-label="ADA Legal Link admin home"
           >
-            ADA <span className="text-accent-500">Legal</span> Link
-            <span className="text-ink-500 font-mono text-xs ml-2 tracking-widest uppercase">
-              Admin
-            </span>
+            ADA <span className="admin-brand-accent">Legal</span> Link
           </Link>
-          <div className="flex items-center gap-4 text-sm">
-            <span className="text-ink-500 hidden sm:inline font-mono text-xs">{email}</span>
-            <button
-              type="button"
-              onClick={() => signOut({ redirectUrl: '/' })}
-              className="text-ink-700 hover:text-accent-600 underline underline-offset-2"
-            >
-              Sign out
-            </button>
+          <div className="admin-kicker text-[0.7rem] uppercase tracking-[0.15em] mt-0.5">
+            Admin
           </div>
         </div>
-      </header>
 
-      {/* Body: sidebar + main */}
-      <div className="flex-1 max-w-6xl w-full mx-auto flex flex-col md:flex-row gap-6 px-5 sm:px-8 py-6">
-        <aside className="md:w-48 md:flex-none">
-          <nav aria-label="Admin sections" className="flex md:flex-col gap-1 md:gap-4 overflow-x-auto">
-            {NAV_SECTIONS.map((section) => (
-              <div key={section.label} className="flex md:flex-col gap-1 md:gap-0.5">
-                {/* Group headings are real headings, not styled spans, so a
-                    screen-reader user can navigate the sidebar by heading
-                    rather than walking every link. */}
-                <h2 className="hidden md:block px-3 pb-1 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-ink-500">
-                  {section.label}
-                </h2>
-                {section.items.map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    className={({ isActive }) =>
-                      // 44px minimum target: Gina navigates by knuckle.
-                      'flex items-center min-h-[44px] px-3 py-2 rounded-md text-sm whitespace-nowrap transition-colors ' +
-                      (isActive
-                        ? 'bg-accent-600 text-white font-medium'
-                        : 'text-ink-700 hover:bg-surface-100 hover:text-accent-600')
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                ))}
-              </div>
-            ))}
-          </nav>
-        </aside>
+        <nav aria-label="Admin sections" className="flex md:flex-col gap-1 md:gap-5 overflow-x-auto">
+          {NAV_SECTIONS.map((section) => (
+            <div key={section.label} className="flex md:flex-col gap-1 md:gap-0.5">
+              {/* Group headings are real headings, not styled spans, so a
+                  screen-reader user can navigate the sidebar by heading
+                  rather than walking every link. */}
+              <h2 className="admin-kicker hidden md:block px-3 pb-1.5 text-[0.7rem] uppercase tracking-[0.15em]">
+                {section.label}
+              </h2>
+              {section.items.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    // 44px minimum target: Gina navigates by knuckle.
+                    'admin-navlink flex items-center min-h-[44px] px-3 py-2 rounded-md text-sm whitespace-nowrap no-underline transition-colors ' +
+                    (isActive ? 'is-active font-semibold' : '')
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </div>
+          ))}
+        </nav>
+      </aside>
 
-        <main id="admin-main" className="flex-1 min-w-0" key={location.pathname}>
+      {/* Main column */}
+      <div className="flex-1 min-w-0 flex flex-col">
+        <header className="admin-topbar flex items-center justify-end gap-4 px-8 py-4">
+          <span className="admin-topbar-email hidden sm:inline text-xs">{email}</span>
+          <button
+            type="button"
+            onClick={() => signOut({ redirectUrl: '/' })}
+            className="admin-topbar-signout text-sm underline underline-offset-2 min-h-[44px]"
+          >
+            Sign out
+          </button>
+        </header>
+
+        <main
+          id="admin-main"
+          className="flex-1 min-w-0 w-full max-w-[1280px] mx-auto px-5 sm:px-8 py-8"
+          key={location.pathname}
+        >
           <Outlet />
         </main>
       </div>

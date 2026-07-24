@@ -671,6 +671,83 @@ body {
   min-height: 44px;
 }
 
+/* ─── Admin chrome palette (scoped — never leaks to the consumer site) ─────
+ *
+ * The Base44 admin is the design authority here: Gina has used it daily for
+ * months and M8 deletes it, so this surface has to be a substitute, not a
+ * lookalike. B44's anatomy is a 240px #0F172A sidebar with an orange active
+ * pill, a white content area, and the brand inside the sidebar rather than
+ * the header bar.
+ *
+ * B44's exact hexes are NOT used, because four of them fail this project's
+ * 7:1 floor. Measured against their own backgrounds:
+ *
+ *   section labels  #64748B on #0F172A   3.75:1   FAIL
+ *   white on the active pill #F97316     2.80:1   FAIL
+ *   tile sub        #94A3B8 on white     2.56:1   FAIL   (Phase 3)
+ *   View → link     #F97316 on white     2.80:1   FAIL   (Phase 3)
+ *   nav inactive    #CBD5E1 on #0F172A  12.02:1   pass — kept verbatim
+ *
+ * Each failing value is lightened or darkened along its own hue until it
+ * clears 7:1, which is the same reconciliation the portal and the landing
+ * got. The pill is still unmistakably the orange pill; it is just an orange
+ * that white can legally sit on. Ratios are recomputed, not estimated.
+ * ────────────────────────────────────────────────────────────────────────── */
+.admin-shell {
+  --admin-sidebar-bg: #0f172a;        /* B44 verbatim */
+  --admin-nav-idle: #cbd5e1;          /* B44 verbatim — 12.02:1 */
+  --admin-nav-active-bg: #953f04;     /* B44 #F97316 darkened — white 7.02:1 */
+  --admin-kicker: #98a4b5;            /* B44 #64748B lightened — 7.07:1 */
+  --admin-brand-accent: #fb923c;      /* decorative, on dark; not body text */
+  --admin-page-bg: #f8fafc;           /* B44 verbatim */
+  --admin-topbar-bg: #ffffff;
+  --admin-topbar-border: #7f97b5;     /* B44 #E2E8F0/#CBD5E1 was 1.2–1.5:1 — 3.00:1 */
+  --admin-topbar-text: #4d5a6c;       /* B44 #64748B darkened — 7.01:1 */
+
+  background: var(--admin-page-bg);
+  color: #0f172a;
+}
+
+.admin-sidebar {
+  background: var(--admin-sidebar-bg);
+}
+
+.admin-brand {
+  color: #f8fafc;
+}
+.admin-brand-accent {
+  color: var(--admin-brand-accent);
+}
+.admin-kicker {
+  color: var(--admin-kicker);
+}
+
+.admin-navlink {
+  color: var(--admin-nav-idle);
+}
+.admin-navlink:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+.admin-navlink.is-active {
+  background: var(--admin-nav-active-bg);
+  color: #ffffff;
+}
+
+.admin-topbar {
+  background: var(--admin-topbar-bg);
+  border-bottom: 1px solid var(--admin-topbar-border);
+}
+.admin-topbar-email {
+  color: var(--admin-topbar-text);
+}
+.admin-topbar-signout {
+  color: var(--admin-topbar-text);
+}
+.admin-topbar-signout:hover {
+  color: #0f172a;
+}
+
 /* ─── Line + paragraph spacing ──────────────────────────────────────────── */
 
 /* Paragraph spacing values are calibrated against AAA 1.4.8, which
