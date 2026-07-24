@@ -62,6 +62,7 @@ import AdminIntakes from './routes/admin/AdminIntakes.js';
 import AdminSettings from './routes/admin/AdminSettings.js';
 import AdminDashboard from './routes/admin/AdminDashboard.js';
 import AdminFeedback from './routes/admin/AdminFeedback.js';
+import AdminIntakeDetail from './routes/admin/AdminIntakeDetail.js';
 import AdminAnalytics from './routes/admin/AdminAnalytics.js';
 import AdminPhotoReview from './routes/admin/AdminPhotoReview.js';
 import AdminPhotoReviewDetail from './routes/admin/AdminPhotoReviewDetail.js';
@@ -182,6 +183,7 @@ function AdminShell() {
           <Route index element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="feedback" element={<AdminFeedback />} />
+          <Route path="intakes/:id" element={<AdminIntakeDetail />} />
           <Route path="sessions" element={<AdminSessions />} />
           <Route path="sessions/:id" element={<AdminSessionDetail />} />
           <Route path="cases" element={<AdminCases />} />

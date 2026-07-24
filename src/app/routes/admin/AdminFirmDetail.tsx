@@ -37,6 +37,12 @@ interface Firm {
   isPilot: boolean;
   createdAt?: string;
   updatedAt?: string;
+  // M6: already on the wire — /api/admin/firms/[id] returns the whole
+  // LawFirmRow — but never rendered here, so B44's firm detail showed
+  // coverage information this page did not. No endpoint change needed.
+  practiceAreas?: string[];
+  additionalStates?: string[];
+  servesNationwide?: boolean;
 }
 
 interface Listing {
@@ -339,6 +345,30 @@ export default function AdminFirmDetail() {
       )}
 
       {/* Attorneys (firm roster) section */}
+      {/* Coverage — parity with B44's firm detail. Practice areas and
+          service area are how Gina decides whether a firm can take a
+          given matched claimant, so their absence here meant switching
+          to the Base44 admin to answer a routing question. */}
+      <section className="mb-8">
+        <h2 className="font-display text-lg text-ink-900 mb-3">Coverage</h2>
+        <dl className="grid grid-cols-[max-content_1fr] gap-x-6 gap-y-2 text-sm m-0">
+          <dt className="text-ink-500 font-medium">Practice areas</dt>
+          <dd className="m-0 text-ink-900">
+            {(firm.practiceAreas ?? []).length > 0
+              ? firm.practiceAreas!.join(', ')
+              : 'None recorded'}
+          </dd>
+          <dt className="text-ink-500 font-medium">Serves nationwide</dt>
+          <dd className="m-0 text-ink-900">{firm.servesNationwide ? 'Yes' : 'No'}</dd>
+          <dt className="text-ink-500 font-medium">Additional states</dt>
+          <dd className="m-0 text-ink-900">
+            {(firm.additionalStates ?? []).length > 0
+              ? firm.additionalStates!.join(', ')
+              : 'None recorded'}
+          </dd>
+        </dl>
+      </section>
+
       <section className="mb-8">
         <h2 className="font-display text-lg text-ink-900 mb-3">
           Attorneys{' '}

@@ -176,7 +176,7 @@ export default function AdminIntakes() {
               onChange={(e) => setIncludeTest(e.target.checked)}
               className="w-4 h-4 rounded border-surface-200 text-accent-500 focus:ring-accent-500"
             />
-            <span className="text-ink-700 font-medium">Include test sessions</span>
+            <span className="text-ink-700 font-medium">Include QA / test sessions</span>
           </label>
           <span className="ml-auto text-xs text-ink-500 font-mono">
             {loading ? 'Loading…' : `${total} total`}
