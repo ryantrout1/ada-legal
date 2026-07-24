@@ -114,7 +114,7 @@ export default function TwoPathsSection() {
               <b style={{ color: 'var(--heading)', fontWeight: 700 }}>Talk to Ada</b> · validate the barrier · connect to the right place
             </p>
             {adaLive ? (
-              <Link to={'/chat'} className="v2-btn v2-btn-ada" style={{
+              <Link to={'/ada'} className="v2-btn v2-btn-ada" style={{
                 alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
                 background: 'var(--v2-ada)', color: '#fff', padding: '14px 26px',
                 borderRadius: '10px', fontSize: '0.95rem', fontWeight: 700,

@@ -18,7 +18,7 @@ test('homepage renders hero with Ada CTA', async ({ page }) => {
 
   const cta = page.getByRole('link', { name: /Talk to Ada/i }).first();
   await expect(cta).toBeVisible();
-  await expect(cta).toHaveAttribute('href', '/chat');
+  await expect(cta).toHaveAttribute('href', '/ada');
 });
 
 test('homepage has correct document title + lang attribute', async ({ page }) => {
@@ -70,7 +70,7 @@ test('reading-level switch on empty chat: silent swap, no ConfirmBar', async ({ 
     await d.dismiss();
   });
 
-  await page.goto('/chat');
+  await page.goto('/ada');
   await expect(page.getByRole('group', { name: /Reading level/i })).toBeVisible();
 
   // Wait for the input to enable — the session has to initialise before
@@ -98,7 +98,7 @@ test('reading-level switch mid-conversation: ConfirmBar appears; Cancel leaves p
     await d.dismiss();
   });
 
-  await page.goto('/chat');
+  await page.goto('/ada');
   await expect(page.getByRole('textbox', { name: 'Your message' })).toBeEnabled({ timeout: 15000 });
 
   // Send a message so we have user content — this is the trigger that
@@ -143,7 +143,7 @@ test('reading-level switch mid-conversation: ESC key cancels', async ({ page }) 
     await d.dismiss();
   });
 
-  await page.goto('/chat');
+  await page.goto('/ada');
   await expect(page.getByRole('textbox', { name: 'Your message' })).toBeEnabled({ timeout: 15000 });
 
   const input = page.getByRole('textbox', { name: 'Your message' });
@@ -174,7 +174,7 @@ test('New conversation button: ConfirmBar appears when there is user content', a
     await d.dismiss();
   });
 
-  await page.goto('/chat');
+  await page.goto('/ada');
   await expect(page.getByRole('textbox', { name: 'Your message' })).toBeEnabled({ timeout: 15000 });
 
   await page.getByRole('textbox', { name: 'Your message' }).fill('New conversation test.');

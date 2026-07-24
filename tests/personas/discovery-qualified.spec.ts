@@ -56,8 +56,8 @@ test(
     });
 
     // ── Land directly on /chat (NO deep-link) ───────────────────────
-    await page.goto('/chat');
-    recorder.navigate('/chat');
+    await page.goto('/ada');
+    recorder.navigate('/ada');
 
     const conversation = page.getByLabel('Conversation with Ada');
     await expect(conversation).toBeVisible({ timeout: 15_000 });

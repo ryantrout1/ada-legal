@@ -132,7 +132,7 @@ export default function SessionPackagePage() {
         <p className="text-ink-700 leading-relaxed">
           If you were in the middle of talking to me, you can{' '}
           <a
-            href="/chat"
+            href="/ada"
             className="text-accent-500 hover:text-accent-600 underline underline-offset-2"
           >
             start a new conversation

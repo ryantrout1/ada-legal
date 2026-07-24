@@ -102,7 +102,7 @@ export default function SpotIntro() {
         <p className="mt-3 text-sm text-ink-500">
           Ran into a barrier here yourself? Spot is built for the person who owns the place —{' '}
           <a
-            href="/chat"
+            href="/ada"
             className="text-accent-600 underline underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
           >
             talk to Ada instead

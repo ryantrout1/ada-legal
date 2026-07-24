@@ -43,9 +43,9 @@ const KNOWN_SLUGS = new Set([
 const EXPLICIT: Record<string, string> = {
   HomeV2: '/',
   Home: '/',
-  Intake: '/chat',
-  RightsPathway: '/chat',
-  Ada: '/chat',
+  Intake: '/ada',
+  RightsPathway: '/ada',
+  Ada: '/ada',
   StandardsGuide: '/standards-guide',
   Attorneys: '/attorneys',
   Lawsuits: '/lawsuits',

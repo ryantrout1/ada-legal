@@ -131,7 +131,7 @@ export default function HeroV2() {
 
           <div style={{ marginTop: '20px', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
             {adaLive ? (
-              <Link to={'/chat'} className="v2-btn v2-btn-ada" style={{
+              <Link to={'/ada'} className="v2-btn v2-btn-ada" style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
                 background: 'var(--v2-ada)', color: '#fff', padding: '16px 30px',
                 borderRadius: '10px', fontSize: '1rem', fontWeight: 700,

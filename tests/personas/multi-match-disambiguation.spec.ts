@@ -93,8 +93,8 @@ test(
     const listingTitles = listBody.listings.map((l) => l.title.toLowerCase());
     const listingSlugs = listBody.listings.map((l) => l.slug.toLowerCase());
 
-    await page.goto('/chat');
-    recorder.navigate('/chat');
+    await page.goto('/ada');
+    recorder.navigate('/ada');
     const conversation = page.getByLabel('Conversation with Ada');
     await expect(conversation).toBeVisible({ timeout: 15_000 });
     await waitForSessionAdopted(conversation);

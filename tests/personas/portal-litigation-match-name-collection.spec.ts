@@ -18,7 +18,7 @@ import { test, expect } from '@playwright/test';
 test.fixme('Ada asks for the name early — before the qualifying questions begin', async ({ page }) => {
   // Preview/manual: open a Hilton-accessible-room opener, confirm the case fits,
   // then assert Ada asks for the user's name BEFORE posing qualifying question 1.
-  await page.goto('/chat');
+  await page.goto('/ada');
   await expect(page.getByRole('textbox')).toBeVisible();
   // ...drive the litigation_match opener; assert a name prompt precedes QQ #1...
 });
@@ -27,7 +27,7 @@ test.fixme('Ada collects email + optional phone after the last qualifying questi
   // Preview/manual: walk all qualifying questions, then assert the contact-
   // collection step (email required, phone optional) fires only after the last
   // qualifying question and before the session summary.
-  await page.goto('/chat');
+  await page.goto('/ada');
   await expect(page.getByRole('textbox')).toBeVisible();
   // ...complete the QQ sequence; assert email/phone ask comes last...
 });

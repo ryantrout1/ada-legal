@@ -95,7 +95,7 @@ export default function App() {
         {/* Public routes — no Clerk context */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/ada" element={<Chat />} />
           {/* M3: /lawsuits is canonical. The legacy /class-actions pair
               is gone from the router entirely — vercel.json 301s both
               shapes, so those URLs never reach React. */}

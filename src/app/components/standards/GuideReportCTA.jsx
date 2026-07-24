@@ -52,7 +52,7 @@ export default function GuideReportCTA() {
         readingLevel,
       });
     }
-    navigate('/chat');
+    navigate('/ada');
   }
 
   return (
@@ -99,7 +99,7 @@ export default function GuideReportCTA() {
             "launching soon" line stays because it is still true here —
             attorney-connected reporting is not live yet. */}
         <div style={{ marginTop: '16px' }}>
-          <Link to="/chat" className="sg-cta-link" style={{
+          <Link to="/ada" className="sg-cta-link" style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
             color: 'var(--dark-muted)', textDecoration: 'underline',
             minHeight: '44px', display: 'inline-flex', alignItems: 'center'

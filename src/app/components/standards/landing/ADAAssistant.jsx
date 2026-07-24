@@ -411,7 +411,7 @@ export default function ADAAssistant() {
 
           {/* Violation CTA */}
           <Link
-            to={b44PageToRoute('Intake') ?? '/chat'}
+            to={b44PageToRoute('Intake') ?? '/ada'}
             onClick={() => { setQuery(''); setFocused(false); }}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',

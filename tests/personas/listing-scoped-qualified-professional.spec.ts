@@ -76,8 +76,8 @@ test(
       `reading_level=${sessionBody.reading_level}`,
     );
 
-    await page.goto('/chat');
-    recorder.navigate('/chat');
+    await page.goto('/ada');
+    recorder.navigate('/ada');
 
     const conversation = page.getByLabel('Conversation with Ada');
     await expect(conversation).toBeVisible({ timeout: 15_000 });

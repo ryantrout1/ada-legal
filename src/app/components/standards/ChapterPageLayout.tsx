@@ -459,7 +459,7 @@ export default function ChapterPageLayout({
       title,
       readingLevel,
     });
-    navigate('/chat');
+    navigate('/ada');
   }
 
   const currentIdx = ALL_CHAPTERS.findIndex((c) => c.num === chapterNum);

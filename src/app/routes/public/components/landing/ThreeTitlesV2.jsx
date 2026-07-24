@@ -93,7 +93,7 @@ export default function ThreeTitlesV2() {
             simple questions to find the right path for you.
           </p>
           {adaLive ? (
-            <Link to={'/chat'} className="v2-btn v2-btn-ada" style={{
+            <Link to={'/ada'} className="v2-btn v2-btn-ada" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--v2-ada)',
               color: '#fff', border: 'none', padding: '14px 28px', borderRadius: '10px',
               fontSize: '0.95rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px',

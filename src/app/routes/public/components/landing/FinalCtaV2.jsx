@@ -31,7 +31,7 @@ export default function FinalCtaV2() {
         </p>
         <div className="v2-cta-row" style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
           {adaLive ? (
-            <Link to={'/chat'} className="v2-btn v2-btn-ada" style={{
+            <Link to={'/ada'} className="v2-btn v2-btn-ada" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--v2-ada)',
               color: '#fff', padding: '18px 36px', borderRadius: '10px', fontSize: '1.1rem',
               fontWeight: 700, fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px', border: 'none',

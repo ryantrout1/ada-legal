@@ -105,7 +105,7 @@ test(
       page.waitForURL(/\/chat(?:\?|$)/, { timeout: 15_000 }),
       ctaButton.click(),
     ]);
-    recorder.navigate('/chat');
+    recorder.navigate('/ada');
     recorder.step('navigated-to-chat');
 
     // Wait for the session to initialize. The chat container's

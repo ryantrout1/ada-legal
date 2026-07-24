@@ -81,7 +81,7 @@ export default function Terms() {
             : "These terms cover what Ada can and can't do. If you're trying to figure out whether what you experienced is something Ada can help with, just ask her."}
         </p>
         <Link
-          to="/chat"
+          to="/ada"
           className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium px-5 py-3 rounded-md transition-colors"
         >
           Talk to Ada

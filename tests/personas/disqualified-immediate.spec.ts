@@ -77,7 +77,7 @@ test(
       page.waitForURL(/\/chat(?:\?|$)/, { timeout: 15_000 }),
       ctaButton.click(),
     ]);
-    recorder.navigate('/chat');
+    recorder.navigate('/ada');
 
     const conversation = page.getByLabel('Conversation with Ada');
     await expect(conversation).toBeVisible({ timeout: 15_000 });

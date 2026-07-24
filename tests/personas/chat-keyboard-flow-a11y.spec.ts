@@ -73,8 +73,8 @@ test(
 
     // Cold /chat — public_ada session. Keyboard user never touched
     // the mouse, so we explicitly start focus on the body.
-    await page.goto('/chat');
-    recorder.navigate('/chat');
+    await page.goto('/ada');
+    recorder.navigate('/ada');
 
     const conversation = page.getByLabel('Conversation with Ada');
     await expect(conversation).toBeVisible({ timeout: 15_000 });

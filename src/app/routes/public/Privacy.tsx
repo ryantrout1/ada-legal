@@ -85,7 +85,7 @@ export default function Privacy() {
             : 'Privacy questions about your conversation, your data, or your rights under the ADA — Ada can talk through any of it.'}
         </p>
         <Link
-          to="/chat"
+          to="/ada"
           className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium px-5 py-3 rounded-md transition-colors"
         >
           Talk to Ada

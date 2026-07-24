@@ -181,7 +181,7 @@ export default function LawsuitDetail() {
         const body = (await resp.json().catch(() => ({}))) as { error?: string };
         throw new Error(body.error ?? `HTTP ${resp.status}`);
       }
-      navigate('/chat');
+      navigate('/ada');
     } catch (err) {
       setChatError(err instanceof Error ? err.message : 'Could not start chat');
       setStartingChat(false);

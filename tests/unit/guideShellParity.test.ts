@@ -53,8 +53,9 @@ describe('GuideReportCTA keeps the live Ada handoff', () => {
     expect(src).toMatch(/kind:\s*'guide'/);
   });
 
-  it('routes to the chat surface Ada actually lives on', () => {
-    expect(src).toMatch(/navigate\('\/chat'\)/);
+  it('routes to the surface Ada actually lives on', () => {
+    // Renamed /chat -> /ada: B44's route is /Ada and it is her name.
+    expect(src).toMatch(/navigate\('\/ada'\)/);
   });
 
   it('does not resurrect the RightsPathway destination', () => {

@@ -35,7 +35,7 @@ test.describe('Persona: Dave barrier-removal intake', () => {
   test('Ada handles a restaurant barrier story end-to-end', async ({
     page,
   }) => {
-    await page.goto('/chat');
+    await page.goto('/ada');
 
     // Wait for the chat input to be ready (session created).
     const input = page.getByRole('textbox', { name: /Message/i });

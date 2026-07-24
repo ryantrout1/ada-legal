@@ -47,7 +47,7 @@ const SAMPLES: [string, string][] = [
   ['/StandardsGuide', '/standards-guide'],
   ['/HomeV2', '/'],
   ['/Home', '/'],
-  ['/Ada', '/chat'],
+  ['/Ada', '/ada'],
   // chapters
   ['/StandardsCh1', '/standards-guide/chapter/1'],
   ['/StandardsCh4', '/standards-guide/chapter/4'],
@@ -62,8 +62,8 @@ const SAMPLES: [string, string][] = [
   ['/AdminSettings', '/admin/settings'],
   ['/AdminFeedbackV2', '/admin/feedback'],
   // surfaces this app never built — must still land somewhere real
-  ['/RightsPathway', '/chat'],
-  ['/TitleIPathway', '/chat'],
+  ['/RightsPathway', '/ada'],
+  ['/TitleIPathway', '/ada'],
   ['/MyCases', '/'],
   ['/Login', '/'],
 ];
@@ -132,7 +132,7 @@ describe('lowercase legacy paths resolve too', () => {
 
   it('sends /ada to the chat, not a 404', () => {
     // Our route is /chat; B44's is /Ada. This is the one people type.
-    expect(bySource.get('/ada')?.destination).toBe('/chat');
+    expect(bySource.get('/ada')?.destination).toBe('/ada');
   });
 });
 

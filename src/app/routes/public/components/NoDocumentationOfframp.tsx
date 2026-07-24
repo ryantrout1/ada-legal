@@ -67,7 +67,7 @@ export function NoDocumentationOfframp({
         </button>
       ) : (
         <Link
-          to="/chat"
+          to="/ada"
           className="inline-block px-4 py-2 rounded-md border border-accent-500 bg-white text-accent-600 font-medium hover:bg-accent-50 transition-colors"
         >
           Talk to Ada about next steps

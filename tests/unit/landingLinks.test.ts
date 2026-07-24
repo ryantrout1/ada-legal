@@ -79,8 +79,8 @@ describe('b44PageToRoute', () => {
 
   it('routes Base44 surfaces this app never built to where the job now lives', () => {
     // Intake and RightsPathway were form-based; Ada is the front door here.
-    expect(b44PageToRoute('Intake')).toBe('/chat');
-    expect(b44PageToRoute('RightsPathway')).toBe('/chat');
+    expect(b44PageToRoute('Intake')).toBe('/ada');
+    expect(b44PageToRoute('RightsPathway')).toBe('/ada');
     expect(b44PageToRoute('HomeV2')).toBe('/');
   });
 

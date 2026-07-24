@@ -76,7 +76,7 @@ test(
       page.waitForURL(/\/chat(?:\?|$)/, { timeout: 15_000 }),
       ctaButton.click(),
     ]);
-    recorder.navigate('/chat');
+    recorder.navigate('/ada');
 
     const conversation = page.getByLabel('Conversation with Ada');
     await expect(conversation).toBeVisible({ timeout: 15_000 });
@@ -108,7 +108,7 @@ test(
       recorder.step('console-error-page2', { message: err.message });
     });
 
-    await page2.goto('/chat');
+    await page2.goto('/ada');
     recorder.step('second-page-opened-at-chat');
 
     const conversation2 = page2.getByLabel('Conversation with Ada');

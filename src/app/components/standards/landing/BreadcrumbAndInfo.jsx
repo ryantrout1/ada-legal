@@ -77,7 +77,7 @@ export default function BreadcrumbAndInfo() {
               This guide presents the official 2010 ADA Standards for Accessible
               Design with plain-language explanations. All citations reference ADA.gov.
               For legal advice,{' '}
-              <Link to={b44PageToRoute('Intake') ?? '/chat'} className="sg-cta-link" style={{
+              <Link to={b44PageToRoute('Intake') ?? '/ada'} className="sg-cta-link" style={{
                 color: 'var(--link)', fontWeight: 600, textDecoration: 'none'
               }}>
                 connect with an ADA attorney

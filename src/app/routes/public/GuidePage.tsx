@@ -87,7 +87,7 @@ export default function GuidePage() {
           <Link to="/standards-guide" className="underline">
             browse all guides
           </Link>{' '}
-          or <Link to="/chat" className="underline">talk to Ada</Link> directly.
+          or <Link to="/ada" className="underline">talk to Ada</Link> directly.
         </p>
       </main>
     );
