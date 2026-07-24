@@ -1556,6 +1556,8 @@ export interface DbClient {
     litigationListingId: string,
     lawFirmIds: string[],
     assignedByUserId?: string | null,
+    /** M6: firms opted in to receive matched claimants. Absent = none. */
+    receivesMatchesFirmIds?: string[],
   ): Promise<LitigationFirmAssignment[]>;
 
   /**

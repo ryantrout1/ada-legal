@@ -33,7 +33,7 @@ const registeredRoutes = new Set(
 
 describe('admin nav — B44 group structure', () => {
   it('declares the group sections B44 uses', () => {
-    for (const group of ['Ada', 'Directory', 'Business', 'System']) {
+    for (const group of ['Overview', 'Ada', 'Directory', 'Business', 'System']) {
       expect(layout, `nav group missing: ${group}`).toContain(`label: '${group}'`);
     }
   });
@@ -87,10 +87,8 @@ describe('admin nav — no dead links', () => {
     ).toEqual([]);
   });
 
-  it('does not link Dashboard or Feedback until Phase 3 builds them', () => {
-    // A nav entry pointing at a missing page reads as a broken tool
-    // rather than an unfinished one.
-    expect(navTargets).not.toContain('dashboard');
-    expect(navTargets).not.toContain('feedback');
+  it('links Dashboard and Feedback now that Phase 3 built them', () => {
+    expect(navTargets).toContain('dashboard');
+    expect(navTargets).toContain('feedback');
   });
 });

@@ -42,7 +42,16 @@ async function handleGet(id: string, res: VercelResponse) {
   try {
     const clients = makeClientsFromEnv();
     const assignments = await clients.db.listFirmAssignmentsForLitigation(id);
-    return res.status(200).json({ law_firm_ids: assignments.map((a) => a.lawFirmId) });
+    return res.status(200).json({
+      // Existing key, unchanged — Gina's live B44 admin reads this.
+      law_firm_ids: assignments.map((a) => a.lawFirmId),
+      // M6, additive: the opt-in flag the router actually reads. Without
+      // it the admin cannot tell an assigned firm from a routable one.
+      assignments: assignments.map((a) => ({
+        law_firm_id: a.lawFirmId,
+        receives_matches: a.receivesMatches === true,
+      })),
+    });
   } catch (err) {
     console.error('GET /api/admin/litigation/[id]/firms failed', err);
     return res.status(500).json({
@@ -58,19 +67,41 @@ async function handlePut(
   assignedByUserId: string | null,
 ) {
   try {
-    const body = readJsonBody<{ law_firm_ids?: unknown }>(req);
-    if (!Array.isArray(body.law_firm_ids)) {
-      return res.status(400).json({ error: 'law_firm_ids (string[]) is required' });
+    const body = readJsonBody<{ law_firm_ids?: unknown; assignments?: unknown }>(req);
+
+    // M6, additive: prefer the richer `assignments` shape when present,
+    // fall back to the original `law_firm_ids` array. Gina's live B44
+    // admin still sends the latter and must keep working until S10.
+    let lawFirmIds: string[];
+    let optIns: Set<string> | null = null;
+
+    if (Array.isArray(body.assignments)) {
+      const rows = body.assignments.filter(
+        (a): a is { law_firm_id: string; receives_matches?: boolean } =>
+          typeof a === 'object' && a !== null && typeof (a as { law_firm_id?: unknown }).law_firm_id === 'string',
+      );
+      lawFirmIds = rows.map((a) => a.law_firm_id);
+      optIns = new Set(rows.filter((a) => a.receives_matches === true).map((a) => a.law_firm_id));
+    } else if (Array.isArray(body.law_firm_ids)) {
+      lawFirmIds = body.law_firm_ids.filter((x): x is string => typeof x === 'string');
+    } else {
+      return res.status(400).json({ error: 'law_firm_ids (string[]) or assignments is required' });
     }
-    const lawFirmIds = body.law_firm_ids.filter((x): x is string => typeof x === 'string');
 
     const clients = makeClientsFromEnv();
     const assignments = await clients.db.replaceFirmAssignmentsForLitigation(
       id,
       lawFirmIds,
       assignedByUserId,
+      optIns ? [...optIns] : undefined,
     );
-    return res.status(200).json({ law_firm_ids: assignments.map((a) => a.lawFirmId) });
+    return res.status(200).json({
+      law_firm_ids: assignments.map((a) => a.lawFirmId),
+      assignments: assignments.map((a) => ({
+        law_firm_id: a.lawFirmId,
+        receives_matches: a.receivesMatches === true,
+      })),
+    });
   } catch (err) {
     console.error('PUT /api/admin/litigation/[id]/firms failed', err);
     return res.status(500).json({

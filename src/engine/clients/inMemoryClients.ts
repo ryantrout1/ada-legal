@@ -1332,6 +1332,7 @@ export class InMemoryDbClient implements DbClient {
     litigationListingId: string,
     lawFirmIds: string[],
     assignedByUserId?: string | null,
+    receivesMatchesFirmIds?: string[],
   ): Promise<LitigationFirmAssignment[]> {
     // Remove existing assignments for this litigation row.
     for (let i = this.litigationFirmAssignments.length - 1; i >= 0; i--) {
@@ -1345,8 +1346,12 @@ export class InMemoryDbClient implements DbClient {
       litigationListingId,
       lawFirmId,
       assignedByUserId: assignedByUserId ?? null,
-      receivesMatches: false,
-      optedInAt: null,
+      // Mirrors the Neon client: assignment is not consent to receive
+      // matched claimants; the opt-in is a separate explicit act.
+      receivesMatches: receivesMatchesFirmIds?.includes(lawFirmId) ?? false,
+      optedInAt: receivesMatchesFirmIds?.includes(lawFirmId)
+        ? new Date(0).toISOString()
+        : null,
       createdAt: new Date(0).toISOString(),
     }));
     this.litigationFirmAssignments.push(...created.map((c) => ({ ...c })));

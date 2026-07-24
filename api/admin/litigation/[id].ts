@@ -80,6 +80,11 @@ async function handlePatch(id: string, req: VercelRequest, res: VercelResponse) 
     }
     if ('filing_date' in body) patch.filingDate = stringOrNull(body.filing_date);
     if ('lead_attorney_id' in body) patch.leadAttorneyId = stringOrNull(body.lead_attorney_id);
+    // M6: lead FIRM, distinct from lead attorney. This is the field
+    // resolveEligibleRoutingFirm() reads to decide the exclusive Lane A
+    // handoff — without a way to set it, every multi-firm litigation
+    // falls to sourcing. Additive: absent key means unchanged.
+    if ('lead_firm_id' in body) patch.leadFirmId = stringOrNull(body.lead_firm_id);
     if (isStatus(body.status)) patch.status = body.status;
 
     const clients = makeClientsFromEnv();

@@ -60,6 +60,8 @@ import AdminListingPreview from './routes/admin/AdminListingPreview.js';
 import AdminSubscriptions from './routes/admin/AdminSubscriptions.js';
 import AdminIntakes from './routes/admin/AdminIntakes.js';
 import AdminSettings from './routes/admin/AdminSettings.js';
+import AdminDashboard from './routes/admin/AdminDashboard.js';
+import AdminFeedback from './routes/admin/AdminFeedback.js';
 import AdminAnalytics from './routes/admin/AdminAnalytics.js';
 import AdminPhotoReview from './routes/admin/AdminPhotoReview.js';
 import AdminPhotoReviewDetail from './routes/admin/AdminPhotoReviewDetail.js';
@@ -174,7 +176,12 @@ function AdminShell() {
             </RequireAdmin>
           }
         >
-          <Route index element={<Navigate to="/admin/sessions" replace />} />
+          {/* M6: Dashboard is the landing page — B44's Overview group is
+              first for a reason, and a count summary is a better entry
+              point than a raw session list. */}
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="feedback" element={<AdminFeedback />} />
           <Route path="sessions" element={<AdminSessions />} />
           <Route path="sessions/:id" element={<AdminSessionDetail />} />
           <Route path="cases" element={<AdminCases />} />
@@ -202,7 +209,7 @@ function AdminShell() {
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="photo-review" element={<AdminPhotoReview />} />
           <Route path="photo-review/:id" element={<AdminPhotoReviewDetail />} />
-          <Route path="*" element={<Navigate to="/admin/sessions" replace />} />
+          <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
         </Route>
       </Routes>
     </ClerkProvider>

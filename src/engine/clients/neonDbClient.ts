@@ -2082,6 +2082,7 @@ export class NeonDbClient implements DbClient {
     litigationListingId: string,
     lawFirmIds: string[],
     assignedByUserId?: string | null,
+    receivesMatchesFirmIds?: string[],
   ): Promise<LitigationFirmAssignment[]> {
     // Replace semantics (PUT). v1 admin op, low concurrency: delete-then-insert
     // sequentially (not wrapped in an interactive transaction).
@@ -2099,6 +2100,14 @@ export class NeonDbClient implements DbClient {
           litigationListingId,
           lawFirmId,
           assignedByUserId: assignedByUserId ?? null,
+          // Defaults FALSE when the caller says nothing. Assignment is
+          // not consent to receive matched claimants — an admin adding a
+          // firm to a litigation is recording a relationship, and the
+          // opt-in is a separate, explicit act.
+          receivesMatches: receivesMatchesFirmIds
+            ? receivesMatchesFirmIds.includes(lawFirmId)
+            : false,
+          optedInAt: receivesMatchesFirmIds?.includes(lawFirmId) ? new Date() : null,
         })),
       )
       .returning();
