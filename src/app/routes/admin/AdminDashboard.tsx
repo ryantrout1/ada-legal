@@ -24,8 +24,8 @@ interface Counts {
 }
 
 const TILES: { key: keyof Counts; label: string; to: string; hint: string }[] = [
-  { key: 'sessions', label: 'Ada sessions', to: '/admin/sessions', hint: 'All time' },
-  { key: 'intakes', label: 'Completed intakes', to: '/admin/intakes', hint: 'Finished conversations' },
+  { key: 'sessions', label: 'Ada sessions', to: '/admin/sessions', hint: 'Last 30 days, real only' },
+  { key: 'intakes', label: 'Intakes', to: '/admin/intakes', hint: 'Class action intakes' },
   { key: 'cases_unplaced', label: 'Awaiting placement', to: '/admin/cases', hint: 'No firm assigned yet' },
   { key: 'firms', label: 'Firms', to: '/admin/firms', hint: 'In the directory' },
   { key: 'attorneys', label: 'Approved attorneys', to: '/admin/attorneys', hint: 'Publicly listed' },
