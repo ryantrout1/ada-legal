@@ -10,10 +10,22 @@ import { useEffect, useState } from 'react';
 
 interface Settings {
   data_collection_enabled: boolean;
+  ada_chat_enabled: boolean;
+  ada_photo_enabled: boolean;
+  spot_enabled: boolean;
+  spot_test_payment: boolean;
+  lawsuits_ada_cta_enabled: boolean;
+  ada_universal_cta: boolean;
 }
 
 const DEFAULT: Settings = {
   data_collection_enabled: true,
+  ada_chat_enabled: true,
+  ada_photo_enabled: false,
+  spot_enabled: false,
+  spot_test_payment: false,
+  lawsuits_ada_cta_enabled: false,
+  ada_universal_cta: false,
 };
 
 export default function AdminSettings() {
@@ -113,10 +125,77 @@ export default function AdminSettings() {
             </span>
           </label>
         </SettingRow>
+
+        {/* M6: the five flags that had no UI. Until now the only way to
+            flip any of these was a hand-written Neon upsert against a
+            shared jsonb blob — the kind of operation that goes wrong at
+            11pm. Each one gates something that either charges money or
+            hands a claimant onward, so each says plainly what it does. */}
+        {FLAGS.map((flag) => (
+          <SettingRow key={flag.key} title={flag.title} description={flag.description}>
+            <label className="flex items-center gap-3 min-h-[44px]">
+              <input
+                type="checkbox"
+                checked={settings[flag.key]}
+                disabled={saving}
+                onChange={(e) => void save({ [flag.key]: e.target.checked })}
+                className="accent-accent-600 w-[22px] h-[22px]"
+              />
+              <span className="text-sm text-ink-700">
+                {settings[flag.key] ? 'On' : 'Off'}
+              </span>
+            </label>
+          </SettingRow>
+        ))}
       </div>
     </section>
   );
 }
+
+/** The flags that live in the shared `admin` blob, with plain-language
+ *  descriptions of what flipping each one actually does to the site. */
+const FLAGS: {
+  key: keyof Settings;
+  title: string;
+  description: string;
+}[] = [
+  {
+    key: 'ada_chat_enabled',
+    title: 'Ada chat',
+    description:
+      'The live claimant conversation. Off means /chat stops accepting new sessions — the kill switch for Ada herself.',
+  },
+  {
+    key: 'ada_photo_enabled',
+    title: 'Ada photo analysis',
+    description:
+      'The photo path at /photo. Analysis is always presented as triage and screening, never as a compliance certification.',
+  },
+  {
+    key: 'spot_enabled',
+    title: 'Spot',
+    description:
+      'The $79 paid accessibility report at /spot. Off hides the product entirely; nobody can be charged while this is off.',
+  },
+  {
+    key: 'spot_test_payment',
+    title: 'Spot test payments',
+    description:
+      'Routes Spot checkout through Stripe test mode. Must be OFF in production — on means real customers cannot actually pay.',
+  },
+  {
+    key: 'lawsuits_ada_cta_enabled',
+    title: 'Ada CTA on lawsuit pages',
+    description:
+      'Shows "Talk to Ada about this case" on public lawsuit pages. Off renders nothing in its place. Gina reviews this copy before it goes on.',
+  },
+  {
+    key: 'ada_universal_cta',
+    title: 'Universal Ada CTA',
+    description:
+      'Retargets site-wide calls to action at Ada rather than the older Pathway pages, so classification happens in conversation instead of a triage form.',
+  },
+];
 
 function SettingRow({
   title,

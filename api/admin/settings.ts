@@ -25,12 +25,33 @@ import {
   ADA_PHOTO_ENABLED_KEY,
 } from '../../src/lib/adaAvailability.js';
 
+/**
+ * Every flag in the shared `admin` blob.
+ *
+ * M6: was three keys while the blob held six. The two missing pairs
+ * (spot, and the two Ada CTA flags) were migrated from Base44's
+ * SiteConfig at M0 and had no UI at all — the only way to flip them was
+ * a hand-written Neon upsert, which is exactly the kind of operation
+ * that gets done wrong at 11pm.
+ *
+ * The blob is ONE jsonb document. The PATCH handler below merges over
+ * the stored value rather than replacing it, so an unknown future key
+ * added by another surface survives a save from this one.
+ */
 interface SettingsShape {
   data_collection_enabled: boolean;
   /** Kill switch for the live claimant chat (POST /api/ada/session). */
   ada_chat_enabled: boolean;
   /** Enable/disable the Opus field-test photo path (/photo). */
   ada_photo_enabled: boolean;
+  /** Spot paid report product (/spot). */
+  spot_enabled: boolean;
+  /** Spot test-payment mode — never true in production. */
+  spot_test_payment: boolean;
+  /** "Talk to Ada" CTA on the public lawsuit pages. */
+  lawsuits_ada_cta_enabled: boolean;
+  /** Retarget site-wide CTAs to Ada rather than the Pathway pages. */
+  ada_universal_cta: boolean;
 }
 
 // Defaults for the availability flags come from the shared resolver so
@@ -39,6 +60,13 @@ const DEFAULTS: SettingsShape = {
   data_collection_enabled: true,
   ada_chat_enabled: ADA_AVAILABILITY_DEFAULTS.chatEnabled,
   ada_photo_enabled: ADA_AVAILABILITY_DEFAULTS.photoEnabled,
+  // All four of these default OFF, and each one gates something that
+  // charges money or hands a claimant onward. "Not configured" must
+  // never mean "on".
+  spot_enabled: false,
+  spot_test_payment: false,
+  lawsuits_ada_cta_enabled: false,
+  ada_universal_cta: false,
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -85,6 +113,16 @@ async function handlePatch(req: VercelRequest, res: VercelResponse, _userId: str
     }
     if (typeof body[ADA_PHOTO_ENABLED_KEY] === 'boolean') {
       next.ada_photo_enabled = body[ADA_PHOTO_ENABLED_KEY];
+    }
+    // M6: the four flags that previously had no UI. Only an explicit
+    // boolean writes — a missing key leaves the stored value alone.
+    for (const key of [
+      'spot_enabled',
+      'spot_test_payment',
+      'lawsuits_ada_cta_enabled',
+      'ada_universal_cta',
+    ] as const) {
+      if (typeof body[key] === 'boolean') next[key] = body[key];
     }
 
     // TODO: updated_by FK expects a users.id uuid, not a Clerk user id.
