@@ -12,9 +12,10 @@
  *   - shares the .directory-filter-control focus rule with the lawsuit
  *     filters instead of emitting its own <style> block
  *
- * Rendered only at or above the thin-roster threshold — see
- * shouldShowFilters. Not a <form>: this is a directory filter, and Ada
- * remains the only intake front door.
+ * Rendered whenever the roster has loaded, at any size — B44 does not
+ * gate its filter UI on roster size and neither do we. Not a <form>:
+ * this is a directory filter, and Ada remains the only intake front
+ * door.
  */
 
 import type { CSSProperties } from 'react';

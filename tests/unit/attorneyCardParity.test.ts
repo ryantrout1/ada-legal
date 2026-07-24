@@ -124,9 +124,35 @@ describe('Attorneys page — ahead-of-B44 data layer survives', () => {
     );
   });
 
-  it('still gates the filter UI on the thin-roster threshold', () => {
-    expect(pageCode, 'thin-roster gate no longer consulted').toMatch(
-      /shouldShowFilters\(\s*totalApproved\s*\)/,
+  // The thin-roster gate used to be guarded here. It is gone — it was
+  // the reason the live page shipped with no search box at all. What
+  // replaces it is the invariant that actually matters now: the filter
+  // bar must render OUTSIDE the loading branch. Inside it, a dropdown
+  // change unmounts the control the user just operated, because the
+  // refetch flips `loading` and takes the whole subtree with it.
+  //
+  // Asserted as source ORDER rather than an identifier, so moving the
+  // bar back down into `{!loading && ...}` fails the guard instead of
+  // satisfying it.
+  it('renders the filter bar outside the loading branch', () => {
+    const bar = pageCode.indexOf('<AttorneyFilters');
+    const loadingBranch = pageCode.indexOf('{loading &&');
+
+    expect(bar, 'filter bar not rendered at all').toBeGreaterThan(-1);
+    expect(loadingBranch, 'loading branch not found — did the guard go stale?').toBeGreaterThan(
+      -1,
+    );
+    expect(bar, 'filter bar moved back inside a loading branch').toBeLessThan(loadingBranch);
+  });
+
+  it('does not push free-text search into the server-side filter', () => {
+    // /api/attorneys has no search param; a round trip on every
+    // keystroke cannot change the result and re-arms the unmount.
+    // Asserted as the early return, not the bare identifier — per the
+    // note above, a name that only appears in a declaration is a guard
+    // that cannot fail.
+    expect(pageCode, 'search dimension no longer guarded at the call site').toMatch(
+      /if\s*\(!serverDimensionChanged\)\s*return;/,
     );
   });
 

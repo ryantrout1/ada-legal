@@ -10,10 +10,20 @@
  *   - useAttorneys, which fetches /api/attorneys/facets on mount and
  *     /api/attorneys on every filter change, debounced 250ms. B44
  *     fetches the whole roster once and filters it in memory.
- *   - the thin-roster gate: below ten approved attorneys the filter UI
- *     is suppressed entirely. Three dropdowns over four attorneys at a
- *     single firm is worse than just showing the four cards.
  *   - client-side sort by state then last name, nulls last.
+ *
+ * THE THIN-ROSTER GATE IS GONE. It suppressed the filter UI below ten
+ * approved attorneys; with four approved there was no search box on
+ * the page at all, which read as a missing feature rather than a
+ * deliberate simplification. B44 does not gate, and a search box that
+ * appears at ten attorneys and vanishes at nine is stranger than one
+ * that is always there. Parity wins.
+ *
+ * THE FILTER BAR RENDERS OUTSIDE THE LOADING BRANCH. It used to live
+ * inside `!loading && !error`, so a dropdown change unmounted the very
+ * control the user had just operated — refetch flips `loading`, the
+ * whole block goes, focus with it. Only the results region swaps to
+ * the loading state now; the controls survive refetches.
  *
  * DIVISION OF FILTERING: the two dropdowns drive the SERVER-side
  * filter through useAttorneys, which is what that hook is for. The
@@ -25,7 +35,7 @@
  * Ref: /plan M4 Phase 2.
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAttorneys } from '../../hooks/useAttorneys.js';
 import AttorneyCard from '../../components/attorneys/AttorneyCard.js';
@@ -33,7 +43,6 @@ import AttorneyFilters from '../../components/attorneys/AttorneyFilters.js';
 import {
   filterAttorneys,
   deriveFacets,
-  shouldShowFilters,
   EMPTY_ATTORNEY_FILTERS,
   type AttorneyFilterState,
 } from '../../lib/attorneyFilters.js';
@@ -46,7 +55,22 @@ export default function Attorneys() {
   // into the hook's server-side filters below.
   const [display, setDisplay] = useState<AttorneyFilterState>(EMPTY_ATTORNEY_FILTERS);
 
-  const showFilters = shouldShowFilters(totalApproved);
+  // Latches on the first SUCCESSFUL load and never goes back. The
+  // filter bar keys off this rather than off `!loading`, so a refetch
+  // triggered by a dropdown cannot unmount the dropdown mid-use.
+  //
+  // A ref rather than state because it has to be right in the same
+  // render the load settles in — a useEffect would leave one frame
+  // with results present and controls missing.
+  //
+  // Successful, not merely settled: a first load that errors has no
+  // facets and no rows, and three empty dropdowns over an error
+  // message helps nobody. A refetch that fails AFTER a good load does
+  // keep the controls, so the user can undo the selection that broke
+  // it.
+  const hasLoadedOnce = useRef(false);
+  if (!loading && !error) hasLoadedOnce.current = true;
+  const showFilters = hasLoadedOnce.current;
 
   // Prefer the server's facet list; fall back to deriving from the rows
   // we already hold if the facets call failed (it is non-fatal by
@@ -71,6 +95,18 @@ export default function Attorneys() {
 
   function handleFilterChange(next: AttorneyFilterState) {
     setDisplay(next);
+
+    // Only the two dropdowns are server-side dimensions. Free-text
+    // search is applied in `visible` above and /api/attorneys has no
+    // parameter for it, so pushing it into the hook would be a round
+    // trip that cannot change the result. The hook's effect happens to
+    // key off primitives today and would ignore an identical object,
+    // but that is an implementation detail of useAttorneys — this
+    // makes the intent explicit at the call site instead.
+    const serverDimensionChanged =
+      next.state !== display.state || next.practiceArea !== display.practiceArea;
+    if (!serverDimensionChanged) return;
+
     setFilters({
       ...filters,
       state: next.state === 'all' ? null : next.state,
@@ -125,6 +161,28 @@ export default function Attorneys() {
         </p>
       </header>
 
+      {showFilters && (
+        <>
+          <AttorneyFilters
+            filters={display}
+            facets={facetOptions}
+            onChange={handleFilterChange}
+          />
+
+          <p
+            aria-live="polite"
+            style={{
+              margin: '0 0 1rem',
+              fontFamily: 'Manrope, sans-serif',
+              fontSize: '0.875rem',
+              color: 'var(--body-secondary)',
+            }}
+          >
+            {visible.length === 1 ? '1 attorney' : `${visible.length} attorneys`}
+          </p>
+        </>
+      )}
+
       {loading && (
         <p
           style={{
@@ -165,28 +223,6 @@ export default function Attorneys() {
 
       {!loading && !error && (
         <>
-          {showFilters && (
-            <AttorneyFilters
-              filters={display}
-              facets={facetOptions}
-              onChange={handleFilterChange}
-            />
-          )}
-
-          {showFilters && (
-            <p
-              aria-live="polite"
-              style={{
-                margin: '0 0 1rem',
-                fontFamily: 'Manrope, sans-serif',
-                fontSize: '0.875rem',
-                color: 'var(--body-secondary)',
-              }}
-            >
-              {visible.length === 1 ? '1 attorney' : `${visible.length} attorneys`}
-            </p>
-          )}
-
           {visible.length === 0 ? (
             <div
               role="status"

@@ -5,8 +5,8 @@
  * (state / city / practice_area params, debounced 250ms) and that
  * stays — it is the better data layer and Base44 has no equivalent.
  * What lives here is the client-side layer B44 has that we lack: the
- * free-text search over name + firm, facet derivation for the
- * dropdowns, and the thin-roster gate.
+ * free-text search over name + firm, and facet derivation for the
+ * dropdowns.
  *
  * The state rule differs deliberately from the lawsuit filter's. A
  * nationwide lawsuit genuinely reaches every state, so it matches any
@@ -37,17 +37,6 @@ export const EMPTY_ATTORNEY_FILTERS: AttorneyFilterState = {
   practiceArea: 'all',
   state: 'all',
 };
-
-/**
- * Below this many approved attorneys the filter UI is suppressed
- * entirely. Three dropdowns over four attorneys at a single firm is
- * worse than simply showing the four cards.
- */
-export const THIN_ROSTER_THRESHOLD = 10;
-
-export function shouldShowFilters(totalApproved: number): boolean {
-  return totalApproved >= THIN_ROSTER_THRESHOLD;
-}
 
 function nonEmpty(values: readonly string[] | null | undefined): string[] {
   if (!values) return [];

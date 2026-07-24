@@ -8,21 +8,18 @@
  * free-text search over name + firm, and the facet derivation the
  * dropdowns need.
  *
- * The thin-roster gate is ours, not B44's: below the threshold the
- * filter UI is suppressed entirely, because three dropdowns over four
- * attorneys at one firm is worse than just showing the four cards. It
- * is pinned here because the boundary is the kind of off-by-one that
- * ships silently.
+ * The thin-roster gate that used to live here is gone. It suppressed
+ * the filter UI below ten approved attorneys, which with four approved
+ * meant the public page shipped with no search box at all. B44 does
+ * not gate; we no longer diverge.
  *
- * Ref: /plan M4 Phase 1, AC2.
+ * Ref: /plan M4 Phase 1, AC2; /plan attorney search.
  */
 
 import { describe, it, expect } from 'vitest';
 import {
   filterAttorneys,
   deriveFacets,
-  shouldShowFilters,
-  THIN_ROSTER_THRESHOLD,
   EMPTY_ATTORNEY_FILTERS,
   type AttorneyFilterState,
   type FilterableAttorney,
@@ -146,22 +143,5 @@ describe('deriveFacets', () => {
     const messy = [att({ id: 'x', location_state: '', practice_areas: ['', 'ada'] })];
     expect(deriveFacets(messy).states).toEqual([]);
     expect(deriveFacets(messy).practiceAreas).toEqual(['ada']);
-  });
-});
-
-describe('shouldShowFilters — thin-roster gate', () => {
-  it('hides the filter UI below the threshold', () => {
-    expect(shouldShowFilters(0)).toBe(false);
-    expect(shouldShowFilters(4)).toBe(false);
-    expect(shouldShowFilters(THIN_ROSTER_THRESHOLD - 1)).toBe(false);
-  });
-
-  it('shows it at and above the threshold', () => {
-    expect(shouldShowFilters(THIN_ROSTER_THRESHOLD)).toBe(true);
-    expect(shouldShowFilters(THIN_ROSTER_THRESHOLD + 1)).toBe(true);
-  });
-
-  it('keeps the threshold where the existing page had it', () => {
-    expect(THIN_ROSTER_THRESHOLD).toBe(10);
   });
 });

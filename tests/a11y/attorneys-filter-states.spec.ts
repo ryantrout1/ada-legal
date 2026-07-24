@@ -1,20 +1,26 @@
 /**
- * attorneys-filter-states.spec.ts — verifies the thin-roster gate.
+ * attorneys-filter-states.spec.ts — the filter UI renders at any
+ * roster size.
  *
- * Phase 2 of /plan thin-roster simplification adds a threshold-based
- * gate: when the approved-attorney network has fewer than 10 attorneys,
- * the filter UI on /attorneys is hidden; at 10 or more, it appears.
+ * This spec used to verify the thin-roster gate: below ten approved
+ * attorneys the filter UI was suppressed. The gate is gone — with four
+ * approved in production it meant the public page shipped with no
+ * search box at all, which read as a missing feature. B44 does not
+ * gate; we no longer diverge. See /plan attorney search.
  *
- * This spec exercises both states by mocking /api/attorneys with
- * controlled total_approved counts. It also confirms the page passes
- * the same WCAG 2.2 AAA audit at each state (no serious or critical
- * violations) — the existing aaa-audit.spec.ts only runs against live
- * data, so this fills the gap for the over-threshold state.
+ * The inversion is deliberate: the small-roster case now asserts the
+ * filter UI IS present, which is the exact assertion that would have
+ * caught the original defect.
  *
- * Acceptance criteria covered:
- *   #1 — under threshold (5 attorneys): no filter UI rendered
- *   #2 — at/over threshold (12 attorneys): filter UI rendered
- *   #4 — AAA audit passes at both states
+ * The AAA coverage is why this file survives the gate's removal. The
+ * existing aaa-audit.spec.ts only runs against live data (four
+ * attorneys, one firm); this exercises the page with a mocked roster
+ * big enough to populate every dropdown, and audits both sizes.
+ *
+ * Covers:
+ *   #1 — small roster (5 attorneys): filter UI rendered
+ *   #2 — larger roster (12 attorneys): filter UI rendered
+ *   #3 — AAA audit passes at both sizes
  */
 
 import { test, expect } from '@playwright/test';
@@ -67,8 +73,8 @@ const FACETS_RESPONSE = {
   practice_areas: ['ada', 'public_accommodations', 'employment'],
 };
 
-test.describe('Attorneys filter visibility — thin-roster gate', () => {
-  test('hides filter UI when total_approved is below threshold (5 < 10)', async ({
+test.describe('Attorneys filter visibility — renders at any roster size', () => {
+  test('shows filter UI on a small roster (5 attorneys)', async ({
     page,
   }) => {
     await page.route('**/api/attorneys/facets', async (route) => {
@@ -102,11 +108,12 @@ test.describe('Attorneys filter visibility — thin-roster gate', () => {
     await page.goto('/attorneys');
     await page.waitForLoadState('networkidle');
 
-    // Filter UI must not be present.
-    await expect(page.getByRole('group', { name: /filter/i })).toHaveCount(0);
-    await expect(page.locator('fieldset')).toHaveCount(0);
-    await expect(page.getByRole('combobox')).toHaveCount(0);
-    await expect(page.getByRole('switch')).toHaveCount(0);
+    // Filter UI must be present — this is the assertion that would
+    // have caught the original defect, where four approved attorneys
+    // meant no search box at all.
+    await expect(page.locator('fieldset')).toHaveCount(1);
+    await expect(page.getByRole('combobox')).toHaveCount(1); // State select
+    await expect(page.getByRole('switch').first()).toBeVisible();
 
     // Cards must still render.
     await expect(page.getByRole('heading', { name: 'Mock Attorney 1' })).toBeVisible();
@@ -118,7 +125,7 @@ test.describe('Attorneys filter visibility — thin-roster gate', () => {
     );
     if (blocking.length > 0) {
       console.log(
-        `\n[a11y] /attorneys (thin) — ${blocking.length} BLOCKING violation(s):`,
+        `\n[a11y] /attorneys (small roster) — ${blocking.length} BLOCKING violation(s):`,
       );
       for (const v of blocking) {
         console.log(`  ✗ ${v.id} (${v.impact}): ${v.help}`);
@@ -126,11 +133,11 @@ test.describe('Attorneys filter visibility — thin-roster gate', () => {
     }
     expect(
       blocking,
-      'Thin-roster /attorneys has serious/critical accessibility violations.',
+      'Small-roster /attorneys has serious/critical accessibility violations.',
     ).toEqual([]);
   });
 
-  test('shows filter UI when total_approved meets threshold (12 >= 10)', async ({
+  test('shows filter UI on a larger roster (12 attorneys)', async ({
     page,
   }) => {
     await page.route('**/api/attorneys/facets', async (route) => {
@@ -180,7 +187,7 @@ test.describe('Attorneys filter visibility — thin-roster gate', () => {
     );
     if (blocking.length > 0) {
       console.log(
-        `\n[a11y] /attorneys (full) — ${blocking.length} BLOCKING violation(s):`,
+        `\n[a11y] /attorneys (larger roster) — ${blocking.length} BLOCKING violation(s):`,
       );
       for (const v of blocking) {
         console.log(`  ✗ ${v.id} (${v.impact}): ${v.help}`);
@@ -188,7 +195,7 @@ test.describe('Attorneys filter visibility — thin-roster gate', () => {
     }
     expect(
       blocking,
-      'Full-roster /attorneys has serious/critical accessibility violations.',
+      'Larger-roster /attorneys has serious/critical accessibility violations.',
     ).toEqual([]);
   });
 });
