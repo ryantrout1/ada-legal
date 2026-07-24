@@ -12,6 +12,20 @@
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { PortalAnnouncerProvider } from '../portal/announcer.js';
+import LiveAnnouncer from '../components/a11y/LiveAnnouncer.js';
+import { ReadingLevelProvider } from '../components/standards/ReadingLevelContext.js';
+import { AccessibilityPanel } from '../components/AccessibilityPanel.js';
+
+/**
+ * The primary site links, mirrored from PublicLayout. Declared here so
+ * the admin chrome carries the same nav; adminChromeParity asserts the
+ * two lists stay identical.
+ */
+const SITE_NAV = [
+  { to: '/standards-guide', label: 'ADA Standards Guide' },
+  { to: '/attorneys', label: 'Find an Attorney' },
+  { to: '/lawsuits', label: 'Lawsuits' },
+];
 
 /**
  * Nav structure, adopted from Base44's AdminLayout (@ 6b1e9ac) so Gina's
@@ -85,8 +99,10 @@ export default function AdminLayout() {
   const email = user?.primaryEmailAddress?.emailAddress ?? 'admin';
 
   return (
+    <LiveAnnouncer>
+    <ReadingLevelProvider>
     <PortalAnnouncerProvider>
-    <div className="admin-shell min-h-screen flex flex-col md:flex-row">
+    <div className="admin-shell min-h-screen flex flex-col">
       {/* Skip link */}
       <a
         href="#admin-main"
@@ -95,6 +111,68 @@ export default function AdminLayout() {
         Skip to main content
       </a>
 
+      {/* Site chrome.
+       *
+       * Base44's admin renders inside the site layout, so Gina has the
+       * nav and — the part that matters — the display-settings control
+       * on every admin page. Ours had neither: the one surface she uses
+       * daily was the one place she could not reach her own
+       * accessibility settings, on a project whose floor is AAA.
+       *
+       * The bar is declared here rather than by wrapping /admin in
+       * PublicLayout, which would nest a second <main>, a second skip
+       * link and a duplicate #main-content id inside this one. The link
+       * set is asserted against PublicLayout's by adminChromeParity so
+       * the two cannot drift apart silently.
+       *
+       * AccessibilityPanel needs LiveAnnouncer and ReadingLevelProvider
+       * above it: without them the panel still renders, but the
+       * reading-level control becomes a silent no-op and announcements
+       * are dropped — a control that looks live and does nothing is
+       * worse than one that is absent.
+       */}
+      <header className="bg-brand-navy text-white relative z-40 flex-none">
+        <div
+          className="w-full flex items-center justify-between"
+          style={{ height: 72, padding: '0 clamp(16px, 4vw, 40px)' }}
+        >
+          <Link
+            to="/"
+            className="flex items-center gap-3 font-display font-bold text-white no-underline"
+            style={{ fontSize: '1.5rem' }}
+            aria-label="ADA Legal Link home"
+          >
+            <img
+              src="/logo-transparent.png"
+              alt=""
+              width="44"
+              height="44"
+              className="w-11 h-11 object-contain flex-shrink-0"
+            />
+            <span className="whitespace-nowrap">
+              ADA Legal <span style={{ color: '#FDBA74' }}>Link</span>
+            </span>
+          </Link>
+
+          <div className="flex items-center gap-1 sm:gap-2">
+            <nav aria-label="Primary" className="hidden md:flex items-center gap-1 font-chrome">
+              {SITE_NAV.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className="transition-colors inline-flex items-center text-white hover:text-brand-gold"
+                  style={{ fontSize: '0.9375rem', fontWeight: 500, minHeight: 44, padding: '6px 12px' }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+            <AccessibilityPanel onDark />
+          </div>
+        </div>
+      </header>
+
+      <div className="flex-1 min-h-0 flex flex-col md:flex-row">
       {/* Sidebar — B44 puts the brand here, not in the header bar. */}
       <aside className="admin-sidebar md:w-60 md:flex-none px-4 py-6">
         <div className="mb-8 px-3">
@@ -158,7 +236,10 @@ export default function AdminLayout() {
           <Outlet />
         </main>
       </div>
+      </div>
     </div>
     </PortalAnnouncerProvider>
+    </ReadingLevelProvider>
+    </LiveAnnouncer>
   );
 }
