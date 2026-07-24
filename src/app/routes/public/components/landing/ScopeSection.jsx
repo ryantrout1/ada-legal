@@ -40,7 +40,7 @@ export default function ScopeSection() {
         <div className="v2-scope-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '22px', maxWidth: '880px', margin: '0 auto' }}>
           {/* Can help */}
           <div style={{ background: 'var(--page-bg)', border: '1px solid var(--border)', borderRadius: '16px', padding: '28px' }}>
-            <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#15803D', margin: '0 0 18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-success-500)', margin: '0 0 18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
               We can help with
             </h3>

@@ -595,18 +595,25 @@ body {
 
 /* When the user picks size=small, every interactive control still
    needs to meet WCAG 2.5.8 (Target Size — Minimum, 24×24px). Buttons
-   styled as `h-9` (2.25rem) drop to 31.5px at 14px base, which is
-   above the floor but tight on touch devices. Force a 32px floor on
-   buttons / role=button / anchors / inputs to keep targets visibly
-   tappable at small text size. The medium and large sizes are already
-   well above the 24px floor and don't need this guard. */
+   styled as `h-9` (2.25rem) drop to 31.5px at 14px base.
+
+   This guard originally forced 32px, which clears WCAG 2.2 AA
+   (2.5.8 Target Size Minimum, 24x24) — the floor the comment was
+   written against. This project holds AAA, where 2.5.5 Target Size
+   Enhanced requires 44x44. So selecting "small" text was silently
+   dropping every form control below the standard: an accessibility
+   setting breaking a different accessibility criterion, chosen by
+   exactly the users least able to absorb it.
+
+   Raised to 44px. Small text size now means smaller TEXT, not smaller
+   targets — which is what someone picking it actually wants. */
 :root[data-size="small"] button,
 :root[data-size="small"] [role="button"],
 :root[data-size="small"] a.inline-flex,
 :root[data-size="small"] input,
 :root[data-size="small"] select,
 :root[data-size="small"] textarea {
-  min-height: 32px;
+  min-height: 44px;
 }
 
 /* iOS Safari auto-zooms any focused text input whose computed

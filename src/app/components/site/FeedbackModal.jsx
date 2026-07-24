@@ -98,67 +98,67 @@ export default function FeedbackModal({ isOpen, onClose }) {
           padding: 24px;
         }
         .fb-panel {
-          background-color: #FAF7F2;
+          background-color: var(--page-bg-alt);
           border-radius: 16px; padding: 28px 24px;
           width: 100%; max-width: 400px; position: relative;
           box-shadow: 0 20px 60px rgba(0,0,0,0.18);
           max-height: calc(100vh - 48px); overflow-y: auto;
-          color: #334155;
+          color: var(--body);
         }
         .fb-close-btn {
           position: absolute; top: 12px; right: 12px;
           background: transparent; border: none; cursor: pointer;
-          color: #475569; padding: 4px;
+          color: var(--body-secondary); padding: 4px;
           min-width: 44px; min-height: 44px;
           display: flex; align-items: center; justify-content: center;
         }
         .fb-title {
           font-family: Fraunces, Georgia, serif;
           font-size: 1.25rem; font-weight: 700;
-          color: #1E293B; margin: 0 0 4px;
+          color: var(--heading); margin: 0 0 4px;
         }
         .fb-subtitle {
           font-family: Manrope, sans-serif;
-          font-size: 0.85rem; color: #3D4A5C;
+          font-size: 0.85rem; color: var(--body);
           margin: 0 0 20px; line-height: 1.5;
         }
         .fb-form { display: flex; flex-direction: column; gap: 14px; }
         .fb-label {
           font-family: Manrope, sans-serif;
           font-size: 0.8125rem; font-weight: 600;
-          color: #334155; display: block; margin-bottom: 4px;
+          color: var(--body); display: block; margin-bottom: 4px;
         }
-        .fb-optional { color: #434E5E; font-weight: 400; }
-        .fb-required { color: #991B1B; }
+        .fb-optional { color: var(--body-secondary); font-weight: 400; }
+        .fb-required { color: var(--color-danger-500); }
         .fb-select, .fb-input, .fb-textarea {
           font-family: Manrope, sans-serif; font-size: 0.9rem;
           padding: 10px 12px; border-radius: 8px;
-          border: 1px solid #9CA3AF; outline: none;
+          border: 1px solid var(--body-secondary); outline: none;
           width: 100%; box-sizing: border-box;
-          background-color: #FFFFFF; color: #334155;
+          background-color: var(--card-bg); color: var(--body);
         }
         .fb-select { min-height: 40px; appearance: auto; }
         .fb-textarea { resize: vertical; min-height: 90px; }
         .fb-select:focus-visible, .fb-input:focus-visible, .fb-textarea:focus-visible {
-          border-color: #B7501F;
-          outline: 2px solid #B7501F;
+          border-color: var(--accent-light);
+          outline: 2px solid var(--accent-light);
           outline-offset: -1px;
         }
         /* Fallback for browsers without focus-visible */
         .fb-select:focus, .fb-input:focus, .fb-textarea:focus {
-          border-color: #B7501F;
-          outline: 2px solid #B7501F;
+          border-color: var(--accent-light);
+          outline: 2px solid var(--accent-light);
           outline-offset: -1px;
         }
-        .fb-input::placeholder, .fb-textarea::placeholder { color: #6B7280; }
+        .fb-input::placeholder, .fb-textarea::placeholder { color: var(--body-secondary); }
         .fb-error {
           font-family: Manrope, sans-serif;
-          font-size: 0.85rem; color: #991B1B; margin: 0;
+          font-size: 0.85rem; color: var(--color-danger-500); margin: 0;
         }
         .fb-submit-btn {
           font-family: Manrope, sans-serif;
           font-size: 0.9375rem; font-weight: 700;
-          background-color: #C2410C; color: #FFFFFF; border: none;
+          background-color: var(--accent); color: var(--card-bg); border: none;
           padding: 12px 20px; border-radius: 10px;
           cursor: pointer; min-height: 44px;
         }
@@ -166,24 +166,24 @@ export default function FeedbackModal({ isOpen, onClose }) {
         .fb-success-wrap { text-align: center; padding: 16px 0; }
         .fb-success-icon-wrap {
           width: 52px; height: 52px; border-radius: 50%;
-          background-color: #F0FDF4;
+          background-color: var(--color-success-50);
           display: flex; align-items: center; justify-content: center;
           margin: 0 auto 14px;
         }
         .fb-success-title {
           font-family: Fraunces, Georgia, serif;
           font-size: 1.2rem; font-weight: 700;
-          color: #1E293B; margin: 0 0 6px;
+          color: var(--heading); margin: 0 0 6px;
         }
         .fb-success-body {
           font-family: Manrope, sans-serif;
-          font-size: 0.9rem; color: #475569;
+          font-size: 0.9rem; color: var(--body-secondary);
           margin: 0 0 18px; line-height: 1.5;
         }
         .fb-done-btn {
           font-family: Manrope, sans-serif;
           font-size: 0.9rem; font-weight: 600;
-          background-color: #1E293B; color: #FFFFFF; border: none;
+          background-color: var(--heading); color: var(--card-bg); border: none;
           padding: 10px 24px; border-radius: 10px;
           cursor: pointer; min-height: 44px;
         }
@@ -216,9 +216,9 @@ export default function FeedbackModal({ isOpen, onClose }) {
                         fontWeight: form.feedback_type === t.value ? 700 : 500,
                         padding: '8px 14px',
                         borderRadius: '100px',
-                        border: form.feedback_type === t.value ? '2px solid #C2410C' : '1px solid #9CA3AF',
-                        background: form.feedback_type === t.value ? '#FEF1EC' : '#FFFFFF',
-                        color: form.feedback_type === t.value ? '#9A3412' : '#334155',
+                        border: form.feedback_type === t.value ? '2px solid var(--accent)' : '1px solid var(--body-secondary)',
+                        background: form.feedback_type === t.value ? 'var(--card-bg-tinted)' : 'var(--card-bg)',
+                        color: form.feedback_type === t.value ? 'var(--link)' : 'var(--body)',
                         cursor: 'pointer',
                         transition: 'all 0.15s ease',
                         minHeight: '36px',
@@ -232,12 +232,12 @@ export default function FeedbackModal({ isOpen, onClose }) {
 
               {form.feedback_type === 'testimonial' && (
                 <div style={{
-                  background: '#FEF3C7', border: '1px solid #F59E0B',
+                  background: 'var(--color-warning-50)', border: '1px solid var(--color-warning-500)',
                   borderRadius: '10px', padding: '14px 16px',
                 }}>
                   <p style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                    color: '#92400E', margin: 0, lineHeight: 1.5,
+                    color: 'var(--color-warning-500)', margin: 0, lineHeight: 1.5,
                   }}>
                     Tell us what you liked — with your permission, we may feature your words
                     and first name on our site to help others in the community find this resource.
@@ -286,11 +286,11 @@ export default function FeedbackModal({ isOpen, onClose }) {
                       type="checkbox"
                       checked={form.testimonial_consent}
                       onChange={(e) => setForm({ ...form, testimonial_consent: e.target.checked })}
-                      style={{ marginTop: '3px', width: '18px', height: '18px', flexShrink: 0, accentColor: '#C2410C' }}
+                      style={{ marginTop: '3px', width: '18px', height: '18px', flexShrink: 0, accentColor: 'var(--accent)' }}
                     />
                     <label htmlFor="fb-consent" style={{
                       fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
-                      color: '#475569', lineHeight: 1.5, cursor: 'pointer',
+                      color: 'var(--body-secondary)', lineHeight: 1.5, cursor: 'pointer',
                     }}>
                       By submitting, you're okay with us featuring your words and name on our site to help
                       others in the community.
@@ -324,41 +324,41 @@ export default function FeedbackModal({ isOpen, onClose }) {
             <p className="fb-subtitle">Please review before sending.</p>
             <div style={{ marginBottom: '14px' }}>
               <p className="fb-label">Type</p>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#334155', margin: '2px 0 10px' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>
                 {TYPES.find(t => t.value === form.feedback_type)?.label}
               </p>
               <p className="fb-label">{form.feedback_type === 'testimonial' ? 'Your words' : 'Message'}</p>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#334155', margin: '2px 0 10px', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
                 {form.message}
               </p>
               {form.feedback_type === 'testimonial' ? (
                 <>
                   {form.display_name && <>
                     <p className="fb-label">Display name</p>
-                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#334155', margin: '2px 0 10px' }}>{form.display_name}</p>
+                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.display_name}</p>
                   </>}
                   {form.location && <>
                     <p className="fb-label">Location</p>
-                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#334155', margin: '2px 0 10px' }}>{form.location}</p>
+                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.location}</p>
                   </>}
                   {form.email && <>
                     <p className="fb-label">Email</p>
-                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#334155', margin: '2px 0 10px' }}>{form.email}</p>
+                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.email}</p>
                   </>}
                   <p style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-                    color: '#15803D', margin: '10px 0 0', fontWeight: 600,
+                    color: 'var(--color-success-500)', margin: '10px 0 0', fontWeight: 600,
                   }}>✓ You've agreed to let us feature your words on our site.</p>
                 </>
               ) : (
                 <>
                   {form.name && <>
                     <p className="fb-label">Name</p>
-                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#334155', margin: '2px 0 10px' }}>{form.name}</p>
+                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.name}</p>
                   </>}
                   {form.email && <>
                     <p className="fb-label">Email</p>
-                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: '#334155', margin: '2px 0 10px' }}>{form.email}</p>
+                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.email}</p>
                   </>}
                 </>
               )}
@@ -374,7 +374,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
           </>
         ) : (
           <div className="fb-success-wrap">
-            <div className="fb-success-icon-wrap"><CheckCircle size={26} color="#16A34A" /></div>
+            <div className="fb-success-icon-wrap"><CheckCircle size={26} color="var(--color-success-500)" /></div>
             <h2 className="fb-success-title">
               {form.feedback_type === 'testimonial' ? 'You made our day!' : 'Thank you!'}
             </h2>

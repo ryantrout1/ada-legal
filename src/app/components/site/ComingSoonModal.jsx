@@ -74,10 +74,10 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
         ref={modalRef}
         className="modal-light-theme"
         style={{
-          background: '#FFFFFF', borderRadius: '16px', padding: '40px 32px',
+          background: 'var(--card-bg)', borderRadius: '16px', padding: '40px 32px',
           maxWidth: '480px', width: '100%', position: 'relative',
           boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
-          color: '#334155',
+          color: 'var(--body)',
         }}
       >
         <button
@@ -86,7 +86,7 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
           style={{
             position: 'absolute', top: '16px', right: '16px',
             background: 'transparent', border: 'none', cursor: 'pointer',
-            color: '#475569', padding: '4px', minWidth: '44px', minHeight: '44px',
+            color: 'var(--body-secondary)', padding: '4px', minWidth: '44px', minHeight: '44px',
             display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}
         >
@@ -97,25 +97,25 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
           <>
             <div style={{
               width: '56px', height: '56px', borderRadius: '14px',
-              background: '#FEF1EC', display: 'flex', alignItems: 'center',
+              background: 'var(--card-bg-tinted)', display: 'flex', alignItems: 'center',
               justifyContent: 'center', margin: '0 0 20px'
             }}>
-              <Bell size={28} color="#C2410C" />
+              <Bell size={28} color="var(--accent)" />
             </div>
 
             <h2 style={{
               fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700,
-              color: '#1E293B', margin: '0 0 8px', lineHeight: 1.25
+              color: 'var(--heading)', margin: '0 0 8px', lineHeight: 1.25
             }}>
               {isPathways ? 'Rights Pathway Opens Soon' : 'Violation Reporting Opens Soon'}
             </h2>
 
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-              color: '#475569', lineHeight: 1.65, margin: '0 0 24px'
+              color: 'var(--body-secondary)', lineHeight: 1.65, margin: '0 0 24px'
             }}>
               We're currently in early access. Explore our{' '}
-              <span style={{ fontWeight: 600, color: '#1E293B' }}>ADA Standards Guide</span>{' '}
+              <span style={{ fontWeight: 600, color: 'var(--heading)' }}>ADA Standards Guide</span>{' '}
               to understand your rights. Enter your email to be notified when{' '}
               {isPathways ? 'the Rights Pathway goes' : 'reporting goes'} live.
             </p>
@@ -131,17 +131,17 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
                 style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
                   padding: '14px 16px', borderRadius: '10px',
-                  border: '1px solid #D1D5DB', outline: 'none',
+                  border: '1px solid var(--color-control-border)', outline: 'none',
                   transition: 'border-color 0.15s', minHeight: '44px',
-                  backgroundColor: '#FFFFFF', color: '#334155',
+                  backgroundColor: 'var(--card-bg)', color: 'var(--body)',
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#C2410C'}
-                onBlur={(e) => e.target.style.borderColor = '#D1D5DB'}
+                onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
+                onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
               />
               {error && (
                 <p style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-                  color: '#991B1B', margin: 0
+                  color: 'var(--color-danger-500)', margin: 0
                 }}>{error}</p>
               )}
               <button
@@ -149,7 +149,7 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
                 disabled={submitting}
                 style={{
                   fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
-                  background: '#C2410C', color: 'white', border: 'none',
+                  background: 'var(--accent)', color: 'white', border: 'none',
                   padding: '14px 24px', borderRadius: '10px', cursor: 'pointer',
                   minHeight: '44px', opacity: submitting ? 0.7 : 1,
                   transition: 'background 0.15s'
@@ -163,20 +163,20 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
           <div style={{ textAlign: 'center', padding: '12px 0' }}>
             <div style={{
               width: '56px', height: '56px', borderRadius: '50%',
-              background: '#F0FDF4', display: 'flex', alignItems: 'center',
+              background: 'var(--color-success-50)', display: 'flex', alignItems: 'center',
               justifyContent: 'center', margin: '0 auto 16px'
             }}>
-              <CheckCircle size={28} color="#16A34A" />
+              <CheckCircle size={28} color="var(--color-success-500)" />
             </div>
             <h2 style={{
               fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700,
-              color: '#1E293B', margin: '0 0 8px'
+              color: 'var(--heading)', margin: '0 0 8px'
             }}>
               You're on the list!
             </h2>
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-              color: '#475569', lineHeight: 1.6, margin: '0 0 20px'
+              color: 'var(--body-secondary)', lineHeight: 1.6, margin: '0 0 20px'
             }}>
               We'll email you as soon as {isPathways ? 'the Rights Pathway' : 'violation reporting'} is live. In the meantime, explore our ADA Standards Guide.
             </p>
@@ -184,7 +184,7 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
               onClick={onClose}
               style={{
                 fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 600,
-                background: '#1E293B', color: 'white', border: 'none',
+                background: 'var(--heading)', color: 'white', border: 'none',
                 padding: '12px 28px', borderRadius: '10px', cursor: 'pointer',
                 minHeight: '44px'
               }}

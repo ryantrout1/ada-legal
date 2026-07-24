@@ -47,6 +47,10 @@ export default function StandardsStyles() {
       .sg-filter-btn {
         display: inline-flex;
         align-items: center;
+        /* 44px floor (2.5.5). Padding alone gave ~40px — under the AAA
+           target size, and these are the Standards Guide's primary
+           filter controls. */
+        min-height: 44px;
         gap: 8px;
         padding: 10px 20px;
         border-radius: 100px;

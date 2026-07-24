@@ -148,7 +148,7 @@ export default function ConsentCard({
         type="button"
         onClick={submit}
         disabled={status === 'submitting'}
-        className="px-5 py-3 rounded-md bg-accent-500 text-white font-medium hover:bg-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600 disabled:opacity-70 transition-colors"
+        className="min-h-[44px] px-5 py-3 rounded-md bg-accent-500 text-white font-medium hover:bg-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600 disabled:opacity-70 transition-colors"
       >
         {status === 'submitting' ? 'Sharing…' : copy.button}
       </button>

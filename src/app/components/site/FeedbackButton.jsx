@@ -18,7 +18,7 @@ export default function FeedbackButton() {
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
-          background: '#1E293B',
+          background: 'var(--heading)',
           color: 'white',
           border: 'none',
           borderRadius: '100px',

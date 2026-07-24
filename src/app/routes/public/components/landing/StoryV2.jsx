@@ -39,7 +39,7 @@ export default function StoryV2() {
           <div style={{
             aspectRatio: '4 / 5', borderRadius: '18px', overflow: 'hidden',
             border: '1px solid var(--dark-card-border)',
-            background: 'linear-gradient(160deg, #334155, #1e293b)',
+            background: 'linear-gradient(160deg, var(--body), #1e293b)',
             position: 'relative', display: 'flex', alignItems: 'flex-end',
           }}>
             {STORY_PHOTO_AVAILABLE && (

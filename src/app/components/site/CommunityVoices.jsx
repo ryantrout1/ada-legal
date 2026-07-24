@@ -15,10 +15,10 @@ import BrandIcon from './BrandIcons';
 
 // ─── Options ───
 const OPTIONS = [
-  { id: 'rights', icon: 'search', label: 'I want to understand my rights', color: '#C2410C', textColor: '#FB923C' },
-  { id: 'happened', icon: 'legalOptions', label: 'Something happened & I want to understand it', color: '#15803D', textColor: '#4ADE80' },
-  { id: 'space', icon: 'accessible', label: 'I want my space accessible for everyone', color: '#2563EB', textColor: '#93C5FD' },
-  { id: 'believe', icon: 'heart', label: 'Access is a human right', color: '#9333EA', textColor: '#C4B5FD' },
+  { id: 'rights', icon: 'search', label: 'I want to understand my rights', color: 'var(--accent)', textColor: 'var(--dark-highlight)' },
+  { id: 'happened', icon: 'legalOptions', label: 'Something happened & I want to understand it', color: 'var(--color-success-500)', textColor: 'var(--color-success-500)' },
+  { id: 'space', icon: 'accessible', label: 'I want my space accessible for everyone', color: 'var(--color-ada-500)', textColor: 'var(--color-ada-500)' },
+  { id: 'believe', icon: 'heart', label: 'Access is a human right', color: 'var(--color-ada-500)', textColor: 'var(--color-ada-500)' },
 ];
 
 // ─── US population hotspots for dot placement ───
@@ -180,7 +180,7 @@ function ResultBar({ option, count, total, delay, isUser }) {
       }}>
         <span style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
-          fontWeight: isUser ? 700 : 600, color: isUser ? '#F8FAFC' : '#CBD5E1',
+          fontWeight: isUser ? 700 : 600, color: isUser ? 'var(--page-bg-subtle)' : 'var(--border)',
         }}>
           <span aria-hidden="true" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }}><BrandIcon name={option.icon} size={22} variant="dark-bg" /></span>{option.label}
         </span>
@@ -311,7 +311,7 @@ export default function CommunityVoices() {
       className="cv-dark-section warm-keep-dark"
       aria-label="Community voices poll"
       style={{
-        background: '#0F172A',
+        background: 'var(--dark-bg)',
         padding: 'clamp(56px, 8vw, 80px) 24px',
         position: 'relative',
         overflow: 'hidden',
@@ -337,7 +337,7 @@ export default function CommunityVoices() {
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.72rem',
             fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em',
-            color: '#FDBA74', margin: '0 0 12px',
+            color: 'var(--dark-label)', margin: '0 0 12px',
           }}>
             Community Voices
           </p>
@@ -350,7 +350,7 @@ export default function CommunityVoices() {
           </h2>
           <p style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
-            color: '#B0BEC5', margin: 0, lineHeight: 1.6,
+            color: 'var(--dark-muted)', margin: 0, lineHeight: 1.6,
           }}>
             {hasVoted
               ? `You're one of ${totalVotes.toLocaleString()} people standing up for accessibility.`
@@ -372,7 +372,7 @@ export default function CommunityVoices() {
           >
             <p id="cv-prompt" style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-              fontWeight: 700, color: '#B0BEC5', textAlign: 'center',
+              fontWeight: 700, color: 'var(--dark-muted)', textAlign: 'center',
               margin: '0 0 14px', textTransform: 'uppercase', letterSpacing: '0.08em',
             }}>
               I'm here because...
@@ -425,12 +425,12 @@ export default function CommunityVoices() {
                   </span>
                   <span style={{
                     fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem',
-                    fontWeight: 600, color: '#E2E8F0', lineHeight: 1.3,
+                    fontWeight: 600, color: 'var(--border)', lineHeight: 1.3,
                   }}>
                     {opt.label}
                   </span>
                   <span aria-hidden="true" style={{
-                    marginLeft: 'auto', color: '#8B9DB5', fontSize: '1.1rem',
+                    marginLeft: 'auto', color: 'var(--dark-muted)', fontSize: '1.1rem',
                     transition: 'color 0.2s', flexShrink: 0,
                   }}>
                     →
@@ -447,7 +447,7 @@ export default function CommunityVoices() {
           >
             <p style={{
               fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
-              fontWeight: 700, color: '#B0BEC5', textAlign: 'center',
+              fontWeight: 700, color: 'var(--dark-muted)', textAlign: 'center',
               margin: '0 0 14px', textTransform: 'uppercase', letterSpacing: '0.08em',
             }}>
               Community Breakdown
@@ -524,11 +524,11 @@ export default function CommunityVoices() {
                   left: `${dot.x}%`, top: `${dot.y}%`,
                   width: dot.size, height: dot.size,
                   borderRadius: '50%',
-                  backgroundColor: opt?.color || '#C2410C',
+                  backgroundColor: opt?.color || 'var(--accent)',
                   opacity: 0.55,
                   transform: 'translate(-50%, -50%)',
                   animation: `cvDotPulse 3s ease-in-out ${dot.delay}s infinite`,
-                  boxShadow: `0 0 ${dot.size * 2}px ${opt?.color || '#C2410C'}25`,
+                  boxShadow: `0 0 ${dot.size * 2}px ${opt?.color || 'var(--accent)'}25`,
                 }}
               />
             );
@@ -565,7 +565,7 @@ export default function CommunityVoices() {
                 transform: 'translate(-50%, -50%)',
                 width: 8, height: 8,
                 borderRadius: '50%',
-                border: `2px solid ${OPTIONS.find(o => o.id === selectedId)?.color || '#C2410C'}`,
+                border: `2px solid ${OPTIONS.find(o => o.id === selectedId)?.color || 'var(--accent)'}`,
                 animation: 'cvRipple 1.5s ease-out forwards',
                 zIndex: 9,
               }}
@@ -576,12 +576,12 @@ export default function CommunityVoices() {
           <div aria-hidden="true" style={{
             position: 'absolute', bottom: 14, right: 16,
             fontFamily: 'Manrope, sans-serif', fontSize: '0.68rem',
-            fontWeight: 600, color: '#B0BEC5',
+            fontWeight: 600, color: 'var(--dark-muted)',
             display: 'flex', alignItems: 'center', gap: 6,
           }}>
             <span style={{
               width: 5, height: 5, borderRadius: '50%',
-              backgroundColor: '#22C55E', display: 'inline-block',
+              backgroundColor: 'var(--color-success-500)', display: 'inline-block',
               animation: 'cvDotPulse 2s ease-in-out infinite',
             }} />
             {totalVotes.toLocaleString()} voices
@@ -593,7 +593,7 @@ export default function CommunityVoices() {
           <p style={{
             textAlign: 'center',
             fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem',
-            color: '#B0BEC5', marginTop: 14,
+            color: 'var(--dark-muted)', marginTop: 14,
             animation: 'cvFadeUp 0.5s 0.6s both',
           }}>
             Every dot is a real person in the ADA community.{' '}

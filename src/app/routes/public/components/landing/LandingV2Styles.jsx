@@ -11,13 +11,13 @@ export default function LandingV2Styles() {
     <style>{`
       /* Ada's distinct purple treatment, scoped to the v2 landing */
       .home-v2-root {
-        --v2-ada: #7C5CFC;
-        --v2-ada-light: #A78BFA;
-        --v2-ada-text: #B9A6FC; /* AAA text-on-dark Ada violet: 8.4:1 on #141820 */
+        --v2-ada: var(--color-ada-500);
+        --v2-ada-light: var(--color-ada-500);
+        --v2-ada-text: var(--color-ada-500); /* AAA text-on-dark Ada violet: 8.4:1 on #141820 */
         --v2-ada-bg: rgba(124,92,252,0.08);
         --v2-ada-border: rgba(124,92,252,0.25);
       }
-      .v2-btn-ada:hover, .v2-btn-ada:focus-visible { background: #6948e0 !important; }
+      .v2-btn-ada:hover, .v2-btn-ada:focus-visible { background: var(--color-ada-600) !important; }
       .v2-btn-ada:focus-visible {
         outline: 3px solid var(--v2-ada-light) !important; outline-offset: 2px !important;
       }

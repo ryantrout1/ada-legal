@@ -5,7 +5,7 @@ import { useAdaSoon } from './AdaSoonModal.jsx';
 
 const CARDS = [
   {
-    accent: 'var(--accent)', iconBg: '#FFF7ED', icon: (
+    accent: 'var(--accent)', iconBg: 'var(--card-bg-warm)', icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 9l1.2-5h15.6L21 9" /><path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9" /><path d="M3 9h18" /><path d="M9 20v-5h6v5" />
       </svg>
@@ -16,18 +16,18 @@ const CARDS = [
     file: <><b style={{ color: 'var(--heading)' }}>Connect through Ada</b> — to a vetted ADA attorney, at no cost to you.</>,
   },
   {
-    accent: '#2563EB', iconBg: '#EFF6FF', icon: (
+    accent: 'var(--color-ada-500)', iconBg: 'var(--card-bg-tinted)', icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <line x1="3" y1="21" x2="21" y2="21" /><line x1="6" y1="18" x2="6" y2="10" /><line x1="10" y1="18" x2="10" y2="10" /><line x1="14" y1="18" x2="14" y2="10" /><line x1="18" y1="18" x2="18" y2="10" /><polygon points="12 2 21 7 3 7" />
       </svg>
     ),
     badge: { text: "We'll point the way", bg: 'var(--card-bg)', color: 'var(--body-secondary)' },
-    title: 'Title II', sub: 'State & local government', subColor: '#2563EB',
+    title: 'Title II', sub: 'State & local government', subColor: 'var(--color-ada-500)',
     desc: 'Services, programs, and facilities of state and local government — courthouses, transit, DMVs, public schools, parks, voting locations.',
     file: <><b style={{ color: 'var(--heading)' }}>Often a DOJ complaint</b> — Ada points you to the right process.</>,
   },
   {
-    accent: 'var(--accent-light)', iconBg: '#FFFBEB', icon: (
+    accent: 'var(--accent-light)', iconBg: 'var(--card-bg-warm)', icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
       </svg>
