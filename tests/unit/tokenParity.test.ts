@@ -94,14 +94,49 @@ describe('B44 alias tokens', () => {
     expect(undeclared).toEqual([]);
   });
 
-  it('points --link at the accent token, matching B44', () => {
-    // (Phase 1) See the typography block below for Phase 3.
-    // B44 sets --link and --section-label to the same value (#9A3412 in its
-    // default mode; both are its terracotta link tone). Aliasing --link to the
-    // accent token keeps that relationship AND inherits every per-display-mode
-    // override for free, rather than pinning a hex that would go unreadable in
-    // dark / contrast / low-vision.
-    expect(css).toMatch(/--link:\s*var\(--color-accent-500\)/);
+  it('points --link at the accent-600 tier, matching B44\u2019s #9A3412', () => {
+    // B44 sets --link and --section-label to the same terracotta link tone,
+    // #9A3412 in its default mode. That is our accent-600, NOT accent-500 —
+    // this assertion previously pinned the wrong tier, so our links rendered
+    // more orange than production's AND accent-500 on --page-bg-subtle
+    // measured 4.73:1, below AA. Corrected at M7.
+    //
+    // Still aliased to a token rather than a literal hex, which is what the
+    // original reasoning was protecting: a pinned value would go unreadable
+    // in dark / contrast / low-vision.
+    expect(css).toMatch(/--link:\s*var\(--color-accent-600\)/);
+    expect(css).toMatch(/--section-label:\s*var\(--color-accent-600\)/);
+  });
+
+  it('keeps link text above the AA floor on every surface it renders on', () => {
+    // The regression this guards: a link sitting directly on the page
+    // background rather than inside a card. That pair is live on four
+    // pages — the "Back to Active Cases" link is the clearest case, and
+    // at accent-500 it measured 4.73:1, below AA.
+    const hex = (name: string) => {
+      const m = css.match(new RegExp(`--${name}:\\s*(#[0-9A-Fa-f]{6})`));
+      if (!m) throw new Error(`token not found: ${name}`);
+      return m[1];
+    };
+    const lum = (h: string) => {
+      const v = [0, 2, 4].map((i) => {
+        const c = parseInt(h.slice(1 + i, 3 + i), 16) / 255;
+        return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+    };
+    const ratio = (a: string, b: string) => {
+      const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+      return (hi + 0.05) / (lo + 0.05);
+    };
+
+    const link = hex('color-accent-600');
+    for (const surface of ['color-surface-0', 'color-surface-50', 'color-surface-100']) {
+      const r = ratio(link, hex(surface));
+      expect(r, `link on ${surface} is ${r.toFixed(2)}:1`).toBeGreaterThanOrEqual(4.5);
+    }
+    // On white — where most links live — it clears AAA outright.
+    expect(ratio(link, hex('color-surface-0'))).toBeGreaterThanOrEqual(7);
   });
 });
 

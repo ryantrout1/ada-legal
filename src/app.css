@@ -865,15 +865,28 @@ body {
   --heading:          var(--color-ink-900);
   --body:             var(--color-ink-700);
   --body-secondary:   var(--color-ink-500);
-  --section-label:    var(--color-accent-500);
+  /* Same tier as --link, for the same reason. */
+  --section-label:    var(--color-accent-600);
   /* --link — B44 declares --link and --section-label as the same terracotta
      link tone (#9A3412 in its default mode). This app referenced var(--link)
      from 8 Standards Guide pages (badge colors, pill fills, inline emphasis)
      without ever declaring it, so those declarations were invalid and the
      elements silently inherited. Aliased to the accent token rather than a
      literal hex so it inherits every per-display-mode override — a pinned
-     hex would go unreadable in dark / contrast / low-vision. */
-  --link:             var(--color-accent-500);
+     hex would go unreadable in dark / contrast / low-vision.
+
+     M7 CORRECTION: this aliased accent-500, but B44's link tone is
+     #9A3412 — our accent-600, one tier darker. Two problems from one
+     mistake: our links were more orange than production's, and
+     accent-500 on --page-bg-subtle (surface-100) measures 4.73:1, which
+     fails AA, not just our AAA floor. That pair renders on real pages —
+     the "Back to Active Cases" link sits directly on the page
+     background at the top and bottom of every case detail.
+
+     accent-600 on surface-100 is 6.67:1: clears AA comfortably, still
+     short of AAA 7:1. Closing that last gap would mean moving off B44's
+     terracotta again, which is a parity decision already made. */
+  --link:             var(--color-accent-600);
   --card-bg:          var(--color-surface-0);
   --card-border:      var(--color-surface-200);
   --card-bg-tinted:   var(--color-accent-50);
