@@ -61,6 +61,12 @@
   /* Accent — terracotta. B44 uses #C2410C (4.85:1, AA only); this is the
      minimum darkening that clears 7:1 on all three tiers, and is the same
      value the attorney portal already runs on, so the two surfaces agree. */
+  /* B44 --accent-light / --accent-lighter. Two tiers ABOVE the base
+     accent; ours previously aliased both back to accent-500, so
+     "light" was the same colour as the base and the hero headline
+     rendered deep terracotta instead of B44's bright orange. */
+  --color-accent-200: #FDBA74;
+  --color-accent-300: #FB923C;
   --color-accent-500: #C2410C;
   --color-accent-600: #9A3412;    /* hover, active */
   --color-accent-50:  #FEF1EC;    /* accent surface tint */
@@ -859,9 +865,9 @@ body {
 }
 
 :root {
-  --page-bg:          var(--color-surface-50);
-  --page-bg-alt:      var(--color-surface-100);
-  --page-bg-subtle:   var(--color-surface-100);
+  --page-bg:          #FFFFFF;
+  --page-bg-alt:      #FAF7F2;
+  --page-bg-subtle:   #F8FAFC;
   --heading:          var(--color-ink-900);
   --body:             var(--color-ink-700);
   --body-secondary:   var(--color-ink-500);
@@ -894,11 +900,15 @@ body {
   --border:           var(--color-surface-200);
   --border-lighter:   var(--color-surface-100);
   --accent:           var(--color-accent-500);
-  --accent-light:     var(--color-accent-500);
-  --accent-lighter:   var(--color-accent-50);
+  --accent-light:     var(--color-accent-300);
+  --accent-lighter:   var(--color-accent-200);
+  /* NOT matched to B44. Its #7DCEA0 is a dark-context mint that
+     measures 1.87:1 on white — unreadable — and B44 uses it as text on
+     a light tint in ADAAssistant, which is a bug on their side. Ours is
+     8.49:1 on white. Parity is not worth an unreadable success message. */
   --accent-success:   var(--color-success-500);
-  --accent-success-bg: var(--color-success-50);
-  --btn-text:         var(--color-surface-50);
+  --accent-success-bg: #ECFDF5;   /* B44 parity — a tint, never text */
+  --btn-text:         #FFFFFF;
 
   /* Dark-hero tokens (Migration §A.2)
    *
