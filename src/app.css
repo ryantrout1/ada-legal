@@ -55,14 +55,14 @@
      computes the ratios against all three surface tiers. */
   --color-ink-900: #1E293B;       /* headings — B44 --heading */
   --color-ink-700: #3D4A5C;       /* body — B44 --body */
-  --color-ink-500: #495260;       /* meta — B44 --body-secondary #4B5563 darkened;
+  --color-ink-500: #4B5563;       /* meta — B44 --body-secondary #4B5563 darkened;
                                      B44's own value is 6.90:1 on surface-100 */
 
   /* Accent — terracotta. B44 uses #C2410C (4.85:1, AA only); this is the
      minimum darkening that clears 7:1 on all three tiers, and is the same
      value the attorney portal already runs on, so the two surfaces agree. */
-  --color-accent-500: #8E2F09;
-  --color-accent-600: #6E2308;    /* hover, active */
+  --color-accent-500: #C2410C;
+  --color-accent-600: #9A3412;    /* hover, active */
   --color-accent-50:  #FEF1EC;    /* accent surface tint */
 
   /* Ada accent — violet, brand-matched to the Base44 home page (--v2-ada
@@ -80,7 +80,7 @@
   --color-success-500: #305533;  /* AAA: 7.26:1 on success-50, darkened from #366039 (6.21) */
   --color-success-50:  #E8EFE9;
   --color-warning-500: #664512;  /* AAA: 7.31:1 on warning-50, darkened from #8C5E19 (4.75) */
-  --color-warning-50:  #F4EBD9;
+  --color-warning-50:  #FFF7ED;   /* B44 --card-bg-warm */
   --color-danger-500:  #822B1D;
   --color-danger-100:  #EBC8C2;   /* hover tier — used by retry buttons */
   --color-danger-50:   #F4E1DD;

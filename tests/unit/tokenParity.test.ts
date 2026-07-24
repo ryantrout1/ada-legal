@@ -287,10 +287,13 @@ describe('default palette parity with B44', () => {
     { token: '--color-surface-200',    b44: '#E2E8F0', reason: null },
     { token: '--color-ink-900',        b44: '#1E293B', reason: null },
     { token: '--color-ink-700',        b44: '#3D4A5C', reason: null },
-    { token: '--color-ink-500',        b44: '#4B5563',
-      reason: 'B44 value is 6.90:1 on surface-100; darkened to clear 7:1' },
-    { token: '--color-accent-500',     b44: '#C2410C',
-      reason: 'B44 value is 4.85:1 (AA); darkened to clear 7:1' },
+    // Both realigned to B44 exactly (2026-07-24). The goal for this phase
+    // is visual parity with production so the rebuilt site can actually be
+    // compared against it; the AAA darkening made every terracotta fill,
+    // link and section label visibly browner than the live site, which made
+    // judging anything else impossible. See ACCESSIBILITY_DEBT below.
+    { token: '--color-ink-500',        b44: '#4B5563', reason: null },
+    { token: '--color-accent-500',     b44: '#C2410C', reason: null },
     { token: '--color-ada-500',        b44: '#6D28D9',
       reason: 'B44 value is 6.79:1 on our page tier; darkened to clear 7:1' },
     { token: '--color-control-border', b44: '#E2E8F0',
@@ -311,7 +314,38 @@ describe('default palette parity with B44', () => {
                 '--color-success-500', '--color-warning-500', '--color-danger-500'];
   const SURFACES = ['--color-surface-0', '--color-surface-50', '--color-surface-100'];
 
-  it.each(TEXT)('%s clears 7:1 on every surface tier', (name) => {
+  /**
+   * ACCESSIBILITY DEBT — deliberate, dated, and reversible.
+   *
+   * `--color-accent-500` is B44's #C2410C, which measures 5.18:1 on white.
+   * That clears AA (4.5:1) and fails the AAA floor (7:1) this project
+   * otherwise holds. It was set back to B44's value on 2026-07-24 so the
+   * rebuilt site could be compared like-for-like against production —
+   * the darkened value made parity impossible to judge.
+   *
+   * This is NOT a silent regression. The exact measured ratio is asserted
+   * below, so if the token moves again this test tells you where it landed.
+   * To restore AAA: set --color-accent-500 to #8E2F09 and --color-accent-600
+   * to #6E2308, then flip these back to the 7:1 assertions.
+   */
+  // ink-500 is B44's #4B5563 — 6.90:1 on surface-100, a hair under the
+  // floor. Same trade as accent-500 and recorded the same way.
+  const AAA_EXEMPT = new Set(['--color-accent-500', '--color-ink-500']);
+
+  it('records the exact contrast of ink-500 on its worst surface', () => {
+    const ratio = contrast(token('--color-ink-500'), token('--color-surface-100'));
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+    expect(Number(ratio.toFixed(2))).toBe(6.9);
+  });
+
+  it('records the exact contrast of the AAA-exempt accent', () => {
+    const ratio = contrast(token('--color-accent-500'), '#FFFFFF');
+    expect(ratio).toBeGreaterThanOrEqual(4.5); // still clears AA
+    expect(ratio).toBeLessThan(7);             // and still owes AAA
+    expect(Number(ratio.toFixed(2))).toBe(5.18);
+  });
+
+  it.each(TEXT.filter((t) => !AAA_EXEMPT.has(t)))('%s clears 7:1 on every surface tier', (name) => {
     const fg = token(name);
     const failing = SURFACES
       .map((s) => ({ s, r: contrast(fg, token(s)) }))
@@ -327,8 +361,8 @@ describe('default palette parity with B44', () => {
     }
   });
 
-  it('button text clears 7:1 on the accent fill', () => {
-    expect(contrast('#FFFFFF', token('--color-accent-500'))).toBeGreaterThanOrEqual(7);
+  it('button text clears AA on the accent fill (AAA exempt — see debt note)', () => {
+    expect(contrast('#FFFFFF', token('--color-accent-500'))).toBeGreaterThanOrEqual(4.5);
   });
 });
 
@@ -552,8 +586,8 @@ describe('accessibility panel selected state', () => {
     expect((panel.match(/variant="segmented"/g) ?? []).length).toBe(4);
   });
 
-  it('white text on the solid fill clears 7:1', () => {
-    expect(contrast('#FFFFFF', themeToken('--color-accent-500'))).toBeGreaterThanOrEqual(7);
+  it('white text on the solid fill clears AA (AAA exempt — see debt note)', () => {
+    expect(contrast('#FFFFFF', themeToken('--color-accent-500'))).toBeGreaterThanOrEqual(4.5);
   });
 
   it('the solid fill is distinguishable from the panel surface (1.4.11)', () => {
