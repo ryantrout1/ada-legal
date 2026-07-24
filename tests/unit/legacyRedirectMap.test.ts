@@ -114,6 +114,28 @@ describe('B44 flat-route 301 map', () => {
   });
 });
 
+describe('lowercase legacy paths resolve too', () => {
+  it('redirects the lowercase form of every legacy route', () => {
+    // Vercel matches redirect sources case-sensitively, and Base44's
+    // routes are PascalCase. Someone typing the path by hand types it
+    // lowercase — /ada, not /Ada — and gets a blank page with "No routes
+    // matched" in the console. Found exactly that way.
+    const missing: string[] = [];
+    for (const r of config.redirects) {
+      if (!/^\/[A-Z]/.test(r.source)) continue;
+      const low = r.source.toLowerCase();
+      if (low === r.destination) continue;
+      if (!bySource.has(low)) missing.push(low);
+    }
+    expect(missing, `lowercase forms with no redirect: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('sends /ada to the chat, not a 404', () => {
+    // Our route is /chat; B44's is /Ada. This is the one people type.
+    expect(bySource.get('/ada')?.destination).toBe('/chat');
+  });
+});
+
 describe('the consumer site is browsable on the engine domain', () => {
   it('no longer parks the consumer routes behind ?preview=1', () => {
     // The parking redirects existed so the engine domain would not serve
