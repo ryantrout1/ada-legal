@@ -114,3 +114,53 @@ describe('semantic alias parity with B44', () => {
     }
   });
 });
+
+/**
+ * Landing violet tiers.
+ *
+ * B44's landing uses THREE violets — a CTA fill, an accent, and a body
+ * text tone that has to read on the dark card. A tokenisation pass
+ * mapped all three onto --color-ada-500, which is tuned for AAA on
+ * LIGHT surfaces and measures 2.07:1 on the dark panel. The card lost
+ * its depth and its text lost its contrast in one move.
+ *
+ * Collapsing a scale onto its middle tier is invisible to a
+ * primitive-level check and to a "does this token exist" check. It is
+ * only visible if you assert the tiers are distinct.
+ */
+describe('landing violet tiers stay distinct', () => {
+  const styles = readFileSync(
+    resolve(root, 'src/app/routes/public/components/landing/LandingV2Styles.jsx'),
+    'utf8',
+  );
+
+  it('points each --v2-ada token at its own tier', () => {
+    expect(styles).toMatch(/--v2-ada:\s*var\(--color-ada-400\)/);
+    expect(styles).toMatch(/--v2-ada-light:\s*var\(--color-ada-300\)/);
+    expect(styles).toMatch(/--v2-ada-text:\s*var\(--color-ada-200\)/);
+  });
+
+  it('resolves those tiers to B44 values', () => {
+    const prim = primitives();
+    expect(prim['color-ada-400']).toBe('#7C5CFC');
+    expect(prim['color-ada-300']).toBe('#A78BFA');
+    expect(prim['color-ada-200']).toBe('#B9A6FC');
+  });
+
+  it('keeps the landing body violet readable on the dark card', () => {
+    const prim = primitives();
+    const lum = (h: string) => {
+      const v = [0, 2, 4].map((i) => {
+        const c = parseInt(h.slice(1 + i, 3 + i), 16) / 255;
+        return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+    };
+    const ratio = (a: string, b: string) => {
+      const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+      return (hi + 0.05) / (lo + 0.05);
+    };
+    // ada-500 here measured 2.07:1 — the regression this guards.
+    expect(ratio(prim['color-ada-200'], '#1A1F2B')).toBeGreaterThanOrEqual(7);
+  });
+});

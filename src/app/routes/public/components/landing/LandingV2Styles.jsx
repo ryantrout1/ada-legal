@@ -11,9 +11,9 @@ export default function LandingV2Styles() {
     <style>{`
       /* Ada's distinct purple treatment, scoped to the v2 landing */
       .home-v2-root {
-        --v2-ada: var(--color-ada-500);
-        --v2-ada-light: var(--color-ada-500);
-        --v2-ada-text: var(--color-ada-500); /* AAA text-on-dark Ada violet: 8.4:1 on #141820 */
+        --v2-ada: var(--color-ada-400);
+        --v2-ada-light: var(--color-ada-300);
+        --v2-ada-text: var(--color-ada-200); /* AAA text-on-dark Ada violet: 8.4:1 on #141820 */
         --v2-ada-bg: rgba(124,92,252,0.08);
         --v2-ada-border: rgba(124,92,252,0.25);
       }

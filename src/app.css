@@ -81,6 +81,14 @@
   --color-ada-500: #6326C8;       /* primary / links, AAA on light */
   --color-ada-600: #5B21B6;       /* hover, active */
   --color-ada-50:  #F3EEFE;       /* purple surface tint */
+  /* Landing violet tiers (B44 --v2-ada / --v2-ada-light / --v2-ada-text).
+     These live on the landing's DARK panels, so they run lighter than
+     --color-ada-500, which is tuned for AAA on light surfaces. Declared
+     as their own tiers because the landing collapsed all three onto
+     ada-500 at one point and the card lost its depth entirely. */
+  --color-ada-400: #7C5CFC;       /* landing CTA fill */
+  --color-ada-300: #A78BFA;       /* landing accent, 6.05:1 on the dark card */
+  --color-ada-200: #B9A6FC;       /* landing body text, 7.78:1 — AAA on dark */
 
   /* Semantic — kept muted, not neon */
   --color-success-500: #305533;  /* AAA: 7.26:1 on success-50, darkened from #366039 (6.21) */
