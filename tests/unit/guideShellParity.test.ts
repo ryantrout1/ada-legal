@@ -57,13 +57,27 @@ describe('GuideReportCTA keeps the live Ada handoff', () => {
     expect(src).toMatch(/navigate\('\/chat'\)/);
   });
 
-  it('does not resurrect the RightsPathway destination or pre-launch copy', () => {
-    // B44 points at a page that was never built on main, under copy
-    // promising a feature that does not exist.
+  it('does not resurrect the RightsPathway destination', () => {
+    // The destination pin stands: B44's primary CTA points at a page
+    // that was never built here, so linking to it would be a dead end.
+    // Both CTAs land on /chat instead.
     const code = readCode(CTA);
     expect(code).not.toMatch(/RightsPathway/);
-    expect(code).not.toMatch(/launching soon/i);
-    expect(code).not.toMatch(/60 [Ss]econds/);
+  });
+
+  it('carries B44\u2019s copy verbatim', () => {
+    // REVERSED 2026-07-24. M2 stripped the "60 seconds" framing and the
+    // "launching soon" line as marketing register that overpromised.
+    // The goal now is parity with what production actually shows, and
+    // both lines are on the live site — so they are back, and this
+    // asserts they stay. The overpromise concern was real; it is a copy
+    // decision for Gina's review, not something to fix by silently
+    // diverging from production.
+    const src = read(CTA);
+    expect(src).toMatch(/Think you experienced an ADA violation\?/);
+    expect(src).toMatch(/60 [Ss]econds/);
+    expect(src).toMatch(/launching soon/i);
+    expect(src).toMatch(/Talk to Ada about what happened/);
   });
 });
 

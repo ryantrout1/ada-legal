@@ -11,9 +11,11 @@ import { useReadingLevel } from './ReadingLevelContext.js';
  * Rewritten from base44-archive's GuideReportCTA.jsx:
  *   - Original pointed to a `RightsPathway` page (never built on main)
  *   - Original "Home" secondary link replaced with "/"
- *   - CTA body copy tightened to match Ada's voice: no plural-we,
- *     Ada speaks in first person, no "60 seconds" / "launching soon"
- *     marketing register.
+ *   - COPY REVERTED TO B44 (2026-07-24). An earlier pass rewrote this
+ *     into Ada's first-person voice and dropped the "60 seconds"
+ *     framing as marketing register. The goal now is parity with what
+ *     production actually shows, so B44's headline, body and button
+ *     copy are restored verbatim.
  *   - Commit 5: the primary CTA now calls /api/ada/session with a
  *     page_context payload derived from the current URL so Ada
  *     greets the user with acknowledgment of the specific guide
@@ -54,7 +56,7 @@ export default function GuideReportCTA() {
   }
 
   return (
-    <div role="region" aria-label="Tell Ada what happened" className="warm-keep-dark" style={{
+    <div role="region" aria-label="Take action on an ADA violation" className="warm-keep-dark" style={{
       background: 'var(--dark-card-bg)', padding: '64px 40px', textAlign: 'center'
     }}>
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>
@@ -62,13 +64,14 @@ export default function GuideReportCTA() {
           fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)',
           fontWeight: 700, color: 'var(--dark-heading)', margin: '0 0 12px'
         }}>
-          Think this happened to you?
+          Think you experienced an ADA violation?
         </h2>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
           color: 'var(--dark-muted)', lineHeight: 1.7, margin: '0 0 28px'
         }}>
-          Tell me what happened. I'll help you figure out what applies and what to do next.
+          Answer a few simple questions and we&rsquo;ll show you exactly what
+          applies to your situation &mdash; in 60 seconds.
         </p>
         <button
           type="button"
@@ -87,18 +90,29 @@ export default function GuideReportCTA() {
             transition: 'background 0.15s'
           }}
         >
-          {starting ? 'Opening chat…' : 'Talk to Ada'}
+          {starting ? 'Opening chat…' : 'Were Your Rights Violated? Find Out in 60 Seconds'}
           {!starting && <ArrowRight size={18} aria-hidden="true" />}
         </button>
+        {/* Secondary path + disclaimer, both B44 parity. B44's primary
+            button goes to RightsPathway and this link goes to Ada; we
+            have no RightsPathway, so both land on the chat. The
+            "launching soon" line stays because it is still true here —
+            attorney-connected reporting is not live yet. */}
         <div style={{ marginTop: '16px' }}>
-          <Link to="/" className="sg-cta-link" style={{
+          <Link to="/chat" className="sg-cta-link" style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
             color: 'var(--dark-muted)', textDecoration: 'underline',
             minHeight: '44px', display: 'inline-flex', alignItems: 'center'
           }}>
-            Learn how it works
+            Talk to Ada about what happened
           </Link>
         </div>
+        <p style={{
+          fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem',
+          color: 'var(--dark-muted)', margin: '12px 0 0'
+        }}>
+          Attorney-connected violation reporting &mdash; launching soon.
+        </p>
       </div>
     </div>
   );

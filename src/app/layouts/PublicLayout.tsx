@@ -296,28 +296,24 @@ export default function PublicLayout() {
           <p className="m-0" style={{ fontSize: '0.75rem', color: '#B0BEC5' }}>
             Connecting people with experienced ADA attorneys.
           </p>
+          <p className="m-0" style={{ fontSize: '0.72rem', color: '#B0BEC5' }}>
+            Informational only. Not legal advice. Not a law firm.
+          </p>
         </div>
 
-        {/* Secondary — UPL disclaimer + site links (kept from the Vercel footer) */}
-        <div className="w-full font-chrome" style={{ maxWidth: 1400, margin: '0 auto', padding: '10px 1.5rem 16px' }}>
-          <div
-            className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-y-2 sm:gap-x-6"
-            style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 10 }}
-          >
-            <p className="m-0" style={{ fontSize: '0.72rem', color: '#B0BEC5' }}>
-              Informational only. Not legal advice. Not a law firm.
-            </p>
-            <ul className="flex flex-wrap gap-4" style={{ fontSize: '0.72rem' }}>
-              <li><a href="/about-ada" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Why she's called Ada</a></li>
-              <li><a href="/standards-guide" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Standards Guide</a></li>
-              <li><a href="/glossary" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Glossary</a></li>
-              <li><a href="/privacy" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Privacy</a></li>
-              <li><a href="/terms" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Terms</a></li>
-              <li><a href="/accessibility" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">Accessibility</a></li>
-              <li><a href="/for-attorneys" className="text-[#B0BEC5] hover:text-brand-gold transition-colors">For attorneys</a></li>
-            </ul>
-          </div>
-        </div>
+        {/* B44 parity: production's global footer is a single 48px brand
+            row — logo, copyright, tagline, no links. The link row that
+            used to sit here (Standards Guide / Glossary / Privacy /
+            Terms / Accessibility / For attorneys) does not exist on
+            adalegallink.com, and four of those pages do not exist there
+            either.
+
+            The UPL line moves INTO the brand row rather than
+            disappearing with it. "Not legal advice. Not a law firm." is
+            a legal safeguard on a legal-services site, not chrome, and
+            dropping it for pixel parity would be the wrong trade. B44
+            carries the same promise in TrustV2 on its landing; keeping
+            it site-wide is stricter, not looser. */}
       </footer>
 
       {/* Site-wide feedback affordance. Renders last so it sits above the
