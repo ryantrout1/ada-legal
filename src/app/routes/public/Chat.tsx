@@ -23,7 +23,11 @@
  */
 
 import { forwardRef, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
-import { useChatSession, type ReadingLevel } from '../../hooks/useChatSession.js';
+import {
+  useChatSession,
+  type ReadingLevel,
+  type SessionStatus,
+} from '../../hooks/useChatSession.js';
 import { useAccessibilitySettings, undoWindowToMs } from '../../hooks/useAccessibilitySettings.js';
 import { useReadingLevel } from '../../components/standards/ReadingLevelContext.js';
 import { CurrentReadingLevel } from '../../components/standards/CurrentReadingLevel.js';
@@ -431,8 +435,13 @@ export default function Chat() {
           Reading level stays prominent — visibility is the point, it's the
           single most important accommodation on this page. Session controls
           (Speak, Download, New conversation) shrink to icon buttons because
-          they're secondary actions; "Conversation active" text was removed
-          as noise — the user can see they're conversing. */}
+          they're secondary actions.
+
+          The status badge was previously removed here as noise — "the user
+          can see they're conversing." True of the ACTIVE state; not true of
+          the others. On a completed session every control is disabled and
+          nothing said why, which reads as a broken page rather than a
+          finished conversation. Restored to B44's three states. */}
       <header className="flex flex-wrap items-center justify-between gap-3 mb-3 pb-3 border-b border-surface-200">
         <div className="flex flex-wrap items-center gap-3">
           <ReadingLevelPicker
@@ -441,6 +450,7 @@ export default function Chat() {
             disabled={state.busy || state.initializing}
           />
           <CurrentReadingLevel value={state.readingLevel} />
+          <SessionStatusBadge status={state.status} />
         </div>
         <div className="flex items-center gap-1.5">
           {speechOutput.isSupported && (
@@ -1120,6 +1130,55 @@ function SendOrUndoButton({
     >
       Send
     </button>
+  );
+}
+
+/**
+ * SessionStatusBadge — Active / Paused / Ended.
+ *
+ * B44 parity (AdaChat.jsx @ 6b1e9ac). The state that earns its keep is
+ * ENDED: when a session completes, every input on the page disables at
+ * once, and without a label that looks like a bug rather than a
+ * finished conversation.
+ *
+ * The dot is decorative and aria-hidden; the text carries the meaning,
+ * so status is never conveyed by colour alone. The aria-label spells
+ * out "Conversation ended" rather than leaving a screen reader to
+ * announce a bare "Ended".
+ */
+function SessionStatusBadge({ status }: { status: SessionStatus }) {
+  const config: Record<SessionStatus, { label: string; aria: string; dot: string }> = {
+    active: {
+      label: 'Active',
+      aria: 'Conversation active',
+      dot: 'var(--color-success-500)',
+    },
+    completed: {
+      label: 'Ended',
+      aria: 'Conversation ended',
+      dot: 'var(--body-secondary)',
+    },
+    abandoned: {
+      label: 'Paused',
+      aria: 'Conversation paused',
+      dot: 'var(--color-warning-500)',
+    },
+  };
+  const c = config[status];
+  if (!c) return null;
+
+  return (
+    <span
+      aria-label={c.aria}
+      className="inline-flex items-center gap-1.5 rounded-full border border-surface-200 bg-surface-50 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.05em] text-ink-700"
+    >
+      <span
+        aria-hidden="true"
+        className="inline-block h-1.5 w-1.5 rounded-full"
+        style={{ background: c.dot }}
+      />
+      {c.label}
+    </span>
   );
 }
 
