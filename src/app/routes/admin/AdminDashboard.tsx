@@ -21,14 +21,28 @@ interface Counts {
   firms?: number;
   attorneys?: number;
   feedback_new?: number;
+  listings_published?: number;
+  litigation_active?: number;
 }
 
-const TILES: { key: keyof Counts; label: string; to: string; hint: string }[] = [
+/**
+ * `to` is optional. Every tile that CAN link does — a count with no
+ * destination is trivia, and the point of the number is to get to the
+ * rows behind it. But litigation_listings has no admin page on this
+ * side yet, and pointing that tile at /admin/listings would send you to
+ * a different table entirely. A tile whose number disagrees with the
+ * page it opens is the exact defect Phase 1 removed; a linkless tile is
+ * merely less useful. Base44 renders its Active-listings, Active-firms
+ * and Active-litigation tiles without drill-downs for the same reason.
+ */
+const TILES: { key: keyof Counts; label: string; to?: string; hint: string }[] = [
   { key: 'sessions', label: 'Ada sessions', to: '/admin/sessions', hint: 'Last 30 days, real only' },
   { key: 'intakes', label: 'Intakes', to: '/admin/intakes', hint: 'Class action intakes' },
   { key: 'cases_unplaced', label: 'Awaiting placement', to: '/admin/cases', hint: 'No firm assigned yet' },
   { key: 'firms', label: 'Firms', to: '/admin/firms', hint: 'In the directory' },
   { key: 'attorneys', label: 'Approved attorneys', to: '/admin/attorneys', hint: 'Publicly listed' },
+  { key: 'listings_published', label: 'Active listings', to: '/admin/listings', hint: 'Published' },
+  { key: 'litigation_active', label: 'Active litigation', hint: 'Class + mass' },
   { key: 'feedback_new', label: 'Feedback', to: '/admin/feedback', hint: 'Last 30 days' },
 ];
 
@@ -68,22 +82,34 @@ export default function AdminDashboard() {
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 list-none p-0 m-0">
         {TILES.map((tile) => {
           const value = counts?.[tile.key];
+          const cardClass =
+            'flex flex-col justify-between min-h-[112px] rounded-lg border border-surface-200 bg-white p-4';
+          const body = (
+            <>
+              <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-ink-500">
+                {tile.label}
+              </span>
+              <span className="font-display text-3xl text-ink-900 leading-none my-2">
+                {/* An em dash while loading, never a zero — a fake zero
+                    reads as real data and would be believed. */}
+                {counts === null ? '—' : (value ?? 0).toLocaleString()}
+              </span>
+              <span className="text-xs text-ink-500">{tile.hint}</span>
+            </>
+          );
+
           return (
             <li key={tile.key}>
-              <Link
-                to={tile.to}
-                className="flex flex-col justify-between min-h-[112px] rounded-lg border border-surface-200 bg-white p-4 hover:border-accent-600 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-accent-600 transition-colors"
-              >
-                <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-ink-500">
-                  {tile.label}
-                </span>
-                <span className="font-display text-3xl text-ink-900 leading-none my-2">
-                  {/* An em dash while loading, never a zero — a fake zero
-                      reads as real data and would be believed. */}
-                  {counts === null ? '—' : (value ?? 0).toLocaleString()}
-                </span>
-                <span className="text-xs text-ink-500">{tile.hint}</span>
-              </Link>
+              {tile.to ? (
+                <Link
+                  to={tile.to}
+                  className={`${cardClass} hover:border-accent-600 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-accent-600 transition-colors`}
+                >
+                  {body}
+                </Link>
+              ) : (
+                <div className={cardClass}>{body}</div>
+              )}
             </li>
           );
         })}
