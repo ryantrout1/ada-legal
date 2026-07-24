@@ -114,18 +114,23 @@ describe('B44 flat-route 301 map', () => {
   });
 });
 
-describe('cutover safety', () => {
-  it('still parks the consumer routes until DNS moves', () => {
-    // Unparking is a separate, deliberate commit at cutover time. If
-    // this assertion ever fails unexpectedly, the consumer site went
-    // public on the engine domain while the apex still served Base44 —
-    // two live copies of the same content.
+describe('the consumer site is browsable on the engine domain', () => {
+  it('no longer parks the consumer routes behind ?preview=1', () => {
+    // The parking redirects existed so the engine domain would not serve
+    // a second public copy of the site. What actually prevents that is
+    // the noindex header below — the redirect only made the site
+    // annoying to look at, forcing ?preview=1 onto every URL and losing
+    // it on every refresh.
     const parked = config.redirects.filter(
       (r) => Array.isArray((r as { missing?: unknown }).missing),
     );
-    const sources = parked.map((r) => r.source);
-    expect(sources).toContain('/');
-    expect(sources).toContain('/lawsuits');
-    expect(sources).toContain('/attorneys');
+    expect(parked, 'consumer routes are parked again').toEqual([]);
+  });
+
+  it('still tells crawlers to stay out', () => {
+    // This is the real guard against a duplicate-content problem while
+    // the apex still serves Base44. It must survive until cutover.
+    const raw = readFileSync(resolve(root, 'vercel.json'), 'utf8');
+    expect(raw, 'noindex header was removed too early').toContain('noindex');
   });
 });
