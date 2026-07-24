@@ -912,7 +912,15 @@ body {
    * Values picked to give roughly the same contrast against the dark
    * banner as the original: ink-900 text on surface-300 backdrop
    * doesn't work (same warm palette), so we reach into explicit hex. */
-  --dark-bg:          #0F172A;
+  /* B44 parity: --dark-bg is #1E293B. Ours was #0F172A, one step
+     darker, which is why the landing's terracotta CTA read deeper and
+     less vivid than production — same button colour, darker panel
+     behind it. The three sibling depths B44 declares were missing
+     entirely; the landing sections reference them. */
+  --dark-bg:          #1E293B;
+  --dark-bg-alt:      #1A1F2B;
+  --dark-bg-deep:     #0F1219;
+  --dark-bg-footer:   #141820;
   --dark-card-bg:     #1A1F2B;
   --dark-card-border: #2A3344;
   --dark-border:      #475569;
