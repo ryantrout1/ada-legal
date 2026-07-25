@@ -46,7 +46,7 @@ describe('generateReport', () => {
     const batches: number[] = [];
     const clients = fakeClients({
       onAnalyze: (keys) => batches.push(keys.length),
-      stream: () => composeStream({ overview: 'ok', areas: [] }),
+      stream: () => composeStream({ overview: 'ok', areas: [{ title: 'Door', concern: 'Hard knob.', remediation: 'Lever handle.', severity: 'major', cited_section: '§404.2.7', confirmable: true }] }),
     });
     await generateReport(clients, { photos: photos(7), model: 'opus-test' });
     expect(batches).toEqual([3, 3, 1]); // 7 photos → 3 calls, none over 3
@@ -104,7 +104,7 @@ describe('generateReport', () => {
       ai: {
         stream: (req: { messages: Array<{ content: string }> }) => {
           sawSynthesisOrder = req.messages[0].content;
-          return composeStream({ overview: 'ok', areas: [] });
+          return composeStream({ overview: 'ok', areas: [{ title: 'Door', concern: 'Hard knob.', remediation: 'Lever handle.', severity: 'major', cited_section: '§404.2.7', confirmable: true }] });
         },
       },
     } as unknown as AdaClients;

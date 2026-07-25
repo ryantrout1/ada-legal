@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { composeReport } from '@/lib/spot/composeReport';
+import { composeReport, SpotCompositionError } from '@/lib/spot/composeReport';
 import {
   COMPOSE_REPORT_TOOL,
   SPOT_REPORT_SEVERITY_LABEL,
@@ -114,5 +114,74 @@ describe('composeReport', () => {
   it('exposes a well-formed compose_report tool definition', () => {
     expect(COMPOSE_REPORT_TOOL.name).toBe('compose_report');
     expect(COMPOSE_REPORT_TOOL.input_schema.required).toEqual(expect.arrayContaining(['overview', 'areas']));
+  });
+});
+
+/**
+ * The failure these pin actually shipped. A model returned valid JSON whose
+ * `overview` held the prose PLUS its own tool-call XML plus the entire
+ * findings array serialized as text, and never emitted `areas`. It composed
+ * to zero items under the "What these photos show" headline, passed review,
+ * was released, and was emailed to a paying customer.
+ *
+ * Every rule above this point checks what a report SAYS. None of them asked
+ * whether a report exists.
+ *
+ * Ref: /triage Spot report generation.
+ */
+describe('composition failure — refuses to render a report that is not there', () => {
+  it('throws when the model returns no areas but the analyses found some', () => {
+    // The observed failure exactly: sources found barriers, compose_report
+    // came back empty.
+    expect(() => composeReport(modelOut({ areas: [] }), [source()])).toThrow(SpotCompositionError);
+  });
+
+  it('does not quietly downgrade that case to "clear"', () => {
+    // The alternative to throwing. It would state that nothing stands out
+    // while the analyses were flagging barriers — the exact claim
+    // absence-honesty exists to forbid, which makes silence the worst
+    // option available here.
+    try {
+      composeReport(modelOut({ areas: [] }), [source()]);
+      throw new Error('expected a throw');
+    } catch (err) {
+      expect(err).toBeInstanceOf(SpotCompositionError);
+      expect((err as Error).message).toMatch(/no areas/i);
+    }
+  });
+
+  it('still allows a genuinely clear read', () => {
+    // Empty areas with empty source findings is not a failure, it is a
+    // clean space. The guard must not swallow it.
+    const out = composeReport(modelOut({ areas: [] }), [source({ findings: [] })]);
+    expect(out.kind).toBe('clear');
+  });
+
+  it('still allows an all-no-read result', () => {
+    const out = composeReport(modelOut({ areas: [] }), [
+      source({ findings: [], meta: { tool_call_present: false, stop_reason: 'end_turn' } }),
+    ]);
+    expect(out.kind).toBe('no_read');
+  });
+
+  it('rejects an overview carrying tool-call syntax', () => {
+    const leaked = 'Prose about the landing.</parameter> <parameter name="areas">[{"title":"x"}]';
+    expect(() => composeReport(modelOut({ overview: leaked }), [source()])).toThrow(
+      /tool-call syntax/i,
+    );
+  });
+
+  it('rejects an overview far past its stated length', () => {
+    // Specified as 2-4 sentences; the healthy reports on record run
+    // 571-710 characters. The failure wrote 4,439.
+    expect(() => composeReport(modelOut({ overview: 'x'.repeat(4439) }), [source()])).toThrow(
+      /max/i,
+    );
+  });
+
+  it('leaves a normal overview alone', () => {
+    expect(composeReport(modelOut(), [source()]).overview).toBe(
+      'The entrance has one possible barrier worth addressing.',
+    );
   });
 });

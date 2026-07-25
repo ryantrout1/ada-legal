@@ -12,7 +12,34 @@
  *   - Disclaimer always embedded from the fixed string.
  * Framing (labels, hedge note, headlines, disclaimer) is ours, so screening
  * language can't drift. Ref: /plan Ada Spot Phase 3a.
+ *
+ * THROWS on a composition that cannot be honest. Every rule above is about
+ * what a report SAYS; none of them asked whether a report exists. A model
+ * returned valid JSON containing no report at all — prose plus its own
+ * tool-call XML serialized inside the overview string, `areas` never emitted
+ * — and it composed to zero items under the "What these photos show"
+ * headline, was reviewed, released and emailed to a paying customer.
+ *
+ * Failing loudly is the only honest option here. Downgrading a zero-item
+ * composition to `clear` would state that nothing stands out while the
+ * per-photo analyses were flagging barriers, which is precisely the claim
+ * absence-honesty exists to forbid. Ref: /triage Spot report generation.
  */
+
+/** A composition that cannot be rendered honestly. Caller regenerates. */
+export class SpotCompositionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SpotCompositionError';
+  }
+}
+
+/**
+ * The overview is specified as 2-4 sentences; the healthy reports on record
+ * run 571-710 characters. This ceiling is not a style rule, it is a
+ * corruption signal: the failure wrote 4,439.
+ */
+const MAX_OVERVIEW_CHARS = 1500;
 
 import { guideUrlForStandard } from '../../engine/package/standardsGuideLink.js';
 import { educationForSection } from '../adaCatalog.js';
@@ -66,6 +93,30 @@ export function composeReport(
       hedgeNote: hedged ? SPOT_REPORT_HEDGE_NOTE : undefined,
     };
   });
+
+  // A composition step that returned nothing while the sources returned
+  // findings has failed. There is no honest `kind` for it: not `findings`
+  // (there are none to show), not `clear` (the analyses disagree), not
+  // `no_read` (the read succeeded).
+  if (!allReadFailed && items.length === 0 && anySourceFindings) {
+    throw new SpotCompositionError(
+      'compose_report returned no areas while the photo analyses found some',
+    );
+  }
+
+  // Corruption signatures in the overview. The observed failure serialized
+  // the entire findings array into this string along with the literal
+  // tool-call delimiters, so both the markers and the length are checked —
+  // a future malformation may carry only one of them.
+  const overview = modelOutput.overview ?? '';
+  if (overview.includes('<parameter') || overview.includes('</parameter')) {
+    throw new SpotCompositionError('compose_report overview contains tool-call syntax');
+  }
+  if (overview.length > MAX_OVERVIEW_CHARS) {
+    throw new SpotCompositionError(
+      `compose_report overview is ${overview.length} chars (max ${MAX_OVERVIEW_CHARS})`,
+    );
+  }
 
   let kind: SpotReportContent['kind'];
   let headline: string;

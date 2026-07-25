@@ -84,7 +84,13 @@ async function collectComposeReport(
 ): Promise<ComposeReportInput | null> {
   for await (const c of stream) {
     if (c.type === 'tool_use_stop' && c.toolName === COMPOSE_REPORT_TOOL.name) {
-      return (c.toolInput ?? {}) as unknown as ComposeReportInput;
+      const input = (c.toolInput ?? {}) as Record<string, unknown>;
+      // The client sets this sentinel when the accumulated tool JSON does not
+      // parse. Casting it straight to ComposeReportInput — which is what this
+      // did — turns a failed generation into a report with no overview and no
+      // areas, and stores it. Treat it as no tool call at all.
+      if (input.__parse_error === true) return null;
+      return input as unknown as ComposeReportInput;
     }
   }
   return null;
