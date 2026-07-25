@@ -17,6 +17,7 @@
 import type { AdaClients, CaseRow } from '../clients/types.js';
 import type { AdaSessionState } from '../types.js';
 import { decideLane } from './routeCase.js';
+import { firmHasRoutingCapacity } from './firmCapacity.js';
 import { isFirmEligible } from './firmEligibility.js';
 import { sendAdminRoutingNotification } from '../notifications/routingNotifications.js';
 
@@ -74,9 +75,21 @@ export async function resolveEligibleRoutingFirm(
   const optedIn = assignments.filter((a) => a.receivesMatches);
   if (optedIn.length === 0) return null;
 
+  // Two independent gates, both required.
+  //
+  //   isFirmEligible        commercial standing — active, paying or comped
+  //   firmHasRoutingCapacity operational willingness — has anyone here said
+  //                          they are full or paused
+  //
+  // The capacity flags shipped in migration 0023 and nothing ever read them,
+  // so "I'm full" was a decorative switch. That matters more here than
+  // anywhere else: this lane is EXCLUSIVE, so a lead pushed at a paused firm
+  // is invisible to every other firm and simply sits there.
   const isEligible = async (firmId: string): Promise<boolean> => {
     const firm = await clients.db.readLawFirmById(firmId);
-    return firm != null && isFirmEligible(firm);
+    if (firm == null || !isFirmEligible(firm)) return false;
+    const capacity = await clients.db.getFirmAttorneyCapacity(firmId);
+    return firmHasRoutingCapacity(capacity);
   };
 
   const lit = await clients.db.getLitigationById(litigationListingId);

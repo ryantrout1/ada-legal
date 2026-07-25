@@ -44,6 +44,7 @@ import {
   routingRules as routingRulesTable,
   stripeWebhookEvents as stripeWebhookEventsTable,
 } from '../../db/schema-ch1.js';
+import type { AttorneyCapacity } from '../routing/firmCapacity.js';
 import { cases as casesTable, caseActivity as caseActivityTable, caseTasks as caseTasksTable, casePeople as casePeopleTable, contacts as contactsTable, caseDocuments as caseDocumentsTable } from '../../db/schema-cases.js';
 import { computePipelineStats } from '../cases/pipelineStats.js';
 import type { PipelineStats } from '../cases/pipelineStats.js';
@@ -2721,6 +2722,42 @@ export class NeonDbClient implements DbClient {
    * because the question this answers is "when did representation start", and
    * a second click should not quietly move that date.
    */
+  /**
+   * Capacity rows for a firm's attorneys, with each one's active caseload.
+   *
+   * Feeds firmHasRoutingCapacity. Only APPROVED attorneys count — a pending or
+   * suspended one is not someone a lead should be pushed toward, and counting
+   * them would let an unapproved row hold a firm's routing open.
+   *
+   * The caseload is cases assigned to that attorney in a working status; a
+   * resolved or declined matter is not load.
+   */
+  async getFirmAttorneyCapacity(lawFirmId: string): Promise<AttorneyCapacity[]> {
+    const rows = await this.db
+      .select({
+        id: attorneysTable.id,
+        acceptingReferrals: attorneysTable.acceptingReferrals,
+        routingPaused: attorneysTable.routingPaused,
+        maxActiveCases: attorneysTable.maxActiveCases,
+        activeCaseCount: sql<number>`(
+          SELECT count(*)::int FROM cases c
+           WHERE c.assigned_lawyer_id = ${attorneysTable.id}
+             AND c.status IN ('new','investigating','demand_sent','negotiating')
+        )`,
+      })
+      .from(attorneysTable)
+      .where(
+        and(eq(attorneysTable.lawFirmId, lawFirmId), eq(attorneysTable.status, 'approved')),
+      );
+
+    return rows.map((r) => ({
+      acceptingReferrals: r.acceptingReferrals,
+      routingPaused: r.routingPaused,
+      maxActiveCases: r.maxActiveCases ?? null,
+      activeCaseCount: Number(r.activeCaseCount ?? 0),
+    }));
+  }
+
   async setCaseEngaged(opts: {
     caseId: string;
     lawFirmId: string;

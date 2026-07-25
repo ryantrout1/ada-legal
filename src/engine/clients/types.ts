@@ -1406,6 +1406,13 @@ export interface DbClient {
    * must not move that date. Writes an ENGAGED / ENGAGEMENT_CLEARED activity.
    * Null when the case isn't this firm's.
    */
+  /**
+   * Capacity rows for a firm's APPROVED attorneys, each with their active
+   * caseload. Feeds firmHasRoutingCapacity — the router must not push an
+   * exclusive lead at a firm whose people have all said they are full.
+   */
+  getFirmAttorneyCapacity(lawFirmId: string): Promise<import('../routing/firmCapacity.js').AttorneyCapacity[]>;
+
   setCaseEngaged(opts: {
     caseId: string;
     lawFirmId: string;

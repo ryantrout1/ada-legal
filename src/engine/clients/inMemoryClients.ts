@@ -215,6 +215,17 @@ export class InMemoryDbClient implements DbClient {
    *  status, matching the column. */
   private readonly caseEngagement = new Map<string, string>();
 
+  /** firmId -> staged attorney capacity rows (see getFirmAttorneyCapacity). */
+  private readonly firmCapacity = new Map<
+    string,
+    Array<{
+      acceptingReferrals: boolean;
+      routingPaused: boolean;
+      maxActiveCases: number | null;
+      activeCaseCount: number;
+    }>
+  >();
+
   private readonly caseExtras = new Map<
     string,
     {
@@ -1815,6 +1826,32 @@ export class InMemoryDbClient implements DbClient {
 
   /** Mirrors neonDbClient.setCaseEngaged, including the keep-original-stamp
    *  behaviour on a repeat mark. */
+  /**
+   * Mirrors neonDbClient.getFirmAttorneyCapacity.
+   *
+   * The in-memory AttorneyRow is the public-directory shape and carries no
+   * capacity columns, so this returns whatever a test has staged via
+   * `setFirmCapacity`. Default is an empty roster, which
+   * firmHasRoutingCapacity treats as available — matching the real fail-open
+   * rule and leaving every existing routing test unchanged.
+   */
+  async getFirmAttorneyCapacity(lawFirmId: string) {
+    return this.firmCapacity.get(lawFirmId) ?? [];
+  }
+
+  /** Test seam: stage capacity rows for a firm. */
+  setFirmCapacity(
+    lawFirmId: string,
+    rows: Array<{
+      acceptingReferrals: boolean;
+      routingPaused: boolean;
+      maxActiveCases: number | null;
+      activeCaseCount: number;
+    }>,
+  ): void {
+    this.firmCapacity.set(lawFirmId, rows);
+  }
+
   async setCaseEngaged(opts: {
     caseId: string;
     lawFirmId: string;
