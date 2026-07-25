@@ -982,6 +982,29 @@ body {
   --link:             var(--color-ada-500);
 }
 
+/* Spot surfaces use the teal Spot accent instead of terracotta.
+   Scoped to .spot-accent (the Spot page roots) so the rest of the site keeps
+   its own colour. Same mechanism as .ada-accent above: re-points the raw
+   Tailwind colour tokens, so the ~32 `accent-*` utilities already written
+   across the eight Spot flow files need no edit — what `accent` MEANS
+   changes inside this scope, not what the components ask for.
+
+   Every semantic alias is re-declared for the reason documented on
+   .ada-accent: custom properties substitute at computed-value time on the
+   element that declares them, so a --link declared only on :root would
+   inherit terracotta into this scope even though --color-accent-500 is teal
+   here. Per-mode teal resolves through --color-spot-*. */
+.spot-accent {
+  --color-accent-500: var(--color-spot-500);
+  --color-accent-600: var(--color-spot-600);
+  --color-accent-50:  var(--color-spot-50);
+  --accent:           var(--color-spot-500);
+  --accent-light:     var(--color-spot-500);
+  --accent-lighter:   var(--color-spot-50);
+  --section-label:    var(--color-spot-500);
+  --link:             var(--color-spot-500);
+}
+
 :root {
   --page-bg:          #FFFFFF;
   --page-bg-alt:      #FAF7F2;

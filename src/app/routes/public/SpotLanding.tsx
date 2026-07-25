@@ -178,7 +178,7 @@ export default function SpotLanding() {
   // Payment flow takes over the page once the CTA is pressed.
   if (paidSessionId || checkoutActive) {
     return (
-      <div className="spot-surface">
+      <div className="spot-surface spot-accent">
         <div className="mx-auto max-w-2xl px-5 sm:px-8 py-10">
           <header className="mb-6">
             <h1 className="font-display text-3xl font-extrabold text-ink-900">Spot</h1>
@@ -194,7 +194,7 @@ export default function SpotLanding() {
   }
 
   return (
-    <div className="spot-surface">
+    <div className="spot-surface spot-accent">
       <div className="mx-auto max-w-2xl px-5 sm:px-8 py-10">
         <header className="mb-6">
           <p className="font-display text-sm font-bold uppercase tracking-widest text-accent-600">

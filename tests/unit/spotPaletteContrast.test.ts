@@ -136,11 +136,16 @@ describe('spot ramp — does not disturb the site palette', () => {
     expect(allValues('color-accent-500').length).toBeGreaterThanOrEqual(9);
   });
 
-  it('has not been scoped to anything yet', () => {
-    // .spot-accent lands in Phase 2. Until then nothing consumes these
-    // tokens, and that is the point — the ramp ships provably inert.
-    // Matches the RULE, not the word: the ramp's own comment names the
-    // selector it is waiting for.
-    expect(css).not.toMatch(/\.spot-accent\s*\{/);
+  it('is consumed through a scope, not applied globally', () => {
+    // The whole point of the mechanism: .spot-accent re-points what
+    // `accent` MEANS inside the Spot roots, so the ~32 accent-* utilities
+    // in the eight flow files never had to change. If the ramp were
+    // assigned on :root instead, the entire site would turn teal.
+    expect(css).toMatch(/\.spot-accent\s*\{/);
+
+    const scope = css.slice(css.indexOf('.spot-accent {'));
+    const block = scope.slice(0, scope.indexOf('}'));
+    expect(block).toContain('--color-accent-500: var(--color-spot-500)');
+    expect(block).toContain('--link:             var(--color-spot-500)');
   });
 });
