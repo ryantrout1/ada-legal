@@ -115,25 +115,51 @@ export async function generateReport(
     ),
   );
 
-  const stream = clients.ai.stream({
-    systemPrompt: SYNTHESIS_SYSTEM,
-    messages: [
-      {
-        role: 'user',
-        content: `Analyses of the photographed spot (grouped views, each up to 3 angles):\n\n${serializeAnalyses(analyses)}`,
-        timestamp: new Date().toISOString(),
-      },
-    ],
-    tools: [COMPOSE_REPORT_TOOL],
-    model,
-    maxTokens: 4000,
-  });
+  // The synthesis call is retried once.
+  //
+  // The observed malformation — the model serializing its findings into the
+  // overview string instead of emitting `areas` — happened on one of four
+  // reports with the same prompt, model and inputs. It is a roll of the dice,
+  // and a buyer who paid $79 should not lose their report to one bad roll.
+  //
+  // Only the SYNTHESIS is retried, never the photo analyses: those are the
+  // expensive vision calls, they already succeeded, and re-running them would
+  // multiply cost for a failure that happens after them.
+  //
+  // One retry, not a loop. If the second attempt also fails the session is
+  // left for regeneration by a human, which is the right escalation for
+  // something this consistent.
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const stream = clients.ai.stream({
+      systemPrompt: SYNTHESIS_SYSTEM,
+      messages: [
+        {
+          role: 'user',
+          content: `Analyses of the photographed spot (grouped views, each up to 3 angles):\n\n${serializeAnalyses(analyses)}`,
+          timestamp: new Date().toISOString(),
+        },
+      ],
+      tools: [COMPOSE_REPORT_TOOL],
+      model,
+      maxTokens: 4000,
+    });
 
-  const modelOutput = await collectComposeReport(stream);
-  // A missing tool call is a generation failure — surface it so the caller
-  // leaves the session for retry rather than persisting an empty report.
-  if (!modelOutput) throw new Error('model did not return a compose_report tool call');
+    try {
+      const modelOutput = await collectComposeReport(stream);
+      // A missing tool call is a generation failure — surface it so the caller
+      // leaves the session for retry rather than persisting an empty report.
+      if (!modelOutput) throw new Error('model did not return a compose_report tool call');
 
-  const content = composeReport(modelOutput, analyses);
-  return { content: { ...content, modelVersion: model }, modelVersion: model };
+      const content = composeReport(modelOutput, analyses);
+      return { content: { ...content, modelVersion: model }, modelVersion: model };
+    } catch (err) {
+      lastError = err;
+      if (attempt === 0) {
+        console.warn('spot generateReport: synthesis attempt failed, retrying once', err);
+      }
+    }
+  }
+
+  throw lastError;
 }

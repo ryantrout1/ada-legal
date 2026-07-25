@@ -122,3 +122,68 @@ describe('generateReport', () => {
     expect(i0).toBeLessThan(i3);
   });
 });
+
+/**
+ * Retry exists because the malformation that shipped a zero-finding report to
+ * a paying customer hit one of four generations on identical inputs. A buyer
+ * should not lose their report to one bad roll.
+ *
+ * Ref: /triage Spot report generation.
+ */
+describe('generateReport — retries synthesis once', () => {
+  const area = { title: 'Door', concern: 'Hard knob.', remediation: 'Lever handle.', severity: 'major', cited_section: '§404.2.7', confirmable: true };
+
+  it('recovers when the first synthesis composes nothing', async () => {
+    let streamCalls = 0;
+    const clients = fakeClients({
+      onAnalyze: () => {},
+      stream: () => {
+        streamCalls += 1;
+        // First attempt reproduces the failure: the analyses found barriers,
+        // compose_report returns none. Second attempt is healthy.
+        return streamCalls === 1
+          ? composeStream({ overview: 'ok', areas: [] })
+          : composeStream({ overview: 'ok', areas: [area] });
+      },
+    });
+
+    const out = await generateReport(clients, { photos: photos(1) });
+    expect(streamCalls).toBe(2);
+    expect(out.content.items).toHaveLength(1);
+  });
+
+  it('does not re-run the photo analyses on retry', async () => {
+    // The vision calls are the expensive part and they already succeeded.
+    let analyzeCalls = 0;
+    let streamCalls = 0;
+    const clients = fakeClients({
+      onAnalyze: () => {
+        analyzeCalls += 1;
+      },
+      stream: () => {
+        streamCalls += 1;
+        return streamCalls === 1
+          ? composeStream({ overview: 'ok', areas: [] })
+          : composeStream({ overview: 'ok', areas: [area] });
+      },
+    });
+
+    await generateReport(clients, { photos: photos(1) });
+    expect(streamCalls).toBe(2);
+    expect(analyzeCalls).toBe(1);
+  });
+
+  it('gives up after the second failure rather than looping', async () => {
+    let streamCalls = 0;
+    const clients = fakeClients({
+      onAnalyze: () => {},
+      stream: () => {
+        streamCalls += 1;
+        return composeStream({ overview: 'ok', areas: [] });
+      },
+    });
+
+    await expect(generateReport(clients, { photos: photos(1) })).rejects.toThrow();
+    expect(streamCalls).toBe(2);
+  });
+});
