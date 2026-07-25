@@ -89,6 +89,32 @@ export interface SpotStore {
   getReleasedReportBySlug(slug: string): Promise<{ content: unknown } | null>;
   /** Release a pending report (guarded, idempotent). Returns the session + buyer for delivery, or null. */
   releaseReport(input: { slug: string; reviewedBy: string }): Promise<{ sessionId: string; buyerEmail: string | null } | null>;
+  /**
+   * Write the report for a session, replacing any existing one IN PLACE.
+   *
+   * spot_report has a unique index on session_id (migration 0039) — at most
+   * one report per session, which is what the recovery path relies on when
+   * the inline trigger and the cron sweeper race. Regenerate was written
+   * before that index and still tried to insert a second row "so both
+   * outputs coexist for side-by-side comparison", so every regeneration on a
+   * session that already had a report hit the unique violation and 500'd.
+   *
+   * The existing slug is KEPT on replace. A released report's URL is already
+   * in a buyer's inbox; minting a new slug would silently break it. Status is
+   * kept too: a released report stays released so the live link keeps
+   * working and immediately serves the corrected content, and a pending one
+   * stays pending. Whether to re-notify is a separate decision the admin
+   * makes with Send again.
+   *
+   * Returns the slug actually in effect — the existing one on replace, the
+   * supplied one on first write.
+   */
+  upsertReport(input: {
+    sessionId: string;
+    slug: string;
+    content: unknown;
+    modelVersion: string;
+  }): Promise<string>;
   /** Mark a released report's email as sent. */
   markReportSent(slug: string): Promise<void>;
   /**
@@ -251,6 +277,28 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
         content: input.content,
         modelVersion: input.modelVersion,
       });
+    },
+    async upsertReport(input) {
+      const rows = await db
+        .insert(spotReports)
+        .values({
+          sessionId: input.sessionId,
+          slug: input.slug,
+          content: input.content,
+          modelVersion: input.modelVersion,
+        })
+        .onConflictDoUpdate({
+          target: spotReports.sessionId,
+          // slug and hitl_status are deliberately absent: the URL stays
+          // valid and the review decision is not silently undone.
+          set: {
+            content: input.content,
+            modelVersion: input.modelVersion,
+            updatedAt: new Date(),
+          },
+        })
+        .returning({ slug: spotReports.slug });
+      return rows[0]?.slug ?? input.slug;
     },
     async markInReview(sessionId) {
       if (!canTransition('uploaded', 'in_review')) return false;

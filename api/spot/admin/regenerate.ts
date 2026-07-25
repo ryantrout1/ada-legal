@@ -2,11 +2,24 @@
  * POST /api/spot/admin/regenerate  { sessionId, model }  → { slug, model }
  *
  * Internal admin preview: re-run report generation for a session's photos with
- * a chosen model (Opus 4.8 vs Fable 5) and persist it as a NEW report, so both
- * outputs coexist for side-by-side comparison. requireAdmin-gated — this spends
- * on the model, so it is never public. The model is allowlisted.
+ * a chosen model. requireAdmin-gated — this spends on the model, so it is
+ * never public. The model is allowlisted.
  *
- * Own surface; does not touch the cron or the bench. Ref: /plan Ada Spot 3b.
+ * REPLACES the session's report in place. It used to insert a second row "so
+ * both outputs coexist for side-by-side comparison", which stopped being
+ * possible when migration 0039 added a unique index on session_id — one
+ * report per session, the invariant the inline/cron recovery path relies on.
+ * From then until now every regeneration on a session that already had a
+ * report hit the unique violation and returned 500, which is exactly the
+ * sessions anyone would want to regenerate.
+ *
+ * The slug survives replacement: a released report's URL is already in a
+ * buyer's inbox. So does the review status, so a live link keeps working and
+ * starts serving the corrected report immediately. Re-notifying is a separate
+ * choice, made with Send again.
+ *
+ * Own surface; does not touch the cron or the bench. Ref: /plan Ada Spot 3b,
+ * /triage Spot regenerate.
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
@@ -39,10 +52,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const clients = makeClientsFromEnv();
     const report = await generateReport(clients, { photos, model: parsed.model });
-    const slug = generatePackageSlug();
-    await store.insertReport({
+    // Only used if this session has no report yet; on replace the existing
+    // slug is kept and returned.
+    const slug = await store.upsertReport({
       sessionId: parsed.sessionId,
-      slug,
+      slug: generatePackageSlug(),
       content: report.content,
       modelVersion: report.modelVersion,
     });
