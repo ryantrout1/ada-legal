@@ -328,6 +328,37 @@ export default function SpotLanding() {
 
             {showResult && state.view ? (
               <>
+                {/* The photo that was screened, shown with the findings.
+                    It used to vanish the moment the read finished: the
+                    uploader block above is gated on !showResult, so the
+                    thumbnail unmounted with it and the result branch had no
+                    image of its own. The reader was left holding a list of
+                    claims about a shower with no shower on screen.
+
+                    Nothing is stored to show this. `files` survives until
+                    startOver and the object URLs created above are still
+                    live, so this is the same blob the user picked. The
+                    never-persist rule is about the server, and it is
+                    untouched.
+
+                    Findings name specific features — a raised curb, a fixed
+                    bench, a mirror height — so the photo is not decoration.
+                    It is the thing that lets someone check the list against
+                    what they actually photographed. */}
+                {previews.length > 0 ? (
+                  <ul className="mb-5 grid grid-cols-2 gap-3">
+                    {previews.map((url, i) => (
+                      <li key={url} className="rounded-md border border-surface-200 bg-surface-100 p-2">
+                        <img
+                          src={url}
+                          alt={`The photo you screened${previews.length > 1 ? `, ${i + 1} of ${previews.length}` : ''}`}
+                          className="block w-full rounded-sm"
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+
                 {state.tier === 'soft_gated' ? (
                   <p className="mb-4 rounded-md border border-surface-200 bg-surface-100 px-4 py-3 text-sm text-ink-700">
                     This one's on us — you're near the end of your free reads. For more photos and a
