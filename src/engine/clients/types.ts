@@ -845,6 +845,9 @@ export interface PortalCaseDetailFull {
   caseName: string | null;
   /** Attorney-set statute-of-limitations date (YYYY-MM-DD) or null. */
   solDate: string | null;
+  /** ISO stamp of when the firm signed the client, or null. Orthogonal to
+   *  status — a matter can be engaged at any active stage. */
+  engagedAt: string | null;
   /** Attorney-entered defendant record or null. */
   defendant: CaseDefendant | null;
   claimantName: string | null;
@@ -1395,6 +1398,19 @@ export interface DbClient {
     lawFirmId: string;
     solDate: string | null;
   }): Promise<boolean>;
+
+  /**
+   * Mark (or clear) that the firm signed the client. Firm-scoped +
+   * consent-gated. Idempotent on set — re-marking keeps the ORIGINAL stamp,
+   * because this answers "when did representation start" and a second click
+   * must not move that date. Writes an ENGAGED / ENGAGEMENT_CLEARED activity.
+   * Null when the case isn't this firm's.
+   */
+  setCaseEngaged(opts: {
+    caseId: string;
+    lawFirmId: string;
+    engaged: boolean;
+  }): Promise<{ engagedAt: string | null } | null>;
 
   /**
    * Attorney self-attests first contact with the claimant. Firm-scoped +

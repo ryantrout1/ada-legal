@@ -79,6 +79,14 @@ export const cases = pgTable(
       notes?: string | null;
     } | null>(),
 
+    // Engagement — when the firm actually signed the client. Fee agreements
+    // happen off-platform and we do not touch them; this is only the marker
+    // that it happened. Deliberately NOT a status: engagement is orthogonal to
+    // the pipeline stage (a matter can be engaged while still investigating, or
+    // reach demand_sent unsigned), so folding it into the enum would impose a
+    // false ordering on two independent facts. Migration 0043.
+    engagedAt: timestamp('engaged_at', { withTimezone: true }),
+
     consentToShare: boolean('consent_to_share').notNull().default(false),
     consentAt: timestamp('consent_at', { withTimezone: true }),
     consentScope: text('consent_scope'),

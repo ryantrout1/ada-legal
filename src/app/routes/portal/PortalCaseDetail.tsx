@@ -39,6 +39,7 @@ import {
   transitionPortalCase,
   addPortalCaseNote,
   setCaseSolDate,
+  setCaseEngaged,
   markCaseContacted,
   setCaseDefendant,
   fetchCasePeople,
@@ -241,6 +242,7 @@ export default function PortalCaseDetail() {
 
             <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-5 pt-5 border-t border-surface-200">
               <SolField caseId={data.case_id} solDate={data.sol_date} onSaved={load} />
+              <EngagedField caseId={data.case_id} engagedAt={data.engaged_at} onSaved={load} />
               <ContactField caseId={data.case_id} contactedAt={data.contacted_at} onSaved={load} />
               <MetaCell label="First contact due" value={fmtDate(data.first_contact_due)} />
               <MetaCell label="Source" value="ADA Legal Link · Ada" />
@@ -363,6 +365,81 @@ function ContactField({ caseId, contactedAt, onSaved }: { caseId: string; contac
           {error && <p role="alert" className="text-danger-500 text-xs mt-1">{error}</p>}
         </dd>
       )}
+    </div>
+  );
+}
+
+/**
+ * The engagement marker — the firm signed the client.
+ *
+ * Deliberately a plain marker, not a pipeline stage. Engagement is orthogonal
+ * to status: a matter can be signed while still investigating, or reach
+ * demand_sent unsigned. Putting it in the stage row would force a false order
+ * onto two independent facts.
+ *
+ * Fee agreements happen off-platform. This records only that one exists, which
+ * is what separates "a firm is looking at this" from "a firm has this case" —
+ * and it is the only figure that says whether an intake became representation.
+ *
+ * Re-marking keeps the ORIGINAL date server-side, so the response is trusted
+ * rather than assumed to be now.
+ */
+function EngagedField({
+  caseId,
+  engagedAt,
+  onSaved,
+}: {
+  caseId: string;
+  engagedAt: string | null;
+  onSaved: () => Promise<void> | void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const set = async (engaged: boolean) => {
+    setBusy(true);
+    setError(null);
+    try {
+      await setCaseEngaged(caseId, engaged);
+      await onSaved();
+    } catch {
+      setError('Could not update.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div>
+      <dt className="text-ink-500 text-[10px] uppercase tracking-wider font-bold mb-1">Engagement</dt>
+      <dd className="text-ink-900 text-sm font-semibold flex items-center gap-2 flex-wrap">
+        {engagedAt ? (
+          <>
+            {fmtDate(engagedAt)}
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void set(false)}
+              className="text-xs text-ink-500 underline font-normal disabled:opacity-50 min-h-[44px]"
+            >
+              Undo
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="text-ink-500 font-normal">Not signed</span>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void set(true)}
+              className="text-xs text-accent-600 underline font-normal disabled:opacity-50 min-h-[44px]"
+            >
+              {busy ? 'Saving…' : 'Client signed'}
+            </button>
+          </>
+        )}
+      </dd>
+      {error && <p role="alert" className="text-danger-500 text-xs mt-1">{error}</p>}
     </div>
   );
 }

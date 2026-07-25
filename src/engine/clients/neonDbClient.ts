@@ -2482,6 +2482,7 @@ export class NeonDbClient implements DbClient {
         contactedAt: casesTable.contactedAt,
         createdAt: casesTable.createdAt,
         solDate: casesTable.solDate,
+        engagedAt: casesTable.engagedAt,
         defendant: casesTable.defendant,
         litigationListingId: casesTable.litigationListingId,
         caseName: litigationTable.caseName,
@@ -2547,6 +2548,7 @@ export class NeonDbClient implements DbClient {
       createdAt: iso(r.createdAt) ?? '',
       caseName: r.caseName ?? null,
       solDate: r.solDate == null ? null : String(r.solDate),
+      engagedAt: r.engagedAt instanceof Date ? r.engagedAt.toISOString() : (r.engagedAt ?? null),
       defendant: (r.defendant as PortalCaseDetailFull['defendant']) ?? null,
       claimantName: fStr('claimant_name') ?? r.clientContactName ?? null,
       claimantEmail: fStr('claimant_email') ?? r.clientContactEmail ?? null,
@@ -2709,6 +2711,56 @@ export class NeonDbClient implements DbClient {
       metadata: { solDate: opts.solDate },
     });
     return true;
+  }
+
+  /**
+   * Mark (or unmark) a case as engaged — the firm signed the client.
+   *
+   * Firm-scoped and consent-gated like every other case mutation. Idempotent
+   * on set: re-marking an already-engaged case keeps the ORIGINAL timestamp,
+   * because the question this answers is "when did representation start", and
+   * a second click should not quietly move that date.
+   */
+  async setCaseEngaged(opts: {
+    caseId: string;
+    lawFirmId: string;
+    engaged: boolean;
+  }): Promise<{ engagedAt: string | null } | null> {
+    const existing = await this.db
+      .select({
+        id: casesTable.id,
+        consentToShare: casesTable.consentToShare,
+        engagedAt: casesTable.engagedAt,
+      })
+      .from(casesTable)
+      .where(and(eq(casesTable.id, opts.caseId), eq(casesTable.firmId, opts.lawFirmId)))
+      .limit(1);
+    const row = existing[0];
+    if (!row || !row.consentToShare) return null;
+
+    // Already in the requested state — no write, no duplicate activity row.
+    if (opts.engaged && row.engagedAt) {
+      return { engagedAt: row.engagedAt.toISOString() };
+    }
+    if (!opts.engaged && !row.engagedAt) return { engagedAt: null };
+
+    const next = opts.engaged ? new Date() : null;
+    await this.db
+      .update(casesTable)
+      .set({ engagedAt: next })
+      .where(eq(casesTable.id, opts.caseId));
+
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: opts.engaged ? 'ENGAGED' : 'ENGAGEMENT_CLEARED',
+      summary: opts.engaged
+        ? 'Client signed — representation started'
+        : 'Engagement marker cleared',
+      metadata: { engagedAt: next ? next.toISOString() : null },
+    });
+
+    return { engagedAt: next ? next.toISOString() : null };
   }
 
   async markCaseContacted(opts: {

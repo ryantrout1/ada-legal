@@ -72,6 +72,8 @@ export interface PortalCaseDetailResponse {
   created_at: string;
   case_name: string | null;
   sol_date: string | null;
+  /** When the firm signed the client. Null until marked. Orthogonal to status. */
+  engaged_at: string | null;
   defendant: PortalDefendant | null;
   claimant_name: string | null;
   claimant_email: string | null;
@@ -307,6 +309,23 @@ export async function setCaseSolDate(id: string, solDate: string | null): Promis
     body: JSON.stringify({ sol_date: solDate }),
   });
   if (!resp.ok) await failFor(resp);
+}
+
+/**
+ * Mark that the firm signed the client, or clear it. Returns the effective
+ * stamp — a repeat mark keeps the original, so the caller should trust the
+ * response rather than assuming "now".
+ */
+export async function setCaseEngaged(id: string, engaged: boolean): Promise<string | null> {
+  const res = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/engaged`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ engaged }),
+  });
+  if (!res.ok) throw new Error('Could not update the engagement marker.');
+  const body = (await res.json()) as { engaged_at: string | null };
+  return body.engaged_at;
 }
 
 /** Attorney self-attests first contact. Returns the (write-once) timestamp. */

@@ -211,6 +211,10 @@ export class InMemoryDbClient implements DbClient {
   // ─── Cases foundation (migration 0023) + routing (Phase 1a) ─────────────────
   public readonly cases: CaseRow[] = [];
   /** Phase 2a: fields the lean CaseRow drops but the portal queue needs. */
+  /** caseId -> ISO engagement stamp. Separate map so it is orthogonal to
+   *  status, matching the column. */
+  private readonly caseEngagement = new Map<string, string>();
+
   private readonly caseExtras = new Map<
     string,
     {
@@ -1682,6 +1686,7 @@ export class InMemoryDbClient implements DbClient {
       createdAt: c.createdAt,
       caseName: litig?.caseName ?? null,
       solDate: extras?.solDate ?? null,
+      engagedAt: this.caseEngagement.get(c.id) ?? null,
       defendant: extras?.defendant ?? null,
       claimantName: portalFieldStr(fields, 'claimant_name') ?? clientContact?.name ?? null,
       claimantEmail: portalFieldStr(fields, 'claimant_email') ?? clientContact?.email ?? null,
@@ -1806,6 +1811,37 @@ export class InMemoryDbClient implements DbClient {
       createdAt: new Date(0).toISOString(),
     });
     return { ok: true, contactedAt };
+  }
+
+  /** Mirrors neonDbClient.setCaseEngaged, including the keep-original-stamp
+   *  behaviour on a repeat mark. */
+  async setCaseEngaged(opts: {
+    caseId: string;
+    lawFirmId: string;
+    engaged: boolean;
+  }): Promise<{ engagedAt: string | null } | null> {
+    const c = this.cases.find((x) => x.id === opts.caseId && x.firmId === opts.lawFirmId);
+    if (!c || !c.consentToShare) return null;
+
+    const prior = this.caseEngagement.get(c.id) ?? null;
+    if (opts.engaged && prior) return { engagedAt: prior };
+    if (!opts.engaged && !prior) return { engagedAt: null };
+
+    const next = opts.engaged ? new Date().toISOString() : null;
+    if (next) this.caseEngagement.set(c.id, next);
+    else this.caseEngagement.delete(c.id);
+
+    this.caseActivity.push({
+      caseId: c.id,
+      actorType: 'user',
+      eventType: opts.engaged ? 'ENGAGED' : 'ENGAGEMENT_CLEARED',
+      summary: opts.engaged
+        ? 'Client signed — representation started'
+        : 'Engagement marker cleared',
+      metadata: { engagedAt: next },
+      createdAt: new Date().toISOString(),
+    });
+    return { engagedAt: next };
   }
 
   async setCaseSolDate(opts: {
