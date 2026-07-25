@@ -1,7 +1,7 @@
 /**
  * SpotUpload — paid photo upload (Ada Spot 2b).
  *
- * Shown only after the server confirms paid-state. Uploads up to 10 photos
+ * Shown only after the server confirms paid-state. Uploads up to MAX_PAID_PHOTOS
  * straight to Vercel Blob via @vercel/blob/client (the token endpoint
  * re-checks paid + cap server-side), then "Finish" flips the session to
  * uploaded and shows the async confirmation. Photos are normalized through the
@@ -11,8 +11,7 @@
 
 import { useState } from 'react';
 import { downscalePhoto } from '@/app/utils/downscalePhoto';
-
-const MAX_PHOTOS = 10;
+import { MAX_PAID_PHOTOS } from '@/lib/spot/uploadGate';
 
 interface Props {
   spotSessionId: string;
@@ -25,7 +24,7 @@ export default function SpotUpload({ spotSessionId, buyerEmail }: Props) {
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const remaining = MAX_PHOTOS - count;
+  const remaining = MAX_PAID_PHOTOS - count;
 
   async function addFiles(list: FileList | null) {
     if (!list || list.length === 0) return;
@@ -100,7 +99,7 @@ export default function SpotUpload({ spotSessionId, buyerEmail }: Props) {
         <p className="mt-1 text-sm text-ink-700">
           Photograph the <strong>same spot</strong> from a few angles — straight on, from the side,
           and a close-up of anything that looks like a step, door, threshold, or sign. Up to{' '}
-          {MAX_PHOTOS} photos. {count} added.
+          {MAX_PAID_PHOTOS} photos. {count} added.
         </p>
       </div>
 

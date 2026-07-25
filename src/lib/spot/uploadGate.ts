@@ -3,13 +3,18 @@
  *
  * The server decides whether an upload token may be minted: only for a session
  * that is actually `paid` (never trusted from the client) and only up to the
- * 10-photo cap. Extracted so the rule is unit-tested, then applied inside the
+ * photo cap. Extracted so the rule is unit-tested, then applied inside the
  * blob token endpoint's onBeforeGenerateToken.
+ *
+ * MAX_PAID_PHOTOS is the ONE definition. SpotUpload used to redeclare its own
+ * `MAX_PHOTOS = 10` for the label and the remaining-count maths — two
+ * constants that happened to agree, so the copy could promise a number the
+ * server would refuse. The client imports this now.
  */
 
 import type { SpotSessionStatus } from './spotSessionStatus.js';
 
-export const MAX_PAID_PHOTOS = 10;
+export const MAX_PAID_PHOTOS = 5;
 
 export type UploadGate = { ok: true } | { ok: false; reason: 'not_paid' | 'limit_reached' };
 
