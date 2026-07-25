@@ -85,6 +85,37 @@ export default function SpotReview() {
     }
   }
 
+  const DELIVERY_MESSAGE: Record<string, string> = {
+    // Retrying will never fix this one — say so rather than inviting a loop.
+    no_buyer_email:
+      'Released, but there is no email address on file for this buyer. Resending will not help until an address is found.',
+    send_failed: 'Released, but the email did not send. Use Resend to try again.',
+  };
+
+  async function resend(slug: string) {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/spot/admin/resend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ slug }),
+      });
+      if (!res.ok) {
+        setError('Resend failed.');
+        return;
+      }
+      const data = (await res.json()) as { sent: boolean; reason?: string };
+      if (!data.sent) {
+        setError(DELIVERY_MESSAGE[data.reason ?? ''] ?? 'The email did not send.');
+      }
+      await loadList();
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function act(path: 'release' | 'reject', slug: string) {
     setBusy(true);
     setError(null);
@@ -100,8 +131,13 @@ export default function SpotReview() {
         return;
       }
       if (path === 'release') {
-        const data = (await res.json()) as { released: boolean; sent: boolean };
-        if (data.released && !data.sent) setError('Released, but the email did not send — retry release to resend.');
+        const data = (await res.json()) as { released: boolean; sent: boolean; reason?: string };
+        if (data.released && !data.sent) {
+          // The old copy here said "retry release to resend", which did
+          // nothing: release matches only pending_review, so a second call
+          // returned released:false without reaching any send.
+          setError(DELIVERY_MESSAGE[data.reason ?? ''] ?? 'Released, but the email did not send.');
+        }
       }
       await loadList();
     } finally {
@@ -159,6 +195,14 @@ export default function SpotReview() {
                     >
                       Open readout
                     </a>
+                  ) : null}
+                  {/* Only for released reports, and worded as what it is.
+                      Before this the only lever on a released-but-unsent
+                      report was Release, which could not send. */}
+                  {r.hitlStatus === 'released' ? (
+                    <button type="button" disabled={busy} className={btn} onClick={() => void resend(r.slug)}>
+                      {r.sentAt ? 'Send again' : 'Resend'}
+                    </button>
                   ) : null}
                   {r.hitlStatus === 'pending_review' ? (
                     <>

@@ -91,6 +91,18 @@ export interface SpotStore {
   releaseReport(input: { slug: string; reviewedBy: string }): Promise<{ sessionId: string; buyerEmail: string | null } | null>;
   /** Mark a released report's email as sent. */
   markReportSent(slug: string): Promise<void>;
+  /**
+   * Look up an ALREADY-RELEASED report so its email can be sent again.
+   *
+   * releaseReport deliberately matches only `pending_review`, so it is a
+   * no-op on a second call and cannot re-send. That is right for the review
+   * decision and wrong for delivery: a decision happens once, a send may
+   * need to happen twice. This is the delivery-side lookup — no state
+   * transition, just the address and whether the mail ever left.
+   */
+  getReleasedReport(
+    slug: string,
+  ): Promise<{ sessionId: string; buyerEmail: string | null; sentAt: Date | null } | null>;
   /** Reject a pending report (guarded). Returns true iff transitioned. */
   rejectReport(input: { slug: string; reviewedBy: string }): Promise<boolean>;
   /** Flip in_review → delivered (conditional; idempotent). */
@@ -304,6 +316,25 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
         .where(eq(spotSessions.id, row.sessionId))
         .limit(1);
       return { sessionId: row.sessionId, buyerEmail: sess[0]?.buyerEmail ?? null };
+    },
+    async getReleasedReport(slug) {
+      const rows = await db
+        .select({ sessionId: spotReports.sessionId, sentAt: spotReports.sentAt })
+        .from(spotReports)
+        .where(and(eq(spotReports.slug, slug), eq(spotReports.hitlStatus, 'released')))
+        .limit(1);
+      const row = rows[0];
+      if (!row) return null;
+      const sess = await db
+        .select({ buyerEmail: spotSessions.buyerEmail })
+        .from(spotSessions)
+        .where(eq(spotSessions.id, row.sessionId))
+        .limit(1);
+      return {
+        sessionId: row.sessionId,
+        buyerEmail: sess[0]?.buyerEmail ?? null,
+        sentAt: row.sentAt ?? null,
+      };
     },
     async markReportSent(slug) {
       await db.update(spotReports).set({ sentAt: new Date() }).where(eq(spotReports.slug, slug));

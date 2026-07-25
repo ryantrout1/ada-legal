@@ -1,12 +1,19 @@
 /**
- * POST /api/spot/admin/release  { slug }  → { released, sent }
+ * POST /api/spot/admin/release  { slug }  → { released, sent, reason? }
  *
  * requireAdmin. Releases a pending report, flips the session to delivered, then
  * emails the buyer the hosted-readout link. Mark-then-send: the review decision
  * (released + delivered) is recorded first; sent_at is set only when the email
- * actually sends, so a delivery failure is visible + retryable (a re-release is
- * a no-op, but the caller can resend). Idempotent — a re-release finds no
- * pending report and returns released:false. Ref: /plan Ada Spot Phase 4a.
+ * actually sends, so a delivery failure stays visible.
+ *
+ * Idempotent — a re-release finds no pending report and returns
+ * released:false. That means release CANNOT resend, which is why
+ * admin/resend.ts exists: the decision happens once, the delivery may need to
+ * happen twice. This file's comment used to claim "the caller can resend"
+ * when there was nothing to call.
+ *
+ * `reason` names why a send did not happen — no_buyer_email (unrecoverable
+ * without human help) vs send_failed (retry). Ref: /plan Ada Spot Phase 4a.
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
@@ -42,6 +49,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await store.markDelivered(released.sessionId);
 
     let sent = false;
+    // Distinguishes the two ways a send can be outstanding. They previously
+    // shared one indistinguishable end state (released, sent_at null): one is
+    // worth retrying, the other never will be. See admin/resend.ts.
+    let reason: 'no_buyer_email' | 'send_failed' | undefined;
+    if (!released.buyerEmail) {
+      console.error('spot/admin/release: no buyer email on file', { slug });
+      reason = 'no_buyer_email';
+    }
     if (released.buyerEmail) {
       const baseUrl = process.env.SPOT_READOUT_BASE_URL ?? DEFAULT_READOUT_BASE_URL;
       const email = buildReleaseEmail({ slug, baseUrl });
@@ -51,12 +66,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         await store.markReportSent(slug);
         sent = true;
       } catch (mailErr) {
-        // Released stands; email can be retried from the review surface.
+        // Released stands; the send is retryable via admin/resend.
         console.error('spot/admin/release: email send failed', mailErr);
+        reason = 'send_failed';
       }
     }
 
-    return res.status(200).json({ released: true, sent });
+    return res.status(200).json({ released: true, sent, reason });
   } catch (err) {
     console.error('spot/admin/release failed', err);
     return res.status(500).json({ error: 'Could not release the report.' });
