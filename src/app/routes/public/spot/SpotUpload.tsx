@@ -9,16 +9,31 @@
  * capture hook is not reused.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { downscalePhoto } from '@/app/utils/downscalePhoto';
 import { MAX_PAID_PHOTOS } from '@/lib/spot/uploadGate';
+
+/**
+ * Paid sessions whose carried photo has already been uploaded.
+ *
+ * Module-level rather than a ref: a ref resets if this component remounts,
+ * and a second run would spend another of the buyer's five slots on a
+ * duplicate of the same photo. They paid for those slots.
+ */
+const carriedSessions = new Set<string>();
 
 interface Props {
   spotSessionId: string;
   buyerEmail?: string | null;
+  /**
+   * The photo(s) already chosen during the free read, handed down by
+   * SpotLanding. Best-effort: empty on a refresh or a returning link, and
+   * the screen correctly starts at zero in that case.
+   */
+  initialFiles?: File[];
 }
 
-export default function SpotUpload({ spotSessionId, buyerEmail }: Props) {
+export default function SpotUpload({ spotSessionId, buyerEmail, initialFiles }: Props) {
   const [count, setCount] = useState(0);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
@@ -26,22 +41,66 @@ export default function SpotUpload({ spotSessionId, buyerEmail }: Props) {
 
   const remaining = MAX_PAID_PHOTOS - count;
 
+  async function uploadOne(file: File) {
+    const { upload } = await import('@vercel/blob/client');
+    const scaled = await downscalePhoto(file);
+    await upload(`spot/${spotSessionId}/${Date.now()}-${scaled.name}`, scaled, {
+      access: 'public',
+      handleUploadUrl: '/api/spot/upload',
+      contentType: scaled.type,
+      clientPayload: JSON.stringify({ spotSessionId }),
+    });
+    setCount((c) => c + 1);
+  }
+
+  /**
+   * Carry the free-read photo into the paid session.
+   *
+   * The free read is deliberately transient — no session, no blob, nothing
+   * persisted — so there is no server-side artifact to hand over. But Stripe
+   * here is Embedded Checkout, the user never navigates away, and SpotLanding
+   * renders this component itself, so the original File objects are still in
+   * its state. They only need re-uploading now that a paid session exists to
+   * attach them to.
+   *
+   * Without this the buyer pays, lands on "0 added", and is asked to
+   * photograph again the thing they just photographed — with Finish disabled
+   * until they do.
+   *
+   * The guard is load-bearing: an effect that uploads must run exactly once
+   * per paid session. StrictMode mounts twice in development, and a remount
+   * would re-run it in production. Either way the buyer loses a slot to a
+   * duplicate of a photo they already gave.
+   */
+  useEffect(() => {
+    if (carriedSessions.has(spotSessionId)) return;
+    if (!initialFiles || initialFiles.length === 0) return;
+    carriedSessions.add(spotSessionId);
+
+    const files = initialFiles.slice(0, MAX_PAID_PHOTOS);
+    setBusy(true);
+    void (async () => {
+      try {
+        for (const file of files) await uploadOne(file);
+      } catch {
+        // Not fatal and deliberately quiet: the uploader below still works,
+        // so the buyer can add the photo by hand. An error banner here would
+        // be alarming about something they never asked for.
+      } finally {
+        setBusy(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialFiles, spotSessionId]);
+
   async function addFiles(list: FileList | null) {
     if (!list || list.length === 0) return;
     setError(null);
     setBusy(true);
     try {
-      const { upload } = await import('@vercel/blob/client');
       const files = Array.from(list).slice(0, remaining);
       for (const file of files) {
-        const scaled = await downscalePhoto(file);
-        await upload(`spot/${spotSessionId}/${Date.now()}-${scaled.name}`, scaled, {
-          access: 'public',
-          handleUploadUrl: '/api/spot/upload',
-          contentType: scaled.type,
-          clientPayload: JSON.stringify({ spotSessionId }),
-        });
-        setCount((c) => c + 1);
+        await uploadOne(file);
       }
     } catch {
       setError('One of your photos could not be uploaded. Please try again.');

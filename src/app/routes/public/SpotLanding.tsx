@@ -184,7 +184,7 @@ export default function SpotLanding() {
             <h1 className="font-display text-3xl font-extrabold text-ink-900">Spot</h1>
           </header>
           {paidSessionId ? (
-            <SpotUpload spotSessionId={paidSessionId} />
+            <SpotUpload spotSessionId={paidSessionId} initialFiles={files} />
           ) : (
             <SpotCheckout onPaid={setPaidSessionId} />
           )}
