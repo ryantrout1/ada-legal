@@ -69,7 +69,21 @@ const DELIVERY_LABEL: Record<SessionRow['delivery'], string> = {
 /** Only the two that need action are marked. Everything else stays quiet. */
 const NEEDS_ATTENTION = new Set<SessionRow['delivery']>(['no_email', 'unsent']);
 
-function money(cents: number | null): string {
+/**
+ * Money actually received — not the price on the session.
+ *
+ * amount_cents is written when the checkout session is created, before any
+ * money moves, so a `pending_payment` row carries $79.00 while nothing has
+ * been collected. Rendering that under "Amount" made the table disagree with
+ * the gross figure directly above it, which correctly counts only captured
+ * payments. Same class of error as a count that is populated and means
+ * something other than its label.
+ *
+ * Unpaid rows show nothing rather than a struck-through price: this column
+ * answers "what came in", and for those rows the answer is nothing.
+ */
+function money(cents: number | null, paidAt: string | null): string {
+  if (!paidAt) return '—';
   if (cents === null || cents === undefined) return '—';
   return `$${(cents / 100).toFixed(2)}`;
 }
@@ -152,7 +166,8 @@ export default function AdminSpot() {
 
       {summary?.gross_cents ? (
         <p className="mt-3 text-sm text-ink-700">
-          {money(summary.gross_cents)} collected across {summary.paid ?? 0} purchases.
+          {`$${((summary.gross_cents ?? 0) / 100).toFixed(2)}`} collected across{' '}
+          {summary.paid ?? 0} purchases.
         </p>
       ) : null}
 
@@ -250,7 +265,9 @@ export default function AdminSpot() {
                     ) : null}
                   </td>
                   <td className="border-b border-surface-200 py-2 pr-4">{s.photo_count ?? '—'}</td>
-                  <td className="border-b border-surface-200 py-2 pr-4">{money(s.amount_cents)}</td>
+                  <td className="border-b border-surface-200 py-2 pr-4">
+                    {money(s.amount_cents, s.paid_at)}
+                  </td>
                   <td className="border-b border-surface-200 py-2 pr-4">{when(s.paid_at)}</td>
                 </tr>
               ))}
