@@ -75,6 +75,10 @@ export default function HeroV2() {
             </p>
         </div>
 
+        {/* Right column: Ada, then Spot stacked beneath her. Ada stays the
+            front door — she is bigger, carries the entry chips, and comes
+            first. Spot is the second way in, not a peer. */}
+        <div style={{ display: 'grid', gap: '20px' }}>
         {/* Right: Ada front-door card */}
         <div className="v2-fade-up v2-delay-3" style={{
           background: 'linear-gradient(135deg, rgba(124,92,252,0.12), rgba(124,92,252,0.04))',
@@ -178,6 +182,72 @@ export default function HeroV2() {
               Why she's called Ada →
             </Link>
           </p>
+        </div>
+
+        {/* Spot — the second front door, in terracotta.
+         *
+         * Deliberately quieter than Ada's card: no entry chips, smaller
+         * avatar, one action. Ada is the way in for "something happened to
+         * me"; Spot is the way in for "here is a photo of a place".
+         *
+         * The button is a light terracotta fill with dark text rather than
+         * Ada's solid-fill-white-text, because white on any terracotta dark
+         * enough to read as a block on this background lands around 5:1.
+         * #FB923C with #141820 text is 7.85:1 as text AND 7.85:1 as a block.
+         *
+         * COPY IS A DRAFT — Gina reviews all claimant-facing copy before it
+         * goes public. The screening framing is not stylistic: Spot must
+         * never be described as certifying compliance.
+         */}
+        <div className="v2-fade-up v2-delay-4" style={{
+          background: 'linear-gradient(135deg, rgba(194,65,12,0.12), rgba(194,65,12,0.04))',
+          border: '1px solid rgba(251,146,60,0.25)', borderRadius: '18px', padding: '24px 30px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
+            <div aria-hidden="true" style={{
+              width: '46px', height: '46px', borderRadius: '50%', flexShrink: 0,
+              background: 'linear-gradient(135deg, #C2410C, #FB923C)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: '1.3rem', color: '#fff',
+            }}>S</div>
+            <div>
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '1.15rem', fontWeight: 700,
+                color: 'var(--dark-heading)', margin: '0 0 3px', fontStyle: 'normal',
+              }}>
+                Show Spot a photo.
+              </p>
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem',
+                color: 'var(--dark-body-secondary)', lineHeight: 1.5, margin: 0,
+              }}>
+                A ramp, a doorway, a restroom, a parking space. Spot flags what looks
+                like a barrier so you know what to ask about — a screening read, not a
+                compliance check.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ marginTop: '18px', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <Link to="/spot" className="v2-btn" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+              background: '#FB923C', color: '#141820', padding: '14px 26px',
+              borderRadius: '10px', fontSize: '0.95rem', fontWeight: 700,
+              fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px', border: 'none',
+            }}>
+              See what Spot does →
+            </Link>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center',
+              fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', fontWeight: 700,
+              letterSpacing: '0.06em', textTransform: 'uppercase', color: '#FDBA74',
+              background: 'rgba(194,65,12,0.15)', border: '1px solid rgba(251,146,60,0.25)',
+              padding: '5px 12px', borderRadius: '100px',
+            }}>
+              Coming soon
+            </span>
+          </div>
+        </div>
         </div>
         </div>
       </div>
