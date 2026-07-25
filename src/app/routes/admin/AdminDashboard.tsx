@@ -46,8 +46,32 @@ const TILES: { key: keyof Counts; label: string; to?: string; hint: string }[] =
   { key: 'feedback_new', label: 'Feedback', to: '/admin/feedback', hint: 'Last 30 days' },
 ];
 
+interface SpotSummary {
+  free_reads?: number;
+  free_with_email?: number;
+  abandoned_checkout?: number;
+  paid?: number;
+  uploaded?: number;
+  refunded?: number;
+  paid_no_email?: number;
+  awaiting_review?: number;
+  released_unsent?: number;
+  delivered?: number;
+  gross_cents?: number;
+}
+
+const SPOT_STAGES: { key: keyof SpotSummary; label: string }[] = [
+  { key: 'free_reads', label: 'Free reads' },
+  { key: 'abandoned_checkout', label: 'Left at checkout' },
+  { key: 'paid', label: 'Paid' },
+  { key: 'uploaded', label: 'Photos in' },
+  { key: 'awaiting_review', label: 'In review' },
+  { key: 'delivered', label: 'Delivered' },
+];
+
 export default function AdminDashboard() {
   const [counts, setCounts] = useState<Counts | null>(null);
+  const [spot, setSpot] = useState<SpotSummary | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -60,6 +84,26 @@ export default function AdminDashboard() {
         if (!cancelled) setCounts(body.counts ?? {});
       } catch {
         if (!cancelled) setError(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Separate request rather than folding Spot into /api/admin/dashboard:
+  // a slow or failing Spot query must not blank the counts everyone else
+  // uses, and the same endpoint backs the Spot page in Phase 2.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const resp = await fetch('/api/admin/spot/summary', { credentials: 'include' });
+        if (!resp.ok) throw new Error(String(resp.status));
+        const body = (await resp.json()) as { summary?: SpotSummary };
+        if (!cancelled) setSpot(body.summary ?? {});
+      } catch {
+        if (!cancelled) setSpot({});
       }
     })();
     return () => {
@@ -114,6 +158,76 @@ export default function AdminDashboard() {
           );
         })}
       </ul>
+
+      {/* Spot — the only product currently taking money, and until now the
+          only one with no admin surface at all. Shown as a funnel rather
+          than loose tiles because the interesting facts are the drops
+          between stages: reads that never pay, purchases with no address to
+          send to, and reports sitting in review undelivered.
+
+          Two figures here are deliberately not what they look like:
+          `paid` counts paid_at rather than status, so a refund does not stay
+          in the paid column; `delivered` counts spot_report.sent_at rather
+          than session status, because a session reaches `delivered` when the
+          reviewer decides and the mail may never have left. See the endpoint
+          for the full reasoning. */}
+      <section className="mt-10" aria-labelledby="spot-funnel-h">
+        <h2 id="spot-funnel-h" className="font-display text-xl text-ink-900">
+          Spot
+        </h2>
+        <p className="mt-1 text-sm text-ink-700">
+          Free reads through to delivered reports.
+        </p>
+
+        <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 list-none p-0">
+          {SPOT_STAGES.map((stage) => (
+            <li
+              key={stage.key}
+              className="rounded-lg border border-surface-200 bg-white p-3"
+            >
+              <span className="block font-mono text-[0.6rem] uppercase tracking-[0.12em] text-ink-500">
+                {stage.label}
+              </span>
+              <span className="mt-1 block font-display text-2xl leading-none text-ink-900">
+                {spot === null ? '—' : (spot[stage.key] ?? 0).toLocaleString()}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        {/* Only rendered when non-zero. These are not statistics, they are
+            work items: a purchase with no address cannot be fulfilled, and a
+            report in review has been paid for and not sent. A zero here
+            should be silence, not a green tick nobody reads. */}
+        <ul className="mt-3 space-y-2 list-none p-0">
+          {spot?.awaiting_review ? (
+            <li className="rounded-md border border-warning-500 bg-white p-3 text-sm text-ink-900">
+              <strong>{spot.awaiting_review}</strong>{' '}
+              {spot.awaiting_review === 1 ? 'report is' : 'reports are'} waiting for review. Paid
+              for, not sent.{' '}
+              <a className="underline underline-offset-2 text-accent-600" href="/spot-review">
+                Open Spot review
+              </a>
+            </li>
+          ) : null}
+          {spot?.paid_no_email ? (
+            <li className="rounded-md border border-warning-500 bg-white p-3 text-sm text-ink-900">
+              <strong>{spot.paid_no_email}</strong>{' '}
+              {spot.paid_no_email === 1 ? 'purchase has' : 'purchases have'} no email address on
+              file. Those reports cannot be delivered until someone finds an address.
+            </li>
+          ) : null}
+          {spot?.released_unsent ? (
+            <li className="rounded-md border border-warning-500 bg-white p-3 text-sm text-ink-900">
+              <strong>{spot.released_unsent}</strong> released{' '}
+              {spot.released_unsent === 1 ? 'report' : 'reports'} never emailed.{' '}
+              <a className="underline underline-offset-2 text-accent-600" href="/spot-review">
+                Resend from Spot review
+              </a>
+            </li>
+          ) : null}
+        </ul>
+      </section>
     </div>
   );
 }
