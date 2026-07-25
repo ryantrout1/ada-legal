@@ -17,6 +17,9 @@ export default function SpotReadout() {
   const [content, setContent] = useState<SpotReportContent | null>(null);
   const [state, setState] = useState<'loading' | 'ok' | 'notfound' | 'error'>('loading');
 
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [photosPurged, setPhotosPurged] = useState(false);
+
   useEffect(() => {
     if (!slug) {
       setState('notfound');
@@ -28,8 +31,14 @@ export default function SpotReadout() {
         if (cancelled) return;
         if (res.status === 404) return setState('notfound');
         if (!res.ok) return setState('error');
-        const data = (await res.json()) as { content: SpotReportContent };
+        const data = (await res.json()) as {
+          content: SpotReportContent;
+          photos?: string[];
+          photosPurged?: boolean;
+        };
         setContent(data.content);
+        setPhotos(data.photos ?? []);
+        setPhotosPurged(data.photosPurged ?? false);
         setState('ok');
       })
       .catch(() => {
@@ -63,7 +72,9 @@ export default function SpotReadout() {
             Something went wrong loading this report. Please try again shortly.
           </p>
         ) : null}
-        {state === 'ok' && content ? <SpotReportView content={content} /> : null}
+        {state === 'ok' && content ? (
+          <SpotReportView content={content} photos={photos} photosPurged={photosPurged} />
+        ) : null}
       </div>
     </div>
   );

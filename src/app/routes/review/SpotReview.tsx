@@ -25,7 +25,12 @@ interface ReportRow {
 
 export default function SpotReview() {
   const [reports, setReports] = useState<ReportRow[]>([]);
-  const [selected, setSelected] = useState<{ slug: string; content: SpotReportContent } | null>(null);
+  const [selected, setSelected] = useState<{
+    slug: string;
+    content: SpotReportContent;
+    photos: string[];
+    photosPurged: boolean;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -62,8 +67,17 @@ export default function SpotReview() {
     try {
       const res = await fetch(`/api/spot/admin/report?slug=${encodeURIComponent(slug)}`, { credentials: 'include' });
       if (!res.ok) return;
-      const data = (await res.json()) as { report: { content: SpotReportContent } };
-      setSelected({ slug, content: data.report.content });
+      const data = (await res.json()) as {
+        report: { content: SpotReportContent };
+        photos?: string[];
+        photosPurged?: boolean;
+      };
+      setSelected({
+        slug,
+        content: data.report.content,
+        photos: data.photos ?? [],
+        photosPurged: data.photosPurged ?? false,
+      });
     } catch {
       /* ignore — list stays */
     }
@@ -238,7 +252,11 @@ export default function SpotReview() {
         {selected ? (
           <section className="mt-8" aria-live="polite">
             <h2 className="mb-2 font-display text-xl text-ink-900">Report {selected.slug.slice(0, 8)}</h2>
-            <SpotReportView content={selected.content} />
+            <SpotReportView
+              content={selected.content}
+              photos={selected.photos}
+              photosPurged={selected.photosPurged}
+            />
           </section>
         ) : null}
       </div>

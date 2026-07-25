@@ -85,8 +85,22 @@ export interface SpotStore {
     | { id: string; sessionId: string; slug: string; content: unknown; modelVersion: string | null; hitlStatus: string; createdAt: Date }
     | null
   >;
+  /**
+   * Photos for a session, with the retention answer attached.
+   *
+   * The readout is a permanent artifact pointing at temporary assets:
+   * spot_photo.delete_after defaults to 90 days and the sweep deletes the
+   * blob then soft-deletes the row, while the release email promises the
+   * report stays available. So a reader on day 91 gets a page with no
+   * images, and the page has to be able to say WHY.
+   *
+   * `purged` is true when this session had photos and none survive. That is
+   * different from a session that never had any, and the difference is the
+   * whole point — silence would read as "there were never any photos".
+   */
+  sessionPhotoState(sessionId: string): Promise<{ urls: string[]; purged: boolean }>;
   /** Public readout: content ONLY if the report is released (else null). */
-  getReleasedReportBySlug(slug: string): Promise<{ content: unknown } | null>;
+  getReleasedReportBySlug(slug: string): Promise<{ content: unknown; sessionId: string } | null>;
   /** Release a pending report (guarded, idempotent). Returns the session + buyer for delivery, or null. */
   releaseReport(input: { slug: string; reviewedBy: string }): Promise<{ sessionId: string; buyerEmail: string | null } | null>;
   /**
@@ -262,6 +276,17 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
       return rows
         .filter((r): r is { blobUrl: string } => typeof r.blobUrl === 'string' && r.blobUrl.length > 0);
     },
+    async sessionPhotoState(sessionId) {
+      const rows = await db
+        .select({ blobUrl: spotPhotos.blobUrl, deletedAt: spotPhotos.deletedAt })
+        .from(spotPhotos)
+        .where(eq(spotPhotos.sessionId, sessionId))
+        .orderBy(asc(spotPhotos.createdAt));
+      const urls = rows
+        .filter((r) => r.deletedAt === null && typeof r.blobUrl === 'string' && r.blobUrl.length > 0)
+        .map((r) => r.blobUrl as string);
+      return { urls, purged: urls.length === 0 && rows.length > 0 };
+    },
     async getReportBySession(sessionId) {
       const rows = await db
         .select({ slug: spotReports.slug })
@@ -342,7 +367,10 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
     },
     async getReleasedReportBySlug(slug) {
       const rows = await db
-        .select({ content: spotReports.content })
+        // sessionId so the caller can join photos at READ time. Baking blob
+        // URLs into the stored content at compose time would leave dead
+        // links in a permanent artifact once the 90-day sweep runs.
+        .select({ content: spotReports.content, sessionId: spotReports.sessionId })
         .from(spotReports)
         .where(and(eq(spotReports.slug, slug), eq(spotReports.hitlStatus, 'released')))
         .limit(1);

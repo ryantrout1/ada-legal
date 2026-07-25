@@ -20,9 +20,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const slug = typeof req.query.slug === 'string' ? req.query.slug : '';
   if (!slug) return res.status(400).json({ error: 'slug is required' });
   try {
-    const report = await makeSpotStore().getReportBySlug(slug);
+    const store = makeSpotStore();
+    const report = await store.getReportBySlug(slug);
     if (!report) return res.status(404).json({ error: 'Not found' });
-    return res.status(200).json({ report });
+    // Same read-time join as the public readout, so the reviewer is looking
+    // at what the buyer will see rather than a text-only approximation.
+    const photos = await store.sessionPhotoState(report.sessionId);
+    return res
+      .status(200)
+      .json({ report, photos: photos.urls, photosPurged: photos.purged });
   } catch (err) {
     console.error('spot/admin/report failed', err);
     return res.status(500).json({ error: 'Could not load the report.' });

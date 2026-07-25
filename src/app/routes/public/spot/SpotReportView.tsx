@@ -5,12 +5,32 @@
  * (Phase 4) both render through here, so the reader-facing artifact is defined
  * once. Screening language + hedge notes come from the persisted content
  * (composeReport already enforced them). AAA: tokens only, semantic headings.
+ *
+ * Photos are passed in rather than read from `content`, because they are not
+ * part of the artifact: spot_photo runs on a 90-day sweep while the report is
+ * permanent. Joined at read time, they can simply be absent later without
+ * leaving dead links in stored JSON.
+ *
+ * They sit ABOVE the findings deliberately. The findings name a yellow-painted
+ * edge and a raised landing; the photo is what lets a reader check the claim
+ * against what they actually photographed. Without it the report is a list of
+ * assertions about a place you cannot see.
  */
 
 import type { SpotReportContent } from '@/lib/spot/reportSchema';
 import { SPOT_REPORT_STARTER_DISCLAIMER } from '@/lib/spot/spotDisclaimers';
 
-export default function SpotReportView({ content }: { content: SpotReportContent }) {
+export default function SpotReportView({
+  content,
+  photos = [],
+  photosPurged = false,
+}: {
+  content: SpotReportContent;
+  /** Live photo URLs for the session. Empty once the 90-day sweep has run. */
+  photos?: string[];
+  /** True when this session HAD photos and none survive retention. */
+  photosPurged?: boolean;
+}) {
   return (
     <article className="rounded-lg border border-surface-200 bg-surface-100 p-5">
       <p className="mb-4 rounded-md border border-surface-200 bg-surface-50 px-4 py-3 text-xs text-ink-700">
@@ -18,6 +38,30 @@ export default function SpotReportView({ content }: { content: SpotReportContent
       </p>
       <h2 className="font-display text-2xl text-ink-900">{content.headline}</h2>
       {content.overview ? <p className="mt-2 text-ink-900">{content.overview}</p> : null}
+
+      {photos.length > 0 ? (
+        <ul className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 list-none p-0">
+          {photos.map((url, i) => (
+            <li key={url} className="rounded-md border border-surface-200 bg-surface-50 p-2">
+              <img
+                src={url}
+                alt={`Photo ${i + 1} of ${photos.length} screened in this report`}
+                className="block w-full rounded-sm"
+                loading="lazy"
+              />
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      {/* Only when photos existed and were swept. A report that never had
+          photos says nothing, because there is nothing to explain. */}
+      {photos.length === 0 && photosPurged ? (
+        <p className="mt-5 rounded-md border border-surface-200 bg-surface-50 px-4 py-3 text-sm text-ink-700">
+          The photos for this screening have been deleted. Uploaded photos are removed after 90
+          days; the report stays available.
+        </p>
+      ) : null}
 
       {content.items.length > 0 ? (
         <ul className="mt-5 space-y-4">
