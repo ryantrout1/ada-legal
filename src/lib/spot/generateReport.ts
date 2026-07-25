@@ -13,12 +13,15 @@
 
 import type { AdaClients, AiStreamChunk } from '../../engine/clients/types.js';
 import type { PhotoAnalysisOutput } from '../../types/db.js';
+import { SPOT_REPORT_DEFAULT_MODEL } from './parseRegenerateBody.js';
 import { COMPOSE_REPORT_TOOL, type ComposeReportInput, type SpotReportContent } from './reportSchema.js';
 import { composeReport } from './composeReport.js';
 
 /** The analyzer throws on > 3 blob keys — batch to its max. */
 export const SPOT_REPORT_BATCH_SIZE = 3;
-export const SPOT_REPORT_DEFAULT_MODEL = 'claude-opus-4-8';
+// Imported, not redeclared. This was its own literal, so the allowlist and the
+// pipeline default were two constants that had to be kept in step by hand.
+export { SPOT_REPORT_DEFAULT_MODEL };
 
 const SYNTHESIS_SYSTEM =
   'You are composing a remediation-oriented ADA accessibility screening report for a business ' +
