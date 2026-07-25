@@ -818,6 +818,24 @@ export interface CasePersonRow {
 }
 
 /** A document attached to a matter (case_documents). Phase 5 §7.5. */
+/**
+ * One logged contact with the claimant or another party.
+ *
+ * `direction` is load-bearing: a run of outbound rows with no inbound reply is
+ * the unresponsive-claimant pattern, which prose notes cannot answer.
+ */
+export interface CaseCommunicationRow {
+  id: string;
+  /** call | email | letter | meeting | text | other */
+  channel: string;
+  /** outbound | inbound */
+  direction: string;
+  /** When it HAPPENED, which may precede when it was logged. */
+  occurredAt: string;
+  subject: string | null;
+  body: string | null;
+}
+
 export interface CaseDocumentRow {
   id: string;
   filename: string;
@@ -1411,6 +1429,24 @@ export interface DbClient {
    * caseload. Feeds firmHasRoutingCapacity — the router must not push an
    * exclusive lead at a firm whose people have all said they are full.
    */
+  /** A matter's contact history, newest occurrence first. Firm-scoped —
+   *  a wrong-firm id reads as empty rather than confirming the case exists. */
+  listCaseCommunications(caseId: string, lawFirmId: string): Promise<CaseCommunicationRow[]>;
+
+  /** Log a contact. Also writes a COMMUNICATION_LOGGED activity row so the
+   *  matter timeline shows contact alongside transitions. Null when the case
+   *  is not this firm's. */
+  addCaseCommunication(opts: {
+    caseId: string;
+    lawFirmId: string;
+    channel: string;
+    direction: string;
+    occurredAt: string | null;
+    subject: string | null;
+    body: string | null;
+    loggedBy: string | null;
+  }): Promise<CaseCommunicationRow | null>;
+
   getFirmAttorneyCapacity(lawFirmId: string): Promise<import('../routing/firmCapacity.js').AttorneyCapacity[]>;
 
   setCaseEngaged(opts: {

@@ -23,7 +23,6 @@ import {
   Users,
   Building2,
   FileText,
-  MessagesSquare,
   X,
   Plus,
   ExternalLink,
@@ -47,6 +46,9 @@ import {
   removeCasePerson,
   fetchCaseDocuments,
   addCaseDocument,
+  fetchCaseCommunications,
+  logCaseCommunication,
+  type PortalCommunication,
   uploadCaseDocument,
   caseDocumentDownloadUrl,
   removeCaseDocument,
@@ -295,9 +297,7 @@ export default function PortalCaseDetail() {
             {tab === 'Notes' && <NotesPanel caseId={data.case_id} notes={notes} onAdded={load} />}
             {tab === 'Tasks' && <TaskPanel caseId={data.case_id} />}
             {tab === 'Documents' && <DocumentsPanel caseId={data.case_id} />}
-            {tab === 'Communications' && (
-              <StubPanel icon={<MessagesSquare size={22} aria-hidden="true" />} title="Communications" blurb="A dedicated communications log is coming soon. Notes covers contact records in the meantime." />
-            )}
+            {tab === 'Communications' && <CommunicationsPanel caseId={data.case_id} />}
           </div>
         </div>
 
@@ -592,6 +592,185 @@ function Timeline({ entries }: { entries: PortalCaseActivityEntry[] }) {
   );
 }
 
+const CHANNELS = [
+  { value: 'call', label: 'Call' },
+  { value: 'email', label: 'Email' },
+  { value: 'letter', label: 'Letter' },
+  { value: 'meeting', label: 'Meeting' },
+  { value: 'text', label: 'Text' },
+  { value: 'other', label: 'Other' },
+] as const;
+
+/**
+ * The contact log.
+ *
+ * Notes carried this before and could not answer the questions a firm actually
+ * asks of a contact history — when did we last reach them, have they ever
+ * replied, how many attempts. Those are structural, so the log is typed.
+ *
+ * The date defaults to today but is editable, because a Tuesday call is often
+ * logged on Thursday and the history must read in the order things happened.
+ */
+function CommunicationsPanel({ caseId }: { caseId: string }) {
+  const [rows, setRows] = useState<PortalCommunication[] | null>(null);
+  const [adding, setAdding] = useState(false);
+  const [channel, setChannel] = useState<string>('call');
+  const [direction, setDirection] = useState<string>('outbound');
+  const [occurredAt, setOccurredAt] = useState(() => new Date().toISOString().slice(0, 10));
+  const [subject, setSubject] = useState('');
+  const [body, setBody] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    try {
+      setRows(await fetchCaseCommunications(caseId));
+    } catch {
+      setRows([]);
+    }
+  }, [caseId]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  const save = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await logCaseCommunication(caseId, {
+        channel,
+        direction,
+        occurred_at: occurredAt ? new Date(occurredAt).toISOString() : null,
+        subject: subject.trim() || null,
+        body: body.trim() || null,
+      });
+      setSubject('');
+      setBody('');
+      setAdding(false);
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not log the contact');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-display text-base text-ink-900">Contact history</h3>
+        <button
+          type="button"
+          onClick={() => setAdding((v) => !v)}
+          className="text-sm text-accent-600 underline min-h-[44px]"
+        >
+          {adding ? 'Cancel' : 'Log a contact'}
+        </button>
+      </div>
+
+      {adding && (
+        <div className="rounded-md border border-surface-200 bg-white p-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label htmlFor="comm-channel" className="block text-xs font-semibold text-ink-700 mb-1">Channel</label>
+              <select
+                id="comm-channel"
+                value={channel}
+                onChange={(e) => setChannel(e.target.value)}
+                className="w-full min-h-[44px] rounded-md border border-control-border bg-white px-2 text-sm text-ink-900"
+              >
+                {CHANNELS.map((c) => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="comm-direction" className="block text-xs font-semibold text-ink-700 mb-1">Direction</label>
+              <select
+                id="comm-direction"
+                value={direction}
+                onChange={(e) => setDirection(e.target.value)}
+                className="w-full min-h-[44px] rounded-md border border-control-border bg-white px-2 text-sm text-ink-900"
+              >
+                <option value="outbound">We contacted them</option>
+                <option value="inbound">They contacted us</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="comm-date" className="block text-xs font-semibold text-ink-700 mb-1">When</label>
+              <input
+                id="comm-date"
+                type="date"
+                value={occurredAt}
+                onChange={(e) => setOccurredAt(e.target.value)}
+                className="w-full min-h-[44px] rounded-md border border-control-border bg-white px-2 text-sm text-ink-900"
+              />
+            </div>
+          </div>
+
+          <label htmlFor="comm-subject" className="block text-xs font-semibold text-ink-700 mt-3 mb-1">Subject</label>
+          <input
+            id="comm-subject"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            placeholder="Left voicemail about the shower threshold"
+            className="w-full min-h-[44px] rounded-md border border-control-border bg-white px-2 text-sm text-ink-900"
+          />
+
+          <label htmlFor="comm-body" className="block text-xs font-semibold text-ink-700 mt-3 mb-1">Detail</label>
+          <textarea
+            id="comm-body"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            rows={3}
+            className="w-full rounded-md border border-control-border bg-white p-2 text-sm text-ink-900"
+          />
+
+          <div className="mt-3">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void save()}
+              className="lw-btn-primary min-h-[44px] px-4 disabled:opacity-50"
+            >
+              {busy ? 'Saving…' : 'Save contact'}
+            </button>
+          </div>
+          {error && <p role="alert" className="text-danger-500 text-xs mt-2">{error}</p>}
+        </div>
+      )}
+
+      {rows === null && <p className="text-ink-500 text-sm">Loading…</p>}
+      {rows !== null && rows.length === 0 && (
+        <p className="text-ink-500 text-sm">
+          No contact logged yet. Calls, emails and letters recorded here build the history of who
+          reached whom, and when.
+        </p>
+      )}
+
+      {rows !== null && rows.length > 0 && (
+        <ul className="space-y-3">
+          {rows.map((r) => (
+            <li key={r.id} className="rounded-md border border-surface-200 bg-white p-3">
+              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                {/* Worded, never colour alone. */}
+                <span className="lw-pill">
+                  {r.direction === 'inbound' ? 'They contacted us' : 'We contacted them'}
+                </span>
+                <span className="text-ink-900 text-sm font-semibold capitalize">{r.channel}</span>
+                <span className="text-ink-500 text-xs">{fmtDate(r.occurredAt)}</span>
+              </div>
+              {r.subject && <p className="text-ink-900 text-sm mt-1.5">{r.subject}</p>}
+              {r.body && <p className="text-ink-700 text-sm mt-1 whitespace-pre-wrap">{r.body}</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 function DocumentsPanel({ caseId }: { caseId: string }) {
   const [docs, setDocs] = useState<PortalDocument[]>([]);
   const [adding, setAdding] = useState(false);
@@ -745,17 +924,6 @@ function DocumentsPanel({ caseId }: { caseId: string }) {
         </ul>
       )}
     </section>
-  );
-}
-
-function StubPanel({ icon, title, blurb }: { icon: React.ReactNode; title: string; blurb: string }) {
-  return (
-    <div className="text-center py-10">
-      <div className="inline-flex text-ink-500 mb-3">{icon}</div>
-      <span className="block text-[11px] font-bold uppercase tracking-wider text-accent-500 mb-1">Coming soon</span>
-      <h2 className="font-display text-lg text-ink-900 mb-1">{title}</h2>
-      <p className="text-ink-500 text-sm max-w-sm mx-auto">{blurb}</p>
-    </div>
   );
 }
 

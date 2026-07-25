@@ -394,6 +394,43 @@ export interface PortalDocument {
   storageKind: string;
 }
 
+/** One logged contact. `direction` is what makes an unanswered run visible. */
+export interface PortalCommunication {
+  id: string;
+  channel: string;
+  direction: string;
+  occurredAt: string;
+  subject: string | null;
+  body: string | null;
+}
+
+export async function fetchCaseCommunications(id: string): Promise<PortalCommunication[]> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/communications`, {
+    credentials: 'include',
+  });
+  if (!resp.ok) await failFor(resp);
+  return ((await resp.json()) as { communications: PortalCommunication[] }).communications;
+}
+
+export async function logCaseCommunication(
+  id: string,
+  input: {
+    channel: string;
+    direction: string;
+    occurred_at?: string | null;
+    subject?: string | null;
+    body?: string | null;
+  },
+): Promise<void> {
+  const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/communications`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(input),
+  });
+  if (!resp.ok) await failFor(resp);
+}
+
 export async function fetchCaseDocuments(id: string): Promise<PortalDocument[]> {
   const resp = await fetch(`/api/portal/cases/${encodeURIComponent(id)}/documents`, {
     credentials: 'include',

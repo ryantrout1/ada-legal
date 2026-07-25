@@ -204,6 +204,49 @@ export const caseActivity = pgTable(
   ],
 );
 
+// ─── case_communications ─────────────────────────────────────────────────────
+
+/**
+ * Typed contact log for a matter — calls, emails, letters, meetings.
+ *
+ * Distinct from case_activity (the append-only audit trail of system events)
+ * and from notes (free prose). A communication records something that happened
+ * OFF the platform, is entered after the fact, and is correctable.
+ *
+ * occurredAt is separate from createdAt because a Tuesday call may be logged on
+ * Thursday, and the history must read in the order things happened.
+ * Migration 0044.
+ */
+export const caseCommunications = pgTable(
+  'case_communications',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    caseId: uuid('case_id')
+      .notNull()
+      .references(() => cases.id, { onDelete: 'cascade' }),
+    channel: text('channel').notNull(),
+    /** Outbound with no inbound reply is the unresponsive-claimant pattern. */
+    direction: text('direction').notNull(),
+    occurredAt: timestamp('occurred_at', { withTimezone: true }).notNull().defaultNow(),
+    subject: text('subject'),
+    body: text('body'),
+    loggedBy: uuid('logged_by').references(() => users.id),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index('case_communications_case_time').on(t.caseId, t.occurredAt),
+    check(
+      'case_communications_channel_enum',
+      sql`${t.channel} IN ('call', 'email', 'letter', 'meeting', 'text', 'other')`,
+    ),
+    check(
+      'case_communications_direction_enum',
+      sql`${t.direction} IN ('outbound', 'inbound')`,
+    ),
+  ],
+);
+
 // ─── case_documents ───────────────────────────────────────────────────────────
 
 export const caseDocuments = pgTable(

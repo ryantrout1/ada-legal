@@ -215,6 +215,16 @@ export class InMemoryDbClient implements DbClient {
    *  status, matching the column. */
   private readonly caseEngagement = new Map<string, string>();
 
+  public readonly caseCommunications: Array<{
+    id: string;
+    caseId: string;
+    channel: string;
+    direction: string;
+    occurredAt: string;
+    subject: string | null;
+    body: string | null;
+  }> = [];
+
   /** firmId -> staged attorney capacity rows (see getFirmAttorneyCapacity). */
   private readonly firmCapacity = new Map<
     string,
@@ -1835,6 +1845,49 @@ export class InMemoryDbClient implements DbClient {
    * firmHasRoutingCapacity treats as available — matching the real fail-open
    * rule and leaving every existing routing test unchanged.
    */
+  async listCaseCommunications(caseId: string, lawFirmId: string) {
+    const c = this.cases.find((x) => x.id === caseId && x.firmId === lawFirmId);
+    if (!c) return [];
+    return this.caseCommunications
+      .filter((m) => m.caseId === caseId)
+      .slice()
+      .sort((a, b) => (a.occurredAt < b.occurredAt ? 1 : -1));
+  }
+
+  async addCaseCommunication(opts: {
+    caseId: string;
+    lawFirmId: string;
+    channel: string;
+    direction: string;
+    occurredAt: string | null;
+    subject: string | null;
+    body: string | null;
+    loggedBy: string | null;
+  }) {
+    const c = this.cases.find((x) => x.id === opts.caseId && x.firmId === opts.lawFirmId);
+    if (!c) return null;
+    const row = {
+      id: `comm-${this.caseCommunications.length + 1}`,
+      caseId: opts.caseId,
+      channel: opts.channel,
+      direction: opts.direction,
+      occurredAt: opts.occurredAt ?? new Date().toISOString(),
+      subject: opts.subject,
+      body: opts.body,
+    };
+    this.caseCommunications.push(row);
+    this.caseActivity.push({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'COMMUNICATION_LOGGED',
+      summary: `${opts.direction === 'inbound' ? 'Received' : 'Sent'} ${opts.channel}`,
+      metadata: { channel: opts.channel, direction: opts.direction },
+      createdAt: new Date().toISOString(),
+    });
+    const { caseId: _caseId, ...out } = row;
+    return out;
+  }
+
   async getFirmAttorneyCapacity(lawFirmId: string) {
     return this.firmCapacity.get(lawFirmId) ?? [];
   }

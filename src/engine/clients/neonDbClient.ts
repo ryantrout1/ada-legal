@@ -45,6 +45,7 @@ import {
   stripeWebhookEvents as stripeWebhookEventsTable,
 } from '../../db/schema-ch1.js';
 import type { AttorneyCapacity } from '../routing/firmCapacity.js';
+import { caseCommunications as caseCommunicationsTable } from '../../db/schema-cases.js';
 import { cases as casesTable, caseActivity as caseActivityTable, caseTasks as caseTasksTable, casePeople as casePeopleTable, contacts as contactsTable, caseDocuments as caseDocumentsTable } from '../../db/schema-cases.js';
 import { computePipelineStats } from '../cases/pipelineStats.js';
 import type { PipelineStats } from '../cases/pipelineStats.js';
@@ -130,6 +131,7 @@ import type {
   CaseDefendant,
   CasePersonRow,
   CaseDocumentRow,
+  CaseCommunicationRow,
   PortalCaseDetailFull,
   LitigationFirmAssignment,
   PortalAttorneyResolution,
@@ -2976,6 +2978,91 @@ export class NeonDbClient implements DbClient {
       metadata: {},
     });
     return true;
+  }
+
+  async listCaseCommunications(
+    caseId: string,
+    lawFirmId: string,
+  ): Promise<CaseCommunicationRow[]> {
+    // firmCaseOrgId is the shared scope check: null when the case is not this
+    // firm's, so a wrong-firm id reads as an empty history rather than 403ing
+    // and confirming the case exists.
+    if (!(await this.firmCaseOrgId(caseId, lawFirmId))) return [];
+    const rows = await this.db
+      .select({
+        id: caseCommunicationsTable.id,
+        channel: caseCommunicationsTable.channel,
+        direction: caseCommunicationsTable.direction,
+        occurredAt: caseCommunicationsTable.occurredAt,
+        subject: caseCommunicationsTable.subject,
+        body: caseCommunicationsTable.body,
+      })
+      .from(caseCommunicationsTable)
+      .where(eq(caseCommunicationsTable.caseId, caseId))
+      // occurredAt, not createdAt — the history reads in the order things
+      // happened, not the order someone typed them up.
+      .orderBy(sql`${caseCommunicationsTable.occurredAt} DESC`);
+    return rows.map((r) => ({
+      id: r.id,
+      channel: r.channel,
+      direction: r.direction,
+      occurredAt: r.occurredAt.toISOString(),
+      subject: r.subject ?? null,
+      body: r.body ?? null,
+    }));
+  }
+
+  async addCaseCommunication(opts: {
+    caseId: string;
+    lawFirmId: string;
+    channel: string;
+    direction: string;
+    occurredAt: string | null;
+    subject: string | null;
+    body: string | null;
+    loggedBy: string | null;
+  }): Promise<CaseCommunicationRow | null> {
+    if (!(await this.firmCaseOrgId(opts.caseId, opts.lawFirmId))) return null;
+    const rows = await this.db
+      .insert(caseCommunicationsTable)
+      .values({
+        caseId: opts.caseId,
+        channel: opts.channel,
+        direction: opts.direction,
+        occurredAt: opts.occurredAt ? new Date(opts.occurredAt) : new Date(),
+        subject: opts.subject,
+        body: opts.body,
+        loggedBy: opts.loggedBy,
+      })
+      .returning({
+        id: caseCommunicationsTable.id,
+        channel: caseCommunicationsTable.channel,
+        direction: caseCommunicationsTable.direction,
+        occurredAt: caseCommunicationsTable.occurredAt,
+        subject: caseCommunicationsTable.subject,
+        body: caseCommunicationsTable.body,
+      });
+    const r = rows[0];
+    if (!r) return null;
+
+    // Mirrored into the audit trail so the matter timeline shows contact
+    // alongside transitions. The log row stays editable; this one does not.
+    await this.db.insert(caseActivityTable).values({
+      caseId: opts.caseId,
+      actorType: 'user',
+      eventType: 'COMMUNICATION_LOGGED',
+      summary: `${opts.direction === 'inbound' ? 'Received' : 'Sent'} ${opts.channel}`,
+      metadata: { channel: opts.channel, direction: opts.direction },
+    });
+
+    return {
+      id: r.id,
+      channel: r.channel,
+      direction: r.direction,
+      occurredAt: r.occurredAt.toISOString(),
+      subject: r.subject ?? null,
+      body: r.body ?? null,
+    };
   }
 
   async listCaseDocuments(caseId: string, lawFirmId: string): Promise<CaseDocumentRow[]> {
