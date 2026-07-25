@@ -174,7 +174,7 @@ export default function AdminDashboard() {
               <strong>{spot.awaiting_review}</strong>{' '}
               {spot.awaiting_review === 1 ? 'report is' : 'reports are'} waiting for review. Paid
               for, not sent.{' '}
-              <a className="underline underline-offset-2 text-accent-600" href="/spot-review">
+              <a className="underline underline-offset-2 text-accent-600" href="/admin/spot-review">
                 Open Spot review
               </a>
             </li>
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
             <li className="rounded-md border border-warning-500 bg-white p-3 text-sm text-ink-900">
               <strong>{spot.released_unsent}</strong> released{' '}
               {spot.released_unsent === 1 ? 'report' : 'reports'} never emailed.{' '}
-              <a className="underline underline-offset-2 text-accent-600" href="/spot-review">
+              <a className="underline underline-offset-2 text-accent-600" href="/admin/spot-review">
                 Resend from Spot review
               </a>
             </li>

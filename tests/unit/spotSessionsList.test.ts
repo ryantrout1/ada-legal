@@ -90,8 +90,12 @@ describe('spot admin page — reachable and legible', () => {
     expect(NAV).toContain("{ to: '/admin/spot', label: 'Spot' }");
   });
 
-  it('links through to report review', () => {
-    expect(PAGE).toContain('/spot-review');
+  it('links through to report review inside the admin branch', () => {
+    // /spot-review used to be a standalone route outside ClerkProvider,
+    // which is scoped to /admin/*. Nothing refreshed Clerk's short-lived
+    // session cookie there, so every admin call 401'd a minute after
+    // sign-in. Linking the bare path would send an admin back to that.
+    expect(PAGE).toContain('/admin/spot-review');
   });
 
   it('only links the readout for released reports', () => {

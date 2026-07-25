@@ -152,7 +152,7 @@ export default function AdminSpot() {
         <h1 className="font-display text-2xl text-ink-900">Spot</h1>
         <p className="mt-1 text-sm text-ink-700">
           Free reads through to delivered reports.{' '}
-          <a className="underline underline-offset-2 text-accent-600" href="/spot-review">
+          <a className="underline underline-offset-2 text-accent-600" href="/admin/spot-review">
             Report review
           </a>
         </p>
@@ -280,7 +280,7 @@ export default function AdminSpot() {
                     {s.report_slug && s.delivery === 'in_review' ? (
                       <>
                         {' '}
-                        <a className="underline underline-offset-2 text-accent-600" href="/spot-review">
+                        <a className="underline underline-offset-2 text-accent-600" href="/admin/spot-review">
                           review
                         </a>
                       </>

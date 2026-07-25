@@ -35,7 +35,11 @@ export default function SpotReview() {
     try {
       const res = await fetch('/api/spot/admin/reports', { credentials: 'include' });
       if (res.status === 401) {
-        setError('Sign in as an admin to view Spot reports.');
+        // Inside /admin now, so a 401 means genuinely signed out rather
+        // than a cookie nothing was refreshing. The shell provides the way
+        // back in; this page used to state the requirement and offer no
+        // route to satisfying it.
+        setError('Signed out. Reload after signing in to view Spot reports.');
         setReports([]);
         return;
       }

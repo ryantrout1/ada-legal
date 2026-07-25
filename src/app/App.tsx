@@ -134,9 +134,16 @@ export default function App() {
             linked from the public site. See /plan: /photo. */}
         <Route path="/photo" element={<PhotoCapture />} />
 
-        {/* Standalone — Spot internal report review + model A/B. Admin-gated
-            at the API (requireAdmin); own surface, not the bench review. */}
-        <Route path="/spot-review" element={<SpotReview />} />
+        {/* Moved to /admin/spot-review. It is admin-gated at the API, but it
+            was mounted OUT here, outside the /admin branch — and
+            ClerkProvider is scoped to /admin/* (see the note at the top of
+            this file). Clerk's session cookie is a short-lived JWT the client
+            refreshes continuously; with no provider on the page nothing
+            refreshed it, so every admin call 401'd about a minute after
+            sign-in and re-authenticating elsewhere bought another minute.
+            Redirect kept so bookmarks and the links from /admin/spot still
+            land somewhere. */}
+        <Route path="/spot-review" element={<Navigate to="/admin/spot-review" replace />} />
 
 
 
@@ -211,6 +218,7 @@ function AdminShell() {
           <Route path="settings" element={<AdminSettings />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="spot" element={<AdminSpot />} />
+          <Route path="spot-review" element={<SpotReview />} />
           <Route path="photo-review" element={<AdminPhotoReview />} />
           <Route path="photo-review/:id" element={<AdminPhotoReviewDetail />} />
           <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />

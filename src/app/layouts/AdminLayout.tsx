@@ -70,6 +70,7 @@ const NAV_SECTIONS: NavSection[] = [
       { to: '/admin/intakes', label: 'Intakes / Referrals' },
       { to: '/admin/cases', label: 'Cases' },
       { to: '/admin/spot', label: 'Spot' },
+      { to: '/admin/spot-review', label: 'Spot Review' },
       { to: '/admin/photo-review', label: 'Photo Review' },
       { to: '/admin/feedback', label: 'Feedback' },
     ],

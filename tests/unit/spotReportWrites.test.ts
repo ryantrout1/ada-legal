@@ -92,3 +92,25 @@ describe('the pipeline — still refuses to overwrite', () => {
     expect(PIPELINE, 'the automatic path must not replace').not.toContain('upsertReport');
   });
 });
+
+describe('spot-review lives inside the Clerk branch', () => {
+  const APP = readCode('src/app/App.tsx');
+  const NAV = readCode('src/app/layouts/AdminLayout.tsx');
+
+  it('is mounted as an admin route', () => {
+    // ClerkProvider is scoped to /admin/* on purpose (custom frontend API
+    // domain; a root provider would have broken public routes while DNS was
+    // on Base44). An admin-gated page mounted outside it has no client to
+    // refresh Clerk's short-lived session cookie, so it 401s permanently
+    // about a minute after sign-in — which is exactly what happened.
+    expect(APP).toContain('<Route path="spot-review" element={<SpotReview />} />');
+  });
+
+  it('keeps the old path working as a redirect', () => {
+    expect(APP).toMatch(/path="\/spot-review" element=\{<Navigate to="\/admin\/spot-review"/);
+  });
+
+  it('is reachable from the admin nav', () => {
+    expect(NAV).toContain("{ to: '/admin/spot-review', label: 'Spot Review' }");
+  });
+});
