@@ -198,10 +198,16 @@ export default function HeroV2() {
             {adaLive ? (
               <Link to={'/ada'} className="v2-btn v2-btn-ada" style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                background: 'var(--v2-ada)', color: '#fff', padding: '16px 30px',
+                // Light fill, dark text — NOT solid violet with white. White on
+                // ada-400 is 4.38:1, below the 7:1 floor, and no violet fixes
+                // it: darkening until white clears 7:1 drops the button below
+                // 3:1 as a block against the hero, failing 1.4.11 instead.
+                // ada-200 with ink text is 8.4:1 both ways. Same exclusion the
+                // admin pill and the Spot button hit.
+                background: 'var(--color-ada-200)', color: '#141820', padding: '16px 30px',
                 borderRadius: '10px', fontSize: '1rem', fontWeight: 700,
                 fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px', border: 'none',
-                boxShadow: '0 4px 20px rgba(124,92,252,0.3)',
+                boxShadow: '0 4px 20px rgba(124,92,252,0.22)',
               }}>
                 Tell Ada what happened →
               </Link>
@@ -209,10 +215,16 @@ export default function HeroV2() {
               <>
                 <button type="button" onClick={() => adaSoon?.openSoon?.()} className="v2-btn v2-btn-ada" style={{
                   display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                  background: 'var(--v2-ada)', color: '#fff', padding: '16px 30px',
+                  // Light fill, dark text — NOT solid violet with white. White on
+                // ada-400 is 4.38:1, below the 7:1 floor, and no violet fixes
+                // it: darkening until white clears 7:1 drops the button below
+                // 3:1 as a block against the hero, failing 1.4.11 instead.
+                // ada-200 with ink text is 8.4:1 both ways. Same exclusion the
+                // admin pill and the Spot button hit.
+                background: 'var(--color-ada-200)', color: '#141820', padding: '16px 30px',
                   borderRadius: '10px', fontSize: '1rem', fontWeight: 700,
                   fontFamily: 'Manrope, sans-serif', minHeight: '44px', border: 'none', cursor: 'pointer',
-                  boxShadow: '0 4px 20px rgba(124,92,252,0.3)',
+                  boxShadow: '0 4px 20px rgba(124,92,252,0.22)',
                 }}>
                   Tell Ada what happened →
                 </button>
