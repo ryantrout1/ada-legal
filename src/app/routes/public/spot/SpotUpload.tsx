@@ -9,7 +9,7 @@
  * capture hook is not reused.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { downscalePhoto } from '@/app/utils/downscalePhoto';
 import { MAX_PAID_PHOTOS } from '@/lib/spot/uploadGate';
 
@@ -35,6 +35,18 @@ interface Props {
 
 export default function SpotUpload({ spotSessionId, buyerEmail, initialFiles }: Props) {
   const [count, setCount] = useState(0);
+  /**
+   * Object URLs for the photos accepted so far, so the buyer can see what
+   * they are sending. A count alone left them staring at "1 added" with no
+   * way to tell WHICH photo it kept — and on the paid screen the carried
+   * one arrives without them doing anything, so the number is the only
+   * evidence it worked.
+   *
+   * No Remove here, unlike the free screen. These are already uploaded
+   * against a paid session and there is no server-side delete; a button
+   * that only cleared the thumbnail would lie about what gets analysed.
+   */
+  const [previews, setPreviews] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,6 +63,7 @@ export default function SpotUpload({ spotSessionId, buyerEmail, initialFiles }: 
       clientPayload: JSON.stringify({ spotSessionId }),
     });
     setCount((c) => c + 1);
+    setPreviews((p) => [...p, URL.createObjectURL(file)]);
   }
 
   /**
@@ -72,6 +85,12 @@ export default function SpotUpload({ spotSessionId, buyerEmail, initialFiles }: 
    * would re-run it in production. Either way the buyer loses a slot to a
    * duplicate of a photo they already gave.
    */
+  // Revoke on unmount only. Revoking whenever `previews` changes would
+  // invalidate URLs still rendered on screen.
+  const previewsRef = useRef<string[]>([]);
+  previewsRef.current = previews;
+  useEffect(() => () => previewsRef.current.forEach((u) => URL.revokeObjectURL(u)), []);
+
   useEffect(() => {
     if (carriedSessions.has(spotSessionId)) return;
     if (!initialFiles || initialFiles.length === 0) return;
@@ -161,6 +180,20 @@ export default function SpotUpload({ spotSessionId, buyerEmail, initialFiles }: 
           {MAX_PAID_PHOTOS} photos. {count} added.
         </p>
       </div>
+
+      {previews.length > 0 ? (
+        <ul className="grid grid-cols-2 gap-3">
+          {previews.map((url, i) => (
+            <li key={url} className="rounded-md border border-surface-200 bg-surface-100 p-2">
+              <img
+                src={url}
+                alt={`Photo ${i + 1} of ${previews.length} you are sending`}
+                className="block w-full rounded-sm"
+              />
+            </li>
+          ))}
+        </ul>
+      ) : null}
 
       <label
         htmlFor="spot-paid-input"
