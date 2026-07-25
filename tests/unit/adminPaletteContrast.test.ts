@@ -58,7 +58,10 @@ describe('admin palette — text clears 7:1', () => {
   const cases: [string, () => number][] = [
     ['nav idle on sidebar', () => ratio(token('admin-nav-idle'), SIDEBAR)],
     ['section kicker on sidebar', () => ratio(token('admin-kicker'), SIDEBAR)],
-    ['white on the active pill', () => ratio(WHITE, token('admin-nav-active-bg'))],
+    [
+      'pill text on the pill',
+      () => ratio(token('admin-nav-active-text'), token('admin-nav-active-bg')),
+    ],
     ['topbar text on white', () => ratio(token('admin-topbar-text'), WHITE)],
   ];
 
@@ -78,9 +81,24 @@ describe('admin palette — non-text clears 3:1', () => {
     expect(r, `divider measured ${r.toFixed(2)}:1, needs 3:1`).toBeGreaterThanOrEqual(3);
   });
 
-  it('the brand accent is legible on the dark sidebar', () => {
-    const r = ratio(token('admin-brand-accent'), SIDEBAR);
-    expect(r).toBeGreaterThanOrEqual(3);
+  it('the active pill reads as a distinct block against the rail', () => {
+    // The failure this pins: the earlier dark pill (#953F04) had legible
+    // white text but measured 2.54:1 against the sidebar, so the
+    // selection itself — the one thing the rail exists to show — was the
+    // hardest element on it to see.
+    //
+    // Both constraints cannot be met by a dark fill. White at 7:1 needs
+    // luminance below 0.100; a 3:1 block needs above 0.126. The pill is
+    // therefore inverted, and this asserts it stays that way.
+    const r = ratio(token('admin-nav-active-bg'), SIDEBAR);
+    expect(r, `pill measured ${r.toFixed(2)}:1 against the rail, needs 3:1`).toBeGreaterThanOrEqual(3);
+  });
+
+  it('the seam separates the two dark surfaces', () => {
+    // #1E293B site bar against #0F172A rail is 1.22:1 — without a seam
+    // the header reads as the top of the sidebar.
+    expect(ratio(token('admin-seam'), '#1e293b')).toBeGreaterThanOrEqual(3);
+    expect(ratio(token('admin-seam'), SIDEBAR)).toBeGreaterThanOrEqual(3);
   });
 });
 
@@ -92,6 +110,8 @@ describe('admin palette — stays scoped', () => {
       'admin-nav-idle',
       'admin-nav-active-bg',
       'admin-kicker',
+      'admin-nav-active-text',
+      'admin-seam',
       'admin-page-bg',
       'admin-topbar-text',
     ]) {

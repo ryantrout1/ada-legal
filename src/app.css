@@ -688,17 +688,25 @@ body {
  *   View → link     #F97316 on white     2.80:1   FAIL   (Phase 3)
  *   nav inactive    #CBD5E1 on #0F172A  12.02:1   pass — kept verbatim
  *
- * Each failing value is lightened or darkened along its own hue until it
- * clears 7:1, which is the same reconciliation the portal and the landing
- * got. The pill is still unmistakably the orange pill; it is just an orange
- * that white can legally sit on. Ratios are recomputed, not estimated.
+ * Each remaining failing value is lightened or darkened along its own hue
+ * until it clears 7:1, the same reconciliation the portal and the landing
+ * got. Ratios are recomputed, not estimated.
+ *
+ * The active pill INVERTS instead — light fill, dark text — because its two
+ * constraints are mutually exclusive. White text at 7:1 needs the fill below
+ * 0.100 relative luminance; reading as a distinct BLOCK at 3:1 against
+ * #0F172A needs it above 0.126. No orange exists in that gap, so the earlier
+ * dark pill (#953F04) was legible while the selection itself measured
+ * 2.54:1 against the rail — the one state the sidebar exists to show was the
+ * hardest thing on it to see. #FB923C with #0F172A text is 7.89:1 both ways.
  * ────────────────────────────────────────────────────────────────────────── */
 .admin-shell {
   --admin-sidebar-bg: #0f172a;        /* B44 verbatim */
   --admin-nav-idle: #cbd5e1;          /* B44 verbatim — 12.02:1 */
-  --admin-nav-active-bg: #953f04;     /* B44 #F97316 darkened — white 7.02:1 */
+  --admin-nav-active-bg: #fb923c;     /* 7.89:1 as a block against the rail */
+  --admin-nav-active-text: #0f172a;   /* 7.89:1 on the pill */
   --admin-kicker: #98a4b5;            /* B44 #64748B lightened — 7.07:1 */
-  --admin-brand-accent: #fb923c;      /* decorative, on dark; not body text */
+  --admin-seam: #7f97b5;              /* 4.87:1 header / 5.95:1 rail */
   --admin-page-bg: #f8fafc;           /* B44 verbatim */
   --admin-topbar-bg: #ffffff;
   --admin-topbar-border: #7f97b5;     /* B44 #E2E8F0/#CBD5E1 was 1.2–1.5:1 — 3.00:1 */
@@ -712,12 +720,6 @@ body {
   background: var(--admin-sidebar-bg);
 }
 
-.admin-brand {
-  color: #f8fafc;
-}
-.admin-brand-accent {
-  color: var(--admin-brand-accent);
-}
 .admin-kicker {
   color: var(--admin-kicker);
 }
@@ -731,7 +733,14 @@ body {
 }
 .admin-navlink.is-active {
   background: var(--admin-nav-active-bg);
-  color: #ffffff;
+  color: var(--admin-nav-active-text);
+}
+
+/* The site bar and the rail are both dark (#1E293B vs #0F172A measures
+ * 1.22:1), so without a seam the header reads as the top of the rail
+ * rather than a separate bar. */
+.admin-seam {
+  border-bottom: 2px solid var(--admin-seam);
 }
 
 .admin-topbar {

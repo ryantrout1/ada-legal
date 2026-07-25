@@ -131,7 +131,7 @@ export default function AdminLayout() {
        * are dropped — a control that looks live and does nothing is
        * worse than one that is absent.
        */}
-      <header className="bg-brand-navy text-white relative z-40 flex-none">
+      <header className="admin-seam bg-brand-navy text-white relative z-40 flex-none">
         <div
           className="w-full flex items-center justify-between"
           style={{ height: 72, padding: '0 clamp(16px, 4vw, 40px)' }}
@@ -175,15 +175,11 @@ export default function AdminLayout() {
       <div className="flex-1 min-h-0 flex flex-col md:flex-row">
       {/* Sidebar — B44 puts the brand here, not in the header bar. */}
       <aside className="admin-sidebar md:w-60 md:flex-none px-4 py-6">
-        <div className="mb-8 px-3">
-          <Link
-            to="/admin/dashboard"
-            className="admin-brand block text-[1.05rem] font-semibold no-underline"
-            aria-label="ADA Legal Link admin home"
-          >
-            ADA <span className="admin-brand-accent">Legal</span> Link
-          </Link>
-          <div className="admin-kicker text-[0.7rem] uppercase tracking-[0.15em] mt-0.5">
+        {/* No wordmark here. The site bar directly above already carries
+            it, and two identical lockups ten pixels apart — linking to
+            different destinations — is a trap, not branding. */}
+        <div className="mb-5 px-2.5">
+          <div className="admin-kicker text-[0.8125rem] font-medium uppercase tracking-[0.1em]">
             Admin
           </div>
         </div>
@@ -194,7 +190,10 @@ export default function AdminLayout() {
               {/* Group headings are real headings, not styled spans, so a
                   screen-reader user can navigate the sidebar by heading
                   rather than walking every link. */}
-              <h2 className="admin-kicker hidden md:block px-3 pb-1.5 text-[0.7rem] uppercase tracking-[0.15em]">
+              {/* 13px, not B44's 11px. Uppercase at 11px with .15em
+                  tracking is the least legible text on the screen, and
+                  these are the labels that make the rail scannable. */}
+              <h2 className="admin-kicker hidden md:block px-2.5 pb-2 text-[0.8125rem] font-medium uppercase tracking-[0.1em]">
                 {section.label}
               </h2>
               {section.items.map((item) => (
@@ -203,7 +202,9 @@ export default function AdminLayout() {
                   to={item.to}
                   className={({ isActive }) =>
                     // 44px minimum target: Gina navigates by knuckle.
-                    'admin-navlink flex items-center min-h-[44px] px-3 py-2 rounded-md text-sm whitespace-nowrap no-underline transition-colors ' +
+                    // pl-6 against the label's pl-2.5: the indent is what
+                    // makes an item read as belonging to its section.
+                    'admin-navlink flex items-center min-h-[44px] pl-6 pr-2.5 py-2 rounded-md text-sm whitespace-nowrap no-underline transition-colors ' +
                     (isActive ? 'is-active font-semibold' : '')
                   }
                 >
