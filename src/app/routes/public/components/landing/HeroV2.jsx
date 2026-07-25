@@ -79,18 +79,99 @@ export default function HeroV2() {
             front door — she is bigger, carries the entry chips, and comes
             first. Spot is the second way in, not a peer. */}
         <div style={{ display: 'grid', gap: '20px' }}>
-        {/* Right: Ada front-door card */}
+        {/* Spot — the live product, so it leads.
+         *
+         * Ada is still "opening soon"; Spot ships today. The card that can
+         * actually be used sits on top and carries the weight: full-size
+         * avatar, the entry chips, the primary button. Ada keeps her copy
+         * and her badge below, quieter.
+         *
+         * The button is a light terracotta fill with dark text rather than
+         * Ada's solid-fill-white-text. Any terracotta dark enough for white
+         * to reach 7:1 drops below 3:1 as a block against this background —
+         * the same exclusion the admin pill hit. #FB923C with #141820 text
+         * is 7.85:1 as text AND as a block.
+         *
+         * COPY IS A DRAFT — Gina reviews all claimant-facing copy before it
+         * goes public. The screening framing is not stylistic: Spot must
+         * never be described as certifying compliance.
+         */}
         <div className="v2-fade-up v2-delay-3" style={{
-          background: 'linear-gradient(135deg, rgba(124,92,252,0.12), rgba(124,92,252,0.04))',
-          border: '1px solid var(--v2-ada-border)', borderRadius: '18px', padding: '28px 30px',
+          background: 'linear-gradient(135deg, rgba(194,65,12,0.14), rgba(194,65,12,0.05))',
+          border: '1px solid rgba(251,146,60,0.3)', borderRadius: '18px', padding: '28px 30px',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
             <div aria-hidden="true" style={{
               width: '54px', height: '54px', borderRadius: '50%', flexShrink: 0,
-              background: 'linear-gradient(135deg, var(--v2-ada), var(--v2-ada-light))',
+              background: 'linear-gradient(135deg, #C2410C, #FB923C)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: '1.5rem', color: '#fff',
-              boxShadow: '0 4px 16px rgba(124,92,252,0.4)',
+              boxShadow: '0 4px 16px rgba(194,65,12,0.4)',
+            }}>S</div>
+            <div>
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '1.15rem', fontWeight: 700,
+                color: 'var(--dark-heading)', margin: '0 0 3px', fontStyle: 'normal',
+              }}>
+                Show Spot a photo.
+              </p>
+              <p style={{
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem',
+                color: 'var(--dark-body-secondary)', lineHeight: 1.5, margin: 0,
+              }}>
+                A ramp, a doorway, a restroom, a parking space. Spot flags what looks
+                like a barrier so you know what to ask about — a screening read, not a
+                compliance check.
+              </p>
+            </div>
+          </div>
+
+          <ul aria-label="Ways to use Spot" style={{
+            margin: '18px 0 0', padding: 0, listStyle: 'none', display: 'flex', gap: '10px', flexWrap: 'wrap',
+          }}>
+            {[
+              { label: 'Take a photo', path: <><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></> },
+              { label: 'Upload one you have', path: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></> },
+              { label: 'Get a written report', path: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></> },
+            ].map((chip, i) => (
+              <li key={i} style={{
+                display: 'inline-flex', alignItems: 'center', gap: '7px',
+                fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
+                color: 'var(--dark-body)', background: 'rgba(255,255,255,0.05)',
+                border: '1px solid var(--glass-border)', borderRadius: '100px', padding: '7px 14px',
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FDBA74"
+                  strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  {chip.path}
+                </svg>
+                {chip.label}
+              </li>
+            ))}
+          </ul>
+
+          <div style={{ marginTop: '20px' }}>
+            <Link to="/spot" className="v2-btn" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+              background: '#FB923C', color: '#141820', padding: '16px 30px',
+              borderRadius: '10px', fontSize: '1rem', fontWeight: 700,
+              fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px', border: 'none',
+            }}>
+              Show Spot a photo →
+            </Link>
+          </div>
+        </div>
+
+        {/* Right: Ada front-door card */}
+        <div className="v2-fade-up v2-delay-4" style={{
+          background: 'linear-gradient(135deg, rgba(124,92,252,0.10), rgba(124,92,252,0.03))',
+          border: '1px solid var(--v2-ada-border)', borderRadius: '18px', padding: '24px 30px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
+            <div aria-hidden="true" style={{
+              width: '46px', height: '46px', borderRadius: '50%', flexShrink: 0,
+              background: 'linear-gradient(135deg, var(--v2-ada), var(--v2-ada-light))',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: '1.3rem', color: '#fff',
             }}>A</div>
             <div>
               <p style={{
@@ -109,30 +190,10 @@ export default function HeroV2() {
             </div>
           </div>
 
-          {/* Entry-mode chips — descriptive of how you can talk to Ada */}
-          <ul className="v2-ada-entry" aria-label="Ways to tell Ada what happened" style={{
-            margin: '18px 0 0', padding: 0, listStyle: 'none', display: 'flex', gap: '10px', flexWrap: 'wrap',
-          }}>
-            {[
-              { label: 'Type it', path: <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /> },
-              { label: 'Record it', path: <><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" y1="19" x2="12" y2="23" /></> },
-              { label: 'Share the photo you took', path: <><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></> },
-            ].map((chip, i) => (
-              <li key={i} style={{
-                display: 'inline-flex', alignItems: 'center', gap: '7px',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
-                color: 'var(--dark-body)', background: 'rgba(255,255,255,0.05)',
-                border: '1px solid var(--glass-border)', borderRadius: '100px', padding: '7px 14px',
-              }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--v2-ada-light)"
-                  strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  {chip.path}
-                </svg>
-                {chip.label}
-              </li>
-            ))}
-          </ul>
-
+          {/* Ada's entry chips moved off this card when Spot took the lead.
+              Two chip rows stacked read as two equal offers, and Ada is not
+              the live one. Her copy still says she listens; the how lives on
+              /about-ada. COPY CHANGE — for Gina. */}
           <div style={{ marginTop: '20px', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
             {adaLive ? (
               <Link to={'/ada'} className="v2-btn v2-btn-ada" style={{
@@ -184,70 +245,6 @@ export default function HeroV2() {
           </p>
         </div>
 
-        {/* Spot — the second front door, in terracotta.
-         *
-         * Deliberately quieter than Ada's card: no entry chips, smaller
-         * avatar, one action. Ada is the way in for "something happened to
-         * me"; Spot is the way in for "here is a photo of a place".
-         *
-         * The button is a light terracotta fill with dark text rather than
-         * Ada's solid-fill-white-text, because white on any terracotta dark
-         * enough to read as a block on this background lands around 5:1.
-         * #FB923C with #141820 text is 7.85:1 as text AND 7.85:1 as a block.
-         *
-         * COPY IS A DRAFT — Gina reviews all claimant-facing copy before it
-         * goes public. The screening framing is not stylistic: Spot must
-         * never be described as certifying compliance.
-         */}
-        <div className="v2-fade-up v2-delay-4" style={{
-          background: 'linear-gradient(135deg, rgba(194,65,12,0.12), rgba(194,65,12,0.04))',
-          border: '1px solid rgba(251,146,60,0.25)', borderRadius: '18px', padding: '24px 30px',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-            <div aria-hidden="true" style={{
-              width: '46px', height: '46px', borderRadius: '50%', flexShrink: 0,
-              background: 'linear-gradient(135deg, #C2410C, #FB923C)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: '1.3rem', color: '#fff',
-            }}>S</div>
-            <div>
-              <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '1.15rem', fontWeight: 700,
-                color: 'var(--dark-heading)', margin: '0 0 3px', fontStyle: 'normal',
-              }}>
-                Show Spot a photo.
-              </p>
-              <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem',
-                color: 'var(--dark-body-secondary)', lineHeight: 1.5, margin: 0,
-              }}>
-                A ramp, a doorway, a restroom, a parking space. Spot flags what looks
-                like a barrier so you know what to ask about — a screening read, not a
-                compliance check.
-              </p>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '18px', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
-            <Link to="/spot" className="v2-btn" style={{
-              display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-              background: '#FB923C', color: '#141820', padding: '14px 26px',
-              borderRadius: '10px', fontSize: '0.95rem', fontWeight: 700,
-              fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px', border: 'none',
-            }}>
-              See what Spot does →
-            </Link>
-            <span style={{
-              display: 'inline-flex', alignItems: 'center',
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', fontWeight: 700,
-              letterSpacing: '0.06em', textTransform: 'uppercase', color: '#FDBA74',
-              background: 'rgba(194,65,12,0.15)', border: '1px solid rgba(251,146,60,0.25)',
-              padding: '5px 12px', borderRadius: '100px',
-            }}>
-              Coming soon
-            </span>
-          </div>
-        </div>
         </div>
         </div>
       </div>
