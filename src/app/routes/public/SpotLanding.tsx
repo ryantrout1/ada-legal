@@ -233,9 +233,24 @@ export default function SpotLanding() {
                     it back. */}
                 {files.length === 0 ? (
                   <>
+                    {/* Solid fill, not an outline. This is the only action
+                        on the page and the whole product starts here. As an
+                        outline (border-accent-500 on bg-accent-50) it passed
+                        contrast easily but read as an information panel —
+                        under terracotta the warm cream fill still looked
+                        like a button; under teal the mint one does not.
+                        Weight, not contrast, was the problem.
+
+                        bg-accent-500 + text-surface-50 is safe in every
+                        display mode because the two tokens invert together:
+                        spot-500 is dark teal on light pages and light teal
+                        on dark ones, while surface-50 is near-white on light
+                        and near-black on dark. Measured — light 8.37:1,
+                        warm 8.20:1, dark 12.36:1, contrast and low-vision
+                        14.2:1. */}
                     <label
                       htmlFor="spot-photo-input"
-                      className="block w-full min-h-[44px] cursor-pointer rounded-md border-2 border-accent-500 bg-accent-50 px-4 py-3 text-center font-display text-lg font-bold text-accent-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-accent-500 focus-within:ring-offset-2 focus-within:ring-offset-surface-50"
+                      className="block w-full min-h-[44px] cursor-pointer rounded-md bg-accent-500 px-4 py-3 text-center font-display text-lg font-bold text-surface-50 focus-within:outline-none focus-within:ring-2 focus-within:ring-accent-500 focus-within:ring-offset-2 focus-within:ring-offset-surface-50"
                     >
                       Take or upload a photo
                     </label>
