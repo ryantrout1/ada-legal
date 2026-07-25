@@ -94,6 +94,14 @@ describe('spot admin page — reachable and legible', () => {
     expect(PAGE).toContain('/spot-review');
   });
 
+  it('only links the readout for released reports', () => {
+    // The public readout 404s for pending_review by design. Linking it on
+    // an unreleased row sent the admin to "Report not available", which
+    // looks like a broken report rather than an unapproved one.
+    expect(PAGE).toMatch(/const RELEASED = new Set<SessionRow\['delivery'\]>\(\['sent', 'unsent'\]\)/);
+    expect(PAGE).toMatch(/s\.report_slug && RELEASED\.has\(s\.delivery\)/);
+  });
+
   it('shows an amount only when money was captured', () => {
     // amount_cents is set at checkout creation, so a pending_payment row
     // carries $79.00 with nothing collected. Showing it made the table

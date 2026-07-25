@@ -66,6 +66,13 @@ const DELIVERY_LABEL: Record<SessionRow['delivery'], string> = {
   none: 'No report yet',
 };
 
+/**
+ * Delivery states in which a report has been released, and therefore has a
+ * public readout to link to. `in_review` deliberately is not one: that
+ * readout 404s.
+ */
+const RELEASED = new Set<SessionRow['delivery']>(['sent', 'unsent']);
+
 /** Only the two that need action are marked. Everything else stays quiet. */
 const NEEDS_ATTENTION = new Set<SessionRow['delivery']>(['no_email', 'unsent']);
 
@@ -250,7 +257,14 @@ export default function AdminSpot() {
                     >
                       {DELIVERY_LABEL[s.delivery]}
                     </span>
-                    {s.report_slug ? (
+                    {/* The public readout serves RELEASED reports only —
+                        pending and rejected drafts 404 by design, so nothing
+                        leaks. Linking it on an unreleased row sent the admin
+                        to "Report not available", which reads as a broken
+                        report rather than one that has not been approved yet.
+                        Unreleased rows link to the place the work happens
+                        instead. */}
+                    {s.report_slug && RELEASED.has(s.delivery) ? (
                       <>
                         {' '}
                         <a
@@ -260,6 +274,14 @@ export default function AdminSpot() {
                           rel="noreferrer"
                         >
                           readout
+                        </a>
+                      </>
+                    ) : null}
+                    {s.report_slug && s.delivery === 'in_review' ? (
+                      <>
+                        {' '}
+                        <a className="underline underline-offset-2 text-accent-600" href="/spot-review">
+                          review
                         </a>
                       </>
                     ) : null}
