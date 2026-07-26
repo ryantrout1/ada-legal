@@ -2087,34 +2087,92 @@ export class NeonDbClient implements DbClient {
     assignedByUserId?: string | null,
     receivesMatchesFirmIds?: string[],
   ): Promise<LitigationFirmAssignment[]> {
-    // Replace semantics (PUT). v1 admin op, low concurrency: delete-then-insert
-    // sequentially (not wrapped in an interactive transaction).
-    await this.db
-      .delete(litigationFirmAssignments)
-      .where(eq(litigationFirmAssignments.litigationListingId, litigationListingId));
-
+    // Atomicity: drizzle-orm/neon-http runs one statement per call and has
+    // no multi-statement transaction API — same constraint hardDeleteAttorney
+    // solves with a data-modifying CTE chain, and the same shape used here.
+    //
+    // This used to be a bare delete-then-insert on the reasoning that a v1
+    // admin op has low concurrency. Concurrency was never the risk. When the
+    // insert threw (a Clerk id into a uuid column) the delete had already
+    // committed on its own, so a failed save DESTROYED the existing
+    // assignments and wrote nothing back. One statement means the whole
+    // replace commits or none of it does.
+    //
+    // Upsert-and-prune rather than delete-and-reinsert. Data-modifying CTEs
+    // all see the same snapshot, so a DELETE and an INSERT of the same
+    // (litigation, firm) pair in one statement would collide on
+    // litigation_firm_assignments_unique — the index entry is still live
+    // until the command finishes. Upserting also preserves created_at for a
+    // firm that stays assigned, which delete-and-reinsert silently reset.
     const unique = [...new Set(lawFirmIds)];
-    if (unique.length === 0) return [];
+    const optedIn = new Set(receivesMatchesFirmIds ?? []);
+    const actorId = assignedByUserId ?? null;
 
-    const inserted = await this.db
-      .insert(litigationFirmAssignments)
-      .values(
-        unique.map((lawFirmId) => ({
-          litigationListingId,
-          lawFirmId,
-          assignedByUserId: assignedByUserId ?? null,
-          // Defaults FALSE when the caller says nothing. Assignment is
-          // not consent to receive matched claimants — an admin adding a
-          // firm to a litigation is recording a relationship, and the
-          // opt-in is a separate, explicit act.
-          receivesMatches: receivesMatchesFirmIds
-            ? receivesMatchesFirmIds.includes(lawFirmId)
-            : false,
-          optedInAt: receivesMatchesFirmIds?.includes(lawFirmId) ? new Date() : null,
-        })),
+    // Empty set: prune everything. A VALUES list with zero rows is not
+    // valid SQL, and a lone DELETE is already atomic.
+    if (unique.length === 0) {
+      await this.db
+        .delete(litigationFirmAssignments)
+        .where(eq(litigationFirmAssignments.litigationListingId, litigationListingId));
+      return [];
+    }
+
+    const values = sql.join(
+      unique.map(
+        (lawFirmId) =>
+          sql`(${lawFirmId}::uuid, ${optedIn.has(lawFirmId)}::boolean)`,
+      ),
+      sql`, `,
+    );
+
+    const result = await this.db.execute(sql`
+      WITH input(law_firm_id, receives_matches) AS (
+        VALUES ${values}
+      ),
+      upserted AS (
+        INSERT INTO litigation_firm_assignments
+          (litigation_listing_id, law_firm_id, assigned_by_user_id,
+           receives_matches, opted_in_at)
+        SELECT
+          ${litigationListingId}::uuid,
+          i.law_firm_id,
+          ${actorId}::uuid,
+          i.receives_matches,
+          CASE WHEN i.receives_matches THEN now() ELSE NULL END
+        FROM input i
+        ON CONFLICT (litigation_listing_id, law_firm_id) DO UPDATE SET
+          receives_matches = EXCLUDED.receives_matches,
+          assigned_by_user_id = EXCLUDED.assigned_by_user_id,
+          -- Keep the ORIGINAL opt-in timestamp when a firm was already
+          -- opted in; "when did this firm agree to take matches" must not
+          -- be rewritten by an unrelated save on the same litigation.
+          opted_in_at = CASE
+            WHEN EXCLUDED.receives_matches THEN
+              COALESCE(litigation_firm_assignments.opted_in_at, now())
+            ELSE NULL
+          END
+        RETURNING *
+      ),
+      pruned AS (
+        DELETE FROM litigation_firm_assignments
+        WHERE litigation_listing_id = ${litigationListingId}::uuid
+          AND law_firm_id NOT IN (SELECT law_firm_id FROM input)
+        RETURNING 1
       )
-      .returning();
-    return inserted.map(toLitigationFirmAssignment);
+      SELECT * FROM upserted
+    `);
+
+    // drizzle's execute() return shape varies by driver: neon-http returns
+    // the rows directly, other drivers wrap them in `.rows`.
+    const rows = (
+      Array.isArray(result) ? result : ((result as { rows?: unknown[] }).rows ?? [])
+    ) as RawFirmAssignmentRow[];
+
+    // Raw execute() bypasses drizzle's column mapping: keys come back
+    // snake_case and timestamps as strings, NOT the camelCase/Date shape
+    // toLitigationFirmAssignment takes. Mapped explicitly rather than cast —
+    // a cast compiles and then hands back a row of undefineds.
+    return rows.map(fromRawFirmAssignmentRow);
   }
 
   async listFirmAssignmentsForFirm(lawFirmId: string): Promise<LitigationFirmAssignment[]> {
@@ -4235,6 +4293,37 @@ function toLawFirmRow(r: {
     servesNationwide: r.servesNationwide ?? false,
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
+  };
+}
+
+/**
+ * The shape a raw `db.execute()` returns for litigation_firm_assignments:
+ * snake_case keys, timestamps as strings (neon-http) or Date (other drivers).
+ * Distinct from the drizzle-mapped row toLitigationFirmAssignment consumes.
+ */
+interface RawFirmAssignmentRow {
+  id: string;
+  litigation_listing_id: string;
+  law_firm_id: string;
+  assigned_by_user_id: string | null;
+  receives_matches: boolean;
+  opted_in_at: string | Date | null;
+  created_at: string | Date;
+}
+
+function toIsoString(v: string | Date): string {
+  return v instanceof Date ? v.toISOString() : new Date(v).toISOString();
+}
+
+export function fromRawFirmAssignmentRow(r: RawFirmAssignmentRow): LitigationFirmAssignment {
+  return {
+    id: r.id,
+    litigationListingId: r.litigation_listing_id,
+    lawFirmId: r.law_firm_id,
+    assignedByUserId: r.assigned_by_user_id,
+    receivesMatches: r.receives_matches === true,
+    optedInAt: r.opted_in_at ? toIsoString(r.opted_in_at) : null,
+    createdAt: toIsoString(r.created_at),
   };
 }
 
