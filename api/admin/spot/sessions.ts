@@ -40,8 +40,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
   const auth = await requireAdmin(req, res);
   if (!auth) return;
+  // DELETE removes one paid session with its report, photos and blobs. The
+  // current data is all test traffic; this is how it gets cleared. Blobs go
+  // before rows — see spotStore.deletePaidSession for why.
+  if (req.method === 'DELETE') {
+    const delId = typeof req.query.id === 'string' ? req.query.id : '';
+    if (!delId) return res.status(400).json({ error: 'id is required' });
+    try {
+      const { makeSpotStore } = await import('../../../src/lib/spot/spotStore.js');
+      const ok = await makeSpotStore().deletePaidSession(delId);
+      if (!ok) return res.status(409).json({ error: 'Could not delete — try again.' });
+      return res.status(200).json({ deleted: true });
+    } catch (err) {
+      console.error('DELETE /api/admin/spot/sessions failed', err);
+      return res.status(500).json({ error: 'Could not delete the session.' });
+    }
+  }
+
   if (req.method !== 'GET') {
-    res.setHeader('Allow', 'GET');
+    res.setHeader('Allow', 'GET, DELETE');
     return res.status(405).json({ error: 'Method not allowed' });
   }
 

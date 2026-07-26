@@ -120,3 +120,62 @@ describe('spot admin page — reachable and legible', () => {
     expect(PAGE).toContain("unsent: 'Released, not emailed'");
   });
 });
+
+/**
+ * Free reads and deletion.
+ *
+ * A free read is a different record from a paid session — no buyer, no
+ * payment, no report, and no stored photo, because the free path is transient
+ * by design. What it keeps is the ANALYSIS, which is the reason to keep it at
+ * all: it is what Spot told someone who never paid, and the only evidence of
+ * how the free tier performs.
+ *
+ * Deletion is the part with a trap. The FK cascade drops spot_photo rows, but
+ * Blob storage knows nothing about Postgres and the retention sweep only walks
+ * rows — so deleting a row without its blob leaves a file that nothing will
+ * ever collect. Blobs go first, and a failure leaves the row in place so a
+ * retry can finish.
+ */
+describe('free reads', () => {
+  const STORE = readCode('src/lib/spot/spotStore.ts');
+  const READS = readCode('api/admin/spot/reads.ts');
+  const SESSIONS = readCode('api/admin/spot/sessions.ts');
+  const PAGE = readCode('src/app/routes/admin/AdminSpot.tsx');
+
+  it('reads the analysis, not just the attempt', () => {
+    expect(STORE).toContain('findingCount');
+    expect(STORE).toContain('overallRisk');
+  });
+
+  it('deletes blobs before rows', () => {
+    // The order is the whole point: row-first orphans the file forever.
+    const fn = STORE.slice(STORE.indexOf('async deleteFreeRead'));
+    const body = fn.slice(0, fn.indexOf('async deletePaidSession'));
+    expect(body.indexOf('deleteBlobs')).toBeLessThan(body.indexOf('db.delete('));
+  });
+
+  it('leaves the row when a blob refuses to delete', () => {
+    const fn = STORE.slice(STORE.indexOf('async deleteFreeRead'));
+    const body = fn.slice(0, fn.indexOf('async deletePaidSession'));
+    expect(body).toMatch(/if \(!\(await deleteBlobs[\s\S]*?return false;/);
+  });
+
+  it('treats an already-missing blob as success so a retry can finish', () => {
+    expect(STORE).toMatch(/not found\|404/);
+  });
+
+  it('exposes delete on both records', () => {
+    expect(READS).toContain("req.method === 'DELETE'");
+    expect(SESSIONS).toContain("req.method === 'DELETE'");
+  });
+
+  it('confirms before a hard delete', () => {
+    // Paid data with no undo.
+    expect(PAGE).toMatch(/window\.confirm/);
+    expect(PAGE).toMatch(/cannot be undone/i);
+  });
+
+  it('says plainly that free reads keep no photo', () => {
+    expect(PAGE).toMatch(/the photo is not/i);
+  });
+});

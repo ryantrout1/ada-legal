@@ -17,7 +17,7 @@
  * Ref: /plan Spot admin, Phase 2.
  */
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Summary {
   free_reads?: number;
@@ -54,6 +54,17 @@ const STAGES: { key: keyof Summary; label: string }[] = [
   { key: 'awaiting_review', label: 'In review' },
   { key: 'delivered', label: 'Delivered' },
 ];
+
+interface FreeRead {
+  id: string;
+  created_at?: string;
+  createdAt?: string;
+  photoCount?: number;
+  modelVersion?: string | null;
+  email?: string | null;
+  findingCount?: number;
+  overallRisk?: string | null;
+}
 
 const FILTERS = ['all', 'pending_payment', 'paid', 'uploaded', 'in_review', 'delivered', 'refunded'];
 
@@ -109,6 +120,14 @@ export default function AdminSpot() {
   const [sessions, setSessions] = useState<SessionRow[] | null>(null);
   const [filter, setFilter] = useState('all');
   const [error, setError] = useState(false);
+  /**
+   * Free reads are a separate record, not a cheaper session — no buyer, no
+   * payment, no report, and no stored photo. They share a page because they
+   * are one funnel, but not a table, because they share almost no columns.
+   */
+  const [tab, setTab] = useState<'paid' | 'free'>('paid');
+  const [reads, setReads] = useState<FreeRead[] | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -126,6 +145,43 @@ export default function AdminSpot() {
       cancelled = true;
     };
   }, []);
+
+  const loadReads = useCallback(async () => {
+    try {
+      const resp = await fetch('/api/admin/spot/reads', { credentials: 'include' });
+      if (!resp.ok) throw new Error(String(resp.status));
+      const body = (await resp.json()) as { reads?: FreeRead[] };
+      setReads(body.reads ?? []);
+    } catch {
+      setReads([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (tab === 'free' && reads === null) void loadReads();
+  }, [tab, reads, loadReads]);
+
+  /** One row at a time, with a confirm — this is a hard delete of paid data. */
+  const remove = async (kind: 'paid' | 'free', id: string) => {
+    const what = kind === 'paid' ? 'purchase' : 'free read';
+    if (!window.confirm(`Delete this ${what} and its photos? This cannot be undone.`)) return;
+    setBusyId(id);
+    try {
+      const path = kind === 'paid' ? 'sessions' : 'reads';
+      const resp = await fetch(`/api/admin/spot/${path}?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (!resp.ok) {
+        window.alert('Could not delete. Try again.');
+        return;
+      }
+      if (kind === 'paid') setSessions((prev) => prev?.filter((s) => s.id !== id) ?? null);
+      else setReads((prev) => prev?.filter((r) => r.id !== id) ?? null);
+    } finally {
+      setBusyId(null);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -178,7 +234,27 @@ export default function AdminSpot() {
         </p>
       ) : null}
 
-      <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter by status">
+      <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Show paid purchases or free reads">
+        {(['paid', 'free'] as const).map((t) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => setTab(t)}
+            aria-pressed={tab === t}
+            className={
+              'min-h-[44px] rounded-md border px-4 py-1 text-sm ' +
+              (tab === t
+                ? 'border-accent-600 bg-accent-50 text-accent-600 font-semibold'
+                : 'border-control-border text-ink-700')
+            }
+          >
+            {t === 'paid' ? 'Purchases' : 'Free reads'}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'paid' && (
+      <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Filter by status">
         {FILTERS.map((f) => (
           <button
             key={f}
@@ -197,21 +273,23 @@ export default function AdminSpot() {
         ))}
       </div>
 
+      )}
+
       {error ? (
         <p className="mt-6 text-sm text-ink-700" role="alert">
           Could not load Spot sessions.
         </p>
       ) : null}
 
-      {sessions === null && !error ? (
+      {tab === 'paid' && sessions === null && !error ? (
         <p className="mt-6 text-sm text-ink-700">Loading…</p>
       ) : null}
 
-      {sessions && sessions.length === 0 ? (
+      {tab === 'paid' && sessions && sessions.length === 0 ? (
         <p className="mt-6 text-sm text-ink-700">No sessions with that status.</p>
       ) : null}
 
-      {sessions && sessions.length > 0 ? (
+      {tab === 'paid' && sessions && sessions.length > 0 ? (
         <div className="mt-6 overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <caption className="sr-only">
@@ -236,6 +314,9 @@ export default function AdminSpot() {
                 </th>
                 <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">
                   Paid
+                </th>
+                <th scope="col" className="border-b border-surface-200 py-2 font-semibold">
+                  <span className="sr-only">Delete</span>
                 </th>
               </tr>
             </thead>
@@ -291,6 +372,79 @@ export default function AdminSpot() {
                     {money(s.amount_cents, s.paid_at)}
                   </td>
                   <td className="border-b border-surface-200 py-2 pr-4">{when(s.paid_at)}</td>
+                  <td className="border-b border-surface-200 py-2">
+                    <button
+                      type="button"
+                      disabled={busyId === s.id}
+                      onClick={() => void remove('paid', s.id)}
+                      className="min-h-[44px] text-sm text-warning-500 underline disabled:opacity-50"
+                    >
+                      {busyId === s.id ? 'Deleting…' : 'Delete'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+
+      {tab === 'free' && reads === null ? (
+        <p className="mt-6 text-sm text-ink-700">Loading…</p>
+      ) : null}
+
+      {tab === 'free' && reads && reads.length === 0 ? (
+        <p className="mt-6 text-sm text-ink-700">No free reads yet.</p>
+      ) : null}
+
+      {tab === 'free' && reads && reads.length > 0 ? (
+        <div className="mt-6 overflow-x-auto">
+          <p className="mb-3 text-sm text-ink-700">
+            What Spot told someone who never paid. The analysis is kept; the photo is not —
+            the free path stores no image.
+          </p>
+          <table className="w-full border-collapse text-sm">
+            <caption className="sr-only">Free Spot reads, newest first</caption>
+            <thead>
+              <tr className="text-left">
+                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">When</th>
+                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">Email given</th>
+                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">Photos</th>
+                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">Findings</th>
+                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">Read</th>
+                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">Model</th>
+                <th scope="col" className="border-b border-surface-200 py-2 font-semibold">
+                  <span className="sr-only">Delete</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {reads.map((r) => (
+                <tr key={r.id}>
+                  <td className="border-b border-surface-200 py-2 pr-4">
+                    {when(r.createdAt ?? r.created_at ?? null)}
+                  </td>
+                  <td className="border-b border-surface-200 py-2 pr-4">
+                    {r.email ?? <span className="text-ink-500">None</span>}
+                  </td>
+                  <td className="border-b border-surface-200 py-2 pr-4">{r.photoCount ?? '—'}</td>
+                  <td className="border-b border-surface-200 py-2 pr-4">{r.findingCount ?? 0}</td>
+                  <td className="border-b border-surface-200 py-2 pr-4">
+                    {r.overallRisk ?? <span className="text-ink-500">—</span>}
+                  </td>
+                  <td className="border-b border-surface-200 py-2 pr-4 text-ink-500">
+                    {r.modelVersion ?? '—'}
+                  </td>
+                  <td className="border-b border-surface-200 py-2">
+                    <button
+                      type="button"
+                      disabled={busyId === r.id}
+                      onClick={() => void remove('free', r.id)}
+                      className="min-h-[44px] text-sm text-warning-500 underline disabled:opacity-50"
+                    >
+                      {busyId === r.id ? 'Deleting…' : 'Delete'}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

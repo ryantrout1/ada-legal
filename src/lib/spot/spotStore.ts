@@ -16,6 +16,32 @@ import { spotReads, spotRateLimits, spotSessions, spotPhotos, spotReports } from
 import type { SpotTier } from './rateLimitDecision.js';
 import { canTransition, type SpotSessionStatus } from './spotSessionStatus.js';
 
+/**
+ * Delete blobs for rows about to be removed.
+ *
+ * The FK cascade drops spot_photo rows but Blob storage knows nothing about
+ * Postgres, and the retention sweep only walks rows — so a row deleted without
+ * its blob leaves a file nothing will ever collect.
+ *
+ * An already-missing blob counts as success, which makes a partial failure
+ * safe to retry: the second pass re-deletes what it can and finishes.
+ */
+async function deleteBlobs(urls: Array<string | null>): Promise<boolean> {
+  const { del } = await import('@vercel/blob');
+  for (const url of urls) {
+    if (!url) continue;
+    try {
+      await del(url);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      if (/not found|404/i.test(message)) continue;
+      console.error('spotStore: blob delete failed, leaving the row', { url, message });
+      return false;
+    }
+  }
+  return true;
+}
+
 export interface SpotReadRow {
   rateLimitKey: string;
   result: unknown;
@@ -99,6 +125,42 @@ export interface SpotStore {
    * whole point — silence would read as "there were never any photos".
    */
   sessionPhotoState(sessionId: string): Promise<{ urls: string[]; purged: boolean }>;
+  /**
+   * Free reads, newest first, for the admin funnel.
+   *
+   * A free read is a different shape from a paid session — no buyer, no
+   * payment, no report, and no stored photo (spot_photo.read_id is null on
+   * every row today; the free path is transient by design). What it DOES keep
+   * is the analysis itself, which is the point: it is the record of what Spot
+   * told someone.
+   */
+  listFreeReads(limit: number): Promise<
+    Array<{
+      id: string;
+      createdAt: string;
+      photoCount: number;
+      modelVersion: string | null;
+      email: string | null;
+      findingCount: number;
+      overallRisk: string | null;
+    }>
+  >;
+
+  /**
+   * Hard-delete a free read and its photos.
+   *
+   * Blobs are NOT cascaded by the FK — dropping the row alone would orphan the
+   * files, and the retention sweep only sees rows, so nothing would ever
+   * collect them. Blobs go first; if any deletion fails the row is left in
+   * place so a retry can finish the job. Re-deleting an already-gone blob is
+   * treated as success, which makes that retry safe.
+   */
+  deleteFreeRead(id: string): Promise<boolean>;
+
+  /** Same contract as deleteFreeRead, for a paid session. Cascades to its
+   *  report and photos once the blobs are gone. */
+  deletePaidSession(id: string): Promise<boolean>;
+
   /** Public readout: content ONLY if the report is released (else null). */
   getReleasedReportBySlug(slug: string): Promise<{ content: unknown; sessionId: string } | null>;
   /** Release a pending report (guarded, idempotent). Returns the session + buyer for delivery, or null. */
@@ -365,6 +427,61 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
         .limit(1);
       return rows[0] ?? null;
     },
+    async listFreeReads(limit) {
+      const rows = await db
+        .select({
+          id: spotReads.id,
+          createdAt: spotReads.createdAt,
+          photoCount: spotReads.photoCount,
+          modelVersion: spotReads.modelVersion,
+          email: spotReads.email,
+          result: spotReads.result,
+        })
+        .from(spotReads)
+        .orderBy(desc(spotReads.createdAt))
+        .limit(limit);
+
+      return rows.map((r) => {
+        const result = (r.result ?? {}) as {
+          findings?: unknown[];
+          overall_risk?: unknown;
+        };
+        return {
+          id: r.id,
+          createdAt: r.createdAt.toISOString(),
+          photoCount: r.photoCount ?? 0,
+          modelVersion: r.modelVersion ?? null,
+          email: r.email ?? null,
+          findingCount: Array.isArray(result.findings) ? result.findings.length : 0,
+          overallRisk:
+            typeof result.overall_risk === 'string' ? result.overall_risk : null,
+        };
+      });
+    },
+
+    async deleteFreeRead(id) {
+      const photos = await db
+        .select({ blobUrl: spotPhotos.blobUrl })
+        .from(spotPhotos)
+        .where(eq(spotPhotos.readId, id));
+      if (!(await deleteBlobs(photos.map((p) => p.blobUrl)))) return false;
+      const gone = await db.delete(spotReads).where(eq(spotReads.id, id)).returning({ id: spotReads.id });
+      return gone.length > 0;
+    },
+
+    async deletePaidSession(id) {
+      const photos = await db
+        .select({ blobUrl: spotPhotos.blobUrl })
+        .from(spotPhotos)
+        .where(eq(spotPhotos.sessionId, id));
+      if (!(await deleteBlobs(photos.map((p) => p.blobUrl)))) return false;
+      const gone = await db
+        .delete(spotSessions)
+        .where(eq(spotSessions.id, id))
+        .returning({ id: spotSessions.id });
+      return gone.length > 0;
+    },
+
     async getReleasedReportBySlug(slug) {
       const rows = await db
         // sessionId so the caller can join photos at READ time. Baking blob
