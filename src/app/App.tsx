@@ -54,6 +54,8 @@ import AdminCases from './routes/admin/AdminCases.js';
 import AdminFirmDetail from './routes/admin/AdminFirmDetail.js';
 import AdminFirmEdit from './routes/admin/AdminFirmEdit.js';
 import AdminListings from './routes/admin/AdminListings.js';
+import AdminLitigation from './routes/admin/AdminLitigation.js';
+import AdminLitigationEdit from './routes/admin/AdminLitigationEdit.js';
 import AdminListingEdit from './routes/admin/AdminListingEdit.js';
 import AdminListingConfigEdit from './routes/admin/AdminListingConfigEdit.js';
 import AdminListingPreview from './routes/admin/AdminListingPreview.js';
@@ -202,6 +204,9 @@ function AdminShell() {
           <Route path="firms/new" element={<AdminFirmEdit />} />
           <Route path="firms/:id" element={<AdminFirmDetail />} />
           <Route path="firms/:id/edit" element={<AdminFirmEdit />} />
+          <Route path="litigation" element={<AdminLitigation />} />
+          <Route path="litigation/new" element={<AdminLitigationEdit />} />
+          <Route path="litigation/:id" element={<AdminLitigationEdit />} />
           <Route path="listings" element={<AdminListings />} />
           <Route path="listings/new" element={<AdminListingEdit />} />
           <Route path="listings/:id" element={<AdminListingEdit />} />
