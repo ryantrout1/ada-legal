@@ -28,12 +28,11 @@ interface Counts {
 /**
  * `to` is optional. Every tile that CAN link does — a count with no
  * destination is trivia, and the point of the number is to get to the
- * rows behind it. But litigation_listings has no admin page on this
- * side yet, and pointing that tile at /admin/listings would send you to
- * a different table entirely. A tile whose number disagrees with the
- * page it opens is the exact defect Phase 1 removed; a linkless tile is
- * merely less useful. Base44 renders its Active-listings, Active-firms
- * and Active-litigation tiles without drill-downs for the same reason.
+ * rows behind it. The Active-litigation tile was linkless while
+ * litigation_listings had no admin page on this side — pointing it at
+ * /admin/listings would have opened a different table entirely, and a
+ * tile whose number disagrees with the page it opens is a real defect.
+ * /admin/litigation now exists, so the tile links to it.
  */
 const TILES: { key: keyof Counts; label: string; to?: string; hint: string }[] = [
   { key: 'sessions', label: 'Ada sessions', to: '/admin/sessions', hint: 'Last 30 days, real only' },
@@ -42,7 +41,7 @@ const TILES: { key: keyof Counts; label: string; to?: string; hint: string }[] =
   { key: 'firms', label: 'Firms', to: '/admin/firms', hint: 'In the directory' },
   { key: 'attorneys', label: 'Approved attorneys', to: '/admin/attorneys', hint: 'Publicly listed' },
   { key: 'listings_published', label: 'Active listings', to: '/admin/listings', hint: 'Published' },
-  { key: 'litigation_active', label: 'Active litigation', hint: 'Class + mass' },
+  { key: 'litigation_active', label: 'Active litigation', to: '/admin/litigation', hint: 'Class + mass' },
   { key: 'feedback_new', label: 'Feedback', to: '/admin/feedback', hint: 'Last 30 days' },
 ];
 
