@@ -63,7 +63,32 @@ describe('planCheck', () => {
       has: [{ type: 'query', key: 'slug', value: '(?<slug>.*)' }],
     });
     expect(c.path).toBe(`/LawsuitDetail?slug=${SAMPLE_PARAM}`);
-    expect(c.expectedLocation).toBe(`/lawsuits/${SAMPLE_PARAM}`);
+    // Vercel carries the query through to Location; matching a `has`
+    // condition does not consume it. Verified against production.
+    expect(c.expectedLocation).toBe(`/lawsuits/${SAMPLE_PARAM}?slug=${SAMPLE_PARAM}`);
+  });
+
+  it('preserves the query on a literal has-value too', () => {
+    const c = planCheck({
+      source: '/LawsuitDetail',
+      destination: '/lawsuits',
+      permanent: true,
+      has: [{ type: 'query', key: 'slug', value: 'coen-v-ga-doc-deaf-prisoners' }],
+    });
+    expect(c.expectedLocation).toBe('/lawsuits?slug=coen-v-ga-doc-deaf-prisoners');
+  });
+
+  it('routes a host-conditioned rule to that host instead of skipping it', () => {
+    const c = planCheck({
+      source: '/',
+      destination: '/portal',
+      permanent: false,
+      has: [{ type: 'host', value: 'portal.adalegallink.com', key: 'host' }],
+    });
+    expect(c.skipped).toBeUndefined();
+    expect(c.host).toBe('portal.adalegallink.com');
+    expect(c.path).toBe('/');
+    expect(c.expectedLocation).toBe('/portal');
   });
 
   it('uses a literal has-value verbatim rather than the sample', () => {
@@ -76,7 +101,6 @@ describe('planCheck', () => {
       has: [{ type: 'query', key: 'slug', value: 'coen-v-ga-doc-deaf-prisoners' }],
     });
     expect(c.path).toBe('/LawsuitDetail?slug=coen-v-ga-doc-deaf-prisoners');
-    expect(c.expectedLocation).toBe('/lawsuits');
   });
 
   it('skips a regex source rather than guessing a URL', () => {
@@ -84,11 +108,11 @@ describe('planCheck', () => {
     expect(c.skipped).toBeTruthy();
   });
 
-  it('skips a non-query has condition rather than pretending', () => {
+  it('still skips a has condition type it cannot model', () => {
     const c = planCheck({
       source: '/x',
       destination: '/y',
-      has: [{ type: 'host', key: 'host', value: 'example.com' }],
+      has: [{ type: 'cookie', key: 'session', value: 'abc' }],
     });
     expect(c.skipped).toBeTruthy();
   });

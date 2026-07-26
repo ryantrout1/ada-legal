@@ -46,8 +46,11 @@ function parseArgs(argv) {
 
 async function checkOne(base, check) {
   if (check.skipped) return { ...check, status: 'skip', detail: check.skipped };
+  // A host-conditioned rule only fires for its own hostname, so the request
+  // goes there rather than to the default base.
+  const origin = check.host ? `https://${check.host}` : base;
   try {
-    const res = await fetch(`${base}${check.path}`, {
+    const res = await fetch(`${origin}${check.path}`, {
       method: 'HEAD',
       redirect: 'manual',
       headers: { 'user-agent': 'adall-redirect-verifier' },
@@ -114,7 +117,8 @@ async function main() {
     console.log(JSON.stringify({ base: args.base, passed: passed.length, failed, skipped }, null, 2));
   } else {
     for (const r of failed) {
-      console.log(`FAIL  ${r.path}\n      ${r.detail}`);
+      const where = r.host ? ` [host: ${r.host}]` : '';
+      console.log(`FAIL  ${r.path}${where}\n      ${r.detail}`);
     }
     if (skipped.length > 0) {
       console.log(`\nSkipped (not modellable as one concrete request):`);

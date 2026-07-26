@@ -15,7 +15,7 @@
  *             statusCode?: number, has?: HasCondition[],
  *             missing?: { type: string, key: string, value?: string }[] }} RedirectRule
  * @typedef {{ path: string, expectedLocation: string, expectedStatuses: number[],
- *             source: string, skipped?: string }} RedirectCheck
+ *             source: string, host?: string, skipped?: string }} RedirectCheck
  */
 
 /** Stand-in used wherever a rule interpolates a dynamic segment. */
@@ -36,6 +36,12 @@ function isNamedCapture(value) {
  */
 function fillParams(pattern, value) {
   return pattern.replace(/:([A-Za-z_][A-Za-z0-9_]*)\*?/g, value);
+}
+
+/** Merge a preserved query string onto a destination that may already have one. */
+function appendQuery(destination, query) {
+  if (!query) return destination;
+  return destination.includes('?') ? `${destination}&${query}` : `${destination}?${query}`;
 }
 
 /** Regex-ish sources can't be turned into one concrete request. */
@@ -76,14 +82,22 @@ export function planCheck(rule) {
   let path = fillParams(rule.source, SAMPLE_PARAM);
   let expectedLocation = fillParams(rule.destination, SAMPLE_PARAM);
 
+  /** @type {string | undefined} */
+  let host;
+
   if (rule.has && rule.has.length > 0) {
     const queryConds = rule.has.filter((h) => h.type === 'query');
-    if (queryConds.length !== rule.has.length) {
+    const hostConds = rule.has.filter((h) => h.type === 'host');
+    // A host condition is not un-modellable — it just means the request
+    // has to go to that host. Skipping it left the portal redirect, the
+    // only rule of its kind, permanently unverified.
+    if (hostConds.length === 1) host = hostConds[0].value;
+    if (queryConds.length + hostConds.length !== rule.has.length) {
       return {
         ...base,
         path,
         expectedLocation,
-        skipped: 'non-query `has` condition; not modelled',
+        skipped: 'unsupported `has` condition type; not modelled',
       };
     }
     const params = new URLSearchParams();
@@ -94,11 +108,18 @@ export function planCheck(rule) {
       const value = isNamedCapture(h.value) ? SAMPLE_PARAM : h.value;
       params.set(h.key, value);
     }
-    path = `${path}?${params.toString()}`;
-    expectedLocation = fillParams(rule.destination, SAMPLE_PARAM);
+    const query = params.toString();
+    if (query) {
+      path = `${path}?${query}`;
+      // Vercel carries the request's query string through to the Location
+      // header; it is not consumed by matching a `has` condition. Expecting
+      // a bare destination reported three false failures on rules that were
+      // firing correctly.
+      expectedLocation = appendQuery(fillParams(rule.destination, SAMPLE_PARAM), query);
+    }
   }
 
-  return { ...base, path, expectedLocation };
+  return { ...base, path, expectedLocation, ...(host ? { host } : {}) };
 }
 
 /**
