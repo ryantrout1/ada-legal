@@ -143,35 +143,62 @@ describe('vercel.json schema conformance', () => {
  */
 describe('closed litigation slugs redirect rather than soft-404', () => {
   const config = JSON.parse(raw) as {
-    redirects?: { source: string; destination: string; permanent?: boolean }[];
+    redirects?: {
+      source: string;
+      destination: string;
+      permanent?: boolean;
+      has?: { type: string; key: string; value: string }[];
+    }[];
   };
+  const redirects = config.redirects ?? [];
 
   const CLOSED_SLUGS = [
     'coen-v-ga-doc-deaf-prisoners',
     'eeoc-v-union-pacific-one-percent-rule',
   ];
 
+  /**
+   * The URL that is actually in the wild is the Base44 one —
+   * /LawsuitDetail?slug=<slug>, built by createPageUrl in LawsuitCard.
+   * The /lawsuits/<slug> path form only ever existed on the Vercel side,
+   * which is noindexed. Redirecting only the path form left the real URL
+   * going through the generic rule and taking two hops via a page that
+   * renders nothing.
+   */
   for (const slug of CLOSED_SLUGS) {
-    it(`redirects /lawsuits/${slug} to the index`, () => {
-      const hit = (config.redirects ?? []).find(
-        (r) => r.source === `/lawsuits/${slug}`,
+    it(`sends the live /LawsuitDetail?slug=${slug} straight to the index`, () => {
+      const hit = redirects.find(
+        (r) =>
+          r.source === '/LawsuitDetail' &&
+          r.has?.some((h) => h.key === 'slug' && h.value === slug),
       );
-      expect(hit, `no redirect for ${slug}`).toBeDefined();
+      expect(hit, `no query-form redirect for ${slug}`).toBeDefined();
       expect(hit!.destination).toBe('/lawsuits');
       expect(hit!.permanent).toBe(true);
     });
+
+    it(`also covers the /lawsuits/${slug} path form`, () => {
+      const hit = redirects.find((r) => r.source === `/lawsuits/${slug}`);
+      expect(hit, `no path-form redirect for ${slug}`).toBeDefined();
+      expect(hit!.destination).toBe('/lawsuits');
+    });
   }
 
-  it('is not shadowed by a broader /lawsuits rule earlier in the list', () => {
-    const redirects = config.redirects ?? [];
+  it('places the slug-specific rules before the generic /LawsuitDetail rule', () => {
+    // Vercel takes the first match. Behind the catch-all these are dead.
+    const generic = redirects.findIndex(
+      (r) =>
+        r.source === '/LawsuitDetail' &&
+        r.has?.some((h) => h.key === 'slug' && h.value.includes('?<slug>')),
+    );
+    expect(generic).toBeGreaterThan(-1);
     for (const slug of CLOSED_SLUGS) {
-      const mine = redirects.findIndex((r) => r.source === `/lawsuits/${slug}`);
-      const broader = redirects.findIndex(
-        (r) => r.source.startsWith('/lawsuits/:') || r.source === '/lawsuits/(.*)',
+      const specific = redirects.findIndex(
+        (r) =>
+          r.source === '/LawsuitDetail' &&
+          r.has?.some((h) => h.key === 'slug' && h.value === slug),
       );
-      if (broader !== -1) {
-        expect(mine, `a broader rule precedes ${slug}`).toBeLessThan(broader);
-      }
+      expect(specific, `${slug} is shadowed by the generic rule`).toBeLessThan(generic);
     }
   });
 });

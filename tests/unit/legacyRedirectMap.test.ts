@@ -32,7 +32,7 @@ const config = JSON.parse(readFileSync(resolve(root, 'vercel.json'), 'utf8')) as
     source: string;
     destination: string;
     permanent?: boolean;
-    has?: unknown;
+    has?: { type: string; key: string; value: string }[];
   }>;
 };
 
@@ -96,8 +96,16 @@ describe('B44 flat-route 301 map', () => {
     // /LawsuitDetail?slug=x must reach /lawsuits/x, not the index —
     // dropping someone on a list when they clicked a specific case is
     // a soft dead end.
+    //
+    // Matched on the named capture rather than "has a slug key at all":
+    // closed cases now carry slug-specific overrides that sit ahead of
+    // this rule and deliberately DO go to the index, because their
+    // detail page no longer exists. Those are exceptions to this rule,
+    // not violations of it, and a looser finder picks one of them up.
     const rule = config.redirects.find(
-      (r) => r.source === '/LawsuitDetail' && r.has !== undefined,
+      (r) =>
+        r.source === '/LawsuitDetail' &&
+        r.has?.some((h) => h.key === 'slug' && h.value.includes('?<slug>')),
     );
     expect(rule, 'no query-preserving rule for /LawsuitDetail').toBeDefined();
     expect(rule?.destination).toBe('/lawsuits/:slug');
