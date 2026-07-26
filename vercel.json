@@ -12,6 +12,8 @@
       "permanent": false
     },
     { "source": "/class-actions", "destination": "/lawsuits", "permanent": true },
+    { "source": "/lawsuits/coen-v-ga-doc-deaf-prisoners", "destination": "/lawsuits", "permanent": true },
+    { "source": "/lawsuits/eeoc-v-union-pacific-one-percent-rule", "destination": "/lawsuits", "permanent": true },
     { "source": "/class-actions/:slug", "destination": "/lawsuits/:slug", "permanent": true },
     {"source": "/LawsuitDetail", "has": [{"type": "query", "key": "slug", "value": "(?<slug>.*)"}], "destination": "/lawsuits/:slug", "permanent": true},
     {"source": "/AboutAda", "destination": "/about-ada", "permanent": true},

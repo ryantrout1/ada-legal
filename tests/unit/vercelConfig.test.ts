@@ -127,3 +127,51 @@ describe('vercel.json schema conformance', () => {
     }
   });
 });
+
+/**
+ * Two litigation slugs are `closed` in Neon and therefore excluded by the
+ * public API's status filter (active/compliance/investigating/tracking).
+ * Base44 applied no such filter, so both were live and indexable on
+ * adalegallink.com. Without a redirect they become soft-404s at cutover —
+ * the SPA returns 200 with a not-found body, which is worse for search
+ * than an honest 301.
+ *
+ * Pinned because the natural "fix" for a missing lawsuit page is to add a
+ * catch-all /lawsuits/:slug rule, and that would shadow these.
+ *
+ * Ref: B44 decommission, Gate D — litigation reconciliation.
+ */
+describe('closed litigation slugs redirect rather than soft-404', () => {
+  const config = JSON.parse(raw) as {
+    redirects?: { source: string; destination: string; permanent?: boolean }[];
+  };
+
+  const CLOSED_SLUGS = [
+    'coen-v-ga-doc-deaf-prisoners',
+    'eeoc-v-union-pacific-one-percent-rule',
+  ];
+
+  for (const slug of CLOSED_SLUGS) {
+    it(`redirects /lawsuits/${slug} to the index`, () => {
+      const hit = (config.redirects ?? []).find(
+        (r) => r.source === `/lawsuits/${slug}`,
+      );
+      expect(hit, `no redirect for ${slug}`).toBeDefined();
+      expect(hit!.destination).toBe('/lawsuits');
+      expect(hit!.permanent).toBe(true);
+    });
+  }
+
+  it('is not shadowed by a broader /lawsuits rule earlier in the list', () => {
+    const redirects = config.redirects ?? [];
+    for (const slug of CLOSED_SLUGS) {
+      const mine = redirects.findIndex((r) => r.source === `/lawsuits/${slug}`);
+      const broader = redirects.findIndex(
+        (r) => r.source.startsWith('/lawsuits/:') || r.source === '/lawsuits/(.*)',
+      );
+      if (broader !== -1) {
+        expect(mine, `a broader rule precedes ${slug}`).toBeLessThan(broader);
+      }
+    }
+  });
+});
