@@ -21,7 +21,8 @@
     "personas:copy": "node scripts/personas-copy.mjs",
     "personas:harvest": "node scripts/personas-harvest.mjs",
     "test:a11y": "playwright test --config=playwright.a11y.config.ts",
-    "test:a11y:preview": "PLAYWRIGHT_TARGET=preview playwright test --config=playwright.a11y.config.ts"
+    "test:a11y:preview": "PLAYWRIGHT_TARGET=preview playwright test --config=playwright.a11y.config.ts",
+    "verify:redirects": "node scripts/verify-redirects.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",
