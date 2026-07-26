@@ -86,3 +86,44 @@ describe('consumer-route parking', () => {
     expect(portal?.missing).toBeUndefined();
   });
 });
+
+/**
+ * Vercel validates vercel.json against a strict schema at DEPLOY time, and
+ * `npm run build` does not — so a config-only mistake passes every local
+ * gate and fails in the cloud. A `_comment` key on a headers entry did
+ * exactly that (deployment 91X89XE, ERROR: "should NOT have additional
+ * property `_comment`"). These pin the key sets the schema allows.
+ */
+describe('vercel.json schema conformance', () => {
+  const config = JSON.parse(raw) as {
+    headers?: Record<string, unknown>[];
+    redirects?: Record<string, unknown>[];
+    rewrites?: Record<string, unknown>[];
+  };
+
+  const ALLOWED_HEADER_KEYS = new Set(['source', 'headers', 'has', 'missing']);
+  const ALLOWED_ROUTE_KEYS = new Set([
+    'source',
+    'destination',
+    'permanent',
+    'statusCode',
+    'has',
+    'missing',
+  ]);
+
+  it('headers entries carry only schema-legal keys', () => {
+    for (const h of config.headers ?? []) {
+      for (const key of Object.keys(h)) {
+        expect(ALLOWED_HEADER_KEYS.has(key), `headers: illegal key "${key}"`).toBe(true);
+      }
+    }
+  });
+
+  it('redirect and rewrite entries carry only schema-legal keys', () => {
+    for (const r of [...(config.redirects ?? []), ...(config.rewrites ?? [])]) {
+      for (const key of Object.keys(r)) {
+        expect(ALLOWED_ROUTE_KEYS.has(key), `route: illegal key "${key}"`).toBe(true);
+      }
+    }
+  });
+});

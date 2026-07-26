@@ -232,13 +232,11 @@
       ]
     },
     {
-      "_comment": "The engine domain is never indexable. Host-scoped so the public apex can become indexable at DNS cutover with no edit on the day, and so there is no window where both hosts serve the same content as indexable.",
       "source": "/(.*)",
       "has": [{ "type": "host", "value": "ada.adalegallink.com" }],
       "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
     },
     {
-      "_comment": "Private surfaces are never indexable on any host.",
       "source": "/(admin|portal|photo|review|s|spot/r)(/.*)?",
       "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
     }
