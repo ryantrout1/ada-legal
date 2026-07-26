@@ -3562,6 +3562,15 @@ export class NeonDbClient implements DbClient {
     return computePipelineStats(cases, events);
   }
 
+  async resolveUserIdByClerkUserId(clerkUserId: string): Promise<string | null> {
+    const rows = await this.db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.clerkUserId, clerkUserId))
+      .limit(1);
+    return rows[0]?.id ?? null;
+  }
+
   async resolveAttorneyByClerkUserId(
     clerkUserId: string,
   ): Promise<PortalAttorneyResolution | null> {

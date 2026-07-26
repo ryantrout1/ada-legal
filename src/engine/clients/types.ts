@@ -1706,6 +1706,19 @@ export interface DbClient {
   resolveAttorneyByClerkUserId(
     clerkUserId: string,
   ): Promise<PortalAttorneyResolution | null>;
+
+  /**
+   * Resolve a Clerk user id to the INTERNAL `users.id` uuid, or null when
+   * no internal user is paired with it.
+   *
+   * Admin endpoints receive `auth.userId`, which is a Clerk id (`user_…`)
+   * on the Clerk path and null on the B44 bridge path. Any column that
+   * stores an actor as `uuid REFERENCES users(id)` needs this translation
+   * first — writing the Clerk id straight through raises Postgres 22P02.
+   * Distinct from resolveAttorneyByClerkUserId, which requires a paired
+   * ATTORNEY; an admin is a user and usually is not an attorney.
+   */
+  resolveUserIdByClerkUserId(clerkUserId: string): Promise<string | null>;
 }
 
 // ─── Ch1 row shapes ───────────────────────────────────────────────────────────

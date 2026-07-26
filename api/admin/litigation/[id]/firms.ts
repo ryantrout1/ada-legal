@@ -16,6 +16,7 @@ import { requireAdmin } from '../../../_admin.js';
 import { applyCors } from '../../../_cors.js';
 import { makeClientsFromEnv } from '../../../_shared.js';
 import { readJsonBody } from '../../../_shared.js';
+import { isUuid } from '../../../../src/lib/uuid.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
@@ -89,10 +90,23 @@ async function handlePut(
     }
 
     const clients = makeClientsFromEnv();
+
+    // `assigned_by_user_id` is uuid REFERENCES users(id), but requireAdmin
+    // hands back a CLERK id (`user_…`) on the Clerk path and null on the
+    // B44 bridge path. The bridge was this endpoint's only caller for
+    // fourteen months, so the null sailed through and the mismatch stayed
+    // latent until the Vercel admin UI called it with a real session —
+    // Postgres 22P02, after the delete had already committed.
+    //
+    // Unmapped actors fall back to null rather than failing the save: the
+    // column is nullable, held null for every existing row, and losing the
+    // actor stamp is not worth losing the assignment.
+    const actorUserId = await resolveActorUserId(clients, assignedByUserId);
+
     const assignments = await clients.db.replaceFirmAssignmentsForLitigation(
       id,
       lawFirmIds,
-      assignedByUserId,
+      actorUserId,
       optIns ? [...optIns] : undefined,
     );
     return res.status(200).json({
@@ -108,4 +122,21 @@ async function handlePut(
       error: err instanceof Error ? err.message : 'Internal error',
     });
   }
+}
+
+/**
+ * Translate whatever requireAdmin produced into an internal `users.id`.
+ *
+ *   null            → null   (B44 bridge path)
+ *   a uuid          → itself (already internal; future-proofs a change to
+ *                             requireAdmin without reintroducing the bug)
+ *   `user_…` (Clerk) → users.id via clerk_user_id, or null if unpaired
+ */
+async function resolveActorUserId(
+  clients: ReturnType<typeof makeClientsFromEnv>,
+  rawActorId: string | null,
+): Promise<string | null> {
+  if (!rawActorId) return null;
+  if (isUuid(rawActorId)) return rawActorId;
+  return clients.db.resolveUserIdByClerkUserId(rawActorId);
 }

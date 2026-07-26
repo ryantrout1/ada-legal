@@ -2422,6 +2422,13 @@ export class InMemoryDbClient implements DbClient {
     return computePipelineStats(cases, events);
   }
 
+  async resolveUserIdByClerkUserId(clerkUserId: string): Promise<string | null> {
+    // Stops at users.id — no attorney hop. An admin is a user and is
+    // usually not an attorney, which is exactly why the attorney-joined
+    // resolver is the wrong lookup for an actor stamp.
+    return this.users.get(clerkUserId)?.userId ?? null;
+  }
+
   async resolveAttorneyByClerkUserId(
     clerkUserId: string,
   ): Promise<PortalAttorneyResolution | null> {
