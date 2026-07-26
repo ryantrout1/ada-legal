@@ -21,7 +21,14 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { makeClientsFromEnv } from './_shared.js';
 
-const SITE_URL = 'https://ada.adalegallink.com';
+/**
+ * Every <loc> is the PUBLIC apex, regardless of which host served the
+ * request. A sitemap advertising ada.adalegallink.com would invite
+ * crawlers onto the engine domain — the one thing robots.ts exists to
+ * prevent — and after the Base44 cutover would split the same content
+ * across two hostnames with no canonical signal between them.
+ */
+const SITE_URL = 'https://adalegallink.com';
 
 interface UrlEntry {
   loc: string;
