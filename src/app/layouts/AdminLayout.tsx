@@ -80,7 +80,8 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { to: '/admin/firms', label: 'Firms' },
       { to: '/admin/attorneys', label: 'Attorneys' },
-      { to: '/admin/listings', label: 'Class & Mass Actions' },
+      { to: '/admin/litigation', label: 'Class & Mass Actions' },
+      { to: '/admin/listings', label: 'Firm Listings' },
     ],
   },
   {
