@@ -21,15 +21,14 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import type { LitigationKind } from '../../../types/db.js';
 
 const NATIONWIDE_SENTINEL = '__nationwide__';
 
-type Kind =
-  | 'class'
-  | 'enforcement_action'
-  | 'consent_decree'
-  | 'pattern_of_practice'
-  | 'regulatory_challenge';
+// The shared list, not a local copy. This union used to be written out
+// here and was missing 'mass', so a mass row rendered its raw slug in the
+// table and left the edit form's Kind dropdown blank.
+type Kind = LitigationKind;
 
 type Status =
   | 'draft'
@@ -53,8 +52,11 @@ interface LitigationRow {
   leadFirmId: string | null;
 }
 
+// Typed as a total record over the shared union, so adding a kind without
+// a label here is a compile error rather than a blank field.
 export const KIND_LABEL: Record<Kind, string> = {
   class: 'Class action',
+  mass: 'Mass action',
   enforcement_action: 'Enforcement action',
   consent_decree: 'Consent decree',
   pattern_of_practice: 'Pattern or practice',

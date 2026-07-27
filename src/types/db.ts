@@ -258,13 +258,23 @@ export interface PageContext {
  * Mirrors the CHECK constraint on `litigation_listings.kind`
  * (migrations 0010 + 0024).
  */
-export type LitigationKind =
-  | 'class'
-  | 'mass'
-  | 'enforcement_action'
-  | 'consent_decree'
-  | 'pattern_of_practice'
-  | 'regulatory_challenge';
+export const LITIGATION_KINDS = [
+  'class',
+  'mass',
+  'enforcement_action',
+  'consent_decree',
+  'pattern_of_practice',
+  'regulatory_challenge',
+] as const;
+
+/**
+ * Derived from the array above rather than written twice. A runtime list is
+ * what lets a test walk every value and check that each one has a label and
+ * passes each guard — a hand-written union cannot be enumerated at runtime,
+ * which is how 'mass' came to exist in the database, the type, and neither
+ * of the two places in the admin that needed it.
+ */
+export type LitigationKind = (typeof LITIGATION_KINDS)[number];
 
 export interface LitigationContext {
   id: string;

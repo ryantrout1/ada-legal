@@ -15,6 +15,7 @@ import { requireAdmin } from '../../_admin.js';
 import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
 import { sanitizeIncomingStates } from '../../../src/engine/clients/litigationStates.js';
+import { LITIGATION_KINDS } from '../../../src/types/db.js';
 import type {
   LitigationKind,
   LitigationStatus,
@@ -113,14 +114,15 @@ async function handleArchive(id: string, res: VercelResponse) {
   }
 }
 
-function isKind(v: unknown): v is LitigationKind {
-  return (
-    v === 'class' ||
-    v === 'enforcement_action' ||
-    v === 'consent_decree' ||
-    v === 'pattern_of_practice' ||
-    v === 'regulatory_challenge'
-  );
+/**
+ * Exported so a test can check it accepts exactly what the admin's
+ * KIND_LABEL offers. It used to be a hand-written chain missing 'mass',
+ * which meant the form could display a value it would then silently refuse
+ * to save — the field was dropped from the patch with no error, so the
+ * screen was wrong and the stored data was fine.
+ */
+export function isKind(v: unknown): v is LitigationKind {
+  return typeof v === 'string' && (LITIGATION_KINDS as readonly string[]).includes(v);
 }
 
 function isStatus(v: unknown): v is LitigationStatus {
