@@ -8,6 +8,14 @@
  * consent decree. Type stays for now — removing it is a separate,
  * deliberate step once this has been seen working on the real page.
  *
+ * It spans two grid columns because its values are full phrases —
+ * "Community living & institutions", "Restaurants, stores & venues" —
+ * where the other three are single words. At one column a selected
+ * category truncated, so the control could not tell you what it was
+ * currently filtering by. The column minimum drops to 160px to keep all
+ * four on one row at common widths; below that they wrap, which is the
+ * grid doing its job rather than a breakpoint to maintain.
+ *
  * Ported from Base44 (src/components/public/LawsuitFilters.jsx
  * @ 6b1e9ac). Design authority is B44; changes are confined to the port
  * seams:
@@ -95,7 +103,7 @@ export default function LawsuitFilters({ filters, onChange }: Props) {
         borderRadius: 12,
         padding: '1rem 1.25rem',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
         gap: '0.85rem',
         marginBottom: '1.25rem',
       }}
@@ -115,7 +123,7 @@ export default function LawsuitFilters({ filters, onChange }: Props) {
         />
       </div>
 
-      <div>
+      <div style={{ gridColumn: 'span 2' }}>
         <label htmlFor="lawsuit-category" style={labelStyle}>
           What happened
         </label>
