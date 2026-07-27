@@ -6,7 +6,18 @@
  * (sole-assignment resolution in the router). No admin in the loop; live on
  * toggle.
  *
- * Presented as the two buckets the firm thinks in — Class actions and Mass
+ * Grouped by what each matter actually is. Until 2026-07-27 this page used
+ * a `kind === 'class' ? 'Class action' : 'Mass action'` test for both the
+ * badge and the grouping, so all 22 non-class records — DOJ enforcement,
+ * consent decrees, pattern-of-practice, regulatory challenges — were
+ * labelled and filed as mass actions. That mattered because accepting sets
+ * receivesMatches, so a firm could opt into exclusive routing believing it
+ * had taken on a mass action.
+ *
+ * Labels and groups now come from KIND_ORDER and kindLabel, the same list
+ * the public directory uses.
+ *
+ * Was presented as the two buckets the firm thinks in — Class actions and Mass
  * actions (everything non-class). Deliberately simple: no search, no filter
  * chrome — fewer focus stops for switch / sip-puff scanning.
  *
@@ -19,6 +30,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { KIND_ORDER, kindLabel } from '../../lib/litigationLabels.js';
 import { Link } from 'react-router-dom';
 import { Scale, MapPin, Check, Plus, ChevronRight, Calendar, Search, X } from 'lucide-react';
 import {
@@ -86,12 +98,16 @@ function LitigationRow({
         <div className="mb-1.5 flex flex-wrap items-center gap-2">
           <span
             className={
-              lit.kind === 'class'
+              // Class and mass are the two that gather individual
+              // claimants. The rest — DOJ actions, consent decrees,
+              // regulatory challenges, pattern-of-practice records — are
+              // matters we track, and they get the quieter treatment.
+              lit.kind === 'class' || lit.kind === 'mass'
                 ? 'rounded-full border border-accent-500 px-2 py-0.5 text-xs font-semibold text-accent-500'
                 : 'rounded-full bg-surface-100 px-2 py-0.5 text-xs font-semibold text-ink-700'
             }
           >
-            {lit.kind === 'class' ? 'Class action' : 'Mass action'}
+            {kindLabel(lit.kind)}
           </span>
           {lit.legal_theory && (
             <span className="text-xs font-medium text-ink-500">{lit.legal_theory}</span>
@@ -146,7 +162,7 @@ export default function PortalLitigations() {
   const [error, setError] = useState<string | null>(null);
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState<'all' | 'class' | 'mass'>('all');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
   const [acceptedOnly, setAcceptedOnly] = useState(false);
 
   const load = useCallback(async () => {
@@ -169,12 +185,12 @@ export default function PortalLitigations() {
 
   const filtersActive = query.trim().length > 0 || typeFilter !== 'all' || acceptedOnly;
 
-  const { classActions, massActions, total } = useMemo(() => {
+  const { groups, total } = useMemo(() => {
     const q = query.trim().toLowerCase();
     const matches = (l: PortalLitigation) => {
       if (acceptedOnly && !l.accepted) return false;
-      if (typeFilter === 'class' && l.kind !== 'class') return false;
-      if (typeFilter === 'mass' && l.kind === 'class') return false;
+      // Match the kind asked for, not "everything that is not class".
+      if (typeFilter !== 'all' && l.kind !== typeFilter) return false;
       if (!q) return true;
       const hay = [l.case_name, l.legal_theory ?? '', l.short_description ?? '', l.eligibility ?? '', ...l.defendants]
         .join(' ')
@@ -183,8 +199,13 @@ export default function PortalLitigations() {
     };
     const filtered = (litigations ?? []).filter(matches);
     return {
-      classActions: filtered.filter((l) => l.kind === 'class'),
-      massActions: filtered.filter((l) => l.kind !== 'class'),
+      // One group per kind, in the order the public directory uses. An
+      // empty kind renders nothing rather than an empty heading.
+      groups: KIND_ORDER.map((kind) => ({
+        kind,
+        label: kindLabel(kind),
+        rows: filtered.filter((l) => l.kind === kind),
+      })).filter((g) => g.rows.length > 0),
       total: filtered.length,
     };
   }, [litigations, query, typeFilter, acceptedOnly]);
@@ -259,10 +280,9 @@ export default function PortalLitigations() {
               className="inline-flex overflow-hidden rounded-md border border-control-border"
             >
               {([
-                ['all', 'All'],
-                ['class', 'Class'],
-                ['mass', 'Mass'],
-              ] as const).map(([value, label], i) => {
+                ['all', 'All'] as const,
+                ...KIND_ORDER.map((k) => [k, kindLabel(k)] as const),
+              ]).map(([value, label], i) => {
                 const active = typeFilter === value;
                 return (
                   <button
@@ -346,14 +366,14 @@ export default function PortalLitigations() {
         </div>
       )}
 
-      {classActions.length > 0 && (
-        <section className="mb-8" aria-labelledby="lw-class-h">
-          <h2 id="lw-class-h" className="mb-3 text-lg font-bold text-ink-900">
-            Class actions{' '}
-            <span className="font-normal text-ink-500">({classActions.length})</span>
+      {groups.map((group) => (
+        <section key={group.kind} className="mb-8" aria-labelledby={`lw-${group.kind}-h`}>
+          <h2 id={`lw-${group.kind}-h`} className="mb-3 text-lg font-bold text-ink-900">
+            {group.label}{' '}
+            <span className="font-normal text-ink-500">({group.rows.length})</span>
           </h2>
           <ul className="space-y-3">
-            {classActions.map((lit) => (
+            {group.rows.map((lit) => (
               <LitigationRow
                 key={lit.id}
                 lit={lit}
@@ -363,26 +383,7 @@ export default function PortalLitigations() {
             ))}
           </ul>
         </section>
-      )}
-
-      {massActions.length > 0 && (
-        <section aria-labelledby="lw-mass-h">
-          <h2 id="lw-mass-h" className="mb-3 text-lg font-bold text-ink-900">
-            Mass actions{' '}
-            <span className="font-normal text-ink-500">({massActions.length})</span>
-          </h2>
-          <ul className="space-y-3">
-            {massActions.map((lit) => (
-              <LitigationRow
-                key={lit.id}
-                lit={lit}
-                pending={pendingIds.has(lit.id)}
-                onToggle={() => void toggle(lit)}
-              />
-            ))}
-          </ul>
-        </section>
-      )}
+      ))}
     </div>
   );
 }
