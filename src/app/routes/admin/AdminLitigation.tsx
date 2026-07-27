@@ -47,6 +47,7 @@ interface LitigationRow {
   status: Status;
   court: string | null;
   docketNumber: string | null;
+  barrierCategory?: string;
   affectedStates: string[];
   filingDate: string | null;
   leadFirmId: string | null;
@@ -266,6 +267,15 @@ export default function AdminLitigation() {
                   <span className="block text-xs text-ink-500 font-mono">
                     {row.slug}
                   </span>
+                  {/* AC6: the gap has to be countable at a glance, or
+                      38-of-39 quietly becomes 30-of-45 as records are added
+                      and nobody notices the ones with no category. Text,
+                      not a colour — colour is never the only signal. */}
+                  {(!row.barrierCategory || row.barrierCategory === 'unassigned') && (
+                    <span className="block text-xs text-ink-700">
+                      Needs a barrier category
+                    </span>
+                  )}
                 </td>
                 <td className="px-3 py-2 text-ink-700">{KIND_LABEL[row.kind] ?? row.kind}</td>
                 <td className="px-3 py-2 text-ink-700">

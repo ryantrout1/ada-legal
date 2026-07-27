@@ -870,6 +870,13 @@ export class InMemoryDbClient implements DbClient {
       ...(input.kind !== undefined ? { kind: input.kind } : {}),
       ...(input.caseName !== undefined ? { caseName: input.caseName } : {}),
       ...(input.slug !== undefined ? { slug: input.slug } : {}),
+      // Taxonomy Phase 1 wired these through the Neon client's update and
+      // not this one, so they round-tripped in production and silently did
+      // nothing in every test using the in-memory client.
+      ...(input.barrierCategory !== undefined
+        ? { barrierCategory: input.barrierCategory }
+        : {}),
+      ...(input.intakeStatus !== undefined ? { intakeStatus: input.intakeStatus } : {}),
       ...(input.legalTheory !== undefined ? { legalTheory: input.legalTheory } : {}),
       ...(input.shortDescription !== undefined ? { shortDescription: input.shortDescription } : {}),
       ...(input.shortDescriptionSimple !== undefined

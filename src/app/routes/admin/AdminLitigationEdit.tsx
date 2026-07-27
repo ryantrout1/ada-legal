@@ -28,6 +28,26 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import LitigationRoutingPanel from './components/LitigationRoutingPanel.js';
 import { KIND_LABEL, STATUS_LABEL, normalizeStates } from './AdminLitigation.js';
+import {
+  BARRIER_CLUSTER_ORDER,
+  BARRIER_CLUSTER_LABELS,
+  CATEGORIES_BY_CLUSTER,
+  barrierCategoryLabel,
+  type BarrierCategoryStored,
+} from '../../lib/barrierCategories.js';
+import type { IntakeStatus } from '../../../engine/clients/types.js';
+
+/**
+ * Written as sentences rather than the stored tokens. "mechanism" means
+ * nothing to a reader; what it actually encodes is that there is no intake
+ * but a live way to raise the problem — a city 311 line, a hospital's own
+ * complaint process.
+ */
+const INTAKE_STATUS_LABEL: Record<IntakeStatus, string> = {
+  open: 'Someone can join or be represented now',
+  mechanism: 'No intake, but there is a live way to raise it',
+  none: 'Nothing a person can do here directly',
+};
 
 type Kind = keyof typeof KIND_LABEL;
 type Status = keyof typeof STATUS_LABEL;
@@ -39,6 +59,8 @@ interface AttorneyOption {
 
 interface FormState {
   kind: Kind;
+  barrierCategory: BarrierCategoryStored;
+  intakeStatus: IntakeStatus;
   caseName: string;
   slug: string;
   status: Status;
@@ -56,6 +78,8 @@ interface FormState {
 
 const EMPTY: FormState = {
   kind: 'class',
+  barrierCategory: 'unassigned',
+  intakeStatus: 'none',
   caseName: '',
   slug: '',
   status: 'draft',
@@ -121,6 +145,8 @@ export default function AdminLitigationEdit() {
       const states = normalizeStates(lit.affectedStates as string[]);
       setForm({
         kind: (lit.kind as Kind) ?? 'class',
+        barrierCategory: (lit.barrierCategory as BarrierCategoryStored) ?? 'unassigned',
+        intakeStatus: (lit.intakeStatus as IntakeStatus) ?? 'none',
         caseName: (lit.caseName as string) ?? '',
         slug: (lit.slug as string) ?? '',
         status: (lit.status as Status) ?? 'draft',
@@ -174,6 +200,8 @@ export default function AdminLitigationEdit() {
     setSaving(true);
     const payload: Record<string, unknown> = {
       kind: form.kind,
+      barrier_category: form.barrierCategory,
+      intake_status: form.intakeStatus,
       case_name: form.caseName.trim(),
       slug,
       status: form.status,
@@ -305,6 +333,43 @@ export default function AdminLitigationEdit() {
           >
             {(Object.keys(KIND_LABEL) as Kind[]).map((k) => (
               <option key={k} value={k}>{KIND_LABEL[k]}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className={labelClass} htmlFor="barrier-category">Barrier category</label>
+          <select
+            id="barrier-category"
+            className={inputClass}
+            value={form.barrierCategory}
+            onChange={(e) => set('barrierCategory', e.target.value as BarrierCategoryStored)}
+          >
+            {/* Offered deliberately. A wrong category misleads — it puts a
+                case on a page it does not belong to and names the wrong
+                agency in its fallback route — so this has to be clearable,
+                not only changeable. Never offered on the public side. */}
+            <option value="unassigned">Not yet categorised</option>
+            {BARRIER_CLUSTER_ORDER.map((cluster) => (
+              <optgroup key={cluster} label={BARRIER_CLUSTER_LABELS[cluster]}>
+                {CATEGORIES_BY_CLUSTER[cluster].map((c) => (
+                  <option key={c} value={c}>{barrierCategoryLabel(c)}</option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className={labelClass} htmlFor="intake-status">Can a person act on this?</label>
+          <select
+            id="intake-status"
+            className={inputClass}
+            value={form.intakeStatus}
+            onChange={(e) => set('intakeStatus', e.target.value as IntakeStatus)}
+          >
+            {(Object.keys(INTAKE_STATUS_LABEL) as IntakeStatus[]).map((v) => (
+              <option key={v} value={v}>{INTAKE_STATUS_LABEL[v]}</option>
             ))}
           </select>
         </div>

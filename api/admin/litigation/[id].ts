@@ -16,7 +16,13 @@ import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv } from '../../_shared.js';
 import { sanitizeIncomingStates } from '../../../src/engine/clients/litigationStates.js';
 import { LITIGATION_KINDS } from '../../../src/types/db.js';
+import {
+  isStoredCategory,
+  type BarrierCategoryStored,
+} from '../../../src/app/lib/barrierCategories.js';
+import { INTAKE_STATUSES } from '../../../src/engine/clients/types.js';
 import type {
+  IntakeStatus,
   LitigationKind,
   LitigationStatus,
 } from '../../../src/engine/clients/types.js';
@@ -88,6 +94,21 @@ async function handlePatch(id: string, req: VercelRequest, res: VercelResponse) 
     if ('lead_firm_id' in body) patch.leadFirmId = stringOrNull(body.lead_firm_id);
     if (isStatus(body.status)) patch.status = body.status;
 
+    // Phase 2: the taxonomy fields. Unlike the fields above, a bad value
+    // here is reported rather than dropped — see the guards' comment.
+    if ('barrier_category' in body) {
+      if (!isBarrierCategory(body.barrier_category)) {
+        return res.status(400).json({ error: 'Unknown barrier_category' });
+      }
+      patch.barrierCategory = body.barrier_category;
+    }
+    if ('intake_status' in body) {
+      if (!isIntakeStatus(body.intake_status)) {
+        return res.status(400).json({ error: 'Unknown intake_status' });
+      }
+      patch.intakeStatus = body.intake_status;
+    }
+
     const clients = makeClientsFromEnv();
     const updated = await clients.db.updateLitigation(id, patch as never);
     if (!updated) return res.status(404).json({ error: 'Litigation not found' });
@@ -121,6 +142,21 @@ async function handleArchive(id: string, res: VercelResponse) {
  * to save — the field was dropped from the patch with no error, so the
  * screen was wrong and the stored data was fine.
  */
+/**
+ * Both of these return the field name to the caller rather than dropping a
+ * bad value silently, which is what the fields around them do. That silence
+ * is how a blank Kind dropdown survived a save without complaint. An admin
+ * who typed something wrong should be told, not left to discover later that
+ * the change never landed.
+ */
+export function isBarrierCategory(v: unknown): v is BarrierCategoryStored {
+  return isStoredCategory(v);
+}
+
+export function isIntakeStatus(v: unknown): v is IntakeStatus {
+  return typeof v === 'string' && (INTAKE_STATUSES as readonly string[]).includes(v);
+}
+
 export function isKind(v: unknown): v is LitigationKind {
   return typeof v === 'string' && (LITIGATION_KINDS as readonly string[]).includes(v);
 }

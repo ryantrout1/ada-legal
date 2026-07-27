@@ -485,7 +485,10 @@ export type BarrierCategory =
  * Narrower than `status` on purpose; see the column comment in
  * schema-core.ts for why this is not a duplicate of it.
  */
-export type IntakeStatus = 'open' | 'mechanism' | 'none';
+export const INTAKE_STATUSES = ['open', 'mechanism', 'none'] as const;
+
+/** Derived from the list above so a guard can walk it — see LITIGATION_KINDS. */
+export type IntakeStatus = (typeof INTAKE_STATUSES)[number];
 
 export type LitigationStatus =
   | 'draft'

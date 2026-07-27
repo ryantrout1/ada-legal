@@ -146,7 +146,27 @@ export const CATEGORIES_BY_CLUSTER: Record<BarrierCluster, readonly BarrierCateg
   ],
 };
 
+/**
+ * Every value the column will accept, browsable or not.
+ *
+ * BARRIER_CATEGORY_ORDER is what a reader can filter by. This adds
+ * `unassigned`, which admin needs and the public side must never offer: a
+ * wrong category actively misleads — it puts a case on a page it does not
+ * belong to and names the wrong agency in its fallback route — so admin
+ * has to be able to clear one, not only change it.
+ */
+export const BARRIER_CATEGORY_STORED: readonly BarrierCategoryStored[] = [
+  ...BARRIER_CATEGORY_ORDER,
+  'unassigned',
+];
+
 const BROWSABLE = new Set<string>(BARRIER_CATEGORY_ORDER);
+const STORED = new Set<string>(BARRIER_CATEGORY_STORED);
+
+/** True for any value the column accepts, `unassigned` included. */
+export function isStoredCategory(value: unknown): value is BarrierCategoryStored {
+  return typeof value === 'string' && STORED.has(value);
+}
 
 /** True only for the 15 categories a reader can filter by. */
 export function isBrowsableCategory(value: string | null | undefined): value is BarrierCategory {
