@@ -26,6 +26,7 @@ import { useLocation } from 'react-router-dom';
 import GuideReadingLevelBar from '../../components/standards/GuideReadingLevelBar.jsx';
 import LawsuitCard from '../../components/litigation/LawsuitCard.js';
 import LawsuitFilters from '../../components/litigation/LawsuitFilters.js';
+import ContactBlock from '../../components/litigation/ContactBlock.js';
 import {
   parseInitialFilters,
   filterLawsuits,
@@ -190,6 +191,19 @@ export default function Lawsuits() {
               : 'Try clearing the search or choosing a different type, status, or state.'}
           </p>
         </div>
+      )}
+
+      {/* Taxonomy Phase 5: an empty result used to be where the search
+          ended. When someone has picked a category and found nothing,
+          the government route for that category is the honest next
+          step — no case, no counsel, and they can still report it. Only
+          shown once a category is chosen, because "anything" gives us
+          nothing to route on. */}
+      {!loading && !error && filtered.length === 0 && filters.category !== 'all' && (
+        <ContactBlock
+          category={filters.category}
+          headingId="no-results-contact-heading"
+        />
       )}
 
       {!loading && !error && filtered.length > 0 && (
