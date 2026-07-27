@@ -208,3 +208,32 @@ describe('the consumer site is browsable on the engine domain', () => {
     expect(raw, 'noindex header was removed too early').toContain('noindex');
   });
 });
+
+/**
+ * /chat always goes to /ada.
+ *
+ * It is the old name for the intake front door and is still in the wild —
+ * bookmarks, anything printed, and whatever Google indexed while the
+ * sitemap advertised it at priority 0.9. The route no longer exists, so
+ * losing this rule turns the most-linked entry point on the site into a
+ * soft 404 rather than an error anyone would notice.
+ *
+ * Pinned separately from the bulk B44 page map because /chat is not a
+ * Base44 page name — it survives the decommission and must outlive it.
+ */
+describe('/chat is a permanent alias for the intake front door', () => {
+  it('redirects to /ada, permanently', () => {
+    const rule = config.redirects.find((r) => r.source === '/chat');
+    expect(rule, '/chat lost its redirect').toBeDefined();
+    expect(rule?.destination).toBe('/ada');
+    expect(rule?.permanent, '/chat must be a 308, not a temporary').toBe(true);
+  });
+
+  it('is not itself redirected away by an earlier rule', () => {
+    const idx = config.redirects.findIndex((r) => r.source === '/chat');
+    const earlier = config.redirects
+      .slice(0, idx)
+      .find((r) => r.source === '/chat' || r.source === '/(.*)');
+    expect(earlier, 'an earlier rule shadows /chat').toBeUndefined();
+  });
+});
