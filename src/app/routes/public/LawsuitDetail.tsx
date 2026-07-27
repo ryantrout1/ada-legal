@@ -38,6 +38,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import GuideReadingLevelBar from '../../components/standards/GuideReadingLevelBar.jsx';
 import { useReadingLevel } from '../../components/standards/ReadingLevelContext.js';
 import { StatusBadge, KindLabel } from '../../components/litigation/LitigationChips.js';
+import ContactBlock from '../../components/litigation/ContactBlock.js';
 import { useLawsuitsAdaCta } from '../../hooks/useLawsuitsAdaCta.js';
 import { kindLabel, statesLabel } from '../../lib/litigationLabels.js';
 import { pickReadingLevelText, pickSimpleProText } from '../../lib/readingLevelText.js';
@@ -588,6 +589,18 @@ export default function LawsuitDetail() {
               )}
             </dl>
           </section>
+
+          {/* Taxonomy Phase 6. Renders the contacts we hold, each with its
+              scope note attached, or the government route for this barrier
+              category when we hold none — which is 26 of 39 cases, so the
+              fallback is the common path, not the edge case. Placed after
+              the facts and before the supporting detail: the facts say what
+              the case is, this says what a person can do about it. */}
+          <ContactBlock
+            contacts={row.contacts}
+            category={row.barrierCategory}
+            headingId="contact-heading"
+          />
 
           {keyDateEntries.length > 0 && (
             <section style={sectionStyle} aria-labelledby="key-dates-heading">

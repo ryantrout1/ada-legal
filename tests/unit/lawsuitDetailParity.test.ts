@@ -152,4 +152,26 @@ describe('LawsuitDetail — routing and data seams', () => {
       expect(code, `internal field rendered: ${field}`).not.toContain(field);
     }
   });
+
+  /**
+   * Taxonomy Phase 6 — who to contact.
+   *
+   * The seeded contacts and the government route both existed and were
+   * returned by the API for a while before anything rendered them, which
+   * is the failure this pins: stored is not the same as shown.
+   */
+  it('renders the contact block, fed by both the contacts and the category', () => {
+    expect(code).toContain('ContactBlock');
+    // Both props matter. Without contacts it can only ever show the
+    // government route; without the category that route would be the
+    // generic DOJ one for an airline or an employment case.
+    expect(code).toContain('row.contacts');
+    expect(code).toContain('row.barrierCategory');
+  });
+
+  it('does not fetch contacts separately from the row', () => {
+    // They arrive with the detail payload. A second request would let the
+    // page paint a case with its contacts still in flight.
+    expect(code).not.toContain('/api/public/litigation/contacts');
+  });
 });

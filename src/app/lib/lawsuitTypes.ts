@@ -65,7 +65,31 @@ export interface PublicLawsuitDetailRow extends PublicLawsuitRow {
   whatThisIsNotProfessional: string | null;
   keyDates: Record<string, string>;
   leadAttorneyName: string | null;
+  /**
+   * Taxonomy Phase 3. Loaded with the row rather than fetched separately,
+   * so the page never renders a case with its contacts still in flight.
+   * Optional because a cached response from before Phase 3 will not carry
+   * the key — absent behaves the same as none, which falls through to the
+   * government route.
+   */
+  contacts?: PublicLawsuitContact[];
   relatedCases: RelatedLawsuit[];
+}
+
+/** A contact as /api/public/litigation/:slug returns it. */
+export interface PublicLawsuitContact {
+  id: string;
+  contactKind: string;
+  orgName: string;
+  personName: string | null;
+  phone: string | null;
+  tty: string | null;
+  email: string | null;
+  url: string | null;
+  address: string | null;
+  /** Who this contact can help. Never blank — the database rejects it. */
+  scopeNote: string;
+  intakeOpen: boolean;
 }
 
 export interface RelatedLawsuit {
