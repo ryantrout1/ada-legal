@@ -83,14 +83,29 @@ export interface MatchedListing {
   listingTitle: string;
   /** Listing category, e.g. "ada_title_iii". Drives the chip color. */
   listingCategory: string;
-  /** Hosting law firm display name. */
-  firmName: string;
+  /**
+   * Who to contact. Null when we hold nobody — which is most cases, and is
+   * why this is nullable rather than the block being omitted. A matched
+   * case with no contact still tells the reader what it is.
+   */
+  firmName: string | null;
   /** Primary contact name at the firm, if set on the firm row. */
   firmPrimaryContact: string | null;
   /** Firm email, if set. */
   firmEmail: string | null;
   /** Firm phone, if set. */
   firmPhone: string | null;
+  /**
+   * True only when this contact is counsel of record on the case. A firm
+   * from our own network that takes related work is a useful contact and
+   * is NOT running the case — saying otherwise is the mistake Niles was
+   * carrying when an assigned firm showed as its lead attorney.
+   */
+  contactIsClassCounsel: boolean;
+  /** What this contact can help with. Null when we fell back to a firm. */
+  contactScopeNote: string | null;
+  /** Lets the page offer the government route when there is no contact. */
+  barrierCategory: string | null;
 }
 
 /**

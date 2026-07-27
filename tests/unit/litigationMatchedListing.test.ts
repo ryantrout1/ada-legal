@@ -62,13 +62,36 @@ describe('buildLitigationMatchedListing', () => {
     expect(await buildLitigationMatchedListing({ db }, 'nope')).toBeNull();
   });
 
-  it('returns null when no firm resolves (leaves the placeholder — honest)', async () => {
+  /**
+   * These two asserted null, on the reasoning that a placeholder was more
+   * honest than naming a firm we could not resolve. That reasoning held
+   * while those were the only two options.
+   *
+   * They are not any more. Returning null means the readout falls back to
+   * a generic class-action placeholder that names nobody and offers
+   * nothing — which is what a Niles match produces today, after its lead
+   * attorney and firm assignment were removed on 2026-07-27 because the
+   * assigned firm was not counsel on the case.
+   *
+   * The third option is to return the listing with no contact attached and
+   * let the page offer the government route for its barrier category. The
+   * reader still learns a case exists about exactly their problem, and
+   * still gets a next step. Naming nobody is honest; saying nothing is not.
+   *
+   * The case still has to be real — a missing litigation row is still null.
+   */
+  it('returns the case with no contact when no firm resolves', async () => {
     const db = seed({ withAssignment: false, withFirmRow: true });
-    expect(await buildLitigationMatchedListing({ db }, LIT_ID)).toBeNull();
+    const built = await buildLitigationMatchedListing({ db }, LIT_ID);
+    expect(built).not.toBeNull();
+    expect(built!.firmName).toBeNull();
+    expect(built!.contactIsClassCounsel).toBe(false);
   });
 
-  it('returns null when the resolved firm row is missing', async () => {
+  it('returns the case with no contact when the resolved firm row is missing', async () => {
     const db = seed({ withAssignment: true, withFirmRow: false });
-    expect(await buildLitigationMatchedListing({ db }, LIT_ID)).toBeNull();
+    const built = await buildLitigationMatchedListing({ db }, LIT_ID);
+    expect(built).not.toBeNull();
+    expect(built!.firmName).toBeNull();
   });
 });

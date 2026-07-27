@@ -399,6 +399,11 @@ async function finalizeTurn(
                   listingSlug: listing.slug,
                   listingTitle: listing.title,
                   listingCategory: listing.category,
+                  // Legacy Ch1 listing bound to one of our own firms. Not
+                  // counsel of record, and no barrier category on that table.
+                  contactIsClassCounsel: false,
+                  contactScopeNote: null,
+                  barrierCategory: null,
                   firmName: firm.name,
                   firmPrimaryContact: firm.primaryContact,
                   firmEmail: firm.email,

@@ -30,19 +30,57 @@ export async function buildLitigationMatchedListing(
   const litigation = await clients.db.getLitigationById(litigationListingId);
   if (!litigation) return null;
 
-  const firmId = await resolveDisplayFirm(clients, litigationListingId);
-  if (!firmId) return null;
-
-  const firm = await clients.db.readLawFirmById(firmId);
-  if (!firm) return null;
-
-  return {
+  const base = {
     listingSlug: litigation.slug,
     listingTitle: litigation.caseName,
     listingCategory: litigation.kind,
-    firmName: firm.name,
-    firmPrimaryContact: firm.primaryContact,
-    firmEmail: firm.email,
-    firmPhone: firm.phone,
+    barrierCategory: litigation.barrierCategory ?? null,
+  };
+
+  // Class counsel first. They are the lawyers actually running the case,
+  // and they are usually a firm we have no relationship with and no row
+  // for — which is exactly why looking only at our own network was wrong.
+  const contacts = await clients.db.listContactsForLitigation(litigationListingId);
+  const counsel = contacts.find((c) => c.contactKind === 'class_counsel');
+  if (counsel) {
+    return {
+      ...base,
+      firmName: counsel.orgName,
+      firmPrimaryContact: counsel.personName,
+      firmEmail: counsel.email,
+      firmPhone: counsel.phone,
+      contactIsClassCounsel: true,
+      contactScopeNote: counsel.scopeNote,
+    };
+  }
+
+  // Then a firm from our network, if one resolves. Useful, but NOT counsel
+  // of record — the flag keeps the page from implying otherwise.
+  const firmId = await resolveDisplayFirm(clients, litigationListingId);
+  const firm = firmId ? await clients.db.readLawFirmById(firmId) : null;
+  if (firm) {
+    return {
+      ...base,
+      firmName: firm.name,
+      firmPrimaryContact: firm.primaryContact,
+      firmEmail: firm.email,
+      firmPhone: firm.phone,
+      contactIsClassCounsel: false,
+      contactScopeNote: null,
+    };
+  }
+
+  // Neither. Return the listing anyway rather than null: null made the
+  // readout fall back to a placeholder naming nobody, which is what a
+  // Niles match produces today. The page can offer the government route
+  // for the barrier category instead.
+  return {
+    ...base,
+    firmName: null,
+    firmPrimaryContact: null,
+    firmEmail: null,
+    firmPhone: null,
+    contactIsClassCounsel: false,
+    contactScopeNote: null,
   };
 }

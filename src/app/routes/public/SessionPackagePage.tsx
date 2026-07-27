@@ -353,7 +353,7 @@ function PackageView({
           {(pkg.matchedListing.firmEmail || pkg.matchedListing.firmPhone) && (
             <div className="mb-5">
               <FirmContactCopyButton
-                firmName={pkg.matchedListing.firmName}
+                firmName={pkg.matchedListing.firmName ?? ''}
                 firmEmail={pkg.matchedListing.firmEmail}
                 firmPhone={pkg.matchedListing.firmPhone}
               />
