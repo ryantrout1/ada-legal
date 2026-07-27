@@ -73,6 +73,25 @@ const FACETS_RESPONSE = {
   practice_areas: ['ada', 'public_accommodations', 'employment'],
 };
 
+/**
+ * A note on what these assertions used to say, so a weaker test is not
+ * mistaken for the original intent.
+ *
+ * Until commit b783e7b (2026-07-23) this page filtered practice areas with
+ * a row of toggle buttons — <button role="switch" aria-pressed> — and you
+ * could turn on several at once. The rebuild to Base44's design replaced
+ * them with a single dropdown, so only one practice area can be chosen.
+ * That took the switch assertion with it, and made the combobox count two
+ * rather than one.
+ *
+ * Reviewed 2026-07-27 and one is fine for now — a deliberate call, not an
+ * oversight, which is the only reason these assertions were relaxed rather
+ * than the component repaired. The fieldset that went missing in the same
+ * commit WAS repaired; see AttorneyFilters.tsx.
+ *
+ * If multi-select comes back, restore both: two comboboxes become one, and
+ * the switch assertion returns.
+ */
 test.describe('Attorneys filter visibility — renders at any roster size', () => {
   test('shows filter UI on a small roster (5 attorneys)', async ({
     page,
@@ -112,8 +131,9 @@ test.describe('Attorneys filter visibility — renders at any roster size', () =
     // have caught the original defect, where four approved attorneys
     // meant no search box at all.
     await expect(page.locator('fieldset')).toHaveCount(1);
-    await expect(page.getByRole('combobox')).toHaveCount(1); // State select
-    await expect(page.getByRole('switch').first()).toBeVisible();
+    // Practice area and state. TWO, not one, and not because the test
+    // drifted — see the note at the top of this file.
+    await expect(page.getByRole('combobox')).toHaveCount(2);
 
     // Cards must still render.
     await expect(page.getByRole('heading', { name: 'Mock Attorney 1' })).toBeVisible();
@@ -173,9 +193,8 @@ test.describe('Attorneys filter visibility — renders at any roster size', () =
 
     // Filter UI must be present.
     await expect(page.locator('fieldset')).toHaveCount(1);
-    await expect(page.getByRole('combobox')).toHaveCount(1); // State select
-    // Practice-area chips render as switches; expect at least one.
-    await expect(page.getByRole('switch').first()).toBeVisible();
+    // Practice area and state — see the note at the top of this file.
+    await expect(page.getByRole('combobox')).toHaveCount(2);
 
     // Cards must render.
     await expect(page.getByRole('heading', { name: 'Mock Attorney 1' })).toBeVisible();
