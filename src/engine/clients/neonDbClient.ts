@@ -25,6 +25,7 @@ import {
   adaSessions,
   anonSessions,
   attorneys as attorneysTable,
+  litigationContacts as litigationContactsTable,
   litigationListings as litigationTable,
   litigationFirmAssignments,
   organizations,
@@ -113,7 +114,10 @@ import type {
   CreateLitigationInput,
   LitigationAdminRow,
   BarrierCategory,
+  CreateLitigationContactInput,
   IntakeStatus,
+  LitigationContactKind,
+  LitigationContactRow,
   LitigationKind,
   LitigationRow,
   LitigationDetailRow,
@@ -1456,6 +1460,46 @@ export class NeonDbClient implements DbClient {
     return rows.map(toLitigationPublicRow);
   }
 
+  async listContactsForLitigation(
+    litigationListingId: string,
+  ): Promise<LitigationContactRow[]> {
+    const rows = await this.db
+      .select()
+      .from(litigationContactsTable)
+      .where(eq(litigationContactsTable.litigationListingId, litigationListingId))
+      .orderBy(litigationContactsTable.displayOrder, litigationContactsTable.orgName);
+    return rows.map(toLitigationContactRow);
+  }
+
+  async createLitigationContact(
+    input: CreateLitigationContactInput,
+  ): Promise<LitigationContactRow> {
+    // Guarded here as well as by the CHECK, so the in-memory client and
+    // this one reject the same input for the same reason.
+    if (!input.scopeNote || input.scopeNote.trim().length === 0) {
+      throw new Error('litigation contact requires a scope note');
+    }
+    const [row] = await this.db
+      .insert(litigationContactsTable)
+      .values({
+        orgId: input.orgId,
+        litigationListingId: input.litigationListingId,
+        contactKind: input.contactKind,
+        orgName: input.orgName,
+        personName: input.personName ?? null,
+        phone: input.phone ?? null,
+        tty: input.tty ?? null,
+        email: input.email ?? null,
+        url: input.url ?? null,
+        address: input.address ?? null,
+        scopeNote: input.scopeNote,
+        intakeOpen: input.intakeOpen ?? false,
+        displayOrder: input.displayOrder ?? 0,
+      })
+      .returning();
+    return toLitigationContactRow(row!);
+  }
+
   async readActiveLitigationBySlug(
     opts: ReadActiveLitigationBySlugOptions,
   ): Promise<LitigationDetailRow | null> {
@@ -1535,9 +1579,14 @@ export class NeonDbClient implements DbClient {
         }));
     }
 
+    // Taxonomy Phase 3: the detail page renders these, so they load with
+    // the row rather than in a second round trip from the client.
+    const contacts = await this.listContactsForLitigation(r.litigation.id);
+
     return {
       ...toLitigationPublicRow(r.litigation),
       leadAttorneyName: r.attorneyName ?? null,
+      contacts,
       relatedCases,
     };
   }
@@ -4522,6 +4571,27 @@ function toAttorneyAdminRow(r: typeof attorneysTable.$inferSelect): AttorneyAdmi
     maxActiveCases: r.maxActiveCases,
     createdAt: (r.createdAt as Date).toISOString(),
     updatedAt: (r.updatedAt as Date).toISOString(),
+  };
+}
+
+function toLitigationContactRow(
+  r: typeof litigationContactsTable.$inferSelect,
+): LitigationContactRow {
+  return {
+    id: r.id,
+    litigationListingId: r.litigationListingId,
+    contactKind: r.contactKind as LitigationContactKind,
+    orgName: r.orgName,
+    personName: r.personName,
+    phone: r.phone,
+    tty: r.tty,
+    email: r.email,
+    url: r.url,
+    address: r.address,
+    scopeNote: r.scopeNote,
+    intakeOpen: r.intakeOpen,
+    displayOrder: r.displayOrder,
+    verifiedAt: r.verifiedAt ? r.verifiedAt.toISOString() : null,
   };
 }
 

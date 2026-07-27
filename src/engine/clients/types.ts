@@ -721,6 +721,8 @@ export interface ReadActiveLitigationBySlugOptions {
 export interface LitigationDetailRow extends LitigationRow {
   /** null when leadAttorneyId is unset OR the attorney row is missing. */
   leadAttorneyName: string | null;
+  /** Taxonomy Phase 3: who to contact, in display order. */
+  contacts: LitigationContactRow[];
   /**
    * Phase C1: inlined surface-visible related cases resolved from
    * relatedListingIds. Skips ids that resolve to missing/draft/closed/
@@ -761,6 +763,61 @@ export interface OrganizationRow {
 // ─── Attorney portal (migration 0019) ────────────────────────────────────────
 
 /** A row in litigation_firm_assignments — one firm assigned to one litigation. */
+/**
+ * Taxonomy Phase 3: who to contact about a case.
+ *
+ * Six kinds, drawn from what the research actually found rather than
+ * invented up front:
+ *   class_counsel            the lawyers who ran or are running it
+ *   settlement_administrator claims processing, e.g. CPT Group
+ *   government_agency        DOJ, DOT, EEOC, ED-OCR, HUD
+ *   state_pa                 state protection & advocacy — these DO take intake
+ *   referral_firm            taking related work, not counsel of record
+ *   defendant_process        the settlement's own mechanism, e.g. a city 311 line
+ */
+export type LitigationContactKind =
+  | 'class_counsel'
+  | 'settlement_administrator'
+  | 'government_agency'
+  | 'state_pa'
+  | 'referral_firm'
+  | 'defendant_process';
+
+export interface LitigationContactRow {
+  id: string;
+  litigationListingId: string;
+  contactKind: LitigationContactKind;
+  orgName: string;
+  personName: string | null;
+  phone: string | null;
+  tty: string | null;
+  email: string | null;
+  url: string | null;
+  address: string | null;
+  /** Who this contact can actually help. Never blank. */
+  scopeNote: string;
+  /** True only when someone confirmed they take new enquiries. */
+  intakeOpen: boolean;
+  displayOrder: number;
+  verifiedAt: string | null;
+}
+
+export interface CreateLitigationContactInput {
+  orgId: string;
+  litigationListingId: string;
+  contactKind: LitigationContactKind;
+  orgName: string;
+  scopeNote: string;
+  personName?: string | null;
+  phone?: string | null;
+  tty?: string | null;
+  email?: string | null;
+  url?: string | null;
+  address?: string | null;
+  intakeOpen?: boolean;
+  displayOrder?: number;
+}
+
 export interface LitigationFirmAssignment {
   id: string;
   litigationListingId: string;
@@ -1177,6 +1234,9 @@ export interface DbClient {
    * and matches every state filter.
    */
   listActiveLitigation(opts?: ListActiveLitigationOptions): Promise<LitigationRow[]>;
+  /** Contacts for a case, in display order. Empty array when there are none. */
+  listContactsForLitigation(litigationListingId: string): Promise<LitigationContactRow[]>;
+  createLitigationContact(input: CreateLitigationContactInput): Promise<LitigationContactRow>;
   /**
    * Phase 6a: read a single active litigation row by slug, scoped to
    * orgId. Returns the row joined with the lead attorney's name, or null

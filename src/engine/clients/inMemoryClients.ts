@@ -23,6 +23,8 @@ import type { CaseEvidence } from '../cases/caseEvidence.js';
 const PIPELINE_EVENT_TYPES: ReadonlySet<string> = new Set(['ROUTED', 'ACCEPT', 'BEGIN_WORK', 'RESOLVE']);
 import type { AdaSessionState } from '../types.js';
 import type {
+  CreateLitigationContactInput,
+  LitigationContactRow,
   AdaClients,
   AdminAnalyticsOptions,
   AdminAnalyticsResult,
@@ -187,6 +189,7 @@ export class InMemoryDbClient implements DbClient {
   public readonly attorneys: AttorneyRow[] = [];
   public readonly adminAttorneys: AttorneyAdminRow[] = [];
   public readonly adminLitigation: LitigationAdminRow[] = [];
+  public readonly litigationContacts: LitigationContactRow[] = [];
   public readonly orgs: OrganizationRow[] = [];
   public readonly systemSettings = new Map<string, unknown>();
   public readonly qualityChecks = new Map<string, SessionQualityCheckRow>();
@@ -932,6 +935,44 @@ export class InMemoryDbClient implements DbClient {
     return next;
   }
 
+  async listContactsForLitigation(
+    litigationListingId: string,
+  ): Promise<LitigationContactRow[]> {
+    return this.litigationContacts
+      .filter((c) => c.litigationListingId === litigationListingId)
+      .sort((a, b) => a.displayOrder - b.displayOrder || a.orgName.localeCompare(b.orgName));
+  }
+
+  async createLitigationContact(
+    input: CreateLitigationContactInput,
+  ): Promise<LitigationContactRow> {
+    // Mirrors the CHECK in migration 0046: a contact that cannot say who
+    // it serves must not be storable, because the page shows every case to
+    // everyone regardless of where they are.
+    if (!input.scopeNote || input.scopeNote.trim().length === 0) {
+      throw new Error('litigation contact requires a scope note');
+    }
+    const row: LitigationContactRow = {
+      id: '30000000-0000-4000-8000-' +
+        (this.litigationContacts.length + 1).toString(16).padStart(12, '0'),
+      litigationListingId: input.litigationListingId,
+      contactKind: input.contactKind,
+      orgName: input.orgName,
+      personName: input.personName ?? null,
+      phone: input.phone ?? null,
+      tty: input.tty ?? null,
+      email: input.email ?? null,
+      url: input.url ?? null,
+      address: input.address ?? null,
+      scopeNote: input.scopeNote,
+      intakeOpen: input.intakeOpen ?? false,
+      displayOrder: input.displayOrder ?? 0,
+      verifiedAt: null,
+    };
+    this.litigationContacts.push(row);
+    return row;
+  }
+
   async listActiveLitigation(
     opts: ListActiveLitigationOptions = {},
   ): Promise<LitigationRow[]> {
@@ -1104,6 +1145,7 @@ export class InMemoryDbClient implements DbClient {
       leadAttorneyId: row.leadAttorneyId,
       leadFirmId: row.leadFirmId,
       leadAttorneyName,
+      contacts: await this.listContactsForLitigation(row.id),
       relatedCases,
     };
   }

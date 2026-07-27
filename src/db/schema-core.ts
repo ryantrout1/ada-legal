@@ -476,6 +476,51 @@ export const litigationListings = pgTable(
   ],
 );
 
+// ─── litigation_contacts ──────────────────────────────────────────────────────
+// Taxonomy Phase 3 (migration 0046): who to contact about a case.
+//
+// Separate from law_firms on purpose. Most of these are not firms in our
+// system — settlement administrators, the DOJ, state protection & advocacy
+// agencies, a city 311 line — and law_firms feeds routing eligibility, so
+// putting a claims administrator there would make it routable.
+//
+// scopeNote is NOT NULL because nearly every contact is bounded to a place.
+// The directory shows a case to everyone regardless of where they are, so a
+// contact that cannot say who it serves must not be storable.
+
+export const litigationContacts = pgTable(
+  'litigation_contacts',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    orgId: uuid('org_id')
+      .notNull()
+      .references(() => organizations.id),
+    litigationListingId: uuid('litigation_listing_id')
+      .notNull()
+      .references(() => litigationListings.id, { onDelete: 'cascade' }),
+    contactKind: text('contact_kind').notNull(), // CHECK in migration 0046
+    orgName: text('org_name').notNull(),
+    personName: text('person_name'),
+    phone: text('phone'),
+    tty: text('tty'),
+    email: text('email'),
+    url: text('url'),
+    address: text('address'),
+    /** The jurisdictional guardrail. Never blank — CHECK in 0046. */
+    scopeNote: text('scope_note').notNull(),
+    /** Opt-in. Most of these monitor rather than take clients. */
+    intakeOpen: boolean('intake_open').notNull().default(false),
+    displayOrder: integer('display_order').notNull().default(0),
+    verifiedAt: timestamp('verified_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (t) => [index('litigation_contacts_listing').on(t.litigationListingId, t.displayOrder)],
+);
+
 // ─── litigation_firm_assignments ──────────────────────────────────────────────
 // Attorney portal (migration 0019): the routing fan-out. Many firms per
 // litigation row. Distinct from litigation_listings.lead_firm_id (the public
