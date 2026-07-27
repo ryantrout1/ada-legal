@@ -657,6 +657,7 @@ export default function Chat() {
       {/* Message list */}
       <div
         ref={listRef}
+        role="log"
         aria-live="polite"
         aria-label="Conversation with Ada"
         data-session-id={state.sessionId ?? ''}

@@ -276,6 +276,7 @@ export default function AdminListingPreview() {
 
       {/* Message list */}
       <div
+        role="log"
         aria-live="polite"
         aria-label="Conversation with Ada"
         className="rounded-md border border-surface-200 bg-white p-4 mb-4 min-h-[300px] max-h-[60vh] overflow-y-auto space-y-3"

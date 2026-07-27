@@ -55,20 +55,29 @@
      computes the ratios against all three surface tiers. */
   --color-ink-900: #1E293B;       /* headings — B44 --heading */
   --color-ink-700: #3D4A5C;       /* body — B44 --body */
-  --color-ink-500: #4B5563;       /* meta — B44 --body-secondary #4B5563 darkened;
-                                     B44's own value is 6.90:1 on surface-100 */
+  --color-ink-500: #454F5E;       /* meta. B44's #4B5563 is 6.90:1 on
+                                     surface-100 — just under the floor, and
+                                     the second half of the 2026-07-24 parity
+                                     trade. 7.57:1 now. */
 
-  /* Accent — terracotta. B44 uses #C2410C (4.85:1, AA only); this is the
-     minimum darkening that clears 7:1 on all three tiers, and is the same
-     value the attorney portal already runs on, so the two surfaces agree. */
+  /* Accent — terracotta, darkened to clear 7:1.
+     B44's own value is #C2410C, which measures 4.69-5.18 across the four
+     surfaces this lands on: AA, not AAA. It was set back to that value on
+     2026-07-24 so the rebuilt site could be compared like-for-like against
+     production during the Base44 move; the comparison is done, so the
+     darkening is back. #8E2F09 clears 7:1 as text on page-alt, subtle,
+     card and the accent tint, and clears 7:1 for white text sitting on it
+     as a fill — darkening helps both directions here, so unlike the Ada
+     violet no inversion is needed. Recorded exit from the debt note in
+     tests/unit/tokenParity.test.ts. */
   /* B44 --accent-light / --accent-lighter. Two tiers ABOVE the base
      accent; ours previously aliased both back to accent-500, so
      "light" was the same colour as the base and the hero headline
      rendered deep terracotta instead of B44's bright orange. */
   --color-accent-200: #FDBA74;
   --color-accent-300: #FB923C;
-  --color-accent-500: #C2410C;
-  --color-accent-600: #9A3412;    /* hover, active */
+  --color-accent-500: #8E2F09;    /* 7.42:1 worst surface, 8.20:1 white-on-fill */
+  --color-accent-600: #6E2308;    /* hover, active; also --section-label. 9.97:1 */
   --color-accent-50:  #FEF1EC;    /* accent surface tint */
 
   /* Ada accent — violet, brand-matched to the Base44 home page (--v2-ada
@@ -564,7 +573,7 @@ body {
  * portal. Browsers without :has() simply keep Plex — a clean fallback.
  *
  * Deliberately fonts only. The consumer site's palette is AA-level (its accent
- * #C2410C is 5.18:1); this app's AAA floor is why accent-500 is #883D17. Theme
+ * #C2410C is 5.18:1); this app's AAA floor is why accent-500 is #8E2F09. Theme
  * parity would mean regressing contrast, so the tokens stay put.
  */
 :root:has(.spot-surface) {

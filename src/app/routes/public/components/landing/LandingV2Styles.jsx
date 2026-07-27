@@ -11,7 +11,13 @@ export default function LandingV2Styles() {
     <style>{`
       /* Ada's distinct purple treatment, scoped to the v2 landing */
       .home-v2-root {
-        --v2-ada: var(--color-ada-400);
+        /* ada-500, not ada-400. ada-400 (#7C5CFC) is the DARK-panel tier —
+           its own comment says so — but the CTA that uses --v2-ada renders on
+           a light card, where white text on it measures 4.38:1 and fails even
+           AA. ada-500 is the light-surface tier and clears AAA both ways.
+           --v2-ada-light and --v2-ada-text below still point at the lighter
+           tiers, which are correct: they are only used on the dark hero. */
+        --v2-ada: var(--color-ada-500);
         --v2-ada-light: var(--color-ada-300);
         --v2-ada-text: var(--color-ada-200); /* AAA text-on-dark Ada violet: 8.4:1 on #141820 */
         --v2-ada-bg: rgba(124,92,252,0.08);

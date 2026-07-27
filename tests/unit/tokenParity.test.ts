@@ -322,13 +322,16 @@ describe('default palette parity with B44', () => {
     { token: '--color-surface-200',    b44: '#E2E8F0', reason: null },
     { token: '--color-ink-900',        b44: '#1E293B', reason: null },
     { token: '--color-ink-700',        b44: '#3D4A5C', reason: null },
-    // Both realigned to B44 exactly (2026-07-24). The goal for this phase
-    // is visual parity with production so the rebuilt site can actually be
-    // compared against it; the AAA darkening made every terracotta fill,
-    // link and section label visibly browner than the live site, which made
-    // judging anything else impossible. See ACCESSIBILITY_DEBT below.
-    { token: '--color-ink-500',        b44: '#4B5563', reason: null },
-    { token: '--color-accent-500',     b44: '#C2410C', reason: null },
+    // Realigned to B44 exactly on 2026-07-24 so the rebuilt site could be
+    // compared like-for-like against production during the Base44 move, at
+    // the cost of the 7:1 floor. That comparison is finished, so both are
+    // darkened again and the exemptions below are gone. The terracotta does
+    // read browner than the live B44 site — that is the accepted cost of
+    // AAA, and it is the whole reason this divergence is recorded here.
+    { token: '--color-ink-500',        b44: '#4B5563',
+      reason: 'B44 value is 6.90:1 on surface-100, under the 7:1 floor' },
+    { token: '--color-accent-500',     b44: '#C2410C',
+      reason: 'B44 value is 4.69-5.18 across our four surfaces — AA, not AAA' },
     { token: '--color-ada-500',        b44: '#6D28D9',
       reason: 'B44 value is 6.79:1 on our page tier; darkened to clear 7:1' },
     { token: '--color-control-border', b44: '#E2E8F0',
@@ -350,37 +353,36 @@ describe('default palette parity with B44', () => {
   const SURFACES = ['--color-surface-0', '--color-surface-50', '--color-surface-100'];
 
   /**
-   * ACCESSIBILITY DEBT — deliberate, dated, and reversible.
+   * The 2026-07-24 accessibility debt is PAID.
    *
-   * `--color-accent-500` is B44's #C2410C, which measures 5.18:1 on white.
-   * That clears AA (4.5:1) and fails the AAA floor (7:1) this project
-   * otherwise holds. It was set back to B44's value on 2026-07-24 so the
-   * rebuilt site could be compared like-for-like against production —
-   * the darkened value made parity impossible to judge.
+   * `--color-accent-500` and `--color-ink-500` were held at B44's AA-level
+   * values so the rebuilt site could be compared against production during
+   * the Base44 move. Both are darkened again: accent-500 to #8E2F09,
+   * accent-600 to #6E2308, ink-500 to #454F5E. There is no AAA exemption
+   * left, so every text token now goes through the same 7:1 sweep below.
    *
-   * This is NOT a silent regression. The exact measured ratio is asserted
-   * below, so if the token moves again this test tells you where it landed.
-   * To restore AAA: set --color-accent-500 to #8E2F09 and --color-accent-600
-   * to #6E2308, then flip these back to the 7:1 assertions.
+   * The exact ratios are asserted rather than just "greater than 7" so a
+   * future nudge tells you where it landed, which is what made the debt
+   * visible in the first place.
    */
-  // ink-500 is B44's #4B5563 — 6.90:1 on surface-100, a hair under the
-  // floor. Same trade as accent-500 and recorded the same way.
-  const AAA_EXEMPT = new Set(['--color-accent-500', '--color-ink-500']);
-
-  it('records the exact contrast of ink-500 on its worst surface', () => {
-    const ratio = contrast(token('--color-ink-500'), token('--color-surface-100'));
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
-    expect(Number(ratio.toFixed(2))).toBe(6.9);
+  it('accent-500 clears the floor as text AND as a fill behind white', () => {
+    const a = token('--color-accent-500');
+    expect(Number(contrast(a, '#FFFFFF').toFixed(2))).toBe(8.2);
+    expect(contrast('#FFFFFF', a)).toBeGreaterThanOrEqual(7);
   });
 
-  it('records the exact contrast of the AAA-exempt accent', () => {
-    const ratio = contrast(token('--color-accent-500'), '#FFFFFF');
-    expect(ratio).toBeGreaterThanOrEqual(4.5); // still clears AA
-    expect(ratio).toBeLessThan(7);             // and still owes AAA
-    expect(Number(ratio.toFixed(2))).toBe(5.18);
+  it('accent-600 stays darker than accent-500 so hover still darkens', () => {
+    expect(contrast(token('--color-accent-600'), '#FFFFFF'))
+      .toBeGreaterThan(contrast(token('--color-accent-500'), '#FFFFFF'));
   });
 
-  it.each(TEXT.filter((t) => !AAA_EXEMPT.has(t)))('%s clears 7:1 on every surface tier', (name) => {
+  it('ink-500 clears the floor on its worst surface', () => {
+    const r = contrast(token('--color-ink-500'), token('--color-surface-100'));
+    expect(r).toBeGreaterThanOrEqual(7);
+    expect(Number(r.toFixed(2))).toBe(7.57);
+  });
+
+  it.each(TEXT)('%s clears 7:1 on every surface tier', (name) => {
     const fg = token(name);
     const failing = SURFACES
       .map((s) => ({ s, r: contrast(fg, token(s)) }))
@@ -396,8 +398,8 @@ describe('default palette parity with B44', () => {
     }
   });
 
-  it('button text clears AA on the accent fill (AAA exempt — see debt note)', () => {
-    expect(contrast('#FFFFFF', token('--color-accent-500'))).toBeGreaterThanOrEqual(4.5);
+  it('white button text clears the AAA floor on the accent fill', () => {
+    expect(contrast('#FFFFFF', token('--color-accent-500'))).toBeGreaterThanOrEqual(7);
   });
 });
 
