@@ -77,14 +77,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const clients = makeClientsFromEnv();
-    const listings = await clients.db.listActiveListings();
 
-    // Dedupe listings by listingId (v_active_listings can emit
-    // multiple rows per listing when multiple subscriptions exist).
+    // Lawsuit URLs come from litigation_listings — the same source and
+    // the same four statuses the public /lawsuits pages render, so the
+    // sitemap can only ever advertise a URL that resolves.
+    //
+    // This used to call listActiveListings(), which reads the unrelated
+    // `listings` table (6 legacy firm-marketing rows). Five of the six
+    // slugs it emitted had no litigation row at all, so the sitemap was
+    // pointing crawlers at five soft 404s while omitting all 36 real
+    // lawsuit pages.
+    const litigation = await clients.db.listActiveLitigation({
+      statuses: ['active', 'compliance', 'investigating', 'tracking'],
+      limit: 500,
+    });
+
+    // Defensive dedupe: slugs are unique in the table, but a duplicate
+    // here would put the same <loc> in twice, which crawlers flag.
     const seen = new Set<string>();
-    const uniqueListings = listings.filter((l) => {
-      if (seen.has(l.listingId)) return false;
-      seen.add(l.listingId);
+    const uniqueLitigation = litigation.filter((l) => {
+      if (!l.slug || seen.has(l.slug)) return false;
+      seen.add(l.slug);
       return true;
     });
 
@@ -132,10 +145,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    for (const l of uniqueListings) {
+    for (const l of uniqueLitigation) {
       entries.push({
         loc: `${SITE_URL}/lawsuits/${encodeURIComponent(l.slug)}`,
-        lastmod: l.currentPeriodEnd ?? undefined,
+        // No lastmod. LitigationRow carries no updated_at, and the old
+        // code substituted a subscription's currentPeriodEnd — a billing
+        // date describing when money moved, not when the page changed.
+        // An absent hint is honest; a wrong one teaches crawlers to
+        // ignore the field.
         changefreq: 'weekly',
         priority: '0.8',
       });
