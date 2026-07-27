@@ -952,6 +952,8 @@ export class InMemoryDbClient implements DbClient {
       statusFilter.has(l.status),
     );
     if (opts.kind) filtered = filtered.filter((l) => l.kind === opts.kind);
+    if (opts.category)
+      filtered = filtered.filter((l) => l.barrierCategory === opts.category);
     if (opts.state) {
       filtered = filtered.filter(
         (l) =>

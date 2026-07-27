@@ -676,6 +676,8 @@ export interface UpdateLitigationInput {
 
 export interface ListActiveLitigationOptions {
   kind?: LitigationKind;
+  /** Taxonomy Phase 2: filter to one barrier category. */
+  category?: BarrierCategory;
   /**
    * Phase A3a: statuses to include. Defaults to `['active']` for
    * back-compat with Ada's prompt context (only active rows feed

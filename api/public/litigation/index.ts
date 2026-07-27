@@ -31,7 +31,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { makeClientsFromEnv } from '../../_shared.js';
 import { applyCors } from '../../_cors.js';
-import type { LitigationKind } from '../../../src/engine/clients/types.js';
+import type { LitigationKind, BarrierCategory } from '../../../src/engine/clients/types.js';
+import { isBrowsableCategory } from '../../../src/app/lib/barrierCategories.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
@@ -54,6 +55,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       kindRaw && validKinds.has(kindRaw as LitigationKind)
         ? (kindRaw as LitigationKind)
         : undefined;
+
+    // Taxonomy Phase 2: filter by where the barrier happened. Unknown
+    // values are dropped rather than passed through, so a bad link
+    // returns the whole directory instead of nothing.
+    const categoryRaw =
+      typeof req.query.category === 'string' ? req.query.category : undefined;
+    const category = isBrowsableCategory(categoryRaw)
+      ? (categoryRaw as BarrierCategory)
+      : undefined;
 
     const stateRaw = typeof req.query.state === 'string' ? req.query.state : undefined;
     const state = stateRaw ? stateRaw.toUpperCase() : undefined;
@@ -79,6 +89,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // archived) are never returned regardless of what's requested.
     const rows = await clients.db.listActiveLitigation({
       kind,
+      category,
       state,
       search,
       limit,

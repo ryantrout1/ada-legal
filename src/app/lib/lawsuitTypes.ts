@@ -17,6 +17,10 @@ export interface PublicLawsuitRow {
   id: string;
   kind: string;
   status: string;
+  /** Where the barrier was encountered. 'unassigned' until someone sets it. */
+  barrierCategory: string;
+  /** Whether a person can act on this today: open | mechanism | none. */
+  intakeStatus: string;
   caseName: string;
   slug: string;
   legalTheory: string | null;

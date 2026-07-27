@@ -1,5 +1,12 @@
 /**
- * LawsuitFilters — search + type + status + state controls.
+ * LawsuitFilters — search + what-happened + type + status + state controls.
+ *
+ * Taxonomy Phase 2 added "What happened" (barrier category), grouped
+ * into five headings. It sits ahead of Type because it is the control
+ * most people will reach for: it lets someone find their situation
+ * without first working out whether it counts as a class action or a
+ * consent decree. Type stays for now — removing it is a separate,
+ * deliberate step once this has been seen working on the real page.
  *
  * Ported from Base44 (src/components/public/LawsuitFilters.jsx
  * @ 6b1e9ac). Design authority is B44; changes are confined to the port
@@ -24,6 +31,12 @@ import {
   kindLabel,
   statusLabel,
 } from '../../lib/litigationLabels.js';
+import {
+  BARRIER_CLUSTER_ORDER,
+  BARRIER_CLUSTER_LABELS,
+  CATEGORIES_BY_CLUSTER,
+  barrierCategoryLabel,
+} from '../../lib/barrierCategories.js';
 import type { LawsuitFilterState } from '../../lib/lawsuitFilters.js';
 import type { CSSProperties } from 'react';
 
@@ -100,6 +113,30 @@ export default function LawsuitFilters({ filters, onChange }: Props) {
           placeholder="Case name or description…"
           style={controlStyle}
         />
+      </div>
+
+      <div>
+        <label htmlFor="lawsuit-category" style={labelStyle}>
+          What happened
+        </label>
+        <select
+          id="lawsuit-category"
+          className="lawsuit-filter-control"
+          value={filters.category}
+          onChange={(e) => update({ category: e.target.value })}
+          style={controlStyle}
+        >
+          <option value="all">Anything</option>
+          {BARRIER_CLUSTER_ORDER.map((cluster) => (
+            <optgroup key={cluster} label={BARRIER_CLUSTER_LABELS[cluster]}>
+              {CATEGORIES_BY_CLUSTER[cluster].map((c) => (
+                <option key={c} value={c}>
+                  {barrierCategoryLabel(c)}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
       </div>
 
       <div>

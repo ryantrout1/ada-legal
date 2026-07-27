@@ -1411,6 +1411,8 @@ export class NeonDbClient implements DbClient {
 
     const conds = [inArray(litigationTable.status, statusFilter)];
     if (opts.kind) conds.push(eq(litigationTable.kind, opts.kind));
+    if (opts.category)
+      conds.push(eq(litigationTable.barrierCategory, opts.category));
     if (opts.state) {
       // Match if affected_states contains the requested state, OR if the
       // row is nationwide — encoded either as an empty array (wave 1) or

@@ -158,6 +158,7 @@ describe('filterLawsuits — filters combine', () => {
   it('ANDs kind + status + state + search', () => {
     const f: LawsuitFilterState = {
       kind: 'class',
+      category: 'all',
       status: 'active',
       state: 'AZ',
       search: 'desert',
@@ -168,6 +169,7 @@ describe('filterLawsuits — filters combine', () => {
   it('returns nothing when the combination genuinely matches nothing', () => {
     const f: LawsuitFilterState = {
       kind: 'class',
+      category: 'all',
       status: 'tracking',
       state: '',
       search: '',
@@ -179,5 +181,110 @@ describe('filterLawsuits — filters combine', () => {
     const before = ROWS.map((r) => r.slug);
     filterLawsuits(ROWS, { ...EMPTY_FILTERS, state: 'AZ', kind: 'class' });
     expect(ROWS.map((r) => r.slug)).toEqual(before);
+  });
+});
+
+// ─── Taxonomy Phase 2 — filtering by barrier category ────────────────────────
+
+/**
+ * The category filter is what lets someone find their situation without
+ * first working out whether it counts as a class action or a consent
+ * decree. Type stays on the page for now — this is added alongside it,
+ * not in place of it.
+ *
+ * Rows carry a category the same way they carry a state, so the rules
+ * match the ones already here: an unrecognised value in the URL shows
+ * the whole directory rather than an empty page, and filters combine
+ * with AND.
+ *
+ * Ref: /plan litigation-taxonomy-and-contacts, Phase 2.
+ */
+
+const CATEGORY_ROWS = [
+  row({ slug: 'seattle-ramps', barrierCategory: 'sidewalks_streets', status: 'compliance', affectedStates: ['WA'], caseName: 'Reynoldson v. Seattle' }),
+  row({ slug: 'la-sidewalks', barrierCategory: 'sidewalks_streets', status: 'compliance', affectedStates: ['CA'], caseName: 'Willits v. Los Angeles' }),
+  row({ slug: 'uber-animals', barrierCategory: 'rideshare_taxis', status: 'compliance', affectedStates: ['__nationwide__'], caseName: 'NFB v. Uber' }),
+  row({ slug: 'harris-ballots', barrierCategory: 'voting_elections', status: 'active', affectedStates: ['TX'], caseName: 'Bryant v. Harris County' }),
+  row({ slug: 'demo-row', barrierCategory: 'unassigned', status: 'active', affectedStates: [], caseName: 'Uncategorised matter' }),
+];
+
+describe('filterLawsuits — barrier category', () => {
+  it('returns only rows in the chosen category', () => {
+    const out = filterLawsuits(CATEGORY_ROWS, {
+      ...EMPTY_FILTERS,
+      category: 'sidewalks_streets',
+    });
+    expect(slugs(out)).toEqual(['la-sidewalks', 'seattle-ramps']);
+  });
+
+  it('returns everything when no category is chosen', () => {
+    const out = filterLawsuits(CATEGORY_ROWS, EMPTY_FILTERS);
+    expect(out).toHaveLength(CATEGORY_ROWS.length);
+  });
+
+  it('never shows an uncategorised row under a real category', () => {
+    // The demo row is the only 'unassigned' one and it must not leak
+    // into any category page.
+    for (const category of ['sidewalks_streets', 'rideshare_taxis', 'voting_elections']) {
+      const out = filterLawsuits(CATEGORY_ROWS, { ...EMPTY_FILTERS, category });
+      expect(slugs(out)).not.toContain('demo-row');
+    }
+  });
+
+  it('combines with the state filter, and nationwide rows still match', () => {
+    // Same rule the state filter already follows: a nationwide case
+    // reaches every state, so picking a state must not hide it.
+    const out = filterLawsuits(CATEGORY_ROWS, {
+      ...EMPTY_FILTERS,
+      category: 'rideshare_taxis',
+      state: 'AZ',
+    });
+    expect(slugs(out)).toEqual(['uber-animals']);
+  });
+
+  it('combines with status', () => {
+    const out = filterLawsuits(CATEGORY_ROWS, {
+      ...EMPTY_FILTERS,
+      category: 'sidewalks_streets',
+      status: 'compliance',
+    });
+    expect(slugs(out)).toEqual(['la-sidewalks', 'seattle-ramps']);
+
+    const none = filterLawsuits(CATEGORY_ROWS, {
+      ...EMPTY_FILTERS,
+      category: 'sidewalks_streets',
+      status: 'active',
+    });
+    expect(none).toEqual([]);
+  });
+
+  it('tolerates a row with no category at all', () => {
+    // Rows come from the API, and an older cached response won't carry
+    // the field. Missing must behave like uncategorised, not throw.
+    const legacy = [row({ slug: 'legacy' })] as FilterableLawsuit[];
+    expect(filterLawsuits(legacy, EMPTY_FILTERS)).toHaveLength(1);
+    expect(
+      filterLawsuits(legacy, { ...EMPTY_FILTERS, category: 'sidewalks_streets' }),
+    ).toEqual([]);
+  });
+});
+
+describe('parseInitialFilters — category deep links', () => {
+  it('honors ?category=', () => {
+    expect(parseInitialFilters('?category=jails_prisons').category).toBe('jails_prisons');
+  });
+
+  it('shows the whole directory for a category that does not exist', () => {
+    // A bad link should never produce a blank page the reader can't explain.
+    expect(parseInitialFilters('?category=nonsense').category).toBe('all');
+    expect(parseInitialFilters('?category=unassigned').category).toBe('all');
+    expect(parseInitialFilters('').category).toBe('all');
+  });
+
+  it('reads alongside the other params', () => {
+    const f = parseInitialFilters('?category=air_travel&state=az&status=active');
+    expect(f.category).toBe('air_travel');
+    expect(f.state).toBe('AZ');
+    expect(f.status).toBe('active');
   });
 });

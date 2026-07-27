@@ -28,9 +28,17 @@ import {
   type LitigationKindValue,
   type PublicLitigationStatus,
 } from './litigationLabels.js';
+import { isBrowsableCategory, type BarrierCategory } from './barrierCategories.js';
 
 export interface LawsuitFilterState {
   kind: LitigationKindValue | 'all' | string;
+  /**
+   * Where the barrier was encountered. This is the control most people
+   * will actually reach for — it lets someone find their situation
+   * without first working out what kind of legal action covers it.
+   * 'all' means no category chosen.
+   */
+  category: BarrierCategory | 'all' | string;
   status: PublicLitigationStatus | 'all' | string;
   /** Two-letter code, uppercased. Empty string means "all states". */
   state: string;
@@ -40,6 +48,11 @@ export interface LawsuitFilterState {
 /** The minimum shape the filter reads. Real rows carry much more. */
 export interface FilterableLawsuit {
   kind: string;
+  /**
+   * Optional because rows come from the API and an older cached
+   * response won't carry the field. Missing behaves like uncategorised.
+   */
+  barrierCategory?: string | null;
   status: string;
   caseName: string;
   shortDescription: string | null;
@@ -48,6 +61,7 @@ export interface FilterableLawsuit {
 
 export const EMPTY_FILTERS: LawsuitFilterState = {
   kind: 'all',
+  category: 'all',
   status: 'all',
   state: '',
   search: '',
@@ -66,11 +80,16 @@ const VALID_STATUSES = new Set<string>(PUBLIC_STATUS_ORDER);
 export function parseInitialFilters(search: string): LawsuitFilterState {
   const params = new URLSearchParams(search);
   const kindRaw = params.get('kind') ?? '';
+  const categoryRaw = params.get('category') ?? '';
   const statusRaw = params.get('status') ?? '';
   const stateRaw = params.get('state') ?? '';
 
   return {
     kind: VALID_KINDS.has(kindRaw) ? kindRaw : 'all',
+    // 'unassigned' deliberately fails this check. It is a real stored
+    // value but never a browsable one, so it lands on 'all' like any
+    // other junk — a bad link shows the whole directory, not a blank page.
+    category: isBrowsableCategory(categoryRaw) ? categoryRaw : 'all',
     // `closed` deliberately fails this check: it is a real status, but
     // never a public one, so it lands on "all" like any other junk.
     status: VALID_STATUSES.has(statusRaw) ? statusRaw : 'all',
@@ -103,6 +122,7 @@ export function filterLawsuits<T extends FilterableLawsuit>(
 
   return rows.filter((r) => {
     if (filters.kind !== 'all' && r.kind !== filters.kind) return false;
+    if (filters.category !== 'all' && r.barrierCategory !== filters.category) return false;
     if (filters.status !== 'all' && r.status !== filters.status) return false;
     if (!matchesState(r, state)) return false;
     if (!matchesSearch(r, needle)) return false;
