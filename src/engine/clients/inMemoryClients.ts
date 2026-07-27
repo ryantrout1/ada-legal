@@ -950,6 +950,18 @@ export class InMemoryDbClient implements DbClient {
       .sort((a, b) => a.displayOrder - b.displayOrder || a.orgName.localeCompare(b.orgName));
   }
 
+  async deleteLitigationContact(
+    litigationListingId: string,
+    contactId: string,
+  ): Promise<boolean> {
+    const i = this.litigationContacts.findIndex(
+      (c) => c.id === contactId && c.litigationListingId === litigationListingId,
+    );
+    if (i === -1) return false;
+    this.litigationContacts.splice(i, 1);
+    return true;
+  }
+
   async createLitigationContact(
     input: CreateLitigationContactInput,
   ): Promise<LitigationContactRow> {

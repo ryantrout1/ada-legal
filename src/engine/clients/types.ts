@@ -1241,6 +1241,11 @@ export interface DbClient {
   listContactsForLitigation(litigationListingId: string): Promise<LitigationContactRow[]>;
   createLitigationContact(input: CreateLitigationContactInput): Promise<LitigationContactRow>;
   /**
+   * Scoped to the litigation as well as the contact, so a mismatched pair
+   * deletes nothing. Returns false on a miss rather than throwing.
+   */
+  deleteLitigationContact(litigationListingId: string, contactId: string): Promise<boolean>;
+  /**
    * Phase 6a: read a single active litigation row by slug, scoped to
    * orgId. Returns the row joined with the lead attorney's name, or null
    * if no matching active row exists.

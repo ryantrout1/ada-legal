@@ -28,6 +28,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import LitigationRoutingPanel from './components/LitigationRoutingPanel.js';
 import { KIND_LABEL, STATUS_LABEL, normalizeStates } from './AdminLitigation.js';
+import LitigationContactsPanel from './components/LitigationContactsPanel.js';
 import {
   BARRIER_CLUSTER_ORDER,
   BARRIER_CLUSTER_LABELS,
@@ -550,6 +551,11 @@ export default function AdminLitigationEdit() {
           litigation is created.
         </p>
       )}
+
+      {/* Only once the litigation exists — a contact needs something to
+          belong to, and the panel saves on its own rather than with the
+          form above. */}
+      {!isNew && id && <LitigationContactsPanel litigationId={id} />}
     </section>
   );
 }

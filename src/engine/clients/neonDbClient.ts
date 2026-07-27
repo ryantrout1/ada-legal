@@ -1471,6 +1471,24 @@ export class NeonDbClient implements DbClient {
     return rows.map(toLitigationContactRow);
   }
 
+  async deleteLitigationContact(
+    litigationListingId: string,
+    contactId: string,
+  ): Promise<boolean> {
+    // Both keys in the WHERE. Keying on the contact alone would let an id
+    // from another case delete a row that does not belong to it.
+    const rows = await this.db
+      .delete(litigationContactsTable)
+      .where(
+        and(
+          eq(litigationContactsTable.id, contactId),
+          eq(litigationContactsTable.litigationListingId, litigationListingId),
+        ),
+      )
+      .returning({ id: litigationContactsTable.id });
+    return rows.length > 0;
+  }
+
   async createLitigationContact(
     input: CreateLitigationContactInput,
   ): Promise<LitigationContactRow> {
