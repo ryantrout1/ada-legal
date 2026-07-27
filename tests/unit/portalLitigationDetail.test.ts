@@ -16,6 +16,8 @@ function makeAdminRow(overrides: Partial<LitigationAdminRow> = {}): LitigationAd
     kind: 'class',
     caseName: 'Smith v. Acme Corp',
     slug: 'smith-v-acme-corp',
+    barrierCategory: 'unassigned',
+    intakeStatus: 'none',
     legalTheory: null,
     shortDescription: null,
     shortDescriptionSimple: null,

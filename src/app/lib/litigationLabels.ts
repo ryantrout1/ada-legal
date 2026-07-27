@@ -18,6 +18,10 @@
 
 export type LitigationKindValue =
   | 'class'
+  // Taxonomy Phase 1: migration 0024 re-added 'mass' to the DB CHECK.
+  // The canonical union lives in src/types/db.ts; this front-end copy
+  // exists because the public bundle shouldn't import engine types.
+  | 'mass'
   | 'consent_decree'
   | 'enforcement_action'
   | 'pattern_of_practice'
@@ -32,6 +36,7 @@ export type PublicLitigationStatus =
 
 export const KIND_LABELS: Record<string, string> = {
   class: 'Class action',
+  mass: 'Mass action',
   consent_decree: 'Consent decree',
   enforcement_action: 'Enforcement action',
   pattern_of_practice: 'Pattern of practice',
@@ -49,6 +54,8 @@ export const STATUS_LABELS: Record<string, string> = {
 /** B44's kind ordering, preserved so the Type dropdown reads identically. */
 export const KIND_ORDER: LitigationKindValue[] = [
   'class',
+  // Sits next to 'class' because the two read as a pair to a claimant.
+  'mass',
   'consent_decree',
   'enforcement_action',
   'pattern_of_practice',

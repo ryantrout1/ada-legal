@@ -50,6 +50,8 @@ function makeRow(overrides: Partial<LitigationRow> = {}): LitigationRow {
     docketNumber: '3:24-cv-01234',
     affectedStates: ['CA', 'AZ', 'NV'],
     filingDate: '2024-03-15',
+    barrierCategory: 'unassigned',
+    intakeStatus: 'none',
     keyDates: {},
     relatedListingIds: [],
     adaQualifyingQuestions: {},

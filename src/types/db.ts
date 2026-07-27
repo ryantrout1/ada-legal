@@ -239,15 +239,37 @@ export interface PageContext {
  * slug enables the per-turn lookup; case_name and kind are inlined so
  * the greeting can render without a DB hit at session-creation time.
  */
+/**
+ * The canonical litigation `kind` union.
+ *
+ * Lives here, in the lowest types layer, because `LitigationContext`
+ * below needs it and `src/engine/clients/types.ts` already imports from
+ * this file (so the dependency can only run one way). `clients/types.ts`
+ * re-exports it, which is why every existing import site is unchanged.
+ *
+ * It was previously declared THREE times — here, in `clients/types.ts`,
+ * and again as `KIND_ORDER` in `src/app/lib/litigationLabels.ts`. When
+ * migration 0024 re-added 'mass' to the DB CHECK, only the database
+ * learned about it: a mass row would have rendered its raw enum on the
+ * public page, been filtered out of the directory, and hit the
+ * `?? 'litigation'` fallback in Ada's prompt. One declaration means the
+ * next value added can't half-land the same way.
+ *
+ * Mirrors the CHECK constraint on `litigation_listings.kind`
+ * (migrations 0010 + 0024).
+ */
+export type LitigationKind =
+  | 'class'
+  | 'mass'
+  | 'enforcement_action'
+  | 'consent_decree'
+  | 'pattern_of_practice'
+  | 'regulatory_challenge';
+
 export interface LitigationContext {
   id: string;
   slug: string;
-  kind:
-    | 'class'
-    | 'enforcement_action'
-    | 'consent_decree'
-    | 'pattern_of_practice'
-    | 'regulatory_challenge';
+  kind: LitigationKind;
   case_name: string;
 }
 

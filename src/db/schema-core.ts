@@ -441,12 +441,38 @@ export const litigationListings = pgTable(
     leadFirmId: uuid('lead_firm_id'),
 
     status: text('status').notNull().default('draft'),
+
+    /**
+     * Taxonomy Phase 1 (migration 0045): the "where did this happen to
+     * me" axis, and the only one of this table's three dimensions a
+     * claimant navigates by. `kind` stays the legal-instrument field
+     * (Gina's), `status` stays the lifecycle field. CHECK in 0045.
+     *
+     * NOT NULL DEFAULT 'unassigned' rather than nullable, so an
+     * un-categorised row is visibly wrong on the admin surface instead
+     * of silently absent from every category page.
+     */
+    barrierCategory: text('barrier_category').notNull().default('unassigned'),
+
+    /**
+     * Taxonomy Phase 1 (migration 0045): whether a person can actually
+     * do something here. Deliberately narrow — `status` already carries
+     * the lifecycle, and `compliance` already means "settled,
+     * obligations live". This closes the one gap `status` can't:
+     * `active` covers a case accepting members, a case merely being
+     * litigated, a case whose claim window closed, and a
+     * pattern-of-practice row that is not a case at all.
+     * ('open' | 'mechanism' | 'none'; CHECK in 0045.)
+     */
+    intakeStatus: text('intake_status').notNull().default('none'),
+
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
   },
   (t) => [
     index('litigation_kind_status').on(t.kind, t.status),
     index('litigation_lead_attorney').on(t.leadAttorneyId),
+    index('litigation_category_status').on(t.barrierCategory, t.status),
   ],
 );
 

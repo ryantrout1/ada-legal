@@ -816,6 +816,9 @@ export class InMemoryDbClient implements DbClient {
       kind: input.kind,
       caseName: input.caseName,
       slug: input.slug,
+      // Mirrors the NOT NULL DEFAULTs in migration 0045.
+      barrierCategory: input.barrierCategory ?? 'unassigned',
+      intakeStatus: input.intakeStatus ?? 'none',
       legalTheory: input.legalTheory ?? null,
       shortDescription: input.shortDescription ?? null,
       shortDescriptionSimple: input.shortDescriptionSimple ?? null,
@@ -980,6 +983,8 @@ export class InMemoryDbClient implements DbClient {
       kind: l.kind,
       caseName: l.caseName,
       slug: l.slug,
+      barrierCategory: l.barrierCategory,
+      intakeStatus: l.intakeStatus,
       legalTheory: l.legalTheory,
       shortDescription: l.shortDescription,
       shortDescriptionSimple: l.shortDescriptionSimple,
@@ -1063,6 +1068,8 @@ export class InMemoryDbClient implements DbClient {
       kind: row.kind,
       caseName: row.caseName,
       slug: row.slug,
+      barrierCategory: row.barrierCategory,
+      intakeStatus: row.intakeStatus,
       // M3: mirrors the list projection and the Neon mapper. `row` is
       // already status-filtered above, so no admin-only status escapes.
       status: row.status,

@@ -17,6 +17,7 @@
  */
 
 import type { LitigationKind, LitigationRow } from '../clients/types.js';
+import { barrierCategoryLabel } from '../../app/lib/barrierCategories.js';
 
 /**
  * Phase C3b-i: human-readable labels for each litigation kind. The
@@ -30,6 +31,10 @@ import type { LitigationKind, LitigationRow } from '../clients/types.js';
  */
 const KIND_LABELS: Record<LitigationKind, string> = {
   class: 'class action',
+  // Taxonomy Phase 1: migration 0024 re-added 'mass' to the DB CHECK
+  // for the router's mass-action lane, but this map was never updated,
+  // so a mass row hit the `?? 'litigation'` fallback below.
+  mass: 'mass action',
   enforcement_action: 'DOJ enforcement',
   consent_decree: 'consent decree',
   pattern_of_practice: 'pattern of practice',
@@ -88,8 +93,17 @@ export function renderActiveLitigationIndex(
       eligibility.length > 160 ? eligibility.slice(0, 157) + '…' : eligibility;
     const eligibilityClause = eligibilityShort ? ` Eligibility: ${eligibilityShort}` : '';
 
+    // Taxonomy Phase 1: the block above already tells Ada to match on
+    // "the kind of barrier", but gave her nothing structured to match
+    // against. An uncategorised row emits no clause at all — telling
+    // her the barrier is "unassigned" is worse than saying nothing.
+    const categoryClause =
+      row.barrierCategory && row.barrierCategory !== 'unassigned'
+        ? ` Barrier: ${barrierCategoryLabel(row.barrierCategory)}.`
+        : '';
+
     parts.push(
-      `- **${row.caseName}** (${kindLabel}, ${jurisdictionParts.join(' / ')}) — id: \`${row.id}\`.${eligibilityClause}`,
+      `- **${row.caseName}** (${kindLabel}, ${jurisdictionParts.join(' / ')}) — id: \`${row.id}\`.${categoryClause}${eligibilityClause}`,
     );
   }
 

@@ -17,6 +17,7 @@
  */
 
 import type {
+  LitigationKind,
   Message,
   PhotoAnalysisOutput,
   PhotoFinding,
@@ -440,12 +441,51 @@ export interface AuditLogEntry {
 // monitoring), tracking (pattern_of_practice intake). 'settled' was removed
 // because it conflated terminal status with active settlement-administration.
 
-export type LitigationKind =
-  | 'class'
-  | 'enforcement_action'
-  | 'consent_decree'
-  | 'pattern_of_practice'
-  | 'regulatory_challenge';
+/**
+ * Re-exported from `src/types/db.ts`, which is the canonical home (see
+ * the comment there for why, and for the migration-0024 gap this
+ * de-duplication closes). Every existing `import type { LitigationKind }
+ * from '.../clients/types.js'` keeps working.
+ */
+export type { LitigationKind } from '../../types/db.js';
+
+/**
+ * Taxonomy Phase 1: the "where did this happen to me" axis. Values
+ * mirror `barrier_category`'s CHECK in migration 0045. The display
+ * labels and cluster grouping live in `src/app/lib/barrierCategories.ts`
+ * — this is the storage contract only.
+ */
+export type BarrierCategory =
+  | 'sidewalks_streets'
+  | 'rideshare_taxis'
+  | 'air_travel'
+  | 'buses_transit'
+  | 'healthcare'
+  | 'hotels_lodging'
+  | 'restaurants_stores_venues'
+  | 'websites_apps_kiosks'
+  | 'voting_elections'
+  | 'gov_services'
+  | 'jails_prisons'
+  | 'community_living'
+  | 'education'
+  | 'employment'
+  | 'housing'
+  | 'unassigned';
+
+/**
+ * Taxonomy Phase 1: whether a person can act on this row today.
+ *
+ *   open       they can join, claim, or be represented now
+ *   mechanism  no intake, but a live mechanism exists to invoke — often
+ *              the settlement's own compliance path (a city 311 line, a
+ *              hospital complaint process) rather than its lawyers
+ *   none       nothing they can do directly here
+ *
+ * Narrower than `status` on purpose; see the column comment in
+ * schema-core.ts for why this is not a duplicate of it.
+ */
+export type IntakeStatus = 'open' | 'mechanism' | 'none';
 
 export type LitigationStatus =
   | 'draft'
@@ -504,6 +544,10 @@ export interface LitigationRow {
   filingDate: string | null; // ISO date
   /** Phase A1: structured key dates (filing deadlines, hearings, etc). */
   keyDates: LitigationKeyDates;
+  /** Taxonomy Phase 1: where the barrier was encountered. */
+  barrierCategory: BarrierCategory;
+  /** Taxonomy Phase 1: whether a person can act on this row today. */
+  intakeStatus: IntakeStatus;
   /** Phase A1: related listing ids — companion cases or consolidated actions. */
   relatedListingIds: string[];
   /** Phase A1: Ada qualifying-question structure for this listing. */
@@ -589,6 +633,8 @@ export interface CreateLitigationInput {
   leadAttorneyId?: string | null;
   leadFirmId?: string | null;
   status?: LitigationStatus;
+  barrierCategory?: BarrierCategory;
+  intakeStatus?: IntakeStatus;
 }
 
 export interface UpdateLitigationInput {
@@ -624,6 +670,8 @@ export interface UpdateLitigationInput {
   leadAttorneyId?: string | null;
   leadFirmId?: string | null;
   status?: LitigationStatus;
+  barrierCategory?: BarrierCategory;
+  intakeStatus?: IntakeStatus;
 }
 
 export interface ListActiveLitigationOptions {

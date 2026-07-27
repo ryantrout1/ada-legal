@@ -112,6 +112,8 @@ import type {
   StripeWebhookEventRow,
   CreateLitigationInput,
   LitigationAdminRow,
+  BarrierCategory,
+  IntakeStatus,
   LitigationKind,
   LitigationRow,
   LitigationDetailRow,
@@ -1309,6 +1311,8 @@ export class NeonDbClient implements DbClient {
         affectedStates: input.affectedStates ?? [],
         filingDate: input.filingDate ?? null,
         keyDates: input.keyDates ?? {},
+        barrierCategory: input.barrierCategory ?? 'unassigned',
+        intakeStatus: input.intakeStatus ?? 'none',
         relatedListingIds: input.relatedListingIds ?? [],
         adaQualifyingQuestions: input.adaQualifyingQuestions ?? {},
         leadAttorneyId: input.leadAttorneyId ?? null,
@@ -1370,6 +1374,9 @@ export class NeonDbClient implements DbClient {
     if (input.leadAttorneyId !== undefined) patch.leadAttorneyId = input.leadAttorneyId;
     if (input.leadFirmId !== undefined) patch.leadFirmId = input.leadFirmId;
     if (input.status !== undefined) patch.status = input.status;
+    if (input.barrierCategory !== undefined)
+      patch.barrierCategory = input.barrierCategory;
+    if (input.intakeStatus !== undefined) patch.intakeStatus = input.intakeStatus;
 
     if (Object.keys(patch).length === 0) {
       return this.getLitigationById(id);
@@ -4549,6 +4556,8 @@ function toLitigationPublicRow(
     // filingDate is a Drizzle 'date' which serializes as string already.
     filingDate: r.filingDate as string | null,
     keyDates: (r.keyDates ?? {}) as Record<string, string>,
+    barrierCategory: (r.barrierCategory ?? 'unassigned') as BarrierCategory,
+    intakeStatus: (r.intakeStatus ?? 'none') as IntakeStatus,
     relatedListingIds: (r.relatedListingIds ?? []) as string[],
     adaQualifyingQuestions: (r.adaQualifyingQuestions ?? {}) as Record<string, unknown>,
     leadAttorneyId: r.leadAttorneyId,
