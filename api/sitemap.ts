@@ -6,7 +6,7 @@
  * via vercel.json so the canonical URL still reads correctly.
  *
  * Includes:
- *   - Static public pages (/, /chat, /lawsuits, /attorneys, etc.)
+ *   - Static public pages (/, /ada, /lawsuits, /attorneys, etc.)
  *   - One <url> entry per active class-action listing, with lastmod
  *     set to the listing row's current_period_end (a cheap proxy for
  *     "the subscription last rolled," acceptable freshness hint for
@@ -37,6 +37,38 @@ interface UrlEntry {
   priority?: string;
 }
 
+/**
+ * Every static public page, as a path.
+ *
+ * Exported so a test can assert each one is a real route in App.tsx.
+ * That guard exists because this list carried `/chat` at priority 0.9 —
+ * the second-highest URL on the site — for as long as the sitemap has
+ * existed. There is no /chat route; it 301s to /ada. A sitemap should
+ * list canonical destinations, not redirects, and the actual front door
+ * was missing entirely while a redirect stood in for it.
+ *
+ * Anything reachable and public belongs here. Anything gated, private,
+ * or slug-guarded does not — see PRIVATE_PATHS in robots.ts.
+ */
+export const STATIC_PAGES: {
+  path: string;
+  changefreq: string;
+  priority: string;
+}[] = [
+  { path: '/', changefreq: 'weekly', priority: '1.0' },
+  { path: '/ada', changefreq: 'weekly', priority: '0.9' },
+  { path: '/lawsuits', changefreq: 'daily', priority: '0.9' },
+  { path: '/standards-guide', changefreq: 'weekly', priority: '0.9' },
+  { path: '/spot', changefreq: 'weekly', priority: '0.8' },
+  { path: '/attorneys', changefreq: 'weekly', priority: '0.7' },
+  { path: '/for-attorneys', changefreq: 'monthly', priority: '0.6' },
+  { path: '/glossary', changefreq: 'monthly', priority: '0.5' },
+  { path: '/accessibility', changefreq: 'monthly', priority: '0.5' },
+  { path: '/about-ada', changefreq: 'monthly', priority: '0.4' },
+  { path: '/privacy', changefreq: 'monthly', priority: '0.4' },
+  { path: '/terms', changefreq: 'monthly', priority: '0.4' },
+];
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET');
@@ -57,28 +89,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     // Static public pages. Ordered by likely priority for the site.
-    const entries: UrlEntry[] = [
-      { loc: `${SITE_URL}/`, changefreq: 'weekly', priority: '1.0' },
-      { loc: `${SITE_URL}/chat`, changefreq: 'weekly', priority: '0.9' },
-      {
-        loc: `${SITE_URL}/lawsuits`,
-        changefreq: 'daily',
-        priority: '0.9',
-      },
-      {
-        loc: `${SITE_URL}/standards-guide`,
-        changefreq: 'weekly',
-        priority: '0.9',
-      },
-      { loc: `${SITE_URL}/attorneys`, changefreq: 'weekly', priority: '0.7' },
-      {
-        loc: `${SITE_URL}/accessibility`,
-        changefreq: 'monthly',
-        priority: '0.5',
-      },
-      { loc: `${SITE_URL}/privacy`, changefreq: 'monthly', priority: '0.4' },
-      { loc: `${SITE_URL}/terms`, changefreq: 'monthly', priority: '0.4' },
-    ];
+    const entries: UrlEntry[] = STATIC_PAGES.map((p) => ({
+      loc: `${SITE_URL}${p.path}`,
+      changefreq: p.changefreq,
+      priority: p.priority,
+    }));
 
     // Standards Guide: 10 chapter URLs.
     for (let n = 1; n <= 10; n++) {
