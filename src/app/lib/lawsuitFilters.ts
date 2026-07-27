@@ -11,6 +11,15 @@
  * render testing, so logic inside a component is logic nothing can
  * pin. Everything here is a pure function over plain data.
  *
+ * There is no Type filter. B44 had one and so did this page until the
+ * barrier categories landed — legal instrument (class action, consent
+ * decree, pattern of practice) is the wrong axis for someone trying to
+ * find their own situation, and asking them to pick one before they can
+ * search made them do the lawyer's job first. Cards still show the type,
+ * so the information is not lost; only the filter is. `?kind=` in a URL
+ * is now ignored and shows the full directory, which is how every other
+ * unrecognised param already behaves here.
+ *
  * Two behaviors differ deliberately from B44 (both resolved decisions,
  * M3 Phase 2 — see the tests for the full reasoning):
  *   1. `closed` is not a filter value. The public endpoint never
@@ -21,17 +30,14 @@
  */
 
 import {
-  KIND_ORDER,
   PUBLIC_STATUS_ORDER,
   isNationwide,
   statesList,
-  type LitigationKindValue,
   type PublicLitigationStatus,
 } from './litigationLabels.js';
 import { isBrowsableCategory, type BarrierCategory } from './barrierCategories.js';
 
 export interface LawsuitFilterState {
-  kind: LitigationKindValue | 'all' | string;
   /**
    * Where the barrier was encountered. This is the control most people
    * will actually reach for — it lets someone find their situation
@@ -47,7 +53,6 @@ export interface LawsuitFilterState {
 
 /** The minimum shape the filter reads. Real rows carry much more. */
 export interface FilterableLawsuit {
-  kind: string;
   /**
    * Optional because rows come from the API and an older cached
    * response won't carry the field. Missing behaves like uncategorised.
@@ -60,14 +65,12 @@ export interface FilterableLawsuit {
 }
 
 export const EMPTY_FILTERS: LawsuitFilterState = {
-  kind: 'all',
   category: 'all',
   status: 'all',
   state: '',
   search: '',
 };
 
-const VALID_KINDS = new Set<string>(KIND_ORDER);
 const VALID_STATUSES = new Set<string>(PUBLIC_STATUS_ORDER);
 
 /**
@@ -79,13 +82,11 @@ const VALID_STATUSES = new Set<string>(PUBLIC_STATUS_ORDER);
  */
 export function parseInitialFilters(search: string): LawsuitFilterState {
   const params = new URLSearchParams(search);
-  const kindRaw = params.get('kind') ?? '';
   const categoryRaw = params.get('category') ?? '';
   const statusRaw = params.get('status') ?? '';
   const stateRaw = params.get('state') ?? '';
 
   return {
-    kind: VALID_KINDS.has(kindRaw) ? kindRaw : 'all',
     // 'unassigned' deliberately fails this check. It is a real stored
     // value but never a browsable one, so it lands on 'all' like any
     // other junk — a bad link shows the whole directory, not a blank page.
@@ -121,7 +122,6 @@ export function filterLawsuits<T extends FilterableLawsuit>(
   const state = filters.state.trim().toUpperCase();
 
   return rows.filter((r) => {
-    if (filters.kind !== 'all' && r.kind !== filters.kind) return false;
     if (filters.category !== 'all' && r.barrierCategory !== filters.category) return false;
     if (filters.status !== 'all' && r.status !== filters.status) return false;
     if (!matchesState(r, state)) return false;

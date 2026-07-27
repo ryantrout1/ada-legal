@@ -1,12 +1,14 @@
 /**
- * LawsuitFilters — search + what-happened + type + status + state controls.
+ * LawsuitFilters — search + what-happened + status + state controls.
  *
  * Taxonomy Phase 2 added "What happened" (barrier category), grouped
  * into five headings. It sits ahead of Type because it is the control
  * most people will reach for: it lets someone find their situation
  * without first working out whether it counts as a class action or a
- * consent decree. Type stays for now — removing it is a separate,
- * deliberate step once this has been seen working on the real page.
+ * consent decree. The Type filter that used to sit here has now been
+ * removed: it asked people to classify their own problem in legal terms
+ * before they could search. The card still shows the type, so nothing is
+ * hidden — you just cannot filter by it.
  *
  * It spans two grid columns because its values are full phrases —
  * "Community living & institutions", "Restaurants, stores & venues" —
@@ -34,9 +36,7 @@
  */
 
 import {
-  KIND_ORDER,
   PUBLIC_STATUS_ORDER,
-  kindLabel,
   statusLabel,
 } from '../../lib/litigationLabels.js';
 import {
@@ -143,26 +143,6 @@ export default function LawsuitFilters({ filters, onChange }: Props) {
                 </option>
               ))}
             </optgroup>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label htmlFor="lawsuit-kind" style={labelStyle}>
-          Type
-        </label>
-        <select
-          id="lawsuit-kind"
-          className="lawsuit-filter-control"
-          value={filters.kind}
-          onChange={(e) => update({ kind: e.target.value })}
-          style={controlStyle}
-        >
-          <option value="all">All types</option>
-          {KIND_ORDER.map((k) => (
-            <option key={k} value={k}>
-              {kindLabel(k)}
-            </option>
           ))}
         </select>
       </div>

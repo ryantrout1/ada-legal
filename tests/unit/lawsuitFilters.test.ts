@@ -41,7 +41,6 @@ function row(
   overrides: Partial<FilterableLawsuit> & { slug: string },
 ): FilterableLawsuit & { slug: string } {
   return {
-    kind: 'class',
     status: 'active',
     caseName: 'Generic v. Defendant',
     shortDescription: null,
@@ -51,11 +50,11 @@ function row(
 }
 
 const ROWS = [
-  row({ slug: 'az-class', kind: 'class', status: 'active', affectedStates: ['AZ', 'NV'], caseName: 'Desert v. Acme' }),
-  row({ slug: 'ca-enf', kind: 'enforcement_action', status: 'investigating', affectedStates: ['CA'], caseName: 'DOJ v. Bayshore' }),
-  row({ slug: 'nationwide-decree', kind: 'consent_decree', status: 'compliance', affectedStates: [], caseName: 'US v. Hilton' }),
-  row({ slug: 'sentinel-only', kind: 'pattern_of_practice', status: 'tracking', affectedStates: ['__nationwide__'], caseName: 'Pattern v. Chain' }),
-  row({ slug: 'tx-reg', kind: 'regulatory_challenge', status: 'active', affectedStates: ['TX'], shortDescription: 'Kiosk accessibility rulemaking challenge.' }),
+  row({ slug: 'az-class', status: 'active', affectedStates: ['AZ', 'NV'], caseName: 'Desert v. Acme' }),
+  row({ slug: 'ca-enf', status: 'investigating', affectedStates: ['CA'], caseName: 'DOJ v. Bayshore' }),
+  row({ slug: 'nationwide-decree', status: 'compliance', affectedStates: [], caseName: 'US v. Hilton' }),
+  row({ slug: 'sentinel-only', status: 'tracking', affectedStates: ['__nationwide__'], caseName: 'Pattern v. Chain' }),
+  row({ slug: 'tx-reg', status: 'active', affectedStates: ['TX'], shortDescription: 'Kiosk accessibility rulemaking challenge.' }),
 ];
 
 const slugs = (rows: { slug: string }[]) => rows.map((r) => r.slug).sort();
@@ -66,16 +65,10 @@ describe('parseInitialFilters', () => {
   });
 
   it('honors each deep-link param', () => {
-    const f = parseInitialFilters('?kind=consent_decree&status=compliance&state=az&search=hilton');
-    expect(f.kind).toBe('consent_decree');
+    const f = parseInitialFilters('?status=compliance&state=az&search=hilton');
     expect(f.status).toBe('compliance');
     expect(f.state).toBe('AZ');
     expect(f.search).toBe('hilton');
-  });
-
-  it('falls back to "all" for an unrecognised kind', () => {
-    expect(parseInitialFilters('?kind=bogus').kind).toBe('all');
-    expect(parseInitialFilters('?kind=CLASS').kind).toBe('all');
   });
 
   it('treats ?status=closed as "all" — closed cases are not public', () => {
@@ -101,11 +94,6 @@ describe('parseInitialFilters', () => {
 describe('filterLawsuits — single filters', () => {
   it('returns everything for the empty filter state', () => {
     expect(filterLawsuits(ROWS, EMPTY_FILTERS)).toHaveLength(5);
-  });
-
-  it('filters by kind', () => {
-    const out = filterLawsuits(ROWS, { ...EMPTY_FILTERS, kind: 'enforcement_action' });
-    expect(slugs(out)).toEqual(['ca-enf']);
   });
 
   it('filters by status', () => {
@@ -155,9 +143,8 @@ describe('filterLawsuits — nationwide rows always match a state filter', () =>
 });
 
 describe('filterLawsuits — filters combine', () => {
-  it('ANDs kind + status + state + search', () => {
+  it('ANDs status + state + search', () => {
     const f: LawsuitFilterState = {
-      kind: 'class',
       category: 'all',
       status: 'active',
       state: 'AZ',
@@ -168,10 +155,9 @@ describe('filterLawsuits — filters combine', () => {
 
   it('returns nothing when the combination genuinely matches nothing', () => {
     const f: LawsuitFilterState = {
-      kind: 'class',
       category: 'all',
-      status: 'tracking',
-      state: '',
+      status: 'investigating',
+      state: 'TX',
       search: '',
     };
     expect(filterLawsuits(ROWS, f)).toHaveLength(0);
@@ -179,7 +165,7 @@ describe('filterLawsuits — filters combine', () => {
 
   it('does not mutate the input array', () => {
     const before = ROWS.map((r) => r.slug);
-    filterLawsuits(ROWS, { ...EMPTY_FILTERS, state: 'AZ', kind: 'class' });
+    filterLawsuits(ROWS, { ...EMPTY_FILTERS, state: 'AZ', status: 'active' });
     expect(ROWS.map((r) => r.slug)).toEqual(before);
   });
 });
