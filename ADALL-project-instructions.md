@@ -60,19 +60,23 @@ Legacy, being retired. New reads of real ADALL data go through `adminApi`/`publi
 
 ## 1. THE ROUTING RULE (read this first, every time)
 
-There are TWO repos. Every change belongs in exactly one. Before writing any code, state which repo the change goes in and why: **`Repo: <name> — because <reason>.`**
+**Base44 is being shut down. Everything belongs in `ada-legal` (Vercel), including admin.**
+Resolved 2026-07-27. The rule below used to send admin work to B44; it no longer does.
 
 | If the change is… | Repo | Deploys to |
 |---|---|---|
-| Engine, database, migrations, any `/api/*` endpoint, attorney portal (`/portal/*`), Ada intake, photo analyzer, routing/matching, tests | **ada-legal** (Vercel) | `ada.adalegallink.com` — auto on push |
-| Consumer site, admin UI Gina uses (`/AdminFirms`, `/AdminAttorneys`, `/AdminListings`, etc.), anything on `adalegallink.com` | **ada-legal-link-B44** (Base44) | `adalegallink.com` — push + webhook + **Ryan clicks Publish** |
+| Everything — engine, database, migrations, any `/api/*` endpoint, attorney portal (`/portal/*`), **admin (`/admin/*`)**, Ada intake, photo analyzer, routing/matching, the public site, tests | **ada-legal** (Vercel) | `ada.adalegallink.com` — auto on push |
+| Nothing new. `ada-legal-link-B44` is being decommissioned — touch it only to finish the shutdown | **ada-legal-link-B44** (Base44) | `adalegallink.com` — push + webhook + **Ryan clicks Publish** |
 
 Hard rules:
-- **Backend logic → ada-legal. Admin UI → B44. Never both for the same feature.**
-- Never build admin UI in the Vercel repo — its `/admin/*` React pages are retiring dead code.
+- **Admin UI goes in `ada-legal`, under `/admin/*`.** `AdminLitigation.tsx`, `AdminLitigationEdit.tsx` and the rest are live and wired into `App.tsx` — they are the real admin, not dead code.
+- **Do not start new work in B44.** It is being retired; adding to it makes the shutdown longer.
 - Never revive Base44 entities as datastores. **Neon is the single source of truth.**
-- The bridge: B44 admin pages call Vercel `/api/admin/*` via `src/lib/adminApi.js` → `base44.functions.invoke('adallProxy')`. A new admin feature = backend endpoint in ada-legal + UI page in B44, two commits, two repos.
+- A new admin feature is now ONE commit in ONE repo: the endpoint under `api/admin/*` and the page under `src/app/routes/admin/*`, both in `ada-legal`. No proxy, no second repo, no Publish step.
+- The old bridge (`src/lib/adminApi.js` → `base44.functions.invoke('adallProxy')`) still exists for whatever remains on B44. Do not build anything new on it, and rotate the hardcoded `adallProxy` secret when B44 is finally switched off.
 - Each repo has `scripts/check-repo-boundary.sh` — greps for the other repo's tells (`base44.entities` in ada-legal; `@vercel/node`/Drizzle in B44) and fails the push. Run it in the gate.
+
+**What this said until 2026-07-27, and why it changed.** It read *"Admin UI → B44. Never build admin UI in the Vercel repo — its `/admin/*` React pages are retiring dead code."* That was true before the decommission started. It went stale as the decommission ran and admin moved into `ada-legal`, and the staleness cost real time: a build plan stalled for a full session because the written rule and the shipped code disagreed and there was no way to tell from the outside which one was right. Worth keeping the note — the failure was not the rule being wrong, it was the rule going quiet while the ground moved.
 
 ---
 
@@ -86,7 +90,7 @@ Hard rules:
 - Deploy: push to main → Vercel READY ~90s. Verify on the public alias (per-deployment `*-<hash>.vercel.app` URLs 401). `Vercel:web_fetch_vercel_url` fetches live JSON; bash cannot reach the domain.
 - Bundle spot-check: grep `dist/assets/` for known strings.
 
-### ada-legal-link-B44 (Base44) — consumer site + Gina's admin
+### ada-legal-link-B44 (Base44) — being decommissioned
 - GitHub: `ryantrout1/ada-legal-link-B44` (private — PAT to clone/push) · sandbox `/home/claude/ada-legal-link-B44`
 - Live: `adalegallink.com`
 - **Gates before every push:** `npm run lint` + `npx vite build` + `bash scripts/check-repo-boundary.sh`. tsc is NOT a gate here (red repo-wide). No test runner exists (0 tests). Never use `npm run build`.
