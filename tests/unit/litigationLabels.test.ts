@@ -27,14 +27,31 @@ import {
 import { pickReadingLevelText } from '@/app/lib/readingLevelText';
 
 describe('litigation labels', () => {
-  it('carries B44\u2019s five kinds in B44\u2019s order', () => {
+  it('carries B44\u2019s five kinds in B44\u2019s order, plus mass', () => {
+    // Migration 0024 re-added 'mass' to the DB CHECK for the router's
+    // mass-action lane, but this map was never updated to match. A mass
+    // row inserted before Taxonomy Phase 1 would have rendered its raw
+    // enum on the public page and been filtered out of browse entirely
+    // (VALID_KINDS is derived from this array). 'mass' sorts next to
+    // 'class' because the two read as a pair to a claimant.
     expect(KIND_ORDER).toEqual([
       'class',
+      'mass',
       'consent_decree',
       'enforcement_action',
       'pattern_of_practice',
       'regulatory_challenge',
     ]);
+  });
+
+  it('gives every kind in the order a display label', () => {
+    for (const kind of KIND_ORDER) {
+      const label = kindLabel(kind);
+      expect(label, `missing label for ${kind}`).toBeTruthy();
+      // Falling through to the raw value means the map is missing an entry.
+      expect(label).not.toBe(kind);
+    }
+    expect(kindLabel('mass')).toBe('Mass action');
   });
 
   it('offers only the four public statuses as filter options', () => {

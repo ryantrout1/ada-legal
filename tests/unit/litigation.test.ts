@@ -390,12 +390,71 @@ describe('renderActiveLitigationIndex kind labels (Phase C3b-i)', () => {
     expect(out).toContain('(pattern of practice,');
     expect(out).toContain('Reg Challenge Case');
     expect(out).toContain('(regulatory challenge,');
-    // The stale binary label must be gone entirely.
+    // None of these rows is a mass action, so the stale binary label
+    // must not appear on any of them.
     expect(out).not.toContain('mass action');
+  });
+
+  it('labels a mass-action row instead of falling back to "litigation"', () => {
+    // Migration 0024 re-added 'mass' to the DB CHECK but this map was
+    // never updated, so a mass row hit the `?? 'litigation'` fallback in
+    // Ada's prompt. Taxonomy Phase 1 closes it.
+    const out = renderActiveLitigationIndex([
+      makeRow({
+        id: '20000000-0000-4000-8000-00000000a006',
+        kind: 'mass',
+        caseName: 'Mass Action Case',
+        slug: 'mass-case',
+      }),
+    ]);
+    expect(out).toContain('Mass Action Case');
+    expect(out).toContain('(mass action,');
+    expect(out).not.toContain('(litigation,');
   });
 
   it('returns empty string when given no rows', () => {
     expect(renderActiveLitigationIndex([])).toBe('');
+  });
+});
+
+/**
+ * Taxonomy Phase 1 — barrier category in Ada's catalog.
+ *
+ * Ada's catalog block already instructs her to match on "the kind of
+ * barrier (mobility / vision / hearing / cognitive / digital /
+ * physical)" but gave her nothing structured to match against. Emitting
+ * the stored category gives that instruction something to bind to.
+ *
+ * Ref: /plan litigation-taxonomy-and-contacts, Phase 1, AC8 (partial —
+ * the prompt half; the browse half lands in Phase 2).
+ */
+describe('renderActiveLitigationIndex barrier category (Taxonomy Phase 1)', () => {
+  it('emits the category label for a categorised row', () => {
+    const out = renderActiveLitigationIndex([
+      makeRow({
+        id: '20000000-0000-4000-8000-00000000b001',
+        kind: 'class',
+        caseName: 'Voting Case',
+        slug: 'voting-case',
+        barrierCategory: 'voting_elections',
+      }),
+    ]);
+    expect(out).toContain('Voting & elections');
+  });
+
+  it('omits the category clause entirely when the row is unassigned', () => {
+    const out = renderActiveLitigationIndex([
+      makeRow({
+        id: '20000000-0000-4000-8000-00000000b002',
+        caseName: 'Uncategorised Case',
+        slug: 'uncat-case',
+        barrierCategory: 'unassigned',
+      }),
+    ]);
+    expect(out).toContain('Uncategorised Case');
+    // Better to say nothing than to tell Ada the barrier is "unassigned".
+    expect(out).not.toContain('unassigned');
+    expect(out).not.toContain('Unassigned');
   });
 });
 

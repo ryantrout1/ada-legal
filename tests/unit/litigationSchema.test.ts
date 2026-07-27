@@ -32,6 +32,7 @@ import { describe, it, expect } from 'vitest';
 import { makeInMemoryClients } from '@/engine/clients/inMemoryClients';
 import type {
   CreateLitigationInput,
+  IntakeStatus,
   LitigationKind,
   LitigationStatus,
 } from '@/engine/clients/types';
@@ -183,13 +184,25 @@ describe('Phase A1 — litigation_listings schema v2', () => {
       });
     }
 
-    it('TypeScript: "mass" is not assignable to LitigationKind', () => {
-      // This is a type-level assertion. If the union still contains
-      // 'mass' the @ts-expect-error will become an unused-directive
-      // error and the test fails. If the union has been narrowed
-      // correctly, the directive is required because 'mass' is rejected.
-      // @ts-expect-error 'mass' was removed from LitigationKind in Phase A1
-      const bad: LitigationKind = 'mass';
+    it('accepts kind="mass" — re-added by migration 0024', async () => {
+      // Phase A1 removed 'mass' from the union. Migration 0024 put it
+      // back in the DB CHECK for the router's mass-action lane, but the
+      // TypeScript union, both front-end label maps, and Ada's prompt
+      // label map were never updated to match — a contract/shape
+      // mismatch that would render a raw enum to claimants the first
+      // time a mass row was inserted. Taxonomy Phase 1 closes it.
+      const c = makeInMemoryClients();
+      const created = await c.db.createLitigation(
+        fullCreateInput({ kind: 'mass', slug: 'slug-mass' }),
+      );
+      expect(created.kind).toBe('mass');
+    });
+
+    it('TypeScript: "settled" is still not assignable to LitigationKind', () => {
+      // The union stays closed. If someone widens it to `string` this
+      // directive becomes unused and the test fails.
+      // @ts-expect-error 'settled' is a status, never a kind
+      const bad: LitigationKind = 'settled';
       // Use bad to silence noUnusedLocals.
       expect(typeof bad).toBe('string');
     });
@@ -312,5 +325,93 @@ describe('Attorney portal schema (migration 0019)', () => {
     const c = makeInMemoryClients();
     const resolved = await c.db.resolveAttorneyByClerkUserId('clerk_unknown');
     expect(resolved).toBeNull();
+  });
+});
+
+// ─── Taxonomy Phase 1 (migration 0045) — barrier_category + intake_status ─────
+
+/**
+ * Two new axes on litigation_listings.
+ *
+ * `barrier_category` is the "where did this happen to me" dimension the
+ * public directory navigates by. `kind` (the legal instrument) stays
+ * exactly where it is — it is the admin's field, not the claimant's.
+ *
+ * `intake_status` is deliberately narrow. `status` already carries the
+ * lifecycle (active / investigating / compliance / tracking / closed),
+ * and `compliance` already means "settled, obligations live". What
+ * `status` cannot express is whether a person can actually DO anything:
+ * `active` covers a case accepting members, a case merely being
+ * litigated, a case whose claim window has closed, and a
+ * pattern-of-practice row that is not a case at all. Three values close
+ * that gap without duplicating `status`.
+ *
+ * Ref: /plan litigation-taxonomy-and-contacts, Phase 1, AC1 + AC2.
+ */
+describe('Taxonomy Phase 1 — barrier_category + intake_status', () => {
+  it('defaults to unassigned / none when the caller omits both', async () => {
+    const c = makeInMemoryClients();
+    const created = await c.db.createLitigation(
+      fullCreateInput({ slug: 'taxonomy-defaults' }),
+    );
+    // NOT NULL with a default: an un-categorised row is visibly wrong,
+    // never silently null.
+    expect(created.barrierCategory).toBe('unassigned');
+    expect(created.intakeStatus).toBe('none');
+  });
+
+  it('round-trips both fields through create → read', async () => {
+    const c = makeInMemoryClients();
+    const created = await c.db.createLitigation(
+      fullCreateInput({
+        slug: 'taxonomy-roundtrip',
+        barrierCategory: 'voting_elections',
+        intakeStatus: 'open',
+      }),
+    );
+    expect(created.barrierCategory).toBe('voting_elections');
+    expect(created.intakeStatus).toBe('open');
+
+    const read = await c.db.getLitigationById(created.id);
+    expect(read!.barrierCategory).toBe('voting_elections');
+    expect(read!.intakeStatus).toBe('open');
+  });
+
+  it('accepts each of the three intake_status values', async () => {
+    const values: IntakeStatus[] = ['open', 'mechanism', 'none'];
+    for (const intakeStatus of values) {
+      const c = makeInMemoryClients();
+      const created = await c.db.createLitigation(
+        fullCreateInput({ slug: `intake-${intakeStatus}`, intakeStatus }),
+      );
+      expect(created.intakeStatus).toBe(intakeStatus);
+    }
+  });
+
+  it('carries barrier_category independently of kind', async () => {
+    // The whole point of the new axis: two rows of different legal
+    // instrument can share a category, and one kind spreads across
+    // several categories. Neither field constrains the other.
+    const c = makeInMemoryClients();
+    const classRow = await c.db.createLitigation(
+      fullCreateInput({
+        slug: 'hotel-class',
+        kind: 'class',
+        barrierCategory: 'hotels_lodging',
+      }),
+    );
+    const decreeRow = await c.db.createLitigation(
+      fullCreateInput({
+        slug: 'hotel-decree',
+        kind: 'consent_decree',
+        barrierCategory: 'hotels_lodging',
+      }),
+    );
+    // Assert the concrete value, not just equality — comparing two
+    // undefineds would pass before the field exists at all.
+    expect(classRow.barrierCategory).toBe('hotels_lodging');
+    expect(decreeRow.barrierCategory).toBe('hotels_lodging');
+    expect(classRow.kind).toBe('class');
+    expect(decreeRow.kind).toBe('consent_decree');
   });
 });
