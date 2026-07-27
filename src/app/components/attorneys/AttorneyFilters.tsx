@@ -16,6 +16,19 @@
  * gate its filter UI on roster size and neither do we. Not a <form>:
  * this is a directory filter, and Ada remains the only intake front
  * door.
+ *
+ * The wrapper is a <fieldset> with a <legend>, not a div. It was one until
+ * commit b783e7b (2026-07-23) rebuilt this page to B44's design and carried
+ * the grouping away with the markup, along with the practice-area switches.
+ * Without it a screen reader user gets three loose controls with nothing
+ * saying they belong together or what they are for.
+ *
+ * axe does not flag a missing fieldset — it is an absent affordance, not a
+ * violation — which is why this went unnoticed while the page kept passing
+ * its accessibility sweep. tests/a11y/attorneys-filter-states.spec.ts is
+ * what caught it, and had been reporting it correctly for weeks. If a
+ * future design pass wants the div back, that is a decision worth
+ * recording rather than a detail worth losing.
  */
 
 import type { CSSProperties } from 'react';
@@ -58,7 +71,7 @@ export default function AttorneyFilters({ filters, facets, onChange }: Props) {
   }
 
   return (
-    <div
+    <fieldset
       style={{
         background: 'var(--card-bg)',
         border: '1px solid var(--card-border)',
@@ -68,8 +81,25 @@ export default function AttorneyFilters({ filters, facets, onChange }: Props) {
         gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
         gap: '0.85rem',
         marginBottom: '1.25rem',
+        // A fieldset defaults to min-inline-size: min-content, which makes
+        // the grid refuse to shrink and overflow its container in Chrome.
+        // This is the whole reason people reach for a div here and lose the
+        // grouping; it is one line to keep both.
+        minInlineSize: 0,
       }}
     >
+      <legend
+        style={{
+          fontFamily: 'Manrope, sans-serif',
+          fontSize: '0.75rem',
+          fontWeight: 600,
+          color: 'var(--body)',
+          padding: '0 0.4rem',
+        }}
+      >
+        Filter attorneys
+      </legend>
+
       <div style={{ gridColumn: '1 / -1' }}>
         <label htmlFor="attorney-search" style={labelStyle}>
           Search
@@ -125,6 +155,6 @@ export default function AttorneyFilters({ filters, facets, onChange }: Props) {
           ))}
         </select>
       </div>
-    </div>
+    </fieldset>
   );
 }
