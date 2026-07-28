@@ -37,6 +37,7 @@
 
 import type { AttorneyPackage } from './attorneyPackage.js';
 import type { ReadingLevel } from '../../types/db.js';
+import { copyFor, type CopyBundle } from '../email/resolveCopy.js';
 
 export interface RenderedEmail {
   subject: string;
@@ -46,16 +47,39 @@ export interface RenderedEmail {
 
 // ─── Firm email (qualified intakes only) ──────────────────────────────────────
 
-export function renderFirmEmail(pkg: AttorneyPackage): RenderedEmail {
-  const claimantFirstName = firstName(pkg.claimant.name) ?? 'Claimant';
-  const subject = `New qualified intake — ${pkg.listing.title} — ${claimantFirstName}`;
+/** No edits stored. Every slot falls back to the registry. */
+export const EMPTY_COPY: CopyBundle = new Map();
 
-  const html = renderFirmHtml(pkg);
-  const text = renderFirmText(pkg);
+/**
+ * Substitute {{name}} placeholders.
+ *
+ * A name with no value is left as-is rather than blanked, so a mistake
+ * shows up as visible braces in a test instead of a sentence that
+ * quietly loses its subject. The registry test already refuses a
+ * placeholder the slot did not declare, so this should be unreachable.
+ */
+export function fill(text: string, vars: Record<string, string | null | undefined>): string {
+  return text.replace(/\{\{([a-z0-9_]+)\}\}/gi, (whole, name: string) => {
+    const v = vars[name];
+    return v == null ? whole : v;
+  });
+}
+
+export function renderFirmEmail(pkg: AttorneyPackage, copy: CopyBundle = EMPTY_COPY): RenderedEmail {
+  const claimantFirstName = firstName(pkg.claimant.name) ?? 'Claimant';
+  // Flat template — no reading levels, so every slot resolves at standard.
+  const t = (slot: string) => copyFor(copy, 'firm_handoff', slot, 'standard');
+  const subject = fill(t('subject'), {
+    listing_title: pkg.listing.title,
+    claimant_first_name: claimantFirstName,
+  });
+
+  const html = renderFirmHtml(pkg, t);
+  const text = renderFirmText(pkg, t);
   return { subject, html, text };
 }
 
-function renderFirmHtml(pkg: AttorneyPackage): string {
+function renderFirmHtml(pkg: AttorneyPackage, t: (slot: string) => string): string {
   const rows: string[] = [];
   rows.push(`<!doctype html><html><body style="${BODY_STYLE}">`);
   rows.push(
@@ -63,16 +87,16 @@ function renderFirmHtml(pkg: AttorneyPackage): string {
   );
 
   rows.push(
-    `<h1 style="font-size:18px;font-weight:600;margin:0 0 16px">New qualified intake</h1>`,
+    `<h1 style="font-size:18px;font-weight:600;margin:0 0 16px">${escapeHtml(t('heading'))}</h1>`,
   );
   rows.push(
-    `<p style="margin:0 0 20px;color:#555">An ADA Legal Link client has completed intake for <strong>${escapeHtml(
-      pkg.listing.title,
-    )}</strong>.</p>`,
+    `<p style="margin:0 0 20px;color:#555">${fill(escapeHtml(t('intro')), {
+      listing_title: `<strong>${escapeHtml(pkg.listing.title)}</strong>`,
+    })}</p>`,
   );
 
   // Claimant block
-  rows.push(`<h2 style="${H2_STYLE}">Claimant</h2>`);
+  rows.push(`<h2 style="${H2_STYLE}">${escapeHtml(t('section_claimant'))}</h2>`);
   rows.push(`<table style="${TABLE_STYLE}">`);
   rows.push(kvRow('Name', pkg.claimant.name));
   rows.push(kvRow('Email', pkg.claimant.email));
@@ -82,7 +106,7 @@ function renderFirmHtml(pkg: AttorneyPackage): string {
 
   // Classification
   if (pkg.classification) {
-    rows.push(`<h2 style="${H2_STYLE}">Classification</h2>`);
+    rows.push(`<h2 style="${H2_STYLE}">${escapeHtml(t('section_classification'))}</h2>`);
     rows.push(
       `<p style="margin:0 0 4px"><strong>${escapeHtml(
         pkg.classification.title,
@@ -96,9 +120,9 @@ function renderFirmHtml(pkg: AttorneyPackage): string {
   }
 
   // Case facts
-  rows.push(`<h2 style="${H2_STYLE}">Case facts</h2>`);
+  rows.push(`<h2 style="${H2_STYLE}">${escapeHtml(t('section_case_facts'))}</h2>`);
   if (Object.keys(pkg.fields).length === 0) {
-    rows.push(`<p style="${MUTED_STYLE}">(none recorded)</p>`);
+    rows.push(`<p style="${MUTED_STYLE}">${escapeHtml(t('empty_facts'))}</p>`);
   } else {
     rows.push(`<table style="${TABLE_STYLE}">`);
     for (const [name, entry] of Object.entries(pkg.fields)) {
@@ -114,7 +138,7 @@ function renderFirmHtml(pkg: AttorneyPackage): string {
 
   if (pkg.missingRequiredFields.length > 0) {
     rows.push(
-      `<p style="${WARN_STYLE}"><strong>Missing required fields:</strong> ${pkg.missingRequiredFields
+      `<p style="${WARN_STYLE}"><strong>${escapeHtml(t('missing_fields_label'))}</strong> ${pkg.missingRequiredFields
         .map((n) => escapeHtml(n))
         .join(', ')}</p>`,
     );
@@ -167,7 +191,7 @@ function renderFirmHtml(pkg: AttorneyPackage): string {
   return rows.join('');
 }
 
-function renderFirmText(pkg: AttorneyPackage): string {
+function renderFirmText(pkg: AttorneyPackage, t: (slot: string) => string): string {
   const lines: string[] = [];
   lines.push('NEW QUALIFIED INTAKE');
   lines.push('');
@@ -206,7 +230,7 @@ function renderFirmText(pkg: AttorneyPackage): string {
   if (pkg.missingRequiredFields.length > 0) {
     lines.push('');
     lines.push(
-      `  ** Missing required fields: ${pkg.missingRequiredFields.join(', ')} **`,
+      `  ** ${t('missing_fields_label')} ${pkg.missingRequiredFields.join(', ')} **`,
     );
   }
 
@@ -248,68 +272,43 @@ function renderFirmText(pkg: AttorneyPackage): string {
 export interface RenderUserEmailOptions {
   pkg: AttorneyPackage;
   readingLevel: ReadingLevel;
+  /**
+   * Edited wording, loaded once by the caller. Omitted means "use the
+   * registry", which is what every existing caller and test does — so
+   * this swap changes nothing a claimant reads until somebody edits.
+   */
+  copy?: CopyBundle;
 }
 
 export function renderUserEmail(opts: RenderUserEmailOptions): RenderedEmail {
-  const { pkg, readingLevel } = opts;
+  const { pkg, readingLevel, copy = EMPTY_COPY } = opts;
   const firmName = pkg.listing.firmName;
   const listingTitle = pkg.listing.title;
+  const t = (slot: string) => copyFor(copy, 'claimant_handoff', slot, readingLevel);
 
   let subject: string;
   let intro: string;
   let nextSteps: string;
 
   if (pkg.qualified) {
-    subject = simpleByLevel(readingLevel, {
-      simple: `We sent your story to ${firmName}`,
-      standard: `We've sent your information to ${firmName}`,
-      professional: `Intake submitted to ${firmName}`,
-    });
-    intro = simpleByLevel(readingLevel, {
-      simple: `Thank you for telling us what happened. We sent your story to ${firmName}.`,
-      standard: `Thanks for sharing your experience. We've sent your information to ${firmName} for the "${listingTitle}" class action.`,
-      professional: `Thank you for completing intake for the "${listingTitle}" class action. Your information has been submitted to ${firmName} for review.`,
-    });
-    nextSteps = simpleByLevel(readingLevel, {
-      simple: `They will look at it and get back to you soon. Watch for their email or call. You do not need to do anything right now.`,
-      standard: `They'll review it and reach out to you directly. Watch for their email or call in the coming days.`,
-      professional: `The firm will review your submission and contact you directly to discuss next steps. Expected response time varies by firm but is typically 1-2 weeks.`,
-    });
+    subject = fill(t('subject_qualified'), { firm_name: firmName });
+    intro = fill(t('intro_qualified'), { firm_name: firmName, listing_title: listingTitle });
+    nextSteps = t('next_steps_qualified');
   } else {
-    subject = simpleByLevel(readingLevel, {
-      simple: `About your story`,
-      standard: `Update on your intake`,
-      professional: `Update regarding your intake`,
-    });
-    intro = simpleByLevel(readingLevel, {
-      simple: `Thank you for telling us what happened. For this case, we were not able to match you.`,
-      standard: `Thanks for sharing your experience. Unfortunately, based on what we discussed, your situation doesn't match the "${listingTitle}" class action.`,
-      professional: `Thank you for completing intake for the "${listingTitle}" class action. Based on the information provided, your situation does not meet the eligibility criteria for this particular case.`,
-    });
+    subject = t('subject_unqualified');
+    intro = fill(t('intro_unqualified'), { listing_title: listingTitle });
     const reasonLine = pkg.disqualifyingReason
-      ? simpleByLevel(readingLevel, {
-          simple: `Reason: ${pkg.disqualifyingReason}`,
-          standard: `The reason: ${pkg.disqualifyingReason}`,
-          professional: `Disqualifying reason: ${pkg.disqualifyingReason}`,
-        })
+      ? fill(t('reason_line'), { reason: pkg.disqualifyingReason })
       : '';
     nextSteps = [
       reasonLine,
-      simpleByLevel(readingLevel, {
-        simple: `You can still get help. Come back to ADA Legal Link to look for other ways.`,
-        standard: `You may still have options. Come back to ADA Legal Link and we can explore other paths that fit your situation.`,
-        professional: `Other avenues may still be available. Please return to ADA Legal Link to explore alternative options for your situation.`,
-      }),
+      t('next_steps_unqualified'),
     ]
       .filter(Boolean)
       .join('\n\n');
   }
 
-  const summaryHeading = simpleByLevel(readingLevel, {
-    simple: 'What we talked about',
-    standard: "What we discussed",
-    professional: 'Summary of intake',
-  });
+  const summaryHeading = t('summary_heading');
 
   const html = renderUserHtml({
     intro,
@@ -434,8 +433,4 @@ function escapeHtml(s: string): string {
 
 function escapeAttr(s: string): string {
   return escapeHtml(s);
-}
-
-function simpleByLevel<T>(level: ReadingLevel, variants: Record<ReadingLevel, T>): T {
-  return variants[level];
 }

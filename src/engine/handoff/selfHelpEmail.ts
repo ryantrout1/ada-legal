@@ -25,6 +25,8 @@ import type { ReadingLevel, ExtractedFields } from '../../types/db.js';
 import type { EmailClient, DbClient } from '../clients/types.js';
 import type { AdaSessionState } from '../types.js';
 import type { RenderedEmail } from './emailTemplates.js';
+import { copyFor, loadCopy, type CopyBundle } from '../email/resolveCopy.js';
+import { EMPTY_COPY } from './emailTemplates.js';
 
 // ─── Contact email extraction ─────────────────────────────────────────────────
 
@@ -51,6 +53,8 @@ export function extractContactEmail(fields: ExtractedFields): string | null {
 // ─── Template ─────────────────────────────────────────────────────────────────
 
 export interface RenderSelfHelpEmailOptions {
+  /** Edited wording, loaded once by the caller. Omitted means the registry. */
+  copy?: CopyBundle;
   packageUrl: string;
   readingLevel: ReadingLevel;
   summary: string;
@@ -60,34 +64,19 @@ export interface RenderSelfHelpEmailOptions {
 export function renderSelfHelpUserEmail(
   opts: RenderSelfHelpEmailOptions,
 ): RenderedEmail {
-  const { packageUrl, readingLevel, summary, hasLetter } = opts;
+  const { packageUrl, readingLevel, summary, hasLetter, copy = EMPTY_COPY } = opts;
+  const t = (slot: string) => copyFor(copy, 'self_help', slot, readingLevel);
 
-  const subject = byLevel(readingLevel, {
-    simple: 'Your accessibility summary from Ada',
-    standard: 'Your accessibility summary and next steps',
-    professional: 'Your ADA accessibility summary and recommended next steps',
-  });
+  const subject = t('subject');
 
-  const greeting = byLevel(readingLevel, {
-    simple: 'Here is the summary of what we talked about.',
-    standard: "Here's the summary of what we discussed and the steps you can take.",
-    professional:
-      'Below is the summary of our discussion and the recommended next steps.',
-  });
+  const greeting = t('greeting');
 
   const letterLine = hasLetter
-    ? byLevel(readingLevel, {
-        simple: 'Your summary also has a sample letter you can send.',
-        standard:
-          'Your summary also includes a sample letter you can send to the business.',
-        professional:
-          'Your summary also includes a sample letter you may send to the business directly.',
-      })
+    ? t('letter_line')
     : '';
 
-  const cta = 'Open your full summary:';
-  const disclaimer =
-    'This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.';
+  const cta = t('cta');
+  const disclaimer = t('disclaimer');
 
   const textLines = [greeting, '', summary, '', cta, packageUrl];
   if (letterLine) textLines.push('', letterLine);
@@ -144,6 +133,7 @@ export async function maybeSendSelfHelpEmail(
       readingLevel: state.readingLevel,
       summary: pkg.summary,
       hasLetter: pkg.demandLetter !== null,
+      copy: await loadCopy(deps.db, state.orgId, 'self_help'),
     });
     const result = await deps.email.send({
       to,
@@ -167,13 +157,6 @@ export async function maybeSendSelfHelpEmail(
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function byLevel(
-  level: ReadingLevel,
-  variants: { simple: string; standard: string; professional: string },
-): string {
-  return variants[level] ?? variants.standard;
-}
 
 function escapeHtml(s: string): string {
   return s

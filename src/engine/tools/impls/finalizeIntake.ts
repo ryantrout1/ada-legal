@@ -50,6 +50,7 @@ import {
 } from '../../handoff/emailTemplates.js';
 import { renderAndUploadTranscript } from '../../handoff/transcriptPdf.js';
 import { confirmationSatisfied, NEEDS_CONFIRMATION_MESSAGE } from '../finalizeGuard.js';
+import { loadCopy } from '../../email/resolveCopy.js';
 
 interface FinalizeIntakeInput {
   qualified: boolean;
@@ -293,13 +294,20 @@ export const finalizeIntakeTool: AdaTool<FinalizeIntakeInput> = {
     //    bounces we'll see it in logs and the user has still been told
     //    their info was sent (we consider the intent enough).
     let firmEmailId: string | null = null;
+    // Copy is loaded once per send, not per slot, so the renderers stay
+    // synchronous. loadCopy soft-fails, so an unreachable database means
+    // the registry wording goes out rather than nothing.
+    const orgId = ctx.state.orgId;
     let firmEmailError: string | null = null;
     if (input.qualified) {
       if (!lawFirm.email) {
         firmEmailError = 'law firm has no email address on file';
       } else {
         try {
-          const rendered = renderFirmEmail(pkg);
+          const rendered = renderFirmEmail(
+            pkg,
+            await loadCopy(ctx.clients.db, orgId, 'firm_handoff'),
+          );
           const result = await ctx.clients.email.send({
             to: lawFirm.email,
             subject: rendered.subject,
@@ -324,6 +332,7 @@ export const finalizeIntakeTool: AdaTool<FinalizeIntakeInput> = {
         const rendered = renderUserEmail({
           pkg,
           readingLevel: ctx.state.readingLevel,
+          copy: await loadCopy(ctx.clients.db, orgId, 'claimant_handoff'),
         });
         const result = await ctx.clients.email.send({
           to: pkg.claimant.email,
