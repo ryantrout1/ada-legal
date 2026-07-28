@@ -23,7 +23,11 @@
 
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { EMAIL_TEMPLATES, type EmailTemplateSpec } from '@/engine/email/copySlots';
+import {
+  EMAIL_TEMPLATES,
+  type EmailTemplateSpec,
+  type LeveledText,
+} from '@/engine/email/copySlots';
 import { renderFirmEmail, renderUserEmail } from '@/engine/handoff/emailTemplates';
 import { renderSelfHelpUserEmail } from '@/engine/handoff/selfHelpEmail';
 import {
@@ -165,7 +169,7 @@ function literalRuns(s: string): string[] {
 function defaultsFor(slot: EmailTemplateSpec['slots'][number]): Array<[ReadingLevel, string]> {
   return typeof slot.default === 'string'
     ? [['standard', slot.default]]
-    : LEVELS.map((l) => [l, slot.default[l]] as [ReadingLevel, string]);
+    : LEVELS.map((l) => [l, (slot.default as LeveledText)[l]] as [ReadingLevel, string]);
 }
 
 describe('every default is the string the renderer sends today', () => {
