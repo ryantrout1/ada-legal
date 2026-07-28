@@ -1,5 +1,9 @@
 /**
- * GET /api/admin/feedback — the feedback inbox.
+ * /api/admin/feedback — the feedback inbox.
+ *
+ *   GET   — messages, filtered by triage state. Defaults to what still
+ *           needs attention rather than everything ever sent.
+ *   PATCH — move one message between new / reviewed / archived.
  *
  * New endpoint (M6), so no additive constraint applies. Reads the table
  * the public FeedbackModal writes to.
@@ -13,33 +17,63 @@
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { desc } from 'drizzle-orm';
 import { requireAdmin } from '../_admin.js';
 import { applyCors } from '../_cors.js';
-import { makeDb } from '../../src/db/client.js';
-import { feedback } from '../../src/db/schema-core.js';
+import { makeClientsFromEnv } from '../_shared.js';
+import { isFeedbackStatus, FEEDBACK_STATUSES } from '../../src/engine/clients/types.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
 
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', 'GET');
+  if (req.method !== 'GET' && req.method !== 'PATCH') {
+    res.setHeader('Allow', 'GET, PATCH');
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const auth = await requireAdmin(req, res);
   if (!auth) return;
 
-  try {
-    const url = process.env.DATABASE_URL;
-    if (!url) throw new Error('DATABASE_URL is not set');
-    const db = makeDb(url);
+  if (req.method === 'PATCH') {
+    const body = (req.body ?? {}) as { id?: unknown; status?: unknown };
+    const id = typeof body.id === 'string' ? body.id : '';
+    if (!id) return res.status(400).json({ error: 'id is required' });
 
-    const rows = await db
-      .select()
-      .from(feedback)
-      .orderBy(desc(feedback.createdAt))
-      .limit(500);
+    // Named, not dropped. A status the column will not take comes back
+    // with the field and what it accepts, rather than a 500 from the
+    // CHECK or a quiet no-op that looks like it worked.
+    if (!isFeedbackStatus(body.status)) {
+      return res.status(400).json({
+        error: `status must be one of: ${FEEDBACK_STATUSES.join(', ')}`,
+        field: 'status',
+      });
+    }
+
+    try {
+      const clients = makeClientsFromEnv();
+      const updated = await clients.db.updateFeedbackStatus(id, body.status);
+      if (!updated) return res.status(404).json({ error: 'No such feedback' });
+      return res.status(200).json({ feedback: updated });
+    } catch (err) {
+      console.error('PATCH /api/admin/feedback failed', err);
+      return res.status(500).json({ error: 'Could not update feedback' });
+    }
+  }
+
+  try {
+    const clients = makeClientsFromEnv();
+
+    // Default to what still needs attention. Archived stays reachable
+    // through the filter — it is out of the way, not gone.
+    const raw = typeof req.query.status === 'string' ? req.query.status : 'new';
+    const status = raw === 'all' ? undefined : raw;
+    if (status !== undefined && !isFeedbackStatus(status)) {
+      return res.status(400).json({
+        error: `status must be 'all' or one of: ${FEEDBACK_STATUSES.join(', ')}`,
+        field: 'status',
+      });
+    }
+
+    const rows = await clients.db.listFeedback({ status });
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({
@@ -54,6 +88,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         testimonial_consent: r.testimonialConsent,
         page: r.page,
         page_url: r.pageUrl,
+        status: r.status,
         created_at: r.createdAt,
       })),
       total: rows.length,

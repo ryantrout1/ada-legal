@@ -1247,6 +1247,17 @@ export interface DbClient {
    * Every slot this org has edited, across all templates. Empty when
    * nobody has changed anything — that is the normal state, not an error.
    */
+  // ─── Feedback (migration 0049) ────────────────────────────────────────────
+  /** Newest first. Empty array when nobody has said anything. */
+  listFeedback(opts: ListFeedbackOptions): Promise<FeedbackRow[]>;
+  createFeedback(input: CreateFeedbackInput): Promise<FeedbackRow>;
+  /**
+   * Move a message between triage states. Returns null on a miss rather
+   * than throwing. Touches status and nothing else — the message is what
+   * somebody took the trouble to write.
+   */
+  updateFeedbackStatus(id: string, status: FeedbackStatus): Promise<FeedbackRow | null>;
+
   listEmailCopy(orgId: string): Promise<EmailCopyRow[]>;
   /** Edited slots for one template. Empty array on a miss, never null. */
   getEmailCopy(orgId: string, templateKey: string): Promise<EmailCopyRow[]>;
@@ -2264,6 +2275,60 @@ export interface PhotoReviewDetail {
   reviews: PhotoReviewRecord[];
   /** The current viewer's reviewer name, when known server-side (admin/Clerk). */
   viewerReviewer?: string;
+}
+
+/**
+ * Triage states for a feedback message.
+ *
+ * A runtime array so a guard can walk it and a test can enumerate it —
+ * the shape LITIGATION_KINDS uses, for the same reason.
+ */
+export const FEEDBACK_STATUSES = ['new', 'reviewed', 'archived'] as const;
+
+export type FeedbackStatus = (typeof FEEDBACK_STATUSES)[number];
+
+export function isFeedbackStatus(value: unknown): value is FeedbackStatus {
+  return (
+    typeof value === 'string' && (FEEDBACK_STATUSES as readonly string[]).includes(value)
+  );
+}
+
+export interface FeedbackRow {
+  id: string;
+  message: string;
+  feedbackType: string;
+  rating: string | null;
+  name: string | null;
+  email: string | null;
+  displayName: string | null;
+  location: string | null;
+  /** Never inferred from a name being present. Stored explicitly. */
+  testimonialConsent: boolean;
+  page: string | null;
+  pageUrl: string | null;
+  status: FeedbackStatus;
+  createdAt: string;
+}
+
+export interface CreateFeedbackInput {
+  orgId: string;
+  message: string;
+  feedbackType?: string;
+  rating?: string | null;
+  name?: string | null;
+  email?: string | null;
+  displayName?: string | null;
+  location?: string | null;
+  testimonialConsent?: boolean;
+  page?: string | null;
+  pageUrl?: string | null;
+  userAgent?: string | null;
+}
+
+export interface ListFeedbackOptions {
+  /** Omit for everything, including archived. */
+  status?: FeedbackStatus;
+  limit?: number;
 }
 
 export interface EmailCopyRow {

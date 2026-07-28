@@ -18,7 +18,7 @@
  * Ref: docs/ARCHITECTURE.md §2, §6, docs/DO_NOT_TOUCH.md rule 1
  */
 
-import { and, eq, ilike, inArray, isNull, lt, ne, or, sql } from 'drizzle-orm';
+import { and, eq, ilike, inArray, isNull, lt, ne, or, sql, desc } from 'drizzle-orm';
 import type { Database } from '../../db/client.js';
 import { NATIONWIDE_SENTINEL, normalizeAffectedStates } from './litigationStates.js';
 import {
@@ -27,6 +27,7 @@ import {
   attorneys as attorneysTable,
   litigationContacts as litigationContactsTable,
   emailCopy as emailCopyTable,
+  feedback as feedbackTable,
   litigationListings as litigationTable,
   litigationFirmAssignments,
   organizations,
@@ -121,6 +122,10 @@ import type {
   LitigationContactRow,
   LitigationKind,
   EmailCopyRow,
+  FeedbackRow,
+  FeedbackStatus,
+  CreateFeedbackInput,
+  ListFeedbackOptions,
   UpsertEmailCopyInput,
   LitigationRow,
   LitigationDetailRow,
@@ -1490,6 +1495,71 @@ export class NeonDbClient implements DbClient {
       )
       .returning({ id: litigationContactsTable.id });
     return rows.length > 0;
+  }
+
+  // ─── Feedback (migration 0049) ────────────────────────────────────────────
+
+  private mapFeedback(r: typeof feedbackTable.$inferSelect): FeedbackRow {
+    return {
+      id: r.id,
+      message: r.message,
+      feedbackType: r.feedbackType,
+      rating: r.rating ?? null,
+      name: r.name ?? null,
+      email: r.email ?? null,
+      displayName: r.displayName ?? null,
+      location: r.location ?? null,
+      testimonialConsent: r.testimonialConsent,
+      page: r.page ?? null,
+      pageUrl: r.pageUrl ?? null,
+      status: r.status as FeedbackStatus,
+      createdAt:
+        r.createdAt instanceof Date ? r.createdAt.toISOString() : String(r.createdAt),
+    };
+  }
+
+  async listFeedback(opts: ListFeedbackOptions): Promise<FeedbackRow[]> {
+    const base = this.db.select().from(feedbackTable);
+    const rows = await (opts.status
+      ? base.where(eq(feedbackTable.status, opts.status))
+      : base
+    )
+      .orderBy(desc(feedbackTable.createdAt))
+      .limit(opts.limit && opts.limit > 0 ? Math.min(opts.limit, 500) : 500);
+    return rows.map((r) => this.mapFeedback(r));
+  }
+
+  async createFeedback(input: CreateFeedbackInput): Promise<FeedbackRow> {
+    const [row] = await this.db
+      .insert(feedbackTable)
+      .values({
+        message: input.message,
+        feedbackType: input.feedbackType ?? 'general_feedback',
+        rating: input.rating ?? null,
+        name: input.name ?? null,
+        email: input.email ?? null,
+        displayName: input.displayName ?? null,
+        location: input.location ?? null,
+        testimonialConsent: input.testimonialConsent ?? false,
+        page: input.page ?? null,
+        pageUrl: input.pageUrl ?? null,
+        userAgent: input.userAgent ?? null,
+      })
+      .returning();
+    return this.mapFeedback(row);
+  }
+
+  async updateFeedbackStatus(
+    id: string,
+    status: FeedbackStatus,
+  ): Promise<FeedbackRow | null> {
+    // status only — the message is what somebody took the trouble to write.
+    const [row] = await this.db
+      .update(feedbackTable)
+      .set({ status })
+      .where(eq(feedbackTable.id, id))
+      .returning();
+    return row ? this.mapFeedback(row) : null;
   }
 
   // ─── Edited email copy (migration 0048) ──────────────────────────────────

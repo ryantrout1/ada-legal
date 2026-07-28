@@ -693,6 +693,12 @@ export const feedback = pgTable(
     page: text('page'),
     pageUrl: text('page_url'),
     userAgent: text('user_agent'),
+    /**
+     * Triage state — 'new' | 'reviewed' | 'archived'. CHECK in 0049.
+     * Archived is out of the way, never gone: feedback on an
+     * accessibility product is evidence about the product.
+     */
+    status: text('status').notNull().default('new'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index('feedback_created_at_idx').on(t.createdAt)],

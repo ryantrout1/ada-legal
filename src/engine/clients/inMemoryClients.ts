@@ -122,6 +122,10 @@ import type {
   UpsertPhotoReviewInput,
   PhotoReviewEvalRow,
   PhotoReviewRecord,
+  FeedbackRow,
+  FeedbackStatus,
+  CreateFeedbackInput,
+  ListFeedbackOptions,
   EmailCopyRow,
   UpsertEmailCopyInput,
   SavePhotoAnalysisInput,
@@ -653,6 +657,51 @@ export class InMemoryDbClient implements DbClient {
   }
 
   /** Deliberately not modelled — aggregation, see NOT_MODELLED below. */
+  // ─── Feedback (migration 0049) ────────────────────────────────────────────
+
+  public readonly feedback: FeedbackRow[] = [];
+
+  async listFeedback(opts: ListFeedbackOptions): Promise<FeedbackRow[]> {
+    const rows = opts.status
+      ? this.feedback.filter((r) => r.status === opts.status)
+      : [...this.feedback];
+    // Newest first, because the newest is the one somebody still needs
+    // to read. Insertion order is chronological here.
+    rows.reverse();
+    return opts.limit && opts.limit > 0 ? rows.slice(0, opts.limit) : rows;
+  }
+
+  async createFeedback(input: CreateFeedbackInput): Promise<FeedbackRow> {
+    const row: FeedbackRow = {
+      id: `mem-feedback-${this.feedback.length + 1}`,
+      message: input.message,
+      feedbackType: input.feedbackType ?? 'general_feedback',
+      rating: input.rating ?? null,
+      name: input.name ?? null,
+      email: input.email ?? null,
+      displayName: input.displayName ?? null,
+      location: input.location ?? null,
+      testimonialConsent: input.testimonialConsent ?? false,
+      page: input.page ?? null,
+      pageUrl: input.pageUrl ?? null,
+      status: 'new',
+      createdAt: new Date(this.feedback.length).toISOString(),
+    };
+    this.feedback.push(row);
+    return row;
+  }
+
+  async updateFeedbackStatus(
+    id: string,
+    status: FeedbackStatus,
+  ): Promise<FeedbackRow | null> {
+    const row = this.feedback.find((r) => r.id === id);
+    if (!row) return null;
+    // Status only. Nothing else on the row moves.
+    row.status = status;
+    return row;
+  }
+
   // ─── Edited email copy (migration 0048) ──────────────────────────────────
 
   public readonly emailCopy: EmailCopyRow[] = [];
