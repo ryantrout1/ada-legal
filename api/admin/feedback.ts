@@ -73,7 +73,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    const rows = await clients.db.listFeedback({ status });
+    // Counts for every status come back with every read, so the sidebar
+    // badge and the filter buttons never need a second request.
+    const [rows, counts] = await Promise.all([
+      clients.db.listFeedback({ status }),
+      clients.db.countFeedbackByStatus(),
+    ]);
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({
@@ -91,6 +96,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         status: r.status,
         created_at: r.createdAt,
       })),
+      counts,
       total: rows.length,
     });
   } catch (err) {

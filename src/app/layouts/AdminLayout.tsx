@@ -9,6 +9,7 @@
  * Ref: docs/ARCHITECTURE.md §11
  */
 
+import { useEffect, useState } from 'react';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { PortalAnnouncerProvider } from '../portal/announcer.js';
@@ -103,6 +104,34 @@ export default function AdminLayout() {
   const location = useLocation();
 
   const email = user?.primaryEmailAddress?.emailAddress ?? 'admin';
+
+  /**
+   * How many messages are waiting, for the badge on Feedback.
+   *
+   * Re-read on every navigation rather than once on mount, so marking
+   * something reviewed drops the count without a page refresh. A failed
+   * read shows no badge — an admin surface should not grow an error
+   * banner because a decoration could not load.
+   */
+  const [newFeedback, setNewFeedback] = useState(0);
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const resp = await fetch('/api/admin/feedback?status=new&limit=1', {
+          credentials: 'include',
+        });
+        if (!resp.ok) return;
+        const body = (await resp.json()) as { counts?: { new?: number } };
+        if (!cancelled) setNewFeedback(body.counts?.new ?? 0);
+      } catch {
+        /* no badge is the right failure here */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [location.pathname]);
 
   return (
     <LiveAnnouncer>
@@ -215,6 +244,17 @@ export default function AdminLayout() {
                   }
                 >
                   {item.label}
+                  {item.to === '/admin/feedback' && newFeedback > 0 && (
+                    <span
+                      className="ml-2 inline-flex min-w-[1.5rem] justify-center rounded-full bg-accent-500 px-2 py-0.5 text-xs font-bold text-white"
+                      // The number is read out as part of the link, so a
+                      // screen-reader user hears "Feedback, 3 waiting"
+                      // rather than "Feedback, 3".
+                      aria-label={`${newFeedback} waiting`}
+                    >
+                      {newFeedback}
+                    </span>
+                  )}
                 </NavLink>
               ))}
             </div>

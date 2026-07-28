@@ -58,6 +58,7 @@ export default function AdminFeedback() {
   const [filter, setFilter] = useState<Filter>('new');
   const [busyId, setBusyId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [counts, setCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
     let cancelled = false;
@@ -68,8 +69,14 @@ export default function AdminFeedback() {
           credentials: 'include',
         });
         if (!resp.ok) throw new Error(String(resp.status));
-        const body = (await resp.json()) as { feedback?: FeedbackRow[] };
-        if (!cancelled) setRows(body.feedback ?? []);
+        const body = (await resp.json()) as {
+          feedback?: FeedbackRow[];
+          counts?: Record<string, number>;
+        };
+        if (!cancelled) {
+          setRows(body.feedback ?? []);
+          setCounts(body.counts ?? {});
+        }
       } catch {
         if (!cancelled) setError(true);
       }
@@ -138,6 +145,9 @@ export default function AdminFeedback() {
             }
           >
             {f.label}
+            {f.value !== 'all' && (counts[f.value] ?? 0) > 0 && (
+              <span className="ml-2 font-normal">{counts[f.value]}</span>
+            )}
           </button>
         ))}
       </div>

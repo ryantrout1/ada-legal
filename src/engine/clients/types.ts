@@ -1252,6 +1252,11 @@ export interface DbClient {
   listFeedback(opts: ListFeedbackOptions): Promise<FeedbackRow[]>;
   createFeedback(input: CreateFeedbackInput): Promise<FeedbackRow>;
   /**
+   * How many messages sit in each state. Every status is present, zero
+   * included, so a caller never has to tell "none" from "not counted".
+   */
+  countFeedbackByStatus(): Promise<Record<FeedbackStatus, number>>;
+  /**
    * Move a message between triage states. Returns null on a miss rather
    * than throwing. Touches status and nothing else — the message is what
    * somebody took the trouble to write.

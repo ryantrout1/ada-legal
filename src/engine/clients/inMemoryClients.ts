@@ -691,6 +691,12 @@ export class InMemoryDbClient implements DbClient {
     return row;
   }
 
+  async countFeedbackByStatus(): Promise<Record<FeedbackStatus, number>> {
+    const counts: Record<FeedbackStatus, number> = { new: 0, reviewed: 0, archived: 0 };
+    for (const r of this.feedback) counts[r.status] += 1;
+    return counts;
+  }
+
   async updateFeedbackStatus(
     id: string,
     status: FeedbackStatus,

@@ -19,6 +19,7 @@
  */
 
 import { and, eq, ilike, inArray, isNull, lt, ne, or, sql, desc } from 'drizzle-orm';
+import { isFeedbackStatus } from './types.js';
 import type { Database } from '../../db/client.js';
 import { NATIONWIDE_SENTINEL, normalizeAffectedStates } from './litigationStates.js';
 import {
@@ -1547,6 +1548,21 @@ export class NeonDbClient implements DbClient {
       })
       .returning();
     return this.mapFeedback(row);
+  }
+
+  async countFeedbackByStatus(): Promise<Record<FeedbackStatus, number>> {
+    const rows = await this.db
+      .select({ status: feedbackTable.status, n: sql<number>`count(*)::int` })
+      .from(feedbackTable)
+      .groupBy(feedbackTable.status);
+    // Seeded at zero so every status is present even when the table is
+    // empty — a missing key and a count of none are different things to
+    // a caller, and only one of them is true.
+    const counts: Record<FeedbackStatus, number> = { new: 0, reviewed: 0, archived: 0 };
+    for (const r of rows) {
+      if (isFeedbackStatus(r.status)) counts[r.status] = Number(r.n);
+    }
+    return counts;
   }
 
   async updateFeedbackStatus(

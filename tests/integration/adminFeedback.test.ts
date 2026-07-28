@@ -192,3 +192,50 @@ describe('the inbox screen', () => {
     expect(src).not.toMatch(/#[0-9a-f]{3,8}\b/i);
   });
 });
+
+/**
+ * The badge exists so nobody has to remember to check.
+ *
+ * A feedback form on an accessibility product that nobody watches is
+ * worse than no form at all. The count lives on the sidebar so it is
+ * visible from every admin page, not just the one you would only open
+ * if you already suspected there was something to read.
+ */
+describe('the waiting count', () => {
+  it('counts every status, zero included', async () => {
+    // A missing key and a count of none are different things to a
+    // caller, and only one of them is true.
+    const c = new InMemoryDbClient();
+    expect(await c.countFeedbackByStatus()).toEqual({ new: 0, reviewed: 0, archived: 0 });
+  });
+
+  it('moves as messages are dealt with', async () => {
+    const c = new InMemoryDbClient();
+    const a = await seed(c, 'one');
+    await seed(c, 'two');
+    expect((await c.countFeedbackByStatus()).new).toBe(2);
+
+    await c.updateFeedbackStatus(a.id, 'reviewed');
+    const after = await c.countFeedbackByStatus();
+    expect(after).toEqual({ new: 1, reviewed: 1, archived: 0 });
+  });
+
+  it('shows on the sidebar, on every admin page', () => {
+    const nav = readCode('src/app/layouts/AdminLayout.tsx');
+    expect(nav).toContain("item.to === '/admin/feedback'");
+    expect(nav).toContain('newFeedback > 0');
+  });
+
+  it('is announced as waiting, not as a bare number', () => {
+    // "Feedback, 3" tells a screen-reader user nothing about what the 3 is.
+    expect(readCode('src/app/layouts/AdminLayout.tsx')).toContain('waiting');
+  });
+
+  it('refreshes on navigation so a reviewed message drops the count', () => {
+    expect(readCode('src/app/layouts/AdminLayout.tsx')).toContain('[location.pathname]');
+  });
+
+  it('comes back with every read, so the sidebar needs no second request', () => {
+    expect(readCode('api/admin/feedback.ts')).toContain('countFeedbackByStatus()');
+  });
+});
