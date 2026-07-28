@@ -14,6 +14,8 @@
     "test:watch": "vitest",
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration",
+    "test:schema": "node scripts/run-live-tests.mjs schema",
+    "test:live": "node scripts/run-live-tests.mjs write",
     "test:personas": "playwright test",
     "test:personas:preview": "PLAYWRIGHT_TARGET=preview playwright test",
     "test:personas:prod": "PLAYWRIGHT_TARGET=prod playwright test",

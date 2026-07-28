@@ -8,7 +8,11 @@
  * information_schema/row check during /shipit) rather than writing test rows to
  * the shared database here.
  *
- * Gated on DATABASE_URL — skips locally/CI without a live connection.
+ * DOES NOT RUN under `npm run test`. Nothing in this repo sets DATABASE_URL
+ * for a test run — there is no CI, and vitest loads no env file — so this
+ * skipped on every run from the day it was written until 2026-07-28. Run it
+ * with `npm run test:live`. It writes, so it also needs
+ * SPOT_TEST_ALLOW_WRITES=1 and a Neon branch — not main.
  *
  * Ref: /plan Phase 1a (Ada Spot free-read backend).
  */
@@ -18,8 +22,11 @@ import { makeDb } from '@/db/client';
 import { makeSpotStore } from '@/lib/spot/spotStore';
 
 const DATABASE_URL = process.env.DATABASE_URL;
+// This file writes. Requiring a second variable means an exported
+// DATABASE_URL alone cannot reach it — `npm run test` stays read-only.
+const ALLOW_WRITES = process.env.SPOT_TEST_ALLOW_WRITES === '1';
 
-describe.skipIf(!DATABASE_URL)('spotStore — live schema wiring', () => {
+describe.skipIf(!DATABASE_URL || !ALLOW_WRITES)('spotStore — live schema wiring', () => {
   it('countReadsSince returns 0 for a fresh key (query + schema mapping valid)', async () => {
     const store = makeSpotStore(makeDb(DATABASE_URL!));
     const freshKey = `__test_never_written__${crypto.randomUUID()}`;

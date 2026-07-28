@@ -10,8 +10,12 @@
  * Applied to Neon ancient-star-00703098 main and verified during /shipit; this
  * is the automated equivalent (same pattern as casesSchemaApplied.test.ts).
  *
- * Gated on DATABASE_URL — skips when no live connection is configured (the
- * default for local/CI without secrets).
+ * DOES NOT RUN under `npm run test`. Nothing in this repo sets DATABASE_URL
+ * for a test run — there is no CI, and vitest loads no env file — so this
+ * skipped on every run from the day it was written until 2026-07-28. The
+ * old note said "local/CI without secrets", describing a CI that was never
+ * built. Run it with `npm run test:schema` and DATABASE_URL exported.
+ * Reads only; safe against production.
  *
  * Ref: /plan Phase 0 (Ada Spot foundations & schema).
  */

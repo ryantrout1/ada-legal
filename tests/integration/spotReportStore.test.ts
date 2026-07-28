@@ -3,7 +3,13 @@
  *
  * uploaded session → insertReport → getReportBySession → markInReview
  * (idempotent), verifying the pickup + persistence + status flip. Self-cleaning.
- * Skips without DATABASE_URL. Ref: /plan Phase 3a.
+ * DOES NOT RUN under `npm run test`. Nothing in this repo sets DATABASE_URL
+ * for a test run — there is no CI, and vitest loads no env file — so this
+ * skipped on every run from the day it was written until 2026-07-28. Run it
+ * with `npm run test:live`. It writes, so it also needs
+ * SPOT_TEST_ALLOW_WRITES=1 and a Neon branch — not main.
+ *
+ * Ref: /plan Phase 3a.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -14,8 +20,11 @@ import { makeSpotStore } from '@/lib/spot/spotStore';
 import { generatePackageSlug } from '@/engine/package/slug';
 
 const DATABASE_URL = process.env.DATABASE_URL;
+// This file writes. Requiring a second variable means an exported
+// DATABASE_URL alone cannot reach it — `npm run test` stays read-only.
+const ALLOW_WRITES = process.env.SPOT_TEST_ALLOW_WRITES === '1';
 
-describe.skipIf(!DATABASE_URL)('spotStore report methods — live DB', () => {
+describe.skipIf(!DATABASE_URL || !ALLOW_WRITES)('spotStore report methods — live DB', () => {
   it('uploaded → insertReport → getReportBySession → markInReview', async () => {
     const db = makeDb(DATABASE_URL!);
     const store = makeSpotStore(db);
