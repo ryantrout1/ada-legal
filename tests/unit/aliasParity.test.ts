@@ -24,10 +24,37 @@ import { dirname, resolve } from 'node:path';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const css = readFileSync(resolve(root, 'src/app.css'), 'utf8');
-const b44 = readFileSync(
-  resolve(root, '../ada-legal-link-B44/src/components/a11y/DisplaySettings.jsx'),
-  'utf8',
+
+/**
+ * This reads a file out of the OTHER repo, checked out beside this one. On
+ * a machine that has both, it runs. Anywhere that does not — a fresh
+ * clone, CI, a sandbox — it used to crash the whole file with ENOENT and
+ * report as a failure.
+ *
+ * That mattered more than it looks. A suite that always shows red stops
+ * being read: when the attorney filter broke on 2026-07-23 it added two
+ * more red lines to a screen that already had some, and nobody noticed for
+ * a month. Permanent known-failures are how real failures hide.
+ *
+ * So it skips instead. A skip says "not checked here", which is true. A
+ * failure said "something is wrong", which was not.
+ *
+ * It stops mattering entirely once Base44 is switched off, at which point
+ * this file can go.
+ */
+const B44_PATH = resolve(
+  root,
+  '../ada-legal-link-B44/src/components/a11y/DisplaySettings.jsx',
 );
+
+let b44 = '';
+let haveB44 = false;
+try {
+  b44 = readFileSync(B44_PATH, 'utf8');
+  haveB44 = true;
+} catch {
+  haveB44 = false;
+}
 
 /** Primitives: FIRST declaration only — later ones are theme overrides. */
 function primitives(): Record<string, string> {
@@ -78,7 +105,7 @@ const EXEMPT: Record<string, string> = {
     'success message.',
 };
 
-describe('semantic alias parity with B44', () => {
+describe.skipIf(!haveB44)('semantic alias parity with B44', () => {
   it('resolves the alias layer at all', () => {
     // A scope-detection bug here would make every assertion below pass
     // vacuously — which is how the original miss survived.
@@ -128,7 +155,7 @@ describe('semantic alias parity with B44', () => {
  * primitive-level check and to a "does this token exist" check. It is
  * only visible if you assert the tiers are distinct.
  */
-describe('landing violet tiers stay distinct', () => {
+describe.skipIf(!haveB44)('landing violet tiers stay distinct', () => {
   const styles = readFileSync(
     resolve(root, 'src/app/routes/public/components/landing/LandingV2Styles.jsx'),
     'utf8',
