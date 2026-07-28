@@ -62,6 +62,8 @@ import AdminListingPreview from './routes/admin/AdminListingPreview.js';
 import AdminSubscriptions from './routes/admin/AdminSubscriptions.js';
 import AdminIntakes from './routes/admin/AdminIntakes.js';
 import AdminSettings from './routes/admin/AdminSettings.js';
+import AdminEmailCopy from './routes/admin/AdminEmailCopy.js';
+import AdminEmailCopyDetail from './routes/admin/AdminEmailCopyDetail.js';
 import AdminDashboard from './routes/admin/AdminDashboard.js';
 import AdminFeedback from './routes/admin/AdminFeedback.js';
 import AdminIntakeDetail from './routes/admin/AdminIntakeDetail.js';
@@ -204,6 +206,8 @@ function AdminShell() {
           <Route path="firms/new" element={<AdminFirmEdit />} />
           <Route path="firms/:id" element={<AdminFirmDetail />} />
           <Route path="firms/:id/edit" element={<AdminFirmEdit />} />
+          <Route path="email" element={<AdminEmailCopy />} />
+          <Route path="email/:key" element={<AdminEmailCopyDetail />} />
           <Route path="litigation" element={<AdminLitigation />} />
           <Route path="litigation/new" element={<AdminLitigationEdit />} />
           <Route path="litigation/:id" element={<AdminLitigationEdit />} />

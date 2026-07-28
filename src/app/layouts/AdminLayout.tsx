@@ -90,7 +90,10 @@ const NAV_SECTIONS: NavSection[] = [
   },
   {
     label: 'System',
-    items: [{ to: '/admin/settings', label: 'Settings' }],
+    items: [
+      { to: '/admin/email', label: 'Email' },
+      { to: '/admin/settings', label: 'Settings' },
+    ],
   },
 ];
 
