@@ -40,6 +40,14 @@
  * for the claimant to reach out themselves. It never routes or gets accepted —
  * only admin-closed (new → closed).
  *
+ * 'class_member' (2026-07-27): the person matched a class action, which
+ * means if they fit the certified class they are already in it. There is
+ * nothing to enrol them in and a firm that is not appointed class counsel
+ * cannot act on the class claim. firm_id is still set when one is eligible,
+ * because the class action covers the barrier and not their wasted trip or
+ * an injury — the firm reviews for a separate claim rather than taking on
+ * the class claim.
+ *
  * 'pool' (routing rebuild R4) is the shared self-select lane: a non-matched
  * actionable intake, firm_id null, status 'new', consent-gated. Any eligible
  * firm covering its jurisdiction can atomically claim it (first-come-wins),
@@ -55,6 +63,7 @@ export type CaseLane =
   | 'no_action'
   | 'direct'
   | 'matched_self_referral'
+  | 'class_member'
   | 'pool';
 
 export type CaseStatus =

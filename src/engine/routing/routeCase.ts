@@ -38,6 +38,15 @@ export interface RouteInput {
   eligibleFirmId: string | null;
   /** Whether any firm is resolvable for contact display (eligibility-independent). */
   hasDisplayFirm: boolean;
+  /**
+   * The matched litigation's kind. Null when nothing matched.
+   *
+   * The router ignored this until 2026-07-27, which meant a class action
+   * and a pattern-of-practice record took identical paths — the system
+   * could not tell the difference between a case somebody can be handed
+   * and a case they are already inside.
+   */
+  litigationKind: string | null;
 }
 
 export interface RouteDecision {
@@ -56,6 +65,30 @@ const ACTIONABLE_TITLES: ReadonlySet<AdaTitle> = new Set<AdaTitle>([
 
 export function decideLane(input: RouteInput): RouteDecision {
   if (input.litigationListingId) {
+    // A class action is not an intake to hand over. If the person fits the
+    // certified class they are already in it — there is nothing to enrol
+    // them in, and a firm that is not appointed class counsel cannot act
+    // on the class claim however willing it is.
+    //
+    // They still reach a firm, because the class action covers the barrier
+    // and not their wasted trip, their injury, or anything specific to
+    // them — and those are real work. The firm receives them to check for
+    // a separate claim, not to take on the class claim.
+    //
+    // Everyone routes rather than only those Ada judges to have something
+    // extra: a firm spending five minutes on someone with no separate
+    // claim costs very little, and Ada withholding someone who did have
+    // one costs them their case.
+    if (input.litigationKind === 'class') {
+      return {
+        lane: 'class_member',
+        firmId: input.eligibleFirmId ?? null,
+        reason: input.eligibleFirmId
+          ? 'matched class action — already a class member; firm reviews for a separate claim'
+          : 'matched class action — already a class member; no firm to review a separate claim',
+      };
+    }
+
     if (input.eligibleFirmId) {
       return {
         lane: 'routed_firm',

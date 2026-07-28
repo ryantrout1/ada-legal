@@ -22,6 +22,7 @@ describe('decideLane — matched litigation', () => {
       litigationListingId: 'lit-1',
       eligibleFirmId: 'firm-1',
       hasDisplayFirm: true,
+      litigationKind: 'enforcement_action',
     });
     expect(d.lane).toBe('routed_firm');
     expect(d.firmId).toBe('firm-1');
@@ -33,6 +34,7 @@ describe('decideLane — matched litigation', () => {
       litigationListingId: 'lit-1',
       eligibleFirmId: null,
       hasDisplayFirm: true,
+      litigationKind: 'enforcement_action',
     });
     expect(d.lane).toBe('matched_self_referral');
     expect(d.firmId).toBeNull();
@@ -44,6 +46,7 @@ describe('decideLane — matched litigation', () => {
       litigationListingId: 'lit-1',
       eligibleFirmId: null,
       hasDisplayFirm: false,
+      litigationKind: 'enforcement_action',
     });
     expect(d.lane).toBe('sourcing');
     expect(d.firmId).toBeNull();
@@ -55,6 +58,7 @@ describe('decideLane — matched litigation', () => {
       litigationListingId: 'lit-1',
       eligibleFirmId: 'firm-1',
       hasDisplayFirm: true,
+      litigationKind: 'enforcement_action',
     });
     expect(d.lane).toBe('routed_firm');
   });
@@ -65,6 +69,7 @@ describe('decideLane — matched litigation', () => {
       litigationListingId: 'lit-1',
       eligibleFirmId: null,
       hasDisplayFirm: true,
+      litigationKind: 'enforcement_action',
     });
     expect(d.lane).toBe('matched_self_referral');
   });
@@ -79,6 +84,7 @@ describe('decideLane — no litigation', () => {
         litigationListingId: null,
         eligibleFirmId: null,
         hasDisplayFirm: false,
+      litigationKind: 'enforcement_action',
       });
       expect(d.lane).toBe('pool');
       expect(d.firmId).toBeNull();
@@ -91,6 +97,7 @@ describe('decideLane — no litigation', () => {
       litigationListingId: null,
       eligibleFirmId: null,
       hasDisplayFirm: false,
+      litigationKind: 'enforcement_action',
     });
     expect(d.lane).toBe('no_action');
   });
@@ -101,6 +108,7 @@ describe('decideLane — no litigation', () => {
       litigationListingId: null,
       eligibleFirmId: null,
       hasDisplayFirm: false,
+      litigationKind: 'enforcement_action',
     });
     expect(d.lane).toBe('no_action');
   });
@@ -113,8 +121,84 @@ describe('decideLane — reason', () => {
       litigationListingId: null,
       eligibleFirmId: null,
       hasDisplayFirm: false,
+      litigationKind: 'enforcement_action',
     });
     expect(typeof d.reason).toBe('string');
     expect(d.reason.length).toBeGreaterThan(0);
+  });
+});
+
+// ─── A matched class action is not an intake ─────────────────────────────────
+
+/**
+ * The router ignored `kind` entirely until 2026-07-27, so a class action
+ * and a pattern-of-practice record took identical paths. That is the root
+ * of the whole class-action problem: the system could not tell the
+ * difference between a case somebody can be handed and a case they are
+ * already inside.
+ *
+ * If a person fits a certified class they are already in it. There is
+ * nothing to enrol them in, and a firm that is not appointed class counsel
+ * cannot act on the class claim however willing it is.
+ *
+ * They still reach a firm, because the class action covers the barrier and
+ * not their wasted trip or an injury — the firm reviews for a separate
+ * claim. Everyone routes rather than only those judged to have something
+ * extra: a firm spending five minutes on someone with no separate claim
+ * costs very little, and withholding someone who did costs them their case.
+ */
+describe('decideLane — matched class action', () => {
+  it('does not hand a firm the class claim, even when one is eligible', () => {
+    const d = decideLane({
+      classificationTitle: 'class_action',
+      litigationListingId: 'lit-1',
+      eligibleFirmId: 'firm-1',
+      hasDisplayFirm: true,
+      litigationKind: 'class',
+    });
+    expect(d.lane).toBe('class_member');
+    expect(d.lane).not.toBe('routed_firm');
+  });
+
+  it('still reaches the firm, for the separate claim', () => {
+    const d = decideLane({
+      classificationTitle: 'class_action',
+      litigationListingId: 'lit-1',
+      eligibleFirmId: 'firm-1',
+      hasDisplayFirm: true,
+      litigationKind: 'class',
+    });
+    expect(d.firmId).toBe('firm-1');
+    expect(d.reason).toMatch(/separate claim/i);
+  });
+
+  it('still routes when no firm is eligible', () => {
+    // Nobody to review a separate claim, but the person is still a class
+    // member and the readout still has something to tell them.
+    const d = decideLane({
+      classificationTitle: 'class_action',
+      litigationListingId: 'lit-1',
+      eligibleFirmId: null,
+      hasDisplayFirm: false,
+      litigationKind: 'class',
+    });
+    expect(d.lane).toBe('class_member');
+    expect(d.firmId).toBeNull();
+  });
+
+  it('leaves every other kind on its existing path', () => {
+    // Mass actions DO gather individual claimants, and DOJ matters work
+    // differently again. Only 'class' changes.
+    for (const kind of ['mass', 'enforcement_action', 'consent_decree',
+                        'pattern_of_practice', 'regulatory_challenge']) {
+      const d = decideLane({
+        classificationTitle: 'class_action',
+        litigationListingId: 'lit-1',
+        eligibleFirmId: 'firm-1',
+        hasDisplayFirm: true,
+        litigationKind: kind,
+      });
+      expect(d.lane, `${kind} should still route normally`).toBe('routed_firm');
+    }
   });
 });

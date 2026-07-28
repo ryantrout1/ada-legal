@@ -135,11 +135,16 @@ export async function createCaseForSession(
       ? (await resolveDisplayFirm(clients, litigationListingId)) != null
       : false;
 
+    const matchedLitigation = litigationListingId
+      ? await clients.db.getLitigationById(litigationListingId)
+      : null;
+
     const decision = decideLane({
       classificationTitle: state.classification?.title ?? null,
       litigationListingId,
       eligibleFirmId,
       hasDisplayFirm,
+      litigationKind: matchedLitigation?.kind ?? null,
     });
 
     const now = clients.clock.now();

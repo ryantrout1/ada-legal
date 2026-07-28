@@ -90,7 +90,13 @@ describe('backfill unblocks a litigation-matched, unclassified completion', () =
     // And the case routes to the litigation's firm.
     const caseRow = await createCaseForSession(c, backfilled);
     expect(caseRow).not.toBeNull();
-    expect(caseRow?.lane).toBe('routed_firm');
+    // The fixture litigation is kind='class'. Since 2026-07-27 a matched
+    // class action lands in 'class_member' rather than 'routed_firm':
+    // the person is already in the class, so there is nothing to hand the
+    // firm on the class claim. The firm is still attached — it reviews for
+    // a separate claim the class action does not cover.
+    expect(caseRow?.lane).toBe('class_member');
+    expect(caseRow?.firmId).toBeTruthy();
     expect(caseRow?.firmId).toBe(FIRM_ID);
   });
 });
