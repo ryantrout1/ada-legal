@@ -121,6 +121,7 @@ import type {
   PhotoReviewDetail,
   UpsertPhotoReviewInput,
   PhotoReviewEvalRow,
+  PhotoReviewRecord,
   SavePhotoAnalysisInput,
   UpdatePhotoAnalysisReadingLevelsInput,
 } from './types.js';
@@ -175,6 +176,27 @@ export class InMemoryAiClient implements AiClient {
 }
 
 // ─── DB ───────────────────────────────────────────────────────────────────────
+
+/**
+ * Message for a method this fake database refuses to fake.
+ *
+ * The rule: a stub that returns an empty value is a trap. Six photo-review
+ * methods returned null / [] / false / nothing, and the result was that
+ * nobody could write an honest test over them — a test would have gone
+ * green while proving nothing was saved. Five are modelled properly now.
+ * The two below are behaviour rather than storage (filtering with
+ * pagination, and aggregation), and copying behaviour into a second
+ * implementation is how this repo has been bitten before. So they throw.
+ * A test that needs them needs the real database.
+ */
+function NOT_MODELLED(method: string): string {
+  return (
+    `InMemoryDbClient does not implement ${method}. This is deliberate: it is ` +
+    'behaviour, not storage, and a second copy of it would be a second thing ' +
+    'that can be wrong. Use the Neon client — see npm run test:schema.'
+  );
+}
+
 
 export class InMemoryDbClient implements DbClient {
   public readonly sessions = new Map<string, AdaSessionState>();
@@ -457,7 +479,19 @@ export class InMemoryDbClient implements DbClient {
     photoUrl: string;
     analysis: PhotoAnalysisOutput;
     analyzedAt: string;
+    modelVersion: string;
+    testerComment: string | null;
   }> = [];
+
+  /**
+   * Reviews of those analyses — Peter's, Gina's, Ryan's.
+   *
+   * One row per (analysis, reviewer), matching the real unique index
+   * photo_reviews_analysis_reviewer_key. That rule is the whole point of the
+   * table: three people review the same photo and none of them may overwrite
+   * another. Modelling it here is what lets a test prove it.
+   */
+  public readonly photoReviews: Array<PhotoReviewRecord & { photoAnalysisId: string }> = [];
 
   async savePhotoAnalysis(input: SavePhotoAnalysisInput): Promise<string> {
     const id = `mem-analysis-${this.photoAnalyses.length + 1}`;
@@ -477,6 +511,8 @@ export class InMemoryDbClient implements DbClient {
         findings: input.findings,
       },
       analyzedAt: new Date(this.photoAnalyses.length).toISOString(),
+      modelVersion: input.modelVersion,
+      testerComment: null,
     });
     return id;
   }
@@ -516,45 +552,107 @@ export class InMemoryDbClient implements DbClient {
     });
   }
 
-  async savePhotoTesterComment(_sessionId: string, _comment: string): Promise<boolean> {
-    return false;
+  async savePhotoTesterComment(sessionId: string, comment: string): Promise<boolean> {
+    const rows = this.photoAnalyses.filter((a) => a.sessionId === sessionId);
+    for (const row of rows) row.testerComment = comment;
+    return rows.length > 0;
   }
 
+  /**
+   * Deliberately not modelled — see NOT_MODELLED below.
+   *
+   * Filtering plus pagination is behaviour, and a second copy of behaviour is
+   * a second thing that can be wrong. Returning an empty page instead would
+   * let a test assert "no analyses need review" and pass for the wrong
+   * reason.
+   */
   async listPhotoAnalysesForReview(
-    opts: PhotoReviewListOptions,
+    _opts: PhotoReviewListOptions,
   ): Promise<PhotoReviewListResult> {
-    // Not modeled in-memory; photo review is exercised against Neon only.
-    return {
-      items: [],
-      totalCount: 0,
-      page: opts.page && opts.page > 0 ? opts.page : 1,
-      pageSize: opts.pageSize && opts.pageSize > 0 ? Math.min(opts.pageSize, 100) : 25,
-    };
+    throw new Error(NOT_MODELLED('listPhotoAnalysesForReview'));
   }
 
   async getPhotoAnalysisForReview(
-    _photoAnalysisId: string,
+    photoAnalysisId: string,
   ): Promise<PhotoReviewDetail | null> {
-    return null;
+    const a = this.photoAnalyses.find((x) => x.id === photoAnalysisId);
+    if (!a) return null;
+    return {
+      photoAnalysisId: a.id,
+      sessionId: a.sessionId ?? '',
+      photoUrl: a.photoUrl,
+      scene: a.analysis.scene ?? null,
+      summary: a.analysis.summary ?? null,
+      overallRisk: a.analysis.overall_risk ?? null,
+      positiveFindings: a.analysis.positive_findings ?? null,
+      findings: a.analysis.findings,
+      modelVersion: a.modelVersion,
+      analyzedAt: a.analyzedAt,
+      testerComment: a.testerComment,
+      reviews: this.photoReviews
+        .filter((r) => r.photoAnalysisId === photoAnalysisId)
+        .map(({ photoAnalysisId: _id, ...rest }) => rest),
+    };
   }
 
   async updatePhotoAnalysisReadingLevels(
-    _input: UpdatePhotoAnalysisReadingLevelsInput,
+    input: UpdatePhotoAnalysisReadingLevelsInput,
   ): Promise<void> {
-    // Not modeled in-memory; photo persistence is exercised against Neon.
+    const a = this.photoAnalyses.find((x) => x.id === input.photoAnalysisId);
+    if (!a) return;
+    // KNOWN DIVERGENCE. The three reading-level columns are nullable and the
+    // Neon client writes null straight through. PhotoAnalysisOutput has them
+    // non-null, so null becomes empty here — the same coercion savePhotoAnalysis
+    // already makes above. Written down rather than left to be discovered: a
+    // test that turns on null-versus-empty needs the real database.
+    a.analysis = {
+      ...a.analysis,
+      scene: input.scene ?? { standard: '' },
+      summary: input.summary ?? { standard: '' },
+      positive_findings: input.positiveFindings ?? { standard: [] },
+      findings: input.findings,
+    };
   }
 
-  async deletePhotoAnalysis(_photoAnalysisId: string): Promise<boolean> {
-    // Not modeled in-memory; photo persistence is exercised against Neon.
-    return false;
+  async deletePhotoAnalysis(photoAnalysisId: string): Promise<boolean> {
+    const i = this.photoAnalyses.findIndex((x) => x.id === photoAnalysisId);
+    if (i === -1) return false;
+    this.photoAnalyses.splice(i, 1);
+    // photo_reviews.photo_analysis_id is ON DELETE CASCADE. Without this the
+    // fake database can hold orphaned reviews the real one cannot produce,
+    // and a test would be reasoning about a state that never occurs.
+    for (let j = this.photoReviews.length - 1; j >= 0; j -= 1) {
+      if (this.photoReviews[j].photoAnalysisId === photoAnalysisId) {
+        this.photoReviews.splice(j, 1);
+      }
+    }
+    return true;
   }
 
-  async upsertPhotoReview(_input: UpsertPhotoReviewInput): Promise<void> {
-    // no-op in memory
+  async upsertPhotoReview(input: UpsertPhotoReviewInput): Promise<void> {
+    const row = {
+      photoAnalysisId: input.photoAnalysisId,
+      reviewer: input.reviewer,
+      reviewerEmail: input.reviewerEmail ?? null,
+      status: input.status ?? 'reviewed',
+      overallVerdict: input.overallVerdict ?? null,
+      findingLabels: input.findingLabels,
+      missedFindings: input.missedFindings,
+      reviewerNotes: input.reviewerNotes ?? null,
+      modelVersion: input.modelVersion ?? null,
+      reviewedAt: new Date(this.photoReviews.length).toISOString(),
+    };
+    const i = this.photoReviews.findIndex(
+      (r) => r.photoAnalysisId === input.photoAnalysisId && r.reviewer === input.reviewer,
+    );
+    if (i === -1) this.photoReviews.push(row);
+    // Re-saving replaces that person's row and leaves everyone else's alone.
+    else this.photoReviews[i] = { ...row, reviewedAt: this.photoReviews[i].reviewedAt };
   }
 
+  /** Deliberately not modelled — aggregation, see NOT_MODELLED below. */
   async getPhotoReviewEvalSummary(): Promise<PhotoReviewEvalRow[]> {
-    return [];
+    throw new Error(NOT_MODELLED('getPhotoReviewEvalSummary'));
   }
 
   async listAttorneysForAdmin(
