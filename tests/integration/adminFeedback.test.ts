@@ -22,6 +22,7 @@
 import { describe, it, expect } from 'vitest';
 import { InMemoryDbClient } from '@/engine/clients/inMemoryClients';
 import { isFeedbackStatus, FEEDBACK_STATUSES } from '@/engine/clients/types';
+import { readCode } from '../support/sourceText.js';
 
 const ORG = '00000000-0000-4000-8000-000000000001';
 
@@ -139,5 +140,55 @@ describe('reading the inbox', () => {
     const [row] = await c.listFeedback({});
     expect(row.feedbackType).toBe('testimonial');
     expect(row.testimonialConsent).toBe(false);
+  });
+});
+
+/**
+ * The screen, pinned by source assertion — this repo has no React render
+ * testing, so the file's text is what can be checked. Same approach as
+ * the portal label guard and the email screen.
+ */
+describe('the inbox screen', () => {
+  const SCREEN = 'src/app/routes/admin/AdminFeedback.tsx';
+  const src = readCode(SCREEN);
+
+  it('opens on what needs attention, not on everything ever sent', () => {
+    expect(src).toContain("useState<Filter>('new')");
+    expect(src).toContain('status=${filter}');
+  });
+
+  it('can still reach archived, because archiving is not deleting', () => {
+    expect(src).toContain("value: 'archived'");
+    expect(src).toContain("value: 'all'");
+  });
+
+  it('offers a way back out of archived', () => {
+    // Nothing here deletes. A message put away by mistake has to be
+    // retrievable or the archive button becomes a trap.
+    expect(src).toContain('Put back');
+  });
+
+  it('says why an action failed instead of looking like it worked', () => {
+    expect(src).toContain('actionError');
+    expect(src).toContain('role="alert"');
+  });
+
+  it('tells you what an empty view means, per view', () => {
+    // "No feedback yet" under the Archived filter is a lie.
+    expect(src).toContain('EMPTY_BY_FILTER[filter]');
+    expect(src).toContain('Nothing waiting');
+  });
+
+  it('keeps the 44px floor on every control', () => {
+    const controls = src.match(/<button/g) ?? [];
+    const targets = src.match(/min-h-\[44px\]/g) ?? [];
+    expect(controls.length).toBeGreaterThan(0);
+    expect(targets.length, 'a button without a 44px target').toBeGreaterThanOrEqual(
+      controls.length,
+    );
+  });
+
+  it('uses tokens, never a hardcoded colour', () => {
+    expect(src).not.toMatch(/#[0-9a-f]{3,8}\b/i);
   });
 });

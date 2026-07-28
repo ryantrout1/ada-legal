@@ -23,6 +23,7 @@ interface FeedbackRow {
   display_name: string | null;
   location: string | null;
   testimonial_consent: boolean;
+  status: 'new' | 'reviewed' | 'archived';
   page: string | null;
   created_at: string;
 }
@@ -35,15 +36,37 @@ const TYPE_LABELS: Record<string, string> = {
   testimonial: 'Testimonial',
 };
 
+type Filter = 'new' | 'reviewed' | 'archived' | 'all';
+
+const FILTERS: Array<{ value: Filter; label: string }> = [
+  { value: 'new', label: 'Needs attention' },
+  { value: 'reviewed', label: 'Reviewed' },
+  { value: 'archived', label: 'Archived' },
+  { value: 'all', label: 'Everything' },
+];
+
+const EMPTY_BY_FILTER: Record<Filter, string> = {
+  new: 'Nothing waiting. Anything new will show up here.',
+  reviewed: 'Nothing marked reviewed yet.',
+  archived: 'Nothing archived yet.',
+  all: 'No feedback yet.',
+};
+
 export default function AdminFeedback() {
   const [rows, setRows] = useState<FeedbackRow[] | null>(null);
   const [error, setError] = useState(false);
+  const [filter, setFilter] = useState<Filter>('new');
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+    setRows(null);
     (async () => {
       try {
-        const resp = await fetch('/api/admin/feedback', { credentials: 'include' });
+        const resp = await fetch(`/api/admin/feedback?status=${filter}`, {
+          credentials: 'include',
+        });
         if (!resp.ok) throw new Error(String(resp.status));
         const body = (await resp.json()) as { feedback?: FeedbackRow[] };
         if (!cancelled) setRows(body.feedback ?? []);
@@ -54,14 +77,79 @@ export default function AdminFeedback() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [filter]);
+
+  /**
+   * Move one message. On success it leaves the current view, because
+   * every view except Everything is defined by the status it just left.
+   * On failure the message stays put and says why — a button that looks
+   * like it worked and did not is worse than one that refuses.
+   */
+  async function setStatus(id: string, status: FeedbackRow['status']) {
+    setBusyId(id);
+    setActionError(null);
+    try {
+      const resp = await fetch('/api/admin/feedback', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ id, status }),
+      });
+      if (!resp.ok) {
+        const body = (await resp.json().catch(() => ({}))) as { error?: string };
+        throw new Error(body.error ?? `HTTP ${resp.status}`);
+      }
+      const updated = (await resp.json()) as { feedback: FeedbackRow };
+      setRows((prev) =>
+        (prev ?? []).flatMap((r) =>
+          r.id !== id ? [r] : filter === 'all' ? [{ ...r, status: updated.feedback.status }] : [],
+        ),
+      );
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Could not update that message.');
+    } finally {
+      setBusyId(null);
+    }
+  }
 
   return (
     <div>
       <h1 className="font-display text-2xl text-ink-900 mb-1">Feedback</h1>
-      <p className="text-ink-700 text-sm mb-6">
+      <p className="text-ink-700 text-sm mb-4">
         What people have told us through the site.
       </p>
+
+      <div
+        role="group"
+        aria-label="Which feedback to show"
+        className="flex flex-wrap gap-2 mb-6"
+      >
+        {FILTERS.map((f) => (
+          <button
+            key={f.value}
+            type="button"
+            aria-pressed={filter === f.value}
+            onClick={() => setFilter(f.value)}
+            className={
+              'min-h-[44px] rounded-md border px-4 text-sm font-semibold ' +
+              (filter === f.value
+                ? 'border-accent-600 bg-accent-50 text-accent-600'
+                : 'border-control-border bg-surface-0 text-ink-700')
+            }
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+      {actionError && (
+        <div
+          role="alert"
+          className="mb-4 rounded-md border border-danger-500 bg-danger-50 px-4 py-3 text-sm text-danger-500"
+        >
+          {actionError}
+        </div>
+      )}
 
       {error && (
         <div role="alert" className="rounded-md border border-surface-200 bg-white p-4 text-sm">
@@ -71,7 +159,7 @@ export default function AdminFeedback() {
 
       {rows !== null && rows.length === 0 && (
         <div className="rounded-md border border-surface-200 bg-white p-6 text-sm text-ink-700">
-          No feedback yet.
+          {EMPTY_BY_FILTER[filter]}
         </div>
       )}
 
@@ -109,6 +197,41 @@ export default function AdminFeedback() {
                 .filter(Boolean)
                 .join(' · ') || 'Anonymous'}
             </p>
+
+            <div className="mt-3 flex flex-wrap gap-2">
+              {r.status !== 'reviewed' && (
+                <button
+                  type="button"
+                  disabled={busyId === r.id}
+                  onClick={() => void setStatus(r.id, 'reviewed')}
+                  className="min-h-[44px] rounded-md border border-control-border bg-surface-0 px-4 text-sm font-semibold text-ink-900 disabled:opacity-60"
+                >
+                  Reviewed
+                </button>
+              )}
+              {r.status !== 'archived' && (
+                <button
+                  type="button"
+                  disabled={busyId === r.id}
+                  onClick={() => void setStatus(r.id, 'archived')}
+                  className="min-h-[44px] rounded-md border border-control-border bg-surface-0 px-4 text-sm font-semibold text-ink-900 disabled:opacity-60"
+                >
+                  Archive
+                </button>
+              )}
+              {r.status !== 'new' && (
+                // Archived is out of the way, not gone. Putting a message
+                // back is the whole reason nothing here deletes.
+                <button
+                  type="button"
+                  disabled={busyId === r.id}
+                  onClick={() => void setStatus(r.id, 'new')}
+                  className="min-h-[44px] rounded-md border border-control-border bg-surface-0 px-4 text-sm text-ink-700 disabled:opacity-60"
+                >
+                  Put back
+                </button>
+              )}
+            </div>
           </li>
         ))}
       </ul>
