@@ -1,0 +1,375 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`claimant handoff email > qualified — professional 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;padding:0;background:#f6f6f6"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.6"><p style="margin:0 0 16px">Thank you for completing intake for the &quot;Hotel booking fraud class action&quot; class action. Your information has been submitted to Acme ADA Law for review.</p><p style="margin:0 0 20px">The firm will review your submission and contact you directly to discuss next steps. Expected response time varies by firm but is typically 1-2 weeks.</p><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">Summary of intake</h2><p style="margin:0 0 16px;color:#555;white-space:pre-wrap">User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.</p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "Intake submitted to Acme ADA Law",
+  "text": "Thank you for completing intake for the "Hotel booking fraud class action" class action. Your information has been submitted to Acme ADA Law for review.
+
+The firm will review your submission and contact you directly to discuss next steps. Expected response time varies by firm but is typically 1-2 weeks.
+
+SUMMARY OF INTAKE
+
+User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.
+
+---
+ADA Legal Link",
+}
+`;
+
+exports[`claimant handoff email > qualified — simple 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;padding:0;background:#f6f6f6"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.6"><p style="margin:0 0 16px">Thank you for telling us what happened. We sent your story to Acme ADA Law.</p><p style="margin:0 0 20px">They will look at it and get back to you soon. Watch for their email or call. You do not need to do anything right now.</p><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">What we talked about</h2><p style="margin:0 0 16px;color:#555;white-space:pre-wrap">User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.</p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "We sent your story to Acme ADA Law",
+  "text": "Thank you for telling us what happened. We sent your story to Acme ADA Law.
+
+They will look at it and get back to you soon. Watch for their email or call. You do not need to do anything right now.
+
+WHAT WE TALKED ABOUT
+
+User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.
+
+---
+ADA Legal Link",
+}
+`;
+
+exports[`claimant handoff email > qualified — standard 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;padding:0;background:#f6f6f6"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.6"><p style="margin:0 0 16px">Thanks for sharing your experience. We&#39;ve sent your information to Acme ADA Law for the &quot;Hotel booking fraud class action&quot; class action.</p><p style="margin:0 0 20px">They&#39;ll review it and reach out to you directly. Watch for their email or call in the coming days.</p><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">What we discussed</h2><p style="margin:0 0 16px;color:#555;white-space:pre-wrap">User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.</p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "We've sent your information to Acme ADA Law",
+  "text": "Thanks for sharing your experience. We've sent your information to Acme ADA Law for the "Hotel booking fraud class action" class action.
+
+They'll review it and reach out to you directly. Watch for their email or call in the coming days.
+
+WHAT WE DISCUSSED
+
+User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.
+
+---
+ADA Legal Link",
+}
+`;
+
+exports[`claimant handoff email > unqualified — professional 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;padding:0;background:#f6f6f6"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.6"><p style="margin:0 0 16px">Thank you for completing intake for the &quot;Hotel booking fraud class action&quot; class action. Based on the information provided, your situation does not meet the eligibility criteria for this particular case.</p><p style="margin:0 0 20px">Disqualifying reason: Stayed outside the class period</p><p style="margin:0 0 16px">Other avenues may still be available. Please return to ADA Legal Link to explore alternative options for your situation.</p><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">Summary of intake</h2><p style="margin:0 0 16px;color:#555;white-space:pre-wrap">User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.</p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "Update regarding your intake",
+  "text": "Thank you for completing intake for the "Hotel booking fraud class action" class action. Based on the information provided, your situation does not meet the eligibility criteria for this particular case.
+
+Disqualifying reason: Stayed outside the class period
+
+Other avenues may still be available. Please return to ADA Legal Link to explore alternative options for your situation.
+
+SUMMARY OF INTAKE
+
+User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.
+
+---
+ADA Legal Link",
+}
+`;
+
+exports[`claimant handoff email > unqualified — simple 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;padding:0;background:#f6f6f6"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.6"><p style="margin:0 0 16px">Thank you for telling us what happened. For this case, we were not able to match you.</p><p style="margin:0 0 20px">Reason: Stayed outside the class period</p><p style="margin:0 0 16px">You can still get help. Come back to ADA Legal Link to look for other ways.</p><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">What we talked about</h2><p style="margin:0 0 16px;color:#555;white-space:pre-wrap">User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.</p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "About your story",
+  "text": "Thank you for telling us what happened. For this case, we were not able to match you.
+
+Reason: Stayed outside the class period
+
+You can still get help. Come back to ADA Legal Link to look for other ways.
+
+WHAT WE TALKED ABOUT
+
+User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.
+
+---
+ADA Legal Link",
+}
+`;
+
+exports[`claimant handoff email > unqualified — standard 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;padding:0;background:#f6f6f6"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.6"><p style="margin:0 0 16px">Thanks for sharing your experience. Unfortunately, based on what we discussed, your situation doesn&#39;t match the &quot;Hotel booking fraud class action&quot; class action.</p><p style="margin:0 0 20px">The reason: Stayed outside the class period</p><p style="margin:0 0 16px">You may still have options. Come back to ADA Legal Link and we can explore other paths that fit your situation.</p><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">What we discussed</h2><p style="margin:0 0 16px;color:#555;white-space:pre-wrap">User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.</p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "Update on your intake",
+  "text": "Thanks for sharing your experience. Unfortunately, based on what we discussed, your situation doesn't match the "Hotel booking fraud class action" class action.
+
+The reason: Stayed outside the class period
+
+You may still have options. Come back to ADA Legal Link and we can explore other paths that fit your situation.
+
+WHAT WE DISCUSSED
+
+User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.
+
+---
+ADA Legal Link",
+}
+`;
+
+exports[`firm handoff email > qualified 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;padding:0;background:#f6f6f6"><div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222"><h1 style="font-size:18px;font-weight:600;margin:0 0 16px">New qualified intake</h1><p style="margin:0 0 20px;color:#555">An ADA Legal Link client has completed intake for <strong>Hotel booking fraud class action</strong>.</p><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">Claimant</h2><table style="width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14px"><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">Name</td><td style="padding:6px 0;color:#222;vertical-align:top">Alex Morales</td></tr><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">Email</td><td style="padding:6px 0;color:#222;vertical-align:top">alex@example.com</td></tr><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">Phone</td><td style="padding:6px 0;color:#222;vertical-align:top">+1-555-111-2222</td></tr><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">Preferred contact</td><td style="padding:6px 0;color:#222;vertical-align:top">email</td></tr></table><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">Classification</h2><p style="margin:0 0 4px"><strong>III</strong> &mdash; tier high</p><p style="margin:0 0 16px;color:#555;font-size:14px">Discrimination in a public accommodation</p><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">Case facts</h2><table style="width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14px"><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">hotel_name</td><td style="padding:6px 0;color:#222;vertical-align:top">Marriott Phoenix<br><span style="color:#888;font-size:12px">high confidence</span></td></tr><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">incident_date</td><td style="padding:6px 0;color:#222;vertical-align:top">2026-03-15<br><span style="color:#888;font-size:12px">high confidence</span></td></tr><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">was_refunded</td><td style="padding:6px 0;color:#222;vertical-align:top">false<br><span style="color:#888;font-size:12px">medium confidence</span></td></tr></table><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">Conversation summary</h2><p style="margin:0 0 16px;color:#333;white-space:pre-wrap">User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.</p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0">Session 00000000-0000-4000-8000-000000000111 &middot; generated 2026-04-22T18:00:00.000Z</p></div></body></html>",
+  "subject": "New qualified intake — Hotel booking fraud class action — Alex",
+  "text": "NEW QUALIFIED INTAKE
+
+Listing: Hotel booking fraud class action
+
+CLAIMANT
+  Name:  Alex Morales
+  Email: alex@example.com
+  Phone: +1-555-111-2222
+  Preferred contact: email
+
+CLASSIFICATION
+  III (tier high)
+  Discrimination in a public accommodation
+
+CASE FACTS
+  hotel_name: Marriott Phoenix [high confidence]
+  incident_date: 2026-03-15 [high confidence]
+  was_refunded: false [medium confidence]
+
+CONVERSATION SUMMARY
+
+  User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.
+
+---
+Session 00000000-0000-4000-8000-000000000111 · generated 2026-04-22T18:00:00.000Z",
+}
+`;
+
+exports[`firm handoff email > unqualified 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;padding:0;background:#f6f6f6"><div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222"><h1 style="font-size:18px;font-weight:600;margin:0 0 16px">New qualified intake</h1><p style="margin:0 0 20px;color:#555">An ADA Legal Link client has completed intake for <strong>Hotel booking fraud class action</strong>.</p><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">Claimant</h2><table style="width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14px"><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">Name</td><td style="padding:6px 0;color:#222;vertical-align:top">Alex Morales</td></tr><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">Email</td><td style="padding:6px 0;color:#222;vertical-align:top">alex@example.com</td></tr><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">Phone</td><td style="padding:6px 0;color:#222;vertical-align:top">+1-555-111-2222</td></tr><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">Preferred contact</td><td style="padding:6px 0;color:#222;vertical-align:top">email</td></tr></table><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">Classification</h2><p style="margin:0 0 4px"><strong>III</strong> &mdash; tier high</p><p style="margin:0 0 16px;color:#555;font-size:14px">Discrimination in a public accommodation</p><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">Case facts</h2><table style="width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14px"><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">hotel_name</td><td style="padding:6px 0;color:#222;vertical-align:top">Marriott Phoenix<br><span style="color:#888;font-size:12px">high confidence</span></td></tr><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">incident_date</td><td style="padding:6px 0;color:#222;vertical-align:top">2026-03-15<br><span style="color:#888;font-size:12px">high confidence</span></td></tr><tr><td style="padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px">was_refunded</td><td style="padding:6px 0;color:#222;vertical-align:top">false<br><span style="color:#888;font-size:12px">medium confidence</span></td></tr></table><h2 style="font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333">Conversation summary</h2><p style="margin:0 0 16px;color:#333;white-space:pre-wrap">User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.</p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0">Session 00000000-0000-4000-8000-000000000111 &middot; generated 2026-04-22T18:00:00.000Z</p></div></body></html>",
+  "subject": "New qualified intake — Hotel booking fraud class action — Alex",
+  "text": "NEW QUALIFIED INTAKE
+
+Listing: Hotel booking fraud class action
+
+CLAIMANT
+  Name:  Alex Morales
+  Email: alex@example.com
+  Phone: +1-555-111-2222
+  Preferred contact: email
+
+CLASSIFICATION
+  III (tier high)
+  Discrimination in a public accommodation
+
+CASE FACTS
+  hotel_name: Marriott Phoenix [high confidence]
+  incident_date: 2026-03-15 [high confidence]
+  was_refunded: false [medium confidence]
+
+CONVERSATION SUMMARY
+
+  User booked accessible room at Marriott Phoenix for 2026-03-15, arrived to find room had no roll-in shower. Refund denied.
+
+---
+Session 00000000-0000-4000-8000-000000000111 · generated 2026-04-22T18:00:00.000Z",
+}
+`;
+
+exports[`routing emails > admin — general queue lane 1`] = `
+{
+  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A case needs placement</h1><p style="margin:0 0 12px">Case <strong>CASE-0042</strong> routed to the <strong>general_queue</strong> lane and needs placement.</p><p style="margin:24px 0"><a href="https://ada.adalegallink.com/admin" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Open admin</a></p></div>",
+  "subject": "New general_queue case — CASE-0042 needs placement",
+  "text": "A case needs placement
+
+Case CASE-0042 routed to the general_queue lane and needs placement.
+
+Open admin: https://ada.adalegallink.com/admin",
+}
+`;
+
+exports[`routing emails > admin — sourcing lane 1`] = `
+{
+  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A case needs sourcing</h1><p style="margin:0 0 12px">Case <strong>CASE-0042</strong> routed to the <strong>sourcing</strong> lane and needs sourcing.</p><p style="margin:24px 0"><a href="https://ada.adalegallink.com/admin" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Open admin</a></p></div>",
+  "subject": "New sourcing case — CASE-0042 needs sourcing",
+  "text": "A case needs sourcing
+
+Case CASE-0042 routed to the sourcing lane and needs sourcing.
+
+Open admin: https://ada.adalegallink.com/admin",
+}
+`;
+
+exports[`routing emails > claimant — connected to a named firm 1`] = `
+{
+  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">You're all set</h1><p style="margin:0 0 12px">Thanks for confirming. Spinal Cord Injury Law Firm can now review what you described and will reach out to you directly.</p><p style="margin:0 0 16px;color:#555">There's nothing more you need to do right now — they'll be in touch.</p><p style="margin:24px 0"><a href="https://ada.adalegallink.com/s/s-abcdefghjkmn" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">View your summary</a></p><p style="margin:22px 0 0;color:#555">— Ada, ADA Legal Link</p></div>",
+  "subject": "You're connected with Spinal Cord Injury Law Firm",
+  "text": "You're all set
+
+Thanks for confirming. Spinal Cord Injury Law Firm can now review what you described and will reach out to you directly.
+
+There's nothing more you need to do right now — they'll be in touch.
+
+View your summary: https://ada.adalegallink.com/s/s-abcdefghjkmn
+
+— Ada, ADA Legal Link",
+}
+`;
+
+exports[`routing emails > claimant — connected with no firm named 1`] = `
+{
+  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">You're all set</h1><p style="margin:0 0 12px">Thanks for confirming. An attorney can now review what you described and will reach out to you directly.</p><p style="margin:0 0 16px;color:#555">There's nothing more you need to do right now — they'll be in touch.</p><p style="margin:24px 0"><a href="https://ada.adalegallink.com/s/s-abcdefghjkmn" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">View your summary</a></p><p style="margin:22px 0 0;color:#555">— Ada, ADA Legal Link</p></div>",
+  "subject": "You're connected",
+  "text": "You're all set
+
+Thanks for confirming. An attorney can now review what you described and will reach out to you directly.
+
+There's nothing more you need to do right now — they'll be in touch.
+
+View your summary: https://ada.adalegallink.com/s/s-abcdefghjkmn
+
+— Ada, ADA Legal Link",
+}
+`;
+
+exports[`routing emails > firm — a claimant consented 1`] = `
+{
+  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A claimant consented to connect</h1><p style="margin:0 0 12px">Jane Doe has reviewed their summary and consented to share their intake with <strong>Spinal Cord Injury Law Firm</strong> on case <strong>CASE-0042</strong>.</p><p style="margin:0 0 4px;color:#555">Their contact details and intake are in your portal.</p><p style="margin:24px 0"><a href="https://ada.adalegallink.com/portal" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Review in your portal</a></p></div>",
+  "subject": "New consented case — CASE-0042",
+  "text": "A claimant consented to connect
+
+Jane Doe has reviewed their summary and consented to share their intake with Spinal Cord Injury Law Firm on case CASE-0042.
+
+Their contact details and intake are in your portal: https://ada.adalegallink.com/portal",
+}
+`;
+
+exports[`routing emails > firm — claimant name withheld 1`] = `
+{
+  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A claimant consented to connect</h1><p style="margin:0 0 12px">A claimant has reviewed their summary and consented to share their intake with <strong>Spinal Cord Injury Law Firm</strong> on case <strong>CASE-0042</strong>.</p><p style="margin:0 0 4px;color:#555">Their contact details and intake are in your portal.</p><p style="margin:24px 0"><a href="https://ada.adalegallink.com/portal" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Review in your portal</a></p></div>",
+  "subject": "New consented case — CASE-0042",
+  "text": "A claimant consented to connect
+
+A claimant has reviewed their summary and consented to share their intake with Spinal Cord Injury Law Firm on case CASE-0042.
+
+Their contact details and intake are in your portal: https://ada.adalegallink.com/portal",
+}
+`;
+
+exports[`self-help email > with a sample letter — professional 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;background:#faf7f2"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1e293b;line-height:1.6"><p style="margin:0 0 16px">Below is the summary of our discussion and the recommended next steps.</p><p style="margin:0 0 16px;color:#475569;white-space:pre-wrap">Title III access barrier at a restaurant.</p><p style="margin:0 0 8px">Open your full summary:</p><p style="margin:0 0 20px"><a href="https://ada.adalegallink.com/s/s-abcdefghjkmn" style="color:#c2410c">https://ada.adalegallink.com/s/s-abcdefghjkmn</a></p><p style="margin:0 0 16px">Your summary also includes a sample letter you may send to the business directly.</p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0 0 8px">This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.</p><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "Your ADA accessibility summary and recommended next steps",
+  "text": "Below is the summary of our discussion and the recommended next steps.
+
+Title III access barrier at a restaurant.
+
+Open your full summary:
+https://ada.adalegallink.com/s/s-abcdefghjkmn
+
+Your summary also includes a sample letter you may send to the business directly.
+
+This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.
+
+ADA Legal Link",
+}
+`;
+
+exports[`self-help email > with a sample letter — simple 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;background:#faf7f2"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1e293b;line-height:1.6"><p style="margin:0 0 16px">Here is the summary of what we talked about.</p><p style="margin:0 0 16px;color:#475569;white-space:pre-wrap">Title III access barrier at a restaurant.</p><p style="margin:0 0 8px">Open your full summary:</p><p style="margin:0 0 20px"><a href="https://ada.adalegallink.com/s/s-abcdefghjkmn" style="color:#c2410c">https://ada.adalegallink.com/s/s-abcdefghjkmn</a></p><p style="margin:0 0 16px">Your summary also has a sample letter you can send.</p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0 0 8px">This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.</p><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "Your accessibility summary from Ada",
+  "text": "Here is the summary of what we talked about.
+
+Title III access barrier at a restaurant.
+
+Open your full summary:
+https://ada.adalegallink.com/s/s-abcdefghjkmn
+
+Your summary also has a sample letter you can send.
+
+This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.
+
+ADA Legal Link",
+}
+`;
+
+exports[`self-help email > with a sample letter — standard 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;background:#faf7f2"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1e293b;line-height:1.6"><p style="margin:0 0 16px">Here&#39;s the summary of what we discussed and the steps you can take.</p><p style="margin:0 0 16px;color:#475569;white-space:pre-wrap">Title III access barrier at a restaurant.</p><p style="margin:0 0 8px">Open your full summary:</p><p style="margin:0 0 20px"><a href="https://ada.adalegallink.com/s/s-abcdefghjkmn" style="color:#c2410c">https://ada.adalegallink.com/s/s-abcdefghjkmn</a></p><p style="margin:0 0 16px">Your summary also includes a sample letter you can send to the business.</p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0 0 8px">This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.</p><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "Your accessibility summary and next steps",
+  "text": "Here's the summary of what we discussed and the steps you can take.
+
+Title III access barrier at a restaurant.
+
+Open your full summary:
+https://ada.adalegallink.com/s/s-abcdefghjkmn
+
+Your summary also includes a sample letter you can send to the business.
+
+This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.
+
+ADA Legal Link",
+}
+`;
+
+exports[`self-help email > without a sample letter — professional 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;background:#faf7f2"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1e293b;line-height:1.6"><p style="margin:0 0 16px">Below is the summary of our discussion and the recommended next steps.</p><p style="margin:0 0 16px;color:#475569;white-space:pre-wrap">Title III access barrier at a restaurant.</p><p style="margin:0 0 8px">Open your full summary:</p><p style="margin:0 0 20px"><a href="https://ada.adalegallink.com/s/s-abcdefghjkmn" style="color:#c2410c">https://ada.adalegallink.com/s/s-abcdefghjkmn</a></p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0 0 8px">This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.</p><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "Your ADA accessibility summary and recommended next steps",
+  "text": "Below is the summary of our discussion and the recommended next steps.
+
+Title III access barrier at a restaurant.
+
+Open your full summary:
+https://ada.adalegallink.com/s/s-abcdefghjkmn
+
+This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.
+
+ADA Legal Link",
+}
+`;
+
+exports[`self-help email > without a sample letter — simple 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;background:#faf7f2"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1e293b;line-height:1.6"><p style="margin:0 0 16px">Here is the summary of what we talked about.</p><p style="margin:0 0 16px;color:#475569;white-space:pre-wrap">Title III access barrier at a restaurant.</p><p style="margin:0 0 8px">Open your full summary:</p><p style="margin:0 0 20px"><a href="https://ada.adalegallink.com/s/s-abcdefghjkmn" style="color:#c2410c">https://ada.adalegallink.com/s/s-abcdefghjkmn</a></p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0 0 8px">This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.</p><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "Your accessibility summary from Ada",
+  "text": "Here is the summary of what we talked about.
+
+Title III access barrier at a restaurant.
+
+Open your full summary:
+https://ada.adalegallink.com/s/s-abcdefghjkmn
+
+This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.
+
+ADA Legal Link",
+}
+`;
+
+exports[`self-help email > without a sample letter — standard 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;background:#faf7f2"><div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1e293b;line-height:1.6"><p style="margin:0 0 16px">Here&#39;s the summary of what we discussed and the steps you can take.</p><p style="margin:0 0 16px;color:#475569;white-space:pre-wrap">Title III access barrier at a restaurant.</p><p style="margin:0 0 8px">Open your full summary:</p><p style="margin:0 0 20px"><a href="https://ada.adalegallink.com/s/s-abcdefghjkmn" style="color:#c2410c">https://ada.adalegallink.com/s/s-abcdefghjkmn</a></p><hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0 0 8px">This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.</p><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p></div></body></html>",
+  "subject": "Your accessibility summary and next steps",
+  "text": "Here's the summary of what we discussed and the steps you can take.
+
+Title III access barrier at a restaurant.
+
+Open your full summary:
+https://ada.adalegallink.com/s/s-abcdefghjkmn
+
+This summary is based on what you told Ada. Ada is an AI assistant, not a lawyer, and this is not legal advice.
+
+ADA Legal Link",
+}
+`;
+
+exports[`spot release email > released report 1`] = `
+{
+  "html": "<!doctype html><html><body style="margin:0;background:#faf7f2;font-family:sans-serif"><div style="max-width:560px;margin:0 auto;padding:28px 20px;color:#334155"><h1 style="font-size:20px;color:#1e293b;margin:0 0 12px">Your screening is ready</h1><p style="margin:0 0 16px">Thanks for using Spot. Your accessibility screening report is ready to view:</p><p style="margin:0 0 20px"><a href="https://ada.adalegallink.com/spot/r/abc123xyz" style="color:#9c340a">https://ada.adalegallink.com/spot/r/abc123xyz</a></p><p style="margin:0 0 16px;font-size:14px;color:#64748b">This report is an automated screening based on the photos you provided — a starting point for planning remediation, not a professional inspection or a legal determination. Findings should be confirmed on-site.</p><p style="margin:0;font-size:13px;color:#94a3b8">Your uploaded photos are automatically deleted after 90 days. Your report stays available.</p></div></body></html>",
+  "subject": "Your accessibility screening from Spot is ready",
+  "text": "Your accessibility screening from Spot is ready.
+
+View your report: https://ada.adalegallink.com/spot/r/abc123xyz
+
+This report is an automated screening based on the photos you provided — a starting point for planning remediation, not a professional inspection or a legal determination. Findings should be confirmed on-site.
+
+Your uploaded photos are automatically deleted after 90 days. Your report stays available.",
+}
+`;
