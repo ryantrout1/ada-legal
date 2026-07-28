@@ -12,9 +12,15 @@
  * matched firm's public contact whether or not the case routes to them), so
  * the readout names the case and shows the firm's contact details.
  *
- * Returns null when there's no litigation row or no firm resolves (e.g.
- * multi-firm with no lead) — in that case the placeholder stays, which is
- * the honest state.
+ * Returns null only when there is no litigation row. It used to return null
+ * when no firm resolved too, which sent the readout to a placeholder naming
+ * nobody — a Niles match produced exactly that. A firmless litigation now
+ * comes back with null contact fields so the page can offer the government
+ * route for the barrier category instead.
+ *
+ * Contact preference: class counsel first (the lawyers actually running the
+ * case, usually a firm we have no row for), then a firm from our network,
+ * flagged so the page cannot imply counsel of record.
  *
  * Ref: /triage — litigation-matched readout renders as generic self-help.
  */

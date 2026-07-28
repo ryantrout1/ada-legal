@@ -623,8 +623,13 @@ describe('accessibility panel selected state', () => {
     expect((panel.match(/variant="segmented"/g) ?? []).length).toBe(4);
   });
 
-  it('white text on the solid fill clears AA (AAA exempt — see debt note)', () => {
-    expect(contrast('#FFFFFF', themeToken('--color-accent-500'))).toBeGreaterThanOrEqual(4.5);
+  it('white text on the solid fill clears 7:1', () => {
+    // Asserted 4.5 and called itself "AAA exempt" until 2026-07-28, while
+    // the block above declared the debt paid. The token had already been
+    // darkened to #8E2F09 (8.20:1), so the exemption outlived the reason
+    // for it — a passing test that would have kept passing through a
+    // regression back to the AA value.
+    expect(contrast('#FFFFFF', themeToken('--color-accent-500'))).toBeGreaterThanOrEqual(7);
   });
 
   it('the solid fill is distinguishable from the panel surface (1.4.11)', () => {
