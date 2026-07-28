@@ -26,6 +26,7 @@ import {
   anonSessions,
   attorneys as attorneysTable,
   litigationContacts as litigationContactsTable,
+  emailCopy as emailCopyTable,
   litigationListings as litigationTable,
   litigationFirmAssignments,
   organizations,
@@ -119,6 +120,8 @@ import type {
   LitigationContactKind,
   LitigationContactRow,
   LitigationKind,
+  EmailCopyRow,
+  UpsertEmailCopyInput,
   LitigationRow,
   LitigationDetailRow,
   LitigationStatus,
@@ -1487,6 +1490,87 @@ export class NeonDbClient implements DbClient {
       )
       .returning({ id: litigationContactsTable.id });
     return rows.length > 0;
+  }
+
+  // ─── Edited email copy (migration 0048) ──────────────────────────────────
+
+  private mapEmailCopy(r: {
+    id: string;
+    orgId: string;
+    templateKey: string;
+    slotKey: string;
+    readingLevel: string;
+    value: string;
+    updatedBy: string | null;
+    updatedAt: Date | string;
+  }): EmailCopyRow {
+    return {
+      id: r.id,
+      orgId: r.orgId,
+      templateKey: r.templateKey,
+      slotKey: r.slotKey,
+      readingLevel: r.readingLevel as ReadingLevel,
+      value: r.value,
+      updatedBy: r.updatedBy ?? null,
+      updatedAt:
+        r.updatedAt instanceof Date ? r.updatedAt.toISOString() : String(r.updatedAt),
+    };
+  }
+
+  async listEmailCopy(orgId: string): Promise<EmailCopyRow[]> {
+    const rows = await this.db
+      .select()
+      .from(emailCopyTable)
+      .where(eq(emailCopyTable.orgId, orgId));
+    return rows.map((r) => this.mapEmailCopy(r));
+  }
+
+  async getEmailCopy(orgId: string, templateKey: string): Promise<EmailCopyRow[]> {
+    const rows = await this.db
+      .select()
+      .from(emailCopyTable)
+      .where(
+        and(eq(emailCopyTable.orgId, orgId), eq(emailCopyTable.templateKey, templateKey)),
+      );
+    return rows.map((r) => this.mapEmailCopy(r));
+  }
+
+  async upsertEmailCopy(input: UpsertEmailCopyInput): Promise<EmailCopyRow> {
+    // Guarded here as well as by the CHECK, so this client and the
+    // in-memory one reject the same input for the same reason. Without
+    // it the CHECK still holds, but the caller gets a constraint error
+    // instead of a sentence.
+    if (!input.value || input.value.trim().length === 0) {
+      throw new Error('email copy cannot be blank');
+    }
+    const [row] = await this.db
+      .insert(emailCopyTable)
+      .values({
+        orgId: input.orgId,
+        templateKey: input.templateKey,
+        slotKey: input.slotKey,
+        readingLevel: input.readingLevel,
+        value: input.value,
+        updatedBy: input.updatedBy ?? null,
+      })
+      // Row identity is org + template + slot + level, matching
+      // email_copy_slot_key. Writing one reading level leaves the other
+      // two untouched.
+      .onConflictDoUpdate({
+        target: [
+          emailCopyTable.orgId,
+          emailCopyTable.templateKey,
+          emailCopyTable.slotKey,
+          emailCopyTable.readingLevel,
+        ],
+        set: {
+          value: input.value,
+          updatedBy: input.updatedBy ?? null,
+          updatedAt: sql`now()`,
+        },
+      })
+      .returning();
+    return this.mapEmailCopy(row);
   }
 
   async createLitigationContact(

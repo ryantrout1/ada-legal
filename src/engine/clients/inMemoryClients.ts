@@ -122,6 +122,8 @@ import type {
   UpsertPhotoReviewInput,
   PhotoReviewEvalRow,
   PhotoReviewRecord,
+  EmailCopyRow,
+  UpsertEmailCopyInput,
   SavePhotoAnalysisInput,
   UpdatePhotoAnalysisReadingLevelsInput,
 } from './types.js';
@@ -651,6 +653,49 @@ export class InMemoryDbClient implements DbClient {
   }
 
   /** Deliberately not modelled — aggregation, see NOT_MODELLED below. */
+  // ─── Edited email copy (migration 0048) ──────────────────────────────────
+
+  public readonly emailCopy: EmailCopyRow[] = [];
+
+  async listEmailCopy(orgId: string): Promise<EmailCopyRow[]> {
+    return this.emailCopy.filter((r) => r.orgId === orgId);
+  }
+
+  async getEmailCopy(orgId: string, templateKey: string): Promise<EmailCopyRow[]> {
+    return this.emailCopy.filter((r) => r.orgId === orgId && r.templateKey === templateKey);
+  }
+
+  async upsertEmailCopy(input: UpsertEmailCopyInput): Promise<EmailCopyRow> {
+    // Guarded here as well as by the CHECK, so this client and the Neon
+    // one reject the same input for the same reason.
+    if (!input.value || input.value.trim().length === 0) {
+      throw new Error('email copy cannot be blank');
+    }
+    const row: EmailCopyRow = {
+      id: `mem-email-copy-${this.emailCopy.length + 1}`,
+      orgId: input.orgId,
+      templateKey: input.templateKey,
+      slotKey: input.slotKey,
+      readingLevel: input.readingLevel,
+      value: input.value,
+      updatedBy: input.updatedBy ?? null,
+      updatedAt: new Date(this.emailCopy.length).toISOString(),
+    };
+    // Row identity is org + template + slot + level, matching the unique
+    // index. Writing the standard variant must leave simple and
+    // professional exactly where they were.
+    const i = this.emailCopy.findIndex(
+      (r) =>
+        r.orgId === input.orgId &&
+        r.templateKey === input.templateKey &&
+        r.slotKey === input.slotKey &&
+        r.readingLevel === input.readingLevel,
+    );
+    if (i === -1) this.emailCopy.push(row);
+    else this.emailCopy[i] = { ...row, id: this.emailCopy[i].id };
+    return i === -1 ? row : this.emailCopy[i];
+  }
+
   async getPhotoReviewEvalSummary(): Promise<PhotoReviewEvalRow[]> {
     throw new Error(NOT_MODELLED('getPhotoReviewEvalSummary'));
   }

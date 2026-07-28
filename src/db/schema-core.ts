@@ -740,3 +740,39 @@ export const analyticsEvents = pgTable(
   },
   (t) => [index('analytics_events_name_time_idx').on(t.eventName, t.occurredAt)],
 );
+
+/**
+ * Edited email copy. Empty means nobody has changed anything.
+ *
+ * The defaults live in src/engine/email/copySlots.ts and the resolver
+ * falls back to them, so a row here exists only where someone edited a
+ * slot. That keeps "never touched" distinguishable from "edited back to
+ * the original", and stops the code default and a row from being two
+ * places that can disagree.
+ *
+ * `readingLevel` is 'standard' for flat slots rather than null: a
+ * nullable column in a unique index treats every null as distinct, which
+ * would let the same flat slot insert repeatedly with the index present
+ * and enforcing nothing.
+ */
+export const emailCopy = pgTable(
+  'email_copy',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    orgId: uuid('org_id')
+      .notNull()
+      .references(() => organizations.id),
+    templateKey: text('template_key').notNull(),
+    slotKey: text('slot_key').notNull(),
+    /** 'simple' | 'standard' | 'professional'. CHECK in migration 0048. */
+    readingLevel: text('reading_level').notNull().default('standard'),
+    /** Never blank — CHECK in 0048. No row and a blank row mean different things. */
+    value: text('value').notNull(),
+    updatedBy: text('updated_by'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex('email_copy_slot_key').on(t.orgId, t.templateKey, t.slotKey, t.readingLevel),
+  ],
+);

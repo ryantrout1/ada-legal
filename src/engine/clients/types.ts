@@ -26,6 +26,7 @@ import type {
   PhotoOverallRisk,
   ReviewOverallVerdict,
   ReviewStatus,
+  ReadingLevel,
   ReadingLevelText,
   ReadingLevelStringList,
 } from '../../types/db.js';
@@ -1240,6 +1241,25 @@ export interface DbClient {
   /** Contacts for a case, in display order. Empty array when there are none. */
   listContactsForLitigation(litigationListingId: string): Promise<LitigationContactRow[]>;
   createLitigationContact(input: CreateLitigationContactInput): Promise<LitigationContactRow>;
+
+  // ─── Edited email copy (migration 0048) ──────────────────────────────────
+  /**
+   * Every slot this org has edited, across all templates. Empty when
+   * nobody has changed anything — that is the normal state, not an error.
+   */
+  listEmailCopy(orgId: string): Promise<EmailCopyRow[]>;
+  /** Edited slots for one template. Empty array on a miss, never null. */
+  getEmailCopy(orgId: string, templateKey: string): Promise<EmailCopyRow[]>;
+  /**
+   * Write one slot at one reading level. Replaces that exact row and
+   * leaves every other level of the same slot alone — the property the
+   * unique index exists for.
+   *
+   * Rejects a blank value rather than storing one. The resolver falls
+   * back to the code default when there is NO row; a blank row is a
+   * different thing and would render as a missing sentence.
+   */
+  upsertEmailCopy(input: UpsertEmailCopyInput): Promise<EmailCopyRow>;
   /**
    * Scoped to the litigation as well as the contact, so a mismatched pair
    * deletes nothing. Returns false on a miss rather than throwing.
@@ -2244,6 +2264,28 @@ export interface PhotoReviewDetail {
   reviews: PhotoReviewRecord[];
   /** The current viewer's reviewer name, when known server-side (admin/Clerk). */
   viewerReviewer?: string;
+}
+
+export interface EmailCopyRow {
+  id: string;
+  orgId: string;
+  templateKey: string;
+  slotKey: string;
+  readingLevel: ReadingLevel;
+  value: string;
+  updatedBy: string | null;
+  updatedAt: string;
+}
+
+export interface UpsertEmailCopyInput {
+  orgId: string;
+  templateKey: string;
+  slotKey: string;
+  /** Flat slots pass 'standard'. Never null — see migration 0048. */
+  readingLevel: ReadingLevel;
+  value: string;
+  /** Clerk email of whoever saved. Null when unknown. */
+  updatedBy?: string | null;
 }
 
 export interface UpsertPhotoReviewInput {
