@@ -28,6 +28,7 @@ import { readCode } from '../support/sourceText.js';
 import { KIND_ORDER, kindLabel } from '@/app/lib/litigationLabels';
 
 const code = readCode('src/app/routes/portal/PortalLitigations.tsx');
+const detail = readCode('src/app/routes/portal/PortalLitigationDetail.tsx');
 
 describe('portal litigation list', () => {
   it('takes its labels from the shared map, not a ternary', () => {
@@ -56,5 +57,29 @@ describe('portal litigation list', () => {
       expect(label, `${kind} would head a section with its raw slug`).toBeTruthy();
       expect(label).not.toBe(kind);
     }
+  });
+});
+
+/**
+ * The list page was fixed on 2026-07-27 and the detail page was not.
+ *
+ * Same ternary, same file tree, one directory apart. The fix was scoped to
+ * the file the bug was reported against, so a lawyer who clicked through
+ * from a correctly-labelled list row landed on a page that called a DOJ
+ * enforcement action a mass action. The test above only ever read the list.
+ *
+ * Ref: audit of 2026-07-28.
+ */
+describe('portal litigation detail', () => {
+  it('takes its label from the shared map, not a ternary', () => {
+    expect(detail).toContain('kindLabel(');
+    expect(detail).not.toContain("'Class action' : 'Mass action'");
+  });
+
+  it('does not keep a private copy of the states helper', () => {
+    // It had its own statesLabel + NATIONWIDE_SENTINEL, which is how the
+    // sentinel ends up rendered as a state code on one page and not another.
+    expect(detail).not.toContain('function statesLabel');
+    expect(detail).not.toContain("NATIONWIDE_SENTINEL = '__nationwide__'");
   });
 });

@@ -10,6 +10,14 @@
  * focus-trap — the most robust pattern for Josh (C4, voice / switch / eye-gaze)
  * and the cleanest AAA path. The Accept toggle mirrors the card's, so a lawyer
  * can opt in from here after reading.
+ *
+ * LABELS. This page carried its own `kind === 'class' ? … : 'Mass action'`
+ * until 2026-07-28. The list page's identical ternary was fixed a day
+ * earlier and the fix was scoped to that file, so the detail page went on
+ * calling all 22 non-class records mass actions — eight DOJ enforcement
+ * actions, ten pattern-of-practice records, two consent decrees, two
+ * regulatory challenges. Exactly one record is actually a mass action.
+ * Labels and state lists now come from litigationLabels, the shared map.
  */
 
 import { useCallback, useEffect, useState } from 'react';
@@ -22,13 +30,7 @@ import {
   PortalApiError,
   type PortalLitigationDetail,
 } from '../../data/portalClient.js';
-
-const NATIONWIDE_SENTINEL = '__nationwide__';
-
-function statesLabel(states: string[]): string {
-  if (states.length === 0 || states.includes(NATIONWIDE_SENTINEL)) return 'Nationwide';
-  return states.join(', ');
-}
+import { kindLabel, statesLabel } from '../../lib/litigationLabels.js';
 
 function humanizeKey(k: string): string {
   const s = k.replace(/[_-]+/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2');
@@ -124,7 +126,6 @@ export default function PortalLitigationDetail() {
     );
   }
 
-  const kindLabel = lit.kind === 'class' ? 'Class action' : 'Mass action';
   const keyDateEntries = Object.entries(lit.key_dates ?? {});
 
   return (
@@ -149,7 +150,7 @@ export default function PortalLitigationDetail() {
                 : 'inline-block rounded-full bg-surface-100 px-2 py-0.5 text-xs font-semibold text-ink-700'
             }
           >
-            {kindLabel}
+            {kindLabel(lit.kind)}
           </span>
           <h1 className="mt-2 text-2xl font-bold text-ink-900">{lit.case_name}</h1>
           {lit.legal_theory && <p className="mt-1 text-sm text-ink-700">{lit.legal_theory}</p>}
