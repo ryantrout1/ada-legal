@@ -38,6 +38,7 @@ import { useParams } from 'react-router-dom';
 import type { SessionPackage } from '../../../engine/package/types.js';
 import type { ActionDestination } from '../../../engine/routing/destinations.js';
 import ConsentCard from './ConsentCard.js';
+import ContactBlock from '../../components/litigation/ContactBlock.js';
 
 type LoadState =
   | { kind: 'loading' }
@@ -289,7 +290,7 @@ function PackageView({
           aria-labelledby="pkg-matched-listing"
         >
           <p className="text-xs uppercase tracking-wider font-mono text-accent-600 mb-2">
-            You may be part of an active class action
+            A case about this is already running
           </p>
           <h2
             id="pkg-matched-listing"
@@ -297,6 +298,58 @@ function PackageView({
           >
             {pkg.matchedListing.listingTitle}
           </h2>
+
+          {/*
+            What being "in" a class action actually means. People assume
+            they have to sign up and that a lawyer will call — neither is
+            true, and believing it means they wait instead of acting.
+
+            Deliberately says LIKELY covered, never asserts membership:
+            that turns on a class definition a court approved, and we are
+            not the ones who decide it.
+
+            Says no money without saying what might replace it. The ADA
+            gives a private claimant injunctive relief and fees, no
+            damages. State law sometimes adds damages and sometimes does
+            not, and that question is explicitly out of scope, so this must
+            not hint at a payout it cannot stand behind.
+
+            No deadline anywhere. Same rule as SOL.
+          */}
+          {pkg.matchedListing.listingCategory === 'class' && (
+            <div className="mb-5 rounded bg-surface-50 border border-[var(--color-control-border)] p-4">
+              <p className="text-ink-900 font-medium mb-2">
+                If your situation matches this case, you are most likely already
+                covered by it.
+              </p>
+              <ul className="text-ink-700 text-sm leading-relaxed list-disc pl-5 space-y-1">
+                <li>There is nothing to join and nothing to sign.</li>
+                <li>
+                  Nobody will contact you about it. There is no list of people
+                  it covers.
+                </li>
+                <li>
+                  It asks a court to make the company fix the problem. It does
+                  not pay you for what happened.
+                </li>
+              </ul>
+              <p className="text-ink-900 text-sm mt-3">
+                So there are two useful things you can do.
+              </p>
+              <ol className="text-ink-700 text-sm leading-relaxed list-decimal pl-5 mt-1 space-y-1">
+                <li>
+                  <strong>Tell the lawyers running it what happened to you.</strong>{' '}
+                  They are arguing this happens to real people, and you are one.
+                  Your booking, the date, the hotel — that is useful to them.
+                </li>
+                <li>
+                  <strong>Ask a lawyer whether you have a claim of your own.</strong>{' '}
+                  This case covers the barrier. It does not cover a wasted trip,
+                  an injury, or anything that happened only to you.
+                </li>
+              </ol>
+            </div>
+          )}
           <p className="text-ink-700 mb-4">
             What you described matches the pattern of an active class action
             currently being pursued by{' '}
@@ -378,6 +431,34 @@ function PackageView({
               See the full case
             </a>
           </div>
+
+          {!pkg.matchedListing.firmName && (
+            <div className="mb-5">
+              <p className="text-ink-900 text-sm mb-2">
+                We do not have contact details for the lawyers running this
+                case yet.
+              </p>
+              <ContactBlock
+                contacts={undefined}
+                category={pkg.matchedListing.barrierCategory}
+                headingId="pkg-matched-gov-route"
+              />
+            </div>
+          )}
+
+          {pkg.matchedListing.contactScopeNote && (
+            <p className="text-ink-700 text-sm mb-4">
+              {pkg.matchedListing.contactScopeNote}
+            </p>
+          )}
+
+          {pkg.matchedListing.firmName &&
+            !pkg.matchedListing.contactIsClassCounsel && (
+              <p className="text-ink-700 text-sm mb-4">
+                This firm takes cases like this one. They are not the lawyers
+                running this case.
+              </p>
+            )}
 
           <p className="mt-4 text-xs text-ink-500 leading-relaxed">
             ADA Legal Link is not a law firm and is not representing you.
