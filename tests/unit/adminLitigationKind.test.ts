@@ -28,6 +28,8 @@ import { describe, it, expect } from 'vitest';
 import { LITIGATION_KINDS } from '@/types/db';
 import { KIND_LABEL } from '@/app/routes/admin/AdminLitigation';
 import { isKind } from '../../api/admin/litigation/[id].js';
+import { KIND_ORDER, kindLabel } from '@/app/lib/litigationLabels';
+import { readCode } from '../support/sourceText.js';
 
 describe('the admin knows every kind the database allows', () => {
   it('carries all six, mass included', () => {
@@ -67,5 +69,39 @@ describe('the admin knows every kind the database allows', () => {
     for (const bad of ['settled', 'archived', 'draft', '', 'clas', null, undefined, 7]) {
       expect(isKind(bad)).toBe(false);
     }
+  });
+});
+
+/**
+ * Two hand-written copies survived the 2026-07-27 de-duplication.
+ *
+ * The commit message said the list lived in one place. It lived in three:
+ * LITIGATION_KINDS, the front end's own LitigationKindValue union in
+ * litigationLabels.ts, and a hard-coded <option> block in AdminLitigation
+ * sitting directly beneath the exhaustive KIND_LABEL map in the same file.
+ * All three happened to hold the same six values, so nothing was broken —
+ * which is exactly how the last one survived four phases.
+ *
+ * Ref: audit of 2026-07-28.
+ */
+describe('nobody keeps a private copy of the kind list', () => {
+  it('the front-end order covers every kind and invents none', () => {
+    // KIND_ORDER stays hand-ordered on purpose — 'mass' sits next to
+    // 'class' because the two read as a pair. Membership is what is
+    // pinned; a kind missing here drops its whole group from the portal
+    // list while the total count still includes it.
+    expect([...KIND_ORDER].sort()).toEqual([...LITIGATION_KINDS].sort());
+  });
+
+  it('the front-end label map covers every kind', () => {
+    for (const kind of LITIGATION_KINDS) {
+      expect(kindLabel(kind), `${kind} would render its raw slug`).not.toBe(kind);
+    }
+  });
+
+  it('the admin filter builds its options rather than listing them', () => {
+    const code = readCode('src/app/routes/admin/AdminLitigation.tsx');
+    expect(code).toContain('LITIGATION_KINDS.map');
+    expect(code).not.toContain('<option value="pattern_of_practice">');
   });
 });

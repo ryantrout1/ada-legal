@@ -16,16 +16,18 @@
  * worse thing to render than a friendly label.
  */
 
-export type LitigationKindValue =
-  | 'class'
-  // Taxonomy Phase 1: migration 0024 re-added 'mass' to the DB CHECK.
-  // The canonical union lives in src/types/db.ts; this front-end copy
-  // exists because the public bundle shouldn't import engine types.
-  | 'mass'
-  | 'consent_decree'
-  | 'enforcement_action'
-  | 'pattern_of_practice'
-  | 'regulatory_challenge';
+import type { LitigationKind } from '../../types/db.js';
+
+/**
+ * The shared list, not a front-end copy.
+ *
+ * This was written out by hand here until 2026-07-28, on the reasoning
+ * that the public bundle shouldn't import engine types. src/types/db.ts
+ * has no imports and exactly one runtime export — a six-string array — so
+ * the cost of importing it is six strings, and the cost of not importing
+ * it was a seventh place the list could drift.
+ */
+export type LitigationKindValue = LitigationKind;
 
 /** The four statuses the public endpoints can return. */
 export type PublicLitigationStatus =
@@ -34,7 +36,9 @@ export type PublicLitigationStatus =
   | 'compliance'
   | 'tracking';
 
-export const KIND_LABELS: Record<string, string> = {
+// Total over the union, so adding a kind without a label is a compile
+// error rather than a raw slug rendered at a claimant.
+export const KIND_LABELS: Record<LitigationKindValue, string> = {
   class: 'Class action',
   mass: 'Mass action',
   consent_decree: 'Consent decree',
@@ -83,7 +87,7 @@ export const NATIONWIDE_SENTINEL = '__nationwide__';
 
 export function kindLabel(kind: string | null | undefined): string {
   if (!kind) return '';
-  return KIND_LABELS[kind] ?? kind;
+  return KIND_LABELS[kind as LitigationKindValue] ?? kind;
 }
 
 export function statusLabel(status: string | null | undefined): string {

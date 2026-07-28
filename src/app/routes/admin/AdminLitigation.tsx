@@ -21,7 +21,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import type { LitigationKind } from '../../../types/db.js';
+import { LITIGATION_KINDS, type LitigationKind } from '../../../types/db.js';
 
 const NATIONWIDE_SENTINEL = '__nationwide__';
 
@@ -181,12 +181,14 @@ export default function AdminLitigation() {
               className="min-h-[44px] rounded-md border border-control-border bg-white px-3 text-ink-900"
             >
               <option value="">All</option>
-              <option value="class">Class actions</option>
-              <option value="mass">Mass actions (all non-class)</option>
-              <option value="enforcement_action">Enforcement action</option>
-              <option value="consent_decree">Consent decree</option>
-              <option value="pattern_of_practice">Pattern or practice</option>
-              <option value="regulatory_challenge">Regulatory challenge</option>
+              {/* Built from KIND_LABEL, not typed out again. The hand-written
+                  copy that used to sit here would have silently lacked a new
+                  kind while KIND_LABEL failed to compile without one. */}
+              {LITIGATION_KINDS.map((k) => (
+                <option key={k} value={k}>
+                  {KIND_LABEL[k]}
+                </option>
+              ))}
             </select>
           </label>
 
