@@ -16,7 +16,8 @@
  */
 
 import type { CaseRow } from '../clients/types.js';
-import type { RenderedEmail } from '../handoff/emailTemplates.js';
+import { fill, EMPTY_COPY, type RenderedEmail } from '../handoff/emailTemplates.js';
+import { copyFor, type CopyBundle } from '../email/resolveCopy.js';
 
 export const APP_BASE = 'https://ada.adalegallink.com';
 const FONT_STACK = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
@@ -44,25 +45,38 @@ export function renderFirmMatchedEmail(opts: {
   caseRow: CaseRow;
   firmName: string;
   claimantName: string | null;
+  copy?: CopyBundle;
 }): RenderedEmail {
-  const { caseRow, firmName, claimantName } = opts;
+  const { caseRow, firmName, claimantName, copy = EMPTY_COPY } = opts;
   const who = claimantName ?? 'A claimant';
   const portalUrl = `${APP_BASE}/portal`;
-  const subject = `New consented case — ${caseRow.caseNumber}`;
+  const t = (slot: string) => copyFor(copy, 'routing_firm_matched', slot, 'standard');
+  const subject = fill(t('subject'), { case_number: caseRow.caseNumber });
 
+  // The firm name and case number are bolded inside the sentence, so the
+  // html substitution carries markup where the text one carries the bare
+  // value. Same slot, same words, two renderings.
   const html = wrap(
-    `<h1 style="font-size:20px;margin:0 0 16px">A claimant consented to connect</h1>` +
-      `<p style="margin:0 0 12px">${escapeHtml(who)} has reviewed their summary and consented to share their intake with <strong>${escapeHtml(firmName)}</strong> on case <strong>${escapeHtml(caseRow.caseNumber)}</strong>.</p>` +
-      `<p style="margin:0 0 4px;color:#555">Their contact details and intake are in your portal.</p>` +
-      button(portalUrl, 'Review in your portal'),
+    `<h1 style="font-size:20px;margin:0 0 16px">${escapeHtml(t('heading'))}</h1>` +
+      `<p style="margin:0 0 12px">${fill(escapeHtml(t('body')), {
+        claimant_name: escapeHtml(who),
+        firm_name: `<strong>${escapeHtml(firmName)}</strong>`,
+        case_number: `<strong>${escapeHtml(caseRow.caseNumber)}</strong>`,
+      })}</p>` +
+      `<p style="margin:0 0 4px;color:#555">${escapeHtml(t('note'))}</p>` +
+      button(portalUrl, t('cta_label')),
   );
 
   const text = [
-    `A claimant consented to connect`,
+    t('heading'),
     ``,
-    `${who} has reviewed their summary and consented to share their intake with ${firmName} on case ${caseRow.caseNumber}.`,
+    fill(t('body'), {
+      claimant_name: who,
+      firm_name: firmName,
+      case_number: caseRow.caseNumber,
+    }),
     ``,
-    `Their contact details and intake are in your portal: ${portalUrl}`,
+    `${t('note').replace(/\.$/, '')}: ${portalUrl}`,
   ].join('\n');
 
   return { subject, html, text };
@@ -74,29 +88,33 @@ export function renderUserConnectedEmail(opts: {
   caseRow: CaseRow;
   firmName: string | null;
   readoutUrl: string;
+  copy?: CopyBundle;
 }): RenderedEmail {
-  const { firmName, readoutUrl } = opts;
+  const { firmName, readoutUrl, copy = EMPTY_COPY } = opts;
+  const t = (slot: string) => copyFor(copy, 'routing_user_connected', slot, 'standard');
   const withFirm = firmName ? ` with ${firmName}` : '';
-  const subject = `You're connected${withFirm}`;
+  const subject = fill(t('subject'), { with_firm: withFirm });
 
   const html = wrap(
-    `<h1 style="font-size:20px;margin:0 0 16px">You're all set</h1>` +
-      `<p style="margin:0 0 12px">Thanks for confirming. ${firmName ? escapeHtml(firmName) + ' can' : 'An attorney can'} now review what you described and will reach out to you directly.</p>` +
-      `<p style="margin:0 0 16px;color:#555">There's nothing more you need to do right now — they'll be in touch.</p>` +
-      button(readoutUrl, 'View your summary') +
-      `<p style="margin:22px 0 0;color:#555">— Ada, ADA Legal Link</p>`,
+    `<h1 style="font-size:20px;margin:0 0 16px">${escapeHtml(t('heading'))}</h1>` +
+      `<p style="margin:0 0 12px">${fill(escapeHtml(t('intro')), {
+        firm_or_attorney: firmName ? escapeHtml(firmName) : 'An attorney',
+      })}</p>` +
+      `<p style="margin:0 0 16px;color:#555">${escapeHtml(t('reassurance'))}</p>` +
+      button(readoutUrl, t('cta_label')) +
+      `<p style="margin:22px 0 0;color:#555">${escapeHtml(t('signoff'))}</p>`,
   );
 
   const text = [
-    `You're all set`,
+    t('heading'),
     ``,
-    `Thanks for confirming. ${firmName ?? 'An attorney'} can now review what you described and will reach out to you directly.`,
+    fill(t('intro'), { firm_or_attorney: firmName ?? 'An attorney' }),
     ``,
-    `There's nothing more you need to do right now — they'll be in touch.`,
+    t('reassurance'),
     ``,
-    `View your summary: ${readoutUrl}`,
+    `${t('cta_label')}: ${readoutUrl}`,
     ``,
-    `— Ada, ADA Legal Link`,
+    t('signoff'),
   ].join('\n');
 
   return { subject, html, text };
@@ -104,24 +122,35 @@ export function renderUserConnectedEmail(opts: {
 
 // ─── Admin: a case needs sourcing / placement ─────────────────────────────────
 
-export function renderAdminRoutingEmail(opts: { caseRow: CaseRow }): RenderedEmail {
-  const { caseRow } = opts;
+export function renderAdminRoutingEmail(opts: {
+  caseRow: CaseRow;
+  copy?: CopyBundle;
+}): RenderedEmail {
+  const { caseRow, copy = EMPTY_COPY } = opts;
+  const t = (slot: string) => copyFor(copy, 'routing_admin', slot, 'standard');
   const action = caseRow.lane === 'sourcing' ? 'sourcing' : 'placement';
   const adminUrl = `${APP_BASE}/admin`;
-  const subject = `New ${caseRow.lane} case — ${caseRow.caseNumber} needs ${action}`;
+  const vars = { lane: caseRow.lane, case_number: caseRow.caseNumber, action };
+  const subject = fill(t('subject'), vars);
 
   const html = wrap(
-    `<h1 style="font-size:20px;margin:0 0 16px">A case needs ${escapeHtml(action)}</h1>` +
-      `<p style="margin:0 0 12px">Case <strong>${escapeHtml(caseRow.caseNumber)}</strong> routed to the <strong>${escapeHtml(caseRow.lane)}</strong> lane and needs ${escapeHtml(action)}.</p>` +
-      button(adminUrl, 'Open admin'),
+    `<h1 style="font-size:20px;margin:0 0 16px">${fill(escapeHtml(t('heading')), {
+      action: escapeHtml(action),
+    })}</h1>` +
+      `<p style="margin:0 0 12px">${fill(escapeHtml(t('body')), {
+        case_number: `<strong>${escapeHtml(caseRow.caseNumber)}</strong>`,
+        lane: `<strong>${escapeHtml(caseRow.lane)}</strong>`,
+        action: escapeHtml(action),
+      })}</p>` +
+      button(adminUrl, t('cta_label')),
   );
 
   const text = [
-    `A case needs ${action}`,
+    fill(t('heading'), vars),
     ``,
-    `Case ${caseRow.caseNumber} routed to the ${caseRow.lane} lane and needs ${action}.`,
+    fill(t('body'), vars),
     ``,
-    `Open admin: ${adminUrl}`,
+    `${t('cta_label')}: ${adminUrl}`,
   ].join('\n');
 
   return { subject, html, text };

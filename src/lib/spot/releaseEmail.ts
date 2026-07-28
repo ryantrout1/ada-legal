@@ -1,3 +1,5 @@
+import { copyFor, type CopyBundle } from '../../engine/email/resolveCopy.js';
+import { EMPTY_COPY } from '../../engine/handoff/emailTemplates.js';
 /**
  * Ada Spot — release (delivery) email (pure).
  *
@@ -27,31 +29,35 @@ export interface BuiltEmail {
   text: string;
 }
 
-export function buildReleaseEmail({ slug, baseUrl }: ReleaseEmailInput): BuiltEmail {
+export function buildReleaseEmail(
+  { slug, baseUrl }: ReleaseEmailInput,
+  copy: CopyBundle = EMPTY_COPY,
+): BuiltEmail {
+  const t = (slot: string) => copyFor(copy, 'spot_release', slot, 'standard');
   const readoutUrl = `${baseUrl.replace(/\/+$/, '')}/spot/r/${encodeURIComponent(slug)}`;
   const safeUrl = escapeHtml(readoutUrl);
 
-  const subject = 'Your accessibility screening from Spot is ready';
+  const subject = t('subject');
 
   const html = [
     '<!doctype html><html><body style="margin:0;background:#faf7f2;font-family:sans-serif">',
     '<div style="max-width:560px;margin:0 auto;padding:28px 20px;color:#334155">',
-    '<h1 style="font-size:20px;color:#1e293b;margin:0 0 12px">Your screening is ready</h1>',
-    '<p style="margin:0 0 16px">Thanks for using Spot. Your accessibility screening report is ready to view:</p>',
+    `<h1 style="font-size:20px;color:#1e293b;margin:0 0 12px">${escapeHtml(t('heading'))}</h1>`,
+    `<p style="margin:0 0 16px">${escapeHtml(t('intro'))}</p>`,
     `<p style="margin:0 0 20px"><a href="${safeUrl}" style="color:#9c340a">${safeUrl}</a></p>`,
-    '<p style="margin:0 0 16px;font-size:14px;color:#64748b">This report is an automated screening based on the photos you provided — a starting point for planning remediation, not a professional inspection or a legal determination. Findings should be confirmed on-site.</p>',
-    '<p style="margin:0;font-size:13px;color:#94a3b8">Your uploaded photos are automatically deleted after 90 days. Your report stays available.</p>',
+    `<p style="margin:0 0 16px;font-size:14px;color:#64748b">${escapeHtml(t('disclaimer'))}</p>`,
+    `<p style="margin:0;font-size:13px;color:#94a3b8">${escapeHtml(t('retention'))}</p>`,
     '</div></body></html>',
   ].join('');
 
   const text = [
-    'Your accessibility screening from Spot is ready.',
+    `${t('subject')}.`,
     '',
     `View your report: ${readoutUrl}`,
     '',
-    'This report is an automated screening based on the photos you provided — a starting point for planning remediation, not a professional inspection or a legal determination. Findings should be confirmed on-site.',
+    t('disclaimer'),
     '',
-    'Your uploaded photos are automatically deleted after 90 days. Your report stays available.',
+    t('retention'),
   ].join('\n');
 
   return { subject, html, text };

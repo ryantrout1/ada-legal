@@ -272,3 +272,46 @@ describe('the renderers stay pure', () => {
     }
   });
 });
+
+/**
+ * A slot nobody reads is an editor control that does nothing.
+ *
+ * Phase 2 puts every template on a screen. If a template's send site
+ * never calls loadCopy, Gina edits it, saves it, and the email goes out
+ * unchanged — a silent drop wearing a user interface. That is the exact
+ * shape this repo keeps getting caught by, so it fails here instead.
+ *
+ * spot_release is knowingly on the list. Spot sessions carry no org id
+ * and its admin routes never resolve one, so there is nothing to scope a
+ * lookup by yet. It renders from the registry defaults, which is correct
+ * today and wrong the moment someone edits it — hence the entry.
+ */
+describe('every template is actually read from somewhere', () => {
+  const NOT_WIRED_YET = new Set(['spot_release']);
+
+  it('has a loadCopy call for each template, or an admitted reason', () => {
+    const sources = [
+      'src/engine/tools/impls/finalizeIntake.ts',
+      'src/engine/handoff/selfHelpEmail.ts',
+      'src/engine/notifications/routingNotifications.ts',
+      'api/spot/admin/release.ts',
+      'api/spot/admin/resend.ts',
+    ]
+      .map((f) => readFileSync(f, 'utf8'))
+      .join('\n');
+
+    for (const tpl of EMAIL_TEMPLATES) {
+      if (NOT_WIRED_YET.has(tpl.key)) {
+        expect(sources, `${tpl.key} is on the not-wired list but IS wired — remove it`).not.toContain(
+          `'${tpl.key}'`,
+        );
+        continue;
+      }
+      expect(
+        sources,
+        `${tpl.key} has no loadCopy call, so editing it would change nothing`,
+      ).toContain(`loadCopy(`);
+      expect(sources, `${tpl.key} is never loaded by name`).toContain(`'${tpl.key}'`);
+    }
+  });
+});

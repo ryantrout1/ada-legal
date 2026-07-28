@@ -19,6 +19,7 @@ import type { EmailClient, DbClient, CaseRow, LawFirmRow } from '../clients/type
 import type { ExtractedFields } from '../../types/db.js';
 import type { RenderedEmail } from '../handoff/emailTemplates.js';
 import { extractContactEmail } from '../handoff/selfHelpEmail.js';
+import { loadCopy } from '../email/resolveCopy.js';
 import {
   renderFirmMatchedEmail,
   renderUserConnectedEmail,
@@ -81,7 +82,12 @@ export async function sendConsentNotifications(
     const ok = await softSend(
       deps.email,
       firmEmail,
-      renderFirmMatchedEmail({ caseRow, firmName, claimantName }),
+      renderFirmMatchedEmail({
+        caseRow,
+        firmName,
+        claimantName,
+        copy: await loadCopy(deps.db, caseRow.orgId, 'routing_firm_matched'),
+      }),
     );
     if (ok) recipients.push(`firm:${firmEmail}`);
     else skipped.push('firm:send_failed');
@@ -93,7 +99,12 @@ export async function sendConsentNotifications(
     const ok = await softSend(
       deps.email,
       userEmail,
-      renderUserConnectedEmail({ caseRow, firmName, readoutUrl }),
+      renderUserConnectedEmail({
+        caseRow,
+        firmName,
+        readoutUrl,
+        copy: await loadCopy(deps.db, caseRow.orgId, 'routing_user_connected'),
+      }),
     );
     if (ok) recipients.push(`user:${userEmail}`);
     else skipped.push('user:send_failed');
@@ -140,7 +151,12 @@ export async function sendPlacementNotification(
     const ok = await softSend(
       deps.email,
       firmEmail,
-      renderFirmMatchedEmail({ caseRow, firmName, claimantName }),
+      renderFirmMatchedEmail({
+        caseRow,
+        firmName,
+        claimantName,
+        copy: await loadCopy(deps.db, caseRow.orgId, 'routing_firm_matched'),
+      }),
     );
     if (ok) recipients.push(`firm:${firmEmail}`);
     else skipped.push('firm:send_failed');
@@ -178,7 +194,11 @@ export async function sendAdminRoutingNotification(
     return;
   }
 
-  const ok = await softSend(deps.email, deps.adminEmail, renderAdminRoutingEmail({ caseRow }));
+  const ok = await softSend(deps.email, deps.adminEmail, renderAdminRoutingEmail({
+      caseRow,
+      copy: await loadCopy(deps.db, caseRow.orgId, 'routing_admin'),
+    }),
+  );
   await deps.db.appendCaseActivity({
     caseId: caseRow.id,
     actorType: 'system',
