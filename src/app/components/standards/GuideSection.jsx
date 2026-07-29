@@ -25,7 +25,7 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
 
   const heading = (
     <h2 id={`${id}-heading`} style={{
-      fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700,
+      fontFamily: 'var(--font-display)', fontSize: '1.375rem', fontWeight: 700,
       color: 'var(--heading)', margin: '0 0 16px'
     }}>
       {title}
@@ -34,7 +34,7 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
 
   const plainBlock = (
     <div style={{
-      fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
+      fontFamily: 'var(--font-body)', fontSize: '1rem',
       color: 'var(--body)', lineHeight: 1.75
     }}>
       <AutoCiteLinks>{children}</AutoCiteLinks>
@@ -47,14 +47,14 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
       borderRadius: '12px', padding: '20px'
     }}>
       <p style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+        fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700,
         letterSpacing: '0.1em', textTransform: 'uppercase',
         color: 'var(--body-secondary)', margin: '0 0 10px'
       }}>
         {legalTitle || 'Official Standard'}
       </p>
       <div style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+        fontFamily: 'var(--font-body)', fontSize: '0.875rem',
         color: 'var(--body)', lineHeight: 1.7
       }}>
         <AutoCiteLinks>{legalContent}</AutoCiteLinks>
@@ -69,7 +69,7 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
         {heading}
         {simpleContent ? (
           <div style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '1.0625rem',
+            fontFamily: 'var(--font-body)', fontSize: '1.0625rem',
             color: 'var(--body)', lineHeight: 1.85
           }}>
             <AutoCiteLinks>{simpleContent}</AutoCiteLinks>
@@ -83,14 +83,14 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                 <Sparkles size={16} style={{ color: 'var(--section-label)' }} aria-hidden="true" />
                 <p style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
+                  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 700,
                   color: 'var(--heading)', margin: 0
                 }}>
                   Simple summary coming soon
                 </p>
               </div>
               <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
                 color: 'var(--body)', margin: 0, lineHeight: 1.6
               }}>
                 We are writing plain-language summaries for every section. Here is the standard explanation:
@@ -115,13 +115,13 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
             <Scale size={14} style={{ color: 'var(--body-secondary)' }} aria-hidden="true" />
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+              fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700,
               letterSpacing: '0.1em', textTransform: 'uppercase',
               color: 'var(--body-secondary)', margin: 0
             }}>{legalTitle || 'Official Standard'}</p>
           </div>
           <div style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.9375rem',
             color: 'var(--body)', lineHeight: 1.75
           }}>
             <AutoCiteLinks>{legalContent}</AutoCiteLinks>
@@ -129,7 +129,7 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
         </div>
         <details style={{ marginTop: '8px' }}>
           <summary style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
             fontWeight: 600, color: 'var(--section-label)', cursor: 'pointer',
             padding: '8px 0', minHeight: '44px',
             display: 'flex', alignItems: 'center', gap: '6px'
@@ -137,7 +137,7 @@ export default function GuideSection({ id, title, children, legalTitle, legalCon
             <BookOpen size={14} aria-hidden="true" /> View plain-language explanation
           </summary>
           <div style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.875rem',
             color: 'var(--body)', lineHeight: 1.7, padding: '12px 0'
           }}>
             <AutoCiteLinks>{children}</AutoCiteLinks>

@@ -27,7 +27,7 @@ export default function StandardsStyles() {
       .sg-search-input {
         width: 100%;
         padding: 14px 16px 14px 48px;
-        font-family: Manrope, sans-serif;
+        font-family: var(--font-body);
         font-size: 1rem;
         color: var(--heading);
         background: var(--card-bg);
@@ -56,7 +56,7 @@ export default function StandardsStyles() {
         border-radius: 100px;
         background: var(--page-bg-subtle);
         border: 1.5px solid var(--border);
-        font-family: Manrope, sans-serif;
+        font-family: var(--font-body);
         font-size: 0.9rem;
         font-weight: 500;
         color: var(--heading);

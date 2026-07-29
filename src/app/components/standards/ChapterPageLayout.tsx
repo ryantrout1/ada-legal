@@ -126,7 +126,7 @@ function SectionBlock({
             width: '100%',
             padding: '16px 20px',
             cursor: 'pointer',
-            fontFamily: 'var(--font-body), Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.95rem',
             fontWeight: 600,
             color: 'var(--heading)',
@@ -141,7 +141,7 @@ function SectionBlock({
         >
           <span
             style={{
-              fontFamily: 'var(--font-display), Fraunces, serif',
+              fontFamily: 'var(--font-display)',
               fontSize: '0.8rem',
               fontWeight: 700,
               color: 'var(--section-label)',
@@ -197,7 +197,7 @@ function SectionBlock({
                 {section.simple ? (
                   <div
                     style={{
-                      fontFamily: 'var(--font-body), Manrope, sans-serif',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '1rem',
                       color: 'var(--body)',
                       lineHeight: 1.85,
@@ -230,7 +230,7 @@ function SectionBlock({
                       />
                       <p
                         style={{
-                          fontFamily: 'var(--font-body), Manrope, sans-serif',
+                          fontFamily: 'var(--font-body)',
                           fontSize: '0.875rem',
                           fontWeight: 700,
                           color: 'var(--heading)',
@@ -242,7 +242,7 @@ function SectionBlock({
                     </div>
                     <p
                       style={{
-                        fontFamily: 'var(--font-body), Manrope, sans-serif',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '0.875rem',
                         color: 'var(--body)',
                         margin: 0,
@@ -257,7 +257,7 @@ function SectionBlock({
                         marginTop: '16px',
                         paddingTop: '16px',
                         borderTop: '1px solid var(--border)',
-                        fontFamily: 'var(--font-body), Manrope, sans-serif',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '0.9375rem',
                         color: 'var(--body)',
                         lineHeight: 1.75,
@@ -276,7 +276,7 @@ function SectionBlock({
                 <div style={{ flex: '1 1 55%', minWidth: 0 }}>
                   <div
                     style={{
-                      fontFamily: 'var(--font-body), Manrope, sans-serif',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.9375rem',
                       color: 'var(--body)',
                       lineHeight: 1.75,
@@ -299,7 +299,7 @@ function SectionBlock({
                   >
                     <p
                       style={{
-                        fontFamily: 'var(--font-body), Manrope, sans-serif',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '0.7rem',
                         fontWeight: 700,
                         letterSpacing: '0.1em',
@@ -312,7 +312,7 @@ function SectionBlock({
                     </p>
                     <div
                       style={{
-                        fontFamily: 'var(--font-body), Manrope, sans-serif',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '0.875rem',
                         color: 'var(--body)',
                         lineHeight: 1.7,
@@ -352,7 +352,7 @@ function SectionBlock({
                     />
                     <p
                       style={{
-                        fontFamily: 'var(--font-body), Manrope, sans-serif',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '0.7rem',
                         fontWeight: 700,
                         letterSpacing: '0.1em',
@@ -366,7 +366,7 @@ function SectionBlock({
                   </div>
                   <div
                     style={{
-                      fontFamily: 'var(--font-body), Manrope, sans-serif',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.9375rem',
                       color: 'var(--body)',
                       lineHeight: 1.75,
@@ -378,7 +378,7 @@ function SectionBlock({
                 <details style={{ marginTop: '8px' }}>
                   <summary
                     style={{
-                      fontFamily: 'var(--font-body), Manrope, sans-serif',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.8125rem',
                       fontWeight: 600,
                       color: 'var(--section-label)',
@@ -395,7 +395,7 @@ function SectionBlock({
                   </summary>
                   <div
                     style={{
-                      fontFamily: 'var(--font-body), Manrope, sans-serif',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.875rem',
                       color: 'var(--body)',
                       lineHeight: 1.7,
@@ -488,7 +488,7 @@ export default function ChapterPageLayout({
     display: 'inline-flex',
     alignItems: 'center',
     gap: '6px',
-    fontFamily: 'var(--font-body), Manrope, sans-serif',
+    fontFamily: 'var(--font-body)',
     fontSize: '0.875rem',
     fontWeight: 600,
     color: 'var(--section-label)',
@@ -553,7 +553,7 @@ export default function ChapterPageLayout({
             <aside
               aria-label="Chapter summary in plain language"
               style={{
-                fontFamily: 'var(--font-body), Manrope, sans-serif',
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.9375rem',
                 color: 'var(--body)',
                 lineHeight: 1.6,
@@ -571,7 +571,7 @@ export default function ChapterPageLayout({
           {/* Overview prose */}
           <div
             style={{
-              fontFamily: 'var(--font-body), Manrope, sans-serif',
+              fontFamily: 'var(--font-body)',
               fontSize: '1rem',
               color: 'var(--body)',
               lineHeight: 1.75,
@@ -640,7 +640,7 @@ export default function ChapterPageLayout({
           >
             <h2
               style={{
-                fontFamily: 'var(--font-body), Manrope, sans-serif',
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.75rem',
                 fontWeight: 700,
                 letterSpacing: '0.08em',
@@ -653,7 +653,7 @@ export default function ChapterPageLayout({
             </h2>
             <p
               style={{
-                fontFamily: 'var(--font-body), Manrope, sans-serif',
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.9375rem',
                 color: 'var(--body)',
                 lineHeight: 1.6,
@@ -675,7 +675,7 @@ export default function ChapterPageLayout({
                 borderRadius: '6px',
                 background: 'var(--accent)',
                 color: 'var(--btn-text)',
-                fontFamily: 'var(--font-body), Manrope, sans-serif',
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.875rem',
                 fontWeight: 600,
                 textDecoration: 'none',

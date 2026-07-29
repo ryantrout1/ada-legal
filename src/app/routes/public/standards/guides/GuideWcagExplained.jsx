@@ -54,7 +54,7 @@ export default function GuideWcagExplained() {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     width: '36px', height: '36px', borderRadius: '8px',
                     background: 'var(--link)', color: 'var(--page-bg)', fontWeight: 700,
-                    fontFamily: 'Fraunces, serif', fontSize: '1.125rem', flexShrink: 0
+                    fontFamily: 'var(--font-display)', fontSize: '1.125rem', flexShrink: 0
                   }}>{item.letter}</span>
                   <div>
                     <p style={{ margin: '0 0 2px', fontWeight: 700, color: 'var(--heading)' }}>{item.name}</p>

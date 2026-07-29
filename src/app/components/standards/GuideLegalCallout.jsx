@@ -18,7 +18,7 @@ export default function GuideLegalCallout({ citation, children }) {
     }}>
       {citation && (
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+          fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700,
           letterSpacing: '0.1em', textTransform: 'uppercase',
           color: 'var(--body-secondary)', margin: '0 0 8px'
         }}>
@@ -26,7 +26,7 @@ export default function GuideLegalCallout({ citation, children }) {
         </p>
       )}
       <div style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+        fontFamily: 'var(--font-body)', fontSize: '0.875rem',
         color: 'var(--body)', lineHeight: 1.7
       }}>
         <AutoCiteLinks>{children}</AutoCiteLinks>

@@ -108,7 +108,7 @@ export default function GuideSmallBusiness() {
               <div style={{
                 padding: '16px 20px', borderBottom: '1px solid var(--border)'
               }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)', fontFamily: 'Fraunces, serif', fontSize: '1.05rem' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)', fontFamily: 'var(--font-display)', fontSize: '1.05rem' }}>
                   1. Remove barriers in existing buildings
                 </p>
                 <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>
@@ -121,7 +121,7 @@ export default function GuideSmallBusiness() {
               <div style={{
                 padding: '16px 20px', borderBottom: '1px solid var(--border)'
               }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)', fontFamily: 'Fraunces, serif', fontSize: '1.05rem' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)', fontFamily: 'var(--font-display)', fontSize: '1.05rem' }}>
                   2. Make reasonable modifications
                 </p>
                 <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>
@@ -132,7 +132,7 @@ export default function GuideSmallBusiness() {
                 </p>
               </div>
               <div style={{ padding: '16px 20px' }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)', fontFamily: 'Fraunces, serif', fontSize: '1.05rem' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--heading)', fontFamily: 'var(--font-display)', fontSize: '1.05rem' }}>
                   3. Communicate effectively
                 </p>
                 <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.7 }}>

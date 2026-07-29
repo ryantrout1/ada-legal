@@ -45,17 +45,17 @@ function CalloutPanel({ callout, onClose, panelRef }) {
     <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'plFade 0.25s ease-out' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
-          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
         </div>
-        <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
+        <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
       </div>
       <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
-        <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
+        <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
         <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard {'\u2014'} {parseCite(callout.citation)}</p>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(callout.legal)}</p>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard {'\u2014'} {parseCite(callout.citation)}</p>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(callout.legal)}</p>
         </div></aside>
       </div>
     </div>
@@ -65,8 +65,8 @@ function CalloutPanel({ callout, onClose, panelRef }) {
 function KeyFact({ color, number, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
-      <span style={{ background: color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
+      <span style={{ background: color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
     </div>
   );
 }
@@ -76,7 +76,7 @@ function Dots({ callouts, active, toggle }) {
     <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
       {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
       <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
-      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
+      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
       <circle cx={c.x} cy={c.y} r="22" fill="none" stroke="transparent" strokeWidth="2" className="pl-focus-ring" />
     </g>
   ));
@@ -103,8 +103,8 @@ export default function PlatformLiftDiagram() {
 
   const unitToggle = (
     <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
-      {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}
+      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
+      {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}
     </div>
   );
 
@@ -113,7 +113,7 @@ export default function PlatformLiftDiagram() {
 
       {/* DIAGRAM 1: How It Works */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>How a Platform Lift Works</h3>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>How a Platform Lift Works</h3>
         {unitToggle}
       </div>
 
@@ -123,16 +123,16 @@ export default function PlatformLiftDiagram() {
           <rect width="720" height="380" fill="var(--page-bg-subtle)" />
 
           {/* LEFT: Side elevation */}
-          <text x="180" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Side view</text>
+          <text x="180" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Side view</text>
 
           {/* Upper floor */}
           <rect x="40" y="100" width="140" height="10" fill="#94A3B8" opacity="0.3" rx="2" />
-          <text x="110" y="92" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">upper level</text>
+          <text x="110" y="92" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="600">upper level</text>
 
           {/* Lower floor */}
           <rect x="40" y="310" width="140" height="10" fill="#94A3B8" opacity="0.3" rx="2" />
           <rect x="220" y="310" width="110" height="10" fill="#94A3B8" opacity="0.3" rx="2" />
-          <text x="275" y="302" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">lower level</text>
+          <text x="275" y="302" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="600">lower level</text>
 
           {/* Lift shaft */}
           <rect x="180" y="100" width="80" height="220" fill="#7C3AED" opacity="0.03" stroke="#94A3B8" strokeWidth="1.5" strokeDasharray="6 3" />
@@ -154,18 +154,18 @@ export default function PlatformLiftDiagram() {
           <line x1="280" y1="130" x2="280" y2="290" stroke="#7C3AED" strokeWidth="1.5" strokeDasharray="4 3" />
           <polygon points="280,125 276,135 284,135" fill="#7C3AED" opacity="0.6" />
           <polygon points="280,295 276,285 284,285" fill="#7C3AED" opacity="0.6" />
-          <text x="300" y="215" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6" fontWeight="600">travel</text>
+          <text x="300" y="215" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6" fontWeight="600">travel</text>
 
           {/* Door labels */}
           <line x1="180" y1="100" x2="180" y2="138" stroke="#2563EB" strokeWidth="2.5" />
-          <text x="168" y="125" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">door</text>
+          <text x="168" y="125" textAnchor="end" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A" fontWeight="600">door</text>
 
           <line x1="260" y1="270" x2="260" y2="310" stroke="#2563EB" strokeWidth="2.5" />
-          <text x="272" y="295" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">door</text>
+          <text x="272" y="295" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A" fontWeight="600">door</text>
 
           {/* Control panel */}
           <rect x="185" y="190" width="10" height="16" rx="2" fill="#C2410C" opacity="0.2" stroke="#C2410C" strokeWidth="1" />
-          <text x="175" y="203" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600">controls</text>
+          <text x="175" y="203" textAnchor="end" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C" fontWeight="600">controls</text>
 
 
           {/* DIVIDER */}
@@ -173,7 +173,7 @@ export default function PlatformLiftDiagram() {
 
 
           {/* RIGHT: Plan view (top down) */}
-          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Top-down view</text>
+          <text x="540" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Top-down view</text>
 
           {/* Platform rectangle */}
           <rect x="430" y="80" width="140" height="200" rx="4" fill="#7C3AED" opacity="0.04" stroke="#94A3B8" strokeWidth="2" />
@@ -186,25 +186,25 @@ export default function PlatformLiftDiagram() {
           <line x1="445" y1="264" x2="445" y2="276" stroke="#C2410C" strokeWidth="1.5" />
           <line x1="555" y1="264" x2="555" y2="276" stroke="#C2410C" strokeWidth="1.5" />
           <rect x="470" y="278" width="64" height="20" rx="6" fill="#C2410C" />
-          <text x="502" y="292" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('36', '915')} min</text>
+          <text x="502" y="292" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('36', '915')} min</text>
 
           {/* Depth dimension */}
           <line x1="575" y1="105" x2="575" y2="255" stroke="#C2410C" strokeWidth="1.5" />
           <line x1="569" y1="105" x2="581" y2="105" stroke="#C2410C" strokeWidth="1.5" />
           <line x1="569" y1="255" x2="581" y2="255" stroke="#C2410C" strokeWidth="1.5" />
           <rect x="586" y="168" width="64" height="20" rx="6" fill="#C2410C" />
-          <text x="618" y="182" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('48', '1220')} min</text>
+          <text x="618" y="182" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('48', '1220')} min</text>
 
           {/* Door opening */}
           <line x1="460" y1="80" x2="530" y2="80" stroke="#2563EB" strokeWidth="3" />
-          <text x="495" y="72" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">{d('32', '815')} door min</text>
+          <text x="495" y="72" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A" fontWeight="600">{d('32', '815')} door min</text>
 
           {/* Grab bar */}
           <line x1="435" y1="105" x2="435" y2="255" stroke="#15803D" strokeWidth="3" strokeLinecap="round" />
-          <text x="422" y="185" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">grab bar</text>
+          <text x="422" y="185" textAnchor="end" fontFamily="var(--font-body)" fontSize="10" fill="#15803D" fontWeight="600">grab bar</text>
 
           {/* Gap callout */}
-          <text x="495" y="100" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B">{'\u00be'}{'\u2033'} max gap</text>
+          <text x="495" y="100" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B">{'\u00be'}{'\u2033'} max gap</text>
 
           {/* Wheelchair top-view */}
           <g transform="translate(478,150)" opacity="0.4">
@@ -214,10 +214,10 @@ export default function PlatformLiftDiagram() {
             <circle cx="20" cy="10" r="6" fill="#E2E8F0" stroke="#475569" strokeWidth="1" />
           </g>
 
-          <text x="500" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="500">clear floor space</text>
+          <text x="500" y="320" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#15803D" fontWeight="500">clear floor space</text>
 
           <Dots callouts={LIFT_CALLOUTS} active={liftActive} toggle={toggleLift} />
-          <text x="20" y="368" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <text x="20" y="368" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 
@@ -225,7 +225,7 @@ export default function PlatformLiftDiagram() {
       <CalloutPanel callout={liftCallout} onClose={() => setLiftActive(null)} panelRef={liftRef} />
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
-        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Platform Lifts</p>
+        <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Platform Lifts</p>
         <KeyFact color="#C2410C" number={`${d('36', '915')}\u00d7${d('48', '1220')}`}>Minimum clear floor space on the platform</KeyFact>
         <KeyFact color="#2563EB" number={`${d('32', '815')}`}>Minimum clear door width</KeyFact>
         <KeyFact color="#15803D" number={`\u00be${d('', '')}`}>Maximum gap between platform edge and landing ({'\u00be'} inch)</KeyFact>
@@ -235,7 +235,7 @@ export default function PlatformLiftDiagram() {
 
       {/* DIAGRAM 2: Where They're Allowed */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '40px', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Where Lifts Are Allowed</h3>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Where Lifts Are Allowed</h3>
       </div>
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
@@ -244,31 +244,31 @@ export default function PlatformLiftDiagram() {
           <rect width="720" height="300" fill="var(--page-bg-subtle)" />
 
           {/* LEFT: Permitted uses */}
-          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="#15803D">Lifts OK here {'\u2714'}</text>
+          <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="#15803D">Lifts OK here {'\u2714'}</text>
 
           {/* Use case boxes */}
           <rect x="40" y="65" width="130" height="44" rx="8" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="1.5" />
-          <text x="105" y="85" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">Stages &</text>
-          <text x="105" y="100" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">platforms</text>
+          <text x="105" y="85" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">Stages &</text>
+          <text x="105" y="100" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">platforms</text>
 
           <rect x="185" y="65" width="130" height="44" rx="8" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="1.5" />
-          <text x="250" y="85" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">Wheelchair</text>
-          <text x="250" y="100" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">seating areas</text>
+          <text x="250" y="85" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">Wheelchair</text>
+          <text x="250" y="100" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">seating areas</text>
 
           <rect x="40" y="125" width="130" height="44" rx="8" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="1.5" />
-          <text x="105" y="145" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">Existing</text>
-          <text x="105" y="160" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">buildings</text>
+          <text x="105" y="145" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">Existing</text>
+          <text x="105" y="160" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">buildings</text>
 
           <rect x="185" y="125" width="130" height="44" rx="8" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="1.5" />
-          <text x="250" y="145" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">Small rooms</text>
-          <text x="250" y="160" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">({'\u2264'} 5 people)</text>
+          <text x="250" y="145" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">Small rooms</text>
+          <text x="250" y="160" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">({'\u2264'} 5 people)</text>
 
           <rect x="40" y="185" width="130" height="44" rx="8" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="1.5" />
-          <text x="105" y="212" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">Courtrooms</text>
+          <text x="105" y="212" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">Courtrooms</text>
 
           <rect x="185" y="185" width="130" height="44" rx="8" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="1.5" />
-          <text x="250" y="205" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">Recreation</text>
-          <text x="250" y="220" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">facilities</text>
+          <text x="250" y="205" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">Recreation</text>
+          <text x="250" y="220" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">facilities</text>
 
 
           {/* DIVIDER */}
@@ -276,22 +276,22 @@ export default function PlatformLiftDiagram() {
 
 
           {/* RIGHT: NOT permitted */}
-          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="#C2410C">Lifts NOT OK here {'\u2718'}</text>
+          <text x="540" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="#C2410C">Lifts NOT OK here {'\u2718'}</text>
 
           <rect x="400" y="65" width="280" height="60" rx="10" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" />
-          <text x="540" y="90" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fill="#7C2D12" fontWeight="600">New multi-story buildings</text>
-          <text x="540" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12">Must use elevator unless exception applies</text>
+          <text x="540" y="90" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fill="#7C2D12" fontWeight="600">New multi-story buildings</text>
+          <text x="540" y="108" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">Must use elevator unless exception applies</text>
 
           <rect x="400" y="140" width="280" height="60" rx="10" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" />
-          <text x="540" y="165" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fill="#7C2D12" fontWeight="600">Primary accessible route</text>
-          <text x="540" y="183" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12">Can{'\u0027'}t replace an elevator on a main route</text>
+          <text x="540" y="165" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fill="#7C2D12" fontWeight="600">Primary accessible route</text>
+          <text x="540" y="183" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">Can{'\u0027'}t replace an elevator on a main route</text>
 
           <rect x="400" y="215" width="280" height="50" rx="10" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" />
-          <text x="540" y="240" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fill="#7C2D12" fontWeight="600">High-traffic public spaces</text>
-          <text x="540" y="255" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12">Not appropriate for heavy daily use</text>
+          <text x="540" y="240" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fill="#7C2D12" fontWeight="600">High-traffic public spaces</text>
+          <text x="540" y="255" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">Not appropriate for heavy daily use</text>
 
           <Dots callouts={USE_CALLOUTS} active={useActive} toggle={toggleUse} />
-          <text x="20" y="290" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <text x="20" y="290" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 
@@ -299,7 +299,7 @@ export default function PlatformLiftDiagram() {
       <CalloutPanel callout={useCallout} onClose={() => setUseActive(null)} panelRef={useRef2} />
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
-        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Quick check {'\u2014'} Is this lift compliant?</p>
+        <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Quick check {'\u2014'} Is this lift compliant?</p>
         <KeyFact color="#15803D" number="Pass">Can you call and operate it yourself, without a key or attendant?</KeyFact>
         <KeyFact color="#C2410C" number="Fail">Does it need a staff member to run, or is it always broken?</KeyFact>
       </div>

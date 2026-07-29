@@ -44,7 +44,7 @@ export default function GuideReadingLevelBar() {
       borderRadius: '8px',
       background: 'var(--card-bg)',
       border: '1px solid var(--card-border)',
-      fontFamily: 'Manrope, sans-serif',
+      fontFamily: 'var(--font-body)',
       flexWrap: 'wrap',
     }}>
       <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--body)', whiteSpace: 'nowrap' }}>Reading level</span>
@@ -66,7 +66,7 @@ export default function GuideReadingLevelBar() {
                 background: active ? 'var(--accent)' : 'var(--card-bg)',
                 color: active ? 'var(--btn-text)' : 'var(--body)',
                 fontSize: '0.9375rem', fontWeight: active ? 700 : 500,
-                fontFamily: 'Manrope, sans-serif',
+                fontFamily: 'var(--font-body)',
                 cursor: 'pointer', transition: 'all 0.15s',
                 whiteSpace: 'nowrap',
               }}

@@ -170,7 +170,7 @@ export default function GuideIntroToAda() {
                   alignItems: 'flex-start'
                 }}>
                   <span style={{
-                    fontFamily: 'Fraunces, serif', fontSize: '0.9rem', fontWeight: 700,
+                    fontFamily: 'var(--font-display)', fontSize: '0.9rem', fontWeight: 700,
                     color: 'var(--accent)', background: 'var(--card-bg-tinted)',
                     padding: '4px 10px', borderRadius: '6px', flexShrink: 0,
                     minWidth: '36px', textAlign: 'center'

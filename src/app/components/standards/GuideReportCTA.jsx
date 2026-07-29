@@ -64,13 +64,13 @@ export default function GuideReportCTA() {
     }}>
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>
         <h2 style={{
-          fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+          fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 3vw, 2rem)',
           fontWeight: 700, color: 'var(--dark-heading)', margin: '0 0 12px'
         }}>
           Think you experienced an ADA violation?
         </h2>
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
+          fontFamily: 'var(--font-body)', fontSize: '1rem',
           color: 'var(--dark-muted)', lineHeight: 1.7, margin: '0 0 28px'
         }}>
           Answer a few simple questions and we&rsquo;ll show you exactly what
@@ -84,7 +84,7 @@ export default function GuideReportCTA() {
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '8px',
             background: 'var(--accent)', color: 'var(--btn-text)',
-            fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600,
+            fontFamily: 'var(--font-body)', fontSize: '1rem', fontWeight: 600,
             padding: '14px 28px', borderRadius: '10px',
             border: 'none',
             textDecoration: 'none', minHeight: '44px',
@@ -103,7 +103,7 @@ export default function GuideReportCTA() {
             attorney-connected reporting is not live yet. */}
         <div style={{ marginTop: '16px' }}>
           <button type="button" onClick={handleTalkToAda} className="sg-cta-link" style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.9rem',
             color: 'var(--dark-muted)', textDecoration: 'underline',
             minHeight: '44px', display: 'inline-flex', alignItems: 'center',
             // It was a link; a bare button brings its own border, background
@@ -114,7 +114,7 @@ export default function GuideReportCTA() {
           </button>
         </div>
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem',
+          fontFamily: 'var(--font-body)', fontSize: '0.82rem',
           color: 'var(--dark-muted)', margin: '12px 0 0'
         }}>
           Attorney-connected violation reporting &mdash; launching soon.

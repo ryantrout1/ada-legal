@@ -414,14 +414,14 @@ export default function ResourceSections({ activeFilters = [] }) {
                     <section.icon size={22} style={{ color: 'white' }} aria-hidden="true" />
                   </div>
                   <h2 id={`${section.id}-heading`} style={{
-                    fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700,
+                    fontFamily: 'var(--font-display)', fontSize: '1.375rem', fontWeight: 700,
                     color: 'var(--heading)', margin: 0
                   }}>
                     {section.title}
                   </h2>
                 </div>
                 <span style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                  fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
                   color: 'var(--body-secondary)'
                 }}>
                   {section.count} chapters

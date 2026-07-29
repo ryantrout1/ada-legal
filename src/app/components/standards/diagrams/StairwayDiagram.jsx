@@ -28,17 +28,17 @@ function CalloutPanel({ callout, onClose, panelRef }) {
     <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'stairFade 0.25s ease-out' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
-          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
         </div>
-        <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
+        <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
       </div>
       <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
-        <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
+        <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
         <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard {'\u2014'} {parseCite(callout.citation)}</p>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(callout.legal)}</p>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard {'\u2014'} {parseCite(callout.citation)}</p>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(callout.legal)}</p>
         </div></aside>
       </div>
     </div>
@@ -48,8 +48,8 @@ function CalloutPanel({ callout, onClose, panelRef }) {
 function KeyFact({ color, number, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
-      <span style={{ background: color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
+      <span style={{ background: color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
     </div>
   );
 }
@@ -59,7 +59,7 @@ function Dots({ callouts, active, toggle }) {
     <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
       {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
       <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
-      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
+      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
       <circle cx={c.x} cy={c.y} r="22" fill="none" stroke="transparent" strokeWidth="2" className="stair-focus-ring" />
     </g>
   ));
@@ -78,10 +78,10 @@ export default function StairwayDiagram() {
   return (
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Steps & Safety</h3>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Steps & Safety</h3>
         <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
-          {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
+          {['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}
         </div>
       </div>
 
@@ -90,8 +90,8 @@ export default function StairwayDiagram() {
           <title id="stair-title">Stairway Requirements {'\u2014'} Treads, Risers, Nosings, Handrails</title>
           <rect width="720" height="380" fill="var(--page-bg-subtle)" />
 
-          <text x="190" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">What each step looks like</text>
-          <text x="560" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Handrail extensions</text>
+          <text x="190" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">What each step looks like</text>
+          <text x="560" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Handrail extensions</text>
 
           {/* LEFT: Step cross-section */}
           {/* Stairs (3 steps) */}
@@ -108,27 +108,27 @@ export default function StairwayDiagram() {
           <line x1="60" y1="315" x2="60" y2="325" stroke="#C2410C" strokeWidth="1.2" />
           <line x1="140" y1="315" x2="140" y2="325" stroke="#C2410C" strokeWidth="1.2" />
           <rect x="65" y="328" width="66" height="18" rx="5" fill="#C2410C" />
-          <text x="98" y="341" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('11', '280')} min</text>
-          <text x="98" y="360" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="500">tread depth</text>
+          <text x="98" y="341" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('11', '280')} min</text>
+          <text x="98" y="360" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C" fontWeight="500">tread depth</text>
 
           {/* Riser height dimension */}
           <line x1="150" y1="250" x2="150" y2="310" stroke="#15803D" strokeWidth="1.2" />
           <line x1="145" y1="250" x2="155" y2="250" stroke="#15803D" strokeWidth="1.2" />
           <line x1="145" y1="310" x2="155" y2="310" stroke="#15803D" strokeWidth="1.2" />
           <rect x="158" y="268" width="58" height="18" rx="5" fill="#15803D" />
-          <text x="187" y="281" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('4', '100')}{'\u2013'}{d('7', '178')}</text>
-          <text x="187" y="300" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="500">riser height</text>
+          <text x="187" y="281" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('4', '100')}{'\u2013'}{d('7', '178')}</text>
+          <text x="187" y="300" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#15803D" fontWeight="500">riser height</text>
 
           {/* Nosing detail callout */}
           <circle cx="140" cy="250" r="12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="3 2" />
           <line x1="148" y1="240" x2="240" y2="160" stroke="#2563EB" strokeWidth="1" />
-          <text x="245" y="156" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A" fontWeight="600">rounded nosing</text>
-          <text x="245" y="170" fontFamily="Manrope, sans-serif" fontSize="10" fill="#1E3A8A">{'\u2264'} 1{'\u00bd'}{'\u2033'} projection</text>
+          <text x="245" y="156" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A" fontWeight="600">rounded nosing</text>
+          <text x="245" y="170" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A">{'\u2264'} 1{'\u00bd'}{'\u2033'} projection</text>
 
           {/* NO open risers */}
           <rect x="60" y="80" width="160" height="40" rx="8" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="1.5" />
-          <text x="140" y="98" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#7C2D12" fontWeight="600">{'\u2718'} No open risers</text>
-          <text x="140" y="114" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12">canes and feet get caught</text>
+          <text x="140" y="98" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#7C2D12" fontWeight="600">{'\u2718'} No open risers</text>
+          <text x="140" y="114" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">canes and feet get caught</text>
 
 
           {/* DIVIDER */}
@@ -152,26 +152,26 @@ export default function StairwayDiagram() {
           <line x1="568" y1="140" x2="650" y2="140" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
           <line x1="568" y1="150" x2="650" y2="150" stroke="#7C3AED" strokeWidth="1" />
           <rect x="580" y="118" width="60" height="18" rx="5" fill="#7C3AED" />
-          <text x="610" y="131" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('12', '305')} ext.</text>
-          <text x="610" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6" fontWeight="500">top extension</text>
+          <text x="610" y="131" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('12', '305')} ext.</text>
+          <text x="610" y="108" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6" fontWeight="500">top extension</text>
 
           {/* Bottom extension (follows slope then horizontal) */}
           <line x1="488" y1="260" x2="460" y2="290" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
           <line x1="460" y1="290" x2="410" y2="290" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
           <rect x="408" y="296" width="60" height="18" rx="5" fill="#7C3AED" />
-          <text x="438" y="309" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('12', '305')} ext.</text>
-          <text x="438" y="326" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6" fontWeight="500">bottom extension</text>
+          <text x="438" y="309" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('12', '305')} ext.</text>
+          <text x="438" y="326" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6" fontWeight="500">bottom extension</text>
 
           {/* Height dimension */}
           <line x1="545" y1="175" x2="545" y2="220" stroke="#7C3AED" strokeWidth="1" strokeDasharray="3 2" />
           <rect x="395" y="80" width="170" height="22" rx="6" fill="#7C3AED" opacity="0.08" stroke="#7C3AED" strokeWidth="1" />
-          <text x="480" y="95" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6" fontWeight="600">{d('34', '865')}{'\u2013'}{d('38', '965')} above nosings</text>
+          <text x="480" y="95" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6" fontWeight="600">{d('34', '865')}{'\u2013'}{d('38', '965')} above nosings</text>
 
           {/* Both sides note */}
-          <text x="540" y="348" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6" fontWeight="600">required on both sides, continuous</text>
+          <text x="540" y="348" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6" fontWeight="600">required on both sides, continuous</text>
 
           <Dots callouts={STEP_CALLOUTS} active={active} toggle={toggle} />
-          <text x="20" y="370" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <text x="20" y="370" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
 
@@ -179,7 +179,7 @@ export default function StairwayDiagram() {
       <CalloutPanel callout={ac} onClose={() => setActive(null)} panelRef={panelRef} />
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
-        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Stairways</p>
+        <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Stairways</p>
         <KeyFact color="#C2410C" number={d('11', '280')}>Minimum tread depth</KeyFact>
         <KeyFact color="#15803D" number={`${d('4', '100')}\u2013${d('7', '178')}`}>Riser height range (must be uniform within a flight)</KeyFact>
         <KeyFact color="#7C3AED" number={d('12', '305')}>Handrail extension beyond top and bottom</KeyFact>

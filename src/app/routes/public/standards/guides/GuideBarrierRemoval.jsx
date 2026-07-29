@@ -209,7 +209,7 @@ export default function GuideBarrierRemoval() {
                   alignItems: 'flex-start'
                 }}>
                   <span style={{
-                    fontFamily: 'Fraunces, serif', fontSize: '1.25rem',
+                    fontFamily: 'var(--font-display)', fontSize: '1.25rem',
                     fontWeight: 700, color: 'var(--accent)', flexShrink: 0, width: '28px'
                   }}>{item.num}</span>
                   <div>

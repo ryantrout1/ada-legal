@@ -184,7 +184,7 @@ export default function GuideNewConstruction() {
                 borderBottom: '1px solid var(--border)', alignItems: 'flex-start'
               }}>
                 <span style={{
-                  fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
+                  fontFamily: 'var(--font-display)', fontSize: '0.8rem', fontWeight: 700,
                   color: 'var(--accent-success)', background: '#DCFCE7',
                   padding: '4px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
                 }}>Maintenance</span>
@@ -203,7 +203,7 @@ export default function GuideNewConstruction() {
                 display: 'flex', gap: '16px', padding: '16px 20px', alignItems: 'flex-start'
               }}>
                 <span style={{
-                  fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
+                  fontFamily: 'var(--font-display)', fontSize: '0.8rem', fontWeight: 700,
                   color: 'var(--accent)', background: 'var(--card-bg-tinted)',
                   padding: '4px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
                 }}>Alteration</span>

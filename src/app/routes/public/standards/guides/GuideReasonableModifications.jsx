@@ -96,7 +96,7 @@ export default function GuideReasonableModifications() {
                 borderBottom: '1px solid var(--border)', alignItems: 'flex-start'
               }}>
                 <span style={{
-                  fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
+                  fontFamily: 'var(--font-display)', fontSize: '0.8rem', fontWeight: 700,
                   color: 'var(--accent)', background: 'var(--card-bg-tinted)',
                   padding: '4px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
                 }}>Title II / III</span>
@@ -115,7 +115,7 @@ export default function GuideReasonableModifications() {
                 display: 'flex', gap: '16px', padding: '16px 20px', alignItems: 'flex-start'
               }}>
                 <span style={{
-                  fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
+                  fontFamily: 'var(--font-display)', fontSize: '0.8rem', fontWeight: 700,
                   color: 'var(--accent)', background: 'var(--card-bg-tinted)',
                   padding: '4px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
                 }}>Title I</span>

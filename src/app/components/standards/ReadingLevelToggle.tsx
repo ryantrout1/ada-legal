@@ -70,7 +70,7 @@ export function ReadingLevelToggle({ className }: ReadingLevelToggleProps) {
         borderRadius: '8px',
         background: 'var(--page-bg-subtle)',
         border: '1px solid var(--border)',
-        fontFamily: 'var(--font-body), Manrope, sans-serif',
+        fontFamily: 'var(--font-body)',
         flexWrap: 'wrap',
       }}
     >
@@ -105,7 +105,7 @@ export function ReadingLevelToggle({ className }: ReadingLevelToggleProps) {
                 color: active ? 'var(--btn-text)' : 'var(--body)',
                 fontSize: '0.72rem',
                 fontWeight: active ? 700 : 500,
-                fontFamily: 'var(--font-body), Manrope, sans-serif',
+                fontFamily: 'var(--font-body)',
                 cursor: 'pointer',
                 transition: 'all 0.15s',
                 whiteSpace: 'nowrap',

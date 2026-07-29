@@ -45,17 +45,17 @@ function CalloutPanel({ callout, onClose, panelRef }) {
     <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'walkFade 0.25s ease-out' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
-          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
         </div>
-        <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close {'\u2715'}</button>
+        <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close {'\u2715'}</button>
       </div>
       <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
-        <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
+        <div style={{ flex: '1 1 55%', minWidth: 0 }}><p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>{callout.plain}</p></div>
         <aside style={{ flex: '1 1 40%', minWidth: 0 }}><div style={{ background: 'var(--card-bg-tinted)', borderLeft: '3px solid var(--accent)', borderRadius: '0 10px 10px 0', padding: '16px 18px' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard {'\u2014'} {parseCite(callout.citation)}</p>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(callout.legal)}</p>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--body-secondary)', margin: '0 0 8px' }}>Official Standard {'\u2014'} {parseCite(callout.citation)}</p>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>{parseCite(callout.legal)}</p>
         </div></aside>
       </div>
     </div>
@@ -63,8 +63,8 @@ function CalloutPanel({ callout, onClose, panelRef }) {
 }
 function KeyFact({ color, number, children }) {
   return (<div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
-    <span style={{ background: color, color: 'white', fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
-    <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
+    <span style={{ background: color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+    <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
   </div>);
 }
 function Dots({ callouts, active, toggle }) {
@@ -72,7 +72,7 @@ function Dots({ callouts, active, toggle }) {
     <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
       {active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}
       <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
-      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
+      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
       <circle cx={c.x} cy={c.y} r="22" fill="none" stroke="transparent" strokeWidth="2" className="walk-fr"/>
     </g>
   ));
@@ -91,13 +91,13 @@ export default function WalkingSurfaceDiagram() {
   const d = (i, m) => metric ? `${m} mm` : `${i}\u2033`;
   const slopeC = SLOPE_CALLOUTS.find(c => c.id === slopeActive);
   const surfC = SURFACE_CALLOUTS.find(c => c.id === surfActive);
-  const unitToggle = (<div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>{['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}</div>);
+  const unitToggle = (<div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>{['Imperial', 'Metric'].map(u => { const isA = u === 'Metric' ? metric : !metric; return (<button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA} style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: isA ? 700 : 500, padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: isA ? 'var(--heading)' : 'var(--card-bg)', color: isA ? 'var(--page-bg)' : 'var(--body)', cursor: 'pointer', minHeight: '44px' }}>{u}</button>); })}</div>);
 
   return (
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
       {/* DIAGRAM 1: Width & Slope */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Width & Slope</h3>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Width & Slope</h3>
         {unitToggle}
       </div>
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
@@ -106,13 +106,13 @@ export default function WalkingSurfaceDiagram() {
           <rect width="720" height="360" fill="var(--page-bg-subtle)" />
 
           {/* LEFT: Width */}
-          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">How wide the path must be</text>
+          <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">How wide the path must be</text>
 
           {/* Corridor walls */}
           <rect x="60" y="80" width="220" height="14" rx="2" fill="#CBD5E1" />
           <rect x="60" y="280" width="220" height="14" rx="2" fill="#CBD5E1" />
-          <text x="170" y="78" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
-          <text x="170" y="308" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
+          <text x="170" y="78" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
+          <text x="170" y="308" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
 
           {/* Walking path */}
           <rect x="60" y="94" width="220" height="186" rx="0" fill="#C2410C" opacity="0.03" />
@@ -130,44 +130,44 @@ export default function WalkingSurfaceDiagram() {
           <line x1="60" y1="314" x2="60" y2="326" stroke="#C2410C" strokeWidth="1.5" />
           <line x1="280" y1="314" x2="280" y2="326" stroke="#C2410C" strokeWidth="1.5" />
           <rect x="130" y="326" width="80" height="22" rx="6" fill="#C2410C" />
-          <text x="170" y="341" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="white">{d('36', '915')} min</text>
+          <text x="170" y="341" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="white">{d('36', '915')} min</text>
 
           {/* DIVIDER */}
           <line x1="345" y1="20" x2="345" y2="340" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
 
           {/* RIGHT: Slope */}
-          <text x="530" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">How steep it can be</text>
+          <text x="530" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">How steep it can be</text>
 
           {/* Running slope surface */}
           <line x1="380" y1="230" x2="680" y2="190" stroke="#475569" strokeWidth="3" />
-          <text x="530" y="178" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">direction of travel {'\u2192'}</text>
+          <text x="530" y="178" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="600">direction of travel {'\u2192'}</text>
 
           {/* Running slope label */}
           <rect x="460" y="235" width="140" height="22" rx="6" fill="#15803D" />
-          <text x="530" y="250" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">running slope: 1:20 max</text>
+          <text x="530" y="250" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">running slope: 1:20 max</text>
 
           {/* Cross slope illustration */}
           <line x1="410" y1="300" x2="650" y2="295" stroke="#475569" strokeWidth="2" strokeDasharray="4 3" />
           <rect x="460" y="305" width="140" height="22" rx="6" fill="#2563EB" />
-          <text x="530" y="320" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">cross slope: 1:48 max</text>
+          <text x="530" y="320" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">cross slope: 1:48 max</text>
 
           {/* Slope angle indicator */}
           <line x1="380" y1="230" x2="680" y2="230" stroke="#15803D" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
-          <text x="690" y="212" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">5%</text>
+          <text x="690" y="212" fontFamily="var(--font-body)" fontSize="10" fill="#15803D" fontWeight="600">5%</text>
 
           {/* Warning note */}
           <rect x="395" y="90" width="270" height="44" rx="8" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="1" />
-          <text x="530" y="110" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600">Steeper than 1:20?</text>
-          <text x="530" y="126" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C">It{'\u2019'}s a ramp {'\u2014'} needs handrails + landings</text>
+          <text x="530" y="110" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C" fontWeight="600">Steeper than 1:20?</text>
+          <text x="530" y="126" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C">It{'\u2019'}s a ramp {'\u2014'} needs handrails + landings</text>
 
           <Dots callouts={SLOPE_CALLOUTS} active={slopeActive} toggle={toggleSlope} />
-          <text x="20" y="350" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <text x="20" y="350" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{slopeC ? `Showing: ${slopeC.label}` : ''}</div>
       <CalloutPanel callout={slopeC} onClose={() => setSlopeActive(null)} panelRef={slopeRef} />
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
-        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Width & Slope</p>
+        <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Width & Slope</p>
         <KeyFact color="#C2410C" number={d('36', '915')}>Minimum clear width of any walking surface</KeyFact>
         <KeyFact color="#15803D" number="1:20">Maximum running slope (5%) before it becomes a ramp</KeyFact>
         <KeyFact color="#2563EB" number="1:48">Maximum cross slope (about 2%) to prevent wheelchair drift</KeyFact>
@@ -175,7 +175,7 @@ export default function WalkingSurfaceDiagram() {
 
       {/* DIAGRAM 2: Surface & Level Changes */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '40px', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Surface & Level Changes</h3>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Surface & Level Changes</h3>
       </div>
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <svg viewBox="0 0 720 320" role="img" aria-labelledby="surf-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
@@ -183,47 +183,47 @@ export default function WalkingSurfaceDiagram() {
           <rect width="720" height="320" fill="var(--page-bg-subtle)" />
 
           {/* LEFT: Surface */}
-          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">The surface itself</text>
+          <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">The surface itself</text>
 
           <rect x="40" y="70" width="280" height="50" rx="8" fill="#7C3AED" opacity="0.04" stroke="#7C3AED" strokeWidth="1.5" />
-          <text x="180" y="92" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#5B21B6" fontWeight="600">Firm + Stable + Slip-resistant</text>
-          <text x="180" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6">no loose gravel, deep carpet, or slick tile</text>
+          <text x="180" y="92" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#5B21B6" fontWeight="600">Firm + Stable + Slip-resistant</text>
+          <text x="180" y="108" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6">no loose gravel, deep carpet, or slick tile</text>
 
           <rect x="40" y="135" width="280" height="50" rx="8" fill="#7C3AED" opacity="0.04" stroke="#7C3AED" strokeWidth="1.5" />
-          <text x="180" y="157" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#5B21B6" fontWeight="600">Carpet: {d('\u00bd', '13')} max pile height</text>
-          <text x="180" y="173" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6">must be securely attached, firm backing</text>
+          <text x="180" y="157" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#5B21B6" fontWeight="600">Carpet: {d('\u00bd', '13')} max pile height</text>
+          <text x="180" y="173" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6">must be securely attached, firm backing</text>
 
           <rect x="40" y="200" width="280" height="50" rx="8" fill="#7C3AED" opacity="0.04" stroke="#7C3AED" strokeWidth="1.5" />
-          <text x="180" y="222" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#5B21B6" fontWeight="600">Grate openings: {d('\u00bd', '13')} max gap</text>
-          <text x="180" y="238" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#5B21B6">long slots run perpendicular to travel</text>
+          <text x="180" y="222" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#5B21B6" fontWeight="600">Grate openings: {d('\u00bd', '13')} max gap</text>
+          <text x="180" y="238" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6">long slots run perpendicular to travel</text>
 
           {/* DIVIDER */}
           <line x1="360" y1="20" x2="360" y2="300" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
 
           {/* RIGHT: Level changes */}
-          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Bumps and edges</text>
+          <text x="540" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Bumps and edges</text>
 
           {/* Three tiers of level changes */}
           <rect x="400" y="70" width="280" height="55" rx="8" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="1.5" />
-          <text x="540" y="90" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#14532D" fontWeight="600">{'\u2264'} {d('\u00bc', '6')} {'\u2014'} OK as-is</text>
-          <text x="540" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#14532D">vertical edge is fine</text>
+          <text x="540" y="90" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">{'\u2264'} {d('\u00bc', '6')} {'\u2014'} OK as-is</text>
+          <text x="540" y="108" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#14532D">vertical edge is fine</text>
 
           <rect x="400" y="140" width="280" height="55" rx="8" fill="#B45309" opacity="0.04" stroke="#B45309" strokeWidth="1.5" />
-          <text x="540" y="160" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#78350F" fontWeight="600">{d('\u00bc', '6')} to {d('\u00bd', '13')} {'\u2014'} must bevel</text>
-          <text x="540" y="178" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#78350F">slope the edge at 1:2 max</text>
+          <text x="540" y="160" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#78350F" fontWeight="600">{d('\u00bc', '6')} to {d('\u00bd', '13')} {'\u2014'} must bevel</text>
+          <text x="540" y="178" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#78350F">slope the edge at 1:2 max</text>
 
           <rect x="400" y="210" width="280" height="55" rx="8" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" />
-          <text x="540" y="230" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fill="#7C2D12" fontWeight="600">{'\u003e'} {d('\u00bd', '13')} {'\u2014'} needs a ramp</text>
-          <text x="540" y="248" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C2D12">full ramp requirements apply ({'\u00a7'}405)</text>
+          <text x="540" y="230" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#7C2D12" fontWeight="600">{'\u003e'} {d('\u00bd', '13')} {'\u2014'} needs a ramp</text>
+          <text x="540" y="248" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">full ramp requirements apply ({'\u00a7'}405)</text>
 
           <Dots callouts={SURFACE_CALLOUTS} active={surfActive} toggle={toggleSurf} />
-          <text x="20" y="308" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
+          <text x="20" y="308" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
         </svg>
       </div>
       <div aria-live="polite" className="sr-only">{surfC ? `Showing: ${surfC.label}` : ''}</div>
       <CalloutPanel callout={surfC} onClose={() => setSurfActive(null)} panelRef={surfRef} />
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
-        <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Surface & Level Changes</p>
+        <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Surface & Level Changes</p>
         <KeyFact color="#7C3AED" number="3 rules">Firm, stable, and slip-resistant {'\u2014'} every walking surface</KeyFact>
         <KeyFact color="#15803D" number={`\u2264 ${d('\u00bc', '6')}`}>Small level changes OK as vertical edges</KeyFact>
         <KeyFact color="#B45309" number={`${d('\u00bc', '6')}\u2013${d('\u00bd', '13')}`}>Must be beveled (angled at 1:2 max slope)</KeyFact>

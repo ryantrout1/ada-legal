@@ -38,13 +38,13 @@ export default function ChapterNavigator() {
       }}
     >
       <h3 id="ch-nav-heading" style={{
-        fontFamily: 'Fraunces, serif', fontSize: '1.125rem', fontWeight: 700,
+        fontFamily: 'var(--font-display)', fontSize: '1.125rem', fontWeight: 700,
         color: 'var(--heading)', margin: '0 0 6px'
       }}>
         Navigate by Chapter
       </h3>
       <p style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
+        fontFamily: 'var(--font-body)', fontSize: '0.9rem',
         color: 'var(--body)', lineHeight: 1.6, margin: '0 0 20px'
       }}>
         The 2010 Standards are organized into 10 chapters. Each chapter page
@@ -72,19 +72,19 @@ export default function ChapterNavigator() {
                 width: '34px', height: '34px', background: 'var(--card-bg)',
                 border: '1px solid var(--border)', borderRadius: '8px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: 'Fraunces, serif', fontSize: '0.8rem', fontWeight: 700,
+                fontFamily: 'var(--font-display)', fontSize: '0.8rem', fontWeight: 700,
                 color: 'var(--accent)', flexShrink: 0
               }}>
                 {ch.num}
               </span>
               <span style={{
-                flex: 1, fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
+                flex: 1, fontFamily: 'var(--font-body)', fontSize: '0.9rem',
                 fontWeight: 500, color: 'var(--heading)'
               }}>
                 {ch.name}
               </span>
               <span style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem',
+                fontFamily: 'var(--font-body)', fontSize: '0.7rem',
                 color: 'var(--body-secondary)', whiteSpace: 'nowrap', flexShrink: 0
               }}>
                 {ch.range}

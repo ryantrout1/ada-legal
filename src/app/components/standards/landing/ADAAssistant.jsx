@@ -265,7 +265,7 @@ export default function ADAAssistant() {
             autoComplete="off"
             style={{
               width: '100%', padding: '14px 44px 14px 44px',
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+              fontFamily: 'var(--font-body)', fontSize: '0.9375rem',
               background: 'rgba(255,255,255,0.06)', color: 'var(--dark-heading)',
               border: '1px solid rgba(255,255,255,0.12)',
               borderRadius: '12px', outline: 'none',
@@ -303,7 +303,7 @@ export default function ADAAssistant() {
                 background: 'rgba(255,255,255,0.06)',
                 border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '100px', padding: '6px 14px', minHeight: '44px',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem',
+                fontFamily: 'var(--font-body)', fontSize: '0.78rem',
                 color: 'var(--dark-body)', cursor: 'pointer',
                 transition: 'all 0.2s', lineHeight: 1.5
               }}
@@ -336,7 +336,7 @@ export default function ADAAssistant() {
         >
           <div style={{
             padding: '10px 16px 6px',
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+            fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700,
             letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--body-secondary)'
           }}>
             {results.length} result{results.length !== 1 ? 's' : ''}
@@ -366,14 +366,14 @@ export default function ADAAssistant() {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '2px' }}>
                     <span style={{
-                      fontFamily: 'Fraunces, serif', fontSize: '0.95rem', fontWeight: 700,
+                      fontFamily: 'var(--font-display)', fontSize: '0.95rem', fontWeight: 700,
                       color: 'var(--heading)'
                     }}>
                       {item.title}
                     </span>
                     {item.section && (
                       <span style={{
-                        fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
+                        fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 600,
                         color: 'var(--section-label)', background: 'var(--card-bg-tinted)',
                         padding: '1px 6px', borderRadius: '4px'
                       }}>
@@ -382,7 +382,7 @@ export default function ADAAssistant() {
                     )}
                     {item.diagram && (
                       <span style={{
-                        fontFamily: 'Manrope, sans-serif', fontSize: '0.65rem', fontWeight: 600,
+                        fontFamily: 'var(--font-body)', fontSize: '0.65rem', fontWeight: 600,
                         color: cat.text, background: cat.bg, border: `1px solid ${cat.border}`,
                         padding: '1px 6px', borderRadius: '4px',
                         display: 'inline-flex', alignItems: 'center', gap: '3px'
@@ -392,13 +392,13 @@ export default function ADAAssistant() {
                     )}
                   </div>
                   <p style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+                    fontFamily: 'var(--font-body)', fontSize: '0.8rem',
                     color: 'var(--body)', margin: 0, lineHeight: 1.5
                   }}>
                     {item.desc}
                   </p>
                   <span style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.65rem', fontWeight: 600,
+                    fontFamily: 'var(--font-body)', fontSize: '0.65rem', fontWeight: 600,
                     color: cat.text, marginTop: '2px', display: 'inline-block'
                   }}>
                     {item.category}
@@ -424,13 +424,13 @@ export default function ADAAssistant() {
           >
             <div>
               <span style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', fontWeight: 600,
+                fontFamily: 'var(--font-body)', fontSize: '0.85rem', fontWeight: 600,
                 color: 'var(--section-label)'
               }}>
                 Experienced a violation?
               </span>
               <span style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+                fontFamily: 'var(--font-body)', fontSize: '0.8rem',
                 color: 'var(--body-secondary)', marginLeft: '6px'
               }}>
                 Report it — we'll connect you with an attorney.
@@ -448,7 +448,7 @@ export default function ADAAssistant() {
           borderRadius: '14px', padding: '20px', textAlign: 'center',
           boxShadow: '0 8px 30px rgba(0,0,0,0.15)'
         }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: 0 }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', margin: 0 }}>
             No results for "{query}" — try different keywords or browse the categories below.
           </p>
         </div>

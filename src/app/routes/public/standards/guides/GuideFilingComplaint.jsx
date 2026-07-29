@@ -152,7 +152,7 @@ export default function GuideFilingComplaint() {
                   alignItems: 'flex-start'
                 }}>
                   <span style={{
-                    fontFamily: 'Fraunces, serif', fontSize: '0.9rem', fontWeight: 700,
+                    fontFamily: 'var(--font-display)', fontSize: '0.9rem', fontWeight: 700,
                     color: 'var(--accent)', background: 'var(--card-bg-tinted)',
                     padding: '4px 10px', borderRadius: '6px', flexShrink: 0,
                     minWidth: '28px', textAlign: 'center'
@@ -299,7 +299,7 @@ export default function GuideFilingComplaint() {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: '8px',
                   background: 'var(--accent)', color: 'var(--page-bg)',
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
+                  fontFamily: 'var(--font-body)', fontSize: '0.9375rem', fontWeight: 600,
                   padding: '12px 24px', borderRadius: '10px',
                   textDecoration: 'none', minHeight: '44px'
                 }}

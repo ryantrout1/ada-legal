@@ -75,7 +75,7 @@ function Message({ role, content, isLoading, adaUniversalCta }) {
           background: role === 'user' ? 'var(--accent)' : 'var(--page-bg-subtle)',
           color: role === 'user' ? 'var(--btn-text)' : 'var(--heading)',
           border: role === 'user' ? 'none' : '1px solid var(--border)',
-          fontFamily: 'Manrope, sans-serif',
+          fontFamily: 'var(--font-body)',
           fontSize: '0.9rem',
           lineHeight: 1.7,
           wordBreak: 'break-word',
@@ -331,13 +331,13 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           </div>
           <div style={{ textAlign: 'left', flex: 1 }}>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 700,
+              fontFamily: 'var(--font-body)', fontSize: '0.9rem', fontWeight: 700,
               color: 'var(--heading)', margin: '0 0 2px',
             }}>
               Have a question about this standard?
             </p>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem',
+              fontFamily: 'var(--font-body)', fontSize: '0.75rem',
               color: 'var(--body-secondary)', margin: 0,
             }}>
               Ask in plain language — we'll help you understand what the law says.
@@ -375,7 +375,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <MessageCircle size={18} style={{ color: 'var(--accent-light)' }} aria-hidden="true" />
           <span style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 700,
+            fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 700,
             color: 'var(--heading)',
           }}>
             Ask About This Standard
@@ -428,7 +428,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           /* Welcome + suggested questions */
           <div>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+              fontFamily: 'var(--font-body)', fontSize: '0.875rem',
               color: 'var(--body)', lineHeight: 1.7, margin: '0 0 16px',
             }}>
               Ask anything about the standards on this page. You can type your question or tap one below.
@@ -445,7 +445,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
                     padding: '12px 16px', borderRadius: '10px',
                     background: 'var(--page-bg-subtle)',
                     border: '1px solid var(--border)',
-                    cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
+                    cursor: 'pointer', fontFamily: 'var(--font-body)',
                     fontSize: '0.875rem', color: 'var(--body)',
                     minHeight: '48px', transition: 'all 0.15s',
                   }}
@@ -480,7 +480,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
         <div role="alert" style={{
           padding: '8px 20px', background: 'var(--card-bg-tinted)',
           borderTop: '1px solid var(--border)',
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--section-label)',
+          fontFamily: 'var(--font-body)', fontSize: '0.8rem', color: 'var(--section-label)',
         }}>
           {error}
         </div>
@@ -515,7 +515,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
           style={{
             flex: 1, padding: '12px 16px',
             borderRadius: '10px', border: '1px solid var(--border)',
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.9rem',
             color: 'var(--heading)', background: 'var(--card-bg)',
             minHeight: '48px', outline: 'none',
           }}
@@ -546,7 +546,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
         borderTop: '1px solid var(--border-lighter)',
       }}>
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem',
+          fontFamily: 'var(--font-body)', fontSize: '0.7rem',
           color: 'var(--body-secondary)', margin: 0, lineHeight: 1.5,
         }}>
           This helper explains ADA standards — it does not provide legal advice. For your specific situation, {adaUniversalCta ? (

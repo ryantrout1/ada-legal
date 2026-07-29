@@ -31,15 +31,27 @@ const CHAPTERS_DIR = resolve(root, 'src/app/routes/public/standards');
 const MANIFEST = resolve(root, 'content-migration/guide-parity/GUIDE_BODY_PARITY.json');
 
 /**
- * The comparison unit: file content with `import` lines removed and
- * whitespace collapsed. Imports are excluded because the port legitimately
- * rewrote every path; everything else must match.
+ * The comparison unit: file content with `import` lines removed, font
+ * declarations normalised away, and whitespace collapsed.
+ *
+ * Imports are excluded because the port legitimately rewrote every path.
+ *
+ * Font declarations are excluded because this guard is about what the
+ * guide SAYS, and a font family is not something it says. It hashed them
+ * until 2026-07-29, so moving the guide onto --font-display and
+ * --font-body — which is what makes the accessibility font switcher work
+ * on these pages at all — read as twelve guides drifting from their
+ * source. A content guard that fires on presentation trains people to
+ * regenerate it without looking, which is how a real drift gets waved
+ * through.
  */
 export function bodyDigest(source: string): string {
   const stripped = source
     .split('\n')
     .filter((l) => !/^\s*import\s/.test(l))
     .join('\n')
+    .replace(/(fontFamily|font-family)\s*:\s*(['"`])[^'"`]*\2/g, '$1:FONT')
+    .replace(/(font-family)\s*:\s*[^;'"`}]+/g, '$1:FONT')
     .replace(/\s+/g, ' ')
     .trim();
   return createHash('md5').update(stripped).digest('hex');

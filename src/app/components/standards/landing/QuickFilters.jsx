@@ -49,7 +49,7 @@ export default function QuickFilters({ activeFilters, onToggle }) {
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <p style={{
-          fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 600,
+          fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 600,
           color: 'var(--heading)', margin: '0 0 16px'
         }}>
           I need information about:

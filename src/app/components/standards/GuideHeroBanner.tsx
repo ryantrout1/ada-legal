@@ -85,7 +85,7 @@ export default function GuideHeroBanner({
               <Link
                 to="/"
                 style={{
-                  fontFamily: 'var(--font-body), Manrope, sans-serif',
+                  fontFamily: 'var(--font-body)',
                   fontSize: '0.8125rem',
                   color: 'var(--dark-muted)',
                   textDecoration: 'none',
@@ -101,7 +101,7 @@ export default function GuideHeroBanner({
               <Link
                 to="/standards-guide"
                 style={{
-                  fontFamily: 'var(--font-body), Manrope, sans-serif',
+                  fontFamily: 'var(--font-body)',
                   fontSize: '0.8125rem',
                   color: 'var(--dark-muted)',
                   textDecoration: 'none',
@@ -117,7 +117,7 @@ export default function GuideHeroBanner({
               <span
                 aria-current="page"
                 style={{
-                  fontFamily: 'var(--font-body), Manrope, sans-serif',
+                  fontFamily: 'var(--font-body)',
                   fontSize: '0.8125rem',
                   color: 'var(--dark-body)',
                 }}
@@ -134,7 +134,7 @@ export default function GuideHeroBanner({
             display: 'inline-block',
             background: badgeColor || 'var(--accent)',
             color: 'var(--dark-heading)',
-            fontFamily: 'var(--font-body), Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.7rem',
             fontWeight: 700,
             letterSpacing: '0.08em',
@@ -151,7 +151,7 @@ export default function GuideHeroBanner({
         <h1
           id="guide-page-heading"
           style={{
-            fontFamily: 'var(--font-display), Fraunces, serif',
+            fontFamily: 'var(--font-display)',
             fontSize: 'clamp(1.75rem, 3vw, 2.25rem)',
             fontWeight: 700,
             lineHeight: 1.15,

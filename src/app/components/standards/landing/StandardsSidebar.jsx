@@ -25,7 +25,7 @@ export default function StandardsSidebar({ activeId }) {
   return (
     <nav aria-label="Resource categories" className="sg-sidebar">
       <p style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+        fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700,
         letterSpacing: '0.12em', textTransform: 'uppercase',
         color: 'var(--body)', margin: '0 0 16px', paddingLeft: '16px'
       }}>
@@ -48,7 +48,7 @@ export default function StandardsSidebar({ activeId }) {
                 background: isActive ? 'var(--card-bg-tinted)' : 'transparent',
                 color: isActive ? 'var(--section-label)' : 'var(--body)',
                 textDecoration: 'none',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem', fontWeight: 500,
+                fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 500,
                 borderRadius: '0 6px 6px 0',
                 minHeight: '44px', boxSizing: 'border-box'
               }}

@@ -40,7 +40,7 @@ export default function ResourceCard({ card }) {
             width: '6px', height: '6px', borderRadius: '50%', background: dotColor
           }} />
           <span style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+            fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700,
             textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--section-label)'
           }}>
             {type}
@@ -51,7 +51,7 @@ export default function ResourceCard({ card }) {
 
       {/* Title as stretched link */}
       <h3 style={{
-        fontFamily: 'Fraunces, serif', fontSize: '1.0625rem', fontWeight: 600,
+        fontFamily: 'var(--font-display)', fontSize: '1.0625rem', fontWeight: 600,
         color: 'var(--heading)', margin: '0 0 8px', lineHeight: 1.3
       }}>
         {isInternal && route ? (
@@ -73,7 +73,7 @@ export default function ResourceCard({ card }) {
 
       {/* Description */}
       <p style={{
-        fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
+        fontFamily: 'var(--font-body)', fontSize: '0.9rem',
         color: 'var(--body)', lineHeight: 1.6, margin: 0
       }}>
         {description}
@@ -88,7 +88,7 @@ export default function ResourceCard({ card }) {
           {meta.map((item, i) => (
             <span key={i} style={{
               display: 'inline-flex', alignItems: 'center', gap: '5px',
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)'
+              fontFamily: 'var(--font-body)', fontSize: '0.8rem', color: 'var(--body-secondary)'
             }}>
               {item.warning
                 ? <AlertTriangle size={14} style={{ color: 'var(--section-label)' }} aria-hidden="true" />
@@ -109,7 +109,7 @@ export default function ResourceCard({ card }) {
           {tags.map((tag, i) => (
             <span key={i} style={{
               background: 'var(--border-lighter)', padding: '3px 10px', borderRadius: '100px',
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 600,
+              fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 600,
               color: 'var(--body)'
             }}>
               {tag}

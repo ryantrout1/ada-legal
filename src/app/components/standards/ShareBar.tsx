@@ -161,7 +161,7 @@ export default function ShareBar() {
     >
       <span
         style={{
-          fontFamily: 'var(--font-body), Manrope, sans-serif',
+          fontFamily: 'var(--font-body)',
           fontSize: '0.75rem',
           fontWeight: 600,
           color: 'var(--dark-muted)',
@@ -190,7 +190,7 @@ export default function ShareBar() {
               ? 'var(--accent)'
               : 'rgba(255, 255, 255, 0.08)',
             color: highlight ? 'var(--btn-text)' : 'var(--dark-heading)',
-            fontFamily: 'var(--font-body), Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.8125rem',
             fontWeight: 500,
             cursor: 'pointer',

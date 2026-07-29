@@ -71,13 +71,13 @@ function QuoteCarousel() {
 
       <div role="group" aria-roledescription="slide" aria-label={`Quote ${index + 1} of ${total}`}>
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
+          fontFamily: 'var(--font-body)', fontSize: '1rem',
           color: 'var(--dark-body)', lineHeight: 1.6, margin: '0 0 0.75rem', fontStyle: 'italic'
         }}>
           "{q.text}"
         </p>
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
+          fontFamily: 'var(--font-body)', fontSize: '0.85rem',
           color: 'var(--dark-muted)', margin: 0
         }}>
           — {q.attribution}
@@ -201,7 +201,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
             <div aria-hidden="true" style={{ width: '32px', height: '2px', background: 'var(--accent)' }} />
             <span style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
+              fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700,
               letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--dark-label)'
             }}>
               ADA Standards Guide
@@ -209,7 +209,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
           </div>
 
           <h1 id="sg-heading" style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: 'clamp(2.1rem, 4vw, 3.4rem)',
+            fontFamily: 'var(--font-body)', fontSize: 'clamp(2.1rem, 4vw, 3.4rem)',
             fontWeight: 800, letterSpacing: '-0.01em', lineHeight: 1.1,
             color: 'var(--dark-heading)', margin: '0 0 1.5rem'
           }}>
@@ -218,7 +218,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
           </h1>
 
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '1.125rem',
+            fontFamily: 'var(--font-body)', fontSize: '1.125rem',
             color: 'var(--dark-body-secondary)', lineHeight: 1.7, margin: '0 0 2rem', maxWidth: '520px'
           }}>
             The 2010 ADA Standards for Accessible Design — the federal rules for
@@ -240,26 +240,26 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
               <Shield size={16} style={{ color: 'var(--dark-label)' }} aria-hidden="true" />
               <span style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
+                fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 700,
                 letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--dark-label)'
               }}>
                 Official Source
               </span>
             </div>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '2.5rem', fontWeight: 800,
+              fontFamily: 'var(--font-body)', fontSize: '2.5rem', fontWeight: 800,
               letterSpacing: '-0.02em', color: 'var(--accent-light)', margin: '0 0 0.5rem'
             }}>
               118
             </p>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '1.125rem', fontWeight: 700,
+              fontFamily: 'var(--font-body)', fontSize: '1.125rem', fontWeight: 700,
               color: 'var(--dark-heading)', margin: '0 0 0.75rem', lineHeight: 1.3
             }}>
               Sections of the 2010 ADA Standards for Accessible Design
             </p>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
+              fontFamily: 'var(--font-body)', fontSize: '0.9rem',
               color: 'var(--dark-body-secondary)', lineHeight: 1.6, margin: 0
             }}>
               The federal built-environment standard, reorganized into searchable

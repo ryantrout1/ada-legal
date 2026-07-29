@@ -24,7 +24,7 @@ export default function BreadcrumbAndInfo() {
         <nav aria-label="Breadcrumb" style={{ marginBottom: '24px' }}>
           <ol style={{
             listStyle: 'none', display: 'flex', alignItems: 'center', gap: '8px',
-            margin: 0, padding: 0, fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem'
+            margin: 0, padding: 0, fontFamily: 'var(--font-body)', fontSize: '0.875rem'
           }}>
             <li>
               <Link to={b44PageToRoute('HomeV2') ?? '/'} className="sg-cta-link" style={{
@@ -65,13 +65,13 @@ export default function BreadcrumbAndInfo() {
           </div>
           <div>
             <p style={{
-              fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700,
+              fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700,
               color: 'var(--heading)', margin: '0 0 6px'
             }}>
               About This Guide
             </p>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem',
+              fontFamily: 'var(--font-body)', fontSize: '0.9375rem',
               color: 'var(--body)', lineHeight: 1.6, margin: 0
             }}>
               This guide presents the official 2010 ADA Standards for Accessible

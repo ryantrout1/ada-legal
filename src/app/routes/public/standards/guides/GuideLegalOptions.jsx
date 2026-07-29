@@ -30,7 +30,7 @@ function ComparisonTable() {
           {headers.map((h, i) => (
             <div key={i} style={{
               padding: '12px 14px',
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 700,
+              fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 700,
               color: i === 0 ? 'transparent' : 'white',
               letterSpacing: '0.02em'
             }}>{h}</div>
@@ -50,7 +50,7 @@ function ComparisonTable() {
             {keys.map((k, ci) => (
               <div key={ci} style={{
                 padding: '10px 14px',
-                fontFamily: 'Manrope, sans-serif',
+                fontFamily: 'var(--font-body)',
                 fontSize: ci === 0 ? '0.8rem' : '0.8rem',
                 fontWeight: ci === 0 ? 700 : 500,
                 color: ci === 0 ? 'var(--heading)' : 'var(--body)',
@@ -472,7 +472,7 @@ export default function GuideLegalOptions() {
                   display: 'flex', gap: '14px', alignItems: 'flex-start'
                 }}>
                   <span style={{
-                    fontFamily: 'Fraunces, serif', fontSize: '1.1rem',
+                    fontFamily: 'var(--font-display)', fontSize: '1.1rem',
                     fontWeight: 700, color: 'var(--accent)', flexShrink: 0, width: '24px',
                     marginTop: '2px'
                   }}>→</span>

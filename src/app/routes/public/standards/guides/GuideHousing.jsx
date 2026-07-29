@@ -120,7 +120,7 @@ export default function GuideHousing() {
                   alignItems: 'flex-start'
                 }}>
                   <span style={{
-                    fontFamily: 'Fraunces, serif', fontSize: '1rem',
+                    fontFamily: 'var(--font-display)', fontSize: '1rem',
                     fontWeight: 700, color: 'var(--accent)', flexShrink: 0, width: '24px'
                   }}>{i + 1}</span>
                   <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{item}</p>
@@ -283,7 +283,7 @@ export default function GuideHousing() {
                   alignItems: 'flex-start'
                 }}>
                   <span style={{
-                    fontFamily: 'Fraunces, serif', fontSize: '1.25rem',
+                    fontFamily: 'var(--font-display)', fontSize: '1.25rem',
                     fontWeight: 700, color: 'var(--accent)', flexShrink: 0, width: '28px'
                   }}>{item.num}</span>
                   <div>

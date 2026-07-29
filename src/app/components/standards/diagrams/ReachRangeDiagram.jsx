@@ -80,13 +80,13 @@ function CalloutPanel({ callout, onClose, panelRef }) {
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             width: '26px', height: '26px', borderRadius: '50%',
             background: callout.color, color: 'white',
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700
+            fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700
           }}>{callout.id}</span>
-          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>
             {callout.label}
           </span>
           <span style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: 600,
+            fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
             color: callout.color, background: `${callout.color}15`,
             padding: '2px 8px', borderRadius: '4px'
           }}>{callout.section}</span>
@@ -94,13 +94,13 @@ function CalloutPanel({ callout, onClose, panelRef }) {
         <button onClick={onClose} aria-label="Close panel"
           style={{
             background: 'none', border: '1px solid var(--border)', borderRadius: '8px',
-            padding: '8px 16px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif',
+            padding: '8px 16px', cursor: 'pointer', fontFamily: 'var(--font-body)',
             fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px'
           }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
       </div>
       <div className="guide-two-col" style={{ padding: '20px', gap: '24px', margin: 0 }}>
         <div style={{ flex: '1 1 55%', minWidth: 0 }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9375rem', color: 'var(--body)', lineHeight: 1.75, margin: 0 }}>
             {callout.plain}
           </p>
         </div>
@@ -110,12 +110,12 @@ function CalloutPanel({ callout, onClose, panelRef }) {
             borderRadius: '0 10px 10px 0', padding: '16px 18px'
           }}>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.7rem', fontWeight: 700,
+              fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700,
               letterSpacing: '0.1em', textTransform: 'uppercase',
               color: 'var(--body-secondary)', margin: '0 0 8px'
             }}>Official Standard — {parseCitations(callout.citation)}</p>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.875rem',
+              fontFamily: 'var(--font-body)', fontSize: '0.875rem',
               color: 'var(--body)', lineHeight: 1.7, margin: 0, fontStyle: 'italic'
             }}>{parseCitations(callout.legal)}</p>
           </div>
@@ -131,11 +131,11 @@ function KeyFact({ color, number, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
       <span style={{
-        background: color, color: 'white', fontFamily: 'Manrope, sans-serif',
+        background: color, color: 'white', fontFamily: 'var(--font-body)',
         fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center',
         padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
       }}>{number}</span>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>
+      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>
         {children}
       </span>
     </div>
@@ -161,7 +161,7 @@ function CalloutDots({ callouts, active, toggle }) {
       )}
       <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'}
         stroke={c.color} strokeWidth="2" />
-      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="Manrope, sans-serif"
+      <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="var(--font-body)"
         fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
       <circle cx={c.x} cy={c.y} r="22" fill="none" stroke="transparent" strokeWidth="2"
         className="reach-focus-ring" />
@@ -239,13 +239,13 @@ export default function ReachRangeDiagram() {
 
   const unitToggle = (
     <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-      <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
+      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', color: 'var(--body-secondary)' }}>Units:</span>
       {['Imperial', 'Metric'].map(u => {
         const isA = u === 'Metric' ? metric : !metric;
         return (
           <button key={u} onClick={() => setMetric(u === 'Metric')} aria-pressed={isA}
             style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.75rem', fontWeight: isA ? 700 : 500,
+              fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: isA ? 700 : 500,
               padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)',
               background: isA ? 'var(--heading)' : 'var(--card-bg)',
               color: isA ? 'var(--page-bg)' : 'var(--body)',
@@ -266,7 +266,7 @@ export default function ReachRangeDiagram() {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         marginBottom: '8px', flexWrap: 'wrap', gap: '8px'
       }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
           Forward Reach
         </h3>
         {unitToggle}
@@ -284,13 +284,13 @@ export default function ReachRangeDiagram() {
           <rect width="720" height="380" fill="var(--page-bg-subtle)" />
 
           {/* ─── LEFT: Nothing in the way ─── */}
-          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
+          <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
             Nothing in the way
           </text>
 
           {/* Wall */}
           <rect x="258" y="60" width="10" height="268" fill="#CBD5E1" rx="2" />
-          <text x="250" y="55" textAnchor="end" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
+          <text x="250" y="55" textAnchor="end" fontFamily="var(--font-body)" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
 
           {/* Reachable zone */}
           <rect x="70" y="96" width="188" height="200" fill="#C2410C" opacity="0.05" rx="6" stroke="#C2410C" strokeWidth="1.5" />
@@ -298,14 +298,14 @@ export default function ReachRangeDiagram() {
           {/* 48" max line */}
           <line x1="60" y1="96" x2="270" y2="96" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="4 3" />
           <rect x="8" y="86" width="50" height="22" rx="6" fill="#C2410C" />
-          <text x="33" y="101" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="white">{d('48', '1220')}</text>
-          <text x="33" y="122" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600">max high</text>
+          <text x="33" y="101" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="white">{d('48', '1220')}</text>
+          <text x="33" y="122" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C" fontWeight="600">max high</text>
 
           {/* 15" min line */}
           <line x1="60" y1="296" x2="270" y2="296" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="4 3" />
           <rect x="8" y="286" width="50" height="22" rx="6" fill="#C2410C" />
-          <text x="33" y="301" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="white">{d('15', '380')}</text>
-          <text x="33" y="322" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#C2410C" fontWeight="600">min low</text>
+          <text x="33" y="301" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="white">{d('15', '380')}</text>
+          <text x="33" y="322" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C" fontWeight="600">min low</text>
 
           {/* Wheelchair */}
           <WheelchairSide x={110} y={180} armToX={65} armToY={-20} />
@@ -319,7 +319,7 @@ export default function ReachRangeDiagram() {
 
 
           {/* ─── RIGHT: Reaching over a counter ─── */}
-          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
+          <text x="540" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
             Reaching over a counter
           </text>
 
@@ -328,14 +328,14 @@ export default function ReachRangeDiagram() {
 
           {/* Counter */}
           <rect x="540" y="195" width="100" height="10" rx="2" fill="#94A3B8" stroke="#64748B" strokeWidth="1.5" />
-          <text x="590" y="190" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="600">counter surface</text>
+          <text x="590" y="190" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="600">counter surface</text>
 
           {/* Counter depth */}
           <line x1="540" y1="218" x2="640" y2="218" stroke="#15803D" strokeWidth="1.5" />
           <line x1="540" y1="211" x2="540" y2="225" stroke="#15803D" strokeWidth="1.5" />
           <line x1="640" y1="211" x2="640" y2="225" stroke="#15803D" strokeWidth="1.5" />
           <rect x="557" y="224" width="66" height="20" rx="6" fill="#15803D" />
-          <text x="590" y="238" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('25', '635')} deep</text>
+          <text x="590" y="238" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('25', '635')} deep</text>
 
           {/* Reach zone */}
           <rect x="460" y="96" width="178" height="98" fill="#15803D" opacity="0.04" rx="6" stroke="#15803D" strokeWidth="1.5" />
@@ -343,10 +343,10 @@ export default function ReachRangeDiagram() {
           {/* 44-48" max */}
           <line x1="450" y1="96" x2="650" y2="96" stroke="#15803D" strokeWidth="1.5" strokeDasharray="4 3" />
           <rect x="654" y="82" width="62" height="28" rx="6" fill="#15803D" />
-          <text x="685" y="100" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('44\u201348', '1120')}</text>
-          <text x="685" y="124" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#15803D" fontWeight="600">max high</text>
-          <text x="685" y="138" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8">(depends on</text>
-          <text x="685" y="150" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#94A3B8">counter depth)</text>
+          <text x="685" y="100" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('44\u201348', '1120')}</text>
+          <text x="685" y="124" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#15803D" fontWeight="600">max high</text>
+          <text x="685" y="138" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#94A3B8">(depends on</text>
+          <text x="685" y="150" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#94A3B8">counter depth)</text>
 
           {/* Wheelchair */}
           <WheelchairSide x={440} y={180} armToX={80} armToY={-15} />
@@ -357,7 +357,7 @@ export default function ReachRangeDiagram() {
           {/* Callout dots */}
           <CalloutDots callouts={FWD_CALLOUTS} active={fwdActive} toggle={toggleFwd} />
 
-          <text x="20" y="365" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">
+          <text x="20" y="365" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">
             Click or tap numbered callouts for details
           </text>
         </svg>
@@ -375,7 +375,7 @@ export default function ReachRangeDiagram() {
         borderRadius: '12px', padding: '20px 24px', marginTop: '12px'
       }}>
         <p style={{
-          fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700,
+          fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700,
           color: 'var(--heading)', margin: '0 0 12px'
         }}>Key numbers {'\u2014'} Forward Reach</p>
         <KeyFact color="#C2410C" number={`${d('15', '380')} \u2013 ${d('48', '1220')}`}>
@@ -397,7 +397,7 @@ export default function ReachRangeDiagram() {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         marginTop: '40px', marginBottom: '8px', flexWrap: 'wrap', gap: '8px'
       }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
           Side Reach
         </h3>
       </div>
@@ -414,7 +414,7 @@ export default function ReachRangeDiagram() {
           <rect width="720" height="380" fill="var(--page-bg-subtle)" />
 
           {/* ─── LEFT: Nothing in the way ─── */}
-          <text x="170" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
+          <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
             Nothing in the way
           </text>
 
@@ -424,8 +424,8 @@ export default function ReachRangeDiagram() {
           {/* Light switch */}
           <rect x="78" y="178" width="14" height="22" rx="3" fill="white" stroke="#94A3B8" strokeWidth="1.5" />
           <rect x="83" y="184" width="4" height="10" rx="1" fill="#94A3B8" />
-          <text x="85" y="172" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="500">light</text>
-          <text x="85" y="160" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="500">switch</text>
+          <text x="85" y="172" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="500">light</text>
+          <text x="85" y="160" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="500">switch</text>
 
           {/* Reach zone */}
           <rect x="78" y="96" width="70" height="200" fill="#2563EB" opacity="0.05" rx="6" stroke="#2563EB" strokeWidth="1.5" />
@@ -433,14 +433,14 @@ export default function ReachRangeDiagram() {
           {/* 48" max */}
           <line x1="70" y1="96" x2="270" y2="96" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="4 3" />
           <rect x="272" y="86" width="50" height="22" rx="6" fill="#2563EB" />
-          <text x="297" y="101" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="white">{d('48', '1220')}</text>
-          <text x="297" y="122" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#2563EB" fontWeight="600">max high</text>
+          <text x="297" y="101" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="white">{d('48', '1220')}</text>
+          <text x="297" y="122" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#2563EB" fontWeight="600">max high</text>
 
           {/* 15" min */}
           <line x1="70" y1="296" x2="270" y2="296" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="4 3" />
           <rect x="272" y="286" width="50" height="22" rx="6" fill="#2563EB" />
-          <text x="297" y="301" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="11" fontWeight="700" fill="white">{d('15', '380')}</text>
-          <text x="297" y="322" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#2563EB" fontWeight="600">min low</text>
+          <text x="297" y="301" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="white">{d('15', '380')}</text>
+          <text x="297" y="322" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#2563EB" fontWeight="600">min low</text>
 
           {/* Person front view */}
           <WheelchairFront x={140} y={140} armToX={-30} armToY={20} dotColor="#2563EB" />
@@ -454,7 +454,7 @@ export default function ReachRangeDiagram() {
 
 
           {/* ─── RIGHT: Reaching over something ─── */}
-          <text x="540" y="30" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
+          <text x="540" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">
             Reaching over something
           </text>
 
@@ -463,19 +463,19 @@ export default function ReachRangeDiagram() {
 
           {/* Cabinet */}
           <rect x="458" y="210" width="60" height="118" rx="3" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="488" y="275" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#64748B" fontWeight="500">cabinet</text>
+          <text x="488" y="275" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="500">cabinet</text>
 
           {/* Obstruction height */}
           <rect x="390" y="200" width="54" height="22" rx="6" fill="#7C3AED" />
-          <text x="417" y="215" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('34', '865')}</text>
-          <text x="417" y="236" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C3AED" fontWeight="600">max height</text>
+          <text x="417" y="215" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('34', '865')}</text>
+          <text x="417" y="236" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C3AED" fontWeight="600">max height</text>
 
           {/* Obstruction depth */}
           <line x1="458" y1="340" x2="518" y2="340" stroke="#15803D" strokeWidth="1.5" />
           <line x1="458" y1="333" x2="458" y2="347" stroke="#15803D" strokeWidth="1.5" />
           <line x1="518" y1="333" x2="518" y2="347" stroke="#15803D" strokeWidth="1.5" />
           <rect x="460" y="348" width="56" height="18" rx="5" fill="#15803D" />
-          <text x="488" y="361" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('24', '610')} deep</text>
+          <text x="488" y="361" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('24', '610')} deep</text>
 
           {/* Reach zone */}
           <rect x="458" y="104" width="60" height="106" fill="#7C3AED" opacity="0.04" rx="6" stroke="#7C3AED" strokeWidth="1.5" />
@@ -483,8 +483,8 @@ export default function ReachRangeDiagram() {
           {/* 46-48" max */}
           <line x1="440" y1="104" x2="650" y2="104" stroke="#7C3AED" strokeWidth="1.5" strokeDasharray="4 3" />
           <rect x="654" y="90" width="62" height="28" rx="6" fill="#7C3AED" />
-          <text x="685" y="108" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fontWeight="700" fill="white">{d('46\u201348', '1170')}</text>
-          <text x="685" y="132" textAnchor="middle" fontFamily="Manrope, sans-serif" fontSize="10" fill="#7C3AED" fontWeight="600">max high</text>
+          <text x="685" y="108" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('46\u201348', '1170')}</text>
+          <text x="685" y="132" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C3AED" fontWeight="600">max high</text>
 
           {/* Person front view */}
           <WheelchairFront x={530} y={140} armToX={-30} armToY={8} dotColor="#7C3AED" />
@@ -495,7 +495,7 @@ export default function ReachRangeDiagram() {
           {/* Callout dots */}
           <CalloutDots callouts={SIDE_CALLOUTS} active={sideActive} toggle={toggleSide} />
 
-          <text x="20" y="365" fontFamily="Manrope, sans-serif" fontSize="10" fill="var(--body-secondary)">
+          <text x="20" y="365" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">
             Click or tap numbered callouts for details
           </text>
         </svg>
@@ -513,7 +513,7 @@ export default function ReachRangeDiagram() {
         borderRadius: '12px', padding: '20px 24px', marginTop: '12px'
       }}>
         <p style={{
-          fontFamily: 'Fraunces, serif', fontSize: '1rem', fontWeight: 700,
+          fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700,
           color: 'var(--heading)', margin: '0 0 12px'
         }}>Key numbers {'\u2014'} Side Reach</p>
         <KeyFact color="#2563EB" number={`${d('15', '380')} \u2013 ${d('48', '1220')}`}>
