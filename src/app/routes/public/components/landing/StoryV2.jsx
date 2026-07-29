@@ -7,13 +7,18 @@ import React from 'react';
  * placeholder until Gina's photo/video is wired in.
  */
 /**
- * Founder photo. Flip STORY_PHOTO_AVAILABLE to true once the file is
- * committed at public/brand/gina-story.png — see the note at the render
- * site. Kept as an explicit constant rather than an onError fallback so
- * the missing-asset state is a deliberate decision, not a runtime accident.
+ * Founder photo. Landed 2026-07-29.
+ *
+ * Cropped to 4:5 at source rather than shipping a landscape original for
+ * the browser to discard two-fifths of — 1.4 MB of PNG became 90 KB of
+ * JPEG, on a page someone may be loading on a phone in a car park.
+ *
+ * The constant stays rather than being inlined: it is what made the
+ * missing-asset state a deliberate decision instead of a broken image,
+ * and the same is true of the next photo that goes in here.
  */
-const STORY_PHOTO_SRC = '/brand/gina-story.png';
-const STORY_PHOTO_AVAILABLE = false;
+const STORY_PHOTO_SRC = '/brand/gina-story.jpg';
+const STORY_PHOTO_AVAILABLE = true;
 
 export default function StoryV2() {
   return (
@@ -43,11 +48,17 @@ export default function StoryV2() {
             position: 'relative', display: 'flex', alignItems: 'flex-end',
           }}>
             {STORY_PHOTO_AVAILABLE && (
+              /* The alt says what is in the picture, not just who. On a
+                 site about access, the description of the founder photo is
+                 not a formality — someone reading this with a screen
+                 reader should get the joke too. */
               <img
                 loading="lazy"
+                width="546"
+                height="683"
                 src={STORY_PHOTO_SRC}
-                alt="Gina Schuh, co-founder of ADA Legal Link, in her wheelchair outdoors"
-                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', display: 'block' }}
+                alt="Gina Schuh outdoors at a picnic table in her wheelchair, a thick stack of lawsuit filings under one arm and a pitchfork in her other hand."
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
               />
             )}
           </div>

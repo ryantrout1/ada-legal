@@ -152,16 +152,39 @@ describe('landing-v2 — accessibility affordances survived', () => {
   });
 });
 
-describe('landing-v2 — the founder photo is an honest empty state', () => {
-  it('does not render a broken image while the asset is missing', () => {
+describe('landing-v2 — the founder photo', () => {
+  it('stays a guarded render, so the next missing asset is not a broken image', () => {
+    // The photo landed 2026-07-29 and the guard stays. It is what turned
+    // "no asset yet" into a deliberate empty state rather than a 404 in a
+    // frame, and the next photo swapped in here gets the same protection.
     const code = readCode(`${LANDING_DIR}/StoryV2.jsx`);
     expect(code).toContain('STORY_PHOTO_AVAILABLE');
-    // Guarded render, not an unconditional <img> pointed at a 404.
     expect(code).toMatch(/STORY_PHOTO_AVAILABLE\s*&&/);
   });
 
   it('points at a local path, not external storage', () => {
+    // Pinned the filename until 2026-07-29, which made changing the format
+    // fail a test that was never about the extension. What matters is that
+    // the founder photo ships from this repo rather than someone's CDN
+    // that can rot or start charging.
     const code = readCode(`${LANDING_DIR}/StoryV2.jsx`);
-    expect(code).toContain("'/brand/gina-story.png'");
+    expect(code).toMatch(/const STORY_PHOTO_SRC = '\/brand\/[^']+'/);
+    expect(code).not.toMatch(/STORY_PHOTO_SRC = '(https?:)?\/\//);
+  });
+
+  it('describes what is in the picture, not just who is in it', () => {
+    // On a site about access, the alt text on the founder photo is not a
+    // formality. Someone reading with a screen reader should get the
+    // lawsuits and the pitchfork too, not just a name.
+    const code = readCode(`${LANDING_DIR}/StoryV2.jsx`);
+    const alt = code.match(/alt="([^"]+)"/)?.[1] ?? '';
+    expect(alt.length, 'alt text is too short to describe anything').toBeGreaterThan(60);
+    expect(alt).toContain('Gina Schuh');
+  });
+
+  it('reserves the space so the text below does not jump when it loads', () => {
+    const code = readCode(`${LANDING_DIR}/StoryV2.jsx`);
+    expect(code).toContain('width="546"');
+    expect(code).toContain('height="683"');
   });
 });
