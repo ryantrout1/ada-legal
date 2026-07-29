@@ -172,10 +172,21 @@ function SectionBlock({
         id={panelId}
         role="region"
         aria-labelledby={headerId}
-        style={{
-          maxHeight: isOpen ? '50000px' : '0px',
-          overflow: 'hidden',
-        }}
+        /*
+         * display, not max-height.
+         *
+         * This was `maxHeight: isOpen ? '50000px' : '0px'` with overflow
+         * hidden. That clips what gets painted, but the diagrams inside a
+         * closed section still counted toward the document's scroll
+         * height — chapter 4 ends at 1791px and the page was 3469px, so
+         * 1678px of nothing sat after the footer. Seven closed sections,
+         * thirteen SVGs.
+         *
+         * Nothing is lost: max-height had no transition on it, so the
+         * open/close was never animated. Only the chevron rotates, and
+         * that still does.
+         */
+        style={{ display: isOpen ? 'block' : 'none' }}
       >
         <div style={{ borderTop: '1px solid var(--border)' }}>
           <div style={{ padding: '24px', background: 'var(--card-bg)' }}>

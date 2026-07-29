@@ -165,3 +165,36 @@ describe('GuideHeroBanner watermark', () => {
     expect(wm).toMatch(/pointerEvents:\s*'none'/);
   });
 });
+
+/**
+ * A closed section must take up no room at all.
+ *
+ * It collapsed with `max-height: 0` and `overflow: hidden` until
+ * 2026-07-29. That clips what gets painted, but the SVG diagrams inside
+ * a closed section still counted toward the document's scroll height.
+ * Chapter 4's content ended at 1791px and the page measured 3469px —
+ * 1678px of nothing after the footer, on every chapter, because every
+ * chapter has diagrams inside collapsed sections.
+ *
+ * Measured in a real browser before and after: seven closed panels,
+ * thirteen SVGs, and hiding them reclaimed exactly the 1678px.
+ *
+ * Nothing was lost in the swap. max-height had no transition on it, so
+ * opening and closing was never animated — only the chevron rotates.
+ *
+ * Ref: /triage — blank space below the footer on chapter pages.
+ */
+describe('a collapsed chapter section occupies nothing', () => {
+  const layout = readCodeAt('src/app/components/standards/ChapterPageLayout.tsx');
+
+  it('collapses with display, not a zero max-height', () => {
+    expect(layout).toContain("display: isOpen ? 'block' : 'none'");
+  });
+
+  it('does not go back to the max-height trick', () => {
+    // The 50000px was the tell: a number that large is only ever there
+    // to defeat a max-height animation that, here, did not exist.
+    expect(layout).not.toContain('50000px');
+    expect(layout).not.toMatch(/maxHeight:\s*isOpen/);
+  });
+});
