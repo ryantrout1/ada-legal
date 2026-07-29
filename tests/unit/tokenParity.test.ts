@@ -643,3 +643,24 @@ describe('accessibility panel selected state', () => {
     expect(panel).toMatch(/rounded border-2 /);
   });
 });
+
+/**
+ * The page grows with its content.
+ *
+ * `html, body, #root { height: 100% }` pins all three to one screen while
+ * PublicLayout's root grows with the page, so every long page had a
+ * one-screen box with its child hanging out of it. The standards guide
+ * showed it worst because those are the longest pages.
+ *
+ * Ref: /triage — blank space below the footer on chapter pages.
+ */
+describe('the page is not capped at one screen', () => {
+  it('gives html, body and #root a minimum height, not a fixed one', () => {
+    const rule = css.match(/html,\s*body,\s*#root\s*\{[^}]*\}/)?.[0] ?? '';
+    expect(rule, 'the base height rule is gone or was renamed').not.toBe('');
+    expect(rule).toContain('min-height: 100%');
+    expect(rule, 'a fixed height caps every long page at one screen').not.toMatch(
+      /[^-]height:\s*100%/,
+    );
+  });
+});

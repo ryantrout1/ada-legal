@@ -132,8 +132,24 @@
 }
 
 /* Base reset and default body style */
+
+/*
+ * min-height, not height.
+ *
+ * This said `height: 100%` until 2026-07-29, which pins all three boxes
+ * to exactly one screen. The app does not want that: PublicLayout's root
+ * is `min-h-screen flex flex-col`, which grows with the page. So on any
+ * page taller than the viewport, #root was a one-screen box with its
+ * child hanging out of it, and the scrollable area no longer matched
+ * anything that was drawn — a screenful of nothing after the footer,
+ * most visible on the standards guide because those are the long pages.
+ *
+ * min-height keeps the only thing `height: 100%` was there for — a short
+ * page still filling the window, so the footer sits at the bottom instead
+ * of floating in the middle — without capping a long one.
+ */
 html, body, #root {
-  height: 100%;
+  min-height: 100%;
 }
 
 /* color-scheme — declares which OS color scheme the page rendering
