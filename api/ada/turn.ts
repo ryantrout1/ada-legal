@@ -54,6 +54,7 @@ import {
   readJsonBody,
   resolveRequestContext,
 } from '../_shared.js';
+import { PUBLIC_ORIGIN } from '../../src/lib/publicOrigin.js';
 
 // A turn can run several tool loops, each with its own model round-trip
 // (assemble prompt, stream, dispatch tools, loop). On the JSON path the
@@ -66,7 +67,7 @@ export const config = { maxDuration: 90 };
 
 // Canonical public host for links emailed to users (the /s/[slug] page
 // lives on the Vercel SPA). Mirrors api/sitemap.ts's SITE_URL.
-const PUBLIC_BASE_URL = 'https://ada.adalegallink.com';
+const PUBLIC_BASE_URL = PUBLIC_ORIGIN;
 
 interface Body {
   session_id?: string;

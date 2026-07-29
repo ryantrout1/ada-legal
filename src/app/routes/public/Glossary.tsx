@@ -17,6 +17,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { Breadcrumbs } from '../../components/Breadcrumbs.js';
 import { getSortedEntries, GLOSSARY } from '../../data/glossary.js';
+import { PUBLIC_ORIGIN } from '../../../lib/publicOrigin.js';
 
 export default function Glossary() {
   const entries = getSortedEntries();
@@ -29,7 +30,7 @@ export default function Glossary() {
           name="description"
           content="Plain-language definitions of acronyms and legal terms used across ADA Legal Link."
         />
-        <link rel="canonical" href="https://ada.adalegallink.com/glossary" />
+        <link rel="canonical" href={`${PUBLIC_ORIGIN}/glossary`} />
       </Helmet>
 
       <section className="max-w-2xl mx-auto px-5 sm:px-8 py-10 sm:py-16">

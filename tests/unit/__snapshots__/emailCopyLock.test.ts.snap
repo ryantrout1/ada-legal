@@ -174,25 +174,25 @@ Session 00000000-0000-4000-8000-000000000111 · generated 2026-04-22T18:00:00.00
 
 exports[`routing emails > admin — general queue lane 1`] = `
 {
-  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A case needs placement</h1><p style="margin:0 0 12px">Case <strong>CASE-0042</strong> routed to the <strong>general_queue</strong> lane and needs placement.</p><p style="margin:24px 0"><a href="https://ada.adalegallink.com/admin" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Open admin</a></p></div>",
+  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A case needs placement</h1><p style="margin:0 0 12px">Case <strong>CASE-0042</strong> routed to the <strong>general_queue</strong> lane and needs placement.</p><p style="margin:24px 0"><a href="https://adalegallink.com/admin" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Open admin</a></p></div>",
   "subject": "New general_queue case — CASE-0042 needs placement",
   "text": "A case needs placement
 
 Case CASE-0042 routed to the general_queue lane and needs placement.
 
-Open admin: https://ada.adalegallink.com/admin",
+Open admin: https://adalegallink.com/admin",
 }
 `;
 
 exports[`routing emails > admin — sourcing lane 1`] = `
 {
-  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A case needs sourcing</h1><p style="margin:0 0 12px">Case <strong>CASE-0042</strong> routed to the <strong>sourcing</strong> lane and needs sourcing.</p><p style="margin:24px 0"><a href="https://ada.adalegallink.com/admin" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Open admin</a></p></div>",
+  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A case needs sourcing</h1><p style="margin:0 0 12px">Case <strong>CASE-0042</strong> routed to the <strong>sourcing</strong> lane and needs sourcing.</p><p style="margin:24px 0"><a href="https://adalegallink.com/admin" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Open admin</a></p></div>",
   "subject": "New sourcing case — CASE-0042 needs sourcing",
   "text": "A case needs sourcing
 
 Case CASE-0042 routed to the sourcing lane and needs sourcing.
 
-Open admin: https://ada.adalegallink.com/admin",
+Open admin: https://adalegallink.com/admin",
 }
 `;
 
@@ -230,25 +230,25 @@ View your summary: https://ada.adalegallink.com/s/s-abcdefghjkmn
 
 exports[`routing emails > firm — a claimant consented 1`] = `
 {
-  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A claimant consented to connect</h1><p style="margin:0 0 12px">Jane Doe has reviewed their summary and consented to share their intake with <strong>Spinal Cord Injury Law Firm</strong> on case <strong>CASE-0042</strong>.</p><p style="margin:0 0 4px;color:#555">Their contact details and intake are in your portal.</p><p style="margin:24px 0"><a href="https://ada.adalegallink.com/portal" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Review in your portal</a></p></div>",
+  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A claimant consented to connect</h1><p style="margin:0 0 12px">Jane Doe has reviewed their summary and consented to share their intake with <strong>Spinal Cord Injury Law Firm</strong> on case <strong>CASE-0042</strong>.</p><p style="margin:0 0 4px;color:#555">Their contact details and intake are in your portal.</p><p style="margin:24px 0"><a href="https://adalegallink.com/portal" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Review in your portal</a></p></div>",
   "subject": "New consented case — CASE-0042",
   "text": "A claimant consented to connect
 
 Jane Doe has reviewed their summary and consented to share their intake with Spinal Cord Injury Law Firm on case CASE-0042.
 
-Their contact details and intake are in your portal: https://ada.adalegallink.com/portal",
+Their contact details and intake are in your portal: https://adalegallink.com/portal",
 }
 `;
 
 exports[`routing emails > firm — claimant name withheld 1`] = `
 {
-  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A claimant consented to connect</h1><p style="margin:0 0 12px">A claimant has reviewed their summary and consented to share their intake with <strong>Spinal Cord Injury Law Firm</strong> on case <strong>CASE-0042</strong>.</p><p style="margin:0 0 4px;color:#555">Their contact details and intake are in your portal.</p><p style="margin:24px 0"><a href="https://ada.adalegallink.com/portal" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Review in your portal</a></p></div>",
+  "html": "<div style="max-width:620px;margin:0 auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5"><h1 style="font-size:20px;margin:0 0 16px">A claimant consented to connect</h1><p style="margin:0 0 12px">A claimant has reviewed their summary and consented to share their intake with <strong>Spinal Cord Injury Law Firm</strong> on case <strong>CASE-0042</strong>.</p><p style="margin:0 0 4px;color:#555">Their contact details and intake are in your portal.</p><p style="margin:24px 0"><a href="https://adalegallink.com/portal" style="display:inline-block;background:#C2410C;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600">Review in your portal</a></p></div>",
   "subject": "New consented case — CASE-0042",
   "text": "A claimant consented to connect
 
 A claimant has reviewed their summary and consented to share their intake with Spinal Cord Injury Law Firm on case CASE-0042.
 
-Their contact details and intake are in your portal: https://ada.adalegallink.com/portal",
+Their contact details and intake are in your portal: https://adalegallink.com/portal",
 }
 `;
 

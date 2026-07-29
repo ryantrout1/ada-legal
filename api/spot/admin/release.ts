@@ -22,8 +22,9 @@ import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv, readJsonBody } from '../../_shared.js';
 import { makeSpotStore } from '../../../src/lib/spot/spotStore.js';
 import { buildReleaseEmail } from '../../../src/lib/spot/releaseEmail.js';
+import { PUBLIC_ORIGIN } from '../../../src/lib/publicOrigin.js';
 
-const DEFAULT_READOUT_BASE_URL = 'https://ada.adalegallink.com';
+const DEFAULT_READOUT_BASE_URL = PUBLIC_ORIGIN;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;

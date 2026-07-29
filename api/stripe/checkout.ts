@@ -35,6 +35,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAdmin } from '../_admin.js';
 import { makeClientsFromEnv } from '../_shared.js';
+import { PUBLIC_ORIGIN } from '../../src/lib/publicOrigin.js';
 
 interface CheckoutRequest {
   lawFirmId: string;
@@ -128,7 +129,7 @@ export default async function handler(
   // own pages, but fall back to something sensible.
   const origin =
     (req.headers.origin as string | undefined) ??
-    `https://${req.headers.host ?? 'ada.adalegallink.com'}`;
+    (req.headers.host ? `https://${req.headers.host}` : PUBLIC_ORIGIN);
   const successUrl =
     parsed.successUrl ?? `${origin}/admin/firms/${parsed.lawFirmId}?checkout=success`;
   const cancelUrl =

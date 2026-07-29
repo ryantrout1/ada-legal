@@ -26,6 +26,7 @@ import { Suspense, lazy } from 'react';
 import type { LazyExoticComponent, ComponentType } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { chapterMeta } from './chapterMeta.js';
+import { PUBLIC_ORIGIN } from '../../../lib/publicOrigin.js';
 
 const StandardsCh1 = lazy(() => import('./standards/StandardsCh1.js'));
 const StandardsCh2 = lazy(() => import('./standards/StandardsCh2.js'));
@@ -101,7 +102,7 @@ function ChapterSeo({ num }: { num: string }) {
   const meta = chapterMeta(num);
   if (!meta) return null;
 
-  const canonicalUrl = `https://ada.adalegallink.com/standards-guide/chapter/${meta.num}`;
+  const canonicalUrl = `${PUBLIC_ORIGIN}/standards-guide/chapter/${meta.num}`;
   const titleText = `Chapter ${meta.num}: ${meta.title} — ADA Standards Guide`;
 
   const jsonLd = {
@@ -115,12 +116,12 @@ function ChapterSeo({ num }: { num: string }) {
     isPartOf: {
       '@type': 'TechArticle',
       name: 'ADA Standards Guide',
-      url: 'https://ada.adalegallink.com/standards-guide',
+      url: `${PUBLIC_ORIGIN}/standards-guide`,
     },
     publisher: {
       '@type': 'Organization',
       name: 'ADA Legal Link',
-      url: 'https://ada.adalegallink.com',
+      url: PUBLIC_ORIGIN,
     },
     about: {
       '@type': 'Thing',

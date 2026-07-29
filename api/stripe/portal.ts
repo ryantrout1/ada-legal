@@ -25,6 +25,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAdmin } from '../_admin.js';
 import { makeClientsFromEnv } from '../_shared.js';
+import { PUBLIC_ORIGIN } from '../../src/lib/publicOrigin.js';
 
 interface PortalRequest {
   lawFirmId: string;
@@ -82,7 +83,7 @@ export default async function handler(
 
   const origin =
     (req.headers.origin as string | undefined) ??
-    `https://${req.headers.host ?? 'ada.adalegallink.com'}`;
+    (req.headers.host ? `https://${req.headers.host}` : PUBLIC_ORIGIN);
   const returnUrl =
     parsed.returnUrl ?? `${origin}/admin/firms/${parsed.lawFirmId}`;
 

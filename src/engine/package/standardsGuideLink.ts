@@ -18,7 +18,9 @@
  * Ref: /plan R5, Phase R5b.
  */
 
-const APP_BASE = 'https://ada.adalegallink.com';
+import { PUBLIC_ORIGIN } from '../../lib/publicOrigin.js';
+
+const APP_BASE = PUBLIC_ORIGIN;
 const GUIDE_INDEX = `${APP_BASE}/standards-guide`;
 
 /** The 2010-Standards chapter for a section number, or null if not a section. */

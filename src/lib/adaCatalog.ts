@@ -64,6 +64,8 @@ export interface AdaStandardRow {
   source_ref: string;
 }
 
+import { PUBLIC_ORIGIN } from './publicOrigin.js';
+
 const CH1 = 'https://www.access-board.gov/ada/chapter/ch01';
 const CH2 = 'https://www.access-board.gov/ada/chapter/ch02';
 const CH3 = 'https://www.access-board.gov/ada/chapter/ch03';
@@ -884,6 +886,6 @@ export function educationForSection(
   return {
     ruleTitle: row.title,
     ruleExplanation: row.rule,
-    guideUrl: `https://ada.adalegallink.com${path}`,
+    guideUrl: `${PUBLIC_ORIGIN}${path}`,
   };
 }

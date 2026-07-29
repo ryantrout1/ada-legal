@@ -24,7 +24,9 @@
  * create an attorney-client relationship."
  */
 
-const LOGO_URL = 'https://ada.adalegallink.com/brand/logo-email.png';
+import { PUBLIC_ORIGIN } from '../../lib/publicOrigin.js';
+
+const LOGO_URL = `${PUBLIC_ORIGIN}/brand/logo-email.png`;
 
 export interface BrandedEmailOptions {
   heading: string;

@@ -8,8 +8,9 @@
 
 import { describe, it, expect } from 'vitest';
 import { guideUrlForStandard } from '@/engine/package/standardsGuideLink';
+import { PUBLIC_ORIGIN } from '@/lib/publicOrigin';
 
-const BASE = 'https://ada.adalegallink.com/standards-guide';
+const BASE = `${PUBLIC_ORIGIN}/standards-guide`;
 
 describe('guideUrlForStandard', () => {
   it('maps a 2xx section to chapter 2', () => {

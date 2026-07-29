@@ -23,9 +23,10 @@ import { Suspense } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useParams } from 'react-router-dom';
 import { GUIDE_LOADERS, titleForSlug } from './standardsGuideIndex.js';
+import { PUBLIC_ORIGIN } from '../../../lib/publicOrigin.js';
 
 function GuideSeo({ slug, title }: { slug: string; title: string }) {
-  const canonicalUrl = `https://ada.adalegallink.com/standards-guide/guide/${slug}`;
+  const canonicalUrl = `${PUBLIC_ORIGIN}/standards-guide/guide/${slug}`;
   const titleText = `${title} — ADA Standards Guide`;
   const description = `Plain-language guide to ${title.toLowerCase()}. Simple, standard, and legal reading levels. Part of the ADA Legal Link Standards Guide — free, always.`;
 
@@ -40,12 +41,12 @@ function GuideSeo({ slug, title }: { slug: string; title: string }) {
     isPartOf: {
       '@type': 'TechArticle',
       name: 'ADA Standards Guide',
-      url: 'https://ada.adalegallink.com/standards-guide',
+      url: `${PUBLIC_ORIGIN}/standards-guide`,
     },
     publisher: {
       '@type': 'Organization',
       name: 'ADA Legal Link',
-      url: 'https://ada.adalegallink.com',
+      url: PUBLIC_ORIGIN,
     },
     about: {
       '@type': 'Thing',

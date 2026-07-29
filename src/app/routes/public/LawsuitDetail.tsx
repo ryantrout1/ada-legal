@@ -46,6 +46,7 @@ import type {
   PublicLawsuitDetailRow,
   PublicLitigationDetailResponse,
 } from '../../lib/lawsuitTypes.js';
+import { PUBLIC_ORIGIN } from '../../../lib/publicOrigin.js';
 
 const sectionStyle: CSSProperties = {
   background: 'var(--card-bg)',
@@ -247,7 +248,7 @@ export default function LawsuitDetail() {
   const relatedCases = row?.relatedCases ?? [];
 
   const canonicalUrl = row
-    ? `https://ada.adalegallink.com/lawsuits/${encodeURIComponent(row.slug)}`
+    ? `${PUBLIC_ORIGIN}/lawsuits/${encodeURIComponent(row.slug)}`
     : '';
   const rawDescription =
     row?.shortDescription ??
