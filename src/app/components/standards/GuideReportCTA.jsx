@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { startAdaSessionWithContext } from './startAdaSession.js';
 import { titleForSlug } from '../../routes/public/standardsGuideIndex.js';
-import { useReadingLevel } from './ReadingLevelContext.js';
+import { useAdaSoon } from '../../routes/public/components/landing/AdaSoonModal.jsx';
 
 /**
  * GuideReportCTA — the CTA at the bottom of every Guide page.
@@ -31,8 +30,6 @@ import { useReadingLevel } from './ReadingLevelContext.js';
  */
 export default function GuideReportCTA() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { readingLevel } = useReadingLevel();
   const [starting, setStarting] = useState(false);
 
   // Derive the guide slug from the current pathname. The page structure
@@ -41,18 +38,24 @@ export default function GuideReportCTA() {
   const slug = slugFromPath(location.pathname);
   const title = slug ? titleForSlug(slug) : null;
 
-  async function handleClick() {
-    if (starting) return;
-    setStarting(true);
-    if (slug && title) {
-      await startAdaSessionWithContext({
-        kind: 'guide',
-        ref: slug,
-        title,
-        readingLevel,
-      });
-    }
-    navigate('/ada');
+  /**
+   * Same as the chapter CTA: Ada is not open, so this shows the notice
+   * rather than starting a session for a conversation that cannot happen.
+   *
+   * When Ada opens, restore this to:
+   *
+   *   await startAdaSessionWithContext({ kind: 'guide', ref: slug, title,
+   *     readingLevel });
+   *   navigate('/ada');
+   *
+   * with the startAdaSession, useNavigate and useReadingLevel imports.
+   * That context is what lets her first reply know which guide page the
+   * person was reading.
+   */
+  const adaSoon = useAdaSoon();
+
+  function handleTalkToAda() {
+    adaSoon?.openSoon();
   }
 
   return (
@@ -99,13 +102,16 @@ export default function GuideReportCTA() {
             "launching soon" line stays because it is still true here —
             attorney-connected reporting is not live yet. */}
         <div style={{ marginTop: '16px' }}>
-          <Link to="/ada" className="sg-cta-link" style={{
+          <button type="button" onClick={handleTalkToAda} className="sg-cta-link" style={{
             fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
             color: 'var(--dark-muted)', textDecoration: 'underline',
-            minHeight: '44px', display: 'inline-flex', alignItems: 'center'
+            minHeight: '44px', display: 'inline-flex', alignItems: 'center',
+            // It was a link; a bare button brings its own border, background
+            // and centring, none of which belong here.
+            background: 'none', border: 'none', padding: 0, cursor: 'pointer'
           }}>
             Talk to Ada about what happened
-          </Link>
+          </button>
         </div>
         <p style={{
           fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem',

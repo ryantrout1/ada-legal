@@ -31,7 +31,6 @@
 
 import { Helmet } from 'react-helmet-async';
 import LandingV2Styles from './components/landing/LandingV2Styles.jsx';
-import { AdaSoonProvider } from './components/landing/AdaSoonModal.jsx';
 import HeroV2 from './components/landing/HeroV2.jsx';
 import TwoPathsSection from './components/landing/TwoPathsSection.jsx';
 import ThreeTitlesV2 from './components/landing/ThreeTitlesV2.jsx';
@@ -51,7 +50,6 @@ export default function Home() {
         />
       </Helmet>
       <LandingV2Styles />
-      <AdaSoonProvider>
         <HeroV2 />
         <TwoPathsSection />
         <ThreeTitlesV2 />
@@ -59,7 +57,6 @@ export default function Home() {
         <TrustV2 />
         <StoryV2 />
         <FinalCtaV2 />
-      </AdaSoonProvider>
     </div>
   );
 }

@@ -38,14 +38,14 @@
 
 import { BookOpen, ChevronLeft, ChevronRight, Scale, Sparkles } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AutoCiteLinks from './AutoCiteLinks.js';
 import GuideHeroBanner from './GuideHeroBanner.js';
 import GuideStyles from './GuideStyles.js';
 import { useReadingLevel, type ReadingLevel } from './ReadingLevelContext.js';
 import { ReadingLevelToggle } from './ReadingLevelToggle.js';
 import { CurrentReadingLevel } from './CurrentReadingLevel.js';
-import { startAdaSessionWithContext } from './startAdaSession.js';
+import { useAdaSoon } from '../../routes/public/components/landing/AdaSoonModal.jsx';
 
 /** One section in a chapter (e.g. §405 Ramps inside Ch. 4). */
 export interface ChapterSection {
@@ -446,20 +446,27 @@ export default function ChapterPageLayout({
   sections,
 }: ChapterPageLayoutProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const [startingChat, setStartingChat] = useState(false);
+  const adaSoon = useAdaSoon() as { openSoon: () => void } | null;
   const { readingLevel } = useReadingLevel();
-  const navigate = useNavigate();
 
-  async function handleTalkToAda(): Promise<void> {
-    if (startingChat) return;
-    setStartingChat(true);
-    await startAdaSessionWithContext({
-      kind: 'chapter',
-      ref: String(chapterNum),
-      title,
-      readingLevel,
-    });
-    navigate('/ada');
+  /**
+   * Ada is not open yet, so this shows the notice rather than walking
+   * somebody into a conversation that cannot happen. No session is
+   * started either — seeding context for a chat nobody is about to have
+   * leaves a trail of sessions that were never conversations.
+   *
+   * When Ada opens, restore this to:
+   *
+   *   await startAdaSessionWithContext({ kind: 'chapter',
+   *     ref: String(chapterNum), title, readingLevel });
+   *   navigate('/ada');
+   *
+   * with the startAdaSession and useNavigate imports. That context is
+   * what lets her first reply know which chapter the person was reading,
+   * so it is worth putting back rather than rewriting.
+   */
+  function handleTalkToAda(): void {
+    adaSoon?.openSoon();
   }
 
   const currentIdx = ALL_CHAPTERS.findIndex((c) => c.num === chapterNum);
@@ -648,10 +655,7 @@ export default function ChapterPageLayout({
             </p>
             <button
               type="button"
-              onClick={() => {
-                void handleTalkToAda();
-              }}
-              disabled={startingChat}
+              onClick={handleTalkToAda}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -665,12 +669,11 @@ export default function ChapterPageLayout({
                 fontWeight: 600,
                 textDecoration: 'none',
                 border: 'none',
-                cursor: startingChat ? 'wait' : 'pointer',
+                cursor: 'pointer',
                 minHeight: '44px',
-                opacity: startingChat ? 0.7 : 1,
               }}
             >
-              {startingChat ? 'Opening chat…' : 'Talk to Ada'}
+              Talk to Ada
             </button>
           </section>
 

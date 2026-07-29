@@ -48,14 +48,29 @@ const HERO = 'src/app/components/standards/GuideHeroBanner.tsx';
 describe('GuideReportCTA keeps the live Ada handoff', () => {
   const src = read(CTA);
 
-  it('starts an Ada session carrying the guide page context', () => {
-    expect(src).toMatch(/startAdaSessionWithContext/);
-    expect(src).toMatch(/kind:\s*'guide'/);
+  it('shows the opening-soon notice instead of walking somebody into a chat', () => {
+    // Pinned the session-start and the navigate until 2026-07-29. Ada is
+    // not open, so both were wrong: the navigate dropped a person on a
+    // conversation that cannot happen, and the session-start left a trail
+    // of sessions that were never conversations.
+    expect(src).toContain('useAdaSoon');
+    expect(src).toMatch(/adaSoon\?\.openSoon\(\)/);
   });
 
-  it('routes to the surface Ada actually lives on', () => {
-    // Renamed /chat -> /ada: B44's route is /Ada and it is her name.
-    expect(src).toMatch(/navigate\('\/ada'\)/);
+  it('does not start a session for a conversation nobody is about to have', () => {
+    // Comment-stripped on purpose. The restore instructions in the file
+    // name both of these, and a raw-source check would fail on the very
+    // note that tells the next person how to put them back.
+    const code = readCodeAt(CTA);
+    expect(code).not.toMatch(/startAdaSessionWithContext/);
+    expect(code).not.toMatch(/navigate\('\/ada'\)/);
+  });
+
+  it('says what to put back when Ada opens', () => {
+    // The guide context is what lets her first reply know which page the
+    // person was reading. Losing that to a silent deletion would be a
+    // worse outcome than the notice itself.
+    expect(src).toMatch(/When Ada opens|restore/i);
   });
 
   it('does not resurrect the RightsPathway destination', () => {

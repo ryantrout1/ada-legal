@@ -78,12 +78,19 @@ describe('landing-v2 — the suite is complete and composed', () => {
     }
   });
 
-  it('wraps the sections in the AdaSoon provider and the v2 style scope', () => {
-    // AdaSoonModal is a context provider — the CTAs inside call useAdaSoon.
-    // Without the provider the hero's primary button throws on click.
-    expect(homeCode).toContain('AdaSoonProvider');
+  it('wraps the sections in the v2 style scope', () => {
     expect(homeCode).toContain('LandingV2Styles');
     expect(homeCode).toContain('home-v2-root');
+  });
+
+  it('gets the AdaSoon provider from the layout, not its own copy', () => {
+    // It lived in Home until 2026-07-29, which meant the standards guide
+    // could not open the same notice. Lifting it to PublicLayout gives
+    // every public page one modal; a second copy here would give the home
+    // page its own and quietly diverge.
+    const layout = readCode('src/app/layouts/PublicLayout.tsx');
+    expect(layout).toContain('AdaSoonProvider');
+    expect(homeCode).not.toContain('AdaSoonProvider');
   });
 });
 

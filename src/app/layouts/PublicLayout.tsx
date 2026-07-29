@@ -33,6 +33,7 @@ import { ReadingLevelProvider } from '../components/standards/ReadingLevelContex
 // exposes openModal() through context; FeedbackButton owns its own modal.
 // Both mount once here rather than per-page, matching B44's Layout.
 import { ComingSoonProvider } from '../components/site/useComingSoonModal.jsx';
+import { AdaSoonProvider } from '../routes/public/components/landing/AdaSoonModal.jsx';
 import FeedbackButton from '../components/site/FeedbackButton.jsx';
 
 // B44 Layout parity: the current page's nav link renders in the brand
@@ -98,6 +99,7 @@ export default function PublicLayout() {
     <LiveAnnouncer>
     <ReadingLevelProvider>
     <ComingSoonProvider>
+    <AdaSoonProvider>
     <div className="min-h-screen flex flex-col bg-surface-50 text-ink-900">
       {/* Skip link — first focusable element, hidden until focused */}
       {/* B44 skip-link visual: accent pill anchored at the left edge that
@@ -320,6 +322,7 @@ export default function PublicLayout() {
           footer in the tab order rather than interrupting the page. */}
       <FeedbackButton />
     </div>
+    </AdaSoonProvider>
     </ComingSoonProvider>
     </ReadingLevelProvider>
     </LiveAnnouncer>
