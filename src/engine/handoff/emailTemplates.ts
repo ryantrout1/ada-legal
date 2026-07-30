@@ -38,6 +38,16 @@
 import type { AttorneyPackage } from './attorneyPackage.js';
 import type { ReadingLevel } from '../../types/db.js';
 import { copyFor, type CopyBundle } from '../email/resolveCopy.js';
+import {
+  EMAIL_BG_ALT,
+  EMAIL_BODY,
+  EMAIL_INK,
+  EMAIL_LINK,
+  EMAIL_MUTED,
+  EMAIL_RULE,
+  EMAIL_WARN_BG,
+  EMAIL_WARN_BORDER,
+} from '../email/emailStyles.js';
 
 export interface RenderedEmail {
   subject: string;
@@ -83,14 +93,14 @@ function renderFirmHtml(pkg: AttorneyPackage, t: (slot: string) => string): stri
   const rows: string[] = [];
   rows.push(`<!doctype html><html><body style="${BODY_STYLE}">`);
   rows.push(
-    `<div style="max-width:620px;margin:0 auto;padding:24px;font-family:${FONT_STACK};color:#222">`,
+    `<div style="max-width:620px;margin:0 auto;padding:24px;font-family:${FONT_STACK};color:${EMAIL_INK}">`,
   );
 
   rows.push(
     `<h1 style="font-size:18px;font-weight:600;margin:0 0 16px">${escapeHtml(t('heading'))}</h1>`,
   );
   rows.push(
-    `<p style="margin:0 0 20px;color:#555">${fill(escapeHtml(t('intro')), {
+    `<p style="margin:0 0 20px;color:${EMAIL_BODY}">${fill(escapeHtml(t('intro')), {
       listing_title: `<strong>${escapeHtml(pkg.listing.title)}</strong>`,
     })}</p>`,
   );
@@ -113,7 +123,7 @@ function renderFirmHtml(pkg: AttorneyPackage, t: (slot: string) => string): stri
       )}</strong> &mdash; tier ${escapeHtml(String(pkg.classification.tier))}</p>`,
     );
     rows.push(
-      `<p style="margin:0 0 16px;color:#555;font-size:14px">${escapeHtml(
+      `<p style="margin:0 0 16px;color:${EMAIL_BODY};font-size:14px">${escapeHtml(
         pkg.classification.reasoning ?? '',
       )}</p>`,
     );
@@ -130,7 +140,7 @@ function renderFirmHtml(pkg: AttorneyPackage, t: (slot: string) => string): stri
       const valStr = escapeHtml(stringifyValue(entry.value));
       rows.push(
         `<tr><td style="${KEY_CELL_STYLE}">${escapeHtml(name)}</td>` +
-          `<td style="${VAL_CELL_STYLE}">${valStr}<br><span style="color:#888;font-size:12px">${confTag}</span></td></tr>`,
+          `<td style="${VAL_CELL_STYLE}">${valStr}<br><span style="color:${EMAIL_MUTED};font-size:14px">${confTag}</span></td></tr>`,
       );
     }
     rows.push('</table>');
@@ -150,7 +160,7 @@ function renderFirmHtml(pkg: AttorneyPackage, t: (slot: string) => string): stri
     rows.push(`<ul style="margin:0 0 16px;padding-left:18px">`);
     for (const p of pkg.photos) {
       rows.push(
-        `<li style="margin:0 0 6px"><a href="${escapeAttr(p.url)}" style="color:#0066cc">View photo</a>` +
+        `<li style="margin:0 0 6px"><a href="${escapeAttr(p.url)}" style="color:${EMAIL_LINK}">View photo</a>` +
           (p.findings.length > 0
             ? ` &mdash; ${p.findings.length} finding${p.findings.length === 1 ? '' : 's'}`
             : '') +
@@ -168,7 +178,7 @@ function renderFirmHtml(pkg: AttorneyPackage, t: (slot: string) => string): stri
     );
   }
   rows.push(
-    `<p style="margin:0 0 16px;color:#333;white-space:pre-wrap">${escapeHtml(
+    `<p style="margin:0 0 16px;color:${EMAIL_INK};white-space:pre-wrap">${escapeHtml(
       pkg.conversationSummary,
     )}</p>`,
   );
@@ -177,12 +187,12 @@ function renderFirmHtml(pkg: AttorneyPackage, t: (slot: string) => string): stri
   if (pkg.conversationTranscriptUrl) {
     rows.push(`<h2 style="${H2_STYLE}">Full transcript</h2>`);
     rows.push(
-      `<p><a href="${escapeAttr(pkg.conversationTranscriptUrl)}" style="color:#0066cc">Download PDF transcript</a> <span style="color:#888;font-size:12px">(link expires in 30 days)</span></p>`,
+      `<p><a href="${escapeAttr(pkg.conversationTranscriptUrl)}" style="color:${EMAIL_LINK}">Download PDF transcript</a> <span style="color:${EMAIL_MUTED};font-size:14px">(link expires in 30 days)</span></p>`,
     );
   }
 
   rows.push(
-    `<hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0">Session ${escapeHtml(
+    `<hr style="border:none;border-top:1px solid ${EMAIL_RULE};margin:24px 0"><p style="color:${EMAIL_MUTED};font-size:14px;margin:0">Session ${escapeHtml(
       pkg.sessionId,
     )} &middot; generated ${escapeHtml(pkg.generatedAt)}</p>`,
   );
@@ -334,7 +344,7 @@ function renderUserHtml(ctx: {
   const rows: string[] = [];
   rows.push(`<!doctype html><html><body style="${BODY_STYLE}">`);
   rows.push(
-    `<div style="max-width:560px;margin:0 auto;padding:24px;font-family:${FONT_STACK};color:#222;line-height:1.6">`,
+    `<div style="max-width:560px;margin:0 auto;padding:24px;font-family:${FONT_STACK};color:${EMAIL_INK};line-height:1.6">`,
   );
   rows.push(`<p style="margin:0 0 16px">${escapeHtml(ctx.intro)}</p>`);
   rows.push(
@@ -344,12 +354,12 @@ function renderUserHtml(ctx: {
     `<h2 style="${H2_STYLE}">${escapeHtml(ctx.summaryHeading)}</h2>`,
   );
   rows.push(
-    `<p style="margin:0 0 16px;color:#555;white-space:pre-wrap">${escapeHtml(
+    `<p style="margin:0 0 16px;color:${EMAIL_BODY};white-space:pre-wrap">${escapeHtml(
       ctx.conversationSummary,
     )}</p>`,
   );
   rows.push(
-    `<hr style="border:none;border-top:1px solid #eee;margin:24px 0"><p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p>`,
+    `<hr style="border:none;border-top:1px solid ${EMAIL_RULE};margin:24px 0"><p style="color:${EMAIL_MUTED};font-size:14px;margin:0">ADA Legal Link</p>`,
   );
   rows.push('</div></body></html>');
   return rows.join('');
@@ -377,24 +387,21 @@ function renderUserText(ctx: {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const BODY_STYLE = 'margin:0;padding:0;background:#f6f6f6';
+const BODY_STYLE = `margin:0;padding:0;background:${EMAIL_BG_ALT}`;
 const FONT_STACK =
   "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
-const H2_STYLE =
-  'font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #eee;color:#333';
+const H2_STYLE = `font-size:14px;font-weight:600;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid ${EMAIL_RULE};color:${EMAIL_INK}`;
 const TABLE_STYLE =
   'width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14px';
-const KEY_CELL_STYLE =
-  'padding:6px 10px 6px 0;color:#666;vertical-align:top;width:140px';
-const VAL_CELL_STYLE = 'padding:6px 0;color:#222;vertical-align:top';
-const MUTED_STYLE = 'color:#888;font-size:14px;margin:0 0 16px';
-const WARN_STYLE =
-  'margin:8px 0 16px;padding:10px 12px;background:#fff5e5;border-left:3px solid #d48200;font-size:14px';
+const KEY_CELL_STYLE = `padding:6px 10px 6px 0;color:${EMAIL_MUTED};vertical-align:top;width:140px`;
+const VAL_CELL_STYLE = `padding:6px 0;color:${EMAIL_INK};vertical-align:top`;
+const MUTED_STYLE = `color:${EMAIL_MUTED};font-size:14px;margin:0 0 16px`;
+const WARN_STYLE = `margin:8px 0 16px;padding:10px 12px;background:${EMAIL_WARN_BG};border-left:3px solid ${EMAIL_WARN_BORDER};font-size:14px`;
 
 function kvRow(key: string, value: string | null | undefined): string {
   const safeVal =
     value === null || value === undefined || value === ''
-      ? `<span style="color:#aaa">(not provided)</span>`
+      ? `<span style="color:${EMAIL_MUTED}">(not provided)</span>`
       : escapeHtml(value);
   return `<tr><td style="${KEY_CELL_STYLE}">${escapeHtml(key)}</td><td style="${VAL_CELL_STYLE}">${safeVal}</td></tr>`;
 }

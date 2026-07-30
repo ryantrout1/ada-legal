@@ -67,6 +67,31 @@ export const EMAIL_LINK = EMAIL_BUTTON_BG;
  */
 export const EMAIL_RULE = '#d9d2c7';
 
+/**
+ * The handoff emails' surface.
+ *
+ * A second background is a cost — every colour needs a pair against each
+ * surface it can sit on, and pairing against the wrong one is a real way to
+ * ship a failure that the test says passed. It stays because the handoff pair
+ * has rendered on this grey since it was written and this change is about
+ * contrast, not about restyling attorney-facing mail. Collapsing both surfaces
+ * onto EMAIL_BG is the obvious follow-up whenever someone is looking at these
+ * emails anyway.
+ */
+export const EMAIL_BG_ALT = '#f6f6f6';
+
+/** Callout block behind a warning line in the firm handoff. */
+export const EMAIL_WARN_BG = '#fff5e5';
+
+/**
+ * The callout's left border. 3.05:1 on EMAIL_WARN_BG.
+ *
+ * Held to 3:1 rather than 7:1 and paired as non-text: it is the only thing
+ * marking the block as a callout, so 1.4.11 applies to it, but it carries no
+ * text of its own. The previous #d48200 was 2.78:1 — below even that.
+ */
+export const EMAIL_WARN_BORDER = '#8a5000';
+
 /** Every hex any email renderer is allowed to emit. */
 export const EMAIL_PALETTE = [
   EMAIL_BG,
@@ -76,6 +101,9 @@ export const EMAIL_PALETTE = [
   EMAIL_BUTTON_BG,
   EMAIL_BUTTON_TEXT,
   EMAIL_RULE,
+  EMAIL_BG_ALT,
+  EMAIL_WARN_BG,
+  EMAIL_WARN_BORDER,
 ] as const;
 
 /**
@@ -113,4 +141,13 @@ export const EMAIL_CONTRAST_PAIRS: readonly EmailContrastPair[] = [
   { name: 'button label', fg: EMAIL_BUTTON_TEXT, bg: EMAIL_BUTTON_BG, min: 7, kind: 'text' },
   { name: 'button fill', fg: EMAIL_BUTTON_BG, bg: EMAIL_BG, min: 3, kind: 'non-text' },
   { name: 'link', fg: EMAIL_LINK, bg: EMAIL_BG, min: 7, kind: 'text' },
+
+  // The handoff surface. Same foregrounds, different ground — so they are
+  // measured again rather than assumed to carry over.
+  { name: 'heading on alt surface', fg: EMAIL_INK, bg: EMAIL_BG_ALT, min: 7, kind: 'text' },
+  { name: 'body on alt surface', fg: EMAIL_BODY, bg: EMAIL_BG_ALT, min: 7, kind: 'text' },
+  { name: 'muted on alt surface', fg: EMAIL_MUTED, bg: EMAIL_BG_ALT, min: 7, kind: 'text' },
+  { name: 'link on alt surface', fg: EMAIL_LINK, bg: EMAIL_BG_ALT, min: 7, kind: 'text' },
+  { name: 'callout text', fg: EMAIL_INK, bg: EMAIL_WARN_BG, min: 7, kind: 'text' },
+  { name: 'callout border', fg: EMAIL_WARN_BORDER, bg: EMAIL_WARN_BG, min: 3, kind: 'non-text' },
 ];
