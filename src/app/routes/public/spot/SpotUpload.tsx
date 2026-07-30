@@ -10,6 +10,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { downscalePhoto } from '@/app/utils/downscalePhoto';
 import { MAX_PAID_PHOTOS } from '@/lib/spot/uploadGate';
 import {
@@ -19,6 +20,7 @@ import {
   SPOT_SUPPORT_EMAIL,
   type EmailLookup,
 } from '@/lib/spot/confirmationCopy';
+import { resolveWaitLinks } from './waitLinks';
 
 /**
  * Paid sessions whose carried photo has already been uploaded.
@@ -202,27 +204,61 @@ export default function SpotUpload({ spotSessionId, initialFiles }: Props) {
 
   if (done) {
     const copy = buildConfirmationCopy(emailLookup);
+    // Resolved at render, not module load, so a guide rename shows three
+    // links rather than one broken one.
+    const waitLinks = resolveWaitLinks();
     return (
-      <div className="rounded-lg border border-surface-200 bg-surface-100 p-5" aria-live="polite">
-        <h2 className="font-display text-xl text-ink-900">{copy.heading}</h2>
-        <p className="mt-2 text-ink-900">
-          {copy.kind === 'none' ? (
-            <>
-              {NO_ADDRESS_BEFORE}
-              <a
-                href={`mailto:${SPOT_SUPPORT_EMAIL}`}
-                className="inline-flex min-h-[44px] items-center text-accent-600 underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
-              >
-                {SPOT_SUPPORT_EMAIL}
-              </a>
-              {NO_ADDRESS_AFTER}
-            </>
-          ) : (
-            copy.addressLine
-          )}
-        </p>
-        <p className="mt-2 text-ink-700">{copy.reviewLine}</p>
-        <p className="mt-2 text-ink-700">{copy.closingLine}</p>
+      <div className="rounded-lg border border-surface-200 bg-surface-100 p-5">
+        {/*
+          The live region covers the status text only. The link list below is
+          navigation, not a status change — inside the region it would be read
+          out with the confirmation, and read out again if the address lookup
+          resolved late and swapped the line above it.
+        */}
+        <div aria-live="polite">
+          <h2 className="font-display text-xl text-ink-900">{copy.heading}</h2>
+          <p className="mt-2 text-ink-900">
+            {copy.kind === 'none' ? (
+              <>
+                {NO_ADDRESS_BEFORE}
+                <a
+                  href={`mailto:${SPOT_SUPPORT_EMAIL}`}
+                  className="inline-flex min-h-[44px] items-center text-accent-600 underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+                >
+                  {SPOT_SUPPORT_EMAIL}
+                </a>
+                {NO_ADDRESS_AFTER}
+              </>
+            ) : (
+              copy.addressLine
+            )}
+          </p>
+          <p className="mt-2 text-ink-700">{copy.reviewLine}</p>
+          <p className="mt-2 text-ink-700">{copy.closingLine}</p>
+        </div>
+
+        {waitLinks.length > 0 ? (
+          <nav className="mt-6 border-t border-surface-200 pt-4" aria-labelledby="spot-wait-h">
+            <h3 id="spot-wait-h" className="font-display text-base font-bold text-ink-900">
+              While you wait
+            </h3>
+            <p className="mt-1 text-sm text-ink-700">
+              The ground your report will cover, in plain language.
+            </p>
+            <ul className="mt-3 space-y-1">
+              {waitLinks.map((link) => (
+                <li key={link.slug}>
+                  <Link
+                    to={link.href}
+                    className="flex min-h-[44px] items-center text-accent-600 underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+                  >
+                    {link.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ) : null}
       </div>
     );
   }
