@@ -17,7 +17,10 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { EMAIL_CONTRAST_PAIRS } from '@/engine/email/emailStyles';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+import { EMAIL_CONTRAST_PAIRS, EMAIL_PALETTE } from '@/engine/email/emailStyles';
 
 /** WCAG 2.x relative luminance. */
 function luminance(hex: string): number {
@@ -67,6 +70,34 @@ describe('every declared email colour pair', () => {
     for (const pair of EMAIL_CONTRAST_PAIRS) {
       if (pair.kind !== 'non-text') continue;
       expect(pair.min, pair.name).toBeGreaterThanOrEqual(3);
+    }
+  });
+});
+
+/**
+ * Phase 2 — /plan: Spot release email.
+ *
+ * The contrast pairs above prove the palette. This proves the renderers only
+ * draw from it. Without this half, a renderer can hold any hex it likes and
+ * the measured pairs are measuring a palette nobody uses.
+ *
+ * Source-level rather than output-level because these renderers need fixtures
+ * to run and a stray hex is visible in the source either way.
+ */
+describe('every email renderer draws only from the shared palette', () => {
+  const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+  const allowed = new Set(EMAIL_PALETTE.map((c) => c.toLowerCase()));
+
+  const RENDERERS = ['src/engine/handoff/selfHelpEmail.ts', 'src/lib/spot/releaseEmail.ts'];
+
+  it.each(RENDERERS)('%s', (rel) => {
+    const src = readFileSync(resolve(root, rel), 'utf8');
+    // Strip the comment blocks — they cite old values on purpose, to record
+    // what was wrong and what it measured.
+    const code = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
+    const used = new Set((code.match(/#[0-9a-f]{3,6}\b/gi) ?? []).map((h) => h.toLowerCase()));
+    for (const hex of used) {
+      expect(allowed.has(hex), `${rel} uses ${hex}, which is not in the shared palette`).toBe(true);
     }
   });
 });
