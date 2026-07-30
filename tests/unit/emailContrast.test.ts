@@ -64,6 +64,16 @@ describe('every declared email colour pair', () => {
       'link on alt surface',
       'callout text',
       'callout border',
+      // brandedEmail puts text on a dark band and on a white card, so it
+      // brings two more surfaces with it — including the only inverted pairs
+      // in the product, where the fix for a failure is to lighten rather than
+      // darken.
+      'heading on surface',
+      'body on surface',
+      'button fill on surface',
+      'wordmark on dark band',
+      'inverse muted on dark band',
+      'inverse heading on dark band',
     ]) {
       expect(names, `no pair declared for "${required}"`).toContain(required);
     }
@@ -109,6 +119,7 @@ describe('every email renderer draws only from the shared palette', () => {
     'src/lib/spot/releaseEmail.ts',
     'src/engine/handoff/emailTemplates.ts',
     'src/engine/notifications/routingEmailTemplates.ts',
+    'src/engine/handoff/brandedEmail.ts',
   ];
 
   it.each(RENDERERS)('%s', (rel) => {
