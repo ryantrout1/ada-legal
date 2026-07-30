@@ -68,6 +68,7 @@ export default function StandardsGuide() {
       </Helmet>
 
       <StandardsStyles />
+      <div className="guide-surface">
       <StandardsHero searchValue={searchValue} onSearchChange={handleSearchChange} />
       <QuickFilters activeFilters={activeFilters} onToggle={handleToggleFilter} />
       <BreadcrumbAndInfo />
@@ -78,6 +79,7 @@ export default function StandardsGuide() {
         </div>
       </div>
       <GuideReportCTA />
+      </div>
     </>
   );
 }

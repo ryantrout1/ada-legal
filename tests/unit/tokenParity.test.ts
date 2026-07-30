@@ -164,7 +164,11 @@ describe('typography parity with B44', () => {
     expect(theme).toMatch(/--font-body:\s*'Manrope'/);
   });
 
-  it('keeps --font-display on Fraunces, matching B44 headings', () => {
+  it('keeps --font-display on Fraunces globally — the guide overrides it locally', () => {
+    // The token still drives the header and footer wordmark and every
+    // admin heading, so it stays put. The standards guide repoints it on
+    // .guide-surface and .guide-content-wrap instead, which is why the
+    // guide reads sans while the chrome does not.
     expect(theme).toMatch(/--font-display:\s*'Fraunces'/);
   });
 

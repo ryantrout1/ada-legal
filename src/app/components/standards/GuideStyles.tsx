@@ -19,6 +19,25 @@
 export default function GuideStyles() {
   return (
     <style>{`
+      /*
+       * The guide's headings are sans, matching the rest of the site.
+       *
+       * Scoped here rather than repointing --font-display in @theme.
+       * That token also drives the header and footer wordmark and every
+       * heading in the admin, so changing it globally would repaint far
+       * more than the guide — and would leave the About and lawsuit
+       * pages on a serif they still name directly, so the site would
+       * read as half-converted.
+       *
+       * It resolves to --font-body rather than naming a family, so the
+       * accessibility font switcher still reaches it. Picking
+       * OpenDyslexic here gives OpenDyslexic headings, not a serif.
+       */
+      .guide-surface,
+      .guide-content-wrap {
+        --font-display: var(--font-body);
+      }
+
       .guide-content-wrap {
         background: var(--page-bg-alt);
         padding: 60px 40px;

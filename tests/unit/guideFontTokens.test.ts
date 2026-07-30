@@ -83,3 +83,52 @@ describe('the guide names no font directly', () => {
     expect(Array.isArray(withMono)).toBe(true);
   });
 });
+
+/**
+ * The guide's headings are sans, and they got there without dragging the
+ * rest of the site along.
+ *
+ * --font-display also drives the header and footer wordmark and every
+ * heading in the admin. Repointing it in @theme would have repainted all
+ * of that, and would have left the About and lawsuit pages on a serif
+ * they still name directly — so the site would read as half-converted.
+ *
+ * Ref: /plan get Fraunces out of the standards guide, Phase 2. AC3, AC4.
+ */
+describe('the guide overrides the display font locally', () => {
+  const appCss = readFileSync('src/app.css', 'utf8');
+  const guideCss = readFileSync('src/app/components/standards/GuideStyles.tsx', 'utf8');
+  const landingCss = readFileSync(
+    'src/app/components/standards/landing/StandardsStyles.jsx',
+    'utf8',
+  );
+
+  it('leaves the global token alone', () => {
+    expect(appCss).toMatch(/--font-display:\s*'Fraunces'/);
+  });
+
+  it('repoints it on the guide surfaces, in both stylesheets', () => {
+    // Two, because the chapter pages and the landing render different
+    // shells. Missing either one leaves half the guide on a serif — the
+    // landing was exactly that until this phase.
+    for (const [name, css] of [['GuideStyles', guideCss], ['StandardsStyles', landingCss]]) {
+      expect(css, `${name} does not repoint the display font`).toMatch(
+        /--font-display:\s*var\(--font-body\)/,
+      );
+    }
+  });
+
+  it('resolves to the body token rather than naming a family', () => {
+    // Naming Manrope here would put the headings straight back outside
+    // the switcher's reach, which is the whole point of phase 1.
+    for (const css of [guideCss, landingCss]) {
+      const rule = css.match(/--font-display:\s*[^;]+;/)?.[0] ?? '';
+      expect(rule).toContain('var(--font-body)');
+    }
+  });
+
+  it('gives the landing a wrapper to hang the token on', () => {
+    const page = readFileSync('src/app/routes/public/StandardsGuide.tsx', 'utf8');
+    expect(page).toContain('className="guide-surface"');
+  });
+});

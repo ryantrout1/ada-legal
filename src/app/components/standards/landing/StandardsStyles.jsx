@@ -13,6 +13,24 @@ import React from 'react';
 export default function StandardsStyles() {
   return (
     <style>{`
+      /*
+       * Guide headings are sans, matching the rest of the site.
+       *
+       * Scoped, not global: --font-display also drives the header and
+       * footer wordmark and every admin heading, so repointing it in
+       * @theme would repaint far more than the guide.
+       *
+       * It resolves to --font-body rather than naming a family, so the
+       * accessibility font switcher still reaches these headings.
+       *
+       * One class on a wrapper, rather than a list of section selectors.
+       * A list is a thing to forget: add a section, miss the list, and
+       * that one heading silently stays serif.
+       */
+      .guide-surface {
+        --font-display: var(--font-body);
+      }
+
       .sg-hero-grid {
         max-width: 1160px;
         margin: 0 auto;

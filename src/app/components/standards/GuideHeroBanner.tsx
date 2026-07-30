@@ -34,6 +34,7 @@ export default function GuideHeroBanner({
 }: GuideHeroBannerProps) {
   return (
     <header
+      className="guide-surface"
       aria-labelledby="guide-page-heading"
       style={{
         background: 'var(--dark-card-bg)',
