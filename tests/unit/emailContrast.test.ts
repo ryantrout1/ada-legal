@@ -108,6 +108,7 @@ describe('every email renderer draws only from the shared palette', () => {
     'src/engine/handoff/selfHelpEmail.ts',
     'src/lib/spot/releaseEmail.ts',
     'src/engine/handoff/emailTemplates.ts',
+    'src/engine/notifications/routingEmailTemplates.ts',
   ];
 
   it.each(RENDERERS)('%s', (rel) => {
