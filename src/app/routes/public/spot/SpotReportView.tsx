@@ -1,24 +1,120 @@
 /**
  * SpotReportView — renders a persisted Ada Spot report (SpotReportContent).
  *
- * Dual-use: the admin preview (Phase 3b) and the hosted delivery readout
- * (Phase 4) both render through here, so the reader-facing artifact is defined
- * once. Screening language + hedge notes come from the persisted content
- * (composeReport already enforced them). AAA: tokens only, semantic headings.
+ * Three surfaces render this: the buyer's hosted readout at /spot/r/:slug, the
+ * admin release queue, and the test preview on /spot. They must stay identical
+ * — a reviewer approving a report has to be looking at what the buyer will see.
  *
- * Photos are passed in rather than read from `content`, because they are not
- * part of the artifact: spot_photo runs on a 90-day sweep while the report is
- * permanent. Joined at read time, they can simply be absent later without
- * leaving dead links in stored JSON.
+ * THE SHAPE. The old version drew every finding as the same card, which made a
+ * report of four findings read as a list of four equivalent assertions. It is
+ * not. `hedged` records whether the photograph settled the question, and that
+ * is the difference between "move these bins" and "go measure the threshold".
+ * Findings are grouped on it, under headings that say which is which. The
+ * grouping and the derived summary line live in reportLayout.ts, where a test
+ * can reach them — this file is markup.
  *
- * They sit ABOVE the findings deliberately. The findings name a yellow-painted
- * edge and a raised landing; the photo is what lets a reader check the claim
- * against what they actually photographed. Without it the report is a list of
- * assertions about a place you cannot see.
+ * REPEATED RULE TEXT. `ruleExplanation` is the same paragraph under every
+ * finding citing the same section — identical under three of four in the
+ * sample report. It is collapsed rather than dropped: it is genuinely useful
+ * the first time, and useless the third. The print stylesheet opens it, since
+ * a printed document has no way to expand anything.
+ *
+ * Photos sit ABOVE the findings deliberately. The findings describe a place
+ * the reader cannot see; the photograph is what lets them check the claim.
+ * They are passed in rather than read from `content` because spot_photo runs
+ * on a 90-day sweep while the report is permanent.
+ *
+ * COLOUR. Tokens only, no literals — pinned by spotReportTokens.test.ts. That
+ * is what carries this through all five display modes, including the
+ * low-vision mode that is gold on pure black.
+ *
+ * Ref: /plan Spot report redesign, phase 2.
  */
 
-import type { SpotReportContent } from '@/lib/spot/reportSchema';
+import type { SpotReportContent, SpotReportItem } from '@/lib/spot/reportSchema';
+import { groupFindings, summaryLine } from '@/lib/spot/reportLayout';
 import { SPOT_REPORT_STARTER_DISCLAIMER } from '@/lib/spot/spotDisclaimers';
+
+/** Severity drives emphasis, not colour meaning. A red would read as a
+ *  verdict, and this product never returns one. */
+function chipClass(severity: SpotReportItem['severity']): string {
+  if (severity === 'critical' || severity === 'major') {
+    return 'border border-accent-600 bg-accent-50 text-accent-600';
+  }
+  if (severity === 'minor') return 'border border-surface-200 bg-surface-100 text-ink-700';
+  return 'border border-surface-200 text-ink-500';
+}
+
+function Finding({ item }: { item: SpotReportItem }) {
+  return (
+    <section className="overflow-hidden rounded-lg border border-surface-200 bg-white">
+      <div className="p-5">
+        <span
+          className={`mb-3 inline-block rounded px-2 py-1 text-xs font-semibold uppercase tracking-wide ${chipClass(item.severity)}`}
+        >
+          {item.severityLabel}
+        </span>
+        <h4 className="font-display text-lg font-bold text-ink-900">{item.title}</h4>
+        <p className="mt-3 text-ink-700">{item.concern}</p>
+      </div>
+
+      <div className="border-t border-surface-200 bg-surface-100 p-5">
+        <p className="text-xs font-bold uppercase tracking-wider text-accent-600">
+          How to address it
+        </p>
+        <p className="mt-2 text-ink-900">{item.remediation}</p>
+        {item.hedged && item.hedgeNote ? (
+          <p className="mt-3 text-sm text-ink-500">{item.hedgeNote}</p>
+        ) : null}
+      </div>
+
+      {item.ruleExplanation || item.citedSection ? (
+        <div className="border-t border-surface-200 px-5 py-3">
+          {item.ruleExplanation ? (
+            <details className="spot-rule">
+              <summary className="flex min-h-[44px] cursor-pointer items-center text-xs font-medium uppercase tracking-wider text-ink-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50">
+                What this rule means{item.ruleTitle ? ` — ${item.ruleTitle}` : ''}
+              </summary>
+              <p className="pb-2 text-sm text-ink-700">{item.ruleExplanation}</p>
+            </details>
+          ) : null}
+          {item.citedSection ? (
+            <p className="text-xs text-ink-500">
+              Related standard:{' '}
+              {item.citedUrl ? (
+                <a
+                  href={item.citedUrl}
+                  className="text-accent-600 underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+                >
+                  {item.citedSection}
+                </a>
+              ) : (
+                item.citedSection
+              )}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+function Group({ heading, items }: { heading: string; items: SpotReportItem[] }) {
+  // An empty group renders nothing at all — not a heading over blank space.
+  if (items.length === 0) return null;
+  return (
+    <>
+      <h3 className="mt-10 border-b border-surface-200 pb-2 text-xs font-bold uppercase tracking-widest text-ink-500">
+        {heading}
+      </h3>
+      <div className="mt-4 space-y-4">
+        {items.map((item, i) => (
+          <Finding key={`${item.title}-${i}`} item={item} />
+        ))}
+      </div>
+    </>
+  );
+}
 
 export default function SpotReportView({
   content,
@@ -31,84 +127,59 @@ export default function SpotReportView({
   /** True when this session HAD photos and none survive retention. */
   photosPurged?: boolean;
 }) {
+  const groups = groupFindings(content.items);
+  const summary = summaryLine(groups);
+
   return (
-    <article className="rounded-lg border border-surface-200 bg-surface-100 p-5">
-      <p className="mb-4 rounded-md border border-surface-200 bg-surface-50 px-4 py-3 text-xs text-ink-700">
+    <article className="spot-report">
+      <p className="mb-5 rounded-md border border-surface-200 bg-surface-100 px-4 py-3 text-xs text-ink-700">
         {SPOT_REPORT_STARTER_DISCLAIMER}
       </p>
-      <h2 className="font-display text-2xl text-ink-900">{content.headline}</h2>
-      {content.overview ? <p className="mt-2 text-ink-900">{content.overview}</p> : null}
+
+      <p className="text-xs font-bold uppercase tracking-widest text-ink-500">
+        Accessibility screening
+      </p>
+      <h2 className="mt-2 font-display text-3xl font-bold leading-tight text-ink-900">
+        {content.headline}
+      </h2>
+      {summary ? <p className="mt-2 text-lg text-ink-500">{summary}</p> : null}
 
       {photos.length > 0 ? (
-        <ul className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 list-none p-0">
+        <ul className="mt-6 list-none space-y-3 p-0">
           {photos.map((url, i) => (
-            <li key={url} className="rounded-md border border-surface-200 bg-surface-50 p-2">
+            <li key={url}>
               <img
                 src={url}
                 alt={`Photo ${i + 1} of ${photos.length} screened in this report`}
-                className="block w-full rounded-sm"
+                className="block w-full rounded-lg border border-surface-200"
                 loading="lazy"
               />
             </li>
           ))}
+          <li className="text-xs text-ink-500">
+            The photographs this screening read. Photos are deleted after 90 days; the report
+            stays.
+          </li>
         </ul>
       ) : null}
 
       {/* Only when photos existed and were swept. A report that never had
           photos says nothing, because there is nothing to explain. */}
       {photos.length === 0 && photosPurged ? (
-        <p className="mt-5 rounded-md border border-surface-200 bg-surface-50 px-4 py-3 text-sm text-ink-700">
+        <p className="mt-6 rounded-md border border-surface-200 bg-surface-100 px-4 py-3 text-sm text-ink-700">
           The photos for this screening have been deleted. Uploaded photos are removed after 90
           days; the report stays available.
         </p>
       ) : null}
 
-      {content.items.length > 0 ? (
-        <ul className="mt-5 space-y-4">
-          {content.items.map((item, i) => (
-            <li key={i} className="rounded-md border border-surface-200 bg-surface-50 p-4">
-              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <span className="rounded-full bg-accent-50 px-2 py-0.5 text-xs font-medium text-accent-600">
-                  {item.severityLabel}
-                </span>
-                <span className="font-display text-base text-ink-900">{item.title}</span>
-              </div>
-              <p className="mt-2 text-sm text-ink-700">{item.concern}</p>
-              <p className="mt-2 text-sm text-ink-900">
-                <span className="font-medium">How to address it:</span> {item.remediation}
-              </p>
-              {item.hedged && item.hedgeNote ? (
-                <p className="mt-2 text-sm text-ink-500">{item.hedgeNote}</p>
-              ) : null}
-              {item.ruleExplanation ? (
-                <div className="mt-2 rounded-md bg-surface-100 px-3 py-2">
-                  <p className="text-xs font-medium text-ink-700">
-                    What this rule means{item.ruleTitle ? ` — ${item.ruleTitle}` : ''}
-                  </p>
-                  <p className="mt-1 text-xs text-ink-700">{item.ruleExplanation}</p>
-                </div>
-              ) : null}
-              {item.citedSection ? (
-                <p className="mt-2 text-xs text-ink-500">
-                  Related standard:{' '}
-                  {item.citedUrl ? (
-                    <a
-                      href={item.citedUrl}
-                      className="text-accent-600 underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
-                    >
-                      {item.citedSection}
-                    </a>
-                  ) : (
-                    item.citedSection
-                  )}
-                </p>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-      ) : null}
+      {content.overview ? <p className="mt-6 text-lg text-ink-900">{content.overview}</p> : null}
 
-      <p className="mt-6 border-t border-surface-200 pt-4 text-xs text-ink-500">{content.disclaimer}</p>
+      <Group heading="Visible in the photo" items={groups.confirmed} />
+      <Group heading="A photo can’t settle these — go measure" items={groups.unconfirmed} />
+
+      <p className="mt-10 border-t border-surface-200 pt-4 text-xs text-ink-500">
+        {content.disclaimer}
+      </p>
     </article>
   );
 }

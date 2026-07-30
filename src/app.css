@@ -932,6 +932,18 @@ body {
   footer {
     display: none !important;
   }
+
+  /* A Spot report collapses its repeated rule explanations behind a
+     <details>, because the same paragraph appears under every finding
+     citing the same section. Paper has no disclosure triangle: on print
+     the toggle goes and the text comes out, so the printed report and
+     the PDF built from it are complete. */
+  .spot-report details.spot-rule > summary {
+    display: none !important;
+  }
+  .spot-report details.spot-rule > *:not(summary) {
+    display: block !important;
+  }
 }
 
 /* ───────────────────────────────────────────────────────────────────────────
