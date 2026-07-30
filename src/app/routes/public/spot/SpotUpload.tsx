@@ -12,6 +12,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { downscalePhoto } from '@/app/utils/downscalePhoto';
 import { MAX_PAID_PHOTOS } from '@/lib/spot/uploadGate';
+import {
+  buildConfirmationCopy,
+  NO_ADDRESS_AFTER,
+  NO_ADDRESS_BEFORE,
+  SPOT_SUPPORT_EMAIL,
+  type EmailLookup,
+} from '@/lib/spot/confirmationCopy';
 
 /**
  * Paid sessions whose carried photo has already been uploaded.
@@ -24,7 +31,6 @@ const carriedSessions = new Set<string>();
 
 interface Props {
   spotSessionId: string;
-  buyerEmail?: string | null;
   /**
    * The photo(s) already chosen during the free read, handed down by
    * SpotLanding. Best-effort: empty on a refresh or a returning link, and
@@ -33,8 +39,17 @@ interface Props {
   initialFiles?: File[];
 }
 
-export default function SpotUpload({ spotSessionId, buyerEmail, initialFiles }: Props) {
+export default function SpotUpload({ spotSessionId, initialFiles }: Props) {
   const [count, setCount] = useState(0);
+  /**
+   * The address this session's report will be emailed to.
+   *
+   * Fetched here rather than threaded down from SpotLanding: the id is all
+   * that is needed, and SpotCheckout's onPaid only ever carried the id. It
+   * starts 'unknown' and stays there if the request fails, so a network
+   * problem shows a vaguer line rather than asserting we have no address.
+   */
+  const [emailLookup, setEmailLookup] = useState<EmailLookup>({ state: 'unknown' });
   /**
    * Object URLs for the photos accepted so far, so the buyer can see what
    * they are sending. A count alone left them staring at "1 added" with no
@@ -52,6 +67,34 @@ export default function SpotUpload({ spotSessionId, buyerEmail, initialFiles }: 
   const [error, setError] = useState<string | null>(null);
 
   const remaining = MAX_PAID_PHOTOS - count;
+
+  // One read, on mount. The address cannot change for a paid session, so
+  // there is nothing to poll for.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/spot/session-status?id=${encodeURIComponent(spotSessionId)}`,
+        );
+        if (!res.ok) return; // stays 'unknown' — we did not learn either way
+        const data = (await res.json()) as { buyerEmail?: string | null };
+        if (cancelled) return;
+        // A present key with a null value is the server telling us there is
+        // no address on file. A missing key means an older deploy that never
+        // sent one, which is not the same claim — leave that as 'unknown'.
+        if (!('buyerEmail' in data)) return;
+        setEmailLookup(
+          data.buyerEmail ? { state: 'found', email: data.buyerEmail } : { state: 'none' },
+        );
+      } catch {
+        // Network failure. 'unknown' is the honest state.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [spotSessionId]);
 
   async function uploadOne(file: File) {
     const { upload } = await import('@vercel/blob/client');
@@ -158,14 +201,28 @@ export default function SpotUpload({ spotSessionId, buyerEmail, initialFiles }: 
   }
 
   if (done) {
+    const copy = buildConfirmationCopy(emailLookup);
     return (
       <div className="rounded-lg border border-surface-200 bg-surface-100 p-5" aria-live="polite">
-        <h2 className="font-display text-xl text-ink-900">Payment received — photos in</h2>
+        <h2 className="font-display text-xl text-ink-900">{copy.heading}</h2>
         <p className="mt-2 text-ink-900">
-          Your report is being prepared and will be emailed
-          {buyerEmail ? ` to ${buyerEmail}` : ''} shortly — typically within a few hours. You can
-          close this page.
+          {copy.kind === 'none' ? (
+            <>
+              {NO_ADDRESS_BEFORE}
+              <a
+                href={`mailto:${SPOT_SUPPORT_EMAIL}`}
+                className="inline-flex min-h-[44px] items-center text-accent-600 underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+              >
+                {SPOT_SUPPORT_EMAIL}
+              </a>
+              {NO_ADDRESS_AFTER}
+            </>
+          ) : (
+            copy.addressLine
+          )}
         </p>
+        <p className="mt-2 text-ink-700">{copy.reviewLine}</p>
+        <p className="mt-2 text-ink-700">{copy.closingLine}</p>
       </div>
     );
   }

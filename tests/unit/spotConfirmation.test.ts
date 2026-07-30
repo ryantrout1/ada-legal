@@ -20,6 +20,8 @@
 
 import { describe, it, expect } from 'vitest';
 import {
+  NO_ADDRESS_AFTER,
+  NO_ADDRESS_BEFORE,
   SPOT_SUPPORT_EMAIL,
   buildConfirmationCopy,
 } from '@/lib/spot/confirmationCopy';
@@ -114,5 +116,29 @@ describe('buildConfirmationCopy — input hygiene', () => {
     const copy = buildConfirmationCopy({ state: 'found', email: '  buyer@example.com  ' });
     expect(copy.addressLine).toContain('buyer@example.com');
     expect(copy.addressLine).not.toContain('  buyer');
+  });
+});
+
+describe('the no-address sentence has one source', () => {
+  it('composes from the fragments the screen renders', () => {
+    // The screen cannot print addressLine verbatim for this branch — it has
+    // to interleave a mailto anchor. If it restated the prose instead of
+    // composing from these, the test above would pass against a sentence
+    // nobody sees.
+    expect(`${NO_ADDRESS_BEFORE}${SPOT_SUPPORT_EMAIL}${NO_ADDRESS_AFTER}`).toBe(
+      buildConfirmationCopy({ state: 'none' }).addressLine,
+    );
+  });
+});
+
+describe('buildConfirmationCopy — kind', () => {
+  it('reports which state produced the copy, so the screen branches once', () => {
+    expect(buildConfirmationCopy({ state: 'found', email: 'a@b.com' }).kind).toBe('found');
+    expect(buildConfirmationCopy({ state: 'none' }).kind).toBe('none');
+    expect(buildConfirmationCopy({ state: 'unknown' }).kind).toBe('unknown');
+  });
+
+  it('treats a blank address as the no-address branch, not a found one', () => {
+    expect(buildConfirmationCopy({ state: 'found', email: '  ' }).kind).toBe('none');
   });
 });
