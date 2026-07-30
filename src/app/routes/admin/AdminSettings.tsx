@@ -175,7 +175,7 @@ const FLAGS: {
     key: 'spot_enabled',
     title: 'Spot',
     description:
-      'The $79 paid accessibility report at /spot. Off hides the product entirely; nobody can be charged while this is off.',
+      'The $99 paid accessibility report at /spot. Off hides the product entirely; nobody can be charged while this is off.',
   },
   {
     key: 'spot_test_payment',

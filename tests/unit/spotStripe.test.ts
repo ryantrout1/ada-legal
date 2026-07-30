@@ -3,7 +3,7 @@ import { buildSpotCheckoutParams, resolveSpotCheckoutEvent } from '@/lib/spot/sp
 import type { StripeWebhookEvent } from '@/engine/clients/stripeClient';
 
 describe('buildSpotCheckoutParams', () => {
-  const params = buildSpotCheckoutParams({ spotSessionId: 'sess-1', priceCents: 7900 });
+  const params = buildSpotCheckoutParams({ spotSessionId: 'sess-1', priceCents: 9900 });
 
   it('is a one-time, on-page embedded payment (no redirect)', () => {
     expect(params.get('mode')).toBe('payment');
@@ -13,7 +13,7 @@ describe('buildSpotCheckoutParams', () => {
 
   it('sets the amount server-side and echoes the spot session id in metadata', () => {
     expect(params.get('line_items[0][price_data][currency]')).toBe('usd');
-    expect(params.get('line_items[0][price_data][unit_amount]')).toBe('7900');
+    expect(params.get('line_items[0][price_data][unit_amount]')).toBe('9900');
     expect(params.get('line_items[0][quantity]')).toBe('1');
     expect(params.get('metadata[spot_session_id]')).toBe('sess-1');
     // also on the payment intent so a PI-side event can still be correlated
@@ -36,7 +36,7 @@ describe('resolveSpotCheckoutEvent', () => {
       completedEvent({
         metadata: { spot_session_id: 'sess-9' },
         payment_intent: 'pi_123',
-        amount_total: 7900,
+        amount_total: 9900,
         customer_details: { email: 'owner@shop.example' },
       }),
     );
@@ -44,7 +44,7 @@ describe('resolveSpotCheckoutEvent', () => {
       spotSessionId: 'sess-9',
       paymentIntentId: 'pi_123',
       email: 'owner@shop.example',
-      amountCents: 7900,
+      amountCents: 9900,
     });
   });
 

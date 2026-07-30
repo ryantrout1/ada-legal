@@ -91,7 +91,7 @@ const NEEDS_ATTENTION = new Set<SessionRow['delivery']>(['no_email', 'unsent']);
  * Money actually received — not the price on the session.
  *
  * amount_cents is written when the checkout session is created, before any
- * money moves, so a `pending_payment` row carries $79.00 while nothing has
+ * money moves, so a `pending_payment` row carries $99.00 while nothing has
  * been collected. Rendering that under "Amount" made the table disagree with
  * the gross figure directly above it, which correctly counts only captured
  * payments. Same class of error as a count that is populated and means

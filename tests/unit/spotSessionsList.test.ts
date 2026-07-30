@@ -108,7 +108,7 @@ describe('spot admin page — reachable and legible', () => {
 
   it('shows an amount only when money was captured', () => {
     // amount_cents is set at checkout creation, so a pending_payment row
-    // carries $79.00 with nothing collected. Showing it made the table
+    // carries $99.00 with nothing collected. Showing it made the table
     // disagree with the gross total above it.
     expect(PAGE).toMatch(/function money\(cents: number \| null, paidAt: string \| null\)/);
     expect(PAGE).toMatch(/if \(!paidAt\) return '—';/);

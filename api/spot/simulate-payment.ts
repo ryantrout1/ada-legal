@@ -11,7 +11,7 @@
  *      upsert), and
  *   2. a shared secret in SPOT_TEST_KEY that the caller must present (header
  *      `x-spot-test-key` or body `testKey`).
- * The flag alone is not a security boundary — this endpoint mints a free $79
+ * The flag alone is not a security boundary — this endpoint mints a free $99
  * report and its path is visible in the public JS bundle, so a flag-only gate
  * is world-open. The key lives only in the server env and the operator's
  * private URL (?test=1&key=…); it is never shipped to the browser. With the key
@@ -31,7 +31,7 @@ import { generatePackageSlug } from '../../src/engine/package/slug.js';
 export const config = { maxDuration: 300 };
 
 const MAX_TEST_PHOTOS = 10;
-const TEST_AMOUNT_CENTS = 7900;
+const TEST_AMOUNT_CENTS = 9900;
 
 /** Constant-time string compare; false on any length/type mismatch (no timing oracle). */
 function timingSafeEqualStr(a: string, b: string): boolean {
@@ -54,7 +54,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // Second gate: a shared secret only the operator holds. The admin flag alone
-  // is not enough — this endpoint mints a free $79 report and its URL is
+  // is not enough — this endpoint mints a free $99 report and its URL is
   // visible in the public bundle, so a flag-only gate is world-open. The key
   // lives ONLY in SPOT_TEST_KEY (server env) and in the operator's private
   // URL; it is never shipped to the browser. Unset key => closed (fail-safe),

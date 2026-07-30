@@ -123,7 +123,7 @@ export async function generateReport(
   // The observed malformation — the model serializing its findings into the
   // overview string instead of emitting `areas` — happened on one of four
   // reports with the same prompt, model and inputs. It is a roll of the dice,
-  // and a buyer who paid $79 should not lose their report to one bad roll.
+  // and a buyer who paid $99 should not lose their report to one bad roll.
   //
   // Only the SYNTHESIS is retried, never the photo analyses: those are the
   // expensive vision calls, they already succeeded, and re-running them would

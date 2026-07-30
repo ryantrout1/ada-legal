@@ -4,7 +4,7 @@
  *   POST {} -> { clientSecret, spotSessionId }
  *
  * Creates a pending_payment spot_session and an embedded Stripe Checkout
- * Session ($79 one-time), then returns the client_secret the browser mounts.
+ * Session ($99 one-time), then returns the client_secret the browser mounts.
  * The amount is set server-side (SPOT_PRICE_CENTS) — the client never supplies
  * a price. Paid-state is NOT granted here; only the verified webhook flips it.
  *
@@ -18,7 +18,7 @@ import { readSpotEnabled } from '../../src/lib/spot/spotAvailability.js';
 import { makeSpotStore } from '../../src/lib/spot/spotStore.js';
 import { createSpotCheckoutSession } from '../../src/lib/spot/spotStripe.js';
 
-const SPOT_PRICE_CENTS = Number(process.env.SPOT_PRICE_CENTS) || 7900;
+const SPOT_PRICE_CENTS = Number(process.env.SPOT_PRICE_CENTS) || 9900;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;

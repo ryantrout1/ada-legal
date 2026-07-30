@@ -29,13 +29,13 @@ describe.skipIf(!DATABASE_URL || !ALLOW_WRITES)('spotStore sessions — live DB'
   it('createSession -> markPaid is idempotent (a replayed webhook is a no-op)', async () => {
     const db = makeDb(DATABASE_URL!);
     const store = makeSpotStore(db);
-    const id = await store.createSession({ amountCents: 7900 });
+    const id = await store.createSession({ amountCents: 9900 });
     try {
       const first = await store.markPaid({
         spotSessionId: id,
         paymentIntentId: 'pi_test',
         email: 'owner@shop.example',
-        amountCents: 7900,
+        amountCents: 9900,
       });
       expect(first).toBe(true);
 

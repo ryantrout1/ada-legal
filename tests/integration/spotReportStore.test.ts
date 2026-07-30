@@ -28,9 +28,9 @@ describe.skipIf(!DATABASE_URL || !ALLOW_WRITES)('spotStore report methods — li
   it('uploaded → insertReport → getReportBySession → markInReview', async () => {
     const db = makeDb(DATABASE_URL!);
     const store = makeSpotStore(db);
-    const id = await store.createSession({ amountCents: 7900 });
+    const id = await store.createSession({ amountCents: 9900 });
     try {
-      await store.markPaid({ spotSessionId: id, amountCents: 7900 });
+      await store.markPaid({ spotSessionId: id, amountCents: 9900 });
       await store.insertPhoto({ sessionId: id, blobKey: 'k', blobUrl: 'https://blob/x.jpg' });
       await store.markUploaded({ spotSessionId: id, photoCount: 1 });
 
@@ -75,7 +75,7 @@ describe.skipIf(!DATABASE_URL || !ALLOW_WRITES)('spotStore report methods — li
   it('photosToSweep finds past-retention photos; markPhotoDeleted removes them from the sweep', async () => {
     const db = makeDb(DATABASE_URL!);
     const store = makeSpotStore(db);
-    const id = await store.createSession({ amountCents: 7900 });
+    const id = await store.createSession({ amountCents: 9900 });
     try {
       await store.insertPhoto({ sessionId: id, blobKey: 'k', blobUrl: 'https://blob/sweep.jpg' });
       // Force this photo past its retention window.

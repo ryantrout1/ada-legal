@@ -27,9 +27,9 @@ describe.skipIf(!DATABASE_URL || !ALLOW_WRITES)('spotStore photo lifecycle — l
   it('pay -> insert photos -> count -> markUploaded (idempotent)', async () => {
     const db = makeDb(DATABASE_URL!);
     const store = makeSpotStore(db);
-    const id = await store.createSession({ amountCents: 7900 });
+    const id = await store.createSession({ amountCents: 9900 });
     try {
-      await store.markPaid({ spotSessionId: id, amountCents: 7900 });
+      await store.markPaid({ spotSessionId: id, amountCents: 9900 });
 
       await store.insertPhoto({ sessionId: id, blobKey: 'spot/a.jpg', blobUrl: 'https://blob/a.jpg' });
       await store.insertPhoto({ sessionId: id, blobKey: 'spot/b.jpg', blobUrl: 'https://blob/b.jpg' });
