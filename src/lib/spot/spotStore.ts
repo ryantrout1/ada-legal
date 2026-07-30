@@ -107,8 +107,13 @@ export interface SpotStore {
   /** Flip uploaded → in_review (conditional; idempotent). Returns true iff transitioned. */
   markInReview(sessionId: string): Promise<boolean>;
   /** Recent reports for the admin preview list. */
+  /**
+   * The review queue's list. Carries the buyer so a reviewer can see whose
+   * report they are about to release — and nothing else from the session,
+   * because this returns up to 100 rows and the page renders one at a time.
+   */
   listReports(limit: number): Promise<
-    Array<{ id: string; sessionId: string; slug: string; modelVersion: string | null; hitlStatus: string; sentAt: Date | null; createdAt: Date }>
+    Array<{ id: string; sessionId: string; slug: string; modelVersion: string | null; hitlStatus: string; sentAt: Date | null; createdAt: Date; buyerName: string | null; buyerEmail: string | null }>
   >;
   /** A single report's full content + metadata, by slug. */
   getReportBySlug(slug: string): Promise<
@@ -412,8 +417,14 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
           hitlStatus: spotReports.hitlStatus,
           sentAt: spotReports.sentAt,
           createdAt: spotReports.createdAt,
+          buyerName: spotSessions.buyerName,
+          buyerEmail: spotSessions.buyerEmail,
         })
         .from(spotReports)
+        // leftJoin, not join: a report whose session row is missing should
+        // list without a buyer, not vanish from the queue. A report nobody
+        // can see is worse than one nobody can attribute.
+        .leftJoin(spotSessions, eq(spotReports.sessionId, spotSessions.id))
         .orderBy(desc(spotReports.createdAt))
         .limit(limit);
     },

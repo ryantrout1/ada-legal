@@ -21,6 +21,8 @@ interface ReportRow {
   hitlStatus: string;
   sentAt: string | null;
   createdAt: string;
+  buyerName: string | null;
+  buyerEmail: string | null;
 }
 
 export default function SpotReview() {
@@ -198,6 +200,27 @@ export default function SpotReview() {
                     <span className="text-ink-500">{r.sentAt ? 'emailed' : 'not emailed'}</span>
                   ) : null}
                   <span className="text-ink-500">{new Date(r.createdAt).toLocaleString()}</span>
+                </div>
+                {/* Who this report is for. The name is the CARDHOLDER, which
+                    is not always the person the barrier affects — a manager
+                    or an assistant may have paid — so it is labelled as who
+                    paid and never travels onto the report itself.
+                    No buyer at all is a real state worth seeing before
+                    pressing Release: that report can never be delivered. */}
+                <div className="mt-1 flex flex-wrap items-center gap-x-2 text-sm">
+                  {r.buyerName || r.buyerEmail ? (
+                    <>
+                      <span className="text-ink-500">Paid by</span>
+                      {r.buyerName ? (
+                        <span className="font-medium text-ink-900">{r.buyerName}</span>
+                      ) : null}
+                      {r.buyerEmail ? <span className="text-ink-700">{r.buyerEmail}</span> : null}
+                    </>
+                  ) : (
+                    <span className="text-ink-500">No buyer on file</span>
+                  )}
+                </div>
+                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
                   <span className="text-ink-500">session {r.sessionId.slice(0, 8)}</span>
                 </div>
                 <div className="mt-2 flex flex-wrap gap-2">
