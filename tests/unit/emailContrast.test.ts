@@ -48,7 +48,23 @@ describe('the contrast maths itself', () => {
 describe('every declared email colour pair', () => {
   it('declares at least the pairs the Spot release email uses', () => {
     const names = EMAIL_CONTRAST_PAIRS.map((p) => p.name);
-    for (const required of ['heading', 'body', 'muted', 'button label', 'button fill']) {
+    for (const required of [
+      'heading',
+      'body',
+      'muted',
+      'button label',
+      'button fill',
+      'link',
+      // The handoff emails render on their own lighter-grey surface, so every
+      // colour used there needs its own pair — a ratio is a property of a
+      // combination, not of a colour.
+      'heading on alt surface',
+      'body on alt surface',
+      'muted on alt surface',
+      'link on alt surface',
+      'callout text',
+      'callout border',
+    ]) {
       expect(names, `no pair declared for "${required}"`).toContain(required);
     }
   });
@@ -88,7 +104,11 @@ describe('every email renderer draws only from the shared palette', () => {
   const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
   const allowed = new Set(EMAIL_PALETTE.map((c) => c.toLowerCase()));
 
-  const RENDERERS = ['src/engine/handoff/selfHelpEmail.ts', 'src/lib/spot/releaseEmail.ts'];
+  const RENDERERS = [
+    'src/engine/handoff/selfHelpEmail.ts',
+    'src/lib/spot/releaseEmail.ts',
+    'src/engine/handoff/emailTemplates.ts',
+  ];
 
   it.each(RENDERERS)('%s', (rel) => {
     const src = readFileSync(resolve(root, rel), 'utf8');
