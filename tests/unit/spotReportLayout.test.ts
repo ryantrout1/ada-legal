@@ -17,7 +17,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { groupFindings, summaryLine } from '@/lib/spot/reportLayout';
+import { groupFindings, stripEntries, summaryLine } from '@/lib/spot/reportLayout';
 import type { SpotReportItem } from '@/lib/spot/reportSchema';
 
 function item(title: string, hedged: boolean): SpotReportItem {
@@ -134,5 +134,47 @@ describe('summaryLine', () => {
         expect(blob).not.toContain(banned);
       }
     }
+  });
+});
+
+/**
+ * Phase 3 — /plan Spot report redesign.
+ *
+ * The strip across the top of the report is every measurable target in one
+ * glance: the numbers you are about to go and check. It is derived, so a
+ * report whose findings carry no targets simply has no strip rather than an
+ * empty band.
+ */
+describe('stripEntries', () => {
+  const withTarget = (title: string, value: string, label: string): SpotReportItem => ({
+    ...item(title, true),
+    target: { value, label },
+  });
+
+  it('returns one entry per finding that carries a target, in order', () => {
+    const entries = stripEntries([
+      withTarget('a', '32 in', 'clear doorway width'),
+      withTarget('b', '34–48 in', 'handle height'),
+    ]);
+    expect(entries).toEqual([
+      { value: '32 in', label: 'clear doorway width' },
+      { value: '34–48 in', label: 'handle height' },
+    ]);
+  });
+
+  it('skips findings with no target but keeps the rest', () => {
+    const entries = stripEntries([
+      item('no target', false),
+      withTarget('has one', '¼ in', 'threshold lip'),
+      item('also none', true),
+    ]);
+    expect(entries).toEqual([{ value: '¼ in', label: 'threshold lip' }]);
+  });
+
+  it('returns nothing when no finding carries a target', () => {
+    // Every report generated before this field existed. They are permanent,
+    // so this is not a transitional case — it is forever.
+    expect(stripEntries(SAMPLE)).toEqual([]);
+    expect(stripEntries([])).toEqual([]);
   });
 });
