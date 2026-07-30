@@ -35,6 +35,7 @@ import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv, readJsonBody } from '../../_shared.js';
 import { makeSpotStore } from '../../../src/lib/spot/spotStore.js';
 import { buildReleaseEmail } from '../../../src/lib/spot/releaseEmail.js';
+import { SPOT_SUPPORT_EMAIL } from '../../../src/lib/spot/confirmationCopy.js';
 import { PUBLIC_ORIGIN } from '../../../src/lib/publicOrigin.js';
 
 const DEFAULT_READOUT_BASE_URL = PUBLIC_ORIGIN;
@@ -77,6 +78,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         subject: email.subject,
         html: email.html,
         text: email.text,
+        replyTo: SPOT_SUPPORT_EMAIL,
       });
     } catch (mailErr) {
       console.error('spot/admin/resend: email send failed', mailErr);

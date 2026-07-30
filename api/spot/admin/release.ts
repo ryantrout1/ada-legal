@@ -22,6 +22,7 @@ import { applyCors } from '../../_cors.js';
 import { makeClientsFromEnv, readJsonBody } from '../../_shared.js';
 import { makeSpotStore } from '../../../src/lib/spot/spotStore.js';
 import { buildReleaseEmail } from '../../../src/lib/spot/releaseEmail.js';
+import { SPOT_SUPPORT_EMAIL } from '../../../src/lib/spot/confirmationCopy.js';
 import { PUBLIC_ORIGIN } from '../../../src/lib/publicOrigin.js';
 
 const DEFAULT_READOUT_BASE_URL = PUBLIC_ORIGIN;
@@ -63,7 +64,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const email = buildReleaseEmail({ slug, baseUrl });
       try {
         const clients = makeClientsFromEnv();
-        await clients.email.send({ to: released.buyerEmail, subject: email.subject, html: email.html, text: email.text });
+        await clients.email.send({ to: released.buyerEmail, subject: email.subject, html: email.html, text: email.text, replyTo: SPOT_SUPPORT_EMAIL });
         await store.markReportSent(slug);
         sent = true;
       } catch (mailErr) {

@@ -335,10 +335,18 @@ export const EMAIL_TEMPLATES: readonly EmailTemplateSpec[] = [
       },
       { key: 'heading', varied: false, variables: [], default: 'Your screening is ready' },
       {
+        key: 'cta_label',
+        varied: false,
+        variables: [],
+        default: 'View your screening report',
+      },
+      {
         key: 'intro',
         varied: false,
         variables: [],
-        default: 'Thanks for using Spot. Your accessibility screening report is ready to view:',
+        // No trailing colon: it introduced a bare URL, and the URL is a
+        // button now.
+        default: 'Thanks for using Spot. Your accessibility screening report is ready.',
       },
       {
         key: 'disclaimer',
@@ -350,11 +358,25 @@ export const EMAIL_TEMPLATES: readonly EmailTemplateSpec[] = [
           'This report is an automated screening based on the photos you provided — a starting point for planning remediation, not a professional inspection or a legal determination. Findings should be confirmed on-site.',
       },
       {
+        key: 'review',
+        varied: false,
+        variables: [],
+        // Matches buildConfirmationCopy's line on the waiting screen, in the
+        // past tense. api/spot/admin/release.ts is the only path that sends a
+        // report and it requires an admin, so this is simply true — and it is
+        // the reason the wait was hours.
+        default: 'A person read this report before it was sent.',
+      },
+      {
         key: 'retention',
         varied: false,
         variables: [],
+        // The report is permanent — api/spot/report.ts says so outright, and
+        // spot_photo is what carries the 90-day clock. Saying the link expires
+        // would be false and would manufacture urgency the product does not
+        // have; the honest urgency is that the photos leave the report.
         default:
-          'Your uploaded photos are automatically deleted after 90 days. Your report stays available.',
+          'The link above doesn’t expire. Your uploaded photos are deleted after 90 days, and come out of the report when they go — the findings stay.',
       },
     ],
   },
