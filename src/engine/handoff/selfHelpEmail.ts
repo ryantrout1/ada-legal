@@ -27,6 +27,14 @@ import type { AdaSessionState } from '../types.js';
 import type { RenderedEmail } from './emailTemplates.js';
 import { copyFor, loadCopy, type CopyBundle } from '../email/resolveCopy.js';
 import { EMPTY_COPY } from './emailTemplates.js';
+import {
+  EMAIL_BG,
+  EMAIL_BODY,
+  EMAIL_INK,
+  EMAIL_LINK,
+  EMAIL_MUTED,
+  EMAIL_RULE,
+} from '../email/emailStyles.js';
 
 // ─── Contact email extraction ─────────────────────────────────────────────────
 
@@ -84,16 +92,16 @@ export function renderSelfHelpUserEmail(
   const text = textLines.join('\n');
 
   const html = [
-    '<!doctype html><html><body style="margin:0;background:#faf7f2">',
-    '<div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1e293b;line-height:1.6">',
+    `<!doctype html><html lang="en"><body style="margin:0;background:${EMAIL_BG}">`,
+    `<div style="max-width:560px;margin:0 auto;padding:24px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:${EMAIL_INK};line-height:1.6">`,
     `<p style="margin:0 0 16px">${escapeHtml(greeting)}</p>`,
-    `<p style="margin:0 0 16px;color:#475569;white-space:pre-wrap">${escapeHtml(summary)}</p>`,
+    `<p style="margin:0 0 16px;color:${EMAIL_BODY};white-space:pre-wrap">${escapeHtml(summary)}</p>`,
     `<p style="margin:0 0 8px">${escapeHtml(cta)}</p>`,
-    `<p style="margin:0 0 20px"><a href="${escapeHtml(packageUrl)}" style="color:#c2410c">${escapeHtml(packageUrl)}</a></p>`,
+    `<p style="margin:0 0 20px"><a href="${escapeHtml(packageUrl)}" style="color:${EMAIL_LINK}">${escapeHtml(packageUrl)}</a></p>`,
     letterLine ? `<p style="margin:0 0 16px">${escapeHtml(letterLine)}</p>` : '',
-    '<hr style="border:none;border-top:1px solid #eee;margin:24px 0">',
-    `<p style="color:#888;font-size:12px;margin:0 0 8px">${escapeHtml(disclaimer)}</p>`,
-    '<p style="color:#888;font-size:12px;margin:0">ADA Legal Link</p>',
+    `<hr style="border:none;border-top:1px solid ${EMAIL_RULE};margin:24px 0">`,
+    `<p style="color:${EMAIL_MUTED};font-size:14px;margin:0 0 8px">${escapeHtml(disclaimer)}</p>`,
+    `<p style="color:${EMAIL_MUTED};font-size:14px;margin:0">ADA Legal Link</p>`,
     '</div></body></html>',
   ].join('');
 

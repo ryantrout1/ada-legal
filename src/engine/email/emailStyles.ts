@@ -47,6 +47,26 @@ export const EMAIL_MUTED = '#3f4b5b';
 export const EMAIL_BUTTON_BG = '#8a2c08';
 export const EMAIL_BUTTON_TEXT = '#ffffff';
 
+/**
+ * Inline link text. Same value as the button fill — one accent, used two ways.
+ * 8.04:1, so it clears AAA as normal-weight body text, which a link inside a
+ * paragraph is. The old #c2410c was 4.85:1 and the old #0066cc is 5.15:1;
+ * both are the shade of orange or blue that reads as "link" and neither
+ * survives the 7:1 floor.
+ */
+export const EMAIL_LINK = EMAIL_BUTTON_BG;
+
+/**
+ * Hairline rules between sections.
+ *
+ * Deliberately NOT a declared contrast pair. WCAG 1.4.11 covers graphics
+ * needed to understand the content; a decorative separator that carries no
+ * information is exempt, and holding it to 3:1 would make it a heavy black
+ * bar. It lives in the palette so the renderers can use it without tripping
+ * the stray-hex guard, and this comment is the record of why it has no pair.
+ */
+export const EMAIL_RULE = '#d9d2c7';
+
 /** Every hex any email renderer is allowed to emit. */
 export const EMAIL_PALETTE = [
   EMAIL_BG,
@@ -55,6 +75,7 @@ export const EMAIL_PALETTE = [
   EMAIL_MUTED,
   EMAIL_BUTTON_BG,
   EMAIL_BUTTON_TEXT,
+  EMAIL_RULE,
 ] as const;
 
 /**
@@ -91,4 +112,5 @@ export const EMAIL_CONTRAST_PAIRS: readonly EmailContrastPair[] = [
   { name: 'muted', fg: EMAIL_MUTED, bg: EMAIL_BG, min: 7, kind: 'text' },
   { name: 'button label', fg: EMAIL_BUTTON_TEXT, bg: EMAIL_BUTTON_BG, min: 7, kind: 'text' },
   { name: 'button fill', fg: EMAIL_BUTTON_BG, bg: EMAIL_BG, min: 3, kind: 'non-text' },
+  { name: 'link', fg: EMAIL_LINK, bg: EMAIL_BG, min: 7, kind: 'text' },
 ];
