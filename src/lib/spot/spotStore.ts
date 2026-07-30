@@ -61,6 +61,8 @@ export interface SpotSessionRow {
   status: SpotSessionStatus;
   stripeCheckoutSessionId: string | null;
   buyerEmail: string | null;
+  /** Cardholder name. Admin-facing only — see the note on session-status. */
+  buyerName: string | null;
   amountCents: number | null;
 }
 
@@ -80,6 +82,8 @@ export interface SpotStore {
     spotSessionId: string;
     paymentIntentId?: string;
     email?: string;
+    /** Cardholder name from Stripe, when it sent one. */
+    name?: string;
     amountCents?: number;
   }): Promise<boolean>;
   /** Record one uploaded paid photo (session-parented; read_id stays null). */
@@ -260,6 +264,7 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
           status: spotSessions.status,
           stripeCheckoutSessionId: spotSessions.stripeCheckoutSessionId,
           buyerEmail: spotSessions.buyerEmail,
+          buyerName: spotSessions.buyerName,
           amountCents: spotSessions.amountCents,
         })
         .from(spotSessions)
@@ -285,6 +290,7 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
           paidAt: new Date(),
           stripePaymentIntentId: input.paymentIntentId ?? null,
           buyerEmail: input.email ?? null,
+          buyerName: input.name ?? null,
           updatedAt: new Date(),
           ...(typeof input.amountCents === 'number' ? { amountCents: input.amountCents } : {}),
         })

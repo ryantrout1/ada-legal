@@ -47,5 +47,8 @@ describe('session-status returns the buyer email alongside the status', () => {
     const body = ok![1];
     expect(body).not.toMatch(/stripe/i);
     expect(body).not.toMatch(/amountCents/);
+    // The row carries the cardholder name now. The browser has no use for it,
+    // so it stops at the server.
+    expect(body).not.toMatch(/buyerName/);
   });
 });

@@ -79,6 +79,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         spotSessionId: resolved.spotSessionId,
         paymentIntentId: resolved.paymentIntentId,
         email: resolved.email,
+        name: resolved.name,
         amountCents: resolved.amountCents,
       });
     }

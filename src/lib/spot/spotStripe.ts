@@ -29,7 +29,27 @@ export interface ResolvedSpotCheckout {
   spotSessionId: string;
   paymentIntentId?: string;
   email?: string;
+  /**
+   * The CARDHOLDER name, not the subject of the report. Stripe collects it
+   * for card payments in `payment` mode without being asked. Undefined when
+   * Stripe sent nothing usable — see readName.
+   */
+  name?: string;
   amountCents?: number;
+}
+
+/**
+ * customer_details is whatever Stripe sent, so this is a boundary.
+ *
+ * A name arriving as a number, a null, or three spaces has to become
+ * undefined here. Downstream it lands in an admin list beside "no buyer on
+ * file", and a blank that a reader cannot tell from an absent one is worse
+ * than either.
+ */
+function readName(raw: unknown): string | undefined {
+  if (typeof raw !== 'string') return undefined;
+  const trimmed = raw.trim();
+  return trimmed || undefined;
 }
 
 /**
@@ -92,11 +112,12 @@ export function resolveSpotCheckoutEvent(event: StripeWebhookEvent): ResolvedSpo
   if (!spotSessionId) return null;
 
   const paymentIntentId = typeof session.payment_intent === 'string' ? session.payment_intent : undefined;
-  const details = session.customer_details as { email?: unknown } | undefined;
+  const details = session.customer_details as { email?: unknown; name?: unknown } | undefined;
   const email =
     (details && typeof details.email === 'string' ? details.email : undefined) ??
     (typeof session.customer_email === 'string' ? session.customer_email : undefined);
+  const name = readName(details?.name);
   const amountCents = typeof session.amount_total === 'number' ? session.amount_total : undefined;
 
-  return { spotSessionId, paymentIntentId, email, amountCents };
+  return { spotSessionId, paymentIntentId, email, name, amountCents };
 }

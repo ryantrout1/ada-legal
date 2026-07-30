@@ -9,7 +9,8 @@
  * only the verified webhook can advance.
  *
  * buyerEmail is here so the confirmation screen can name the address a report
- * is going to. getSession already read it; this used to drop it on the floor,
+ * is going to. buyerName is deliberately NOT — the browser has no use for it
+ * and the row now carries it for the admin surfaces. getSession already read it; this used to drop it on the floor,
  * which is why that screen promised an email it could not name. The response
  * stays narrow otherwise — this endpoint is unauthenticated, guarded only by
  * the session id being an unguessable uuid, so Stripe ids and amounts do not
