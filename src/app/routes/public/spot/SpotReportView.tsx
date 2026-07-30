@@ -70,7 +70,7 @@ function Finding({ item }: { item: SpotReportItem }) {
             <span className="text-xs font-bold uppercase tracking-wider text-accent-600">
               Target
             </span>
-            <span className="mt-2 font-display text-3xl font-bold leading-none text-ink-900">
+            <span className="mt-2 text-3xl font-extrabold leading-none tracking-tight text-ink-900 tabular-nums">
               {item.target.value}
             </span>
             <span className="mt-2 text-xs text-ink-500">{item.target.label}</span>
@@ -169,7 +169,7 @@ export default function SpotReportView({
         <ul className="mt-6 grid list-none grid-cols-2 gap-px overflow-hidden rounded-lg border border-surface-200 bg-surface-200 p-0 sm:grid-cols-4">
           {targets.map((t, i) => (
             <li key={`${t.value}-${i}`} className="bg-white p-4 text-center">
-              <span className="block font-display text-xl font-bold leading-none text-accent-600">
+              <span className="block text-xl font-extrabold leading-none tracking-tight text-accent-600 tabular-nums">
                 {t.value}
               </span>
               <span className="mt-2 block text-xs text-ink-500">{t.label}</span>

@@ -50,7 +50,12 @@ export default function SpotReadout() {
   }, [slug]);
 
   return (
-    <div>
+    // spot-surface, not spot-accent. The first is typography — app.css
+    // de-serifs Spot's own copy so a QR scan into /spot and the report that
+    // follows read as one product. The second is the teal, which this app
+    // deliberately does not take: the consumer palette is AA-level and the
+    // floor here is AAA.
+    <div className="spot-surface">
       <div className="mx-auto max-w-3xl px-5 sm:px-8 py-10">
         <p className="mb-6 font-display text-lg text-ink-700">Spot</p>
         {state === 'loading' ? (

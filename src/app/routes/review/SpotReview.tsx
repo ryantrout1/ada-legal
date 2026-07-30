@@ -250,7 +250,10 @@ export default function SpotReview() {
         )}
 
         {selected ? (
-          <section className="mt-8" aria-live="polite">
+          // The surface class goes here rather than on the page: a reviewer
+          // has to be looking at the buyer's document, but the admin chrome
+          // around it is not Spot.
+          <section className="spot-surface mt-8" aria-live="polite">
             <h2 className="mb-2 font-display text-xl text-ink-900">Report {selected.slug.slice(0, 8)}</h2>
             <SpotReportView
               content={selected.content}

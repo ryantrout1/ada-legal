@@ -23,19 +23,28 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { readCode } from '../support/sourceText.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const read = (rel: string) => readFileSync(resolve(root, rel), 'utf8');
+/**
+ * Absence assertions run against comment-stripped source.
+ *
+ * The first version of this file failed on its own subject matter: the
+ * readout carries a comment explaining that it takes spot-surface and NOT
+ * spot-accent, and a raw-text search found the word in the explanation. A
+ * guard that a correct comment can break is a guard people learn to edit
+ * around.
+ */
+const code = (rel: string) => readCode(resolve(root, rel));
 
 const READOUT = 'src/app/routes/public/spot/SpotReadout.tsx';
 const REVIEW = 'src/app/routes/review/SpotReview.tsx';
 const VIEW = 'src/app/routes/public/spot/SpotReportView.tsx';
 
 describe('the buyer’s readout', () => {
-  const src = read(READOUT);
+  const src = code(READOUT);
 
   it('opts into the Spot surface, so the report is not set in Fraunces', () => {
     expect(src).toMatch(/spot-surface/);
@@ -49,7 +58,7 @@ describe('the buyer’s readout', () => {
 });
 
 describe('the admin review queue', () => {
-  const src = read(REVIEW);
+  const src = code(REVIEW);
 
   it('renders its preview on the Spot surface too', () => {
     // The point of a review queue is that the reviewer sees what the buyer
@@ -69,7 +78,7 @@ describe('the admin review queue', () => {
 });
 
 describe('measurements are set as numbers, not headlines', () => {
-  const src = read(VIEW);
+  const src = code(VIEW);
 
   const classesFor = (marker: string): string => {
     const m = src.match(new RegExp(`className="([^"]*)"[^>]*>\\s*\\{${marker}\\}`));
