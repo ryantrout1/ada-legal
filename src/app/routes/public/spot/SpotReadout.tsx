@@ -51,7 +51,7 @@ export default function SpotReadout() {
 
   return (
     <div>
-      <div className="mx-auto max-w-2xl px-5 sm:px-8 py-10">
+      <div className="mx-auto max-w-3xl px-5 sm:px-8 py-10">
         <p className="mb-6 font-display text-lg text-ink-700">Spot</p>
         {state === 'loading' ? (
           <p aria-live="polite" className="text-ink-700">

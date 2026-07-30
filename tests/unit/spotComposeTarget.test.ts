@@ -65,7 +65,7 @@ const run = (over: Record<string, unknown>) =>
 
 describe('the compose tool asks for a target', () => {
   const areaProps = (
-    COMPOSE_REPORT_TOOL.input_schema as {
+    COMPOSE_REPORT_TOOL.input_schema as unknown as {
       properties: { areas: { items: { properties: Record<string, unknown>; required: string[] } } };
     }
   ).properties.areas.items;

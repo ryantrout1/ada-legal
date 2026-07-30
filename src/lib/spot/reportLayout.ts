@@ -22,7 +22,7 @@
  * Ref: /plan Spot report redesign, phase 1.
  */
 
-import type { SpotReportItem } from './reportSchema.js';
+import type { SpotReportItem, SpotReportTarget } from './reportSchema.js';
 
 export interface FindingGroups {
   /** The photograph settled these. Actionable without going anywhere. */
@@ -95,4 +95,25 @@ export function summaryLine(groups: FindingGroups): string | null {
     parts.push(`${count(measure)}${noun} to measure.`);
   }
   return parts.join(' ');
+}
+
+/**
+ * Every measurable target in the report, in one row.
+ *
+ * The strip across the top of the page is the reader's glance at what they
+ * are about to go and check. It is derived rather than authored, so it cannot
+ * disagree with the cards below it.
+ *
+ * A report whose findings carry no targets returns an empty array and the
+ * strip is not rendered at all — not an empty band with nothing in it. Every
+ * report generated before the target field existed is in that state, and
+ * reports are permanent, so it is the normal case rather than a transitional
+ * one.
+ */
+export function stripEntries(items: readonly SpotReportItem[]): SpotReportTarget[] {
+  const out: SpotReportTarget[] = [];
+  for (const item of items) {
+    if (item.target) out.push(item.target);
+  }
+  return out;
 }

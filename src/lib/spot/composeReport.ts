@@ -34,6 +34,33 @@ export class SpotCompositionError extends Error {
   }
 }
 
+
+/**
+ * The model's `target`, if it gave us one we can actually render.
+ *
+ * Dropped whole rather than half-rendered. A value that is a sentence would
+ * be set at 31px in the report's target rail, and a number with no label
+ * says nothing — "32 in" of what? In both cases a card with no rail is the
+ * better outcome, and it is the outcome every report predating this field
+ * already has.
+ *
+ * MAX_VALUE_CHARS is the line between a target and a paragraph. "34-48 in"
+ * is eight characters; the longest honest target anyone has needed here is
+ * well inside twenty-four.
+ */
+const MAX_TARGET_VALUE_CHARS = 24;
+
+function readTarget(raw: unknown): SpotReportTarget | undefined {
+  if (!raw || typeof raw !== 'object') return undefined;
+  const { value, label } = raw as { value?: unknown; label?: unknown };
+  if (typeof value !== 'string' || typeof label !== 'string') return undefined;
+  const v = value.trim();
+  const l = label.trim();
+  if (!v || !l) return undefined;
+  if (v.length > MAX_TARGET_VALUE_CHARS) return undefined;
+  return { value: v, label: l };
+}
+
 /**
  * The overview is specified as 2-4 sentences; the healthy reports on record
  * run 571-710 characters. This ceiling is not a style rule, it is a
@@ -53,6 +80,7 @@ import {
   SPOT_REPORT_DISCLAIMER,
   type ComposeReportInput,
   type SpotReportContent,
+  type SpotReportTarget,
   type SpotReportItem,
 } from './reportSchema.js';
 
@@ -91,6 +119,7 @@ export function composeReport(
       ruleExplanation: education?.ruleExplanation,
       hedged,
       hedgeNote: hedged ? SPOT_REPORT_HEDGE_NOTE : undefined,
+      target: readTarget(a.target),
     };
   });
 

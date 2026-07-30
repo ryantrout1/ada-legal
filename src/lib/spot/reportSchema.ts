@@ -38,6 +38,8 @@ export interface ComposeReportArea {
   severity: PhotoFindingSeverity;
   cited_section?: string;
   confirmable: boolean;
+  /** Unvalidated as it arrives from the model — composeReport sanitises it. */
+  target?: unknown;
 }
 export interface ComposeReportInput {
   overview: string;
@@ -45,6 +47,20 @@ export interface ComposeReportInput {
 }
 
 /** The final persisted report content (spot_report.content). */
+/**
+ * The single number a reader can check on site.
+ *
+ * Optional, and permanently so: most findings have no one number, and every
+ * report generated before this field existed has none. Reports are permanent,
+ * so absent is not a transitional state.
+ */
+export interface SpotReportTarget {
+  /** Short enough to set large. "32 in", "34-48 in", "1/4 in max". */
+  value: string;
+  /** What is being measured. Without it the number means nothing. */
+  label: string;
+}
+
 export interface SpotReportItem {
   title: string;
   concern: string;
@@ -57,6 +73,7 @@ export interface SpotReportItem {
   ruleExplanation?: string;
   hedged: boolean;
   hedgeNote?: string;
+  target?: SpotReportTarget;
 }
 export interface SpotReportContent {
   kind: 'no_read' | 'clear' | 'findings';
@@ -91,6 +108,23 @@ export const COMPOSE_REPORT_TOOL: AiToolDefinition = {
             severity: { type: 'string', enum: ['critical', 'major', 'minor', 'advisory'] },
             cited_section: { type: 'string', description: 'ADA section from an analysis, e.g. "§404.2.7". Omit if none.' },
             confirmable: { type: 'boolean', description: 'False when the photo cannot conclusively establish it.' },
+            target: {
+              type: 'object',
+              description:
+                'The single number the reader can measure on site to settle this, when there is one. ' +
+                'Omit entirely when the finding has no one measurable target — most do not. Never invent one.',
+              properties: {
+                value: {
+                  type: 'string',
+                  description: 'The target itself, short enough to read at a glance: "32 in", "34-48 in", "1/4 in max".',
+                },
+                label: {
+                  type: 'string',
+                  description: 'What is being measured, e.g. "clear width once the door is open".',
+                },
+              },
+              required: ['value', 'label'],
+            },
           },
           required: ['title', 'concern', 'remediation', 'severity', 'confirmable'],
         },

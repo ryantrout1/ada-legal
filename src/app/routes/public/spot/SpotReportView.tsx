@@ -32,7 +32,7 @@
  */
 
 import type { SpotReportContent, SpotReportItem } from '@/lib/spot/reportSchema';
-import { groupFindings, summaryLine } from '@/lib/spot/reportLayout';
+import { groupFindings, stripEntries, summaryLine } from '@/lib/spot/reportLayout';
 import { SPOT_REPORT_STARTER_DISCLAIMER } from '@/lib/spot/spotDisclaimers';
 
 /** Severity drives emphasis, not colour meaning. A red would read as a
@@ -46,16 +46,36 @@ function chipClass(severity: SpotReportItem['severity']): string {
 }
 
 function Finding({ item }: { item: SpotReportItem }) {
+  // The grid is only declared when there is a second column to put in it.
+  // Declaring it unconditionally leaves 11rem of dead space on the right of
+  // every finding without a target — which is every finding on every report
+  // generated before the field existed.
+  const topClass = item.target ? 'sm:grid sm:grid-cols-[1fr_11rem] print:block' : '';
+
   return (
     <section className="overflow-hidden rounded-lg border border-surface-200 bg-white">
-      <div className="p-5">
-        <span
-          className={`mb-3 inline-block rounded px-2 py-1 text-xs font-semibold uppercase tracking-wide ${chipClass(item.severity)}`}
-        >
-          {item.severityLabel}
-        </span>
-        <h4 className="font-display text-lg font-bold text-ink-900">{item.title}</h4>
-        <p className="mt-3 text-ink-700">{item.concern}</p>
+      <div className={topClass}>
+        <div className="p-5">
+          <span
+            className={`mb-3 inline-block rounded px-2 py-1 text-xs font-semibold uppercase tracking-wide ${chipClass(item.severity)}`}
+          >
+            {item.severityLabel}
+          </span>
+          <h4 className="font-display text-lg font-bold text-ink-900">{item.title}</h4>
+          <p className="mt-3 text-ink-700">{item.concern}</p>
+        </div>
+
+        {item.target ? (
+          <div className="flex flex-col justify-center border-t border-surface-200 bg-accent-50 p-5 text-center sm:border-l sm:border-t-0 print:border-l-0 print:border-t">
+            <span className="text-xs font-bold uppercase tracking-wider text-accent-600">
+              Target
+            </span>
+            <span className="mt-2 font-display text-3xl font-bold leading-none text-ink-900">
+              {item.target.value}
+            </span>
+            <span className="mt-2 text-xs text-ink-500">{item.target.label}</span>
+          </div>
+        ) : null}
       </div>
 
       <div className="border-t border-surface-200 bg-surface-100 p-5">
@@ -129,6 +149,7 @@ export default function SpotReportView({
 }) {
   const groups = groupFindings(content.items);
   const summary = summaryLine(groups);
+  const targets = stripEntries(content.items);
 
   return (
     <article className="spot-report">
@@ -143,6 +164,19 @@ export default function SpotReportView({
         {content.headline}
       </h2>
       {summary ? <p className="mt-2 text-lg text-ink-500">{summary}</p> : null}
+
+      {targets.length > 0 ? (
+        <ul className="mt-6 grid list-none grid-cols-2 gap-px overflow-hidden rounded-lg border border-surface-200 bg-surface-200 p-0 sm:grid-cols-4">
+          {targets.map((t, i) => (
+            <li key={`${t.value}-${i}`} className="bg-white p-4 text-center">
+              <span className="block font-display text-xl font-bold leading-none text-accent-600">
+                {t.value}
+              </span>
+              <span className="mt-2 block text-xs text-ink-500">{t.label}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
 
       {photos.length > 0 ? (
         <ul className="mt-6 list-none space-y-3 p-0">
