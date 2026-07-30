@@ -57,7 +57,19 @@ export default function SpotReadout() {
     // floor here is AAA.
     <div className="spot-surface">
       <div className="mx-auto max-w-3xl px-5 sm:px-8 py-10">
-        <p className="mb-6 font-display text-lg text-ink-700">Spot</p>
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <p className="font-display text-lg text-ink-700">Spot</p>
+          {state === 'ok' && content ? (
+            // print:hidden because otherwise a Download PDF button appears
+            // inside the printed page — and inside the PDF built from it.
+            <a
+              href={`/api/spot/report.pdf?slug=${encodeURIComponent(slug ?? '')}`}
+              className="inline-flex min-h-[44px] items-center rounded-md border border-surface-300 px-4 text-ink-700 hover:border-accent-500 hover:text-accent-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50 print:hidden"
+            >
+              Download PDF
+            </a>
+          ) : null}
+        </div>
         {state === 'loading' ? (
           <p aria-live="polite" className="text-ink-700">
             Loading your report…

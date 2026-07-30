@@ -214,6 +214,20 @@ export default function SpotReview() {
                       Open readout
                     </a>
                   ) : null}
+                  {/* Released only, same as Open readout above — the PDF
+                      endpoint serves released reports and 404s the rest, so
+                      offering it on a pending row would be a button that
+                      cannot work. Checking the PDF BEFORE release would need
+                      an admin-gated endpoint; today a reviewer checks the
+                      preview, releases, then downloads. */}
+                  {r.hitlStatus === 'released' ? (
+                    <a
+                      className={`${btn} inline-flex items-center`}
+                      href={`/api/spot/report.pdf?slug=${encodeURIComponent(r.slug)}`}
+                    >
+                      Download PDF
+                    </a>
+                  ) : null}
                   {/* Only for released reports, and worded as what it is.
                       Before this the only lever on a released-but-unsent
                       report was Release, which could not send. */}
