@@ -45,7 +45,41 @@ export const EMAIL_MUTED = '#3f4b5b';
  * darker fill buys margin for nothing.
  */
 export const EMAIL_BUTTON_BG = '#8a2c08';
-export const EMAIL_BUTTON_TEXT = '#ffffff';
+
+/**
+ * White. The content card in the branded template, and the text that sits on
+ * any dark fill. One literal, two names — the alternative is two constants
+ * holding the same value, which is how a palette starts drifting.
+ */
+export const EMAIL_SURFACE = '#ffffff';
+export const EMAIL_BUTTON_TEXT = EMAIL_SURFACE;
+
+/**
+ * The branded template's header and footer bands.
+ *
+ * Exactly EMAIL_INK — the heading colour used as a fill rather than as text.
+ * Aliased instead of repeated so the two cannot drift apart and quietly break
+ * the inverted pairs below.
+ */
+export const EMAIL_DARK_BAND = EMAIL_INK;
+
+/**
+ * Small print on the dark band. 9.85:1.
+ *
+ * This one was already right: whoever ported the template from Base44 caught
+ * that B44's #4B5563 footer was about 3.6:1 and raised it. Naming it here so
+ * the check outlives the comment that recorded it.
+ */
+export const EMAIL_INVERSE_MUTED = '#CBD5E1';
+
+/**
+ * The orange half of the wordmark, on the dark band. 8.67:1.
+ *
+ * Was #F97316 at 5.22:1. This is the contrast-inversion case: on a dark
+ * ground you cannot fix a failing colour by darkening it, so the orange goes
+ * lighter rather than deeper. Same shape as the admin pill and the Spot CTA.
+ */
+export const EMAIL_WORDMARK = '#FDBA74';
 
 /**
  * Inline link text. Same value as the button fill — one accent, used two ways.
@@ -104,6 +138,9 @@ export const EMAIL_PALETTE = [
   EMAIL_BG_ALT,
   EMAIL_WARN_BG,
   EMAIL_WARN_BORDER,
+  EMAIL_SURFACE,
+  EMAIL_INVERSE_MUTED,
+  EMAIL_WORDMARK,
 ] as const;
 
 /**
@@ -150,4 +187,32 @@ export const EMAIL_CONTRAST_PAIRS: readonly EmailContrastPair[] = [
   { name: 'link on alt surface', fg: EMAIL_LINK, bg: EMAIL_BG_ALT, min: 7, kind: 'text' },
   { name: 'callout text', fg: EMAIL_INK, bg: EMAIL_WARN_BG, min: 7, kind: 'text' },
   { name: 'callout border', fg: EMAIL_WARN_BORDER, bg: EMAIL_WARN_BG, min: 3, kind: 'non-text' },
+
+  // The branded template's white card.
+  { name: 'heading on surface', fg: EMAIL_INK, bg: EMAIL_SURFACE, min: 7, kind: 'text' },
+  { name: 'body on surface', fg: EMAIL_BODY, bg: EMAIL_SURFACE, min: 7, kind: 'text' },
+  {
+    name: 'button fill on surface',
+    fg: EMAIL_BUTTON_BG,
+    bg: EMAIL_SURFACE,
+    min: 3,
+    kind: 'non-text',
+  },
+
+  // ...and its dark band. Inverted: a failure here is fixed by lightening.
+  { name: 'wordmark on dark band', fg: EMAIL_WORDMARK, bg: EMAIL_DARK_BAND, min: 7, kind: 'text' },
+  {
+    name: 'inverse muted on dark band',
+    fg: EMAIL_INVERSE_MUTED,
+    bg: EMAIL_DARK_BAND,
+    min: 7,
+    kind: 'text',
+  },
+  {
+    name: 'inverse heading on dark band',
+    fg: EMAIL_SURFACE,
+    bg: EMAIL_DARK_BAND,
+    min: 7,
+    kind: 'text',
+  },
 ];
