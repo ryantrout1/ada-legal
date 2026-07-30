@@ -175,3 +175,42 @@ describe('the PDF and the page cannot disagree about structure', () => {
     expect(code).not.toMatch(/\.filter\(\s*\(?\s*\w+\s*\)?\s*=>\s*\w+\.hedged/);
   });
 });
+
+/**
+ * Phase 2 — the button.
+ *
+ * It lives on the two surfaces that know a slug, not inside SpotReportView.
+ * The view is also rendered by SpotLanding's test preview, where the report
+ * has not been released and has no slug — a download link there would point
+ * at nothing.
+ *
+ * Encodes acceptance criterion 5 from /plan phase 2.
+ */
+describe('the download button', () => {
+  const readout = readCode(resolve(root, 'src/app/routes/public/spot/SpotReadout.tsx'));
+  const review = readCode(resolve(root, 'src/app/routes/review/SpotReview.tsx'));
+  const view = readCode(resolve(root, 'src/app/routes/public/spot/SpotReportView.tsx'));
+
+  it.each([
+    ['the buyer’s readout', () => readout],
+    ['the admin review queue', () => review],
+  ])('%s links to the PDF endpoint', (_name, src) => {
+    expect(src()).toContain('/api/spot/report.pdf');
+  });
+
+  it('gives the link a 44px target on the readout', () => {
+    expect(readout).toMatch(/min-h-\[44px\]/);
+  });
+
+  it('hides the link when printing', () => {
+    // Otherwise a Download PDF button appears inside the printed page, and
+    // inside the PDF built from it.
+    expect(readout).toMatch(/print:hidden/);
+  });
+
+  it('is not inside the shared view', () => {
+    // SpotLanding renders SpotReportView for an unreleased test report with
+    // no slug. A link there would 404 by construction.
+    expect(view).not.toContain('/api/spot/report.pdf');
+  });
+});
