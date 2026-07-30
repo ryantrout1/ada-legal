@@ -49,4 +49,43 @@ describe.skipIf(!DATABASE_URL || !ALLOW_WRITES)('spotStore sessions — live DB'
       await db.delete(spotSessions).where(eq(spotSessions.id, id));
     }
   });
+
+  /**
+   * The cardholder name, which Stripe sends and this store dropped until
+   * /plan capture the buyer's name. Written alongside the email in the same
+   * conditional UPDATE, so a replayed webhook cannot overwrite it either.
+   */
+  it('stores the buyer name when the webhook resolved one', async () => {
+    const db = makeDb(DATABASE_URL!);
+    const store = makeSpotStore(db);
+    const id = await store.createSession({ amountCents: 9900 });
+    try {
+      await store.markPaid({
+        spotSessionId: id,
+        paymentIntentId: 'pi_named',
+        email: 'owner@shop.example',
+        name: 'Dana Okonkwo',
+        amountCents: 9900,
+      });
+      const session = await store.getSession(id);
+      expect(session?.buyerName).toBe('Dana Okonkwo');
+      expect(session?.buyerEmail).toBe('owner@shop.example');
+    } finally {
+      await db.delete(spotSessions).where(eq(spotSessions.id, id));
+    }
+  });
+
+  it('leaves the name null when Stripe sent none', async () => {
+    const db = makeDb(DATABASE_URL!);
+    const store = makeSpotStore(db);
+    const id = await store.createSession({ amountCents: 9900 });
+    try {
+      await store.markPaid({ spotSessionId: id, email: 'owner@shop.example' });
+      const session = await store.getSession(id);
+      expect(session?.buyerName).toBeNull();
+      expect(session?.buyerEmail).toBe('owner@shop.example');
+    } finally {
+      await db.delete(spotSessions).where(eq(spotSessions.id, id));
+    }
+  });
 });

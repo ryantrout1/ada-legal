@@ -214,3 +214,28 @@ describe('the download button', () => {
     expect(view).not.toContain('/api/spot/report.pdf');
   });
 });
+
+/**
+ * Buyer identity does not reach the buyer's own document.
+ *
+ * The readout is a permanent, unauthenticated link, and the use case it was
+ * built for is handing it to a contractor or a landlord. Today it describes a
+ * place. A name and an email on it would make it describe a person, and that
+ * person's details would travel with every forward — including the PDF, which
+ * is the most forwardable version of all.
+ *
+ * This lands before the name is captured rather than after. A rule written
+ * once the data exists is a rule somebody has already had a reason to break.
+ *
+ * Encodes acceptance criterion 5 from /plan capture the buyer's name, phase 1.
+ */
+describe('the report never carries who paid for it', () => {
+  it.each([
+    ['the web view', 'src/app/routes/public/spot/SpotReportView.tsx'],
+    ['the PDF', 'src/engine/spot/reportPdf.ts'],
+  ])('%s', (_name, rel) => {
+    const src = readCode(resolve(root, rel));
+    expect(src).not.toMatch(/buyerName|buyer_name/);
+    expect(src).not.toMatch(/buyerEmail|buyer_email/);
+  });
+});
