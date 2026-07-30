@@ -17,9 +17,10 @@
  *                      render and defeats reconciliation.
  *   ShareBar           B44 switches button styles imperatively per display
  *                      mode; ours renders only inside the always-dark hero
- *                      and uses the dark token family directly. Same output,
- *                      and it inlines the Facebook/X/LinkedIn glyphs that
- *                      lucide-react dropped for trademark reasons.
+ *                      and uses the dark token family directly. It also
+ *                      ships only copy-link and email — the Facebook, X and
+ *                      LinkedIn buttons came out on 2026-07-30 because no
+ *                      such accounts exist yet.
  *
  * These assertions are tripwires, not behavior tests: they fail loudly if
  * a later "sync from B44" reintroduces the older shape. Each names the
@@ -129,13 +130,19 @@ describe('AutoCiteLinks keeps the stable-key fix', () => {
 describe('ShareBar keeps its own icon set and dark styling', () => {
   const src = read(SHARE);
 
-  it('inlines the brand glyphs lucide-react no longer ships', () => {
-    // Importing these from lucide-react would resolve to undefined and
-    // render nothing.
-    expect(src).not.toMatch(/import\s*\{[^}]*\b(Facebook|Twitter|Linkedin)\b[^}]*\}\s*from\s*'lucide-react'/);
-    expect(src).toMatch(/function FacebookIcon/);
-    expect(src).toMatch(/function TwitterIcon/);
-    expect(src).toMatch(/function LinkedinIcon/);
+  it('does not offer social shares while those accounts are unset', () => {
+    // Removed 2026-07-30: no Facebook / X / LinkedIn presence exists, so
+    // the buttons sent people to pages that are not there. This guards
+    // against a port from B44 quietly putting them back.
+    expect(src).not.toMatch(/facebook\.com/i);
+    expect(src).not.toMatch(/twitter\.com|x\.com/i);
+    expect(src).not.toMatch(/linkedin\.com/i);
+    expect(src).not.toMatch(/window\.open/);
+  });
+
+  it('keeps copy-link and email', () => {
+    expect(src).toMatch(/Copy Link/);
+    expect(src).toMatch(/mailto:/);
   });
 
   it('does not reintroduce per-display-mode style switching', () => {
