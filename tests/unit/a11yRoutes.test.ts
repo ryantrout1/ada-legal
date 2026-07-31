@@ -36,9 +36,10 @@ function publicRoutePathsFromRouter(): string[] {
       p.startsWith('/') &&
       !p.startsWith('/admin') &&
       !p.startsWith('/portal') &&
-      // reviewer-only unlinked tools are audited separately; keep the
-      // public marketing/content surface as the AC5 contract set.
-      !['/photo', '/review', '/review/:id', '/spot-review'].includes(p),
+      // reviewer-only unlinked tools + session-gated slug readouts are not
+      // part of the public contrast sweep (they need a live paid/intake
+      // session to render). Must match scripts/gen-a11y-routes.mjs.
+      !['/photo', '/review', '/review/:id', '/spot-review', '/s/:slug', '/spot/r/:slug'].includes(p),
   );
 }
 
@@ -67,6 +68,26 @@ describe('a11y audit — route set', () => {
       const hit = audited.some((a) => a.startsWith(prefix) && a.length > prefix.length);
       expect(hit, `no fixture path for dynamic route ${dyn}`).toBe(true);
     }
+  });
+
+  it('leaves no dynamic public route unaudited (guards the generator warn-and-skip)', () => {
+    // A new dynamic route with no fixture would warn-and-skip in the
+    // generator and silently escape the sweep — the exact class of hole
+    // this whole effort closes. This asserts the count of audited dynamic
+    // routes equals the count of dynamic public router routes, so an
+    // unfixtured addition fails here loudly instead of vanishing.
+    const routerDynamic = publicRoutePathsFromRouter().filter((p) => p.includes(':'));
+    const auditedDynamic = AUDIT_ROUTES.filter((r) => {
+      // audited concrete paths whose prefix matches a dynamic router route
+      return routerDynamic.some((dyn) => {
+        const prefix = dyn.slice(0, dyn.indexOf(':'));
+        return r.path.startsWith(prefix) && r.path.length > prefix.length;
+      });
+    });
+    expect(
+      auditedDynamic.length,
+      `every dynamic public route needs a fixture: ${routerDynamic.join(', ')}`,
+    ).toBe(routerDynamic.length);
   });
 
   it('committed routes.generated.json matches the exported AUDIT_ROUTES', () => {

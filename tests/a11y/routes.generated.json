@@ -1,0 +1,62 @@
+[
+  {
+    "path": "/",
+    "name": "homepage"
+  },
+  {
+    "path": "/about-ada",
+    "name": "about Ada"
+  },
+  {
+    "path": "/accessibility",
+    "name": "accessibility statement"
+  },
+  {
+    "path": "/ada",
+    "name": "chat"
+  },
+  {
+    "path": "/attorneys",
+    "name": "attorneys directory"
+  },
+  {
+    "path": "/for-attorneys",
+    "name": "for-attorneys page"
+  },
+  {
+    "path": "/glossary",
+    "name": "glossary"
+  },
+  {
+    "path": "/lawsuits",
+    "name": "class-actions directory"
+  },
+  {
+    "path": "/lawsuits/niles-v-hilton-bed-heights",
+    "name": "lawsuit detail"
+  },
+  {
+    "path": "/privacy",
+    "name": "privacy policy"
+  },
+  {
+    "path": "/spot",
+    "name": "Spot landing"
+  },
+  {
+    "path": "/standards-guide",
+    "name": "standards guide landing"
+  },
+  {
+    "path": "/standards-guide/chapter/1",
+    "name": "standards chapter"
+  },
+  {
+    "path": "/standards-guide/guide/turning-handrails",
+    "name": "standards guide detail"
+  },
+  {
+    "path": "/terms",
+    "name": "terms of service"
+  }
+]
