@@ -64,6 +64,12 @@ describe('spot sessions — scope and exposure', () => {
     expect(sql).not.toMatch(/r\.content/);
   });
 
+  it('selects the buyer name so the list says who each purchase is', () => {
+    // The email was already here; the name is the other half of the same
+    // question. Phase 3 of /plan capture the buyer's name.
+    expect(sql).toMatch(/s\.buyer_name/);
+  });
+
   it('validates the status filter against the real status set', () => {
     // Interpolating an arbitrary query string into SQL is the obvious
     // wrong version of this.
