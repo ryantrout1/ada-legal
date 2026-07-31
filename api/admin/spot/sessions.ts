@@ -77,6 +77,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         s.id,
         s.status,
         s.buyer_email,
+        s.buyer_name,
         s.amount_cents,
         s.photo_count,
         s.created_at,

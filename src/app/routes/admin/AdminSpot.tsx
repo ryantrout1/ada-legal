@@ -37,6 +37,7 @@ interface SessionRow {
   id: string;
   status: string;
   buyer_email: string | null;
+  buyer_name: string | null;
   amount_cents: number | null;
   photo_count: number | null;
   created_at: string;
@@ -324,7 +325,15 @@ export default function AdminSpot() {
               {sessions.map((s) => (
                 <tr key={s.id}>
                   <td className="border-b border-surface-200 py-2 pr-4">
-                    {s.buyer_email ?? <span className="text-ink-500">No email on file</span>}
+                    {s.buyer_name || s.buyer_email ? (
+                      <span>
+                        {s.buyer_name ? <span className="text-ink-900">{s.buyer_name}</span> : null}
+                        {s.buyer_name && s.buyer_email ? ' ' : null}
+                        {s.buyer_email ? <span className="text-ink-500">{s.buyer_email}</span> : null}
+                      </span>
+                    ) : (
+                      <span className="text-ink-500">No buyer on file</span>
+                    )}
                   </td>
                   <td className="border-b border-surface-200 py-2 pr-4">
                     {s.status.replace(/_/g, ' ')}
