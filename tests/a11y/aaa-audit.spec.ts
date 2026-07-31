@@ -1,117 +1,145 @@
 /**
- * Automated WCAG 2.2 AAA accessibility audit via axe-core.
+ * Automated WCAG 2.2 AAA accessibility audit via axe-core — theme matrix.
  *
- * Scope:
- *   Runs on every public route. Fails on any violation at serious
- *   or critical impact. Moderate and minor violations are logged
- *   but do not fail the suite — axe's AAA ruleset sometimes flags
- *   patterns that are not real-world accessibility failures, and
- *   we'd rather not block shipping on noise. Every suppressed
- *   violation is visible in test output for the manual audit.
+ * Phase 2 (AAA remediation) rebuild. THREE holes in the previous version
+ * let real contrast defects ship, all fixed here:
  *
- * Configuration:
- *   Tags enabled: wcag2a, wcag2aa, wcag2aaa, wcag21a, wcag21aa,
- *   wcag21aaa, wcag22aa, wcag22aaa, best-practice.
+ *   1. It ran the DEFAULT theme only — never set data-display, so
+ *      Dark / Contrast / Warm / Low Vision were never audited. Every
+ *      screenshot defect lived in a non-default theme. → We now sweep all
+ *      5 display themes (tests/a11y/lib/themes.ts).
+ *   2. It only FAILED on serious/critical impact — axe files most contrast
+ *      issues as "moderate", so real contrast failures were logged and
+ *      waved through. → color-contrast-enhanced (AAA 7:1) now BLOCKS at any
+ *      impact.
+ *   3. It used a hardcoded 10-route list (with a lawsuit slug that no
+ *      longer exists). → Routes are generated (tests/a11y/lib/routes.ts).
  *
- *   AAA inclusion is the whole point — AA by itself is not
- *   sufficient for an ADA-focused product.
+ * axe "incomplete" contrast results (backgrounds it can't resolve —
+ * gradients / images, i.e. the hero sections) are captured as must-review
+ * with a screenshot rather than silently passed.
  *
- * What this CATCHES:
- *   - Color contrast failures
- *   - Missing alt text
- *   - Improper ARIA
- *   - Missing form labels
- *   - Invalid landmark structure
- *   - Heading-order violations
+ * Findings are written per (route × theme) to test-results/a11y-findings/
+ * (parallel-safe); scripts/a11y-report.mjs merges them into
+ * test-results/a11y-report.md — report v1.
  *
- * What this DOES NOT CATCH (see docs/A11Y-MANUAL-CHECKLIST.md):
- *   - Screen reader announcement timing
- *   - Reading order sanity
- *   - Keyboard tab-order logic
- *   - Error-message comprehensibility
- *   - Whether plain-language mode actually reads as plain language
- *   - Real end-to-end task completion by a disabled user
+ * What this DOES NOT catch (see docs/A11Y-MANUAL-CHECKLIST.md): screen
+ * reader timing, reading order, keyboard/DnD logic, plain-language quality.
  */
 
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-
-const PUBLIC_ROUTES = [
-  { path: '/', name: 'homepage' },
-  { path: '/ada', name: 'chat' },
-  { path: '/lawsuits', name: 'class-actions directory' },
-  {
-    path: '/lawsuits/hotel-accessible-room-fraud',
-    name: 'class-action detail',
-  },
-  { path: '/attorneys', name: 'attorneys directory' },
-  { path: '/for-attorneys', name: 'for-attorneys page' },
-  { path: '/accessibility', name: 'accessibility statement' },
-  { path: '/privacy', name: 'privacy policy' },
-  { path: '/terms', name: 'terms of service' },
-  { path: '/spot', name: 'Spot landing' },
-];
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { AUDIT_ROUTES } from './lib/routes.js';
+import { DISPLAY_THEMES, applyThemeToPage } from './lib/themes.js';
+import type { Finding } from './lib/report.js';
 
 const AAA_TAGS = [
-  'wcag2a',
-  'wcag2aa',
-  'wcag2aaa',
-  'wcag21a',
-  'wcag21aa',
-  'wcag21aaa',
-  'wcag22aa',
-  'wcag22aaa',
+  'wcag2a', 'wcag2aa', 'wcag2aaa',
+  'wcag21a', 'wcag21aa', 'wcag21aaa',
+  'wcag22aa', 'wcag22aaa',
 ];
 
-for (const route of PUBLIC_ROUTES) {
-  test(`${route.name} has no serious or critical AAA violations`, async ({
-    page,
-  }) => {
-    await page.goto(route.path);
-    // Give the route a moment to paint — /chat especially, which
-    // waits on /api/ada/session/current and then either renders the
-    // chat UI or a resume card.
-    await page.waitForLoadState('networkidle');
+const FINDINGS_DIR = 'test-results/a11y-findings';
 
-    const results = await new AxeBuilder({ page })
-      .withTags(AAA_TAGS)
-      .analyze();
+function slugify(s: string): string {
+  return s.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase();
+}
 
-    const blocking = results.violations.filter(
-      (v) => v.impact === 'serious' || v.impact === 'critical',
-    );
-    const advisory = results.violations.filter(
-      (v) => v.impact !== 'serious' && v.impact !== 'critical',
-    );
+/** A contrast finding blocks the suite regardless of axe impact (AC2). */
+function isBlocking(f: Finding): boolean {
+  return (
+    f.kind === 'violation' &&
+    (f.ruleId === 'color-contrast-enhanced' ||
+      f.impact === 'serious' ||
+      f.impact === 'critical')
+  );
+}
 
-    // Log everything so a human reviewer can see the advisory ones.
-    if (advisory.length > 0) {
-      console.log(
-        `\n[a11y] ${route.path} — ${advisory.length} advisory violation(s) (not blocking):`,
-      );
-      for (const v of advisory) {
-        console.log(`  · ${v.id} (${v.impact}): ${v.help}`);
-        console.log(`    ${v.helpUrl}`);
-        console.log(`    nodes: ${v.nodes.length}`);
-      }
-    }
+for (const route of AUDIT_ROUTES) {
+  for (const theme of DISPLAY_THEMES) {
+    test(`${route.name} [${theme.label}] — AAA contrast`, async ({ page }, testInfo) => {
+      await page.goto(route.path);
+      await page.waitForLoadState('networkidle');
+      await applyThemeToPage(page, theme.id);
+      // let the CSS re-theme settle before axe reads computed styles
+      await page.waitForTimeout(150);
 
-    if (blocking.length > 0) {
-      console.log(
-        `\n[a11y] ${route.path} — ${blocking.length} BLOCKING violation(s):`,
-      );
-      for (const v of blocking) {
-        console.log(`  ✗ ${v.id} (${v.impact}): ${v.help}`);
-        console.log(`    ${v.helpUrl}`);
-        for (const node of v.nodes.slice(0, 3)) {
-          console.log(`    ${node.html.slice(0, 200)}`);
+      const results = await new AxeBuilder({ page }).withTags(AAA_TAGS).analyze();
+      const findings: Finding[] = [];
+
+      // Violations
+      for (const v of results.violations) {
+        for (const node of v.nodes) {
+          findings.push({
+            route: route.path,
+            routeName: route.name,
+            theme: theme.label,
+            ruleId: v.id,
+            kind: 'violation',
+            impact: v.impact ?? null,
+            target: node.target.join(' '),
+            html: node.html.slice(0, 200),
+            summary: node.failureSummary ?? v.help,
+          });
         }
       }
-    }
 
-    expect(
-      blocking,
-      `${route.path} has serious/critical accessibility violations. See test output above.`,
-    ).toEqual([]);
-  });
+      // Incomplete CONTRAST results — axe couldn't resolve the background
+      // (gradient / image hero). Keep as must-review + screenshot; never a
+      // silent pass. Non-contrast incompletes are left to the manual pass.
+      const contrastIncomplete = results.incomplete.filter((r) =>
+        r.id === 'color-contrast' || r.id === 'color-contrast-enhanced',
+      );
+      for (const inc of contrastIncomplete) {
+        const shot = `${FINDINGS_DIR}/${slugify(route.name)}-${theme.id}-review.png`;
+        mkdirSync(FINDINGS_DIR, { recursive: true });
+        try {
+          await page.screenshot({ path: shot, fullPage: true });
+        } catch {
+          /* screenshot is best-effort */
+        }
+        for (const node of inc.nodes) {
+          findings.push({
+            route: route.path,
+            routeName: route.name,
+            theme: theme.label,
+            ruleId: inc.id,
+            kind: 'incomplete',
+            impact: inc.impact ?? null,
+            target: node.target.join(' '),
+            html: node.html.slice(0, 200),
+            summary: 'axe could not resolve the background — needs manual review',
+            screenshot: shot,
+          });
+        }
+      }
+
+      // Persist this cell's findings (parallel-safe: unique filename).
+      mkdirSync(FINDINGS_DIR, { recursive: true });
+      writeFileSync(
+        `${FINDINGS_DIR}/${slugify(route.name)}-${theme.id}.json`,
+        JSON.stringify(findings, null, 2),
+      );
+
+      const blocking = findings.filter(isBlocking);
+      if (blocking.length > 0) {
+        console.log(`\n[a11y] ${route.path} [${theme.label}] — ${blocking.length} BLOCKING:`);
+        for (const f of blocking.slice(0, 8)) {
+          console.log(`  ✗ ${f.ruleId} (${f.impact ?? '—'}) ${f.target}`);
+        }
+      }
+
+      // Attach findings to the Playwright report for this cell too.
+      await testInfo.attach('findings.json', {
+        body: JSON.stringify(findings, null, 2),
+        contentType: 'application/json',
+      });
+
+      expect(
+        blocking,
+        `${route.path} [${theme.label}] has AAA contrast / serious violations — see test-results/a11y-report.md`,
+      ).toEqual([]);
+    });
+  }
 }
