@@ -66,14 +66,22 @@ describe('admin nav — B44 group structure', () => {
 
 describe('admin nav — Ada and Spot are separate groups', () => {
   // Slice the source into per-section blocks so membership can be checked by
-  // which group's items[] a route appears in, not just that it appears.
+  // which group's items[] a route appears in, not just that it appears. A
+  // SECTION label is the one followed by `,\n ... items:`; item labels are
+  // followed by ` }`, so anchor the boundary on the section shape to avoid
+  // stopping at an item label that happens to sit inside the section.
+  const SECTION_RE = /label: '([^']+)',\s*\n\s*items:/g;
+  const sectionStarts = [...layout.matchAll(SECTION_RE)].map((m) => ({
+    label: m[1],
+    index: m.index!,
+  }));
+
   function sectionItems(label: string): string {
-    const start = layout.indexOf(`label: '${label}'`);
-    expect(start, `section not found: ${label}`).toBeGreaterThan(-1);
-    // The next section starts at the next "label: '" after this one; the
-    // items[] we want is everything in between.
-    const next = layout.indexOf("label: '", start + `label: '${label}'`.length);
-    return layout.slice(start, next === -1 ? undefined : next);
+    const i = sectionStarts.findIndex((s) => s.label === label);
+    expect(i, `section not found: ${label}`).toBeGreaterThan(-1);
+    const start = sectionStarts[i]!.index;
+    const end = sectionStarts[i + 1]?.index ?? layout.length;
+    return layout.slice(start, end);
   }
 
   const adaBlock = sectionItems('Ada');

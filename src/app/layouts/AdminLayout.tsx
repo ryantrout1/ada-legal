@@ -33,7 +33,7 @@ const SITE_NAV = [
  * muscle memory survives the cutover: Overview / Ada / Directory /
  * Business / System, in that order, with B44's labels.
  *
- * Three deliberate differences from B44's list:
+ * Four deliberate differences from B44's list:
  *
  *   - CASES and PHOTO REVIEW are here and have no B44 counterpart. The
  *     placement queue and the photo-analysis review flow were built on
@@ -45,6 +45,13 @@ const SITE_NAV = [
  *     Overview group and an Ada-group entry respectively. Feedback sits
  *     under Ada rather than System because it is what people say after
  *     using her, not a configuration surface.
+ *   - SPOT has its own group. Ada and Spot are different products — a
+ *     legal-intake assistant and a paid photo-screening tool — and were
+ *     sharing the Ada group. Spot and Spot Review moved out into a Spot
+ *     section of their own. Photo Review stayed under Ada: the analyzer
+ *     it reviews serves both, but it is historically the Ada-side surface.
+ *     This is a divergence FROM B44, so a later "sync from B44" must not
+ *     re-merge it (adminNavParity.test.ts pins the split).
  *
  * LISTINGS is B44's "Class Actions" + "Mass Actions" pair behind one
  * page; Phase 3 decides whether to split it or keep the union.
@@ -70,10 +77,15 @@ const NAV_SECTIONS: NavSection[] = [
       { to: '/admin/sessions', label: 'Sessions' },
       { to: '/admin/intakes', label: 'Intakes / Referrals' },
       { to: '/admin/cases', label: 'Cases' },
-      { to: '/admin/spot', label: 'Spot' },
-      { to: '/admin/spot-review', label: 'Spot Review' },
       { to: '/admin/photo-review', label: 'Photo Review' },
       { to: '/admin/feedback', label: 'Feedback' },
+    ],
+  },
+  {
+    label: 'Spot',
+    items: [
+      { to: '/admin/spot', label: 'Spot' },
+      { to: '/admin/spot-review', label: 'Spot Review' },
     ],
   },
   {
