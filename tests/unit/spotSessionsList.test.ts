@@ -181,7 +181,10 @@ describe('free reads', () => {
     expect(PAGE).toMatch(/cannot be undone/i);
   });
 
-  it('says plainly that free reads keep no photo', () => {
-    expect(PAGE).toMatch(/the photo is not/i);
+  it('says the photo is kept for reads since retention was turned on', () => {
+    // Was "the photo is not — the free path stores no image", true until free
+    // reads began retaining their photo. The copy — and this assertion —
+    // follow the behaviour.
+    expect(PAGE).toMatch(/the photo too, for\s+90 days/i);
   });
 });

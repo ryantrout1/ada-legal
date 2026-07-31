@@ -18,6 +18,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface Summary {
   free_reads?: number;
@@ -117,14 +118,16 @@ function when(iso: string | null): string {
 }
 
 export default function AdminSpot() {
+  const navigate = useNavigate();
   const [summary, setSummary] = useState<Summary | null>(null);
   const [sessions, setSessions] = useState<SessionRow[] | null>(null);
   const [filter, setFilter] = useState('all');
   const [error, setError] = useState(false);
   /**
    * Free reads are a separate record, not a cheaper session — no buyer, no
-   * payment, no report, and no stored photo. They share a page because they
-   * are one funnel, but not a table, because they share almost no columns.
+   * payment, no report. Since photo retention was turned on they do keep the
+   * uploaded photo (for training), but they still share almost no columns with
+   * paid sessions, so they get their own table on the same page.
    */
   const [tab, setTab] = useState<'paid' | 'free'>('paid');
   const [reads, setReads] = useState<FreeRead[] | null>(null);
@@ -395,8 +398,9 @@ export default function AdminSpot() {
       {tab === 'free' && reads && reads.length > 0 ? (
         <div className="mt-6 overflow-x-auto">
           <p className="mb-3 text-sm text-ink-700">
-            What Spot told someone who never paid. The analysis is kept; the photo is not —
-            the free path stores no image.
+            What Spot told someone who never paid. The analysis is kept, and — for
+            reads taken since photo retention was turned on — the photo too, for
+            90 days. Older reads have no photo.
           </p>
           <table className="w-full text-sm">
             <caption className="sr-only">Free Spot reads, newest first</caption>
@@ -409,13 +413,20 @@ export default function AdminSpot() {
                 <th scope="col" className="px-3 py-2">Read</th>
                 <th scope="col" className="px-3 py-2">Model</th>
                 <th scope="col" className="px-3 py-2">
+                  <span className="sr-only">View</span>
+                </th>
+                <th scope="col" className="px-3 py-2">
                   <span className="sr-only">Delete</span>
                 </th>
               </tr>
             </thead>
             <tbody>
               {reads.map((r) => (
-                <tr key={r.id} className="border-t border-surface-200 hover:bg-surface-100">
+                <tr
+                  key={r.id}
+                  onClick={() => navigate(`/admin/spot/reads/${encodeURIComponent(r.id)}`)}
+                  className="cursor-pointer border-t border-surface-200 hover:bg-surface-100"
+                >
                   <td className="px-3 py-2 font-mono text-xs text-ink-700">
                     {when(r.createdAt ?? r.created_at ?? null)}
                   </td>
@@ -429,10 +440,24 @@ export default function AdminSpot() {
                   </td>
                   <td className="px-3 py-2 text-ink-500">{r.modelVersion ?? '—'}</td>
                   <td className="px-3 py-2">
+                    {/* The real focusable, screen-reader affordance; the row
+                        click is a mouse convenience layered on top. */}
+                    <Link
+                      to={`/admin/spot/reads/${encodeURIComponent(r.id)}`}
+                      className="inline-flex min-h-[44px] items-center text-accent-600 underline underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
+                    >
+                      View
+                    </Link>
+                  </td>
+                  <td className="px-3 py-2">
                     <button
                       type="button"
                       disabled={busyId === r.id}
-                      onClick={() => void remove('free', r.id)}
+                      // Stop the row navigate — Delete is a different action.
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        void remove('free', r.id);
+                      }}
                       className="min-h-[44px] text-sm text-warning-500 underline disabled:opacity-50"
                     >
                       {busyId === r.id ? 'Deleting…' : 'Delete'}

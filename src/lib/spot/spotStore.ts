@@ -168,6 +168,23 @@ export interface SpotStore {
   >;
 
   /**
+   * One free read in full: the stored analysis (spot_read.result, a raw
+   * PhotoAnalysisOutput — the same thing the user was shown) plus the URL of
+   * its retained photo when one survives. Null if the read is gone.
+   *
+   * photoUrl is null for reads taken before photo retention was turned on
+   * (they never had a photo) and for reads whose photo the 90-day sweep has
+   * since deleted — the admin page tells the two apart from the row's age.
+   */
+  getFreeRead(id: string): Promise<{
+    id: string;
+    createdAt: string;
+    modelVersion: string | null;
+    result: unknown;
+    photoUrl: string | null;
+  } | null>;
+
+  /**
    * Hard-delete a free read and its photos.
    *
    * Blobs are NOT cascaded by the FK — dropping the row alone would orphan the
@@ -491,6 +508,35 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
             typeof result.overall_risk === 'string' ? result.overall_risk : null,
         };
       });
+    },
+
+    async getFreeRead(id) {
+      // Left join the photo so a read with none (older reads, or a swept one)
+      // still returns. Only a live photo (deleted_at IS NULL) counts as a URL
+      // to show — a soft-deleted row's blob is already gone.
+      const rows = await db
+        .select({
+          id: spotReads.id,
+          createdAt: spotReads.createdAt,
+          modelVersion: spotReads.modelVersion,
+          result: spotReads.result,
+          photoUrl: spotPhotos.blobUrl,
+          photoDeletedAt: spotPhotos.deletedAt,
+        })
+        .from(spotReads)
+        .leftJoin(spotPhotos, eq(spotPhotos.readId, spotReads.id))
+        .where(eq(spotReads.id, id))
+        .limit(1);
+
+      const r = rows[0];
+      if (!r) return null;
+      return {
+        id: r.id,
+        createdAt: r.createdAt.toISOString(),
+        modelVersion: r.modelVersion ?? null,
+        result: r.result ?? null,
+        photoUrl: r.photoDeletedAt === null ? (r.photoUrl ?? null) : null,
+      };
     },
 
     async deleteFreeRead(id) {

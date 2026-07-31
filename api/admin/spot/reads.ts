@@ -5,12 +5,13 @@
  *   DELETE → remove one (?id=…), with its photos and their blobs.
  *
  * WHY FREE READS GET THEIR OWN ENDPOINT. A free read is not a cheaper paid
- * session — it is a different record. No buyer, no payment, no report, and no
- * stored photo, because the free path is transient by design. What it keeps is
- * the analysis itself, which is the interesting part: it is what Spot actually
- * told someone who never paid, and it is the only evidence of how the free tier
- * performs. Forcing both into one list would mean a table of mostly-empty
- * columns.
+ * session — it is a different record. No buyer, no payment, no report. It keeps
+ * the analysis, which is the interesting part: it is what Spot actually told
+ * someone who never paid, and the only evidence of how the free tier performs.
+ * Since photo retention was turned on it also keeps the uploaded photo (a
+ * read-parented spot_photo row, swept after 90 days) for analyzer training.
+ * Forcing free reads and paid sessions into one list would mean a table of
+ * mostly-empty columns.
  *
  * DELETE IS A HARD DELETE. The current data is all test traffic and the point
  * is to clear it. Blobs go before rows — the FK cascade drops spot_photo rows
