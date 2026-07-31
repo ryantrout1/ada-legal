@@ -29,7 +29,7 @@
  * Never: violation · non-compliant · illegal · liable · lawsuit · emoji ·
  * exclamation marks · fear-selling. That last one is load-bearing — ADALL
  * exists partly BECAUSE of drive-by ADA shakedowns, and a voice that frightens
- * people into the $99 report would poison the thing Gina and Kelley are
+ * people into the $79 report would poison the thing Gina and Kelley are
  * building. The limits section is not fine print and is not styled as such:
  * "we can't certify compliance and won't call anything a violation" is the
  * honest shape of the product, and saying it plainly is what earns the read.

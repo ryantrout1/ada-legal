@@ -4,7 +4,7 @@
  *   POST { photos: string[] }   // 1 base64 image data URL (MAX_FREE_PHOTOS)
  *
  * Ada Spot's free-tier read. Runs the shared photo analyzer (Opus 4.8) and
- * returns an honest scoped result + the $99 upsell. No Ada session, no org,
+ * returns an honest scoped result + the $79 upsell. No Ada session, no org,
  * no Vercel Blob — free-read photos are analyzed transiently (the analyzer
  * accepts data: URLs) and never persisted.
  *
@@ -59,9 +59,9 @@ export const config = { maxDuration: 90 };
 const RATE_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 const UPSELL = {
-  price_usd: 99,
+  price_usd: 79,
   max_photos: 10,
-  anchor: 'A professional ADA inspection runs $1,500–$5,000; this screening is $99.',
+  anchor: 'A professional ADA inspection runs $1,500–$5,000; this screening is $79.',
 } as const;
 
 function clientIp(req: VercelRequest): string {

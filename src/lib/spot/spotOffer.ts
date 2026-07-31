@@ -11,7 +11,7 @@
  */
 
 /** Price of the full multi-angle report, in USD. */
-export const SPOT_DEFAULT_PRICE_USD = 99;
+export const SPOT_DEFAULT_PRICE_USD = 79;
 
 /** Photos a buyer may submit against one paid report. */
 export const SPOT_DEFAULT_MAX_PHOTOS = 10;

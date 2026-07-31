@@ -50,7 +50,7 @@ describe('every Spot price source states the same number', () => {
     expect(match?.[1]).toBe(String(expectedCents));
   });
 
-  it('no Spot source still says $79', () => {
+  it('no Spot source still says $99', () => {
     // The previous price. Named explicitly so a half-finished change is
     // caught even if the regexes above are satisfied by something else.
     for (const rel of [
@@ -62,7 +62,7 @@ describe('every Spot price source states the same number', () => {
       'api/spot/create-checkout.ts',
       'api/spot/simulate-payment.ts',
     ]) {
-      expect(read(rel), rel).not.toMatch(/\$79\b|\b7900\b/);
+      expect(read(rel), rel).not.toMatch(/\$99\b|\b9900\b/);
     }
   });
 });

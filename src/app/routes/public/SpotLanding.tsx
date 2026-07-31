@@ -2,7 +2,7 @@
  * SpotLanding — /spot (Ada Spot 1b).
  *
  * Standalone (outside PublicLayout — no nav/footer), single-purpose landing:
- * framing → take/upload up to 2 photos → free screening read → $99 CTA.
+ * framing → take/upload up to 2 photos → free screening read → $79 CTA.
  * Ships dark (spot_enabled OFF); a live submit returns "unavailable" until an
  * admin enables it. AAA: 44px targets, visible focus, keyboard, CSS tokens.
  */
@@ -377,7 +377,7 @@ export default function SpotLanding() {
                       disabled={testBusy || files.length === 0}
                       className="min-h-[44px] w-full rounded-md bg-accent-600 px-4 py-2 text-white disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
                     >
-                      {testBusy ? 'Generating the full report…' : 'Simulate payment → generate the $99 report'}
+                      {testBusy ? 'Generating the full report…' : 'Simulate payment → generate the $79 report'}
                     </button>
                     {testError ? (
                       <p role="alert" className="mt-2 text-sm text-danger-500">
@@ -390,7 +390,7 @@ export default function SpotLanding() {
                 {testReport ? (
                   <section className="mt-6" aria-live="polite">
                     <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-500">
-                      Full report (test) — this is the $99 deliverable
+                      Full report (test) — this is the $79 deliverable
                     </p>
                     <SpotReportView content={testReport} />
                   </section>
