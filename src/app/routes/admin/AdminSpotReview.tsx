@@ -13,27 +13,19 @@
  */
 
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAdminSpotReports, type SpotReportRow } from '../../hooks/useAdminSpotReports.js';
 
 export default function AdminSpotReview() {
   const { reports, loading, unauthenticated, error } = useAdminSpotReports();
+  const navigate = useNavigate();
   // Needs-review first: it is the only state that wants a person. Everything
   // else on this screen is history.
   const [status, setStatus] = useState<string>('pending_review');
-  const [model, setModel] = useState<string>('');
-
-  const models = useMemo(
-    () => [...new Set(reports.map((r) => r.modelVersion).filter((m): m is string => !!m))].sort(),
-    [reports],
-  );
 
   const rows = useMemo(
-    () =>
-      reports.filter(
-        (r) => (!status || r.hitlStatus === status) && (!model || r.modelVersion === model),
-      ),
-    [reports, status, model],
+    () => reports.filter((r) => !status || r.hitlStatus === status),
+    [reports, status],
   );
 
   if (unauthenticated) {
@@ -77,22 +69,6 @@ export default function AdminSpotReview() {
             </select>
           </label>
 
-          <label className="flex items-center gap-2">
-            <span className="text-ink-700 font-medium">Model</span>
-            <select
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              className="min-h-[44px] rounded-md border border-surface-200 bg-white px-3 py-1.5 text-ink-900"
-            >
-              <option value="">All</option>
-              {models.map((m) => (
-                <option key={m} value={m}>
-                  {m.replace('claude-', '')}
-                </option>
-              ))}
-            </select>
-          </label>
-
           <span className="ml-auto text-xs text-ink-500 font-mono">
             {loading ? 'Loading…' : `${rows.length} of ${reports.length}`}
           </span>
@@ -115,7 +91,6 @@ export default function AdminSpotReview() {
               <th scope="col" className="px-3 py-2">Received</th>
               <th scope="col" className="px-3 py-2">Session</th>
               <th scope="col" className="px-3 py-2">Paid by</th>
-              <th scope="col" className="px-3 py-2">Model</th>
               <th scope="col" className="px-3 py-2">Status</th>
               <th scope="col" className="px-3 py-2"></th>
             </tr>
@@ -123,39 +98,49 @@ export default function AdminSpotReview() {
           <tbody>
             {rows.length === 0 && !loading && (
               <tr>
-                <td colSpan={6} className="px-3 py-6 text-center text-ink-500">
-                  No reports match the current filters.
+                <td colSpan={5} className="px-3 py-6 text-center text-ink-500">
+                  No reports match this filter.
                 </td>
               </tr>
             )}
-            {rows.map((r) => (
-              <tr key={r.id} className="border-t border-surface-200">
-                <td className="px-3 py-2 font-mono text-xs text-ink-700">{formatTime(r.createdAt)}</td>
-                <td className="px-3 py-2 font-mono text-xs text-ink-700">{r.sessionId.slice(0, 8)}</td>
-                <td className="px-3 py-2 text-ink-700">
-                  <Buyer row={r} />
-                </td>
-                <td className="px-3 py-2 font-mono text-xs text-ink-700">
-                  {r.modelVersion?.replace('claude-', '') ?? '—'}
-                </td>
-                <td className="px-3 py-2">
-                  <StatusBadge status={r.hitlStatus} />
-                  {r.hitlStatus === 'released' && (
-                    <span className="ml-1.5 text-[10px] uppercase tracking-wider text-ink-500 font-mono">
-                      {r.sentAt ? 'emailed' : 'not emailed'}
-                    </span>
-                  )}
-                </td>
-                <td className="px-3 py-2">
-                  <Link
-                    to={`/admin/spot-review/${encodeURIComponent(r.slug)}`}
-                    className="inline-flex min-h-[44px] items-center text-accent-600 underline underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
-                  >
-                    {r.hitlStatus === 'pending_review' ? 'Review' : 'Open'}
-                  </Link>
-                </td>
-              </tr>
-            ))}
+            {rows.map((r) => {
+              const label = r.hitlStatus === 'pending_review' ? 'Review' : 'Open';
+              return (
+                // The whole row navigates on click for the mouse. The link in
+                // the last cell stays as the real focusable, screen-reader
+                // affordance — a clickable <tr> alone drops out of the tab
+                // order and reads as nothing. Clicking the link lets the row
+                // handler fire too, which is fine: same destination.
+                <tr
+                  key={r.id}
+                  onClick={() => navigate(`/admin/spot-review/${encodeURIComponent(r.slug)}`)}
+                  className="cursor-pointer border-t border-surface-200 hover:bg-surface-100"
+                >
+                  <td className="px-3 py-2 font-mono text-xs text-ink-700">{formatTime(r.createdAt)}</td>
+                  <td className="px-3 py-2 font-mono text-xs text-ink-700">{r.sessionId.slice(0, 8)}</td>
+                  <td className="px-3 py-2 text-ink-700">
+                    <Buyer row={r} />
+                  </td>
+                  <td className="px-3 py-2">
+                    <StatusBadge status={r.hitlStatus} />
+                    {r.hitlStatus === 'released' && (
+                      <span className="ml-1.5 text-[10px] uppercase tracking-wider text-ink-500 font-mono">
+                        {r.sentAt ? 'emailed' : 'not emailed'}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-3 py-2">
+                    <Link
+                      to={`/admin/spot-review/${encodeURIComponent(r.slug)}`}
+                      aria-label={`${label} report for session ${r.sessionId.slice(0, 8)}`}
+                      className="inline-flex min-h-[44px] items-center text-accent-600 underline underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
+                    >
+                      {label}
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
