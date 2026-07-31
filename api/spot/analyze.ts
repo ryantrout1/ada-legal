@@ -169,12 +169,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!aborted) {
         writeSseFrame(res, 'done', { tier, result: result.output, upsell: UPSELL });
       }
-      // Close the stream first, then store. The user has their result; the
-      // photo write must not hold the socket open waiting on Blob.
-      res.end();
+      // Store BEFORE res.end(). On Vercel serverless the function can be
+      // frozen the instant the response closes, so awaited work after
+      // res.end() is not guaranteed to run — an earlier version put the store
+      // there and it never executed, storing zero photos. The user already
+      // has their result from the 'done' frame above; the cost of storing
+      // first is a couple of seconds of open socket during the blob upload,
+      // which is worth paying to not drop the photo. Best-effort and cannot
+      // throw (see storeFreeReadPhoto), so it never blocks res.end().
       if (retainPhoto) {
         await storeFreeReadPhoto({ store, blob: clients.blob, readId: read.id, dataUrl: parsed.photos[0]! });
       }
+      res.end();
       return;
     }
     if (retainPhoto) {
