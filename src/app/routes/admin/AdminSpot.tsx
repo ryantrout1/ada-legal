@@ -291,40 +291,28 @@ export default function AdminSpot() {
       ) : null}
 
       {tab === 'paid' && sessions && sessions.length > 0 ? (
-        <div className="mt-6 overflow-x-auto">
-          <table className="w-full border-collapse text-sm">
+        <div className="mt-6 overflow-x-auto rounded-md border border-surface-200 bg-white">
+          <table className="w-full text-sm">
             <caption className="sr-only">
               Spot sessions, newest first, showing buyer, amount and delivery state
             </caption>
-            <thead>
-              <tr className="text-left">
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">
-                  Buyer
-                </th>
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">
-                  Status
-                </th>
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">
-                  Delivery
-                </th>
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">
-                  Photos
-                </th>
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">
-                  Amount
-                </th>
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">
-                  Paid
-                </th>
-                <th scope="col" className="border-b border-surface-200 py-2 font-semibold">
+            <thead className="bg-surface-100 text-left text-xs uppercase tracking-wider font-mono text-ink-500">
+              <tr>
+                <th scope="col" className="px-3 py-2">Buyer</th>
+                <th scope="col" className="px-3 py-2">Status</th>
+                <th scope="col" className="px-3 py-2">Delivery</th>
+                <th scope="col" className="px-3 py-2">Photos</th>
+                <th scope="col" className="px-3 py-2">Amount</th>
+                <th scope="col" className="px-3 py-2">Paid</th>
+                <th scope="col" className="px-3 py-2">
                   <span className="sr-only">Delete</span>
                 </th>
               </tr>
             </thead>
             <tbody>
               {sessions.map((s) => (
-                <tr key={s.id}>
-                  <td className="border-b border-surface-200 py-2 pr-4">
+                <tr key={s.id} className="border-t border-surface-200 hover:bg-surface-100">
+                  <td className="px-3 py-2">
                     {s.buyer_name || s.buyer_email ? (
                       <span>
                         {s.buyer_name ? <span className="text-ink-900">{s.buyer_name}</span> : null}
@@ -335,10 +323,10 @@ export default function AdminSpot() {
                       <span className="text-ink-500">No buyer on file</span>
                     )}
                   </td>
-                  <td className="border-b border-surface-200 py-2 pr-4">
-                    {s.status.replace(/_/g, ' ')}
+                  <td className="px-3 py-2">
+                    <SpotStatusBadge status={s.status} />
                   </td>
-                  <td className="border-b border-surface-200 py-2 pr-4">
+                  <td className="px-3 py-2">
                     {/* Colour is never the only signal: the word says it too. */}
                     <span
                       className={
@@ -376,12 +364,10 @@ export default function AdminSpot() {
                       </>
                     ) : null}
                   </td>
-                  <td className="border-b border-surface-200 py-2 pr-4">{s.photo_count ?? '—'}</td>
-                  <td className="border-b border-surface-200 py-2 pr-4">
-                    {money(s.amount_cents, s.paid_at)}
-                  </td>
-                  <td className="border-b border-surface-200 py-2 pr-4">{when(s.paid_at)}</td>
-                  <td className="border-b border-surface-200 py-2">
+                  <td className="px-3 py-2">{s.photo_count ?? '—'}</td>
+                  <td className="px-3 py-2">{money(s.amount_cents, s.paid_at)}</td>
+                  <td className="px-3 py-2 font-mono text-xs text-ink-700">{when(s.paid_at)}</td>
+                  <td className="px-3 py-2">
                     <button
                       type="button"
                       disabled={busyId === s.id}
@@ -412,39 +398,37 @@ export default function AdminSpot() {
             What Spot told someone who never paid. The analysis is kept; the photo is not —
             the free path stores no image.
           </p>
-          <table className="w-full border-collapse text-sm">
+          <table className="w-full text-sm">
             <caption className="sr-only">Free Spot reads, newest first</caption>
-            <thead>
-              <tr className="text-left">
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">When</th>
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">Email given</th>
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">Photos</th>
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">Findings</th>
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">Read</th>
-                <th scope="col" className="border-b border-surface-200 py-2 pr-4 font-semibold">Model</th>
-                <th scope="col" className="border-b border-surface-200 py-2 font-semibold">
+            <thead className="bg-surface-100 text-left text-xs uppercase tracking-wider font-mono text-ink-500">
+              <tr>
+                <th scope="col" className="px-3 py-2">When</th>
+                <th scope="col" className="px-3 py-2">Email given</th>
+                <th scope="col" className="px-3 py-2">Photos</th>
+                <th scope="col" className="px-3 py-2">Findings</th>
+                <th scope="col" className="px-3 py-2">Read</th>
+                <th scope="col" className="px-3 py-2">Model</th>
+                <th scope="col" className="px-3 py-2">
                   <span className="sr-only">Delete</span>
                 </th>
               </tr>
             </thead>
             <tbody>
               {reads.map((r) => (
-                <tr key={r.id}>
-                  <td className="border-b border-surface-200 py-2 pr-4">
+                <tr key={r.id} className="border-t border-surface-200 hover:bg-surface-100">
+                  <td className="px-3 py-2 font-mono text-xs text-ink-700">
                     {when(r.createdAt ?? r.created_at ?? null)}
                   </td>
-                  <td className="border-b border-surface-200 py-2 pr-4">
+                  <td className="px-3 py-2">
                     {r.email ?? <span className="text-ink-500">None</span>}
                   </td>
-                  <td className="border-b border-surface-200 py-2 pr-4">{r.photoCount ?? '—'}</td>
-                  <td className="border-b border-surface-200 py-2 pr-4">{r.findingCount ?? 0}</td>
-                  <td className="border-b border-surface-200 py-2 pr-4">
+                  <td className="px-3 py-2">{r.photoCount ?? '—'}</td>
+                  <td className="px-3 py-2">{r.findingCount ?? 0}</td>
+                  <td className="px-3 py-2">
                     {r.overallRisk ?? <span className="text-ink-500">—</span>}
                   </td>
-                  <td className="border-b border-surface-200 py-2 pr-4 text-ink-500">
-                    {r.modelVersion ?? '—'}
-                  </td>
-                  <td className="border-b border-surface-200 py-2">
+                  <td className="px-3 py-2 text-ink-500">{r.modelVersion ?? '—'}</td>
+                  <td className="px-3 py-2">
                     <button
                       type="button"
                       disabled={busyId === r.id}
@@ -461,5 +445,34 @@ export default function AdminSpot() {
         </div>
       ) : null}
     </div>
+  );
+}
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+/**
+ * A session-status pill, styled to match the one on /admin/spot-review so the
+ * two Spot lists read as the same family. The Spot session lifecycle is
+ * richer than the report review's three states, so the map is longer: the
+ * terminal-good state (delivered) is green, the one waiting on a person
+ * (in_review) is amber, a refund is red, and the in-flight middle states
+ * (pending_payment, paid, uploaded) stay a neutral grey — they are not
+ * problems, just not finished.
+ */
+function SpotStatusBadge({ status }: { status: string }) {
+  const classes: Record<string, string> = {
+    delivered: 'bg-success-50 text-success-500 border-success-500',
+    in_review: 'bg-warning-50 text-warning-500 border-warning-500',
+    refunded: 'bg-danger-50 text-danger-500 border-danger-500',
+  };
+  return (
+    <span
+      className={
+        'inline-block rounded border px-1.5 py-0.5 text-[10px] uppercase tracking-wider font-mono ' +
+        (classes[status] ?? 'bg-surface-100 text-ink-700 border-surface-200')
+      }
+    >
+      {status.replace(/_/g, ' ')}
+    </span>
   );
 }
