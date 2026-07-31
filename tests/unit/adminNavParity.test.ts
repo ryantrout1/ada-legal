@@ -90,21 +90,32 @@ describe('admin nav — Ada and Spot are separate groups', () => {
   it('puts the Spot pages under the Spot group', () => {
     expect(spotBlock).toContain("to: '/admin/spot'");
     expect(spotBlock).toContain("to: '/admin/spot-review'");
+    // Photo Review moved here: the analyzer it reviews is now driven mostly
+    // by Spot (paid screenings + retained free-read training photos).
+    expect(spotBlock).toContain("to: '/admin/photo-review'");
   });
 
   it('leaves the Spot pages out of the Ada group', () => {
     expect(adaBlock, 'Spot leaked back into Ada').not.toContain("to: '/admin/spot'");
     expect(adaBlock).not.toContain("to: '/admin/spot-review'");
+    expect(adaBlock, 'Photo Review should be under Spot now').not.toContain(
+      "to: '/admin/photo-review'",
+    );
   });
 
   it('keeps Ada intake pages under Ada', () => {
-    // The split moves Spot out; it must not move Ada's own work with it.
+    // The split moves Spot (and Photo Review) out; it must not move Ada's
+    // own intake work with it.
     expect(adaBlock).toContain("to: '/admin/sessions'");
     expect(adaBlock).toContain("to: '/admin/intakes'");
     expect(adaBlock).toContain("to: '/admin/cases'");
-    // Photo Review and Feedback stay under Ada per the plan's default.
-    expect(adaBlock).toContain("to: '/admin/photo-review'");
-    expect(adaBlock).toContain("to: '/admin/feedback'");
+  });
+
+  it('puts Feedback under Business, next to Analytics', () => {
+    const businessBlock = sectionItems('Business');
+    expect(businessBlock).toContain("to: '/admin/feedback'");
+    expect(businessBlock).toContain("to: '/admin/analytics'");
+    expect(adaBlock, 'Feedback moved to Business').not.toContain("to: '/admin/feedback'");
   });
 });
 
