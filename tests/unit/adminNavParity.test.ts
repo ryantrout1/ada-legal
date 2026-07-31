@@ -32,8 +32,11 @@ const registeredRoutes = new Set(
 );
 
 describe('admin nav — B44 group structure', () => {
-  it('declares the group sections B44 uses', () => {
-    for (const group of ['Overview', 'Ada', 'Directory', 'Business', 'System']) {
+  it('declares the group sections B44 uses, plus the Spot split', () => {
+    // Overview / Ada / Directory / Business / System are B44's groups.
+    // Spot is a deliberate divergence: Ada and Spot are different products
+    // and were sharing the Ada group.
+    for (const group of ['Overview', 'Ada', 'Spot', 'Directory', 'Business', 'System']) {
       expect(layout, `nav group missing: ${group}`).toContain(`label: '${group}'`);
     }
   });
@@ -58,6 +61,42 @@ describe('admin nav — B44 group structure', () => {
     expect(layout, 'Gina navigates by knuckle — 44px is a hard floor').toContain(
       'min-h-[44px]',
     );
+  });
+});
+
+describe('admin nav — Ada and Spot are separate groups', () => {
+  // Slice the source into per-section blocks so membership can be checked by
+  // which group's items[] a route appears in, not just that it appears.
+  function sectionItems(label: string): string {
+    const start = layout.indexOf(`label: '${label}'`);
+    expect(start, `section not found: ${label}`).toBeGreaterThan(-1);
+    // The next section starts at the next "label: '" after this one; the
+    // items[] we want is everything in between.
+    const next = layout.indexOf("label: '", start + `label: '${label}'`.length);
+    return layout.slice(start, next === -1 ? undefined : next);
+  }
+
+  const adaBlock = sectionItems('Ada');
+  const spotBlock = sectionItems('Spot');
+
+  it('puts the Spot pages under the Spot group', () => {
+    expect(spotBlock).toContain("to: '/admin/spot'");
+    expect(spotBlock).toContain("to: '/admin/spot-review'");
+  });
+
+  it('leaves the Spot pages out of the Ada group', () => {
+    expect(adaBlock, 'Spot leaked back into Ada').not.toContain("to: '/admin/spot'");
+    expect(adaBlock).not.toContain("to: '/admin/spot-review'");
+  });
+
+  it('keeps Ada intake pages under Ada', () => {
+    // The split moves Spot out; it must not move Ada's own work with it.
+    expect(adaBlock).toContain("to: '/admin/sessions'");
+    expect(adaBlock).toContain("to: '/admin/intakes'");
+    expect(adaBlock).toContain("to: '/admin/cases'");
+    // Photo Review and Feedback stay under Ada per the plan's default.
+    expect(adaBlock).toContain("to: '/admin/photo-review'");
+    expect(adaBlock).toContain("to: '/admin/feedback'");
   });
 });
 
