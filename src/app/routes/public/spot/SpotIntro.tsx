@@ -79,28 +79,31 @@ const LIMITS: string[] = [
 export default function SpotIntro() {
   return (
     <div className="mt-10 space-y-8">
-      {/* First, because it is the only question an alarmed card-holder has.
-          Gina's card front says POSSIBLE ADA VIOLATION in 100pt; the back says
-          THIS IS NOT A LAWSUIT and promises "Access for All starts here" —
-          this page is "here", so it has to catch what the card throws. Confirm
-          her de-escalation rather than leave them wondering, and claim nothing
-          past it: she hedges every assertion (possible / may not / likely /
-          potential) and we hold the same line. */}
-      <section aria-labelledby="spot-card-h">
-        <h2 id="spot-card-h" className="font-display text-2xl font-extrabold text-ink-900">
-          About that card
+      {/* First section for a reader who arrived by clicking a link on our own
+          site — not someone handed Gina's physical card. So it opens on what
+          Spot is for, not on "that card": most people here are curious, not
+          alarmed, and telling them "this isn't a lawsuit" up front plants a
+          worry they didn't arrive with. The card-holder version of this copy
+          moves to a dedicated campaign page the card URL points at. We still
+          claim nothing past a screening: every assertion stays hedged
+          (possible / may not / likely / potential) and the limits section
+          holds the line. */}
+      <section aria-labelledby="spot-purpose-h">
+        <h2 id="spot-purpose-h" className="font-display text-2xl font-extrabold text-ink-900">
+          What Spot is for
         </h2>
         <p className="mt-3 text-ink-700">
-          The card’s right — this isn’t a lawsuit. It isn’t a legal claim, it isn’t a demand,
-          and nobody has decided anything. Someone came here, ran into something, and left you a
-          card instead of leaving quietly.
+          Most barriers aren’t anyone’s fault. A step nobody measured. A door an inch too narrow. A
+          counter that’s fine standing up and impossible sitting down. They’re easy to miss — until
+          someone can’t get in — and easy to find if you point a camera at them.
         </p>
         <p className="mt-3 text-ink-700">
-          It doesn’t tell you what they hit, though, or how much it matters. That’s what the
-          photo is for.
+          Spot is the fast way to look before it’s a problem. Whether you run the place, work there,
+          or just wondered walking past: take a photo, get a straight read.
         </p>
         <p className="mt-3 text-sm text-ink-500">
-          Ran into a barrier here yourself? Spot is built for the person who owns the place —{' '}
+          Wondering because you ran into a barrier yourself, as a visitor? Spot is built for
+          checking a place. If you’ve hit a barrier and want to know your rights,{' '}
           <a
             href="/ada"
             className="text-accent-600 underline underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"

@@ -201,14 +201,14 @@ export default function SpotLanding() {
             Spot — from ADA Legal Link
           </p>
           <h1 className="mt-2 font-display text-3xl font-extrabold leading-tight text-ink-900">
-            Someone told you.
+            Is this place accessible? One photo tells you.
           </h1>
           <p className="mt-3 text-lg text-ink-900">
-            Most people don’t. They can’t get in, they turn around, and you never find out.
+            Point your camera at a doorway, a ramp, a parking space, a restroom — anywhere someone
+            might get stuck. Spot reads it against the ADA standards and names what stands out.
           </p>
           <p className="mt-3 text-lg text-ink-700">
-            A card is the cheapest way you’ll ever hear about it. Let’s find out what they saw —
-            one photo, about a minute, free.
+            One photo, about a minute, free.
           </p>
         </header>
 
