@@ -35,7 +35,7 @@ import { readCode } from '../support/sourceText.js';
 const RESEND = readCode('api/spot/admin/resend.ts');
 const RELEASE = readCode('api/spot/admin/release.ts');
 const STORE = readCode('src/lib/spot/spotStore.ts');
-const REVIEW = readCode('src/app/routes/review/SpotReview.tsx');
+const REVIEW = readCode('src/app/hooks/useAdminSpotReports.ts');
 
 describe('resend — delivery only, never a state transition', () => {
   it('exists as its own endpoint', () => {
@@ -100,7 +100,11 @@ describe('review UI — does not send the admin down a dead end', () => {
   });
 
   it('calls the resend endpoint', () => {
-    expect(REVIEW).toContain('/api/spot/admin/resend');
+    // The two spot-review pages share one post() helper that appends the
+    // path to /api/spot/admin/, so what matters is that resending is its own
+    // named call against its own path and never rides on release.
+    expect(REVIEW).toContain("`/api/spot/admin/${path}`");
+    expect(REVIEW).toMatch(/post\('resend'/);
   });
 
   it('says plainly when retrying cannot help', () => {

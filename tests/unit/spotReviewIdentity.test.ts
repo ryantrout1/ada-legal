@@ -74,16 +74,19 @@ describe('listReports still refuses to carry what it should not', () => {
 });
 
 describe('the review row renders the buyer', () => {
-  const src = readCode(resolve(root, 'src/app/routes/review/SpotReview.tsx'));
+  // The row type moved to the hook both spot-review pages share; the
+  // rendering stayed on the list.
+  const hook = readCode(resolve(root, 'src/app/hooks/useAdminSpotReports.ts'));
+  const src = readCode(resolve(root, 'src/app/routes/admin/AdminSpotReview.tsx'));
 
   it('carries the buyer on its row type', () => {
-    expect(src).toMatch(/buyerName:\s*string \| null/);
-    expect(src).toMatch(/buyerEmail:\s*string \| null/);
+    expect(hook).toMatch(/buyerName:\s*string \| null/);
+    expect(hook).toMatch(/buyerEmail:\s*string \| null/);
   });
 
   it('renders both', () => {
-    expect(src).toMatch(/r\.buyerName/);
-    expect(src).toMatch(/r\.buyerEmail/);
+    expect(src).toMatch(/\.buyerName/);
+    expect(src).toMatch(/\.buyerEmail/);
   });
 
   it('says so when there is no buyer on file', () => {

@@ -103,7 +103,7 @@ describe('spot-review lives inside the Clerk branch', () => {
     // on Base44). An admin-gated page mounted outside it has no client to
     // refresh Clerk's short-lived session cookie, so it 401s permanently
     // about a minute after sign-in — which is exactly what happened.
-    expect(APP).toContain('<Route path="spot-review" element={<SpotReview />} />');
+    expect(APP).toContain('<Route path="spot-review" element={<AdminSpotReview />} />');
   });
 
   it('keeps the old path working as a redirect', () => {

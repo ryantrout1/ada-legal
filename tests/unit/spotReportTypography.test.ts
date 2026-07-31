@@ -40,7 +40,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const code = (rel: string) => readCode(resolve(root, rel));
 
 const READOUT = 'src/app/routes/public/spot/SpotReadout.tsx';
-const REVIEW = 'src/app/routes/review/SpotReview.tsx';
+const REVIEW = 'src/app/routes/admin/AdminSpotReviewDetail.tsx';
 const VIEW = 'src/app/routes/public/spot/SpotReportView.tsx';
 
 describe('the buyer’s readout', () => {

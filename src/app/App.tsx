@@ -40,7 +40,6 @@ import GuidePage from './routes/public/GuidePage.js';
 import PhotoCapture from './routes/public/PhotoCapture.js';
 import SpotLanding from './routes/public/SpotLanding.js';
 import SpotReadout from './routes/public/spot/SpotReadout.js';
-import SpotReview from './routes/review/SpotReview.js';
 import ReviewLayout from './routes/review/ReviewLayout.js';
 import PhotoReviewQueue from './routes/review/PhotoReviewQueue.js';
 import PhotoReviewLabel from './routes/review/PhotoReviewLabel.js';
@@ -69,6 +68,8 @@ import AdminFeedback from './routes/admin/AdminFeedback.js';
 import AdminIntakeDetail from './routes/admin/AdminIntakeDetail.js';
 import AdminAnalytics from './routes/admin/AdminAnalytics.js';
 import AdminSpot from './routes/admin/AdminSpot.js';
+import AdminSpotReview from './routes/admin/AdminSpotReview.js';
+import AdminSpotReviewDetail from './routes/admin/AdminSpotReviewDetail.js';
 import AdminPhotoReview from './routes/admin/AdminPhotoReview.js';
 import AdminPhotoReviewDetail from './routes/admin/AdminPhotoReviewDetail.js';
 import PortalLayout from './layouts/PortalLayout.js';
@@ -227,7 +228,8 @@ function AdminShell() {
           <Route path="settings" element={<AdminSettings />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="spot" element={<AdminSpot />} />
-          <Route path="spot-review" element={<SpotReview />} />
+          <Route path="spot-review" element={<AdminSpotReview />} />
+          <Route path="spot-review/:slug" element={<AdminSpotReviewDetail />} />
           <Route path="photo-review" element={<AdminPhotoReview />} />
           <Route path="photo-review/:id" element={<AdminPhotoReviewDetail />} />
           <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />

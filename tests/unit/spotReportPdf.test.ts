@@ -188,7 +188,7 @@ describe('the PDF and the page cannot disagree about structure', () => {
  */
 describe('the download button', () => {
   const readout = readCode(resolve(root, 'src/app/routes/public/spot/SpotReadout.tsx'));
-  const review = readCode(resolve(root, 'src/app/routes/review/SpotReview.tsx'));
+  const review = readCode(resolve(root, 'src/app/routes/admin/AdminSpotReviewDetail.tsx'));
   const view = readCode(resolve(root, 'src/app/routes/public/spot/SpotReportView.tsx'));
 
   it.each([
