@@ -583,6 +583,10 @@ export class InMemoryDbClient implements DbClient {
   ): Promise<PhotoReviewDetail | null> {
     const a = this.photoAnalyses.find((x) => x.id === photoAnalysisId);
     if (!a) return null;
+    // Field-test photos only — mirrors the inner join on the Neon client.
+    // A missing session drops the row for the same reason a join would.
+    const session = a.sessionId ? this.sessions.get(a.sessionId) : undefined;
+    if (!session?.isTest) return null;
     return {
       photoAnalysisId: a.id,
       sessionId: a.sessionId ?? '',

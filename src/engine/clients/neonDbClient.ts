@@ -781,7 +781,14 @@ export class NeonDbClient implements DbClient {
         testerComment: photoAnalyses.testerComment,
       })
       .from(photoAnalyses)
-      .where(eq(photoAnalyses.id, photoAnalysisId))
+      // Field-test photos only, the same scope listPhotoAnalysesForReview
+      // has always applied. Without this the id alone was the whole gate,
+      // and /api/photo-review/[id] takes no auth — so any analysis in the
+      // table, claimant photos included, was one known id from being read
+      // or reviewed. An inner join, not a filter, so an analysis whose
+      // session is gone drops out rather than falling through.
+      .innerJoin(adaSessions, eq(adaSessions.id, photoAnalyses.sessionId))
+      .where(and(eq(photoAnalyses.id, photoAnalysisId), eq(adaSessions.isTest, true)))
       .limit(1);
 
     const r = rows[0];

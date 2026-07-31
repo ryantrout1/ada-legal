@@ -17,7 +17,11 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { InMemoryDbClient } from '@/engine/clients/inMemoryClients';
+import {
+  InMemoryDbClient,
+  makeInMemoryClients,
+} from '@/engine/clients/inMemoryClients';
+import { createSession } from '@/engine/session/sessionRepo';
 import type { PhotoFinding } from '@/types/db';
 
 // No cast. A cast in a test is how you get one that compiles and lies —
@@ -34,7 +38,27 @@ const FINDINGS: PhotoFinding[] = [
   },
 ];
 
+/**
+ * Analyses on this surface always belong to a field-test session — that is
+ * the scope both photo-review reads enforce. This fixture used to seed an
+ * analysis against a session id that was never written, which passed only
+ * while `getPhotoAnalysisForReview` looked the analysis up by id alone.
+ * Closing that (Phase 1) made the omission visible.
+ */
+async function seedSession(db: InMemoryDbClient, sessionId: string) {
+  const state = createSession(makeInMemoryClients(), {
+    orgId: '00000000-0000-4000-8000-000000000001',
+    sessionType: 'public_ada',
+    anonSessionId: '00000000-0000-4000-8000-000000000abc',
+    userId: null,
+    isTest: true,
+  });
+  // createSession mints its own id; these tests name theirs.
+  await db.writeSession({ state: { ...state, sessionId } });
+}
+
 async function seedAnalysis(db: InMemoryDbClient, sessionId = 'sess-1') {
+  await seedSession(db, sessionId);
   return db.savePhotoAnalysis({
     sessionId,
     orgId: 'org-1',
