@@ -41,12 +41,13 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv, readJsonBody } from '../_shared.js';
-import { readSpotEnabled } from '../../src/lib/spot/spotAvailability.js';
+import { readSpotEnabled, readSpotRetainFreePhotos } from '../../src/lib/spot/spotAvailability.js';
 import { deriveRateLimitKey } from '../../src/lib/spot/spotRateLimitKey.js';
 import { rateLimitDecision } from '../../src/lib/spot/rateLimitDecision.js';
 import { parseSpotAnalyzeBody, type SpotAnalyzeBody } from '../../src/lib/spot/parseSpotAnalyzeBody.js';
 import { makeSpotStore } from '../../src/lib/spot/spotStore.js';
 import { mapSpotProgress } from '../../src/lib/spot/mapSpotProgress.js';
+import { storeFreeReadPhoto } from '../../src/lib/spot/storeFreeReadPhoto.js';
 
 // The analyzer makes one blocking Opus vision call, typically 15-45s (forced
 // report_findings tool, ~1-2k output tokens). 90s gives the slow tail room —
@@ -148,7 +149,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Record the read even when the client walked away mid-stream. The
     // free-read allowance is enforced from these rows, so skipping them on
     // abort would make the rate limit evadable by killing the connection.
-    await store.insertRead({
+    const read = await store.insertRead({
       rateLimitKey: key,
       result: result.output,
       photoCount: parsed.photos.length,
@@ -156,12 +157,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
     await store.insertRateLimit({ rateLimitKey: key, ipHash, outcome: tier });
 
+    // Retention of the free user's photo is gated and dark by default: it is
+    // only kept once the user-facing disclosure copy is live and the flag is
+    // flipped. Read once, here, so a mid-run flip can't apply to a photo
+    // whose user was never told. The store itself is best-effort and can't
+    // throw — see storeFreeReadPhoto — but it runs AFTER the response below
+    // so it can never delay or break the user's read either way.
+    const retainPhoto = await readSpotRetainFreePhotos(clients.db);
+
     if (wantsSse) {
       if (!aborted) {
         writeSseFrame(res, 'done', { tier, result: result.output, upsell: UPSELL });
       }
+      // Close the stream first, then store. The user has their result; the
+      // photo write must not hold the socket open waiting on Blob.
       res.end();
+      if (retainPhoto) {
+        await storeFreeReadPhoto({ store, blob: clients.blob, readId: read.id, dataUrl: parsed.photos[0]! });
+      }
       return;
+    }
+    if (retainPhoto) {
+      await storeFreeReadPhoto({ store, blob: clients.blob, readId: read.id, dataUrl: parsed.photos[0]! });
     }
     return res.status(200).json({ tier, result: result.output, upsell: UPSELL });
   } catch (err) {

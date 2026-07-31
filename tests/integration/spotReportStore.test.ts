@@ -15,7 +15,7 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { makeDb } from '@/db/client';
-import { spotSessions, spotPhotos, spotReports } from '@/db/schema-spot';
+import { spotSessions, spotPhotos, spotReports, spotReads } from '@/db/schema-spot';
 import { makeSpotStore } from '@/lib/spot/spotStore';
 import { generatePackageSlug } from '@/engine/package/slug';
 
@@ -94,6 +94,33 @@ describe.skipIf(!DATABASE_URL || !ALLOW_WRITES)('spotStore report methods — li
     } finally {
       await db.delete(spotPhotos).where(eq(spotPhotos.sessionId, id));
       await db.delete(spotSessions).where(eq(spotSessions.id, id));
+    }
+  });
+
+  it('sweeps a read-parented free-read photo the same as a session photo', async () => {
+    // The sweep query filters on delete_after alone, with no parent predicate,
+    // so a read-parented photo is due exactly like a session one. This pins
+    // that against the real table rather than the query text.
+    const db = makeDb(DATABASE_URL!);
+    const store = makeSpotStore(db);
+    const readRow = await store.insertRead({
+      rateLimitKey: 'sweep-test-key',
+      result: { ok: true },
+      photoCount: 1,
+      modelVersion: 'test',
+    });
+    try {
+      await store.insertPhoto({ readId: readRow.id, blobKey: 'k', blobUrl: 'https://blob/free-sweep.jpg' });
+      await db
+        .update(spotPhotos)
+        .set({ deleteAfter: new Date('2000-01-01T00:00:00Z') })
+        .where(eq(spotPhotos.readId, readRow.id));
+
+      const due = await store.photosToSweep(new Date(), 100);
+      expect(due.some((p) => p.blobUrl === 'https://blob/free-sweep.jpg')).toBe(true);
+    } finally {
+      await db.delete(spotPhotos).where(eq(spotPhotos.readId, readRow.id));
+      await db.delete(spotReads).where(eq(spotReads.id, readRow.id));
     }
   });
 });

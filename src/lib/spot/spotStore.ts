@@ -68,7 +68,8 @@ export interface SpotSessionRow {
 
 export interface SpotStore {
   countReadsSince(rateLimitKey: string, since: Date): Promise<number>;
-  insertRead(row: SpotReadRow): Promise<void>;
+  /** Record a free read; returns the new spot_read.id so a photo can parent to it. */
+  insertRead(row: SpotReadRow): Promise<{ id: string }>;
   insertRateLimit(row: SpotRateLimitRow): Promise<void>;
   /** Create a pending_payment session; returns its id. */
   createSession(input: { amountCents: number }): Promise<string>;
@@ -86,8 +87,19 @@ export interface SpotStore {
     name?: string;
     amountCents?: number;
   }): Promise<boolean>;
-  /** Record one uploaded paid photo (session-parented; read_id stays null). */
-  insertPhoto(input: { sessionId: string; blobKey: string; blobUrl: string }): Promise<void>;
+  /**
+   * Record one uploaded photo. Exactly one parent: a paid session
+   * (session-parented) or a free read (read-parented), never both — the DB
+   * check spot_photo_one_parent enforces it. delete_after defaults to 90 days
+   * and the nightly sweep deletes by that alone, so a free-read photo gets the
+   * same retention and purge as a paid one.
+   */
+  insertPhoto(input: {
+    sessionId?: string;
+    readId?: string;
+    blobKey: string;
+    blobUrl: string;
+  }): Promise<void>;
   /** Count live (non-deleted) photos for a session — drives the 10-photo cap. */
   countPhotos(sessionId: string): Promise<number>;
   /** Flip paid → uploaded (conditional; idempotent). Returns true iff transitioned. */
@@ -240,13 +252,17 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
       return Number(rows[0]?.n ?? 0);
     },
     async insertRead(row) {
-      await db.insert(spotReads).values({
-        rateLimitKey: row.rateLimitKey,
-        result: row.result,
-        photoCount: row.photoCount,
-        modelVersion: row.modelVersion,
-        email: row.email ?? null,
-      });
+      const inserted = await db
+        .insert(spotReads)
+        .values({
+          rateLimitKey: row.rateLimitKey,
+          result: row.result,
+          photoCount: row.photoCount,
+          modelVersion: row.modelVersion,
+          email: row.email ?? null,
+        })
+        .returning({ id: spotReads.id });
+      return { id: inserted[0]!.id };
     },
     async insertRateLimit(row) {
       await db.insert(spotRateLimits).values({
@@ -305,7 +321,8 @@ export function makeSpotStore(db: Database = makeDb(requireDatabaseUrl())): Spot
     },
     async insertPhoto(input) {
       await db.insert(spotPhotos).values({
-        sessionId: input.sessionId,
+        sessionId: input.sessionId ?? null,
+        readId: input.readId ?? null,
         blobKey: input.blobKey,
         blobUrl: input.blobUrl,
       });

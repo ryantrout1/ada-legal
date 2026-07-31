@@ -55,3 +55,29 @@ export async function readSpotTestPayment(db: AdaClients['db']): Promise<boolean
   const stored = await db.getSystemSetting<Record<string, unknown>>(SPOT_SETTINGS_KEY);
   return resolveSpotTestPayment(stored);
 }
+
+/**
+ * When `spot_retain_free_photos` is true in the admin blob, a completed free
+ * read stores its uploaded photo (Blob + a read-parented spot_photo row,
+ * swept after 90 days like paid photos) so it can be used to improve the
+ * analyzer.
+ *
+ * Defaults OFF, and deliberately so: retaining an anonymous free user's photo
+ * is a privacy representation, and this flag stays dark until the user-facing
+ * disclosure copy is live. Flipping it on before that would store photos we
+ * have not told anyone we keep. Flip via a Neon upsert once the copy ships.
+ */
+export const SPOT_RETAIN_FREE_PHOTOS_KEY = 'spot_retain_free_photos';
+
+export function resolveSpotRetainFreePhotos(stored: unknown): boolean {
+  if (stored && typeof stored === 'object' && SPOT_RETAIN_FREE_PHOTOS_KEY in stored) {
+    const value = (stored as Record<string, unknown>)[SPOT_RETAIN_FREE_PHOTOS_KEY];
+    if (typeof value === 'boolean') return value;
+  }
+  return false;
+}
+
+export async function readSpotRetainFreePhotos(db: AdaClients['db']): Promise<boolean> {
+  const stored = await db.getSystemSetting<Record<string, unknown>>(SPOT_SETTINGS_KEY);
+  return resolveSpotRetainFreePhotos(stored);
+}
