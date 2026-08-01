@@ -674,7 +674,7 @@ export default function ChapterPageLayout({
                 padding: '10px 20px',
                 borderRadius: '6px',
                 background: 'var(--accent)',
-                color: 'var(--btn-text)',
+                color: 'var(--page-bg)',
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.875rem',
                 fontWeight: 600,

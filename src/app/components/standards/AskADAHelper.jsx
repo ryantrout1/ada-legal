@@ -73,7 +73,7 @@ function Message({ role, content, isLoading, adaUniversalCta }) {
           padding: '12px 16px',
           borderRadius: role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
           background: role === 'user' ? 'var(--accent)' : 'var(--page-bg-subtle)',
-          color: role === 'user' ? 'var(--btn-text)' : 'var(--heading)',
+          color: role === 'user' ? 'var(--page-bg)' : 'var(--heading)',
           border: role === 'user' ? 'none' : '1px solid var(--border)',
           fontFamily: 'var(--font-body)',
           fontSize: '0.9rem',
@@ -532,7 +532,7 @@ export default function AskADAHelper({ pageTitle, pageSections, pageType, readin
             background: input.trim() && !isLoading ? 'var(--accent)' : 'var(--border)',
             border: 'none', cursor: input.trim() && !isLoading ? 'pointer' : 'default',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: input.trim() && !isLoading ? 'var(--btn-text)' : 'var(--body-secondary)',
+            color: input.trim() && !isLoading ? 'var(--page-bg)' : 'var(--body-secondary)',
             flexShrink: 0, transition: 'all 0.15s',
           }}
         >

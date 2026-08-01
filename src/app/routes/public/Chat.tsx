@@ -624,7 +624,7 @@ export default function Chat() {
                   type="button"
                   onClick={() => void sendMessage(lastUser.content)}
                   disabled={state.busy || locked}
-                  className="px-3 py-1.5 rounded-md border border-danger-500 bg-danger-50 text-danger-500 hover:bg-danger-100 text-sm font-medium disabled:opacity-50"
+                  className="min-h-[44px] inline-flex items-center justify-center px-3 py-1.5 rounded-md border border-danger-500 bg-danger-50 text-danger-500 hover:bg-danger-100 text-sm font-medium disabled:opacity-50"
                 >
                   Try again
                 </button>
@@ -637,7 +637,7 @@ export default function Chat() {
                 setDraft('');
                 clearPhoto();
               }}
-              className="px-3 py-1.5 rounded-md border border-surface-300 bg-white text-ink-700 hover:bg-surface-100 text-sm"
+              className="min-h-[44px] inline-flex items-center justify-center px-3 py-1.5 rounded-md border border-surface-300 bg-white text-ink-700 hover:bg-surface-100 text-sm"
             >
               Start fresh
             </button>
@@ -645,7 +645,7 @@ export default function Chat() {
               <button
                 type="button"
                 onClick={() => downloadConversation(state.messages)}
-                className="px-3 py-1.5 rounded-md border border-surface-300 bg-white text-ink-700 hover:bg-surface-100 text-sm"
+                className="min-h-[44px] inline-flex items-center justify-center px-3 py-1.5 rounded-md border border-surface-300 bg-white text-ink-700 hover:bg-surface-100 text-sm"
               >
                 Save what we have
               </button>
@@ -856,7 +856,7 @@ export default function Chat() {
           <div className="flex items-center gap-2">
             <label
               htmlFor="photo-upload"
-              className="flex-none cursor-pointer inline-flex items-center justify-center sm:gap-1.5 rounded-md border border-surface-200 bg-surface-100 px-3 py-2.5 text-sm text-ink-700 hover:bg-surface-200 hover:text-accent-600 transition-colors focus-within:outline-2 focus-within:outline-accent-500"
+              className="min-h-[44px] flex-none cursor-pointer inline-flex items-center justify-center sm:gap-1.5 rounded-md border border-surface-200 bg-surface-100 px-3 py-2.5 text-sm text-ink-700 hover:bg-surface-200 hover:text-accent-600 transition-colors focus-within:outline-2 focus-within:outline-accent-500"
             >
               <svg
                 aria-hidden="true"

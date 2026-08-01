@@ -83,7 +83,7 @@ export default function GuideReportCTA() {
           className="sg-cta-link"
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '8px',
-            background: 'var(--accent)', color: 'var(--btn-text)',
+            background: 'var(--accent)', color: 'var(--page-bg)',
             fontFamily: 'var(--font-body)', fontSize: '1rem', fontWeight: 600,
             padding: '14px 28px', borderRadius: '10px',
             border: 'none',

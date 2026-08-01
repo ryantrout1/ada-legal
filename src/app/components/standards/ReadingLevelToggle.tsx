@@ -102,7 +102,7 @@ export function ReadingLevelToggle({ className }: ReadingLevelToggleProps) {
                   ? '2px solid var(--accent)'
                   : '1px solid var(--border)',
                 background: active ? 'var(--accent)' : 'var(--page-bg)',
-                color: active ? 'var(--btn-text)' : 'var(--body)',
+                color: active ? 'var(--page-bg)' : 'var(--body)',
                 fontSize: '0.72rem',
                 fontWeight: active ? 700 : 500,
                 fontFamily: 'var(--font-body)',

@@ -113,7 +113,7 @@ export default function ShareBar() {
             background: highlight
               ? 'var(--accent)'
               : 'rgba(255, 255, 255, 0.08)',
-            color: highlight ? 'var(--btn-text)' : 'var(--dark-heading)',
+            color: highlight ? 'var(--page-bg)' : 'var(--dark-heading)',
             fontFamily: 'var(--font-body)',
             fontSize: '0.8125rem',
             fontWeight: 500,

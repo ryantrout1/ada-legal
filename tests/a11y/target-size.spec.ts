@@ -73,6 +73,18 @@ for (const route of AUDIT_ROUTES) {
           if (inline) continue; // inline in prose
         }
 
+        // A file input paired with a styled <label for=...> isn't itself the
+        // target — WCAG measures the label (the visible control). Skip the
+        // input; the label is selected and measured on its own.
+        if (
+          tag === 'input' &&
+          (el as HTMLInputElement).type === 'file' &&
+          el.id &&
+          document.querySelector(`label[for="${el.id}"]`)
+        ) {
+          continue;
+        }
+
         const r = el.getBoundingClientRect();
         // round to avoid sub-pixel noise
         const w = Math.round(r.width);
