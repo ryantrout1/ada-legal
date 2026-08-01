@@ -1043,9 +1043,19 @@ body {
 }
 
 :root {
-  --page-bg:          #FFFFFF;
+  /* Surface tokens follow the per-display-mode --color-surface-* scale so
+     they re-tint in dark / contrast / warm / low-vision exactly like
+     --card-bg already does. Before this, these were pinned light hexes with
+     no theme overrides, so themed light text (--heading → --color-ink-900,
+     which DOES flip) rendered on an unthemed light surface — the invisible
+     "Two ways forward" / washed-out heroes in every non-default mode.
+     page-bg = surface-0 (#FFFFFF light) and page-bg-subtle = surface-50
+     (#F8FAFC light) match the old pinned values exactly, so default is
+     unchanged. --page-bg-alt is a bespoke warm cream that is NOT in the
+     surface scale, so it gets explicit per-mode overrides just below. */
+  --page-bg:          var(--color-surface-0);
   --page-bg-alt:      #FAF7F2;
-  --page-bg-subtle:   #F8FAFC;
+  --page-bg-subtle:   var(--color-surface-50);
   --heading:          var(--color-ink-900);
   --body:             var(--color-ink-700);
   --body-secondary:   var(--color-ink-500);
@@ -1118,6 +1128,26 @@ body {
   --dark-muted:       #B0BEC5;
   --dark-label:       #FDBA74;
   --dark-highlight:   #FB923C;
+}
+
+/* --page-bg-alt per display mode. The default (#FAF7F2) is a bespoke warm
+   cream not present in the --color-surface-* scale, so unlike --page-bg /
+   --page-bg-subtle it can't just alias the scale — it needs explicit
+   per-mode values. Each maps to that mode's "cards sit on this" tier
+   (surface-100) so the page-alt → card lift ordering the design intends is
+   preserved, and themed text over it stays readable (this is the surface
+   half of the heroes/headings AAA fix; the ink tokens already flip). */
+:root[data-display="dark"] {
+  --page-bg-alt:      #151C28;   /* dark surface-100 */
+}
+:root[data-display="contrast"] {
+  --page-bg-alt:      #0A0A0A;   /* near-black; contrast page bg is pure black */
+}
+:root[data-display="warm"] {
+  --page-bg-alt:      #F5EDE0;   /* warm surface-100, keeps the cream bias */
+}
+:root[data-display="low-vision"] {
+  --page-bg-alt:      #0A0A0A;   /* gold-on-black mode; secondary surface stays black */
 }
 
 /* Standards Guide alias overrides for non-default display modes.
