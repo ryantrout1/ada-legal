@@ -60,7 +60,7 @@ export default function AboutAda() {
     marginBottom: '32px',
   };
 
-  const breadcrumbLinkStyle = { color: LINK, textDecoration: 'underline' };
+  const breadcrumbLinkStyle = { color: LINK, textDecoration: 'underline', display: 'inline-block', padding: '12px 8px', margin: '-12px -8px' };
 
   const eyebrowStyle = {
     fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Cascadia Mono", "Courier New", monospace',

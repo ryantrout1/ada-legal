@@ -61,7 +61,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
               {item.to && !isLast ? (
                 <Link
                   to={item.to}
-                  className="inline-block px-2 py-1.5 -mx-2 -my-1.5 rounded text-ink-500 hover:text-accent-600 hover:underline underline-offset-2 transition-colors"
+                  className="inline-block px-2 py-3 -mx-2 -my-3 rounded text-ink-500 hover:text-accent-600 hover:underline underline-offset-2 transition-colors"
                 >
                   {item.label}
                 </Link>
