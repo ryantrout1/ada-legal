@@ -73,7 +73,7 @@ function KeyFact({ color, number, children }) {
 
 function Dots({ callouts, active, toggle }) {
   return callouts.map(c => (
-    <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>
+    <g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer' }}>
       {active === c.id && (<circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>)}
       <circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" />
       <text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text>
@@ -118,7 +118,7 @@ export default function PlatformLiftDiagram() {
       </div>
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 720 380" role="img" aria-labelledby="lift-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+        <svg viewBox="0 0 720 380" role="group" aria-labelledby="lift-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="lift-title">Platform Lift {'\u2014'} Side View and Plan View</title>
           <rect width="720" height="380" fill="var(--page-bg-subtle)" />
 
@@ -239,7 +239,7 @@ export default function PlatformLiftDiagram() {
       </div>
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 720 300" role="img" aria-labelledby="use-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+        <svg viewBox="0 0 720 300" role="group" aria-labelledby="use-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="use-title">Platform Lift Permitted Locations</title>
           <rect width="720" height="300" fill="var(--page-bg-subtle)" />
 

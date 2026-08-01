@@ -70,9 +70,8 @@ export default function Glossary() {
               </dt>
               <dd className="text-ink-700 leading-relaxed mb-3 ml-0">
                 {entry.definition}
-              </dd>
               {entry.seeAlso && entry.seeAlso.length > 0 && (
-                <div className="text-sm text-ink-500">
+                <div className="text-sm text-ink-500 mt-2">
                   See also:{' '}
                   {entry.seeAlso.map((slug, idx) => {
                     const ref = GLOSSARY[slug];
@@ -91,6 +90,7 @@ export default function Glossary() {
                   })}
                 </div>
               )}
+              </dd>
             </div>
           ))}
         </dl>

@@ -57,9 +57,20 @@ for (const route of AUDIT_ROUTES) {
         // text is materially longer than the link's own text is inline.
         const tag = el.tagName.toLowerCase();
         const ownText = (el.textContent ?? '').trim();
+        // 2.5.5 inline exception: a link flowing within a sentence is exempt.
+        // Links are often wrapped per-item (span > a), so the immediate parent
+        // isn't enough — walk up a few levels; if a nearby ancestor carries
+        // materially more text, the link sits inside prose and is exempt.
         if (tag === 'a') {
-          const parentText = (el.parentElement?.textContent ?? '').trim();
-          if (parentText.length > ownText.length + 10) continue; // inline in prose
+          let anc: Element | null = el.parentElement;
+          let depth = 0;
+          let inline = false;
+          while (anc && depth < 4) {
+            if ((anc.textContent ?? '').trim().length > ownText.length + 10) { inline = true; break; }
+            anc = anc.parentElement;
+            depth++;
+          }
+          if (inline) continue; // inline in prose
         }
 
         const r = el.getBoundingClientRect();

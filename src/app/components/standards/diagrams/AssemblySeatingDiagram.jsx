@@ -17,7 +17,7 @@ export default function AssemblySeatingDiagram(){
   return(<div className="ada-diagram-wrap" style={{margin:'32px 0'}}>
     <div style={{marginBottom:'8px'}}><h3 style={{fontFamily:'var(--font-display)',fontSize:'1.15rem',fontWeight:700,color:'var(--heading)',margin:0}}>Wheelchair Seating in Assembly Areas</h3></div>
     <div style={{background:'var(--card-bg)',border:'1px solid var(--border)',borderRadius:'12px',overflow:'hidden'}}>
-      <svg viewBox="0 0 720 340" role="img" aria-labelledby="as-t" style={{width:'100%',height:'auto',display:'block'}}>
+      <svg viewBox="0 0 720 340" role="group" aria-labelledby="as-t" style={{width:'100%',height:'auto',display:'block'}}>
         <title id="as-t">Wheelchair Spaces in Assembly Areas</title>
         <rect width="720" height="340" fill="var(--page-bg-subtle)"/>
         <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Space requirements</text>

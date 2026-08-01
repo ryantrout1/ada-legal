@@ -152,7 +152,7 @@ function CalloutDots({ callouts, active, toggle }) {
       aria-expanded={active === c.id}
       onClick={() => toggle(c.id)}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }}
-      style={{ cursor: 'pointer', outline: 'none' }}>
+      style={{ cursor: 'pointer' }}>
       {active === c.id && (
         <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3">
           <animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" />
@@ -273,7 +273,7 @@ export default function ReachRangeDiagram() {
       </div>
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 720 380" role="img" aria-labelledby="fwd-title fwd-desc"
+        <svg viewBox="0 0 720 380" role="group" aria-labelledby="fwd-title fwd-desc"
           style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="fwd-title">Forward Reach Range</title>
           <desc id="fwd-desc">
@@ -403,7 +403,7 @@ export default function ReachRangeDiagram() {
       </div>
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 720 380" role="img" aria-labelledby="side-title side-desc"
+        <svg viewBox="0 0 720 380" role="group" aria-labelledby="side-title side-desc"
           style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="side-title">Side Reach Range</title>
           <desc id="side-desc">

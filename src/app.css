@@ -1173,6 +1173,15 @@ body {
 :root[data-display="low-vision"] { --dx-blue: #7FB4FF; }
 /* warm keeps the default #1E3A8A */
 
+/* Diagram callout groups: a real, axe-detectable keyboard focus indicator on
+   the group itself (the child .rail-focus-ring stroke isn't detected by the
+   focus-visible check, and the inline outline:none that used to suppress this
+   has been removed from the diagrams). */
+g[role="button"]:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
 /* Standards Guide alias overrides for non-default display modes.
  *
  * The default :root aliases above are tuned for the light/warm-cream

@@ -51,7 +51,7 @@ function CalloutPanel({ callout, onClose, panelRef }) {
   </div>);
 }
 function KeyFact({ color, number, children }) { return (<div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}><span style={{ background: color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span><span style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span></div>); }
-function Dots({ callouts, active, toggle }) { return callouts.map(c => (<g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer', outline: 'none' }}>{active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}<circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" /><text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text><circle cx={c.x} cy={c.y} r="22" fill="none" stroke="transparent" strokeWidth="2" className="curb-fr"/></g>)); }
+function Dots({ callouts, active, toggle }) { return callouts.map(c => (<g key={c.id} tabIndex="0" role="button" aria-label={`Callout ${c.id}: ${c.label}`} aria-expanded={active === c.id} onClick={() => toggle(c.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(c.id); } }} style={{ cursor: 'pointer' }}>{active === c.id && <circle cx={c.x} cy={c.y} r="18" fill="none" stroke={c.color} strokeWidth="2" opacity="0.3"><animate attributeName="r" from="14" to="22" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.4" to="0" dur="1.2s" repeatCount="indefinite" /></circle>}<circle cx={c.x} cy={c.y} r="13" fill={active === c.id ? c.textColor : 'white'} stroke={c.color} strokeWidth="2" /><text x={c.x} y={c.y + 4} textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill={active === c.id ? 'white' : c.textColor}>{c.id}</text><circle cx={c.x} cy={c.y} r="22" fill="none" stroke="transparent" strokeWidth="2" className="curb-fr"/></g>)); }
 
 export default function CurbRampDiagram() {
   const [rampActive, setRampActive] = useState(null);
@@ -75,7 +75,7 @@ export default function CurbRampDiagram() {
         {unitToggle}
       </div>
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 720 360" role="img" aria-labelledby="curb-ramp-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+        <svg viewBox="0 0 720 360" role="group" aria-labelledby="curb-ramp-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="curb-ramp-title">Curb Ramp Slope, Width, and Flared Sides</title>
           <rect width="720" height="360" fill="var(--page-bg-subtle)" />
           <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Side view</text>
@@ -153,7 +153,7 @@ export default function CurbRampDiagram() {
         <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Warning Bumps & Crosswalk Alignment</h3>
       </div>
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <svg viewBox="0 0 720 320" role="img" aria-labelledby="curb-warn-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
+        <svg viewBox="0 0 720 320" role="group" aria-labelledby="curb-warn-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="curb-warn-title">Detectable Warning Surfaces and Crosswalk Alignment</title>
           <rect width="720" height="320" fill="var(--page-bg-subtle)" />
           <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">The bumpy surface at the bottom</text>
