@@ -51,7 +51,7 @@ export default function FinalCtaV2() {
           )}
           <Link to={'/standards-guide'} className="v2-btn v2-btn-primary" style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--accent)',
-            color: 'var(--btn-text)', padding: '18px 36px', borderRadius: '10px', fontSize: '1.1rem',
+            color: 'var(--page-bg)', padding: '18px 36px', borderRadius: '10px', fontSize: '1.1rem',
             fontWeight: 700, fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px',
             border: 'none', boxShadow: '0 4px 20px rgba(194,65,12,0.25)',
           }}>

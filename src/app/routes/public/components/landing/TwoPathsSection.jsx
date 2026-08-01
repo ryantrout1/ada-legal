@@ -77,7 +77,7 @@ export default function TwoPathsSection() {
             </p>
             <Link to={'/standards-guide'} className="v2-btn v2-btn-primary" style={{
               alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-              background: 'var(--accent)', color: 'var(--btn-text)', border: 'none',
+              background: 'var(--accent)', color: 'var(--page-bg)', border: 'none',
               padding: '14px 26px', borderRadius: '10px', fontSize: '0.95rem', fontWeight: 700,
               fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px',
               boxShadow: '0 4px 20px rgba(194,65,12,0.25)',
