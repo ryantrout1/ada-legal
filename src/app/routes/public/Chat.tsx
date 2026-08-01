@@ -897,7 +897,7 @@ export default function Chat() {
                 }
                 aria-pressed={speechInput.listening}
                 className={
-                  'flex-none inline-flex items-center justify-center rounded-md border px-3 py-2.5 transition-colors ' +
+                  'min-h-[44px] flex-none inline-flex items-center justify-center rounded-md border px-3 py-2.5 transition-colors ' +
                   (speechInput.listening
                     ? 'border-danger-500 bg-danger-50 text-danger-500 animate-pulse motion-reduce:animate-none'
                     : 'border-surface-200 bg-surface-100 text-ink-700 hover:bg-surface-200 hover:text-accent-600')
