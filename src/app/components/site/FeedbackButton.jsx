@@ -19,7 +19,13 @@ export default function FeedbackButton() {
           alignItems: 'center',
           gap: '6px',
           background: 'var(--heading)',
-          color: 'white',
+          // Text tracks --page-bg, which is always the opposite lightness of
+          // --heading (a heading must contrast its page). Pinning to literal
+          // 'white' failed in dark/contrast/low-vision, where --heading flips
+          // light — white-on-near-white, 1.0-1.4:1. page-bg pairing is AAA in
+          // all 5 themes (12.75-19.8:1). No visible change in default/warm
+          // where page-bg is white/cream.
+          color: 'var(--page-bg)',
           border: 'none',
           borderRadius: '100px',
           padding: '10px 18px',
