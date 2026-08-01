@@ -193,8 +193,8 @@ export function AccessibilityPanel({ readingLevel, onDark = false }: Accessibili
         aria-label="Accessibility settings"
         className={
           onDark
-            ? 'p-2 rounded-full text-white hover:bg-brand-navy-hover hover:text-brand-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy transition-colors'
-            : 'p-2 rounded-full text-ink-700 hover:bg-surface-100 hover:text-accent-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50 transition-colors'
+            ? 'inline-flex items-center justify-center min-w-[44px] min-h-[44px] p-2 rounded-full text-white hover:bg-brand-navy-hover hover:text-brand-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy transition-colors'
+            : 'inline-flex items-center justify-center min-w-[44px] min-h-[44px] p-2 rounded-full text-ink-700 hover:bg-surface-100 hover:text-accent-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50 transition-colors'
         }
       >
         {/* Eyeball icon — inline SVG to keep bundle size minimal */}
