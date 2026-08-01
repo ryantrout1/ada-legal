@@ -254,7 +254,8 @@ export default function ADAAssistant() {
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
-            onFocus={() => setFocused(true)}
+            onFocus={e => { setFocused(true); e.target.style.borderColor = 'var(--dark-highlight)'; e.target.style.boxShadow = '0 0 0 3px rgba(251,146,60,0.45)'; }}
+            onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.12)'; e.target.style.boxShadow = 'none'; }}
             onKeyDown={handleKeyDown}
             placeholder="Search ADA standards, guides, diagrams..."
             aria-label="Search ADA standards and guides"
@@ -270,7 +271,7 @@ export default function ADAAssistant() {
               border: '1px solid rgba(255,255,255,0.12)',
               borderRadius: '12px', outline: 'none',
               minHeight: '48px', boxSizing: 'border-box',
-              transition: 'border-color 0.2s'
+              transition: 'border-color 0.2s, box-shadow 0.2s'
             }}
             onMouseEnter={e => e.target.style.borderColor = 'rgba(255,255,255,0.2)'}
             onMouseLeave={e => { if (document.activeElement !== e.target) e.target.style.borderColor = 'rgba(255,255,255,0.12)'; }}
