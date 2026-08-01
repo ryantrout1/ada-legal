@@ -26,6 +26,34 @@ const OUT = fileURLToPath(new URL('test-results/a11y-report.md', ROOT));
 // spec's helper through a compiled artifact when present, else a minimal
 // inline formatter identical in shape (kept in sync by a unit test).
 
+/**
+ * Normalize a raw finding to the full report shape. The contrast sweep
+ * writes {theme, ruleId, kind, impact, target,…}; the target-size and
+ * focus specs write a leaner shape ({selector, width/height} / {selector})
+ * with no theme/ruleId/kind. Merging them naively crashed the sort on
+ * f.theme.localeCompare — this fills the gaps so every finding tabulates.
+ */
+function normalize(f) {
+  const isTargetSize = typeof f.width === 'number' && typeof f.height === 'number';
+  const ruleId = f.ruleId ?? (isTargetSize ? 'target-size' : f.selector ? 'focus-visible' : 'unknown');
+  const target = f.target ?? f.selector ?? '';
+  let summary = f.summary;
+  if (!summary && isTargetSize) summary = `Target ${f.width}x${f.height}px is under 44px`;
+  if (!summary && ruleId === 'focus-visible') summary = 'No visible focus indicator';
+  return {
+    route: f.route ?? '',
+    routeName: f.routeName ?? f.route ?? '',
+    theme: f.theme ?? 'Default',
+    ruleId,
+    kind: f.kind ?? 'violation',
+    impact: f.impact ?? (ruleId === 'target-size' || ruleId === 'focus-visible' ? 'serious' : null),
+    target,
+    html: f.html ?? '',
+    summary: summary ?? '',
+    screenshot: f.screenshot,
+  };
+}
+
 function rank(f) {
   if (f.kind === 'violation' && f.ruleId === 'color-contrast-enhanced') return 0;
   if (f.kind === 'violation' && (f.impact === 'critical' || f.impact === 'serious')) return 1;
@@ -52,9 +80,9 @@ function formatReport(findings) {
   const sorted = [...findings].sort((a, b) => {
     const r = rank(a) - rank(b);
     if (r !== 0) return r;
-    const rt = a.route.localeCompare(b.route);
+    const rt = (a.route || '').localeCompare(b.route || '');
     if (rt !== 0) return rt;
-    return a.theme.localeCompare(b.theme);
+    return (a.theme || '').localeCompare(b.theme || '');
   });
   lines.push('| # | Route | Theme | Rule | Kind | Impact | Element |');
   lines.push('|---|---|---|---|---|---|---|');
@@ -86,7 +114,7 @@ function main() {
   for (const f of files) {
     try {
       const rows = JSON.parse(readFileSync(`${DIR}/${f}`, 'utf8'));
-      if (Array.isArray(rows)) all.push(...rows);
+      if (Array.isArray(rows)) all.push(...rows.map(normalize));
     } catch {
       console.warn(`[a11y-report] skipping unreadable ${f}`);
     }

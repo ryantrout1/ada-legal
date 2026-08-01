@@ -30,6 +30,51 @@ export interface Finding {
   screenshot?: string; // relative path, set for incomplete contrast cases
 }
 
+/** A raw finding as written to disk — the contrast sweep writes the full
+ *  Finding shape; target-size/focus specs write a leaner shape (selector +
+ *  dimensions / selector only, no theme/ruleId/kind). */
+export interface RawFinding {
+  route?: string;
+  routeName?: string;
+  theme?: string;
+  ruleId?: string;
+  kind?: FindingKind;
+  impact?: string | null;
+  target?: string;
+  selector?: string;
+  width?: number;
+  height?: number;
+  html?: string;
+  summary?: string;
+  screenshot?: string;
+}
+
+/**
+ * Normalize a raw finding to the full Finding shape so mixed-shape findings
+ * (contrast vs target-size vs focus) tabulate and sort together. Mirrors
+ * scripts/a11y-report.mjs → normalize(); the parity test keeps them aligned.
+ */
+export function normalizeFinding(f: RawFinding): Finding {
+  const isTargetSize = typeof f.width === 'number' && typeof f.height === 'number';
+  const ruleId = f.ruleId ?? (isTargetSize ? 'target-size' : f.selector ? 'focus-visible' : 'unknown');
+  const target = f.target ?? f.selector ?? '';
+  let summary = f.summary;
+  if (!summary && isTargetSize) summary = `Target ${f.width}x${f.height}px is under 44px`;
+  if (!summary && ruleId === 'focus-visible') summary = 'No visible focus indicator';
+  return {
+    route: f.route ?? '',
+    routeName: f.routeName ?? f.route ?? '',
+    theme: f.theme ?? 'Default',
+    ruleId,
+    kind: f.kind ?? 'violation',
+    impact: f.impact ?? (ruleId === 'target-size' || ruleId === 'focus-visible' ? 'serious' : null),
+    target,
+    html: f.html ?? '',
+    summary: summary ?? '',
+    screenshot: f.screenshot,
+  };
+}
+
 /** Severity rank: contrast violations first (the AAA 7:1 failures we block
  *  on), then other violations, then incomplete (needs-review) last. */
 function rank(f: Finding): number {
@@ -68,9 +113,9 @@ export function formatReport(findings: Finding[]): string {
   const sorted = [...findings].sort((a, b) => {
     const r = rank(a) - rank(b);
     if (r !== 0) return r;
-    const rt = a.route.localeCompare(b.route);
+    const rt = (a.route || '').localeCompare(b.route || '');
     if (rt !== 0) return rt;
-    return a.theme.localeCompare(b.theme);
+    return (a.theme || '').localeCompare(b.theme || '');
   });
 
   lines.push('| # | Route | Theme | Rule | Kind | Impact | Element |');

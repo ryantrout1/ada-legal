@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { formatReport, type Finding } from '../a11y/lib/report.js';
+import { formatReport, normalizeFinding, type Finding } from '../a11y/lib/report.js';
 
 function finding(over: Partial<Finding>): Finding {
   return {
@@ -56,5 +56,36 @@ describe('a11y report formatter', () => {
   it('escapes pipes in selectors so the table stays valid', () => {
     const md = formatReport([finding({ target: 'a[href|="x"]' })]);
     expect(md).toContain('a[href\\|="x"]');
+  });
+
+  // Regression: report v1 crashed on `a.theme.localeCompare` because the
+  // target-size and focus specs write findings with NO theme/ruleId/kind.
+  // normalizeFinding fills those so mixed shapes tabulate and sort.
+  it('normalizes a target-size finding (no theme/ruleId) without crashing', () => {
+    const raw = { route: '/', routeName: 'homepage', selector: 'button.x', width: 30, height: 20 };
+    const n = normalizeFinding(raw);
+    expect(n.theme).toBe('Default');
+    expect(n.ruleId).toBe('target-size');
+    expect(n.impact).toBe('serious');
+    expect(n.target).toBe('button.x');
+    expect(n.summary).toContain('under 44px');
+    // and the full report renders with it mixed alongside a contrast finding
+    const md = formatReport([finding({}), n]);
+    expect(md).toContain('target-size');
+  });
+
+  it('normalizes a focus finding (selector only) without crashing', () => {
+    const raw = { route: '/ada', routeName: 'chat', selector: 'a.nav' };
+    const n = normalizeFinding(raw);
+    expect(n.ruleId).toBe('focus-visible');
+    expect(n.theme).toBe('Default');
+    expect(() => formatReport([n])).not.toThrow();
+  });
+
+  it('sorts a themeless finding without throwing (the exact crash)', () => {
+    // Two findings, one missing theme entirely — this is what blew up.
+    const themeless = { route: '/x', selector: 'button', width: 10, height: 10 };
+    const withTheme = finding({ route: '/a' });
+    expect(() => formatReport([normalizeFinding(themeless), withTheme])).not.toThrow();
   });
 });
