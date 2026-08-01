@@ -39,18 +39,17 @@ function jsFormat(findings: Finding[]): string {
   const dir = mkdtempSync(join(tmpdir(), 'a11y-drift-'));
   const dataFile = join(dir, 'in.json');
   writeFileSync(dataFile, JSON.stringify(findings));
-  // Tiny harness: import the merge script's module scope isn't exported, so
-  // we re-run its formatter by evaluating it in a child that imports nothing
-  // and reproduces the call. Simplest robust path: read the script, extract
-  // the two functions, eval them. Kept inline to avoid a second artifact.
+  // Robust harness: extract EVERY top-level `function name(...) {...}` from
+  // the merge script and eval them together, then call formatReport. This
+  // survives the merge script gaining helpers (e.g. formatClusters) without
+  // the test needing to know their names — the previous name-picking regex
+  // broke exactly when formatReport started calling a new helper.
   const src = execFileSync('node', ['-e', `
     const fs = require('fs');
     let s = fs.readFileSync(${JSON.stringify(scriptPath)}, 'utf8');
-    // Pull the two pure functions out of the ESM module by name.
-    const rankSrc = s.match(/function rank\\(f\\)[\\s\\S]*?\\n}/)[0];
-    const fmtSrc = s.match(/function formatReport\\(findings\\)[\\s\\S]*?\\n}\\n/)[0];
+    const fns = s.match(/^function [\\s\\S]*?^}/gm) || [];
     const findings = JSON.parse(fs.readFileSync(${JSON.stringify(dataFile)}, 'utf8'));
-    const mod = new Function(rankSrc + '\\n' + fmtSrc + '\\nreturn formatReport(arguments[0]);');
+    const mod = new Function(fns.join('\\n\\n') + '\\nreturn formatReport(arguments[0]);');
     process.stdout.write(mod(findings));
   `], { encoding: 'utf8' });
   return src;

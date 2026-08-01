@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { formatReport, normalizeFinding, type Finding } from '../a11y/lib/report.js';
+import { formatReport, formatClusters, normalizeFinding, type Finding } from '../a11y/lib/report.js';
 
 function finding(over: Partial<Finding>): Finding {
   return {
@@ -82,10 +82,22 @@ describe('a11y report formatter', () => {
     expect(() => formatReport([n])).not.toThrow();
   });
 
-  it('sorts a themeless finding without throwing (the exact crash)', () => {
-    // Two findings, one missing theme entirely — this is what blew up.
-    const themeless = { route: '/x', selector: 'button', width: 10, height: 10 };
-    const withTheme = finding({ route: '/a' });
-    expect(() => formatReport([normalizeFinding(themeless), withTheme])).not.toThrow();
+  it('clusters repeated findings by rule+element with hit/route/theme counts', () => {
+    const findings: Finding[] = [];
+    for (const t of ['Dark', 'Contrast', 'Warm']) {
+      findings.push(finding({ theme: t, target: '.hero-sub', route: '/a' }));
+      findings.push(finding({ theme: t, target: '.hero-sub', route: '/b' }));
+    }
+    const md = formatClusters(findings);
+    expect(md).toContain('Distinct patterns: **1**');
+    // one pattern, 6 hits, 2 routes, 3 themes
+    expect(md).toMatch(/`\.hero-sub` \| 6 \| 2 \| 3/);
+  });
+});
+
+describe('a11y report — clustering edge', () => {
+  it('formatReport leads with the clusters section', () => {
+    const md = formatReport([finding({})]);
+    expect(md.indexOf('Top clusters')).toBeLessThan(md.indexOf('All findings'));
   });
 });

@@ -54,6 +54,34 @@ function normalize(f) {
   };
 }
 
+function formatClusters(findings, topN = 30) {
+  const groups = new Map();
+  for (const f of findings) {
+    const key = `${f.ruleId}::${f.target}`;
+    let g = groups.get(key);
+    if (!g) {
+      g = { ruleId: f.ruleId, target: f.target, count: 0, routes: new Set(), themes: new Set() };
+      groups.set(key, g);
+    }
+    g.count += 1;
+    if (f.route) g.routes.add(f.route);
+    if (f.theme) g.themes.add(f.theme);
+  }
+  const ranked = [...groups.values()].sort((a, b) => b.count - a.count);
+  const lines = [];
+  lines.push('## Top clusters (fix these once, clear many rows)');
+  lines.push('');
+  lines.push(`Distinct patterns: **${groups.size}** across ${findings.length} findings.`);
+  lines.push('');
+  lines.push('| # | Rule | Element | Hits | Routes | Themes |');
+  lines.push('|---|---|---|---|---|---|');
+  ranked.slice(0, topN).forEach((g, i) => {
+    const el = String(g.target).replace(/\|/g, '\\|').slice(0, 50);
+    lines.push(`| ${i + 1} | ${g.ruleId} | \`${el}\` | ${g.count} | ${g.routes.size} | ${g.themes.size} |`);
+  });
+  return lines.join('\n') + '\n';
+}
+
 function rank(f) {
   if (f.kind === 'violation' && f.ruleId === 'color-contrast-enhanced') return 0;
   if (f.kind === 'violation' && (f.impact === 'critical' || f.impact === 'serious')) return 1;
@@ -84,6 +112,9 @@ function formatReport(findings) {
     if (rt !== 0) return rt;
     return (a.theme || '').localeCompare(b.theme || '');
   });
+  lines.push(formatClusters(findings));
+  lines.push('## All findings');
+  lines.push('');
   lines.push('| # | Route | Theme | Rule | Kind | Impact | Element |');
   lines.push('|---|---|---|---|---|---|---|');
   sorted.forEach((f, i) => {

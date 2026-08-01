@@ -75,6 +75,45 @@ export function normalizeFinding(f: RawFinding): Finding {
   };
 }
 
+/**
+ * Cluster findings by (ruleId + element selector) so the report leads with
+ * root patterns, not 1000+ repeated rows. Most defects are the same element
+ * failing across many themes; this counts how many route×theme cells each
+ * pattern hits, so triage sees "this one element, 40 times" not 40 lines.
+ */
+export function formatClusters(findings: Finding[], topN = 30): string {
+  const groups = new Map<
+    string,
+    { ruleId: string; target: string; count: number; routes: Set<string>; themes: Set<string> }
+  >();
+  for (const f of findings) {
+    const key = `${f.ruleId}::${f.target}`;
+    let g = groups.get(key);
+    if (!g) {
+      g = { ruleId: f.ruleId, target: f.target, count: 0, routes: new Set(), themes: new Set() };
+      groups.set(key, g);
+    }
+    g.count += 1;
+    if (f.route) g.routes.add(f.route);
+    if (f.theme) g.themes.add(f.theme);
+  }
+  const ranked = [...groups.values()].sort((a, b) => b.count - a.count);
+  const lines: string[] = [];
+  lines.push('## Top clusters (fix these once, clear many rows)');
+  lines.push('');
+  lines.push(`Distinct patterns: **${groups.size}** across ${findings.length} findings.`);
+  lines.push('');
+  lines.push('| # | Rule | Element | Hits | Routes | Themes |');
+  lines.push('|---|---|---|---|---|---|');
+  ranked.slice(0, topN).forEach((g, i) => {
+    const el = g.target.replace(/\|/g, '\\|').slice(0, 50);
+    lines.push(
+      `| ${i + 1} | ${g.ruleId} | \`${el}\` | ${g.count} | ${g.routes.size} | ${g.themes.size} |`,
+    );
+  });
+  return lines.join('\n') + '\n';
+}
+
 /** Severity rank: contrast violations first (the AAA 7:1 failures we block
  *  on), then other violations, then incomplete (needs-review) last. */
 function rank(f: Finding): number {
@@ -117,6 +156,11 @@ export function formatReport(findings: Finding[]): string {
     if (rt !== 0) return rt;
     return (a.theme || '').localeCompare(b.theme || '');
   });
+
+  // Lead with clusters so the report opens with root patterns.
+  lines.push(formatClusters(findings));
+  lines.push('## All findings');
+  lines.push('');
 
   lines.push('| # | Route | Theme | Rule | Kind | Impact | Element |');
   lines.push('|---|---|---|---|---|---|---|');
