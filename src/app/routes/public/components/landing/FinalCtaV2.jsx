@@ -33,7 +33,7 @@ export default function FinalCtaV2() {
           {adaLive ? (
             <Link to={'/ada'} className="v2-btn v2-btn-ada" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--v2-ada)',
-              color: '#fff', padding: '18px 36px', borderRadius: '10px', fontSize: '1.1rem',
+              color: 'var(--page-bg)', padding: '18px 36px', borderRadius: '10px', fontSize: '1.1rem',
               fontWeight: 700, fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px', border: 'none',
               boxShadow: '0 4px 20px rgba(124,92,252,0.3)',
             }}>
@@ -42,7 +42,7 @@ export default function FinalCtaV2() {
           ) : (
             <button type="button" onClick={() => adaSoon?.openSoon?.()} className="v2-btn v2-btn-ada" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--v2-ada)',
-              color: '#fff', padding: '18px 36px', borderRadius: '10px', fontSize: '1.1rem',
+              color: 'var(--page-bg)', padding: '18px 36px', borderRadius: '10px', fontSize: '1.1rem',
               fontWeight: 700, fontFamily: 'Manrope, sans-serif', minHeight: '44px', border: 'none', cursor: 'pointer',
               boxShadow: '0 4px 20px rgba(124,92,252,0.3)',
             }}>

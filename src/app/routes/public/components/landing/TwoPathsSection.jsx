@@ -116,7 +116,7 @@ export default function TwoPathsSection() {
             {adaLive ? (
               <Link to={'/ada'} className="v2-btn v2-btn-ada" style={{
                 alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                background: 'var(--v2-ada)', color: '#fff', padding: '14px 26px',
+                background: 'var(--v2-ada)', color: 'var(--page-bg)', padding: '14px 26px',
                 borderRadius: '10px', fontSize: '0.95rem', fontWeight: 700,
                 fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px', border: 'none',
                 boxShadow: '0 4px 20px rgba(124,92,252,0.25)',
@@ -126,7 +126,7 @@ export default function TwoPathsSection() {
             ) : (
               <button type="button" onClick={() => adaSoon?.openSoon?.()} className="v2-btn v2-btn-ada" style={{
                 alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                background: 'var(--v2-ada)', color: '#fff', padding: '14px 26px',
+                background: 'var(--v2-ada)', color: 'var(--page-bg)', padding: '14px 26px',
                 borderRadius: '10px', fontSize: '0.95rem', fontWeight: 700,
                 fontFamily: 'Manrope, sans-serif', minHeight: '44px', border: 'none', cursor: 'pointer',
                 boxShadow: '0 4px 20px rgba(124,92,252,0.25)',

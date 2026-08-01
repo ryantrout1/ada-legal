@@ -95,7 +95,7 @@ export default function ThreeTitlesV2() {
           {adaLive ? (
             <Link to={'/ada'} className="v2-btn v2-btn-ada" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--v2-ada)',
-              color: '#fff', border: 'none', padding: '14px 28px', borderRadius: '10px',
+              color: 'var(--page-bg)', border: 'none', padding: '14px 28px', borderRadius: '10px',
               fontSize: '0.95rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px',
               boxShadow: '0 4px 20px rgba(124,92,252,0.25)',
             }}>
@@ -104,7 +104,7 @@ export default function ThreeTitlesV2() {
           ) : (
             <button type="button" onClick={() => adaSoon?.openSoon?.()} className="v2-btn v2-btn-ada" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--v2-ada)',
-              color: '#fff', border: 'none', padding: '14px 28px', borderRadius: '10px',
+              color: 'var(--page-bg)', border: 'none', padding: '14px 28px', borderRadius: '10px',
               fontSize: '0.95rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif', minHeight: '44px', cursor: 'pointer',
               boxShadow: '0 4px 20px rgba(124,92,252,0.25)',
             }}>
