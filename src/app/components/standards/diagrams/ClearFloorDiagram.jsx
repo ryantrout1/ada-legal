@@ -5,14 +5,14 @@ const CLEAR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#
 const CALLOUTS = [
   {
     id: 1, label: 'Forward Approach', section: '\u00a7305.5',
-    color: '#15803D', textColor: '#14532D', x: 280, y: 52,
+    color: 'var(--dx-green)', textColor: 'var(--dx-green)', x: 280, y: 52,
     plain: 'In a forward approach, the 48-inch dimension extends toward the element being accessed. The wheelchair faces the element head-on. This is the standard approach for lavatories, drinking fountains, counters, and any element that requires knee and toe clearance underneath.',
     legal: '\u201COne full unobstructed side of the clear floor or ground space shall adjoin an accessible route or adjoin another clear floor or ground space.\u201D Forward approach: 48 inches toward element.',
     citation: '\u00a7305.5'
   },
   {
     id: 2, label: 'Parallel Approach', section: '\u00a7305.5',
-    color: '#2563EB', textColor: '#1E3A8A', x: 470, y: 52,
+    color: 'var(--dx-blue)', textColor: 'var(--dx-blue)', x: 470, y: 52,
     plain: 'In a parallel approach, the 48-inch dimension runs alongside the element. The wheelchair parks parallel to whatever is being accessed. This is common for wall-mounted controls (light switches, thermostats), some ATMs, vending machines, and fire alarm pull stations.',
     legal: '\u201CWhere a clear floor or ground space is positioned for a parallel approach, the 48-inch dimension shall be parallel to the element.\u201D Side reach per \u00a7308.3 applies.',
     citation: '\u00a7305.5'
@@ -32,9 +32,9 @@ function CalloutPanel({ callout, onClose, panelRef }) {
     <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'clearFade 0.25s ease-out' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--page-bg)', background: callout.color, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
         </div>
         <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
       </div>
@@ -52,7 +52,7 @@ function CalloutPanel({ callout, onClose, panelRef }) {
 function KeyFact({ color, number, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
-      <span style={{ background: color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ background: color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
       <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
     </div>
   );
@@ -87,84 +87,84 @@ export default function ClearFloorDiagram() {
           <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Facing it head-on</text>
 
           {/* Element (counter/sink) */}
-          <rect x="110" y="68" width="120" height="12" rx="2" fill="#94A3B8" stroke="#64748B" strokeWidth="1.5" />
-          <text x="170" y="62" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="600">counter, sink, etc.</text>
+          <rect x="110" y="68" width="120" height="12" rx="2" fill="var(--dx-label)" stroke="var(--dx-label)" strokeWidth="1.5" />
+          <text x="170" y="62" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="600">counter, sink, etc.</text>
 
           {/* Clear floor rect */}
-          <rect x="95" y="82" width="150" height="210" rx="4" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="2" />
+          <rect x="95" y="82" width="150" height="210" rx="4" fill="var(--dx-green)" opacity="0.05" stroke="var(--dx-green)" strokeWidth="2" />
 
           {/* Wheelchair (top-down plan view) */}
           <g transform="translate(130,160) scale(1.2)">
-            <rect x="0" y="0" width="60" height="45" rx="4" fill="none" stroke="#475569" strokeWidth="1.8" />
-            <circle cx="30" cy="22" r="10" fill="#E2E8F0" stroke="#475569" strokeWidth="1.5" />
-            <circle cx="5" cy="55" r="16" fill="none" stroke="#475569" strokeWidth="1.5" />
-            <circle cx="55" cy="55" r="16" fill="none" stroke="#475569" strokeWidth="1.5" />
-            <circle cx="18" cy="-6" r="5" fill="none" stroke="#475569" strokeWidth="1" />
-            <circle cx="42" cy="-6" r="5" fill="none" stroke="#475569" strokeWidth="1" />
+            <rect x="0" y="0" width="60" height="45" rx="4" fill="none" stroke="var(--dx-line)" strokeWidth="1.8" />
+            <circle cx="30" cy="22" r="10" fill="var(--dx-line)" stroke="var(--dx-line)" strokeWidth="1.5" />
+            <circle cx="5" cy="55" r="16" fill="none" stroke="var(--dx-line)" strokeWidth="1.5" />
+            <circle cx="55" cy="55" r="16" fill="none" stroke="var(--dx-line)" strokeWidth="1.5" />
+            <circle cx="18" cy="-6" r="5" fill="none" stroke="var(--dx-line)" strokeWidth="1" />
+            <circle cx="42" cy="-6" r="5" fill="none" stroke="var(--dx-line)" strokeWidth="1" />
           </g>
 
           {/* Arrow toward element */}
-          <line x1="170" y1="155" x2="170" y2="95" stroke="#15803D" strokeWidth="2" markerEnd="url(#clearArr)" />
-          <defs><marker id="clearArr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#15803D" /></marker></defs>
+          <line x1="170" y1="155" x2="170" y2="95" stroke="var(--dx-green)" strokeWidth="2" markerEnd="url(#clearArr)" />
+          <defs><marker id="clearArr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--dx-green)" /></marker></defs>
 
           {/* Width: 30" */}
-          <line x1="95" y1="305" x2="245" y2="305" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="95" y1="298" x2="95" y2="312" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="245" y1="298" x2="245" y2="312" stroke="#C2410C" strokeWidth="1.5" />
-          <rect x="130" y="310" width="80" height="20" rx="6" fill="#C2410C" />
-          <text x="170" y="324" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('30', '760')} min wide</text>
+          <line x1="95" y1="305" x2="245" y2="305" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="95" y1="298" x2="95" y2="312" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="245" y1="298" x2="245" y2="312" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <rect x="130" y="310" width="80" height="20" rx="6" fill="var(--dx-orange)" />
+          <text x="170" y="324" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('30', '760')} min wide</text>
 
           {/* Depth: 48" */}
-          <line x1="72" y1="82" x2="72" y2="292" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="65" y1="82" x2="79" y2="82" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="65" y1="292" x2="79" y2="292" stroke="#C2410C" strokeWidth="1.5" />
-          <rect x="30" y="178" width="40" height="20" rx="6" fill="#C2410C" />
-          <text x="50" y="192" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('48', '1220')}</text>
+          <line x1="72" y1="82" x2="72" y2="292" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="65" y1="82" x2="79" y2="82" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="65" y1="292" x2="79" y2="292" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <rect x="30" y="178" width="40" height="20" rx="6" fill="var(--dx-orange)" />
+          <text x="50" y="192" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('48', '1220')}</text>
 
 
           {/* DIVIDER */}
-          <line x1="345" y1="20" x2="345" y2="360" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+          <line x1="345" y1="20" x2="345" y2="360" stroke="var(--dx-line)" strokeWidth="1.5" strokeDasharray="6 4" />
 
 
           {/* RIGHT: PARALLEL APPROACH */}
           <text x="530" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Pulling up alongside</text>
 
           {/* Element (switch on wall) */}
-          <rect x="385" y="120" width="12" height="110" rx="2" fill="#94A3B8" stroke="#64748B" strokeWidth="1.5" />
-          <text x="404" y="120" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="600">switch,</text>
-          <text x="404" y="134" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="600">control,</text>
-          <text x="404" y="148" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="600">etc.</text>
+          <rect x="385" y="120" width="12" height="110" rx="2" fill="var(--dx-label)" stroke="var(--dx-label)" strokeWidth="1.5" />
+          <text x="404" y="120" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="600">switch,</text>
+          <text x="404" y="134" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="600">control,</text>
+          <text x="404" y="148" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="600">etc.</text>
 
           {/* Clear floor rect */}
-          <rect x="400" y="86" width="260" height="190" rx="4" fill="#2563EB" opacity="0.05" stroke="#2563EB" strokeWidth="2" />
+          <rect x="400" y="86" width="260" height="190" rx="4" fill="var(--dx-blue)" opacity="0.05" stroke="var(--dx-blue)" strokeWidth="2" />
 
           {/* Wheelchair (top-down, oriented sideways) */}
           <g transform="translate(480,130) scale(1.2)">
-            <rect x="0" y="0" width="60" height="45" rx="4" fill="none" stroke="#475569" strokeWidth="1.8" />
-            <circle cx="30" cy="22" r="10" fill="#E2E8F0" stroke="#475569" strokeWidth="1.5" />
-            <circle cx="5" cy="55" r="16" fill="none" stroke="#475569" strokeWidth="1.5" />
-            <circle cx="55" cy="55" r="16" fill="none" stroke="#475569" strokeWidth="1.5" />
-            <circle cx="18" cy="-6" r="5" fill="none" stroke="#475569" strokeWidth="1" />
-            <circle cx="42" cy="-6" r="5" fill="none" stroke="#475569" strokeWidth="1" />
+            <rect x="0" y="0" width="60" height="45" rx="4" fill="none" stroke="var(--dx-line)" strokeWidth="1.8" />
+            <circle cx="30" cy="22" r="10" fill="var(--dx-line)" stroke="var(--dx-line)" strokeWidth="1.5" />
+            <circle cx="5" cy="55" r="16" fill="none" stroke="var(--dx-line)" strokeWidth="1.5" />
+            <circle cx="55" cy="55" r="16" fill="none" stroke="var(--dx-line)" strokeWidth="1.5" />
+            <circle cx="18" cy="-6" r="5" fill="none" stroke="var(--dx-line)" strokeWidth="1" />
+            <circle cx="42" cy="-6" r="5" fill="none" stroke="var(--dx-line)" strokeWidth="1" />
           </g>
 
           {/* Arrow toward element */}
-          <line x1="480" y1="185" x2="410" y2="185" stroke="#2563EB" strokeWidth="2" markerEnd="url(#clearArrB)" />
-          <defs><marker id="clearArrB" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto-start-reverse"><polygon points="0 0, 8 3, 0 6" fill="#2563EB" /></marker></defs>
+          <line x1="480" y1="185" x2="410" y2="185" stroke="var(--dx-blue)" strokeWidth="2" markerEnd="url(#clearArrB)" />
+          <defs><marker id="clearArrB" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto-start-reverse"><polygon points="0 0, 8 3, 0 6" fill="var(--dx-blue)" /></marker></defs>
 
           {/* Width: 48" (parallel) */}
-          <line x1="400" y1="290" x2="660" y2="290" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="400" y1="283" x2="400" y2="297" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="660" y1="283" x2="660" y2="297" stroke="#C2410C" strokeWidth="1.5" />
-          <rect x="490" y="296" width="80" height="20" rx="6" fill="#C2410C" />
-          <text x="530" y="310" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('48', '1220')} min long</text>
+          <line x1="400" y1="290" x2="660" y2="290" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="400" y1="283" x2="400" y2="297" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="660" y1="283" x2="660" y2="297" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <rect x="490" y="296" width="80" height="20" rx="6" fill="var(--dx-orange)" />
+          <text x="530" y="310" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('48', '1220')} min long</text>
 
           {/* Depth: 30" */}
-          <line x1="672" y1="86" x2="672" y2="276" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="665" y1="86" x2="679" y2="86" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="665" y1="276" x2="679" y2="276" stroke="#C2410C" strokeWidth="1.5" />
-          <rect x="680" y="172" width="36" height="20" rx="6" fill="#C2410C" />
-          <text x="698" y="186" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('30', '760')}</text>
+          <line x1="672" y1="86" x2="672" y2="276" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="665" y1="86" x2="679" y2="86" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="665" y1="276" x2="679" y2="276" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <rect x="680" y="172" width="36" height="20" rx="6" fill="var(--dx-orange)" />
+          <text x="698" y="186" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('30', '760')}</text>
 
 
           {/* CALLOUT DOTS */}
@@ -185,9 +185,9 @@ export default function ClearFloorDiagram() {
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
         <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Clear Floor Space</p>
-        <KeyFact color="#C2410C" number={`${d('30', '760')} \u00d7 ${d('48', '1220')}`}>Minimum clear floor space at every accessible element (about 2.5 ft {'\u00d7'} 4 ft)</KeyFact>
-        <KeyFact color="#15803D" number="Forward">Wheelchair faces the element {'\u2014'} 48{'\u2033'} toward it, 30{'\u2033'} wide</KeyFact>
-        <KeyFact color="#2563EB" number="Parallel">Wheelchair pulls up alongside {'\u2014'} 48{'\u2033'} long, 30{'\u2033'} deep</KeyFact>
+        <KeyFact color="var(--dx-orange)" number={`${d('30', '760')} \u00d7 ${d('48', '1220')}`}>Minimum clear floor space at every accessible element (about 2.5 ft {'\u00d7'} 4 ft)</KeyFact>
+        <KeyFact color="var(--dx-green)" number="Forward">Wheelchair faces the element {'\u2014'} 48{'\u2033'} toward it, 30{'\u2033'} wide</KeyFact>
+        <KeyFact color="var(--dx-blue)" number="Parallel">Wheelchair pulls up alongside {'\u2014'} 48{'\u2033'} long, 30{'\u2033'} deep</KeyFact>
       </div>
 
       <style>{`

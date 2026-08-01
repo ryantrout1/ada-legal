@@ -5,14 +5,14 @@ const TURN_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#3
 const CALLOUTS = [
   {
     id: 1, label: 'Circular Turning Space', section: '\u00a7304.3.1',
-    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
+    color: 'var(--dx-orange)', textColor: 'var(--dx-orange)', x: 100, y: 52,
     plain: 'The most common option is a clear circular area with a 60-inch (5-foot) diameter. This allows a wheelchair user to make a full 360-degree turn. The entire circle must be free of obstructions \u2014 no columns, trash cans, or furniture legs. The floor must be level (max 1:48 slope) and the surface firm, stable, and slip-resistant.',
     legal: '\u201CThe floor or ground surface of a circular turning space shall be a circular space with a 60 inch (1525 mm) diameter minimum. The floor or ground surface shall comply with 302.\u201D',
     citation: '\u00a7304.3.1'
   },
   {
     id: 2, label: 'T-Shaped Turning Space', section: '\u00a7304.3.2',
-    color: '#15803D', textColor: '#14532D', x: 640, y: 70,
+    color: 'var(--dx-green)', textColor: 'var(--dx-green)', x: 640, y: 70,
     plain: 'The T-shaped turning space is an alternative for tighter layouts like corridors or alcoves. It fits within a 60-inch square. The person executes a three-point turn \u2014 rolling forward into one arm, backing into the stem, then rolling forward in the new direction. Each arm and the stem must be at least 36 inches wide and clear of obstructions.',
     legal: '\u201CThe floor or ground surface of a T-shaped turning space shall be a T-shaped space within a 60 inch (1525 mm) square minimum with arms and base 36 inches (915 mm) wide minimum.\u201D',
     citation: '\u00a7304.3.2'
@@ -32,9 +32,9 @@ function CalloutPanel({ callout, onClose, panelRef }) {
     <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'turnFade 0.25s ease-out' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--page-bg)', background: callout.color, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
         </div>
         <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
       </div>
@@ -52,7 +52,7 @@ function CalloutPanel({ callout, onClose, panelRef }) {
 function KeyFact({ color, number, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
-      <span style={{ background: color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ background: color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
       <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
     </div>
   );
@@ -87,76 +87,76 @@ export default function TurningSpaceDiagram() {
           {/* LEFT: CIRCULAR */}
           <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Full circle</text>
 
-          <circle cx="170" cy="185" r="110" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="2" />
+          <circle cx="170" cy="185" r="110" fill="var(--dx-orange)" opacity="0.04" stroke="var(--dx-orange)" strokeWidth="2" />
 
           {/* Wheelchair silhouette */}
           <g transform="translate(145,155) scale(0.8)" opacity="0.7">
-            <circle cx="22" cy="10" r="9" fill="#E2E8F0" stroke="#475569" strokeWidth="1.8" />
-            <rect x="10" y="22" width="24" height="18" rx="4" fill="none" stroke="#475569" strokeWidth="1.5" />
-            <circle cx="10" cy="52" r="12" fill="none" stroke="#475569" strokeWidth="1.5" />
-            <circle cx="34" cy="52" r="12" fill="none" stroke="#475569" strokeWidth="1.5" />
+            <circle cx="22" cy="10" r="9" fill="var(--dx-line)" stroke="var(--dx-line)" strokeWidth="1.8" />
+            <rect x="10" y="22" width="24" height="18" rx="4" fill="none" stroke="var(--dx-line)" strokeWidth="1.5" />
+            <circle cx="10" cy="52" r="12" fill="none" stroke="var(--dx-line)" strokeWidth="1.5" />
+            <circle cx="34" cy="52" r="12" fill="none" stroke="var(--dx-line)" strokeWidth="1.5" />
           </g>
 
           {/* 360 rotation arrow */}
-          <path d="M 220 110 A 60 60 0 1 1 120 110" fill="none" stroke="#C2410C" strokeWidth="1.2" opacity="0.35" />
-          <polygon points="120,110 125,120 115,118" fill="#C2410C" opacity="0.45" />
-          <text x="170" y="140" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C" fontWeight="600" opacity="0.5">360{'\u00b0'} turn</text>
+          <path d="M 220 110 A 60 60 0 1 1 120 110" fill="none" stroke="var(--dx-orange)" strokeWidth="1.2" opacity="0.35" />
+          <polygon points="120,110 125,120 115,118" fill="var(--dx-orange)" opacity="0.45" />
+          <text x="170" y="140" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)" fontWeight="600" opacity="0.5">360{'\u00b0'} turn</text>
 
           {/* Diameter dimension */}
-          <line x1="60" y1="185" x2="280" y2="185" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="60" y1="178" x2="60" y2="192" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="280" y1="178" x2="280" y2="192" stroke="#C2410C" strokeWidth="1.5" />
-          <rect x="128" y="192" width="84" height="22" rx="6" fill="#C2410C" />
-          <text x="170" y="207" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="white">{d('60', '1525')} dia.</text>
+          <line x1="60" y1="185" x2="280" y2="185" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="60" y1="178" x2="60" y2="192" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="280" y1="178" x2="280" y2="192" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <rect x="128" y="192" width="84" height="22" rx="6" fill="var(--dx-orange)" />
+          <text x="170" y="207" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="var(--page-bg)">{d('60', '1525')} dia.</text>
 
 
           {/* DIVIDER */}
-          <line x1="345" y1="20" x2="345" y2="340" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+          <line x1="345" y1="20" x2="345" y2="340" stroke="var(--dx-line)" strokeWidth="1.5" strokeDasharray="6 4" />
 
 
           {/* RIGHT: T-SHAPED */}
           <text x="530" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">T-shaped (3-point turn)</text>
 
           {/* 60" bounding square (dashed) */}
-          <rect x="420" y="60" width="220" height="250" fill="none" stroke="#94A3B8" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
+          <rect x="420" y="60" width="220" height="250" fill="none" stroke="var(--dx-label)" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
 
           {/* T-shape: top arm + vertical stem */}
-          <rect x="420" y="60" width="220" height="80" rx="2" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" />
-          <rect x="493" y="140" width="74" height="170" rx="2" fill="#15803D" opacity="0.06" stroke="#15803D" strokeWidth="1.5" />
+          <rect x="420" y="60" width="220" height="80" rx="2" fill="var(--dx-green)" opacity="0.06" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <rect x="493" y="140" width="74" height="170" rx="2" fill="var(--dx-green)" opacity="0.06" stroke="var(--dx-green)" strokeWidth="1.5" />
 
           {/* Direction labels */}
-          <text x="458" y="106" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#14532D" fontWeight="600">{'\u2190'} turn left</text>
-          <text x="604" y="106" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#14532D" fontWeight="600">turn right {'\u2192'}</text>
-          <text x="530" y="240" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#14532D" fontWeight="600">enter / back up</text>
+          <text x="458" y="106" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)" fontWeight="600">{'\u2190'} turn left</text>
+          <text x="604" y="106" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)" fontWeight="600">turn right {'\u2192'}</text>
+          <text x="530" y="240" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)" fontWeight="600">enter / back up</text>
 
           {/* Wheelchair at T intersection */}
           <g transform="translate(510,120) scale(0.55)" opacity="0.7">
-            <circle cx="22" cy="10" r="9" fill="#E2E8F0" stroke="#475569" strokeWidth="2" />
-            <rect x="10" y="22" width="24" height="18" rx="4" fill="none" stroke="#475569" strokeWidth="2" />
-            <circle cx="10" cy="52" r="12" fill="none" stroke="#475569" strokeWidth="2" />
-            <circle cx="34" cy="52" r="12" fill="none" stroke="#475569" strokeWidth="2" />
+            <circle cx="22" cy="10" r="9" fill="var(--dx-line)" stroke="var(--dx-line)" strokeWidth="2" />
+            <rect x="10" y="22" width="24" height="18" rx="4" fill="none" stroke="var(--dx-line)" strokeWidth="2" />
+            <circle cx="10" cy="52" r="12" fill="none" stroke="var(--dx-line)" strokeWidth="2" />
+            <circle cx="34" cy="52" r="12" fill="none" stroke="var(--dx-line)" strokeWidth="2" />
           </g>
 
           {/* Arm width dimension (36") */}
-          <line x1="420" y1="150" x2="493" y2="150" stroke="#15803D" strokeWidth="1.2" />
-          <line x1="420" y1="144" x2="420" y2="156" stroke="#15803D" strokeWidth="1.2" />
-          <line x1="493" y1="144" x2="493" y2="156" stroke="#15803D" strokeWidth="1.2" />
-          <rect x="425" y="156" width="60" height="18" rx="5" fill="#15803D" />
-          <text x="455" y="169" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('36', '915')} min</text>
+          <line x1="420" y1="150" x2="493" y2="150" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <line x1="420" y1="144" x2="420" y2="156" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <line x1="493" y1="144" x2="493" y2="156" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <rect x="425" y="156" width="60" height="18" rx="5" fill="var(--dx-green)" />
+          <text x="455" y="169" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('36', '915')} min</text>
 
           {/* Stem width dimension (36") */}
-          <line x1="493" y1="318" x2="567" y2="318" stroke="#15803D" strokeWidth="1.2" />
-          <line x1="493" y1="312" x2="493" y2="324" stroke="#15803D" strokeWidth="1.2" />
-          <line x1="567" y1="312" x2="567" y2="324" stroke="#15803D" strokeWidth="1.2" />
-          <rect x="498" y="324" width="60" height="18" rx="5" fill="#15803D" />
-          <text x="528" y="337" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('36', '915')} min</text>
+          <line x1="493" y1="318" x2="567" y2="318" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <line x1="493" y1="312" x2="493" y2="324" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <line x1="567" y1="312" x2="567" y2="324" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <rect x="498" y="324" width="60" height="18" rx="5" fill="var(--dx-green)" />
+          <text x="528" y="337" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('36', '915')} min</text>
 
           {/* Overall 60" dimension */}
-          <line x1="420" y1="48" x2="640" y2="48" stroke="#64748B" strokeWidth="1.2" />
-          <line x1="420" y1="42" x2="420" y2="54" stroke="#64748B" strokeWidth="1.2" />
-          <line x1="640" y1="42" x2="640" y2="54" stroke="#64748B" strokeWidth="1.2" />
-          <rect x="497" y="36" width="66" height="18" rx="5" fill="#64748B" />
-          <text x="530" y="49" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('60', '1525')} sq.</text>
+          <line x1="420" y1="48" x2="640" y2="48" stroke="var(--dx-label)" strokeWidth="1.2" />
+          <line x1="420" y1="42" x2="420" y2="54" stroke="var(--dx-label)" strokeWidth="1.2" />
+          <line x1="640" y1="42" x2="640" y2="54" stroke="var(--dx-label)" strokeWidth="1.2" />
+          <rect x="497" y="36" width="66" height="18" rx="5" fill="var(--dx-label)" />
+          <text x="530" y="49" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('60', '1525')} sq.</text>
 
 
           {/* CALLOUT DOTS */}
@@ -178,9 +178,9 @@ export default function TurningSpaceDiagram() {
       {/* Key facts */}
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
         <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Turning Space</p>
-        <KeyFact color="#C2410C" number={d('60', '1525')}>Minimum diameter for a circular turning space (5 feet across)</KeyFact>
-        <KeyFact color="#15803D" number={d('36', '915')}>Minimum width of each arm and stem in a T-shaped turning space</KeyFact>
-        <KeyFact color="#64748B" number="1:48">Maximum floor slope in any direction within the turning space</KeyFact>
+        <KeyFact color="var(--dx-orange)" number={d('60', '1525')}>Minimum diameter for a circular turning space (5 feet across)</KeyFact>
+        <KeyFact color="var(--dx-green)" number={d('36', '915')}>Minimum width of each arm and stem in a T-shaped turning space</KeyFact>
+        <KeyFact color="var(--dx-label)" number="1:48">Maximum floor slope in any direction within the turning space</KeyFact>
       </div>
 
       <style>{`

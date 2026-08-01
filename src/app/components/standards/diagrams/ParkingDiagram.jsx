@@ -5,14 +5,14 @@ const PARK_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#5
 const SPACE_CALLOUTS = [
   {
     id: 1, label: 'Space Widths & Access Aisle', section: '\u00a7502.2',
-    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
+    color: 'var(--dx-orange)', textColor: 'var(--dx-orange)', x: 100, y: 52,
     plain: 'Standard accessible car spaces must be at least 96 inches (8 feet) wide. Van-accessible spaces must be at least 132 inches (11 feet) wide \u2014 or a standard 96-inch space with an extra-wide 96-inch access aisle. The access aisle (the striped area next to the space) must be at least 60 inches (5 feet) wide. Two spaces can share one aisle between them. The aisle must be clearly marked with diagonal hatching.',
     legal: '\u201CCar parking spaces shall be 96 inches wide minimum.\u201D Van spaces: \u201C132 inches wide minimum.\u201D Access aisles: \u201C60 inches wide minimum.\u201D \u201CTwo parking spaces shall be permitted to share a common access aisle.\u201D',
     citation: '\u00a7502.2, \u00a7502.3'
   },
   {
     id: 2, label: 'Surface, Slope & Level Changes', section: '\u00a7502.4',
-    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
+    color: 'var(--dx-green)', textColor: 'var(--dx-green)', x: 470, y: 52,
     plain: 'Accessible spaces and their access aisles must be firm, stable, and slip-resistant. The aisle must be at the same level as the parking space \u2014 no curbs, steps, or level changes between them. Maximum slope in any direction is 1:48 (about 2%), essentially flat. Van spaces need 98 inches (8\u20192\u2033) of vertical clearance along the entire vehicle route from entrance to exit.',
     legal: '\u201CParking spaces and access aisles shall have surface slopes not steeper than 1:48.\u201D \u201CAccess aisles shall be at the same level as the parking spaces they serve. Changes in level are not permitted.\u201D Vertical clearance: \u201C98 inches minimum.\u201D',
     citation: '\u00a7502.4, \u00a7502.5'
@@ -22,14 +22,14 @@ const SPACE_CALLOUTS = [
 const SIGN_CALLOUTS = [
   {
     id: 1, label: 'Required Signs', section: '\u00a7502.6',
-    color: '#7C3AED', textColor: '#5B21B6', x: 100, y: 52,
+    color: 'var(--dx-violet)', textColor: 'var(--dx-violet)', x: 100, y: 52,
     plain: 'Every accessible parking space must have a sign showing the International Symbol of Accessibility (the blue wheelchair symbol). The bottom of the sign must be at least 60 inches (5 feet) above the ground so it\u2019s visible even when a vehicle is parked. Van spaces need an additional \u201CVan Accessible\u201D label. Exception: lots with 4 or fewer total spaces serving a single residential unit don\u2019t need signs.',
     legal: '\u201CAccessible parking spaces shall be identified by signs showing the International Symbol of Accessibility.\u201D \u201CSigns shall be 60 inches minimum above the finish ground surface measured to the bottom of the sign.\u201D Van spaces: \u201Cshall contain the designation \u2018van accessible.\u2019\u201D',
     citation: '\u00a7502.6'
   },
   {
     id: 2, label: 'How Many Spaces?', section: '\u00a7208.2',
-    color: '#2563EB', textColor: '#1E3A8A', x: 680, y: 70,
+    color: 'var(--dx-blue)', textColor: 'var(--dx-blue)', x: 680, y: 70,
     plain: 'The number of accessible spaces depends on total lot size: 1\u201325 total spaces = 1 accessible; 26\u201350 = 2; 51\u201375 = 3; 76\u2013100 = 4; and so on. For every 6 accessible spaces (or fraction), at least 1 must be van-accessible. Medical facilities treating mobility impairments need 20% accessible outpatient spaces. Spaces must be on the shortest accessible route to the entrance.',
     legal: '\u201CParking facilities shall provide accessible parking spaces in accordance with Table 208.2.\u201D \u201CFor every six or fraction of six accessible parking spaces, at least one shall be a van parking space.\u201D \u201CSpaces shall be located on the shortest accessible route from parking to an entrance.\u201D',
     citation: '\u00a7208.2, \u00a7208.3.1'
@@ -45,9 +45,9 @@ function CalloutPanel({ callout, onClose, panelRef }) {
     <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'parkFade 0.25s ease-out' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--page-bg)', background: callout.color, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
         </div>
         <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
       </div>
@@ -65,7 +65,7 @@ function CalloutPanel({ callout, onClose, panelRef }) {
 function KeyFact({ color, number, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
-      <span style={{ background: color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ background: color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
       <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
     </div>
   );
@@ -128,72 +128,72 @@ export default function ParkingDiagram() {
 
           {/* LEFT: Van space */}
           {/* Van space rect */}
-          <rect x="40" y="80" width="170" height="200" rx="4" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="2" />
-          <text x="125" y="175" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#C2410C" fontWeight="600">VAN</text>
+          <rect x="40" y="80" width="170" height="200" rx="4" fill="var(--dx-orange)" opacity="0.04" stroke="var(--dx-orange)" strokeWidth="2" />
+          <text x="125" y="175" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-orange)" fontWeight="600">VAN</text>
 
           {/* Access aisle (shared) */}
-          <rect x="210" y="80" width="80" height="200" rx="2" fill="#2563EB" opacity="0.06" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="8 4" />
+          <rect x="210" y="80" width="80" height="200" rx="2" fill="var(--dx-blue)" opacity="0.06" stroke="var(--dx-blue)" strokeWidth="1.5" strokeDasharray="8 4" />
           {/* Diagonal hatching lines */}
-          <line x1="215" y1="120" x2="240" y2="80" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <line x1="215" y1="160" x2="270" y2="80" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <line x1="215" y1="200" x2="285" y2="120" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <line x1="215" y1="240" x2="285" y2="160" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <line x1="215" y1="280" x2="285" y2="200" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <line x1="240" y1="280" x2="285" y2="240" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <text x="250" y="170" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A" fontWeight="600">access</text>
-          <text x="250" y="184" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A" fontWeight="600">aisle</text>
+          <line x1="215" y1="120" x2="240" y2="80" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <line x1="215" y1="160" x2="270" y2="80" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <line x1="215" y1="200" x2="285" y2="120" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <line x1="215" y1="240" x2="285" y2="160" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <line x1="215" y1="280" x2="285" y2="200" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <line x1="240" y1="280" x2="285" y2="240" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <text x="250" y="170" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)" fontWeight="600">access</text>
+          <text x="250" y="184" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)" fontWeight="600">aisle</text>
 
           {/* Van width dimension */}
-          <line x1="40" y1="300" x2="210" y2="300" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="40" y1="294" x2="40" y2="306" stroke="#C2410C" strokeWidth="1.5" />
-          <line x1="210" y1="294" x2="210" y2="306" stroke="#C2410C" strokeWidth="1.5" />
-          <rect x="80" y="306" width="90" height="20" rx="6" fill="#C2410C" />
-          <text x="125" y="320" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('132', '3350')} min</text>
-          <text x="125" y="340" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C" fontWeight="500">(11 feet)</text>
+          <line x1="40" y1="300" x2="210" y2="300" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="40" y1="294" x2="40" y2="306" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <line x1="210" y1="294" x2="210" y2="306" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <rect x="80" y="306" width="90" height="20" rx="6" fill="var(--dx-orange)" />
+          <text x="125" y="320" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('132', '3350')} min</text>
+          <text x="125" y="340" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)" fontWeight="500">(11 feet)</text>
 
           {/* Aisle width */}
-          <line x1="210" y1="300" x2="290" y2="300" stroke="#2563EB" strokeWidth="1.5" />
-          <line x1="290" y1="294" x2="290" y2="306" stroke="#2563EB" strokeWidth="1.5" />
-          <rect x="218" y="306" width="64" height="20" rx="6" fill="#2563EB" />
-          <text x="250" y="320" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('60', '1525')}</text>
-          <text x="250" y="340" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#2563EB" fontWeight="500">(5 feet)</text>
+          <line x1="210" y1="300" x2="290" y2="300" stroke="var(--dx-blue)" strokeWidth="1.5" />
+          <line x1="290" y1="294" x2="290" y2="306" stroke="var(--dx-blue)" strokeWidth="1.5" />
+          <rect x="218" y="306" width="64" height="20" rx="6" fill="var(--dx-blue)" />
+          <text x="250" y="320" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('60', '1525')}</text>
+          <text x="250" y="340" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)" fontWeight="500">(5 feet)</text>
 
 
           {/* DIVIDER */}
-          <line x1="360" y1="40" x2="360" y2="360" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+          <line x1="360" y1="40" x2="360" y2="360" stroke="var(--dx-line)" strokeWidth="1.5" strokeDasharray="6 4" />
 
 
           {/* RIGHT: Standard car space */}
-          <rect x="400" y="80" width="130" height="200" rx="4" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="2" />
-          <text x="465" y="175" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#15803D" fontWeight="600">CAR</text>
+          <rect x="400" y="80" width="130" height="200" rx="4" fill="var(--dx-green)" opacity="0.04" stroke="var(--dx-green)" strokeWidth="2" />
+          <text x="465" y="175" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-green)" fontWeight="600">CAR</text>
 
           {/* Shared aisle */}
-          <rect x="530" y="80" width="80" height="200" rx="2" fill="#2563EB" opacity="0.06" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="8 4" />
-          <line x1="535" y1="120" x2="560" y2="80" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <line x1="535" y1="160" x2="590" y2="80" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <line x1="535" y1="200" x2="605" y2="120" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <line x1="535" y1="240" x2="605" y2="160" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <line x1="535" y1="280" x2="605" y2="200" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <line x1="560" y1="280" x2="605" y2="240" stroke="#2563EB" strokeWidth="1" opacity="0.3" />
-          <text x="570" y="170" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A" fontWeight="600">access</text>
-          <text x="570" y="184" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A" fontWeight="600">aisle</text>
+          <rect x="530" y="80" width="80" height="200" rx="2" fill="var(--dx-blue)" opacity="0.06" stroke="var(--dx-blue)" strokeWidth="1.5" strokeDasharray="8 4" />
+          <line x1="535" y1="120" x2="560" y2="80" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <line x1="535" y1="160" x2="590" y2="80" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <line x1="535" y1="200" x2="605" y2="120" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <line x1="535" y1="240" x2="605" y2="160" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <line x1="535" y1="280" x2="605" y2="200" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <line x1="560" y1="280" x2="605" y2="240" stroke="var(--dx-blue)" strokeWidth="1" opacity="0.3" />
+          <text x="570" y="170" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)" fontWeight="600">access</text>
+          <text x="570" y="184" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)" fontWeight="600">aisle</text>
 
           {/* Car width dimension */}
-          <line x1="400" y1="300" x2="530" y2="300" stroke="#15803D" strokeWidth="1.5" />
-          <line x1="400" y1="294" x2="400" y2="306" stroke="#15803D" strokeWidth="1.5" />
-          <line x1="530" y1="294" x2="530" y2="306" stroke="#15803D" strokeWidth="1.5" />
-          <rect x="428" y="306" width="74" height="20" rx="6" fill="#15803D" />
-          <text x="465" y="320" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('96', '2440')} min</text>
-          <text x="465" y="340" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#15803D" fontWeight="500">(8 feet)</text>
+          <line x1="400" y1="300" x2="530" y2="300" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <line x1="400" y1="294" x2="400" y2="306" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <line x1="530" y1="294" x2="530" y2="306" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <rect x="428" y="306" width="74" height="20" rx="6" fill="var(--dx-green)" />
+          <text x="465" y="320" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('96', '2440')} min</text>
+          <text x="465" y="340" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)" fontWeight="500">(8 feet)</text>
 
           {/* Aisle width */}
-          <line x1="530" y1="300" x2="610" y2="300" stroke="#2563EB" strokeWidth="1.5" />
-          <line x1="610" y1="294" x2="610" y2="306" stroke="#2563EB" strokeWidth="1.5" />
-          <rect x="538" y="306" width="64" height="20" rx="6" fill="#2563EB" />
-          <text x="570" y="320" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('60', '1525')}</text>
+          <line x1="530" y1="300" x2="610" y2="300" stroke="var(--dx-blue)" strokeWidth="1.5" />
+          <line x1="610" y1="294" x2="610" y2="306" stroke="var(--dx-blue)" strokeWidth="1.5" />
+          <rect x="538" y="306" width="64" height="20" rx="6" fill="var(--dx-blue)" />
+          <text x="570" y="320" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('60', '1525')}</text>
 
           {/* Slope note */}
-          <text x="465" y="98" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B">slope {'\u2264'} 1:48 everywhere</text>
+          <text x="465" y="98" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)">slope {'\u2264'} 1:48 everywhere</text>
 
           <Dots callouts={SPACE_CALLOUTS} active={spaceActive} toggle={toggleSpace} />
           <text x="20" y="370" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
@@ -205,10 +205,10 @@ export default function ParkingDiagram() {
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
         <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Space Layout</p>
-        <KeyFact color="#C2410C" number={ft('11', '3.4')}>Van space width (132{'\u2033'})</KeyFact>
-        <KeyFact color="#15803D" number={ft('8', '2.4')}>Standard car space width (96{'\u2033'})</KeyFact>
-        <KeyFact color="#2563EB" number={ft('5', '1.5')}>Access aisle width minimum (60{'\u2033'})</KeyFact>
-        <KeyFact color="#64748B" number="1:48">Maximum slope in any direction (essentially flat)</KeyFact>
+        <KeyFact color="var(--dx-orange)" number={ft('11', '3.4')}>Van space width (132{'\u2033'})</KeyFact>
+        <KeyFact color="var(--dx-green)" number={ft('8', '2.4')}>Standard car space width (96{'\u2033'})</KeyFact>
+        <KeyFact color="var(--dx-blue)" number={ft('5', '1.5')}>Access aisle width minimum (60{'\u2033'})</KeyFact>
+        <KeyFact color="var(--dx-label)" number="1:48">Maximum slope in any direction (essentially flat)</KeyFact>
       </div>
 
 
@@ -227,54 +227,54 @@ export default function ParkingDiagram() {
 
           {/* LEFT: Sign detail */}
           {/* Post */}
-          <rect x="165" y="75" width="6" height="190" fill="#94A3B8" rx="1" />
+          <rect x="165" y="75" width="6" height="190" fill="var(--dx-label)" rx="1" />
 
           {/* Sign face */}
-          <rect x="130" y="70" width="76" height="60" rx="6" fill="#2563EB" stroke="#1E3A8A" strokeWidth="1.5" />
+          <rect x="130" y="70" width="76" height="60" rx="6" fill="var(--dx-blue)" stroke="var(--dx-blue)" strokeWidth="1.5" />
           {/* Wheelchair icon (simplified) */}
-          <circle cx="168" cy="92" r="8" fill="white" opacity="0.9" />
-          <rect x="162" y="100" width="12" height="10" rx="2" fill="white" opacity="0.7" />
-          <text x="168" y="122" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="white" fontWeight="700">VAN</text>
+          <circle cx="168" cy="92" r="8" fill="var(--page-bg)" opacity="0.9" />
+          <rect x="162" y="100" width="12" height="10" rx="2" fill="var(--page-bg)" opacity="0.7" />
+          <text x="168" y="122" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--page-bg)" fontWeight="700">VAN</text>
 
           {/* 60" min height */}
-          <line x1="230" y1="130" x2="230" y2="265" stroke="#7C3AED" strokeWidth="1.5" />
-          <line x1="224" y1="130" x2="236" y2="130" stroke="#7C3AED" strokeWidth="1.5" />
-          <line x1="224" y1="265" x2="236" y2="265" stroke="#7C3AED" strokeWidth="1.5" />
-          <rect x="240" y="186" width="70" height="22" rx="6" fill="#7C3AED" />
-          <text x="275" y="201" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('60', '1525')} min</text>
-          <text x="275" y="220" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6" fontWeight="500">to bottom of sign</text>
+          <line x1="230" y1="130" x2="230" y2="265" stroke="var(--dx-violet)" strokeWidth="1.5" />
+          <line x1="224" y1="130" x2="236" y2="130" stroke="var(--dx-violet)" strokeWidth="1.5" />
+          <line x1="224" y1="265" x2="236" y2="265" stroke="var(--dx-violet)" strokeWidth="1.5" />
+          <rect x="240" y="186" width="70" height="22" rx="6" fill="var(--dx-violet)" />
+          <text x="275" y="201" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('60', '1525')} min</text>
+          <text x="275" y="220" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-violet)" fontWeight="500">to bottom of sign</text>
 
           {/* Ground line */}
-          <line x1="100" y1="265" x2="320" y2="265" stroke="#94A3B8" strokeWidth="2" />
-          <text x="210" y="282" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B">ground level</text>
+          <line x1="100" y1="265" x2="320" y2="265" stroke="var(--dx-label)" strokeWidth="2" />
+          <text x="210" y="282" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)">ground level</text>
 
           {/* Van note */}
-          <text x="168" y="152" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12" fontWeight="600">{'\u201c'}Van Accessible{'\u201d'}</text>
-          <text x="168" y="166" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">required on van spaces</text>
+          <text x="168" y="152" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)" fontWeight="600">{'\u201c'}Van Accessible{'\u201d'}</text>
+          <text x="168" y="166" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)">required on van spaces</text>
 
 
           {/* DIVIDER */}
-          <line x1="360" y1="20" x2="360" y2="300" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+          <line x1="360" y1="20" x2="360" y2="300" stroke="var(--dx-line)" strokeWidth="1.5" strokeDasharray="6 4" />
 
 
           {/* RIGHT: Scoping table (simplified) */}
-          <rect x="400" y="55" width="280" height="42" rx="8" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5" />
-          <text x="540" y="73" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#1E3A8A" fontWeight="600">1{'\u201325'} total spaces {'\u2192'} 1 accessible</text>
-          <text x="540" y="88" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A">minimum required</text>
+          <rect x="400" y="55" width="280" height="42" rx="8" fill="var(--dx-blue)" opacity="0.04" stroke="var(--dx-blue)" strokeWidth="1.5" />
+          <text x="540" y="73" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-blue)" fontWeight="600">1{'\u201325'} total spaces {'\u2192'} 1 accessible</text>
+          <text x="540" y="88" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)">minimum required</text>
 
-          <rect x="400" y="107" width="280" height="32" rx="8" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5" />
-          <text x="540" y="128" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#1E3A8A" fontWeight="600">26{'\u201350'} spaces {'\u2192'} 2 accessible</text>
+          <rect x="400" y="107" width="280" height="32" rx="8" fill="var(--dx-blue)" opacity="0.04" stroke="var(--dx-blue)" strokeWidth="1.5" />
+          <text x="540" y="128" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-blue)" fontWeight="600">26{'\u201350'} spaces {'\u2192'} 2 accessible</text>
 
-          <rect x="400" y="149" width="280" height="32" rx="8" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5" />
-          <text x="540" y="170" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#1E3A8A" fontWeight="600">51{'\u201375'} spaces {'\u2192'} 3 accessible</text>
+          <rect x="400" y="149" width="280" height="32" rx="8" fill="var(--dx-blue)" opacity="0.04" stroke="var(--dx-blue)" strokeWidth="1.5" />
+          <text x="540" y="170" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-blue)" fontWeight="600">51{'\u201375'} spaces {'\u2192'} 3 accessible</text>
 
-          <rect x="400" y="191" width="280" height="32" rx="8" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5" />
-          <text x="540" y="212" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#1E3A8A" fontWeight="600">76{'\u2013100'} spaces {'\u2192'} 4 accessible</text>
+          <rect x="400" y="191" width="280" height="32" rx="8" fill="var(--dx-blue)" opacity="0.04" stroke="var(--dx-blue)" strokeWidth="1.5" />
+          <text x="540" y="212" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-blue)" fontWeight="600">76{'\u2013100'} spaces {'\u2192'} 4 accessible</text>
 
           {/* Van ratio */}
-          <rect x="400" y="240" width="280" height="42" rx="8" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" />
-          <text x="540" y="258" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#7C2D12" fontWeight="600">1 in every 6 must be van-accessible</text>
-          <text x="540" y="274" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">or fraction of 6</text>
+          <rect x="400" y="240" width="280" height="42" rx="8" fill="var(--dx-orange)" opacity="0.04" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <text x="540" y="258" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-orange)" fontWeight="600">1 in every 6 must be van-accessible</text>
+          <text x="540" y="274" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)">or fraction of 6</text>
 
           <Dots callouts={SIGN_CALLOUTS} active={signActive} toggle={toggleSign} />
           <text x="20" y="310" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
@@ -286,9 +286,9 @@ export default function ParkingDiagram() {
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
         <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Signs & Scoping</p>
-        <KeyFact color="#7C3AED" number={d('60', '1525')}>Minimum sign height (bottom of sign to ground)</KeyFact>
-        <KeyFact color="#2563EB" number="1 in 6">At least 1 van-accessible space for every 6 accessible spaces</KeyFact>
-        <KeyFact color="#C2410C" number={`98\u2033`}>Minimum vertical clearance for van routes (8{'\u2019'}2{'\u2033'})</KeyFact>
+        <KeyFact color="var(--dx-violet)" number={d('60', '1525')}>Minimum sign height (bottom of sign to ground)</KeyFact>
+        <KeyFact color="var(--dx-blue)" number="1 in 6">At least 1 van-accessible space for every 6 accessible spaces</KeyFact>
+        <KeyFact color="var(--dx-orange)" number={`98\u2033`}>Minimum vertical clearance for van routes (8{'\u2019'}2{'\u2033'})</KeyFact>
       </div>
 
 
