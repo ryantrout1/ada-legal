@@ -1150,6 +1150,29 @@ body {
   --page-bg-alt:      #0A0A0A;   /* gold-on-black mode; secondary surface stays black */
 }
 
+/* Diagram palette (--dx-*): themed colors for the ~43 standards-guide
+   diagrams, replacing the hardcoded hexes that never adapted (invisible in
+   dark modes; #94A3B8 labels failed 7:1 even in Default). Most map to the
+   existing AAA-tuned families, so they auto-flip per display mode; only
+   --dx-blue is bespoke (no existing blue family). All verified >=7:1 as text
+   on the diagram surface (--card-bg / surface-0) in every theme, and hue
+   fills carry var(--page-bg) text (>=9:1). Decorative geometry uses --dx-line
+   (non-text, 3:1). */
+:root {
+  --dx-orange:      var(--color-accent-500);
+  --dx-green:       var(--color-success-500);
+  --dx-violet:      var(--color-ada-500);
+  --dx-amber:       var(--color-warning-500);
+  --dx-label:       var(--color-ink-700);    /* AAA label/annotation text */
+  --dx-line:        var(--color-surface-300); /* decorative strokes (3:1) */
+  --dx-line-strong: var(--color-ink-500);     /* meaningful lines */
+  --dx-blue:        #1E3A8A;                   /* AAA on light card */
+}
+:root[data-display="dark"]       { --dx-blue: #93C5FD; }
+:root[data-display="contrast"]   { --dx-blue: #A5C8FF; }
+:root[data-display="low-vision"] { --dx-blue: #7FB4FF; }
+/* warm keeps the default #1E3A8A */
+
 /* Standards Guide alias overrides for non-default display modes.
  *
  * The default :root aliases above are tuned for the light/warm-cream

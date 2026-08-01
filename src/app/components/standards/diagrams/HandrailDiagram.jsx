@@ -5,14 +5,14 @@ const RAIL_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#5
 const CALLOUTS = [
   {
     id: 1, label: 'Grip Size & Shape', section: '\u00a7505.7',
-    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
+    color: 'var(--dx-orange)', textColor: 'var(--dx-orange)', x: 100, y: 52,
     plain: 'A circular handrail must have an outside diameter of 1\u00bc to 2 inches. This range lets most people \u2014 including those with limited grip strength \u2014 wrap their fingers comfortably around the rail. Non-circular handrails (oval, rounded rectangle) must have a perimeter between 4 and 6\u00bc inches and a cross-section no larger than 2\u00bc inches. The surface must be smooth with no sharp edges.',
     legal: '\u201CCircular cross sections shall have an outside diameter of 1\u00bc inches minimum and 2 inches maximum.\u201D Non-circular: \u201Ccross-section dimension of 2\u00bc inches maximum\u201D and \u201Cperimeter dimension of 4 inches minimum and 6\u00bc inches maximum.\u201D',
     citation: '\u00a7505.7.1, \u00a7505.7.2'
   },
   {
     id: 2, label: 'Wall Clearance & Mounting', section: '\u00a7505.5',
-    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
+    color: 'var(--dx-green)', textColor: 'var(--dx-green)', x: 470, y: 52,
     plain: 'There must be at least 1\u00bd inches of clear space between the handrail and the wall. This prevents fingers from being pinched or scraped. No exposed bolt heads, rough surfaces, or protruding brackets within the clearance zone. The rail must be continuous for the full length of stair flights and ramp runs \u2014 breaks are only permitted at landing turns where newel posts are used.',
     legal: '\u201CThe clearance between handrail gripping surfaces and adjacent surfaces shall be 1\u00bd inches minimum.\u201D \u00a7505.6: \u201CHandrail gripping surfaces shall be continuous along their full length and shall not be obstructed along their tops or sides.\u201D',
     citation: '\u00a7505.5, \u00a7505.6'
@@ -28,9 +28,9 @@ function CalloutPanel({ callout, onClose, panelRef }) {
     <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'railFade 0.25s ease-out' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--page-bg)', background: callout.color, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
         </div>
         <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
       </div>
@@ -48,7 +48,7 @@ function CalloutPanel({ callout, onClose, panelRef }) {
 function KeyFact({ color, number, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
-      <span style={{ background: color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ background: color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
       <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
     </div>
   );
@@ -95,72 +95,72 @@ export default function HandrailDiagram() {
 
           {/* LEFT: Circular profile cross-section */}
           {/* Wall */}
-          <rect x="60" y="70" width="12" height="200" fill="#CBD5E1" rx="2" />
-          <text x="48" y="170" textAnchor="end" fontFamily="var(--font-body)" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
+          <rect x="60" y="70" width="12" height="200" fill="var(--dx-line)" rx="2" />
+          <text x="48" y="170" textAnchor="end" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="600">wall</text>
 
           {/* Wall clearance gap */}
-          <line x1="72" y1="155" x2="108" y2="155" stroke="#15803D" strokeWidth="1" strokeDasharray="3 2" />
-          <rect x="74" y="158" width="34" height="16" rx="4" fill="#15803D" />
-          <text x="91" y="170" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('1\u00bd', '38')}</text>
-          <text x="91" y="186" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#15803D" fontWeight="500">clearance</text>
+          <line x1="72" y1="155" x2="108" y2="155" stroke="var(--dx-green)" strokeWidth="1" strokeDasharray="3 2" />
+          <rect x="74" y="158" width="34" height="16" rx="4" fill="var(--dx-green)" />
+          <text x="91" y="170" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('1\u00bd', '38')}</text>
+          <text x="91" y="186" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)" fontWeight="500">clearance</text>
 
           {/* Circular handrail cross-section */}
-          <circle cx="150" cy="150" r="30" fill="#C2410C" opacity="0.08" stroke="#C2410C" strokeWidth="2.5" />
+          <circle cx="150" cy="150" r="30" fill="var(--dx-orange)" opacity="0.08" stroke="var(--dx-orange)" strokeWidth="2.5" />
 
           {/* Diameter dimension */}
-          <line x1="120" y1="150" x2="180" y2="150" stroke="#C2410C" strokeWidth="1.2" />
-          <rect x="115" y="196" width="70" height="20" rx="6" fill="#C2410C" />
-          <text x="150" y="210" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('1\u00bc', '32')}{'\u2013'}{d('2', '51')}</text>
-          <text x="150" y="230" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C" fontWeight="500">diameter</text>
+          <line x1="120" y1="150" x2="180" y2="150" stroke="var(--dx-orange)" strokeWidth="1.2" />
+          <rect x="115" y="196" width="70" height="20" rx="6" fill="var(--dx-orange)" />
+          <text x="150" y="210" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('1\u00bc', '32')}{'\u2013'}{d('2', '51')}</text>
+          <text x="150" y="230" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)" fontWeight="500">diameter</text>
 
           {/* Hand gripping illustration */}
           <g transform="translate(200,115)" opacity="0.4">
-            <path d="M 0 10 C 10 -5 40 -5 50 10 C 55 20 55 50 50 60 C 40 75 10 75 0 60 C -5 50 -5 20 0 10" fill="none" stroke="#475569" strokeWidth="1.5" />
+            <path d="M 0 10 C 10 -5 40 -5 50 10 C 55 20 55 50 50 60 C 40 75 10 75 0 60 C -5 50 -5 20 0 10" fill="none" stroke="var(--dx-line)" strokeWidth="1.5" />
           </g>
-          <text x="230" y="108" fontFamily="var(--font-body)" fontSize="10" fill="#64748B">fingers wrap</text>
-          <text x="230" y="122" fontFamily="var(--font-body)" fontSize="10" fill="#64748B">around the rail</text>
+          <text x="230" y="108" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)">fingers wrap</text>
+          <text x="230" y="122" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)">around the rail</text>
 
           {/* Non-circular option */}
-          <rect x="90" y="260" width="120" height="32" rx="10" fill="#7C3AED" opacity="0.06" stroke="#7C3AED" strokeWidth="1.5" />
-          <text x="150" y="280" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6" fontWeight="600">non-circular option</text>
-          <text x="150" y="304" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6">perimeter: 4{'\u2033'}{'\u2013'}6{'\u00bc'}{'\u2033'}</text>
+          <rect x="90" y="260" width="120" height="32" rx="10" fill="var(--dx-violet)" opacity="0.06" stroke="var(--dx-violet)" strokeWidth="1.5" />
+          <text x="150" y="280" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-violet)" fontWeight="600">non-circular option</text>
+          <text x="150" y="304" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-violet)">perimeter: 4{'\u2033'}{'\u2013'}6{'\u00bc'}{'\u2033'}</text>
 
 
           {/* DIVIDER */}
-          <line x1="360" y1="40" x2="360" y2="320" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+          <line x1="360" y1="40" x2="360" y2="320" stroke="var(--dx-line)" strokeWidth="1.5" strokeDasharray="6 4" />
 
 
           {/* RIGHT: Wall clearance side view */}
           {/* Wall */}
-          <rect x="420" y="60" width="15" height="240" fill="#CBD5E1" rx="2" />
-          <text x="428" y="52" fontFamily="var(--font-body)" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
+          <rect x="420" y="60" width="15" height="240" fill="var(--dx-line)" rx="2" />
+          <text x="428" y="52" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="600">wall</text>
 
           {/* Bracket */}
-          <rect x="435" y="155" width="30" height="6" rx="1" fill="#94A3B8" />
+          <rect x="435" y="155" width="30" height="6" rx="1" fill="var(--dx-label)" />
 
           {/* Rail (side view) */}
-          <rect x="465" y="135" width="15" height="50" rx="7" fill="#C2410C" opacity="0.1" stroke="#C2410C" strokeWidth="2" />
+          <rect x="465" y="135" width="15" height="50" rx="7" fill="var(--dx-orange)" opacity="0.1" stroke="var(--dx-orange)" strokeWidth="2" />
 
           {/* 1.5" clearance dimension */}
-          <line x1="435" y1="200" x2="465" y2="200" stroke="#15803D" strokeWidth="1.5" />
-          <line x1="435" y1="194" x2="435" y2="206" stroke="#15803D" strokeWidth="1.5" />
-          <line x1="465" y1="194" x2="465" y2="206" stroke="#15803D" strokeWidth="1.5" />
-          <rect x="435" y="210" width="60" height="20" rx="6" fill="#15803D" />
-          <text x="465" y="224" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('1\u00bd', '38')} min</text>
-          <text x="465" y="244" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#15803D" fontWeight="500">wall clearance</text>
+          <line x1="435" y1="200" x2="465" y2="200" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <line x1="435" y1="194" x2="435" y2="206" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <line x1="465" y1="194" x2="465" y2="206" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <rect x="435" y="210" width="60" height="20" rx="6" fill="var(--dx-green)" />
+          <text x="465" y="224" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('1\u00bd', '38')} min</text>
+          <text x="465" y="244" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)" fontWeight="500">wall clearance</text>
 
           {/* What goes wrong */}
-          <rect x="520" y="90" width="170" height="72" rx="10" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5" />
-          <text x="605" y="112" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#7C2D12" fontWeight="600">{'\u2718'} Fingers pinched</text>
-          <text x="605" y="128" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">if clearance is too small</text>
-          <text x="605" y="148" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">no bolts or rough surfaces</text>
+          <rect x="520" y="90" width="170" height="72" rx="10" fill="var(--dx-orange)" opacity="0.04" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <text x="605" y="112" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-orange)" fontWeight="600">{'\u2718'} Fingers pinched</text>
+          <text x="605" y="128" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)">if clearance is too small</text>
+          <text x="605" y="148" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)">no bolts or rough surfaces</text>
 
           {/* What's right */}
-          <rect x="520" y="180" width="170" height="60" rx="10" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="1.5" />
-          <text x="605" y="202" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">{'\u2714'} Continuous grip</text>
-          <text x="605" y="218" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#14532D">smooth, no breaks, full length</text>
+          <rect x="520" y="180" width="170" height="60" rx="10" fill="var(--dx-green)" opacity="0.04" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <text x="605" y="202" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-green)" fontWeight="600">{'\u2714'} Continuous grip</text>
+          <text x="605" y="218" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)">smooth, no breaks, full length</text>
 
-          <text x="605" y="280" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="600">both sides of stairs and ramps</text>
+          <text x="605" y="280" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="600">both sides of stairs and ramps</text>
 
           <Dots callouts={CALLOUTS} active={active} toggle={toggle} />
           <text x="20" y="332" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
@@ -172,9 +172,9 @@ export default function HandrailDiagram() {
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
         <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Handrails</p>
-        <KeyFact color="#C2410C" number={`${d('1\u00bc', '32')}\u2013${d('2', '51')}`}>Round handrail diameter range</KeyFact>
-        <KeyFact color="#15803D" number={d('1\u00bd', '38')}>Minimum wall clearance (no pinched fingers)</KeyFact>
-        <KeyFact color="#7C3AED" number={`4\u2033\u20136\u00bc\u2033`}>Non-circular handrail perimeter range</KeyFact>
+        <KeyFact color="var(--dx-orange)" number={`${d('1\u00bc', '32')}\u2013${d('2', '51')}`}>Round handrail diameter range</KeyFact>
+        <KeyFact color="var(--dx-green)" number={d('1\u00bd', '38')}>Minimum wall clearance (no pinched fingers)</KeyFact>
+        <KeyFact color="var(--dx-violet)" number={`4\u2033\u20136\u00bc\u2033`}>Non-circular handrail perimeter range</KeyFact>
       </div>
 
       <style>{`
