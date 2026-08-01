@@ -64,7 +64,7 @@ export default function GuideReadingLevelBar() {
                 borderRadius: '6px',
                 border: active ? '2px solid var(--accent)' : '1px solid var(--card-border)',
                 background: active ? 'var(--accent)' : 'var(--card-bg)',
-                color: active ? 'var(--btn-text)' : 'var(--body)',
+                color: active ? 'var(--page-bg)' : 'var(--body)',
                 fontSize: '0.9375rem', fontWeight: active ? 700 : 500,
                 fontFamily: 'var(--font-body)',
                 cursor: 'pointer', transition: 'all 0.15s',

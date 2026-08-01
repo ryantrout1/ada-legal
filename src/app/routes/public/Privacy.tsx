@@ -86,7 +86,7 @@ export default function Privacy() {
         </p>
         <Link
           to="/ada"
-          className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium px-5 py-3 rounded-md transition-colors"
+          className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-[color:var(--page-bg)] font-medium px-5 py-3 rounded-md transition-colors"
         >
           Talk to Ada
           <span aria-hidden="true">→</span>

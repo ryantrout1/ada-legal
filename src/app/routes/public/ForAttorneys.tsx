@@ -179,7 +179,7 @@ export default function ForAttorneys() {
           </p>
           <a
             href={`mailto:${GINA_EMAIL}?subject=${encodeURIComponent(APPLY_SUBJECT)}`}
-            className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium px-6 py-3.5 rounded-md transition-colors"
+            className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-[color:var(--page-bg)] font-medium px-6 py-3.5 rounded-md transition-colors"
           >
             Email us to apply
             <span aria-hidden="true">→</span>

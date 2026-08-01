@@ -134,7 +134,7 @@ export default function GuideHeroBanner({
           style={{
             display: 'inline-block',
             background: badgeColor || 'var(--accent)',
-            color: 'var(--dark-heading)',
+            color: 'var(--page-bg)',
             fontFamily: 'var(--font-body)',
             fontSize: '0.7rem',
             fontWeight: 700,

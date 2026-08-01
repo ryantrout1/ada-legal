@@ -375,7 +375,7 @@ export default function SpotLanding() {
                       type="button"
                       onClick={() => void runTestReport()}
                       disabled={testBusy || files.length === 0}
-                      className="min-h-[44px] w-full rounded-md bg-accent-600 px-4 py-2 text-white disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
+                      className="min-h-[44px] w-full rounded-md bg-accent-600 px-4 py-2 text-[color:var(--page-bg)] disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-50"
                     >
                       {testBusy ? 'Generating the full report…' : 'Simulate payment → generate the $79 report'}
                     </button>

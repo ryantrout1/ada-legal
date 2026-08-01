@@ -407,7 +407,7 @@ export default function Chat() {
               setContextReadingLevel(resumeLevel);
               acceptResume();
             }}
-            className="px-5 py-3 rounded-md bg-accent-500 text-white font-medium hover:bg-accent-600 transition-colors"
+            className="px-5 py-3 rounded-md bg-accent-500 text-[color:var(--page-bg)] font-medium hover:bg-accent-600 transition-colors"
           >
             Continue this conversation
           </button>
@@ -702,7 +702,7 @@ export default function Chat() {
           <div className="flex flex-wrap gap-3">
             <a
               href={`/s/${state.packageSlug}`}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded bg-accent-500 text-white hover:bg-accent-600 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded bg-accent-500 text-[color:var(--page-bg)] hover:bg-accent-600 transition-colors"
               aria-label="Open your summary page"
             >
               Open my summary
@@ -997,7 +997,7 @@ function ReadingLevelPicker({
               title={l.description}
               className={
                 (active
-                  ? 'bg-accent-500 text-white '
+                  ? 'bg-accent-500 text-[color:var(--page-bg)] '
                   : 'bg-surface-100 text-ink-700 hover:bg-surface-200 ') +
                 'px-4 py-3 text-sm transition-colors ' +
                 (i === 0 ? 'border-r border-surface-200' : '') +
@@ -1027,7 +1027,7 @@ function MessageBubble({ message }: { message: import('@/app/hooks/useChatSessio
         className={
           'max-w-[85%] rounded-lg px-4 py-3 ' +
           (isUser
-            ? 'bg-accent-500 text-white'
+            ? 'bg-accent-500 text-[color:var(--page-bg)]'
             : 'bg-surface-100 text-ink-900 border border-surface-200')
         }
       >
@@ -1433,7 +1433,7 @@ const ConfirmBar = forwardRef<
           ref={confirmButtonRef}
           type="button"
           onClick={onConfirm}
-          className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md bg-accent-500 hover:bg-accent-600 text-white text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md bg-accent-500 hover:bg-accent-600 text-[color:var(--page-bg)] text-sm font-medium transition-colors"
         >
           {confirmLabel}
         </button>

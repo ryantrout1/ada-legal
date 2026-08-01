@@ -419,7 +419,7 @@ function PackageView({
                 href={`mailto:${pkg.matchedListing.firmEmail}?subject=${encodeURIComponent(
                   `Class action intake — ${pkg.matchedListing.listingTitle}`,
                 )}`}
-                className="inline-block px-5 py-3 rounded-md bg-accent-500 text-white font-medium hover:bg-accent-600"
+                className="inline-block px-5 py-3 rounded-md bg-accent-500 text-[color:var(--page-bg)] font-medium hover:bg-accent-600"
               >
                 Contact this firm
               </a>
