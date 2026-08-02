@@ -268,6 +268,7 @@ export default function LawsuitDetail() {
         minHeight: 'calc(100vh - 72px)',
       }}
     >
+      {(loading || error) && <h1 className="sr-only">Lawsuit details</h1>}
       <div style={{ marginBottom: '1rem' }}>{backLink}</div>
 
       {loading && (

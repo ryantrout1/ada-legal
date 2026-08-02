@@ -15,7 +15,7 @@ export default function AssemblySeatingDiagram(){
   useEffect(()=>{const h=e=>{if(e.key==='Escape')sa(null)};window.addEventListener('keydown',h);return()=>window.removeEventListener('keydown',h)},[]);
   const ac=CALLOUTS.find(c=>c.id===a);
   return(<div className="ada-diagram-wrap" style={{margin:'32px 0'}}>
-    <div style={{marginBottom:'8px'}}><h3 style={{fontFamily:'var(--font-display)',fontSize:'1.15rem',fontWeight:700,color:'var(--heading)',margin:0}}>Wheelchair Seating in Assembly Areas</h3></div>
+    <div style={{marginBottom:'8px'}}><h2 style={{fontFamily:'var(--font-display)',fontSize:'1.15rem',fontWeight:700,color:'var(--heading)',margin:0}}>Wheelchair Seating in Assembly Areas</h2></div>
     <div style={{background:'var(--card-bg)',border:'1px solid var(--border)',borderRadius:'12px',overflow:'hidden'}}>
       <svg viewBox="0 0 720 340" role="group" aria-labelledby="as-t" style={{width:'100%',height:'auto',display:'block'}}>
         <title id="as-t">Wheelchair Spaces in Assembly Areas</title>

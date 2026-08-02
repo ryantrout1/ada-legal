@@ -19,7 +19,7 @@ export default function AssistiveListeningDiagram() {
   const ac = CALLOUTS.find(c => c.id === active);
   return (
     <div className="ada-diagram-wrap" style={{ margin: '32px 0' }}>
-      <div style={{ marginBottom: '8px' }}><h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Assistive Listening Systems</h3></div>
+      <div style={{ marginBottom: '8px' }}><h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>Assistive Listening Systems</h2></div>
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <svg viewBox="0 0 720 320" role="group" aria-labelledby="als-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
           <title id="als-title">Assistive Listening System Types and Requirements</title>

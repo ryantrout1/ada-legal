@@ -266,9 +266,9 @@ export default function ReachRangeDiagram() {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         marginBottom: '8px', flexWrap: 'wrap', gap: '8px'
       }}>
-        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
           Forward Reach
-        </h3>
+        </h2>
         {unitToggle}
       </div>
 
@@ -397,9 +397,9 @@ export default function ReachRangeDiagram() {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         marginTop: '40px', marginBottom: '8px', flexWrap: 'wrap', gap: '8px'
       }}>
-        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--heading)', margin: 0 }}>
           Side Reach
-        </h3>
+        </h2>
       </div>
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
