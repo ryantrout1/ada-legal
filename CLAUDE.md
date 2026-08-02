@@ -53,9 +53,12 @@ bash scripts/check-repo-boundary.sh     # wrong-repo tell check
 ESLint baseline is 0. Direct-to-main, one commit per concern, no per-push approval.
 
 **UI-affecting changes also run the AAA gate:** `npm run verify:a11y` (WCAG 2.2 AAA
-theme-matrix sweep — every route × 5 display themes + 44px targets + focus). Needs a
-browser, so it's separate from the build chain; it also runs in CI on push
-(`.github/workflows/a11y.yml`, report-only until report v1 is green). See `docs/A11Y-GATE.md`.
+theme-matrix sweep — every route × 5 display themes + 44px targets + focus +
+font-switching + screen-reader/keyboard structure). Needs a browser, so it's
+separate from the build chain. It also runs in CI on push
+(`.github/workflows/a11y.yml`): the guards (fonts/structure/targets/focus)
+hard-fail on regression, the contrast sweep is report-only. See `docs/A11Y-GATE.md`
+— including **"Patterns learned — READ THIS before touching a11y."**
 
 ## Deploy & verify
 Push to main → Vercel auto-deploys → READY ~90s. Verify on the **public alias** `ada.adalegallink.com` (per-deployment `*-<hash>.vercel.app` URLs return 401). Bash cannot reach the domain from the sandbox; use the Vercel MCP `web_fetch_vercel_url` for live JSON, or the Neon MCP for data.
