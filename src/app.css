@@ -628,14 +628,17 @@ body {
 :root[data-font="atkinson"] {
   --font-body: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Atkinson Hyperlegible', 'Georgia', serif;
+  --font-chrome: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 :root[data-font="opendyslexic"] {
   --font-body: 'OpenDyslexic', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'OpenDyslexic', 'Georgia', serif;
+  --font-chrome: 'OpenDyslexic', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 :root[data-font="lexend"] {
   --font-body: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Lexend', 'Georgia', serif;
+  --font-chrome: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* ─── Text size ──────────────────────────────────────────────────────────── */
