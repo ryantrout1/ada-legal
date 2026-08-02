@@ -187,13 +187,13 @@ function ResultBar({ option, count, total, delay, isUser }) {
         marginBottom: 6,
       }}>
         <span style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
+          fontFamily: 'var(--font-body)', fontSize: '0.85rem',
           fontWeight: isUser ? 700 : 600, color: isUser ? 'var(--page-bg-subtle)' : 'var(--border)',
         }}>
           <span aria-hidden="true" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }}><BrandIcon name={option.icon} size={22} variant="dark-bg" /></span>{option.label}
         </span>
         <span style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem',
+          fontFamily: 'var(--font-body)', fontSize: '0.9rem',
           fontWeight: 700, color: option.textColor || option.color, minWidth: 48, textAlign: 'right',
         }}>
           {pct}%
@@ -343,21 +343,21 @@ export default function CommunityVoices() {
         {/* ─── Header ─── */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.72rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.72rem',
             fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em',
             color: 'var(--dark-label)', margin: '0 0 12px',
           }}>
             Community Voices
           </p>
           <h2 style={{
-            fontFamily: 'Fraunces, Georgia, serif',
+            fontFamily: 'var(--font-display)',
             fontSize: 'clamp(1.6rem, 4vw, 2.25rem)',
             fontWeight: 700, color: 'white', margin: '0 0 10px', lineHeight: 1.2,
           }}>
             {hasVoted ? "You've been heard." : 'Add your voice.'}
           </h2>
           <p style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.95rem',
             color: 'var(--dark-muted)', margin: 0, lineHeight: 1.6,
           }}>
             {hasVoted
@@ -379,7 +379,7 @@ export default function CommunityVoices() {
             }}
           >
             <p id="cv-prompt" style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+              fontFamily: 'var(--font-body)', fontSize: '0.8rem',
               fontWeight: 700, color: 'var(--dark-muted)', textAlign: 'center',
               margin: '0 0 14px', textTransform: 'uppercase', letterSpacing: '0.08em',
             }}>
@@ -432,7 +432,7 @@ export default function CommunityVoices() {
                     <BrandIcon name={opt.icon} size={32} variant="dark-bg" />
                   </span>
                   <span style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem',
+                    fontFamily: 'var(--font-body)', fontSize: '0.92rem',
                     fontWeight: 600, color: 'var(--border)', lineHeight: 1.3,
                   }}>
                     {opt.label}
@@ -454,7 +454,7 @@ export default function CommunityVoices() {
             style={{ marginBottom: 32, animation: 'cvFadeUp 0.5s ease-out' }}
           >
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+              fontFamily: 'var(--font-body)', fontSize: '0.8rem',
               fontWeight: 700, color: 'var(--dark-muted)', textAlign: 'center',
               margin: '0 0 14px', textTransform: 'uppercase', letterSpacing: '0.08em',
             }}>
@@ -583,7 +583,7 @@ export default function CommunityVoices() {
           {/* Counter */}
           <div aria-hidden="true" style={{
             position: 'absolute', bottom: 14, right: 16,
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.68rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.68rem',
             fontWeight: 600, color: 'var(--dark-muted)',
             display: 'flex', alignItems: 'center', gap: 6,
           }}>
@@ -600,7 +600,7 @@ export default function CommunityVoices() {
         {hasVoted && (
           <p style={{
             textAlign: 'center',
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.78rem',
             color: 'var(--dark-muted)', marginTop: 14,
             animation: 'cvFadeUp 0.5s 0.6s both',
           }}>

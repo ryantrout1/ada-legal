@@ -36,7 +36,7 @@ const shellStyle = {
   gap: '0.75rem',
   padding: '2rem',
   textAlign: 'center' as const,
-  fontFamily: 'Manrope, system-ui, sans-serif',
+  fontFamily: 'var(--font-body)',
   color: 'var(--body)',
   background: 'var(--page-bg)',
 };

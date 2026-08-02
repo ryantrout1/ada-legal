@@ -104,14 +104,14 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
             </div>
 
             <h2 style={{
-              fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700,
+              fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 700,
               color: 'var(--heading)', margin: '0 0 8px', lineHeight: 1.25
             }}>
               {isPathways ? 'Rights Pathway Opens Soon' : 'Violation Reporting Opens Soon'}
             </h2>
 
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
+              fontFamily: 'var(--font-body)', fontSize: '0.95rem',
               color: 'var(--body-secondary)', lineHeight: 1.65, margin: '0 0 24px'
             }}>
               We're currently in early access. Explore our{' '}
@@ -129,7 +129,7 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
                 onChange={(e) => setEmail(e.target.value)}
                 aria-label="Email address"
                 style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '1rem',
+                  fontFamily: 'var(--font-body)', fontSize: '1rem',
                   padding: '14px 16px', borderRadius: '10px',
                   border: '1px solid var(--color-control-border)', outline: 'none',
                   transition: 'border-color 0.15s', minHeight: '44px',
@@ -140,7 +140,7 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
               />
               {error && (
                 <p style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
+                  fontFamily: 'var(--font-body)', fontSize: '0.85rem',
                   color: 'var(--color-danger-500)', margin: 0
                 }}>{error}</p>
               )}
@@ -148,7 +148,7 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
                 type="submit"
                 disabled={submitting}
                 style={{
-                  fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 700,
+                  fontFamily: 'var(--font-body)', fontSize: '1rem', fontWeight: 700,
                   background: 'var(--accent)', color: 'white', border: 'none',
                   padding: '14px 24px', borderRadius: '10px', cursor: 'pointer',
                   minHeight: '44px', opacity: submitting ? 0.7 : 1,
@@ -169,13 +169,13 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
               <CheckCircle size={28} color="var(--color-success-500)" />
             </div>
             <h2 style={{
-              fontFamily: 'Fraunces, serif', fontSize: '1.375rem', fontWeight: 700,
+              fontFamily: 'var(--font-display)', fontSize: '1.375rem', fontWeight: 700,
               color: 'var(--heading)', margin: '0 0 8px'
             }}>
               You're on the list!
             </h2>
             <p style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem',
+              fontFamily: 'var(--font-body)', fontSize: '0.95rem',
               color: 'var(--body-secondary)', lineHeight: 1.6, margin: '0 0 20px'
             }}>
               We'll email you as soon as {isPathways ? 'the Rights Pathway' : 'violation reporting'} is live. In the meantime, explore our ADA Standards Guide.
@@ -183,7 +183,7 @@ export default function ComingSoonModal({ isOpen, onClose, signupType = 'report_
             <button
               onClick={onClose}
               style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', fontWeight: 600,
+                fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 600,
                 background: 'var(--heading)', color: 'white', border: 'none',
                 padding: '12px 28px', borderRadius: '10px', cursor: 'pointer',
                 minHeight: '44px'

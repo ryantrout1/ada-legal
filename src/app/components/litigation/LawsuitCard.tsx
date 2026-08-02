@@ -62,7 +62,7 @@ export default function LawsuitCard({ row }: { row: PublicLawsuitRow }) {
       <h2
         style={{
           margin: 0,
-          fontFamily: 'Manrope, sans-serif',
+          fontFamily: 'var(--font-body)',
           fontSize: '1.1875rem',
           fontWeight: 500,
           color: 'var(--heading)',
@@ -76,7 +76,7 @@ export default function LawsuitCard({ row }: { row: PublicLawsuitRow }) {
         <p
           style={{
             margin: 0,
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             color: 'var(--body)',
             fontSize: '0.9375rem',
             lineHeight: 1.5,
@@ -98,7 +98,7 @@ export default function LawsuitCard({ row }: { row: PublicLawsuitRow }) {
         <p
           style={{
             margin: 0,
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.8125rem',
             color: 'var(--body-secondary)',
           }}
@@ -119,7 +119,7 @@ export default function LawsuitCard({ row }: { row: PublicLawsuitRow }) {
             padding: '0 0.25rem',
             borderRadius: 8,
             color: 'var(--link)',
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             fontWeight: 600,
             fontSize: '0.875rem',
             textDecoration: 'underline',

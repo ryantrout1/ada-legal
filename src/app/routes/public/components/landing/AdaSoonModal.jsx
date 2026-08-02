@@ -93,13 +93,13 @@ function AdaSoonModal({ isOpen, onClose }) {
         </div>
 
         <h2 id="ada-soon-title" style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '1.5rem', fontWeight: 800, color: 'var(--heading)',
+          fontFamily: 'var(--font-body)', fontSize: '1.5rem', fontWeight: 800, color: 'var(--heading)',
           margin: '0 0 10px', fontStyle: 'normal',
         }}>
           Ada is opening soon
         </h2>
         <p id="ada-soon-desc" style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.95rem', color: 'var(--body)', lineHeight: 1.6, margin: '0 0 24px',
+          fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'var(--body)', lineHeight: 1.6, margin: '0 0 24px',
         }}>
           She's in final testing right now and will be ready to talk soon. In the meantime, you can
           explore the ADA Standards Guide to understand your rights — it's live and ready to use today.
@@ -112,7 +112,7 @@ function AdaSoonModal({ isOpen, onClose }) {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--accent)',
               color: 'var(--btn-text)', padding: '13px 24px', borderRadius: '10px', fontSize: '0.95rem',
-              fontWeight: 700, fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px', border: 'none',
+              fontWeight: 700, fontFamily: 'var(--font-body)', textDecoration: 'none', minHeight: '44px', border: 'none',
             }}
           >
             Explore the Standards Guide →
@@ -124,7 +124,7 @@ function AdaSoonModal({ isOpen, onClose }) {
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               background: 'transparent', color: 'var(--body)', border: '1px solid var(--border)',
               padding: '13px 24px', borderRadius: '10px', fontSize: '0.95rem', fontWeight: 600,
-              fontFamily: 'Manrope, sans-serif', minHeight: '44px', cursor: 'pointer',
+              fontFamily: 'var(--font-body)', minHeight: '44px', cursor: 'pointer',
             }}
           >
             Close
@@ -133,7 +133,7 @@ function AdaSoonModal({ isOpen, onClose }) {
 
         {/* Meet-her link — explore Ada's story while she's in testing */}
         <p style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)',
+          fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)',
           margin: '20px 0 0',
         }}>
           Curious about her in the meantime?{' '}

@@ -136,7 +136,7 @@ export default function Attorneys() {
         <h1
           style={{
             margin: 0,
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
             fontWeight: 700,
             letterSpacing: '-0.01em',
@@ -149,7 +149,7 @@ export default function Attorneys() {
         <p
           style={{
             margin: '0.5rem 0 0',
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             fontSize: '1.0625rem',
             color: 'var(--body)',
             lineHeight: 1.5,
@@ -173,7 +173,7 @@ export default function Attorneys() {
             aria-live="polite"
             style={{
               margin: '0 0 1rem',
-              fontFamily: 'Manrope, sans-serif',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.875rem',
               color: 'var(--body-secondary)',
             }}
@@ -186,7 +186,7 @@ export default function Attorneys() {
       {loading && (
         <p
           style={{
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             color: 'var(--body-secondary)',
             fontStyle: 'italic',
           }}
@@ -209,7 +209,7 @@ export default function Attorneys() {
           <p
             style={{
               margin: 0,
-              fontFamily: 'Manrope, sans-serif',
+              fontFamily: 'var(--font-body)',
               fontSize: '1rem',
               color: 'var(--body)',
               lineHeight: 1.5,
@@ -237,7 +237,7 @@ export default function Attorneys() {
               <p
                 style={{
                   margin: 0,
-                  fontFamily: 'Manrope, sans-serif',
+                  fontFamily: 'var(--font-body)',
                   fontSize: '1rem',
                   color: 'var(--body)',
                   lineHeight: 1.5,

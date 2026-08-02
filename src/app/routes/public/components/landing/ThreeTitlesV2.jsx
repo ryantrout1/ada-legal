@@ -52,13 +52,13 @@ export default function ThreeTitlesV2() {
     >
       <div style={{ maxWidth: '1160px', margin: '0 auto', padding: '0 2rem' }}>
         <div style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto 3rem' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--section-label)', margin: '0 0 0.85rem' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--section-label)', margin: '0 0 0.85rem' }}>
             Know your rights
           </p>
-          <h2 id="v2-titles-heading" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '2.1rem', fontWeight: 800, color: 'var(--heading)', margin: '0 0 1rem', fontStyle: 'normal' }}>
+          <h2 id="v2-titles-heading" style={{ fontFamily: 'var(--font-body)', fontSize: '2.1rem', fontWeight: 800, color: 'var(--heading)', margin: '0 0 1rem', fontStyle: 'normal' }}>
             The ADA protects you in three places
           </h2>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: 'var(--body)', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.05rem', color: 'var(--body)', lineHeight: 1.6, margin: 0 }}>
             Which part of the law applies depends on <em>where</em> the barrier was. You don't have to
             figure this out alone — but here's the shape of it.
           </p>
@@ -74,21 +74,21 @@ export default function ThreeTitlesV2() {
               <div style={{ padding: '26px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
                   <span aria-hidden="true" style={{ width: '40px', height: '40px', borderRadius: '10px', background: c.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: c.accent }}>{c.icon}</span>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.66rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', padding: '3px 10px', borderRadius: '100px', background: c.badge.bg, color: c.badge.color, border: '1px solid var(--border)' }}>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.66rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', padding: '3px 10px', borderRadius: '100px', background: c.badge.bg, color: c.badge.color, border: '1px solid var(--border)' }}>
                     {c.badge.text}
                   </span>
                 </div>
-                <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.2rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 3px', fontStyle: 'normal' }}>{c.title}</h3>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600, color: c.subColor, margin: '0 0 12px' }}>{c.sub}</p>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: 'var(--body)', lineHeight: 1.6, margin: '0 0 14px' }}>{c.desc}</p>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', color: 'var(--body)', lineHeight: 1.5, borderTop: '1px solid var(--border)', paddingTop: '12px', margin: 'auto 0 0' }}>{c.file}</p>
+                <h3 style={{ fontFamily: 'var(--font-body)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 3px', fontStyle: 'normal' }}>{c.title}</h3>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 600, color: c.subColor, margin: '0 0 12px' }}>{c.sub}</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.88rem', color: 'var(--body)', lineHeight: 1.6, margin: '0 0 14px' }}>{c.desc}</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.78rem', color: 'var(--body)', lineHeight: 1.5, borderTop: '1px solid var(--border)', paddingTop: '12px', margin: 'auto 0 0' }}>{c.file}</p>
               </div>
             </div>
           ))}
         </div>
 
         <div style={{ textAlign: 'center', maxWidth: '640px', margin: '2.5rem auto 0' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem', color: 'var(--body-secondary)', lineHeight: 1.6, margin: '0 0 1.5rem' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.92rem', color: 'var(--body-secondary)', lineHeight: 1.6, margin: '0 0 1.5rem' }}>
             Not sure which one applies? That's completely normal — many situations overlap. Ada asks
             simple questions to find the right path for you.
           </p>
@@ -96,7 +96,7 @@ export default function ThreeTitlesV2() {
             <Link to={'/ada'} className="v2-btn v2-btn-ada" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--v2-ada)',
               color: 'var(--page-bg)', border: 'none', padding: '14px 28px', borderRadius: '10px',
-              fontSize: '0.95rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px',
+              fontSize: '0.95rem', fontWeight: 700, fontFamily: 'var(--font-body)', textDecoration: 'none', minHeight: '44px',
               boxShadow: '0 4px 20px rgba(124,92,252,0.25)',
             }}>
               Tell Ada what happened →
@@ -105,13 +105,13 @@ export default function ThreeTitlesV2() {
             <button type="button" onClick={() => adaSoon?.openSoon?.()} className="v2-btn v2-btn-ada" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--v2-ada)',
               color: 'var(--page-bg)', border: 'none', padding: '14px 28px', borderRadius: '10px',
-              fontSize: '0.95rem', fontWeight: 700, fontFamily: 'Manrope, sans-serif', minHeight: '44px', cursor: 'pointer',
+              fontSize: '0.95rem', fontWeight: 700, fontFamily: 'var(--font-body)', minHeight: '44px', cursor: 'pointer',
               boxShadow: '0 4px 20px rgba(124,92,252,0.25)',
             }}>
               Tell Ada what happened →
             </button>
           )}
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.82rem', color: 'var(--body-secondary)', fontStyle: 'italic', lineHeight: 1.55, margin: '1.75rem auto 0', maxWidth: '640px' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.82rem', color: 'var(--body-secondary)', fontStyle: 'italic', lineHeight: 1.55, margin: '1.75rem auto 0', maxWidth: '640px' }}>
             The ADA also includes Title IV (telecommunications relay, handled by the FCC) and Title V
             (anti-retaliation and other provisions). Titles I, II, and III cover the vast majority of
             individual claims.

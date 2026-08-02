@@ -28,7 +28,7 @@ export default function EarlyAccessBanner() {
         style={{
           background: 'var(--link)',
           color: 'white',
-          fontFamily: 'Manrope, sans-serif',
+          fontFamily: 'var(--font-body)',
           fontSize: '0.875rem',
           fontWeight: 500,
           textAlign: 'center',

@@ -37,7 +37,7 @@ export function StateChip({ children }: { children: ReactNode }) {
   return (
     <li
       style={{
-        fontFamily: 'Manrope, sans-serif',
+        fontFamily: 'var(--font-body)',
         fontSize: '0.75rem',
         fontWeight: 600,
         color: 'var(--heading)',
@@ -81,7 +81,7 @@ export function StatusBadge({ status }: { status: string | null | undefined }) {
         display: 'inline-flex',
         alignItems: 'center',
         gap: '0.4rem',
-        fontFamily: 'Manrope, sans-serif',
+        fontFamily: 'var(--font-body)',
         fontSize: '0.7rem',
         fontWeight: 700,
         textTransform: 'uppercase',
@@ -117,7 +117,7 @@ export function KindLabel({ kind }: { kind: string | null | undefined }) {
   return (
     <span
       style={{
-        fontFamily: 'Manrope, sans-serif',
+        fontFamily: 'var(--font-body)',
         fontSize: '0.8125rem',
         fontWeight: 600,
         color: 'var(--body-secondary)',

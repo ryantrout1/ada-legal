@@ -27,7 +27,7 @@ import type { PublicAttorneyRow } from '../../lib/attorneyTypes.js';
 
 const sectionLabelStyle: CSSProperties = {
   margin: '0 0 0.45rem',
-  fontFamily: 'Manrope, sans-serif',
+  fontFamily: 'var(--font-body)',
   fontSize: '0.6875rem',
   fontWeight: 700,
   textTransform: 'uppercase',
@@ -45,7 +45,7 @@ const chipListStyle: CSSProperties = {
 };
 
 const chipStyle: CSSProperties = {
-  fontFamily: 'Manrope, sans-serif',
+  fontFamily: 'var(--font-body)',
   fontSize: '0.75rem',
   fontWeight: 600,
   color: 'var(--heading)',
@@ -63,7 +63,7 @@ const contactRowStyle: CSSProperties = {
   padding: '0 0.25rem',
   borderRadius: 8,
   color: 'var(--link)',
-  fontFamily: 'Manrope, sans-serif',
+  fontFamily: 'var(--font-body)',
   fontSize: '0.875rem',
   fontWeight: 600,
   textDecoration: 'underline',
@@ -102,7 +102,7 @@ export default function AttorneyCard({ attorney }: { attorney: PublicAttorneyRow
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             fontSize: '1rem',
             fontWeight: 700,
             letterSpacing: '0.02em',
@@ -114,7 +114,7 @@ export default function AttorneyCard({ attorney }: { attorney: PublicAttorneyRow
           <h2
             style={{
               margin: 0,
-              fontFamily: 'Manrope, sans-serif',
+              fontFamily: 'var(--font-body)',
               fontSize: '1.0625rem',
               fontWeight: 500,
               color: 'var(--heading)',
@@ -127,7 +127,7 @@ export default function AttorneyCard({ attorney }: { attorney: PublicAttorneyRow
             <p
               style={{
                 margin: '0.125rem 0 0',
-                fontFamily: 'Manrope, sans-serif',
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.875rem',
                 color: 'var(--body-secondary)',
                 lineHeight: 1.35,
@@ -146,7 +146,7 @@ export default function AttorneyCard({ attorney }: { attorney: PublicAttorneyRow
             display: 'flex',
             alignItems: 'center',
             gap: '0.375rem',
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.875rem',
             color: 'var(--body)',
             lineHeight: 1.35,
@@ -195,7 +195,7 @@ export default function AttorneyCard({ attorney }: { attorney: PublicAttorneyRow
         <p
           style={{
             margin: 0,
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.875rem',
             color: 'var(--body)',
             lineHeight: 1.5,

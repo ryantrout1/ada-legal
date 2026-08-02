@@ -113,25 +113,25 @@ export default function FeedbackModal({ isOpen, onClose }) {
           display: flex; align-items: center; justify-content: center;
         }
         .fb-title {
-          font-family: Fraunces, Georgia, serif;
+          font-family: var(--font-display);
           font-size: 1.25rem; font-weight: 700;
           color: var(--heading); margin: 0 0 4px;
         }
         .fb-subtitle {
-          font-family: Manrope, sans-serif;
+          font-family: var(--font-body);
           font-size: 0.85rem; color: var(--body);
           margin: 0 0 20px; line-height: 1.5;
         }
         .fb-form { display: flex; flex-direction: column; gap: 14px; }
         .fb-label {
-          font-family: Manrope, sans-serif;
+          font-family: var(--font-body);
           font-size: 0.8125rem; font-weight: 600;
           color: var(--body); display: block; margin-bottom: 4px;
         }
         .fb-optional { color: var(--body-secondary); font-weight: 400; }
         .fb-required { color: var(--color-danger-500); }
         .fb-select, .fb-input, .fb-textarea {
-          font-family: Manrope, sans-serif; font-size: 0.9rem;
+          font-family: var(--font-body); font-size: 0.9rem;
           padding: 10px 12px; border-radius: 8px;
           border: 1px solid var(--body-secondary); outline: none;
           width: 100%; box-sizing: border-box;
@@ -152,11 +152,11 @@ export default function FeedbackModal({ isOpen, onClose }) {
         }
         .fb-input::placeholder, .fb-textarea::placeholder { color: var(--body-secondary); }
         .fb-error {
-          font-family: Manrope, sans-serif;
+          font-family: var(--font-body);
           font-size: 0.85rem; color: var(--color-danger-500); margin: 0;
         }
         .fb-submit-btn {
-          font-family: Manrope, sans-serif;
+          font-family: var(--font-body);
           font-size: 0.9375rem; font-weight: 700;
           background-color: var(--accent); color: var(--card-bg); border: none;
           padding: 12px 20px; border-radius: 10px;
@@ -171,17 +171,17 @@ export default function FeedbackModal({ isOpen, onClose }) {
           margin: 0 auto 14px;
         }
         .fb-success-title {
-          font-family: Fraunces, Georgia, serif;
+          font-family: var(--font-display);
           font-size: 1.2rem; font-weight: 700;
           color: var(--heading); margin: 0 0 6px;
         }
         .fb-success-body {
-          font-family: Manrope, sans-serif;
+          font-family: var(--font-body);
           font-size: 0.9rem; color: var(--body-secondary);
           margin: 0 0 18px; line-height: 1.5;
         }
         .fb-done-btn {
-          font-family: Manrope, sans-serif;
+          font-family: var(--font-body);
           font-size: 0.9rem; font-weight: 600;
           background-color: var(--heading); color: var(--card-bg); border: none;
           padding: 10px 24px; border-radius: 10px;
@@ -211,7 +211,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
                       onClick={() => setForm({ ...form, feedback_type: t.value })}
                       className="fb-type-pill"
                       style={{
-                        fontFamily: 'Manrope, sans-serif',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '0.8125rem',
                         fontWeight: form.feedback_type === t.value ? 700 : 500,
                         padding: '8px 14px',
@@ -236,7 +236,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
                   borderRadius: '10px', padding: '14px 16px',
                 }}>
                   <p style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem',
+                    fontFamily: 'var(--font-body)', fontSize: '0.85rem',
                     color: 'var(--color-warning-500)', margin: 0, lineHeight: 1.5,
                   }}>
                     Tell us what you liked — with your permission, we may feature your words
@@ -289,7 +289,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
                       style={{ marginTop: '3px', width: '18px', height: '18px', flexShrink: 0, accentColor: 'var(--accent)' }}
                     />
                     <label htmlFor="fb-consent" style={{
-                      fontFamily: 'Manrope, sans-serif', fontSize: '0.8125rem',
+                      fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
                       color: 'var(--body-secondary)', lineHeight: 1.5, cursor: 'pointer',
                     }}>
                       By submitting, you're okay with us featuring your words and name on our site to help
@@ -324,29 +324,29 @@ export default function FeedbackModal({ isOpen, onClose }) {
             <p className="fb-subtitle">Please review before sending.</p>
             <div style={{ marginBottom: '14px' }}>
               <p className="fb-label">Type</p>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>
                 {TYPES.find(t => t.value === form.feedback_type)?.label}
               </p>
               <p className="fb-label">{form.feedback_type === 'testimonial' ? 'Your words' : 'Message'}</p>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
                 {form.message}
               </p>
               {form.feedback_type === 'testimonial' ? (
                 <>
                   {form.display_name && <>
                     <p className="fb-label">Display name</p>
-                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.display_name}</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.display_name}</p>
                   </>}
                   {form.location && <>
                     <p className="fb-label">Location</p>
-                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.location}</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.location}</p>
                   </>}
                   {form.email && <>
                     <p className="fb-label">Email</p>
-                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.email}</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.email}</p>
                   </>}
                   <p style={{
-                    fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem',
+                    fontFamily: 'var(--font-body)', fontSize: '0.8rem',
                     color: 'var(--color-success-500)', margin: '10px 0 0', fontWeight: 600,
                   }}>✓ You've agreed to let us feature your words on our site.</p>
                 </>
@@ -354,11 +354,11 @@ export default function FeedbackModal({ isOpen, onClose }) {
                 <>
                   {form.name && <>
                     <p className="fb-label">Name</p>
-                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.name}</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.name}</p>
                   </>}
                   {form.email && <>
                     <p className="fb-label">Email</p>
-                    <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.email}</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', margin: '2px 0 10px' }}>{form.email}</p>
                   </>}
                 </>
               )}

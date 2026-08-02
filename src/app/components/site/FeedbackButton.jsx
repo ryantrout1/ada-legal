@@ -29,7 +29,7 @@ export default function FeedbackButton() {
           border: 'none',
           borderRadius: '100px',
           padding: '10px 18px',
-          fontFamily: 'Manrope, sans-serif',
+          fontFamily: 'var(--font-body)',
           fontSize: '0.8125rem',
           fontWeight: 600,
           cursor: 'pointer',

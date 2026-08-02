@@ -59,7 +59,7 @@ const card: CSSProperties = {
 };
 
 const kindStyle: CSSProperties = {
-  fontFamily: 'Manrope, sans-serif',
+  fontFamily: 'var(--font-body)',
   fontSize: '0.72rem',
   fontWeight: 700,
   letterSpacing: '0.06em',
@@ -69,7 +69,7 @@ const kindStyle: CSSProperties = {
 };
 
 const orgStyle: CSSProperties = {
-  fontFamily: 'Manrope, sans-serif',
+  fontFamily: 'var(--font-body)',
   fontSize: '1.02rem',
   fontWeight: 700,
   color: 'var(--heading)',
@@ -220,7 +220,7 @@ export default function ContactBlock({
       <h2
         id={headingId}
         style={{
-          fontFamily: 'Manrope, sans-serif',
+          fontFamily: 'var(--font-body)',
           fontSize: '1.15rem',
           fontWeight: 700,
           color: 'var(--heading)',

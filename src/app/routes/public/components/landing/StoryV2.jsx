@@ -64,28 +64,28 @@ export default function StoryV2() {
           </div>
 
           <div>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--dark-label)', margin: '0 0 0.85rem' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--dark-label)', margin: '0 0 0.85rem' }}>
               Our story
             </p>
-            <h2 id="v2-story-heading" style={{ fontFamily: 'Manrope, sans-serif', fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 800, color: 'var(--dark-heading)', lineHeight: 1.2, margin: '0 0 1.2rem', fontStyle: 'normal' }}>
+            <h2 id="v2-story-heading" style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 800, color: 'var(--dark-heading)', lineHeight: 1.2, margin: '0 0 1.2rem', fontStyle: 'normal' }}>
               We don't want to leave anybody out.
             </h2>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: 'var(--dark-body-secondary)', lineHeight: 1.7, margin: '0 0 1.2rem' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.05rem', color: 'var(--dark-body-secondary)', lineHeight: 1.7, margin: '0 0 1.2rem' }}>
               We built ADA Legal Link because the people we love hit barriers every day that shouldn't
               be there. Doors too narrow. Sites that don't work with a screen reader. An "accessible"
               room that wasn't.
             </p>
-            <blockquote style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '20px', fontFamily: 'Manrope, sans-serif', fontStyle: 'italic', fontSize: '1.15rem', color: 'var(--dark-body)', lineHeight: 1.6, margin: '1.8rem 0' }}>
+            <blockquote style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '20px', fontFamily: 'var(--font-body)', fontStyle: 'italic', fontSize: '1.15rem', color: 'var(--dark-body)', lineHeight: 1.6, margin: '1.8rem 0' }}>
               Whatever your disability, whatever the barrier — we don't want you left out. Not by the
               businesses you walk past every day, not by the law, and not by us.
             </blockquote>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.05rem', color: 'var(--dark-body-secondary)', lineHeight: 1.7, margin: '0 0 1.2rem' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.05rem', color: 'var(--dark-body-secondary)', lineHeight: 1.7, margin: '0 0 1.2rem' }}>
               We come at this from two sides. Gina Schuh has spent more than 20 years navigating these
               barriers herself — as a quadriplegic, and as a J.D. and ADA rights advocate fighting for
               access. She didn't just study this law; she lives it. Ryan Trout builds the platform, with
               accessibility designed in from the first line of code instead of bolted on after.
             </p>
-            <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', color: 'var(--dark-muted)', margin: 0 }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', color: 'var(--dark-muted)', margin: 0 }}>
               <b style={{ color: 'var(--dark-label)' }}>Gina Schuh & Ryan Trout</b> — co-founders
             </p>
           </div>

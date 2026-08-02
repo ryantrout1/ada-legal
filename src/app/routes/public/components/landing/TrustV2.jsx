@@ -49,13 +49,13 @@ export default function TrustV2() {
     >
       <div style={{ maxWidth: '1160px', margin: '0 auto', padding: '0 2rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--dark-label)', margin: '0 0 0.85rem' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--dark-label)', margin: '0 0 0.85rem' }}>
             Why you can trust this
           </p>
-          <h2 id="v2-trust-heading" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '2rem', fontWeight: 800, color: 'var(--dark-heading)', margin: '0 0 0.85rem', fontStyle: 'normal' }}>
+          <h2 id="v2-trust-heading" style={{ fontFamily: 'var(--font-body)', fontSize: '2rem', fontWeight: 800, color: 'var(--dark-heading)', margin: '0 0 0.85rem', fontStyle: 'normal' }}>
             Built for the community it serves
           </h2>
-          <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.02rem', color: 'var(--dark-body-secondary)', lineHeight: 1.6, maxWidth: '520px', margin: '0 auto' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.02rem', color: 'var(--dark-body-secondary)', lineHeight: 1.6, maxWidth: '520px', margin: '0 auto' }}>
             These aren't marketing promises. They're the constraints we built under from the first line of code.
           </p>
         </div>
@@ -66,8 +66,8 @@ export default function TrustV2() {
               <div aria-hidden="true" style={{ color: 'var(--accent-light)', marginBottom: '12px' }}>
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{item.icon}</svg>
               </div>
-              <h3 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1rem', fontWeight: 600, color: 'var(--dark-heading)', margin: '0 0 6px', fontStyle: 'normal' }}>{item.title}</h3>
-              <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', color: 'var(--dark-body-secondary)', lineHeight: 1.6, margin: 0 }}>{item.desc}</p>
+              <h3 style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', fontWeight: 600, color: 'var(--dark-heading)', margin: '0 0 6px', fontStyle: 'normal' }}>{item.title}</h3>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', color: 'var(--dark-body-secondary)', lineHeight: 1.6, margin: 0 }}>{item.desc}</p>
             </div>
           ))}
         </div>

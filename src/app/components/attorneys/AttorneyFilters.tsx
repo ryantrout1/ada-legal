@@ -40,7 +40,7 @@ import { practiceAreaLabel } from '../../lib/attorneyLabels.js';
 
 const labelStyle: CSSProperties = {
   display: 'block',
-  fontFamily: 'Manrope, sans-serif',
+  fontFamily: 'var(--font-body)',
   fontSize: '0.75rem',
   fontWeight: 600,
   color: 'var(--body)',
@@ -55,7 +55,7 @@ const controlStyle: CSSProperties = {
   fontSize: '0.9375rem',
   color: 'var(--body)',
   background: 'var(--card-bg)',
-  fontFamily: 'Manrope, sans-serif',
+  fontFamily: 'var(--font-body)',
   minHeight: 44,
 };
 
@@ -90,7 +90,7 @@ export default function AttorneyFilters({ filters, facets, onChange }: Props) {
     >
       <legend
         style={{
-          fontFamily: 'Manrope, sans-serif',
+          fontFamily: 'var(--font-body)',
           fontSize: '0.75rem',
           fontWeight: 600,
           color: 'var(--body)',

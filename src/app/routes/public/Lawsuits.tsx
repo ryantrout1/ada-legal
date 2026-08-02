@@ -94,7 +94,7 @@ export default function Lawsuits() {
         <h1
           style={{
             margin: '0 0 0.5rem',
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
             fontWeight: 700,
             letterSpacing: '-0.01em',
@@ -107,7 +107,7 @@ export default function Lawsuits() {
         <p
           style={{
             margin: 0,
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             color: 'var(--body)',
             fontSize: '1.0625rem',
             lineHeight: 1.5,
@@ -127,7 +127,7 @@ export default function Lawsuits() {
       {loading && (
         <p
           style={{
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             color: 'var(--body-secondary)',
             fontStyle: 'italic',
             margin: '2rem 0',
@@ -168,7 +168,7 @@ export default function Lawsuits() {
           <p
             style={{
               margin: '0 0 0.5rem',
-              fontFamily: 'Manrope, sans-serif',
+              fontFamily: 'var(--font-body)',
               fontSize: '1.0625rem',
               fontWeight: 600,
               color: 'var(--heading)',
@@ -181,7 +181,7 @@ export default function Lawsuits() {
           <p
             style={{
               margin: 0,
-              fontFamily: 'Manrope, sans-serif',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.9375rem',
               color: 'var(--body)',
             }}

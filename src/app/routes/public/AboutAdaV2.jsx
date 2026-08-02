@@ -54,7 +54,7 @@ export default function AboutAda() {
   const containerStyle = { maxWidth: '640px', margin: '0 auto' };
 
   const breadcrumbStyle = {
-    fontFamily: 'Manrope, sans-serif',
+    fontFamily: 'var(--font-body)',
     fontSize: '0.875rem',
     color: MUTED,
     marginBottom: '32px',
@@ -73,7 +73,7 @@ export default function AboutAda() {
   };
 
   const h1Style = {
-    fontFamily: 'Fraunces, Georgia, serif',
+    fontFamily: 'var(--font-display)',
     fontSize: 'clamp(2rem, 5vw, 2.75rem)',
     fontWeight: 600,
     color: INK,
@@ -82,7 +82,7 @@ export default function AboutAda() {
   };
 
   const ledeStyle = {
-    fontFamily: 'Manrope, sans-serif',
+    fontFamily: 'var(--font-body)',
     fontSize: '1.25rem',
     lineHeight: 1.65,
     color: INK,
@@ -91,7 +91,7 @@ export default function AboutAda() {
   };
 
   const h2Style = {
-    fontFamily: 'Fraunces, Georgia, serif',
+    fontFamily: 'var(--font-display)',
     fontSize: '1.75rem',
     fontWeight: 600,
     color: INK,
@@ -100,7 +100,7 @@ export default function AboutAda() {
   };
 
   const h3Style = {
-    fontFamily: 'Fraunces, Georgia, serif',
+    fontFamily: 'var(--font-display)',
     fontSize: '1.375rem',
     fontWeight: 600,
     color: INK,
@@ -109,7 +109,7 @@ export default function AboutAda() {
   };
 
   const pStyle = {
-    fontFamily: 'Manrope, sans-serif',
+    fontFamily: 'var(--font-body)',
     fontSize: '1.0625rem',
     lineHeight: 1.75,
     color: BODY,
@@ -120,7 +120,7 @@ export default function AboutAda() {
     borderLeft: `4px solid ${ACCENT}`,
     paddingLeft: '24px',
     margin: '40px 0 8px',
-    fontFamily: 'Fraunces, Georgia, serif',
+    fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
     fontSize: '1.375rem',
     lineHeight: 1.5,
@@ -129,7 +129,7 @@ export default function AboutAda() {
 
   const captionStyle = {
     paddingLeft: '28px',
-    fontFamily: 'Manrope, sans-serif',
+    fontFamily: 'var(--font-body)',
     fontSize: '0.875rem',
     color: MUTED,
     margin: '0 0 32px',
@@ -155,7 +155,7 @@ export default function AboutAda() {
 
   const ulStyle = {
     paddingLeft: '20px', margin: 0,
-    fontFamily: 'Manrope, sans-serif', fontSize: '1.0625rem', lineHeight: 1.75, color: BODY,
+    fontFamily: 'var(--font-body)', fontSize: '1.0625rem', lineHeight: 1.75, color: BODY,
   };
 
   const liStyle = { margin: '0 0 16px' };

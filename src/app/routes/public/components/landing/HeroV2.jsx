@@ -42,7 +42,7 @@ export default function HeroV2() {
         <div className="v2-fade-up" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
           <span aria-hidden="true" style={{ width: '32px', height: '2px', background: 'var(--accent)' }} />
           <span style={{
-            fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 700,
+            fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700,
             letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--dark-label)',
           }}>
             ADA Legal Link
@@ -50,7 +50,7 @@ export default function HeroV2() {
         </div>
 
         <h1 id="v2-hero-heading" className="v2-fade-up v2-delay-1" style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: 'clamp(2.1rem, 4vw, 3.4rem)', fontWeight: 800,
+          fontFamily: 'var(--font-body)', fontSize: 'clamp(2.1rem, 4vw, 3.4rem)', fontWeight: 800,
           lineHeight: 1.1, letterSpacing: '-0.01em', color: 'var(--dark-heading)',
           margin: 0, fontStyle: 'normal',
         }}>
@@ -59,7 +59,7 @@ export default function HeroV2() {
         </h1>
 
         <p className="v2-fade-up v2-delay-2" style={{
-          fontFamily: 'Manrope, sans-serif', fontSize: '1.1rem', color: 'var(--dark-body-secondary)',
+          fontFamily: 'var(--font-body)', fontSize: '1.1rem', color: 'var(--dark-body-secondary)',
           lineHeight: 1.65, margin: '1.5rem 0 0', maxWidth: '44ch',
         }}>
           If a building, a website, or a service kept you out when it was supposed to be open
@@ -68,7 +68,7 @@ export default function HeroV2() {
         </p>
 
             <p className="v2-fade-up v2-delay-4" style={{
-              fontFamily: 'Manrope, sans-serif', fontSize: '0.88rem', color: 'var(--dark-muted)', margin: '1.5rem 0 0',
+              fontFamily: 'var(--font-body)', fontSize: '0.88rem', color: 'var(--dark-muted)', margin: '1.5rem 0 0',
             }}>
               <strong style={{ color: 'var(--dark-body)' }}>Free to use. No referral fees. No account required.</strong>{' '}
               Your information stays confidential.
@@ -105,18 +105,18 @@ export default function HeroV2() {
               width: '54px', height: '54px', borderRadius: '50%', flexShrink: 0,
               background: 'linear-gradient(135deg, #C2410C, #FB923C)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: '1.5rem', color: '#fff',
+              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '1.5rem', color: '#fff',
               boxShadow: '0 4px 16px rgba(194,65,12,0.4)',
             }}>S</div>
             <div>
               <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '1.15rem', fontWeight: 700,
+                fontFamily: 'var(--font-body)', fontSize: '1.15rem', fontWeight: 700,
                 color: 'var(--dark-heading)', margin: '0 0 3px', fontStyle: 'normal',
               }}>
                 Show Spot a photo.
               </p>
               <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem',
+                fontFamily: 'var(--font-body)', fontSize: '0.92rem',
                 color: 'var(--dark-body-secondary)', lineHeight: 1.5, margin: 0,
               }}>
                 A ramp, a doorway, a restroom, a parking space. Spot flags what looks
@@ -136,7 +136,7 @@ export default function HeroV2() {
             ].map((chip, i) => (
               <li key={i} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '7px',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.8rem', fontWeight: 600,
+                fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 600,
                 color: 'var(--dark-body)', background: 'rgba(255,255,255,0.05)',
                 border: '1px solid var(--glass-border)', borderRadius: '100px', padding: '7px 14px',
               }}>
@@ -154,7 +154,7 @@ export default function HeroV2() {
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
               background: '#FB923C', color: '#141820', padding: '16px 30px',
               borderRadius: '10px', fontSize: '1rem', fontWeight: 700,
-              fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px', border: 'none',
+              fontFamily: 'var(--font-body)', textDecoration: 'none', minHeight: '44px', border: 'none',
             }}>
               Show Spot a photo →
             </Link>
@@ -171,17 +171,17 @@ export default function HeroV2() {
               width: '46px', height: '46px', borderRadius: '50%', flexShrink: 0,
               background: 'linear-gradient(135deg, var(--v2-ada), var(--v2-ada-light))',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: '1.3rem', color: '#fff',
+              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '1.3rem', color: '#fff',
             }}>A</div>
             <div>
               <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '1.15rem', fontWeight: 700,
+                fontFamily: 'var(--font-body)', fontSize: '1.15rem', fontWeight: 700,
                 color: 'var(--dark-heading)', margin: '0 0 3px', fontStyle: 'normal',
               }}>
                 Tell Ada what happened.
               </p>
               <p style={{
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.92rem',
+                fontFamily: 'var(--font-body)', fontSize: '0.92rem',
                 color: 'var(--dark-body-secondary)', lineHeight: 1.5, margin: 0,
               }}>
                 She'll listen, help you understand whether it's an ADA issue, and — if it is —
@@ -206,7 +206,7 @@ export default function HeroV2() {
                 // admin pill and the Spot button hit.
                 background: 'var(--color-ada-200)', color: '#141820', padding: '16px 30px',
                 borderRadius: '10px', fontSize: '1rem', fontWeight: 700,
-                fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px', border: 'none',
+                fontFamily: 'var(--font-body)', textDecoration: 'none', minHeight: '44px', border: 'none',
                 boxShadow: '0 4px 20px rgba(124,92,252,0.22)',
               }}>
                 Tell Ada what happened →
@@ -223,14 +223,14 @@ export default function HeroV2() {
                 // admin pill and the Spot button hit.
                 background: 'var(--color-ada-200)', color: '#141820', padding: '16px 30px',
                   borderRadius: '10px', fontSize: '1rem', fontWeight: 700,
-                  fontFamily: 'Manrope, sans-serif', minHeight: '44px', border: 'none', cursor: 'pointer',
+                  fontFamily: 'var(--font-body)', minHeight: '44px', border: 'none', cursor: 'pointer',
                   boxShadow: '0 4px 20px rgba(124,92,252,0.22)',
                 }}>
                   Tell Ada what happened →
                 </button>
                 <span style={{
                   display: 'inline-flex', alignItems: 'center',
-                  fontFamily: 'Manrope, sans-serif', fontSize: '0.78rem', fontWeight: 700,
+                  fontFamily: 'var(--font-body)', fontSize: '0.78rem', fontWeight: 700,
                   letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--v2-ada-text)',
                   background: 'rgba(124,92,252,0.12)', border: '1px solid var(--v2-ada-border)',
                   padding: '5px 12px', borderRadius: '100px',
@@ -247,7 +247,7 @@ export default function HeroV2() {
               to="/about-ada"
               style={{
                 display: 'inline-flex', alignItems: 'center',
-                fontFamily: 'Manrope, sans-serif', fontSize: '0.9rem', fontWeight: 600,
+                fontFamily: 'var(--font-body)', fontSize: '0.9rem', fontWeight: 600,
                 color: 'var(--v2-ada-text)', textDecoration: 'underline',
                 textUnderlineOffset: '3px', minHeight: '44px',
               }}

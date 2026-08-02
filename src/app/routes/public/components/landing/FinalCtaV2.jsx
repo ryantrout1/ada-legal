@@ -20,12 +20,12 @@ export default function FinalCtaV2() {
         pointerEvents: 'none',
       }} />
       <div style={{ maxWidth: '760px', margin: '0 auto', padding: '0 2rem', position: 'relative' }}>
-        <h2 id="v2-cta-heading" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '2.4rem', fontWeight: 800, color: 'var(--dark-heading)', lineHeight: 1.22, margin: '0 0 1.2rem', fontStyle: 'normal' }}>
+        <h2 id="v2-cta-heading" style={{ fontFamily: 'var(--font-body)', fontSize: '2.4rem', fontWeight: 800, color: 'var(--dark-heading)', lineHeight: 1.22, margin: '0 0 1.2rem', fontStyle: 'normal' }}>
           The ADA was written so everyone could take part in American life.
           <br />
           <span style={{ color: 'var(--dark-highlight)' }}>We built this to help keep that promise.</span>
         </h2>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.1rem', color: 'var(--dark-body-secondary)', lineHeight: 1.6, margin: '0 0 2.5rem' }}>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.1rem', color: 'var(--dark-body-secondary)', lineHeight: 1.6, margin: '0 0 2.5rem' }}>
           Understand what happened, or talk it through with Ada. Whenever you're ready — there's no
           clock running, and it costs you nothing.
         </p>
@@ -34,7 +34,7 @@ export default function FinalCtaV2() {
             <Link to={'/ada'} className="v2-btn v2-btn-ada" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--v2-ada)',
               color: 'var(--page-bg)', padding: '18px 36px', borderRadius: '10px', fontSize: '1.1rem',
-              fontWeight: 700, fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px', border: 'none',
+              fontWeight: 700, fontFamily: 'var(--font-body)', textDecoration: 'none', minHeight: '44px', border: 'none',
               boxShadow: '0 4px 20px rgba(124,92,252,0.3)',
             }}>
               Tell Ada what happened →
@@ -43,7 +43,7 @@ export default function FinalCtaV2() {
             <button type="button" onClick={() => adaSoon?.openSoon?.()} className="v2-btn v2-btn-ada" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--v2-ada)',
               color: 'var(--page-bg)', padding: '18px 36px', borderRadius: '10px', fontSize: '1.1rem',
-              fontWeight: 700, fontFamily: 'Manrope, sans-serif', minHeight: '44px', border: 'none', cursor: 'pointer',
+              fontWeight: 700, fontFamily: 'var(--font-body)', minHeight: '44px', border: 'none', cursor: 'pointer',
               boxShadow: '0 4px 20px rgba(124,92,252,0.3)',
             }}>
               Tell Ada what happened →
@@ -52,13 +52,13 @@ export default function FinalCtaV2() {
           <Link to={'/standards-guide'} className="v2-btn v2-btn-primary" style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--accent)',
             color: 'var(--page-bg)', padding: '18px 36px', borderRadius: '10px', fontSize: '1.1rem',
-            fontWeight: 700, fontFamily: 'Manrope, sans-serif', textDecoration: 'none', minHeight: '44px',
+            fontWeight: 700, fontFamily: 'var(--font-body)', textDecoration: 'none', minHeight: '44px',
             border: 'none', boxShadow: '0 4px 20px rgba(194,65,12,0.25)',
           }}>
             Explore the Standards Guide →
           </Link>
         </div>
-        <p style={{ fontFamily: 'Manrope, sans-serif', fontSize: '0.85rem', color: 'var(--dark-muted)', marginTop: '1.5rem', marginBottom: 0 }}>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', color: 'var(--dark-muted)', marginTop: '1.5rem', marginBottom: 0 }}>
           No account required. No cost. Your information is kept confidential.
         </p>
       </div>

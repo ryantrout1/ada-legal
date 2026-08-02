@@ -58,7 +58,7 @@ const sectionStyle: CSSProperties = {
 
 const sectionHeader: CSSProperties = {
   margin: '0 0 0.65rem',
-  fontFamily: 'Manrope, sans-serif',
+  fontFamily: 'var(--font-body)',
   fontSize: '0.85rem',
   fontWeight: 700,
   color: 'var(--heading)',
@@ -68,7 +68,7 @@ const sectionHeader: CSSProperties = {
 
 const proseStyle: CSSProperties = {
   margin: 0,
-  fontFamily: 'Manrope, sans-serif',
+  fontFamily: 'var(--font-body)',
   color: 'var(--body)',
   fontSize: '1.0625rem',
   lineHeight: 1.6,
@@ -82,7 +82,7 @@ const dlStyle: CSSProperties = {
   rowGap: '0.5rem',
   columnGap: '1rem',
   margin: 0,
-  fontFamily: 'Manrope, sans-serif',
+  fontFamily: 'var(--font-body)',
   fontSize: '0.9375rem',
 };
 
@@ -199,7 +199,7 @@ export default function LawsuitDetail() {
         alignItems: 'center',
         minHeight: 44,
         color: 'var(--link)',
-        fontFamily: 'Manrope, sans-serif',
+        fontFamily: 'var(--font-body)',
         fontWeight: 600,
         fontSize: '0.875rem',
         textDecoration: 'underline',
@@ -273,7 +273,7 @@ export default function LawsuitDetail() {
       {loading && (
         <p
           style={{
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'var(--font-body)',
             color: 'var(--body-secondary)',
             fontStyle: 'italic',
           }}
@@ -304,7 +304,7 @@ export default function LawsuitDetail() {
           <h1
             style={{
               margin: '0 0 0.75rem',
-              fontFamily: 'Fraunces, Georgia, serif',
+              fontFamily: 'var(--font-display)',
               fontSize: '1.5rem',
               fontWeight: 600,
               color: 'var(--heading)',
@@ -315,7 +315,7 @@ export default function LawsuitDetail() {
           <p
             style={{
               margin: 0,
-              fontFamily: 'Manrope, sans-serif',
+              fontFamily: 'var(--font-body)',
               color: 'var(--body)',
               fontSize: '1rem',
               lineHeight: 1.5,
@@ -366,7 +366,7 @@ export default function LawsuitDetail() {
             <h1
               style={{
                 margin: '0 0 0.5rem',
-                fontFamily: 'Manrope, sans-serif',
+                fontFamily: 'var(--font-body)',
                 fontSize: 'clamp(1.625rem, 4vw, 1.875rem)',
                 fontWeight: 500,
                 color: 'var(--heading)',
@@ -379,7 +379,7 @@ export default function LawsuitDetail() {
               <p
                 style={{
                   margin: 0,
-                  fontFamily: 'Manrope, sans-serif',
+                  fontFamily: 'var(--font-body)',
                   fontSize: '1.0625rem',
                   color: 'var(--body)',
                   lineHeight: 1.5,
@@ -398,7 +398,7 @@ export default function LawsuitDetail() {
               <p
                 style={{
                   margin: '0 0 0.85rem',
-                  fontFamily: 'Manrope, sans-serif',
+                  fontFamily: 'var(--font-body)',
                   color: 'var(--body)',
                   fontSize: '0.9375rem',
                   lineHeight: 1.5,
@@ -424,7 +424,7 @@ export default function LawsuitDetail() {
                   borderRadius: 8,
                   fontWeight: 600,
                   fontSize: '1rem',
-                  fontFamily: 'Manrope, sans-serif',
+                  fontFamily: 'var(--font-body)',
                   cursor: startingChat ? 'not-allowed' : 'pointer',
                   minHeight: 48,
                   opacity: startingChat ? 0.6 : 1,
@@ -437,7 +437,7 @@ export default function LawsuitDetail() {
                   role="alert"
                   style={{
                     margin: '0.75rem 0 0',
-                    fontFamily: 'Manrope, sans-serif',
+                    fontFamily: 'var(--font-body)',
                     fontSize: '0.875rem',
                     color: 'var(--color-danger-500)',
                   }}
@@ -500,7 +500,7 @@ export default function LawsuitDetail() {
                     color: 'var(--link)',
                     border: '1px solid var(--color-control-border)',
                     borderRadius: 8,
-                    fontFamily: 'Manrope, sans-serif',
+                    fontFamily: 'var(--font-body)',
                     fontWeight: 600,
                     fontSize: '0.9375rem',
                     cursor: startingChat ? 'not-allowed' : 'pointer',
@@ -535,7 +535,7 @@ export default function LawsuitDetail() {
                 style={{
                   margin: 0,
                   paddingLeft: '1.25rem',
-                  fontFamily: 'Manrope, sans-serif',
+                  fontFamily: 'var(--font-body)',
                   color: 'var(--body)',
                   fontSize: '0.9375rem',
                   lineHeight: 1.6,
@@ -635,7 +635,7 @@ export default function LawsuitDetail() {
                         alignItems: 'center',
                         minHeight: 44,
                         color: 'var(--link)',
-                        fontFamily: 'Manrope, sans-serif',
+                        fontFamily: 'var(--font-body)',
                         fontWeight: 600,
                         fontSize: '0.9375rem',
                         textDecoration: 'underline',
@@ -648,7 +648,7 @@ export default function LawsuitDetail() {
                     </Link>
                     <span
                       style={{
-                        fontFamily: 'Manrope, sans-serif',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '0.8125rem',
                         color: 'var(--body-secondary)',
                         marginLeft: '0.5rem',
