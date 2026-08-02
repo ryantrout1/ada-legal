@@ -431,6 +431,7 @@ export default function Chat() {
 
   return (
     <section className="ada-accent max-w-3xl w-full mx-auto px-5 sm:px-8 py-4 sm:py-6 flex flex-col h-[calc(100dvh-9rem)] sm:h-[calc(100dvh-8rem)] min-h-[400px]">
+      <h1 className="sr-only">Talk to Ada</h1>
       {/* Header row: reading level (left), icon-only session controls (right).
           Reading level stays prominent — visibility is the point, it's the
           single most important accommodation on this page. Session controls

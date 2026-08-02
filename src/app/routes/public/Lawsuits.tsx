@@ -73,7 +73,7 @@ export default function Lawsuits() {
   const filtered = useMemo(() => filterLawsuits(rows, filters), [rows, filters]);
 
   return (
-    <main
+    <div
       style={{
         maxWidth: 1100,
         margin: '0 auto',
@@ -225,6 +225,6 @@ export default function Lawsuits() {
           ))}
         </ul>
       )}
-    </main>
+    </div>
   );
 }

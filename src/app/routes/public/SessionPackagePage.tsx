@@ -109,19 +109,19 @@ export default function SessionPackagePage() {
 
   if (state.kind === 'loading') {
     return (
-      <main
+      <div
         className="max-w-3xl mx-auto px-5 sm:px-8 py-10"
         aria-busy="true"
         aria-live="polite"
       >
         <p className="text-ink-700">Loading your summary…</p>
-      </main>
+      </div>
     );
   }
 
   if (state.kind === 'notFound') {
     return (
-      <main className="max-w-3xl mx-auto px-5 sm:px-8 py-10">
+      <div className="max-w-3xl mx-auto px-5 sm:px-8 py-10">
         <h1 className="font-display text-3xl text-ink-900 mb-3">
           I can't find this summary
         </h1>
@@ -140,18 +140,18 @@ export default function SessionPackagePage() {
           </a>
           .
         </p>
-      </main>
+      </div>
     );
   }
 
   if (state.kind === 'error') {
     return (
-      <main className="max-w-3xl mx-auto px-5 sm:px-8 py-10">
+      <div className="max-w-3xl mx-auto px-5 sm:px-8 py-10">
         <h1 className="font-display text-3xl text-ink-900 mb-3">
           Something didn't load right
         </h1>
         <p className="text-ink-700 leading-relaxed">{state.message}</p>
-      </main>
+      </div>
     );
   }
 

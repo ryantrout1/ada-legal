@@ -259,7 +259,7 @@ export default function LawsuitDetail() {
       : rawDescription;
 
   return (
-    <main
+    <div
       style={{
         maxWidth: 800,
         margin: '0 auto',
@@ -665,6 +665,6 @@ export default function LawsuitDetail() {
           <div style={{ marginTop: '1.5rem' }}>{backLink}</div>
         </article>
       )}
-    </main>
+    </div>
   );
 }

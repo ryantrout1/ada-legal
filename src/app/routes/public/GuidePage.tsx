@@ -77,7 +77,7 @@ export default function GuidePage() {
 
   if (!Loader || !slug || !title) {
     return (
-      <main id="main" className="max-w-3xl mx-auto px-5 sm:px-8 py-16">
+      <div id="main" className="max-w-3xl mx-auto px-5 sm:px-8 py-16">
         <Helmet>
           <title>Guide not found — ADA Legal Link</title>
           <meta name="robots" content="noindex" />
@@ -90,7 +90,7 @@ export default function GuidePage() {
           </Link>{' '}
           or <Link to="/ada" className="underline">talk to Ada</Link> directly.
         </p>
-      </main>
+      </div>
     );
   }
 
@@ -99,9 +99,9 @@ export default function GuidePage() {
       <GuideSeo slug={slug} title={title} />
       <Suspense
         fallback={
-          <main id="main" className="max-w-3xl mx-auto px-5 sm:px-8 py-16">
+          <div id="main" className="max-w-3xl mx-auto px-5 sm:px-8 py-16">
             <p className="text-ink-700">Loading guide…</p>
-          </main>
+          </div>
         }
       >
         <Loader />

@@ -141,7 +141,7 @@ export default function PhotoCapture() {
         {/* Unlisted internal tool. Keep search engines out. */}
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
-      <main
+      <div
         // Match the public site's surface tokens so /photo doesn't look
         // jarringly different — same palette, same body font, but no
         // header/footer. Min-height-screen so the surface fills mobile
@@ -182,7 +182,7 @@ export default function PhotoCapture() {
             <ErrorView error={submitError} onReset={handleReset} />
           )}
         </div>
-      </main>
+      </div>
     </>
   );
 }

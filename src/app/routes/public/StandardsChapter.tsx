@@ -54,20 +54,20 @@ const CHAPTERS: Record<string, LazyExoticComponent<ComponentType>> = {
 
 function Loading() {
   return (
-    <main id="main" className="max-w-3xl mx-auto px-5 sm:px-8 py-16">
+    <div id="main" className="max-w-3xl mx-auto px-5 sm:px-8 py-16">
       <p
         className="text-xs uppercase tracking-wider font-mono"
         style={{ color: 'var(--body-secondary)' }}
       >
         Loading chapter…
       </p>
-    </main>
+    </div>
   );
 }
 
 function NotFound() {
   return (
-    <main id="main" className="max-w-3xl mx-auto px-5 sm:px-8 py-16">
+    <div id="main" className="max-w-3xl mx-auto px-5 sm:px-8 py-16">
       <Helmet>
         <title>Chapter not found — ADA Legal Link</title>
       </Helmet>
@@ -94,7 +94,7 @@ function NotFound() {
         </Link>
         .
       </p>
-    </main>
+    </div>
   );
 }
 

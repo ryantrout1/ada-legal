@@ -115,7 +115,7 @@ export default function Attorneys() {
   }
 
   return (
-    <main
+    <div
       style={{
         maxWidth: 1100,
         margin: '0 auto',
@@ -269,6 +269,6 @@ export default function Attorneys() {
           )}
         </>
       )}
-    </main>
+    </div>
   );
 }
