@@ -5,14 +5,14 @@ const LZ_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#503
 const CALLOUTS = [
   {
     id: 1, label: 'Dimensions & Layout', section: '\u00a7503.2',
-    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
+    color: 'var(--dx-orange)', textColor: 'var(--dx-orange)', x: 100, y: 52,
     plain: 'The vehicle pull-up space must be 96 inches (8 feet) wide minimum and 20 feet long minimum. Next to it, an access aisle must be 60 inches (5 feet) wide minimum and 20 feet long minimum at the same level as the vehicle space \u2014 no curbs between them. The aisle must connect directly to an accessible route into the building. Vertical clearance of 114 inches (9\u20196\u2033) is required for the pull-up space and the entire vehicle route.',
     legal: '\u201CVehicular pull-up space 96 inches wide minimum and 20 feet long minimum.\u201D Access aisle: \u201C60 inches wide minimum, 20 feet long minimum, at the same level as the vehicle pull-up space.\u201D Clearance: \u201C114 inches minimum.\u201D',
     citation: '\u00a7503.2, \u00a7503.3, \u00a7503.4'
   },
   {
     id: 2, label: 'Surface & Common Problems', section: '\u00a7503',
-    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
+    color: 'var(--dx-green)', textColor: 'var(--dx-green)', x: 470, y: 52,
     plain: 'The access aisle and pull-up space must be firm, stable, and slip-resistant with a maximum slope of 1:48. The surface must be flush between the aisle and pull-up space. When a wheelchair ramp deploys from a van, it must not reduce the aisle width below 60 inches. At least one loading zone is required wherever they exist, plus at medical facilities and valet operations. The aisle should be marked to prevent others from blocking it.',
     legal: 'Surface per \u00a7302: \u201Cfirm, stable, and slip-resistant.\u201D Slope: \u201Cnot steeper than 1:48.\u201D \u00a7209.2: \u201CAt least one passenger loading zone complying with \u00a7503 shall be provided.\u201D',
     citation: '\u00a7503, \u00a7209'
@@ -28,9 +28,9 @@ function CalloutPanel({ callout, onClose, panelRef }) {
     <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'lzFade 0.25s ease-out' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--page-bg)', background: callout.color, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
         </div>
         <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
       </div>
@@ -48,7 +48,7 @@ function CalloutPanel({ callout, onClose, panelRef }) {
 function KeyFact({ color, number, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
-      <span style={{ background: color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ background: color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
       <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
     </div>
   );
@@ -94,43 +94,43 @@ export default function LoadingZoneDiagram() {
           <text x="360" y="28" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Top-down view of a hotel or hospital drop-off</text>
 
           {/* Building edge */}
-          <rect x="40" y="55" width="640" height="30" rx="2" fill="#94A3B8" opacity="0.1" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="360" y="74" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#64748B" fontWeight="600">building entrance</text>
+          <rect x="40" y="55" width="640" height="30" rx="2" fill="var(--dx-label)" opacity="0.1" stroke="var(--dx-label)" strokeWidth="1.5" />
+          <text x="360" y="74" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-label)" fontWeight="600">building entrance</text>
 
           {/* Access aisle */}
-          <rect x="40" y="90" width="540" height="70" rx="2" fill="#15803D" opacity="0.05" stroke="#15803D" strokeWidth="1.5" strokeDasharray="6 3" />
-          <text x="310" y="120" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#15803D" fontWeight="600">access aisle</text>
-          <text x="310" y="136" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#15803D">level, connects to entrance</text>
+          <rect x="40" y="90" width="540" height="70" rx="2" fill="var(--dx-green)" opacity="0.05" stroke="var(--dx-green)" strokeWidth="1.5" strokeDasharray="6 3" />
+          <text x="310" y="120" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-green)" fontWeight="600">access aisle</text>
+          <text x="310" y="136" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)">level, connects to entrance</text>
 
           {/* Access aisle width dimension */}
-          <line x1="600" y1="90" x2="600" y2="160" stroke="#15803D" strokeWidth="1.2" />
-          <line x1="594" y1="90" x2="606" y2="90" stroke="#15803D" strokeWidth="1.2" />
-          <line x1="594" y1="160" x2="606" y2="160" stroke="#15803D" strokeWidth="1.2" />
-          <rect x="610" y="113" width="66" height="20" rx="6" fill="#15803D" />
-          <text x="643" y="127" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('60', '1525')} min</text>
+          <line x1="600" y1="90" x2="600" y2="160" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <line x1="594" y1="90" x2="606" y2="90" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <line x1="594" y1="160" x2="606" y2="160" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <rect x="610" y="113" width="66" height="20" rx="6" fill="var(--dx-green)" />
+          <text x="643" y="127" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('60', '1525')} min</text>
 
           {/* Vehicle pull-up space */}
-          <rect x="40" y="165" width="540" height="100" rx="2" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="2" />
-          <text x="310" y="210" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fill="#C2410C" fontWeight="600">vehicle pull-up space</text>
-          <text x="310" y="228" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C">where the van or car stops</text>
+          <rect x="40" y="165" width="540" height="100" rx="2" fill="var(--dx-orange)" opacity="0.04" stroke="var(--dx-orange)" strokeWidth="2" />
+          <text x="310" y="210" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fill="var(--dx-orange)" fontWeight="600">vehicle pull-up space</text>
+          <text x="310" y="228" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)">where the van or car stops</text>
 
           {/* Vehicle pull-up width */}
-          <line x1="600" y1="165" x2="600" y2="265" stroke="#C2410C" strokeWidth="1.2" />
-          <line x1="594" y1="165" x2="606" y2="165" stroke="#C2410C" strokeWidth="1.2" />
-          <line x1="594" y1="265" x2="606" y2="265" stroke="#C2410C" strokeWidth="1.2" />
-          <rect x="610" y="203" width="66" height="20" rx="6" fill="#C2410C" />
-          <text x="643" y="217" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('96', '2440')} min</text>
+          <line x1="600" y1="165" x2="600" y2="265" stroke="var(--dx-orange)" strokeWidth="1.2" />
+          <line x1="594" y1="165" x2="606" y2="165" stroke="var(--dx-orange)" strokeWidth="1.2" />
+          <line x1="594" y1="265" x2="606" y2="265" stroke="var(--dx-orange)" strokeWidth="1.2" />
+          <rect x="610" y="203" width="66" height="20" rx="6" fill="var(--dx-orange)" />
+          <text x="643" y="217" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('96', '2440')} min</text>
 
           {/* 20 ft length */}
-          <line x1="40" y1="285" x2="580" y2="285" stroke="#7C3AED" strokeWidth="1.5" />
-          <line x1="40" y1="279" x2="40" y2="291" stroke="#7C3AED" strokeWidth="1.5" />
-          <line x1="580" y1="279" x2="580" y2="291" stroke="#7C3AED" strokeWidth="1.5" />
-          <rect x="270" y="290" width="80" height="20" rx="6" fill="#7C3AED" />
-          <text x="310" y="304" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{ft('20', '6.1')} min long</text>
+          <line x1="40" y1="285" x2="580" y2="285" stroke="var(--dx-violet)" strokeWidth="1.5" />
+          <line x1="40" y1="279" x2="40" y2="291" stroke="var(--dx-violet)" strokeWidth="1.5" />
+          <line x1="580" y1="279" x2="580" y2="291" stroke="var(--dx-violet)" strokeWidth="1.5" />
+          <rect x="270" y="290" width="80" height="20" rx="6" fill="var(--dx-violet)" />
+          <text x="310" y="304" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{ft('20', '6.1')} min long</text>
 
           {/* Vertical clearance note */}
-          <rect x="40" y="320" width="260" height="24" rx="8" fill="#B45309" opacity="0.06" stroke="#B45309" strokeWidth="1.5" />
-          <text x="170" y="336" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#78350F" fontWeight="600">{d('114', '2895')} vertical clearance (9{'\u2019'}6{'\u2033'})</text>
+          <rect x="40" y="320" width="260" height="24" rx="8" fill="var(--dx-amber)" opacity="0.06" stroke="var(--dx-amber)" strokeWidth="1.5" />
+          <text x="170" y="336" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-amber)" fontWeight="600">{d('114', '2895')} vertical clearance (9{'\u2019'}6{'\u2033'})</text>
 
           <Dots callouts={CALLOUTS} active={active} toggle={toggle} />
           <text x="400" y="348" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
@@ -142,9 +142,9 @@ export default function LoadingZoneDiagram() {
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
         <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Loading Zones</p>
-        <KeyFact color="#C2410C" number={`${d('96', '2440')}\u00d7${ft('20', '6.1')}`}>Pull-up space minimum (8 ft wide, 20 ft long)</KeyFact>
-        <KeyFact color="#15803D" number={d('60', '1525')}>Access aisle width (must be level with pull-up space)</KeyFact>
-        <KeyFact color="#B45309" number={d('114', '2895')}>Vertical clearance for wheelchair vans (9{'\u2019'}6{'\u2033'})</KeyFact>
+        <KeyFact color="var(--dx-orange)" number={`${d('96', '2440')}\u00d7${ft('20', '6.1')}`}>Pull-up space minimum (8 ft wide, 20 ft long)</KeyFact>
+        <KeyFact color="var(--dx-green)" number={d('60', '1525')}>Access aisle width (must be level with pull-up space)</KeyFact>
+        <KeyFact color="var(--dx-amber)" number={d('114', '2895')}>Vertical clearance for wheelchair vans (9{'\u2019'}6{'\u2033'})</KeyFact>
       </div>
 
       <style>{`

@@ -6,7 +6,7 @@ const REACH_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#
 const FWD_CALLOUTS = [
   {
     id: 1, label: 'Unobstructed Forward Reach', section: '§308.2.1',
-    color: '#C2410C', textColor: '#7C2D12',
+    color: 'var(--dx-orange)', textColor: 'var(--dx-orange)',
     x: 100, y: 52,
     plain: 'When a wheelchair user approaches an element head-on with nothing in the way, the reach range is 15 inches minimum to 48 inches maximum above the floor. This covers controls like elevator buttons, light switches, and thermostats mounted on a wall. A clear floor space of 30 × 48 inches must be provided in front of the element so the wheelchair can pull straight up to it.',
     legal: '"Where a forward reach is unobstructed, the high forward reach shall be 48 inches (1220 mm) maximum and the low forward reach shall be 15 inches (380 mm) minimum above the finish floor or ground."',
@@ -14,7 +14,7 @@ const FWD_CALLOUTS = [
   },
   {
     id: 2, label: 'Obstructed Forward Reach', section: '§308.2.2',
-    color: '#15803D', textColor: '#14532D',
+    color: 'var(--dx-green)', textColor: 'var(--dx-green)',
     x: 470, y: 52,
     plain: 'When reaching forward over a counter, shelf, or other obstruction, the maximum reach height decreases as the obstruction gets deeper. If the obstruction is up to 20 inches deep, the maximum high reach is 48 inches. If it\u0027s 20 to 25 inches deep, the maximum drops to 44 inches. Obstructions deeper than 25 inches are not permitted — you\u0027d need a side approach instead.',
     legal: '"Where the high forward reach is over an obstruction, the clear floor space shall extend beneath the element for a distance not less than the required reach depth over the obstruction." Obstruction \u226420 inches: high reach 48 inches max. Obstruction 20\u201325 inches: high reach 44 inches max.',
@@ -26,7 +26,7 @@ const FWD_CALLOUTS = [
 const SIDE_CALLOUTS = [
   {
     id: 1, label: 'Unobstructed Side Reach', section: '§308.3.1',
-    color: '#2563EB', textColor: '#1E3A8A',
+    color: 'var(--dx-blue)', textColor: 'var(--dx-blue)',
     x: 100, y: 52,
     plain: 'When approaching from the side (parallel to the element), with the wheelchair alongside it, the reach range is 15 inches minimum to 48 inches maximum above the floor — same as unobstructed forward reach. This is common for wall-mounted fire extinguishers, paper towel dispensers, and coat hooks.',
     legal: '"Where a clear floor or ground space allows a parallel approach to an element and the side reach is unobstructed, the high side reach shall be 48 inches (1220 mm) maximum and the low side reach shall be 15 inches (380 mm) minimum above the finish floor or ground."',
@@ -34,7 +34,7 @@ const SIDE_CALLOUTS = [
   },
   {
     id: 2, label: 'Obstructed Side Reach', section: '§308.3.2',
-    color: '#7C3AED', textColor: '#5B21B6',
+    color: 'var(--dx-violet)', textColor: 'var(--dx-violet)',
     x: 470, y: 52,
     plain: 'When reaching sideways over an obstruction (like a counter or shelf), the rules depend on depth. Up to 10 inches deep: maximum reach is 48 inches (same as unobstructed). Between 10 and 24 inches deep: maximum drops to 46 inches. Obstructions deeper than 24 inches are not permitted for side reach. The obstruction cannot be taller than 34 inches.',
     legal: '"Where a clear floor or ground space allows a parallel approach to an element and the high side reach is over an obstruction, the height of the obstruction shall be 34 inches (865 mm) maximum and the depth shall be 24 inches (610 mm) maximum." 10\u201324 inches deep: high reach 46 inches max.',
@@ -79,7 +79,7 @@ function CalloutPanel({ callout, onClose, panelRef }) {
           <span style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             width: '26px', height: '26px', borderRadius: '50%',
-            background: callout.color, color: 'white',
+            background: callout.color, color: 'var(--page-bg)',
             fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700
           }}>{callout.id}</span>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>
@@ -87,7 +87,7 @@ function CalloutPanel({ callout, onClose, panelRef }) {
           </span>
           <span style={{
             fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
-            color: callout.color, background: `${callout.color}15`,
+            color: 'var(--page-bg)', background: callout.color,
             padding: '2px 8px', borderRadius: '4px'
           }}>{callout.section}</span>
         </div>
@@ -131,7 +131,7 @@ function KeyFact({ color, number, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
       <span style={{
-        background: color, color: 'white', fontFamily: 'var(--font-body)',
+        background: color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)',
         fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center',
         padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap'
       }}>{number}</span>
@@ -174,16 +174,16 @@ function CalloutDots({ callouts, active, toggle }) {
 function WheelchairSide({ x, y, armToX, armToY }) {
   return (
     <g transform={`translate(${x},${y}) scale(1.3)`}>
-      <circle cx="22" cy="10" r="9" fill="#E2E8F0" stroke="#475569" strokeWidth="1.8" />
-      <line x1="25" y1="50" x2="22" y2="22" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="15" y1="55" x2="55" y2="55" stroke="#475569" strokeWidth="2" />
-      <line x1="15" y1="55" x2="10" y2="73" stroke="#475569" strokeWidth="1.8" />
-      <line x1="55" y1="55" x2="55" y2="75" stroke="#475569" strokeWidth="1.8" />
-      <line x1="15" y1="55" x2="12" y2="28" stroke="#475569" strokeWidth="2" />
-      <circle cx="20" cy="73" r="20" fill="none" stroke="#475569" strokeWidth="2.2" />
-      <circle cx="58" cy="80" r="7" fill="none" stroke="#475569" strokeWidth="1.5" />
-      <line x1="40" y1="80" x2="55" y2="80" stroke="#475569" strokeWidth="1.5" />
-      <line x1="24" y1="30" x2={armToX} y2={armToY} stroke="#475569" strokeWidth="2.2" strokeLinecap="round" />
+      <circle cx="22" cy="10" r="9" fill="var(--dx-line)" stroke="var(--dx-line)" strokeWidth="1.8" />
+      <line x1="25" y1="50" x2="22" y2="22" stroke="var(--dx-line)" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="15" y1="55" x2="55" y2="55" stroke="var(--dx-line)" strokeWidth="2" />
+      <line x1="15" y1="55" x2="10" y2="73" stroke="var(--dx-line)" strokeWidth="1.8" />
+      <line x1="55" y1="55" x2="55" y2="75" stroke="var(--dx-line)" strokeWidth="1.8" />
+      <line x1="15" y1="55" x2="12" y2="28" stroke="var(--dx-line)" strokeWidth="2" />
+      <circle cx="20" cy="73" r="20" fill="none" stroke="var(--dx-line)" strokeWidth="2.2" />
+      <circle cx="58" cy="80" r="7" fill="none" stroke="var(--dx-line)" strokeWidth="1.5" />
+      <line x1="40" y1="80" x2="55" y2="80" stroke="var(--dx-line)" strokeWidth="1.5" />
+      <line x1="24" y1="30" x2={armToX} y2={armToY} stroke="var(--dx-line)" strokeWidth="2.2" strokeLinecap="round" />
     </g>
   );
 }
@@ -192,11 +192,11 @@ function WheelchairSide({ x, y, armToX, armToY }) {
 function WheelchairFront({ x, y, armToX, armToY, dotColor }) {
   return (
     <g transform={`translate(${x},${y}) scale(1.3)`}>
-      <circle cx="40" cy="10" r="10" fill="#E2E8F0" stroke="#475569" strokeWidth="1.8" />
-      <rect x="26" y="24" width="28" height="40" rx="5" fill="none" stroke="#475569" strokeWidth="2" />
-      <circle cx="25" cy="100" r="22" fill="none" stroke="#475569" strokeWidth="2.2" />
-      <circle cx="55" cy="100" r="22" fill="none" stroke="#475569" strokeWidth="2.2" />
-      <line x1="26" y1="36" x2={armToX} y2={armToY} stroke="#475569" strokeWidth="2.2" strokeLinecap="round" />
+      <circle cx="40" cy="10" r="10" fill="var(--dx-line)" stroke="var(--dx-line)" strokeWidth="1.8" />
+      <rect x="26" y="24" width="28" height="40" rx="5" fill="none" stroke="var(--dx-line)" strokeWidth="2" />
+      <circle cx="25" cy="100" r="22" fill="none" stroke="var(--dx-line)" strokeWidth="2.2" />
+      <circle cx="55" cy="100" r="22" fill="none" stroke="var(--dx-line)" strokeWidth="2.2" />
+      <line x1="26" y1="36" x2={armToX} y2={armToY} stroke="var(--dx-line)" strokeWidth="2.2" strokeLinecap="round" />
       <circle cx={armToX - 1} cy={armToY - 1} r="4" fill={dotColor} opacity="0.35" />
     </g>
   );
@@ -289,33 +289,33 @@ export default function ReachRangeDiagram() {
           </text>
 
           {/* Wall */}
-          <rect x="258" y="60" width="10" height="268" fill="#CBD5E1" rx="2" />
-          <text x="250" y="55" textAnchor="end" fontFamily="var(--font-body)" fontSize="10" fill="#94A3B8" fontWeight="600">wall</text>
+          <rect x="258" y="60" width="10" height="268" fill="var(--dx-line)" rx="2" />
+          <text x="250" y="55" textAnchor="end" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="600">wall</text>
 
           {/* Reachable zone */}
-          <rect x="70" y="96" width="188" height="200" fill="#C2410C" opacity="0.05" rx="6" stroke="#C2410C" strokeWidth="1.5" />
+          <rect x="70" y="96" width="188" height="200" fill="var(--dx-orange)" opacity="0.05" rx="6" stroke="var(--dx-orange)" strokeWidth="1.5" />
 
           {/* 48" max line */}
-          <line x1="60" y1="96" x2="270" y2="96" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="4 3" />
-          <rect x="8" y="86" width="50" height="22" rx="6" fill="#C2410C" />
-          <text x="33" y="101" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="white">{d('48', '1220')}</text>
-          <text x="33" y="122" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C" fontWeight="600">max high</text>
+          <line x1="60" y1="96" x2="270" y2="96" stroke="var(--dx-orange)" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="8" y="86" width="50" height="22" rx="6" fill="var(--dx-orange)" />
+          <text x="33" y="101" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="var(--page-bg)">{d('48', '1220')}</text>
+          <text x="33" y="122" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)" fontWeight="600">max high</text>
 
           {/* 15" min line */}
-          <line x1="60" y1="296" x2="270" y2="296" stroke="#C2410C" strokeWidth="1.5" strokeDasharray="4 3" />
-          <rect x="8" y="286" width="50" height="22" rx="6" fill="#C2410C" />
-          <text x="33" y="301" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="white">{d('15', '380')}</text>
-          <text x="33" y="322" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C" fontWeight="600">min low</text>
+          <line x1="60" y1="296" x2="270" y2="296" stroke="var(--dx-orange)" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="8" y="286" width="50" height="22" rx="6" fill="var(--dx-orange)" />
+          <text x="33" y="301" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="var(--page-bg)">{d('15', '380')}</text>
+          <text x="33" y="322" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)" fontWeight="600">min low</text>
 
           {/* Wheelchair */}
           <WheelchairSide x={110} y={180} armToX={65} armToY={-20} />
 
           {/* Floor */}
-          <line x1="30" y1="328" x2="340" y2="328" stroke="#94A3B8" strokeWidth="2" />
+          <line x1="30" y1="328" x2="340" y2="328" stroke="var(--dx-label)" strokeWidth="2" />
 
 
           {/* ─── DIVIDER ─── */}
-          <line x1="360" y1="20" x2="360" y2="360" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+          <line x1="360" y1="20" x2="360" y2="360" stroke="var(--dx-line)" strokeWidth="1.5" strokeDasharray="6 4" />
 
 
           {/* ─── RIGHT: Reaching over a counter ─── */}
@@ -324,35 +324,35 @@ export default function ReachRangeDiagram() {
           </text>
 
           {/* Wall */}
-          <rect x="638" y="60" width="10" height="268" fill="#CBD5E1" rx="2" />
+          <rect x="638" y="60" width="10" height="268" fill="var(--dx-line)" rx="2" />
 
           {/* Counter */}
-          <rect x="540" y="195" width="100" height="10" rx="2" fill="#94A3B8" stroke="#64748B" strokeWidth="1.5" />
-          <text x="590" y="190" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="600">counter surface</text>
+          <rect x="540" y="195" width="100" height="10" rx="2" fill="var(--dx-label)" stroke="var(--dx-label)" strokeWidth="1.5" />
+          <text x="590" y="190" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="600">counter surface</text>
 
           {/* Counter depth */}
-          <line x1="540" y1="218" x2="640" y2="218" stroke="#15803D" strokeWidth="1.5" />
-          <line x1="540" y1="211" x2="540" y2="225" stroke="#15803D" strokeWidth="1.5" />
-          <line x1="640" y1="211" x2="640" y2="225" stroke="#15803D" strokeWidth="1.5" />
-          <rect x="557" y="224" width="66" height="20" rx="6" fill="#15803D" />
-          <text x="590" y="238" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('25', '635')} deep</text>
+          <line x1="540" y1="218" x2="640" y2="218" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <line x1="540" y1="211" x2="540" y2="225" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <line x1="640" y1="211" x2="640" y2="225" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <rect x="557" y="224" width="66" height="20" rx="6" fill="var(--dx-green)" />
+          <text x="590" y="238" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{'\u2264'} {d('25', '635')} deep</text>
 
           {/* Reach zone */}
-          <rect x="460" y="96" width="178" height="98" fill="#15803D" opacity="0.04" rx="6" stroke="#15803D" strokeWidth="1.5" />
+          <rect x="460" y="96" width="178" height="98" fill="var(--dx-green)" opacity="0.04" rx="6" stroke="var(--dx-green)" strokeWidth="1.5" />
 
           {/* 44-48" max */}
-          <line x1="450" y1="96" x2="650" y2="96" stroke="#15803D" strokeWidth="1.5" strokeDasharray="4 3" />
-          <rect x="654" y="82" width="62" height="28" rx="6" fill="#15803D" />
-          <text x="685" y="100" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('44\u201348', '1120')}</text>
-          <text x="685" y="124" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#15803D" fontWeight="600">max high</text>
-          <text x="685" y="138" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#94A3B8">(depends on</text>
-          <text x="685" y="150" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#94A3B8">counter depth)</text>
+          <line x1="450" y1="96" x2="650" y2="96" stroke="var(--dx-green)" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="654" y="82" width="62" height="28" rx="6" fill="var(--dx-green)" />
+          <text x="685" y="100" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('44\u201348', '1120')}</text>
+          <text x="685" y="124" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)" fontWeight="600">max high</text>
+          <text x="685" y="138" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)">(depends on</text>
+          <text x="685" y="150" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)">counter depth)</text>
 
           {/* Wheelchair */}
           <WheelchairSide x={440} y={180} armToX={80} armToY={-15} />
 
           {/* Floor */}
-          <line x1="390" y1="328" x2="710" y2="328" stroke="#94A3B8" strokeWidth="2" />
+          <line x1="390" y1="328" x2="710" y2="328" stroke="var(--dx-label)" strokeWidth="2" />
 
           {/* Callout dots */}
           <CalloutDots callouts={FWD_CALLOUTS} active={fwdActive} toggle={toggleFwd} />
@@ -378,13 +378,13 @@ export default function ReachRangeDiagram() {
           fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700,
           color: 'var(--heading)', margin: '0 0 12px'
         }}>Key numbers {'\u2014'} Forward Reach</p>
-        <KeyFact color="#C2410C" number={`${d('15', '380')} \u2013 ${d('48', '1220')}`}>
+        <KeyFact color="var(--dx-orange)" number={`${d('15', '380')} \u2013 ${d('48', '1220')}`}>
           Reachable zone when nothing is in the way (15 to 48 inches above the floor)
         </KeyFact>
-        <KeyFact color="#15803D" number={`\u2264 ${d('25', '635')}`}>
+        <KeyFact color="var(--dx-green)" number={`\u2264 ${d('25', '635')}`}>
           Maximum counter depth you can reach over {'\u2014'} deeper than 25 inches means the control is too far
         </KeyFact>
-        <KeyFact color="#15803D" number={`${d('44', '1120')} \u2013 ${d('48', '1220')}`}>
+        <KeyFact color="var(--dx-green)" number={`${d('44', '1120')} \u2013 ${d('48', '1220')}`}>
           Maximum height drops to 44 inches when reaching over a counter 20{'\u2013'}25 inches deep
         </KeyFact>
       </div>
@@ -419,38 +419,38 @@ export default function ReachRangeDiagram() {
           </text>
 
           {/* Wall */}
-          <rect x="68" y="60" width="10" height="268" fill="#CBD5E1" rx="2" />
+          <rect x="68" y="60" width="10" height="268" fill="var(--dx-line)" rx="2" />
 
           {/* Light switch */}
-          <rect x="78" y="178" width="14" height="22" rx="3" fill="white" stroke="#94A3B8" strokeWidth="1.5" />
-          <rect x="83" y="184" width="4" height="10" rx="1" fill="#94A3B8" />
-          <text x="85" y="172" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="500">light</text>
-          <text x="85" y="160" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="500">switch</text>
+          <rect x="78" y="178" width="14" height="22" rx="3" fill="var(--page-bg)" stroke="var(--dx-label)" strokeWidth="1.5" />
+          <rect x="83" y="184" width="4" height="10" rx="1" fill="var(--dx-label)" />
+          <text x="85" y="172" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="500">light</text>
+          <text x="85" y="160" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="500">switch</text>
 
           {/* Reach zone */}
-          <rect x="78" y="96" width="70" height="200" fill="#2563EB" opacity="0.05" rx="6" stroke="#2563EB" strokeWidth="1.5" />
+          <rect x="78" y="96" width="70" height="200" fill="var(--dx-blue)" opacity="0.05" rx="6" stroke="var(--dx-blue)" strokeWidth="1.5" />
 
           {/* 48" max */}
-          <line x1="70" y1="96" x2="270" y2="96" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="4 3" />
-          <rect x="272" y="86" width="50" height="22" rx="6" fill="#2563EB" />
-          <text x="297" y="101" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="white">{d('48', '1220')}</text>
-          <text x="297" y="122" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#2563EB" fontWeight="600">max high</text>
+          <line x1="70" y1="96" x2="270" y2="96" stroke="var(--dx-blue)" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="272" y="86" width="50" height="22" rx="6" fill="var(--dx-blue)" />
+          <text x="297" y="101" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="var(--page-bg)">{d('48', '1220')}</text>
+          <text x="297" y="122" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)" fontWeight="600">max high</text>
 
           {/* 15" min */}
-          <line x1="70" y1="296" x2="270" y2="296" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="4 3" />
-          <rect x="272" y="286" width="50" height="22" rx="6" fill="#2563EB" />
-          <text x="297" y="301" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="white">{d('15', '380')}</text>
-          <text x="297" y="322" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#2563EB" fontWeight="600">min low</text>
+          <line x1="70" y1="296" x2="270" y2="296" stroke="var(--dx-blue)" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="272" y="286" width="50" height="22" rx="6" fill="var(--dx-blue)" />
+          <text x="297" y="301" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fontWeight="700" fill="var(--page-bg)">{d('15', '380')}</text>
+          <text x="297" y="322" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)" fontWeight="600">min low</text>
 
           {/* Person front view */}
-          <WheelchairFront x={140} y={140} armToX={-30} armToY={20} dotColor="#2563EB" />
+          <WheelchairFront x={140} y={140} armToX={-30} armToY={20} dotColor="var(--dx-blue)" />
 
           {/* Floor */}
-          <line x1="30" y1="328" x2="340" y2="328" stroke="#94A3B8" strokeWidth="2" />
+          <line x1="30" y1="328" x2="340" y2="328" stroke="var(--dx-label)" strokeWidth="2" />
 
 
           {/* ─── DIVIDER ─── */}
-          <line x1="360" y1="20" x2="360" y2="360" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+          <line x1="360" y1="20" x2="360" y2="360" stroke="var(--dx-line)" strokeWidth="1.5" strokeDasharray="6 4" />
 
 
           {/* ─── RIGHT: Reaching over something ─── */}
@@ -459,38 +459,38 @@ export default function ReachRangeDiagram() {
           </text>
 
           {/* Wall */}
-          <rect x="448" y="60" width="10" height="268" fill="#CBD5E1" rx="2" />
+          <rect x="448" y="60" width="10" height="268" fill="var(--dx-line)" rx="2" />
 
           {/* Cabinet */}
-          <rect x="458" y="210" width="60" height="118" rx="3" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1.5" />
-          <text x="488" y="275" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#64748B" fontWeight="500">cabinet</text>
+          <rect x="458" y="210" width="60" height="118" rx="3" fill="var(--dx-line)" stroke="var(--dx-label)" strokeWidth="1.5" />
+          <text x="488" y="275" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-label)" fontWeight="500">cabinet</text>
 
           {/* Obstruction height */}
-          <rect x="390" y="200" width="54" height="22" rx="6" fill="#7C3AED" />
-          <text x="417" y="215" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('34', '865')}</text>
-          <text x="417" y="236" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C3AED" fontWeight="600">max height</text>
+          <rect x="390" y="200" width="54" height="22" rx="6" fill="var(--dx-violet)" />
+          <text x="417" y="215" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{'\u2264'} {d('34', '865')}</text>
+          <text x="417" y="236" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-violet)" fontWeight="600">max height</text>
 
           {/* Obstruction depth */}
-          <line x1="458" y1="340" x2="518" y2="340" stroke="#15803D" strokeWidth="1.5" />
-          <line x1="458" y1="333" x2="458" y2="347" stroke="#15803D" strokeWidth="1.5" />
-          <line x1="518" y1="333" x2="518" y2="347" stroke="#15803D" strokeWidth="1.5" />
-          <rect x="460" y="348" width="56" height="18" rx="5" fill="#15803D" />
-          <text x="488" y="361" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{'\u2264'} {d('24', '610')} deep</text>
+          <line x1="458" y1="340" x2="518" y2="340" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <line x1="458" y1="333" x2="458" y2="347" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <line x1="518" y1="333" x2="518" y2="347" stroke="var(--dx-green)" strokeWidth="1.5" />
+          <rect x="460" y="348" width="56" height="18" rx="5" fill="var(--dx-green)" />
+          <text x="488" y="361" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{'\u2264'} {d('24', '610')} deep</text>
 
           {/* Reach zone */}
-          <rect x="458" y="104" width="60" height="106" fill="#7C3AED" opacity="0.04" rx="6" stroke="#7C3AED" strokeWidth="1.5" />
+          <rect x="458" y="104" width="60" height="106" fill="var(--dx-violet)" opacity="0.04" rx="6" stroke="var(--dx-violet)" strokeWidth="1.5" />
 
           {/* 46-48" max */}
-          <line x1="440" y1="104" x2="650" y2="104" stroke="#7C3AED" strokeWidth="1.5" strokeDasharray="4 3" />
-          <rect x="654" y="90" width="62" height="28" rx="6" fill="#7C3AED" />
-          <text x="685" y="108" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('46\u201348', '1170')}</text>
-          <text x="685" y="132" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C3AED" fontWeight="600">max high</text>
+          <line x1="440" y1="104" x2="650" y2="104" stroke="var(--dx-violet)" strokeWidth="1.5" strokeDasharray="4 3" />
+          <rect x="654" y="90" width="62" height="28" rx="6" fill="var(--dx-violet)" />
+          <text x="685" y="108" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('46\u201348', '1170')}</text>
+          <text x="685" y="132" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-violet)" fontWeight="600">max high</text>
 
           {/* Person front view */}
-          <WheelchairFront x={530} y={140} armToX={-30} armToY={8} dotColor="#7C3AED" />
+          <WheelchairFront x={530} y={140} armToX={-30} armToY={8} dotColor="var(--dx-violet)" />
 
           {/* Floor */}
-          <line x1="390" y1="328" x2="710" y2="328" stroke="#94A3B8" strokeWidth="2" />
+          <line x1="390" y1="328" x2="710" y2="328" stroke="var(--dx-label)" strokeWidth="2" />
 
           {/* Callout dots */}
           <CalloutDots callouts={SIDE_CALLOUTS} active={sideActive} toggle={toggleSide} />
@@ -516,16 +516,16 @@ export default function ReachRangeDiagram() {
           fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700,
           color: 'var(--heading)', margin: '0 0 12px'
         }}>Key numbers {'\u2014'} Side Reach</p>
-        <KeyFact color="#2563EB" number={`${d('15', '380')} \u2013 ${d('48', '1220')}`}>
+        <KeyFact color="var(--dx-blue)" number={`${d('15', '380')} \u2013 ${d('48', '1220')}`}>
           Reachable zone when nothing is in the way {'\u2014'} same range as forward reach
         </KeyFact>
-        <KeyFact color="#15803D" number={`\u2264 ${d('24', '610')}`}>
+        <KeyFact color="var(--dx-green)" number={`\u2264 ${d('24', '610')}`}>
           Maximum depth of any obstruction you have to reach over sideways
         </KeyFact>
-        <KeyFact color="#7C3AED" number={`\u2264 ${d('34', '865')}`}>
+        <KeyFact color="var(--dx-violet)" number={`\u2264 ${d('34', '865')}`}>
           The obstruction can{'\u0027'}t be taller than 34 inches or it blocks the reach
         </KeyFact>
-        <KeyFact color="#7C3AED" number={`${d('46', '1170')} \u2013 ${d('48', '1220')}`}>
+        <KeyFact color="var(--dx-violet)" number={`${d('46', '1170')} \u2013 ${d('48', '1220')}`}>
           Maximum reach is 46 inches when the obstruction is 10{'\u2013'}24 inches deep
         </KeyFact>
       </div>

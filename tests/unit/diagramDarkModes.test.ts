@@ -1,26 +1,19 @@
 /**
- * Diagram dark-mode legibility — completeness guard.
+ * Diagram palette — token completeness guard.
  *
- * The 43 Standards Guide diagrams paint their labels with hardcoded hex fills
- * (a category color system: green = compliant, red-brown = violation, blue =
- * dimension, violet = note). Their backdrop is tokenized —
- * `<rect fill="var(--page-bg-subtle)">` — so it follows the user's display
- * mode, but the labels do not. In dark and contrast modes the backdrop goes
- * near-black while the labels stay dark, and the text disappears.
+ * The 43 Standards Guide diagrams now paint EVERY color through the themed
+ * `--dx-*` palette (defined in app.css), which auto-flips per display mode
+ * (dark/contrast/low-vision). This replaced the earlier hardcoded-hex +
+ * per-color CSS remap approach: a token that resolves to an AAA-tuned value
+ * in each theme is simpler and can't drift the way a hand-maintained remap
+ * list did.
  *
- * This test is a COMPLETENESS guard, not a spot check. It reads the diagram
- * sources, finds every hardcoded fill actually in use, computes its contrast
- * against each dark backdrop, and asserts that anything failing has a remap
- * rule in app.css. A new diagram introducing a new dark fill fails this test
- * — which is the point. A hand-copied list would go stale the first time
- * someone adds a diagram.
- *
- * Scope note: VC's low-vision mode is a WHITE canvas (#FFFFFF page /
- * #F5F5F5 subtle), unlike Base44's black-and-gold. Dark-mode remapping must
- * NOT apply there. Low-vision has the mirror-image defect — the light
- * STRUCTURAL set (#E2E8F0 lines/circles at 1.13:1) is what disappears —
- * and that is non-text shape recoloring under 1.4.11, deliberately out of
- * scope here and tracked as its own phase.
+ * The invariant this guards is now stronger than the old one: NO diagram may
+ * carry a hardcoded hex color at all — every color must go through a `--dx-*`
+ * token so it follows the user's display mode. A new diagram that hardcodes a
+ * hex (or a conversion that misses one) fails this test, which is the point.
+ * Runtime per-theme contrast of the tokens themselves is covered by the
+ * rendered-contrast a11y harness, not here.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -31,104 +24,58 @@ const APP_CSS = resolve(__dirname, '../../src/app.css');
 const DIAGRAM_DIR = resolve(__dirname, '../../src/app/components/standards/diagrams');
 const css = readFileSync(APP_CSS, 'utf8');
 
-/**
- * Backdrop each mode resolves --page-bg-subtle to. Read from app.css rather
- * than hardcoded: these were pinned as literals (#1E1B17 / #000000) and went
- * stale the moment Phase 4c re-valued the dark surfaces to #151C28. A test
- * measuring against a backdrop the app no longer uses is worse than no test —
- * it reports green while the thing it guards drifts.
- */
-function surface100(mode: string): string {
-  const bodies: string[] = [];
-  const sel = `:root[data-display="${mode}"]`;
-  for (let from = 0; ; ) {
-    const at = css.indexOf(sel, from);
-    if (at === -1) break;
-    const open = css.indexOf('{', at);
-    const close = css.indexOf('}', open);
-    bodies.push(css.slice(open, close));
-    from = close;
-  }
-  const m = bodies.join('\n').match(/--color-surface-100:\s*(#[0-9A-Fa-f]{6})/);
-  if (!m) throw new Error(`no --color-surface-100 for ${mode}`);
-  return m[1].toUpperCase();
+function diagramFiles(): string[] {
+  return readdirSync(DIAGRAM_DIR).filter((f) => /\.(jsx?|tsx?)$/.test(f));
 }
 
-const DARK_BACKDROP = surface100('dark');
-const CONTRAST_BACKDROP = surface100('contrast');
+describe('diagram palette (token completeness)', () => {
+  const files = diagramFiles();
 
-/** WCAG relative luminance + contrast ratio. */
-function luminance(hex: string): number {
-  const h = hex.replace('#', '');
-  const channels = [0, 2, 4].map((i) => {
-    const c = parseInt(h.slice(i, i + 2), 16) / 255;
-    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  it('has diagrams to check (guards against a silent empty pass)', () => {
+    // If the glob ever stops matching, the checks below would vacuously pass.
+    expect(files.length).toBeGreaterThan(5);
   });
-  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
-}
 
-function contrast(a: string, b: string): number {
-  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
-}
-
-/** Every `<text ... fill="#XXXXXX">` colour actually used across the diagrams. */
-function textFillsInUse(): Set<string> {
-  const found = new Set<string>();
-  for (const file of readdirSync(DIAGRAM_DIR)) {
-    if (!/\.(jsx?|tsx?)$/.test(file)) continue;
-    const src = readFileSync(join(DIAGRAM_DIR, file), 'utf8');
-    for (const m of src.matchAll(/<text[^>]*\bfill="(#[0-9A-Fa-f]{6})"/g)) {
-      found.add(m[1].toUpperCase());
+  it('no diagram carries a hardcoded hex color — all color goes through --dx-* tokens', () => {
+    const offenders: string[] = [];
+    for (const file of files) {
+      const src = readFileSync(join(DIAGRAM_DIR, file), 'utf8');
+      const hexes = src.match(/#[0-9A-Fa-f]{6}/g);
+      if (hexes) offenders.push(`${file}: ${[...new Set(hexes)].join(', ')}`);
     }
-  }
-  return found;
-}
-
-/** Does app.css carry a remap rule for this fill? */
-function hasRemap(fill: string): boolean {
-  return new RegExp(`text\\[fill="${fill}"\\]`, 'i').test(css);
-}
-
-describe('diagram dark-mode remap', () => {
-  const fills = [...textFillsInUse()].sort();
-
-  it('finds diagram text fills to check (guards against a silent empty pass)', () => {
-    // If the glob or regex ever stops matching, every it.each below would
-    // vacuously pass. Pin a floor so the suite can't go green by finding nothing.
-    expect(fills.length).toBeGreaterThan(5);
-  });
-
-  it.each([
-    ['dark', DARK_BACKDROP],
-    ['contrast', CONTRAST_BACKDROP],
-  ])('remaps every text fill that fails 4.5:1 in %s mode', (_mode, backdrop) => {
-    const failing = fills.filter((f) => contrast(f, backdrop) < 4.5);
-    const unremapped = failing.filter((f) => !hasRemap(f));
     expect(
-      unremapped,
-      `these diagram text fills are unreadable on ${backdrop} and have no remap rule`,
+      offenders,
+      'diagrams must use the themed --dx-* palette, not hardcoded hex (hardcoded ' +
+        'colors ignore the display-mode override and go invisible in dark modes)',
     ).toEqual([]);
   });
 
-  it('every remap target itself clears 7:1 on both dark backdrops', () => {
-    // A remap that swaps one failing colour for another failing colour is worse
-    // than none — it looks fixed. AAA body text is 7:1; diagram labels are small.
-    const targets = [...css.matchAll(/text\[fill="#[0-9A-Fa-f]{6}"\][^{]*\{\s*fill:\s*(#[0-9A-Fa-f]{6})/g)]
-      .map((m) => m[1].toUpperCase());
-    expect(targets.length, 'no remap targets found in app.css').toBeGreaterThan(0);
-
-    const weak = [...new Set(targets)].filter(
-      (t) => contrast(t, DARK_BACKDROP) < 7 || contrast(t, CONTRAST_BACKDROP) < 7,
+  it('diagrams actually reference the --dx-* palette (not just hex-free by accident)', () => {
+    const usesPalette = files.some((file) =>
+      /var\(--dx-/.test(readFileSync(join(DIAGRAM_DIR, file), 'utf8')),
     );
-    expect(weak, 'remap targets below the 7:1 AAA floor').toEqual([]);
+    expect(usesPalette, 'no diagram references any --dx-* token').toBe(true);
   });
 
-  it('does not apply the dark remap to low-vision, whose canvas is white', () => {
-    // Guard against the copy-from-Base44 mistake: B44's low-vision is black,
-    // so its remap covers LV. Ours is white — applying it there would invert
-    // the bug rather than fix it.
-    const remapBlock = css.slice(css.indexOf('Diagram category-colour remap'));
-    expect(remapBlock).not.toMatch(/\[data-display="low-vision"\][^{]*svg\[role="img"\]/);
+  it('app.css defines the full --dx-* palette', () => {
+    for (const token of [
+      '--dx-orange',
+      '--dx-green',
+      '--dx-violet',
+      '--dx-amber',
+      '--dx-blue',
+      '--dx-label',
+      '--dx-line',
+    ]) {
+      expect(css, `app.css is missing ${token}`).toMatch(token);
+    }
+  });
+
+  it('--dx-blue is themed (bespoke per-mode values, not a single static hue)', () => {
+    // --dx-blue is the one token without an existing AAA family to alias, so it
+    // carries explicit per-theme values. Guard that the dark/contrast overrides
+    // still exist (a regression here would leave blue failing on dark canvases).
+    expect(css).toMatch(/\[data-display="dark"\][^}]*--dx-blue/);
+    expect(css).toMatch(/\[data-display="contrast"\][^}]*--dx-blue/);
   });
 });

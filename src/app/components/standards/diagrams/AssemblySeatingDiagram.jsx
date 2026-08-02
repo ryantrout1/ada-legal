@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 const U = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#802-wheelchair-spaces-companion-seats-and-designated-aisle-seats';
 const CALLOUTS = [
-  { id: 1, label: 'Wheelchair Spaces & Companions', section: '\u00a7802.1', color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52, plain: 'Wheelchair spaces must be 36 inches wide minimum. Depth: 48 inches for front/rear entry, 60 inches for side entry. A companion seat must be directly adjacent \u2014 shoulder-to-shoulder, not in front or behind. The companion seat must be equivalent in comfort and price to surrounding seats. Spaces must be dispersed throughout the venue, not clustered in one location.', legal: '\u201CWheelchair spaces shall be 36 inches wide minimum.\u201D Depth: \u201C48 inches (front/rear entry) or 60 inches (side entry).\u201D Companion: \u201CAt least one companion seat shall be provided for each wheelchair space.\u201D \u201CCompanion seats shall be located to provide shoulder alignment.\u201D', citation: '\u00a7802.1, \u00a7802.3' },
-  { id: 2, label: 'Sightlines & Dispersion', section: '\u00a7802.2', color: '#15803D', textColor: '#14532D', x: 470, y: 52, plain: 'Wheelchair users must see over standing spectators when the audience stands. This means wheelchair positions must be elevated or on a platform \u2014 front-row-only placement fails in venues where people stand. Spaces must be dispersed among different seating sections, price levels, and viewing angles. Clustering all wheelchair seats in one area is a violation, even if the sightlines are good.', legal: '\u201CWhere spectators are expected to stand, wheelchair spaces shall provide a line of sight over standing spectators.\u201D \u00a7221.2.3: \u201CWheelchair spaces shall be dispersed.\u201D \u201CWheelchair spaces shall provide a choice of admission prices and lines of sight comparable to those for the general public.\u201D', citation: '\u00a7802.2, \u00a7221.2.3' }
+  { id: 1, label: 'Wheelchair Spaces & Companions', section: '\u00a7802.1', color: 'var(--dx-orange)', textColor: 'var(--dx-orange)', x: 100, y: 52, plain: 'Wheelchair spaces must be 36 inches wide minimum. Depth: 48 inches for front/rear entry, 60 inches for side entry. A companion seat must be directly adjacent \u2014 shoulder-to-shoulder, not in front or behind. The companion seat must be equivalent in comfort and price to surrounding seats. Spaces must be dispersed throughout the venue, not clustered in one location.', legal: '\u201CWheelchair spaces shall be 36 inches wide minimum.\u201D Depth: \u201C48 inches (front/rear entry) or 60 inches (side entry).\u201D Companion: \u201CAt least one companion seat shall be provided for each wheelchair space.\u201D \u201CCompanion seats shall be located to provide shoulder alignment.\u201D', citation: '\u00a7802.1, \u00a7802.3' },
+  { id: 2, label: 'Sightlines & Dispersion', section: '\u00a7802.2', color: 'var(--dx-green)', textColor: 'var(--dx-green)', x: 470, y: 52, plain: 'Wheelchair users must see over standing spectators when the audience stands. This means wheelchair positions must be elevated or on a platform \u2014 front-row-only placement fails in venues where people stand. Spaces must be dispersed among different seating sections, price levels, and viewing angles. Clustering all wheelchair seats in one area is a violation, even if the sightlines are good.', legal: '\u201CWhere spectators are expected to stand, wheelchair spaces shall provide a line of sight over standing spectators.\u201D \u00a7221.2.3: \u201CWheelchair spaces shall be dispersed.\u201D \u201CWheelchair spaces shall provide a choice of admission prices and lines of sight comparable to those for the general public.\u201D', citation: '\u00a7802.2, \u00a7221.2.3' }
 ];
 function makeLink(t){return(<a href={U} target="_blank" rel="noopener noreferrer" style={{color:'var(--section-label)',textDecoration:'none',borderBottom:'1px dotted var(--accent)'}} aria-label={`${t} on ADA.gov`}>{t}<span aria-hidden="true" style={{fontSize:'0.65em',marginLeft:'1px',verticalAlign:'super'}}>{'\u2197'}</span></a>)}
 function pc(t){return t.split(/(\u00a7\d{3,4}(?:\.\d+)*)/g).map((p,i)=>/^\u00a7\d{3,4}/.test(p)?<React.Fragment key={i}>{makeLink(p)}</React.Fragment>:p)}
@@ -24,34 +24,34 @@ export default function AssemblySeatingDiagram(){
         <text x="540" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Sightlines & placement</text>
 
         {/* LEFT: Space size */}
-        <rect x="40" y="70" width="280" height="50" rx="10" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5"/>
-        <text x="180" y="92" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#7C2D12" fontWeight="600">36{'\u2033'} wide {'\u00d7'} 48{'\u2033'} deep (front entry)</text>
-        <text x="180" y="108" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">or 60{'\u2033'} deep for side entry</text>
+        <rect x="40" y="70" width="280" height="50" rx="10" fill="var(--dx-orange)" opacity="0.04" stroke="var(--dx-orange)" strokeWidth="1.5"/>
+        <text x="180" y="92" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-orange)" fontWeight="600">36{'\u2033'} wide {'\u00d7'} 48{'\u2033'} deep (front entry)</text>
+        <text x="180" y="108" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)">or 60{'\u2033'} deep for side entry</text>
 
-        <rect x="40" y="135" width="280" height="50" rx="10" fill="#7C3AED" opacity="0.04" stroke="#7C3AED" strokeWidth="1.5"/>
-        <text x="180" y="157" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#5B21B6" fontWeight="600">Companion seat: shoulder-to-shoulder</text>
-        <text x="180" y="173" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6">directly adjacent, same comfort and price</text>
+        <rect x="40" y="135" width="280" height="50" rx="10" fill="var(--dx-violet)" opacity="0.04" stroke="var(--dx-violet)" strokeWidth="1.5"/>
+        <text x="180" y="157" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-violet)" fontWeight="600">Companion seat: shoulder-to-shoulder</text>
+        <text x="180" y="173" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-violet)">directly adjacent, same comfort and price</text>
 
-        <rect x="40" y="200" width="280" height="50" rx="10" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5"/>
-        <text x="180" y="222" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#1E3A8A" fontWeight="600">Dispersed throughout venue</text>
-        <text x="180" y="238" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A">different sections, price levels, angles</text>
+        <rect x="40" y="200" width="280" height="50" rx="10" fill="var(--dx-blue)" opacity="0.04" stroke="var(--dx-blue)" strokeWidth="1.5"/>
+        <text x="180" y="222" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-blue)" fontWeight="600">Dispersed throughout venue</text>
+        <text x="180" y="238" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)">different sections, price levels, angles</text>
 
         {/* DIVIDER */}
-        <line x1="370" y1="20" x2="370" y2="320" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4"/>
+        <line x1="370" y1="20" x2="370" y2="320" stroke="var(--dx-line)" strokeWidth="1.5" strokeDasharray="6 4"/>
 
         {/* RIGHT: Sightlines */}
-        <rect x="400" y="70" width="280" height="60" rx="10" fill="#15803D" opacity="0.04" stroke="#15803D" strokeWidth="1.5"/>
-        <text x="540" y="92" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#14532D" fontWeight="600">Must see over standing spectators</text>
-        <text x="540" y="110" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#14532D">elevated or platform seating when audience stands</text>
-        <text x="540" y="124" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#14532D">front row only is NOT enough</text>
+        <rect x="400" y="70" width="280" height="60" rx="10" fill="var(--dx-green)" opacity="0.04" stroke="var(--dx-green)" strokeWidth="1.5"/>
+        <text x="540" y="92" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-green)" fontWeight="600">Must see over standing spectators</text>
+        <text x="540" y="110" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)">elevated or platform seating when audience stands</text>
+        <text x="540" y="124" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)">front row only is NOT enough</text>
 
-        <rect x="400" y="148" width="280" height="50" rx="10" fill="#C2410C" opacity="0.04" stroke="#C2410C" strokeWidth="1.5"/>
-        <text x="540" y="170" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#7C2D12" fontWeight="600">{'\u2718'} All seats in one spot = violation</text>
-        <text x="540" y="186" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">even if sightlines are good from there</text>
+        <rect x="400" y="148" width="280" height="50" rx="10" fill="var(--dx-orange)" opacity="0.04" stroke="var(--dx-orange)" strokeWidth="1.5"/>
+        <text x="540" y="170" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-orange)" fontWeight="600">{'\u2718'} All seats in one spot = violation</text>
+        <text x="540" y="186" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)">even if sightlines are good from there</text>
 
-        <rect x="400" y="215" width="280" height="50" rx="10" fill="#2563EB" opacity="0.04" stroke="#2563EB" strokeWidth="1.5"/>
-        <text x="540" y="237" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#1E3A8A" fontWeight="600">{'\u2714'} Comparable choice of experience</text>
-        <text x="540" y="253" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A">same viewing quality as general public</text>
+        <rect x="400" y="215" width="280" height="50" rx="10" fill="var(--dx-blue)" opacity="0.04" stroke="var(--dx-blue)" strokeWidth="1.5"/>
+        <text x="540" y="237" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-blue)" fontWeight="600">{'\u2714'} Comparable choice of experience</text>
+        <text x="540" y="253" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)">same viewing quality as general public</text>
 
         <Dots callouts={CALLOUTS} active={a} toggle={tg}/>
         <text x="20" y="330" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
@@ -61,10 +61,10 @@ export default function AssemblySeatingDiagram(){
     <CP callout={ac} onClose={()=>sa(null)} panelRef={pr}/>
     <div style={{background:'var(--card-bg)',border:'1px solid var(--border)',borderRadius:'12px',padding:'20px 24px',marginTop:'12px'}}>
       <p style={{fontFamily:'var(--font-display)',fontSize:'1rem',fontWeight:700,color:'var(--heading)',margin:'0 0 12px'}}>Key numbers {'\u2014'} Assembly Seating</p>
-      <KF color="#C2410C" number={`36\u2033`}>Minimum wheelchair space width</KF>
-      <KF color="#7C3AED" number="Adjacent">Companion must be shoulder-to-shoulder</KF>
-      <KF color="#15803D" number="Dispersed">Spaces spread across sections and price levels</KF>
-      <KF color="#2563EB" number="Standing">Must see over spectators who stand up</KF>
+      <KF color="var(--dx-orange)" number={`36\u2033`}>Minimum wheelchair space width</KF>
+      <KF color="var(--dx-violet)" number="Adjacent">Companion must be shoulder-to-shoulder</KF>
+      <KF color="var(--dx-green)" number="Dispersed">Spaces spread across sections and price levels</KF>
+      <KF color="var(--dx-blue)" number="Standing">Must see over spectators who stand up</KF>
     </div>
     <style>{`
       @keyframes asFade{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}

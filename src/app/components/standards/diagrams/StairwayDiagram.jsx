@@ -5,14 +5,14 @@ const STAIR_URL = 'https://www.ada.gov/law-and-regs/design-standards/2010-stds/#
 const STEP_CALLOUTS = [
   {
     id: 1, label: 'Treads, Risers & Nosings', section: '\u00a7504.2',
-    color: '#C2410C', textColor: '#7C2D12', x: 100, y: 52,
+    color: 'var(--dx-orange)', textColor: 'var(--dx-orange)', x: 100, y: 52,
     plain: 'All treads must be at least 11 inches deep, and all risers between 4 and 7 inches high. Every step in a flight must be uniform \u2014 no variation in height or depth. Open risers are NOT permitted because feet and cane tips can slip through. The leading edge (nosing) must be curved or beveled, never sharp. Nosings can project a maximum of 1.5 inches and must have an underside angle of at least 60\u00b0.',
     legal: '\u201CTreads shall be 11 inches deep minimum.\u201D \u201CRisers shall be 4 inches high minimum and 7 inches high maximum.\u201D \u201COpen risers are not permitted.\u201D \u201CThe radius of curvature at the leading edge shall be \u00bd inch maximum.\u201D',
     citation: '\u00a7504.2, \u00a7504.3, \u00a7504.4, \u00a7504.5'
   },
   {
     id: 2, label: 'Handrails & Wet Conditions', section: '\u00a7504.6',
-    color: '#15803D', textColor: '#14532D', x: 470, y: 52,
+    color: 'var(--dx-green)', textColor: 'var(--dx-green)', x: 470, y: 52,
     plain: 'Handrails must be on both sides, 34\u201338 inches above stair nosings, continuous for the full flight length. At the top, rails extend 12 inches horizontally beyond the top riser. At the bottom, rails extend at the stair slope for one tread depth, then 12 inches horizontally. Outdoor stairs or any stairs that may get wet must have contrast strips on each tread edge for people with low vision.',
     legal: '\u201CStairs shall have handrails complying with \u00a7505.\u201D Height: \u201C34 inches minimum and 38 inches maximum above stair nosings.\u201D Top extension: \u201C12 inches horizontally.\u201D \u00a7504.7: Wet conditions require visual contrast at leading edges.',
     citation: '\u00a7504.6, \u00a7505, \u00a7504.7'
@@ -28,9 +28,9 @@ function CalloutPanel({ callout, onClose, panelRef }) {
     <div ref={panelRef} style={{ marginTop: '12px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', animation: 'stairFade 0.25s ease-out' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)', background: 'var(--page-bg-subtle)', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: callout.color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700 }}>{callout.id}</span>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--heading)' }}>{callout.label}</span>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: callout.color, background: `${callout.color}15`, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--page-bg)', background: callout.color, padding: '2px 8px', borderRadius: '4px' }}>{callout.section}</span>
         </div>
         <button onClick={onClose} aria-label="Close panel" style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, color: 'var(--body)', minHeight: '44px' }}>Close <span aria-hidden="true">{'\u2715'}</span></button>
       </div>
@@ -48,7 +48,7 @@ function CalloutPanel({ callout, onClose, panelRef }) {
 function KeyFact({ color, number, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 0' }}>
-      <span style={{ background: color, color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
+      <span style={{ background: color, color: 'var(--page-bg)', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 700, minWidth: '60px', textAlign: 'center', padding: '3px 10px', borderRadius: '6px', flexShrink: 0, whiteSpace: 'nowrap' }}>{number}</span>
       <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--body)', lineHeight: 1.6 }}>{children}</span>
     </div>
   );
@@ -95,80 +95,80 @@ export default function StairwayDiagram() {
 
           {/* LEFT: Step cross-section */}
           {/* Stairs (3 steps) */}
-          <line x1="60" y1="310" x2="140" y2="310" stroke="#475569" strokeWidth="2.5" />
-          <line x1="140" y1="310" x2="140" y2="250" stroke="#475569" strokeWidth="2.5" />
-          <line x1="140" y1="250" x2="220" y2="250" stroke="#475569" strokeWidth="2.5" />
-          <line x1="220" y1="250" x2="220" y2="190" stroke="#475569" strokeWidth="2.5" />
-          <line x1="220" y1="190" x2="300" y2="190" stroke="#475569" strokeWidth="2.5" />
-          <line x1="300" y1="190" x2="300" y2="130" stroke="#475569" strokeWidth="2.5" />
-          <line x1="300" y1="130" x2="360" y2="130" stroke="#475569" strokeWidth="2.5" />
+          <line x1="60" y1="310" x2="140" y2="310" stroke="var(--dx-line)" strokeWidth="2.5" />
+          <line x1="140" y1="310" x2="140" y2="250" stroke="var(--dx-line)" strokeWidth="2.5" />
+          <line x1="140" y1="250" x2="220" y2="250" stroke="var(--dx-line)" strokeWidth="2.5" />
+          <line x1="220" y1="250" x2="220" y2="190" stroke="var(--dx-line)" strokeWidth="2.5" />
+          <line x1="220" y1="190" x2="300" y2="190" stroke="var(--dx-line)" strokeWidth="2.5" />
+          <line x1="300" y1="190" x2="300" y2="130" stroke="var(--dx-line)" strokeWidth="2.5" />
+          <line x1="300" y1="130" x2="360" y2="130" stroke="var(--dx-line)" strokeWidth="2.5" />
 
           {/* Tread depth dimension (bottom step) */}
-          <line x1="60" y1="320" x2="140" y2="320" stroke="#C2410C" strokeWidth="1.2" />
-          <line x1="60" y1="315" x2="60" y2="325" stroke="#C2410C" strokeWidth="1.2" />
-          <line x1="140" y1="315" x2="140" y2="325" stroke="#C2410C" strokeWidth="1.2" />
-          <rect x="65" y="328" width="66" height="18" rx="5" fill="#C2410C" />
-          <text x="98" y="341" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('11', '280')} min</text>
-          <text x="98" y="360" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#C2410C" fontWeight="500">tread depth</text>
+          <line x1="60" y1="320" x2="140" y2="320" stroke="var(--dx-orange)" strokeWidth="1.2" />
+          <line x1="60" y1="315" x2="60" y2="325" stroke="var(--dx-orange)" strokeWidth="1.2" />
+          <line x1="140" y1="315" x2="140" y2="325" stroke="var(--dx-orange)" strokeWidth="1.2" />
+          <rect x="65" y="328" width="66" height="18" rx="5" fill="var(--dx-orange)" />
+          <text x="98" y="341" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('11', '280')} min</text>
+          <text x="98" y="360" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)" fontWeight="500">tread depth</text>
 
           {/* Riser height dimension */}
-          <line x1="150" y1="250" x2="150" y2="310" stroke="#15803D" strokeWidth="1.2" />
-          <line x1="145" y1="250" x2="155" y2="250" stroke="#15803D" strokeWidth="1.2" />
-          <line x1="145" y1="310" x2="155" y2="310" stroke="#15803D" strokeWidth="1.2" />
-          <rect x="158" y="268" width="58" height="18" rx="5" fill="#15803D" />
-          <text x="187" y="281" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('4', '100')}{'\u2013'}{d('7', '178')}</text>
-          <text x="187" y="300" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#15803D" fontWeight="500">riser height</text>
+          <line x1="150" y1="250" x2="150" y2="310" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <line x1="145" y1="250" x2="155" y2="250" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <line x1="145" y1="310" x2="155" y2="310" stroke="var(--dx-green)" strokeWidth="1.2" />
+          <rect x="158" y="268" width="58" height="18" rx="5" fill="var(--dx-green)" />
+          <text x="187" y="281" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('4', '100')}{'\u2013'}{d('7', '178')}</text>
+          <text x="187" y="300" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-green)" fontWeight="500">riser height</text>
 
           {/* Nosing detail callout */}
-          <circle cx="140" cy="250" r="12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="3 2" />
-          <line x1="148" y1="240" x2="240" y2="160" stroke="#2563EB" strokeWidth="1" />
-          <text x="245" y="156" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A" fontWeight="600">rounded nosing</text>
-          <text x="245" y="170" fontFamily="var(--font-body)" fontSize="10" fill="#1E3A8A">{'\u2264'} 1{'\u00bd'}{'\u2033'} projection</text>
+          <circle cx="140" cy="250" r="12" fill="none" stroke="var(--dx-blue)" strokeWidth="1.5" strokeDasharray="3 2" />
+          <line x1="148" y1="240" x2="240" y2="160" stroke="var(--dx-blue)" strokeWidth="1" />
+          <text x="245" y="156" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)" fontWeight="600">rounded nosing</text>
+          <text x="245" y="170" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-blue)">{'\u2264'} 1{'\u00bd'}{'\u2033'} projection</text>
 
           {/* NO open risers */}
-          <rect x="60" y="80" width="160" height="40" rx="8" fill="#C2410C" opacity="0.05" stroke="#C2410C" strokeWidth="1.5" />
-          <text x="140" y="98" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="#7C2D12" fontWeight="600">{'\u2718'} No open risers</text>
-          <text x="140" y="114" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#7C2D12">canes and feet get caught</text>
+          <rect x="60" y="80" width="160" height="40" rx="8" fill="var(--dx-orange)" opacity="0.05" stroke="var(--dx-orange)" strokeWidth="1.5" />
+          <text x="140" y="98" textAnchor="middle" fontFamily="var(--font-body)" fontSize="11" fill="var(--dx-orange)" fontWeight="600">{'\u2718'} No open risers</text>
+          <text x="140" y="114" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-orange)">canes and feet get caught</text>
 
 
           {/* DIVIDER */}
-          <line x1="380" y1="40" x2="380" y2="360" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="6 4" />
+          <line x1="380" y1="40" x2="380" y2="360" stroke="var(--dx-line)" strokeWidth="1.5" strokeDasharray="6 4" />
 
 
           {/* RIGHT: Handrail with extensions */}
           {/* Stair profile (simplified) */}
-          <line x1="460" y1="300" x2="500" y2="300" stroke="#475569" strokeWidth="2" />
-          <line x1="500" y1="300" x2="500" y2="260" stroke="#475569" strokeWidth="2" />
-          <line x1="500" y1="260" x2="540" y2="260" stroke="#475569" strokeWidth="2" />
-          <line x1="540" y1="260" x2="540" y2="220" stroke="#475569" strokeWidth="2" />
-          <line x1="540" y1="220" x2="580" y2="220" stroke="#475569" strokeWidth="2" />
-          <line x1="580" y1="220" x2="580" y2="180" stroke="#475569" strokeWidth="2" />
-          <line x1="580" y1="180" x2="640" y2="180" stroke="#475569" strokeWidth="2" />
+          <line x1="460" y1="300" x2="500" y2="300" stroke="var(--dx-line)" strokeWidth="2" />
+          <line x1="500" y1="300" x2="500" y2="260" stroke="var(--dx-line)" strokeWidth="2" />
+          <line x1="500" y1="260" x2="540" y2="260" stroke="var(--dx-line)" strokeWidth="2" />
+          <line x1="540" y1="260" x2="540" y2="220" stroke="var(--dx-line)" strokeWidth="2" />
+          <line x1="540" y1="220" x2="580" y2="220" stroke="var(--dx-line)" strokeWidth="2" />
+          <line x1="580" y1="220" x2="580" y2="180" stroke="var(--dx-line)" strokeWidth="2" />
+          <line x1="580" y1="180" x2="640" y2="180" stroke="var(--dx-line)" strokeWidth="2" />
 
           {/* Handrail line */}
-          <line x1="488" y1="260" x2="568" y2="140" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
+          <line x1="488" y1="260" x2="568" y2="140" stroke="var(--dx-violet)" strokeWidth="3" strokeLinecap="round" />
 
           {/* Top 12" extension */}
-          <line x1="568" y1="140" x2="650" y2="140" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
-          <line x1="568" y1="150" x2="650" y2="150" stroke="#7C3AED" strokeWidth="1" />
-          <rect x="580" y="118" width="60" height="18" rx="5" fill="#7C3AED" />
-          <text x="610" y="131" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('12', '305')} ext.</text>
-          <text x="610" y="108" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6" fontWeight="500">top extension</text>
+          <line x1="568" y1="140" x2="650" y2="140" stroke="var(--dx-violet)" strokeWidth="3" strokeLinecap="round" />
+          <line x1="568" y1="150" x2="650" y2="150" stroke="var(--dx-violet)" strokeWidth="1" />
+          <rect x="580" y="118" width="60" height="18" rx="5" fill="var(--dx-violet)" />
+          <text x="610" y="131" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('12', '305')} ext.</text>
+          <text x="610" y="108" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-violet)" fontWeight="500">top extension</text>
 
           {/* Bottom extension (follows slope then horizontal) */}
-          <line x1="488" y1="260" x2="460" y2="290" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
-          <line x1="460" y1="290" x2="410" y2="290" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
-          <rect x="408" y="296" width="60" height="18" rx="5" fill="#7C3AED" />
-          <text x="438" y="309" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="white">{d('12', '305')} ext.</text>
-          <text x="438" y="326" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6" fontWeight="500">bottom extension</text>
+          <line x1="488" y1="260" x2="460" y2="290" stroke="var(--dx-violet)" strokeWidth="3" strokeLinecap="round" />
+          <line x1="460" y1="290" x2="410" y2="290" stroke="var(--dx-violet)" strokeWidth="3" strokeLinecap="round" />
+          <rect x="408" y="296" width="60" height="18" rx="5" fill="var(--dx-violet)" />
+          <text x="438" y="309" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fontWeight="700" fill="var(--page-bg)">{d('12', '305')} ext.</text>
+          <text x="438" y="326" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-violet)" fontWeight="500">bottom extension</text>
 
           {/* Height dimension */}
-          <line x1="545" y1="175" x2="545" y2="220" stroke="#7C3AED" strokeWidth="1" strokeDasharray="3 2" />
-          <rect x="395" y="80" width="170" height="22" rx="6" fill="#7C3AED" opacity="0.08" stroke="#7C3AED" strokeWidth="1" />
-          <text x="480" y="95" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6" fontWeight="600">{d('34', '865')}{'\u2013'}{d('38', '965')} above nosings</text>
+          <line x1="545" y1="175" x2="545" y2="220" stroke="var(--dx-violet)" strokeWidth="1" strokeDasharray="3 2" />
+          <rect x="395" y="80" width="170" height="22" rx="6" fill="var(--dx-violet)" opacity="0.08" stroke="var(--dx-violet)" strokeWidth="1" />
+          <text x="480" y="95" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-violet)" fontWeight="600">{d('34', '865')}{'\u2013'}{d('38', '965')} above nosings</text>
 
           {/* Both sides note */}
-          <text x="540" y="348" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="#5B21B6" fontWeight="600">required on both sides, continuous</text>
+          <text x="540" y="348" textAnchor="middle" fontFamily="var(--font-body)" fontSize="10" fill="var(--dx-violet)" fontWeight="600">required on both sides, continuous</text>
 
           <Dots callouts={STEP_CALLOUTS} active={active} toggle={toggle} />
           <text x="20" y="370" fontFamily="var(--font-body)" fontSize="10" fill="var(--body-secondary)">Click or tap numbered callouts for details</text>
@@ -180,10 +180,10 @@ export default function StairwayDiagram() {
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px 24px', marginTop: '12px' }}>
         <p style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'var(--heading)', margin: '0 0 12px' }}>Key numbers {'\u2014'} Stairways</p>
-        <KeyFact color="#C2410C" number={d('11', '280')}>Minimum tread depth</KeyFact>
-        <KeyFact color="#15803D" number={`${d('4', '100')}\u2013${d('7', '178')}`}>Riser height range (must be uniform within a flight)</KeyFact>
-        <KeyFact color="#7C3AED" number={d('12', '305')}>Handrail extension beyond top and bottom</KeyFact>
-        <KeyFact color="#C2410C" number="No open">Open risers are not permitted on accessible routes</KeyFact>
+        <KeyFact color="var(--dx-orange)" number={d('11', '280')}>Minimum tread depth</KeyFact>
+        <KeyFact color="var(--dx-green)" number={`${d('4', '100')}\u2013${d('7', '178')}`}>Riser height range (must be uniform within a flight)</KeyFact>
+        <KeyFact color="var(--dx-violet)" number={d('12', '305')}>Handrail extension beyond top and bottom</KeyFact>
+        <KeyFact color="var(--dx-orange)" number="No open">Open risers are not permitted on accessible routes</KeyFact>
       </div>
 
       <style>{`
