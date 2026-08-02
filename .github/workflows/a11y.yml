@@ -1,0 +1,81 @@
+name: Accessibility guards
+
+# Runs the accessibility test suite on every push to main and on demand.
+# This is what turns "green today" into "can't go red without a red X on the
+# commit". Two kinds of checks:
+#
+#   1. HARD GATE (this job fails if these fail): the guards that are green and
+#      should stay green — font-switching, screen-reader/keyboard structure,
+#      44px target size, and visible focus. A regression here reds the commit.
+#
+#   2. REPORT-ONLY (never fails the job): the full WCAG 2.2 AAA theme-matrix
+#      contrast sweep. It still has a couple of known, non-defect findings
+#      (an axe contrast quirk in one diagram toggle; a test-structure artifact),
+#      so it's kept report-only to avoid a red-by-construction check that gets
+#      ignored. The report is uploaded as an artifact either way. Once those
+#      last findings are excluded, move `verify:a11y` up into the hard gate.
+#
+# NOTE (direct-to-main): this repo pushes straight to main, so this check
+# reports AFTER the push — it flags a regression, it doesn't block the push
+# itself. To make it truly blocking, adopt a PR flow + branch protection
+# requiring this check.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  a11y:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      # ---- HARD GATE: these must stay green ----
+      - name: Guards (fonts, structure, targets, focus)
+        run: >
+          npm run test:a11y --
+          tests/a11y/font-switching.spec.ts
+          tests/a11y/semantics.spec.ts
+          tests/a11y/target-size.spec.ts
+          tests/a11y/focus-visible.spec.ts
+
+      # ---- REPORT-ONLY: contrast sweep + report artifact ----
+      - name: AAA contrast sweep (report-only)
+        id: sweep
+        continue-on-error: true
+        run: npm run verify:a11y
+
+      - name: Upload contrast report + screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-report
+          path: |
+            test-results/a11y-report.md
+            test-results/a11y-findings/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Summarize
+        if: always()
+        run: |
+          echo "### Accessibility guards" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Hard guards (fonts/structure/targets/focus): run above — a red X here is a real regression." >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.sweep.outcome }}" = "success" ]; then
+            echo "- Contrast sweep: **PASS** — no blocking AAA findings." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- Contrast sweep: **findings present** (report-only). See the a11y-report artifact." >> "$GITHUB_STEP_SUMMARY"
+          fi
