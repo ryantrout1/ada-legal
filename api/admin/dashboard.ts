@@ -68,6 +68,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const result = await db.execute<{
       sessions: number;
       intakes: number;
+      /**
+       * Same predicate as `intakes`, windowed to 30 days. `intakes` is
+       * all-time and `sessions` is 30-day, so putting the two next to
+       * each other as a funnel compares different windows and overstates
+       * conversion. The tile still reads all-time; the funnel reads this.
+       */
+      intakes_30d: number;
       cases_unplaced: number;
       firms: number;
       attorneys: number;
@@ -82,6 +89,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         (SELECT count(*)::int FROM ada_sessions
            WHERE is_test = false
              AND session_type = 'class_action_intake')                      AS intakes,
+        (SELECT count(*)::int FROM ada_sessions
+           WHERE is_test = false
+             AND session_type = 'class_action_intake'
+             AND created_at > now() - interval '30 days')                   AS intakes_30d,
         (SELECT count(*)::int FROM cases WHERE firm_id IS NULL)             AS cases_unplaced,
         (SELECT count(*)::int FROM law_firms WHERE status = 'active')       AS firms,
         (SELECT count(*)::int FROM attorneys WHERE status = 'approved')     AS attorneys,

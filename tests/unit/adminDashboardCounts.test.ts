@@ -61,6 +61,27 @@ describe('admin dashboard — each tile matches the page it links to', () => {
     );
   });
 
+  it('exposes a 30-day intakes count for the funnel', () => {
+    // The dashboard shows sessions and intakes side by side as a funnel.
+    // `intakes` is all-time and `sessions` is 30-day, so pairing those two
+    // compares different windows and overstates conversion the moment
+    // either number leaves zero. The funnel reads intakes_30d instead.
+    expect(sql, 'intakes_30d dropped — the funnel is now comparing windows').toContain(
+      'AS intakes_30d',
+    );
+    // Not [^)]* — now() carries its own paren and would truncate the match.
+    // The (?!\(SELECT) lookahead stops the match spilling backwards into the
+    // sessions subquery above, which would let this pass on the wrong text.
+    const windowed = sql.match(
+      /\(SELECT count\(\*\)::int FROM ada_sessions(?:(?!\(SELECT)[\s\S])*?AS intakes_30d/,
+    );
+    expect(windowed, 'intakes_30d is not an ada_sessions count').not.toBeNull();
+    expect(windowed?.[0]).toContain("session_type = 'class_action_intake'");
+    expect(windowed?.[0], 'intakes_30d lost its 30-day window').toContain(
+      "created_at > now() - interval '30 days'",
+    );
+  });
+
   it('counts only active firms', () => {
     expect(sql).toMatch(/FROM law_firms WHERE status = 'active'/);
   });
