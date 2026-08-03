@@ -86,6 +86,7 @@ const NAV_SECTIONS: NavSection[] = [
       { to: '/admin/spot', label: 'Spot' },
       { to: '/admin/spot-review', label: 'Spot Review' },
       { to: '/admin/photo-review', label: 'Photo Review' },
+      { to: '/admin/spot/annotation-preview', label: 'Annotation Preview' },
     ],
   },
   {

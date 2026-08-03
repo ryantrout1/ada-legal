@@ -68,6 +68,7 @@ import AdminFeedback from './routes/admin/AdminFeedback.js';
 import AdminIntakeDetail from './routes/admin/AdminIntakeDetail.js';
 import AdminAnalytics from './routes/admin/AdminAnalytics.js';
 import AdminSpot from './routes/admin/AdminSpot.js';
+import SpotAnnotationPreview from './routes/admin/SpotAnnotationPreview.js';
 import AdminFreeReadDetail from './routes/admin/AdminFreeReadDetail.js';
 import AdminSpotReview from './routes/admin/AdminSpotReview.js';
 import AdminSpotReviewDetail from './routes/admin/AdminSpotReviewDetail.js';
@@ -229,6 +230,7 @@ function AdminShell() {
           <Route path="settings" element={<AdminSettings />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="spot" element={<AdminSpot />} />
+          <Route path="spot/annotation-preview" element={<SpotAnnotationPreview />} />
           <Route path="spot/reads/:id" element={<AdminFreeReadDetail />} />
           <Route path="spot-review" element={<AdminSpotReview />} />
           <Route path="spot-review/:slug" element={<AdminSpotReviewDetail />} />
