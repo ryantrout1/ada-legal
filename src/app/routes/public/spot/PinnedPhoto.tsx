@@ -13,6 +13,7 @@
  */
 
 import type { NumberedPin } from '@/lib/spot/pinNumbering';
+import { assignMarkerOffsets } from '@/lib/spot/markerOffsets';
 
 export function PinnedPhoto({
   url,
@@ -25,6 +26,7 @@ export function PinnedPhoto({
   total: number;
   pins: NumberedPin[];
 }) {
+  const offsets = assignMarkerOffsets(pins);
   return (
     <figure className="m-0">
       <div className="relative">
@@ -41,14 +43,18 @@ export function PinnedPhoto({
           // Keep the on-photo pill compact whatever the label length; the full
           // label lives in the caption below.
           const short = p.label.length > 24 ? `${p.label.slice(0, 23).trimEnd()}…` : p.label;
+          // Stack markers that land close together so their pills don't overlap.
+          const dy = offsets[i];
           return (
             <span
               key={i}
               aria-hidden="true"
-              style={{ left: `${p.x * 100}%`, top: `${p.y * 100}%` }}
-              className={`absolute flex -translate-y-1/2 items-center gap-1.5 ${
-                labelLeft ? '-translate-x-full flex-row-reverse' : ''
-              }`}
+              style={{
+                left: `${p.x * 100}%`,
+                top: `${p.y * 100}%`,
+                transform: `translate(${labelLeft ? '-100%' : '0'}, calc(-50% + ${dy}px))`,
+              }}
+              className={`absolute flex items-center gap-1.5 ${labelLeft ? 'flex-row-reverse' : ''}`}
             >
               {/* Fixed colours on purpose: this sits on a photo, which does not
                   follow the page theme. The dark pill and the accent number badge
