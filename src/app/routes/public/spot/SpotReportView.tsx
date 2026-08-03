@@ -34,7 +34,7 @@
 import type { SpotReportContent, SpotReportItem } from '@/lib/spot/reportSchema';
 import { groupFindings, stripEntries, summaryLine } from '@/lib/spot/reportLayout';
 import { SPOT_REPORT_STARTER_DISCLAIMER } from '@/lib/spot/spotDisclaimers';
-import { pinsForPhoto } from '@/lib/spot/pinsForPhoto';
+import { buildPinNumbering } from '@/lib/spot/pinNumbering';
 import { PinnedPhoto } from './PinnedPhoto';
 
 /** Severity drives emphasis, not colour meaning. A red would read as a
@@ -47,7 +47,7 @@ function chipClass(severity: SpotReportItem['severity']): string {
   return 'border border-surface-200 text-ink-500';
 }
 
-function Finding({ item }: { item: SpotReportItem }) {
+function Finding({ item, number }: { item: SpotReportItem; number?: number | null }) {
   // The grid is only declared when there is a second column to put in it.
   // Declaring it unconditionally leaves 11rem of dead space on the right of
   // every finding without a target — which is every finding on every report
@@ -58,11 +58,18 @@ function Finding({ item }: { item: SpotReportItem }) {
     <section className="overflow-hidden rounded-lg border border-surface-200 bg-white">
       <div className={topClass}>
         <div className="p-5">
-          <span
-            className={`mb-3 inline-block rounded px-2 py-1 text-xs font-semibold uppercase tracking-wide ${chipClass(item.severity)}`}
-          >
-            {item.severityLabel}
-          </span>
+          <div className="mb-3 flex items-center gap-2">
+            {number != null ? (
+              <span className="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-accent-600 text-xs font-semibold leading-none text-[color:var(--page-bg)]">
+                {number}
+              </span>
+            ) : null}
+            <span
+              className={`inline-block rounded px-2 py-1 text-xs font-semibold uppercase tracking-wide ${chipClass(item.severity)}`}
+            >
+              {item.severityLabel}
+            </span>
+          </div>
           <h4 className="font-display text-lg font-bold text-ink-900">{item.title}</h4>
           <p className="mt-3 text-ink-700">{item.concern}</p>
         </div>
@@ -121,7 +128,15 @@ function Finding({ item }: { item: SpotReportItem }) {
   );
 }
 
-function Group({ heading, items }: { heading: string; items: SpotReportItem[] }) {
+function Group({
+  heading,
+  items,
+  numberForItem,
+}: {
+  heading: string;
+  items: SpotReportItem[];
+  numberForItem?: (item: SpotReportItem) => number | null;
+}) {
   // An empty group renders nothing at all — not a heading over blank space.
   if (items.length === 0) return null;
   return (
@@ -131,7 +146,7 @@ function Group({ heading, items }: { heading: string; items: SpotReportItem[] })
       </h3>
       <div className="mt-4 space-y-4">
         {items.map((item, i) => (
-          <Finding key={`${item.title}-${i}`} item={item} />
+          <Finding key={`${item.title}-${i}`} item={item} number={numberForItem?.(item) ?? null} />
         ))}
       </div>
     </>
@@ -159,6 +174,9 @@ export default function SpotReportView({
   const groups = groupFindings(content.items);
   const summary = summaryLine(groups);
   const targets = stripEntries(content.items);
+  const numbering = annotationsEnabled
+    ? buildPinNumbering(groups.confirmed, content.photoAnnotations)
+    : null;
 
   return (
     <article className="spot-report">
@@ -195,7 +213,7 @@ export default function SpotReportView({
                 url={url}
                 index={i}
                 total={photos.length}
-                pins={annotationsEnabled ? pinsForPhoto(content, url) : []}
+                pins={numbering ? numbering.pinsForPhoto(url) : []}
               />
             </li>
           ))}
@@ -217,7 +235,11 @@ export default function SpotReportView({
 
       {content.overview ? <p className="mt-6 text-lg text-ink-900">{content.overview}</p> : null}
 
-      <Group heading="Visible in the photo" items={groups.confirmed} />
+      <Group
+        heading="Visible in the photo"
+        items={groups.confirmed}
+        numberForItem={numbering?.numberForItem}
+      />
       <Group heading="A photo can’t settle these — go measure" items={groups.unconfirmed} />
 
       <p className="mt-10 border-t border-surface-200 pt-4 text-xs text-ink-500">

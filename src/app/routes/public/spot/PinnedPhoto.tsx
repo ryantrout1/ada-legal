@@ -12,7 +12,7 @@
  * identical to the plain gallery image.
  */
 
-import type { PhotoPin } from '@/lib/spot/annotationTypes';
+import type { NumberedPin } from '@/lib/spot/pinNumbering';
 
 export function PinnedPhoto({
   url,
@@ -23,7 +23,7 @@ export function PinnedPhoto({
   url: string;
   index: number;
   total: number;
-  pins: PhotoPin[];
+  pins: NumberedPin[];
 }) {
   return (
     <figure className="m-0">
@@ -51,9 +51,12 @@ export function PinnedPhoto({
               }`}
             >
               {/* Fixed colours on purpose: this sits on a photo, which does not
-                  follow the page theme. A dark pill with white text stays legible
-                  on any background; the accent dot is the only colour cue. */}
-              <span className="h-4 w-4 flex-none rounded-full border-2 border-white bg-accent-600 shadow" />
+                  follow the page theme. The dark pill and the accent number badge
+                  (white numeral on the darkest accent shade, 7:1) stay legible on
+                  any background. */}
+              <span className="flex h-5 w-5 flex-none items-center justify-center rounded-full border-2 border-white bg-[#9C340A] text-[11px] font-semibold leading-none text-white shadow">
+                {p.number}
+              </span>
               <span className="whitespace-nowrap rounded-md bg-black/80 px-2 py-1 text-xs font-semibold text-white shadow">
                 {short}
               </span>
@@ -64,7 +67,7 @@ export function PinnedPhoto({
       {pins.length > 0 ? (
         <figcaption className="mt-2 text-sm text-ink-700">
           <span className="font-medium">Marked on this photo:</span>{' '}
-          {pins.map((p) => `${p.label} (${p.severity})`).join('; ')}
+          {pins.map((p) => `${p.number}. ${p.label} (${p.severity})`).join('; ')}
         </figcaption>
       ) : null}
     </figure>
