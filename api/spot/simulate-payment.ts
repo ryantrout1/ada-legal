@@ -25,7 +25,7 @@ import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv } from '../_shared.js';
 import { makeSpotStore } from '../../src/lib/spot/spotStore.js';
 import { generateReport } from '../../src/lib/spot/generateReport.js';
-import { readSpotTestPayment } from '../../src/lib/spot/spotAvailability.js';
+import { readSpotTestPayment, readSpotShowAnnotations } from '../../src/lib/spot/spotAvailability.js';
 import { generatePackageSlug } from '../../src/engine/package/slug.js';
 
 export const config = { maxDuration: 300 };
@@ -79,7 +79,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await store.markPaid({ spotSessionId: sessionId, amountCents: TEST_AMOUNT_CENTS });
     await store.markUploaded({ spotSessionId: sessionId, photoCount: photos.length });
 
-    const report = await generateReport(clients, { photos: photos.map((blobUrl) => ({ blobUrl })) });
+    const annotate = await readSpotShowAnnotations(clients.db);
+    const report = await generateReport(clients, { photos: photos.map((blobUrl) => ({ blobUrl })), annotate });
     const slug = generatePackageSlug();
     await store.insertReport({ sessionId, slug, content: report.content, modelVersion: report.modelVersion });
     await store.markInReview(sessionId);

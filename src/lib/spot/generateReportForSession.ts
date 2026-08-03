@@ -23,6 +23,7 @@
 import type { AdaClients } from '../../engine/clients/types.js';
 import type { SpotStore } from './spotStore.js';
 import { generateReport } from './generateReport.js';
+import { readSpotShowAnnotations } from './spotAvailability.js';
 import { generatePackageSlug } from '../../engine/package/slug.js';
 
 export type RunReportResult =
@@ -49,7 +50,16 @@ export async function generateReportForSession(
     return { kind: 'empty' };
   }
 
-  const report = await generateReport(clients, { photos });
+  // Annotations are additive: if the flag read fails for any reason, default
+  // to off and generate the report normally rather than letting a settings
+  // read block a buyer's report.
+  let annotate = false;
+  try {
+    annotate = await readSpotShowAnnotations(clients.db);
+  } catch {
+    annotate = false;
+  }
+  const report = await generateReport(clients, { photos, annotate });
   await store.insertReport({
     sessionId,
     slug: generatePackageSlug(),

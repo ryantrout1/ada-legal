@@ -30,6 +30,7 @@ import { makeSpotStore } from '../../../src/lib/spot/spotStore.js';
 import { generateReport } from '../../../src/lib/spot/generateReport.js';
 import { parseRegenerateBody } from '../../../src/lib/spot/parseRegenerateBody.js';
 import { generatePackageSlug } from '../../../src/engine/package/slug.js';
+import { readSpotShowAnnotations } from '../../../src/lib/spot/spotAvailability.js';
 
 export const config = { maxDuration: 300 };
 
@@ -51,7 +52,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (photos.length === 0) return res.status(400).json({ error: 'Session has no photos to analyze.' });
 
     const clients = makeClientsFromEnv();
-    const report = await generateReport(clients, { photos, model: parsed.model });
+    const annotate = await readSpotShowAnnotations(clients.db);
+    const report = await generateReport(clients, { photos, model: parsed.model, annotate });
     // Only used if this session has no report yet; on replace the existing
     // slug is kept and returned.
     const slug = await store.upsertReport({

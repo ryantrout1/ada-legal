@@ -14,6 +14,7 @@ interface Settings {
   ada_photo_enabled: boolean;
   spot_enabled: boolean;
   spot_test_payment: boolean;
+  spot_show_annotations: boolean;
   lawsuits_ada_cta_enabled: boolean;
   ada_universal_cta: boolean;
 }
@@ -24,6 +25,7 @@ const DEFAULT: Settings = {
   ada_photo_enabled: false,
   spot_enabled: false,
   spot_test_payment: false,
+  spot_show_annotations: false,
   lawsuits_ada_cta_enabled: false,
   ada_universal_cta: false,
 };
@@ -182,6 +184,12 @@ const FLAGS: {
     title: 'Spot test payments',
     description:
       'Routes Spot checkout through Stripe test mode. Must be OFF in production — on means real customers cannot actually pay.',
+  },
+  {
+    key: 'spot_show_annotations',
+    title: 'Spot annotations',
+    description:
+      'Adds location pins to newly generated Spot reports. Pins are not shown to buyers yet — this only stores them, and it costs extra model spend per report. Off by default.',
   },
   {
     key: 'lawsuits_ada_cta_enabled',

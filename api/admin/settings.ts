@@ -48,6 +48,8 @@ interface SettingsShape {
   spot_enabled: boolean;
   /** Spot test-payment mode — never true in production. */
   spot_test_payment: boolean;
+  /** Store photo-bound pins on newly generated Spot reports (not shown to buyers yet). */
+  spot_show_annotations: boolean;
   /** "Talk to Ada" CTA on the public lawsuit pages. */
   lawsuits_ada_cta_enabled: boolean;
   /** Retarget site-wide CTAs to Ada rather than the Pathway pages. */
@@ -65,6 +67,7 @@ const DEFAULTS: SettingsShape = {
   // never mean "on".
   spot_enabled: false,
   spot_test_payment: false,
+  spot_show_annotations: false,
   lawsuits_ada_cta_enabled: false,
   ada_universal_cta: false,
 };
@@ -119,6 +122,7 @@ async function handlePatch(req: VercelRequest, res: VercelResponse, _userId: str
     for (const key of [
       'spot_enabled',
       'spot_test_payment',
+      'spot_show_annotations',
       'lawsuits_ada_cta_enabled',
       'ada_universal_cta',
     ] as const) {
