@@ -48,6 +48,7 @@ import { parseSpotAnalyzeBody, type SpotAnalyzeBody } from '../../src/lib/spot/p
 import { makeSpotStore } from '../../src/lib/spot/spotStore.js';
 import { mapSpotProgress } from '../../src/lib/spot/mapSpotProgress.js';
 import { storeFreeReadPhoto } from '../../src/lib/spot/storeFreeReadPhoto.js';
+import { MAX_PAID_PHOTOS } from '../../src/lib/spot/uploadGate.js';
 
 // The analyzer makes one blocking Opus vision call, typically 15-45s (forced
 // report_findings tool, ~1-2k output tokens). 90s gives the slow tail room —
@@ -60,7 +61,7 @@ const RATE_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 const UPSELL = {
   price_usd: 79,
-  max_photos: 10,
+  max_photos: MAX_PAID_PHOTOS,
   anchor: 'A professional ADA inspection runs $1,500–$5,000; this screening is $79.',
 } as const;
 

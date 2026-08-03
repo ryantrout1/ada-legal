@@ -10,8 +10,15 @@
  * read can't quietly disagree.
  */
 
+import { MAX_PAID_PHOTOS } from './uploadGate.js';
+
 /** Price of the full multi-angle report, in USD. */
 export const SPOT_DEFAULT_PRICE_USD = 79;
 
-/** Photos a buyer may submit against one paid report. */
-export const SPOT_DEFAULT_MAX_PHOTOS = 10;
+/**
+ * Photos a buyer may submit against one paid report. Re-exported from the
+ * upload gate rather than declared here: the display and the enforced limit
+ * are the SAME number, and they drifted once already — the page promised 10
+ * while the server refused past 5. One source now.
+ */
+export const SPOT_DEFAULT_MAX_PHOTOS = MAX_PAID_PHOTOS;

@@ -7,7 +7,7 @@
  * blob token endpoint's onBeforeGenerateToken.
  *
  * MAX_PAID_PHOTOS is the ONE definition. SpotUpload used to redeclare its own
- * `MAX_PHOTOS = 10` for the label and the remaining-count maths — two
+ * its own MAX_PHOTOS for the label and the remaining-count maths — two
  * constants that happened to agree, so the copy could promise a number the
  * server would refuse. The client imports this now.
  */

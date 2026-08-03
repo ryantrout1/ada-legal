@@ -9,7 +9,7 @@
  *
  * The gate is server-side and paid-only: a token is minted only when the
  * client-supplied spot_session is actually `paid` (per the DB, advanced only
- * by the verified webhook) and under the 10-photo cap. The client is never
+ * by the verified webhook) and under the 5-photo cap. The client is never
  * trusted for paid-state.
  *
  * Firewall: net-new endpoint over spot_* tables; the bench upload path is

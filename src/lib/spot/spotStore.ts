@@ -100,7 +100,7 @@ export interface SpotStore {
     blobKey: string;
     blobUrl: string;
   }): Promise<void>;
-  /** Count live (non-deleted) photos for a session — drives the 10-photo cap. */
+  /** Count live (non-deleted) photos for a session — drives the 5-photo cap. */
   countPhotos(sessionId: string): Promise<number>;
   /** Flip paid → uploaded (conditional; idempotent). Returns true iff transitioned. */
   markUploaded(input: { spotSessionId: string; photoCount: number }): Promise<boolean>;
