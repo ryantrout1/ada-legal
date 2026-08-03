@@ -10,6 +10,7 @@
 
 import type { AiToolDefinition } from '../../engine/clients/types.js';
 import type { PhotoFindingSeverity } from '../../types/db.js';
+import type { PhotoAnnotation } from './annotationTypes.js';
 
 /** Screening-language severity labels — never "violation" (shared vocabulary with the free read). */
 export const SPOT_REPORT_SEVERITY_LABEL: Record<PhotoFindingSeverity, string> = {
@@ -82,6 +83,13 @@ export interface SpotReportContent {
   items: SpotReportItem[];
   disclaimer: string;
   modelVersion?: string;
+  /**
+   * Photo-bound location pins, one entry per photo. Optional and permanently
+   * so: only present when the report was generated with spot_show_annotations
+   * on, and reports made before this existed have none. A consumer treats
+   * absent as "no pins", exactly like `target`.
+   */
+  photoAnnotations?: PhotoAnnotation[];
 }
 
 export const COMPOSE_REPORT_TOOL: AiToolDefinition = {

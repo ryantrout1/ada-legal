@@ -16,6 +16,9 @@ import type { PhotoAnalysisOutput } from '../../types/db.js';
 import { SPOT_REPORT_DEFAULT_MODEL } from './parseRegenerateBody.js';
 import { COMPOSE_REPORT_TOOL, type ComposeReportInput, type SpotReportContent } from './reportSchema.js';
 import { composeReport } from './composeReport.js';
+import { buildPhotoAnnotations, type AnnotationSource, type PlaceFn } from './buildPhotoAnnotations.js';
+import { makeAnthropicPlaceFn, PLACEMENT_MODEL_DEFAULT } from './placeFindingAnthropic.js';
+import type { PhotoAnnotation } from './annotationTypes.js';
 
 /** The analyzer throws on > 3 blob keys — batch to its max. */
 export const SPOT_REPORT_BATCH_SIZE = 3;
@@ -42,6 +45,18 @@ const SYNTHESIS_SYSTEM =
 export interface GenerateReportInput {
   photos: { blobUrl: string }[];
   model?: string;
+  /**
+   * When true, also produce photo-bound pins (content.photoAnnotations).
+   * Off by default; resolved from the spot_show_annotations flag by callers.
+   */
+  annotate?: boolean;
+  /**
+   * Injectable placement function (tests). When annotate is true and this is
+   * omitted, the real Anthropic placer is built from the environment.
+   */
+  placeFn?: PlaceFn;
+  /** Minimum placement confidence to draw a pin. Defaults to 0.5. */
+  minConfidence?: number;
 }
 
 export interface GeneratedReport {
@@ -97,6 +112,35 @@ async function collectComposeReport(
     }
   }
   return null;
+}
+
+const SPOT_ANNOTATION_MIN_CONFIDENCE = 0.5;
+
+function requireApiKey(): string {
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) throw new Error('ANTHROPIC_API_KEY is not set');
+  return key;
+}
+
+/**
+ * Produce photo-bound pins by analyzing each photo on its OWN (batch of one),
+ * so each finding binds to a known photo URL — the batched synthesis pass
+ * groups photos and cannot. Deliberately separate from the synthesis analyses:
+ * the report prose stays byte-identical whether annotations are on or off.
+ */
+async function buildReportAnnotations(
+  clients: AdaClients,
+  photos: { blobUrl: string }[],
+  place: PlaceFn,
+  minConfidence: number,
+): Promise<PhotoAnnotation[]> {
+  const sources: AnnotationSource[] = await Promise.all(
+    photos.map(async (p) => {
+      const { output } = await clients.photo.analyze({ blobKeys: [p.blobUrl] });
+      return { photoUrl: p.blobUrl, findings: output.findings ?? [] };
+    }),
+  );
+  return buildPhotoAnnotations(sources, place, { minConfidence });
 }
 
 export async function generateReport(
@@ -155,7 +199,32 @@ export async function generateReport(
       if (!modelOutput) throw new Error('model did not return a compose_report tool call');
 
       const content = composeReport(modelOutput, analyses);
-      return { content: { ...content, modelVersion: model }, modelVersion: model };
+      const base: SpotReportContent = { ...content, modelVersion: model };
+
+      // Annotations are additive and must never fail a paid report: any error
+      // in the per-photo pass or placement is swallowed and the report ships
+      // without pins. Placement always runs on claude-opus-4-8 (the model that
+      // tested cleanest for tool-call placement), independent of the report
+      // synthesis model.
+      if (input.annotate) {
+        try {
+          const place =
+            input.placeFn ?? makeAnthropicPlaceFn(requireApiKey(), PLACEMENT_MODEL_DEFAULT);
+          const photoAnnotations = await buildReportAnnotations(
+            clients,
+            input.photos,
+            place,
+            input.minConfidence ?? SPOT_ANNOTATION_MIN_CONFIDENCE,
+          );
+          return { content: { ...base, photoAnnotations }, modelVersion: model };
+        } catch (err) {
+          console.warn(
+            'spot generateReport: annotation build failed, shipping report without pins',
+            err,
+          );
+        }
+      }
+      return { content: base, modelVersion: model };
     } catch (err) {
       lastError = err;
       if (attempt === 0) {

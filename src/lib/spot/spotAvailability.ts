@@ -81,3 +81,27 @@ export async function readSpotRetainFreePhotos(db: AdaClients['db']): Promise<bo
   const stored = await db.getSystemSetting<Record<string, unknown>>(SPOT_SETTINGS_KEY);
   return resolveSpotRetainFreePhotos(stored);
 }
+
+/**
+ * When `spot_show_annotations` is true in the admin blob, a newly generated
+ * Spot report also carries photo-bound location pins (content.photoAnnotations).
+ *
+ * Defaults OFF and ships dark: producing pins runs a per-photo analysis pass
+ * plus a placement call per finding, so it costs real model spend, and the
+ * pins are not shown to buyers until the Phase 3 render lands. Flipping this on
+ * changes only NEW reports (forward-only) and never alters the report prose.
+ */
+export const SPOT_SHOW_ANNOTATIONS_KEY = 'spot_show_annotations';
+
+export function resolveSpotShowAnnotations(stored: unknown): boolean {
+  if (stored && typeof stored === 'object' && SPOT_SHOW_ANNOTATIONS_KEY in stored) {
+    const value = (stored as Record<string, unknown>)[SPOT_SHOW_ANNOTATIONS_KEY];
+    if (typeof value === 'boolean') return value;
+  }
+  return false;
+}
+
+export async function readSpotShowAnnotations(db: AdaClients['db']): Promise<boolean> {
+  const stored = await db.getSystemSetting<Record<string, unknown>>(SPOT_SETTINGS_KEY);
+  return resolveSpotShowAnnotations(stored);
+}
