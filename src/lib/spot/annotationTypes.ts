@@ -23,6 +23,11 @@ export interface PlacedPin {
   y: number;
   /** The model's confidence that this point is correct (0..1). */
   confidence: number;
+  /**
+   * A short 2-4 word marker label for display on the photo (e.g. "Raised curb",
+   * "Grab bars"). Falls back to the finding title when the model omits it.
+   */
+  label?: string;
 }
 
 /** A pin bound to the finding it marks. */

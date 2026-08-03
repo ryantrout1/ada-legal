@@ -33,6 +33,10 @@ const PLACE_FINDING_TOOL = {
       x: { type: 'number', minimum: 0, maximum: 1, description: 'Center X, image fraction from left.' },
       y: { type: 'number', minimum: 0, maximum: 1, description: 'Center Y, image fraction from top.' },
       confidence: { type: 'number', minimum: 0, maximum: 1, description: 'Confidence this point is correct.' },
+      label: {
+        type: 'string',
+        description: 'A 2-4 word marker caption for this concern, e.g. "Raised curb", "Grab bars".',
+      },
     },
     required: ['placeable'],
   },

@@ -45,6 +45,8 @@ export function placementPrompt(finding: PhotoFinding): string {
     'Return the CENTER POINT of the physical object or area this concern is about,',
     'as normalized image fractions x and y (0..1, measured from the top-left).',
     'Return confidence (0..1) that this point is correct.',
+    'Return label: a 2 to 4 word marker caption for this concern, plain and concrete',
+    '(e.g. "Raised curb", "Grab bars", "Narrow clearance") — not a full sentence.',
     'If this concern has no single visible location in THIS photo — an absence with',
     'no place to point at, or something not shown — return placeable:false instead.',
   ].join('\n');
@@ -70,5 +72,9 @@ export async function placeFinding(
   if (r.placeable === false) return null;
   const { x, y, confidence } = r;
   if (!inUnit(x) || !inUnit(y) || !inUnit(confidence)) return null;
-  return { x: round3(x), y: round3(y), confidence: round3(confidence) };
+  const label =
+    typeof r.label === 'string' && r.label.trim().length > 0
+      ? r.label.trim().slice(0, 40)
+      : undefined;
+  return { x: round3(x), y: round3(y), confidence: round3(confidence), label };
 }

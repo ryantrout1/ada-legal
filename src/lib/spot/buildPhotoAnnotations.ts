@@ -62,7 +62,7 @@ export async function buildPhotoAnnotations(
         x: placed.x,
         y: placed.y,
         confidence: placed.confidence,
-        label: f.title_standard,
+        label: placed.label ?? f.title_standard,
         severity: f.severity,
         findingIndex: i,
       });

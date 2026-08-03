@@ -45,6 +45,25 @@ describe('buildPhotoAnnotations — gates', () => {
     });
   });
 
+  it('prefers the placer short label over the finding title', async () => {
+    const labeledPlacer: PlaceFn = async () => ({ x: 0.3, y: 0.7, confidence: 0.9, label: 'Raised curb' });
+    const out = await buildPhotoAnnotations(
+      [source([finding({ title_standard: 'Shower Curb — Raised Threshold Blocks Entry' })])],
+      labeledPlacer,
+      { minConfidence: 0.5 },
+    );
+    expect(out[0].pins[0].label).toBe('Raised curb');
+  });
+
+  it('falls back to the finding title when the placer omits a label', async () => {
+    const out = await buildPhotoAnnotations(
+      [source([finding({ title_standard: 'Curb' })])],
+      placerAt(0.8),
+      { minConfidence: 0.5 },
+    );
+    expect(out[0].pins[0].label).toBe('Curb');
+  });
+
   it('confirmable gate: an unconfirmable finding never gets a pin', async () => {
     const out = await buildPhotoAnnotations(
       [source([finding({ confirmable: false })])],

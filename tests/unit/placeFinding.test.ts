@@ -25,7 +25,16 @@ describe('placementPrompt', () => {
 describe('placeFinding', () => {
   it('returns a rounded pin for a valid in-range response', async () => {
     const pin = await placeFinding(callReturning({ x: 0.2412, y: 0.7188, confidence: 0.834 }), 'u', finding);
-    expect(pin).toEqual({ x: 0.241, y: 0.719, confidence: 0.834 });
+    expect(pin).toEqual({ x: 0.241, y: 0.719, confidence: 0.834, label: undefined });
+  });
+
+  it('carries a trimmed short label when the model returns one', async () => {
+    const pin = await placeFinding(
+      callReturning({ x: 0.3, y: 0.5, confidence: 0.8, label: '  Raised curb  ' }),
+      'u',
+      finding,
+    );
+    expect(pin?.label).toBe('Raised curb');
   });
 
   it('returns null when the model declines with placeable:false', async () => {
