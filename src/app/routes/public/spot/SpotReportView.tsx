@@ -175,7 +175,7 @@ export default function SpotReportView({
   const summary = summaryLine(groups);
   const targets = stripEntries(content.items);
   const numbering = annotationsEnabled
-    ? buildPinNumbering(groups.confirmed, content.photoAnnotations)
+    ? buildPinNumbering(content.items, content.photoAnnotations)
     : null;
 
   return (

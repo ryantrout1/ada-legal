@@ -1,16 +1,11 @@
 /**
  * Ada Spot — number the pins and tie each to its finding row.
  *
- * The markers on the photo and the "Visible in the photo" rows come from two
- * different places (per-photo placement vs the composed report), so they carry
- * no shared id. This links them at render time: it walks the confirmed rows in
- * display order, matches each to a pin by label, and hands out the numbers —
- * so pin ①  on the photo is the same finding as row ①  below.
- *
- * Matching is by normalized label containment (the short pin label is usually
- * the opening of the row title). It fails safe: an unmatched row gets no number
- * (never a wrong one), and a pin with no row still gets a trailing number so it
- * is labelled on the photo and in the caption.
+ * Pins are placed FOR confirmed report items (see buildItemAnnotations), so
+ * every pin carries the itemIndex of the row it marks. Numbering is therefore
+ * exact, not a text guess: walk the items in display order, and each confirmed
+ * item that has a pin gets the next number — on both the marker and the row.
+ * pin ①  on the photo is the same finding as row ①  below, by construction.
  */
 
 import type { SpotReportItem } from './reportSchema.js';
@@ -27,43 +22,40 @@ export interface PinNumbering {
   numberForItem: (item: SpotReportItem) => number | null;
 }
 
-function norm(s: string): string {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-}
-
-function itemMatchesPin(item: SpotReportItem, pin: PhotoPin): boolean {
-  const title = norm(item.title);
-  const label = norm(pin.label);
-  if (!label || !title) return false;
-  return title.includes(label) || label.includes(title);
-}
-
 export function buildPinNumbering(
-  confirmedItems: readonly SpotReportItem[],
+  items: readonly SpotReportItem[],
   photoAnnotations: readonly PhotoAnnotation[] | undefined,
 ): PinNumbering {
   const annotations = photoAnnotations ?? [];
-  const allPins: PhotoPin[] = annotations.flatMap((a) => a.pins);
+  const pinByItemIndex = new Map<number, PhotoPin>();
+  for (const a of annotations) for (const p of a.pins) pinByItemIndex.set(p.itemIndex, p);
 
   const pinNumber = new Map<PhotoPin, number>();
   const itemNumber = new Map<SpotReportItem, number>();
   let counter = 0;
 
-  // Number confirmed rows that have a matching pin, in display order, so the
-  // list reads 1, 2, 3 top to bottom and the photo markers match.
-  for (const item of confirmedItems) {
-    const pin = allPins.find((p) => !pinNumber.has(p) && itemMatchesPin(item, p));
-    if (pin) {
-      counter += 1;
-      pinNumber.set(pin, counter);
-      itemNumber.set(item, counter);
-    }
-  }
-  // Any pin with no row still gets a number so it is labelled on the photo.
-  for (const pin of allPins) {
-    if (!pinNumber.has(pin)) {
-      counter += 1;
-      pinNumber.set(pin, counter);
+  // Display order = content.items order; groupFindings preserves it and keeps
+  // the same object references, so numbering by identity lines up with the
+  // rendered "Visible in the photo" list.
+  items.forEach((item, index) => {
+    if (item.hedged) return;
+    const pin = pinByItemIndex.get(index);
+    if (!pin) return;
+    counter += 1;
+    pinNumber.set(pin, counter);
+    itemNumber.set(item, counter);
+  });
+
+  // Defensive: a pin with no linked confirmed item (e.g. a report generated
+  // before this build, whose pins predate itemIndex) still gets a number so it
+  // never renders a bare "0". Such a report shows numbered markers but no row
+  // numbers until it is regenerated.
+  for (const a of annotations) {
+    for (const pin of a.pins) {
+      if (!pinNumber.has(pin)) {
+        counter += 1;
+        pinNumber.set(pin, counter);
+      }
     }
   }
 

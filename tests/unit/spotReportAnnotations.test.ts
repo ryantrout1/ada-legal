@@ -57,18 +57,20 @@ describe('generateReport — annotate branch', () => {
     expect('photoAnnotations' in out.content).toBe(false);
   });
 
-  it('on: attaches one annotation entry per photo, each with a pin for the confirmable finding', async () => {
+  it('on: places each confirmed item once, on its best photo, bound to itemIndex', async () => {
     const out = await generateReport(fakeClients(), {
       photos: photos(2),
       model: 'opus-test',
       annotate: true,
       placeFn: stubPlacer,
     });
+    // One annotation entry per photo, but the single confirmed item is placed
+    // once (on the first best-confidence photo), not once per photo.
     expect(out.content.photoAnnotations).toHaveLength(2);
-    expect(out.content.photoAnnotations?.[0].photoUrl).toBe('https://blob/0.jpg');
-    expect(out.content.photoAnnotations?.[0].pins).toHaveLength(1);
-    expect(out.content.photoAnnotations?.[0].pins[0]).toMatchObject({ label: 'Door', severity: 'major' });
-    // Prose is untouched by annotation (1b: synthesis path unchanged).
+    const allPins = out.content.photoAnnotations!.flatMap((a) => a.pins);
+    expect(allPins).toHaveLength(1);
+    expect(allPins[0]).toMatchObject({ label: 'Door', severity: 'major', itemIndex: 0 });
+    // Prose is untouched by annotation (synthesis path unchanged).
     expect(out.content.items.length).toBeGreaterThan(0);
   });
 

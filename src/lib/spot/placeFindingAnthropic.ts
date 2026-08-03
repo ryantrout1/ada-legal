@@ -9,8 +9,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import type { PhotoFinding } from '../../types/db.js';
-import type { PlacedPin } from './annotationTypes.js';
+import type { PlacedPin, PlaceTarget } from './annotationTypes.js';
 import { placeFinding } from './placeFinding.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
 
@@ -59,7 +58,7 @@ export function makeAnthropicPlaceFn(
 ): PlaceFn {
   const client = new Anthropic({ apiKey });
 
-  return async (photoUrl: string, finding: PhotoFinding): Promise<PlacedPin | null> => {
+  return async (photoUrl: string, target: PlaceTarget): Promise<PlacedPin | null> => {
     return placeFinding(
       async (url, prompt) => {
         const response = await client.messages.create({
@@ -80,7 +79,7 @@ export function makeAnthropicPlaceFn(
         return extractToolInput(response);
       },
       photoUrl,
-      finding,
+      target,
     );
   };
 }

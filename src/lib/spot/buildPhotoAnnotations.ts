@@ -18,7 +18,7 @@
  */
 
 import type { PhotoFinding } from '../../types/db.js';
-import type { PhotoAnnotation, PhotoPin, PlacedPin } from './annotationTypes.js';
+import type { PhotoAnnotation, PhotoPin, PlacedPin, PlaceTarget } from './annotationTypes.js';
 
 /** One source photo and the findings from its stored per-photo analysis. */
 export interface AnnotationSource {
@@ -26,8 +26,8 @@ export interface AnnotationSource {
   findings: PhotoFinding[];
 }
 
-/** Placement of one finding on one photo; null when it can't be placed. */
-export type PlaceFn = (photoUrl: string, finding: PhotoFinding) => Promise<PlacedPin | null>;
+/** Placement of one target on one photo; null when it can't be placed. */
+export type PlaceFn = (photoUrl: string, target: PlaceTarget) => Promise<PlacedPin | null>;
 
 export interface BuildAnnotationsOptions {
   /** Minimum placement confidence to draw a pin. Below this → no pin. */
@@ -53,7 +53,10 @@ export async function buildPhotoAnnotations(
       const f = findings[i];
       // Confirmable gate: absence / unmeasurable → prose only.
       if (f.confirmable === false) continue;
-      const placed = await place(src.photoUrl, f);
+      const placed = await place(src.photoUrl, {
+        title: f.title_standard,
+        detail: f.finding_standard,
+      });
       // Model could not place it (declined, errored, or out of range).
       if (!placed) continue;
       // Confidence gate: uncertain placement draws nothing.
@@ -64,7 +67,7 @@ export async function buildPhotoAnnotations(
         confidence: placed.confidence,
         label: placed.label ?? f.title_standard,
         severity: f.severity,
-        findingIndex: i,
+        itemIndex: i,
       });
     }
     out.push({ photoUrl: src.photoUrl, pins });

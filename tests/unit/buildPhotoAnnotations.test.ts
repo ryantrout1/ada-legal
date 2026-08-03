@@ -41,7 +41,7 @@ describe('buildPhotoAnnotations — gates', () => {
       confidence: 0.8,
       label: 'Curb',
       severity: 'critical',
-      findingIndex: 0,
+      itemIndex: 0,
     });
   });
 
@@ -98,7 +98,7 @@ describe('buildPhotoAnnotations — gates', () => {
     expect(out).toEqual([{ photoUrl: 'lonely', pins: [] }]);
   });
 
-  it('preserves findingIndex against the source order across mixed findings', async () => {
+  it('preserves itemIndex against the source order across mixed findings', async () => {
     const out = await buildPhotoAnnotations(
       [
         source([
@@ -110,7 +110,7 @@ describe('buildPhotoAnnotations — gates', () => {
       { minConfidence: 0.5 },
     );
     expect(out[0].pins).toHaveLength(1);
-    expect(out[0].pins[0].findingIndex).toBe(1);
+    expect(out[0].pins[0].itemIndex).toBe(1);
     expect(out[0].pins[0].label).toBe('Bench');
   });
 });

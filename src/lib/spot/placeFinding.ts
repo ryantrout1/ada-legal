@@ -16,8 +16,7 @@
  * is always preferable to a pin on the wrong thing.
  */
 
-import type { PhotoFinding } from '../../types/db.js';
-import type { PlacedPin } from './annotationTypes.js';
+import type { PlacedPin, PlaceTarget } from './annotationTypes.js';
 
 /**
  * The injected model call: given a photo URL and a prompt, return whatever the
@@ -37,11 +36,11 @@ function inUnit(n: unknown): n is number {
  * (placeable:false) when the concern has no single visible location — an
  * absence, or something not shown in this photo.
  */
-export function placementPrompt(finding: PhotoFinding): string {
+export function placementPrompt(target: PlaceTarget): string {
   return [
     'You are marking the location of ONE accessibility concern on this photo.',
-    `Concern: ${finding.title_standard}`,
-    `Detail: ${finding.finding_standard}`,
+    `Concern: ${target.title}`,
+    `Detail: ${target.detail}`,
     'Return the CENTER POINT of the physical object or area this concern is about,',
     'as normalized image fractions x and y (0..1, measured from the top-left).',
     'Return confidence (0..1) that this point is correct.',
@@ -53,17 +52,17 @@ export function placementPrompt(finding: PhotoFinding): string {
 }
 
 /**
- * Place one finding on one photo. Pure except the injected call. Returns null
+ * Place one target on one photo. Pure except the injected call. Returns null
  * when the model declines, errors, or returns anything outside 0..1.
  */
 export async function placeFinding(
   call: PlaceCall,
   photoUrl: string,
-  finding: PhotoFinding,
+  target: PlaceTarget,
 ): Promise<PlacedPin | null> {
   let raw: unknown;
   try {
-    raw = await call(photoUrl, placementPrompt(finding));
+    raw = await call(photoUrl, placementPrompt(target));
   } catch {
     return null;
   }

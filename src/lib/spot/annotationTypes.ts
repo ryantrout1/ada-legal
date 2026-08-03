@@ -30,13 +30,19 @@ export interface PlacedPin {
   label?: string;
 }
 
+/** The thing being placed on a photo: a short title and a longer detail. */
+export interface PlaceTarget {
+  title: string;
+  detail: string;
+}
+
 /** A pin bound to the finding it marks. */
 export interface PhotoPin extends PlacedPin {
   /** The finding's headline, shown as the pin's text equivalent. */
   label: string;
   severity: PhotoFindingSeverity;
-  /** Index of the source finding in its analysis, for cross-referencing. */
-  findingIndex: number;
+  /** Index of the report item (or source finding) this pin marks. */
+  itemIndex: number;
 }
 
 /** One photo and the pins placed on it. */

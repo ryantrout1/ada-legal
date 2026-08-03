@@ -16,9 +16,9 @@ import type { PhotoAnalysisOutput } from '../../types/db.js';
 import { SPOT_REPORT_DEFAULT_MODEL } from './parseRegenerateBody.js';
 import { COMPOSE_REPORT_TOOL, type ComposeReportInput, type SpotReportContent } from './reportSchema.js';
 import { composeReport } from './composeReport.js';
-import { buildPhotoAnnotations, type AnnotationSource, type PlaceFn } from './buildPhotoAnnotations.js';
+import type { PlaceFn } from './buildPhotoAnnotations.js';
+import { buildItemAnnotations, type PlaceItemInput } from './buildItemAnnotations.js';
 import { makeAnthropicPlaceFn, PLACEMENT_MODEL_DEFAULT } from './placeFindingAnthropic.js';
-import type { PhotoAnnotation } from './annotationTypes.js';
 
 /** The analyzer throws on > 3 blob keys — batch to its max. */
 export const SPOT_REPORT_BATCH_SIZE = 3;
@@ -122,27 +122,6 @@ function requireApiKey(): string {
   return key;
 }
 
-/**
- * Produce photo-bound pins by analyzing each photo on its OWN (batch of one),
- * so each finding binds to a known photo URL — the batched synthesis pass
- * groups photos and cannot. Deliberately separate from the synthesis analyses:
- * the report prose stays byte-identical whether annotations are on or off.
- */
-async function buildReportAnnotations(
-  clients: AdaClients,
-  photos: { blobUrl: string }[],
-  place: PlaceFn,
-  minConfidence: number,
-): Promise<PhotoAnnotation[]> {
-  const sources: AnnotationSource[] = await Promise.all(
-    photos.map(async (p) => {
-      const { output } = await clients.photo.analyze({ blobKeys: [p.blobUrl] });
-      return { photoUrl: p.blobUrl, findings: output.findings ?? [] };
-    }),
-  );
-  return buildPhotoAnnotations(sources, place, { minConfidence });
-}
-
 export async function generateReport(
   clients: AdaClients,
   input: GenerateReportInput,
@@ -202,19 +181,30 @@ export async function generateReport(
       const base: SpotReportContent = { ...content, modelVersion: model };
 
       // Annotations are additive and must never fail a paid report: any error
-      // in the per-photo pass or placement is swallowed and the report ships
-      // without pins. Placement always runs on claude-opus-4-8 (the model that
-      // tested cleanest for tool-call placement), independent of the report
-      // synthesis model.
+      // in placement is swallowed and the report ships without pins. Placement
+      // always runs on claude-opus-4-8 (the model that tested cleanest for
+      // tool-call placement), independent of the report synthesis model.
       if (input.annotate) {
         try {
           const place =
             input.placeFn ?? makeAnthropicPlaceFn(requireApiKey(), PLACEMENT_MODEL_DEFAULT);
-          const photoAnnotations = await buildReportAnnotations(
-            clients,
-            input.photos,
+          // Place the composed CONFIRMED items (the "visible in the photo"
+          // rows), not the raw per-photo findings — so each pin is one report
+          // row, tied by itemIndex, and the render numbers them by that index.
+          const items: PlaceItemInput[] = content.items
+            .map((it, itemIndex) => ({ it, itemIndex }))
+            .filter(({ it }) => !it.hedged)
+            .map(({ it, itemIndex }) => ({
+              itemIndex,
+              title: it.title,
+              detail: it.concern,
+              severity: it.severity,
+            }));
+          const photoAnnotations = await buildItemAnnotations(
+            items,
+            input.photos.map((p) => p.blobUrl),
             place,
-            input.minConfidence ?? SPOT_ANNOTATION_MIN_CONFIDENCE,
+            { minConfidence: input.minConfidence ?? SPOT_ANNOTATION_MIN_CONFIDENCE },
           );
           return { content: { ...base, photoAnnotations }, modelVersion: model };
         } catch (err) {
