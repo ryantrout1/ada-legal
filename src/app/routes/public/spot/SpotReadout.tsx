@@ -10,10 +10,12 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SpotReportView from './SpotReportView';
+import { useSpotAnnotationsEnabled } from '@/app/hooks/useSpotAnnotationsEnabled';
 import type { SpotReportContent } from '@/lib/spot/reportSchema';
 
 export default function SpotReadout() {
   const { slug } = useParams<{ slug: string }>();
+  const annotationsEnabled = useSpotAnnotationsEnabled();
   const [content, setContent] = useState<SpotReportContent | null>(null);
   const [state, setState] = useState<'loading' | 'ok' | 'notfound' | 'error'>('loading');
 
@@ -90,7 +92,12 @@ export default function SpotReadout() {
           </p>
         ) : null}
         {state === 'ok' && content ? (
-          <SpotReportView content={content} photos={photos} photosPurged={photosPurged} />
+          <SpotReportView
+            content={content}
+            photos={photos}
+            photosPurged={photosPurged}
+            annotationsEnabled={annotationsEnabled}
+          />
         ) : null}
       </div>
     </div>

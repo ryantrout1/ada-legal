@@ -34,6 +34,8 @@
 import type { SpotReportContent, SpotReportItem } from '@/lib/spot/reportSchema';
 import { groupFindings, stripEntries, summaryLine } from '@/lib/spot/reportLayout';
 import { SPOT_REPORT_STARTER_DISCLAIMER } from '@/lib/spot/spotDisclaimers';
+import { pinsForPhoto } from '@/lib/spot/pinsForPhoto';
+import { PinnedPhoto } from './PinnedPhoto';
 
 /** Severity drives emphasis, not colour meaning. A red would read as a
  *  verdict, and this product never returns one. */
@@ -140,12 +142,19 @@ export default function SpotReportView({
   content,
   photos = [],
   photosPurged = false,
+  annotationsEnabled = false,
 }: {
   content: SpotReportContent;
   /** Live photo URLs for the session. Empty once the 90-day sweep has run. */
   photos?: string[];
   /** True when this session HAD photos and none survive retention. */
   photosPurged?: boolean;
+  /**
+   * Render photo location pins. The public report passes the live
+   * spot_show_annotations flag (kill-switch); the admin review passes true so
+   * pins can be reviewed before public enable. Default off.
+   */
+  annotationsEnabled?: boolean;
 }) {
   const groups = groupFindings(content.items);
   const summary = summaryLine(groups);
@@ -182,11 +191,11 @@ export default function SpotReportView({
         <ul className="mt-6 list-none space-y-3 p-0">
           {photos.map((url, i) => (
             <li key={url}>
-              <img
-                src={url}
-                alt={`Photo ${i + 1} of ${photos.length} screened in this report`}
-                className="block w-full rounded-lg border border-surface-200"
-                loading="lazy"
+              <PinnedPhoto
+                url={url}
+                index={i}
+                total={photos.length}
+                pins={annotationsEnabled ? pinsForPhoto(content, url) : []}
               />
             </li>
           ))}

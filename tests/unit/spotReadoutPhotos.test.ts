@@ -27,6 +27,7 @@ const PUBLIC_ENDPOINT = readCode('api/spot/report.ts');
 const ADMIN_ENDPOINT = readCode('api/spot/admin/report.ts');
 const STORE = readCode('src/lib/spot/spotStore.ts');
 const VIEW = readCode('src/app/routes/public/spot/SpotReportView.tsx');
+const PINNED = readCode('src/app/routes/public/spot/PinnedPhoto.tsx');
 const COMPOSE = readCode('src/lib/spot/composeReport.ts');
 
 describe('photos are joined at read time, not composed in', () => {
@@ -67,7 +68,9 @@ describe('sessionPhotoState — distinguishes swept from never-had', () => {
 describe('the view renders honestly in both states', () => {
   it('shows the photos when they exist', () => {
     expect(VIEW).toMatch(/photos\.map\(/);
-    expect(VIEW).toContain('screened in this report');
+    // The photo (with its alt text) is rendered through PinnedPhoto now.
+    expect(VIEW).toContain('PinnedPhoto');
+    expect(PINNED).toContain('screened in this report');
   });
 
   it('explains the absence only when they were swept', () => {

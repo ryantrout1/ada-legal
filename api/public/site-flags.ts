@@ -30,6 +30,7 @@ import {
   readLawsuitsAdaCta,
   readAdaUniversalCta,
 } from '../../src/lib/site/lawsuitsAdaCta.js';
+import { readSpotShowAnnotations } from '../../src/lib/spot/spotAvailability.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return; // preflight handled
@@ -41,12 +42,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   let lawsuitsAdaCtaEnabled = false;
   let adaUniversalCta = false;
+  let spotShowAnnotations = false;
   try {
     const clients = makeClientsFromEnv();
-    // Both flags live in the same `admin` blob, so this is one read.
-    [lawsuitsAdaCtaEnabled, adaUniversalCta] = await Promise.all([
+    // All three flags live in the same `admin` blob, so this is one read each.
+    [lawsuitsAdaCtaEnabled, adaUniversalCta, spotShowAnnotations] = await Promise.all([
       readLawsuitsAdaCta(clients.db),
       readAdaUniversalCta(clients.db),
+      readSpotShowAnnotations(clients.db),
     ]);
   } catch (err) {
     // Fail closed, and say so in the logs so a persistent read failure
@@ -54,6 +57,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error('[public/site-flags GET] flag read failed, serving off:', err);
     lawsuitsAdaCtaEnabled = false;
     adaUniversalCta = false;
+    spotShowAnnotations = false;
   }
 
   res.setHeader(
@@ -64,5 +68,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     lawsuits_ada_cta_enabled: lawsuitsAdaCtaEnabled,
     // M5: additive. Existing consumers keep reading the field above.
     ada_universal_cta: adaUniversalCta,
+    // Spot annotation render kill-switch (Phase 3). Additive.
+    spot_show_annotations: spotShowAnnotations,
   });
 }

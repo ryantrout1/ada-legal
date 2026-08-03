@@ -204,6 +204,7 @@ export default function AdminSpotReviewDetail() {
             content={body.content}
             photos={body.photos}
             photosPurged={body.photosPurged}
+            annotationsEnabled
           />
         ) : (
           <p className="text-ink-700">Loading the report…</p>
