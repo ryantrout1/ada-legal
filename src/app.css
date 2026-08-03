@@ -625,6 +625,29 @@ body {
   letter-spacing: -0.01em;
 }
 
+/* De-serif the admin content area — the same move already made on the portal
+ * and on Spot, which leaves admin as the last surface still setting figures
+ * in Fraunces. Serif numerals are the wrong tool for a dashboard: the point
+ * of "17" is to be read at a glance and compared to the number beside it, and
+ * an editorial face with old-style figures makes that slower, not warmer.
+ *
+ * Scoped to `main` on purpose. The masthead wordmark carries `font-display`
+ * and lives in the <header> above the sidebar split, outside <main>, so it
+ * keeps Fraunces and still matches the wordmark on the homepage. This is the
+ * exact leak documented on .spot-surface above — repointing the token at
+ * :root turned that wordmark sans.
+ *
+ * Reads var(--font-body) rather than naming Manrope so a user's Atkinson /
+ * OpenDyslexic / Lexend choice still resolves through. */
+.admin-shell main h1,
+.admin-shell main h2,
+.admin-shell main h3,
+.admin-shell main h4,
+.admin-shell main .font-display {
+  font-family: var(--font-body);
+  letter-spacing: -0.02em;
+}
+
 :root[data-font="atkinson"] {
   --font-body: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Atkinson Hyperlegible', 'Georgia', serif;
