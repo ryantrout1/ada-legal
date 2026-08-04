@@ -25,10 +25,18 @@ export interface AnalyzePhotoBody {
   session_id?: unknown;
   photo_url?: unknown;
   context_hint?: unknown;
+  /**
+   * Opt-in: after analysis, run the per-finding placement pass and return
+   * pins for the photo. Only the /photo harness sets this — it renders the
+   * pins. The Spot capture flow calls this same endpoint and must NOT set it,
+   * because Spot places findings again during report generation and would
+   * otherwise pay for placement twice.
+   */
+  place?: unknown;
 }
 
 export type ParsedAnalyzePhotoBody =
-  | { ok: true; sessionId: string; photoUrl: string; contextHint?: string }
+  | { ok: true; sessionId: string; photoUrl: string; contextHint?: string; place: boolean }
   | { ok: false; status: number; error: string };
 
 export function parseAnalyzePhotoBody(
@@ -51,7 +59,10 @@ export function parseAnalyzePhotoBody(
   if (photoUrl.length > MAX_PHOTO_URL_CHARS) {
     return { ok: false, status: 400, error: 'photo_url is too long' };
   }
-  return { ok: true, sessionId, photoUrl, contextHint };
+  // Strict === true: any other value (including "true", 1) leaves placement
+  // off, so an unexpected body never silently spends on the placement pass.
+  const place = body.place === true;
+  return { ok: true, sessionId, photoUrl, contextHint, place };
 }
 
 export type AnalyzePhotoGate =

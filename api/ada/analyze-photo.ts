@@ -30,12 +30,24 @@ import {
   gateAnalyzePhotoSession,
   type AnalyzePhotoBody,
 } from '../../src/lib/analyzePhotoRequest.js';
+import { buildPhotoAnnotations } from '../../src/lib/spot/buildPhotoAnnotations.js';
+import {
+  makeAnthropicPlaceFn,
+  PLACEMENT_MODEL_DEFAULT,
+} from '../../src/lib/spot/placeFindingAnthropic.js';
+import type { PhotoAnnotation } from '../../src/lib/spot/annotationTypes.js';
 
-// The structured analyzer makes a blocking ~10-18s vision call. Without a
-// raised limit, slower runs get killed mid-analysis and the request hangs
-// (fast runs persisted a row; slow ones didn't). The /turn chat route
-// streams, so it never hit this. 60s gives the vision call headroom.
-export const config = { maxDuration: 60 };
+// Same floor as the admin annotation preview: below this placement confidence,
+// a finding draws no pin and stays in prose only.
+const PLACEMENT_MIN_CONFIDENCE = 0.5;
+
+// The structured analyzer makes a blocking ~10-18s vision call. With the
+// opt-in placement pass (/photo only), each confirmable finding adds a short
+// vision call on top. 120s covers analysis plus a handful of placements; the
+// admin preview that runs the same pass uses 300s, but the harness places one
+// photo's findings, not a whole session's. The /turn chat route streams, so it
+// never hit this.
+export const config = { maxDuration: 120 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
@@ -47,7 +59,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const parsed = parseAnalyzePhotoBody(readJsonBody<AnalyzePhotoBody>(req));
   if (!parsed.ok) return res.status(parsed.status).json({ error: parsed.error });
-  const { sessionId, photoUrl, contextHint } = parsed;
+  const { sessionId, photoUrl, contextHint, place } = parsed;
 
   try {
     const clients = makeClientsFromEnv();
@@ -94,11 +106,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const assistantMessage =
       out.summary?.standard ?? out.scene?.standard ?? 'Analysis complete.';
 
+    // Opt-in placement pass (/photo harness only). Same per-finding placement
+    // the admin preview and the Spot report use, run over this one photo's
+    // findings so the harness can draw the same pin overlay Spot reports show.
+    // A missing key, or any placement failure, degrades to no annotations —
+    // the analysis and its prose already succeeded, and a preview overlay is
+    // never worth failing the whole request over. Both gates (confirmable,
+    // confidence) live inside buildPhotoAnnotations.
+    let annotations: PhotoAnnotation[] | undefined;
+    if (place) {
+      const apiKey = process.env.ANTHROPIC_API_KEY;
+      if (apiKey) {
+        try {
+          const placeFn = makeAnthropicPlaceFn(apiKey, PLACEMENT_MODEL_DEFAULT);
+          annotations = await buildPhotoAnnotations(
+            [{ photoUrl, findings: out.findings }],
+            placeFn,
+            { minConfidence: PLACEMENT_MIN_CONFIDENCE },
+          );
+        } catch (placeErr) {
+          console.error('analyze-photo placement pass failed (non-fatal)', placeErr);
+        }
+      }
+    }
+
     return res.status(200).json({
       ok: true,
       photo_analysis_id: photoAnalysisId,
       assistant_message: assistantMessage,
       analysis: out,
+      annotations,
     });
   } catch (err) {
     console.error('POST /api/ada/analyze-photo failed', err);
