@@ -44,7 +44,7 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
-import type { PhotoAnnotation } from '../../lib/spot/annotationTypes.js';
+import type { SpotReportContent } from '../../lib/spot/reportSchema.js';
 import type { DebugFindingPlacement } from '../../lib/spot/debugPlacement.js';
 
 export type PhotoCaptureStatus =
@@ -66,11 +66,11 @@ export interface PhotoCaptureResult {
   assistantMessage: string;
   photoUrl: string;
   /**
-   * Placement pins for the photo, when the placement pass ran and found
-   * something to mark. Undefined when placement was skipped or failed —
-   * the saved view then shows the plain photo, exactly as before.
+   * The composed screening report — the same content Spot ships — built by the
+   * shared compose+place pipeline. Undefined only if the request predates this
+   * or in debug mode (which shows the raw method-comparison overlay instead).
    */
-  annotations?: PhotoAnnotation[];
+  content?: SpotReportContent;
   /** Placement-method comparison rows, only present under /photo?debug=1. */
   debug?: DebugFindingPlacement[];
 }
@@ -159,11 +159,8 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
             session_id: sessionId,
             photo_url: photoUrl,
             context_hint: contextHint,
-            // Ask for the pin overlay. This is the only caller that does —
-            // the Spot capture flow places findings during report generation
-            // and must not pay for placement twice.
-            place: true,
-            // /photo?debug=1 — also return the placement-method comparison.
+            // /photo?debug=1 — return the raw placement-method comparison
+            // instead of the composed report.
             debug: input.debug === true,
           }),
         });
@@ -172,7 +169,7 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
         }
         const analyzeJson = (await analyzeRes.json()) as {
           assistant_message?: string;
-          annotations?: PhotoAnnotation[];
+          content?: SpotReportContent;
           debug?: DebugFindingPlacement[];
         };
         const assistantMessage = analyzeJson.assistant_message ?? '';
@@ -182,7 +179,7 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
           sessionId,
           assistantMessage,
           photoUrl,
-          annotations: analyzeJson.annotations,
+          content: analyzeJson.content,
           debug: analyzeJson.debug,
         });
         setStatus('saved');

@@ -53,8 +53,8 @@ import {
 } from '../../hooks/usePhotoCapture.js';
 import { PinnedPhoto } from './spot/PinnedPhoto.js';
 import { PhotoDebugOverlay } from './spot/PhotoDebugOverlay.js';
-import { numberPins } from '../../../lib/spot/numberPins.js';
-import type { PhotoAnnotation } from '../../../lib/spot/annotationTypes.js';
+import { buildPinNumbering } from '../../../lib/spot/pinNumbering.js';
+import type { SpotReportContent } from '../../../lib/spot/reportSchema.js';
 import type { DebugFindingPlacement } from '../../../lib/spot/debugPlacement.js';
 
 const MAX_RAW_BYTES = 20 * 1024 * 1024; // 20 MB — matches Chat.tsx
@@ -312,7 +312,7 @@ interface SavedViewProps {
     sessionId: string;
     assistantMessage: string;
     photoUrl: string;
-    annotations?: PhotoAnnotation[];
+    content?: SpotReportContent;
     debug?: DebugFindingPlacement[];
   };
   onSubmitFeedback: (comment: string) => Promise<boolean>;
@@ -323,11 +323,11 @@ function SavedView({ result, onSubmitFeedback, onReset }: SavedViewProps) {
   const [comment, setComment] = useState('');
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
-  // One photo per capture, so the first annotation is the only one. numberPins
-  // hands PinnedPhoto its NumberedPin[]; an empty result falls through to the
-  // plain photo below.
-  const pins = numberPins(result.annotations?.[0]);
   const debug = result.debug;
+  const content = result.content;
+  // Same numbering the buyer report uses: pin ① on the photo is row ① below.
+  const numbering = content ? buildPinNumbering(content.items, content.photoAnnotations) : null;
+  const pins = numbering ? numbering.pinsForPhoto(result.photoUrl) : [];
 
   async function handleSaveComment() {
     if (!comment.trim() || saveState === 'saving') return;
@@ -341,9 +341,9 @@ function SavedView({ result, onSubmitFeedback, onReset }: SavedViewProps) {
       <section>
         <h2 className="font-display text-xl text-ink-900">Your photo</h2>
         {/* Debug mode (?debug=1) shows both placement methods over the photo for
-            comparison. Otherwise: the numbered pin overlay a Spot report uses
-            when there's anything to mark, and the plain photo when there isn't
-            (so the alt text stays the harness's own wording). */}
+            comparison. Otherwise: the photo with the composed report's numbered
+            pins (honest markers), and the plain photo when there's nothing to
+            mark (so the alt text stays the harness's own wording). */}
         <div className="mt-2 rounded-md border border-surface-200 bg-surface-100 p-2">
           {debug && debug.length > 0 ? (
             <PhotoDebugOverlay url={result.photoUrl} findings={debug} />
@@ -353,7 +353,7 @@ function SavedView({ result, onSubmitFeedback, onReset }: SavedViewProps) {
               index={0}
               total={1}
               pins={pins}
-              showRegions
+              honestConfidence
             />
           ) : (
             // eslint-disable-next-line jsx-a11y/img-redundant-alt
@@ -366,12 +366,50 @@ function SavedView({ result, onSubmitFeedback, onReset }: SavedViewProps) {
         </div>
       </section>
 
-      <section>
-        <h2 className="font-display text-xl text-ink-900">Ada said</h2>
-        <div className="mt-2 whitespace-pre-wrap rounded-md border border-surface-200 bg-surface-100 px-3 py-3 text-base text-ink-900">
-          {result.assistantMessage || '(no response text)'}
-        </div>
-      </section>
+      {/* The composed screening report — the same content Spot ships. Shown
+          instead of the raw analyzer read so testing on /photo represents the
+          buyer experience. Debug mode shows the method-comparison overlay
+          above and skips this. */}
+      {!debug && content ? (
+        <section>
+          <h2 className="font-display text-xl text-ink-900">{content.headline}</h2>
+          {content.overview ? (
+            <p className="mt-2 text-base text-ink-900">{content.overview}</p>
+          ) : null}
+          {content.items.length > 0 ? (
+            <ol className="mt-3 list-none space-y-3 p-0">
+              {content.items.map((item, i) => {
+                const num = numbering?.numberForItem(item) ?? null;
+                return (
+                  <li
+                    key={`${item.title}-${i}`}
+                    className="rounded-md border border-surface-200 bg-surface-100 px-3 py-3"
+                  >
+                    <p className="m-0 font-medium text-ink-900">
+                      {num !== null ? `${num}. ` : ''}
+                      {item.title}{' '}
+                      <span className="text-sm font-normal text-ink-500">
+                        ({item.severityLabel})
+                      </span>
+                    </p>
+                    <p className="m-0 mt-1 text-sm text-ink-700">{item.concern}</p>
+                    {item.remediation ? (
+                      <p className="m-0 mt-1 text-sm text-ink-900">
+                        <span className="font-medium">What to do:</span> {item.remediation}
+                      </p>
+                    ) : null}
+                    {item.hedged && item.hedgeNote ? (
+                      <p className="m-0 mt-1 text-xs text-ink-500">{item.hedgeNote}</p>
+                    ) : null}
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <p className="mt-2 text-base text-ink-700">{content.disclaimer}</p>
+          )}
+        </section>
+      ) : null}
 
       <section>
         <label htmlFor="tester-comment" className="block font-display text-base text-ink-900">
