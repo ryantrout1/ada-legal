@@ -44,6 +44,7 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
+import type { PhotoAnnotation } from '../../lib/spot/annotationTypes.js';
 
 export type PhotoCaptureStatus =
   | 'idle'
@@ -61,6 +62,12 @@ export interface PhotoCaptureResult {
   sessionId: string;
   assistantMessage: string;
   photoUrl: string;
+  /**
+   * Placement pins for the photo, when the placement pass ran and found
+   * something to mark. Undefined when placement was skipped or failed —
+   * the saved view then shows the plain photo, exactly as before.
+   */
+  annotations?: PhotoAnnotation[];
 }
 
 interface UsePhotoCaptureReturn {
@@ -147,6 +154,10 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
             session_id: sessionId,
             photo_url: photoUrl,
             context_hint: contextHint,
+            // Ask for the pin overlay. This is the only caller that does —
+            // the Spot capture flow places findings during report generation
+            // and must not pay for placement twice.
+            place: true,
           }),
         });
         if (!analyzeRes.ok) {
@@ -154,11 +165,17 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
         }
         const analyzeJson = (await analyzeRes.json()) as {
           assistant_message?: string;
+          annotations?: PhotoAnnotation[];
         };
         const assistantMessage = analyzeJson.assistant_message ?? '';
 
         sessionIdRef.current = sessionId;
-        setResult({ sessionId, assistantMessage, photoUrl });
+        setResult({
+          sessionId,
+          assistantMessage,
+          photoUrl,
+          annotations: analyzeJson.annotations,
+        });
         setStatus('saved');
       } catch (err) {
         const message =

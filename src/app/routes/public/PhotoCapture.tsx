@@ -50,6 +50,9 @@ import {
   usePhotoCapture,
   type PhotoCaptureStatus,
 } from '../../hooks/usePhotoCapture.js';
+import { PinnedPhoto } from './spot/PinnedPhoto.js';
+import { numberPins } from '../../../lib/spot/numberPins.js';
+import type { PhotoAnnotation } from '../../../lib/spot/annotationTypes.js';
 
 const MAX_RAW_BYTES = 20 * 1024 * 1024; // 20 MB — matches Chat.tsx
 
@@ -304,6 +307,7 @@ interface SavedViewProps {
     sessionId: string;
     assistantMessage: string;
     photoUrl: string;
+    annotations?: PhotoAnnotation[];
   };
   onSubmitFeedback: (comment: string) => Promise<boolean>;
   onReset: () => void;
@@ -312,6 +316,11 @@ interface SavedViewProps {
 function SavedView({ result, onSubmitFeedback, onReset }: SavedViewProps) {
   const [comment, setComment] = useState('');
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  // One photo per capture, so the first annotation is the only one. numberPins
+  // hands PinnedPhoto its NumberedPin[]; an empty result falls through to the
+  // plain photo below.
+  const pins = numberPins(result.annotations?.[0]);
 
   async function handleSaveComment() {
     if (!comment.trim() || saveState === 'saving') return;
@@ -324,13 +333,28 @@ function SavedView({ result, onSubmitFeedback, onReset }: SavedViewProps) {
     <div className="space-y-4">
       <section>
         <h2 className="font-display text-xl text-ink-900">Your photo</h2>
+        {/* When the placement pass marked anything, show the same numbered pin
+            overlay a Spot report uses; the caption under it lists each pin as
+            text. With no pins (placement skipped, failed, or nothing to mark)
+            PinnedPhoto renders just the photo — so this path is safe either
+            way, but we keep the plain img when there are no annotations at all
+            so the alt text stays the harness's own wording. */}
         <div className="mt-2 rounded-md border border-surface-200 bg-surface-100 p-2">
-          {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-          <img
-            src={result.photoUrl}
-            alt="The photo you submitted"
-            className="block w-full rounded-sm"
-          />
+          {pins.length > 0 ? (
+            <PinnedPhoto
+              url={result.photoUrl}
+              index={0}
+              total={1}
+              pins={pins}
+            />
+          ) : (
+            // eslint-disable-next-line jsx-a11y/img-redundant-alt
+            <img
+              src={result.photoUrl}
+              alt="The photo you submitted"
+              className="block w-full rounded-sm"
+            />
+          )}
         </div>
       </section>
 
