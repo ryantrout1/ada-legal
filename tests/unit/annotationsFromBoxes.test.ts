@@ -42,6 +42,8 @@ describe('annotationsFromBoxes', () => {
       label: 'Curb',
       severity: 'critical',
       itemIndex: 0,
+      // The source box rides along so the renderer can choose point vs region.
+      box: { x: 0.08, y: 0.79, w: 0.5, h: 0.09 },
     });
   });
 

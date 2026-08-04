@@ -75,6 +75,9 @@ export function annotationsFromBoxes(
       label: f.title_standard,
       severity: f.severity,
       itemIndex: i,
+      // Carry the box so a renderer can decide point vs region (pinShape) and
+      // draw the region. Absent-box findings never reach here (box gate above).
+      box,
     });
   }
 
