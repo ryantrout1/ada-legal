@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "ADA Legal Link — Ada engine, attorney directory, and enterprise ADA intake platform.",
+  "description": "ADA Legal Link \u2014 Ada engine, attorney directory, and enterprise ADA intake platform.",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
@@ -25,7 +25,8 @@
     "test:a11y": "playwright test --config=playwright.a11y.config.ts",
     "test:a11y:preview": "PLAYWRIGHT_TARGET=preview playwright test --config=playwright.a11y.config.ts",
     "verify:redirects": "node scripts/verify-redirects.mjs",
-    "verify:a11y": "node scripts/verify-a11y.mjs"
+    "verify:a11y": "node scripts/verify-a11y.mjs",
+    "eval:boxes": "node --experimental-strip-types scripts/eval-boxes.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",

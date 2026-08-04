@@ -1,0 +1,41 @@
+{
+  "photoId": "bathroom-01",
+  "note": "Remodeled residential bathroom: glass shower with a raised dark curb, toilet, white vanity beside a white door. The hard case from /triage — low-contrast curb on a large dark floor.",
+  "source": {
+    "photoAnalysisId": "0b904c61-063d-4ae2-aff2-a7d7412312f8",
+    "capturedAt": "2026-08-04"
+  },
+  "groundTruth": [
+    {
+      "photoId": "bathroom-01",
+      "findingTitleContains": "curb",
+      "truth": { "x": 0.33, "y": 0.55 },
+      "note": "PROVISIONAL — estimated from the debug screenshots, NOT yet clicked. Replace with a captured click before trusting any before/after number."
+    },
+    {
+      "photoId": "bathroom-01",
+      "findingTitleContains": "cabinet",
+      "truth": { "x": 0.78, "y": 0.83 },
+      "note": "PROVISIONAL — the vanity cabinet front, where all three methods already agree."
+    }
+  ],
+  "observed": {
+    "note": "Analyzer boxes from photo_analysis 0b904c61 (the 2026-08-04 run), with the placement points read off that run's debug overlay.",
+    "findings": [
+      {
+        "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
+        "box": { "x": 0.08, "y": 0.72, "w": 0.5, "h": 0.12 },
+        "boxCenter": { "x": 0.33, "y": 0.78 },
+        "placement": { "x": 0.32, "y": 0.85 },
+        "cropPlacement": { "x": 0.24, "y": 0.73 }
+      },
+      {
+        "title": "Lavatory — Cabinet Beneath Blocks Knee Clearance / Rim Height",
+        "box": { "x": 0.6, "y": 0.72, "w": 0.35, "h": 0.28 },
+        "boxCenter": { "x": 0.78, "y": 0.86 },
+        "placement": { "x": 0.72, "y": 0.82 },
+        "cropPlacement": { "x": 0.69, "y": 0.83 }
+      }
+    ]
+  }
+}

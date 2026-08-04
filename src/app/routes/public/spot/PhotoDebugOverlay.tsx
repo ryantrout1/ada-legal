@@ -14,6 +14,7 @@
  * layer, no theming; it never ships to a claimant or the buyer report.
  */
 
+import { useState, type MouseEvent as ReactMouseEvent } from 'react';
 import type { DebugFindingPlacement } from '@/lib/spot/debugPlacement';
 
 const BOX_COLOR = '#2563EB'; // analyzer box + its center
@@ -68,10 +69,44 @@ export function PhotoDebugOverlay({
   url: string;
   findings: DebugFindingPlacement[];
 }) {
+  // Ground-truth capture (/plan analyzer-grounding phase 1): click the actual
+  // concern in the photo to read off its normalized coordinates, which go into
+  // a boxAccuracy fixture. Clicking is the cheapest honest way to get a truth
+  // point — the alternative is eyeballing "better", which has already misled
+  // us three times on this photo.
+  const [truth, setTruth] = useState<{ x: number; y: number } | null>(null);
+
+  const capture = (e: ReactMouseEvent<HTMLImageElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) return;
+    const x = Math.round(((e.clientX - r.left) / r.width) * 1000) / 1000;
+    const y = Math.round(((e.clientY - r.top) / r.height) * 1000) / 1000;
+    setTruth({ x, y });
+  };
+
   return (
     <figure className="m-0">
       <div className="relative">
-        <img src={url} alt="Field-test photo with placement debug overlay" className="block w-full rounded-lg border border-surface-200" />
+        <img
+          src={url}
+          alt="Field-test photo with placement debug overlay"
+          className="block w-full rounded-lg border border-surface-200"
+          onClick={capture}
+        />
+
+        {truth && (
+          <span
+            aria-hidden="true"
+            className="absolute"
+            style={{
+              left: `${truth.x * 100}%`,
+              top: `${truth.y * 100}%`,
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            <span className="block h-4 w-4 rounded-full border-2 border-white bg-black shadow" />
+          </span>
+        )}
 
         {findings.map((f, i) => {
           const n = i + 1;
@@ -117,6 +152,12 @@ export function PhotoDebugOverlay({
           <span className="inline-flex items-center gap-1.5">
             <span className="inline-block h-3 w-3 rounded-full" style={{ backgroundColor: CROP_COLOR }} />
             crop-guided placement
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="inline-block h-3 w-3 rounded-full bg-black" />
+            {truth
+              ? `ground truth — click again to move: {"x": ${truth.x}, "y": ${truth.y}}`
+              : 'click the photo on the real concern to capture ground truth'}
           </span>
         </div>
         <ol className="m-0 list-none space-y-1 p-0">

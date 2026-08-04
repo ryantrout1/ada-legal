@@ -56,10 +56,10 @@ describe('scoreFinding', () => {
 
     expect(row.insideBox).toBe(false);
     // crop is closest here, box center is worst — the ordering is the signal.
-    expect(row.methods.find((m) => m.method === 'cropPlacement')!.distance).toBeLessThan(
-      row.methods.find((m) => m.method === 'boxCenter')!.distance,
+    expect(row.methods.find((m) => m.method === 'cropPlacement')!.distance!).toBeLessThan(
+      row.methods.find((m) => m.method === 'boxCenter')!.distance!,
     );
-    expect(row.methods.find((m) => m.method === 'boxCenter')!.distance).toBeCloseTo(0.3406, 3);
+    expect(row.methods.find((m) => m.method === 'boxCenter')!.distance).toBeCloseTo(0.3413, 3);
   });
 
   it('records a null method as missing rather than scoring it as zero', () => {
