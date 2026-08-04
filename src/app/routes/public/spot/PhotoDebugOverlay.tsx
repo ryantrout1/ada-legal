@@ -108,7 +108,7 @@ export function PhotoDebugOverlay({
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span className="inline-block h-3 w-3 rounded-full" style={{ backgroundColor: PLACE_COLOR }} />
-            fresh re-placement point
+            re-placement, Spot-style short concern
           </span>
         </div>
         <ol className="m-0 list-none space-y-1 p-0">

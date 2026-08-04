@@ -41,6 +41,19 @@ export interface DebugFindingPlacement {
 const round3 = (n: number): number => Math.round(n * 1000) / 1000;
 
 /**
+ * A short, concrete placement concern from a finding's formal title — the kind
+ * of anchor the placement prompt is built for. Spot places composed titles like
+ * "Raised shower curb"; the analyzer's raw title is the long ADA-framed form
+ * ("Shower Threshold — Raised Curb Blocks Roll-In Entry"). The object sits
+ * before the em-dash, so take that: "Shower Threshold", "Shower Seat",
+ * "Lavatory". Falls back to the whole title when there's no dash.
+ */
+export function shortConcern(title: string): string {
+  const cut = title.split(/\s[—–-]\s/)[0]?.trim();
+  return cut && cut.length > 0 ? cut : title.trim();
+}
+
+/**
  * Center of a bounding box, rounded to 3 decimals to match placeFinding. Returns
  * null for a missing box so the caller can render the rectangle-less case.
  */

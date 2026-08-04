@@ -38,6 +38,7 @@ import {
 } from '../../src/lib/spot/placeFindingAnthropic.js';
 import {
   boxCenterOf,
+  shortConcern,
   type DebugFindingPlacement,
 } from '../../src/lib/spot/debugPlacement.js';
 
@@ -141,8 +142,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           let placement: DebugFindingPlacement['placement'] = null;
           if (placeFn) {
             try {
+              // Feed placement the short concrete concern, the way the Spot
+              // report does (it places composed titles like "Raised shower
+              // curb"). The raw analyzer title is long and ADA-framed, which
+              // the placement prompt — which anchors on a short "Concern" and
+              // asks for a short label back — localizes worse.
               const p = await placeFn(photoUrl, {
-                title: f.title_standard,
+                title: shortConcern(f.title_standard),
                 detail: f.finding_standard,
               });
               if (p) {
