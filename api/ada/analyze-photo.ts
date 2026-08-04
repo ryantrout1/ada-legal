@@ -30,8 +30,8 @@ import {
   gateAnalyzePhotoSession,
   type AnalyzePhotoBody,
 } from '../../src/lib/analyzePhotoRequest.js';
-import { annotationsFromBoxes } from '../../src/lib/spot/annotationsFromBoxes.js';
-import type { PhotoAnnotation } from '../../src/lib/spot/annotationTypes.js';
+import { composeAndPlaceReport } from '../../src/lib/spot/composeAndPlaceReport.js';
+import type { SpotReportContent } from '../../src/lib/spot/reportSchema.js';
 import {
   makeAnthropicPlaceFn,
   PLACEMENT_MODEL_DEFAULT,
@@ -42,10 +42,6 @@ import {
   type DebugFindingPlacement,
 } from '../../src/lib/spot/debugPlacement.js';
 import { cropGuidedPlace } from '../../src/lib/spot/cropPlacement.js';
-
-// Same floor as the analyzer's own reporting: below this confidence a finding
-// draws no pin and stays in prose only.
-const PIN_MIN_CONFIDENCE = 0.5;
 
 // The structured analyzer makes a blocking ~10-18s vision call. Normal pins are
 // built from that output with no extra call, so 60s would cover them — but the
@@ -65,7 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const parsed = parseAnalyzePhotoBody(readJsonBody<AnalyzePhotoBody>(req));
   if (!parsed.ok) return res.status(parsed.status).json({ error: parsed.error });
-  const { sessionId, photoUrl, contextHint, place, debug } = parsed;
+  const { sessionId, photoUrl, contextHint, debug } = parsed;
 
   try {
     const clients = makeClientsFromEnv();
@@ -112,18 +108,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const assistantMessage =
       out.summary?.standard ?? out.scene?.standard ?? 'Analysis complete.';
 
-    // Opt-in pins (/photo harness only). Mark each qualifying finding at its
-    // analyzer bounding-box center — the same overlay a Spot report shows,
-    // built from data the analysis already produced. No second model call:
-    // /triage found the per-finding re-placement pass clustered distinct
-    // findings on hard photos (a bench pin landing on the toilet), while the
-    // analyzer's own boxes placed them correctly. Pure and synchronous; both
-    // gates (confirmable, confidence) plus the box gate live in the helper.
-    let annotations: PhotoAnnotation[] | undefined;
-    if (place) {
-      annotations = annotationsFromBoxes(photoUrl, out.findings, {
-        minConfidence: PIN_MIN_CONFIDENCE,
+    // The field test now renders the SAME composed report Spot ships. The raw
+    // row above stays (it feeds Peter's review queue); this reuses the exact
+    // shared compose+place core the buyer report uses, from the analysis we
+    // already have — so the analyzer runs once, and anything the testers
+    // validate here (composer, placement) is a real change to Spot. Skipped in
+    // debug mode, which is the raw method-comparison lab below. Placement
+    // errors never fail the request (composeAndPlaceReport swallows them).
+    let content: SpotReportContent | undefined;
+    if (!debug) {
+      const report = await composeAndPlaceReport(clients, {
+        analyses: [out],
+        photos: [{ blobUrl: photoUrl }],
+        annotate: true,
       });
+      content = report.content;
     }
 
     // Debug comparison (/photo?debug=1 only). For each confirmable finding,
@@ -186,7 +185,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       photo_analysis_id: photoAnalysisId,
       assistant_message: assistantMessage,
       analysis: out,
-      annotations,
+      content,
       debug: debugPlacements,
     });
   } catch (err) {
