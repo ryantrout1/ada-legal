@@ -9,13 +9,19 @@
     {
       "photoId": "bathroom-01",
       "findingTitleContains": "curb",
-      "truth": { "x": 0.33, "y": 0.55 },
+      "truth": {
+        "x": 0.33,
+        "y": 0.55
+      },
       "note": "PROVISIONAL — estimated from the debug screenshots, NOT yet clicked. Replace with a captured click before trusting any before/after number."
     },
     {
       "photoId": "bathroom-01",
       "findingTitleContains": "cabinet",
-      "truth": { "x": 0.78, "y": 0.83 },
+      "truth": {
+        "x": 0.78,
+        "y": 0.83
+      },
       "note": "PROVISIONAL — the vanity cabinet front, where all three methods already agree."
     }
   ],
@@ -24,18 +30,179 @@
     "findings": [
       {
         "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
-        "box": { "x": 0.08, "y": 0.72, "w": 0.5, "h": 0.12 },
-        "boxCenter": { "x": 0.33, "y": 0.78 },
-        "placement": { "x": 0.32, "y": 0.85 },
-        "cropPlacement": { "x": 0.24, "y": 0.73 }
+        "box": {
+          "x": 0.08,
+          "y": 0.72,
+          "w": 0.5,
+          "h": 0.12
+        },
+        "boxCenter": {
+          "x": 0.33,
+          "y": 0.78
+        },
+        "placement": {
+          "x": 0.32,
+          "y": 0.85
+        },
+        "cropPlacement": {
+          "x": 0.24,
+          "y": 0.73
+        }
       },
       {
         "title": "Lavatory — Cabinet Beneath Blocks Knee Clearance / Rim Height",
-        "box": { "x": 0.6, "y": 0.72, "w": 0.35, "h": 0.28 },
-        "boxCenter": { "x": 0.78, "y": 0.86 },
-        "placement": { "x": 0.72, "y": 0.82 },
-        "cropPlacement": { "x": 0.69, "y": 0.83 }
+        "box": {
+          "x": 0.6,
+          "y": 0.72,
+          "w": 0.35,
+          "h": 0.28
+        },
+        "boxCenter": {
+          "x": 0.78,
+          "y": 0.86
+        },
+        "placement": {
+          "x": 0.72,
+          "y": 0.82
+        },
+        "cropPlacement": {
+          "x": 0.69,
+          "y": 0.83
+        }
       }
     ]
-  }
+  },
+  "runsNote": "Ten real analyzer runs of this photo pulled from photo_analyses on 2026-08-04, spanning the day's sessions. Only the curb finding is recorded (the cabinet's box was not captured for every run). This is the NOISE FLOOR: the box moved 0.13 with no code change, so any future change must beat that to mean anything.",
+  "runs": [
+    {
+      "findings": [
+        {
+          "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
+          "box": {
+            "x": 0.05,
+            "y": 0.85,
+            "w": 0.55,
+            "h": 0.12
+          }
+        }
+      ]
+    },
+    {
+      "findings": [
+        {
+          "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
+          "box": {
+            "x": 0.08,
+            "y": 0.72,
+            "w": 0.5,
+            "h": 0.12
+          }
+        }
+      ]
+    },
+    {
+      "findings": [
+        {
+          "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
+          "box": {
+            "x": 0.08,
+            "y": 0.78,
+            "w": 0.5,
+            "h": 0.12
+          }
+        }
+      ]
+    },
+    {
+      "findings": [
+        {
+          "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
+          "box": {
+            "x": 0.08,
+            "y": 0.79,
+            "w": 0.55,
+            "h": 0.1
+          }
+        }
+      ]
+    },
+    {
+      "findings": [
+        {
+          "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
+          "box": {
+            "x": 0.05,
+            "y": 0.83,
+            "w": 0.5,
+            "h": 0.12
+          }
+        }
+      ]
+    },
+    {
+      "findings": [
+        {
+          "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
+          "box": {
+            "x": 0.08,
+            "y": 0.72,
+            "w": 0.55,
+            "h": 0.15
+          }
+        }
+      ]
+    },
+    {
+      "findings": [
+        {
+          "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
+          "box": {
+            "x": 0.05,
+            "y": 0.83,
+            "w": 0.55,
+            "h": 0.12
+          }
+        }
+      ]
+    },
+    {
+      "findings": [
+        {
+          "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
+          "box": {
+            "x": 0.08,
+            "y": 0.79,
+            "w": 0.5,
+            "h": 0.12
+          }
+        }
+      ]
+    },
+    {
+      "findings": [
+        {
+          "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
+          "box": {
+            "x": 0.08,
+            "y": 0.79,
+            "w": 0.5,
+            "h": 0.09
+          }
+        }
+      ]
+    },
+    {
+      "findings": [
+        {
+          "title": "Shower Threshold — Raised Curb Blocks Roll-In Entry",
+          "box": {
+            "x": 0.08,
+            "y": 0.79,
+            "w": 0.45,
+            "h": 0.1
+          }
+        }
+      ]
+    }
+  ]
 }

@@ -312,6 +312,7 @@ export interface ReanalyzePreviewFinding {
   severity: FindingSeverity;
   standard: string;
   confirmable: boolean;
+  box?: { x: number; y: number; w: number; h: number } | null;
 }
 
 export interface ReanalyzePreviewSide {
@@ -324,6 +325,54 @@ export interface ReanalyzePreviewItem {
   analyzedAt: string;
   before: ReanalyzePreviewSide;
   after: ReanalyzePreviewSide;
+}
+
+/**
+ * Sample ONE stored photo N times (/plan repeat-run phase 1).
+ *
+ * The analyzer is non-deterministic: ten runs of one bathroom photo moved the
+ * curb box by 0.13 with no code change. A single run therefore cannot tell a
+ * real improvement from run-to-run noise, which is how several placement
+ * "fixes" looked convincing and changed nothing. This returns every run's
+ * boxes so summarizeRuns can report containment as k-of-N instead.
+ *
+ * Writes nothing — same no-save endpoint the preview uses, so the review
+ * queue is never disturbed by measurement.
+ */
+export function useSampleAnalyzer() {
+  const [sampling, setSampling] = useState(false);
+  const [sample, setSample] = useState<{
+    requested: number;
+    completed: number;
+    runs: { findings: ReanalyzePreviewFinding[] }[];
+  } | null>(null);
+  const [sampleError, setSampleError] = useState<string | null>(null);
+
+  const runSample = useCallback(async (id: string, runs: number) => {
+    setSampling(true);
+    setSampleError(null);
+    setSample(null);
+    try {
+      const r = await fetch('/api/admin/photo-analyses/reanalyze-preview', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, runs }),
+      });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const json = (await r.json()) as {
+        samples?: { requested: number; completed: number; runs: { findings: ReanalyzePreviewFinding[] }[] };
+      };
+      if (!json.samples) throw new Error('no samples returned');
+      setSample(json.samples);
+    } catch {
+      setSampleError('Could not sample this photo — see server logs.');
+    } finally {
+      setSampling(false);
+    }
+  }, []);
+
+  return { runSample, sampling, sample, sampleError };
 }
 
 export function useReanalyzePreview() {

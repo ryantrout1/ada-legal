@@ -11,11 +11,13 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   useAdminPhotoReviewDetail,
+  useSampleAnalyzer,
   type FindingSeverity,
   type FindingVerdict,
   type ReviewOverallVerdict,
   type MissedFinding,
 } from '../../hooks/useAdminPhotoReview.js';
+import { summarizeRuns } from '../../../lib/spot/boxVariance.js';
 
 const SEV: Record<FindingSeverity, { bg: string; text: string }> = {
   critical: { bg: 'bg-danger-50', text: 'text-danger-500' },
@@ -204,6 +206,8 @@ export default function AdminPhotoReviewDetail() {
         </div>
       )}
 
+      <AnalyzerSamplePanel id={id ?? ''} findingTitles={detail.findings.map((f) => f.title_standard)} />
+
       <h2 className="mb-2 font-display text-lg text-ink-900">
         Engine findings <span className="text-ink-500">({detail.findings.length})</span>
       </h2>
@@ -366,6 +370,79 @@ export default function AdminPhotoReviewDetail() {
             </span>
           )}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Analyzer sampling panel (/plan repeat-run phase 1).
+ *
+ * Runs the CURRENT analyzer N times against this same stored photo and reports,
+ * per finding, how often it appeared and how far its box wandered. Nothing is
+ * written — sampling never touches the review queue.
+ *
+ * The point is the spread. Ten runs of one bathroom photo moved a curb box by
+ * 0.13 with no code change, which is wider than most of the differences we were
+ * judging from single screenshots. A change that moves the box less than the
+ * spread has not been shown to do anything.
+ */
+function AnalyzerSamplePanel({ id, findingTitles }: { id: string; findingTitles: string[] }) {
+  const { runSample, sampling, sample, sampleError } = useSampleAnalyzer();
+  const RUNS = 5;
+
+  const summaries = sample
+    ? findingTitles.map((title) =>
+        summarizeRuns(sample.runs, title.slice(0, 24), undefined),
+      )
+    : [];
+
+  return (
+    <section className="mb-6 rounded-md border border-surface-200 bg-surface-50 p-4">
+      <h2 className="mb-1 font-display text-lg text-ink-900">Analyzer stability</h2>
+      <p className="mb-3 text-sm text-ink-700">
+        Runs the analyzer {RUNS} times on this same photo to show how much its answer moves on
+        its own. Nothing is saved — this never adds to the review queue.
+      </p>
+
+      <button
+        type="button"
+        onClick={() => runSample(id, RUNS)}
+        disabled={sampling || !id}
+        className="min-h-[44px] rounded-md bg-accent-600 px-4 py-2 text-base font-medium text-surface-50 hover:bg-accent-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-surface-300"
+      >
+        {sampling ? `Running ${RUNS} analyses…` : `Sample ${RUNS}×`}
+      </button>
+
+      <div aria-live="polite" className="mt-3 text-sm">
+        {sampleError && <p className="text-accent-700">{sampleError}</p>}
+
+        {sample && (
+          <>
+            <p className="text-ink-700">
+              {sample.completed} of {sample.requested} runs completed.
+            </p>
+            <ul className="mt-2 list-none space-y-2 p-0">
+              {summaries.map((s, i) => (
+                <li key={i} className="rounded-md border border-surface-200 bg-white px-3 py-2">
+                  <p className="m-0 font-medium text-ink-900">{findingTitles[i]}</p>
+                  <p className="m-0 mt-1 text-ink-700">
+                    Appeared in {s.matchedRuns} of {sample.completed} runs
+                    {s.missingRuns > 0 ? ` (missing in ${s.missingRuns})` : ''}.
+                    {s.ySpread
+                      ? ` Box top edge ranged ${s.ySpread.min}–${s.ySpread.max} (spread ${s.ySpread.range}).`
+                      : ' No bounding box returned.'}
+                  </p>
+                  {s.observedY.length > 0 && (
+                    <p className="m-0 mt-1 text-xs text-ink-500">
+                      Observed: {s.observedY.join(', ')}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
     </section>
   );

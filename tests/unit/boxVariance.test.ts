@@ -34,9 +34,9 @@ describe('summarizeRuns', () => {
 
   it('reports the observed y spread — the noise floor any change must beat', () => {
     const s = summarizeRuns(curbRuns, 'curb', { x: 0.33, y: 0.55 });
-    expect(s.ySpread.min).toBeCloseTo(0.72, 6);
-    expect(s.ySpread.max).toBeCloseTo(0.85, 6);
-    expect(s.ySpread.range).toBeCloseTo(0.13, 6);
+    expect(s.ySpread!.min).toBeCloseTo(0.72, 6);
+    expect(s.ySpread!.max).toBeCloseTo(0.85, 6);
+    expect(s.ySpread!.range).toBeCloseTo(0.13, 6);
   });
 
   it('reports containment 10 of 10 for a finding whose box does cover truth', () => {

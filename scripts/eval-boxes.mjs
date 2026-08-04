@@ -32,6 +32,7 @@ if (files.length === 0) {
 }
 
 const rows = [];
+const multiRun = [];
 let provisional = 0;
 
 for (const file of files) {
@@ -45,6 +46,30 @@ for (const file of files) {
     if (!observed) {
       console.warn(`  (no observed finding matching "${gt.findingTitleContains}" in ${file})`);
       continue;
+    }
+    // When the fixture carries repeated runs of the same photo, containment
+    // across those runs is the number that survives run-to-run noise. A single
+    // run cannot distinguish a real change from the analyzer's own wobble.
+    if (Array.isArray(fx.runs) && fx.runs.length > 0) {
+      // Reuses scoreFinding (already imported) rather than importing the
+      // summarizer: node's type-stripping cannot resolve a .js specifier to a
+      // .ts file, and duplicating the geometry would be worse than looping.
+      const matched = fx.runs
+        .map((run) => (run.findings ?? []).find((f) => f.title.toLowerCase().includes(needle)))
+        .filter(Boolean);
+      const boxed = matched.filter((f) => f.box);
+      const inside = boxed.filter(
+        (f) => scoreFinding(gt, { title: f.title, box: f.box, boxCenter: null, placement: null, cropPlacement: null }).insideBox,
+      ).length;
+      const ys = boxed.map((f) => f.box.y);
+      multiRun.push({
+        needle: gt.findingTitleContains,
+        inside,
+        boxedRuns: boxed.length,
+        totalRuns: fx.runs.length,
+        min: ys.length ? Math.min(...ys) : null,
+        max: ys.length ? Math.max(...ys) : null,
+      });
     }
     rows.push(
       scoreFinding(gt, {
@@ -81,6 +106,20 @@ console.log(
   `\nAnalyzer box containment: ${rate === null ? '—' : `${(rate * 100).toFixed(0)}%`} of findings had ground truth inside the box.`,
 );
 console.log('That containment number is the analyzer-grounding metric to move.\n');
+
+if (multiRun.length > 0) {
+  console.log('Across repeated runs of the same photo:');
+  for (const s of multiRun) {
+    const sp =
+      s.min === null
+        ? 'no boxes'
+        : `spread ${(s.max - s.min).toFixed(3)} (${s.min}-${s.max})`;
+    console.log(
+      `  "${s.needle}": truth inside box in ${s.inside} of ${s.boxedRuns} boxed runs (${s.totalRuns} sampled); box top edge ${sp}`,
+    );
+  }
+  console.log('  A change that moves the box less than the spread has not been shown to do anything.\n');
+}
 
 if (provisional > 0) {
   console.log(
