@@ -17,7 +17,8 @@
 import type { DebugFindingPlacement } from '@/lib/spot/debugPlacement';
 
 const BOX_COLOR = '#2563EB'; // analyzer box + its center
-const PLACE_COLOR = '#EA580C'; // re-placement point
+const PLACE_COLOR = '#EA580C'; // full-frame re-placement point
+const CROP_COLOR = '#16A34A'; // crop-guided placement point
 
 function Dot({
   x,
@@ -95,6 +96,9 @@ export function PhotoDebugOverlay({
               {f.placement && (
                 <Dot x={f.placement.x} y={f.placement.y} color={PLACE_COLOR} tag={`${n} place`} />
               )}
+              {f.cropPlacement && (
+                <Dot x={f.cropPlacement.x} y={f.cropPlacement.y} color={CROP_COLOR} tag={`${n} crop`} />
+              )}
             </span>
           );
         })}
@@ -108,7 +112,11 @@ export function PhotoDebugOverlay({
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span className="inline-block h-3 w-3 rounded-full" style={{ backgroundColor: PLACE_COLOR }} />
-            re-placement, Spot-style short concern
+            re-placement, full frame
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="inline-block h-3 w-3 rounded-full" style={{ backgroundColor: CROP_COLOR }} />
+            crop-guided placement
           </span>
         </div>
         <ol className="m-0 list-none space-y-1 p-0">
@@ -116,8 +124,8 @@ export function PhotoDebugOverlay({
             <li key={i} className="tabular-nums">
               <span className="font-medium text-ink-900">{i + 1}.</span> {f.title}{' '}
               <span className="text-ink-500">
-                — box {fmt(f.boxCenter)} · place {fmt(f.placement)}
-                {f.placement ? ` (conf ${f.placement.confidence.toFixed(2)})` : ' (declined)'}
+                — box {fmt(f.boxCenter)} · place {fmt(f.placement)} · crop {fmt(f.cropPlacement)}
+                {f.cropPlacement ? ` (conf ${f.cropPlacement.confidence.toFixed(2)})` : ''}
               </span>
             </li>
           ))}

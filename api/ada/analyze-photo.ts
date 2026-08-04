@@ -41,6 +41,7 @@ import {
   shortConcern,
   type DebugFindingPlacement,
 } from '../../src/lib/spot/debugPlacement.js';
+import { cropGuidedPlace } from '../../src/lib/spot/cropPlacement.js';
 
 // Same floor as the analyzer's own reporting: below this confidence a finding
 // draws no pin and stays in prose only.
@@ -126,11 +127,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Debug comparison (/photo?debug=1 only). For each confirmable finding,
-    // return the analyzer box, its center (what ships), and a fresh
-    // re-placement point so the two methods can be eyeballed side by side on a
-    // real photo. One model call per confirmable finding, run in parallel; a
-    // missing key or a per-finding failure degrades that finding's placement to
-    // null rather than failing the request. Never runs in normal use.
+    // return the analyzer box + its center (what ships), a full-frame
+    // re-placement point, and a crop-guided placement point, so all three can
+    // be eyeballed side by side on a real photo. Up to two model calls per
+    // confirmable finding, run in parallel; a missing key or a per-finding
+    // failure degrades that point to null rather than failing the request.
+    // Never runs in normal use.
     let debugPlacements: DebugFindingPlacement[] | undefined;
     if (debug) {
       const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -140,28 +142,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         confirmable.map(async (f): Promise<DebugFindingPlacement> => {
           const box = f.bounding_box ?? null;
           let placement: DebugFindingPlacement['placement'] = null;
+          let cropPlacement: DebugFindingPlacement['cropPlacement'] = null;
           if (placeFn) {
-            try {
-              // Feed placement the short concrete concern, the way the Spot
-              // report does (it places composed titles like "Raised shower
-              // curb"). The raw analyzer title is long and ADA-framed, which
-              // the placement prompt — which anchors on a short "Concern" and
-              // asks for a short label back — localizes worse.
-              const p = await placeFn(photoUrl, {
-                title: shortConcern(f.title_standard),
-                detail: f.finding_standard,
-              });
-              if (p) {
-                placement = {
-                  x: p.x,
-                  y: p.y,
-                  confidence: p.confidence,
-                  label: p.label ?? null,
-                };
-              }
-            } catch (placeErr) {
-              console.error('analyze-photo debug placement failed (non-fatal)', placeErr);
+            const target = {
+              title: shortConcern(f.title_standard),
+              detail: f.finding_standard,
+            };
+            // Full-frame re-placement and crop-guided placement run in
+            // parallel so the overlay can show both against the box center.
+            const [full, cropped] = await Promise.all([
+              (async () => {
+                try {
+                  return await placeFn(photoUrl, target);
+                } catch (placeErr) {
+                  console.error('analyze-photo debug placement failed (non-fatal)', placeErr);
+                  return null;
+                }
+              })(),
+              box && apiKey
+                ? cropGuidedPlace(apiKey, photoUrl, box, target)
+                : Promise.resolve(null),
+            ]);
+            if (full) {
+              placement = { x: full.x, y: full.y, confidence: full.confidence, label: full.label ?? null };
             }
+            cropPlacement = cropped;
           }
           return {
             title: f.title_standard,
@@ -170,6 +175,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             box,
             boxCenter: boxCenterOf(box),
             placement,
+            cropPlacement,
           };
         }),
       );
