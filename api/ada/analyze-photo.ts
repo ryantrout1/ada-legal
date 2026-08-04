@@ -32,17 +32,26 @@ import {
 } from '../../src/lib/analyzePhotoRequest.js';
 import { annotationsFromBoxes } from '../../src/lib/spot/annotationsFromBoxes.js';
 import type { PhotoAnnotation } from '../../src/lib/spot/annotationTypes.js';
+import {
+  makeAnthropicPlaceFn,
+  PLACEMENT_MODEL_DEFAULT,
+} from '../../src/lib/spot/placeFindingAnthropic.js';
+import {
+  boxCenterOf,
+  type DebugFindingPlacement,
+} from '../../src/lib/spot/debugPlacement.js';
 
 // Same floor as the analyzer's own reporting: below this confidence a finding
 // draws no pin and stays in prose only.
 const PIN_MIN_CONFIDENCE = 0.5;
 
-// The structured analyzer makes a blocking ~10-18s vision call. Without a
-// raised limit, slower runs get killed mid-analysis and the request hangs
-// (fast runs persisted a row; slow ones didn't). The /turn chat route
-// streams, so it never hit this. 60s gives the vision call headroom. Pins are
-// built from the analysis output with no extra model call, so they add no time.
-export const config = { maxDuration: 60 };
+// The structured analyzer makes a blocking ~10-18s vision call. Normal pins are
+// built from that output with no extra call, so 60s would cover them — but the
+// debug branch (/photo?debug=1 only) runs a re-placement call per confirmable
+// finding in parallel on top, so the ceiling is 120s. A higher ceiling adds no
+// latency to normal calls; it only raises the kill limit. The /turn chat route
+// streams, so it never hit this.
+export const config = { maxDuration: 120 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;
@@ -54,7 +63,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const parsed = parseAnalyzePhotoBody(readJsonBody<AnalyzePhotoBody>(req));
   if (!parsed.ok) return res.status(parsed.status).json({ error: parsed.error });
-  const { sessionId, photoUrl, contextHint, place } = parsed;
+  const { sessionId, photoUrl, contextHint, place, debug } = parsed;
 
   try {
     const clients = makeClientsFromEnv();
@@ -115,12 +124,58 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // Debug comparison (/photo?debug=1 only). For each confirmable finding,
+    // return the analyzer box, its center (what ships), and a fresh
+    // re-placement point so the two methods can be eyeballed side by side on a
+    // real photo. One model call per confirmable finding, run in parallel; a
+    // missing key or a per-finding failure degrades that finding's placement to
+    // null rather than failing the request. Never runs in normal use.
+    let debugPlacements: DebugFindingPlacement[] | undefined;
+    if (debug) {
+      const apiKey = process.env.ANTHROPIC_API_KEY;
+      const placeFn = apiKey ? makeAnthropicPlaceFn(apiKey, PLACEMENT_MODEL_DEFAULT) : null;
+      const confirmable = out.findings.filter((f) => f.confirmable !== false);
+      debugPlacements = await Promise.all(
+        confirmable.map(async (f): Promise<DebugFindingPlacement> => {
+          const box = f.bounding_box ?? null;
+          let placement: DebugFindingPlacement['placement'] = null;
+          if (placeFn) {
+            try {
+              const p = await placeFn(photoUrl, {
+                title: f.title_standard,
+                detail: f.finding_standard,
+              });
+              if (p) {
+                placement = {
+                  x: p.x,
+                  y: p.y,
+                  confidence: p.confidence,
+                  label: p.label ?? null,
+                };
+              }
+            } catch (placeErr) {
+              console.error('analyze-photo debug placement failed (non-fatal)', placeErr);
+            }
+          }
+          return {
+            title: f.title_standard,
+            severity: f.severity,
+            analyzerConfidence: f.confidence,
+            box,
+            boxCenter: boxCenterOf(box),
+            placement,
+          };
+        }),
+      );
+    }
+
     return res.status(200).json({
       ok: true,
       photo_analysis_id: photoAnalysisId,
       assistant_message: assistantMessage,
       analysis: out,
       annotations,
+      debug: debugPlacements,
     });
   } catch (err) {
     console.error('POST /api/ada/analyze-photo failed', err);

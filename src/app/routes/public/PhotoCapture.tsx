@@ -44,6 +44,7 @@
  */
 
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { downscalePhoto } from '../../utils/downscalePhoto.js';
 import {
@@ -51,12 +52,16 @@ import {
   type PhotoCaptureStatus,
 } from '../../hooks/usePhotoCapture.js';
 import { PinnedPhoto } from './spot/PinnedPhoto.js';
+import { PhotoDebugOverlay } from './spot/PhotoDebugOverlay.js';
 import { numberPins } from '../../../lib/spot/numberPins.js';
 import type { PhotoAnnotation } from '../../../lib/spot/annotationTypes.js';
+import type { DebugFindingPlacement } from '../../../lib/spot/debugPlacement.js';
 
 const MAX_RAW_BYTES = 20 * 1024 * 1024; // 20 MB — matches Chat.tsx
 
 export default function PhotoCapture() {
+  const [searchParams] = useSearchParams();
+  const debugMode = searchParams.get('debug') === '1';
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [comment, setComment] = useState('');
@@ -120,7 +125,7 @@ export default function PhotoCapture() {
       return;
     }
     setLocalError(null);
-    await submit({ file: photoFile, comment });
+    await submit({ file: photoFile, comment, debug: debugMode });
   }
 
   function handleReset() {
@@ -308,6 +313,7 @@ interface SavedViewProps {
     assistantMessage: string;
     photoUrl: string;
     annotations?: PhotoAnnotation[];
+    debug?: DebugFindingPlacement[];
   };
   onSubmitFeedback: (comment: string) => Promise<boolean>;
   onReset: () => void;
@@ -321,6 +327,7 @@ function SavedView({ result, onSubmitFeedback, onReset }: SavedViewProps) {
   // hands PinnedPhoto its NumberedPin[]; an empty result falls through to the
   // plain photo below.
   const pins = numberPins(result.annotations?.[0]);
+  const debug = result.debug;
 
   async function handleSaveComment() {
     if (!comment.trim() || saveState === 'saving') return;
@@ -333,14 +340,14 @@ function SavedView({ result, onSubmitFeedback, onReset }: SavedViewProps) {
     <div className="space-y-4">
       <section>
         <h2 className="font-display text-xl text-ink-900">Your photo</h2>
-        {/* When the placement pass marked anything, show the same numbered pin
-            overlay a Spot report uses; the caption under it lists each pin as
-            text. With no pins (placement skipped, failed, or nothing to mark)
-            PinnedPhoto renders just the photo — so this path is safe either
-            way, but we keep the plain img when there are no annotations at all
-            so the alt text stays the harness's own wording. */}
+        {/* Debug mode (?debug=1) shows both placement methods over the photo for
+            comparison. Otherwise: the numbered pin overlay a Spot report uses
+            when there's anything to mark, and the plain photo when there isn't
+            (so the alt text stays the harness's own wording). */}
         <div className="mt-2 rounded-md border border-surface-200 bg-surface-100 p-2">
-          {pins.length > 0 ? (
+          {debug && debug.length > 0 ? (
+            <PhotoDebugOverlay url={result.photoUrl} findings={debug} />
+          ) : pins.length > 0 ? (
             <PinnedPhoto
               url={result.photoUrl}
               index={0}

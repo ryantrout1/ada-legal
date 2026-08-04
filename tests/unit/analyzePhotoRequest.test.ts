@@ -34,6 +34,16 @@ describe('parseAnalyzePhotoBody', () => {
       expect(r.contextHint).toBe('doorway width');
       // Placement is off unless explicitly asked for.
       expect(r.place).toBe(false);
+      expect(r.debug).toBe(false);
+    }
+  });
+
+  it('turns on debug only for debug === true', () => {
+    const on = parseAnalyzePhotoBody({ session_id: 's', photo_url: VALID_URL, debug: true });
+    expect(on.ok && on.debug).toBe(true);
+    for (const v of ['true', 1, {}, null] as unknown[]) {
+      const off = parseAnalyzePhotoBody({ session_id: 's', photo_url: VALID_URL, debug: v });
+      expect(off.ok && off.debug, `debug=${JSON.stringify(v)} should stay off`).toBe(false);
     }
   });
 

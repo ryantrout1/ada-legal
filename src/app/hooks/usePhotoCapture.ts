@@ -45,6 +45,7 @@
 
 import { useCallback, useRef, useState } from 'react';
 import type { PhotoAnnotation } from '../../lib/spot/annotationTypes.js';
+import type { DebugFindingPlacement } from '../../lib/spot/debugPlacement.js';
 
 export type PhotoCaptureStatus =
   | 'idle'
@@ -56,6 +57,8 @@ export type PhotoCaptureStatus =
 export interface PhotoCaptureSubmitInput {
   file: File;
   comment: string;
+  /** /photo?debug=1 — also fetch the placement-method comparison for the overlay. */
+  debug?: boolean;
 }
 
 export interface PhotoCaptureResult {
@@ -68,6 +71,8 @@ export interface PhotoCaptureResult {
    * the saved view then shows the plain photo, exactly as before.
    */
   annotations?: PhotoAnnotation[];
+  /** Placement-method comparison rows, only present under /photo?debug=1. */
+  debug?: DebugFindingPlacement[];
 }
 
 interface UsePhotoCaptureReturn {
@@ -158,6 +163,8 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
             // the Spot capture flow places findings during report generation
             // and must not pay for placement twice.
             place: true,
+            // /photo?debug=1 — also return the placement-method comparison.
+            debug: input.debug === true,
           }),
         });
         if (!analyzeRes.ok) {
@@ -166,6 +173,7 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
         const analyzeJson = (await analyzeRes.json()) as {
           assistant_message?: string;
           annotations?: PhotoAnnotation[];
+          debug?: DebugFindingPlacement[];
         };
         const assistantMessage = analyzeJson.assistant_message ?? '';
 
@@ -175,6 +183,7 @@ export function usePhotoCapture(): UsePhotoCaptureReturn {
           assistantMessage,
           photoUrl,
           annotations: analyzeJson.annotations,
+          debug: analyzeJson.debug,
         });
         setStatus('saved');
       } catch (err) {
