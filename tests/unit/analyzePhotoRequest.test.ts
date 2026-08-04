@@ -32,8 +32,6 @@ describe('parseAnalyzePhotoBody', () => {
       expect(r.sessionId).toBe('sess-1');
       expect(r.photoUrl).toBe(VALID_URL);
       expect(r.contextHint).toBe('doorway width');
-      // Placement is off unless explicitly asked for.
-      expect(r.place).toBe(false);
       expect(r.debug).toBe(false);
     }
   });
@@ -44,18 +42,6 @@ describe('parseAnalyzePhotoBody', () => {
     for (const v of ['true', 1, {}, null] as unknown[]) {
       const off = parseAnalyzePhotoBody({ session_id: 's', photo_url: VALID_URL, debug: v });
       expect(off.ok && off.debug, `debug=${JSON.stringify(v)} should stay off`).toBe(false);
-    }
-  });
-
-  it('turns on placement only for place === true', () => {
-    const on = parseAnalyzePhotoBody({ session_id: 's', photo_url: VALID_URL, place: true });
-    expect(on.ok && on.place).toBe(true);
-
-    // Anything other than the boolean true leaves placement off, so a stray
-    // body value never silently spends on the placement pass.
-    for (const v of ['true', 1, 'yes', {}, null] as unknown[]) {
-      const off = parseAnalyzePhotoBody({ session_id: 's', photo_url: VALID_URL, place: v });
-      expect(off.ok && off.place, `place=${JSON.stringify(v)} should stay off`).toBe(false);
     }
   });
 
