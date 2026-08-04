@@ -353,6 +353,7 @@ function SavedView({ result, onSubmitFeedback, onReset }: SavedViewProps) {
               index={0}
               total={1}
               pins={pins}
+              showRegions
             />
           ) : (
             // eslint-disable-next-line jsx-a11y/img-redundant-alt

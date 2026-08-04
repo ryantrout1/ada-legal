@@ -8,23 +8,33 @@
  * in the caption text. No colour carries meaning on its own, and no red: this
  * product never returns a verdict, and a red pin would read as one.
  *
+ * `showRegions` (default off) is the honesty guardrail from /plan Phase 1: when
+ * on, a pin whose source box is loose (pinShape → 'region') draws a translucent
+ * outlined area over that box instead of a precise dot, so a marker never claims
+ * a certainty the analyzer didn't have. The buyer report leaves it off and is
+ * unchanged. A region still carries its number badge and the same caption text.
+ *
  * Rendered for every gallery photo; with no pins it is just the photo, visually
  * identical to the plain gallery image.
  */
 
 import type { NumberedPin } from '@/lib/spot/pinNumbering';
 import { assignMarkerOffsets } from '@/lib/spot/markerOffsets';
+import { pinShape } from '@/lib/spot/pinShape';
 
 export function PinnedPhoto({
   url,
   index,
   total,
   pins,
+  showRegions = false,
 }: {
   url: string;
   index: number;
   total: number;
   pins: NumberedPin[];
+  /** When true, loose-box pins render as translucent regions (see pinShape). */
+  showRegions?: boolean;
 }) {
   const offsets = assignMarkerOffsets(pins);
   return (
@@ -37,6 +47,33 @@ export function PinnedPhoto({
           loading="lazy"
         />
         {pins.map((p, i) => {
+          const asRegion = showRegions && p.box ? pinShape(p.box) === 'region' : false;
+          // Region: outline the box. The solid dark-accent border plus a white
+          // outline carries the >=3:1 non-text contrast on any photo backdrop,
+          // not the faint fill — so it stays AAA-legible without depending on
+          // what's behind it.
+          if (asRegion && p.box) {
+            return (
+              <span
+                key={i}
+                aria-hidden="true"
+                className="absolute rounded-md"
+                style={{
+                  left: `${p.box.x * 100}%`,
+                  top: `${p.box.y * 100}%`,
+                  width: `${p.box.w * 100}%`,
+                  height: `${p.box.h * 100}%`,
+                  border: '2px solid #9C340A',
+                  outline: '2px solid rgba(255,255,255,0.9)',
+                  backgroundColor: 'rgba(156,52,10,0.14)',
+                }}
+              >
+                <span className="absolute left-0 top-0 flex h-5 w-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-[#9C340A] text-[11px] font-semibold leading-none text-white shadow">
+                  {p.number}
+                </span>
+              </span>
+            );
+          }
           // Flip the label to the left of the dot near the right edge so it
           // doesn't run off the photo.
           const labelLeft = p.x > 0.6;
