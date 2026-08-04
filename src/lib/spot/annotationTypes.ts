@@ -13,7 +13,7 @@
  * (SpotReportContent) is Phase 2. Ref: /plan Spot photo annotation.
  */
 
-import type { PhotoFindingSeverity, PhotoBoundingBox } from '../../types/db.js';
+import type { PhotoFindingSeverity } from '../../types/db.js';
 
 /** A placed point, before it is tied to a finding. All fields 0..1. */
 export interface PlacedPin {
@@ -43,12 +43,6 @@ export interface PhotoPin extends PlacedPin {
   severity: PhotoFindingSeverity;
   /** Index of the report item (or source finding) this pin marks. */
   itemIndex: number;
-  /**
-   * The analyzer box this pin was derived from, when it came from a box. Lets a
-   * renderer decide point-vs-region (see pinShape) and draw the region. Absent
-   * for pins from the placement path, which have a point but no box.
-   */
-  box?: PhotoBoundingBox;
 }
 
 /** One photo and the pins placed on it. */
