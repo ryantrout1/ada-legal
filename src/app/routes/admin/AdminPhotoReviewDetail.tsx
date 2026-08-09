@@ -206,7 +206,10 @@ export default function AdminPhotoReviewDetail() {
         </div>
       )}
 
-      <AnalyzerSamplePanel id={id ?? ''} findingTitles={detail.findings.map((f) => f.title_standard)} />
+      <AnalyzerSamplePanel
+        id={id ?? ''}
+        tracked={detail.findings.map((f) => ({ standard: f.standard, title: f.title_standard }))}
+      />
 
       <h2 className="mb-2 font-display text-lg text-ink-900">
         Engine findings <span className="text-ink-500">({detail.findings.length})</span>
@@ -387,14 +390,21 @@ export default function AdminPhotoReviewDetail() {
  * judging from single screenshots. A change that moves the box less than the
  * spread has not been shown to do anything.
  */
-function AnalyzerSamplePanel({ id, findingTitles }: { id: string; findingTitles: string[] }) {
+function AnalyzerSamplePanel({
+  id,
+  tracked,
+}: {
+  id: string;
+  tracked: { standard: string; title: string }[];
+}) {
   const { runSample, sampling, sample, sampleError } = useSampleAnalyzer();
   const RUNS = 5;
 
+  // Matched by ADA section, not by title: the analyzer rewords findings every
+  // run, and title matching reported findings as missing that were plainly
+  // there.
   const summaries = sample
-    ? findingTitles.map((title) =>
-        summarizeRuns(sample.runs, title.slice(0, 24), undefined),
-      )
+    ? tracked.map((t) => summarizeRuns(sample.runs, t, undefined))
     : [];
 
   return (
@@ -402,7 +412,10 @@ function AnalyzerSamplePanel({ id, findingTitles }: { id: string; findingTitles:
       <h2 className="mb-1 font-display text-lg text-ink-900">Analyzer stability</h2>
       <p className="mb-3 text-sm text-ink-700">
         Runs the analyzer {RUNS} times on this same photo to show how much its answer moves on
-        its own. Nothing is saved — this never adds to the review queue.
+        its own. Findings are matched across runs by ADA section, because the analyzer rewords
+        titles every run. Shows how often each finding appears and how far its box wanders —
+        not whether the box is in the right place, which needs a recorded ground-truth point.
+        Nothing is saved; this never adds to the review queue.
       </p>
 
       <button
@@ -425,17 +438,30 @@ function AnalyzerSamplePanel({ id, findingTitles }: { id: string; findingTitles:
             <ul className="mt-2 list-none space-y-2 p-0">
               {summaries.map((s, i) => (
                 <li key={i} className="rounded-md border border-surface-200 bg-white px-3 py-2">
-                  <p className="m-0 font-medium text-ink-900">{findingTitles[i]}</p>
+                  <p className="m-0 font-medium text-ink-900">
+                    {tracked[i].title}{' '}
+                    <span className="text-sm font-normal text-ink-500">({tracked[i].standard})</span>
+                  </p>
                   <p className="m-0 mt-1 text-ink-700">
                     Appeared in {s.matchedRuns} of {sample.completed} runs
                     {s.missingRuns > 0 ? ` (missing in ${s.missingRuns})` : ''}.
                     {s.ySpread
                       ? ` Box top edge ranged ${s.ySpread.min}–${s.ySpread.max} (spread ${s.ySpread.range}).`
-                      : ' No bounding box returned.'}
+                      : s.matchedRuns > 0
+                        ? ' Matched, but no bounding box returned.'
+                        : ''}
                   </p>
                   {s.observedY.length > 0 && (
                     <p className="m-0 mt-1 text-xs text-ink-500">
                       Observed: {s.observedY.join(', ')}
+                    </p>
+                  )}
+                  {/* The titles each run used. The analyzer rewords findings,
+                      so showing them makes a wrong match visible instead of
+                      silently counting as a match. */}
+                  {new Set(s.matchedTitles).size > 1 && (
+                    <p className="m-0 mt-1 text-xs text-ink-500">
+                      Named: {Array.from(new Set(s.matchedTitles)).join(' · ')}
                     </p>
                   )}
                 </li>

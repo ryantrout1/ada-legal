@@ -11,6 +11,16 @@
  * Containment is the grounding metric. Spread is the noise floor — a change
  * that moves the box less than the spread has not been shown to do anything.
  *
+ * Findings are matched across runs by ADA SECTION, never by title. The
+ * analyzer rewords titles every run — the same shower curb has appeared under
+ * seven different names across thirteen stored runs — so any key derived from
+ * the prose silently reports a finding as missing when it was actually there.
+ * The section is stable (all thirteen cite 608.7) and never empty (0 of 371
+ * stored findings lack one). Where several findings in one run share a section
+ * (4.5% of section groups, worst case three) they are disambiguated by title
+ * word overlap, and every matched title is returned so a bad match is visible
+ * rather than silent.
+ *
  * Pure and deterministic; the model never runs here. Ref: /plan repeat-run.
  */
 
@@ -19,7 +29,16 @@ import { boxContains, type Point } from './boxAccuracy.js';
 
 export interface PreviewFindingBox {
   title: string;
+  /** The cited ADA section — the stable identity key across runs. */
+  standard: string;
   box?: PhotoBoundingBox | null;
+}
+
+/** The stored finding being tracked across runs. */
+export interface TrackedFinding {
+  standard: string;
+  /** Only used to disambiguate a same-section collision, never to match. */
+  title: string;
 }
 
 /** One analyzer run's findings. */
@@ -28,9 +47,11 @@ export interface PreviewRun {
 }
 
 export interface RunSummary {
-  /** The needle used to match the finding across runs. */
-  needle: string;
-  /** Runs in which a finding matching the needle appeared. */
+  /** The section used to match the finding across runs. */
+  standard: string;
+  /** The title each matched run used — reveals rewording and bad matches. */
+  matchedTitles: string[];
+  /** Runs in which a finding citing the tracked section appeared. */
   matchedRuns: number;
   /** Runs where the finding appeared but was absent — the analyzer skipped it. */
   missingRuns: number;
@@ -49,23 +70,59 @@ export interface RunSummary {
 
 const round3 = (n: number): number => Math.round(n * 1000) / 1000;
 
+/** Sections differ only cosmetically between runs (a stray section sign or space). */
+function normalizeSection(s: string): string {
+  return s.replace(/[§\s]/g, '').toLowerCase();
+}
+
+/** Words worth comparing — short filler carries no identifying signal. */
+function titleWords(title: string): Set<string> {
+  return new Set(
+    title
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter((w) => w.length >= 3),
+  );
+}
+
+function overlapScore(a: string, b: string): number {
+  const wa = titleWords(a);
+  let hits = 0;
+  for (const w of titleWords(b)) if (wa.has(w)) hits++;
+  return hits;
+}
+
 /**
  * Summarize one finding (matched by case-insensitive title substring) across
  * repeated runs of the same photo.
  */
 export function summarizeRuns(
   runs: readonly PreviewRun[],
-  needle: string,
+  tracked: TrackedFinding,
   truth: Point | undefined,
 ): RunSummary {
-  const lower = needle.toLowerCase();
+  const wanted = normalizeSection(tracked.standard);
   const matched: PreviewFindingBox[] = [];
   let missingRuns = 0;
 
   for (const run of runs) {
-    const hit = run.findings.find((f) => f.title.toLowerCase().includes(lower));
-    if (hit) matched.push(hit);
-    else missingRuns++;
+    const candidates = run.findings.filter((f) => normalizeSection(f.standard) === wanted);
+    if (candidates.length === 0) {
+      // A genuinely absent finding must stay absent: turning it into a loose
+      // title match would hide exactly the instability being measured.
+      missingRuns++;
+      continue;
+    }
+    // One candidate is the common case. Several means the run cited the same
+    // section twice (mirror and faucet both cite 606) — pick by title overlap
+    // among those candidates only, never across sections.
+    const hit =
+      candidates.length === 1
+        ? candidates[0]
+        : candidates.reduce((best, c) =>
+            overlapScore(tracked.title, c.title) > overlapScore(tracked.title, best.title) ? c : best,
+          );
+    matched.push(hit);
   }
 
   const boxed = matched.filter((f): f is PreviewFindingBox & { box: PhotoBoundingBox } =>
@@ -74,7 +131,8 @@ export function summarizeRuns(
   const observedY = boxed.map((f) => f.box.y);
 
   return {
-    needle,
+    standard: tracked.standard,
+    matchedTitles: matched.map((f) => f.title),
     matchedRuns: matched.length,
     missingRuns,
     boxedRuns: boxed.length,
