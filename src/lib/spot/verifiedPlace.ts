@@ -34,14 +34,45 @@ import { PLACEMENT_MODEL_DEFAULT } from './placeFindingAnthropic.js';
 /** Confidence assigned when the model could not confirm its own placement. */
 export const UNVERIFIED_CONFIDENCE = 0.6;
 
-/** Half-width of the verification crop, as a fraction of the image. */
-const VERIFY_WINDOW = 0.18;
+/**
+ * Half-width of the verification crop, as a fraction of the image.
+ *
+ * This was 0.18 and that made verification worthless: a 0.36-wide window
+ * around a pin on the floor at y 0.85 reached up to y 0.67 and contained the
+ * curb, so the model truthfully answered "yes, it is in this crop" and
+ * confirmed a point that was not on the curb. The window must be tight enough
+ * that "in the crop" and "at the point" mean nearly the same thing.
+ */
+export const VERIFY_WINDOW = 0.1;
 
 export interface PlacementAttempt {
   pin: PlacedPin | null;
   verified: boolean;
   /** The model's confidence in the verification itself, when it answered. */
   verifyConfidence?: number;
+}
+
+/** A normalized crop window over the full image. */
+export interface CropRegion {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+const round3 = (n: number): number => Math.round(n * 1000) / 1000;
+
+/**
+ * Map a point the model reported within the crop back to full-image
+ * coordinates. Verification CORRECTS the pin rather than merely approving it:
+ * if the object is visible but sits at the edge of the window, the pin moves
+ * onto it instead of staying where it was guessed.
+ */
+export function correctPointFromCrop(pt: { x: number; y: number }, region: CropRegion) {
+  return {
+    x: round3(region.x + pt.x * region.w),
+    y: round3(region.y + pt.y * region.h),
+  };
 }
 
 /**
@@ -84,7 +115,7 @@ async function verifyPoint(
   height: number,
   point: PlacedPin,
   target: PlaceTarget,
-): Promise<{ verified: boolean; confidence: number } | null> {
+): Promise<{ verified: boolean; confidence: number; corrected: PlacedPin } | null> {
   try {
     const left = Math.max(0, Math.round((point.x - VERIFY_WINDOW) * width));
     const top = Math.max(0, Math.round((point.y - VERIFY_WINDOW) * height));
@@ -93,6 +124,13 @@ async function verifyPoint(
 
     const crop = await sharp(imageBuffer).extract({ left, top, width: w, height: h }).jpeg({ quality: 80 }).toBuffer();
 
+    const region: CropRegion = {
+      x: left / width,
+      y: top / height,
+      w: w / width,
+      h: h / height,
+    };
+
     const resp = await client.messages.create({
       model,
       max_tokens: 128,
@@ -100,11 +138,13 @@ async function verifyPoint(
         {
           name: 'confirm_location',
           description:
-            'State whether the described accessibility concern is actually visible in this cropped region of a larger photo.',
+            'State whether the described accessibility concern is visible in this cropped region, and if so give its center within the crop.',
           input_schema: {
             type: 'object' as const,
             properties: {
               present: { type: 'boolean' },
+              x: { type: 'number', minimum: 0, maximum: 1 },
+              y: { type: 'number', minimum: 0, maximum: 1 },
               confidence: { type: 'number', minimum: 0, maximum: 1 },
             },
             required: ['present'],
@@ -123,10 +163,12 @@ async function verifyPoint(
             {
               type: 'text',
               text:
-                `This is a close crop from a larger photo. Concern: ${target.title}.\n` +
-                `Is the object this concern refers to actually visible in THIS crop? ` +
-                `Answer present:false if you only see the surrounding floor, wall, or empty space ` +
-                `where the object is not present. Call confirm_location.`,
+                `This is a tight crop from a larger photo, centred on where the concern was ` +
+                `estimated to be. Concern: ${target.title}.\n` +
+                `Is the object this concern refers to visible in THIS crop? Answer present:false ` +
+                `if you see only surrounding floor, wall, or empty space. If it IS visible, also ` +
+                `give x and y as its center WITHIN this crop (0..1 of the crop, not the whole ` +
+                `photo) so the marker can be moved onto it. Call confirm_location.`,
             },
           ],
         },
@@ -141,7 +183,14 @@ async function verifyPoint(
           typeof input.confidence === 'number' && input.confidence >= 0 && input.confidence <= 1
             ? input.confidence
             : 0.5;
-        return { verified: input.present, confidence };
+        // When the model located it within the crop, MOVE the pin there. This
+        // is the difference between a rubber stamp and a correction.
+        const inUnit = (n: unknown): n is number => typeof n === 'number' && n >= 0 && n <= 1;
+        const corrected =
+          input.present === true && inUnit(input.x) && inUnit(input.y)
+            ? { ...point, ...correctPointFromCrop({ x: input.x, y: input.y }, region) }
+            : point;
+        return { verified: input.present, confidence, corrected };
       }
     }
     return null;
@@ -190,7 +239,8 @@ export function makeVerifiedPlaceFn(
       // A check that could not run counts as unverified, not as a failure of
       // the placement — reconcile still returns the point, capped.
       attempts.push({
-        pin,
+        // Use the corrected point when verification located the object.
+        pin: check?.corrected ?? pin,
         verified: check?.verified === true,
         verifyConfidence: check?.confidence,
       });

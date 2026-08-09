@@ -13,7 +13,30 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { reconcilePlacements } from '../../src/lib/spot/verifiedPlace.js';
+import {
+  reconcilePlacements,
+  correctPointFromCrop,
+  VERIFY_WINDOW,
+} from '../../src/lib/spot/verifiedPlace.js';
+
+describe('verification window', () => {
+  it('is tight enough that the crop cannot contain half the frame', () => {
+    // The bug this replaces: a +/-0.18 window spans 36% of the image, so a pin
+    // on the floor at y 0.85 produced a crop reaching y 0.67 — which contained
+    // the curb. The model truthfully said "yes it is in this crop" and
+    // rubber-stamped a point that was not on the curb.
+    expect(VERIFY_WINDOW * 2).toBeLessThanOrEqual(0.2);
+  });
+});
+
+describe('correctPointFromCrop', () => {
+  const region = { x: 0.25, y: 0.8, w: 0.1, h: 0.1 };
+
+  it('maps a point reported inside the crop back to full-image coordinates', () => {
+    expect(correctPointFromCrop({ x: 0.5, y: 0.0 }, region)).toEqual({ x: 0.3, y: 0.8 });
+    expect(correctPointFromCrop({ x: 0.0, y: 1.0 }, region)).toEqual({ x: 0.25, y: 0.9 });
+  });
+});
 
 const pin = (y: number, confidence = 0.9) => ({ x: 0.3, y, confidence, label: 'Curb' });
 
