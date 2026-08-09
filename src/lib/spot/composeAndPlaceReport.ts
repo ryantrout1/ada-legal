@@ -14,7 +14,7 @@
  */
 
 import type { AdaClients, AiStreamChunk } from '../../engine/clients/types.js';
-import type { PhotoAnalysisOutput } from '../../types/db.js';
+import type { PhotoAnalysisOutput, PhotoFindingSeverity } from '../../types/db.js';
 import { SPOT_REPORT_DEFAULT_MODEL } from './parseRegenerateBody.js';
 import { COMPOSE_REPORT_TOOL, type ComposeReportInput, type SpotReportContent } from './reportSchema.js';
 import { composeReport } from './composeReport.js';
@@ -66,6 +66,15 @@ const SYNTHESIS_SYSTEM =
   'concerning was found, return an empty areas list. Respond by calling the compose_report tool.';
 
 const SPOT_ANNOTATION_MIN_CONFIDENCE = 0.5;
+
+/**
+ * Only barriers that matter get a marker. Locatable answers "can we point at
+ * it"; this answers "is it worth pointing at". Shower controls are plainly
+ * visible and so are locatable, but a minor advisory does not earn a pin —
+ * every extra marker competes with the critical one for the reader's
+ * attention, and a report that flags everything flags nothing.
+ */
+const PINNED_SEVERITIES = new Set<PhotoFindingSeverity>(['critical', 'major']);
 
 function serializeAnalyses(analyses: PhotoAnalysisOutput[]): string {
   return analyses
@@ -196,7 +205,7 @@ export async function composeAndPlaceReport(
             // need a tape measure, while the reader lost the one thing a photo
             // is good for. Absent grab bars and insufficient turning space
             // still get no pin: there is no object there to mark.
-            .filter(({ it }) => it.locatable)
+            .filter(({ it }) => it.locatable && PINNED_SEVERITIES.has(it.severity))
             .map(({ it, itemIndex }) => ({
               itemIndex,
               title: it.title,

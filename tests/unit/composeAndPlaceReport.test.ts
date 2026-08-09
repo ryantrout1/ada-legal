@@ -163,6 +163,9 @@ describe('pins only what can be pointed at', () => {
         { title: 'Fixed shower bench', concern: 'Not folding.', remediation: 'Folding seat.', severity: 'major', confirmable: false, locatable: true },
         { title: 'No grab bars at shower', concern: 'None visible.', remediation: 'Install bars.', severity: 'major', confirmable: false, locatable: false },
         { title: 'Turning space', concern: 'May be too small.', remediation: 'Measure.', severity: 'major', confirmable: false, locatable: false },
+        // Visible object, so locatable — but minor. A marker here competes
+        // with the critical curb for attention and is not worth it.
+        { title: 'Shower controls', concern: 'Reach range.', remediation: 'Verify.', severity: 'minor', confirmable: false, locatable: true },
       ],
     };
     const clients = fakeClients({ onAnalyze: () => {}, streams: [() => composeStream(areas)] });
@@ -176,9 +179,10 @@ describe('pins only what can be pointed at', () => {
 
     const pins = out.content.photoAnnotations?.[0].pins ?? [];
     expect(pins).toHaveLength(2);
-    // Bound by itemIndex: curb is item 0, bench item 1.
+    // Bound by itemIndex: curb is item 0, bench item 1. The minor shower
+    // controls (item 4) are locatable but not pinned.
     expect(pins.map((p) => p.itemIndex).sort()).toEqual([0, 1]);
-    // All four concerns still appear in the report text.
-    expect(out.content.items).toHaveLength(4);
+    // All five concerns still appear in the report text.
+    expect(out.content.items).toHaveLength(5);
   });
 });
