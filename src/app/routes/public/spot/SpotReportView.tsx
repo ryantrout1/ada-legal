@@ -214,6 +214,11 @@ export default function SpotReportView({
                 index={i}
                 total={photos.length}
                 pins={numbering ? numbering.pinsForPhoto(url) : []}
+                // Placement is verified and capped when unconfirmed, so an
+                // unverified location must render as an approximate marker
+                // here too — capping confidence achieves nothing if the buyer
+                // report still draws it as a confident dot.
+                honestConfidence
               />
             </li>
           ))}
