@@ -93,38 +93,75 @@ function overlapScore(a: string, b: string): number {
 }
 
 /**
- * Summarize one finding (matched by case-insensitive title substring) across
- * repeated runs of the same photo.
+ * Match a whole set of tracked findings across runs, assigning EXCLUSIVELY:
+ * within a run, no two tracked findings may claim the same reported finding.
+ *
+ * This matters because sections collide. Lavatory knee clearance and lavatory
+ * faucet both cite 606. Matched independently, both claimed the run's single
+ * 606 finding, so the faucet row rendered the cabinet's boxes and titles
+ * verbatim — a fabricated 5-of-5 for a finding that appeared 0 of 5. A
+ * fabricated match is worse than a missing one: it reports stability that was
+ * never measured.
+ *
+ * Assignment is greedy by best title overlap, highest-scoring pair first, so
+ * the clearest match wins regardless of list order. Anything left unassigned
+ * counts as missing for that run.
  */
+export function summarizeTrackedFindings(
+  runs: readonly PreviewRun[],
+  tracked: readonly TrackedFinding[],
+  truth: Point | undefined,
+): RunSummary[] {
+  const matched: PreviewFindingBox[][] = tracked.map(() => []);
+  const missing: number[] = tracked.map(() => 0);
+
+  for (const run of runs) {
+    const takenCandidate = new Set<number>();
+    const assignedTracked = new Set<number>();
+
+    // Score every (tracked, candidate) pair that shares a section.
+    const pairs: { t: number; c: number; score: number }[] = [];
+    tracked.forEach((t, ti) => {
+      const wanted = normalizeSection(t.standard);
+      run.findings.forEach((f, ci) => {
+        if (normalizeSection(f.standard) !== wanted) return;
+        pairs.push({ t: ti, c: ci, score: overlapScore(t.title, f.title) });
+      });
+    });
+
+    // Best overlap first; ties fall back to list order for determinism.
+    pairs.sort((a, b) => b.score - a.score || a.t - b.t || a.c - b.c);
+
+    for (const p of pairs) {
+      if (assignedTracked.has(p.t) || takenCandidate.has(p.c)) continue;
+      assignedTracked.add(p.t);
+      takenCandidate.add(p.c);
+      matched[p.t].push(run.findings[p.c]);
+    }
+
+    tracked.forEach((_, ti) => {
+      if (!assignedTracked.has(ti)) missing[ti]++;
+    });
+  }
+
+  return tracked.map((t, ti) => buildSummary(t, matched[ti], missing[ti], truth));
+}
+
+/** Single-finding convenience wrapper. No collisions are possible with one. */
 export function summarizeRuns(
   runs: readonly PreviewRun[],
   tracked: TrackedFinding,
   truth: Point | undefined,
 ): RunSummary {
-  const wanted = normalizeSection(tracked.standard);
-  const matched: PreviewFindingBox[] = [];
-  let missingRuns = 0;
+  return summarizeTrackedFindings(runs, [tracked], truth)[0];
+}
 
-  for (const run of runs) {
-    const candidates = run.findings.filter((f) => normalizeSection(f.standard) === wanted);
-    if (candidates.length === 0) {
-      // A genuinely absent finding must stay absent: turning it into a loose
-      // title match would hide exactly the instability being measured.
-      missingRuns++;
-      continue;
-    }
-    // One candidate is the common case. Several means the run cited the same
-    // section twice (mirror and faucet both cite 606) — pick by title overlap
-    // among those candidates only, never across sections.
-    const hit =
-      candidates.length === 1
-        ? candidates[0]
-        : candidates.reduce((best, c) =>
-            overlapScore(tracked.title, c.title) > overlapScore(tracked.title, best.title) ? c : best,
-          );
-    matched.push(hit);
-  }
-
+function buildSummary(
+  tracked: TrackedFinding,
+  matched: readonly PreviewFindingBox[],
+  missingRuns: number,
+  truth: Point | undefined,
+): RunSummary {
   const boxed = matched.filter((f): f is PreviewFindingBox & { box: PhotoBoundingBox } =>
     Boolean(f.box),
   );

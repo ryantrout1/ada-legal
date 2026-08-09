@@ -9,7 +9,11 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { summarizeRuns, type PreviewRun } from '../../src/lib/spot/boxVariance.js';
+import {
+  summarizeRuns,
+  summarizeTrackedFindings,
+  type PreviewRun,
+} from '../../src/lib/spot/boxVariance.js';
 
 /** The ten real curb boxes pulled from photo_analyses on 2026-08-04. */
 const CURB_Y = [0.85, 0.72, 0.78, 0.79, 0.83, 0.72, 0.83, 0.79, 0.79, 0.79];
@@ -121,5 +125,100 @@ describe('summarizeRuns', () => {
     expect(s.boxedRuns).toBe(0);
     expect(s.containment).toBeNull();
     expect(s.ySpread).toBeNull();
+  });
+});
+
+describe('summarizeTrackedFindings — exclusive assignment', () => {
+  /**
+   * The real defect this covers: two stored findings both cite 606 (lavatory
+   * knee clearance and lavatory faucet). Matched independently, BOTH claimed
+   * the run's single 606 finding, so the faucet row displayed the cabinet's
+   * numbers and titles verbatim — a fabricated 5-of-5 for a finding that
+   * actually appeared 0 of 5.
+   */
+  it('does not let two tracked findings claim the same run finding', () => {
+    const runs: PreviewRun[] = Array.from({ length: 5 }, () => ({
+      findings: [
+        {
+          title: 'Lavatory — Closed Cabinet Obstructs Knee Clearance',
+          standard: '§606',
+          box: { x: 0.6, y: 0.72, w: 0.3, h: 0.2 },
+        },
+      ],
+    }));
+
+    const [cabinet, faucet] = summarizeTrackedFindings(
+      runs,
+      [
+        { standard: '§606', title: 'Lavatory Knee Clearance — Closed Cabinet Below' },
+        { standard: '§606', title: 'Lavatory Faucet — Operable Parts' },
+      ],
+      undefined,
+    );
+
+    expect(cabinet.matchedRuns).toBe(5);
+    // The faucet genuinely was not reported in any run — it must read as absent.
+    expect(faucet.matchedRuns).toBe(0);
+    expect(faucet.missingRuns).toBe(5);
+    expect(faucet.observedY).toEqual([]);
+    expect(faucet.matchedTitles).toEqual([]);
+  });
+
+  it('gives each tracked finding its own match when the run reports both', () => {
+    const runs: PreviewRun[] = [
+      {
+        findings: [
+          { title: 'Mirror Bottom Edge Height — Verify', standard: '§606', box: { x: 0.6, y: 0.08, w: 0.3, h: 0.2 } },
+          { title: 'Lavatory Faucet — Operable Parts', standard: '§606', box: { x: 0.7, y: 0.6, w: 0.1, h: 0.1 } },
+        ],
+      },
+    ];
+    const [mirror, faucet] = summarizeTrackedFindings(
+      runs,
+      [
+        { standard: '§606', title: 'Mirror Mounting Height — Verify' },
+        { standard: '§606', title: 'Lavatory Faucet — Operable Parts' },
+      ],
+      undefined,
+    );
+    expect(mirror.matchedTitles[0]).toContain('Mirror');
+    expect(faucet.matchedTitles[0]).toContain('Faucet');
+  });
+
+  it('assigns the best-overlapping pair first, not in list order', () => {
+    // Faucet listed first, but the run's only 606 finding is clearly the mirror.
+    const runs: PreviewRun[] = [
+      { findings: [{ title: 'Mirror Bottom Edge Height — Verify', standard: '§606', box: null }] },
+    ];
+    const [faucet, mirror] = summarizeTrackedFindings(
+      runs,
+      [
+        { standard: '§606', title: 'Lavatory Faucet — Operable Parts' },
+        { standard: '§606', title: 'Mirror Mounting Height — Verify' },
+      ],
+      undefined,
+    );
+    expect(mirror.matchedRuns).toBe(1);
+    expect(faucet.matchedRuns).toBe(0);
+  });
+
+  it('is unaffected when sections do not collide', () => {
+    const runs: PreviewRun[] = [
+      {
+        findings: [
+          { title: 'Shower Threshold — Raised Curb', standard: '§608.7', box: { x: 0, y: 0.83, w: 0.5, h: 0.1 } },
+          { title: 'Mirror Height', standard: '§603.3', box: { x: 0.6, y: 0.08, w: 0.3, h: 0.2 } },
+        ],
+      },
+    ];
+    const out = summarizeTrackedFindings(
+      runs,
+      [
+        { standard: '§608.7', title: 'Shower Threshold/Curb — Roll-In Entry Blocked' },
+        { standard: '§603.3', title: 'Mirror Mounting Height — Verify' },
+      ],
+      undefined,
+    );
+    expect(out.map((s) => s.matchedRuns)).toEqual([1, 1]);
   });
 });

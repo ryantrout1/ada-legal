@@ -17,7 +17,7 @@ import {
   type ReviewOverallVerdict,
   type MissedFinding,
 } from '../../hooks/useAdminPhotoReview.js';
-import { summarizeRuns } from '../../../lib/spot/boxVariance.js';
+import { summarizeTrackedFindings } from '../../../lib/spot/boxVariance.js';
 
 const SEV: Record<FindingSeverity, { bg: string; text: string }> = {
   critical: { bg: 'bg-danger-50', text: 'text-danger-500' },
@@ -402,10 +402,10 @@ function AnalyzerSamplePanel({
 
   // Matched by ADA section, not by title: the analyzer rewords findings every
   // run, and title matching reported findings as missing that were plainly
-  // there.
-  const summaries = sample
-    ? tracked.map((t) => summarizeRuns(sample.runs, t, undefined))
-    : [];
+  // there. Matched as a SET, not one at a time, so two findings citing the same
+  // section (lavatory cabinet and faucet both cite 606) cannot both claim the
+  // same reported finding and show identical numbers.
+  const summaries = sample ? summarizeTrackedFindings(sample.runs, tracked, undefined) : [];
 
   return (
     <section className="mb-6 rounded-md border border-surface-200 bg-surface-50 p-4">
