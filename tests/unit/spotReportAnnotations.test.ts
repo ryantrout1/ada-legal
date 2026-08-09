@@ -17,7 +17,7 @@ const cannedOutput = (): PhotoAnalysisOutput =>
         severity: 'major',
         standard: '§404.2.7',
         confidence: 0.7,
-        confirmable: true,
+        confirmable: true, locatable: true,
       },
     ],
     meta: { tool_call_present: true, stop_reason: 'tool_use' },
@@ -39,7 +39,7 @@ function fakeClients(): AdaClients {
         composeStream({
           overview: 'ok',
           areas: [
-            { title: 'Door', concern: 'Hard knob.', remediation: 'Lever.', severity: 'major', confirmable: true },
+            { title: 'Door', concern: 'Hard knob.', remediation: 'Lever.', severity: 'major', confirmable: true, locatable: true },
           ],
         }),
     },

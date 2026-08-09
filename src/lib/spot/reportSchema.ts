@@ -39,6 +39,8 @@ export interface ComposeReportArea {
   severity: PhotoFindingSeverity;
   cited_section?: string;
   confirmable: boolean;
+  /** True when the barrier is a physical thing visible in the photo. */
+  locatable?: boolean;
   /** Unvalidated as it arrives from the model — composeReport sanitises it. */
   target?: unknown;
 }
@@ -74,6 +76,14 @@ export interface SpotReportItem {
   ruleExplanation?: string;
   hedged: boolean;
   hedgeNote?: string;
+  /**
+   * Whether this concern can be pointed at in the photo. Only locatable items
+   * get a pin: a raised curb, a fixed bench and a closed cabinet are objects
+   * you can mark, while missing grab bars, insufficient turning space and an
+   * unmeasured mirror height are not — marking those would point at empty
+   * floor and imply we measured something we did not.
+   */
+  locatable?: boolean;
   target?: SpotReportTarget;
 }
 export interface SpotReportContent {
@@ -116,6 +126,11 @@ export const COMPOSE_REPORT_TOOL: AiToolDefinition = {
             severity: { type: 'string', enum: ['critical', 'major', 'minor', 'advisory'] },
             cited_section: { type: 'string', description: 'ADA section from an analysis, e.g. "§404.2.7". Omit if none.' },
             confirmable: { type: 'boolean', description: 'False when the photo cannot conclusively establish it.' },
+            locatable: {
+              type: 'boolean',
+              description:
+                'True ONLY when the barrier is a physical object visible in this photo that could be circled — a raised curb, a fixed bench, a closed cabinet. False when the concern is something ABSENT (no grab bars), a dimension of empty space (turning space, clearance), or a measurement of an object that cannot be judged from the photo (mirror height). If false, the concern is explained in text and gets no marker.',
+            },
             target: {
               type: 'object',
               description:
@@ -134,7 +149,7 @@ export const COMPOSE_REPORT_TOOL: AiToolDefinition = {
               required: ['value', 'label'],
             },
           },
-          required: ['title', 'concern', 'remediation', 'severity', 'confirmable'],
+          required: ['title', 'concern', 'remediation', 'severity', 'confirmable', 'locatable'],
         },
       },
     },

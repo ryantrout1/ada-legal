@@ -72,7 +72,7 @@ const AREA = {
       remediation: 'Lever handle.',
       severity: 'major',
       cited_section: '§404.2.7',
-      confirmable: true,
+      confirmable: true, locatable: true,
     },
   ],
 };
@@ -142,5 +142,43 @@ describe('composeAndPlaceReport', () => {
     });
     expect(out.content.items[0].title).toBe('Door');
     expect(out.content.photoAnnotations).toBeUndefined();
+  });
+});
+
+describe('pins only what can be pointed at', () => {
+  /**
+   * The product rule: mark the curb, the fixed bench and the closed cabinet —
+   * physical things a reader can see. Do not mark absent grab bars or
+   * insufficient turning space; there is no object there, and a marker would
+   * point at empty floor and imply a measurement we never took.
+   *
+   * A concern can be locatable and unconfirmable at once: the bench is plainly
+   * visible even though its height needs a tape measure on site.
+   */
+  it('pins locatable items, including hedged ones, and skips the rest', async () => {
+    const areas = {
+      overview: 'Several concerns.',
+      areas: [
+        { title: 'Raised shower curb', concern: 'Blocks roll-in.', remediation: 'Curbless.', severity: 'critical', confirmable: true, locatable: true },
+        { title: 'Fixed shower bench', concern: 'Not folding.', remediation: 'Folding seat.', severity: 'major', confirmable: false, locatable: true },
+        { title: 'No grab bars at shower', concern: 'None visible.', remediation: 'Install bars.', severity: 'major', confirmable: false, locatable: false },
+        { title: 'Turning space', concern: 'May be too small.', remediation: 'Measure.', severity: 'major', confirmable: false, locatable: false },
+      ],
+    };
+    const clients = fakeClients({ onAnalyze: () => {}, streams: [() => composeStream(areas)] });
+    const out = await composeAndPlaceReport(clients, {
+      analyses: [cannedOutput()],
+      photos: [{ blobUrl: 'https://blob/0.jpg' }],
+      model: 'opus-test',
+      annotate: true,
+      placeFn: stubPlace,
+    });
+
+    const pins = out.content.photoAnnotations?.[0].pins ?? [];
+    expect(pins).toHaveLength(2);
+    // Bound by itemIndex: curb is item 0, bench item 1.
+    expect(pins.map((p) => p.itemIndex).sort()).toEqual([0, 1]);
+    // All four concerns still appear in the report text.
+    expect(out.content.items).toHaveLength(4);
   });
 });

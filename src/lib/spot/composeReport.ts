@@ -119,6 +119,9 @@ export function composeReport(
       ruleExplanation: education?.ruleExplanation,
       hedged,
       hedgeNote: hedged ? SPOT_REPORT_HEDGE_NOTE : undefined,
+      // Absent means not locatable: a missing flag must not silently create a
+      // pin on something that cannot be pointed at.
+      locatable: a.locatable === true,
       target: readTarget(a.target),
     };
   });

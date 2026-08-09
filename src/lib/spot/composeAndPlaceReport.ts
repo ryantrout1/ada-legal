@@ -56,7 +56,13 @@ const SYNTHESIS_SYSTEM =
   'is, what to do about it (a concrete fix AND, where a photo cannot settle it, a simple check ' +
   'THEY can do themselves — e.g. "measure the step; anything over half an inch needs a ramp"), ' +
   'a severity, and the ADA section ONLY if an analysis provided it (never invent one). Mark a ' +
-  'concern confirmable:false when the photos cannot conclusively establish it. If nothing ' +
+  'concern confirmable:false when the photos cannot conclusively establish it. Set ' +
+  'locatable:true ONLY when the barrier is a physical object visible in the photo that could ' +
+  'be circled — a raised curb, a fixed bench, a closed cabinet. Set locatable:false when the ' +
+  'concern is something ABSENT (no grab bars), a dimension of empty space (turning space, ' +
+  'clearance around a fixture), or a measurement of an object the photo cannot settle (mirror ' +
+  'height). A concern can be locatable:true and confirmable:false at the same time — a fixed ' +
+  'bench is plainly visible even though its height needs measuring on site. If nothing ' +
   'concerning was found, return an empty areas list. Respond by calling the compose_report tool.';
 
 const SPOT_ANNOTATION_MIN_CONFIDENCE = 0.5;
@@ -183,7 +189,14 @@ export async function composeAndPlaceReport(
           // row, tied by itemIndex, and the render numbers them by that index.
           const items: PlaceItemInput[] = content.items
             .map((it, itemIndex) => ({ it, itemIndex }))
-            .filter(({ it }) => !it.hedged)
+            // Pin only what can actually be pointed at. This used to be
+            // !hedged, which conflated "we cannot measure it" with "we cannot
+            // show you where it is" — so a plainly visible fixed bench and
+            // closed cabinet got no marker merely because their dimensions
+            // need a tape measure, while the reader lost the one thing a photo
+            // is good for. Absent grab bars and insufficient turning space
+            // still get no pin: there is no object there to mark.
+            .filter(({ it }) => it.locatable)
             .map(({ it, itemIndex }) => ({
               itemIndex,
               title: it.title,

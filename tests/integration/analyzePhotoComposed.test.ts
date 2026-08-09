@@ -48,7 +48,7 @@ async function* composeStream(): AsyncIterable<AiStreamChunk> {
           remediation: 'Consider a curbless conversion.',
           severity: 'major',
           cited_section: '§608',
-          confirmable: true,
+          confirmable: true, locatable: true,
         },
       ],
     } as Record<string, unknown>,
