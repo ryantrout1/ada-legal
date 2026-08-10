@@ -61,11 +61,22 @@ const ADA_STANDARDS_CHECKLIST = renderCatalogForPrompt();
 // positive_findings + (title + finding) per concern. Generating all
 // three reading levels at capture was ~60% of the output and the cause
 // of the 45–90s wait; simple/professional are now produced on demand via
-// rewriteToLevel() and cached back onto the row. 4096 is ample for a
-// single-level, 3-photo, 10-finding site; truncation still surfaces as a
-// max_tokens stop_reason which extractOutputFromResponse handles
-// gracefully (empty findings + meta logged for visibility).
-const DEFAULT_MAX_TOKENS = 4096;
+// rewriteToLevel() and cached back onto the row.
+//
+// This was 4096, described as "ample for a 10-finding site". Real
+// bathroom analyses now return 9 to 11 findings with substantially longer
+// per-finding text, which sits right on that ceiling: consecutive runs of
+// the same photo returned 11, 11, 9 findings and then 0. The zero was
+// truncation, and truncation here is silent in the worst possible way —
+// extractOutputFromResponse degrades to empty findings, so a cut-off
+// answer reads downstream as "we looked and found nothing" and the buyer
+// gets a report saying nothing stands out. An empty report on a paid
+// screening is far more damaging than a slow one.
+//
+// max_tokens is a CAP, not a charge: unused budget costs nothing, and
+// output is billed only for tokens actually generated. So it is sized for
+// the longest plausible site rather than the typical one.
+const DEFAULT_MAX_TOKENS = 16000;
 const MAX_PHOTOS_PER_CALL = 3;
 
 // Vercel Blob URL pattern: https://<storeId>.public.blob.vercel-storage.com/<path>.
@@ -570,11 +581,20 @@ export function extractOutputFromResponse(
     .map((b) => (b as { type: 'text'; text: string }).text)
     .join(' ')
     .slice(0, 200);
+  // Truncation is the dangerous case and deserves to say so by name: the
+  // caller cannot tell "the model found nothing" from "the model was cut off
+  // mid-answer", and the second one ships a report claiming a barrier-free
+  // room. Naming it here is what turns a silent wrong answer into a
+  // searchable log line.
+  const truncated = response.stop_reason === 'max_tokens';
   // eslint-disable-next-line no-console
   console.warn(
-    '[photo-analyzer] no report_findings tool_use block in response',
+    truncated
+      ? '[photo-analyzer] TRUNCATED: hit max_tokens before completing the tool call — findings will be EMPTY and must not be read as "no barriers". Raise DEFAULT_MAX_TOKENS.'
+      : '[photo-analyzer] no report_findings tool_use block in response',
     {
       stop_reason: response.stop_reason,
+      truncated,
       content_block_count: response.content.length,
       content_block_types: response.content.map((b) => b.type),
       text_excerpt: textExcerpt || undefined,
