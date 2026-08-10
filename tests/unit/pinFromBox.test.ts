@@ -56,6 +56,10 @@ describe('boxPinForItem', () => {
     expect(pin).toMatchObject({ x: 0.33, y: 0.745, confidence: 0.9 });
   });
 
+  it('marks the pin as box-derived so the renderer knows the location is known', () => {
+    expect(boxPinForItem(item(), [analysis([curbFinding])])?.source).toBe('box');
+  });
+
   it('is pure — identical inputs give identical output, with no model call', () => {
     const analyses = [analysis([curbFinding])];
     expect(boxPinForItem(item(), analyses)).toEqual(boxPinForItem(item(), analyses));

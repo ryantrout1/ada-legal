@@ -73,3 +73,36 @@ describe('buildItemAnnotations — report path', () => {
     expect(bare.flatMap((a) => a.pins)[0].label).toBe('Curb');
   });
 });
+
+describe('pin source propagation', () => {
+  const stubPlace = async () => ({ x: 0.5, y: 0.5, confidence: 0.6, label: 'X' });
+
+  it('marks a preset (box-derived) pin as box', async () => {
+    const out = await buildItemAnnotations(
+      [
+        {
+          itemIndex: 0,
+          title: 'Bench',
+          detail: 'd',
+          severity: 'major',
+          presetPin: { x: 0.5, y: 0.6, confidence: 0.6, source: 'box' },
+          presetPhotoUrl: 'https://blob/a.jpg',
+        },
+      ],
+      ['https://blob/a.jpg'],
+      stubPlace as never,
+      { minConfidence: 0.5 },
+    );
+    expect(out[0].pins[0].source).toBe('box');
+  });
+
+  it('marks a fallback pin as placement', async () => {
+    const out = await buildItemAnnotations(
+      [{ itemIndex: 0, title: 'Bench', detail: 'd', severity: 'major' }],
+      ['https://blob/a.jpg'],
+      stubPlace as never,
+      { minConfidence: 0.5 },
+    );
+    expect(out[0].pins[0].source).toBe('placement');
+  });
+});

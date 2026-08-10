@@ -27,3 +27,33 @@ describe('pinConfidenceTier', () => {
     expect(pinConfidenceTier(0.6, { preciseMin: 0.5 })).toBe('precise');
   });
 });
+
+describe('pin source decides precision', () => {
+  /**
+   * The category error this closes: pinConfidenceTier was written for
+   * PLACEMENT confidence — placeFinding asks the model "how sure are you this
+   * point is correct", a claim about location. Box-derived pins were being fed
+   * the FINDING confidence instead, which the analyzer prompt defines as an
+   * honest assessment of whether the concern is real — a claim about
+   * existence. So a fixed shower bench rendered as an approximate halo because
+   * the analyzer was slightly unsure it needs a folding seat, not because
+   * anyone was unsure where the bench is.
+   *
+   * A box IS the localization. If the analyzer drew one, we know where it is.
+   */
+  it('treats a box-derived pin as precise even at low confidence', () => {
+    expect(pinConfidenceTier(0.6, { source: 'box' })).toBe('precise');
+    expect(pinConfidenceTier(0.51, { source: 'box' })).toBe('precise');
+  });
+
+  it('keeps the confidence tier for a placement-derived pin', () => {
+    expect(pinConfidenceTier(0.6, { source: 'placement' })).toBe('approximate');
+    expect(pinConfidenceTier(0.9, { source: 'placement' })).toBe('precise');
+  });
+
+  it('falls back to the confidence tier when source is absent (legacy pins)', () => {
+    // Stored reports predate the field. They must not silently become precise.
+    expect(pinConfidenceTier(0.6, {})).toBe('approximate');
+    expect(pinConfidenceTier(0.6)).toBe('approximate');
+  });
+});
