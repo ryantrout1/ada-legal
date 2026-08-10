@@ -21,6 +21,8 @@ import { composeReport } from './composeReport.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
 import { buildItemAnnotations, type PlaceItemInput } from './buildItemAnnotations.js';
 import { boxPinForItem } from './pinFromBox.js';
+import { isEdgeBox } from './pinMarkerShape.js';
+import { snapToHorizontalEdge } from './edgeSnap.js';
 import { makeAnthropicPlaceFn, PLACEMENT_MODEL_DEFAULT } from './placeFindingAnthropic.js';
 
 export interface GeneratedReport {
@@ -118,6 +120,41 @@ async function collectComposeReport(
     }
   }
   return null;
+}
+
+/**
+ * Move edge-type pins onto the real edge found in the image.
+ *
+ * Mutates in place, and only for pins whose box is edge-shaped: an object's
+ * box centre is already the right answer, and re-deriving it from brightness
+ * would be worse. Any failure leaves the pin exactly where it was.
+ */
+async function snapEdgeItems(items: PlaceItemInput[], photoUrl: string | undefined): Promise<void> {
+  const edgeItems = items.filter((i) => i.presetPin?.box && isEdgeBox(i.presetPin.box));
+  if (!photoUrl || edgeItems.length === 0) return;
+
+  let buffer: Buffer;
+  try {
+    const resp = await fetch(photoUrl);
+    if (!resp.ok) return;
+    buffer = Buffer.from(await resp.arrayBuffer());
+  } catch (err) {
+    console.warn('spot edge snap: could not fetch photo, keeping box positions', err);
+    return;
+  }
+
+  for (const item of edgeItems) {
+    const box = item.presetPin!.box!;
+    const snappedY = await snapToHorizontalEdge(buffer, box);
+    if (snappedY === null) continue;
+    // Move both the marker point and the band, so the band still frames the
+    // edge it marks instead of drifting away from its own pin.
+    item.presetPin = {
+      ...item.presetPin!,
+      y: snappedY,
+      box: { ...box, y: snappedY },
+    };
+  }
 }
 
 function requireApiKey(): string {
@@ -227,6 +264,15 @@ export async function composeAndPlaceReport(
                 presetPhotoUrl: presetPin ? input.photos[0]?.blobUrl : undefined,
               };
             });
+
+          // Edges get their position from the image rather than the box. The
+          // analyzer's box for a threshold drifts about 6% between runs on the
+          // same photo — the difference between marking the curb and marking
+          // the floor in front of it — while the image itself does not move.
+          // The photo is fetched ONCE here, not per finding, and no model call
+          // is involved. If nothing dominates, snapToHorizontalEdge declines
+          // and the box-derived position stands.
+          await snapEdgeItems(items, input.photos[0]?.blobUrl);
           const photoAnnotations = await buildItemAnnotations(
             items,
             input.photos.map((p) => p.blobUrl),
