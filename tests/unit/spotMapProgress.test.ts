@@ -1,116 +1,80 @@
+/**
+ * What the free read is allowed to say WHILE it is still reading.
+ *
+ * This file used to pin the opposite behaviour: findings streamed in as they
+ * completed, fully-formed only, hedged rather than dropped. That was right
+ * when the free read handed over everything at the end anyway. Once the free
+ * read became a teaser it became the hole in it — a visitor watching the
+ * spinner was shown every barrier and the whole summary, and it sat in the
+ * network payload no matter what the UI painted. Withholding at the end only
+ * counts if nothing leaked on the way there.
+ *
+ * So the mapper now emits the scene and nothing else, and these tests pin that
+ * the leak stays closed.
+ *
+ * Ref: /plan Spot free-read teaser (no markers), Phase 1, criterion 2.
+ */
+
 import { describe, it, expect } from 'vitest';
 import { mapSpotProgress } from '@/lib/spot/mapSpotProgress';
 
 describe('mapSpotProgress', () => {
   it('returns an empty view for a snapshot with nothing in it yet', () => {
-    expect(mapSpotProgress({})).toEqual({ positives: [], items: [] });
+    expect(mapSpotProgress({})).toEqual({});
   });
 
   it('tolerates a non-object snapshot', () => {
-    expect(mapSpotProgress(null)).toEqual({ positives: [], items: [] });
-    expect(mapSpotProgress('nope')).toEqual({ positives: [], items: [] });
-    expect(mapSpotProgress([1, 2])).toEqual({ positives: [], items: [] });
+    expect(mapSpotProgress(null)).toEqual({});
+    expect(mapSpotProgress('nope')).toEqual({});
+    expect(mapSpotProgress([1, 2])).toEqual({});
   });
 
-  it('surfaces scene and summary once present', () => {
+  it('surfaces the scene once present — it names no barrier', () => {
     const v = mapSpotProgress({ scene: 'A concrete entrance', summary: 'One concern.' });
     expect(v.scene).toBe('A concrete entrance');
-    expect(v.summary).toBe('One concern.');
   });
 
-  it('emits only fully-formed findings and skips in-progress ones', () => {
+  it('never streams a finding, however complete it is', () => {
     const v = mapSpotProgress({
-      scene: 'S',
+      scene: 'A residential bathroom',
       findings: [
         {
-          title: 'No ramp',
-          finding: 'Steps only.',
+          title: 'Raised shower curb blocks entry',
+          finding: 'A wheelchair cannot roll over this curb.',
           severity: 'critical',
-          standard: '§206.2.1',
-          confidence: 0.9,
+          standard: '608.7',
           confirmable: true,
         },
-        {}, // still being written
       ],
     });
-    expect(v.items).toHaveLength(1);
-    expect(v.items[0].title).toBe('No ramp');
-    expect(v.items[0].citedSection).toBe('§206.2.1');
-    expect(v.items[0].hedged).toBe(false);
+    expect(JSON.stringify(v)).not.toContain('Raised shower curb');
+    expect(JSON.stringify(v)).not.toContain('608.7');
+    expect(Object.keys(v)).toEqual(['scene']);
   });
 
-  it('never renders a claim that is missing any required field', () => {
-    // Each case drops exactly one required field — none may render.
-    const base = {
-      title: 'Door hardware',
-      finding: 'Round knob.',
-      severity: 'major',
-      confirmable: true,
-    };
-    for (const drop of ['title', 'finding', 'severity', 'confirmable'] as const) {
-      const partial: Record<string, unknown> = { ...base };
-      delete partial[drop];
-      expect(mapSpotProgress({ findings: [partial] }).items).toHaveLength(0);
-    }
-    // A garbage severity is not a severity.
-    expect(
-      mapSpotProgress({ findings: [{ ...base, severity: 'catastrophic' }] }).items,
-    ).toHaveLength(0);
-  });
-
-  it('hedge-don\'t-drop: an unconfirmable finding streams in flagged, not omitted', () => {
+  it('never streams the summary — it names the barriers in prose', () => {
     const v = mapSpotProgress({
-      findings: [
-        {
-          title: 'Door closer speed',
-          finding: 'Cannot time it from a photo.',
-          severity: 'minor',
-          confidence: 0.4,
-          confirmable: false,
-        },
-      ],
+      scene: 'S',
+      summary: 'The headline concern is the raised curb, plus a fixed bench and no grab bars.',
     });
-    expect(v.items).toHaveLength(1);
-    expect(v.items[0].hedged).toBe(true);
+    expect(JSON.stringify(v)).not.toContain('headline concern');
   });
 
-  it('carries no verdict — an empty findings array mid-stream is not "clear"', () => {
-    const v = mapSpotProgress({ scene: 'S', summary: 'Sum.', findings: [] });
-    expect(v.items).toEqual([]);
-    // The progress view has no kind / overallRisk to render a verdict from.
-    expect('kind' in v).toBe(false);
-    expect('overallRisk' in v).toBe(false);
+  it('never streams the positives either', () => {
+    // Harmless on its own, but it is still read content arriving before the
+    // teaser decides what to give away, and the teaser does not show it.
+    const v = mapSpotProgress({ scene: 'S', positive_findings: ['curb cut present'] });
+    expect(JSON.stringify(v)).not.toContain('curb cut present');
   });
 
-  it('filters non-string entries out of positive_findings', () => {
-    expect(mapSpotProgress({ positive_findings: ['curb cut present', '', 7, null] }).positives).toEqual([
-      'curb cut present',
-    ]);
+  it('carries no verdict — there is nothing here to read an all-clear from', () => {
+    const v = mapSpotProgress({ scene: 'S', findings: [] });
+    expect(v).not.toHaveProperty('kind');
+    expect(v).not.toHaveProperty('overallRisk');
   });
 
-  it('maps real fragments the way the SDK parser actually hands them over', async () => {
-    // Drive the mapper with the SDK's own tolerant parser — the same one
-    // MessageStream uses to build the inputJson snapshot — so this pins the
-    // real contract, not an imagined one.
-    const { partialParse } = (await import(
-      '@anthropic-ai/sdk/_vendor/partial-json-parser/parser.js'
-    )) as { partialParse: (s: string) => unknown };
-
-    const midScene = '{"scene": "A concrete entra';
-    expect(mapSpotProgress(partialParse(midScene)).scene).toBeUndefined();
-
-    const sceneDone =
-      '{"scene": "A concrete entrance with two steps", "summary": "The main ent';
-    const v1 = mapSpotProgress(partialParse(sceneDone));
-    expect(v1.scene).toBe('A concrete entrance with two steps');
-    expect(v1.summary).toBeUndefined(); // still mid-write — must not render
-
-    const oneFindingDone =
-      '{"scene":"S.","summary":"Sum.","positive_findings":["curb cut present"],' +
-      '"findings":[{"title":"No ramp","finding":"Steps only.","severity":"critical",' +
-      '"standard":"§206.2.1","confidence":0.9,"confirmable":true},{"title":"Door hard';
-    const v2 = mapSpotProgress(partialParse(oneFindingDone));
-    expect(v2.items.map((i) => i.title)).toEqual(['No ramp']);
-    expect(v2.positives).toEqual(['curb cut present']);
+  it('ignores a non-string scene rather than emitting a half-parsed value', () => {
+    expect(mapSpotProgress({ scene: 42 })).toEqual({});
+    expect(mapSpotProgress({ scene: '' })).toEqual({});
   });
 });

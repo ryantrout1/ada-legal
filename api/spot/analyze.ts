@@ -4,24 +4,26 @@
  *   POST { photos: string[] }   // 1 base64 image data URL (MAX_FREE_PHOTOS)
  *
  * Ada Spot's free-tier read. Runs the shared photo analyzer (Opus 4.8) and
- * returns an honest scoped result + the $79 upsell. No Ada session, no org,
+ * returns a teaser — a few named barriers, an honest count of what is held
+ * back, and the $79 upsell. No Ada session, no org,
  * no Vercel Blob — free-read photos are analyzed transiently (the analyzer
  * accepts data: URLs) and never persisted.
  *
  * Two response modes, picked by the Accept header (mirrors api/ada/turn.ts):
  *
  *   1. JSON (default — any non-browser caller). One shot:
- *        { tier, result, upsell }
+ *        { tier, teaser, upsell }
  *
  *   2. SSE (Accept: text/event-stream — what the browser uses):
- *        event: progress  data: { scene?, summary?, positives, items }
- *        event: done      data: { tier, result, upsell }
+ *        event: progress  data: { scene? }
+ *        event: done      data: { tier, teaser, upsell }
  *        event: error     data: { error }
  *      The analysis is identical in both modes (analyzeStream sends the same
- *      params as analyze and extracts through the same path); streaming just
- *      lets the ~15-25s of generation render as it lands instead of arriving
- *      as one block at the end. `done` carries the full result, so the client
- *      reconciles final state in one place and progress stays advisory.
+ *      params as analyze and extracts through the same path). Streaming used
+ *      to render the read as it landed; now that the free read is a teaser,
+ *      the findings are withheld until `done` and the progress frames carry
+ *      only the scene — otherwise the whole read would arrive mid-stream and
+ *      the withholding at the end would be theatre.
  *
  * Every gate (400/413 parse, 503 kill switch, 429 blocked) runs BEFORE any
  * SSE header, so a rejection is always a clean JSON status.
@@ -47,6 +49,7 @@ import { rateLimitDecision } from '../../src/lib/spot/rateLimitDecision.js';
 import { parseSpotAnalyzeBody, type SpotAnalyzeBody } from '../../src/lib/spot/parseSpotAnalyzeBody.js';
 import { makeSpotStore } from '../../src/lib/spot/spotStore.js';
 import { mapSpotProgress } from '../../src/lib/spot/mapSpotProgress.js';
+import { buildFreeReadTeaser } from '../../src/lib/spot/freeReadTeaser.js';
 import { storeFreeReadPhoto } from '../../src/lib/spot/storeFreeReadPhoto.js';
 import { MAX_PAID_PHOTOS } from '../../src/lib/spot/uploadGate.js';
 
@@ -166,9 +169,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // so it can never delay or break the user's read either way.
     const retainPhoto = await readSpotRetainFreePhotos(clients.db);
 
+    // What the visitor is allowed to see. The full analysis is persisted above
+    // and stays available to admin; this is the presentation boundary, and it
+    // is enforced HERE rather than in the browser on purpose — truncating a
+    // list client-side leaves every withheld finding sitting in the network
+    // payload, which is a paywall in name only.
+    const teaser = buildFreeReadTeaser(result.output);
+
     if (wantsSse) {
       if (!aborted) {
-        writeSseFrame(res, 'done', { tier, result: result.output, upsell: UPSELL });
+        writeSseFrame(res, 'done', { tier, teaser, upsell: UPSELL });
       }
       // Store BEFORE res.end(). On Vercel serverless the function can be
       // frozen the instant the response closes, so awaited work after
@@ -187,7 +197,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (retainPhoto) {
       await storeFreeReadPhoto({ store, blob: clients.blob, readId: read.id, dataUrl: parsed.photos[0]! });
     }
-    return res.status(200).json({ tier, result: result.output, upsell: UPSELL });
+    return res.status(200).json({ tier, teaser, upsell: UPSELL });
   } catch (err) {
     console.error('spot/analyze failed', err);
     // Once the stream is open the status is already 200 — surface the

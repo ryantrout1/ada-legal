@@ -9,8 +9,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSpotCapture, type SpotUpsell } from './spot/useSpotCapture';
-import SpotResultView from './spot/SpotResultView';
-import SpotProgressPanel from './spot/SpotProgressPanel';
+import SpotTeaserView from './spot/SpotTeaserView';
 import SpotCheckout from './spot/SpotCheckout';
 import SpotUpload from './spot/SpotUpload';
 import SpotReportView from './spot/SpotReportView';
@@ -25,13 +24,12 @@ const MAX_PHOTOS = 1;
 /**
  * The accessible status channel for the free read.
  *
- * The read now streams (SpotProgressPanel renders content as it lands), but
- * that panel is aria-live="off" — scene, summary and each finding arrive
- * separately and announcing every one would machine-gun a screen reader.
- * This stays the calm channel: a handful of coarse, honest, elapsed-time
- * stages, each announced once. It never claims a finding — the analyzer
- * gives no intermediate signal to base a claim on. Copy pending Gina's
- * review.
+ * The read streams, but nothing about the findings streams with it: the free
+ * read is a teaser, so the barrier list is withheld until the done frame and
+ * the mid-read frames carry only the scene. This is the calm channel around
+ * that wait: a handful of coarse, honest, elapsed-time stages, each announced
+ * once. It never claims a finding — the analyzer gives no intermediate signal
+ * to base a claim on. Copy pending Gina's review.
  */
 const READ_STAGES: Array<{ atMs: number; text: string }> = [
   { atMs: 0, text: 'Reading your photo…' },
@@ -88,9 +86,10 @@ function UpsellCard({ upsell, onStart }: { upsell?: SpotUpsell; onStart: () => v
         Want the full read on this spot?
       </h2>
       <p className="mt-2 text-ink-900">
-        Take a few more angles of this same spot — up to {maxPhotos} photos — and we’ll read
-        them together: what each finding is, which rule it points to, and what people usually do
-        about it. ${price}, yours to keep.
+        The full report names everything we found — not just the few above — and for each one:
+        what it is, which rule it points to, and what people usually do about it. Add a few more
+        angles of this same spot, up to {maxPhotos} photos, and we’ll read them together.
+        ${price}, yours to keep.
       </p>
       {upsell?.anchor ? <p className="mt-1 text-sm text-ink-700">{upsell.anchor}</p> : null}
       <button
@@ -307,10 +306,16 @@ export default function SpotLanding() {
                 ) : null}
 
                 {analyzing ? <SpotReadProgress /> : null}
-                {analyzing && state.progress ? (
-                  <div className="mt-4">
-                    <SpotProgressPanel view={state.progress} />
-                  </div>
+                {/* Mid-read, the scene and nothing else. The panel that used
+                    to live here streamed the summary and every finding title
+                    as they landed — which handed over the whole read before
+                    the teaser could withhold any of it. Naming what is being
+                    read is honest evidence the analysis is working and gives
+                    away no barrier. */}
+                {analyzing && state.progress?.scene ? (
+                  <p className="mt-2 text-center text-sm text-ink-700">
+                    Reading: {state.progress.scene}
+                  </p>
                 ) : null}
 
                 {state.status === 'error' ? (
@@ -326,7 +331,7 @@ export default function SpotLanding() {
               </>
             ) : null}
 
-            {showResult && state.view ? (
+            {showResult && state.teaser ? (
               <>
                 {/* The photo that was screened, shown with the findings.
                     It used to vanish the moment the read finished: the
@@ -365,7 +370,7 @@ export default function SpotLanding() {
                     remediation report, see below.
                   </p>
                 ) : null}
-                <SpotResultView view={state.view} onRetry={startOver} />
+                <SpotTeaserView teaser={state.teaser} onRetry={startOver} />
                 <UpsellCard upsell={state.upsell} onStart={() => setCheckoutActive(true)} />
 
                 {IS_TEST_MODE ? (

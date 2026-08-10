@@ -15,9 +15,8 @@
 
 import { useCallback, useState } from 'react';
 import { downscalePhoto } from '@/app/utils/downscalePhoto';
-import { mapSpotFindings, type SpotResultView } from '@/lib/spot/mapSpotFindings';
+import type { FreeReadTeaser } from '@/lib/spot/freeReadTeaser';
 import type { SpotProgressView } from '@/lib/spot/mapSpotProgress';
-import type { PhotoAnalysisOutput } from '@/types/db';
 
 export type SpotStatus = 'idle' | 'analyzing' | 'done' | 'error';
 export type SpotTier = 'allowed' | 'soft_gated' | 'blocked';
@@ -31,12 +30,17 @@ export interface SpotUpsell {
 export interface SpotState {
   status: SpotStatus;
   tier?: SpotTier;
-  view?: SpotResultView;
+  /**
+   * The finished free read, already reduced to a teaser BY THE SERVER. The
+   * client never receives the withheld findings, so there is nothing here to
+   * truncate and nothing to leak into the network payload.
+   */
+  teaser?: FreeReadTeaser;
   upsell?: SpotUpsell;
   /**
-   * Partial result while the analysis streams. Advisory only — `view` (from
-   * the done frame) is the source of truth for the finished read, and this
-   * carries no verdict by construction (see mapSpotProgress).
+   * Partial state while the analysis streams. Advisory only — the teaser (from
+   * the done frame) is the source of truth for the finished read. Carries the
+   * scene and nothing else by construction (see mapSpotProgress).
    */
   progress?: SpotProgressView;
   /** True on a 503 — Ada Spot is turned off. */
@@ -58,7 +62,7 @@ function fileToDataUrl(file: File): Promise<string> {
 
 interface SpotSseHandlers {
   onProgress: (view: SpotProgressView) => void;
-  onDone: (payload: { tier: SpotTier; result?: PhotoAnalysisOutput; upsell?: SpotUpsell }) => void;
+  onDone: (payload: { tier: SpotTier; teaser?: FreeReadTeaser; upsell?: SpotUpsell }) => void;
   onError: (message: string) => void;
 }
 
@@ -139,21 +143,21 @@ export function useSpotCapture() {
    * frame and the JSON body can't drift in how they resolve state.
    */
   const applyFinal = useCallback(
-    (data: { tier: SpotTier; result?: PhotoAnalysisOutput; upsell?: SpotUpsell }) => {
+    (data: { tier: SpotTier; teaser?: FreeReadTeaser; upsell?: SpotUpsell }) => {
       if (data.tier === 'blocked') {
         setState({ status: 'done', tier: 'blocked', upsell: data.upsell });
         return;
       }
-      if (!data.result) {
+      if (!data.teaser) {
         setState({ status: 'error', error: 'Something went wrong reading your photos. Please try again.' });
         return;
       }
-      // Drop `progress` — the mapped view supersedes it, and leaving both
-      // would let a stale partial render alongside the real result.
+      // Drop `progress` — the teaser supersedes it, and leaving both would let
+      // a stale partial render alongside the real result.
       setState({
         status: 'done',
         tier: data.tier,
-        view: mapSpotFindings(data.result),
+        teaser: data.teaser,
         upsell: data.upsell,
       });
     },
@@ -201,7 +205,7 @@ export function useSpotCapture() {
       if (!isSse) {
         const data = (await res.json()) as {
           tier: SpotTier;
-          result?: PhotoAnalysisOutput;
+          teaser?: FreeReadTeaser;
           upsell?: SpotUpsell;
         };
         applyFinal(data);
