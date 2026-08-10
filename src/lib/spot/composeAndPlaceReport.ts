@@ -158,14 +158,31 @@ export async function composeAndPlaceReport(
       ],
       tools: [COMPOSE_REPORT_TOOL],
       model,
-      maxTokens: 4000,
+      // A report now carries around ten concerns, each with an explanation, a
+      // remediation paragraph and a self-check. At 4000 the model ran out of
+      // output mid-tool-call, which arrives here as "no tool call at all" —
+      // so it retried, and two long attempts together blew the 120s function
+      // limit and returned a 504. This is a CAP, not a charge: unused budget
+      // costs nothing, so it is sized for the longest plausible report rather
+      // than the typical one.
+      maxTokens: 16000,
     });
 
     try {
       const modelOutput = await collectComposeReport(stream);
       // A missing tool call is a generation failure — surface it so the caller
       // leaves the session for retry rather than persisting an empty report.
-      if (!modelOutput) throw new Error('model did not return a compose_report tool call');
+      if (!modelOutput) {
+        // The commonest cause is the model running out of output budget
+        // partway through the tool call, which arrives here indistinguishable
+        // from never having called the tool. Say so, because the previous
+        // wording sent us looking at the tool schema while the real problem
+        // was maxTokens.
+        throw new Error(
+          'model did not return a complete compose_report tool call ' +
+            '(most likely truncated: output exceeded maxTokens)',
+        );
+      }
 
       const content = composeReport(modelOutput, analyses);
       const base: SpotReportContent = { ...content, modelVersion: model };
