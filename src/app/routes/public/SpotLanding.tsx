@@ -397,7 +397,20 @@ export default function SpotLanding() {
                     <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-500">
                       Full report (test) — this is the $79 deliverable
                     </p>
-                    <SpotReportView content={testReport} />
+                    {/* `previews` — the same photo already on screen as your
+                        thumbnail. Deliberately reusing it rather than storing
+                        a second copy: an earlier attempt added new state and a
+                        settings lookup to this page and broke photo picking
+                        outright, cause never identified. So this page gains
+                        nothing — no state, no lookup, no import.
+
+                        The thumbnail's address differs from the one the
+                        markers were saved against, so the lookup falls back to
+                        position (see pinNumbering). Markers are switched on
+                        directly here, the same way the admin review screen
+                        does it: this is a test preview, and its whole job is
+                        showing the markers. */}
+                    <SpotReportView content={testReport} photos={previews} annotationsEnabled />
                   </section>
                 ) : null}
 
