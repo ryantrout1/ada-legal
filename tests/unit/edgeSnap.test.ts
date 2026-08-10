@@ -15,6 +15,34 @@ import { describe, it, expect } from 'vitest';
 import sharp from 'sharp';
 import { snapToHorizontalEdge } from '../../src/lib/spot/edgeSnap.js';
 
+/**
+ * Build a JPEG where the edge row varies with x, so the boundary can slope the
+ * way a real curb does in perspective. edgeRowAt(x) returns the row where the
+ * image switches from `above` to `below`.
+ */
+async function slopedImage(
+  width: number,
+  height: number,
+  edgeRowAt: (x: number) => number,
+  above: number,
+  below: number,
+  noise = 0,
+): Promise<Buffer> {
+  const px = Buffer.alloc(width * height * 3);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const base = y < edgeRowAt(x) ? above : below;
+      const n = noise === 0 ? 0 : ((x * 7 + y * 13) % noise);
+      const v = Math.min(255, base + n);
+      const i = (y * width + x) * 3;
+      px[i] = v;
+      px[i + 1] = v;
+      px[i + 2] = v;
+    }
+  }
+  return sharp(px, { raw: { width, height, channels: 3 } }).jpeg({ quality: 75 }).toBuffer();
+}
+
 /** Build a JPEG from a per-row brightness function, so edges are exact. */
 async function image(
   width: number,
@@ -100,5 +128,42 @@ describe('snapToHorizontalEdge', () => {
 
   it('returns null on an unreadable buffer instead of throwing', async () => {
     expect(await snapToHorizontalEdge(Buffer.from('not an image'), fullFrame)).toBeNull();
+  });
+});
+
+describe('sloped edges (the real-photo case)', () => {
+  /**
+   * A curb photographed from a doorway runs at an angle: lower on one side,
+   * higher on the other. Averaging whole rows smears such an edge across many
+   * rows and flattens it below the detection threshold — which is exactly what
+   * happened on the real photo while every horizontal test image passed.
+   * Reading vertical slices and fitting a line handles the slope.
+   */
+  it('finds a sloped edge and reports its height at the centre', async () => {
+    // Edge runs from row 96 on the left to row 64 on the right, of 160.
+    // At the horizontal centre it is row 80 => 0.5.
+    const buf = await slopedImage(400, 160, (x) => 96 - (x / 400) * 32, 190, 55);
+    const y = await snapToHorizontalEdge(buf, fullFrame);
+    expect(y).not.toBeNull();
+    expect(y!).toBeCloseTo(0.5, 2);
+  });
+
+  it('handles a slope steeper than the curb is thick', async () => {
+    const buf = await slopedImage(400, 200, (x) => 130 - (x / 400) * 60, 200, 50, 16);
+    const y = await snapToHorizontalEdge(buf, fullFrame);
+    expect(y).not.toBeNull();
+    expect(y!).toBeCloseTo(0.5, 2); // centre row 100 of 200
+  });
+
+  it('still refuses when the slices disagree — no coherent edge', async () => {
+    // Each slice has its edge in a random-ish place: no line fits.
+    const buf = await slopedImage(
+      400,
+      160,
+      (x) => 40 + ((x * 37) % 90),
+      200,
+      50,
+    );
+    expect(await snapToHorizontalEdge(buf, fullFrame)).toBeNull();
   });
 });
