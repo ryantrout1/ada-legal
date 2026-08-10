@@ -26,6 +26,42 @@ import type { SpotReportItem } from './reportSchema.js';
 
 const round3 = (n: number): number => Math.round(n * 1000) / 1000;
 
+/**
+ * A box is a LINEAR HORIZONTAL feature — an edge rather than an object — when
+ * it is much wider than it is tall. A raised curb, a door threshold, a ramp
+ * lip and a floor transition all box this way.
+ */
+const LINEAR_ASPECT_MIN = 4;
+/** Above this height it reads as an area even if wide (a wall, a floor zone). */
+const LINEAR_MAX_HEIGHT = 0.12;
+/** How far below a linear feature's top edge to sit, so the marker is legible. */
+const LINEAR_TOP_INSET = 0.015;
+
+/**
+ * Where inside the box to put the marker.
+ *
+ * For an object — a cabinet, a bench, a mirror — the centre is right. For an
+ * EDGE it is not: the analyzer boxes a curb as a wide thin band around the
+ * step, and the centre of that band lands on the curb's face or the tile just
+ * below it. What a person points at on a raised threshold is the step line,
+ * which is the box's top edge.
+ *
+ * Measured: 8 runs boxed the curb at avg y 0.744, h 0.058 — so the centre sat
+ * at 0.773 while crop-guided placement, which only answers when it can
+ * actually see the object, independently put the curb at 0.73.
+ *
+ * Keyed on shape, so it covers any threshold or floor transition without
+ * naming them, and leaves object-shaped and tall-thin boxes alone.
+ */
+function referenceY(box: { y: number; w: number; h: number }): number {
+  const isLinearHorizontal =
+    box.h > 0 && box.h <= LINEAR_MAX_HEIGHT && box.w / box.h >= LINEAR_ASPECT_MIN;
+  if (!isLinearHorizontal) return box.y + box.h / 2;
+  // Inset is capped at half the height so the marker can never sit outside a
+  // very thin box.
+  return box.y + Math.min(LINEAR_TOP_INSET, box.h / 2);
+}
+
 /** Sections differ only cosmetically between runs (a stray section sign or space). */
 function normalizeSection(s: string): string {
   return s.replace(/[§\s]/g, '').toLowerCase();
@@ -71,7 +107,7 @@ export function boxPinForItem(
   const b = best.bounding_box;
   return {
     x: round3(b.x + b.w / 2),
-    y: round3(b.y + b.h / 2),
+    y: round3(referenceY(b)),
     confidence: best.confidence,
     // The analyzer localized this itself, so the marker is precise regardless
     // of the finding's confidence — that number is about whether the concern

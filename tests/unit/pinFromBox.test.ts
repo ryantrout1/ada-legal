@@ -53,7 +53,10 @@ const curbFinding = {
 describe('boxPinForItem', () => {
   it('pins at the center of the matching finding box', () => {
     const pin = boxPinForItem(item(), [analysis([curbFinding])]);
-    expect(pin).toMatchObject({ x: 0.33, y: 0.745, confidence: 0.9 });
+    // Curb-shaped box (0.5 wide, 0.05 tall) is a linear feature, so the pin
+    // sits just below its top edge — the step line — not at 0.745, the middle
+    // of the band.
+    expect(pin).toMatchObject({ x: 0.33, y: 0.735, confidence: 0.9 });
   });
 
   it('marks the pin as box-derived so the renderer knows the location is known', () => {
@@ -67,7 +70,7 @@ describe('boxPinForItem', () => {
 
   it('matches despite the analyzer rewording the title', () => {
     const reworded = { ...curbFinding, title_standard: 'Raised Shower Curb Blocks Wheelchair Entry' };
-    expect(boxPinForItem(item(), [analysis([reworded])])?.y).toBe(0.745);
+    expect(boxPinForItem(item(), [analysis([reworded])])?.y).toBe(0.735);
   });
 
   it('normalizes section formatting differences', () => {
@@ -118,5 +121,49 @@ describe('boxPinForItem', () => {
     const a = { ...curbFinding, confidence: 0.6, bounding_box: { x: 0, y: 0.2, w: 0.2, h: 0.2 } };
     const b = { ...curbFinding, confidence: 0.95, bounding_box: { x: 0, y: 0.6, w: 0.2, h: 0.2 } };
     expect(boxPinForItem(item(), [analysis([a, b])])?.y).toBeCloseTo(0.7, 5);
+  });
+});
+
+describe('reference point by box shape', () => {
+  /**
+   * A curb is an edge, not an area. Across 8 runs the analyzer boxed it as a
+   * wide thin band (avg y 0.744, h 0.058) — correct — but the pin took the
+   * box's vertical CENTER, 0.773, which lands on the curb's face or the tile
+   * just below it. The point a person would indicate on a raised threshold is
+   * the step line: the top edge. Crop-guided placement, which only answers
+   * when it can actually see the object, independently put the curb at 0.73 —
+   * matching the box top, not the box center.
+   *
+   * Keyed on shape, not on the word "curb", so it covers any threshold, ramp
+   * lip or floor transition without naming them.
+   */
+  const boxFinding = (box: { x: number; y: number; w: number; h: number }) => ({
+    ...curbFinding,
+    bounding_box: box,
+  });
+
+  it('pins a wide thin band near its top edge, not its center', () => {
+    // The real curb shape: 0.43 wide, 0.058 tall.
+    const pin = boxPinForItem(item(), [analysis([boxFinding({ x: 0.09, y: 0.744, w: 0.43, h: 0.058 })])]);
+    expect(pin!.y).toBeCloseTo(0.759, 3); // 0.744 + 0.015, not 0.773
+    expect(pin!.x).toBeCloseTo(0.305, 3); // x still centred
+  });
+
+  it('keeps the center for an object-shaped box', () => {
+    // A vanity cabinet: roughly square. Its center is the right place to point.
+    const pin = boxPinForItem(item(), [analysis([boxFinding({ x: 0.6, y: 0.7, w: 0.3, h: 0.28 })])]);
+    expect(pin!.y).toBeCloseTo(0.84, 3);
+  });
+
+  it('keeps the center for a tall thin box — vertical features are not step lines', () => {
+    const pin = boxPinForItem(item(), [analysis([boxFinding({ x: 0.5, y: 0.2, w: 0.05, h: 0.4 })])]);
+    expect(pin!.y).toBeCloseTo(0.4, 3);
+  });
+
+  it('never places the pin outside a very thin box', () => {
+    const box = { x: 0.1, y: 0.8, w: 0.5, h: 0.02 };
+    const pin = boxPinForItem(item(), [analysis([boxFinding(box)])])!;
+    expect(pin.y).toBeGreaterThanOrEqual(box.y);
+    expect(pin.y).toBeLessThanOrEqual(box.y + box.h);
   });
 });
