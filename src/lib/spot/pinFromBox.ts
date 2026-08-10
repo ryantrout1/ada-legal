@@ -35,6 +35,9 @@ const round3 = (n: number): number => Math.round(n * 1000) / 1000;
 /** How far below a linear feature's top edge to sit, so the marker is legible. */
 const LINEAR_TOP_INSET = 0.015;
 
+/** How far in from a linear feature's left end to sit, so the marker is legible. */
+const LINEAR_LEFT_INSET = 0.02;
+
 /**
  * Where inside the box to put the marker.
  *
@@ -56,6 +59,26 @@ function referenceY(box: { y: number; w: number; h: number }): number {
   // Inset is capped at half the height so the marker can never sit outside a
   // very thin box.
   return box.y + Math.min(LINEAR_TOP_INSET, box.h / 2);
+}
+
+/**
+ * Where along the box's width to put the marker.
+ *
+ * For an object the horizontal centre is right — it sits on the thing. For an
+ * EDGE it is not: the analyzer boxes a curb as a wide, loose band (measured
+ * 0.42–0.5 wide) whose right half often overhangs open floor, so a point at the
+ * band's centre drifts off the curb toward the middle of the room. The stable
+ * end of a threshold is where it meets the wall — the left end of the step line
+ * — so an edge marker anchors there, a small inset in from the box's left edge.
+ *
+ * Same shape predicate as referenceY, so objects and tall-thin boxes keep their
+ * centre and only true edges move.
+ */
+function referenceX(box: { x: number; w: number; h: number }): number {
+  if (!isEdgeBox(box)) return box.x + box.w / 2;
+  // Inset capped at half the width so the marker can never sit past a very
+  // narrow box's right edge.
+  return box.x + Math.min(LINEAR_LEFT_INSET, box.w / 2);
 }
 
 /** Sections differ only cosmetically between runs (a stray section sign or space). */
@@ -102,7 +125,7 @@ export function boxPinForItem(
 
   const b = best.bounding_box;
   return {
-    x: round3(b.x + b.w / 2),
+    x: round3(referenceX(b)),
     y: round3(referenceY(b)),
     confidence: best.confidence,
     // The analyzer localized this itself, so the marker is precise regardless

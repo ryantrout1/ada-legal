@@ -51,12 +51,13 @@ const curbFinding = {
 };
 
 describe('boxPinForItem', () => {
-  it('pins at the center of the matching finding box', () => {
+  it('anchors an edge box at the left end of its step line', () => {
     const pin = boxPinForItem(item(), [analysis([curbFinding])]);
-    // Curb-shaped box (0.5 wide, 0.05 tall) is a linear feature, so the pin
-    // sits just below its top edge — the step line — not at 0.745, the middle
-    // of the band.
-    expect(pin).toMatchObject({ x: 0.33, y: 0.735, confidence: 0.9 });
+    // Curb-shaped box (0.5 wide, 0.05 tall) is a linear feature: y sits just
+    // below the top edge — the step line, not 0.745 the band middle — and x
+    // sits a small inset in from the box's left end (0.08 + 0.02), where the
+    // threshold meets the wall, not 0.33 the band centre which overhangs floor.
+    expect(pin).toMatchObject({ x: 0.1, y: 0.735, confidence: 0.9 });
   });
 
   it('marks the pin as box-derived so the renderer knows the location is known', () => {
@@ -142,11 +143,11 @@ describe('reference point by box shape', () => {
     bounding_box: box,
   });
 
-  it('pins a wide thin band near its top edge, not its center', () => {
+  it('pins a wide thin band near its top-left, not its center', () => {
     // The real curb shape: 0.43 wide, 0.058 tall.
     const pin = boxPinForItem(item(), [analysis([boxFinding({ x: 0.09, y: 0.744, w: 0.43, h: 0.058 })])]);
     expect(pin!.y).toBeCloseTo(0.759, 3); // 0.744 + 0.015, not 0.773
-    expect(pin!.x).toBeCloseTo(0.305, 3); // x still centred
+    expect(pin!.x).toBeCloseTo(0.11, 3); // 0.09 + 0.02 left inset, not 0.305 centred
   });
 
   it('keeps the center for an object-shaped box', () => {
