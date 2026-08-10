@@ -213,7 +213,7 @@ export default function SpotReportView({
                 url={url}
                 index={i}
                 total={photos.length}
-                pins={numbering ? numbering.pinsForPhoto(url) : []}
+                pins={numbering ? numbering.pinsForPhoto(url, i) : []}
                 // Placement is verified and capped when unconfirmed, so an
                 // unverified location must render as an approximate marker
                 // here too — capping confidence achieves nothing if the buyer
@@ -235,6 +235,18 @@ export default function SpotReportView({
         <p className="mt-6 rounded-md border border-surface-200 bg-surface-100 px-4 py-3 text-sm text-ink-700">
           The photos for this screening have been deleted. Uploaded photos are removed after 90
           days; the report stays available.
+        </p>
+      ) : null}
+
+      {/* The report HAS markers but no photo arrived to put them on.
+          Previously this rendered as nothing at all: a complete-looking report
+          whose whole visual layer had silently gone missing, indistinguishable
+          from a report that never had markers. Saying so is what turns an
+          invisible failure into a reportable one. */}
+      {photos.length === 0 && !photosPurged && (content.photoAnnotations?.length ?? 0) > 0 ? (
+        <p className="mt-6 rounded-md border border-surface-200 bg-surface-100 px-4 py-3 text-sm text-ink-700">
+          The marked-up photo for this screening couldn&rsquo;t be loaded. The findings below are
+          unaffected.
         </p>
       ) : null}
 
