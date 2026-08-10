@@ -33,18 +33,44 @@ import type { PhotoBoundingBox } from '../../types/db.js';
 const SEARCH_PAD = 0.08;
 
 /**
- * How much the winning edge must beat the runner-up to be trusted. Below this
- * the scene is ambiguous and we decline. Measured margin on the real scene
- * shape was ~5x, so 2x accepts the genuine case with room to spare while still
- * rejecting a coin flip between two similar transitions.
+ * The strip is read in vertical slices rather than as whole rows.
+ *
+ * A curb photographed from a doorway slopes: lower on one side, higher on the
+ * other. Averaging a whole row mixes the light side of the boundary with the
+ * dark side, so a sloped edge smears across many rows and its peak flattens
+ * below any sensible threshold — which is precisely what made the detector
+ * decline on the real photo while every horizontal test image passed. Each
+ * slice is narrow enough that the edge is near-flat within it.
  */
-const DOMINANCE_MIN = 2;
+const SLICE_COUNT = 12;
 
-/** Rows within this distance of the winner are the same edge, not a rival. */
+/** An edge weaker than this, within a slice, is texture rather than a boundary. */
+const MIN_EDGE_STRENGTH = 8;
+
+/** At least this many slices must find an edge for the result to be trusted. */
+const MIN_SLICES_AGREEING = 6;
+
+/**
+ * Within a slice, how far the winning transition must beat the runner-up.
+ *
+ * Without this the detector will happily pick one of two equally strong
+ * parallel boundaries and report it with full confidence — a coin flip
+ * presented as an answer. On the real scene the curb's top edge beat its
+ * nearest rival about five times over, so 2x admits the genuine case easily
+ * while still refusing a tie.
+ */
+const SLICE_DOMINANCE_MIN = 2;
+
+/** Rows this close to the winner belong to the same edge, not to a rival. */
 const PEAK_NEIGHBOURHOOD = 3;
 
-/** An edge weaker than this is texture, not a boundary. */
-const MIN_EDGE_STRENGTH = 8;
+/**
+ * How far a slice's edge may sit from the fitted line, as a fraction of the
+ * searched strip, before the slices count as disagreeing. A real boundary is
+ * straight enough to fit; scattered peaks mean there is no single edge, and
+ * guessing at one would put a confident marker in the wrong place.
+ */
+const MAX_FIT_ERROR = 0.12;
 
 const clamp01 = (n: number): number => Math.min(1, Math.max(0, n));
 
@@ -84,38 +110,73 @@ export async function snapToHorizontalEdge(
       .raw()
       .toBuffer({ resolveWithObject: true });
 
-    // Average brightness per row. Averaging across the strip's width is what
-    // makes a long horizontal boundary stand out from local texture: a grout
-    // line contributes to one row too, but with far less contrast.
-    const rowMean = new Array<number>(info.height);
-    for (let y = 0; y < info.height; y++) {
-      let sum = 0;
-      const rowStart = y * info.width;
-      for (let x = 0; x < info.width; x++) sum += data[rowStart + x];
-      rowMean[y] = sum / info.width;
-    }
+    // Find the boundary independently in each vertical slice, then fit a line
+    // through those points. A straight boundary — sloped or not — fits well; a
+    // scatter of unrelated texture does not, and that is the signal to decline.
+    const sliceWidth = Math.max(1, Math.floor(info.width / SLICE_COUNT));
+    const points: { x: number; row: number }[] = [];
 
-    // Row-to-row change. The largest is the boundary.
-    let bestRow = -1;
-    let bestStrength = 0;
-    for (let y = 1; y < info.height; y++) {
-      const d = Math.abs(rowMean[y] - rowMean[y - 1]);
-      if (d > bestStrength) {
-        bestStrength = d;
-        bestRow = y;
+    for (let s = 0; s < SLICE_COUNT; s++) {
+      const xStart = s * sliceWidth;
+      const xEnd = s === SLICE_COUNT - 1 ? info.width : Math.min(info.width, xStart + sliceWidth);
+      if (xEnd - xStart < 1) continue;
+
+      const rowMean = new Array<number>(info.height);
+      for (let y = 0; y < info.height; y++) {
+        let sum = 0;
+        const rowStart = y * info.width;
+        for (let x = xStart; x < xEnd; x++) sum += data[rowStart + x];
+        rowMean[y] = sum / (xEnd - xStart);
       }
-    }
-    if (bestRow < 0 || bestStrength < MIN_EDGE_STRENGTH) return null;
 
-    // The runner-up, ignoring rows belonging to the same edge. If a second,
-    // unrelated boundary is nearly as strong, the scene is ambiguous.
-    let runnerUp = 0;
-    for (let y = 1; y < info.height; y++) {
-      if (Math.abs(y - bestRow) <= PEAK_NEIGHBOURHOOD) continue;
-      const d = Math.abs(rowMean[y] - rowMean[y - 1]);
-      if (d > runnerUp) runnerUp = d;
+      let bestRow = -1;
+      let bestStrength = 0;
+      for (let y = 1; y < info.height; y++) {
+        const d = Math.abs(rowMean[y] - rowMean[y - 1]);
+        if (d > bestStrength) {
+          bestStrength = d;
+          bestRow = y;
+        }
+      }
+      if (bestRow < 0 || bestStrength < MIN_EDGE_STRENGTH) continue;
+
+      // Runner-up, ignoring rows belonging to the same boundary.
+      let runnerUp = 0;
+      for (let y = 1; y < info.height; y++) {
+        if (Math.abs(y - bestRow) <= PEAK_NEIGHBOURHOOD) continue;
+        const d = Math.abs(rowMean[y] - rowMean[y - 1]);
+        if (d > runnerUp) runnerUp = d;
+      }
+      if (runnerUp > 0 && bestStrength / runnerUp < SLICE_DOMINANCE_MIN) continue;
+
+      points.push({ x: (xStart + xEnd) / 2, row: bestRow });
     }
-    if (runnerUp > 0 && bestStrength / runnerUp < DOMINANCE_MIN) return null;
+
+    if (points.length < MIN_SLICES_AGREEING) return null;
+
+    // Least-squares line through the slice edges: row = intercept + slope * x.
+    const n = points.length;
+    const meanX = points.reduce((a, p) => a + p.x, 0) / n;
+    const meanRow = points.reduce((a, p) => a + p.row, 0) / n;
+    let num = 0;
+    let den = 0;
+    for (const p of points) {
+      num += (p.x - meanX) * (p.row - meanRow);
+      den += (p.x - meanX) ** 2;
+    }
+    const slope = den === 0 ? 0 : num / den;
+    const intercept = meanRow - slope * meanX;
+    const rowAt = (x: number): number => intercept + slope * x;
+
+    // Median distance from the line. Median, not mean, so one stray slice
+    // catching a grout line cannot veto an otherwise clean edge.
+    const residuals = points.map((p) => Math.abs(p.row - rowAt(p.x))).sort((a, b) => a - b);
+    const medianResidual = residuals[Math.floor(residuals.length / 2)];
+    if (medianResidual / info.height > MAX_FIT_ERROR) return null;
+
+    // Report the boundary's height at the middle of the strip.
+    const bestRow = rowAt(info.width / 2);
+    if (bestRow < 0 || bestRow > info.height) return null;
 
     // Map the row back to the whole image.
     const edgeY = (px.top + bestRow) / meta.height;
