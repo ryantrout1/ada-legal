@@ -17,7 +17,7 @@
  * given a stubbed placer. Ref: /plan place composed report items, Phase 1.
  */
 
-import type { PhotoAnnotation, PhotoPin } from './annotationTypes.js';
+import type { PhotoAnnotation, PhotoPin, PlacedPin } from './annotationTypes.js';
 import type { PhotoFindingSeverity } from '../../types/db.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
 
@@ -27,6 +27,21 @@ export interface PlaceItemInput {
   title: string;
   detail: string;
   severity: PhotoFindingSeverity;
+  /**
+   * A pin already derived from the analyzer's own bounding box (see
+   * pinFromBox). When present it is used as-is and NO placement call is made:
+   * the analyzer already localized this concern, and a second model call was
+   * both slower and less accurate — it discarded a good box and re-guessed,
+   * differently each run. Absent for items with no boxed finding, which still
+   * fall back to placement.
+   */
+  presetPin?: PlacedPin;
+  /**
+   * The photo the preset pin belongs to. A box comes from a specific photo's
+   * analysis, so the pin must land on that photo rather than being competed
+   * across the gallery.
+   */
+  presetPhotoUrl?: string;
 }
 
 export interface BuildItemAnnotationsOptions {
@@ -50,6 +65,26 @@ export async function buildItemAnnotations(
   for (const url of photos) pinsByPhoto.set(url, []);
 
   for (const item of items) {
+    // Box-derived pin: deterministic, no model call. Its photo is known, so it
+    // is not competed across the gallery.
+    if (item.presetPin) {
+      const url =
+        item.presetPhotoUrl && pinsByPhoto.has(item.presetPhotoUrl)
+          ? item.presetPhotoUrl
+          : photos[0];
+      if (url !== undefined && item.presetPin.confidence >= opts.minConfidence) {
+        pinsByPhoto.get(url)!.push({
+          x: item.presetPin.x,
+          y: item.presetPin.y,
+          confidence: item.presetPin.confidence,
+          label: item.presetPin.label ?? item.title,
+          severity: item.severity,
+          itemIndex: item.itemIndex,
+        });
+      }
+      continue;
+    }
+
     let best: { photoUrl: string; pin: PhotoPin } | null = null;
     for (const url of photos) {
       const placed = await place(url, { title: item.title, detail: item.detail });

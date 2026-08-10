@@ -20,8 +20,8 @@ import { COMPOSE_REPORT_TOOL, type ComposeReportInput, type SpotReportContent } 
 import { composeReport } from './composeReport.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
 import { buildItemAnnotations, type PlaceItemInput } from './buildItemAnnotations.js';
+import { boxPinForItem } from './pinFromBox.js';
 import { makeAnthropicPlaceFn, PLACEMENT_MODEL_DEFAULT } from './placeFindingAnthropic.js';
-import { makeVerifiedPlaceFn } from './verifiedPlace.js';
 
 export interface GeneratedReport {
   content: SpotReportContent;
@@ -176,23 +176,13 @@ export async function composeAndPlaceReport(
       // tool-call placement), independent of the report synthesis model.
       if (input.annotate) {
         try {
-          // Placement is VERIFIED: the model checks its own answer against a
-          // crop around the point and resamples once if the check fails. The
-          // failure this addresses is inconsistency, not blindness — the same
-          // photo localized the shower curb correctly in six of nine runs and
-          // drifted onto the floor in the other three. A single sample is a
-          // coin flip; checking and resampling takes the confirmed answer.
-          // When nothing confirms, confidence is capped so the pin renders as
-          // an approximate marker instead of a confident dot in the wrong
-          // place. Tests inject placeFn and bypass verification.
-          const apiKey = input.placeFn ? null : requireApiKey();
+          // Placement is the FALLBACK now, not the primary source: items are
+          // pinned from the analyzer's own bounding box where it drew one (see
+          // pinFromBox), which is deterministic and needs no model call. A
+          // separate placement call was both slower and less accurate — it
+          // discarded a good box and re-guessed, differently each run.
           const place =
-            input.placeFn ??
-            makeVerifiedPlaceFn(
-              apiKey!,
-              makeAnthropicPlaceFn(apiKey!, PLACEMENT_MODEL_DEFAULT),
-              PLACEMENT_MODEL_DEFAULT,
-            );
+            input.placeFn ?? makeAnthropicPlaceFn(requireApiKey(), PLACEMENT_MODEL_DEFAULT);
           // Place the composed CONFIRMED items (the "visible in the photo"
           // rows), not the raw per-photo findings — so each pin is one report
           // row, tied by itemIndex, and the render numbers them by that index.
@@ -206,12 +196,20 @@ export async function composeAndPlaceReport(
             // is good for. Absent grab bars and insufficient turning space
             // still get no pin: there is no object there to mark.
             .filter(({ it }) => it.locatable && PINNED_SEVERITIES.has(it.severity))
-            .map(({ it, itemIndex }) => ({
-              itemIndex,
-              title: it.title,
-              detail: it.concern,
-              severity: it.severity,
-            }));
+            .map(({ it, itemIndex }) => {
+              const presetPin = boxPinForItem(it, analyses);
+              return {
+                itemIndex,
+                title: it.title,
+                detail: it.concern,
+                severity: it.severity,
+                presetPin: presetPin ?? undefined,
+                // The box belongs to the photo whose analysis produced it.
+                // Single-photo reports are the common case; for multi-photo,
+                // analyses and photos are index-aligned by the caller.
+                presetPhotoUrl: presetPin ? input.photos[0]?.blobUrl : undefined,
+              };
+            });
           const photoAnnotations = await buildItemAnnotations(
             items,
             input.photos.map((p) => p.blobUrl),
