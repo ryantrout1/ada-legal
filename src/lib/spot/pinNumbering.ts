@@ -38,7 +38,12 @@ export function buildPinNumbering(
   // the same object references, so numbering by identity lines up with the
   // rendered "Visible in the photo" list.
   items.forEach((item, index) => {
-    if (item.hedged) return;
+    // Number whatever has a pin. This used to skip hedged items, which went
+    // stale when pin selection moved to locatable+severity: a hedged but
+    // plainly visible bench got a marker, was skipped here, and then picked up
+    // a number from the fallback below — so its marker read 3 while its row
+    // showed none. Two filters disagreeing about which items count is exactly
+    // the conflation the pin filter already fixed; there must be one answer.
     const pin = pinByItemIndex.get(index);
     if (!pin) return;
     counter += 1;
@@ -46,10 +51,12 @@ export function buildPinNumbering(
     itemNumber.set(item, counter);
   });
 
-  // Defensive: a pin with no linked confirmed item (e.g. a report generated
-  // before this build, whose pins predate itemIndex) still gets a number so it
-  // never renders a bare "0". Such a report shows numbered markers but no row
-  // numbers until it is regenerated.
+  // Defensive, for legacy reports ONLY: a pin whose itemIndex matches no item
+  // (reports generated before pins carried itemIndex) still gets a number so it
+  // never renders a bare "0". With numbering and pin selection now driven by
+  // the same question — does this item have a pin — a current report should
+  // never reach here. If a live report does, the two filters have drifted apart
+  // again; that is the bug this fallback previously disguised.
   for (const a of annotations) {
     for (const pin of a.pins) {
       if (!pinNumber.has(pin)) {

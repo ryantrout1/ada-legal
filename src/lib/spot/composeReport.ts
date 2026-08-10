@@ -101,7 +101,18 @@ export function composeReport(
     sources.length > 0 && sources.every((s) => s.meta?.tool_call_present === false);
   const anySourceFindings = sources.some((s) => (s.findings ?? []).length > 0);
 
-  const items: SpotReportItem[] = (modelOutput.areas ?? []).map((a) => {
+  // Most critical first. Item order IS marker order — the numbering walk
+  // assigns 1, 2, 3 down this list, and the detail rows below the photo render
+  // from the same array — so leaving it as composer output made the critical
+  // barrier marker 1 on one run and marker 2 on the next. Stable within a tier,
+  // so the composer's own sequencing survives among equals.
+  const severityRank: Record<string, number> = { critical: 0, major: 1, minor: 2, advisory: 3 };
+  const orderedAreas = (modelOutput.areas ?? [])
+    .map((a, i) => ({ a, i }))
+    .sort((l, r) => (severityRank[l.a.severity] ?? 9) - (severityRank[r.a.severity] ?? 9) || l.i - r.i)
+    .map(({ a }) => a);
+
+  const items: SpotReportItem[] = orderedAreas.map((a) => {
     const citedSection = a.cited_section && validSections.has(a.cited_section) ? a.cited_section : undefined;
     const education = citedSection ? educationForSection(citedSection) : undefined;
     const hedged = a.confirmable === false;
