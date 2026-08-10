@@ -17,7 +17,7 @@
  * given a stubbed placer. Ref: /plan place composed report items, Phase 1.
  */
 
-import type { PhotoAnnotation, PhotoPin, PlacedPin } from './annotationTypes.js';
+import type { PhotoAnnotation, PhotoPin, PlacedPin, PinSource } from './annotationTypes.js';
 import type { PhotoFindingSeverity } from '../../types/db.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
 
@@ -35,7 +35,7 @@ export interface PlaceItemInput {
    * differently each run. Absent for items with no boxed finding, which still
    * fall back to placement.
    */
-  presetPin?: PlacedPin;
+  presetPin?: PlacedPin & { source?: PinSource };
   /**
    * The photo the preset pin belongs to. A box comes from a specific photo's
    * analysis, so the pin must land on that photo rather than being competed
@@ -77,6 +77,7 @@ export async function buildItemAnnotations(
           x: item.presetPin.x,
           y: item.presetPin.y,
           confidence: item.presetPin.confidence,
+          source: item.presetPin.source ?? 'box',
           label: item.presetPin.label ?? item.title,
           severity: item.severity,
           itemIndex: item.itemIndex,
@@ -97,6 +98,7 @@ export async function buildItemAnnotations(
           x: placed.x,
           y: placed.y,
           confidence: placed.confidence,
+          source: 'placement',
           label: placed.label ?? item.title,
           severity: item.severity,
           itemIndex: item.itemIndex,

@@ -39,7 +39,7 @@ export function PinnedPhoto({
 }) {
   const offsets = assignMarkerOffsets(pins);
   const isApprox = (p: NumberedPin) =>
-    honestConfidence && pinConfidenceTier(p.confidence) === 'approximate';
+    honestConfidence && pinConfidenceTier(p.confidence, { source: p.source }) === 'approximate';
   return (
     <figure className="m-0">
       <div className="relative">

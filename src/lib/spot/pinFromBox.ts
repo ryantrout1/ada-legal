@@ -21,7 +21,7 @@
  */
 
 import type { PhotoAnalysisOutput, PhotoFinding, PhotoFindingSeverity } from '../../types/db.js';
-import type { PlacedPin } from './annotationTypes.js';
+import type { PlacedPin, PinSource } from './annotationTypes.js';
 import type { SpotReportItem } from './reportSchema.js';
 
 const round3 = (n: number): number => Math.round(n * 1000) / 1000;
@@ -48,7 +48,7 @@ function hasBox(f: PhotoFinding): f is BoxedFinding {
 export function boxPinForItem(
   item: SpotReportItem,
   analyses: readonly PhotoAnalysisOutput[],
-): PlacedPin | null {
+): (PlacedPin & { source: PinSource }) | null {
   if (!item.citedSection) return null;
   const wanted = normalizeSection(item.citedSection);
 
@@ -73,6 +73,10 @@ export function boxPinForItem(
     x: round3(b.x + b.w / 2),
     y: round3(b.y + b.h / 2),
     confidence: best.confidence,
+    // The analyzer localized this itself, so the marker is precise regardless
+    // of the finding's confidence — that number is about whether the concern
+    // is real, not about where it is.
+    source: 'box',
     // No label: the caller falls back to the composed item's own title, which
     // is the buyer-facing wording.
   };

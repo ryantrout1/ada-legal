@@ -36,8 +36,19 @@ export interface PlaceTarget {
   detail: string;
 }
 
+/** Where a pin's location came from. */
+export type PinSource = 'box' | 'placement';
+
 /** A pin bound to the finding it marks. */
 export interface PhotoPin extends PlacedPin {
+  /**
+   * How the location was determined. 'box' means the analyzer drew a bounding
+   * box around the object, so the location is known and the marker renders
+   * precise. 'placement' means a separate model call estimated the point, and
+   * its confidence genuinely reflects how sure it was of that location.
+   * Optional: stored reports predate the field.
+   */
+  source?: PinSource;
   /** The finding's headline, shown as the pin's text equivalent. */
   label: string;
   severity: PhotoFindingSeverity;
