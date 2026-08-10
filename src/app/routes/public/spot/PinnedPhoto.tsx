@@ -22,6 +22,7 @@
 import type { NumberedPin } from '@/lib/spot/pinNumbering';
 import { assignMarkerOffsets } from '@/lib/spot/markerOffsets';
 import { pinConfidenceTier } from '@/lib/spot/pinConfidenceTier';
+import { markerShape } from '@/lib/spot/pinMarkerShape';
 
 export function PinnedPhoto({
   url,
@@ -51,6 +52,36 @@ export function PinnedPhoto({
         />
         {pins.map((p, i) => {
           const dy = offsets[i];
+          // An edge — a curb, threshold or ramp lip — is drawn as a band over
+          // the analyzer's box rather than a dot. A dot asserts we know the
+          // spot to within a percent; the box drifts about 6% of the frame
+          // between runs, so a dot lands on the floor while a band still lies
+          // over the curb. The marker claims the precision we actually have.
+          if (p.box && markerShape(p.box) === 'band') {
+            return (
+              <span
+                key={i}
+                aria-hidden="true"
+                className="absolute rounded-sm"
+                style={{
+                  left: `${p.box.x * 100}%`,
+                  top: `${p.box.y * 100}%`,
+                  width: `${p.box.w * 100}%`,
+                  height: `${p.box.h * 100}%`,
+                  // The solid border carries the >=3:1 non-text contrast on any
+                  // photo backdrop; the fill is only a tint, so legibility does
+                  // not depend on what is underneath.
+                  border: '2px solid #9C340A',
+                  outline: '2px solid rgba(255,255,255,0.9)',
+                  backgroundColor: 'rgba(156,52,10,0.16)',
+                }}
+              >
+                <span className="absolute left-0 top-1/2 flex h-5 w-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-[#9C340A] text-[11px] font-semibold leading-none text-white shadow">
+                  {p.number}
+                </span>
+              </span>
+            );
+          }
           // Approximate: a larger dashed halo centred on the point says "around
           // here", not "exactly here". The solid dark-accent number badge on
           // white (7:1) plus the dashed ring (dark accent + white outline,

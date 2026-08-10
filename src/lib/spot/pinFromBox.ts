@@ -20,20 +20,18 @@
  * falls back to placement, which is the previous behavior.
  */
 
-import type { PhotoAnalysisOutput, PhotoFinding, PhotoFindingSeverity } from '../../types/db.js';
+import type {
+  PhotoAnalysisOutput,
+  PhotoBoundingBox,
+  PhotoFinding,
+  PhotoFindingSeverity,
+} from '../../types/db.js';
 import type { PlacedPin, PinSource } from './annotationTypes.js';
+import { isEdgeBox } from './pinMarkerShape.js';
 import type { SpotReportItem } from './reportSchema.js';
 
 const round3 = (n: number): number => Math.round(n * 1000) / 1000;
 
-/**
- * A box is a LINEAR HORIZONTAL feature — an edge rather than an object — when
- * it is much wider than it is tall. A raised curb, a door threshold, a ramp
- * lip and a floor transition all box this way.
- */
-const LINEAR_ASPECT_MIN = 4;
-/** Above this height it reads as an area even if wide (a wall, a floor zone). */
-const LINEAR_MAX_HEIGHT = 0.12;
 /** How far below a linear feature's top edge to sit, so the marker is legible. */
 const LINEAR_TOP_INSET = 0.015;
 
@@ -54,9 +52,7 @@ const LINEAR_TOP_INSET = 0.015;
  * naming them, and leaves object-shaped and tall-thin boxes alone.
  */
 function referenceY(box: { y: number; w: number; h: number }): number {
-  const isLinearHorizontal =
-    box.h > 0 && box.h <= LINEAR_MAX_HEIGHT && box.w / box.h >= LINEAR_ASPECT_MIN;
-  if (!isLinearHorizontal) return box.y + box.h / 2;
+  if (!isEdgeBox(box)) return box.y + box.h / 2;
   // Inset is capped at half the height so the marker can never sit outside a
   // very thin box.
   return box.y + Math.min(LINEAR_TOP_INSET, box.h / 2);
@@ -84,7 +80,7 @@ function hasBox(f: PhotoFinding): f is BoxedFinding {
 export function boxPinForItem(
   item: SpotReportItem,
   analyses: readonly PhotoAnalysisOutput[],
-): (PlacedPin & { source: PinSource }) | null {
+): (PlacedPin & { source: PinSource; box: PhotoBoundingBox }) | null {
   if (!item.citedSection) return null;
   const wanted = normalizeSection(item.citedSection);
 
@@ -113,6 +109,9 @@ export function boxPinForItem(
     // of the finding's confidence — that number is about whether the concern
     // is real, not about where it is.
     source: 'box',
+    // Carry the box so the renderer can draw a band over an edge instead of a
+    // dot that claims precision the box does not have.
+    box: b,
     // No label: the caller falls back to the composed item's own title, which
     // is the buyer-facing wording.
   };

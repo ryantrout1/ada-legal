@@ -18,7 +18,7 @@
  */
 
 import type { PhotoAnnotation, PhotoPin, PlacedPin, PinSource } from './annotationTypes.js';
-import type { PhotoFindingSeverity } from '../../types/db.js';
+import type { PhotoFindingSeverity, PhotoBoundingBox } from '../../types/db.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
 
 /** One confirmed report item to place, carrying its index in content.items. */
@@ -35,7 +35,7 @@ export interface PlaceItemInput {
    * differently each run. Absent for items with no boxed finding, which still
    * fall back to placement.
    */
-  presetPin?: PlacedPin & { source?: PinSource };
+  presetPin?: PlacedPin & { source?: PinSource; box?: PhotoBoundingBox };
   /**
    * The photo the preset pin belongs to. A box comes from a specific photo's
    * analysis, so the pin must land on that photo rather than being competed
@@ -78,6 +78,7 @@ export async function buildItemAnnotations(
           y: item.presetPin.y,
           confidence: item.presetPin.confidence,
           source: item.presetPin.source ?? 'box',
+          box: item.presetPin.box,
           label: item.presetPin.label ?? item.title,
           severity: item.severity,
           itemIndex: item.itemIndex,
