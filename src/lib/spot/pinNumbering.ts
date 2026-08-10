@@ -16,14 +16,8 @@ export interface NumberedPin extends PhotoPin {
 }
 
 export interface PinNumbering {
-  /**
-   * This photo's pins, each carrying its number, in the photo's pin order.
-   *
-   * `photoIndex` is the photo's position in the rendered gallery. It is the
-   * fallback key when the stored address does not match the address the photo
-   * is being served under — see the note in pinsForPhoto.
-   */
-  pinsForPhoto: (photoUrl: string, photoIndex?: number) => NumberedPin[];
+  /** This photo's pins, each carrying its number, in the photo's pin order. */
+  pinsForPhoto: (photoUrl: string) => NumberedPin[];
   /** The number to show on a finding row, or null when it has no pin. */
   numberForItem: (item: SpotReportItem) => number | null;
 }
@@ -73,26 +67,8 @@ export function buildPinNumbering(
   }
 
   return {
-    pinsForPhoto: (photoUrl, photoIndex) => {
-      // The address is the preferred key: with several photos it is the only
-      // thing that says WHICH one a marker belongs to.
-      let match = annotations.find((a) => a.photoUrl === photoUrl);
-
-      // Fall back to position when the address does not match anything.
-      //
-      // The address is written when the report is generated and matched again
-      // when it is displayed. Nothing forces those two to agree, and when they
-      // disagree the report renders complete with every marker missing — the
-      // failure looks like a plain photo, so nobody reports it. Position is
-      // what the address was standing in for anyway: the generator pairs the
-      // Nth set of markers with the Nth photo.
-      //
-      // Only when the lookup found nothing at all, so an exact match is never
-      // overridden by a positional guess.
-      if (!match && typeof photoIndex === 'number') {
-        match = annotations[photoIndex];
-      }
-
+    pinsForPhoto: (photoUrl) => {
+      const match = annotations.find((a) => a.photoUrl === photoUrl);
       if (!match) return [];
       return match.pins.map((pin) => ({ ...pin, number: pinNumber.get(pin) ?? 0 }));
     },
