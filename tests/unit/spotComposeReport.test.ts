@@ -185,3 +185,49 @@ describe('composition failure — refuses to render a report that is not there',
     );
   });
 });
+
+describe('item ordering', () => {
+  /**
+   * The markers on the photo are numbered by item order, so item order IS the
+   * marker order. Composer output order is arbitrary — the curb came back
+   * first one run and third the next, which meant the critical barrier was
+   * marker 1 sometimes and marker 2 other times. Sort by severity so the most
+   * serious concern is always number one, in the photo and in the list below
+   * it, which are the same sequence.
+   */
+  const area = (title: string, severity: string) => ({
+    title,
+    concern: 'c',
+    remediation: 'r',
+    severity,
+    confirmable: true,
+    locatable: true,
+  });
+
+  it('orders items most critical first', () => {
+    const out = composeReport(
+      {
+        overview: 'o',
+        areas: [
+          area('Cabinet', 'major'),
+          area('Dispenser', 'minor'),
+          area('Curb', 'critical'),
+          area('Bench', 'major'),
+        ],
+      } as unknown as ComposeReportInput,
+      [source()],
+    );
+    expect(out.items.map((i) => i.title)).toEqual(['Curb', 'Cabinet', 'Bench', 'Dispenser']);
+  });
+
+  it('is stable within a severity tier — composer order is preserved', () => {
+    const out = composeReport(
+      {
+        overview: 'o',
+        areas: [area('Cabinet', 'major'), area('Bench', 'major'), area('Grab bars', 'major')],
+      } as unknown as ComposeReportInput,
+      [source()],
+    );
+    expect(out.items.map((i) => i.title)).toEqual(['Cabinet', 'Bench', 'Grab bars']);
+  });
+});

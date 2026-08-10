@@ -64,3 +64,65 @@ describe('buildPinNumbering', () => {
     expect(n.numberForItem(items[0])).toBeNull();
   });
 });
+
+describe('numbering follows pins, not the hedged flag', () => {
+  /**
+   * The runtime defect this closes: pins are chosen by locatable+severity, but
+   * numbering still skipped anything hedged. A hedged-but-pinned fixed shower
+   * bench was skipped by the numbering walk, then picked up by the defensive
+   * fallback at the end — so its marker read "3" while its detail row showed no
+   * number at all, and the caption ran 1, 3, 2. Two filters disagreeing about
+   * which items count is the same conflation the pin filter already fixed.
+   */
+  const item = (title: string, hedged: boolean): SpotReportItem =>
+    ({
+      title,
+      concern: '',
+      remediation: '',
+      severity: 'major',
+      severityLabel: 'Major',
+      hedged,
+      locatable: true,
+    }) as SpotReportItem;
+
+  it('numbers a hedged item that has a pin, in item order', () => {
+    const curb = item('Raised curb', false);
+    const bench = item('Fixed bench', true); // hedged, but pinned
+    const cabinet = item('Closed cabinet', false);
+    const items = [curb, bench, cabinet];
+
+    const annotations = [
+      {
+        photoUrl: 'https://blob/a.jpg',
+        pins: [
+          { x: 0.3, y: 0.7, confidence: 0.9, label: 'Raised curb', severity: 'critical', itemIndex: 0 },
+          { x: 0.5, y: 0.6, confidence: 0.8, label: 'Fixed bench', severity: 'major', itemIndex: 1 },
+          { x: 0.8, y: 0.8, confidence: 0.8, label: 'Closed cabinet', severity: 'major', itemIndex: 2 },
+        ],
+      },
+    ];
+
+    const n = buildPinNumbering(items, annotations as never);
+    expect(n.numberForItem(curb)).toBe(1);
+    expect(n.numberForItem(bench)).toBe(2);
+    expect(n.numberForItem(cabinet)).toBe(3);
+    // Markers agree with the rows.
+    expect(n.pinsForPhoto('https://blob/a.jpg').map((p) => p.number)).toEqual([1, 2, 3]);
+  });
+
+  it('still gives no number to an item with no pin', () => {
+    const curb = item('Raised curb', false);
+    const grabBars = item('No grab bars', true); // no pin: nothing to point at
+    const annotations = [
+      {
+        photoUrl: 'https://blob/a.jpg',
+        pins: [
+          { x: 0.3, y: 0.7, confidence: 0.9, label: 'Raised curb', severity: 'critical', itemIndex: 0 },
+        ],
+      },
+    ];
+    const n = buildPinNumbering([curb, grabBars], annotations as never);
+    expect(n.numberForItem(curb)).toBe(1);
+    expect(n.numberForItem(grabBars)).toBeNull();
+  });
+});
