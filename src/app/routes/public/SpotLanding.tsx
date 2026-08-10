@@ -18,6 +18,7 @@ import { downscalePhoto } from '@/app/utils/downscalePhoto';
 import type { SpotReportContent } from '@/lib/spot/reportSchema';
 import { SPOT_DEFAULT_MAX_PHOTOS, SPOT_DEFAULT_PRICE_USD } from '@/lib/spot/spotOffer';
 import { SPOT_PHOTO_RETENTION_DAYS } from '@/lib/spot/retention';
+import { useSpotAnnotationsEnabled } from '@/app/hooks/useSpotAnnotationsEnabled';
 
 const MAX_PHOTOS = 1;
 
@@ -109,8 +110,21 @@ export default function SpotLanding() {
   const [checkoutActive, setCheckoutActive] = useState(false);
   const [paidSessionId, setPaidSessionId] = useState<string | null>(null);
   const [testReport, setTestReport] = useState<SpotReportContent | null>(null);
+  /**
+   * The EXACT data URLs the test report was generated from.
+   *
+   * Not `previews`. Pins are matched to a photo by string equality on
+   * photoUrl (see pinNumbering.pinsForPhoto), and the photoUrl the generator
+   * stored is the base64 data URL this page sent it. The object URLs in
+   * `previews` are a different string for the same image, so passing those
+   * renders the photo with every marker silently dropped.
+   */
+  const [testPhotos, setTestPhotos] = useState<string[]>([]);
   const [testBusy, setTestBusy] = useState(false);
   const [testError, setTestError] = useState<string | null>(null);
+  // Same kill-switch the paid readout honors, so the preview shows what a
+  // buyer would actually get rather than a privileged view of it.
+  const annotationsEnabled = useSpotAnnotationsEnabled();
 
   async function runTestReport() {
     setTestBusy(true);
@@ -127,7 +141,10 @@ export default function SpotLanding() {
         return;
       }
       const data = (await res.json()) as { content: SpotReportContent };
+      // Set together: the report's pins only resolve against these exact
+      // strings, so the two must never be out of step.
       setTestReport(data.content);
+      setTestPhotos(photos);
     } catch {
       setTestError('Report generation failed.');
     } finally {
@@ -167,6 +184,8 @@ export default function SpotLanding() {
   const removeFile = (idx: number) => setFiles((prev) => prev.filter((_, i) => i !== idx));
   const startOver = () => {
     setFiles([]);
+    setTestReport(null);
+    setTestPhotos([]);
     reset();
   };
 
@@ -397,7 +416,11 @@ export default function SpotLanding() {
                     <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-500">
                       Full report (test) — this is the $79 deliverable
                     </p>
-                    <SpotReportView content={testReport} />
+                    <SpotReportView
+                      content={testReport}
+                      photos={testPhotos}
+                      annotationsEnabled={annotationsEnabled}
+                    />
                   </section>
                 ) : null}
 
