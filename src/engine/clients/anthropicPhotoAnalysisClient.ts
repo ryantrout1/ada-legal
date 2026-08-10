@@ -235,8 +235,11 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
   }
 
   /**
-   * Ada Spot's free read (api/spot/analyze) streams so the user sees the
-   * report build itself instead of ~15-25s of dead air. The request is the
+   * Ada Spot's free read (api/spot/analyze) streams so the endpoint can show
+   * progress during ~15-25s of otherwise dead air. It used to stream the
+   * findings themselves; now that the free read is a teaser, the caller sends
+   * only the scene onward and the findings stay server-side until the read is
+   * complete. The transport is unchanged either way. The request is the
    * SAME params object analyze() sends — same model, system blocks +
    * cache_control, forced tool_choice, schema, max_tokens, image blocks —
    * and the result comes back through the SAME extractOutputFromResponse.

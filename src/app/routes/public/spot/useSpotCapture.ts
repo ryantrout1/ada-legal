@@ -4,12 +4,16 @@
  * Deliberately NOT usePhotoCapture: that hook is the bench field-test flow
  * (mints is_test sessions, uploads to blob, hits /api/ada/analyze-photo,
  * persists photo_analyses). This is a firewalled, self-contained flow:
- * downscale → base64 data URL → POST /api/spot/analyze (SSE) → render the
- * read as it streams → reconcile on the done frame. The free read is
- * transient — no session, no blob, no persistence here.
+ * downscale → base64 data URL → POST /api/spot/analyze (SSE) → reconcile on
+ * the done frame. The free read is transient — no session, no blob, no
+ * persistence here.
  *
- * State machine: idle → analyzing (progress accrues) → done | error.
- * `progress` is advisory and carries no verdict; `view` from the done frame
+ * The read no longer renders as it streams: the free read is a teaser, and
+ * streaming the findings would have handed over everything the teaser then
+ * pretended to withhold. Mid-flight frames carry the scene only.
+ *
+ * State machine: idle → analyzing (scene may arrive) → done | error.
+ * `progress` is advisory and carries no verdict; `teaser` from the done frame
  * is the source of truth for the finished read.
  */
 

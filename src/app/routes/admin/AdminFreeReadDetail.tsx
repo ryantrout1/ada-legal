@@ -2,10 +2,14 @@
  * AdminFreeReadDetail — one free read at /admin/spot/reads/:id.
  *
  * The free-reads list shows only metadata; the photo is now retained for
- * training. This is where a reviewer sees the pair — the analysis Spot gave
- * the user (rendered through the very same SpotResultView the public free-read
- * page uses, so it looks exactly as they saw it) next to the photo they
- * uploaded.
+ * training. This is where a reviewer sees the pair — the FULL analysis Spot
+ * produced, next to the photo the user uploaded.
+ *
+ * Deliberately NOT what the user saw. The public free read is a teaser now
+ * (SpotTeaserView): three names, a count, and nothing else. This page keeps
+ * rendering the whole thing through SpotResultView, because a reviewer
+ * judging analyzer accuracy needs every finding — including the ones the
+ * visitor was never shown.
  *
  * The photo is absent for reads taken before retention was turned on, and for
  * reads whose photo the 90-day sweep has since deleted; the page says which
