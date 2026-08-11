@@ -13,6 +13,7 @@ import { describe, it, expect, vi } from 'vitest';
 import {
   parseBlobKeyToImageBlock,
   extractOutputFromResponse,
+  AnthropicPhotoAnalysisClient,
 } from '@/engine/clients/anthropicPhotoAnalysisClient';
 import type Anthropic from '@anthropic-ai/sdk';
 
@@ -383,3 +384,91 @@ function makeFakeResponse(content: unknown[]): Anthropic.Message {
     usage: { input_tokens: 0, output_tokens: 0 },
   } as Anthropic.Message;
 }
+
+describe('analyze retries a missing tool call', () => {
+  const req = { blobKeys: ['data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ=='] };
+
+  const fullResponse = (): Anthropic.Message =>
+    makeFakeResponse([
+      {
+        type: 'tool_use',
+        id: 't1',
+        name: 'report_findings',
+        input: {
+          scene: 'A bathroom.',
+          summary: 'One concern.',
+          positive_findings: [],
+          findings: [
+            makeFinding({
+              title: 'Raised curb',
+              text: 'Blocks roll-in entry.',
+              severity: 'critical',
+              standard: '§608.7',
+              confidence: 0.9,
+              confirmable: true,
+            }),
+          ],
+        },
+      },
+    ]);
+
+  // No report_findings block — the empty-fallback path (truncation/refusal).
+  const emptyResponse = (
+    stopReason: Anthropic.Message['stop_reason'],
+  ): Anthropic.Message => ({
+    ...makeFakeResponse([{ type: 'text', text: 'I cannot complete that.' }]),
+    stop_reason: stopReason,
+  });
+
+  function clientWith(...responses: Anthropic.Message[]) {
+    const create = vi.fn();
+    for (const r of responses) create.mockResolvedValueOnce(r);
+    const client = new AnthropicPhotoAnalysisClient('test-key');
+    (
+      client as unknown as { client: { messages: { create: typeof create } } }
+    ).client = { messages: { create } };
+    return { client, create };
+  }
+
+  it('retries once when the first response has no tool call, then succeeds', async () => {
+    const { client, create } = clientWith(emptyResponse('end_turn'), fullResponse());
+    const res = await client.analyze(req);
+    expect(create).toHaveBeenCalledTimes(2);
+    expect(res.output.findings).toHaveLength(1);
+    expect(res.output.meta?.tool_call_present).toBe(true);
+  });
+
+  it('gives the retry a larger token ceiling after a truncated first attempt', async () => {
+    const { client, create } = clientWith(emptyResponse('max_tokens'), fullResponse());
+    await client.analyze(req);
+    expect(create).toHaveBeenCalledTimes(2);
+    const retryParams = create.mock.calls[1][0] as { max_tokens: number };
+    expect(retryParams.max_tokens).toBe(32000);
+  });
+
+  it('reuses the same token ceiling when the miss was not truncation', async () => {
+    const { client, create } = clientWith(emptyResponse('end_turn'), fullResponse());
+    await client.analyze(req);
+    const firstParams = create.mock.calls[0][0] as { max_tokens: number };
+    const retryParams = create.mock.calls[1][0] as { max_tokens: number };
+    expect(retryParams.max_tokens).toBe(firstParams.max_tokens);
+  });
+
+  it('retries at most once, then falls back to an empty analysis', async () => {
+    const { client, create } = clientWith(
+      emptyResponse('end_turn'),
+      emptyResponse('end_turn'),
+    );
+    const res = await client.analyze(req);
+    expect(create).toHaveBeenCalledTimes(2);
+    expect(res.output.findings).toHaveLength(0);
+    expect(res.output.meta?.tool_call_present).toBe(false);
+  });
+
+  it('does not retry when the first response already has the tool call', async () => {
+    const { client, create } = clientWith(fullResponse());
+    const res = await client.analyze(req);
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(res.output.findings).toHaveLength(1);
+  });
+});

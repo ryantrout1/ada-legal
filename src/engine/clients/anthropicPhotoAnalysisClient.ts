@@ -77,6 +77,11 @@ const ADA_STANDARDS_CHECKLIST = renderCatalogForPrompt();
 // output is billed only for tokens actually generated. So it is sized for
 // the longest plausible site rather than the typical one.
 const DEFAULT_MAX_TOKENS = 16000;
+// A missing tool call is retried once (see analyze). When the first attempt was
+// cut off (stop_reason max_tokens), the retry gets a larger ceiling so a
+// genuinely long site can complete instead of truncating again. Only spent on
+// the ~rare retry, never on a normal call.
+const RETRY_MAX_TOKENS = 32000;
 const MAX_PHOTOS_PER_CALL = 3;
 
 // Vercel Blob URL pattern: https://<storeId>.public.blob.vercel-storage.com/<path>.
@@ -225,9 +230,26 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
 
   async analyze(req: PhotoAnalysisRequest): Promise<PhotoAnalysisResult> {
     const params = this.buildAnalyzeParams(req);
-    const response = await this.client.messages.create(params);
+    let response = await this.client.messages.create(params);
+    let output = extractOutputFromResponse(response);
 
-    const output = extractOutputFromResponse(response);
+    // Forced tool_choice means a missing report_findings block is a truncated
+    // or refused response, NOT "found nothing" — a real empty read would still
+    // call the tool and carry a scene/summary. Retry ONCE before letting an
+    // empty analysis ship, because downstream an empty read is indistinguishable
+    // from "no barriers", the worst outcome (see extractOutputFromResponse).
+    // If the first attempt was cut off, give the retry more room; otherwise the
+    // same params, since a refusal/transient stop usually clears next call. One
+    // retry, not a loop — two long vision calls approach the function budget.
+    if (output.meta?.tool_call_present === false) {
+      const retryParams =
+        response.stop_reason === 'max_tokens'
+          ? { ...params, max_tokens: RETRY_MAX_TOKENS }
+          : params;
+      response = await this.client.messages.create(retryParams);
+      output = extractOutputFromResponse(response);
+    }
+
     return {
       output,
       modelVersion: this.model,
