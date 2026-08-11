@@ -128,12 +128,13 @@ export function boxPinForItem(
     x: round3(referenceX(b)),
     y: round3(referenceY(b)),
     confidence: best.confidence,
-    // The analyzer localized this itself, so the marker is precise regardless
-    // of the finding's confidence — that number is about whether the concern
-    // is real, not about where it is.
+    // source 'box' so the tier logic does NOT gate on this confidence — it is
+    // about whether the concern is real, not where it is. The box y proved
+    // systematically low, so a box pin renders approximate, not precise
+    // (see pinConfidenceTier).
     source: 'box',
-    // Carry the box so the renderer can draw a band over an edge instead of a
-    // dot that claims precision the box does not have.
+    // Carry the box so the edge-snap pass (snapEdgeItems) can refine an edge
+    // pin against the real image, and so referenceX/Y can shape the point.
     box: b,
     // No label: the caller falls back to the composed item's own title, which
     // is the buyer-facing wording.

@@ -9,11 +9,13 @@
  * product never returns a verdict, and a red pin would read as one.
  *
  * `honestConfidence` (default off) is the honesty guardrail from /plan phase 2:
- * when on, a pin the model placed with only medium confidence
- * (pinConfidenceTier → 'approximate') draws a larger dashed halo — "around
- * here" — instead of a precise dot, and the caption says "(approximate)". A
- * marker never claims a certainty the placement didn't have. The buyer report
- * leaves it off and is unchanged; /photo turns it on.
+ * when on, a pin whose location the model isn't sure of (pinConfidenceTier →
+ * 'approximate') draws a larger dashed halo — "around here" — instead of a
+ * precise dot, and the caption says "(approximate)". That covers every
+ * box-derived pin: the analyzer's box y proved systematically low, so a box
+ * never earns a precise dot regardless of finding confidence (see
+ * pinConfidenceTier). A marker never claims a certainty the placement didn't
+ * have. Both /photo and the buyer report turn it on.
  *
  * Rendered for every gallery photo; with no pins it is just the photo, visually
  * identical to the plain gallery image.

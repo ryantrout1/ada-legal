@@ -43,9 +43,10 @@ export type PinSource = 'box' | 'placement';
 export interface PhotoPin extends PlacedPin {
   /**
    * How the location was determined. 'box' means the analyzer drew a bounding
-   * box around the object, so the location is known and the marker renders
-   * precise. 'placement' means a separate model call estimated the point, and
-   * its confidence genuinely reflects how sure it was of that location.
+   * box; its finding confidence is not treated as location certainty, and
+   * because box y proved systematically low, a box pin renders approximate.
+   * 'placement' means a separate model call estimated the point, and its
+   * confidence genuinely reflects how sure it was of that location.
    * Optional: stored reports predate the field.
    */
   source?: PinSource;
