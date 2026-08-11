@@ -53,10 +53,18 @@ export function PinnedPhoto({
         />
         {pins.map((p, i) => {
           const dy = offsets[i];
+          // Flip the label left near the right edge so it doesn't run off the
+          // photo; keep the on-photo pill compact (full label lives in the
+          // caption). Shared by both marker shapes.
+          const labelLeft = p.x > 0.6;
+          const short = p.label.length > 24 ? `${p.label.slice(0, 23).trimEnd()}…` : p.label;
           // Approximate: a larger dashed halo centred on the point says "around
-          // here", not "exactly here". The solid dark-accent number badge on
-          // white (7:1) plus the dashed ring (dark accent + white outline,
-          // >=3:1 non-text) stay AAA-legible on any photo backdrop.
+          // here", not "exactly here". The dashed ring stays CENTRED on the
+          // point (the marker's whole claim is "somewhere around here"), and
+          // the label chip hangs just outside the ring rather than shifting the
+          // ring off the point. Number badge on white (7:1) + dashed ring (dark
+          // accent + white outline, >=3:1 non-text) stay AAA-legible on any
+          // photo backdrop.
           if (isApprox(p)) {
             return (
               <span
@@ -81,14 +89,19 @@ export function PinnedPhoto({
                     {p.number}
                   </span>
                 </span>
+                {/* Label hangs off the ring edge, so the ring can stay on the
+                    point. Same dark pill the precise pin uses. */}
+                <span
+                  className={`absolute top-1/2 -translate-y-1/2 whitespace-nowrap rounded-md bg-black/80 px-2 py-1 text-xs font-semibold text-white shadow ${
+                    labelLeft ? 'right-full mr-1' : 'left-full ml-1'
+                  }`}
+                >
+                  {short}
+                </span>
               </span>
             );
           }
-          // Precise pin. Flip the label left near the right edge so it doesn't
-          // run off the photo; keep the on-photo pill compact (full label lives
-          // in the caption).
-          const labelLeft = p.x > 0.6;
-          const short = p.label.length > 24 ? `${p.label.slice(0, 23).trimEnd()}…` : p.label;
+          // Precise pin.
           return (
             <span
               key={i}
