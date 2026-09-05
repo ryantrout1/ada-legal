@@ -1,0 +1,133 @@
+/**
+ * Dark-band palette — per-display-mode completeness guard.
+ *
+ * Eight components paint a full-width dark band (the Standards Guide hero,
+ * the landing hero / story / trust / final-CTA, Community Voices, the guide
+ * report CTA, and GuideLegalOptions). They all paint through the `--dark-*`
+ * token family in app.css.
+ *
+ * That family originally carried ONE set of navy literals and was deliberately
+ * not tied to `[data-display]` — the band stayed navy in every display mode.
+ * That was fine as Base44 visual parity and wrong as accessibility: a user who
+ * selects Low Vision (gold on pure black) got the largest heading on the page
+ * served in the palette they just told us they can't read, with no signal that
+ * the setting had applied at all. The site's own axe pass never caught it,
+ * because contrast INSIDE the band is fine — nothing asserted the band
+ * responds to the mode.
+ *
+ * So the family is now themed per mode, the same shape as `--dx-*`
+ * (diagramDarkModes.test.ts) and `--sg-cat-*`. This test guards the invariant
+ * that made the original bug possible: EVERY token in the family must be
+ * overridden in EVERY dark-canvas mode. A token that gets an override in two
+ * modes and is forgotten in the third is the silent-drop shape — it reverts to
+ * navy in exactly one mode and nothing else notices.
+ *
+ * Warm is deliberately NOT asserted here. Warm is a light cream canvas and
+ * whether the band stays dark inside it is an open design decision (/plan
+ * phase 3). When that lands, add 'warm' to MODES and this test covers it.
+ *
+ * Per-mode contrast of the resolved values is the rendered-contrast a11y
+ * harness's job (tests/a11y/aaa-audit.spec.ts), not this file's.
+ */
+
+import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+const APP_CSS = resolve(__dirname, '../../src/app.css');
+const css = readFileSync(APP_CSS, 'utf8');
+
+/** Every token in the dark-band family. Declared once at :root, overridden per mode. */
+const DARK_BAND_TOKENS = [
+  '--dark-bg',
+  '--dark-bg-alt',
+  '--dark-bg-deep',
+  '--dark-bg-footer',
+  '--dark-card-bg',
+  '--dark-card-border',
+  '--dark-border',
+  '--dark-heading',
+  '--dark-body',
+  '--dark-body-secondary',
+  '--dark-muted',
+  '--dark-label',
+  '--dark-highlight',
+] as const;
+
+/**
+ * Dark-canvas display modes. Warm is excluded pending the phase-3 decision;
+ * default is the base declaration, not an override.
+ */
+const MODES = ['dark', 'contrast', 'low-vision'] as const;
+
+/**
+ * app.css declares several separate `:root[data-display="X"]` blocks per mode
+ * (palette, page-bg-alt, category hues, ...). Concatenate every block body for
+ * a mode so a token declared in any of them counts.
+ */
+function modeBlocks(mode: string): string {
+  const selector = `:root[data-display="${mode}"]`;
+  const bodies: string[] = [];
+  let from = 0;
+  for (;;) {
+    const at = css.indexOf(selector, from);
+    if (at === -1) break;
+    const open = css.indexOf('{', at);
+    const close = css.indexOf('}', open);
+    if (open === -1 || close === -1) break;
+    bodies.push(css.slice(open + 1, close));
+    from = close + 1;
+  }
+  return bodies.join('\n');
+}
+
+/**
+ * Match a declaration of exactly this token — `--dark-bg:` must not be
+ * satisfied by `--dark-bg-alt:`. Anchors on the colon.
+ */
+function declares(block: string, token: string): boolean {
+  return new RegExp(`${token}\\s*:`).test(block);
+}
+
+describe('dark-band palette (per-mode completeness)', () => {
+  it('app.css declares the full --dark-* family at :root', () => {
+    for (const token of DARK_BAND_TOKENS) {
+      expect(declares(css, token), `app.css never declares ${token}`).toBe(true);
+    }
+  });
+
+  it('finds a real block for every dark-canvas mode (guards a vacuous pass)', () => {
+    // If the selector shape ever changes, the per-token checks below would
+    // pass against empty strings and assert nothing.
+    for (const mode of MODES) {
+      expect(
+        modeBlocks(mode).length,
+        `no :root[data-display="${mode}"] block found in app.css`,
+      ).toBeGreaterThan(0);
+    }
+  });
+
+  for (const mode of MODES) {
+    it(`overrides every --dark-* token in ${mode} mode`, () => {
+      const block = modeBlocks(mode);
+      const missing = DARK_BAND_TOKENS.filter((t) => !declares(block, t));
+      expect(
+        missing,
+        `${mode} mode does not override: ${missing.join(', ')}. An un-overridden ` +
+          `token keeps its default navy literal, so the band ignores the user's ` +
+          `display mode for that one property.`,
+      ).toEqual([]);
+    });
+  }
+
+  it('no dark-canvas mode reuses the default navy band background', () => {
+    // #1E293B is the Default-mode band. If it shows up inside a dark-canvas
+    // mode block, the override was copy-pasted rather than re-themed.
+    for (const mode of MODES) {
+      expect(
+        /#1E293B/i.test(modeBlocks(mode)),
+        `${mode} mode reuses the default navy #1E293B`,
+      ).toBe(false);
+    }
+  });
+});
