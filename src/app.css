@@ -1156,6 +1156,88 @@ body {
   --dark-highlight:   #FB923C;
 }
 
+/* Dark-band tokens, per display mode.
+ *
+ * The block above is the DEFAULT-mode band and is unchanged. What follows
+ * corrects the original design note: the family used to be deliberately
+ * untied from [data-display], so the band stayed navy in every mode. That
+ * held as Base44 visual parity and failed as accessibility — someone who
+ * selects Low Vision (gold on pure black) was still served navy-and-orange
+ * on the largest heading on the page, with no signal the setting applied.
+ * axe never caught it because contrast INSIDE the band is fine; nothing
+ * asserted the band responds to the mode at all.
+ *
+ * Each mode maps the band onto its own audited palette rather than inventing
+ * values, same discipline as --dx-* and --sg-cat-*. The band keeps its job in
+ * every mode: a surface tier distinct from the page, so the section still
+ * reads as a band rather than dissolving into the page around it.
+ *
+ * Warm is intentionally absent — it's a light cream canvas and whether the
+ * band stays dark inside it is an open design decision, not a mechanical
+ * port. Until that's settled warm keeps the default navy, which is today's
+ * behaviour, so this block changes nothing for warm users. The dead
+ * `warm-keep-dark` class in the eight components resolves with it.
+ *
+ * Completeness across the three modes is pinned by
+ * tests/unit/darkBandThemes.test.ts; a token overridden in two modes and
+ * forgotten in the third silently reverts to navy in exactly one place. */
+
+/* Dark: page is #0F1520, so the band lifts to the card tier to stay a
+   distinct surface. Text drops onto the mode's own AAA-tuned ink ramp
+   (>=7.3:1 for every text token on #1B2436). */
+:root[data-display="dark"] {
+  --dark-bg:          #1B2436;
+  --dark-bg-alt:      #151C28;
+  --dark-bg-deep:     #0F1520;
+  --dark-bg-footer:   #0F1520;
+  --dark-card-bg:     #151C28;
+  --dark-card-border: #39445A;
+  --dark-border:      #4C5872;
+  --dark-heading:     #F1F5F9;
+  --dark-body:        #CBD5E1;
+  --dark-body-secondary: #A8B4C4;
+  --dark-muted:       #A8B4C4;   /* 7.39:1 on the band — the most-used token */
+  --dark-label:       #FDBA74;
+  --dark-highlight:   #FDBA74;
+}
+
+/* High contrast: flat black band, pure white text and rules, amber accents.
+   Matches the mode's own flatten-everything treatment. */
+:root[data-display="contrast"] {
+  --dark-bg:          #000000;
+  --dark-bg-alt:      #0A0A0A;
+  --dark-bg-deep:     #000000;
+  --dark-bg-footer:   #000000;
+  --dark-card-bg:     #0A0A0A;
+  --dark-card-border: #FFFFFF;
+  --dark-border:      #FFFFFF;
+  --dark-heading:     #FFFFFF;
+  --dark-body:        #FFFFFF;
+  --dark-body-secondary: #FFFFFF;
+  --dark-muted:       #E0E0E0;   /* 15.7:1 on black */
+  --dark-label:       #FFB347;   /* 11.8:1 on black */
+  --dark-highlight:   #FFB347;
+}
+
+/* Low vision: the RNIB gold-on-black treatment, which is the whole point of
+   the mode. Gold headings ~19.6:1, white body, the mode's own #B8960C rule
+   colour for edges (7.4:1, far past the 3:1 non-text floor). */
+:root[data-display="low-vision"] {
+  --dark-bg:          #000000;
+  --dark-bg-alt:      #111100;
+  --dark-bg-deep:     #000000;
+  --dark-bg-footer:   #000000;
+  --dark-card-bg:     #111100;
+  --dark-card-border: #B8960C;
+  --dark-border:      #B8960C;
+  --dark-heading:     #FFD700;
+  --dark-body:        #FFFFFF;
+  --dark-body-secondary: #FFE566;
+  --dark-muted:       #FFE566;   /* 16.5:1 on black */
+  --dark-label:       #FFD700;
+  --dark-highlight:   #FFD700;
+}
+
 /* --page-bg-alt per display mode. The default (#FAF7F2) is a bespoke warm
    cream not present in the --color-surface-* scale, so unlike --page-bg /
    --page-bg-subtle it can't just alias the scale — it needs explicit
