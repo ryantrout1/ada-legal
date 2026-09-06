@@ -18,7 +18,7 @@ export default function HeroV2() {
   return (
     <section
       aria-labelledby="v2-hero-heading"
-      className="v2-hero warm-keep-dark"
+      className="v2-hero"
       style={{
         position: 'relative', overflow: 'hidden', background: 'var(--dark-bg)',
         padding: '72px 0 64px',

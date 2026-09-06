@@ -1248,6 +1248,44 @@ body {
   --dark-chip-hover-text:    #FED7AA;
 }
 
+/* Warm: a cream page with no dark tier of its own, so the band takes the
+   mode's deepest brown. #3D2B1F sits just above the warm header (#231912),
+   the same lifted relationship dark mode uses, and reads as a strong strip
+   against the cream page. Cream text lands at 12.8:1, amber label at 8.7:1.
+   Replaces the navy the band used to keep in this mode, and with it the
+   `warm-keep-dark` class, which was never defined anywhere. */
+:root[data-display="warm"] {
+  --dark-bg:          #3D2B1F;
+  --dark-bg-alt:      #33231A;
+  --dark-bg-deep:     #2A1D15;
+  --dark-bg-footer:   #2A1D15;
+  --dark-card-bg:     #33231A;
+  --dark-card-border: #5C4033;
+  --dark-border:      #96866A;   /* the mode's control border — 3.8:1 on the band */
+  --dark-heading:     #FFF8F0;   /* 12.8:1 */
+  --dark-body:        #F5EDE0;   /* 11.4:1 */
+  --dark-body-secondary: #E2D3BE;
+  --dark-muted:       #E2D3BE;   /* 9.1:1 — the most-used token */
+  --dark-label:       #F5C99B;   /* 8.7:1 */
+  --dark-highlight:   #F5C99B;
+  /* Band stays dark, so translucent white still reads. */
+  --dark-glass-bg:         rgba(255,255,255,0.04);
+  --dark-glass-border:     rgba(255,255,255,0.08);
+  --dark-glass-btn:        rgba(255,255,255,0.06);
+  --dark-glass-btn-border: rgba(255,255,255,0.1);
+  --dark-glass-btn-hover:  rgba(255,255,255,0.1);
+  --dark-hairline:         rgba(255,255,255,0.06);
+  --dark-dot-idle:         rgba(255,255,255,0.15);
+  --dark-glow-warm: radial-gradient(circle, rgba(245,201,155,0.10) 0%, transparent 70%);
+  --dark-glow-deep: radial-gradient(circle, rgba(124,45,18,0.12) 0%, transparent 70%);
+  --dark-input-border:       rgba(255,255,255,0.12);
+  --dark-input-border-hover: rgba(255,255,255,0.2);
+  --dark-focus-ring:         rgba(245,201,155,0.45);
+  --dark-chip-hover-bg:      rgba(245,201,155,0.15);
+  --dark-chip-hover-border:  rgba(245,201,155,0.3);
+  --dark-chip-hover-text:    #FFE8CF;   /* 7.9:1 on the hovered chip */
+}
+
 /* High contrast: flat black band, pure white text and rules, amber accents.
    Matches the mode's own flatten-everything treatment. */
 :root[data-display="contrast"] {

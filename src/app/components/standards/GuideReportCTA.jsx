@@ -59,7 +59,7 @@ export default function GuideReportCTA() {
   }
 
   return (
-    <div role="region" aria-label="Take action on an ADA violation" className="warm-keep-dark" style={{
+    <div role="region" aria-label="Take action on an ADA violation" style={{
       background: 'var(--dark-card-bg)', padding: '64px 40px', textAlign: 'center'
     }}>
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>

@@ -316,7 +316,7 @@ export default function CommunityVoices() {
 
   return (
     <section
-      className="cv-dark-section warm-keep-dark"
+      className="cv-dark-section"
       aria-label="Community voices poll"
       style={{
         background: 'var(--dark-bg)',

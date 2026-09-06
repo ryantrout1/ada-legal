@@ -174,7 +174,6 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
   return (
     <section
       aria-labelledby="sg-heading"
-      className="warm-keep-dark"
       style={{
         background: 'var(--dark-bg)',
         position: 'relative',

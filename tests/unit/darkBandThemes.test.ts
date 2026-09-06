@@ -70,21 +70,17 @@ const MODES = ['dark', 'contrast', 'low-vision', 'warm'] as const;
  * app.css declares several separate `:root[data-display="X"]` blocks per mode
  * (palette, page-bg-alt, category hues, ...). Concatenate every block body for
  * a mode so a token declared in any of them counts.
+ *
+ * The trailing `\s*\{` matters: there are also DESCENDANT rules of the form
+ * `:root[data-display="warm"] .lawyer-workspace { … }`, which reset the
+ * attorney portal to a slate scale. A plain substring match swallows those
+ * and reads portal values as if they were band values — which is exactly what
+ * happened, and it reported the portal's slate heading as the band reusing
+ * the default navy.
  */
 function modeBlocks(mode: string): string {
-  const selector = `:root[data-display="${mode}"]`;
-  const bodies: string[] = [];
-  let from = 0;
-  for (;;) {
-    const at = css.indexOf(selector, from);
-    if (at === -1) break;
-    const open = css.indexOf('{', at);
-    const close = css.indexOf('}', open);
-    if (open === -1 || close === -1) break;
-    bodies.push(css.slice(open + 1, close));
-    from = close + 1;
-  }
-  return bodies.join('\n');
+  const re = new RegExp(`:root\\[data-display="${mode}"\\]\\s*\\{([^}]*)\\}`, 'g');
+  return [...css.matchAll(re)].map((m) => m[1]).join('\n');
 }
 
 /**

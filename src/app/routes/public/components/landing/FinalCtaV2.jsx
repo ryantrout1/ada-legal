@@ -11,7 +11,7 @@ export default function FinalCtaV2() {
   return (
     <section
       aria-labelledby="v2-cta-heading"
-      className="v2-section warm-keep-dark"
+      className="v2-section"
       style={{ background: 'var(--dark-bg)', padding: '110px 0', textAlign: 'center', position: 'relative', overflow: 'hidden' }}
     >
       <div aria-hidden="true" style={{

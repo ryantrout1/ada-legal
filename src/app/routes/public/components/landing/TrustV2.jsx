@@ -44,7 +44,7 @@ export default function TrustV2() {
   return (
     <section
       aria-labelledby="v2-trust-heading"
-      className="v2-section warm-keep-dark"
+      className="v2-section"
       style={{ background: 'var(--dark-bg)', padding: '90px 0', position: 'relative', overflow: 'hidden' }}
     >
       <div style={{ maxWidth: '1160px', margin: '0 auto', padding: '0 2rem' }}>

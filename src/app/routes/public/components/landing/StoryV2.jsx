@@ -24,7 +24,7 @@ export default function StoryV2() {
   return (
     <section
       aria-labelledby="v2-story-heading"
-      className="v2-section warm-keep-dark"
+      className="v2-section"
       style={{ background: 'var(--dark-bg-deep)', padding: '90px 0' }}
     >
       <div style={{ maxWidth: '1160px', margin: '0 auto', padding: '0 2rem' }}>
