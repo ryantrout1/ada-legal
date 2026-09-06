@@ -1154,6 +1154,25 @@ body {
   --dark-muted:       #B0BEC5;
   --dark-label:       #FDBA74;
   --dark-highlight:   #FB923C;
+
+  /* Band furniture — the chips, edges, buttons, hairlines and decorative
+     glows that sit ON the band. These were written straight into the
+     components as translucent white. That reads correctly on the navy and
+     dark bands and fails outright on the pure-black ones: white at 4% over
+     #000 has no visible fill and no visible edge, so the furniture vanishes
+     in exactly the two modes a low-vision reader would choose. High Contrast
+     and Low Vision already flatten transparency everywhere else; the band
+     was the last holdout. Default values below are the literals they
+     replace, so Default and Dark are unchanged. */
+  --dark-glass-bg:         rgba(255,255,255,0.04);
+  --dark-glass-border:     rgba(255,255,255,0.08);
+  --dark-glass-btn:        rgba(255,255,255,0.06);
+  --dark-glass-btn-border: rgba(255,255,255,0.1);
+  --dark-glass-btn-hover:  rgba(255,255,255,0.1);
+  --dark-hairline:         rgba(255,255,255,0.06);
+  --dark-dot-idle:         rgba(255,255,255,0.15);
+  --dark-glow-warm: radial-gradient(circle, rgba(251,146,60,0.08) 0%, transparent 70%);
+  --dark-glow-deep: radial-gradient(circle, rgba(194,65,12,0.08) 0%, transparent 70%);
 }
 
 /* Dark-band tokens, per display mode.
@@ -1199,6 +1218,18 @@ body {
   --dark-muted:       #A8B4C4;   /* 7.39:1 on the band — the most-used token */
   --dark-label:       #FDBA74;
   --dark-highlight:   #FDBA74;
+  /* Band stays dark, so translucent white still reads. Same values as
+     Default — restated rather than inherited so the completeness guard
+     covers this mode too. */
+  --dark-glass-bg:         rgba(255,255,255,0.04);
+  --dark-glass-border:     rgba(255,255,255,0.08);
+  --dark-glass-btn:        rgba(255,255,255,0.06);
+  --dark-glass-btn-border: rgba(255,255,255,0.1);
+  --dark-glass-btn-hover:  rgba(255,255,255,0.1);
+  --dark-hairline:         rgba(255,255,255,0.06);
+  --dark-dot-idle:         rgba(255,255,255,0.15);
+  --dark-glow-warm: radial-gradient(circle, rgba(251,146,60,0.08) 0%, transparent 70%);
+  --dark-glow-deep: radial-gradient(circle, rgba(194,65,12,0.08) 0%, transparent 70%);
 }
 
 /* High contrast: flat black band, pure white text and rules, amber accents.
@@ -1217,6 +1248,17 @@ body {
   --dark-muted:       #E0E0E0;   /* 15.7:1 on black */
   --dark-label:       #FFB347;   /* 11.8:1 on black */
   --dark-highlight:   #FFB347;
+  /* Solid, not translucent — this mode flattens transparency site-wide and
+     draws real 2px edges. Glows drop out: decoration is stripped here. */
+  --dark-glass-bg:         #0A0A0A;
+  --dark-glass-border:     #FFFFFF;
+  --dark-glass-btn:        #0A0A0A;
+  --dark-glass-btn-border: #FFFFFF;
+  --dark-glass-btn-hover:  #1A1A1A;
+  --dark-hairline:         #FFFFFF;
+  --dark-dot-idle:         #E0E0E0;   /* 15.7:1; the active dot is amber and 20px wide */
+  --dark-glow-warm: none;
+  --dark-glow-deep: none;
 }
 
 /* Low vision: the RNIB gold-on-black treatment, which is the whole point of
@@ -1236,6 +1278,17 @@ body {
   --dark-muted:       #FFE566;   /* 16.5:1 on black */
   --dark-label:       #FFD700;
   --dark-highlight:   #FFD700;
+  /* Solid gold-on-black furniture. #B8960C is this mode's own rule colour —
+     7.4:1 on black, well past the 3:1 non-text floor. Glows drop out. */
+  --dark-glass-bg:         #111100;
+  --dark-glass-border:     #B8960C;
+  --dark-glass-btn:        #111100;
+  --dark-glass-btn-border: #B8960C;
+  --dark-glass-btn-hover:  #1A1A00;
+  --dark-hairline:         #B8960C;
+  --dark-dot-idle:         #B8960C;   /* active dot is gold and 20px wide */
+  --dark-glow-warm: none;
+  --dark-glow-deep: none;
 }
 
 /* --page-bg-alt per display mode. The default (#FAF7F2) is a bespoke warm

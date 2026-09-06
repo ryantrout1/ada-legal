@@ -62,7 +62,7 @@ function QuoteCarousel() {
       aria-label="Testimonials from users"
       onKeyDown={onKeyDown}
       style={{
-        background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+        background: 'var(--dark-glass-bg)', border: '1px solid var(--dark-glass-border)',
         borderRadius: '16px', padding: '24px', borderLeft: '3px solid var(--accent)',
         paddingLeft: '20px', position: 'relative'
       }}
@@ -87,7 +87,7 @@ function QuoteCarousel() {
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         marginTop: '16px', paddingTop: '12px',
-        borderTop: '1px solid rgba(255,255,255,0.06)'
+        borderTop: '1px solid var(--dark-hairline)'
       }}>
         <div style={{ display: 'flex', gap: '6px' }} role="tablist" aria-label="Quote navigation">
           {QUOTES.map((_, i) => (
@@ -119,7 +119,7 @@ function QuoteCarousel() {
               <span aria-hidden="true" style={{
                 width: i === index ? '20px' : '8px', height: '8px',
                 borderRadius: '4px',
-                background: i === index ? 'var(--accent)' : 'rgba(255,255,255,0.15)',
+                background: i === index ? 'var(--accent)' : 'var(--dark-dot-idle)',
                 display: 'block'
               }} />
             </button>
@@ -133,14 +133,14 @@ function QuoteCarousel() {
             className="sg-carousel-btn"
             style={{
               width: '44px', height: '44px', borderRadius: '8px',
-              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+              background: 'var(--dark-glass-btn)', border: '1px solid var(--dark-glass-btn-border)',
               color: 'var(--dark-muted)', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '14px', padding: 0,
               transition: 'background 0.15s'
             }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--dark-glass-btn-hover)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--dark-glass-btn)'}
           >
             ‹
           </button>
@@ -150,14 +150,14 @@ function QuoteCarousel() {
             className="sg-carousel-btn"
             style={{
               width: '44px', height: '44px', borderRadius: '8px',
-              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+              background: 'var(--dark-glass-btn)', border: '1px solid var(--dark-glass-btn-border)',
               color: 'var(--dark-muted)', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '14px', padding: 0,
               transition: 'background 0.15s'
             }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--dark-glass-btn-hover)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--dark-glass-btn)'}
           >
             ›
           </button>
@@ -185,13 +185,13 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
       <div aria-hidden="true" style={{
         position: 'absolute', top: '-15%', right: '-8%',
         width: '680px', height: '680px', borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(251,146,60,0.08) 0%, transparent 70%)',
+        background: 'var(--dark-glow-warm)',
         pointerEvents: 'none'
       }} />
       <div aria-hidden="true" style={{
         position: 'absolute', bottom: '-20%', left: '-10%',
         width: '600px', height: '600px', borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(194,65,12,0.08) 0%, transparent 70%)',
+        background: 'var(--dark-glow-deep)',
         pointerEvents: 'none'
       }} />
 
@@ -234,7 +234,7 @@ export default function StandardsHero({ searchValue, onSearchChange }) {
         <div>
           {/* Impact card */}
           <div style={{
-            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+            background: 'var(--dark-glass-bg)', border: '1px solid var(--dark-glass-border)',
             borderRadius: '16px', padding: '28px 32px', marginBottom: '16px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
