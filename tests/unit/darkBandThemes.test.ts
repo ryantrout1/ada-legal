@@ -154,6 +154,13 @@ const GLASS_TOKENS = [
   '--dark-dot-idle',
   '--dark-glow-warm',
   '--dark-glow-deep',
+  // The search block's own surfaces (phase 2 of the search-block plan).
+  '--dark-input-border',
+  '--dark-input-border-hover',
+  '--dark-focus-ring',
+  '--dark-chip-hover-bg',
+  '--dark-chip-hover-border',
+  '--dark-chip-hover-text',
 ] as const;
 
 /**

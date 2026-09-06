@@ -127,3 +127,85 @@ describe('search block — band-half icon contrast', () => {
     }
   });
 });
+
+/**
+ * The band half of the component, delimited in the source by explicit
+ * markers. The zone boundary is the whole reason the clear button broke: two
+ * sets of near-identically named tokens, correct in one half and wrong in the
+ * other, with nothing in the file saying where one ends. Marking it makes the
+ * boundary readable and lets these checks run against the right half.
+ */
+const ZONE_START = 'band-zone:start';
+const ZONE_END = 'band-zone:end';
+
+function bandZone(): string {
+  const from = component.indexOf(ZONE_START);
+  const to = component.indexOf(ZONE_END);
+  if (from === -1 || to === -1 || to < from) {
+    throw new Error(
+      `band zone markers not found — the band half must be delimited by ` +
+        `${ZONE_START} and ${ZONE_END} comments`,
+    );
+  }
+  return component.slice(from, to);
+}
+
+/** Tokens that belong to the light results dropdown, never to the band. */
+const PAGE_HALF_TOKENS = [
+  '--body-secondary',
+  '--body',
+  '--heading',
+  '--border',
+  '--border-lighter',
+  '--card-bg',
+  '--card-bg-tinted',
+  '--page-bg-subtle',
+];
+
+describe('search block — band zone hygiene', () => {
+  it('the band zone is delimited in the source', () => {
+    expect(bandZone().length).toBeGreaterThan(100);
+  });
+
+  it('the band zone carries no written-in colour values', () => {
+    const zone = bandZone();
+    const found = [
+      ...(zone.match(/rgba?\([^)]*\)/g) ?? []),
+      ...(zone.match(/#[0-9A-Fa-f]{3,8}\b/g) ?? []),
+    ];
+    expect(
+      [...new Set(found)],
+      'a written-in colour ignores the display-mode override — on the black ' +
+        'canvases a translucent white edge measures about 1.1:1 against a 3:1 floor',
+    ).toEqual([]);
+  });
+
+  it('the band zone uses no page-half token names', () => {
+    const zone = bandZone();
+    const offenders: string[] = [];
+    for (const token of PAGE_HALF_TOKENS) {
+      // Word-boundary the name so --body does not match --body-secondary or
+      // --dark-body.
+      if (new RegExp(`var\\(\\s*${token}\\s*\\)`).test(zone)) offenders.push(token);
+    }
+    expect(
+      offenders,
+      'these belong to the light results dropdown; on the band they resolve ' +
+        'to light-surface ink and fail contrast',
+    ).toEqual([]);
+  });
+
+  it('a chip returns to its starting colour after hover', () => {
+    // Today the mouse-leave handler resets to a dimmer tier than the one the
+    // chip was authored with, so chips get permanently dimmer once brushed —
+    // in every mode, not just the dark ones.
+    const zone = bandZone();
+    const authored = zone.match(/color:\s*'var\(\s*(--[a-zA-Z0-9-]+)\s*\)',\s*cursor:\s*'pointer'/);
+    const reset = zone.match(/onMouseLeave=\{e =>[^}]*?style\.color\s*=\s*'([^']+)'/);
+    expect(authored, 'could not find the chip authored colour').not.toBeNull();
+    expect(reset, 'could not find the chip mouse-leave colour').not.toBeNull();
+    expect(reset![1], 'chip hover reset does not restore the authored colour').toBe(
+      `var(${authored![1]})`,
+    );
+  });
+});
