@@ -131,3 +131,104 @@ describe('dark-band palette (per-mode completeness)', () => {
     }
   });
 });
+
+/**
+ * The surface tokens the band's own furniture paints through — card fills,
+ * edges, buttons, hairlines, the carousel dot, the two decorative glows.
+ *
+ * These were written straight into the components as translucent white
+ * (rgba(255,255,255,0.04) and friends). Translucent white works on the navy
+ * and dark bands and fails completely on the pure-black ones: at 4% alpha a
+ * chip on #000 has no visible fill and no visible edge, so the furniture
+ * disappears in exactly the two modes a low-vision reader would pick. Both
+ * of those modes already flatten transparency everywhere else on the site;
+ * the band was the last place still using it.
+ */
+const GLASS_TOKENS = [
+  '--dark-glass-bg',
+  '--dark-glass-border',
+  '--dark-glass-btn',
+  '--dark-glass-btn-border',
+  '--dark-glass-btn-hover',
+  '--dark-hairline',
+  '--dark-dot-idle',
+  '--dark-glow-warm',
+  '--dark-glow-deep',
+] as const;
+
+/**
+ * Band components converted off written-in colour values, one phase at a
+ * time. Phase 2 adds CommunityVoices.jsx; phase 3 adds HeroV2.jsx and
+ * LandingV2Styles.jsx. The list is the contract — a file joins it only once
+ * it is actually clean, so the checks below can never vacuously pass on a
+ * file nobody has converted yet.
+ */
+const CONVERTED = ['src/app/components/standards/landing/StandardsHero.jsx'];
+
+const REPO_ROOT = resolve(__dirname, '../..');
+
+describe('dark-band surfaces (converted components)', () => {
+  it('has converted files to check (guards against a silent empty pass)', () => {
+    expect(CONVERTED.length).toBeGreaterThan(0);
+  });
+
+  it('app.css defines the full glass token set', () => {
+    for (const token of GLASS_TOKENS) {
+      expect(declares(css, token), `app.css never declares ${token}`).toBe(true);
+    }
+  });
+
+  for (const mode of MODES) {
+    it(`overrides every glass token in ${mode} mode`, () => {
+      const block = modeBlocks(mode);
+      const missing = GLASS_TOKENS.filter((t) => !declares(block, t));
+      expect(missing, `${mode} mode does not override: ${missing.join(', ')}`).toEqual([]);
+    });
+  }
+
+  it('converted components carry no written-in colour values', () => {
+    const offenders: string[] = [];
+    for (const file of CONVERTED) {
+      const src = readFileSync(resolve(REPO_ROOT, file), 'utf8');
+      const found = [
+        ...(src.match(/rgba?\([^)]*\)/g) ?? []),
+        ...(src.match(/#[0-9A-Fa-f]{3,8}\b/g) ?? []),
+      ];
+      if (found.length) offenders.push(`${file}: ${[...new Set(found)].join(', ')}`);
+    }
+    expect(
+      offenders,
+      'a written-in colour ignores the display-mode override — it must go ' +
+        'through a token instead',
+    ).toEqual([]);
+  });
+
+  it('every custom property a converted component asks for is actually defined', () => {
+    // Two dead references have surfaced in two consecutive passes: the
+    // `warm-keep-dark` class with no rule, and `--glass-border` with no
+    // declaration (an unknown custom property invalidates the whole
+    // declaration, so that border silently does not render). Neither was
+    // caught by a build, a type check, or the axe pass. This is the guard.
+    const landingStyles = readFileSync(
+      resolve(REPO_ROOT, 'src/app/routes/public/components/landing/LandingV2Styles.jsx'),
+      'utf8',
+    );
+    const undefinedRefs: string[] = [];
+    for (const file of CONVERTED) {
+      const src = readFileSync(resolve(REPO_ROOT, file), 'utf8');
+      for (const match of src.matchAll(/var\(\s*(--[a-zA-Z0-9-]+)/g)) {
+        const name = match[1];
+        // A property is defined if app.css declares it, the v2 landing style
+        // block declares it, or the component sets it on itself inline.
+        const defined =
+          declares(css, name) || declares(landingStyles, name) || declares(src, name);
+        if (!defined) undefinedRefs.push(`${file}: ${name}`);
+      }
+    }
+    expect(
+      [...new Set(undefinedRefs)],
+      'an undefined custom property invalidates its whole declaration, so the ' +
+        'property it was meant to set silently does not apply',
+    ).toEqual([]);
+  });
+});
