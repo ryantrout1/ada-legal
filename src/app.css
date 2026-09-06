@@ -1173,6 +1173,16 @@ body {
   --dark-dot-idle:         rgba(255,255,255,0.15);
   --dark-glow-warm: radial-gradient(circle, rgba(251,146,60,0.08) 0%, transparent 70%);
   --dark-glow-deep: radial-gradient(circle, rgba(194,65,12,0.08) 0%, transparent 70%);
+
+  /* Search block on the band — the input's edge, its hover and focus states,
+     and the suggestion chips' hover treatment. Same reasoning as the
+     furniture above: translucent white over pure black is not an edge. */
+  --dark-input-border:       rgba(255,255,255,0.12);
+  --dark-input-border-hover: rgba(255,255,255,0.2);
+  --dark-focus-ring:         rgba(251,146,60,0.45);
+  --dark-chip-hover-bg:      rgba(194,65,12,0.15);
+  --dark-chip-hover-border:  rgba(194,65,12,0.3);
+  --dark-chip-hover-text:    #FED7AA;   /* 9.9:1 on the hovered chip */
 }
 
 /* Dark-band tokens, per display mode.
@@ -1230,6 +1240,12 @@ body {
   --dark-dot-idle:         rgba(255,255,255,0.15);
   --dark-glow-warm: radial-gradient(circle, rgba(251,146,60,0.08) 0%, transparent 70%);
   --dark-glow-deep: radial-gradient(circle, rgba(194,65,12,0.08) 0%, transparent 70%);
+  --dark-input-border:       rgba(255,255,255,0.12);
+  --dark-input-border-hover: rgba(255,255,255,0.2);
+  --dark-focus-ring:         rgba(251,146,60,0.45);
+  --dark-chip-hover-bg:      rgba(194,65,12,0.15);
+  --dark-chip-hover-border:  rgba(194,65,12,0.3);
+  --dark-chip-hover-text:    #FED7AA;
 }
 
 /* High contrast: flat black band, pure white text and rules, amber accents.
@@ -1259,6 +1275,12 @@ body {
   --dark-dot-idle:         #E0E0E0;   /* 15.7:1; the active dot is amber and 20px wide */
   --dark-glow-warm: none;
   --dark-glow-deep: none;
+  --dark-input-border:       #FFFFFF;
+  --dark-input-border-hover: #FFFFFF;
+  --dark-focus-ring:         #FFB347;
+  --dark-chip-hover-bg:      #1A1A1A;
+  --dark-chip-hover-border:  #FFB347;
+  --dark-chip-hover-text:    #FFB347;   /* 9.6:1 on the hovered chip */
 }
 
 /* Low vision: the RNIB gold-on-black treatment, which is the whole point of
@@ -1289,6 +1311,12 @@ body {
   --dark-dot-idle:         #B8960C;   /* active dot is gold and 20px wide */
   --dark-glow-warm: none;
   --dark-glow-deep: none;
+  --dark-input-border:       #B8960C;
+  --dark-input-border-hover: #FFD700;
+  --dark-focus-ring:         #FFD700;
+  --dark-chip-hover-bg:      #1A1A00;
+  --dark-chip-hover-border:  #FFD700;
+  --dark-chip-hover-text:    #FFD700;   /* 18:1 on the hovered chip */
 }
 
 /* --page-bg-alt per display mode. The default (#FAF7F2) is a bespoke warm

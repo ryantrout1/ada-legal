@@ -240,6 +240,13 @@ export default function ADAAssistant() {
 
   return (
     <div ref={containerRef} style={{ maxWidth: '520px', width: '100%', position: 'relative' }}>
+      {/* band-zone:start — everything below sits ON the dark hero band and
+          must paint through the --dark-* family. Past the closing marker,
+          the results dropdown is a floating light card and correctly uses
+          the ordinary page tokens. The two sets have near-identical names;
+          the clear button spent months using the page-half grey at 1.76:1
+          because nothing in the file said where the boundary was. Now it
+          does, and tests/unit/searchBlockContrast.test.ts enforces it. */}
       {/* Search input */}
       <div role="search" aria-label="Search ADA standards">
         <label htmlFor="ada-search-input" className="sr-only">Search ADA standards and guides</label>
@@ -254,8 +261,8 @@ export default function ADAAssistant() {
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
-            onFocus={e => { setFocused(true); e.target.style.borderColor = 'var(--dark-highlight)'; e.target.style.boxShadow = '0 0 0 3px rgba(251,146,60,0.45)'; }}
-            onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.12)'; e.target.style.boxShadow = 'none'; }}
+            onFocus={e => { setFocused(true); e.target.style.borderColor = 'var(--dark-highlight)'; e.target.style.boxShadow = '0 0 0 3px var(--dark-focus-ring)'; }}
+            onBlur={e => { e.target.style.borderColor = 'var(--dark-input-border)'; e.target.style.boxShadow = 'none'; }}
             onKeyDown={handleKeyDown}
             placeholder="Search ADA standards, guides, diagrams..."
             aria-label="Search ADA standards and guides"
@@ -267,14 +274,14 @@ export default function ADAAssistant() {
             style={{
               width: '100%', padding: '14px 44px 14px 44px',
               fontFamily: 'var(--font-body)', fontSize: '0.9375rem',
-              background: 'rgba(255,255,255,0.06)', color: 'var(--dark-heading)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              background: 'var(--dark-glass-btn)', color: 'var(--dark-heading)',
+              border: '1px solid var(--dark-input-border)',
               borderRadius: '12px', outline: 'none',
               minHeight: '48px', boxSizing: 'border-box',
               transition: 'border-color 0.2s, box-shadow 0.2s'
             }}
-            onMouseEnter={e => e.target.style.borderColor = 'rgba(255,255,255,0.2)'}
-            onMouseLeave={e => { if (document.activeElement !== e.target) e.target.style.borderColor = 'rgba(255,255,255,0.12)'; }}
+            onMouseEnter={e => e.target.style.borderColor = 'var(--dark-input-border-hover)'}
+            onMouseLeave={e => { if (document.activeElement !== e.target) e.target.style.borderColor = 'var(--dark-input-border)'; }}
           />
           {query && (
             <button
@@ -282,7 +289,7 @@ export default function ADAAssistant() {
               aria-label="Clear search"
               style={{
                 position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
-                background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '6px',
+                background: 'var(--dark-glass-btn-hover)', border: 'none', borderRadius: '6px',
                 width: '44px', height: '44px', display: 'flex', alignItems: 'center',
                 justifyContent: 'center', cursor: 'pointer'
               }}
@@ -301,15 +308,15 @@ export default function ADAAssistant() {
               key={i}
               onClick={() => handleStarterClick(s.q)}
               style={{
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: 'var(--dark-glass-btn)',
+                border: '1px solid var(--dark-glass-btn-border)',
                 borderRadius: '100px', padding: '6px 14px', minHeight: '44px',
                 fontFamily: 'var(--font-body)', fontSize: '0.78rem',
                 color: 'var(--dark-body)', cursor: 'pointer',
                 transition: 'all 0.2s', lineHeight: 1.5
               }}
-              onMouseEnter={e => { e.target.style.background = 'rgba(194,65,12,0.15)'; e.target.style.borderColor = 'rgba(194,65,12,0.3)'; e.target.style.color = '#FED7AA'; }}
-              onMouseLeave={e => { e.target.style.background = 'rgba(255,255,255,0.06)'; e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.color = '#CBD5E1'; }}
+              onMouseEnter={e => { e.target.style.background = 'var(--dark-chip-hover-bg)'; e.target.style.borderColor = 'var(--dark-chip-hover-border)'; e.target.style.color = 'var(--dark-chip-hover-text)'; }}
+              onMouseLeave={e => { e.target.style.background = 'var(--dark-glass-btn)'; e.target.style.borderColor = 'var(--dark-glass-btn-border)'; e.target.style.color = 'var(--dark-body)'; }}
             >
               {s.label}
             </button>
@@ -318,6 +325,7 @@ export default function ADAAssistant() {
       )}
 
       {/* Live search results */}
+      {/* band-zone:end — the light results dropdown starts here. */}
       {showResults && (
         <div
           id="ada-search-results"

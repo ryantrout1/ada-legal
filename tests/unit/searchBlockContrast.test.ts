@@ -140,7 +140,9 @@ const ZONE_END = 'band-zone:end';
 
 function bandZone(): string {
   const from = component.indexOf(ZONE_START);
-  const to = component.indexOf(ZONE_END);
+  // lastIndexOf, so a comment that mentions the marker in prose can't cut the
+  // zone short — which is exactly what happened the first time this ran.
+  const to = component.lastIndexOf(ZONE_END);
   if (from === -1 || to === -1 || to < from) {
     throw new Error(
       `band zone markers not found — the band half must be delimited by ` +
