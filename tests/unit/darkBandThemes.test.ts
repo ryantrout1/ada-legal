@@ -31,7 +31,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const APP_CSS = resolve(__dirname, '../../src/app.css');
@@ -55,10 +55,16 @@ const DARK_BAND_TOKENS = [
 ] as const;
 
 /**
- * Dark-canvas display modes. Warm is excluded pending the phase-3 decision;
- * default is the base declaration, not an override.
+ * Every mode that overrides the band. Default is the base declaration, not an
+ * override, so it is not listed.
+ *
+ * Warm was excluded while its treatment was undecided. It is now settled: the
+ * band goes deep espresso rather than staying navy, so warm is enforced here
+ * like every other mode. That also retires the `warm-keep-dark` class, which
+ * was applied to seven components and defined in no stylesheet — it never did
+ * anything, and now there is nothing for it to mean.
  */
-const MODES = ['dark', 'contrast', 'low-vision'] as const;
+const MODES = ['dark', 'contrast', 'low-vision', 'warm'] as const;
 
 /**
  * app.css declares several separate `:root[data-display="X"]` blocks per mode
@@ -120,7 +126,22 @@ describe('dark-band palette (per-mode completeness)', () => {
     });
   }
 
-  it('no dark-canvas mode reuses the default navy band background', () => {
+  it('the dead warm-keep-dark class is gone from every component', () => {
+    // It was applied to seven components and declared in no stylesheet, so it
+    // never had an effect. It existed to say "in warm, keep this dark" -- a
+    // rule the tokens now express properly.
+    const survivors = readdirSync(resolve(__dirname, '../../src/app'), {
+      recursive: true,
+      encoding: 'utf8',
+    })
+      .filter((f) => /\.(jsx|tsx)$/.test(f))
+      .filter((f) =>
+        readFileSync(resolve(__dirname, '../../src/app', f), 'utf8').includes('warm-keep-dark'),
+      );
+    expect(survivors, 'warm-keep-dark is a no-op class; the tokens replace it').toEqual([]);
+  });
+
+  it('no mode reuses the default navy band background', () => {
     // #1E293B is the Default-mode band. If it shows up inside a dark-canvas
     // mode block, the override was copy-pasted rather than re-themed.
     for (const mode of MODES) {
