@@ -287,7 +287,7 @@ export default function ADAAssistant() {
                 justifyContent: 'center', cursor: 'pointer'
               }}
             >
-              <X size={14} style={{ color: 'var(--body-secondary)' }} />
+              <X size={14} style={{ color: 'var(--dark-body-secondary)' }} />
             </button>
           )}
         </div>
