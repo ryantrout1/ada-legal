@@ -35,6 +35,13 @@ import { hashAnonToken, parseAnonCookie } from '../../src/lib/anonCookie.js';
 import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv } from '../_shared.js';
 import { readAdaAvailability } from '../../src/lib/adaAvailability.js';
+import {
+  ADA_PHOTO_BUCKET,
+  checkRateLimit,
+} from '../../src/lib/rateLimit/apiRateLimit.js';
+import { makeApiRateLimitStore } from '../../src/lib/rateLimit/apiRateLimitStore.js';
+import { clientIp } from '../../src/lib/rateLimit/clientIp.js';
+import { deriveRateLimitKey } from '../../src/lib/spot/spotRateLimitKey.js';
 
 const ALLOWED_CONTENT_TYPES = [
   'image/jpeg',
@@ -113,6 +120,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!anonSessionId) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
+
+      // Rate limit (/plan Ada rate limits, Phase 3). Shares the ada_photo
+      // bucket with the analyzer: this is the front door to that spend, so
+      // throttling one and not the other would just move the queue.
+      //
+      // ONLY on this branch. The blob.upload-completed callback below is
+      // server-to-server, carries no user cookie, and completes an upload
+      // that was already authorized — throttling it would strand a
+      // legitimate upload, and would do it against Vercel's IP rather than
+      // the caller's. Same distinction the kill switch above makes.
+      //
+      // Placed after the cookie resolves so an unauthenticated caller
+      // cannot burn the allowance of real users sharing their IP. Shared
+      // IPs are the norm in libraries, clinics and care facilities —
+      // exactly where this product matters most.
+      const limit = await checkRateLimit(
+        makeApiRateLimitStore(),
+        ADA_PHOTO_BUCKET,
+        deriveRateLimitKey(clientIp(req), (req.headers['user-agent'] as string) ?? ''),
+      );
+      if (!limit.allowed) {
+        res.setHeader('Retry-After', String(limit.retryAfterSeconds));
+        return res.status(429).json({
+          error:
+            'That is a lot of photos in a short time. Give it a few minutes and try again.',
+        });
+      }
+
       resolvedAnonSessionId = anonSessionId;
     }
 

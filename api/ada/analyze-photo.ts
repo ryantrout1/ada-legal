@@ -26,6 +26,13 @@ import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv, readJsonBody } from '../_shared.js';
 import { readAdaAvailability } from '../../src/lib/adaAvailability.js';
 import {
+  ADA_PHOTO_BUCKET,
+  checkRateLimit,
+} from '../../src/lib/rateLimit/apiRateLimit.js';
+import { makeApiRateLimitStore } from '../../src/lib/rateLimit/apiRateLimitStore.js';
+import { clientIp } from '../../src/lib/rateLimit/clientIp.js';
+import { deriveRateLimitKey } from '../../src/lib/spot/spotRateLimitKey.js';
+import {
   parseAnalyzePhotoBody,
   gateAnalyzePhotoSession,
   type AnalyzePhotoBody,
@@ -82,6 +89,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const gate = gateAnalyzePhotoSession(state);
     if (!gate.ok) return res.status(gate.status).json({ error: gate.error });
     const session = state!; // gate guarantees a non-null field-test session
+
+    // Rate limit (/plan Ada rate limits, Phase 3). The gate above bounds
+    // WHICH sessions reach the model, not how many times: /photo is
+    // unauthenticated and minting a field-test session is client-side
+    // code, so anyone can produce a session that satisfies it. This is the
+    // only unauthenticated route on the platform that reaches an Opus
+    // vision call, so it carries the tightest budget on the platform.
+    //
+    // Placed here deliberately — after the kill switch and the gate, so a
+    // dark endpoint or a bogus session costs the caller nothing from their
+    // allowance, and immediately before the spend it exists to bound.
+    // Fails OPEN on a store error, same posture as the guide assistant.
+    const limit = await checkRateLimit(
+      makeApiRateLimitStore(),
+      ADA_PHOTO_BUCKET,
+      deriveRateLimitKey(clientIp(req), (req.headers['user-agent'] as string) ?? ''),
+    );
+    if (!limit.allowed) {
+      res.setHeader('Retry-After', String(limit.retryAfterSeconds));
+      return res.status(429).json({
+        error:
+          'That is a lot of photos in a short time. Give it a few minutes and try again.',
+      });
+    }
 
     // Run the structured analyzer (same client Ada's analyze_photo tool
     // uses) and persist a durable row. Errors propagate to the catch —
