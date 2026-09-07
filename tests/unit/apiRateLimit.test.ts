@@ -10,6 +10,9 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import {
+  ADA_PHOTO_BUCKET,
+  ADA_SESSION_BUCKET,
+  ADA_TURN_BUCKET,
   GUIDE_ASSISTANT_BUCKET,
   RATE_LIMITS,
   checkRateLimit,
@@ -58,6 +61,43 @@ describe('limits', () => {
     expect(RATE_LIMITS[GUIDE_ASSISTANT_BUCKET].short.windowMs).toBe(10 * 60_000);
     expect(RATE_LIMITS[GUIDE_ASSISTANT_BUCKET].long.max).toBe(60);
     expect(RATE_LIMITS[GUIDE_ASSISTANT_BUCKET].long.windowMs).toBe(24 * 60 * 60_000);
+  });
+
+  // ── Ada buckets (/plan Ada rate limits, Phase 1) ───────────────────────────
+  // Ada's four public endpoints ship with no limiter at all today. These
+  // pin the registered shape; the endpoints are wired in Phases 2 and 3.
+
+  it('registers a bucket for each Ada surface', () => {
+    for (const bucket of [ADA_SESSION_BUCKET, ADA_TURN_BUCKET, ADA_PHOTO_BUCKET]) {
+      expect(RATE_LIMITS[bucket], `missing bucket: ${bucket}`).toBeDefined();
+    }
+  });
+
+  it('sets conversation limits above what a real intake needs', () => {
+    // Observed sessions average ~4 user turns; the longest ran 56. A person
+    // working through a hard situation must never hit this.
+    expect(RATE_LIMITS[ADA_TURN_BUCKET].short.max).toBe(30);
+    expect(RATE_LIMITS[ADA_TURN_BUCKET].short.windowMs).toBe(10 * 60_000);
+    expect(RATE_LIMITS[ADA_TURN_BUCKET].long.max).toBe(200);
+    expect(RATE_LIMITS[ADA_TURN_BUCKET].long.windowMs).toBe(24 * 60 * 60_000);
+
+    expect(RATE_LIMITS[ADA_SESSION_BUCKET].short.max).toBe(5);
+    expect(RATE_LIMITS[ADA_SESSION_BUCKET].short.windowMs).toBe(60 * 60_000);
+    expect(RATE_LIMITS[ADA_SESSION_BUCKET].long.max).toBe(20);
+  });
+
+  it('holds the photo path to a tighter budget than chat (AC3)', () => {
+    // A photo analysis is an Opus vision call — orders of magnitude more
+    // expensive than a chat turn. This ordering is the invariant; the exact
+    // numbers are tunable. If someone loosens photo past chat, that is a bug.
+    expect(RATE_LIMITS[ADA_PHOTO_BUCKET].short.max).toBeLessThan(
+      RATE_LIMITS[ADA_TURN_BUCKET].short.max,
+    );
+    expect(RATE_LIMITS[ADA_PHOTO_BUCKET].long.max).toBeLessThan(
+      RATE_LIMITS[ADA_TURN_BUCKET].long.max,
+    );
+    expect(RATE_LIMITS[ADA_PHOTO_BUCKET].short.max).toBe(3);
+    expect(RATE_LIMITS[ADA_PHOTO_BUCKET].long.max).toBe(10);
   });
 });
 
@@ -108,6 +148,18 @@ describe('checkRateLimit', () => {
     await checkRateLimit(s, GUIDE_ASSISTANT_BUCKET, key);
     expect(s.record).not.toHaveBeenCalled();
   });
+
+  it.each([ADA_SESSION_BUCKET, ADA_TURN_BUCKET, ADA_PHOTO_BUCKET])(
+    'does not record a blocked request on the %s bucket (AC5)',
+    async (bucket) => {
+      // Same lockout reasoning as the guide bucket, pinned per Ada bucket so
+      // a future config edit cannot quietly regress it.
+      const s = store([RATE_LIMITS[bucket].short.max, 0]);
+      const result = await checkRateLimit(s, bucket, key);
+      expect(result.allowed).toBe(false);
+      expect(s.record).not.toHaveBeenCalled();
+    },
+  );
 
   it('stores only the hashed key and a short prefix — never a raw IP', async () => {
     const s = store([0, 0]);
