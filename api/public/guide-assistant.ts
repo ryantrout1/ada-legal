@@ -37,6 +37,7 @@ import {
   GUIDE_ASSISTANT_BUCKET,
   checkRateLimit,
 } from '../../src/lib/rateLimit/apiRateLimit.js';
+import { clientIp } from '../../src/lib/rateLimit/clientIp.js';
 import { makeApiRateLimitStore } from '../../src/lib/rateLimit/apiRateLimitStore.js';
 import {
   GUIDE_ASSISTANT_MODEL,
@@ -57,12 +58,6 @@ export const config = { maxDuration: 30 };
 const MAX_CONTEXT_CHARS = 12_000;
 
 const READING_LEVELS: ReadonlySet<string> = new Set(['simple', 'standard', 'professional']);
-
-function clientIp(req: VercelRequest): string {
-  const fwd = req.headers['x-forwarded-for'];
-  const raw = Array.isArray(fwd) ? fwd[0] : fwd;
-  return raw?.split(',')[0]?.trim() || '0.0.0.0';
-}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return;

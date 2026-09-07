@@ -40,6 +40,17 @@ export interface RateLimitConfig {
 export const GUIDE_ASSISTANT_BUCKET = 'guide_assistant';
 
 /**
+ * Ada's public surfaces. Three buckets rather than one because the cost per
+ * request differs by orders of magnitude: starting a conversation is a row
+ * write, a turn is a Sonnet call, and a photo analysis is an Opus vision
+ * call. A single shared budget would either throttle conversation too hard
+ * or leave the expensive path too loose.
+ */
+export const ADA_SESSION_BUCKET = 'ada_session';
+export const ADA_TURN_BUCKET = 'ada_turn';
+export const ADA_PHOTO_BUCKET = 'ada_photo';
+
+/**
  * Deliberately generous. Shared IPs are the norm in exactly the places
  * this guide matters most — offices, schools, libraries, clinics — and a
  * reader working through a chapter can legitimately ask several questions
@@ -50,6 +61,40 @@ export const RATE_LIMITS: Record<string, RateLimitConfig> = {
   [GUIDE_ASSISTANT_BUCKET]: {
     short: { windowMs: 10 * 60_000, max: 10 },
     long: { windowMs: 24 * 60 * 60_000, max: 60 },
+  },
+
+  /**
+   * Conversation starts. Nobody legitimately opens six intakes in an hour,
+   * but a reader who reloads the page a few times must not be locked out
+   * before typing anything.
+   */
+  [ADA_SESSION_BUCKET]: {
+    short: { windowMs: 60 * 60_000, max: 5 },
+    long: { windowMs: 24 * 60 * 60_000, max: 20 },
+  },
+
+  /**
+   * Messages. Sized off observed sessions — roughly 4 user turns on
+   * average, 56 at the longest ever recorded. Someone describing a
+   * complicated barrier deserves room to keep going; the same generosity
+   * argument as the guide assistant applies, and more so, because the
+   * people who need Ada most are the ones least able to come back later.
+   */
+  [ADA_TURN_BUCKET]: {
+    short: { windowMs: 10 * 60_000, max: 30 },
+    long: { windowMs: 24 * 60 * 60_000, max: 200 },
+  },
+
+  /**
+   * Photo analysis + upload. The tightest budget on the platform: this is
+   * the only unauthenticated path that reaches an Opus vision call, so it
+   * is the one a script would find most worth abusing. Kept strictly below
+   * ADA_TURN — tests/unit/apiRateLimit.test.ts pins that ordering as an
+   * invariant, not just as a pair of numbers.
+   */
+  [ADA_PHOTO_BUCKET]: {
+    short: { windowMs: 60 * 60_000, max: 3 },
+    long: { windowMs: 24 * 60 * 60_000, max: 10 },
   },
 };
 

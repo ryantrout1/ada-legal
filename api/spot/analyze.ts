@@ -45,6 +45,7 @@ import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv, readJsonBody } from '../_shared.js';
 import { readSpotEnabled, readSpotRetainFreePhotos } from '../../src/lib/spot/spotAvailability.js';
 import { deriveRateLimitKey } from '../../src/lib/spot/spotRateLimitKey.js';
+import { clientIp } from '../../src/lib/rateLimit/clientIp.js';
 import { rateLimitDecision } from '../../src/lib/spot/rateLimitDecision.js';
 import { parseSpotAnalyzeBody, type SpotAnalyzeBody } from '../../src/lib/spot/parseSpotAnalyzeBody.js';
 import { makeSpotStore } from '../../src/lib/spot/spotStore.js';
@@ -67,12 +68,6 @@ const UPSELL = {
   max_photos: MAX_PAID_PHOTOS,
   anchor: 'A professional ADA inspection runs $1,500–$5,000; this screening is $79.',
 } as const;
-
-function clientIp(req: VercelRequest): string {
-  const fwd = req.headers['x-forwarded-for'];
-  const raw = Array.isArray(fwd) ? fwd[0] : fwd;
-  return raw?.split(',')[0]?.trim() || '0.0.0.0';
-}
 
 function writeSseFrame(res: VercelResponse, event: string, data: unknown): void {
   // Minimal SSE, same shape as api/ada/turn.ts: event line, one
