@@ -2,7 +2,8 @@
   "crons": [
     { "path": "/api/cron/sweep-abandoned", "schedule": "0 */6 * * *" },
     { "path": "/api/cron/generate-spot-reports", "schedule": "*/10 * * * *" },
-    { "path": "/api/cron/sweep-spot-photos", "schedule": "0 3 * * *" }
+    { "path": "/api/cron/sweep-spot-photos", "schedule": "0 3 * * *" },
+    { "path": "/api/cron/prune-rate-limits", "schedule": "0 4 * * *" }
   ],
   "redirects": [
     {
