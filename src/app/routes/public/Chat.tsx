@@ -602,6 +602,29 @@ export default function Chat() {
         />
       )}
 
+      {/* Throttle notice. Distinct from the error banner: nothing failed,
+          the server refused on purpose and will accept again shortly. So
+          the voice is "wait", not "something broke", and there is no Try
+          again button — pressing it would only earn another 429.
+
+          role="status" (polite) rather than role="alert": this is
+          informational, and an assertive announcement would cut across
+          whatever a screen-reader user is currently reading. It still
+          announces, because it follows a deliberate user action.
+          Voice rule: name what happened, don't apologize.
+          See docs/ADA_VOICE_GUIDE.md. */}
+      {state.throttled && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="mb-3 rounded-md border border-warning-500 bg-warning-50 px-4 py-3 text-sm"
+        >
+          <p className="text-warning-500">
+            <strong>Give it a minute.</strong> {state.throttled.message}
+          </p>
+        </div>
+      )}
+
       {/* Error banner with recovery actions.
           On error we show what happened, then concrete next steps: try
           again with the last user message, start over, or save what we

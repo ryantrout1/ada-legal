@@ -37,6 +37,14 @@ export interface ChatState {
   messages: ChatMessage[];
   busy: boolean;
   error: string | null;
+  /**
+   * Set when the server throttled this caller (HTTP 429). Kept separate
+   * from `error` because nothing went wrong: the request was refused on
+   * purpose and will succeed again shortly. The error banner's voice
+   * ("Something didn't go through") and its Try-again button are both
+   * wrong here — retrying immediately just earns another 429.
+   */
+  throttled: { message: string; retryAfterSeconds: number } | null;
   /** True on mount until first session call resolves. */
   initializing: boolean;
   /**
@@ -141,6 +149,7 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
     resumable: null,
     packageSlug: null,
     pendingSend: null,
+    throttled: null,
   });
   const didInitRef = useRef(false);
 
@@ -420,6 +429,10 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
         messages: [...s.messages, userMsg],
         busy: true,
         error: null,
+        // A new attempt clears any prior throttle notice — otherwise a
+        // stale "wait a few minutes" sits above a request that just
+        // succeeded.
+        throttled: null,
         // Open the undo window if undoWindowMs > 0. The UI keys off
         // pendingSend.sendAt to render the countdown affordance.
         pendingSend: undoWindowMs > 0
@@ -551,6 +564,31 @@ export function useChatSession(initialLevel: ReadingLevel = DEFAULT_LEVEL) {
             photo_url: photoUrl ?? undefined,
           }),
         });
+        if (resp.status === 429) {
+          // Throttled, not broken. Surface it as its own state so the UI
+          // can say "wait a moment" rather than "something went wrong",
+          // and so it doesn't offer a Try-again button that would only
+          // earn another 429. The user's own message bubble stays put —
+          // they said it, and erasing it would be worse than useless.
+          const msg = await extractError(resp);
+          const retryAfterSeconds =
+            Number(resp.headers.get('Retry-After')) || 60;
+          setState((s) => ({
+            ...s,
+            messages: s.messages.filter(
+              (m) => !(m.id === assistantId && m.content.length === 0),
+            ),
+            busy: false,
+            error: null,
+            throttled: {
+              message:
+                msg ||
+                'Ada needs a moment. Give it a few minutes and try again.',
+              retryAfterSeconds,
+            },
+          }));
+          return;
+        }
         if (!resp.ok) {
           const msg = await extractError(resp);
           throw new Error(msg || `Turn failed (${resp.status})`);

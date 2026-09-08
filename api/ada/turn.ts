@@ -50,6 +50,13 @@ import type { AdaClients } from '../../src/engine/clients/types.js';
 import { hashAnonToken } from '../../src/lib/anonCookie.js';
 import { applyCors } from '../_cors.js';
 import {
+  ADA_TURN_BUCKET,
+  checkRateLimit,
+} from '../../src/lib/rateLimit/apiRateLimit.js';
+import { makeApiRateLimitStore } from '../../src/lib/rateLimit/apiRateLimitStore.js';
+import { clientIp } from '../../src/lib/rateLimit/clientIp.js';
+import { deriveRateLimitKey } from '../../src/lib/spot/spotRateLimitKey.js';
+import {
   makeClientsFromEnv,
   readJsonBody,
   resolveRequestContext,
@@ -205,6 +212,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       callerAnonSessionId !== state.anonSessionId
     ) {
       return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Rate limit (/plan Ada rate limits, Phase 2). This is the model
+    // spend, and the endpoint is unauthenticated.
+    //
+    // Placed here for the same reason the ownership gate above is here:
+    // BEFORE the SSE branch and before runSseTurn calls flushHeaders().
+    // Once those streaming headers are on the wire the response is
+    // committed to 200, and a limit could only surface as an error frame
+    // inside a successful stream — the client's `!resp.ok` branch would
+    // never fire and a throttled user would watch a chat that appears to
+    // hang. After every cheap gate, so a bad session or a closed one
+    // cannot drain a real user's allowance.
+    //
+    // Sized off observed sessions: ~4 user turns on average, 56 at the
+    // longest. Someone describing a complicated barrier has room to keep
+    // going. Fails OPEN on a store error.
+    const limit = await checkRateLimit(
+      makeApiRateLimitStore(),
+      ADA_TURN_BUCKET,
+      deriveRateLimitKey(clientIp(req), (req.headers['user-agent'] as string) ?? ''),
+    );
+    if (!limit.allowed) {
+      res.setHeader('Retry-After', String(limit.retryAfterSeconds));
+      return res.status(429).json({
+        error:
+          "You've sent a lot of messages in a short time. Give it a few minutes, then pick up where you left off — nothing you've told Ada is lost.",
+      });
     }
 
     if (wantsSse) {

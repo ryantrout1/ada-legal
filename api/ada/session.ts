@@ -50,6 +50,13 @@ import {
 import { applyCors } from '../_cors.js';
 import { readAdaAvailability } from '../../src/lib/adaAvailability.js';
 import {
+  ADA_SESSION_BUCKET,
+  checkRateLimit,
+} from '../../src/lib/rateLimit/apiRateLimit.js';
+import { makeApiRateLimitStore } from '../../src/lib/rateLimit/apiRateLimitStore.js';
+import { clientIp } from '../../src/lib/rateLimit/clientIp.js';
+import { deriveRateLimitKey } from '../../src/lib/spot/spotRateLimitKey.js';
+import {
   FIELD_CAPTURE_HEADER,
   resolveFieldCaptureFlag,
 } from '../../src/lib/fieldCaptureFlag.js';
@@ -260,6 +267,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         preview: true,
         greeting,
         reading_level: readingLevel,
+      });
+    }
+
+    // Rate limit (/plan Ada rate limits, Phase 2). Deliberately placed
+    // AFTER the preview return above: preview fires on every page load
+    // and makes no model call, so counting it would lock someone out of
+    // starting a conversation before they had typed a word. Only a real,
+    // persisted session create is counted.
+    //
+    // Nobody legitimately opens six intakes in an hour. Fails OPEN on a
+    // store error — see apiRateLimit.ts for the posture.
+    const limit = await checkRateLimit(
+      makeApiRateLimitStore(),
+      ADA_SESSION_BUCKET,
+      deriveRateLimitKey(clientIp(req), (req.headers['user-agent'] as string) ?? ''),
+    );
+    if (!limit.allowed) {
+      res.setHeader('Retry-After', String(limit.retryAfterSeconds));
+      return res.status(429).json({
+        error:
+          "You've started a lot of conversations in a short time. Give it a few minutes and try again.",
       });
     }
 
