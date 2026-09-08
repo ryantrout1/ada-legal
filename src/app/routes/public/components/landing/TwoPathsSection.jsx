@@ -44,6 +44,50 @@ export default function TwoPathsSection() {
           </p>
         </div>
 
+        {/* Spot lead-in. Deliberately NOT a third card: "Three ways
+            forward" would sit directly above "The ADA protects you in
+            three places", and two consecutive three-card rows with
+            different meanings read as the same three things.
+
+            It is also not a peer of the two below it. The Guide and Ada
+            are destinations; Spot is how you work out which one you need,
+            and it hands off to Ada. So it reads as a step — shorter,
+            smaller radius, inline link instead of a filled button — and
+            the heading above stays honest at two. */}
+        <div className="v2-spine-lead" style={{
+          maxWidth: '920px', margin: '0 auto 20px', display: 'flex',
+          alignItems: 'center', gap: '18px', flexWrap: 'wrap',
+          background: 'var(--page-bg)', border: '1px solid var(--border)',
+          borderRadius: '14px', padding: '16px 24px',
+        }}>
+          <div aria-hidden="true" style={{
+            width: '40px', height: '40px', borderRadius: '50%', flexShrink: 0,
+            background: 'linear-gradient(135deg, #C2410C, #FB923C)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '1.1rem', color: '#fff',
+          }}>S</div>
+          <p style={{
+            fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--body)',
+            lineHeight: 1.6, margin: 0, flex: 1, minWidth: '220px',
+          }}>
+            <b style={{ color: 'var(--heading)', fontWeight: 700 }}>Not sure it's even a barrier?</b>{' '}
+            Show Spot a photo first — it flags what looks like a problem so you know what to ask about.
+          </p>
+          {/* minHeight 44px keeps this an AAA target even though it reads
+              as a link rather than a button. Colour comes from
+              --link (accent-600, 9.97:1); var(--accent) is accent-500 and
+              fails 7:1 as text on --page-bg-alt — the card buttons only
+              get away with it because there it is a background. */}
+          <Link to="/spot" style={{
+            display: 'inline-flex', alignItems: 'center', minHeight: '44px',
+            padding: '0 4px', color: 'var(--link)', fontFamily: 'var(--font-body)',
+            fontSize: '0.95rem', fontWeight: 700, textDecoration: 'underline',
+            textUnderlineOffset: '3px', flexShrink: 0,
+          }}>
+            Show Spot a photo →
+          </Link>
+        </div>
+
         <div className="v2-spine-grid" style={{
           display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '28px',
           maxWidth: '920px', margin: '0 auto',

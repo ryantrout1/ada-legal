@@ -68,6 +68,7 @@ export default function LandingV2Styles() {
 
       @media (max-width: 900px) {
         .v2-spine-grid { grid-template-columns: 1fr !important; }
+        .v2-spine-lead { align-items: flex-start !important; gap: 12px !important; }
         .v2-titles-grid { grid-template-columns: 1fr !important; }
         .v2-trust-grid { grid-template-columns: 1fr !important; }
         .v2-scope-grid { grid-template-columns: 1fr !important; }
