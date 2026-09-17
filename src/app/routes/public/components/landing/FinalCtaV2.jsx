@@ -59,7 +59,7 @@ export default function FinalCtaV2() {
           </Link>
         </div>
         <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', color: 'var(--dark-muted)', marginTop: '1.5rem', marginBottom: 0 }}>
-          No account required. No cost. Your information is kept confidential.
+          No account required. Your information is kept confidential.
         </p>
       </div>
     </section>

@@ -46,7 +46,7 @@ export default function Home() {
         <title>ADA Legal Link — Know the Law. Know Your Rights.</title>
         <meta
           name="description"
-          content="If a barrier shut you out, we help you understand what happened and connect you with someone who can help. Free."
+          content="If a barrier shut you out, we help you understand what happened and connect you with someone who can help."
         />
       </Helmet>
       <LandingV2Styles />

@@ -64,13 +64,13 @@ export default function HeroV2() {
         }}>
           If a building, a website, or a service kept you out when it was supposed to be open
           to you — that wasn't your fault, and it probably wasn't legal. We help you understand
-          what happened and connect you with someone who can help. Free.
+          what happened and connect you with someone who can help.
         </p>
 
             <p className="v2-fade-up v2-delay-4" style={{
               fontFamily: 'var(--font-body)', fontSize: '0.88rem', color: 'var(--dark-muted)', margin: '1.5rem 0 0',
             }}>
-              <strong style={{ color: 'var(--dark-body)' }}>Free to use. No referral fees. No account required.</strong>{' '}
+              <strong style={{ color: 'var(--dark-body)' }}>No account required. The Standards Guide and Ada are free.</strong>{' '}
               Your information stays confidential.
             </p>
         </div>
@@ -121,7 +121,8 @@ export default function HeroV2() {
               }}>
                 A ramp, a doorway, a restroom, a parking space. Spot flags what looks
                 like a barrier so you know what to ask about — a screening read, not a
-                compliance check.
+                compliance check. Your first check is free. A full written report costs
+                extra, and you see the price before you pay.
               </p>
             </div>
           </div>
@@ -132,7 +133,7 @@ export default function HeroV2() {
             {[
               { label: 'Take a photo', path: <><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></> },
               { label: 'Upload one you have', path: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></> },
-              { label: 'Get a written report', path: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></> },
+              { label: 'Buy a full report', path: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></> },
             ].map((chip, i) => (
               <li key={i} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '7px',

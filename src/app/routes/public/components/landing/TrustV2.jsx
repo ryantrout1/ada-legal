@@ -24,8 +24,8 @@ const ITEMS = [
     icon: <><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></>,
   },
   {
-    title: 'Always free',
-    desc: 'No paywall, no subscription, no credit card. If a barrier shut you out, you can get help here — free, always. You don\u2019t have to prove anything to anyone.',
+    title: 'Clear about cost',
+    desc: 'The Standards Guide, Ada, and being connected to an attorney are free. The only paid item is a full Spot photo report, and you see the price before you pay.',
     icon: <><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></>,
   },
   {
