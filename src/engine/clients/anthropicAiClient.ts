@@ -116,8 +116,29 @@ export class AnthropicAiClient implements AiClient {
     const blockKinds = new Map<number, 'text' | 'tool_use'>();
     const toolUseBuffers = new Map<number, { id: string; name: string; json: string }>();
 
+    // Usage for the ada_ai_usage log line. Numbers only, never text, so
+    // prompt caching and the live model can be read from runtime logs.
+    const usage = {
+      model: '',
+      input: 0,
+      output: 0,
+      cache_read: 0,
+      cache_creation: 0,
+      stop_reason: null as string | null,
+    };
+
     for await (const event of stream) {
-      if (event.type === 'content_block_start') {
+      if (event.type === 'message_start') {
+        const u = event.message.usage;
+        usage.model = event.message.model;
+        usage.input = u.input_tokens ?? 0;
+        usage.output = u.output_tokens ?? 0;
+        usage.cache_read = u.cache_read_input_tokens ?? 0;
+        usage.cache_creation = u.cache_creation_input_tokens ?? 0;
+      } else if (event.type === 'message_delta') {
+        usage.output = event.usage?.output_tokens ?? usage.output;
+        usage.stop_reason = event.delta?.stop_reason ?? usage.stop_reason;
+      } else if (event.type === 'content_block_start') {
         if (event.content_block.type === 'text') {
           blockKinds.set(event.index, 'text');
         } else if (event.content_block.type === 'tool_use') {
@@ -171,6 +192,7 @@ export class AnthropicAiClient implements AiClient {
           }
         }
       } else if (event.type === 'message_stop') {
+        console.log(JSON.stringify({ evt: 'ada_ai_usage', ...usage }));
         yield { type: 'message_stop' };
       }
     }
