@@ -9,9 +9,8 @@
  * the AiClient interface. That's what lets us swap in InMemoryAiClient
  * for tests.
  *
- * Model default: claude-sonnet-4-5 (model alias, floats forward with
- * minor Anthropic snapshot updates). Override via req.model if a given
- * call wants a different tier.
+ * Model default: CLAUDE_MODELS.adaChat (src/lib/claudeModels.ts).
+ * Override via req.model if a given call wants a different tier.
  *
  * Chunk mapping (Anthropic stream event → our AiStreamChunk):
  *   content_block_start (text)      → text_delta (empty init, nothing emitted)
@@ -25,13 +24,14 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { CLAUDE_MODELS } from '../../lib/claudeModels.js';
 import type {
   AiClient,
   AiStreamChunk,
   AiStreamRequest,
 } from './types.js';
 
-const DEFAULT_MODEL = 'claude-sonnet-4-5';
+const DEFAULT_MODEL = CLAUDE_MODELS.adaChat;
 const DEFAULT_MAX_TOKENS = 4096;
 
 export class AnthropicAiClient implements AiClient {

@@ -19,11 +19,12 @@ import {
   makeAnthropicPlaceFn,
   PLACEMENT_MODEL_DEFAULT,
 } from '../../../src/lib/spot/placeFindingAnthropic.js';
+import { SPOT_PLACEMENT_PREVIEW_MODELS } from '../../../src/lib/claudeModels.js';
 
 export const config = { maxDuration: 300 };
 
 /** Models allowed for a preview run. Kept tight — this spends. */
-const ALLOWED_MODELS = new Set([PLACEMENT_MODEL_DEFAULT, 'claude-sonnet-5']);
+const ALLOWED_MODELS = new Set<string>(SPOT_PLACEMENT_PREVIEW_MODELS);
 const MIN_CONFIDENCE_DEFAULT = 0.5;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

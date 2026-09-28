@@ -10,6 +10,7 @@
 
 import { useState } from 'react';
 import type { PhotoAnnotation } from '@/lib/spot/annotationTypes.js';
+import { SPOT_PLACEMENT_PREVIEW_MODELS } from '@/lib/claudeModels';
 
 interface PreviewResponse {
   model: string;
@@ -17,7 +18,7 @@ interface PreviewResponse {
   annotations: PhotoAnnotation[];
 }
 
-const MODELS = ['claude-opus-4-8', 'claude-sonnet-5'];
+const MODELS = SPOT_PLACEMENT_PREVIEW_MODELS;
 
 export default function SpotAnnotationPreview() {
   const [sessionId, setSessionId] = useState('');

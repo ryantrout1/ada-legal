@@ -22,9 +22,11 @@
  * it would invalidate that feedback.
  */
 
-export const SPOT_REPORT_MODELS = ['claude-opus-5'] as const;
+import { CLAUDE_MODELS } from '../claudeModels.js';
+
+export const SPOT_REPORT_MODELS = [CLAUDE_MODELS.spotReport] as const;
 export type SpotReportModel = (typeof SPOT_REPORT_MODELS)[number];
-export const SPOT_REPORT_DEFAULT_MODEL: SpotReportModel = 'claude-opus-5';
+export const SPOT_REPORT_DEFAULT_MODEL: SpotReportModel = CLAUDE_MODELS.spotReport;
 
 export type ParsedRegenerate =
   | { ok: true; sessionId: string; model: SpotReportModel }

@@ -28,12 +28,14 @@
  * the prompt and the model is forbidden from using general knowledge.
  */
 
+import { CLAUDE_MODELS } from '../claudeModels.js';
+
 /** System-settings blob shared with the ada/spot flags. */
 export const GUIDE_ASSISTANT_SETTINGS_KEY = 'admin';
 export const GUIDE_ASSISTANT_ENABLED_KEY = 'guide_assistant_enabled';
 export const GUIDE_ASSISTANT_ENABLED_DEFAULT = false;
 
-export const GUIDE_ASSISTANT_MODEL = 'claude-sonnet-5';
+export const GUIDE_ASSISTANT_MODEL = CLAUDE_MODELS.guideAssistant;
 
 /** Hard cap on a single question, matching B44's client-side limit. */
 export const MAX_QUESTION_CHARS = 500;

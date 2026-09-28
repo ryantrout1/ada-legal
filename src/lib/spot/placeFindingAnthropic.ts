@@ -12,9 +12,10 @@ import Anthropic from '@anthropic-ai/sdk';
 import type { PlacedPin, PlaceTarget } from './annotationTypes.js';
 import { placeFinding } from './placeFinding.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
+import { CLAUDE_MODELS } from '../claudeModels.js';
 
-/** Same default the photo analyzer uses. Overridable per preview run. */
-export const PLACEMENT_MODEL_DEFAULT = 'claude-opus-4-8';
+/** Placement model. Set in src/lib/claudeModels.ts; overridable per preview run. */
+export const PLACEMENT_MODEL_DEFAULT = CLAUDE_MODELS.spotPlacement;
 
 const PLACE_FINDING_TOOL = {
   name: 'place_finding',
