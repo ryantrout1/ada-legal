@@ -29,8 +29,8 @@
  *   # Write to stdout instead of harvest.md (for piping)
  *   node scripts/personas-harvest.mjs --persona <slug> --stdout
  *
- *   # Use a different model (default: claude-sonnet-4-5-20250929)
- *   node scripts/personas-harvest.mjs --persona <slug> --model claude-opus-4-5
+ *   # Use a different model (default: claude-sonnet-5-5)
+ *   node scripts/personas-harvest.mjs --persona <slug> --model claude-opus-5-5
  *
  * Requires ANTHROPIC_API_KEY in the environment. Reads from
  * .env.local automatically if present.
@@ -48,7 +48,7 @@ const ARTIFACT_ROOT = path.resolve(
   'personas',
 );
 
-const DEFAULT_MODEL = 'claude-sonnet-4-6';
+const DEFAULT_MODEL = 'claude-sonnet-5-5';
 
 // ─── Argument parsing ───────────────────────────────────────────────────────
 

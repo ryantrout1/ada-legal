@@ -101,8 +101,8 @@ npm run personas:harvest -- --persona listing-scoped --run 2026-04-22-080000
 # Write to stdout instead of harvest.md
 npm run personas:harvest -- --persona listing-scoped --stdout
 
-# Use a different model (default: claude-sonnet-4-6)
-npm run personas:harvest -- --persona listing-scoped --model claude-opus-4-6
+# Use a different model (default: claude-sonnet-5-5)
+npm run personas:harvest -- --persona listing-scoped --model claude-opus-5-5
 
 # List runs, showing which personas have been harvested
 npm run personas:harvest -- --list
@@ -120,8 +120,8 @@ The harvester prompt looks for:
 The output is tight by design: `Verdict at a glance`, `Strengths`,
 `Concerns`, `Would debug`. Omits sections with nothing to report.
 
-Typical cost: ~500 input tokens + ~400 output tokens = $0.008 per
-harvest on Sonnet 4.6. A full Harness A sweep harvested = ~$0.05.
+Typical cost: ~500 input tokens + ~400 output tokens = $0.005 per
+harvest on Sonnet 5.5. A full Harness A sweep harvested = ~$0.03.
 
 ## Grouping multiple runs under one timestamp
 
