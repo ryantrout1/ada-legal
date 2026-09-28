@@ -29,7 +29,7 @@
     "eval:boxes": "node --experimental-strip-types scripts/eval-boxes.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.90.0",
+    "@anthropic-ai/sdk": "^0.129.0",
     "@clerk/backend": "^3.2.13",
     "@clerk/clerk-react": "^5.61.5",
     "@neondatabase/serverless": "^1.1.0",
