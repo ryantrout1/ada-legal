@@ -397,9 +397,11 @@ export async function waitForTurnComplete(
 }
 
 /**
- * Wait for the chat hook to have adopted a session (session_id goes
- * from empty to a uuid). Used at the start of every persona that
- * drives the public chat UI.
+ * Wait for the chat to be ready for the first user turn. A pre-bound
+ * (deep-linked) chat adopts a live session, so session_id goes from
+ * empty to a uuid. A cold /ada load only previews Ada's greeting and
+ * creates the session lazily on the first real message, so there the
+ * greeting bubble is the ready signal. Either one counts.
  */
 export async function waitForSessionAdopted(
   conversation: Locator,
@@ -408,10 +410,18 @@ export async function waitForSessionAdopted(
   const { expect } = await import('@playwright/test');
   await expect
     .poll(
-      async () => (await conversation.getAttribute('data-session-id')) || '',
+      async () => {
+        const id = (await conversation.getAttribute('data-session-id')) || '';
+        if (id) return 'ready';
+        const greeting = await conversation
+          .page()
+          .locator('[data-role="assistant"]')
+          .count();
+        return greeting > 0 ? 'ready' : '';
+      },
       { timeout: timeoutMs, intervals: [500, 1000, 2000] },
     )
-    .not.toBe('');
+    .toBe('ready');
 }
 
 /**
