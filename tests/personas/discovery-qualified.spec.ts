@@ -62,20 +62,12 @@ test(
     const conversation = page.getByLabel('Conversation with Ada');
     await expect(conversation).toBeVisible({ timeout: 15_000 });
 
-    // Public_ada session — wait for the cold greeting to render.
-    // The hook sets sessionId only after POST /api/ada/session returns.
-    await expect
-      .poll(
-        async () => (await conversation.getAttribute('data-session-id')) || '',
-        { timeout: 15_000, intervals: [500, 1000, 2000] },
-      )
-      .not.toBe('');
-
-    await recorder.captureSessionState(page);
-    recorder.assertion(
-      'initial-session-id-present',
-      recorder.trace.sessionId !== null && recorder.trace.sessionId !== '',
-    );
+    // Public_ada — wait for the cold greeting to render. The session row
+    // is created lazily on the first real message (useChatSession
+    // previewGreeting/ensureSession), so there is no session id yet.
+    await expect(page.locator('[data-role="assistant"]').first()).toBeVisible({
+      timeout: 15_000,
+    });
 
     // Capture Ada's opening greeting as turn 0 so transcript is
     // complete (she speaks first in public_ada mode).
@@ -157,6 +149,12 @@ test(
     }
 
     // ── Assertions on final state ───────────────────────────────────
+
+    // The session row exists once the first message was sent.
+    recorder.assertion(
+      'session-id-present-after-first-message',
+      recorder.trace.sessionId !== null && recorder.trace.sessionId !== '',
+    );
 
     // Some assistant turn surfaced the hotel listing. Ada's discovery
     // response references the listing by title or short_description.
