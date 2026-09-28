@@ -17,8 +17,8 @@
  */
 
 export const CLAUDE_MODELS = Object.freeze({
-  /** Ada intake chat. The AnthropicAiClient default. */
-  adaChat: 'claude-sonnet-4-5',
+  /** Ada intake chat. The AnthropicAiClient default. Phase 2 moved it from claude-sonnet-4-5 (retired Sep 29, 2026). */
+  adaChat: 'claude-sonnet-5-5',
   /** Spot report synthesis: the paid report. */
   spotReport: 'claude-opus-5',
   /** Spot pin placement. Also used by api/ada/analyze-photo.ts. */
