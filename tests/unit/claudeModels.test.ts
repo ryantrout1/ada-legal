@@ -87,7 +87,7 @@ describe('CLAUDE_MODELS', () => {
   it('pins the models production runs today', async () => {
     const { CLAUDE_MODELS } = await import('@/lib/claudeModels');
     expect(CLAUDE_MODELS).toEqual({
-      adaChat: 'claude-sonnet-4-5',
+      adaChat: 'claude-sonnet-5-5',
       spotReport: 'claude-opus-5',
       spotPlacement: 'claude-opus-4-8',
       spotPlacementCompare: 'claude-sonnet-5',
