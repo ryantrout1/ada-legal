@@ -5,7 +5,7 @@
  * 2026-07-08 grid-cohesion pass). Design authority is B44; changes are
  * confined to the port seams:
  *   - reads /api/public/litigation (Neon, reconciled at M0) instead of
- *     base44.entities.Litigation.list()
+ *     B44's Litigation entity list call
  *   - filter logic extracted to src/app/lib/lawsuitFilters.ts so it can
  *     be unit-tested; behavior is B44's apart from the two resolved
  *     decisions documented there

@@ -2,7 +2,7 @@
  * FeedbackModal — site feedback, ported from Base44
  * (src/components/FeedbackModal.jsx @ 6b1e9ac).
  *
- * Port seams: base44.entities.Feedback.create -> POST /api/public/feedback;
+ * Port seams: B44's Feedback entity create -> POST /api/public/feedback;
  * trackEvent now posts to /api/public/events.
  *
  * NOT INTAKE. This captures "the site did something wrong" or "here is a

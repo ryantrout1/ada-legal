@@ -2,7 +2,7 @@
  * ComingSoonModal — waitlist capture, ported from Base44
  * (src/components/ComingSoonModal.jsx @ 6b1e9ac).
  *
- * Port seam: base44.entities.WaitlistSignup.create -> POST
+ * Port seam: B44's WaitlistSignup entity create -> POST
  * /api/public/waitlist. The endpoint treats a duplicate address as
  * success, so the double-click path shows the same thank-you rather than
  * an error.
