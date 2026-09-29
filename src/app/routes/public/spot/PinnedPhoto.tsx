@@ -31,6 +31,7 @@ export function PinnedPhoto({
   total,
   pins,
   honestConfidence = false,
+  alt,
 }: {
   url: string;
   index: number;
@@ -38,6 +39,8 @@ export function PinnedPhoto({
   pins: NumberedPin[];
   /** When true, medium-confidence pins render as approximate halos. */
   honestConfidence?: boolean;
+  /** Overrides the report's default alt text (the free read is not a report). */
+  alt?: string;
 }) {
   const offsets = assignMarkerOffsets(pins);
   const isApprox = (p: NumberedPin) =>
@@ -47,7 +50,7 @@ export function PinnedPhoto({
       <div className="relative">
         <img
           src={url}
-          alt={`Photo ${index + 1} of ${total} screened in this report`}
+          alt={alt ?? `Photo ${index + 1} of ${total} screened in this report`}
           className="block w-full rounded-lg border border-surface-200"
           loading="lazy"
         />

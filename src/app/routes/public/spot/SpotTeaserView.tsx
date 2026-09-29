@@ -24,6 +24,8 @@ import { SPOT_FREE_STARTER_DISCLAIMER } from '@/lib/spot/spotDisclaimers';
 interface Props {
   teaser: FreeReadTeaser;
   onRetry: () => void;
+  /** Per shown row, the number of its marker on the photo (null: no marker). */
+  numberForRow?: (number | null)[];
 }
 
 function StarterNote() {
@@ -50,7 +52,7 @@ function headline(teaser: FreeReadTeaser): string {
   return `We found ${totalCount} things worth a closer look in this photo. Here are the ${shown.length} that stand out.`;
 }
 
-export default function SpotTeaserView({ teaser, onRetry }: Props) {
+export default function SpotTeaserView({ teaser, onRetry, numberForRow }: Props) {
   if (teaser.kind === 'no_read') {
     return (
       <div className="rounded-lg border border-surface-200 bg-surface-100 p-5" aria-live="polite">
@@ -93,6 +95,12 @@ export default function SpotTeaserView({ teaser, onRetry }: Props) {
             key={i}
             className="flex flex-wrap items-baseline gap-x-2 gap-y-1 rounded-md border border-surface-200 bg-surface-50 px-3 py-2.5"
           >
+            {numberForRow?.[i] != null ? (
+              <span className="flex h-6 w-6 flex-none items-center justify-center self-center rounded-full bg-accent-600 text-xs font-semibold leading-none text-[color:var(--page-bg)]">
+                <span className="sr-only">Marker </span>
+                {numberForRow[i]}
+              </span>
+            ) : null}
             <span className="rounded-full bg-accent-50 px-2 py-0.5 text-xs font-medium text-accent-600">
               {SPOT_SEVERITY_LABEL[item.severity]}
             </span>

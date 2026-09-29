@@ -14,6 +14,8 @@ import SpotCheckout from './spot/SpotCheckout';
 import SpotUpload from './spot/SpotUpload';
 import SpotReportView from './spot/SpotReportView';
 import SpotIntro from './spot/SpotIntro';
+import { PinnedPhoto } from './spot/PinnedPhoto';
+import { teaserPins } from '@/lib/spot/teaserPins';
 import { downscalePhoto } from '@/app/utils/downscalePhoto';
 import type { SpotReportContent } from '@/lib/spot/reportSchema';
 import { SPOT_DEFAULT_MAX_PHOTOS, SPOT_DEFAULT_PRICE_USD } from '@/lib/spot/spotOffer';
@@ -136,6 +138,10 @@ export default function SpotLanding() {
   }
 
   const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
+  // Markers for the named barriers, numbered to match the list. The free read
+  // is one photo, so they all belong on previews[0].
+  const marked = useMemo(() => (state.teaser ? teaserPins(state.teaser) : null), [state.teaser]);
+  const showMarkedPhoto = previews.length === 1 && (marked?.pins.length ?? 0) > 0;
   useEffect(() => () => previews.forEach((u) => URL.revokeObjectURL(u)), [previews]);
 
   /**
@@ -349,8 +355,23 @@ export default function SpotLanding() {
                     Findings name specific features — a raised curb, a fixed
                     bench, a mirror height — so the photo is not decoration.
                     It is the thing that lets someone check the list against
-                    what they actually photographed. */}
-                {previews.length > 0 ? (
+                    what they actually photographed.
+
+                    When the named barriers were boxed, the photo is drawn
+                    full width through PinnedPhoto, with numbered markers that
+                    match the list below. */}
+                {showMarkedPhoto && marked ? (
+                  <div className="mb-5 rounded-md border border-surface-200 bg-surface-100 p-2">
+                    <PinnedPhoto
+                      url={previews[0]!}
+                      index={0}
+                      total={1}
+                      pins={marked.pins}
+                      honestConfidence
+                      alt="The photo you screened"
+                    />
+                  </div>
+                ) : previews.length > 0 ? (
                   <ul className="mb-5 grid grid-cols-2 gap-3">
                     {previews.map((url, i) => (
                       <li key={url} className="rounded-md border border-surface-200 bg-surface-100 p-2">
@@ -370,7 +391,11 @@ export default function SpotLanding() {
                     remediation report, see below.
                   </p>
                 ) : null}
-                <SpotTeaserView teaser={state.teaser} onRetry={startOver} />
+                <SpotTeaserView
+                  teaser={state.teaser}
+                  onRetry={startOver}
+                  numberForRow={showMarkedPhoto ? marked?.numberForRow : undefined}
+                />
                 <UpsellCard upsell={state.upsell} onStart={() => setCheckoutActive(true)} />
 
                 {IS_TEST_MODE ? (

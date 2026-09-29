@@ -30,9 +30,11 @@
 
 import type {
   PhotoAnalysisOutput,
+  PhotoBoundingBox,
   PhotoFinding,
   PhotoFindingSeverity,
 } from '../../types/db.js';
+import { markerPointForBox } from './pinFromBox.js';
 
 /**
  * How many barriers the free read names.
@@ -56,6 +58,19 @@ export interface FreeReadTeaserItem {
   severity: PhotoFindingSeverity;
   /** True when the model could not fully assess this from the photo. */
   hedged: boolean;
+  /**
+   * Where to mark this barrier on the photo, from the analyzer's own box.
+   * Present only when markers are switched on and the analyzer boxed it. A
+   * location, not content: it says where the named barrier is, nothing more.
+   */
+  pin?: FreeReadTeaserPin;
+}
+
+/** The point to mark (fractions of the image) and the box it came from. */
+export interface FreeReadTeaserPin {
+  x: number;
+  y: number;
+  box: PhotoBoundingBox;
 }
 
 export interface FreeReadTeaser {
@@ -126,12 +141,19 @@ function dedupeBySection(findings: readonly PhotoFinding[]): PhotoFinding[] {
   return [...bySection.values(), ...unkeyed];
 }
 
-function toItem(f: PhotoFinding): FreeReadTeaserItem {
-  return {
+function toItem(f: PhotoFinding, withPin: boolean): FreeReadTeaserItem {
+  const item: FreeReadTeaserItem = {
     title: f.title_standard,
     severity: f.severity,
     hedged: f.confirmable === false,
   };
+  // Only a shown finding reaches here, so a withheld barrier's location can
+  // never ride along. No box means no marker, never a guessed one.
+  if (withPin && f.bounding_box) {
+    const b = f.bounding_box;
+    item.pin = { ...markerPointForBox(b), box: { x: b.x, y: b.y, w: b.w, h: b.h } };
+  }
+  return item;
 }
 
 /**
@@ -139,10 +161,13 @@ function toItem(f: PhotoFinding): FreeReadTeaserItem {
  *
  * `max` is injectable for tests only; callers should take the default so the
  * product has one answer to "how much is free".
+ *
+ * `pins` adds marker points to the shown rows. The endpoint passes the
+ * spot_show_annotations flag, the same kill switch the paid report uses.
  */
 export function buildFreeReadTeaser(
   output: PhotoAnalysisOutput,
-  opts: { max?: number } = {},
+  opts: { max?: number; pins?: boolean } = {},
 ): FreeReadTeaser {
   const max = opts.max ?? FREE_READ_TEASER_MAX;
   const scene = output.scene?.standard || undefined;
@@ -169,7 +194,7 @@ export function buildFreeReadTeaser(
     })
     .map(({ f }) => f);
 
-  const shown = ordered.slice(0, max).map(toItem);
+  const shown = ordered.slice(0, max).map((f) => toItem(f, opts.pins === true));
 
   return {
     kind: 'findings',

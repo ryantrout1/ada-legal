@@ -43,7 +43,11 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { applyCors } from '../_cors.js';
 import { makeClientsFromEnv, readJsonBody } from '../_shared.js';
-import { readSpotEnabled, readSpotRetainFreePhotos } from '../../src/lib/spot/spotAvailability.js';
+import {
+  readSpotEnabled,
+  readSpotRetainFreePhotos,
+  readSpotShowAnnotations,
+} from '../../src/lib/spot/spotAvailability.js';
 import { deriveRateLimitKey } from '../../src/lib/spot/spotRateLimitKey.js';
 import { clientIp } from '../../src/lib/rateLimit/clientIp.js';
 import { rateLimitDecision } from '../../src/lib/spot/rateLimitDecision.js';
@@ -169,7 +173,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // is enforced HERE rather than in the browser on purpose — truncating a
     // list client-side leaves every withheld finding sitting in the network
     // payload, which is a paywall in name only.
-    const teaser = buildFreeReadTeaser(result.output);
+    //
+    // Markers ride on the named barriers only, from the analyzer's own boxes,
+    // behind the same spot_show_annotations switch as the paid report. A
+    // failed flag read means no markers, never a failed read.
+    const showPins = await readSpotShowAnnotations(clients.db).catch(() => false);
+    const teaser = buildFreeReadTeaser(result.output, { pins: showPins });
 
     if (wantsSse) {
       if (!aborted) {

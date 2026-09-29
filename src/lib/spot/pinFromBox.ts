@@ -86,6 +86,15 @@ function normalizeSection(s: string): string {
   return s.replace(/[§\s]/g, '').toLowerCase();
 }
 
+/**
+ * The point to mark for one analyzer box: its centre for an object, the step
+ * line for an edge. The one rule both the paid report and the free read use,
+ * so a barrier is marked in the same place on both.
+ */
+export function markerPointForBox(box: PhotoBoundingBox): { x: number; y: number } {
+  return { x: round3(referenceX(box)), y: round3(referenceY(box)) };
+}
+
 type BoxedFinding = PhotoFinding & { bounding_box: NonNullable<PhotoFinding['bounding_box']> };
 
 function hasBox(f: PhotoFinding): f is BoxedFinding {
@@ -125,8 +134,7 @@ export function boxPinForItem(
 
   const b = best.bounding_box;
   return {
-    x: round3(referenceX(b)),
-    y: round3(referenceY(b)),
+    ...markerPointForBox(b),
     confidence: best.confidence,
     // source 'box' so the tier logic does NOT gate on this confidence — it is
     // about whether the concern is real, not where it is. The box y proved
