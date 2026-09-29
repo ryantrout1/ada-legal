@@ -141,6 +141,6 @@ describe('model selection', () => {
     // B44 pinned Opus 4.7 because that was the newest its SDK exposed, not
     // because the task needed it: this is grounded extraction from supplied
     // page content, on a public endpoint billed per question.
-    expect(GUIDE_ASSISTANT_MODEL).toBe('claude-sonnet-5');
+    expect(GUIDE_ASSISTANT_MODEL).toBe('claude-sonnet-5-5');
   });
 });

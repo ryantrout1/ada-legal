@@ -92,7 +92,7 @@ describe('CLAUDE_MODELS', () => {
       spotReport: 'claude-opus-5',
       spotPlacement: 'claude-opus-4-8',
       spotPlacementCompare: 'claude-sonnet-5',
-      guideAssistant: 'claude-sonnet-5',
+      guideAssistant: 'claude-sonnet-5-5',
       sharedReport: 'claude-opus-5',
       sharedPlacement: 'claude-opus-4-8',
     });
