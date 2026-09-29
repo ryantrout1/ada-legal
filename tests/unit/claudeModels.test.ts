@@ -88,6 +88,7 @@ describe('CLAUDE_MODELS', () => {
     const { CLAUDE_MODELS } = await import('@/lib/claudeModels');
     expect(CLAUDE_MODELS).toEqual({
       adaChat: 'claude-sonnet-5-5',
+      spotPhotoReading: 'claude-opus-4-8',
       spotReport: 'claude-opus-5',
       spotPlacement: 'claude-opus-4-8',
       spotPlacementCompare: 'claude-sonnet-5',
@@ -114,5 +115,34 @@ describe('CLAUDE_MODELS', () => {
       CLAUDE_MODELS.spotPlacement,
       CLAUDE_MODELS.spotPlacementCompare,
     ]);
+  });
+});
+
+describe('Spot photo reader (upgrade Phase 3a)', () => {
+  it('is its own analyzer instance built from the spotPhotoReading slot', async () => {
+    const { makeAdaClients } = await import('@/engine/clients/adaClients');
+    const { CLAUDE_MODELS } = await import('@/lib/claudeModels');
+    const clients = makeAdaClients({
+      databaseUrl: 'postgres://u:p@localhost/db',
+      anthropicApiKey: 'test-key',
+      photoAnalysisModel: 'claude-shared-analyzer-override',
+    } as never);
+    expect(clients.spotPhoto).toBeDefined();
+    expect(clients.spotPhoto).not.toBe(clients.photo);
+    expect((clients.spotPhoto as unknown as { model: string }).model).toBe(
+      CLAUDE_MODELS.spotPhotoReading,
+    );
+    // The shared analyzer keeps its own setting.
+    expect((clients.photo as unknown as { model: string }).model).toBe(
+      'claude-shared-analyzer-override',
+    );
+  });
+
+  it('Spot endpoints read photos only through clients.spotPhoto', () => {
+    for (const rel of ['api/spot/analyze.ts', 'src/lib/spot/generateReport.ts']) {
+      const code = stripComments(readFileSync(join(ROOT, rel), 'utf8'));
+      expect(code, rel).not.toMatch(/clients\.photo\b/);
+      expect(code, rel).toMatch(/clients\.spotPhoto\./);
+    }
   });
 });

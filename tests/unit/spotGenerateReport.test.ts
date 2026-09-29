@@ -29,7 +29,7 @@ function fakeClients(opts: {
   stream: () => AsyncIterable<AiStreamChunk>;
 }): AdaClients {
   return {
-    photo: {
+    spotPhoto: {
       analyze: async ({ blobKeys }: { blobKeys: string[] }) => {
         opts.onAnalyze(blobKeys);
         return { output: cannedOutput(), modelVersion: 'opus-test' };
@@ -89,7 +89,7 @@ describe('generateReport', () => {
 
     let sawSynthesisOrder = '';
     const clients = {
-      photo: {
+      spotPhoto: {
         analyze: async ({ blobKeys }: { blobKeys: string[] }) => {
           const label = blobKeys[0];
           started.push(label);

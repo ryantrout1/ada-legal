@@ -26,7 +26,7 @@ async function* composeStream(): AsyncIterable<AiStreamChunk> {
 
 function fakeClients(): AdaClients {
   return {
-    photo: {
+    spotPhoto: {
       analyze: async () => ({ output: analysis(), modelVersion: 'opus-test' }),
     },
     ai: { stream: () => composeStream() },
@@ -83,7 +83,7 @@ describe('generateReportForSession', () => {
   it('flips an empty session to in_review without a model call', async () => {
     const log: StoreLog = { inserted: 0, markedInReview: 0 };
     const clients = {
-      photo: {
+      spotPhoto: {
         analyze: async () => {
           throw new Error('must not be called');
         },

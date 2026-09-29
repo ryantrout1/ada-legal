@@ -31,7 +31,7 @@ async function* composeStream(input: unknown): AsyncIterable<AiStreamChunk> {
 
 function fakeClients(): AdaClients {
   return {
-    photo: {
+    spotPhoto: {
       analyze: async () => ({ output: cannedOutput(), modelVersion: 'opus-test' }),
     },
     ai: {
