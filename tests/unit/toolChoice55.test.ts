@@ -32,9 +32,12 @@ const full = () =>
 const empty = () => msg([{ type: 'text', text: 'Here is what I see.' }]);
 
 function stub(model: string | undefined, ...responses: Anthropic.Message[]) {
-  const create = vi.fn();
-  for (const r of responses) create.mockResolvedValueOnce(r);
-  const stream = vi.fn();
+  // Every canned response is served by whichever transport the client uses:
+  // create() for forced-tool models, stream().finalMessage() for 5.5 models
+  // (the SDK refuses non-streamed calls with large max_tokens).
+  const queue = [...responses];
+  const create = vi.fn(async () => queue.shift());
+  const stream = vi.fn(() => ({ on: () => undefined, finalMessage: async () => queue.shift() }));
   const client = model ? new AnthropicPhotoAnalysisClient('k', model) : new AnthropicPhotoAnalysisClient('k');
   (client as unknown as { client: unknown }).client = { messages: { create, stream } };
   return { client, create, stream };
@@ -57,10 +60,12 @@ describe('forcedToolChoiceSupported', () => {
 });
 
 describe('photo reader request per model', () => {
-  it('on Opus 5.5: auto tool choice, an explicit instruction, and room for thinking', async () => {
-    const { client, create } = stub('claude-opus-5-5', full());
+  it('on Opus 5.5: auto tool choice, an explicit instruction, and room for thinking, streamed', async () => {
+    const { client, create, stream } = stub('claude-opus-5-5', full());
     const res = await client.analyze(req);
-    const p = create.mock.calls[0][0] as Params;
+    // 32000 tokens is past the SDK's non-streaming limit, so this must stream.
+    expect(create).not.toHaveBeenCalled();
+    const p = stream.mock.calls[0][0] as Params;
     expect(p.tool_choice).toEqual({ type: 'auto' });
     expect(p.max_tokens).toBe(32000);
     const last = p.messages[0].content.at(-1)!;
@@ -70,9 +75,10 @@ describe('photo reader request per model', () => {
     expect(res.output.meta?.tool_call_present).toBe(true);
   });
 
-  it('on Opus 4.8: unchanged (forced tool, 16000, no extra instruction)', async () => {
-    const { client, create } = stub(undefined, full());
+  it('on Opus 4.8: unchanged (forced tool, 16000, no extra instruction, not streamed)', async () => {
+    const { client, create, stream } = stub(undefined, full());
     await client.analyze(req);
+    expect(stream).not.toHaveBeenCalled();
     const p = create.mock.calls[0][0] as Params;
     expect(p.tool_choice).toEqual({ type: 'tool', name: 'report_findings' });
     expect(p.max_tokens).toBe(16000);
@@ -80,9 +86,9 @@ describe('photo reader request per model', () => {
   });
 
   it('on Opus 5.5 a text-only reply still never reads as "no barriers"', async () => {
-    const { client, create } = stub('claude-opus-5-5', empty(), empty());
+    const { client, stream } = stub('claude-opus-5-5', empty(), empty());
     const res = await client.analyze(req);
-    expect(create).toHaveBeenCalledTimes(2);
+    expect(stream).toHaveBeenCalledTimes(2);
     expect(res.output.meta?.tool_call_present).toBe(false);
   });
 });
@@ -92,11 +98,11 @@ describe('streamed free read per model', () => {
     return { on: () => undefined, finalMessage: async () => response };
   }
 
-  it('on Opus 5.5: a streamed reply with no tool call falls back to one normal call', async () => {
-    const { client, create, stream } = stub('claude-opus-5-5', full());
+  it('on Opus 5.5: a streamed reply with no tool call falls back to one more read', async () => {
+    const { client, stream } = stub('claude-opus-5-5', full());
     stream.mockReturnValueOnce(streamOf(empty()));
     const res = await client.analyzeStream(req, () => {});
-    expect(create).toHaveBeenCalledTimes(1);
+    expect(stream).toHaveBeenCalledTimes(2);
     expect(res.output.findings).toHaveLength(1);
   });
 
