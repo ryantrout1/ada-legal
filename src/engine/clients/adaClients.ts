@@ -33,6 +33,7 @@ import { NeonDbClient } from './neonDbClient.js';
 import { auditLog } from '../../db/schema-core.js';
 import { AnthropicAiClient } from './anthropicAiClient.js';
 import { AnthropicPhotoAnalysisClient } from './anthropicPhotoAnalysisClient.js';
+import { CLAUDE_MODELS } from '../../lib/claudeModels.js';
 import { makeOpenAIEmbeddingClient } from '../knowledge/embeddings.js';
 import { ResendEmailClient, StubResendEmailClient } from './resendEmailClient.js';
 import { StripeClient, StubStripeClient } from './stripeClient.js';
@@ -272,6 +273,10 @@ export function makeAdaClients(config: AdaClientsConfig = {}): AdaClients {
     photo: new AnthropicPhotoAnalysisClient(
       config.anthropicApiKey,
       config.photoAnalysisModel,
+    ),
+    spotPhoto: new AnthropicPhotoAnalysisClient(
+      config.anthropicApiKey,
+      CLAUDE_MODELS.spotPhotoReading,
     ),
     email,
     clock: new SystemClock(),

@@ -3,7 +3,7 @@
  *
  *   POST { photos: string[] }   // 1 base64 image data URL (MAX_FREE_PHOTOS)
  *
- * Ada Spot's free-tier read. Runs the shared photo analyzer (Opus 4.8) and
+ * Ada Spot's free-tier read. Runs Spot's own photo reader (clients.spotPhoto) and
  * returns a teaser — a few named barriers, an honest count of what is held
  * back, and the $79 upsell. No Ada session, no org,
  * no Vercel Blob — free-read photos are analyzed transiently (the analyzer
@@ -29,7 +29,7 @@
  * SSE header, so a rejection is always a clean JSON status.
  *
  * Firewall: this is a net-new endpoint. It reuses the analyzer *library*
- * (clients.photo.analyze / analyzeStream) additively; it does NOT touch
+ * (clients.spotPhoto.analyze / analyzeStream) additively; it does NOT touch
  * /api/ada/analyze-photo, photo_analyses, or photo_reviews. Availability is
  * gated by Ada Spot's own spot_enabled flag (dark by default), independent of
  * the ada flags.
@@ -135,15 +135,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // allowed | soft_gated → run the free read on the shared analyzer.
+    // allowed | soft_gated → run the free read on Spot's photo reader.
     // Streamed and blocking paths run the identical analysis; only the
     // transport differs (see analyzeStream).
     const result = wantsSse
-      ? await clients.photo.analyzeStream({ blobKeys: parsed.photos }, (snapshot) => {
+      ? await clients.spotPhoto.analyzeStream({ blobKeys: parsed.photos }, (snapshot) => {
           if (aborted) return;
           writeSseFrame(res, 'progress', mapSpotProgress(snapshot));
         })
-      : await clients.photo.analyze({ blobKeys: parsed.photos });
+      : await clients.spotPhoto.analyze({ blobKeys: parsed.photos });
 
     // Record the read even when the client walked away mid-stream. The
     // free-read allowance is enforced from these rows, so skipping them on

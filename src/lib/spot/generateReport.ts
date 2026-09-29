@@ -66,7 +66,7 @@ export async function generateReport(
   // the session `uploaded` for retry).
   const analyses: PhotoAnalysisOutput[] = await Promise.all(
     chunk(input.photos.map((p) => p.blobUrl), SPOT_REPORT_BATCH_SIZE).map(
-      async (batch) => (await clients.photo.analyze({ blobKeys: batch })).output,
+      async (batch) => (await clients.spotPhoto.analyze({ blobKeys: batch })).output,
     ),
   );
 

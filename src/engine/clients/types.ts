@@ -2575,6 +2575,12 @@ export interface AdaClients {
   db: DbClient;
   blob: BlobClient;
   photo: PhotoAnalysisClient;
+  /**
+   * Spot's own photo reader: the same analyzer, built with
+   * CLAUDE_MODELS.spotPhotoReading, so Spot can move models without
+   * moving the shared analyzer. Spot code reads photos only through this.
+   */
+  spotPhoto: PhotoAnalysisClient;
   email: EmailClient;
   clock: ClockClient;
   random: RandomClient;

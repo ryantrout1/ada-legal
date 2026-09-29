@@ -3511,6 +3511,7 @@ export interface InMemoryAdaClients extends AdaClients {
   db: InMemoryDbClient;
   blob: InMemoryBlobClient;
   photo: InMemoryPhotoAnalysisClient;
+  spotPhoto: InMemoryPhotoAnalysisClient;
   email: InMemoryEmailClient;
   clock: InMemoryClock;
   random: InMemoryRandom;
@@ -3525,6 +3526,7 @@ export function makeInMemoryClients(): InMemoryAdaClients {
     db: new InMemoryDbClient(),
     blob: new InMemoryBlobClient(),
     photo: new InMemoryPhotoAnalysisClient(),
+    spotPhoto: new InMemoryPhotoAnalysisClient(),
     email: new InMemoryEmailClient(),
     clock: new InMemoryClock(),
     random: new InMemoryRandom(),
