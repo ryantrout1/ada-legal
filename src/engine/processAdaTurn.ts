@@ -73,7 +73,7 @@ export async function processAdaTurn({
   // Build the user message and append to history. When the user
   // attaches photos this turn, the message becomes a multi-part
   // content array with image blocks ahead of the text — Ada looks
-  // at the photo natively (Sonnet 4.5 is a vision model), no
+  // at the photo natively (the Ada chat model is a vision model), no
   // separate analyzer call required. Without photos, the message
   // is plain text as before.
   const newPhotoUrls = input.photoBlobKeys ?? [];

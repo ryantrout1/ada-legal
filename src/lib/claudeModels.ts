@@ -6,9 +6,13 @@
  * tests/unit/claudeModels.test.ts fails if a Claude model ID string appears
  * anywhere else in src/ or api/, and pins the values below.
  *
- * Not here on purpose: the photo analyzer client
- * (src/engine/clients/anthropicPhotoAnalysisClient.ts), which is out of
- * scope and being retired.
+ * Not here on purpose: the shared photo reader's own default
+ * (src/engine/clients/anthropicPhotoAnalysisClient.ts, claude-opus-4-8),
+ * used by Ada's analyze_photo tool and case evidence. The /photo analyzer
+ * tool and review queue were retired Sep 28, 2026. Spot builds its own
+ * instance of that reader from spotPhotoReading.
+ *
+ * The 5.5 models reject forced tool use; see forcedToolChoiceSupported().
  *
  * Keep this file free of imports. The admin UI bundles it.
  *

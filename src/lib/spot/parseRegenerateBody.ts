@@ -16,10 +16,8 @@
  * customer before the composition guards existed. Adding a comparison model
  * back is one more entry in this array.
  *
- * NOTE: this is the report SYNTHESIS model only. The photo ANALYSIS model in
- * anthropicPhotoAnalysisClient is a separate choice and is deliberately
- * untouched here — Peter has been grading analyzer output on it, and moving
- * it would invalidate that feedback.
+ * NOTE: this is the report SYNTHESIS model only. Spot's photo reading model
+ * is a separate slot (CLAUDE_MODELS.spotPhotoReading).
  */
 
 import { CLAUDE_MODELS } from '../claudeModels.js';

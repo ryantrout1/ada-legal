@@ -20,7 +20,7 @@
  *   - Prompt caching on the stable prefix (the persona + rules + chapter
  *     map), which is identical on every request; only the reading level
  *     and the page's content vary.
- *   - Sonnet 5: grounded extraction from supplied context, on a per-question
+ *   - Sonnet 5.5: grounded extraction from supplied context, on a per-question
  *     public surface. See src/lib/guide/guideAssistant.ts.
  *
  * Request:  { question, pageContext, pageTitle?, readingLevel?, history? }
