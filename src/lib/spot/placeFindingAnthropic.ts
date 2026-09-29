@@ -12,7 +12,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import type { PlacedPin, PlaceTarget } from './annotationTypes.js';
 import { placeFinding } from './placeFinding.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
-import { CLAUDE_MODELS } from '../claudeModels.js';
+import { CLAUDE_MODELS, callToolInstruction, forcedToolChoiceSupported } from '../claudeModels.js';
 
 /** Spot's placement model: the paid report's pins and the admin preview. Set in claudeModels.ts. */
 export const SPOT_PLACEMENT_MODEL = CLAUDE_MODELS.spotPlacement;
@@ -58,24 +58,29 @@ export function makeAnthropicPlaceFn(
   model: string = SPOT_PLACEMENT_MODEL,
 ): PlaceFn {
   const client = new Anthropic({ apiKey });
+  // The 5.5 models reject forced tool use and always think; thinking counts
+  // against max_tokens, so 256 would leave no room for the answer. Low effort
+  // keeps a one-point placement quick.
+  const forced = forcedToolChoiceSupported(model);
 
   return async (photoUrl: string, target: PlaceTarget): Promise<PlacedPin | null> => {
     return placeFinding(
       async (url, prompt) => {
+        const content: Array<
+          | { type: 'image'; source: { type: 'url'; url: string } }
+          | { type: 'text'; text: string }
+        > = [
+          { type: 'image', source: { type: 'url', url } },
+          { type: 'text', text: prompt },
+        ];
+        if (!forced) content.push({ type: 'text', text: callToolInstruction('place_finding') });
         const response = await client.messages.create({
           model,
-          max_tokens: 256,
+          max_tokens: forced ? 256 : 4000,
           tools: [PLACE_FINDING_TOOL as never],
-          tool_choice: { type: 'tool', name: 'place_finding' },
-          messages: [
-            {
-              role: 'user',
-              content: [
-                { type: 'image', source: { type: 'url', url } },
-                { type: 'text', text: prompt },
-              ],
-            },
-          ],
+          tool_choice: forced ? { type: 'tool', name: 'place_finding' } : { type: 'auto' },
+          ...(forced ? {} : { output_config: { effort: 'low' as const } }),
+          messages: [{ role: 'user', content }],
         });
         return extractToolInput(response);
       },

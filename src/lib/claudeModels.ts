@@ -37,6 +37,26 @@ export const CLAUDE_MODELS = Object.freeze({
 } as const);
 
 /**
+ * Models that reject forced tool use: tool_choice "tool" and "any" return a
+ * 400 on the 5.5 generation. Callers that force a tool must use auto tool
+ * choice plus an explicit instruction for these instead.
+ */
+const NO_FORCED_TOOL_CHOICE = ['claude-opus-5-5', 'claude-sonnet-5-5'];
+
+/** True when this model accepts tool_choice { type: 'tool' | 'any' }. */
+export function forcedToolChoiceSupported(model: string): boolean {
+  return !NO_FORCED_TOOL_CHOICE.some((m) => model === m || model.startsWith(`${m}-`));
+}
+
+/** The instruction sent in place of forcing a tool on models that reject it. */
+export function callToolInstruction(toolName: string): string {
+  return (
+    `Respond by calling the ${toolName} tool exactly once with your complete answer. ` +
+    'Do not answer in plain text.'
+  );
+}
+
+/**
  * Models an admin can pick in the Spot annotation preview. One list, read by
  * both the API allowlist and the admin screen, so they cannot drift apart.
  */

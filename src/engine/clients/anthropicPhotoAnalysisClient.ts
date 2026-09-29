@@ -50,6 +50,7 @@ import { computeOverallRisk } from '../../lib/photoRisk.js';
 import photoAnalysisSystemPrompt from '../../../content-migration/prompts/photo-analysis.js';
 import readingLevelsPrompt from '../../../content-migration/prompts/reading-levels.js';
 import { renderCatalogForPrompt } from '../../lib/adaCatalog.js';
+import { callToolInstruction, forcedToolChoiceSupported } from '../../lib/claudeModels.js';
 
 const DEFAULT_MODEL = 'claude-opus-4-8';
 
@@ -82,6 +83,11 @@ const DEFAULT_MAX_TOKENS = 16000;
 // genuinely long site can complete instead of truncating again. Only spent on
 // the ~rare retry, never on a normal call.
 const RETRY_MAX_TOKENS = 32000;
+// Models that reject forced tool use (the 5.5 generation) also always think,
+// and thinking counts against max_tokens. They get a larger ceiling, and a
+// larger retry ceiling, so thinking cannot crowd out the tool call.
+const AUTO_TOOL_MAX_TOKENS = 32000;
+const AUTO_TOOL_RETRY_MAX_TOKENS = 48000;
 const MAX_PHOTOS_PER_CALL = 3;
 
 // Vercel Blob URL pattern: https://<storeId>.public.blob.vercel-storage.com/<path>.
@@ -244,7 +250,12 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
     if (output.meta?.tool_call_present === false) {
       const retryParams =
         response.stop_reason === 'max_tokens'
-          ? { ...params, max_tokens: RETRY_MAX_TOKENS }
+          ? {
+              ...params,
+              max_tokens: forcedToolChoiceSupported(this.model)
+                ? RETRY_MAX_TOKENS
+                : AUTO_TOOL_RETRY_MAX_TOKENS,
+            }
           : params;
       response = await this.client.messages.create(retryParams);
       output = extractOutputFromResponse(response);
@@ -296,6 +307,13 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
 
     const response = await stream.finalMessage();
     const output = extractOutputFromResponse(response);
+    // Without forced tool use a model can occasionally answer in text. The
+    // non-streamed analyze() retries that; the stream falls back to it once
+    // rather than let an empty read reach the user. Forced-tool models keep
+    // their original behavior.
+    if (output.meta?.tool_call_present === false && !forcedToolChoiceSupported(this.model)) {
+      return this.analyze(req);
+    }
     return {
       output,
       modelVersion: this.model,
@@ -342,9 +360,15 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
       });
     }
 
+    // The 5.5 models reject forced tool use: ask for the tool instead.
+    const forced = forcedToolChoiceSupported(this.model);
+    if (!forced) {
+      userContent.push({ type: 'text', text: callToolInstruction('report_findings') });
+    }
+
     return {
       model: this.model,
-      max_tokens: DEFAULT_MAX_TOKENS,
+      max_tokens: forced ? DEFAULT_MAX_TOKENS : AUTO_TOOL_MAX_TOKENS,
       // System prompt + tool schema are stable across every photo
       // analysis call. Marking the last block of each with
       // cache_control: ephemeral lets Anthropic skip prefill on
@@ -374,7 +398,9 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
           cache_control: { type: 'ephemeral' },
         } as never,
       ],
-      tool_choice: { type: 'tool' as const, name: 'report_findings' },
+      tool_choice: forced
+        ? { type: 'tool' as const, name: 'report_findings' }
+        : { type: 'auto' as const },
       messages: [{ role: 'user' as const, content: userContent }],
     };
   }
@@ -430,11 +456,15 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
           cache_control: { type: 'ephemeral' },
         } as never,
       ],
-      tool_choice: { type: 'tool', name: 'rewrite_reading_level' },
+      tool_choice: forcedToolChoiceSupported(this.model)
+        ? { type: 'tool', name: 'rewrite_reading_level' }
+        : { type: 'auto' },
       messages: [
         {
           role: 'user',
-          content: JSON.stringify(payload),
+          content: forcedToolChoiceSupported(this.model)
+            ? JSON.stringify(payload)
+            : `${JSON.stringify(payload)}\n\n${callToolInstruction('rewrite_reading_level')}`,
         },
       ],
     });
