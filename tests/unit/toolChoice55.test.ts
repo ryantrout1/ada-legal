@@ -36,8 +36,8 @@ function stub(model: string | undefined, ...responses: Anthropic.Message[]) {
   // create() for forced-tool models, stream().finalMessage() for 5.5 models
   // (the SDK refuses non-streamed calls with large max_tokens).
   const queue = [...responses];
-  const create = vi.fn(async () => queue.shift());
-  const stream = vi.fn(() => ({ on: () => undefined, finalMessage: async () => queue.shift() }));
+  const create = vi.fn(async (_p: unknown) => queue.shift());
+  const stream = vi.fn((_p: unknown) => ({ on: () => undefined, finalMessage: async () => queue.shift() }));
   const client = model ? new AnthropicPhotoAnalysisClient('k', model) : new AnthropicPhotoAnalysisClient('k');
   (client as unknown as { client: unknown }).client = { messages: { create, stream } };
   return { client, create, stream };

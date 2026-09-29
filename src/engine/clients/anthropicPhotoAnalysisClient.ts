@@ -236,7 +236,7 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
 
   async analyze(req: PhotoAnalysisRequest): Promise<PhotoAnalysisResult> {
     const params = this.buildAnalyzeParams(req);
-    let response = await this.client.messages.create(params);
+    let response = await this.send(params);
     let output = extractOutputFromResponse(response);
 
     // Forced tool_choice means a missing report_findings block is a truncated
@@ -257,7 +257,7 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
                 : AUTO_TOOL_RETRY_MAX_TOKENS,
             }
           : params;
-      response = await this.client.messages.create(retryParams);
+      response = await this.send(retryParams);
       output = extractOutputFromResponse(response);
     }
 
@@ -265,6 +265,21 @@ export class AnthropicPhotoAnalysisClient implements PhotoAnalysisClient {
       output,
       modelVersion: this.model,
     };
+  }
+
+  /**
+   * One analyze request. Forced-tool models keep the plain create() they
+   * always used. The 5.5 models need a max_tokens ceiling large enough that
+   * the SDK refuses a non-streamed call, so they stream and take the final
+   * message: same response, no progress callback.
+   */
+  private async send(
+    params: ReturnType<AnthropicPhotoAnalysisClient['buildAnalyzeParams']>,
+  ): Promise<Anthropic.Message> {
+    if (forcedToolChoiceSupported(this.model)) {
+      return this.client.messages.create(params);
+    }
+    return this.client.messages.stream(params).finalMessage();
   }
 
   /**
