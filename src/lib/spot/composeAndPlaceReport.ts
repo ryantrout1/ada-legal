@@ -1,12 +1,10 @@
 /**
  * Ada Spot — compose + place, the shared report core.
  *
- * Extracted from generateReport (/plan phase 1) so two callers share one
- * pipeline: the paid buyer report (generateReport analyzes, then calls this)
- * and — in phase 2 — the /photo field test (analyzes once, persists the raw
- * row for the review queue, then calls this). Because both run the SAME
- * synthesis prompt, the SAME composeReport, and the SAME placement, anything
- * the testers validate on /photo is a real change to Spot.
+ * Extracted from generateReport (/plan phase 1). It was shared with the
+ * /photo field test until that tool was retired (Sep 28, 2026); the paid
+ * buyer report (generateReport analyzes, then calls this) is now the only
+ * caller.
  *
  * This half takes ANALYSES ALREADY COMPUTED — it never analyzes — so a caller
  * that already has analyses (and may have persisted them) does not pay for a
@@ -15,7 +13,7 @@
 
 import type { AdaClients, AiStreamChunk } from '../../engine/clients/types.js';
 import type { PhotoAnalysisOutput, PhotoFindingSeverity } from '../../types/db.js';
-import { CLAUDE_MODELS } from '../claudeModels.js';
+import { SPOT_REPORT_DEFAULT_MODEL } from './parseRegenerateBody.js';
 import { COMPOSE_REPORT_TOOL, type ComposeReportInput, type SpotReportContent } from './reportSchema.js';
 import { composeReport } from './composeReport.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
@@ -23,7 +21,7 @@ import { buildItemAnnotations, type PlaceItemInput } from './buildItemAnnotation
 import { boxPinForItem } from './pinFromBox.js';
 import { isEdgeBox } from './pinMarkerShape.js';
 import { snapToHorizontalEdge } from './edgeSnap.js';
-import { makeAnthropicPlaceFn, PLACEMENT_MODEL_DEFAULT } from './placeFindingAnthropic.js';
+import { makeAnthropicPlaceFn, SPOT_PLACEMENT_MODEL } from './placeFindingAnthropic.js';
 
 export interface GeneratedReport {
   content: SpotReportContent;
@@ -35,12 +33,9 @@ export interface ComposeAndPlaceInput {
   analyses: PhotoAnalysisOutput[];
   /** The photo blob URLs, in the same grouping the analyses came from. */
   photos: { blobUrl: string }[];
-  /**
-   * Synthesis model. When omitted: SPOT_REPORT_MODEL, then the shared
-   * default (CLAUDE_MODELS.sharedReport). Spot always passes its own.
-   */
+  /** Synthesis model. When omitted: SPOT_REPORT_MODEL, then Spot's report slot. */
   model?: string;
-  /** Placement model. When omitted: the shared default (PLACEMENT_MODEL_DEFAULT). */
+  /** Placement model. When omitted: Spot's placement slot. */
   placementModel?: string;
   /** When true, also produce photo-bound pins (content.photoAnnotations). */
   annotate?: boolean;
@@ -176,7 +171,7 @@ export async function composeAndPlaceReport(
   clients: AdaClients,
   input: ComposeAndPlaceInput,
 ): Promise<GeneratedReport> {
-  const model = input.model ?? process.env.SPOT_REPORT_MODEL ?? CLAUDE_MODELS.sharedReport;
+  const model = input.model ?? process.env.SPOT_REPORT_MODEL ?? SPOT_REPORT_DEFAULT_MODEL;
   const { analyses } = input;
 
   // The synthesis call is retried once.
@@ -231,7 +226,7 @@ export async function composeAndPlaceReport(
 
       // Annotations are additive and must never fail a report: any error in
       // placement is swallowed and the report ships without pins. Placement
-      // uses its own model (input.placementModel, else the shared default),
+      // uses its own model (input.placementModel, else Spot's placement slot),
       // independent of the report synthesis model.
       if (input.annotate) {
         try {
@@ -242,7 +237,7 @@ export async function composeAndPlaceReport(
           // discarded a good box and re-guessed, differently each run.
           const place =
             input.placeFn ??
-            makeAnthropicPlaceFn(requireApiKey(), input.placementModel ?? PLACEMENT_MODEL_DEFAULT);
+            makeAnthropicPlaceFn(requireApiKey(), input.placementModel ?? SPOT_PLACEMENT_MODEL);
           // Place the composed CONFIRMED items (the "visible in the photo"
           // rows), not the raw per-photo findings — so each pin is one report
           // row, tied by itemIndex, and the render numbers them by that index.

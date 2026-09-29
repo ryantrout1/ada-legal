@@ -75,7 +75,7 @@ export async function generateReport(
   return composeAndPlaceReport(clients, {
     analyses,
     photos: input.photos,
-    // Spot's own models. The shared core's defaults are the /photo path's.
+    // Spot's own models, passed explicitly.
     model: input.model ?? process.env.SPOT_REPORT_MODEL ?? SPOT_REPORT_DEFAULT_MODEL,
     placementModel: SPOT_PLACEMENT_MODEL,
     annotate: input.annotate,

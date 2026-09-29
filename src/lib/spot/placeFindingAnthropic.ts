@@ -14,12 +14,7 @@ import { placeFinding } from './placeFinding.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
 import { CLAUDE_MODELS } from '../claudeModels.js';
 
-/**
- * Placement model when a caller names none: the shared /photo analyzer path
- * (frozen). Spot uses SPOT_PLACEMENT_MODEL. Both set in claudeModels.ts.
- */
-export const PLACEMENT_MODEL_DEFAULT = CLAUDE_MODELS.sharedPlacement;
-/** Spot's placement model: the paid report's pins and the admin preview. */
+/** Spot's placement model: the paid report's pins and the admin preview. Set in claudeModels.ts. */
 export const SPOT_PLACEMENT_MODEL = CLAUDE_MODELS.spotPlacement;
 
 const PLACE_FINDING_TOOL = {
@@ -60,7 +55,7 @@ function extractToolInput(response: Anthropic.Messages.Message): unknown {
  */
 export function makeAnthropicPlaceFn(
   apiKey: string,
-  model: string = PLACEMENT_MODEL_DEFAULT,
+  model: string = SPOT_PLACEMENT_MODEL,
 ): PlaceFn {
   const client = new Anthropic({ apiKey });
 
