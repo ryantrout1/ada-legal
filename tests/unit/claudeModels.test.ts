@@ -89,7 +89,7 @@ describe('CLAUDE_MODELS', () => {
     expect(CLAUDE_MODELS).toEqual({
       adaChat: 'claude-sonnet-5-5',
       spotPhotoReading: 'claude-opus-5-5',
-      spotReport: 'claude-opus-5',
+      spotReport: 'claude-opus-5-5',
       spotPlacement: 'claude-opus-5-5',
       spotPlacementCompare: 'claude-sonnet-5-5',
       guideAssistant: 'claude-sonnet-5-5',
