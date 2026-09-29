@@ -25,13 +25,13 @@ export const CLAUDE_MODELS = Object.freeze({
    * (Ada's photo tool, case evidence, /photo) is not upgraded and keeps
    * its own default.
    */
-  spotPhotoReading: 'claude-opus-4-8',
+  spotPhotoReading: 'claude-opus-5-5',
   /** Spot report synthesis: the paid report. */
   spotReport: 'claude-opus-5',
   /** Spot pin placement. Also used by api/ada/analyze-photo.ts. */
-  spotPlacement: 'claude-opus-4-8',
+  spotPlacement: 'claude-opus-5-5',
   /** Second model offered for comparison in the admin annotation preview. */
-  spotPlacementCompare: 'claude-sonnet-5',
+  spotPlacementCompare: 'claude-sonnet-5-5',
   /** Guide assistant API. */
   guideAssistant: 'claude-sonnet-5-5',
 } as const);

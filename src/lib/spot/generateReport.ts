@@ -5,11 +5,12 @@
  * composeAndPlaceReport (the shared synthesis + compose + place core) →
  * SpotReportContent.
  *
- * The compose+place half lives in composeAndPlaceReport so the /photo field
- * test shares the exact same pipeline (/plan). This function is now just the
- * analyze-then-delegate wrapper. Reuses the shared analyzer additively; writes
- * nothing here (the cron persists). Model is selectable (SPOT_REPORT_MODEL,
- * default Opus 4.8); the free read is a separate path and is unaffected.
+ * The compose+place half lives in composeAndPlaceReport. This function is
+ * the analyze-then-delegate wrapper: it reads photos through Spot's own
+ * reader (clients.spotPhoto) and passes Spot's report and pin models.
+ * Writes nothing here (the cron persists). Models are set in
+ * src/lib/claudeModels.ts; SPOT_REPORT_MODEL in the environment overrides
+ * the report model.
  */
 
 import type { AdaClients } from '../../engine/clients/types.js';
