@@ -37,12 +37,8 @@ import SessionPackagePage from './routes/public/SessionPackagePage.js';
 import StandardsGuide from './routes/public/StandardsGuide.js';
 import StandardsChapter from './routes/public/StandardsChapter.js';
 import GuidePage from './routes/public/GuidePage.js';
-import PhotoCapture from './routes/public/PhotoCapture.js';
 import SpotLanding from './routes/public/SpotLanding.js';
 import SpotReadout from './routes/public/spot/SpotReadout.js';
-import ReviewLayout from './routes/review/ReviewLayout.js';
-import PhotoReviewQueue from './routes/review/PhotoReviewQueue.js';
-import PhotoReviewLabel from './routes/review/PhotoReviewLabel.js';
 import AdminSignIn from './routes/admin/SignIn.js';
 import AdminSessions from './routes/admin/AdminSessions.js';
 import AdminSessionDetail from './routes/admin/AdminSessionDetail.js';
@@ -72,8 +68,6 @@ import SpotAnnotationPreview from './routes/admin/SpotAnnotationPreview.js';
 import AdminFreeReadDetail from './routes/admin/AdminFreeReadDetail.js';
 import AdminSpotReview from './routes/admin/AdminSpotReview.js';
 import AdminSpotReviewDetail from './routes/admin/AdminSpotReviewDetail.js';
-import AdminPhotoReview from './routes/admin/AdminPhotoReview.js';
-import AdminPhotoReviewDetail from './routes/admin/AdminPhotoReviewDetail.js';
 import PortalLayout from './layouts/PortalLayout.js';
 import PortalSignIn from './routes/portal/SignIn.js';
 import PortalSignUp from './routes/portal/SignUp.js';
@@ -135,11 +129,9 @@ export default function App() {
           <Route path="/spot/r/:slug" element={<SpotReadout />} />
         </Route>
 
-        {/* Standalone — internal field-test capture tool. Deliberately
-            outside PublicLayout so there's no nav, footer, or other
-            chrome competing with the single-task form. Unlisted; not
-            linked from the public site. See /plan: /photo. */}
-        <Route path="/photo" element={<PhotoCapture />} />
+        {/* /photo, /review and /admin/photo-review were the photo analyzer
+            field-test tools. Retired Sep 28, 2026 (model upgrade R1); their
+            paths now fall through to not-found. Data tables are kept. */}
 
         {/* Moved to /admin/spot-review. It is admin-gated at the API, but it
             was mounted OUT here, outside the /admin branch — and
@@ -153,14 +145,6 @@ export default function App() {
         <Route path="/spot-review" element={<Navigate to="/admin/spot-review" replace />} />
 
 
-
-        {/* Standalone — public, no-auth reviewer tool for Peter/Gina/Ryan.
-            Self-identifies by name (no login); outside PublicLayout and
-            Clerk, same discipline as /photo. Unlisted. */}
-        <Route element={<ReviewLayout />}>
-          <Route path="/review" element={<PhotoReviewQueue />} />
-          <Route path="/review/:id" element={<PhotoReviewLabel />} />
-        </Route>
 
         {/* Admin tree — ClerkProvider only wraps this subtree */}
         <Route path="/admin/*" element={<AdminShell />} />
@@ -234,8 +218,6 @@ function AdminShell() {
           <Route path="spot/reads/:id" element={<AdminFreeReadDetail />} />
           <Route path="spot-review" element={<AdminSpotReview />} />
           <Route path="spot-review/:slug" element={<AdminSpotReviewDetail />} />
-          <Route path="photo-review" element={<AdminPhotoReview />} />
-          <Route path="photo-review/:id" element={<AdminPhotoReviewDetail />} />
           <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
         </Route>
       </Routes>

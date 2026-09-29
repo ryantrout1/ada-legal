@@ -9,7 +9,7 @@
  *
  * It also pins the three deliberate divergences, so a later "sync from
  * B44" does not quietly undo them:
- *   - Cases and Photo Review are Vercel-only surfaces that must not be
+ *   - Cases is a Vercel-only surface that must not be
  *     dropped for having no B44 counterpart (the M2/M3/M4 pattern)
  *   - Subscribers is dropped per decision o4
  *   - no nav entry may point at a route that does not exist
@@ -90,15 +90,14 @@ describe('admin nav — Ada and Spot are separate groups', () => {
   it('puts the Spot pages under the Spot group', () => {
     expect(spotBlock).toContain("to: '/admin/spot'");
     expect(spotBlock).toContain("to: '/admin/spot-review'");
-    // Photo Review moved here: the analyzer it reviews is now driven mostly
-    // by Spot (paid screenings + retained free-read training photos).
-    expect(spotBlock).toContain("to: '/admin/photo-review'");
+    // Photo Review was retired with the photo analyzer (Sep 28, 2026).
+    expect(spotBlock).not.toContain("to: '/admin/photo-review'");
   });
 
   it('leaves the Spot pages out of the Ada group', () => {
     expect(adaBlock, 'Spot leaked back into Ada').not.toContain("to: '/admin/spot'");
     expect(adaBlock).not.toContain("to: '/admin/spot-review'");
-    expect(adaBlock, 'Photo Review should be under Spot now').not.toContain(
+    expect(adaBlock, 'Photo Review is retired').not.toContain(
       "to: '/admin/photo-review'",
     );
   });
@@ -120,10 +119,11 @@ describe('admin nav — Ada and Spot are separate groups', () => {
 });
 
 describe('admin nav — Vercel-only surfaces survive', () => {
-  it('keeps Cases and Photo Review, which B44 has no counterpart for', () => {
+  it('keeps Cases, which B44 has no counterpart for', () => {
     // Built on this side, live, and easy to lose to a "faithful" sync.
     expect(navTargets, 'the placement queue was dropped').toContain('cases');
-    expect(navTargets, 'photo review was dropped').toContain('photo-review');
+    // Photo Review was retired with the photo analyzer (Sep 28, 2026).
+    expect(navTargets, 'photo review is retired').not.toContain('photo-review');
   });
 });
 
