@@ -137,7 +137,7 @@ describe('kill switch', () => {
 });
 
 describe('model selection', () => {
-  it('runs on Sonnet 5', () => {
+  it('runs on Sonnet 5.5', () => {
     // B44 pinned Opus 4.7 because that was the newest its SDK exposed, not
     // because the task needed it: this is grounded extraction from supplied
     // page content, on a public endpoint billed per question.

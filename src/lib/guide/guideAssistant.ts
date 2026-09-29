@@ -22,7 +22,7 @@
  *      window, prompt caching on the stable prefix, a rate limit at the
  *      handler, and a kill switch that defaults off.
  *
- * MODEL: Sonnet 5. B44 pinned `claude_opus_4_7` with a comment saying it
+ * MODEL: Sonnet 5.5 (model upgrade Phase 6). B44 pinned `claude_opus_4_7` with a comment saying it
  * was the newest Opus its SDK exposed — a ceiling, not a judgement. The
  * task is grounded extraction: the page's standards text is supplied in
  * the prompt and the model is forbidden from using general knowledge.

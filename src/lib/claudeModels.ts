@@ -33,7 +33,7 @@ export const CLAUDE_MODELS = Object.freeze({
   /** Second model offered for comparison in the admin annotation preview. */
   spotPlacementCompare: 'claude-sonnet-5',
   /** Guide assistant API. */
-  guideAssistant: 'claude-sonnet-5',
+  guideAssistant: 'claude-sonnet-5-5',
   /**
    * The shared compose+place core's defaults, used when a caller passes no
    * model: the /photo analyzer path. Frozen: the photo analyzer is not
