@@ -93,8 +93,6 @@ describe('CLAUDE_MODELS', () => {
       spotPlacement: 'claude-opus-4-8',
       spotPlacementCompare: 'claude-sonnet-5',
       guideAssistant: 'claude-sonnet-5-5',
-      sharedReport: 'claude-opus-5',
-      sharedPlacement: 'claude-opus-4-8',
     });
   });
 
@@ -106,12 +104,13 @@ describe('CLAUDE_MODELS', () => {
   it('feeds every consumer constant', async () => {
     const { CLAUDE_MODELS, SPOT_PLACEMENT_PREVIEW_MODELS } = await import('@/lib/claudeModels');
     const { SPOT_REPORT_MODELS, SPOT_REPORT_DEFAULT_MODEL } = await import('@/lib/spot/parseRegenerateBody');
-    const { PLACEMENT_MODEL_DEFAULT, SPOT_PLACEMENT_MODEL } = await import('@/lib/spot/placeFindingAnthropic');
+    const placeMod = await import('@/lib/spot/placeFindingAnthropic');
+    const { SPOT_PLACEMENT_MODEL } = placeMod;
     const { GUIDE_ASSISTANT_MODEL } = await import('@/lib/guide/guideAssistant');
 
     expect(SPOT_REPORT_MODELS).toEqual([CLAUDE_MODELS.spotReport]);
     expect(SPOT_REPORT_DEFAULT_MODEL).toBe(CLAUDE_MODELS.spotReport);
-    expect(PLACEMENT_MODEL_DEFAULT).toBe(CLAUDE_MODELS.sharedPlacement);
+    expect('PLACEMENT_MODEL_DEFAULT' in placeMod, 'the /photo-only default is gone').toBe(false);
     expect(SPOT_PLACEMENT_MODEL).toBe(CLAUDE_MODELS.spotPlacement);
     expect(GUIDE_ASSISTANT_MODEL).toBe(CLAUDE_MODELS.guideAssistant);
     expect(SPOT_PLACEMENT_PREVIEW_MODELS).toEqual([

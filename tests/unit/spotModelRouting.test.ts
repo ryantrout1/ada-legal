@@ -1,7 +1,7 @@
 /**
- * Model upgrade Phase 4a: Spot's report synthesis and pin placement read
- * Spot's own model slots; the shared compose+place core, when called
- * without models (the /photo analyzer path), stays on the shared slots.
+ * Model upgrade 4a / R2: Spot's report synthesis and pin placement read
+ * Spot's own model slots. The /photo analyzer path is retired, so the
+ * compose+place core's defaults are Spot's slots too.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AdaClients, AiStreamChunk } from '@/engine/clients/types';
@@ -76,7 +76,7 @@ describe('Spot model routing', () => {
     expect(placementModels).toEqual([CLAUDE_MODELS.spotPlacement]);
   });
 
-  it('the shared core with no models (the /photo path) uses the shared slots', async () => {
+  it('the core with no models given falls back to Spot slots (no /photo path left)', async () => {
     const { composeAndPlaceReport } = await import('@/lib/spot/composeAndPlaceReport');
     const { CLAUDE_MODELS } = await import('@/lib/claudeModels');
     const compose: string[] = [];
@@ -85,8 +85,8 @@ describe('Spot model routing', () => {
       photos: [{ blobUrl: 'https://blob/0.jpg' }],
       annotate: true,
     });
-    expect(compose[0]).toBe(CLAUDE_MODELS.sharedReport);
-    expect(placementModels).toEqual([CLAUDE_MODELS.sharedPlacement]);
+    expect(compose[0]).toBe(CLAUDE_MODELS.spotReport);
+    expect(placementModels).toEqual([CLAUDE_MODELS.spotPlacement]);
   });
 
   it('Spot annotation preview defaults to the Spot placement model', async () => {
