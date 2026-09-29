@@ -20,6 +20,7 @@ import {
   composeAndPlaceReport,
   type GeneratedReport,
 } from './composeAndPlaceReport.js';
+import { SPOT_PLACEMENT_MODEL } from './placeFindingAnthropic.js';
 
 /** The analyzer throws on > 3 blob keys — batch to its max. */
 export const SPOT_REPORT_BATCH_SIZE = 3;
@@ -74,7 +75,9 @@ export async function generateReport(
   return composeAndPlaceReport(clients, {
     analyses,
     photos: input.photos,
-    model: input.model,
+    // Spot's own models. The shared core's defaults are the /photo path's.
+    model: input.model ?? process.env.SPOT_REPORT_MODEL ?? SPOT_REPORT_DEFAULT_MODEL,
+    placementModel: SPOT_PLACEMENT_MODEL,
     annotate: input.annotate,
     placeFn: input.placeFn,
     minConfidence: input.minConfidence,

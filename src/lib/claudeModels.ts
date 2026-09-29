@@ -34,6 +34,13 @@ export const CLAUDE_MODELS = Object.freeze({
   spotPlacementCompare: 'claude-sonnet-5',
   /** Guide assistant API. */
   guideAssistant: 'claude-sonnet-5',
+  /**
+   * The shared compose+place core's defaults, used when a caller passes no
+   * model: the /photo analyzer path. Frozen: the photo analyzer is not
+   * upgraded. Spot passes its own slots (spotReport, spotPlacement).
+   */
+  sharedReport: 'claude-opus-5',
+  sharedPlacement: 'claude-opus-4-8',
 } as const);
 
 /**

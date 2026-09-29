@@ -17,7 +17,7 @@ import { makeAnnotationPreviewStore } from '../../../src/lib/spot/annotationPrev
 import { buildPhotoAnnotations } from '../../../src/lib/spot/buildPhotoAnnotations.js';
 import {
   makeAnthropicPlaceFn,
-  PLACEMENT_MODEL_DEFAULT,
+  SPOT_PLACEMENT_MODEL,
 } from '../../../src/lib/spot/placeFindingAnthropic.js';
 import { SPOT_PLACEMENT_PREVIEW_MODELS } from '../../../src/lib/claudeModels.js';
 
@@ -44,7 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const model =
     typeof body.model === 'string' && ALLOWED_MODELS.has(body.model)
       ? body.model
-      : PLACEMENT_MODEL_DEFAULT;
+      : SPOT_PLACEMENT_MODEL;
 
   const minConfidence =
     typeof body.minConfidence === 'number' &&

@@ -15,7 +15,7 @@
 
 import type { AdaClients, AiStreamChunk } from '../../engine/clients/types.js';
 import type { PhotoAnalysisOutput, PhotoFindingSeverity } from '../../types/db.js';
-import { SPOT_REPORT_DEFAULT_MODEL } from './parseRegenerateBody.js';
+import { CLAUDE_MODELS } from '../claudeModels.js';
 import { COMPOSE_REPORT_TOOL, type ComposeReportInput, type SpotReportContent } from './reportSchema.js';
 import { composeReport } from './composeReport.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
@@ -35,8 +35,13 @@ export interface ComposeAndPlaceInput {
   analyses: PhotoAnalysisOutput[];
   /** The photo blob URLs, in the same grouping the analyses came from. */
   photos: { blobUrl: string }[];
-  /** Synthesis model. Resolves to SPOT_REPORT_MODEL / the default when omitted. */
+  /**
+   * Synthesis model. When omitted: SPOT_REPORT_MODEL, then the shared
+   * default (CLAUDE_MODELS.sharedReport). Spot always passes its own.
+   */
   model?: string;
+  /** Placement model. When omitted: the shared default (PLACEMENT_MODEL_DEFAULT). */
+  placementModel?: string;
   /** When true, also produce photo-bound pins (content.photoAnnotations). */
   annotate?: boolean;
   /** Injectable placement function (tests). Real Anthropic placer when omitted. */
@@ -171,7 +176,7 @@ export async function composeAndPlaceReport(
   clients: AdaClients,
   input: ComposeAndPlaceInput,
 ): Promise<GeneratedReport> {
-  const model = input.model ?? process.env.SPOT_REPORT_MODEL ?? SPOT_REPORT_DEFAULT_MODEL;
+  const model = input.model ?? process.env.SPOT_REPORT_MODEL ?? CLAUDE_MODELS.sharedReport;
   const { analyses } = input;
 
   // The synthesis call is retried once.
@@ -226,8 +231,8 @@ export async function composeAndPlaceReport(
 
       // Annotations are additive and must never fail a report: any error in
       // placement is swallowed and the report ships without pins. Placement
-      // always runs on claude-opus-4-8 (the model that tested cleanest for
-      // tool-call placement), independent of the report synthesis model.
+      // uses its own model (input.placementModel, else the shared default),
+      // independent of the report synthesis model.
       if (input.annotate) {
         try {
           // Placement is the FALLBACK now, not the primary source: items are
@@ -236,7 +241,8 @@ export async function composeAndPlaceReport(
           // separate placement call was both slower and less accurate — it
           // discarded a good box and re-guessed, differently each run.
           const place =
-            input.placeFn ?? makeAnthropicPlaceFn(requireApiKey(), PLACEMENT_MODEL_DEFAULT);
+            input.placeFn ??
+            makeAnthropicPlaceFn(requireApiKey(), input.placementModel ?? PLACEMENT_MODEL_DEFAULT);
           // Place the composed CONFIRMED items (the "visible in the photo"
           // rows), not the raw per-photo findings — so each pin is one report
           // row, tied by itemIndex, and the render numbers them by that index.

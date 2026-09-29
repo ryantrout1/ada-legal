@@ -14,8 +14,13 @@ import { placeFinding } from './placeFinding.js';
 import type { PlaceFn } from './buildPhotoAnnotations.js';
 import { CLAUDE_MODELS } from '../claudeModels.js';
 
-/** Placement model. Set in src/lib/claudeModels.ts; overridable per preview run. */
-export const PLACEMENT_MODEL_DEFAULT = CLAUDE_MODELS.spotPlacement;
+/**
+ * Placement model when a caller names none: the shared /photo analyzer path
+ * (frozen). Spot uses SPOT_PLACEMENT_MODEL. Both set in claudeModels.ts.
+ */
+export const PLACEMENT_MODEL_DEFAULT = CLAUDE_MODELS.sharedPlacement;
+/** Spot's placement model: the paid report's pins and the admin preview. */
+export const SPOT_PLACEMENT_MODEL = CLAUDE_MODELS.spotPlacement;
 
 const PLACE_FINDING_TOOL = {
   name: 'place_finding',
