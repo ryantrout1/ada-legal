@@ -130,8 +130,12 @@ export default function App() {
         </Route>
 
         {/* /photo, /review and /admin/photo-review were the photo analyzer
-            field-test tools. Retired Sep 28, 2026 (model upgrade R1); their
-            paths now fall through to not-found. Data tables are kept. */}
+            field-test tools. Retired Sep 28, 2026 (model upgrade R1). Old
+            links go home (the admin one falls to the admin catch-all).
+            Data tables are kept. */}
+        <Route path="/photo" element={<Navigate to="/" replace />} />
+        <Route path="/review" element={<Navigate to="/" replace />} />
+        <Route path="/review/:id" element={<Navigate to="/" replace />} />
 
         {/* Moved to /admin/spot-review. It is admin-gated at the API, but it
             was mounted OUT here, outside the /admin branch — and
