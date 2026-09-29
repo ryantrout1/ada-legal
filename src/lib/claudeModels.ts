@@ -27,7 +27,7 @@ export const CLAUDE_MODELS = Object.freeze({
    */
   spotPhotoReading: 'claude-opus-5-5',
   /** Spot report synthesis: the paid report. */
-  spotReport: 'claude-opus-5',
+  spotReport: 'claude-opus-5-5',
   /** Spot pin placement. Also used by api/ada/analyze-photo.ts. */
   spotPlacement: 'claude-opus-5-5',
   /** Second model offered for comparison in the admin annotation preview. */

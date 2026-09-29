@@ -7,7 +7,7 @@ import {
 
 describe('parseRegenerateBody', () => {
   it('exposes the report model allowlist', () => {
-    expect(SPOT_REPORT_MODELS).toContain('claude-opus-5');
+    expect(SPOT_REPORT_MODELS).toContain('claude-opus-5-5');
   });
 
   it('no longer offers the models the A/B retired', () => {
@@ -19,13 +19,13 @@ describe('parseRegenerateBody', () => {
   });
 
   it('accepts a session id + an allowlisted model', () => {
-    const out = parseRegenerateBody({ sessionId: 'abc-123', model: 'claude-opus-5' });
-    expect(out).toEqual({ ok: true, sessionId: 'abc-123', model: 'claude-opus-5' });
+    const out = parseRegenerateBody({ sessionId: 'abc-123', model: 'claude-opus-5-5' });
+    expect(out).toEqual({ ok: true, sessionId: 'abc-123', model: 'claude-opus-5-5' });
   });
 
-  it('defaults to Opus 5 when no model is given', () => {
+  it('defaults to Opus 5.5 when no model is given', () => {
     const out = parseRegenerateBody({ sessionId: 'abc-123' });
-    expect(out).toEqual({ ok: true, sessionId: 'abc-123', model: 'claude-opus-5' });
+    expect(out).toEqual({ ok: true, sessionId: 'abc-123', model: 'claude-opus-5-5' });
   });
 
   it('is the single definition the pipeline default reads', () => {
@@ -36,7 +36,7 @@ describe('parseRegenerateBody', () => {
 
   it('rejects a missing session id', () => {
     expect(parseRegenerateBody({}).ok).toBe(false);
-    expect(parseRegenerateBody({ model: 'claude-opus-5' }).ok).toBe(false);
+    expect(parseRegenerateBody({ model: 'claude-opus-5-5' }).ok).toBe(false);
   });
 
   it('rejects a model not on the allowlist (no arbitrary model strings)', () => {
