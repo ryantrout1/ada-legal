@@ -88,7 +88,7 @@ describe('CLAUDE_MODELS', () => {
     const { CLAUDE_MODELS } = await import('@/lib/claudeModels');
     expect(CLAUDE_MODELS).toEqual({
       adaChat: 'claude-sonnet-5-5',
-      spotPhotoReading: 'claude-opus-5-5',
+      spotPhotoReading: 'claude-opus-4-8',
       spotReport: 'claude-opus-5',
       spotPlacement: 'claude-opus-4-8',
       spotPlacementCompare: 'claude-sonnet-5',
