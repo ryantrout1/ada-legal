@@ -27,7 +27,7 @@ export default function BathtubDiagram() {
       </div>
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <svg viewBox="0 0 720 340" role="group" aria-labelledby="bt-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="bt-title">Accessible Bathtub {'\u2014'} Plan View</title>
+          <title id="bt-title">{`Accessible Bathtub \u2014 Plan View`}</title>
           <rect width="720" height="340" fill="var(--page-bg-subtle)" />
           <text x="200" y="28" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Plan view (top down)</text>
           <text x="560" y="28" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">What to check</text>

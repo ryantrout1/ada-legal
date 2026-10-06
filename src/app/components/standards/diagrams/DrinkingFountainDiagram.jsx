@@ -47,7 +47,7 @@ export default function DrinkingFountainDiagram() {
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <svg viewBox="0 0 720 380" role="group" aria-labelledby="df-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="df-title">Drinking Fountain Heights {'\u2014'} Wheelchair and Standing</title>
+          <title id="df-title">{`Drinking Fountain Heights \u2014 Wheelchair and Standing`}</title>
           <rect width="720" height="380" fill="var(--page-bg-subtle)" />
 
           <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Wheelchair height</text>

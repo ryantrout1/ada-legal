@@ -27,7 +27,7 @@ export default function SignageDiagram() {
       </div>
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <svg viewBox="0 0 720 380" role="group" aria-labelledby="sig-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="sig-title">Signage Types {'\u2014'} Tactile Room Signs vs Visual Directional Signs</title>
+          <title id="sig-title">{`Signage Types \u2014 Tactile Room Signs vs Visual Directional Signs`}</title>
           <rect width="720" height="380" fill="var(--page-bg-subtle)" />
           <text x="170" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Tactile (touch to read)</text>
           <text x="540" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Visual (read from a distance)</text>

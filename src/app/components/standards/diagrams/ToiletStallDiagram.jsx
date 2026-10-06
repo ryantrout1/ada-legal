@@ -34,7 +34,7 @@ export default function ToiletStallDiagram() {
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <svg viewBox="0 0 720 400" role="group" aria-labelledby="ts-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="ts-title">Accessible Toilet Stall {'\u2014'} Plan View with Grab Bars</title>
+          <title id="ts-title">{`Accessible Toilet Stall \u2014 Plan View with Grab Bars`}</title>
           <rect width="720" height="400" fill="var(--page-bg-subtle)" />
 
           <text x="190" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Plan view (top down)</text>

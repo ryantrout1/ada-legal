@@ -117,6 +117,10 @@ for (const route of ROUTE_META) {
   const h1s = rest.match(/<h1[\s>]/g) ?? [];
   if (h1s.length !== 1) fail(`expected exactly one <h1>, found ${h1s.length}`);
   if (/Loading (guide|chapter)/.test(rest)) fail('a Suspense fallback ("Loading…") was rendered instead of the page');
+  // React drops an SVG <title> that has more than one child on the server
+  // (text plus an expression), then fills it in on the client, which is a
+  // hydration mismatch. Each SVG <title> must be a single string child.
+  if (/<title[^>]*><\/title>/.test(rest)) fail('an SVG <title> rendered empty (use one string child, not several)');
   const body = textOf(rest);
   if (body.length < 300) fail(`only ${body.length} characters of body text`);
   if (!/<a [^>]*href="\/[^"]*"/.test(rest)) fail('no internal <a href> links in the body');

@@ -27,7 +27,7 @@ export default function LavatoryDiagram() {
       </div>
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <svg viewBox="0 0 720 360" role="group" aria-labelledby="lav-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="lav-title">Lavatory {'\u2014'} Side Cross-Section</title>
+          <title id="lav-title">{`Lavatory \u2014 Side Cross-Section`}</title>
           <rect width="720" height="360" fill="var(--page-bg-subtle)" />
           <text x="190" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">Side view</text>
           <text x="560" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">What to check</text>

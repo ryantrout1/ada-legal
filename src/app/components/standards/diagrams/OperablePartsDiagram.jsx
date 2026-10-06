@@ -123,7 +123,7 @@ export default function OperablePartsDiagram() {
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <svg viewBox="0 0 720 380" role="group" aria-labelledby="rules-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="rules-title">Operable Parts {'\u2014'} Height Range and Operation Rules</title>
+          <title id="rules-title">{`Operable Parts \u2014 Height Range and Operation Rules`}</title>
           <rect width="720" height="380" fill="var(--page-bg-subtle)" />
 
           {/* LEFT: Height range */}

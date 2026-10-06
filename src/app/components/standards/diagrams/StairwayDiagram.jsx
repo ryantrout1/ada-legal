@@ -87,7 +87,7 @@ export default function StairwayDiagram() {
 
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
         <svg viewBox="0 0 720 380" role="group" aria-labelledby="stair-title" style={{ width: '100%', height: 'auto', display: 'block' }}>
-          <title id="stair-title">Stairway Requirements {'\u2014'} Treads, Risers, Nosings, Handrails</title>
+          <title id="stair-title">{`Stairway Requirements \u2014 Treads, Risers, Nosings, Handrails`}</title>
           <rect width="720" height="380" fill="var(--page-bg-subtle)" />
 
           <text x="190" y="30" textAnchor="middle" fontFamily="var(--font-body)" fontSize="12" fontWeight="700" fill="var(--body-secondary)">What each step looks like</text>
