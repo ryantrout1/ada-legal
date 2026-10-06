@@ -29,7 +29,6 @@
  * Ref: docs/ARCHITECTURE.md §11 (public routes).
  */
 
-import { Helmet } from 'react-helmet-async';
 import { Breadcrumbs } from '../../components/Breadcrumbs.js';
 
 // Email target for Phase 1 mailto: CTA. Hardcoded by design — if it
@@ -41,14 +40,6 @@ const APPLY_SUBJECT = 'Joining the ADA Legal Link attorney network';
 export default function ForAttorneys() {
   return (
     <>
-      <Helmet>
-        <title>For attorneys, ADA Legal Link</title>
-        <meta
-          name="description"
-          content="ADA Legal Link is a free intake and triage service for people facing disability access barriers. Information for attorneys interested in joining the vetted network."
-        />
-      </Helmet>
-
       <article className="max-w-3xl mx-auto px-5 sm:px-8 py-10 sm:py-16">
         <Breadcrumbs
           items={[

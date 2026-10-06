@@ -20,6 +20,8 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { makeClientsFromEnv } from './_shared.js';
+import { GUIDE_META } from '../src/lib/seo/routeMeta.js';
+import { CHAPTER_META } from '../src/app/routes/public/chapterMeta.js';
 
 /**
  * Every <loc> is the PUBLIC apex, regardless of which host served the
@@ -69,6 +71,36 @@ export const STATIC_PAGES: {
   { path: '/terms', changefreq: 'monthly', priority: '0.4' },
 ];
 
+/**
+ * The prerendered pages: every static page, every Standards Guide chapter
+ * and every guide. Built from the same tables that drive the prerender
+ * (src/lib/seo/routeMeta.ts, chapterMeta.ts), so a page cannot be
+ * prerendered without being listed here. tests/unit/routeMeta.test.ts
+ * checks the two stay equal.
+ */
+export function prerenderedEntries(): UrlEntry[] {
+  const entries: UrlEntry[] = STATIC_PAGES.map((p) => ({
+    loc: `${SITE_URL}${p.path}`,
+    changefreq: p.changefreq,
+    priority: p.priority,
+  }));
+  for (const c of CHAPTER_META) {
+    entries.push({
+      loc: `${SITE_URL}/standards-guide/chapter/${c.num}`,
+      changefreq: 'monthly',
+      priority: '0.8',
+    });
+  }
+  for (const g of GUIDE_META) {
+    entries.push({
+      loc: `${SITE_URL}/standards-guide/guide/${g.slug}`,
+      changefreq: 'monthly',
+      priority: '0.7',
+    });
+  }
+  return entries;
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET');
@@ -101,49 +133,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return true;
     });
 
-    // Static public pages. Ordered by likely priority for the site.
-    const entries: UrlEntry[] = STATIC_PAGES.map((p) => ({
-      loc: `${SITE_URL}${p.path}`,
-      changefreq: p.changefreq,
-      priority: p.priority,
-    }));
-
-    // Standards Guide: 10 chapter URLs.
-    for (let n = 1; n <= 10; n++) {
-      entries.push({
-        loc: `${SITE_URL}/standards-guide/chapter/${n}`,
-        changefreq: 'monthly',
-        priority: '0.8',
-      });
-    }
-
-    // Standards Guide: 46 deep-dive guide URLs. Kept as a static list
-    // rather than imported from standardsGuideIndex.ts because that
-    // module pulls in React.lazy() references to .jsx files, which
-    // aren't server-safe. The list here must stay in sync with
-    // GUIDE_LOADERS — adding a new guide means adding it here too.
-    const GUIDE_SLUGS = [
-      'accessible-documents', 'ada-coordinators', 'ada-protections',
-      'barrier-removal', 'criminal-justice', 'digital-barriers',
-      'education', 'effective-communication', 'emergency-management',
-      'employment', 'entrances', 'filing-complaint', 'hotels-lodging',
-      'housing', 'intro-to-ada', 'legal-options', 'medical-facilities',
-      'mobility-devices', 'new-construction', 'parking',
-      'parking-requirements', 'playgrounds', 'program-access', 'ramps',
-      'reach-ranges', 'reasonable-modifications', 'restaurants-retail',
-      'restrooms', 'service-animals', 'sidewalks', 'signage',
-      'small-business', 'social-media', 'swimming-pools',
-      'tax-incentives', 'title-i', 'title-ii', 'title-iii',
-      'turning-handrails', 'voting', 'wcag-explained', 'web-first-steps',
-      'web-rule', 'web-testing', 'what-to-expect', 'why-attorney',
-    ];
-    for (const slug of GUIDE_SLUGS) {
-      entries.push({
-        loc: `${SITE_URL}/standards-guide/guide/${slug}`,
-        changefreq: 'monthly',
-        priority: '0.7',
-      });
-    }
+    // Every prerendered page: static pages, 10 chapters, every guide.
+    const entries: UrlEntry[] = prerenderedEntries();
 
     for (const l of uniqueLitigation) {
       entries.push({

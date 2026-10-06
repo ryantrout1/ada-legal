@@ -38,16 +38,28 @@ import ScopeSection from './components/landing/ScopeSection.jsx';
 import TrustV2 from './components/landing/TrustV2.jsx';
 import StoryV2 from './components/landing/StoryV2.jsx';
 import FinalCtaV2 from './components/landing/FinalCtaV2.jsx';
+import { PUBLIC_ORIGIN } from '../../../lib/publicOrigin.js';
+
+const ORGANIZATION_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${PUBLIC_ORIGIN}/#organization`,
+  name: 'ADA Legal Link',
+  url: PUBLIC_ORIGIN,
+  logo: `${PUBLIC_ORIGIN}/logo.png`,
+  description:
+    'If a barrier shut you out, we help you understand what happened and connect you with someone who can help.',
+  slogan: 'Connecting people with experienced ADA attorneys.',
+  areaServed: { '@type': 'Country', name: 'United States' },
+};
 
 export default function Home() {
   return (
     <div className="home-v2-root" style={{ background: '#141820' }}>
+      {/* Title, description and canonical come from RouteSeo (routeMeta.ts).
+          Organization, not LocalBusiness: this is a national platform. */}
       <Helmet>
-        <title>ADA Legal Link — Know the Law. Know Your Rights.</title>
-        <meta
-          name="description"
-          content="If a barrier shut you out, we help you understand what happened and connect you with someone who can help."
-        />
+        <script type="application/ld+json">{JSON.stringify(ORGANIZATION_JSON_LD)}</script>
       </Helmet>
       <LandingV2Styles />
         <HeroV2 />

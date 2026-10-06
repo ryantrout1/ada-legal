@@ -102,8 +102,9 @@ function ChapterSeo({ num }: { num: string }) {
   const meta = chapterMeta(num);
   if (!meta) return null;
 
+  // Title, description, canonical and social tags come from RouteSeo
+  // (routeMeta.ts). This block only adds the structured data.
   const canonicalUrl = `${PUBLIC_ORIGIN}/standards-guide/chapter/${meta.num}`;
-  const titleText = `Chapter ${meta.num}: ${meta.title} — ADA Standards Guide`;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -131,15 +132,6 @@ function ChapterSeo({ num }: { num: string }) {
 
   return (
     <Helmet>
-      <title>{titleText}</title>
-      <meta name="description" content={meta.description} />
-      <meta property="og:title" content={titleText} />
-      <meta property="og:description" content={meta.description} />
-      <meta property="og:url" content={canonicalUrl} />
-      <meta property="og:type" content="article" />
-      <meta name="twitter:title" content={titleText} />
-      <meta name="twitter:description" content={meta.description} />
-      <link rel="canonical" href={canonicalUrl} />
       <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
     </Helmet>
   );

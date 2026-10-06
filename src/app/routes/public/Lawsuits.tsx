@@ -21,7 +21,6 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import GuideReadingLevelBar from '../../components/standards/GuideReadingLevelBar.jsx';
 import LawsuitCard from '../../components/litigation/LawsuitCard.js';
@@ -82,14 +81,6 @@ export default function Lawsuits() {
         minHeight: 'calc(100vh - 72px)',
       }}
     >
-      <Helmet>
-        <title>Active Cases — ADA Legal Link</title>
-        <meta
-          name="description"
-          content="ADA class actions, enforcement actions, consent decrees, and other accessibility matters we're tracking."
-        />
-      </Helmet>
-
       <header style={{ marginBottom: '1.5rem' }}>
         <h1
           style={{

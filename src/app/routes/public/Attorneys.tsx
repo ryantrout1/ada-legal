@@ -36,7 +36,6 @@
  */
 
 import { useMemo, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useAttorneys } from '../../hooks/useAttorneys.js';
 import AttorneyCard from '../../components/attorneys/AttorneyCard.js';
 import AttorneyFilters from '../../components/attorneys/AttorneyFilters.js';
@@ -124,14 +123,6 @@ export default function Attorneys() {
         minHeight: 'calc(100vh - 72px)',
       }}
     >
-      <Helmet>
-        <title>Find an Attorney — ADA Legal Link</title>
-        <meta
-          name="description"
-          content="Browse experienced ADA attorneys in our network and reach out directly."
-        />
-      </Helmet>
-
       <header style={{ marginBottom: '1.5rem' }}>
         <h1
           style={{

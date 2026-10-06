@@ -16,7 +16,6 @@
  */
 
 import { useState, useCallback } from 'react';
-import { Helmet } from 'react-helmet-async';
 import StandardsStyles from '../../components/standards/landing/StandardsStyles.jsx';
 import StandardsHero from '../../components/standards/landing/StandardsHero.jsx';
 import QuickFilters from '../../components/standards/landing/QuickFilters.jsx';
@@ -59,14 +58,6 @@ export default function StandardsGuide() {
 
   return (
     <>
-      <Helmet>
-        <title>ADA Standards Guide — ADA Legal Link</title>
-        <meta
-          name="description"
-          content="The 2010 ADA Standards for Accessible Design, reorganized by topic with plain-language explanations and interactive diagrams. Free and fully accessible."
-        />
-      </Helmet>
-
       <StandardsStyles />
       <div className="guide-surface">
       <StandardsHero searchValue={searchValue} onSearchChange={handleSearchChange} />

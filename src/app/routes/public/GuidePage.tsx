@@ -24,11 +24,13 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useParams } from 'react-router-dom';
 import { GUIDE_LOADERS, titleForSlug } from './standardsGuideIndex.js';
 import { PUBLIC_ORIGIN } from '../../../lib/publicOrigin.js';
+import { routeMeta } from '../../../lib/seo/routeMeta.js';
 
 function GuideSeo({ slug, title }: { slug: string; title: string }) {
   const canonicalUrl = `${PUBLIC_ORIGIN}/standards-guide/guide/${slug}`;
-  const titleText = `${title} — ADA Standards Guide`;
-  const description = `Plain-language guide to ${title.toLowerCase()}. Simple, standard, and legal reading levels. Part of the ADA Legal Link Standards Guide — free, always.`;
+  // Title, description, canonical and social tags come from RouteSeo
+  // (routeMeta.ts). This block only adds the structured data.
+  const description = routeMeta(`/standards-guide/guide/${slug}`)?.description ?? '';
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -56,15 +58,6 @@ function GuideSeo({ slug, title }: { slug: string; title: string }) {
 
   return (
     <Helmet>
-      <title>{titleText}</title>
-      <meta name="description" content={description} />
-      <meta property="og:title" content={titleText} />
-      <meta property="og:description" content={description} />
-      <meta property="og:url" content={canonicalUrl} />
-      <meta property="og:type" content="article" />
-      <meta name="twitter:title" content={titleText} />
-      <meta name="twitter:description" content={description} />
-      <link rel="canonical" href={canonicalUrl} />
       <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
     </Helmet>
   );

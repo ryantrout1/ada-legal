@@ -35,6 +35,7 @@ import { ReadingLevelProvider } from '../components/standards/ReadingLevelContex
 import { ComingSoonProvider } from '../components/site/useComingSoonModal.jsx';
 import { AdaSoonProvider } from '../routes/public/components/landing/AdaSoonModal.jsx';
 import FeedbackButton from '../components/site/FeedbackButton.jsx';
+import RouteSeo from '../components/RouteSeo.js';
 
 // B44 Layout parity: the current page's nav link renders in the brand
 // gold (#FBB040 — --color-brand-gold) and carries aria-current="page".
@@ -101,6 +102,7 @@ export default function PublicLayout() {
     <ComingSoonProvider>
     <AdaSoonProvider>
     <div className="min-h-screen flex flex-col bg-surface-50 text-ink-900">
+      <RouteSeo />
       {/* Skip link — first focusable element, hidden until focused */}
       {/* B44 skip-link visual: accent pill anchored at the left edge that
           slides down into view on focus (Layout.jsx). Accent token is the
