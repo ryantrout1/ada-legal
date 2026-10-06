@@ -17,7 +17,7 @@
  * Ref: docs/ARCHITECTURE.md §15 accessibility
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 /**
  * The Web Speech API types aren't in the default TS lib. These are the
@@ -96,6 +96,13 @@ interface Options {
   lang?: string;
 }
 
+// Support never changes during a page's life. The server snapshot keeps the
+// prerendered HTML and the first client render identical (see
+// useSpeechOutput for the same pattern).
+const subscribeNever = () => () => {};
+const serverUnsupported = () => false;
+const clientSupported = () => getSpeechRecognitionConstructor() !== null;
+
 export function useSpeechInput(opts: Options = {}): SpeechInputState {
   const [listening, setListening] = useState(false);
   const [transcript, setTranscript] = useState('');
@@ -104,7 +111,7 @@ export function useSpeechInput(opts: Options = {}): SpeechInputState {
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const finalTextRef = useRef<string>('');
 
-  const isSupported = getSpeechRecognitionConstructor() !== null;
+  const isSupported = useSyncExternalStore(subscribeNever, clientSupported, serverUnsupported);
 
   // Lazily create the recognition instance. We don't need it until
   // start() is called for the first time.

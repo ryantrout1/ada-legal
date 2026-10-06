@@ -17,7 +17,7 @@
  * Ref: docs/ARCHITECTURE.md §15 accessibility
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 const STORAGE_KEY = 'ada2-tts-enabled';
 
@@ -40,6 +40,12 @@ function isSpeechSupported(): boolean {
   return typeof window !== 'undefined' && 'speechSynthesis' in window;
 }
 
+// Browser support never changes during a page's life, so there is nothing
+// to subscribe to. useSyncExternalStore lets the prerendered HTML (server
+// snapshot: false) hydrate cleanly, then flips to the real answer.
+const subscribeNever = () => () => {};
+const serverUnsupported = () => false;
+
 function loadStoredPreference(): boolean {
   if (typeof window === 'undefined') return false;
   try {
@@ -58,7 +64,7 @@ function persistPreference(enabled: boolean): void {
 }
 
 export function useSpeechOutput(): SpeechOutputState {
-  const supported = isSpeechSupported();
+  const supported = useSyncExternalStore(subscribeNever, isSpeechSupported, serverUnsupported);
   const [enabled, setEnabledState] = useState(false);
   const [speaking, setSpeaking] = useState(false);
 

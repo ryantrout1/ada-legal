@@ -93,9 +93,15 @@ import ScrollToTop from './components/ScrollToTop.js';
  * BrowserRouter for the browser; src/entry-server.tsx wraps it in
  * StaticRouter so the build can prerender the public routes (see
  * scripts/prerender.mjs). Keep anything that needs `window` out of here.
+ *
+ * ScrollToTop lives here, not in App, so the server and the browser render
+ * the same component tree. If they differ, React's useId values differ and
+ * hydration leaves stale aria-controls ids in the prerendered HTML.
  */
 export function AppRoutes() {
   return (
+    <>
+      <ScrollToTop />
       <Routes>
         {/* Public routes — no Clerk context */}
         <Route element={<PublicLayout />}>
@@ -160,6 +166,7 @@ export function AppRoutes() {
             DNS-scoping discipline as AdminShell (see note above). */}
         <Route path="/portal/*" element={<PortalShell />} />
       </Routes>
+    </>
   );
 }
 
@@ -167,7 +174,6 @@ export default function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
-        <ScrollToTop />
         <AppRoutes />
       </BrowserRouter>
     </HelmetProvider>

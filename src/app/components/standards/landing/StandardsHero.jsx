@@ -8,7 +8,7 @@
  * app.css at the AAA-corrected values.
  */
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Shield } from 'lucide-react';
 import ADAAssistant from './ADAAssistant.jsx';
 
@@ -32,7 +32,12 @@ const QUOTES = [
 ];
 
 function QuoteCarousel() {
-  const [index, setIndex] = useState(() => Math.floor(Math.random() * QUOTES.length));
+  // Start on the first quote so the prerendered HTML and the first client
+  // render match, then pick a random one once mounted (the old behavior).
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    setIndex(Math.floor(Math.random() * QUOTES.length));
+  }, []);
   const liveRef = useRef(null);
   const total = QUOTES.length;
 
