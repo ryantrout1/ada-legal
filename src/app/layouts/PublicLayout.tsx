@@ -305,19 +305,42 @@ export default function PublicLayout() {
           </p>
         </div>
 
-        {/* B44 parity: production's global footer is a single 48px brand
-            row — logo, copyright, tagline, no links. The link row that
-            used to sit here (Standards Guide / Glossary / Privacy /
-            Terms / Accessibility / For attorneys) does not exist on
-            adalegallink.com, and four of those pages do not exist there
-            either.
+        {/* Link row. Added for crawlers: Glossary, Accessibility, Terms and
+            For Attorneys were not linked from any other page, so a search
+            engine following links never reached them. Small, single line,
+            wraps on narrow screens; each link keeps a 44px target.
 
-            The UPL line moves INTO the brand row rather than
-            disappearing with it. "Not legal advice. Not a law firm." is
-            a legal safeguard on a legal-services site, not chrome, and
-            dropping it for pixel parity would be the wrong trade. B44
-            carries the same promise in TrustV2 on its landing; keeping
-            it site-wide is stricter, not looser. */}
+            The UPL line lives in the brand row above. "Not legal advice.
+            Not a law firm." is a legal safeguard on a legal-services site,
+            not chrome, so it stays site-wide. */}
+        <nav
+          aria-label="Footer"
+          className="w-full flex flex-wrap items-center font-chrome"
+          style={{ maxWidth: 1400, margin: '0 auto', padding: '0 1.5rem' }}
+        >
+          {[
+            ['/', 'Home'],
+            ['/glossary', 'Glossary'],
+            ['/accessibility', 'Accessibility'],
+            ['/terms', 'Terms'],
+            ['/for-attorneys', 'For Attorneys'],
+          ].map(([to, label]) => (
+            <Link
+              key={to}
+              to={to}
+              className="inline-flex items-center hover:text-brand-gold"
+              style={{
+                fontSize: '0.75rem',
+                color: '#E2E8F0',
+                minHeight: 44,
+                padding: '0 12px 0 0',
+                marginRight: 4,
+              }}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
       </footer>
 
       {/* Site-wide feedback affordance. Renders last so it sits above the

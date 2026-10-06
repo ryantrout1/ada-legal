@@ -63,10 +63,19 @@ function GuideSeo({ slug, title }: { slug: string; title: string }) {
   );
 }
 
+// Guides on the same topic that should point at each other. The guide
+// bodies themselves are pinned to the B44 digest (guideParity test), so
+// the link lives here, in the wrapper.
+const RELATED_GUIDE: Record<string, string> = {
+  parking: 'parking-requirements',
+  'parking-requirements': 'parking',
+};
+
 export default function GuidePage() {
   const { slug } = useParams<{ slug: string }>();
   const Loader = slug ? GUIDE_LOADERS[slug] : undefined;
   const title = slug ? titleForSlug(slug) : null;
+  const related = slug ? RELATED_GUIDE[slug] : undefined;
 
   if (!Loader || !slug || !title) {
     return (
@@ -99,6 +108,17 @@ export default function GuidePage() {
       >
         <Loader />
       </Suspense>
+      {related && (
+        <p
+          className="max-w-3xl mx-auto px-5 sm:px-8 py-6"
+          style={{ margin: '0 auto' }}
+        >
+          Related guide:{' '}
+          <Link to={`/standards-guide/guide/${related}`} style={{ color: 'var(--accent)' }}>
+            {titleForSlug(related)}
+          </Link>
+        </p>
+      )}
     </>
   );
 }

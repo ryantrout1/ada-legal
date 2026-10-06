@@ -334,6 +334,10 @@ export default function AboutAda() {
         <h2 style={{ ...h2Style, marginBottom: '20px' }}>Further reading</h2>
         <ul style={ulStyle}>
           <li style={liStyle}>
+            <Link to="/ada" style={extLinkStyle}>Talk to Ada</Link>
+            <span style={{ color: BODY }}> — tell Ada what happened, in your own words.</span>
+          </li>
+          <li style={liStyle}>
             <a href="https://www.bl.uk/people/ada-lovelace" target="_blank" rel="noopener noreferrer" style={extLinkStyle}>
               Ada Lovelace at the British Library
               <span className="sr-only"> (opens in new tab)</span>
