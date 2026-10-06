@@ -36,6 +36,7 @@ import { ComingSoonProvider } from '../components/site/useComingSoonModal.jsx';
 import { AdaSoonProvider } from '../routes/public/components/landing/AdaSoonModal.jsx';
 import FeedbackButton from '../components/site/FeedbackButton.jsx';
 import RouteSeo from '../components/RouteSeo.js';
+import SeoCopy from '../components/SeoCopy.js';
 
 // B44 Layout parity: the current page's nav link renders in the brand
 // gold (#FBB040 — --color-brand-gold) and carries aria-current="page".
@@ -267,6 +268,7 @@ export default function PublicLayout() {
       {/* Main content slot */}
       <main id="main-content" className="flex-1">
         <Outlet />
+        <SeoCopy />
       </main>
 
       {/* Footer — single row at sm+, stacked at mobile.

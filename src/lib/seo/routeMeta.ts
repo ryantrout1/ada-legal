@@ -22,6 +22,7 @@
  */
 
 import { CHAPTER_META } from '../../app/routes/public/chapterMeta.js';
+import { PAGE_COPY } from './pageCopy.js';
 
 export interface RouteMeta {
   /** URL path, no trailing slash except for "/". */
@@ -420,7 +421,12 @@ export const ROUTE_META: RouteMeta[] = [
   ...STATIC_META.map((m) => ({ ...m, ogType: 'website' as const })),
   ...chapterRoutes(),
   ...guideRoutes(),
-];
+].map((r) => {
+  // pageCopy.ts holds the reviewed search copy for the pages Miloe drafted.
+  // Where a path has an entry, its title and description replace the ones above.
+  const copy = PAGE_COPY[r.path];
+  return copy ? { ...r, title: copy.title, description: copy.description } : r;
+});
 
 const BY_PATH = new Map(ROUTE_META.map((r) => [r.path, r]));
 
