@@ -10,8 +10,10 @@ import { HelmetProvider, type HelmetServerState } from 'react-helmet-async';
 import { Writable } from 'node:stream';
 import { AppRoutes } from './app/App.js';
 import { ROUTE_META } from './lib/seo/routeMeta.js';
+import { lawsuitTitle } from './lib/seo/lawsuitMeta.js';
+import { setLitigationSeed, type LitigationSeed } from './app/lib/litigationSeed.js';
 
-export { ROUTE_META };
+export { ROUTE_META, lawsuitTitle };
 
 export interface RenderResult {
   html: string;
@@ -23,7 +25,13 @@ export interface RenderResult {
   };
 }
 
-export async function render(url: string): Promise<RenderResult> {
+export async function render(
+  url: string,
+  seed: LitigationSeed | null = null,
+): Promise<RenderResult> {
+  // Pages that load data in the browser render from this instead (see
+  // src/app/lib/litigationSeed.ts). Renders run one at a time.
+  setLitigationSeed(seed);
   const helmetContext: { helmet?: HelmetServerState } = {};
 
   const html = await new Promise<string>((resolve, reject) => {

@@ -32,9 +32,9 @@
  * Ref: /plan M3 Phase 3.
  */
 
-import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import GuideReadingLevelBar from '../../components/standards/GuideReadingLevelBar.jsx';
 import { useReadingLevel } from '../../components/standards/ReadingLevelContext.js';
 import { StatusBadge, KindLabel } from '../../components/litigation/LitigationChips.js';
@@ -47,6 +47,8 @@ import type {
   PublicLitigationDetailResponse,
 } from '../../lib/lawsuitTypes.js';
 import { PUBLIC_ORIGIN } from '../../../lib/publicOrigin.js';
+import { lawsuitTitle } from '../../../lib/seo/lawsuitMeta.js';
+import { seededDetail } from '../../lib/litigationSeed.js';
 
 const sectionStyle: CSSProperties = {
   background: 'var(--card-bg)',
@@ -122,9 +124,13 @@ export default function LawsuitDetail() {
   const navigate = useNavigate();
   const { readingLevel } = useReadingLevel();
   const adaCtaEnabled = useLawsuitsAdaCta();
+  const { pathname } = useLocation();
 
-  const [row, setRow] = useState<PublicLawsuitDetailRow | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Prerendered pages start from the case the build rendered (see
+  // litigationSeed.ts) and refresh it in the background on mount.
+  const seed = useRef(seededDetail(pathname));
+  const [row, setRow] = useState<PublicLawsuitDetailRow | null>(seed.current);
+  const [loading, setLoading] = useState(seed.current === null);
   const [notFound, setNotFound] = useState(false);
   // Two separate error states on purpose. A failed page load and a
   // failed chat start need different copy and appear in different
@@ -134,13 +140,13 @@ export default function LawsuitDetail() {
   const [chatError, setChatError] = useState<string | null>(null);
   const [startingChat, setStartingChat] = useState(false);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (background: boolean) => {
     if (!slug) {
       setNotFound(true);
       setLoading(false);
       return;
     }
-    setLoading(true);
+    if (!background) setLoading(true);
     setError(null);
     setNotFound(false);
     try {
@@ -148,6 +154,7 @@ export default function LawsuitDetail() {
         `/api/public/litigation/${encodeURIComponent(slug)}`,
       );
       if (resp.status === 404) {
+        setRow(null);
         setNotFound(true);
         return;
       }
@@ -155,14 +162,17 @@ export default function LawsuitDetail() {
       const body = (await resp.json()) as PublicLitigationDetailResponse;
       setRow(body.litigation);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Network error');
+      // A failed background refresh keeps the case the page already shows.
+      if (!background) setError(err instanceof Error ? err.message : 'Network error');
     } finally {
       setLoading(false);
     }
   }, [slug]);
 
   useEffect(() => {
-    void load();
+    const background = seed.current !== null;
+    seed.current = null;
+    void load(background);
   }, [load]);
 
   async function handleTalkToAda() {
@@ -331,10 +341,10 @@ export default function LawsuitDetail() {
       {row && (
         <article>
           <Helmet>
-            <title>{`${row.caseName} — ADA Legal Link`}</title>
+            <title>{lawsuitTitle(row.caseName)}</title>
             <meta name="description" content={metaDescription} />
             <link rel="canonical" href={canonicalUrl} />
-            <meta property="og:title" content={`${row.caseName} — ADA Legal Link`} />
+            <meta property="og:title" content={lawsuitTitle(row.caseName)} />
             <meta property="og:description" content={metaDescription} />
             <meta property="og:url" content={canonicalUrl} />
             <meta property="og:type" content="article" />

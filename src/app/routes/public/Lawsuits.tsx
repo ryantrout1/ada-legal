@@ -20,7 +20,7 @@
  * Ref: /plan M3 Phase 2.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import GuideReadingLevelBar from '../../components/standards/GuideReadingLevelBar.jsx';
 import LawsuitCard from '../../components/litigation/LawsuitCard.js';
@@ -35,18 +35,28 @@ import type {
   PublicLawsuitRow,
   PublicLitigationListResponse,
 } from '../../lib/lawsuitTypes.js';
+import { seededList } from '../../lib/litigationSeed.js';
 
 export default function Lawsuits() {
   const location = useLocation();
+  // The prerendered page is the unfiltered list. Filters from the URL are
+  // applied right after mount so the first client render matches it.
   const [filters, setFilters] = useState<LawsuitFilterState>(() =>
-    parseInitialFilters(location.search),
+    parseInitialFilters(''),
   );
-  const [rows, setRows] = useState<PublicLawsuitRow[]>([]);
-  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setFilters(parseInitialFilters(location.search));
+    // Only on arrival; later changes come from the filter controls.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  // Rows the build rendered (see litigationSeed.ts), refreshed on mount.
+  const seed = useRef(seededList(location.pathname));
+  const [rows, setRows] = useState<PublicLawsuitRow[]>(seed.current ?? []);
+  const [loading, setLoading] = useState(seed.current === null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    setLoading(true);
+  const load = useCallback(async (background: boolean) => {
+    if (!background) setLoading(true);
     setError(null);
     try {
       // Fetch the whole set once and filter in memory, as B44 does. 36
@@ -58,15 +68,20 @@ export default function Lawsuits() {
       const body = (await resp.json()) as PublicLitigationListResponse;
       setRows(Array.isArray(body.litigation) ? body.litigation : []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Network error');
-      setRows([]);
+      // A failed background refresh keeps the rows the page already has.
+      if (!background) {
+        setError(err instanceof Error ? err.message : 'Network error');
+        setRows([]);
+      }
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    void load();
+    const background = seed.current !== null;
+    seed.current = null;
+    void load(background);
   }, [load]);
 
   const filtered = useMemo(() => filterLawsuits(rows, filters), [rows, filters]);
