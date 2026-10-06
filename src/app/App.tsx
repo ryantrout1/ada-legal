@@ -88,11 +88,14 @@ import RequireAdmin from './components/RequireAdmin.js';
 import RequireAttorney from './components/RequireAttorney.js';
 import ScrollToTop from './components/ScrollToTop.js';
 
-export default function App() {
+/**
+ * The route tree, with no router or provider of its own. App wraps it in
+ * BrowserRouter for the browser; src/entry-server.tsx wraps it in
+ * StaticRouter so the build can prerender the public routes (see
+ * scripts/prerender.mjs). Keep anything that needs `window` out of here.
+ */
+export function AppRoutes() {
   return (
-    <HelmetProvider>
-      <BrowserRouter>
-      <ScrollToTop />
       <Routes>
         {/* Public routes — no Clerk context */}
         <Route element={<PublicLayout />}>
@@ -157,7 +160,16 @@ export default function App() {
             DNS-scoping discipline as AdminShell (see note above). */}
         <Route path="/portal/*" element={<PortalShell />} />
       </Routes>
-    </BrowserRouter>
+  );
+}
+
+export default function App() {
+  return (
+    <HelmetProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <AppRoutes />
+      </BrowserRouter>
     </HelmetProvider>
   );
 }

@@ -41,3 +41,6 @@ test-results/
 
 # TypeScript
 *.tsbuildinfo
+
+# Prerender server bundle (build intermediate)
+dist-ssr/
