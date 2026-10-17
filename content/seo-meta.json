@@ -22,5 +22,11 @@
     "description": "What the ADA generally requires of medical facilities: exam rooms, equipment, communication and parking. Plain-language guide with links to the standards.",
     "by": "Miloe engine",
     "at": "2026-10-17T14:35:19.133Z"
+  },
+  "/standards-guide/guide/mobility-devices": {
+    "title": "ADA Mobility Device Rules: Wheelchairs & OPDMDs",
+    "description": "Plain-language ADA mobility device rules: wheelchairs always allowed, OPDMD assessment factors, what staff may ask, storage, and citations to 28 CFR.",
+    "by": "Miloe engine",
+    "at": "2026-10-17T14:40:20.089Z"
   }
 }
