@@ -40,5 +40,11 @@
     "description": "How many ADA accessible parking spaces a lot needs, van-accessible rules, signage, access aisles, and what to do if a space is blocked or missing.",
     "by": "Miloe engine",
     "at": "2026-10-17T14:50:19.518Z"
+  },
+  "/standards-guide/guide/parking-requirements": {
+    "title": "ADA Parking Requirements: Spaces, Signs & Van Access",
+    "description": "ADA parking requirements explained plainly: how many accessible spaces you need, van space sizes, signs and access aisles, with the official table.",
+    "by": "Miloe engine",
+    "at": "2026-10-17T14:55:16.341Z"
   }
 }
