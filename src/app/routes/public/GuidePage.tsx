@@ -24,7 +24,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useParams } from 'react-router-dom';
 import { GUIDE_LOADERS, titleForSlug } from './standardsGuideIndex.js';
 import { PUBLIC_ORIGIN } from '../../../lib/publicOrigin.js';
-import { routeMeta } from '../../../lib/seo/routeMeta.js';
+import { routeMeta } from '../../../lib/seo/seoMeta.js';
 
 function GuideSeo({ slug, title }: { slug: string; title: string }) {
   const canonicalUrl = `${PUBLIC_ORIGIN}/standards-guide/guide/${slug}`;

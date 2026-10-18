@@ -1,6 +1,7 @@
 /**
  * RouteSeo: the title, description, canonical URL and social tags for every
- * public page that has an entry in src/lib/seo/routeMeta.ts.
+ * public page that has an entry in src/lib/seo/routeMeta.ts (with the
+ * Miloe engine's search copy from seoMeta.ts applied over it).
  *
  * Mounted once in PublicLayout. Routes with no entry (lawsuit detail,
  * /s/:slug, /spot/r/:slug, not-found guides) render nothing here and keep
@@ -13,7 +14,7 @@
 
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
-import { routeMeta } from '../../lib/seo/routeMeta.js';
+import { routeMeta } from '../../lib/seo/seoMeta.js';
 import { PUBLIC_ORIGIN } from '../../lib/publicOrigin.js';
 
 export default function RouteSeo() {

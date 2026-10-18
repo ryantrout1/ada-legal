@@ -9,7 +9,7 @@ import { StaticRouter } from 'react-router-dom';
 import { HelmetProvider, type HelmetServerState } from 'react-helmet-async';
 import { Writable } from 'node:stream';
 import { AppRoutes } from './app/App.js';
-import { ROUTE_META } from './lib/seo/routeMeta.js';
+import { ROUTE_META } from './lib/seo/seoMeta.js';
 import { lawsuitTitle } from './lib/seo/lawsuitMeta.js';
 import { setLitigationSeed, type LitigationSeed } from './app/lib/litigationSeed.js';
 
