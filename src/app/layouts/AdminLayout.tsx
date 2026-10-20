@@ -102,6 +102,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { to: '/admin/analytics', label: 'Analytics' },
       { to: '/admin/feedback', label: 'Feedback' },
+      { to: '/admin/civil-rights', label: 'Civil Rights Forms' },
     ],
   },
   {
