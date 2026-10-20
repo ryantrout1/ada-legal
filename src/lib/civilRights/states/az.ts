@@ -15,7 +15,93 @@
  * All labels and hints are DRAFT until Gina approves the copy.
  */
 
-import type { StateConfig } from '../types.js';
+import type { Answers, PdfFillPlan, StateConfig } from '../types.js';
+import { usDate } from '../summary.js';
+
+const NARRATIVE = 'documents that will help explain what happened to you';
+const AGENCY = 'crimination If the answer is yes please state the name and address of the agency';
+const ATTORNEY =
+  'Do you have an attorney If the answer is yes please tell us the name and address of your attorney';
+const lines = (base: string, n: number) => Array.from({ length: n }, (_, i) => `${base} ${i + 1}`);
+const yn = (v: string) => (v === 'yes' ? 'Yes' : 'No');
+
+/**
+ * Field names and circle positions read from the 2024 PDF itself
+ * (scripts/inspect-pdf-fields.mjs + pdftotext -bbox). Page 1 has two
+ * columns: left is the person, right is the business. Areas and bases are
+ * "circle all that apply" with no fields, so we draw the circles.
+ */
+function azPlan(a: Answers, summary: string): PdfFillPlan {
+  const first = a.first_incident_date ? usDate(a.first_incident_date) : '';
+  const last = usDate(a.last_incident_date);
+  return {
+    fields: {
+      Name: a.complainant_name,
+      Address: a.address1,
+      Address_3: a.address2,
+      City: a.city,
+      State: a.state,
+      Zip: a.zip,
+      Phone: a.phone,
+      'Business Name': a.respondent_company
+        ? `${a.respondent_name} (${a.respondent_company})`
+        : a.respondent_name,
+      Address_2: a.respondent_address1,
+      Address_4: a.respondent_address2,
+      City_2: a.respondent_city,
+      State_2: a.respondent_state,
+      Zip_2: a.respondent_zip,
+      // "When" is left empty: its box straddles a table rule, so text in it
+      // prints struck through. First/Last Time and the circled Continuous
+      // answer carry the same information.
+      'first time': first,
+      'Last Time': last,
+    },
+    lineGroups: [
+      { fields: lines(NARRATIVE, 8), text: summary, overflowLabel: 'What happened (continued)' },
+      {
+        fields: lines(AGENCY, 5),
+        text: a.other_agencies || 'No',
+        overflowLabel: 'Other agencies contacted (continued)',
+      },
+      {
+        fields: lines(ATTORNEY, 5),
+        text: a.has_attorney === 'yes' ? `Yes. ${a.attorney_name_address}` : 'No',
+        overflowLabel: 'Attorney (continued)',
+      },
+    ],
+    circles: [
+      // "Public Accommodations" column heading
+      { page: 0, x: 306, y: 366, width: 135, height: 23 },
+      // "Disability" in the Public Accommodations column
+      { page: 0, x: 345, y: 238, width: 58, height: 23 },
+      // Continuous: (Yes or No)
+      a.ongoing === 'yes'
+        ? { page: 0, x: 395, y: 99, width: 25, height: 22 }
+        : { page: 0, x: 431, y: 99, width: 23, height: 22 },
+    ],
+    extraPage: {
+      title: 'Additional Information',
+      intro:
+        "Attached to the Civil Rights Intake Questionnaire. These are answers to questions on the Attorney General's online questionnaire that the paper form has no space for.",
+      items: [
+        { name: 'extra_email', label: 'Email', value: a.email },
+        { name: 'extra_alt_name', label: 'Alternate contact', value: a.alt_contact_name },
+        { name: 'extra_alt_phone', label: 'Alternate contact phone', value: a.alt_contact_phone },
+        { name: 'extra_ongoing', label: 'Is the alleged discrimination ongoing?', value: yn(a.ongoing) },
+        { name: 'extra_legal_action', label: 'Is any legal action pending?', value: yn(a.legal_action_pending) },
+        {
+          name: 'extra_comments',
+          label: 'Additional comments',
+          value: a.additional_comments,
+          multiline: true,
+        },
+      ],
+      declaration:
+        'I declare, under penalty of perjury under the laws of the state of Arizona, that the information in this questionnaire is true and accurate.',
+    },
+  };
+}
 
 export const AZ: StateConfig = {
   code: 'az',
@@ -157,4 +243,9 @@ export const AZ: StateConfig = {
     { id: 'legal', title: 'Other legal action', fields: ['legal_action_pending', 'other_agencies'] },
     { id: 'anything_else', title: 'Anything else', fields: ['additional_comments'] },
   ],
+  pdf: {
+    path: '/forms/az/civil_rights_intake_form-2024.pdf',
+    sha256: '92e336c13c1e94171bf8f05dca33643c4e42110c30cf6a053a41c34c25d82c58',
+    plan: azPlan,
+  },
 };

@@ -75,6 +75,58 @@ export interface StateConfig {
   channels: SubmissionChannel[];
   fields: FieldSpec[];
   steps: StepSpec[];
+  pdf: PdfTemplate;
+}
+
+/**
+ * How one state's agency PDF gets filled. The template is the agency's own
+ * file, served from /public; the checksum pins the exact edition mapped.
+ */
+export interface PdfTemplate {
+  /** Public URL path, e.g. /forms/az/civil_rights_intake_form-2024.pdf */
+  path: string;
+  sha256: string;
+  plan: (answers: Answers, summary: string) => PdfFillPlan;
+}
+
+/** A group of single-line agency fields that one long answer flows across. */
+export interface LineGroup {
+  fields: string[];
+  text: string;
+  /** Label for the continuation on the added page if it does not fit. */
+  overflowLabel: string;
+}
+
+/** A circle drawn on the agency page (paper forms say "circle all that apply"). */
+export interface CircleMark {
+  page: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface ExtraPageItem {
+  /** Field name for the new fillable field. */
+  name: string;
+  label: string;
+  value: string;
+  multiline?: boolean;
+}
+
+export interface PdfFillPlan {
+  /** Agency field name -> value. */
+  fields: Record<string, string>;
+  lineGroups: LineGroup[];
+  circles: CircleMark[];
+  /** One added page, fully fillable, for answers the paper form has no room for. */
+  extraPage: {
+    title: string;
+    intro: string;
+    items: ExtraPageItem[];
+    /** Declaration text shown above blank signature and date fields. */
+    declaration: string;
+  };
 }
 
 /** Clean answers: every configured key present, trimmed, '' when blank. */
