@@ -31,6 +31,7 @@ import {
   readAdaUniversalCta,
 } from '../../src/lib/site/lawsuitsAdaCta.js';
 import { readSpotShowAnnotations } from '../../src/lib/spot/spotAvailability.js';
+import { readCivilRightsEnabled } from '../../src/lib/site/civilRightsFlag.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (applyCors(req, res)) return; // preflight handled
@@ -43,14 +44,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let lawsuitsAdaCtaEnabled = false;
   let adaUniversalCta = false;
   let spotShowAnnotations = false;
+  let civilRightsEnabled = false;
   try {
     const clients = makeClientsFromEnv();
     // All three flags live in the same `admin` blob, so this is one read each.
-    [lawsuitsAdaCtaEnabled, adaUniversalCta, spotShowAnnotations] = await Promise.all([
-      readLawsuitsAdaCta(clients.db),
-      readAdaUniversalCta(clients.db),
-      readSpotShowAnnotations(clients.db),
-    ]);
+    [lawsuitsAdaCtaEnabled, adaUniversalCta, spotShowAnnotations, civilRightsEnabled] =
+      await Promise.all([
+        readLawsuitsAdaCta(clients.db),
+        readAdaUniversalCta(clients.db),
+        readSpotShowAnnotations(clients.db),
+        readCivilRightsEnabled(clients.db),
+      ]);
   } catch (err) {
     // Fail closed, and say so in the logs so a persistent read failure
     // is still visible rather than silently pinning the CTA off.
@@ -58,6 +62,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     lawsuitsAdaCtaEnabled = false;
     adaUniversalCta = false;
     spotShowAnnotations = false;
+    civilRightsEnabled = false;
   }
 
   res.setHeader(
@@ -70,5 +75,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ada_universal_cta: adaUniversalCta,
     // Spot annotation render kill-switch (Phase 3). Additive.
     spot_show_annotations: spotShowAnnotations,
+    // State civil rights complaint page gate. Additive.
+    civil_rights_enabled: civilRightsEnabled,
   });
 }
